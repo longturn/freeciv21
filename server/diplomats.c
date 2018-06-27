@@ -635,7 +635,7 @@ void diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
     log_debug("steal-tech: difficulty: %d", count);
     /* Determine success or failure. */
     while (count > 0) {
-      if (fc_rand (100) >= game.server.diplchance) {
+      if (fc_rand (100) >= game.server.diplchance_steal) {
         break;
       }
       count--;

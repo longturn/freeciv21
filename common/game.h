@@ -134,6 +134,7 @@ struct civ_game {
       int conquercost;
       int contactturns;
       int diplchance;
+      int diplchance_steal;
       int diplbulbcost;
       int diplgoldcost;
       int dispersion;
@@ -410,6 +411,10 @@ extern struct civ_game game;
 #define GAME_DEFAULT_DIPLCHANCE      80
 #define GAME_MIN_DIPLCHANCE          40
 #define GAME_MAX_DIPLCHANCE          100
+
+#define GAME_DEFAULT_DIPLCHANCE_STEAL 80
+#define GAME_MIN_DIPLCHANCE_STEAL    0
+#define GAME_MAX_DIPLCHANCE_STEAL    100
 
 #define GAME_DEFAULT_FREECOST        0
 #define GAME_MIN_FREECOST            0

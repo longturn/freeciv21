@@ -375,6 +375,7 @@ static void game_defaults(void)
     }
     sz_strlcpy(game.server.demography, GAME_DEFAULT_DEMOGRAPHY);
     game.server.diplchance        = GAME_DEFAULT_DIPLCHANCE;
+    game.server.diplchance_steal  = GAME_DEFAULT_DIPLCHANCE_STEAL;
     game.server.diplbulbcost      = GAME_DEFAULT_DIPLBULBCOST;
     game.server.diplgoldcost      = GAME_DEFAULT_DIPLGOLDCOST;
     game.server.dispersion        = GAME_DEFAULT_DISPERSION;
