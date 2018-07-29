@@ -210,7 +210,19 @@ static bool set_enum_value(struct setting *pset, int val);
       return &name;                                                         \
     }
 
-/****************************************************************************
+/************************************************************************//**
+  Caravan bonus style setting names accessor.
+****************************************************************************/
+static const struct sset_val_name *caravanbonusstyle_name(int caravanbonus)
+{
+  switch (caravanbonus) {
+  NAME_CASE(CBS_CLASSIC, "CLASSIC", N_("Classic Freeciv"));
+  NAME_CASE(CBS_LOGARITHMIC, "LOGARITHMIC", N_("Log^2 N style"));
+  }
+  return NULL;
+}
+
+/************************************************************************//**
   Map size definition setting names accessor. This setting has an
   hard-coded depedence in "server/meta.c".
 ****************************************************************************/
@@ -238,7 +250,19 @@ static const struct sset_val_name *topology_name(int topology_bit)
   return NULL;
 }
 
-/****************************************************************************
+/************************************************************************//**
+  Trade revenue style setting names accessor.
+****************************************************************************/
+static const struct sset_val_name *traderevenuestyle_name(int revenue_style)
+{
+  switch (revenue_style) {
+  NAME_CASE(TRS_CLASSIC, "CLASSIC", N_("Classic Freeciv"));
+  NAME_CASE(TRS_SIMPLE, "SIMPLE", N_("Proportional to tile trade"));
+  }
+  return NULL;
+}
+
+/************************************************************************//**
   Generator setting names accessor.
 ****************************************************************************/
 static const struct sset_val_name *generator_name(int generator)
@@ -1985,7 +2009,29 @@ static struct setting settings[] = {
               "is not allowed."), NULL, NULL,
            GAME_DEFAULT_TRADING_CITY)
 
-  GEN_INT("trademindist", game.info.trademindist,
+  GEN_ENUM("caravan_bonus_style", game.server.caravan_bonus_style,
+          SSET_RULES, SSET_ECONOMICS, SSET_RARE, SSET_TO_CLIENT,
+           N_("Caravan bonus style"),
+           N_("The formula for the bonus when a caravan enters a city. "
+              "CLASSIC bonuses are proportional to distance and trade "
+              "of source and destination with multipliers for overseas and "
+              "international destinations. LOGARITHMIC bonuses are "
+              "proportional to log^2(distance + trade)."),
+           NULL, NULL, NULL, caravanbonusstyle_name,
+           GAME_DEFAULT_CARAVAN_BONUS_STYLE)
+
+  GEN_ENUM("trade_revenue_style", game.server.trade_revenue_style,
+          SSET_RULES, SSET_ECONOMICS, SSET_RARE, SSET_TO_CLIENT,
+          N_("Trade revenue style"),
+          N_("The formula for the trade a city receives from a traderoute. "
+             "CLASSIC revenues depend on distance and trade with "
+             "multipliers for overseas and international routes. "
+             "SIMPLE revenues are proportional to the average trade of the "
+             "two cities."),
+	  NULL, NULL, NULL, traderevenuestyle_name,
+          GAME_DEFAULT_TRADE_REVENUE_STYLE)
+
+    GEN_INT("trademindist", game.info.trademindist,
           SSET_RULES, SSET_ECONOMICS, SSET_RARE, SSET_TO_CLIENT,
           N_("Minimum distance for trade routes"),
           N_("In order for two cities in the same civilization to establish "

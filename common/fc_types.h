@@ -511,6 +511,14 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #include "specenum_gen.h"
 
 /* Used in the network protocol. */
+#define SPECENUM_NAME caravan_bonus_style
+#define SPECENUM_VALUE0 CBS_CLASSIC
+#define SPECENUM_VALUE0NAME "Classic"
+#define SPECENUM_VALUE1 CBS_LOGARITHMIC
+#define SPECENUM_VALUE1NAME "Logarithmic"
+#include "specenum_gen.h"
+
+/* Used in the network protocol. */
 #define SPECENUM_NAME persistent_ready
 #define SPECENUM_VALUE0  PERSISTENTR_DISABLED
 #define SPECENUM_VALUE0NAME "Disabled"
@@ -557,12 +565,24 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE2NAME "Cities"
 #include "specenum_gen.h"
 
+#define SPECENUM_NAME trade_revenue_style
+#define SPECENUM_VALUE0 TRS_CLASSIC
+#define SPECENUM_VALUE0NAME "Classic"
+#define SPECENUM_VALUE1 TRS_SIMPLE
+#define SPECENUM_VALUE1NAME "Simple"
+#include "specenum_gen.h"
+
 /* Used in the network protocol. */
-enum phase_mode_types {
-  PMT_CONCURRENT = 0,
-  PMT_PLAYERS_ALTERNATE,
-  PMT_TEAMS_ALTERNATE
-};
+/* Numerical values used in savegames */
+#define SPECENUM_NAME phase_mode_types
+#define SPECENUM_VALUE0 PMT_CONCURRENT
+#define SPECENUM_VALUE0NAME "Concurrent"
+#define SPECENUM_VALUE1 PMT_PLAYERS_ALTERNATE
+#define SPECENUM_VALUE1NAME "Players Alternate"
+#define SPECENUM_VALUE2 PMT_TEAMS_ALTERNATE
+#define SPECENUM_VALUE2NAME "Teams Alternate"
+#include "specenum_gen.h"
+
 
 /* Phase mode change has changed meaning of the phase numbers */
 #define PHASE_INVALIDATED -1

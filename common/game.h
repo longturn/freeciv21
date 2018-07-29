@@ -222,6 +222,10 @@ struct civ_game {
       int seed_setting;
       int seed;
 
+
+      enum trade_revenue_style trade_revenue_style;
+      enum caravan_bonus_style caravan_bonus_style;
+
       bool global_warming;
       int global_warming_percent;
       bool nuclear_winter;
@@ -591,9 +595,13 @@ extern struct civ_game game;
 #define GAME_DEFAULT_TRADING_GOLD    TRUE
 #define GAME_DEFAULT_TRADING_CITY    TRUE
 
+#define GAME_DEFAULT_CARAVAN_BONUS_STYLE CBS_CLASSIC
+
 #define GAME_DEFAULT_TRADEMINDIST    9
 #define GAME_MIN_TRADEMINDIST        1
 #define GAME_MAX_TRADEMINDIST        999
+
+#define GAME_DEFAULT_TRADE_REVENUE_STYLE TRS_CLASSIC
 
 #define GAME_DEFAULT_BARBARIANRATE   BARBS_NORMAL
 
