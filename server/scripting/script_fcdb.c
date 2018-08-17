@@ -111,6 +111,8 @@ static void script_fcdb_functions_define(void)
                      API_TYPE_STRING);
   luascript_func_add(fcl, "user_log", TRUE, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
+  luascript_func_add(fcl, "user_take", FALSE, 3, 1, API_TYPE_CONNECTION,
+                     API_TYPE_PLAYER, API_TYPE_BOOL, API_TYPE_BOOL);
 }
 
 /*****************************************************************************

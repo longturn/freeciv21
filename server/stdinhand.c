@@ -3054,20 +3054,13 @@ static bool set_command(struct connection *caller, char *str, bool check)
   NB: If this function returns FALSE, then callers expect that 'msg' will
   be filled in with a NULL-terminated string containing the reason.
 **************************************************************************/
-static bool is_allowed_to_take(struct player *pplayer, bool will_obs, 
+static bool is_allowed_to_take(struct connection *conn,
+                               struct player *pplayer, bool will_obs,
                                char *msg, size_t msg_len)
 {
   const char *allow;
-
-  if (!pplayer && will_obs) {
-    /* Global observer. */
-    if (!(allow = strchr(game.server.allow_take,
-                         (game.info.is_new_game ? 'O' : 'o')))) {
-      fc_strlcpy(msg, _("Sorry, one can't observe globally in this game."),
-                msg_len);
-      return FALSE;
-    }
-  } else if (!pplayer && !will_obs) {
+  bool ok = FALSE;
+  if (!pplayer && !will_obs) {
     /* Auto-taking a new player */
 
     if (game_was_started()) {
@@ -3098,7 +3091,17 @@ static bool is_allowed_to_take(struct player *pplayer, bool will_obs,
     }
 
     return TRUE;
-
+  } else if (script_fcdb_call("user_take", conn, pplayer, will_obs, &ok)
+             && ok) {
+    return TRUE;
+  } else if (!pplayer && will_obs) {
+    /* Global observer. */
+    if (!(allow = strchr(game.server.allow_take,
+                         (game.info.is_new_game ? 'O' : 'o')))) {
+      fc_strlcpy(msg, _("Sorry, one can't observe globally in this game."),
+                msg_len);
+      return FALSE;
+    }
   } else if (is_barbarian(pplayer)) {
     if (!(allow = strchr(game.server.allow_take, 'b'))) {
       if (will_obs) {
@@ -3243,7 +3246,7 @@ static bool observe_command(struct connection *caller, char *str, bool check)
   /******** PART II: do the observing ********/
 
   /* check allowtake for permission */
-  if (!is_allowed_to_take(pplayer, TRUE, msg, sizeof(msg))) {
+  if (!is_allowed_to_take(caller, pplayer, TRUE, msg, sizeof(msg))) {
     cmd_reply(CMD_OBSERVE, caller, C_FAIL, "%s", msg);
     goto end;
   }
@@ -3405,7 +3408,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
   }
 
   /* check allowtake for permission */
-  if (!is_allowed_to_take(pplayer, FALSE, msg, sizeof(msg))) {
+  if (!is_allowed_to_take(caller, pplayer, FALSE, msg, sizeof(msg))) {
     cmd_reply(CMD_TAKE, caller, C_FAIL, "%s", msg);
     goto end;
   }
