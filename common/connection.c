@@ -189,10 +189,13 @@ static int write_socket_data(struct connection *pc,
       }
     }
 
+    /*
+     * Cannot be the case with emscripten bc exceptfs is ignored
     if (FD_ISSET(pc->sock, &exceptfs)) {
       connection_close(pc, _("network exception"));
       return -1;
     }
+    */
 
     if (FD_ISSET(pc->sock, &writefs)) {
       nblock=MIN(buf->ndata-start, MAX_LEN_PACKET);
@@ -200,9 +203,9 @@ static int write_socket_data(struct connection *pc,
       if((nput=fc_writesocket(pc->sock, 
 			      (const char *)buf->data+start, nblock)) == -1) {
 #ifdef NONBLOCKING_SOCKETS
-	if (errno == EWOULDBLOCK || errno == EAGAIN) {
-	  break;
-	}
+      if (errno == EWOULDBLOCK || errno == EAGAIN || errno == EINPROGRESS ) {
+        break;
+      }
 #endif
         connection_close(pc, _("lagging connection"));
         return -1;

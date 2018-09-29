@@ -49,6 +49,10 @@
 #include <windows.h>	/* GetTempPath */
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 /* utility */
 #include "fcintl.h"
 #include "log.h"
@@ -97,6 +101,28 @@ static void set_socket_errno(void)
 }
 #endif /* FREECIV_HAVE_WINSOCK */
 
+#ifdef __EMSCRIPTEN__
+/***************************************************************
+  Connect a socket to an address
+***************************************************************/
+int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen,
+               fc_socket_callback connect_callback, void *data)
+{
+  int result;
+  
+  result = connect(sockfd, serv_addr, addrlen);
+  
+#ifdef FREECIV_HAVE_WINSOCK
+  if (result == -1) {
+    set_socket_errno();
+  }
+#endif /* FREECIV_HAVE_WINSOCK */
+
+  emscripten_set_socket_open_callback(data, connect_callback);
+
+  return result;
+}
+#else
 /***************************************************************
   Connect a socket to an address
 ***************************************************************/
@@ -114,6 +140,7 @@ int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen)
 
   return result;
 }
+#endif
 
 /***************************************************************
   Wait for a number of sockets to change status
@@ -123,7 +150,11 @@ int fc_select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
 {
   int result;
 
+#ifdef __EMSCRIPTEN__
+  result = select(n, readfds, writefds, NULL, timeout);
+#else
   result = select(n, readfds, writefds, exceptfds, timeout);
+#endif
 
 #ifdef FREECIV_HAVE_WINSOCK
   if (result == -1) {

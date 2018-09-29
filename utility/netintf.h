@@ -90,7 +90,15 @@ typedef TIMEVAL fc_timeval;
 typedef struct timeval fc_timeval;
 #endif /* FREECIV_MSWINDOWS */
 
+typedef void (*fc_socket_callback)(int sock, void *username);
+
+#ifdef __EMSCRIPTEN__
+int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen,
+               fc_socket_callback connect_callback, void *data);
+#else
 int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen);
+#endif
+
 int fc_select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
               fc_timeval *timeout);
 int fc_readsocket(int sock, void *buf, size_t size);

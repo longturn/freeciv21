@@ -56,6 +56,10 @@
 #include <unistd.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 /* utility */
 #include "capstr.h"
 #include "dataio.h"
@@ -175,6 +179,22 @@ static int get_server_address(const char *hostname, int port,
   return 0;
 }
 
+#ifdef __EMSCRIPTEN__
+/**************************************************************************
+  Callback for asynchronous connect.
+**************************************************************************/
+static void connect_callback(int sock, void *username)
+{
+  client.conn.sock = sock;
+  if (client.conn.sock == -1) {
+    // TODO Error handling
+    //(void) fc_strlcpy(errbuf, fc_strerror(err), errbufsize);
+    return;
+  }
+  make_connection(client.conn.sock, username);
+}
+#endif
+
 /**************************************************************************
   Try to connect to a server (get_server_address() must be called first!):
    - try to create a TCP socket and connect it to `names'
@@ -210,9 +230,20 @@ static int try_to_connect(const char *username, char *errbuf, int errbufsize)
       continue;
     }
 
+#ifdef __EMSCRIPTEN__
+    if (fc_connect(sock, &paddr->saddr,
+                   sockaddr_size(paddr),
+                   connect_callback, username) == -1) {
+      err = fc_get_errno(); /* Save errno value before calling anything */
+      if (err == EINPROGRESS /* Operation now in progress */) {
+          /* Assume it's gonna work later on */
+          return 0;
+      }
+#else
     if (fc_connect(sock, &paddr->saddr,
                    sockaddr_size(paddr)) == -1) {
       err = fc_get_errno(); /* Save errno value before calling anything */
+#endif
       fc_closesocket(sock);
       sock = -1;
       continue;
@@ -381,9 +412,13 @@ static int read_from_connection(struct connection *pc, bool block)
       return -1;
     }
 
+/*
+ * exceptfs not supported by emscripten
     if (FD_ISSET(socket_fd, &exceptfs)) {
+        printf("Trapped by FD_ISSET\n");
       return -1;
     }
+*/
 
     if (have_data_for_server && FD_ISSET(socket_fd, &writefs)) {
       flush_connection_send_buffer_all(pc);
