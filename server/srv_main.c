@@ -1065,9 +1065,8 @@ static void begin_turn(bool is_new_turn)
   send_game_info(NULL);
 
   if (is_new_turn) {
-    script_server_signal_emit("turn_started", 2,
-                              API_TYPE_INT, game.info.turn,
-                              API_TYPE_INT, game.info.year);
+    script_server_signal_emit("turn_started", game.info.turn,
+                              game.info.year);
 
     /* We build scores at the beginning of every turn.  We have to
      * build them at the beginning so that the AI can use the data,
@@ -1435,10 +1434,7 @@ static void end_turn(void)
 
       lsend_packet_achievement_info(first->connections, &pack);
 
-      script_server_signal_emit("achievement_gained", 3,
-                                API_TYPE_ACHIEVEMENT, ach,
-                                API_TYPE_PLAYER, first,
-                                API_TYPE_BOOL, TRUE);
+      script_server_signal_emit("achievement_gained", ach, first, TRUE);
 
     }
 
@@ -1453,10 +1449,8 @@ static void end_turn(void)
 
           lsend_packet_achievement_info(pplayer->connections, &pack);
 
-          script_server_signal_emit("achievement_gained", 3,
-                                    API_TYPE_ACHIEVEMENT, ach,
-                                    API_TYPE_PLAYER, pplayer,
-                                    API_TYPE_BOOL, FALSE);
+          script_server_signal_emit("achievement_gained", ach, pplayer,
+                                    FALSE);
         }
       } player_list_iterate_end;
     }
@@ -3136,7 +3130,7 @@ static void srv_ready(void)
     }
 
     if (game.map.server.generator != MAPGEN_SCENARIO) {
-      script_server_signal_emit("map_generated", 0);
+      script_server_signal_emit("map_generated");
     }
 
     game_map_init();

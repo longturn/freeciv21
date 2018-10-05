@@ -690,10 +690,8 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
 
   if (city_size_get(pcity) <= pop_loss) {
 
-    script_server_signal_emit("city_destroyed", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, pcity->owner,
-                              API_TYPE_PLAYER, destroyer);
+    script_server_signal_emit("city_destroyed", pcity, pcity->owner,
+                              destroyer);
 
     remove_city(pcity);
     return FALSE;
@@ -748,10 +746,7 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   if (reason != NULL) {
     int id = pcity->id;
 
-    script_server_signal_emit("city_size_change", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_INT, -pop_loss,
-                              API_TYPE_STRING, reason);
+    script_server_signal_emit("city_size_change", pcity, -pop_loss, reason);
 
     return city_exist(id);
   }
@@ -899,9 +894,7 @@ static bool city_increase_size(struct city *pcity, struct player *nationality)
 
   /* Deprecated signal. Connect your lua functions to "city_size_change" that's
    * emitted from calling functions which know the 'reason' of the increase. */
-  script_server_signal_emit("city_growth", 2,
-                            API_TYPE_CITY, pcity,
-                            API_TYPE_INT, city_size_get(pcity));
+  script_server_signal_emit("city_growth", pcity, city_size_get(pcity));
   if (city_exist(saved_id)) {
     /* Script didn't destroy this city */
     sanity_check_city(pcity);
@@ -934,10 +927,8 @@ bool city_change_size(struct city *pcity, citizens size,
     if (real_change != 0 && reason != NULL) {
       int id = pcity->id;
 
-      script_server_signal_emit("city_size_change", 3,
-                                API_TYPE_CITY, pcity,
-                                API_TYPE_INT, real_change,
-                                API_TYPE_STRING, reason);
+      script_server_signal_emit("city_size_change", pcity, real_change,
+                                reason);
 
       if (!city_exist(id)) {
         return FALSE;
@@ -980,10 +971,7 @@ static void city_populate(struct city *pcity, struct player *nationality)
       map_claim_border(pcity->tile, pcity->owner, -1);
 
       if (success) {
-        script_server_signal_emit("city_size_change", 3,
-                                  API_TYPE_CITY, pcity,
-                                  API_TYPE_INT, 1,
-                                  API_TYPE_STRING, "growth");
+        script_server_signal_emit("city_size_change", pcity, 1, "growth");
       }
     }
   } else if (pcity->food_stock < 0) {
@@ -1088,10 +1076,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                           "it needs %s government. Postponing..."),
                         city_link(pcity), utype_name_translation(ptarget),
                         government_name_translation(ptarget->need_government));
-          script_server_signal_emit("unit_cant_be_built", 3,
-                                    API_TYPE_BUILDING_TYPE, ptarget,
-                                    API_TYPE_CITY, pcity,
-                                    API_TYPE_STRING, "need_government");
+          script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
+                                    "need_government");
         } else if (ptarget->need_improvement != NULL
                    && !city_has_building(pcity, ptarget->need_improvement)) {
           notify_player(pplayer, city_tile(pcity),
@@ -1101,10 +1087,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                         city_link(pcity), utype_name_translation(ptarget),
                         city_improvement_name_translation(pcity,
                                                   ptarget->need_improvement));
-          script_server_signal_emit("unit_cant_be_built", 3,
-                                    API_TYPE_UNIT_TYPE, ptarget,
-                                    API_TYPE_CITY, pcity,
-                                    API_TYPE_STRING, "need_building");
+          script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
+                                    "need_building");
         } else if (ptarget->require_advance != NULL
                    && TECH_KNOWN != research_invention_state
                           (research_get(pplayer),
@@ -1115,10 +1099,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                           "tech %s not yet available. Postponing..."),
                         city_link(pcity), utype_name_translation(ptarget),
                         advance_name_translation(ptarget->require_advance));
-          script_server_signal_emit("unit_cant_be_built", 3,
-                                    API_TYPE_UNIT_TYPE, ptarget,
-                                    API_TYPE_CITY, pcity,
-                                    API_TYPE_STRING, "need_tech");
+          script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
+                                    "need_tech");
         } else {
           /* This shouldn't happen, but in case it does... */
           notify_player(pplayer, city_tile(pcity),
@@ -1142,10 +1124,8 @@ static bool worklist_change_build_target(struct player *pplayer,
 			    in the worklist, not its obsolete-closure
 			    pupdate. */
 			 utype_name_translation(ptarget));
-        script_server_signal_emit("unit_cant_be_built", 3,
-                                  API_TYPE_UNIT_TYPE, ptarget,
-                                  API_TYPE_CITY, pcity,
-                                  API_TYPE_STRING, "never");
+        script_server_signal_emit("unit_cant_be_built", ptarget, pcity,
+                                  "never");
         if (city_exist(saved_id)) {
           city_checked = TRUE;
           /* Purge this worklist item. */
@@ -1195,10 +1175,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_improvement_name_translation(pcity, ptarget),
                               advance_name_translation
                                   (preq->source.value.advance));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_tech");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_tech");
               } else {
                 /* While techs can be unlearned, this isn't useful feedback */
                 success = FALSE;
@@ -1214,10 +1192,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               tech_flag_id_name(preq->source.value.techflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_techflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_techflag");
               } else {
                 /* While techs can be unlearned, this isn't useful feedback */
                 success = FALSE;
@@ -1233,10 +1209,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_improvement_name_translation(pcity, ptarget),
                               city_improvement_name_translation(pcity,
 						  preq->source.value.building));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_building");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_building");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1246,10 +1220,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_improvement_name_translation(pcity, ptarget),
                               city_improvement_name_translation(pcity,
 						  preq->source.value.building));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_building");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_building");
               }
 	      break;
 	    case VUT_GOVERNMENT:
@@ -1261,10 +1233,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               government_name_translation(preq->source.value.govern));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_government");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_government");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1273,10 +1243,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               government_name_translation(preq->source.value.govern));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_government");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_government");
               }
 	      break;
 	    case VUT_ACHIEVEMENT:
@@ -1288,10 +1256,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               achievement_name_translation(preq->source.value.achievement));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_achievement");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_achievement");
               } else {
                 /* Can't unachieve things. */
                 success = FALSE;
@@ -1306,10 +1272,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               extra_name_translation(preq->source.value.extra));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_extra");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_extra");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1318,10 +1282,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               extra_name_translation(preq->source.value.extra));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_extra");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_extra");
               }
 	      break;
 	    case VUT_TERRAIN:
@@ -1333,6 +1295,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_name_translation(preq->source.value.terrain));
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_terrain");
                 script_server_signal_emit("building_cant_be_built", 3,
                                           API_TYPE_BUILDING_TYPE, ptarget,
                                           API_TYPE_CITY, pcity,
@@ -1345,10 +1309,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_name_translation(preq->source.value.terrain));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_terrain");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_terrain");
               }
 	      break;
 	    case VUT_RESOURCE:
@@ -1360,10 +1322,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               resource_name_translation(preq->source.value.resource));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_resource");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_resource");
               } else {
                 /* FIXME: Yes, it's possible to destroy a resource, but the
                  * player probably wanted us to have purged, rather than
@@ -1375,6 +1335,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               resource_name_translation(preq->source.value.resource));
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_resource");
                 script_server_signal_emit("building_cant_be_built", 3,
                                           API_TYPE_BUILDING_TYPE, ptarget,
                                           API_TYPE_CITY, pcity,
@@ -1392,10 +1354,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_adjective_translation(preq->source.value.nation));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_nation");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_nation");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1404,10 +1364,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_adjective_translation(preq->source.value.nation));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_nation");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_nation");
               }
               break;
             case VUT_NATIONGROUP:
@@ -1422,10 +1380,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_group_name_translation(preq->source.value.nationgroup));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_nationgroup");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_nationgroup");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1434,10 +1390,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_group_name_translation(preq->source.value.nationgroup));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_nationgroup");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_nationgroup");
               }
               break;
             case VUT_STYLE:
@@ -1452,10 +1406,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               style_name_translation(preq->source.value.style));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_style");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_style");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1464,10 +1416,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               style_name_translation(preq->source.value.style));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_style");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_style");
               }
 	      break;
 	    case VUT_NATIONALITY:
@@ -1482,10 +1432,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_plural_translation(preq->source.value.nationality));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_nationality");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_nationality");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1495,10 +1443,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               nation_plural_translation(preq->source.value.nationality));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_nationality");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_nationality");
               }
               break;
             case VUT_DIPLREL:
@@ -1516,10 +1462,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                                                                 ptarget),
                               diplrel_name_translation(
                                 preq->source.value.diplrel));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_diplrel");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_diplrel");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1531,10 +1475,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                                                                 ptarget),
                               diplrel_name_translation(
                                 preq->source.value.diplrel));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_diplrel");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_diplrel");
               }
               break;
 	    case VUT_MINSIZE:
@@ -1547,10 +1489,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               preq->source.value.minsize);
-	        script_server_signal_emit("building_cant_be_built", 3,
-				   API_TYPE_BUILDING_TYPE, ptarget,
-				   API_TYPE_CITY, pcity,
-				   API_TYPE_STRING, "need_minsize");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_minsize");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1560,10 +1500,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               (preq->source.value.minsize - 1));
-	        script_server_signal_emit("building_cant_be_built", 3,
-				   API_TYPE_BUILDING_TYPE, ptarget,
-				   API_TYPE_CITY, pcity,
-				   API_TYPE_STRING, "need_minsize");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_minsize");
               }
 	      break;
 	    case VUT_MINCULTURE:
@@ -1575,10 +1513,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               preq->source.value.minculture);
-	        script_server_signal_emit("building_cant_be_built", 3,
-				   API_TYPE_BUILDING_TYPE, ptarget,
-				   API_TYPE_CITY, pcity,
-				   API_TYPE_STRING, "need_minculture");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_minculture");
               } else {
                 /* What has been written may not be unwritten. */
                 success = FALSE;
@@ -1599,10 +1535,8 @@ static bool worklist_change_build_target(struct player *pplayer,
 			      city_improvement_name_translation(pcity,
 								ptarget),
                               preq->source.value.max_tile_units);
-		script_server_signal_emit("building_cant_be_built", 3,
-					  API_TYPE_BUILDING_TYPE, ptarget,
-					  API_TYPE_CITY, pcity,
-					  API_TYPE_STRING, "need_tileunits");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_tileunits");
 	      } else {
 		notify_player(pplayer, city_tile(pcity),
 			      E_CITY_CANTBUILD, ftc_server,
@@ -1617,10 +1551,8 @@ static bool worklist_change_build_target(struct player *pplayer,
 			      city_improvement_name_translation(pcity,
 								ptarget),
                               preq->source.value.max_tile_units + 1);
-		script_server_signal_emit("building_cant_be_built", 3,
-					  API_TYPE_BUILDING_TYPE, ptarget,
-					  API_TYPE_CITY, pcity,
-					  API_TYPE_STRING, "need_tileunits");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_tileunits");
 	      }
               break;
             case VUT_AI_LEVEL:
@@ -1637,10 +1569,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_class_name_translation(preq->source.value.terrainclass));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_terrainclass");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_terrainclass");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1650,10 +1580,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_class_name_translation(preq->source.value.terrainclass));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_terrainclass");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_terrainclass");
               }
 	      break;
 	    case VUT_TERRFLAG:
@@ -1666,10 +1594,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_flag_id_name(preq->source.value.terrainflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_terrainflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_terrainflag");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1679,10 +1605,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               terrain_flag_id_name(preq->source.value.terrainflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_terrainflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_terrainflag");
               }
 	      break;
             case VUT_BASEFLAG:
@@ -1695,10 +1619,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               base_flag_id_name(preq->source.value.baseflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_baseflag");
+                script_server_signal_emit("building_cant_be_built",
+                                          ptarget, pcity, "need_baseflag");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1708,10 +1630,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               base_flag_id_name(preq->source.value.baseflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_baseflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_baseflag");
               }
               break;
             case VUT_ROADFLAG:
@@ -1724,10 +1644,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               road_flag_id_name(preq->source.value.roadflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_roadflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_roadflag");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1737,10 +1655,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               road_flag_id_name(preq->source.value.roadflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_roadflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_roadflag");
               }
 	      break;
             case VUT_EXTRAFLAG:
@@ -1753,10 +1669,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               extra_flag_id_translated_name(preq->source.value.extraflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_extraflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_extraflag");
               } else {
                 notify_player(pplayer, city_tile(pcity),
                               E_CITY_CANTBUILD, ftc_server,
@@ -1766,10 +1680,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               extra_flag_id_translated_name(preq->source.value.extraflag));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "have_extraflag");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "have_extraflag");
               }
 	      break;
 	    case VUT_UTYPE:
@@ -1797,10 +1709,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               textyear(preq->source.value.minyear));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_minyear");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_minyear");
               } else {
                 /* Can't go back in time. */
                 success = FALSE;
@@ -1817,10 +1727,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               _(topo_flag_name(preq->source.value.topo_property)));
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_topo");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_topo");
               }
               success = FALSE;
               break;
@@ -1833,10 +1741,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                               city_link(pcity),
                               city_improvement_name_translation(pcity, ptarget),
                               preq->source.value.age);
-                script_server_signal_emit("building_cant_be_built", 3,
-                                          API_TYPE_BUILDING_TYPE, ptarget,
-                                          API_TYPE_CITY, pcity,
-                                          API_TYPE_STRING, "need_age");
+                script_server_signal_emit("building_cant_be_built", ptarget,
+                                          pcity, "need_age");
               } else {
                 /* Can't go back in time. */
                 success = FALSE;
@@ -1892,10 +1798,8 @@ static bool worklist_change_build_target(struct player *pplayer,
                       _("%s can't build %s from the worklist. Purging..."),
                       city_link(pcity),
                       city_improvement_name_translation(pcity, ptarget));
-        script_server_signal_emit("building_cant_be_built", 3,
-                                  API_TYPE_BUILDING_TYPE, ptarget,
-                                  API_TYPE_CITY, pcity,
-                                  API_TYPE_STRING, "never");
+        script_server_signal_emit("building_cant_be_built", ptarget, pcity,
+                                  "never");
         if (city_exist(saved_id)) {
           city_checked = TRUE;
           /* Purge this worklist item. */
@@ -2150,10 +2054,8 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
                   _("%s is building %s, which is no longer available."),
                   city_link(pcity),
                   city_improvement_name_translation(pcity, pimprove));
-    script_server_signal_emit("building_cant_be_built", 3,
-                              API_TYPE_BUILDING_TYPE, pimprove,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_STRING, "unavailable");
+    script_server_signal_emit("building_cant_be_built", pimprove, pcity,
+                              "unavailable");
     return TRUE;
   }
   if (pcity->shield_stock >= impr_build_shield_cost(pimprove)) {
@@ -2195,9 +2097,7 @@ static bool city_build_building(struct player *pplayer, struct city *pcity)
     notify_player(pplayer, city_tile(pcity), E_IMP_BUILD, ftc_server,
                   _("%s has finished building %s."),
                   city_link(pcity), improvement_name_translation(pimprove));
-    script_server_signal_emit("building_built", 2,
-                              API_TYPE_BUILDING_TYPE, pimprove,
-                              API_TYPE_CITY, pcity);
+    script_server_signal_emit("building_built", pimprove, pcity);
 
     if (!city_exist(saved_id)) {
       /* Script removed city */
@@ -2335,11 +2235,9 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
     log_verbose("%s %s tried to build %s, which is not available.",
                 nation_rule_name(nation_of_city(pcity)),
                 city_name_get(pcity), utype_rule_name(utype));
-    script_server_signal_emit("unit_cant_be_built", 3,
-                              API_TYPE_UNIT_TYPE, utype,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_STRING, "unavailable");
-    return city_exist(saved_city_id);
+    script_server_signal_emit("unit_cant_be_built", utype, pcity,
+                              "unavailable");
+    return TRUE;
   }
 
   if (pcity->shield_stock >= unit_shield_cost) {
@@ -2359,11 +2257,9 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
                       "(city size: %d, unit population cost: %d)"),
                     city_link(pcity), utype_name_translation(utype),
                     city_size_get(pcity), pop_cost);
-      script_server_signal_emit("unit_cant_be_built", 3,
-                                API_TYPE_UNIT_TYPE, utype,
-                                API_TYPE_CITY, pcity,
-                                API_TYPE_STRING, "pop_cost");
-      return city_exist(saved_city_id);
+      script_server_signal_emit("unit_cant_be_built", utype, pcity,
+                                "pop_cost");
+      return TRUE;
     }
 
     fc_assert(pop_cost == 0 || city_size_get(pcity) >= pop_cost);
@@ -2420,6 +2316,13 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
                           pop_cost),
                       utype_name_translation(utype), pop_cost,
                       city_link(pcity), city_size_get(pcity));
+      }
+
+      script_server_signal_emit("unit_built", punit, pcity);
+
+      /* check if the city still exists */
+      if (!city_exist(saved_city_id)) {
+        break;
       }
 
       if (i != 0 && worklist_length(pwl) > 0) {
@@ -3157,10 +3060,8 @@ static bool disband_city(struct city *pcity)
                   _("%s can't build %s yet, "
                     "as we can't disband our only city."),
                   city_link(pcity), utype_name_translation(utype));
-    script_server_signal_emit("unit_cant_be_built", 3,
-                              API_TYPE_UNIT_TYPE, utype,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_STRING, "pop_cost");
+    script_server_signal_emit("unit_cant_be_built", utype, pcity,
+                              "pop_cost");
     if (!city_exist(saved_id)) {
       /* Script decided to remove even the last city */
       return TRUE;
@@ -3189,11 +3090,8 @@ static bool disband_city(struct city *pcity)
                     city_tile_link(pcity), utype_name_translation(utype));
     }
 
-    script_server_signal_emit("city_destroyed", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, pcity->owner,
-                              API_TYPE_PLAYER, NULL);
-
+    script_server_signal_emit("city_destroyed", pcity, pcity->owner, NULL);
+    
     remove_city(pcity);
 
     /* Since we've removed the city, we don't need to worry about
@@ -3468,16 +3366,12 @@ static bool do_city_migration(struct city *pcity_from,
                           -1, TRUE);
       sz_strlcpy(name_from, city_tile_link(pcity_from));
 
-      script_server_signal_emit("city_size_change", 3,
-                            API_TYPE_CITY, pcity_from,
-                            API_TYPE_INT, -1,
-                            API_TYPE_STRING, "migration_from");
+      script_server_signal_emit("city_size_change", pcity_from, -1,
+                                "migration_from");
 
       if (city_exist(id)) {
-        script_server_signal_emit("city_destroyed", 3,
-                                  API_TYPE_CITY, pcity_from,
-                                  API_TYPE_PLAYER, pcity_from->owner,
-                                  API_TYPE_PLAYER, NULL);
+        script_server_signal_emit("city_destroyed", pcity_from,
+                                  pcity_from->owner, NULL);
 
         if (city_exist(id)) {
           remove_city(pcity_from);
@@ -3548,10 +3442,8 @@ static bool do_city_migration(struct city *pcity_from,
         auto_arrange_workers(pcity_to);
       }
       if (incr_success) {
-        script_server_signal_emit("city_size_change", 3,
-                                  API_TYPE_CITY, pcity_to,
-                                  API_TYPE_INT, 1,
-                                  API_TYPE_STRING, "migration_to");
+        script_server_signal_emit("city_size_change", pcity_to, 1,
+                                  "migration_to");
       }
     }
   }
@@ -3718,13 +3610,9 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
     }
   }
 
-  script_server_signal_emit("disaster_occurred", 3,
-                            API_TYPE_DISASTER, pdis,
-                            API_TYPE_CITY, pcity,
-                            API_TYPE_BOOL, had_internal_effect);
-  script_server_signal_emit("disaster", 2,
-                            API_TYPE_DISASTER, pdis,
-                            API_TYPE_CITY, pcity);
+  script_server_signal_emit("disaster_occurred", pdis, pcity,
+                            had_internal_effect);
+  script_server_signal_emit("disaster", pdis, pcity);
 }
 
 /**************************************************************************

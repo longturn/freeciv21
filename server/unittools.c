@@ -1653,10 +1653,8 @@ static void server_remove_unit_full(struct unit *punit, bool transported,
     player_status_add(unit_owner(punit), PSTATUS_DYING);
   }
 
-  script_server_signal_emit("unit_lost", 3,
-                            API_TYPE_UNIT, punit,
-                            API_TYPE_PLAYER, unit_owner(punit),
-                            API_TYPE_STRING, unit_loss_reason_name(reason));
+  script_server_signal_emit("unit_lost", punit, unit_owner(punit),
+                            unit_loss_reason_name(reason));
 
   script_server_remove_exported_object(punit);
   game_remove_unit(punit);
@@ -2889,8 +2887,7 @@ static bool unit_enter_hut(struct unit *punit)
         /* AI with H_LIMITEDHUTS only gets 25 gold (or barbs if unlucky) */
         (void) hut_get_limited(punit);
       } else {
-        script_server_signal_emit("hut_enter", 1,
-                                  API_TYPE_UNIT, punit);
+        script_server_signal_emit("hut_enter", punit);
       }
 
       /* We need punit for the callbacks, can't continue if the unit died */
@@ -3863,10 +3860,7 @@ bool unit_move(struct unit *punit, struct tile *pdesttile, int move_cost,
 
   if (unit_lives) {
     /* Let the scripts run ... */
-    script_server_signal_emit("unit_moved", 3,
-                              API_TYPE_UNIT, punit,
-                              API_TYPE_TILE, psrctile,
-                              API_TYPE_TILE, pdesttile);
+    script_server_signal_emit("unit_moved", punit, psrctile, pdesttile);
     unit_lives = unit_is_alive(saved_id);
   }
 

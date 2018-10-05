@@ -1594,8 +1594,7 @@ void create_city(struct player *pplayer, struct tile *ptile,
 
   sanity_check_city(pcity);
 
-  script_server_signal_emit("city_built", 1,
-                            API_TYPE_CITY, pcity);
+  script_server_signal_emit("city_built", pcity);
 
   CALL_PLR_AI_FUNC(city_got, pplayer, pplayer, pcity);
 }
@@ -1888,10 +1887,7 @@ void unit_enter_city(struct unit *punit, struct city *pcity, bool passenger)
     notify_player(cplayer, city_tile(pcity), E_CITY_LOST, ftc_server,
                   _("%s has been destroyed by %s."), 
                   city_tile_link(pcity), player_name(pplayer));
-    script_server_signal_emit("city_destroyed", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, cplayer,
-                              API_TYPE_PLAYER, pplayer);
+    script_server_signal_emit("city_destroyed", pcity, cplayer, pplayer);
 
     /* We cant't be sure of city existence after running some script */
     if (city_exist(saved_id)) {
@@ -1986,15 +1982,9 @@ void unit_enter_city(struct unit *punit, struct city *pcity, bool passenger)
   }
 
   if (city_remains) {
-    script_server_signal_emit("city_transferred", 4,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, cplayer,
-                              API_TYPE_PLAYER, pplayer,
-                              API_TYPE_STRING, "conquest");
-    script_server_signal_emit("city_lost", 3,
-                              API_TYPE_CITY, pcity,
-                              API_TYPE_PLAYER, cplayer,
-                              API_TYPE_PLAYER, pplayer);
+    script_server_signal_emit("city_transferred", pcity, cplayer, pplayer,
+                              "conquest");
+    script_server_signal_emit("city_lost", pcity, cplayer, pplayer);
   }
 }
 

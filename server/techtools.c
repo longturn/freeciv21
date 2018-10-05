@@ -86,19 +86,14 @@ void script_tech_learned(struct research *presearch,
    * tech first */
   if (originating_plr) {
     fc_assert(research_get(originating_plr) == presearch);
-    script_server_signal_emit("tech_researched", 3,
-                              API_TYPE_TECH_TYPE, tech,
-                              API_TYPE_PLAYER, originating_plr,
-                              API_TYPE_STRING, reason);
+    script_server_signal_emit("tech_researched", tech, originating_plr,
+                              reason);
   }
 
   /* Emit signal to remaining research teammates, if any */
   research_players_iterate(presearch, member) {
     if (member != originating_plr) {
-      script_server_signal_emit("tech_researched", 3,
-                                API_TYPE_TECH_TYPE, tech,
-                                API_TYPE_PLAYER, member,
-                                API_TYPE_STRING, reason);
+      script_server_signal_emit("tech_researched", tech, member, reason);
     }
   } research_players_iterate_end;
 }
@@ -221,10 +216,8 @@ void do_tech_parasite_effect(struct player *pplayer)
   found_new_tech(plr_research, tech, FALSE, TRUE);
 
   research_players_iterate(plr_research, member) {
-    script_server_signal_emit("tech_researched", 3,
-                              API_TYPE_TECH_TYPE, advance_by_number(tech),
-                              API_TYPE_PLAYER, member,
-                              API_TYPE_STRING, "stolen");
+    script_server_signal_emit("tech_researched", advance_by_number(tech),
+                              member, "stolen");
   } research_players_iterate_end;
 }
 

@@ -1320,10 +1320,8 @@ void handle_unit_do_action(struct player *pplayer,
   }
 
 #define ACTION_STARTED_UNIT_CITY(action, actor, target)                   \
-  script_server_signal_emit("action_started_unit_city", 3,                \
-                            API_TYPE_ACTION, action_by_number(action),    \
-                            API_TYPE_UNIT, actor,                         \
-                            API_TYPE_CITY, target);                       \
+  script_server_signal_emit("action_started_unit_city",                   \
+                            action_by_number(action), actor, target);     \
   if (!actor || !unit_is_alive(actor_id)) {                               \
     /* Actor unit was destroyed during pre action Lua. */                 \
     return;                                                         \
@@ -1334,10 +1332,8 @@ void handle_unit_do_action(struct player *pplayer,
   }
 
 #define ACTION_STARTED_UNIT_UNIT(action, actor, target)                   \
-  script_server_signal_emit("action_started_unit_unit", 3,                \
-                            API_TYPE_ACTION, action_by_number(action),    \
-                            API_TYPE_UNIT, actor,                         \
-                            API_TYPE_UNIT, target);                       \
+  script_server_signal_emit("action_started_unit_unit",                   \
+                            action_by_number(action), actor, target);     \
   if (!actor || !unit_is_alive(actor_id)) {                               \
     /* Actor unit was destroyed during pre action Lua. */                 \
     return;                                                         \
@@ -1868,10 +1864,7 @@ static void city_add_unit(struct player *pplayer, struct unit *punit)
 
   send_city_info(NULL, pcity);
 
-  script_server_signal_emit("city_size_change", 3,
-                            API_TYPE_CITY, pcity,
-                            API_TYPE_INT, amount,
-                            API_TYPE_STRING, "unit_added");
+  script_server_signal_emit("city_size_change", pcity, amount, "unit_added");
 }
 
 /**************************************************************************
