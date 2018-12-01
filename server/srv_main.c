@@ -1222,6 +1222,10 @@ static void begin_phase(bool is_new_phase)
 
   game.tinfo.last_turn_change_time = (float)game.server.turn_change_time;
   game.tinfo.seconds_to_phasedone = (double)current_turn_timeout();
+  if (game.server.timeoutmask) {
+    game.server.phase_mask = fc_rand(2 * game.server.timeoutmask + 2)
+                             - game.server.timeoutmask;
+  }
   game.server.phase_timer = timer_renew(game.server.phase_timer,
                                         TIMER_USER, TIMER_ACTIVE);
   timer_start(game.server.phase_timer);

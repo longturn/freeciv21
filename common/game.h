@@ -198,8 +198,13 @@ struct civ_game {
       int timeoutintinc;  /* ... and increase timeoutint by this amount */
       int timeoutcounter; /* timeoutcounter - timeoutint = turns to next inc. */
       int timeoutaddenemymove; /* minimum timeout after an enemy move is seen */
+      int timeoutmask;    /* mask actual timeout by adding random number. */
 
       time_t last_ping;
+
+      /* Hide real phase time from clients by adding offset. */
+      int phase_mask;
+
       struct timer *phase_timer; /* Time since seconds_to_phase_done was set. */
       /* The game.info.phase_mode value indicates the phase mode currently in
        * use. The "stored" value is a value the player can change; it won't
@@ -522,6 +527,10 @@ extern struct civ_game game;
 #define GAME_DEFAULT_TIMEOUTINCMULT  1
 #define GAME_DEFAULT_TIMEOUTADDEMOVE 0
 #define GAME_DEFAULT_TIMEOUTCOUNTER  1
+
+#define GAME_DEFAULT_TIMEOUT_MASK    0
+#define GAME_MIN_TIMEOUT_MASK        0
+#define GAME_MAX_TIMEOUT_MASK        3600
 
 #define GAME_DEFAULT_MAXCONNECTIONSPERHOST 4
 #define GAME_MIN_MAXCONNECTIONSPERHOST     0

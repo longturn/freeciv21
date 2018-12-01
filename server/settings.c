@@ -2538,6 +2538,17 @@ static struct setting settings[] = {
           NULL, NULL, NULL,
           0, GAME_MAX_TIMEOUT, GAME_DEFAULT_TIMEOUTADDEMOVE)
 
+  GEN_INT("timeout_mask", game.server.timeoutmask,
+          SSET_META, SSET_INTERNAL, SSET_VITAL, SSET_TO_CLIENT,
+          N_("Mask actual timeout for each turn by random offeset"),
+          N_("The actual timeout each turn will be have a random number "
+             "in the range of this setting added or subtrated to it. "
+             "Time remaining will be reported to clients without this "
+             "offset."),
+          NULL, NULL, NULL,
+          GAME_MIN_TIMEOUT_MASK, GAME_MAX_TIMEOUT_MASK,
+          GAME_DEFAULT_TIMEOUT_MASK)
+
   GEN_INT("unitwaittime", game.server.unitwaittime,
           SSET_RULES_FLEXIBLE, SSET_INTERNAL, SSET_VITAL, SSET_TO_CLIENT,
           N_("Minimum time between unit actions over turn change"),
