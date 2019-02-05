@@ -191,6 +191,7 @@ struct civ_game {
       int techpenalty;
       bool turnblock;
       int unitwaittime;   /* minimal time between two movements of a unit */
+      unsigned unitwaittime_style;
       int upgrade_veteran_loss;
       bool vision_reveal_tiles;
 
@@ -574,6 +575,8 @@ extern struct civ_game game;
 #define GAME_MIN_UNITWAITTIME        0
 #define GAME_MAX_UNITWAITTIME        GAME_MAX_TIMEOUT
 #define GAME_DEFAULT_UNITWAITTIME    0
+
+#define GAME_DEFAULT_UNITWAITTIME_STYLE UWT_CLASSICAL
 
 #define GAME_DEFAULT_PHASE_MODE 0
 

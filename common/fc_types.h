@@ -536,6 +536,16 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_VALUE1 REVEAL_MAP_DEAD
 #include "specenum_gen.h"
 
+#define SPECENUM_NAME unitwaittime_style
+#define SPECENUM_BITWISE
+/* Unit wait time only prevents moving. */
+#define SPECENUM_ZERO   UWT_CLASSICAL
+#define SPECENUM_ZERONAME "Classical"
+/* Wait time applies to activities such as building roads and fortresses. */
+#define SPECENUM_VALUE0 UWT_ACTIVITIES
+#define SPECENUM_VALUE0NAME "Activities"
+#include "specenum_gen.h"
+
 /* Used in the network protocol. */
 #define SPECENUM_NAME gameloss_style
 #define SPECENUM_BITWISE

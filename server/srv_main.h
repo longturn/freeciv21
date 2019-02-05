@@ -82,6 +82,8 @@ extern struct civserver {
   unsigned short identity_number;
 
   char game_identifier[MAX_LEN_GAME_IDENTIFIER];
+
+  struct unit_wait_list *unit_waits;
 } server;
 
 

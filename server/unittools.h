@@ -93,6 +93,7 @@ void execute_unit_orders(struct player *pplayer);
 void finalize_unit_phase_beginning(struct player *pplayer);
 
 /* various */
+void finish_unit_wait(struct unit *punit, int activity_count);
 void place_partisans(struct tile *pcenter, struct player *powner,
                      int count, int sq_radius);
 bool teleport_unit_to_city(struct unit *punit, struct city *pcity, int move_cost,

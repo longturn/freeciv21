@@ -558,6 +558,18 @@ compresstype_name(enum fz_method compresstype)
 }
 
 /****************************************************************************
+  Unitwaittime style names accessor.
+****************************************************************************/
+static const struct sset_val_name *unitwaittime_name(int bit)
+{
+  switch (1 << bit) {
+  NAME_CASE(UWT_ACTIVITIES, "ACTIVITIES",
+            N_("Wait time applies to activity completion at turn change"));
+  }
+  return NULL;
+}
+
+/****************************************************************************
   Names accessor for boolean settings (disable/enable).
 ****************************************************************************/
 static const struct sset_val_name *bool_name(int enable)
@@ -2654,6 +2666,23 @@ static struct setting settings[] = {
              "limited to a maximum value of 2/3 'timeout'."),
           NULL, unitwaittime_callback, NULL, GAME_MIN_UNITWAITTIME,
           GAME_MAX_UNITWAITTIME, GAME_DEFAULT_UNITWAITTIME)
+
+  GEN_BITWISE("unitwaittime_style", game.server.unitwaittime_style,
+              SSET_RULES_FLEXIBLE, SSET_INTERNAL, SSET_VITAL,
+              SSET_TO_CLIENT,
+              N_("Unitwaittime style"),
+              /* TRANS: The strings between double quotes are also translated
+               * separately (they must match!). The strings between single
+               * quotes are setting names and shouldn't be translated. The
+               * strings between parentheses and in uppercase must stay as
+               * untranslated. */
+              N_("This setting affects unitwaittime:\n"
+                 "- \"Activities\" (ACTIVITIES): Units moved less than "
+                 "'unitwaittime' seconds from turn change will not complete "
+                 "activities such as pillaging and building roads during "
+                 "turn change, but during the next turn when their wait "
+                 "expires."),
+              NULL, NULL, unitwaittime_name, GAME_DEFAULT_UNITWAITTIME_STYLE)
 
   /* This setting points to the "stored" value; changing it won't have
    * an effect until the next synchronization point (i.e., the start of

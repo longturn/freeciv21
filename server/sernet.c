@@ -87,6 +87,7 @@
 #include "plrhand.h"
 #include "srv_main.h"
 #include "stdinhand.h"
+#include "unittools.h"
 #include "voting.h"
 
 #include "sernet.h"
@@ -126,6 +127,7 @@ static int server_accept_connection(int sockfd);
 static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
+static void finish_unit_waits(void);
 static void connection_ping(struct connection *pconn);
 static void send_ping_times_to_all(void);
 
@@ -693,6 +695,8 @@ enum server_events server_sniff_all_input(void)
       }
     }
     con_prompt_off();		/* output doesn't generate a new prompt */
+
+    finish_unit_waits();
 
     if (fc_select(max_desc + 1, &readfs, &writefs, &exceptfs, &tv) == 0) {
       /* timeout */
@@ -1371,6 +1375,30 @@ static void finish_processing_request(struct connection *pconn)
   send_packet_processing_finished(pconn);
   pconn->server.currently_processed_request_id = 0;
   conn_compression_thaw(pconn);
+}
+
+/****************************************************************************
+  Process all unit waits that are expired.
+*****************************************************************************/
+static void finish_unit_waits(void)
+{
+  time_t now = time(NULL);
+  struct unit *punit;
+  struct unit_wait *head;
+
+  while((head = unit_wait_list_front(server.unit_waits))
+        && head->wake_up < now) {
+
+    punit = game_unit_by_number(head->id);
+    if (!punit) {
+      /* Unit doesn't exist anymore. */
+      continue;
+    }
+    if (head->activity == punit->activity) {
+      finish_unit_wait(punit, head->activity_count);
+    }
+    unit_wait_list_pop_front(server.unit_waits);
+  }
 }
 
 /****************************************************************************
