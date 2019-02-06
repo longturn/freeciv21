@@ -2349,6 +2349,14 @@ static struct setting settings[] = {
               "arrival of a spaceship at Alpha Centauri."),
            NULL, NULL, GAME_DEFAULT_END_SPACESHIP)
 
+  GEN_INT("spaceship_travel_time", game.server.spaceship_travel_time,
+           SSET_RULES_FLEXIBLE, SSET_SCIENCE, SSET_VITAL, SSET_TO_CLIENT,
+           N_("Percentage to multiply spaceship travel time by"),
+           N_("This percentage is multiplied onto the time it will take for "
+              "a spaceship to arrive at Alpha Centauri."), NULL, NULL, NULL,
+          GAME_MIN_SPACESHIP_TRAVEL_TIME, GAME_MAX_SPACESHIP_TRAVEL_TIME,
+          GAME_DEFAULT_SPACESHIP_TRAVEL_TIME)
+
   GEN_INT("civilwarsize", game.server.civilwarsize,
           SSET_RULES_FLEXIBLE, SSET_SOCIOLOGY, SSET_RARE, SSET_TO_CLIENT,
           N_("Minimum number of cities for civil war"),
