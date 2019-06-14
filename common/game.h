@@ -137,6 +137,7 @@ struct civ_game {
       int diplchance_steal;
       int diplbulbcost;
       int diplgoldcost;
+      int incite_gold_recovered;
       int dispersion;
       int end_turn;
       bool endspaceship;
@@ -389,6 +390,10 @@ extern struct civ_game game;
 #define GAME_DEFAULT_DIPLGOLDCOST    0
 #define GAME_MIN_DIPLGOLDCOST        0
 #define GAME_MAX_DIPLGOLDCOST        100
+
+#define GAME_DEFAULT_INCITE_GOLD_RECOVERED -1
+#define GAME_MIN_INCITE_GOLD_RECOVERED     -1
+#define GAME_MAX_INCITE_GOLD_RECOVERED     100
 
 #define GAME_DEFAULT_FOGOFWAR        TRUE
 

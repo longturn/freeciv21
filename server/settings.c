@@ -1863,6 +1863,18 @@ static struct setting settings[] = {
           NULL, NULL, NULL,
           GAME_MIN_DIPLGOLDCOST, GAME_MAX_DIPLGOLDCOST, GAME_DEFAULT_DIPLGOLDCOST)
 
+  GEN_INT("incite_gold_recovered", game.server.incite_gold_recovered,
+          SSET_RULES, SSET_SCIENCE, SSET_RARE, SSET_TO_CLIENT,
+          N_("Percentage of gold recovered by target of failed incite"),
+          N_("If set between 0 and 100 inclusive, a player attempting to "
+             "incite a city loses the revolt cost after inciting unit "
+             "infiltrates the city regardless of success. The defending "
+             "player will recover this percentage of the revolt cost. "
+             "If set to -1, players lose no gold when incite fails."),
+          NULL, NULL, NULL,
+          GAME_MIN_INCITE_GOLD_RECOVERED, GAME_MAX_INCITE_GOLD_RECOVERED,
+          GAME_DEFAULT_INCITE_GOLD_RECOVERED)
+
   GEN_INT("conquercost", game.server.conquercost,
           SSET_RULES, SSET_SCIENCE, SSET_RARE, SSET_TO_CLIENT,
           N_("Penalty when getting tech from conquering"),

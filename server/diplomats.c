@@ -783,6 +783,17 @@ void diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
                   nation_adjective_for_player(pplayer),
                   unit_tile_link(pdiplomat),
                   clink);
+
+    if (game.server.incite_gold_recovered != -1) {
+      pplayer->economic.gold -= revolt_cost;
+      cplayer->economic.gold += revolt_cost
+                                * game.server.incite_gold_recovered / 100;
+    }
+
+    /* This may cause a diplomatic incident */
+    action_consequence_caught(ACTION_SPY_INCITE_CITY,
+                              pplayer, cplayer, ctile, clink);
+
     wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
     return;
   }

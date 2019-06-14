@@ -380,6 +380,7 @@ static void game_defaults(void)
     game.server.diplchance_steal  = GAME_DEFAULT_DIPLCHANCE_STEAL;
     game.server.diplbulbcost      = GAME_DEFAULT_DIPLBULBCOST;
     game.server.diplgoldcost      = GAME_DEFAULT_DIPLGOLDCOST;
+    game.server.incite_gold_recovered = GAME_DEFAULT_INCITE_GOLD_RECOVERED;
     game.server.dispersion        = GAME_DEFAULT_DISPERSION;
     game.server.endspaceship      = GAME_DEFAULT_END_SPACESHIP;
     game.server.end_turn          = GAME_DEFAULT_END_TURN;
