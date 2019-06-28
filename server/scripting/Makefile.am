@@ -24,6 +24,8 @@ dist_libscripting_server_la_SOURCES = \
 	api_server_game_methods.h	\
 	api_server_notify.c	\
 	api_server_notify.h	\
+	pbkdf2_sha256.c		\
+	pbkdf2_sha256.h		\
 	script_server.c		\
 	script_server.h		\
 	tolua_server_gen.c	\

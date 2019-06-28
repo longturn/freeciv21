@@ -56,6 +56,7 @@
 /* server/scripting */
 #ifdef HAVE_FCDB
 #include "tolua_fcdb_gen.h"
+#include "pbkdf2_sha256.h"
 #endif /* HAVE_FCDB */
 
 #include "script_fcdb.h"
@@ -197,6 +198,39 @@ static int md5sum(lua_State *L)
   lua_pushstring(L, sum);
   return 1;
 }
+
+/*************************************************************************//**
+  PBKDF2 SHA256 function for lua environment.
+*****************************************************************************/
+static int pbkdf2_sha256(lua_State *L)
+{
+   int n = lua_gettop(L);
+   int dk_len, c;
+   unsigned char *password, *salt;
+   size_t password_length, salt_length;
+   char *buf;
+
+   if (n != 4
+      || lua_type(L, 1) != LUA_TSTRING
+      || lua_type(L, 2) != LUA_TSTRING
+      || !lua_isinteger(L, 3)
+      || !lua_isinteger(L, 4)) {
+     lua_pushliteral(L, "invalid argument");
+     lua_error(L);
+   }
+
+  password = (unsigned char*)lua_tolstring(L, 1,&password_length);
+  salt = (unsigned char*)lua_tolstring(L, 2, &salt_length);
+  c = lua_tointeger(L, 3);
+  dk_len = lua_tointeger(L, 4);
+
+  buf = fc_malloc(dk_len/8);
+
+  PBKDF2_SHA256(password, password_length, salt, salt_length, c, (unsigned char*)buf, dk_len);
+
+  lua_pushlstring(L, buf, dk_len/8);
+  return 1;
+}
 #endif /* HAVE_FCDB */
 
 /*****************************************************************************
@@ -226,6 +260,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
   tolua_common_a_open(fcl->state);
   tolua_fcdb_open(fcl->state);
   lua_register(fcl->state, "md5sum", md5sum);
+  lua_register(fcl->state, "pbkdf2_sha256", pbkdf2_sha256);
 #ifdef HAVE_FCDB_MYSQL
   luaL_requiref(fcl->state, "ls_mysql", luaopen_luasql_mysql, 1);
   lua_pop(fcl->state, 1);
