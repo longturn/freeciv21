@@ -155,6 +155,8 @@ static char setting_status(struct connection *caller,
 static bool player_name_check(const char* name, char *buf, size_t buflen);
 static bool playercolor_command(struct connection *caller,
                                 char *str, bool check);
+static bool syncturn_command(struct connection *caller,
+                                char *str, bool check);
 static bool autocreate_command(struct connection *caller,
                                 char *str, bool check);
 static bool mapimg_command(struct connection *caller, char *arg, bool check);
@@ -4098,6 +4100,55 @@ static bool playercolor_command(struct connection *caller,
   return ret;
 }
 /****************************************************************************
+  /syncturn command handler.
+****************************************************************************/
+static bool syncturn_command(struct connection *caller, char *arg, bool check)
+{
+  int newtimeout;
+  int now;
+  float min = 0.8;
+
+  if (check) {
+    return TRUE;
+  }
+
+  if (game.info.timeout == 0) {
+    cmd_reply(CMD_SYNCTURN, caller, C_FAIL, _("There is no timeout, cannot sync"));
+    return FALSE;
+  }
+
+  if (strlen(arg) > 0) {
+    sscanf(arg, "%f", &min);
+    if (min < 0.01 || min > 10) {
+      cmd_reply(CMD_SYNCTURN, caller, C_FAIL, _("The value \"%f\" doesn't make much sense"), min);
+      return FALSE;
+    }
+  }
+
+  now = time(NULL) + (srvarg.port % 10) * (2 * 60 * 60);
+  now %= game.info.timeout;
+  newtimeout = game.info.timeout - now;
+
+  cmd_reply(CMD_SYNCTURN, caller, C_OK, _("Old timeout: %02d:%02d:%02d"),
+    (int)game.tinfo.seconds_to_phasedone/60/60,
+    (int)game.tinfo.seconds_to_phasedone/60 % 60,
+    (int)game.tinfo.seconds_to_phasedone % 60);
+  cmd_reply(CMD_SYNCTURN, caller, C_OK, _("New timeout: %02d:%02d:%02d"),
+    newtimeout/60/60, newtimeout/60 % 60, newtimeout % 60);
+  while (newtimeout < min * game.info.timeout) {
+    newtimeout += game.info.timeout;
+    cmd_reply(CMD_SYNCTURN, caller, C_OK, _("Adding timeout"));
+  }
+  game.tinfo.seconds_to_phasedone = newtimeout;
+
+  cmd_reply(CMD_SYNCTURN, caller, C_OK, _("New turn in %02d hours, %02d minutes"),
+            (int)game.tinfo.seconds_to_phasedone/60/60,
+            (int)game.tinfo.seconds_to_phasedone/60 % 60);
+
+  return TRUE;
+}
+
+/****************************************************************************
   /autocreate command handler.
 ****************************************************************************/
 #include <errno.h>
@@ -4489,6 +4540,8 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
     return unignore_command(caller, arg, check);
   case CMD_PLAYERCOLOR:
     return playercolor_command(caller, arg, check);
+  case CMD_SYNCTURN:
+    return syncturn_command(caller, arg, check);
   case CMD_AUTOCREATE:
     return autocreate_command(caller, arg, check);
   case CMD_NUM:

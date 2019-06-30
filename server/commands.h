@@ -77,6 +77,7 @@ enum command_id {
   CMD_IGNORE,
   CMD_UNIGNORE,
   CMD_PLAYERCOLOR,
+  CMD_SYNCTURN,
   CMD_AUTOCREATE,
 
   /* potentially harmful: */
