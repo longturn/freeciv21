@@ -516,6 +516,13 @@ static struct command commands[] = {
       "To list the player colors, use 'list colors'."), NULL,
    CMD_ECHO_NONE, VCF_NONE, 0
   },
+  {"autocreate", ALLOW_ADMIN,
+   /* TRANS: translate text between <> */
+   N_("autocreate <player-file>"),
+   N_("Create players and teams from a file."),
+   N_("See the source code for more information."), NULL,
+   CMD_ECHO_ALL, VCF_NONE, 0
+  },
   {"endgame",	ALLOW_ADMIN,
    /* no translatable parameters */
    SYN_ORIG_("endgame"),

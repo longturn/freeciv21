@@ -155,6 +155,8 @@ static char setting_status(struct connection *caller,
 static bool player_name_check(const char* name, char *buf, size_t buflen);
 static bool playercolor_command(struct connection *caller,
                                 char *str, bool check);
+static bool autocreate_command(struct connection *caller,
+                                char *str, bool check);
 static bool mapimg_command(struct connection *caller, char *arg, bool check);
 static const char *mapimg_accessor(int i);
 
@@ -4095,6 +4097,84 @@ static bool playercolor_command(struct connection *caller,
 
   return ret;
 }
+/****************************************************************************
+  /autocreate command handler.
+****************************************************************************/
+#include <errno.h>
+static bool autocreate_command(struct connection *caller, char *arg, bool check)
+{
+  char buf[128];
+  char line[1024];
+  char conf_player[1024];
+  char conf_team[1024];
+  char conf_nation[1024];
+  struct player *pplayer;
+  int i, j;
+  FILE *plrfile;
+
+
+  if ((plrfile = fopen(arg, "r")) == NULL) {
+    cmd_reply(CMD_AUTOCREATE, caller, C_FAIL, "can't open %s, %s", arg, strerror(errno));
+    return FALSE;
+  }
+
+  while (fgets(line, 1024, plrfile) > 0) {
+    for (i = 0, j = 0; line[i] != ':'; i++, j++) {
+      conf_player[j] = line[i];
+    }
+    conf_player[j] = '\0';
+
+    for (i++, j = 0; line[i] != ':'; i++, j++) {
+      conf_team[j] = line[i];
+    }
+    conf_team[j] = '\0';
+
+    for (i++, j = 0; line[i] != ':' && line[i] != '\n'; i++, j++) {
+      conf_nation[j] = line[i];
+    }
+    conf_nation[j] = '\0';
+
+    printf("adding player: %-20s of team: %-20s with nation: %-20s\n", conf_player, conf_team, conf_nation);
+    pplayer = server_create_player(-1, default_ai_type_name(), NULL, FALSE);
+
+    if (pplayer == NULL) {
+      /* No player created. */
+      cmd_reply(CMD_AUTOCREATE, caller, C_FAIL, "server_create_player() failed: %s, game in inconsistent state, restart", buf);
+      return FALSE;
+    }
+
+    team_remove_player(pplayer);
+    server_player_init(pplayer, FALSE, TRUE);
+    sz_strlcpy(pplayer->name, conf_player);
+    sz_strlcpy(pplayer->username, conf_player);
+    pplayer->was_created = TRUE; /* must use /remove explicitly to remove */
+    pplayer->ai_controlled = FALSE;
+    pplayer->ai = ai_type_by_name("default");
+
+    if (strlen(buf) > 0) {
+      /* Send a notification. */
+      notify_conn(NULL, NULL, E_SETTING, ftc_server, "%s", buf);
+    }
+    sz_strlcpy(pplayer->username, conf_player);
+    sz_strlcpy(pplayer->ranked_username, conf_player);
+    if (conf_nation[0] != '\0') {
+      struct nation_type *pnation;
+
+      pnation = nation_by_rule_name(conf_nation);
+      if (pnation == NO_NATION_SELECTED) {
+        cmd_reply(CMD_AUTOCREATE, caller, C_FAIL, "Warning: Unknown nation %s", conf_nation);
+      }
+      player_set_nation(pplayer, pnation);
+    }
+    if (conf_team[0] != '\0') {
+      char dupa[1024];
+      sprintf(dupa, "\"%s\" \"%s\"", conf_player, conf_team);
+      team_command(caller, dupa, check);
+    }
+  }
+
+  return TRUE;
+}
 
 /**************************************************************************
   Handle quit command
@@ -4409,6 +4489,8 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
     return unignore_command(caller, arg, check);
   case CMD_PLAYERCOLOR:
     return playercolor_command(caller, arg, check);
+  case CMD_AUTOCREATE:
+    return autocreate_command(caller, arg, check);
   case CMD_NUM:
   case CMD_UNRECOGNIZED:
   case CMD_AMBIGUOUS:
