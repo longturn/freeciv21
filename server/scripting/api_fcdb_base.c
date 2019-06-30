@@ -18,6 +18,9 @@
 /* common/scriptcore */
 #include "luascript.h"
 
+/* server */
+#include "srv_main.h"
+
 /* server/scripting */
 #include "script_fcdb.h"
 
@@ -32,4 +35,14 @@ const char *api_fcdb_option(lua_State *L, const char *type)
   LUASCRIPT_CHECK_ARG_NIL(L, type, 2, string, NULL);
 
   return fcdb_option_get(type);
+}
+
+/*****************************************************************************
+  Return the serverid.
+*****************************************************************************/
+const char *api_fcdb_serverid(lua_State *L)
+{
+  LUASCRIPT_CHECK_STATE(L, NULL);
+
+  return srvarg.serverid;
 }

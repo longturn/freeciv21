@@ -42,6 +42,8 @@ module auth {
 module fcdb {
   const char *api_fcdb_option
     @ option(lua_State *L, const char *name);
+  const char *api_fcdb_serverid
+    @ serverid(lua_State *L);
 }
 
 $[
