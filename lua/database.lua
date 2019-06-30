@@ -182,3 +182,38 @@ function database_free()
     dbh:close()
   end
 end
+
+function user_take(conn, player, observer)
+  if not dbh then
+    error("Missing database connection...")
+  end
+
+  local who = player.name
+  local taker = auth.get_username(conn)
+
+  if who == taker then
+    return true
+  end
+
+  local query = string.format([[
+      SELECT delegation FROM auth_user u, game_joined j, player_player p
+      WHERE u.id = j.user_id AND p.id = j.user_id
+      AND LOWER(u.username) = '%s' AND game_id = '%s']], dbh:escape(who),
+      dbh:escape(fcdb.serverid()))
+  local res = assert(dbh:execute(query))
+
+  local row = res:fetch({}, 'a')
+  if not row then
+    -- No match
+    res:close()
+    return false
+  end
+
+  res:close()
+
+  if row.delegation == taker then
+    return true
+  end
+
+  return false
+end
