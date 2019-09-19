@@ -18,6 +18,9 @@ AC_DEFUN([FC_QT5_GENERIC],
 [
   AC_LANG_PUSH([C++])
 
+  AC_ARG_WITH([qt5],
+    AS_HELP_STRING([--with-qt5], [path to Qt5 installation]))
+
   AC_MSG_CHECKING([Qt5 headers])
 
   AC_ARG_WITH([qt5-includes],
@@ -30,7 +33,12 @@ AC_DEFUN([FC_QT5_GENERIC],
   AS_IF(test "x$MULTIARCH_TUPLE" != "x",
     POTENTIAL_PATHS="$POTENTIAL_PATHS /usr/include/$MULTIARCH_TUPLE/qt5")
 
-  dnl First test without any additional include paths to see if it works already
+  dnl First test if Qt5 installation prefix works
+  if test "x$with_qt5" != "xno" ; then
+    FC_QT5_COMPILETEST([$with_qt5/include])
+  fi
+
+  dnl Next test without any additional include paths to see if it works already
   FC_QT5_COMPILETEST
   for TEST_PATH in $POTENTIAL_PATHS
   do
@@ -53,8 +61,15 @@ AC_DEFUN([FC_QT5_GENERIC],
     AS_IF(test "x$MULTIARCH_TUPLE" != "x",
       POTENTIAL_PATHS="$POTENTIAL_PATHS /usr/lib/$MULTIARCH_TUPLE/qt5")
 
-    dnl First test without any additional library paths to see if it works already
-    FC_QT5_LINKTEST
+    dnl First test if Qt5 installation prefix works
+    if test "x$with_qt5" != "xno" ; then
+      FC_QT5_LINKTEST([$with_qt5/lib])
+    fi
+
+    dnl Next test without any additional library paths to see if it works already
+    if test "x$qt5_libs" != "xyes" ; then
+      FC_QT5_LINKTEST
+    fi
     for TEST_PATH in $POTENTIAL_PATHS
     do
       if test "x$qt5_libs" != "xyes" ; then
@@ -88,6 +103,12 @@ AC_DEFUN([FC_QT5_COMPILETEST],
     CPPFADD=""
   fi
 
+  if test "x$emscripten" = "xyes" ; then
+    CXXFADD=" -std=c++11"
+  else
+    CXXFADD=" -fPIC"
+  fi
+
   CPPFLAGS_SAVE="$CPPFLAGS"
   CPPFLAGS="${CPPFLAGS}${CPPFADD}"
   AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <QApplication>]],
@@ -95,15 +116,16 @@ AC_DEFUN([FC_QT5_COMPILETEST],
     [qt5_headers=yes
      FC_QT5_CPPFLAGS="${FC_QT5_CPPFLAGS}${CPPFADD}"],
     [CXXFLAGS_SAVE="${CXXFLAGS}"
-     CXXFLAGS="${CXXFLAGS} -fPIC"
+     CXXFLAGS="${CXXFLAGS}${CXXFADD}"
      AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <QApplication>]],
 [[int a; QApplication app(a, 0);]])],
       [qt5_headers=yes
        FC_QT5_CPPFLAGS="${FC_QT5_CPPFLAGS}${CPPFADD}"
-       FC_QT5_CXXFLAGS="${FC_QT5_CXXFLAGS} -fPIC"])
+       FC_QT5_CXXFLAGS="${FC_QT5_CXXFLAGS}${CXXFADD}"])
      CXXFLAGS="${CXXFLAGS_SAVE}"])
 
   CPPFLAGS="$CPPFLAGS_SAVE"
+  LDFLAGS="$LDFLAGS_SAVE"
 ])
 
 dnl Check if the included version of Qt is at least Qt5.2
@@ -139,17 +161,28 @@ AC_DEFUN([FC_QT5_LINKTEST],
     LIBSADD=" -lQt5Gui -lQt5Core -lQt5Widgets"
   fi
 
+  if test "x$emscripten" = "xyes" ; then
+    LDFADD=" --bind -Wl,--no-check-features"
+    LIBSADD="$LIBSADD -lqtlibpng -lqtharfbuzz -lqtpcre2 -L$with_qt5/plugins/platforms -lqwasm -L$with_qt5/plugins/imageformats -lqgif -lqico -lqjpeg -lQt5EventDispatcherSupport -lQt5ServiceSupport -lQt5ThemeSupport -lQt5FontDatabaseSupport -lqtfreetype -lQt5FbSupport -lQt5EglSupport -lQt5PlatformCompositorSupport -lQt5DeviceDiscoverySupport"
+  else
+    LDFADD=""
+  fi
+
   CPPFLAGS_SAVE="$CPPFLAGS"
   CPPFLAGS="$CPPFLAGS $FC_QT5_CPPFLAGS"
   CXXFLAGS_SAVE="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS $FC_QT5_CXXFLAGS"
   LIBS_SAVE="$LIBS"
   LIBS="${LIBS}${LIBSADD}"
+  LDFLAGS_SAVE="$LDFLAGS"
+  LDFLAGS="${LDFLAGS}${LDFADD}"
   AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <QApplication>]],
 [[int a; QApplication app(a, 0);]])],
 [qt5_libs=yes
- FC_QT5_LIBS="${FC_QT5_LIBS}${LIBSADD}"])
+ FC_QT5_LIBS="${FC_QT5_LIBS}${LIBSADD}"
+ FC_QT5_LDFLAGS="${FC_QT5_LDFLAGS}${LDFADD}"])
  LIBS="$LIBS_SAVE"
+ LDFLAGS="$LDFLAGS_SAVE"
  CPPFLAGS="${CPPFLAGS_SAVE}"
  CXXFLAGS="${CXXFLAGS_SAVE}"
 ])
@@ -173,9 +206,20 @@ AC_DEFUN([FC_QT5_VALIDATE_MOC], [
   dnl Try to find a Qt 5 'moc' if MOCCMD isn't set.
   dnl Test that the supplied MOCCMD is a Qt 5 'moc' if it is set.
   AS_IF([test "x$MOCCMD" = "x"],
-    [FC_QT5_TRY_MOC([moc],
-      [FC_QT5_TRY_MOC([qtchooser -run-tool=moc -qt=5],
-        [MOCCMD=""])])],
+    [FC_QT5_TRY_MOC([$with_qt5/bin/moc],:)
+     if test "x$MOCCMD" = "x" ; then
+       FC_QT5_TRY_MOC([$with_qt5/bn/qtchooser -run-tool=moc -qt=5],:)
+     fi
+     if test "x$MOCCMD" = "x" ; then
+       FC_QT5_TRY_MOC([moc],:)
+     fi
+     if test "x$MOCCMD" = "x" ; then
+      FC_QT5_TRY_MOC([qtchooser -run-tool=moc -qt=5],:)
+     fi
+    ],
+    dnl[FC_QT5_TRY_MOC([moc],
+      dnl[FC_QT5_TRY_MOC([qtchooser -run-tool=moc -qt=5],
+        dnl[MOCCMD=""])])],
     [FC_QT5_TRY_MOC([$MOCCMD],
       AC_MSG_ERROR(["MOCCMD set to a bad value ($MOCCMD)"]))])
 

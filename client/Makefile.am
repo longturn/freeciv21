@@ -259,16 +259,8 @@ freeciv_sdl_LDADD = \
  $(gui_sdl_libs)
 endif
 
-if CLIENT_GUI_SDL2
-noinst_LTLIBRARIES += libfcgui-sdl2.la
-libfcgui_sdl2_la_SOURCES = $(freeciv_client_src)
-libfcgui_sdl2_la_LIBADD = gui-sdl2/libgui-sdl2.la $(clientlibs)
-
 if EMSCRIPTEN
-bin_PROGRAMS += freeciv-sdl2.html
-freeciv_sdl2_html_SOURCES = dummy.c
-freeciv_sdl2_html_LDFLAGS = $(gui_sdl2_ldflags) \
- -s SDL2_IMAGE_FORMATS='["png"]' -s ALLOW_MEMORY_GROWTH=1 \
+common_preload = \
  --preload-file $(top_srcdir)/data@data \
  --exclude-file $(top_srcdir)/data/alien\* \
  --exclude-file $(top_srcdir)/data/cimpletoon\* \
@@ -286,7 +278,6 @@ freeciv_sdl2_html_LDFLAGS = $(gui_sdl2_ldflags) \
  --exclude-file $(top_srcdir)/data/stdsounds \
  --exclude-file $(top_srcdir)/data/stdmusic \
  --exclude-file $(top_srcdir)/data/themes/gtk\* \
- --exclude-file $(top_srcdir)/data/themes/gui-qt \
  --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/fireflysung.ttf \
  --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/sazanami-gothic.ttf \
  --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/UnDotum.ttf \
@@ -296,7 +287,21 @@ freeciv_sdl2_html_LDFLAGS = $(gui_sdl2_ldflags) \
  --exclude-file \*.icns \
  --exclude-file \*.serv \
  --exclude-file \*.svg \
- --exclude-file \*.xml \
+ --exclude-file \*.xml
+endif
+
+if CLIENT_GUI_SDL2
+noinst_LTLIBRARIES += libfcgui-sdl2.la
+libfcgui_sdl2_la_SOURCES = $(freeciv_client_src)
+libfcgui_sdl2_la_LIBADD = gui-sdl2/libgui-sdl2.la $(clientlibs)
+
+if EMSCRIPTEN
+bin_PROGRAMS += freeciv-sdl2.html
+freeciv_sdl2_html_SOURCES = dummy.c
+freeciv_sdl2_html_LDFLAGS = $(gui_sdl2_ldflags) \
+ $(common_preload) \
+ --exclude-file $(top_srcdir)/data/themes/qt\* \
+ -s SDL2_IMAGE_FORMATS='["png"]' -s ALLOW_MEMORY_GROWTH=1 \
  -s USE_PTHREADS=0
 
 freeciv_sdl2_html_LDADD = \
@@ -338,10 +343,32 @@ freeciv_xaw_LDADD = \
 endif
 
 if CLIENT_GUI_QT
-bin_PROGRAMS += freeciv-qt
 noinst_LTLIBRARIES += libfcgui-qt.la
 libfcgui_qt_la_SOURCES = $(freeciv_client_src)
 libfcgui_qt_la_LIBADD = gui-qt/libgui-qt.la $(clientlibs)
+
+if EMSCRIPTEN
+bin_PROGRAMS += freeciv-qt.js
+freeciv_qt_js_SOURCES = dummycxx.cpp $(gui_interface_src)
+freeciv_qt_js_LDFLAGS = $(gui_qt_ldflags) \
+ -O3 -s WASM=1 \
+ -s USE_PTHREADS=0 \
+ -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
+ -s ALLOW_MEMORY_GROWTH=1 \
+ $(common_preload) \
+ --exclude-file $(top_srcdir)/data/themes/gui-sdl2\* \
+ -s ASSERTIONS=1 \
+ -s ASYNCIFY=1 \
+ -s TOTAL_MEMORY=33554432
+freeciv_qt_js_LDADD = \
+ libfcgui-qt.la $(SOUND_LIBS) gui-qt/gui_main.lo \
+ $(top_builddir)/common/libfreeciv.la \
+ $(INTLLIBS) $(CLIENT_LIBS) $(CLIENTICON) \
+ $(TINYCTHR_LIBS) $(MAPIMG_WAND_LIBS) \
+ $(gui_qt_libs)
+
+else
+bin_PROGRAMS += freeciv-qt
 freeciv_qt_SOURCES = dummycxx.cpp $(gui_interface_src)
 freeciv_qt_LDFLAGS = $(gui_qt_ldflags)
 freeciv_qt_LDADD = \
@@ -351,6 +378,8 @@ freeciv_qt_LDADD = \
  $(INTLLIBS) $(CLIENT_LIBS) $(SOUND_LIBS) $(CLIENTICON) \
  $(MAPIMG_WAND_LIBS) \
  $(gui_qt_libs)
+endif
+
 endif
 
 if CLIENT_GUI_STUB

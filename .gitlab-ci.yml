@@ -16,3 +16,27 @@ sdl:
     - client/freeciv-sdl2.html
     - client/freeciv-sdl2.js
     - client/freeciv-sdl2.wasm
+
+qt:
+  script:
+    - apt-get update
+    - apt-get install -y automake autoconf git python xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
+    - git clone https://github.com/emscripten-core/emsdk /emsdk
+    - /emsdk/emsdk install 1.38.45-upstream
+    - /emsdk/emsdk activate 1.38.45-upstream
+    - source /emsdk/emsdk_env.sh
+    - git clone https://github.com/qt/qtbase /qtbase --depth=1 --branch=5.13.1
+    - pushd /qtbase
+    - git remote set-branches origin 5.14
+    - git fetch origin 5.14 --depth=1
+    - git checkout origin/5.14 -- mkspecs/wasm-emscripten/qmake.conf
+    - ./configure -xplatform wasm-emscripten -nomake examples -prefix /qt5 -opensource -confirm-license
+    - make install
+    - popd
+    - emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qt5=/qt5
+    - emmake make
+  artifacts:
+    paths:
+    - client/freeciv-qt.data
+    - client/freeciv-qt.js
+    - client/freeciv-qt.wasm

@@ -1553,7 +1553,7 @@ AM_CONDITIONAL([SYS_TOLUA_CMD], [test "x$sys_tolua_cmd" != "xfalse"])
 
 if test "x$emscripten" = "xyes" ; then
   CFLAGS="$CFLAGS -s USE_ZLIB=1"
-  CXXFLAGS="$CXXFLAGS -s USE_ZLIB=1"
+  CXXFLAGS="$CXXFLAGS -s USE_ZLIB=1 -O3"
   _LT_TAGVAR(hardcode_libdir_flag_spec, )=""
   _LT_TAGVAR(hardcode_libdir_flag_spec, CXX)=""
 fi
