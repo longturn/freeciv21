@@ -260,10 +260,55 @@ freeciv_sdl_LDADD = \
 endif
 
 if CLIENT_GUI_SDL2
-bin_PROGRAMS += freeciv-sdl2
 noinst_LTLIBRARIES += libfcgui-sdl2.la
 libfcgui_sdl2_la_SOURCES = $(freeciv_client_src)
 libfcgui_sdl2_la_LIBADD = gui-sdl2/libgui-sdl2.la $(clientlibs)
+
+if EMSCRIPTEN
+bin_PROGRAMS += freeciv-sdl2.html
+freeciv_sdl2_html_SOURCES = dummy.c
+freeciv_sdl2_html_LDFLAGS = $(gui_sdl2_ldflags) \
+ -s SDL2_IMAGE_FORMATS='["png"]' -s ALLOW_MEMORY_GROWTH=1 \
+ --preload-file $(top_srcdir)/data@data \
+ --exclude-file $(top_srcdir)/data/alien\* \
+ --exclude-file $(top_srcdir)/data/cimpletoon\* \
+ --exclude-file $(top_srcdir)/data/civ\* \
+ --exclude-file $(top_srcdir)/data/classic\* \
+ --exclude-file $(top_srcdir)/data/default\* \
+ --exclude-file $(top_srcdir)/data/experimental\* \
+ --exclude-file $(top_srcdir)/data/graphics \
+ --exclude-file $(top_srcdir)/data/icons \
+ --exclude-file $(top_srcdir)/data/nation \
+ --exclude-file $(top_srcdir)/data/multiplayer\* \
+ --exclude-file $(top_srcdir)/data/ruledit \
+ --exclude-file $(top_srcdir)/data/sandbox\* \
+ --exclude-file $(top_srcdir)/data/scenarios \
+ --exclude-file $(top_srcdir)/data/stdsounds \
+ --exclude-file $(top_srcdir)/data/stdmusic \
+ --exclude-file $(top_srcdir)/data/themes/gtk\* \
+ --exclude-file $(top_srcdir)/data/themes/gui-qt \
+ --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/fireflysung.ttf \
+ --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/sazanami-gothic.ttf \
+ --exclude-file $(top_srcdir)/data/themes/gui-sdl2/human/UnDotum.ttf \
+ --exclude-file $(top_srcdir)/data/webperimental\* \
+ --exclude-file \*Makefile\* \
+ --exclude-file \*README\* \
+ --exclude-file \*.icns \
+ --exclude-file \*.serv \
+ --exclude-file \*.svg \
+ --exclude-file \*.xml \
+ -s USE_PTHREADS=0
+
+freeciv_sdl2_html_LDADD = \
+ $(gui_sdl2_libs) \
+ libfcgui-sdl2.la $(SOUND_LIBS) gui-sdl2/gui_main.lo \
+ $(top_builddir)/common/libfreeciv.la \
+ $(INTLLIBS) $(CLIENT_LIBS) $(CLIENTICON) \
+ $(TINYCTHR_LIBS) $(MAPIMG_WAND_LIBS) \
+ $(gui_sdl2_libs)
+
+else
+bin_PROGRAMS += freeciv-sdl2
 freeciv_sdl2_SOURCES = dummy.c
 freeciv_sdl2_LDFLAGS = $(gui_sdl2_ldflags)
 freeciv_sdl2_LDADD = \
@@ -273,6 +318,8 @@ freeciv_sdl2_LDADD = \
  $(INTLLIBS) $(CLIENT_LIBS) $(SOUND_LIBS) $(CLIENTICON) \
  $(MAPIMG_WAND_LIBS) \
  $(gui_sdl2_libs)
+endif
+
 endif
 
 if CLIENT_GUI_XAW

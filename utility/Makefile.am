@@ -43,8 +43,6 @@ libcivutility_la_SOURCES = \
 		mem.c           \
 		mem.h		\
 		net_types.h	\
-		netfile.c	\
-		netfile.h	\
 		netintf.c	\
 		netintf.h	\
 		rand.c		\
@@ -72,6 +70,12 @@ libcivutility_la_SOURCES = \
 		timing.h	\
 		md5.c		\
 		md5.h
+
+if !EMSCRIPTEN
+libcivutility_la_SOURCES += \
+		netfile.c	\
+		netfile.h
+endif
 
 EXTRA_DIST = \
 		generate_specenum.py

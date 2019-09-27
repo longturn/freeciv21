@@ -40,7 +40,9 @@
 #include "client_main.h"
 #include "clinet.h"        /* connect_to_server() */
 #include "packhand.h"
+#ifndef __EMSCRIPTEN__
 #include "servers.h"
+#endif
 
 /* gui-sdl2 */
 #include "chatline.h"
@@ -59,8 +61,10 @@
 
 #include "connectdlg.h"
 
+#ifndef __EMSCRIPTEN__
 static struct server_list *pServer_list = NULL;
 static struct server_scan *pServer_scan = NULL;
+#endif
 
 static struct ADVANCED_DLG *pMeta_Server = NULL;
 static struct SMALL_DLG *pConnectDlg = NULL;
@@ -134,9 +138,11 @@ static int exit_meta_server_dlg_callback(struct widget *pWidget)
   if (PRESSED_EVENT(Main.event)) {
     queue_flush();
 
+#ifndef __EMSCRIPTEN__
     server_scan_finish(pServer_scan);
     pServer_scan = NULL;
     pServer_list = NULL;
+#endif
 
     set_client_page(PAGE_NETWORK);
     meswin_dialog_popup(TRUE);
@@ -145,6 +151,7 @@ static int exit_meta_server_dlg_callback(struct widget *pWidget)
   return -1;
 }
 
+#ifndef __EMSCRIPTEN__
 /**************************************************************************
   Server selected from dialog.
 **************************************************************************/
@@ -220,6 +227,7 @@ static struct srv_list *sdl_create_server_list(bool lan)
 
   return list;
 }
+#endif
 
 /**************************************************************************
   Open connection dialog for either meta or lan scan.
@@ -233,7 +241,9 @@ void popup_connection_dialog(bool lan_scan)
   utf8_str *pstr;
   SDL_Surface *pLogo;
   SDL_Rect area, area2;
+#ifndef __EMSCRIPTEN__
   struct srv_list *srvrs;
+#endif
 
   queue_flush();
   close_connection_dialog();
@@ -276,6 +286,7 @@ void popup_connection_dialog(bool lan_scan)
   redraw_group(pNewWidget, pLabelWindow, TRUE);
   flush_dirty();
 
+#ifndef __EMSCRIPTEN__
   /* create server list */
   srvrs = sdl_create_server_list(lan_scan);
 
@@ -286,12 +297,14 @@ void popup_connection_dialog(bool lan_scan)
     server_list_append(pServer_list, pserver);
   } server_list_iterate_end;
   fc_release_mutex(&srvrs->mutex);
+#endif
 
   /* clear label */
   popdown_window_group_dialog(pNewWidget, pLabelWindow);
 
   meswin_dialog_popup(TRUE);
 
+#ifndef __EMSCRIPTEN__
   if (!pServer_list) {
     if (lan_scan) {
       output_window_append(ftc_client, _("No LAN servers found")); 
@@ -301,6 +314,7 @@ void popup_connection_dialog(bool lan_scan)
     set_client_page(PAGE_NETWORK);
     return;
   }
+#endif
 
   /* Server list window */
   pMeta_Server = fc_calloc(1, sizeof(struct ADVANCED_DLG));
@@ -326,6 +340,7 @@ void popup_connection_dialog(bool lan_scan)
   set_wstate(pNewWidget, FC_WS_NORMAL);
   add_to_gui_list(ID_BUTTON, pNewWidget);
 
+#ifndef __EMSCRIPTEN__
   /* servers */
   server_list_iterate(pServer_list, pServer) {
 
@@ -356,6 +371,7 @@ void popup_connection_dialog(bool lan_scan)
     }
 
   } server_list_iterate_end;
+#endif
 
   if (!count) {
     if (lan_scan) {
@@ -1089,11 +1105,13 @@ void close_connection_dialog(void)
     FC_FREE(pMeta_Server->pScroll);
     FC_FREE(pMeta_Server);
 
+#ifndef __EMSCRIPTEN__
     if (pServer_list) {
       server_scan_finish(pServer_scan);
       pServer_scan = NULL;
       pServer_list = NULL;
     }
+#endif
   }
 }
 

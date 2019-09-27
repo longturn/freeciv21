@@ -1,0 +1,18 @@
+image: ubuntu:latest
+
+sdl:
+  script:
+    - apt-get update
+    - apt-get install -y automake autoconf git python xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
+    - git clone https://github.com/emscripten-core/emsdk /emsdk
+    - /emsdk/emsdk install 1.38.45-upstream
+    - /emsdk/emsdk activate 1.38.45-upstream
+    - source /emsdk/emsdk_env.sh
+    - emconfigure ./autogen.sh --enable-client=sdl2 --disable-nls
+    - emmake make
+  artifacts:
+    paths:
+    - client/freeciv-sdl2.data
+    - client/freeciv-sdl2.html
+    - client/freeciv-sdl2.js
+    - client/freeciv-sdl2.wasm

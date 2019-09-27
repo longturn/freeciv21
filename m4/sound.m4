@@ -4,9 +4,18 @@ AC_DEFUN([FC_CHECK_SOUND],[
   [case "${enableval}" in
    sdl|sdl1.2) USE_SOUND_SDL=sdl ;;
    no)  USE_SOUND_SDL=no ;;
-   yes|sdl2) USE_SOUND_SDL=sdl2 ;;
+   yes|sdl2)
+    if test "x$emscripten" = "xyes" ; then
+      AC_MSG_ERROR([SDL Mixer is not supported in Emscripten])
+    fi
+    USE_SOUND_SDL=sdl2 ;;
    *)   AC_MSG_ERROR([bad value ${enableval} for --enable-sdl-mixer]) ;;
-   esac], [USE_SOUND_SDL=maybe])
+   esac], [
+   if test "x$emscripten" = "xyes" ; then
+     USE_SOUND_SDL=no
+   else
+     USE_SOUND_SDL=maybe
+   fi])
 
 if test "x$USE_SOUND_SDL" != "xno" && test "x$USE_SOUND_SDL" != "xsdl" ; then
   dnl Add SDL2-mixer support to client

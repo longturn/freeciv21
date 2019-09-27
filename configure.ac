@@ -15,6 +15,7 @@ AC_CONFIG_HEADERS([gen_headers/fc_config.h gen_headers/freeciv_config.h])
 AC_CANONICAL_HOST
 AC_USE_SYSTEM_EXTENSIONS
 AC_C_BIGENDIAN
+FC_EMSCRIPTEN
 
 BUG_URL="$PACKAGE_BUGREPORT"
 WIKI_URL="http://www.freeciv.org/"
@@ -130,6 +131,10 @@ AC_ARG_ENABLE([fcdb],
 [databases=${enableval}],
 [databases=no])
 
+if test "x$emscripten" = "xyes" ; then
+  databases=no
+fi
+
 for db in $(echo $databases | $SED 's/,/ /g') ; do
   if test "x$db" = "xall" ; then
     fcdb_all=yes
@@ -172,10 +177,19 @@ dnl  no=do not compile server,  yes=compile server,  *=error
 AC_ARG_ENABLE([server],
   AS_HELP_STRING([--disable-server], [do not compile the server]),
 [case "${enableval}" in
-  yes) server=yes ;;
+  yes)
+    if test "x$emscripten" = "xyes" ; then
+      AC_MSG_ERROR([IPv6 is not supported in Emscripten])
+    fi
+    server=yes ;;
   no)  server=no ;;
   *)   AC_MSG_ERROR(bad value ${enableval} for --disable-server) ;;
-esac], [server=yes])
+esac], [
+if test "x$emscripten" = "xyes" ; then
+  server=no
+else
+  server=yes
+fi])
 AM_CONDITIONAL(SERVER, test x$server = xyes)
 
 dnl Host type variable defaults
@@ -224,9 +238,19 @@ dnl test    - Try to enable IPv6 support
 AC_ARG_ENABLE([ipv6],
   AS_HELP_STRING([--enable-ipv6=yes/no/test], [use IPv6 [test]]),
 [case "${enableval}" in
-  yes|no|test) ipv6=${enableval} ;;
+  yes)
+    if test "x$emscripten" = "xyes" ; then
+      AC_MSG_ERROR([IPv6 is not supported in Emscripten])
+    fi
+    ipv6=yes ;;
+  no|test) ipv6=${enableval} ;;
   *)   AC_MSG_ERROR(bad value ${enableval} for --enable-ipv6) ;;
-esac], [ipv6=test])
+esac], [
+if test "x$emscripten" = "xyes" ; then
+  ipv6=no
+else
+  ipv6=test
+fi])
 if test x$ipv6 != xno ; then
   if test "x$have_getaddrinfo" = "xyes" ; then
     enable_ipv6=yes
@@ -623,10 +647,12 @@ PKG_PROG_PKG_CONFIG
 if test "x$PKG_CONFIG" = "x" ; then
   AC_MSG_ERROR([pkg-config not found])
 fi
-PKG_CHECK_MODULES([CURL], [libcurl >= 7.12.1],,
-    [AC_MSG_ERROR([libcurl development files required])])
-UTILITY_CFLAGS="${UTILITY_CFLAGS} ${CURL_CFLAGS}"
-UTILITY_LIBS="${UTILITY_LIBS} ${CURL_LIBS}"
+if test "x$emscripten" = "xno" ; then
+  PKG_CHECK_MODULES([CURL], [libcurl >= 7.12.1],,
+      [AC_MSG_ERROR([libcurl development files required])])
+  UTILITY_CFLAGS="${UTILITY_CFLAGS} ${CURL_CFLAGS}"
+  UTILITY_LIBS="${UTILITY_LIBS} ${CURL_LIBS}"
+fi
 
 AC_ARG_ENABLE([xml-registry],
   AS_HELP_STRING([--enable-xml-registry], [build xml-backend for registry (WIP)]),
@@ -744,15 +770,17 @@ CPPFLAGS="$CPPFLAGS -DBINDIR=\"\\\"$bindir\\\"\""
 COMMON_LIBS=-lm
 
 dnl Check for zlib
-AC_CHECK_LIB([z], [gzgets],
-  [AC_DEFINE([FREECIV_HAVE_LIBZ], [1], [zlib is available])
-UTILITY_LIBS="${UTILITY_LIBS} -lz"
-COMMON_LIBS="$COMMON_LIBS -lz"], 
-  AC_MSG_ERROR([Could not find zlib library.]))
+if test "x$emscripten" = "xno" ; then
+  AC_CHECK_LIB([z], [gzgets],
+    [AC_DEFINE([FREECIV_HAVE_LIBZ], [1], [zlib is available])
+  UTILITY_LIBS="${UTILITY_LIBS} -lz"
+  COMMON_LIBS="$COMMON_LIBS -lz"],
+    AC_MSG_ERROR([Could not find zlib library.]))
 
-AC_CHECK_HEADER(zlib.h, , 
-  AC_MSG_ERROR([zlib found but not zlib.h.
+  AC_CHECK_HEADER(zlib.h,,
+    AC_MSG_ERROR([zlib found but not zlib.h.
 You may need to install a zlib devel package.]))
+fi
 
 AC_PATH_PROG(GZIP, gzip, "no")
 if test "$GZIP" = "no"; then
@@ -942,6 +970,7 @@ if test "x$client" = "xall" ; then
 fi
 
 FC_LD_FLAGS(["-Wl,-rpath=${lib_prefix}"], [], [LDFLAGS])
+FC_LD_FLAGS([""], [], [LDFLAGS])
 
 AM_CONDITIONAL([CLIENT], [test "x$client" = "xyes"])
 
@@ -952,7 +981,16 @@ AC_ARG_ENABLE([freeciv-manual],
   no)       fcmanual=no ;;
   html)     fcmanual=html ;;
   *) AC_MSG_ERROR([bad value ${enableval} for --enable-freeciv-manual]) ;;
-esac], [fcmanual=wiki])
+esac], [
+if test "x$emscripten" = "xyes" ; then
+  fcmanual=no
+else
+  fcmanual=yes
+fi])
+
+if test "x$fcmanual" != "xno" && "x$emscripten" = "xyes" ; then
+  AC_MSG_ERROR([freeciv-manual is not supported in Emscripten])
+fi
 
 AM_CONDITIONAL([FCMANUAL], [test "x$fcmanual" != "xno"])
 
@@ -975,6 +1013,11 @@ fcmp_list=
 if test "x$fc_mp" = "xcli" ; then
   dnl Only cli requested -> no gui needed
   modinst=cli
+fi
+
+if test "x$emscripten" = "xyes" && test "x$fc_mp" = "xauto" ; then
+  fc_mp=no
+  modinst=no
 fi
 
 for mp in $(echo $fc_mp | $SED 's/,/ /g') ; do
@@ -1123,6 +1166,14 @@ AC_ARG_ENABLE([ruledit],
   test) ruledit=test ;;
   *)   AC_MSG_ERROR([bad value ${enableval} for --enable-ruledit]) ;;
 esac], [ruledit=test])
+
+if test "x$emscripten" = "xyes" ; then
+  if test "x$ruledit" != "xno" && test "x$ruledit" != "xtest" ; then
+    AC_MSG_ERROR([ruledit is not supported in Emscripten])
+  fi
+  ruledit=no
+fi
+
 if test "x$ruledit" = "xyes" || test "x$ruledit" = "xtest" ; then
   if test "x$cxx_works" = "xyes" ; then
     FC_QT5
@@ -1201,6 +1252,7 @@ AM_CONDITIONAL(CLIENT_GUI_GTK_3_0, test "x$gui_gtk3" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_XAW, test "x$gui_xaw" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_QT, test "x$gui_qt" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_STUB, test "x$gui_stub" = "xyes")
+AM_CONDITIONAL(EMSCRIPTEN, test x"$emscripten" = "xyes")
 AM_CONDITIONAL(MINGW, test x"$MINGW" = "xyes")
 
 dnl Additional client libraries:
@@ -1457,14 +1509,14 @@ AC_ARG_ENABLE([sys-tolua-cmd],
   yes)
     sys_tolua_cmd=true ;;
   no)
-    if test "x$cross_compiling" = "xyes" ; then
+    if test "x$cross_compiling" = "xyes" || test "x$emscripten" ; then
       AC_MSG_ERROR([Must use external build system tolua command when cross-compiling])
     fi
     sys_tolua_cmd=false ;;
   *)
     sys_tolua_cmd=${enableval} ;;
 esac], [
-if test "x$cross_compiling" = "xyes" ; then
+if test "x$cross_compiling" = "xyes" || test "x$emscripten" = "xyes"; then
   sys_tolua_cmd=true
 else
   sys_tolua_cmd=test
@@ -1498,6 +1550,13 @@ AC_SUBST([TOLUA_CFLAGS])
 AC_SUBST([TOLUA_LIBS])
 
 AM_CONDITIONAL([SYS_TOLUA_CMD], [test "x$sys_tolua_cmd" != "xfalse"])
+
+if test "x$emscripten" = "xyes" ; then
+  CFLAGS="$CFLAGS -s USE_ZLIB=1"
+  CXXFLAGS="$CXXFLAGS -s USE_ZLIB=1"
+  _LT_TAGVAR(hardcode_libdir_flag_spec, )=""
+  _LT_TAGVAR(hardcode_libdir_flag_spec, CXX)=""
+fi
 
 dnl The BeOS sys/uio.h is broken.  This kludges it out of existence.
 dnl (This still causes lots of spurious changes to fc_config.h on BeOS.)
@@ -1744,6 +1803,7 @@ AC_MSG_NOTICE([
 
   == Client ==
   Build freeciv client:  $client
+  Emscripten target:     $emscripten
 
   Maintained client frontends:
     Gtk-3.0:  $gui_gtk3
