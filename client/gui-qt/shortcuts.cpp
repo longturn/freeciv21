@@ -519,7 +519,7 @@ void fc_sc_button::show_info(QString str)
 **************************************************************************/
 void fc_sc_button::popup_error()
 {
-  hud_message_box scinfo(gui()->central_wdg);
+  hud_message_box *scinfo;
   QList<fc_shortcut_popup *> fsb_list;
   QString title;
   /* wait until shortcut popup is destroyed */
@@ -532,10 +532,12 @@ void fc_sc_button::popup_error()
   /* TRANS: Given shortcut(%1) is already assigned */
   title = QString(_("%1 is already assigned to"))
                   .arg(shortcut_to_string(sc));
-  scinfo.setStandardButtons(QMessageBox::Ok);
-  scinfo.setDefaultButton(QMessageBox::Ok);
-  scinfo.set_text_title(err_message, title);
-  scinfo.exec();
+  scinfo = new hud_message_box(gui()->central_wdg);
+  scinfo->setStandardButtons(QMessageBox::Ok);
+  scinfo->setDefaultButton(QMessageBox::Ok);
+  scinfo->set_text_title(err_message, title);
+  scinfo->setAttribute(Qt::WA_DeleteOnClose);
+  scinfo->show();
 }
 /**************************************************************************
   Contructor for shortcut dialog
