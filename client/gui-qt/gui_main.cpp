@@ -373,7 +373,9 @@ void apply_titlebar(struct option *poption)
     flags |= Qt::CustomizeWindowHint;
     gui()->setWindowFlags(flags);
     gui()->corner_wid = new fc_corner(gui());
+#ifndef __EMSCRIPTEN__
     gui()->menu_bar->setCornerWidget(gui()->corner_wid);
+#endif
   }
   gui()->show();
 }
