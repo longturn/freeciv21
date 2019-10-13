@@ -311,7 +311,11 @@ struct client_options gui_options = {
   .gui_sdl2_use_color_cursors = TRUE,
 
 /* gui-qt client specific options. */
+#ifdef __EMSCRIPTEN__
+  .gui_qt_fullscreen = TRUE,
+#else
   .gui_qt_fullscreen = FALSE,
+#endif
   .gui_qt_show_preview = TRUE,
   .gui_qt_sidebar_left = TRUE,
   .gui_qt_default_theme_name = FC_QT_DEFAULT_THEME_NAME,
@@ -330,7 +334,11 @@ struct client_options gui_options = {
   .gui_qt_font_city_names = "Sans Serif,10,-1,5,75,0,0,0,0,0",
   .gui_qt_font_city_productions = "Sans Serif,10,-1,5,50,1,0,0,0,0",
   .gui_qt_font_reqtree_text = "Sans Serif,10,-1,5,50,1,0,0,0,0",
+#ifdef __EMSCRIPTEN__
+  .gui_qt_show_titlebar = FALSE,
+#else
   .gui_qt_show_titlebar = TRUE,
+#endif
   .gui_qt_wakeup_text = "Wake up %1"
 };
 
@@ -3063,16 +3071,18 @@ static struct client_option client_options[] = {
                   COC_INTERFACE, GUI_SDL2, TRUE, NULL),
 
   /* gui-qt client specific options. */
+#ifndef __EMSCRIPTEN__
   GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
                   N_("If this option is set the client will use the "
                      "whole screen area for drawing."),
-                  COC_INTERFACE, GUI_QT, FALSE, NULL),
+                  COC_INTERFACE, GUI_QT, TRUE, NULL),
   GEN_BOOL_OPTION(gui_qt_show_titlebar, N_("Show titlebar"),
                   N_("If this option is set the client will show a titlebar. "
                      "If disabled, then no titlebar will be shown, and "
                      "minimize/maximize/etc buttons will be placed on the "
                      "menu bar."),
-                  COC_INTERFACE, GUI_QT, TRUE, NULL),
+                  COC_INTERFACE, GUI_QT, FALSE, NULL),
+#endif
   GEN_FONT_OPTION(gui_qt_font_city_label, "city_label",
                   N_("City Label"),
                   N_("This font is used to display the city labels on city "
