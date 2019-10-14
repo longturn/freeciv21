@@ -10,6 +10,9 @@
 *.pyc
 *.pyo
 *.rej
+*.js
+*.wasm
+*.data
 *~
 *.#*
 .*.swp
