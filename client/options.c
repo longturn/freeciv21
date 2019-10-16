@@ -20,6 +20,10 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+#endif
+
 /* utility */
 #include "capability.h"
 #include "fcintl.h"
@@ -5967,6 +5971,9 @@ void options_save(option_save_log_callback log_cb)
   if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
     log_cb(LOG_ERROR, _("Save failed, cannot write to file %s"), name);
   } else {
+#ifdef __EMSCRIPTEN__
+    EM_ASM(FS.syncfs(false, function(_) {}));
+#endif
     log_cb(LOG_VERBOSE, _("Saved settings to file %s"), name);
   }
   secfile_destroy(sf);

@@ -349,9 +349,11 @@ libfcgui_qt_la_LIBADD = gui-qt/libgui-qt.la $(clientlibs)
 
 if EMSCRIPTEN
 bin_PROGRAMS += freeciv-qt.js
-freeciv_qt_js_SOURCES = dummycxx.cpp $(gui_interface_src)
+freeciv_qt_js_SOURCES = dummycxx.cpp $(gui_interface_src) prerun.js
 freeciv_qt_js_LDFLAGS = $(gui_qt_ldflags) \
  -O3 -s WASM=1 \
+ --pre-js prerun.js \
+ -lidbfs.js \
  --emrun \
  -g4 \
  -s USE_PTHREADS=0 \
