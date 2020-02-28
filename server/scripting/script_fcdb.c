@@ -228,9 +228,12 @@ static int pbkdf2_sha256(lua_State *L)
 
   buf = fc_malloc(dk_len/8);
 
-  PBKDF2_SHA256(password, password_length, salt, salt_length, c, (unsigned char*)buf, dk_len);
+  PBKDF2_SHA256(password, password_length, salt, salt_length, c, (unsigned char*)buf, dk_len/8);
 
   lua_pushlstring(L, buf, dk_len/8);
+
+  free(buf);
+
   return 1;
 }
 #endif /* HAVE_FCDB */
