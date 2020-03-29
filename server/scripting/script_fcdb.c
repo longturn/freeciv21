@@ -48,6 +48,7 @@
 #include "luascript_types.h"
 #include "tolua_common_a_gen.h"
 #include "tolua_common_z_gen.h"
+#include "tolua_game_gen.h"
 
 /* server */
 #include "console.h"
@@ -263,6 +264,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
   }
 
   tolua_common_a_open(fcl->state);
+  tolua_game_open(fcl->state);
   tolua_fcdb_open(fcl->state);
   lua_register(fcl->state, "md5sum", md5sum);
   lua_register(fcl->state, "pbkdf2_sha256", pbkdf2_sha256);
