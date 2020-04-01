@@ -4172,6 +4172,8 @@ static bool autocreate_command(struct connection *caller, char *arg, bool check)
     return FALSE;
   }
 
+  init_game_seed();
+
   while (fgets(line, 1024, plrfile) > 0) {
     for (i = 0, j = 0; line[i] != ':'; i++, j++) {
       conf_player[j] = line[i];
@@ -4203,7 +4205,6 @@ static bool autocreate_command(struct connection *caller, char *arg, bool check)
     sz_strlcpy(pplayer->username, conf_player);
     pplayer->was_created = TRUE; /* must use /remove explicitly to remove */
     pplayer->ai_controlled = FALSE;
-    pplayer->ai = ai_type_by_name("default");
 
     if (strlen(buf) > 0) {
       /* Send a notification. */
@@ -4218,7 +4219,7 @@ static bool autocreate_command(struct connection *caller, char *arg, bool check)
       if (pnation == NO_NATION_SELECTED) {
         cmd_reply(CMD_AUTOCREATE, caller, C_FAIL, "Warning: Unknown nation %s", conf_nation);
       }
-      player_set_nation(pplayer, pnation);
+      player_nation_defaults(pplayer, pnation, FALSE);
     }
     if (conf_team[0] != '\0') {
       char dupa[1024];
