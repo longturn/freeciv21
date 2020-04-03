@@ -246,6 +246,9 @@ struct civ_game {
 
       struct rgbcolor_list *plr_colors;
 
+      int nuke_pop_loss_pct;
+      int nuke_defender_survival_chance_pct;
+
       struct {
         int turns;
         int max_size;
@@ -799,6 +802,12 @@ extern struct civ_game game;
 #define RS_DEFAULT_SLOW_INVASIONS                TRUE
 
 #define RS_DEFAULT_TIRED_ATTACK                  FALSE
+#define RS_DEFAULT_NUKE_POP_LOSS_PCT             50
+#define RS_MIN_NUKE_POP_LOSS_PCT                 0
+#define RS_MAX_NUKE_POP_LOSS_PCT                 100
+#define RS_DEFAULT_NUKE_DEFENDER_SURVIVAL_CHANCE_PCT 0
+#define RS_MIN_NUKE_DEFENDER_SURVIVAL_CHANCE_PCT 0
+#define RS_MAX_NUKE_DEFENDER_SURVIVAL_CHANCE_PCT 100
 
 #define RS_DEFAULT_BASE_BRIBE_COST               750
 #define RS_MIN_BASE_BRIBE_COST                   0
