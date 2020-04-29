@@ -31,7 +31,6 @@ extern "C" {
 
 class QLabel;
 class QPushButton;
-class QSignalMapper;
 class QScrollArea;
 struct fc_shortcut;
 
@@ -223,7 +222,6 @@ class gov_menu : public QMenu
   Q_OBJECT
   static QSet<gov_menu *> instances;
 
-  QSignalMapper *gov_mapper;
   QVector<QAction *> actions;
 
 public:
@@ -405,9 +403,6 @@ private slots:
 
 private:
   struct tile* find_last_unit_pos(struct unit* punit, int pos);
-  QSignalMapper *signal_help_mapper;
-  QSignalMapper *build_bases_mapper;
-  QSignalMapper *build_roads_mapper;
 };
 
 #endif /* FC__MENU_H */

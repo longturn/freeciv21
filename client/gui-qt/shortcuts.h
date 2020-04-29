@@ -19,7 +19,6 @@
 #include <QPushButton>
 
 class QDialogButtonBox;
-class QSignalMapper;
 class QVBoxLayout;
 struct fc_shortcut;
 
@@ -181,7 +180,6 @@ class fc_shortcuts_dialog : public  QDialog
   Q_OBJECT
   QVBoxLayout *main_layout;
   QVBoxLayout *scroll_layout;
-  QSignalMapper *signal_map;
   QDialogButtonBox *button_box;
   QMap<shortcut_id, fc_shortcut*> *hashcopy;
   void add_option(fc_shortcut *sc);
