@@ -22,6 +22,7 @@
 #include <QGroupBox>
 #include <QProgressBar>
 #include <QPushButton>
+#include <QScreen>
 #include <QScrollArea>
 #include <QSplitter>
 #include <QStack>
@@ -204,7 +205,8 @@ void help_dialog::showEvent(QShowEvent *event)
     restoreGeometry(gui()->qt_settings.help_geometry);
     splitter->restoreState(gui()->qt_settings.help_splitter1);
   } else {
-    QRect rect = QApplication::desktop()->screenGeometry();
+    QList<QScreen *> screens = QGuiApplication::screens();
+    QRect rect = screens[0]->availableGeometry();
 
     resize((rect.width() * 3) / 5, (rect.height() * 3) / 6);
     sizes << rect.width() / 10 << rect.width() / 3;
