@@ -41,7 +41,7 @@ jobs:
 
   - script: |
       source ./emsdk/emsdk_env.sh
-      emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qt5=$(Build.SourcesDirectory)/qt5
+      emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qmake=$(Build.SourcesDirectory)/qt5/bin/qmake
       emmake make -j$(nproc)
     displayName: 'Build Freeciv'
 
@@ -72,7 +72,12 @@ jobs:
     displayName: 'Qt cache'
 
   - script: |
-      brew install gettext icu4c libtool automake autoconf sdl2_mixer pkg-config
+      find /Applications/Xcode_11.3.1.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin
+      which libtool || true
+      libtool -version || true
+      which glibtool || true
+      glibtool --version || true
+      brew install gettext icu4c automake autoconf sdl2_mixer pkg-config
     displayName: 'Setup Build Environment'
 
   - script: |
@@ -87,10 +92,22 @@ jobs:
     displayName: 'Build Qt'
 
   - script: |
+      cd macos
+      $(Build.SourcesDirectory)/qt5/bin/qmake
+      V=1 make
+      cd ..
+      cp -r macos $(Build.ArtifactStagingDirectory)
+    displayName: 'Build test binary'
+
+  - script: |
       export PATH="/usr/local/opt/icu4c/bin:/usr/local/opt/gettext/bin:$PATH"
       ./autogen.sh --no-configure-run
-      ./configure PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig:/usr/local/lib/pkgconfig" CFLAGS="-O3 -I/usr/local/opt/gettext/include" LDFLAGS="-L/usr/local/opt/gettext/lib" --enable-client=qt --disable-fcmp --enable-fcdb=sqlite3 --prefix=/usr/local --with-qt5=$(Build.SourcesDirectory)/qt5
-      make install || true
+      ./configure CC="clang" CXX="clang++" PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig:/usr/local/lib/pkgconfig" CFLAGS="-O3 -I/usr/local/opt/gettext/include" LDFLAGS="-L/usr/local/opt/gettext/lib" --enable-client=qt --disable-fcmp --enable-fcdb=sqlite3 --prefix=/usr/local --with-qmake=$(Build.SourcesDirectory)/qt5/bin/qmake
+      V=1 make || true
+      mkdir staging || true
+      cp client/freeciv-qt server/freeciv-server staging || true
+      cd staging || true
+      $(Build.SourcesDirectory)/qt5/bin/macdeployqt -dmg FreecivQt.app || true
     displayName: 'Build Freeciv'
 
   - task: CopyFiles@2

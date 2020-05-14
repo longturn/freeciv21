@@ -28,7 +28,11 @@
 #include <stdint.h>
 #include <string.h>
 
+#ifdef __APPLE__
+#include <machine/endian.h>
+#else
 #include <endian.h>
+#endif
 
 #include "pbkdf2_sha256.h"
 

@@ -1,15 +1,14 @@
 # Detect Qt5 headers and libraries and set flag variables
 
-AC_ARG_VAR([MOCCMD], [QT 5 moc command (autodetected it if not set)])
-
 AC_DEFUN([FC_QT5],
 [
   if test "x$fc_qt5_usable" = "x" ; then
     FC_QT5_CPPFLAGS="-DQT_DISABLE_DEPRECATED_BEFORE=0x050200"
     case $host_os in 
-    darwin*) FC_QT5_DARWIN;;
-    *) FC_QT5_GENERIC;;
+    darwin*) build_mac=yes;;
+    *) build_mac=no;;
     esac
+    FC_QT5_GENERIC
   fi
 ])
  
@@ -18,64 +17,32 @@ AC_DEFUN([FC_QT5_GENERIC],
 [
   AC_LANG_PUSH([C++])
 
-  AC_ARG_WITH([qt5],
-    AS_HELP_STRING([--with-qt5], [path to Qt5 installation]))
+  AC_ARG_WITH([qmake],
+    AS_HELP_STRING([--with-qmake], [path to qmake]),
+    [AC_MSG_CHECKING([Qt5 qmake])
+     if test -x "$withval" ; then
+       QMAKE=$withval
+       AC_MSG_RESULT([found])
+     else
+       QMAKE=no
+       AC_MSG_RESULT([not found])
+     fi],
+    [AC_PATH_PROG(QMAKE, qmake, no, [$PATH])])
 
-  AC_MSG_CHECKING([Qt5 headers])
+  if test "x$QMAKE" != "xno" ; then
+    AC_MSG_CHECKING([Qt5 headers])
 
-  AC_ARG_WITH([qt5-includes],
-    AS_HELP_STRING([--with-qt5-includes], [path to Qt5 includes]),
-              [FC_QT5_COMPILETEST([$withval])],
-[POTENTIAL_PATHS="/usr/include /usr/include/qt5 /usr/include/qt"
-
-  # search multiarch paths too (if the multiarch tuple can be found)
-  FC_MULTIARCH_TUPLE()
-  AS_IF(test "x$MULTIARCH_TUPLE" != "x",
-    POTENTIAL_PATHS="$POTENTIAL_PATHS /usr/include/$MULTIARCH_TUPLE/qt5")
-
-  dnl First test if Qt5 installation prefix works
-  if test "x$with_qt5" != "xno" ; then
-    FC_QT5_COMPILETEST([$with_qt5/include])
+    qt5_install_headers=`$QMAKE -query QT_INSTALL_HEADERS`
+    FC_QT5_COMPILETEST([$qt5_install_headers])
   fi
-
-  dnl Next test without any additional include paths to see if it works already
-  FC_QT5_COMPILETEST
-  for TEST_PATH in $POTENTIAL_PATHS
-  do
-    if test "x$qt5_headers" != "xyes" ; then
-      FC_QT5_COMPILETEST($TEST_PATH)
-    fi
-  done])
 
   if test "x$qt5_headers" = "xyes" ; then
     AC_MSG_RESULT([found])
 
     AC_MSG_CHECKING([Qt5 libraries])
-    AC_ARG_WITH([qt5-libs],
-      AS_HELP_STRING([--with-qt5-libs], [path to Qt5 libraries]),
-                [FC_QT5_LINKTEST([$withval])],
-[POTENTIAL_PATHS="/usr/lib/qt5 /usr/lib/qt"
 
-    # search multiarch paths too (if the multiarch tuple can be found)
-    FC_MULTIARCH_TUPLE()
-    AS_IF(test "x$MULTIARCH_TUPLE" != "x",
-      POTENTIAL_PATHS="$POTENTIAL_PATHS /usr/lib/$MULTIARCH_TUPLE/qt5")
-
-    dnl First test if Qt5 installation prefix works
-    if test "x$with_qt5" != "xno" ; then
-      FC_QT5_LINKTEST([$with_qt5/lib])
-    fi
-
-    dnl Next test without any additional library paths to see if it works already
-    if test "x$qt5_libs" != "xyes" ; then
-      FC_QT5_LINKTEST
-    fi
-    for TEST_PATH in $POTENTIAL_PATHS
-    do
-      if test "x$qt5_libs" != "xyes" ; then
-        FC_QT5_LINKTEST($TEST_PATH)
-      fi
-    done])
+    qt5_install_libs=`$QMAKE -query QT_INSTALL_LIBS`
+    FC_QT5_LINKTEST([$qt5_install_libs])
   fi
 
   if test "x$qt5_libs" = "xyes" ; then
@@ -87,7 +54,17 @@ AC_DEFUN([FC_QT5_GENERIC],
   AC_LANG_POP([C++])
   if test "x$fc_qt52" = "xyes" ; then
     AC_MSG_RESULT([ok])
-    FC_QT5_VALIDATE_MOC([fc_qt5_usable=true], [fc_qt5_usable=false])
+
+    AC_MSG_CHECKING([the Qt 5 moc command])
+    MOCCMD="`$QMAKE -query QT_INSTALL_BINS`/moc"
+    if test -x "$MOCCMD" ; then
+      fc_qt5_usable=true
+      AC_SUBST([MOCCMD])
+      AC_MSG_RESULT([$MOCCMD])
+    else
+      AC_MSG_RESULT([not found])
+      fc_qt5_usable=false
+    fi
   else
     AC_MSG_RESULT([not found])
     fc_qt5_usable=false
@@ -97,13 +74,9 @@ AC_DEFUN([FC_QT5_GENERIC],
 dnl Test if Qt headers are found from given path
 AC_DEFUN([FC_QT5_COMPILETEST],
 [
-  if test "x$1" != "x" ; then
-    CPPFADD=" -I$1 -I$1/QtCore -I$1/QtGui -I$1/QtWidgets"
-  else
-    CPPFADD=""
-  fi
+  CPPFADD=" -I$1 -I$1/QtCore -I$1/QtGui -I$1/QtWidgets"
 
-  if test "x$emscripten" = "xyes" ; then
+  if test "x$emscripten" = "xyes" || test "x$build_mac" = "xyes" ; then
     CXXFADD=" -std=c++11"
   else
     CXXFADD=" -fPIC"
@@ -125,7 +98,6 @@ AC_DEFUN([FC_QT5_COMPILETEST],
      CXXFLAGS="${CXXFLAGS_SAVE}"])
 
   CPPFLAGS="$CPPFLAGS_SAVE"
-  LDFLAGS="$LDFLAGS_SAVE"
 ])
 
 dnl Check if the included version of Qt is at least Qt5.2
@@ -155,15 +127,15 @@ AC_DEFUN([FC_QT52_CHECK],
 dnl Test Qt application linking with current flags
 AC_DEFUN([FC_QT5_LINKTEST],
 [
-  if test "x$1" != "x" ; then
-    LIBSADD=" -L$1 -lQt5Gui -lQt5Core -lQt5Widgets"
-  else
-    LIBSADD=" -lQt5Gui -lQt5Core -lQt5Widgets"
-  fi
+  LIBSADD=" -L$1 -lQt5Gui -lQt5Core -lQt5Widgets"
 
   if test "x$emscripten" = "xyes" ; then
+    qt5_install_plugins=`$QMAKE -query QT_INSTALL_PLUGINS`
     LDFADD=" --bind -Wl,--no-check-features"
-    LIBSADD="$LIBSADD -lqtlibpng -lqtharfbuzz -lqtpcre2 -L$with_qt5/plugins/platforms -lqwasm -L$with_qt5/plugins/imageformats -lqgif -lqico -lqjpeg -lQt5EventDispatcherSupport -lQt5ServiceSupport -lQt5ThemeSupport -lQt5FontDatabaseSupport -lqtfreetype -lQt5FbSupport -lQt5EglSupport -lQt5PlatformCompositorSupport -lQt5DeviceDiscoverySupport"
+    LIBSADD="$LIBSADD -lqtlibpng -lqtharfbuzz -lqtpcre2 -L$qt5_install_plugins/platforms -lqwasm -L$qt5_install_plugins/imageformats -lqgif -lqico -lqjpeg -lQt5EventDispatcherSupport -lQt5ServiceSupport -lQt5ThemeSupport -lQt5FontDatabaseSupport -lqtfreetype -lQt5FbSupport -lQt5EglSupport -lQt5PlatformCompositorSupport -lQt5DeviceDiscoverySupport"
+  elif test "x$build_mac" = "xyes" ; then
+    qt5_install_plugins=`$QMAKE -query QT_INSTALL_PLUGINS`
+    LIBSADD="$LIBSADD -lz -lQt5AccessibilitySupport -lQt5ClipboardSupport -lQt5GraphicsSupport -lQt5ThemeSupport -lQt5DBus -lQt5FontDatabaseSupport -lqtlibpng -lqtharfbuzz -lqtpcre2 -lqtfreetype -L$qt5_install_plugins/imageformats -lqgif -lqico -lqjpeg -L$qt5_install_plugins/styles -lqmacstyle -L$qt5_install_plugins/bearer -lqgenericbearer -L$qt5_install_plugins/platforms -lqcocoa -L$qt5_install_plugins/printsupport -lcocoaprintersupport -Wl,-framework,CoreText -Wl,-framework,Carbon -Wl,-framework,QuartzCore -Wl,-framework,CoreVideo -Wl,-framework,IOSurface -Wl,-framework,ImageIO -Wl,-framework,Metal -Wl,-framework,CoreGraphics -Wl,-framework,SystemConfiguration -Wl,-framework,GSS -Wl,-framework,DiskArbitration -Wl,-framework,IOKit -Wl,-framework,AppKit -Wl,-framework,Security -Wl,-framework,ApplicationServices -Wl,-framework,CoreServices -Wl,-framework,CoreFoundation -Wl,-framework,Foundation -Wl,-framework,OpenGL -Wl,-framework,AGL -lcups"
   else
     LDFADD=""
   fi
@@ -186,55 +158,3 @@ AC_DEFUN([FC_QT5_LINKTEST],
  CPPFLAGS="${CPPFLAGS_SAVE}"
  CXXFLAGS="${CXXFLAGS_SAVE}"
 ])
-
-dnl If $1 is Qt 5's moc command then $2 else $3
-AC_DEFUN([FC_QT5_IF_QT5_MOC],
-  AS_IF([test "`$1 -v 2<&1 | grep -o 'Qt [[[0-9]]]\+'`" = "Qt 5" ||
-         test "`$1 -v 2<&1 | grep -o 'moc [[[0-9]]]\+'`" = "moc 5" ||
-         test "`$1 -v 2<&1 | grep -o 'moc-qt[[[0-9]]]\+'`" = "moc-qt5"],
-    [$2], [$3]))
-
-dnl Set MOCCMD to $1 if it is the Qt 5 "moc". If not run $2 parameter.
-AC_DEFUN([FC_QT5_TRY_MOC],
-  [FC_QT5_IF_QT5_MOC([$1], [MOCCMD="$1"], [$2])])
-
-
-dnl If a usable moc command is found do $1 else do $2
-AC_DEFUN([FC_QT5_VALIDATE_MOC], [
-  AC_MSG_CHECKING([the Qt 5 moc command])
-
-  dnl Try to find a Qt 5 'moc' if MOCCMD isn't set.
-  dnl Test that the supplied MOCCMD is a Qt 5 'moc' if it is set.
-  AS_IF([test "x$MOCCMD" = "x"],
-    [FC_QT5_TRY_MOC([$with_qt5/bin/moc],:)
-     if test "x$MOCCMD" = "x" ; then
-       FC_QT5_TRY_MOC([$with_qt5/bn/qtchooser -run-tool=moc -qt=5],:)
-     fi
-     if test "x$MOCCMD" = "x" ; then
-       FC_QT5_TRY_MOC([moc],:)
-     fi
-     if test "x$MOCCMD" = "x" ; then
-      FC_QT5_TRY_MOC([qtchooser -run-tool=moc -qt=5],:)
-     fi
-    ],
-    dnl[FC_QT5_TRY_MOC([moc],
-      dnl[FC_QT5_TRY_MOC([qtchooser -run-tool=moc -qt=5],
-        dnl[MOCCMD=""])])],
-    [FC_QT5_TRY_MOC([$MOCCMD],
-      AC_MSG_ERROR(["MOCCMD set to a bad value ($MOCCMD)"]))])
-
-  dnl If no Qt 5 'moc' was found do $2, else do $1
-  AS_IF([test "x$MOCCMD" = "x"],
-    [AC_MSG_RESULT([not found]); $2],
-    [AC_MSG_RESULT([$MOCCMD]); $1])])
-
-dnl Put the multiarch tuple of the host architecture in $MULTIARCH_TUPLE if it
-dnl can be found.
-AC_DEFUN([FC_MULTIARCH_TUPLE], [
-  # GCC has the --print-multiarch option
-  AS_IF(test "x$GCC" = "xyes", [
-    # unless it is an old version
-    AS_IF(($CC --print-multiarch >/dev/null 2>/dev/null),
-      [MULTIARCH_TUPLE=`$CC --print-multiarch`],
-      [MULTIARCH_TUPLE="$host_cpu-$host_os"])],
-    [MULTIARCH_TUPLE="$host_cpu-$host_os"])])
