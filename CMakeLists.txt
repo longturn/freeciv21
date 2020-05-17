@@ -18,7 +18,7 @@ find_package(ZLIB REQUIRED)
 find_program(TOLUA_EXECUTABLE tolua)
 if(NOT TOLUA_EXECUTABLE)
   message(STATUS "Using built-in tolua")
-  set(BUILD_TOLUA_EXE TRUE)
+  set(BUILD_TOLUA TRUE)
 endif()
 
 # Detect common headers

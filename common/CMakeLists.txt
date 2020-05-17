@@ -23,18 +23,20 @@ add_library(fcivnetwork STATIC
 target_include_directories(fcivnetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
 target_link_libraries(fcivnetwork PUBLIC ZLIB::ZLIB)
 
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/scriptcore)
 add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.h
   COMMAND
-    ${TOLUA_EXECUTABLE}
+    tolua_exe
     -n common_a
     -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
   VERBATIM
   DEPENDS
+    tolua_exe
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
 )
 add_custom_command(
@@ -42,13 +44,14 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.h
   COMMAND
-    ${TOLUA_EXECUTABLE}
+    tolua_exe
     -n common_z
     -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_z.pkg
   VERBATIM
   DEPENDS
+    tolua_exe
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
 )
 add_custom_command(
@@ -56,13 +59,14 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.h
   COMMAND
-    ${TOLUA_EXECUTABLE}
+    tolua_exe
     -n game
     -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_game.pkg
   VERBATIM
   DEPENDS
+    tolua_exe
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_game.pkg
 )
 add_custom_command(
@@ -70,13 +74,14 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.h
   COMMAND
-    ${TOLUA_EXECUTABLE}
+    tolua_exe
     -n signal
     -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_signal.pkg
   VERBATIM
   DEPENDS
+    tolua_exe
     ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_signal.pkg
 )
 add_library(scriptcore STATIC
@@ -98,6 +103,7 @@ add_library(scriptcore STATIC
 )
 target_include_directories(scriptcore PUBLIC ${LUA_INCLUDE_DIRS})
 target_link_libraries(scriptcore PUBLIC ${LUA_LIBRARY} tolua)
+target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/scriptcore)
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore)
 
 # Generate the packet handling code
