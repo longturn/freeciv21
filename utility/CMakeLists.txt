@@ -66,6 +66,7 @@ add_library(civutility STATIC
   timing.c
   md5.c
   # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

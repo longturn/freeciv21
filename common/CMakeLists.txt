@@ -92,7 +92,6 @@ add_library(scriptcore STATIC
   scriptcore/tolua_game_gen.c
   scriptcore/tolua_signal_gen.c
 )
-# FIXME Run tolua
 target_include_directories(scriptcore PUBLIC ${LUA_INCLUDE_DIRS})
 target_link_libraries(scriptcore PUBLIC ${LUA_LIBRARY} tolua)
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore)
