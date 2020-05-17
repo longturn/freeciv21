@@ -126,7 +126,6 @@ add_custom_command(
   DEPENDS
     generate_packets.py
     networking/packets.def
-  COMMENT "Generating common packet handling code"
 )
 
 add_library(freeciv STATIC

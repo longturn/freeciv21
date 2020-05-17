@@ -42,4 +42,4 @@ add_library(
   wldlg.cpp
 )
 target_include_directories(freeciv_client_qt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(freeciv_client_qt PRIVATE freeciv_client Qt5::Widgets)
+target_link_libraries(freeciv_client_qt PRIVATE freeciv_client cma_core luascript Qt5::Widgets)

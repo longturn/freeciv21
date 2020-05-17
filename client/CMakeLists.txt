@@ -12,8 +12,8 @@ target_link_libraries(cma_core PUBLIC freeciv)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/luascript)
 add_custom_command(
   OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.h
+    ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.c
   COMMAND
     tolua_exe
     -n client
@@ -44,7 +44,7 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
   COMMAND
     ${PYTHON_EXECUTABLE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/generate_packets.py
+    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
     "" # common/packets_gen.h
     "" # common/packets_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
@@ -53,10 +53,18 @@ add_custom_command(
     "" # server/hand_gen.c
   VERBATIM
   DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/generate_packets.py
-    ${CMAKE_CURRENT_SOURCE_DIR}/../common/networking/packets.def
-  COMMENT "Generating client packet handling code"
+    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
+    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
 )
+add_library(
+  freeciv_client_gen
+  STATIC
+  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
+  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
+)
+target_include_directories(freeciv_client_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(freeciv_client_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(freeciv_client_gen PUBLIC freeciv)
 
 add_library(
   freeciv_client
@@ -84,7 +92,6 @@ add_library(
   music.c
   overview_common.c
   packhand.c
-  packhand_gen.c
   plrdlg_common.c
   options.c
   repodlgs_common.c
@@ -99,18 +106,18 @@ add_library(
   zoom.c
   audio.c
   audio_none.c
-  # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
 )
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
-target_link_libraries(freeciv_client PUBLIC freeciv cvercmp cma_core luascript)
+target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/luascript) # Terrible
+target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/agents) # Terrible
+target_link_libraries(freeciv_client PUBLIC freeciv freeciv_client_gen cvercmp)
 
 target_link_libraries(cma_core PUBLIC freeciv_client)
 target_link_libraries(luascript PUBLIC freeciv_client)
 
 add_subdirectory(gui-qt)
-target_link_libraries(freeciv_client PRIVATE freeciv_client_qt)
+target_link_libraries(freeciv_client PUBLIC freeciv_client_qt)
 
 add_executable(freeciv-qt dummycxx.cpp)
 target_link_libraries(freeciv-qt PRIVATE freeciv_client_qt)
