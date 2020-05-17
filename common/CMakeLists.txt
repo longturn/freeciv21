@@ -16,7 +16,8 @@ add_library(fcivnetwork STATIC
   networking/packets.c
   networking/packets_json.c
 )
-target_include_directories(aicore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
+target_include_directories(fcivnetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
+target_link_libraries(fcivnetwork PUBLIC ZLIB::ZLIB)
 
 add_library(scriptcore STATIC
   scriptcore/api_common_intl.c
@@ -41,7 +42,7 @@ add_library(scriptcore STATIC
 )
 # FIXME Run tolua
 target_include_directories(scriptcore PUBLIC ${LUA_INCLUDE_DIRS})
-target_link_libraries(scriptcore PUBLIC ${LUA_LIBRARIES})
+target_link_libraries(scriptcore PUBLIC ${LUA_LIBRARY} tolua)
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore)
 
 # Generate the packet handling code

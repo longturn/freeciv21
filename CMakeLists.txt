@@ -5,11 +5,14 @@ project(freeciv21 VERSION 3.1.0)
 set(BUG_URL "https://github.com/longturn/freeciv/issues")
 
 # Dependencies
+find_package(CURL REQUIRED)
+find_package(ICU COMPONENTS uc REQUIRED)
 find_package(Lua 5.3)
 if(NOT LUA_FOUND)
   set(BUILD_LUA TRUE)
 endif()
 find_package(PythonInterp 3 REQUIRED)
+find_package(ZLIB REQUIRED)
 
 # Detect common headers
 include(CheckCSourceCompiles)

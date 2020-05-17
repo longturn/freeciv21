@@ -70,7 +70,9 @@ add_library(civutility STATIC
 )
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(civutility PUBLIC config)
+target_include_directories(civutility PRIVATE ${CURL_INCLUDE_DIRS})
+target_link_libraries(civutility PUBLIC ICU::uc Threads::Threads)
+target_link_libraries(civutility PRIVATE ${CURL_LIBRARIES})
 
 target_compile_definitions(civutility PUBLIC HAVE_CONFIG_H)
 

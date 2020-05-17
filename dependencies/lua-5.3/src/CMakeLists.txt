@@ -40,6 +40,11 @@ target_include_directories(lua PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 if(NOT WIN32)
   target_link_libraries(lua PRIVATE m)
   # Replace FindLUA variables
-  set(LUA_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "")
-  set(LUA_LIBRARIES lua CACHE STRING "")
+  set(LUA_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR} CACHE STRING "" FORCE)
+  set(LUA_LIBRARY lua CACHE STRING "" FORCE)
 endif()
+
+add_library(tolua IMPORTED STATIC)
+set_target_properties(tolua PROPERTIES
+  IMPORTED_LOCATION /usr/lib/libtolua.a
+  INTERFACE_LINK_DEPENDS lua)

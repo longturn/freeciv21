@@ -56,6 +56,7 @@ add_library(
   control.c
   editor.c
   global_worklist.c
+  gui_interface.c
   goto.c
   helpdata.c
   luaconsole_common.c
@@ -83,9 +84,15 @@ add_library(
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
 )
-target_link_libraries(freeciv_client PUBLIC freeciv cvercmp cma_core luascript)
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+target_link_libraries(freeciv_client PUBLIC freeciv cvercmp cma_core luascript)
 
 target_link_libraries(cma_core PUBLIC freeciv_client)
 target_link_libraries(luascript PUBLIC freeciv_client)
+
+add_subdirectory(gui-qt)
+target_link_libraries(freeciv_client PRIVATE freeciv_client_qt)
+
+add_executable(freeciv-qt dummycxx.cpp)
+target_link_libraries(freeciv-qt PRIVATE freeciv_client_qt)
