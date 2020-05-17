@@ -9,12 +9,26 @@ add_library(
 target_include_directories(cma_core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/agents)
 target_link_libraries(cma_core PUBLIC freeciv)
 
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.c
+  COMMAND
+    ${TOLUA_EXECUTABLE}
+    -n client
+    -o ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/luascript/tolua_client.pkg
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/luascript/tolua_client.pkg
+)
 add_library(
   luascript
   STATIC
   luascript/api_client_base.c
   luascript/script_client.c
-  luascript/tolua_client_gen.c
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/luascript/tolua_client_gen.c
 )
 target_include_directories(luascript PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/luascript)
 target_link_libraries(luascript PUBLIC freeciv)

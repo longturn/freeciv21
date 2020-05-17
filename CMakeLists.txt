@@ -9,10 +9,17 @@ find_package(CURL REQUIRED)
 find_package(ICU COMPONENTS uc REQUIRED)
 find_package(Lua 5.3)
 if(NOT LUA_FOUND)
+  message(STATUS "Using built-in lua")
   set(BUILD_LUA TRUE)
 endif()
 find_package(PythonInterp 3 REQUIRED)
 find_package(ZLIB REQUIRED)
+
+find_program(TOLUA_EXECUTABLE tolua)
+if(NOT TOLUA_EXECUTABLE)
+  message(STATUS "Using built-in tolua")
+  set(BUILD_TOLUA_EXE TRUE)
+endif()
 
 # Detect common headers
 include(CheckCSourceCompiles)

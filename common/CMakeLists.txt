@@ -19,6 +19,62 @@ add_library(fcivnetwork STATIC
 target_include_directories(fcivnetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
 target_link_libraries(fcivnetwork PUBLIC ZLIB::ZLIB)
 
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.h
+  COMMAND
+    ${TOLUA_EXECUTABLE}
+    -n common_a
+    -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_a_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
+)
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.h
+  COMMAND
+    ${TOLUA_EXECUTABLE}
+    -n common_z
+    -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_common_z_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_z.pkg
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_common_a.pkg
+)
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.h
+  COMMAND
+    ${TOLUA_EXECUTABLE}
+    -n game
+    -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_game_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_game.pkg
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_game.pkg
+)
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.h
+  COMMAND
+    ${TOLUA_EXECUTABLE}
+    -n signal
+    -o ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/scriptcore/tolua_signal_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_signal.pkg
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore/tolua_signal.pkg
+)
 add_library(scriptcore STATIC
   scriptcore/api_common_intl.c
   scriptcore/api_common_utilities.c
@@ -30,10 +86,6 @@ add_library(scriptcore STATIC
   scriptcore/luascript.c
   scriptcore/luascript_func.c
   scriptcore/luascript_signal.c
-  scriptcore/tolua_common_a_gen.c
-  scriptcore/tolua_common_z_gen.c
-  scriptcore/tolua_game_gen.c
-  scriptcore/tolua_signal_gen.c
   # Generated
   scriptcore/tolua_common_a_gen.c
   scriptcore/tolua_common_z_gen.c
