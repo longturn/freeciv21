@@ -49,11 +49,6 @@ add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
-  BYPRODUCTS
-    ${CMAKE_CURRENT_BINARY_DIR}/tmp_packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/tmp_packhand_gen.c
-    ${CMAKE_CURRENT_BINARY_DIR}/tmp_hand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/tmp_hand_gen.c
   COMMAND
     # FIXME The script always writes all 6 files, but we need only two. Give
     #       dummy names to the ones we don't want.
@@ -61,16 +56,16 @@ add_custom_command(
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_packets.py
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
     ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
-    ${CMAKE_CURRENT_BINARY_DIR}/dummy # client/packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/dummy # client/packhand_gen.c
-    ${CMAKE_CURRENT_BINARY_DIR}/dummy # server/hand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/dummy # server/hand_gen.c
+    "" # client/packhand_gen.h
+    "" # client/packhand_gen.c
+    "" # server/hand_gen.h
+    "" # server/hand_gen.c
+  VERBATIM
   DEPENDS
     generate_packets.py
     networking/packets.def
   COMMENT "Generating common packet handling code"
 )
-
 
 add_library(freeciv STATIC
   achievements.c

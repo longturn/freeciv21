@@ -27,7 +27,7 @@
 #cmakedefine FREECIV_TESTMATIC
 
 /* Metaserver URL */
-#cmakedefine FREECIV_META_URL
+#cmakedefine FREECIV_META_URL "${FREECIV_META_URL}"
 
 /* Month next version will be released */
 #cmakedefine FREECIV_RELEASE_MONTH

@@ -6,6 +6,7 @@ add_custom_command(
     ${PYTHON_EXECUTABLE}
     ${CMAKE_CURRENT_SOURCE_DIR}/generate_specenum.py
     ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
+  VERBATIM
   DEPENDS
     generate_specenum.py
   COMMENT "Generating specenum.h"
@@ -25,6 +26,10 @@ add_custom_command(
   COMMAND
     ${CMAKE_CURRENT_SOURCE_DIR}/../gen_headers/generate_version_header.sh
     ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
+  VERBATIM
+  DEPENDS
+    ${CMAKE_CURRENT_SOURCE_DIR}/../gen_headers/generate_version_header.sh
+  COMMENT "Generating version_gen.h"
 )
 
 add_library(civutility STATIC
