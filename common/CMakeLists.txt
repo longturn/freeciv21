@@ -6,6 +6,8 @@ add_library(aicore STATIC
   aicore/cm.c
   aicore/citymap.c
   aicore/caravan.c
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
 )
 target_include_directories(aicore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/aicore)
 
@@ -15,6 +17,8 @@ add_library(fcivnetwork STATIC
   networking/dataio_raw.c
   networking/packets.c
   networking/packets_json.c
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
 )
 target_include_directories(fcivnetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
 target_link_libraries(fcivnetwork PUBLIC ZLIB::ZLIB)
@@ -176,6 +180,7 @@ add_library(freeciv STATIC
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
 )
+target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(freeciv civutility aicore fcivnetwork scriptcore)
 
