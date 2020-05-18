@@ -15,6 +15,10 @@
 #include <fc_config.h>
 #endif
 
+// std
+#include <algorithm>
+#include <random>
+
 // Qt
 #include <QApplication>
 #include <QFileDialog>
@@ -62,7 +66,6 @@
 
 extern QApplication *qapp;
 
-static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
 static void enable_interface(bool enable);
 extern int last_center_enemy;
 extern int last_center_capital;
@@ -306,7 +309,8 @@ void trade_generator::calculate()
 
   for (i = 0; i < 100; i++) {
     tdone = true;
-    std::sort(cities.begin(), cities.end(), tradecity_rand);
+    std::shuffle(cities.begin(), cities.end(),
+                 std::mt19937(std::random_device()()));
     lines.clear();
     foreach (tc, cities) {
       tc->pos_cities.clear();
@@ -472,14 +476,6 @@ bool trade_generator::discard_any(trade_city* tc, int freeroutes)
     }
   }
   return false;
-}
-
-/**************************************************************************
-  Helper function ato randomize list
-**************************************************************************/
-bool tradecity_rand(const trade_city *t1, const trade_city *t2)
-{
-  return (qrand() % 2);
 }
 
 /**************************************************************************
