@@ -2099,7 +2099,7 @@ void fc_client::update_sidebar_tooltips()
     max = 100;
   }
 
-  if (!client_is_global_observer()) {
+  if (!client_is_global_observer() && client.conn.playing) {
     sw_science->set_tooltip(science_dialog_text());
     str = QString(nation_plural_for_player(client_player()));
     str = str + '\n' + get_info_label_text(false);

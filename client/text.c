@@ -752,7 +752,7 @@ static int turns_to_tech_loss(const struct research *presearch, int per_turn)
 const char *science_dialog_text(void)
 {
   bool team;
-  int ours, theirs, perturn, upkeep;
+  int ours, theirs, perturn, upkeep = 0;
   static struct astring str = ASTRING_INIT;
   struct astring ourbuf = ASTRING_INIT, theirbuf = ASTRING_INIT;
   struct research *research;
@@ -762,7 +762,10 @@ const char *science_dialog_text(void)
   perturn = get_bulbs_per_turn(&ours, &team, &theirs);
 
   research = research_get(client_player());
-  upkeep = client_player()->client.tech_upkeep;
+
+  if (client_player()) {
+    upkeep = client_player()->client.tech_upkeep;
+  }
 
   if (NULL == client.conn.playing || (ours == 0 && theirs == 0
                                       && upkeep == 0)) {
