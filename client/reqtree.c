@@ -483,6 +483,7 @@ void destroy_reqtree(struct reqtree *tree)
     if (tree->layer_size) {
       free(tree->layer_size);
     }
+    free(tree->layers);
   }
   free(tree);
 }
