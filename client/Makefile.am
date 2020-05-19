@@ -359,6 +359,7 @@ freeciv_qt_js_LDFLAGS = $(gui_qt_ldflags) \
  --exclude-file $(top_srcdir)/data/themes/gui-sdl2\* \
  -s ASSERTIONS=1 \
  -s ASYNCIFY=1 \
+ -s EXTRA_EXPORTED_RUNTIME_METHODS='["stringToUTF16", "UTF16ToString", "stringToUTF8", "UTF8ToString", "setValue"]' \
  -s TOTAL_MEMORY=33554432
 freeciv_qt_js_LDADD = \
  libfcgui-qt.la $(SOUND_LIBS) gui-qt/gui_main.lo \
