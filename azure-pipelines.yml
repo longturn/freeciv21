@@ -13,7 +13,7 @@ jobs:
     inputs:
       key: wasm_qt | "$(emsdk_tag)" | "$(qt_branch)"
       path: $(Build.SourcesDirectory)/qt5
-      cacheHitVar: wasm_qt_cache
+      cacheHitVar: WASM_QT_CACHE_RESTORED
 
   - script: |
       sudo apt-get update
@@ -22,6 +22,8 @@ jobs:
       git clone https://github.com/emscripten-core/emsdk
       ./emsdk/emsdk install $(EMSDK_TAG)
       ./emsdk/emsdk activate $(EMSDK_TAG)
+
+  - script: |
       source ./emsdk/emsdk_env.sh
       git clone https://github.com/qt/qtbase qtbase --depth=1 --branch=$(QT_BRANCH)
       mkdir -p qtbuild
@@ -29,9 +31,13 @@ jobs:
       ../qtbase/configure -xplatform wasm-emscripten -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license
       make install
       popd
+    timeoutInMinutes: 120
+    condition: ne(variables.WASM_QT_CACHE_RESTORED, 'true')
+
+  - script: |
+      source ./emsdk/emsdk_env.sh
       emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qt5=$(Build.SourcesDirectory)/qt5
       emmake make
-    timeoutInMinutes: 180
 
   - task: CopyFiles@2
     inputs:
