@@ -40,6 +40,14 @@
 #include <QScrollBar>
 #include <QStyleFactory>
 
+#ifdef __EMSCRIPTEN__
+#include <QtPlugin>
+Q_IMPORT_PLUGIN(QWasmIntegrationPlugin)
+Q_IMPORT_PLUGIN(QGifPlugin)
+Q_IMPORT_PLUGIN(QICOPlugin)
+Q_IMPORT_PLUGIN(QJpegPlugin)
+#endif
+
 // utility
 #include "fc_cmdline.h"
 #include "fciconv.h"
