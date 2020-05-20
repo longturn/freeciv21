@@ -99,7 +99,7 @@ class multipler_rates_dialog: public QDialog
   Q_OBJECT
 
 public:
-  explicit multipler_rates_dialog(QWidget* parent = 0, Qt::WindowFlags f = 0);
+  explicit multipler_rates_dialog(QWidget* parent = nullptr, Qt::WindowFlags f = Qt::Widget);
 private:
   QList<QSlider*> slider_list;
   QPushButton *cancel_button;

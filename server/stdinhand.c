@@ -4222,7 +4222,7 @@ static bool autocreate_command(struct connection *caller, char *arg, bool check)
       player_nation_defaults(pplayer, pnation, FALSE);
     }
     if (conf_team[0] != '\0') {
-      char dupa[1024];
+      char dupa[2052];
       sprintf(dupa, "\"%s\" \"%s\"", conf_player, conf_team);
       team_command(caller, dupa, check);
     }

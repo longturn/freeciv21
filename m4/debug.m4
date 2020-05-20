@@ -13,10 +13,10 @@ dnl -g is added by AC_PROG_CC if the compiler understands it
 
 dnl ==========================================================================
 dnl Always
-FC_C_FLAGS([-Wno-tautological-compare -Wno-nonnull-compare],
+FC_C_FLAGS([-Wno-tautological-compare -Wno-tautological-constant-out-of-range-compare -Wno-nonnull-compare],
            [], [EXTRA_DEBUG_CFLAGS])
 if test "x$cxx_works" = "xyes" ; then
-  FC_CXX_FLAGS([-Wno-tautological-compare -Wno-nonnull-compare],
+  FC_CXX_FLAGS([-Wno-tautological-compare -Wno-tautological-constant-out-of-range-compare -Wno-nonnull-compare],
                [], [EXTRA_DEBUG_CXXFLAGS])
 fi
 
@@ -36,11 +36,11 @@ dnl ==========================================================================
 dnl debug level >= some
 if test "x$enable_debug" = "xsome" -o "x$enable_debug" = "xyes" -o \
         "x$enable_debug" = "xchecks"; then
-  FC_C_FLAGS([-Wall -Wpointer-arith -Wcast-align ],
+  FC_C_FLAGS([-Wall -Wno-tautological-constant-out-of-range-compare -Wpointer-arith -Wcast-align ],
              [], [EXTRA_DEBUG_CFLAGS])
   if test "x$cxx_works" = "xyes" ; then
     AC_DEFINE([QT_NO_DEBUG], [1], [Qt debugging support disabled])
-    FC_CXX_FLAGS([-Wall -Wpointer-arith -Wcast-align],
+    FC_CXX_FLAGS([-Wall -Wno-tautological-constant-out-of-range-compare -Wpointer-arith -Wcast-align],
                  [], [EXTRA_DEBUG_CXXFLAGS])
   fi
 fi
