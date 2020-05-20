@@ -16,6 +16,7 @@ jobs:
       cacheHitVar: WASM_QT_CACHE_RESTORED
 
   - script: |
+      nproc
       sudo apt-get update
       sudo apt-get install -y --reinstall ca-certificates
       DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -y pkg-config g++ automake autoconf git python3 python3-distutils xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
@@ -29,7 +30,7 @@ jobs:
       mkdir -p qtbuild
       pushd qtbuild
       ../qtbase/configure -xplatform wasm-emscripten -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license
-      make install
+      make install -j$(nproc)
       popd
     timeoutInMinutes: 120
     condition: ne(variables.WASM_QT_CACHE_RESTORED, 'true')
@@ -37,7 +38,7 @@ jobs:
   - script: |
       source ./emsdk/emsdk_env.sh
       emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qt5=$(Build.SourcesDirectory)/qt5
-      emmake make
+      emmake make -j$(nproc)
 
   - task: CopyFiles@2
     inputs:
