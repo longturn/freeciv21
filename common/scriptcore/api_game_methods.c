@@ -129,7 +129,7 @@ const char
 bool api_methods_city_has_building(lua_State *L, City *pcity,
                                    Building_Type *building)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
   LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, FALSE);
 
@@ -229,7 +229,7 @@ int api_methods_city_culture_get(lua_State *L, City *pcity)
 *****************************************************************************/
 bool api_methods_is_city_happy(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
   return city_happy(pcity);
@@ -240,7 +240,7 @@ bool api_methods_is_city_happy(lua_State *L, City *pcity)
 *****************************************************************************/
 bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
   return city_unhappy(pcity);
@@ -251,7 +251,7 @@ bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
 *****************************************************************************/
 bool api_methods_is_city_celebrating(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
   return city_celebrating(pcity);
@@ -262,7 +262,7 @@ bool api_methods_is_city_celebrating(lua_State *L, City *pcity)
 *****************************************************************************/
 bool api_methods_is_gov_center(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
   return is_gov_center(pcity);
@@ -273,7 +273,7 @@ bool api_methods_is_gov_center(lua_State *L, City *pcity)
 *****************************************************************************/
 bool api_methods_is_capital(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
   return is_capital(pcity);

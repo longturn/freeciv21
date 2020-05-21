@@ -112,7 +112,7 @@ struct color *get_color(const struct tileset *t, enum color_std stdcolor)
 bool player_has_color(const struct tileset *t,
                       const struct player *pplayer)
 {
-  fc_assert_ret_val(pplayer != NULL, NULL);
+  fc_assert_ret_val(pplayer != NULL, FALSE);
 
   return pplayer->rgb != NULL;
 }
