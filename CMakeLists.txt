@@ -25,6 +25,8 @@ endif()
 include(CheckCSourceCompiles)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
+include(CheckTypeSize)
+include(CheckVariableExists)
 
 # Freeciv features not supported by this build system
 set(FREECIV_WEB FALSE)
@@ -32,7 +34,6 @@ set(FREECIV_TESTMATIC FALSE)
 set(FREECIV_HAVE_XML_REGISTRY FALSE)
 set(FREECIV_JSON_CONNECTION FALSE)
 set(FREECIV_SOCKET_ZERO_NOT_STDIN FALSE) # BeOS
-set(FREECIV_IPV6_SUPPORT FALSE)
 
 # Defaults
 set(FREECIV_META_URL "http://meta.freeciv.org/metaserver.php"
@@ -97,14 +98,30 @@ check_c_source_compiles("
 check_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
 check_include_file("netdb.h" HAVE_NETDB_H)
 check_include_file("unistd.h" HAVE_UNISTD_H)
+check_include_file("pwd.h" HAVE_PWD_H)
+check_include_file("sys/uio.h" HAVE_SYS_UIO_H)
+
+check_function_exists(fcntl HAVE_FCNTL)
+check_include_file("fcntl.h" HAVE_FCNTL_H)
+check_function_exists(ioctl HAVE_IOCTL)
+check_include_file("sys/ioctl.h" HAVE_SYS_IOCTL_H)
+if((HAVE_FCNTL AND HAVE_FCNTL_H) OR (HAVE_IOCTL AND HAVE_SYS_IOCTL_H))
+  set(NONBLOCKING_SOCKETS TRUE)
+else()
+  message(FATAL_ERROR "Non-blocking sockets are not available")
+endif()
 
 check_include_file("inttypes.h" FREECIV_HAVE_INTTYPES_H)
 check_include_file("stdint.h" FREECIV_HAVE_STDINT_H)
 check_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
-check_include_file("netinet/in.h" FREECIV_HAVE_NETINET_IN_H)
-check_include_file("sys/select.h" FREECIV_HAVE_SYS_SELECT_H)
-check_include_file("sys/socket.h" FREECIV_HAVE_SYS_SOCKET_H)
-check_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)
+check_include_file("netinet/in.h" HAVE_NETINET_IN_H)
+set(FREECIV_HAVE_NETINET_IN_H ${HAVE_NETINET_IN_H})
+check_include_file("sys/select.h" HAVE_SYS_SELECT_H)
+set(FREECIV_HAVE_SYS_SELECT_H ${HAVE_SYS_SELECT_H})
+check_include_file("sys/socket.h" HAVE_SYS_SOCKET_H)
+set(FREECIV_HAVE_SYS_SOCKET_H ${HAVE_SYS_SOCKET_H})
+check_include_file("sys/time.h" HAVE_SYS_TIME_H)
+set(FREECIV_HAVE_SYS_TIME_H ${HAVE_SYS_TIME_H})
 check_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
 check_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
 check_include_file("ws2tcpip.h" FREECIV_HAVE_WS2TCPIP_H)
@@ -113,6 +130,26 @@ check_include_file("winsock2.h" FREECIV_HAVE_WINSOCK2)
 set(FREECIV_MSWINDOWS ${WIN32})
 check_include_file("locale.h" FREECIV_HAVE_LOCALE_H)
 check_function_exists(opendir FREECIV_HAVE_OPENDIR)
+check_function_exists(getaddrinfo HAVE_GETADDRINFO)
+check_function_exists(inet_pton HAVE_INET_PTON)
+check_function_exists(inet_ntop HAVE_INET_NTOP)
+check_function_exists(getnameinfo HAVE_GETNAMEINFO)
+check_c_source_compiles("
+  #include <sys/socket.h>
+  void main()
+  {
+    socket(AF_INET6, SOCK_STREAM, 0);
+  }"
+  HAVE_AF_INET6)
+if(HAVE_GETADDRINFO AND HAVE_INET_PTON AND HAVE_INET_NTOP AND HAVE_GETNAMEINFO AND HAVE_AF_INET6)
+  set(FREECIV_IPV6_SUPPORT TRUE)
+else()
+  set(FREECIV_IPV6_SUPPORT FALSE)
+endif()
+
+set(CMAKE_EXTRA_INCLUDE_FILES "netinet/in.h")
+check_type_size(ip_mreqn SIZEOF_IP_MREQN)
+unset(CMAKE_EXTRA_INCLUDE_FILES)
 
 add_subdirectory(dependencies)
 add_subdirectory(utility)
