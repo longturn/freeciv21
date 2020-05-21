@@ -21,6 +21,10 @@
 #include <execinfo.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#endif
+
 /* utility */
 #include "log.h"
 #include "shared.h"
@@ -28,7 +32,7 @@
 #include "fcbacktrace.h"
 
 /* We don't want backtrace-spam to testmatic logs */
-#if defined(DEBUG) && defined(HAVE_BACKTRACE) && !defined(FREECIV_TESTMATIC)
+#if defined(DEBUG) && defined(__EMSCRIPTEN__) || defined(HAVE_BACKTRACE) && !defined(FREECIV_TESTMATIC)
 #define BACKTRACE_ACTIVE 1
 #endif
 
@@ -116,6 +120,9 @@ static void backtrace_log(enum log_level level, bool print_from_where,
 void backtrace_print(enum log_level level)
 {
 #ifdef BACKTRACE_ACTIVE
+#ifdef __EMSCRIPTEN__
+  emscripten_log(EM_LOG_ERROR | EM_LOG_C_STACK | EM_LOG_DEMANGLE | EM_LOG_FUNC_PARAMS, "Backtrace:");
+#else
   void *buffer[MAX_NUM_FRAMES];
   int frames;
   char **names;
@@ -140,5 +147,6 @@ void backtrace_print(enum log_level level)
 
     free(names);
   }
+#endif /* __EMSCRIPTEN__ */
 #endif /* BACKTRACE_ACTIVE */
 }
