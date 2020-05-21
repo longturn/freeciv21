@@ -352,6 +352,8 @@ bin_PROGRAMS += freeciv-qt.js
 freeciv_qt_js_SOURCES = dummycxx.cpp $(gui_interface_src)
 freeciv_qt_js_LDFLAGS = $(gui_qt_ldflags) \
  -O3 -s WASM=1 \
+ --emrun \
+ -g4 \
  -s USE_PTHREADS=0 \
  -s ERROR_ON_UNDEFINED_SYMBOLS=0 \
  -s ALLOW_MEMORY_GROWTH=1 \
