@@ -1,3 +1,34 @@
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+  COMMAND
+    ${PYTHON_EXECUTABLE}
+    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
+    "" # common/packets_gen.h
+    "" # common/packets_gen.c
+    "" # client/packhand_gen.h
+    "" # client/packhand_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+  VERBATIM
+  DEPENDS
+    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
+    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
+)
+add_library(
+  freeciv_server_gen
+  STATIC
+  # The generated code calls these directly
+  handchat.c
+  infrapts.c
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+)
+target_include_directories(freeciv_server_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(freeciv_server_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(freeciv_server_gen PUBLIC freeciv)
+
 add_library(
   freeciv_server
   STATIC
@@ -19,9 +50,6 @@ add_library(
   edithand.c
   fcdb.c
   gamehand.c
-  handchat.c
-  hand_gen.c
-  infrapts.c
   maphand.c
   meta.c
   mood.c
@@ -44,6 +72,7 @@ add_library(
   voting.c
 )
 target_include_directories(freeciv_server PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+target_link_libraries(freeciv_server PUBLIC freeciv_server_gen)
 target_link_libraries(freeciv_server PUBLIC freeciv)
 
 add_subdirectory(advisors)

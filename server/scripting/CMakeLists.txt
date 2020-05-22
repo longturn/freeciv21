@@ -1,3 +1,33 @@
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.h
+    ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
+  COMMAND
+    tolua_exe
+    -n client
+    -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tolua_fcdb.pkg
+  VERBATIM
+  DEPENDS
+    tolua_exe
+    ${CMAKE_CURRENT_SOURCE_DIR}/tolua_fcdb.pkg
+)
+add_custom_command(
+  OUTPUT
+    ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.h
+    ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
+  COMMAND
+    tolua_exe
+    -n client
+    -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
+    -H ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/tolua_server.pkg
+  VERBATIM
+  DEPENDS
+    tolua_exe
+    ${CMAKE_CURRENT_SOURCE_DIR}/tolua_server.pkg
+)
 add_library(
   scripting
   STATIC
@@ -10,8 +40,9 @@ add_library(
   api_server_notify.c
   script_fcdb.c
   script_server.c
-  tolua_fcdb_gen.c
-  tolua_server_gen.c
+  # Generated
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
 )
 target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(scripting freeciv_server)
