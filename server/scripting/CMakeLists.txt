@@ -4,7 +4,7 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
   COMMAND
     tolua_exe
-    -n client
+    -n fcdb
     -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tolua_fcdb.pkg
@@ -19,7 +19,7 @@ add_custom_command(
     ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
   COMMAND
     tolua_exe
-    -n client
+    -n server
     -o ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
     -H ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tolua_server.pkg
@@ -44,5 +44,6 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
 )
+target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(scripting PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(scripting freeciv_server)
+target_link_libraries(scripting PUBLIC freeciv_server)
