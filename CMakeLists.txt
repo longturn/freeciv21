@@ -50,7 +50,13 @@ set(FREECIV_AI_MOD_LAST 2 CACHE STRING "Maximum number of AI modules")
 
 # check_include_file("inttypes.h" FREECIV_HAVE_INTL_H)
 check_include_file("libint.h" FREECIV_HAVE_LIBINT_H)
-check_include_file("readline/readline.h" FREECIV_HAVE_LIBREADLINE)
+check_include_file("readline/readline.h" HAVE_READLINE_H)
+find_library(READLINE_LIBRARY readline)
+if(HAVE_READLINE_H AND READLINE_LIBRARY)
+  set(FREECIV_HAVE_LIBREADLINE TRUE)
+else()
+  set(FREECIV_HAVE_LIBREADLINE FALSE)
+endif()
 check_include_file("stdbool.h" FREECIV_HAVE_STDBOOL_H)
 
 # Check for compiler features

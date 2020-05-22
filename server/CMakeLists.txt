@@ -1,8 +1,3 @@
-find_library(READLINE_LIBRARY readline)
-if(NOT READLINE_LIBRARY)
-  message(FATAL_ERROR "Could not find readline")
-endif()
-
 add_library(
   freeciv_server
   STATIC
@@ -70,4 +65,6 @@ add_executable(
   srv_main.c
 )
 target_link_libraries(freeciv-server PRIVATE freeciv_server)
-target_link_libraries(freeciv-server PRIVATE ${READLINE_LIBRARY})
+if(FREECIV_HAVE_LIBREADLINE)
+  target_link_libraries(freeciv-server PRIVATE ${READLINE_LIBRARY})
+endif()
