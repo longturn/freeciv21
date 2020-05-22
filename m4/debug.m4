@@ -54,16 +54,16 @@ if test "x$enable_debug" = "xyes" -o "x$enable_debug" = "xchecks"; then
 
   FC_C_FLAGS([-Werror -Wmissing-prototypes -Wmissing-declarations \
               -Wformat -Wformat-security -Wnested-externs \
-              -Wshadow -Wold-style-declaration -fsanitize=address -fsanitize-recover=address],
+              -Wshadow -Wold-style-declaration],
              [], [EXTRA_DEBUG_CFLAGS])
   if test "x$cxx_works" = "xyes" ; then
     FC_CXX_FLAGS([-Werror -Wmissing-prototypes -Wmissing-declarations \
-                  -Wformat -Wformat-security -Wold-style-declaration -fsanitize=address -fsanitize-recover=address],
+                  -Wformat -Wformat-security -Wold-style-declaration],
                  [], [EXTRA_DEBUG_CXXFLAGS])
   fi
 
   dnl backtrace log callback needs "-rdynamic" in order to work well.
-  FC_LD_FLAGS([-rdynamic -Wl,--no-add-needed -fsanitize=address -fsanitize-recover=address], [], [EXTRA_DEBUG_LDFLAGS])
+  FC_LD_FLAGS([-rdynamic -Wl,--no-add-needed], [], [EXTRA_DEBUG_LDFLAGS])
 fi
 
 dnl ==========================================================================
