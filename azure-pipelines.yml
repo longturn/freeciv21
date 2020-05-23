@@ -120,3 +120,28 @@ jobs:
     inputs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: macos
+
+- job: QtWindows
+  pool:
+    vmImage: 'vs2017-win2016'
+
+  steps:
+  - task: Cache@2
+    inputs:
+      key: win_qt | "$(qt_branch)"
+      path: $(Build.SourcesDirectory)/qt5
+      cacheHitVar: WIN_QT_CACHE_RESTORED
+    displayName: 'Qt cache'
+
+  - script: |
+      git clone https://github.com/qt/qtbase qtbase --depth=1 --branch=$(QT_BRANCH)
+      mkdir -p qtbuild
+      cd qtbuild
+      ../qtbase/configure -static -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license -opengl desktop --zlib=qt
+    condition: ne(variables.WIN_QT_CACHE_RESTORED, 'true')
+
+  - script: |
+      cd qtbuild
+      mingw32-make install -j2 || copy $(Build.SourcesDirectory)/qtbuild/qmake/qmake.exe $(Build.SourcesDirectory)/qt5/bin/qmake.exe
+    condition: ne(variables.WIN_QT_CACHE_RESTORED, 'true')
+    displayName: 'Build Qt'
