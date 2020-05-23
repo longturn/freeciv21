@@ -1,12 +1,13 @@
-pool:
-  vmImage: 'ubuntu-latest'
-
 variables:
-  emsdk_tag: 1.39.13
   qt_branch: 5.15.0
 
 jobs:
 - job: QtWasm
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  variables:
+    emsdk_tag: 1.39.13
   timeoutInMinutes: 180
   steps:
   - task: Cache@2
@@ -14,6 +15,7 @@ jobs:
       key: wasm_qt | "$(emsdk_tag)" | "$(qt_branch)"
       path: $(Build.SourcesDirectory)/qt5
       cacheHitVar: WASM_QT_CACHE_RESTORED
+    displayName: 'Qt cache'
 
   - script: |
       nproc
@@ -23,6 +25,7 @@ jobs:
       git clone https://github.com/emscripten-core/emsdk
       ./emsdk/emsdk install $(EMSDK_TAG)
       ./emsdk/emsdk activate $(EMSDK_TAG)
+    displayName: 'Setup Build Environment'
 
   - script: |
       source ./emsdk/emsdk_env.sh
@@ -34,11 +37,13 @@ jobs:
       popd
     timeoutInMinutes: 120
     condition: ne(variables.WASM_QT_CACHE_RESTORED, 'true')
+    displayName: 'Build Qt'
 
   - script: |
       source ./emsdk/emsdk_env.sh
       emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qt5=$(Build.SourcesDirectory)/qt5
       emmake make -j$(nproc)
+    displayName: 'Build Freeciv'
 
   - task: CopyFiles@2
     inputs:
@@ -50,3 +55,40 @@ jobs:
     inputs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
       artifactName: qtwasm
+
+- job: MacOS
+  pool:
+    vmImage: 'macos-10.14'
+
+  variables:
+    macosx_deployment_target: 10.10
+
+  steps:
+  - task: Cache@2
+    inputs:
+      key: macos_qt | "$(qt_branch)" | "$(macosx_deployment_target)"
+      path: $(Build.SourcesDirectory)/qt5
+      cacheHitVar: MACOS_QT_CACHE_RESTORED
+    displayName: 'Qt cache'
+
+  - script: |
+      brew install gettext icu4c libtool automake autoconf sdl2_mixer pkg-config
+    displayName: 'Setup Build Environment'
+
+  - script: |
+      git clone https://github.com/qt/qtbase qtbase --depth=1 --branch=$(QT_BRANCH)
+      mkdir -p qtbuild
+      pushd qtbuild
+      ../qtbase/configure -static -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license
+      make install -j$(nproc)
+      popd
+    timeoutInMinutes: 120
+    condition: ne(variables.MACOS_QT_CACHE_RESTORED, 'true')
+    displayName: 'Build Qt'
+
+  - script: |
+      export PATH="/usr/local/opt/icu4c/bin:/usr/local/opt/gettext/bin:$PATH"
+      ./autogen.sh --no-configure-run
+      ./configure PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig:/usr/local/lib/pkgconfig" CFLAGS="-O3 -I/usr/local/opt/gettext/include" LDFLAGS="-L/usr/local/opt/gettext/lib" --enable-client=qt --disable-fcmp --enable-fcdb=sqlite3 --prefix=/usr/local --with-qt5=$(Build.SourcesDirectory)/qt5
+      make install || true
+    displayName: 'Build Freeciv'
