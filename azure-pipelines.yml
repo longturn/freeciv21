@@ -92,3 +92,14 @@ jobs:
       ./configure PKG_CONFIG_PATH="/usr/local/opt/icu4c/lib/pkgconfig:/usr/local/opt/libffi/lib/pkgconfig:/usr/local/lib/pkgconfig" CFLAGS="-O3 -I/usr/local/opt/gettext/include" LDFLAGS="-L/usr/local/opt/gettext/lib" --enable-client=qt --disable-fcmp --enable-fcdb=sqlite3 --prefix=/usr/local --with-qt5=$(Build.SourcesDirectory)/qt5
       make install || true
     displayName: 'Build Freeciv'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: 'config.log'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: macos
