@@ -1,5 +1,4 @@
 #include "freeciv_config.h"
-#include "version_gen.h"
 
 #define CMAKE_BUILD
 
@@ -35,6 +34,32 @@
 
 /* Produce debug version */
 #cmakedefine FREECIV_DEBUG
+
+#define DEBUG 1
+
+#define FOLLOWTAG "stable"
+#define FREECIV_DISTRIBUTOR ""
+
+/* Network capability string */
+#define NETWORK_CAPSTRING_MANDATORY "+Freeciv-2.6-network"
+
+/* Additional optional network capabilities */
+#define NETWORK_CAPSTRING_OPTIONAL "techloss_forgiveness"
+
+#define VERSION "2.6.2+"
+
+#define MAJOR_VERSION 2
+
+/* Minor version */
+#define MINOR_VERSION 6
+
+#define PATCH_VERSION 2
+
+/* Version label */
+#define VERSION_LABEL "+"
+
+/* Version string */
+#define VERSION_STRING "2.6.2+"
 
 /* enable audio */
 #cmakedefine AUDIO_SDL

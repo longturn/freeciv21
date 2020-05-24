@@ -18,29 +18,13 @@ configure_file(cmake_freeciv_config.h.in freeciv_config.h)
 # Generate fc_config.h
 configure_file(cmake_fc_config.h.in fc_config.h)
 
-# Generate version_gen.h
-add_custom_command(
-  PRE_BUILD
-  OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
-  COMMAND
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gen_headers/generate_version_header.sh
-    ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
-  VERBATIM
-  DEPENDS
-    ${CMAKE_CURRENT_SOURCE_DIR}/../gen_headers/generate_version_header.sh
-  COMMENT "Generating version_gen.h"
-)
-
 add_library(civutility STATIC
   astring.c
   bitvector.c
-  bugs.c
   capability.c
   deprecations.c
   distribute.c
   fc_cmdline.c
-  fc_dirent.c
   fc_utf8.c
   fcbacktrace.c
   fciconv.c
@@ -53,7 +37,6 @@ add_library(civutility STATIC
   iterator.c
   log.c
   mem.c
-  netfile.c
   netintf.c
   rand.c
   registry.c
@@ -67,12 +50,16 @@ add_library(civutility STATIC
   md5.c
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
+
+if(!EMSCRIPTEN)
+  add_library(civutility STATIC netfile.c)
+endif()
+
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(civutility PRIVATE ${CURL_INCLUDE_DIRS})
-target_link_libraries(civutility PUBLIC ICU::uc Threads::Threads)
+target_link_libraries(civutility PUBLIC ${ICU_LIBRARIES} Threads::Threads)
 target_link_libraries(civutility PRIVATE ${CURL_LIBRARIES})
 
 target_compile_definitions(civutility PUBLIC HAVE_CONFIG_H)

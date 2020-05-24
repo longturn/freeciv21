@@ -21,6 +21,60 @@ jobs:
       nproc
       sudo apt-get update
       sudo apt-get install -y --reinstall ca-certificates
+      DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -y pkg-config g++ automake autoconf git python3 python3-distutils xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
+      git clone https://github.com/emscripten-core/emsdk
+      ./emsdk/emsdk install $(EMSDK_TAG)
+      ./emsdk/emsdk activate $(EMSDK_TAG)
+    displayName: 'Setup Build Environment'
+
+  - script: |
+      source ./emsdk/emsdk_env.sh
+      git clone https://github.com/qt/qtbase qtbase --depth=1 --branch=$(QT_BRANCH)
+      mkdir -p qtbuild
+      pushd qtbuild
+      ../qtbase/configure -xplatform wasm-emscripten -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license
+      make install -j$(nproc)
+      popd
+    timeoutInMinutes: 120
+    condition: ne(variables.WASM_QT_CACHE_RESTORED, 'true')
+    displayName: 'Build Qt'
+
+  - script: |
+      source ./emsdk/emsdk_env.sh
+      emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qmake=$(Build.SourcesDirectory)/qt5/bin/qmake
+      emmake make -j$(nproc)
+    displayName: 'Build Freeciv'
+
+  - task: CopyFiles@2
+    inputs:
+      sourceFolder: '$(Build.SourcesDirectory)'
+      contents: 'client/?(*.html|*.data|*.js|*.wasm)'
+      targetFolder: '$(Build.ArtifactStagingDirectory)'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: '$(Build.ArtifactStagingDirectory)'
+      artifactName: qtwasm
+
+- job: QtWasmCMake
+  pool:
+    vmImage: 'ubuntu-latest'
+
+  variables:
+    emsdk_tag: 1.39.13
+  timeoutInMinutes: 180
+  steps:
+  - task: Cache@2
+    inputs:
+      key: wasm_qt | "$(emsdk_tag)" | "$(qt_branch)"
+      path: $(Build.SourcesDirectory)/qt5
+      cacheHitVar: WASM_QT_CACHE_RESTORED
+    displayName: 'Qt cache'
+
+  - script: |
+      nproc
+      sudo apt-get update
+      sudo apt-get install -y --reinstall ca-certificates
       DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -y pkg-config g++ cmake git python3 python3-distutils xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
       git clone https://github.com/emscripten-core/emsdk
       ./emsdk/emsdk install $(EMSDK_TAG)
@@ -43,20 +97,20 @@ jobs:
       source ./emsdk/emsdk_env.sh
       mkdir build
       cd build
-      emcmake cmake ..
+      emcmake cmake .. -DCMAKE_TOOLCHAIN_FILE=../emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake -DQt5_DIR=../qt5/lib/cmake/Qt5/ -DQt5Widgets_DIR=../qt5/lib/cmake/Qt5Widgets -DQt5Gui_DIR=../qt5/lib/cmake/Qt5Gui -DQt5Core_DIR=../qt5/lib/cmake/Qt5Core -DQt5Network_DIR=../qt5/lib/cmake/Qt5Network -DQt5EventDispatcherSupport_DIR=../qt5/lib/cmake/Qt5EventDispatcherSupport -DQt5FontDatabaseSupport_DIR=../qt5/lib/cmake/Qt5FontDatabaseSupport -DQt5EglSupport_DIR=../qt5/lib/cmake/Qt5EglSupport
       emmake make -j$(nproc)
     displayName: 'Build Freeciv'
 
   - task: CopyFiles@2
     inputs:
-      sourceFolder: '$(Build.SourcesDirectory)'
+      sourceFolder: '$(Build.SourcesDirectory)/build'
       contents: 'client/?(*.html|*.data|*.js|*.wasm)'
       targetFolder: '$(Build.ArtifactStagingDirectory)'
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: '$(Build.ArtifactStagingDirectory)'
-      artifactName: qtwasm
+      artifactName: qtwasmcmake
 
 - job: MacOS
   pool:

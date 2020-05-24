@@ -19,7 +19,6 @@ add_library(
   gui_main.cpp
   helpdlg.cpp
   hudwidget.cpp
-  infradlg.cpp
   inteldlg.cpp
   luaconsole.cpp
   mapctrl.cpp

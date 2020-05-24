@@ -37,30 +37,11 @@ target_include_directories(luascript PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/luascrip
 target_include_directories(luascript PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/luascript)
 target_link_libraries(luascript PUBLIC freeciv)
 
-# Generate the packet handling code
-add_custom_command(
-  OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
-  COMMAND
-    ${PYTHON_EXECUTABLE}
-    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
-    "" # common/packets_gen.h
-    "" # common/packets_gen.c
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
-    "" # server/hand_gen.h
-    "" # server/hand_gen.c
-  VERBATIM
-  DEPENDS
-    ${CMAKE_SOURCE_DIR}/common/generate_packets.py
-    ${CMAKE_SOURCE_DIR}/common/networking/packets.def
-)
 add_library(
   freeciv_client_gen
   STATIC
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
+  packhand_gen.h
+  packhand_gen.c
 )
 target_include_directories(freeciv_client_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(freeciv_client_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

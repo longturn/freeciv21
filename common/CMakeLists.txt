@@ -6,22 +6,9 @@ add_library(aicore STATIC
   aicore/cm.c
   aicore/citymap.c
   aicore/caravan.c
-  # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
+  packets_gen.h
 )
 target_include_directories(aicore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/aicore)
-
-add_library(fcivnetwork STATIC
-  networking/connection.c
-  networking/dataio_json.c
-  networking/dataio_raw.c
-  networking/packets.c
-  networking/packets_json.c
-  # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
-)
-target_include_directories(fcivnetwork PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/networking)
-target_link_libraries(fcivnetwork PUBLIC ZLIB::ZLIB)
 
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/scriptcore)
 add_custom_command(
@@ -106,28 +93,6 @@ target_link_libraries(scriptcore PUBLIC ${LUA_LIBRARY} tolua)
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/scriptcore)
 target_include_directories(scriptcore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/scriptcore)
 
-# Generate the packet handling code
-add_custom_command(
-  OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
-  COMMAND
-    # FIXME The script always writes all 6 files, but we need only two. Give
-    #       dummy names to the ones we don't want.
-    ${PYTHON_EXECUTABLE}
-    ${CMAKE_CURRENT_SOURCE_DIR}/generate_packets.py
-    ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
-    "" # client/packhand_gen.h
-    "" # client/packhand_gen.c
-    "" # server/hand_gen.h
-    "" # server/hand_gen.c
-  VERBATIM
-  DEPENDS
-    generate_packets.py
-    networking/packets.def
-)
-
 add_library(freeciv STATIC
   achievements.c
   actions.c
@@ -140,7 +105,9 @@ add_library(freeciv STATIC
   city.c
   clientutils.c
   combat.c
+  connection.c
   culture.c
+  dataio.c
   diptreaty.c
   disaster.c
   effects.c
@@ -159,13 +126,12 @@ add_library(freeciv STATIC
   movement.c
   multipliers.c
   nation.c
+  packets.c
   player.c
-  reqtext.c
   requirements.c
   research.c
   rgbcolor.c
   road.c
-  server_settings.c
   spaceship.c
   specialist.c
   style.c
@@ -182,14 +148,13 @@ add_library(freeciv STATIC
   vision.c
   workertask.c
   worklist.c
-  # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.c
+  packets_gen.c
 )
 target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(freeciv civutility aicore fcivnetwork scriptcore)
+target_include_directories(freeciv PUBLIC civutility)
+target_link_libraries(freeciv PUBLIC ${ZLIB_LIBRARIES} civutility aicore scriptcore)
 
 # Circular deps
 target_link_libraries(aicore PUBLIC freeciv)
-target_link_libraries(fcivnetwork PUBLIC freeciv)
 target_link_libraries(scriptcore PUBLIC freeciv)

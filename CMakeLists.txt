@@ -1,10 +1,18 @@
 cmake_minimum_required(VERSION 3.10)
 
 # Project settings
-project(freeciv21 VERSION 3.1.0)
+project(freeciv21 VERSION 2.6.2)
 set(BUG_URL "https://github.com/longturn/freeciv/issues")
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+if(EMSCRIPTEN)
+  set(USE_FLAGS "-s USE_ZLIB=1 -s USE_ICU=1")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS} -s ERROR_ON_UNDEFINED_SYMBOLS=0")
+  set(CMAKE_EXECUTABLE_SUFFIX .js)
+endif()
 
 # Dependencies
 if(NOT EMSCRIPTEN)
@@ -134,7 +142,6 @@ set(FREECIV_HAVE_SYS_SOCKET_H ${HAVE_SYS_SOCKET_H})
 check_include_file("sys/time.h" HAVE_SYS_TIME_H)
 set(FREECIV_HAVE_SYS_TIME_H ${HAVE_SYS_TIME_H})
 check_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
-check_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
 check_include_file("ws2tcpip.h" FREECIV_HAVE_WS2TCPIP_H)
 check_include_file("winsock.h" FREECIV_HAVE_WINSOCK)
 check_include_file("winsock2.h" FREECIV_HAVE_WINSOCK2)
@@ -166,5 +173,7 @@ add_subdirectory(dependencies)
 add_subdirectory(utility)
 add_subdirectory(common)
 add_subdirectory(client)
-add_subdirectory(server)
-add_subdirectory(tools)
+if(!EMSCRIPTEN)
+  add_subdirectory(server)
+  add_subdirectory(tools)
+endif()
