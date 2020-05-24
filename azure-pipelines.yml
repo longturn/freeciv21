@@ -142,8 +142,9 @@ jobs:
       ../qtbase/configure -static -nomake examples -prefix $(Build.SourcesDirectory)/qt5 -opensource -confirm-license -opengl desktop --zlib=qt
     condition: ne(variables.WIN_QT_CACHE_RESTORED, 'true')
 
-  - script: |
+  - bash: |
       cd qtbuild
-      mingw32-make install -j2 || copy $(Build.SourcesDirectory)/qtbuild/qmake/qmake.exe $(Build.SourcesDirectory)/qt5/bin/qmake.exe
+      mingw32-make -j2
+      mingw32-make install -j2 || cp $(Build.SourcesDirectory)/qtbuild/bin/qmake.exe $(Build.SourcesDirectory)/qt5/bin/qmake.exe
     condition: ne(variables.WIN_QT_CACHE_RESTORED, 'true')
     displayName: 'Build Qt'
