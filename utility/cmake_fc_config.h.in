@@ -5,7 +5,7 @@
 
 #define LOCALEDIR "@LOCALEDIR@"
 
-#define BUG_URL "https://www.hostedredmine.com/projects/freeciv"
+#cmakedefine BUG_URL "${BUG_URL}"
 #define WIKI_URL "http://www.freeciv.org/"
 
 #define DATASUBDIR "@DATASUBDIR@"
