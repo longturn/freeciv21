@@ -5,15 +5,17 @@ project(freeciv21 VERSION 3.1.0)
 set(BUG_URL "https://github.com/longturn/freeciv/issues")
 
 # Dependencies
-find_package(CURL REQUIRED)
-find_package(ICU COMPONENTS uc REQUIRED)
+if(NOT EMSCRIPTEN)
+  find_package(CURL REQUIRED)
+  find_package(ICU COMPONENTS uc REQUIRED)
+  find_package(ZLIB REQUIRED)
+endif()
 find_package(Lua 5.3)
 if(NOT LUA_FOUND)
   message(STATUS "Using built-in lua")
   set(BUILD_LUA TRUE)
 endif()
 find_package(PythonInterp 3 REQUIRED)
-find_package(ZLIB REQUIRED)
 
 find_program(TOLUA_EXECUTABLE tolua)
 if(NOT TOLUA_EXECUTABLE)
@@ -22,6 +24,7 @@ if(NOT TOLUA_EXECUTABLE)
 endif()
 
 # Detect common headers
+include(CMakeBackwardCompatibilityC)
 include(CheckCSourceCompiles)
 include(CheckFunctionExists)
 include(CheckIncludeFile)
@@ -103,7 +106,6 @@ check_c_source_compiles("
 
 check_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
 check_include_file("netdb.h" HAVE_NETDB_H)
-check_include_file("unistd.h" HAVE_UNISTD_H)
 check_include_file("pwd.h" HAVE_PWD_H)
 check_include_file("signal.h" HAVE_SIGNAL_H)
 check_include_file("sys/uio.h" HAVE_SYS_UIO_H)

@@ -21,7 +21,7 @@ jobs:
       nproc
       sudo apt-get update
       sudo apt-get install -y --reinstall ca-certificates
-      DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -y pkg-config g++ automake autoconf git python3 python3-distutils xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
+      DEBIAN_FRONTEND=noninteractive sudo apt-get install --no-install-recommends -y pkg-config g++ cmake git python3 python3-distutils xz-utils bzip2 libtool make libicu-dev libxml2 curl libtolua-dev
       git clone https://github.com/emscripten-core/emsdk
       ./emsdk/emsdk install $(EMSDK_TAG)
       ./emsdk/emsdk activate $(EMSDK_TAG)
@@ -41,7 +41,9 @@ jobs:
 
   - script: |
       source ./emsdk/emsdk_env.sh
-      emconfigure ./autogen.sh --enable-client=qt --disable-nls --with-qmake=$(Build.SourcesDirectory)/qt5/bin/qmake
+      mkdir build
+      cd build
+      emcmake cmake ..
       emmake make -j$(nproc)
     displayName: 'Build Freeciv'
 
