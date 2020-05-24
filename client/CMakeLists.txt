@@ -102,3 +102,44 @@ target_link_libraries(freeciv_client PUBLIC freeciv_client_qt)
 
 add_executable(freeciv-qt dummycxx.cpp)
 target_link_libraries(freeciv-qt PRIVATE freeciv_client_qt)
+if (EMSCRIPTEN)
+  target_link_options(freeciv-qt PRIVATE
+    --bind
+    -Wl,--no-check-features
+    "SHELL:-s ERROR_ON_UNDEFINED_SYMBOLS=0"
+    "SHELL:-s WASM=1"
+    -lidbfs.js
+    --emrun
+    "SHELL:-s USE_PTHREADS=0"
+    "SHELL:-s ALLOW_MEMORY_GROWTH=1"
+    "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/data@data"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/alien\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/cimpletoon\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/civ\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/classic\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/default\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/experimental\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/graphics"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/icons"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/nation"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/multiplayer\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/ruledit"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/sandbox\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/scenarios"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/stdsounds"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/stdmusic"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/themes/gtk\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/themes/gui-sdl2\*"
+    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/webperimental\*"
+    "SHELL:--exclude-file \*Makefile\*"
+    "SHELL:--exclude-file \*README\*"
+    "SHELL:--exclude-file \*.icns"
+    "SHELL:--exclude-file \*.serv"
+    "SHELL:--exclude-file \*.svg"
+    "SHELL:--exclude-file \*.xml"
+    "SHELL:-s ASSERTIONS=1"
+    "SHELL:-s ASYNCIFY=1"
+    "SHELL:-s EXTRA_EXPORTED_RUNTIME_METHODS='[\"stringToUTF16\", \"UTF16ToString\", \"stringToUTF8\", \"UTF8ToString\", \"setValue\"]'"
+    "SHELL:-s TOTAL_MEMORY=33554432"
+  )
+endif()
