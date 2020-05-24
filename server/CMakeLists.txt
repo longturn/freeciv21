@@ -65,6 +65,7 @@ add_library(
   settings.c
   spacerace.c
   srv_log.c
+  srv_main.c
   stdinhand.c
   techtools.c
   unithand.c
@@ -89,9 +90,18 @@ target_link_libraries(freeciv_server PUBLIC scripting)
 target_link_libraries(freeciv_server PUBLIC ai_default)
 target_link_libraries(freeciv_server PUBLIC ai_classic)
 
+if(FREECIV_HAVE_LIBREADLINE)
+  target_link_libraries(freeciv_server PRIVATE ${READLINE_LIBRARY})
+endif()
+
+# Create an empty file to build the server from. srv_main.c is needed by ruledit
+# so it has to be in the freeciv_server library.
+if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/null.c)
+  file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/null.c "")
+endif()
 add_executable(
   freeciv-server
-  srv_main.c
+  null.c
 )
 target_link_libraries(freeciv-server PRIVATE freeciv_server)
 if(FREECIV_HAVE_LIBREADLINE)
