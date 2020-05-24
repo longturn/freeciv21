@@ -18,3 +18,6 @@ mark_as_advanced(FREECIV_BUG_URL)
 set(FREECIV_STORAGE_DIR "~/.freeciv"
     CACHE STRING "Location for freeciv to store its information")
 mark_as_advanced(FREECIV_STORAGE_DIR)
+
+set(FREECIV_AI_MOD_LAST 2 CACHE STRING "The number of AI modules to build")
+mark_as_advanced(FREECIV_AI_MOD_LAST)
