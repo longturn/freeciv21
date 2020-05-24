@@ -7,6 +7,7 @@ include(FreecivDependencies)
 project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
 
 # Include subdirectories with the actual project definitions
+add_subdirectory(utility)
 add_subdirectory(common)
 
 if(FREECIV_ENABLE_CLIENT)

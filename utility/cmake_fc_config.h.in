@@ -1,0 +1,317 @@
+#include "freeciv_config.h"
+#include "version_gen.h"
+
+#define CMAKE_BUILD
+
+#define LOCALEDIR "@LOCALEDIR@"
+
+#define BUG_URL "https://www.hostedredmine.com/projects/freeciv"
+#define WIKI_URL "http://www.freeciv.org/"
+
+#define DATASUBDIR "@DATASUBDIR@"
+
+#define AI_MOD_DEFAULT "classic"
+
+#define AI_MOD_STATIC_CLASSIC
+#cmakedefine AI_MOD_STATIC_TEX
+
+#define DEFAULT_SOCK_PORT 5556
+
+#define INIT_BRACE_BEGIN {
+#define INIT_BRACE_END   }
+
+#define DEFAULT_DATA_PATH ".:data:@FREECIV_STORAGE_DIR@/" DATASUBDIR ":@DATADIR@/freeciv"
+#define DEFAULT_SAVE_PATH ".:@FREECIV_STORAGE_DIR@/saves"
+#define DEFAULT_SCENARIO_PATH ".:data/scenarios:@FREECIV_STORAGE_DIR@/" DATASUBDIR "/scenarios:@FREECIV_STORAGE_DIR@/scenarios:@DATADIR@/freeciv/scenarios"
+
+#define MPICON_PATH "@DATADIR@/freeciv/misc/mpicon.png"
+
+#define BINDIR "@BINDIR@"
+
+#define _GNU_SOURCE
+
+/* Release cycle information */
+#cmakedefine IS_DEVEL_VERSION
+
+/* Produce debug version */
+#cmakedefine FREECIV_DEBUG
+
+/* enable audio */
+#cmakedefine AUDIO_SDL
+
+/* audio via SDL2_mixer */
+#cmakedefine AUDIO_SDL2
+
+/* Can run programs as root */
+#cmakedefine ALWAYS_ROOT
+
+/* struct ip_mreqn available */
+#cmakedefine HAVE_IP_MREQN
+
+/* arpa/inet.h available */
+#cmakedefine HAVE_ARPA_INET_H
+
+/* bzlib.h available */
+#cmakedefine HAVE_BZLIB_H
+
+/* direct.h available */
+#cmakedefine HAVE_DIRECT_H
+
+/* dlfcn.h available */
+#cmakedefine HAVE_DLFCN_H
+
+/* execinfo.h available */
+#cmakedefine HAVE_EXECINFO_H
+
+/* fcntl.h available */
+#cmakedefine HAVE_FCNTL_H
+
+/* libcharset.h available */
+#cmakedefine HAVE_LIBCHARSET_H
+
+/* libgen.h available */
+#cmakedefine HAVE_LIBGEN_H
+
+/* lzma.h available */
+#cmakedefine HAVE_LZMA_H
+
+/* memory.h available */
+#cmakedefine HAVE_MEMORY_H
+
+/* netdb.h available */
+#cmakedefine HAVE_NETDB_H
+
+/* pwd.h available */
+#cmakedefine HAVE_PWD_H
+
+/* signal.h available */
+#cmakedefine HAVE_SIGNAL_H
+
+/* stdlib.h available */
+#cmakedefine HAVE_STDLIB_H
+
+/* strings.h available */
+#cmakedefine HAVE_STRINGS_H
+
+/* string.h available */
+#cmakedefine HAVE_STRING_H
+
+/* sys/file.h available */
+#cmakedefine HAVE_SYS_FILE_H
+
+/* sys/ioctl.h available */
+#cmakedefine HAVE_SYS_IOCTL_H
+
+/* sys/signal.h available */
+#cmakedefine HAVE_SYS_SIGNAL_H
+
+/* sys/stat.h available */
+#cmakedefine HAVE_SYS_STAT_H
+
+/* sys/termio.h available */
+#cmakedefine HAVE_SYS_TERMIO_H
+
+/* sys/uio.h available */
+#cmakedefine HAVE_SYS_UIO_H
+
+/* sys/utsname.h available */
+#cmakedefine HAVE_SYS_UTSNAME_H
+
+/* sys/wait.h available */
+#cmakedefine HAVE_SYS_WAIT_H
+
+/* termios.h available */
+#cmakedefine HAVE_TERMIOS_H
+
+/* vfork.h available */
+#cmakedefine HAVE_VFORK_H
+
+/* locale.h available */
+#cmakedefine HAVE_LOCALE_H
+
+/* libintl.h available */
+#cmakedefine HAVE_LIBINTL_H
+
+/* inttypes.h available */
+#undef HAVE_INTTYPES_H
+
+/* stdint.h available */
+#define HAVE_STDINT_H
+
+/* ws2tcpip.h available */
+#cmakedefine HAVE_WS2TCPIP_H
+
+/* sys/types.h available */
+#cmakedefine HAVE_SYS_TYPES_H
+
+/* unistd.h available */
+#cmakedefine HAVE_UNISTD_H
+
+/* sys/time.h available */
+#cmakedefine HAVE_SYS_TIME_H
+
+/* sys/socket.h available */
+#cmakedefine HAVE_SYS_SOCKET_H
+
+/* sys/select.h available */
+#cmakedefine HAVE_SYS_SELECT_H
+
+/* netinet/in.h available */
+#cmakedefine HAVE_NETINET_IN_H
+
+/* dirent.h available */
+#cmakedefine HAVE_DIRENT_H
+
+/* stdbool.h available */
+#cmakedefine HAVE_STDBOOL_H
+
+/* fork() available */
+#cmakedefine HAVE_FORK
+
+/* vfork() available */
+#cmakedefine HAVE_VFORK
+
+#ifdef HAVE_FORK
+/* fork() is assumed to be a working one when available at all */
+#define HAVE_WORKING_FORK 1
+#endif
+
+#ifdef HAVE_VFORK
+/* vfork() is assumed to be a working one when available at all */
+#define HAVE_WORKING_VFORK 1
+#endif
+
+/* iconv() available */
+#cmakedefine HAVE_ICONV
+
+#define ICONV_CONST const
+
+/* backtrace() available */
+#cmakedefine HAVE_BACKTRACE
+
+/* bind() available */
+#cmakedefine HAVE_BIND
+
+/* connect() available */
+#cmakedefine HAVE_CONNECT
+
+/* fdopen() available */
+#cmakedefine HAVE_FDOPEN
+
+/* fileno() available */
+#cmakedefine HAVE_FILENO
+
+/* flock() available */
+#cmakedefine HAVE_FLOCK
+
+/* ftime() available */
+#cmakedefine HAVE_FTIME
+
+/* getaddrinfo() available */
+#cmakedefine HAVE_GETADDRINFO
+
+/* gethostbyname() available */
+#cmakedefine HAVE_GETHOSTBYNAME
+
+/* getline() available */
+#cmakedefine HAVE_GETLINE
+
+/* getnameinfo() available */
+#cmakedefine HAVE_GETNAMEINFO
+
+/* getpwuid() available */
+#cmakedefine HAVE_GETPWUID
+
+/* gmtime_r() available */
+#cmakedefine HAVE_GMTIME_R
+
+/* inet_aton() available */
+#cmakedefine HAVE_INET_ATON
+
+/* inet_ntop() available */
+#cmakedefine HAVE_INET_NTOP
+
+/* inet_pton() available */
+#cmakedefine HAVE_INET_PTON
+
+/* localtime_r() available */
+#cmakedefine HAVE_LOCALTIME_R
+
+/* opendir() available */
+#cmakedefine HAVE_OPENDIR
+
+/* pclose() available */
+#cmakedefine HAVE_PCLOSE
+
+/* popen() available */
+#cmakedefine HAVE_POPEN
+
+/* putenv() available */
+#cmakedefine HAVE_PUTENV
+
+/* select() available */
+#cmakedefine HAVE_SELECT
+
+/* setenv() available */
+#cmakedefine HAVE_SETENV
+
+/* snooze() available */
+#cmakedefine HAVE_SNOOZE
+
+/* strcasecoll() available */
+#cmakedefine HAVE_STRCASECOLL
+
+/* strcasestr() available */
+#cmakedefine HAVE_STRCASESTR
+
+/* strcoll() available */
+#cmakedefine HAVE_STRCOLL
+
+/* strerror() available */
+#cmakedefine HAVE_STRERROR
+
+/* stricoll() available */
+#cmakedefine HAVE_STRICOLL
+
+/* strstr() available */
+#cmakedefine HAVE_STRSTR
+
+/* uname() available */
+#cmakedefine HAVE_UNAME
+
+/* usleep() available */
+#cmakedefine HAVE_USLEEP
+
+/* vprintf() available */
+#cmakedefine HAVE_VPRINTF
+
+/* vsnprintf() available */
+#cmakedefine HAVE_VSNPRINTF
+
+/* _longjmp() available */
+#cmakedefine HAVE__LONGJMP
+
+/* _mkdir() available */
+#cmakedefine HAVE__MKDIR
+
+/* _setjmp() available */
+#cmakedefine HAVE__SETJMP
+
+/* _strcoll() available */
+#cmakedefine HAVE__STRCOLL
+
+/* _stricoll() available */
+#cmakedefine HAVE__STRICOLL
+
+/* fcntl() available */
+#cmakedefine HAVE_FCNTL
+
+/* ioctl() available */
+#cmakedefine HAVE_IOCTL
+
+#if defined(HAVE_FCNTL) || defined(HAVE_IOCTL)
+#define NONBLOCKING_SOCKETS 1
+#endif
+
+/* Custom path to CA cert bundle */
+#cmakedefine CUSTOM_CACERT_PATH
