@@ -54,6 +54,25 @@ if(FREECIV_ENABLE_NLS)
   set(FREECIV_HAVE_LIBINTL_H TRUE)
 endif()
 
+# Lua
+#
+# Lua is not binary compatible even between minor releases. We stick to Lua 5.3.
+#
+# The tolua program is compatible with Lua 5.3, but the library may not be (eg
+# on Debian it's linked to Lua 5.2). We always build the library. When not
+# cross-compiling, we can also build the program. When cross-compiling, an
+# externally provided tolua program is required.
+if(CMAKE_CROSSCOMPILING)
+  find_package(ToLuaProgram REQUIRED)
+else()
+  find_package(ToLuaProgram)
+endif()
+add_subdirectory(dependencies/lua-5.3)
+add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
+
+# Compression
+find_package(ZLIB REQUIRED)
+
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
