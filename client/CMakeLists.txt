@@ -87,12 +87,18 @@ add_library(
   zoom.c
   audio.c
   audio_none.c
+  audio_sdl.c
 )
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/luascript) # Terrible
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/agents) # Terrible
 target_link_libraries(freeciv_client PUBLIC freeciv freeciv_client_gen cvercmp)
+if(EMSCRIPTEN)
+  target_compile_options(freeciv_client PRIVATE "SHELL:-s USE_SDL_MIXER=2")
+  target_link_options(freeciv_client PUBLIC "SHELL:-s USE_SDL_MIXER=2")
+  target_compile_definitions(freeciv_client PRIVATE AUDIO_SDL=1)
+endif()
 
 target_link_libraries(cma_core PUBLIC freeciv_client)
 target_link_libraries(luascript PUBLIC freeciv_client)
@@ -108,6 +114,8 @@ if (EMSCRIPTEN)
     -Wl,--no-check-features
     "SHELL:-s ERROR_ON_UNDEFINED_SYMBOLS=0"
     "SHELL:-s WASM=1"
+    "SHELL:-s USE_ZLIB=1"
+    "SHELL:-s USE_SDL_MIXER=2"
     -lidbfs.js
     --emrun
     "SHELL:-s USE_PTHREADS=0"
@@ -126,7 +134,6 @@ if (EMSCRIPTEN)
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/ruledit"
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/sandbox\*"
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/scenarios"
-    "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/stdsounds"
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/stdmusic"
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/themes/gtk\*"
     "SHELL:--exclude-file ${CMAKE_SOURCE_DIR}/data/themes/gui-sdl2\*"

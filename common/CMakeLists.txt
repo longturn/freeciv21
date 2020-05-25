@@ -154,6 +154,10 @@ target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(freeciv PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(freeciv PUBLIC civutility)
 target_link_libraries(freeciv PUBLIC ${ZLIB_LIBRARIES} civutility aicore scriptcore)
+if(EMSCRIPTEN)
+  target_compile_options(freeciv PRIVATE "SHELL:-s USE_ZLIB=1")
+  target_link_options(freeciv PUBLIC "SHELL:-s USE_ZLIB=1")
+endif()
 
 # Circular deps
 target_link_libraries(aicore PUBLIC freeciv)
