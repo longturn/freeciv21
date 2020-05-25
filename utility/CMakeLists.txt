@@ -52,20 +52,23 @@ add_library(civutility STATIC
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
 )
 
-if(!EMSCRIPTEN)
-  add_library(civutility STATIC netfile.c)
+if(NOT EMSCRIPTEN)
+  target_sources(civutility PRIVATE netfile.c)
+  target_link_libraries(civutility PUBLIC CURL::libcurl)
 endif()
 
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(civutility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(civutility PRIVATE ${CURL_INCLUDE_DIRS})
+target_include_directories(civutility PRIVATE ${CURL_INCLUDE_DIRS} ${ICU_INCLUDE_DIRS})
 target_link_libraries(civutility PUBLIC ${ICU_LIBRARIES} Threads::Threads)
-target_link_libraries(civutility PRIVATE ${CURL_LIBRARIES})
-
 target_compile_definitions(civutility PUBLIC HAVE_CONFIG_H)
+
+if(WIN32)
+  target_link_libraries(civutility INTERFACE wsock32 ws2_32)
+endif()
 
 # i18n
 if(Intl_FOUND)
-  target_include_directories(civutility INTERFACE ${Intl_INCLUDE_DIRS})
-  target_link_libraries(civutility INTERFACE ${Intl_LIBRARIES})
+  target_include_directories(civutility PUBLIC ${Intl_INCLUDE_DIR})
+  target_link_libraries(civutility INTERFACE ${Intl_LIBRARY})
 endif()

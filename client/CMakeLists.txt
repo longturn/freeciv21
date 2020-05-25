@@ -87,13 +87,21 @@ add_library(
   zoom.c
   audio.c
   audio_none.c
-  audio_sdl.c
 )
+
+if(SDL_MIXER_FOUND OR EMSCRIPTEN)
+  target_sources(freeciv_client PRIVATE audio_sdl.c)
+endif()
+
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/luascript) # Terrible
 target_include_directories(freeciv_client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/agents) # Terrible
 target_link_libraries(freeciv_client PUBLIC freeciv freeciv_client_gen cvercmp)
+if(SDL_MIXER_FOUND)
+  target_compile_options(freeciv_client PRIVATE ${SDL_MIXER_INCLUDE_DIRS})
+  target_link_libra(freeciv_client PUBLIC ${SDL_MIXER_LIBRARIES})
+endif()
 if(EMSCRIPTEN)
   target_compile_options(freeciv_client PRIVATE "SHELL:-s USE_SDL_MIXER=2")
   target_link_options(freeciv_client PUBLIC "SHELL:-s USE_SDL_MIXER=2")

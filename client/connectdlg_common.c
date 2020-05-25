@@ -75,7 +75,7 @@ Freeciv - Copyright (C) 2004 - The Freeciv Project
 
 #ifdef HAVE_USABLE_FORK
 static pid_t server_pid = -1;
-#elif FREECIV_MSWINDOWS
+#elif defined(FREECIV_MSWINDOWS)
 HANDLE server_process = INVALID_HANDLE_VALUE;
 HANDLE loghandle = INVALID_HANDLE_VALUE;
 #endif /* HAVE_USABLE_FORK || FREECIV_MSWINDOWS */
@@ -121,7 +121,7 @@ bool is_server_running(void)
   }
 #ifdef HAVE_USABLE_FORK
   return (server_pid > 0);
-#elif FREECIV_MSWINDOWS
+#elif defined(FREECIV_MSWINDOWS)
   return (server_process != INVALID_HANDLE_VALUE);
 #else
   return FALSE; /* We've been unable to start one! */
@@ -156,7 +156,7 @@ void client_kill_server(bool force)
     server_pid = -1;
     server_quitting = FALSE;
   }
-#elif FREECIV_MSWINDOWS
+#elif defined(FREECIV_MSWINDOWS)
   if (server_quitting && server_process != INVALID_HANDLE_VALUE) {
     /* Already asked to /quit.
      * If it didn't do that, kill it. */
@@ -195,7 +195,7 @@ void client_kill_server(bool force)
       kill(server_pid, SIGTERM);
       waitpid(server_pid, NULL, WUNTRACED);
       server_pid = -1;
-#elif FREECIV_MSWINDOWS
+#elif defined(FREECIV_MSWINDOWS)
       TerminateProcess(server_process, 0);
       CloseHandle(server_process);
       if (loghandle != INVALID_HANDLE_VALUE) {

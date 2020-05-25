@@ -334,9 +334,8 @@
 /* ioctl() available */
 #cmakedefine HAVE_IOCTL
 
-#if defined(HAVE_FCNTL) || defined(HAVE_IOCTL)
-#define NONBLOCKING_SOCKETS 1
-#endif
+/* nonblocking sockets support */
+#cmakedefine NONBLOCKING_SOCKETS
 
 /* Custom path to CA cert bundle */
 #cmakedefine CUSTOM_CACERT_PATH
