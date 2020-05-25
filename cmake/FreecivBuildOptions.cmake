@@ -15,6 +15,10 @@ set(FREECIV_BUG_URL "https://github.com/longturn/freeciv21/issues"
     CACHE STRING "Where to file bug reports")
 mark_as_advanced(FREECIV_BUG_URL)
 
+set(FREECIV_META_URL "http://meta.freeciv.org/metaserver.php"
+    CACHE STRING "Metaserver URL")
+mark_as_advanced(FREECIV_META_URL)
+
 set(FREECIV_STORAGE_DIR "~/.freeciv"
     CACHE STRING "Location for freeciv to store its information")
 mark_as_advanced(FREECIV_STORAGE_DIR)

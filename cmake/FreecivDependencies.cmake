@@ -134,3 +134,9 @@ if(HAVE_SYS_SOCKET_H)
 else()
   error("Could not find a supported networking library")
 endif()
+
+# Client-specific dependencies
+if(FREECIV_ENABLE_CLIENT)
+  # Version comparison library (this should really be part of utility/)
+  add_subdirectory(dependencies/cvercmp)
+endif()
