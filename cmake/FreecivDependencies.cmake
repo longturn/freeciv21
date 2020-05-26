@@ -47,6 +47,10 @@ set(FREECIV_HAVE_TINYCTHR FALSE)
 # Required for utility
 find_package(CURL REQUIRED)
 find_package(ICU COMPONENTS uc REQUIRED)
+find_package(Readline)
+if(Readline_FOUND)
+  set(FREECIV_HAVE_LIBREADLINE TRUE)
+endif()
 
 # Internationalization
 if(FREECIV_ENABLE_NLS)
