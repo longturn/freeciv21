@@ -139,4 +139,7 @@ endif()
 if(FREECIV_ENABLE_CLIENT)
   # Version comparison library (this should really be part of utility/)
   add_subdirectory(dependencies/cvercmp)
+
+  # May want to relax the version later
+  find_package(Qt5 5.10 COMPONENTS Widgets REQUIRED)
 endif()

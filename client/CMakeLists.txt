@@ -55,7 +55,6 @@ add_library(
   messagewin_common.c
   music.c
   overview_common.c
-  packhand.c
   plrdlg_common.c
   options.c
   repodlgs_common.c
@@ -82,3 +81,10 @@ target_link_libraries(client PUBLIC agents)
 target_link_libraries(client PUBLIC client_gen)
 target_link_libraries(client PUBLIC cvercmp)
 target_link_libraries(client PUBLIC luascript)
+
+if(FREECIV_ENABLE_CLIENT)
+  add_subdirectory(gui-qt)
+  add_executable(freeciv-qt packhand.c) # packhand.c depends on gui-qt
+  target_link_libraries(freeciv-qt client)
+  target_link_libraries(freeciv-qt gui-qt)
+endif()
