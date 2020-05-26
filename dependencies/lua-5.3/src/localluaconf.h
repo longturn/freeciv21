@@ -13,22 +13,18 @@
 #ifndef FC__LOCALLUACONF_H
 #define FC__LOCALLUACONF_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-/* Lua headers want to define VERSION to lua version */
-#undef VERSION
-
 #if defined(HAVE_MKSTEMP) && defined(FREECIV_HAVE_UNISTD_H)
 #define LUA_USE_MKSTEMP
 #endif
 #if defined(HAVE_POPEN) && defined(HAVE_PCLOSE)
 #define LUA_USE_POPEN
 #endif
-#if defined(HAVE__LONGJMP) && defined(HAVE__SETJMP)
+
+#cmakedefine LUA_USE_POSIX
+
+/* This is always available in C99 */
 #define LUA_USE_ULONGJMP
-#endif
+
 #if defined(HAVE_GMTIME_R) && defined(HAVE_LOCALTIME_R)
 #define LUA_USE_GMTIME_R
 #endif
