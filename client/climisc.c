@@ -124,8 +124,6 @@ void client_remove_unit(struct unit *punit)
                 TILE_XY(city_tile(pcity)));
     }
   }
-
-  refresh_unit_mapcanvas(&old_unit, ptile, TRUE, FALSE);
 }
 
 /**************************************************************************

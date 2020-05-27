@@ -1879,7 +1879,7 @@ static struct client_option client_options[] = {
                          "the sound plugin.  The new plugin won't take "
                          "effect until you restart Freeciv.  Changing this "
                          "is the same as using the -P command-line option."),
-                      COC_SOUND, GUI_STUB, NULL, get_soundplugin_list, NULL, 0),
+                      COC_SOUND, GUI_STUB, "none", get_soundplugin_list, NULL, 0),
   GEN_STR_OPTION(default_chat_logfile,
                  N_("The chat log file"),
                  N_("The name of the chat log file."),

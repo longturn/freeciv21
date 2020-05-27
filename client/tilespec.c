@@ -921,10 +921,10 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
   return FOG_AUTO == t->fogstyle;
 }
 
-/**************************************************************************
+/****************************************************************************
   Initialize.
-**************************************************************************/
-static struct tileset *tileset_new(void)
+****************************************************************************/
+struct tileset *tileset_new(void)
 {
   struct tileset *t = fc_calloc(1, sizeof(*t));
 

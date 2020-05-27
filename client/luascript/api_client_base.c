@@ -23,6 +23,8 @@
 
 /* client */
 #include "chatline_common.h"
+#include "client_main.h"
+#include "control.h"
 
 #include "api_client_base.h"
 
@@ -36,3 +38,14 @@ void api_client_chat_base(lua_State *L, const char *msg)
 
   output_window_printf(ftc_chat_luaconsole, "%s", msg);
 }
+
+/*****************************************************************************
+  Return the player the client is connected to.
+*****************************************************************************/
+Player *api_client_player(lua_State *L)
+{
+  LUASCRIPT_CHECK_STATE(L, NULL);
+
+  return client_player();
+}
+

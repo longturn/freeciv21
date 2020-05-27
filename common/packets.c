@@ -523,6 +523,20 @@ void *get_packet_from_connection(struct connection *pc,
     return NULL;
   }
 
+  long timestamp = 0;
+  if (pc->client.game_start_time_ms) {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    timestamp = (1000 * tv.tv_sec + tv.tv_usec / 1000) - pc->client.game_start_time_ms;
+  }
+
+  if(pdump_file) {
+    fwrite(&timestamp, sizeof(long), 1, pdump_file);
+    fwrite(&whole_packet_len, sizeof(int), 1, pdump_file);
+    fwrite(pc->buffer->data, sizeof(char), whole_packet_len, pdump_file);
+    fflush(pdump_file);
+  }
+
   log_packet("got packet type=(%s)%d len=%d from %s",
              packet_name(utype.type), utype.itype, whole_packet_len,
              is_server() ? pc->username : "server");

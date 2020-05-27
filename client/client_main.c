@@ -919,7 +919,6 @@ void set_client_state(enum client_states newstate)
   case C_S_RUNNING:
     if (oldstate == C_S_PREPARING) {
       popdown_races_dialog();
-      stop_menu_music();     /* stop intro sound loop. */
     }
 
     init_city_report_game_data();
@@ -932,26 +931,21 @@ void set_client_state(enum client_states newstate)
     boot_help_texts();   /* reboot with player */
     global_worklists_build();
     can_slide = FALSE;
-    unit_focus_update();
     can_slide = TRUE;
     set_client_page(PAGE_GAME);
     /* Find something sensible to display instead of the intro gfx. */
-    center_on_something();
     free_intro_radar_sprites();
     agents_game_start();
     editgui_tileset_changed();
     voteinfo_gui_update();
 
-    refresh_overview_canvas();
-
     update_info_label();        /* get initial population right */
-    unit_focus_update();
     update_unit_info_label(get_units_in_focus());
 
-    if (gui_options.auto_center_each_turn) {
-      center_on_something();
+    if (scriptfile && !script_client_do_file(scriptfile)) {
+      log_fatal(_("Script failed"));
+      exit(EXIT_FAILURE);
     }
-    start_style_music();
     break;
 
   case C_S_OVER:
@@ -980,9 +974,7 @@ void set_client_state(enum client_states newstate)
       global_worklists_build();
       unit_focus_set(NULL);
       set_client_page(PAGE_GAME);
-      center_on_something();
     }
-    refresh_overview_canvas();
 
     update_info_label();
     unit_focus_update();
@@ -994,9 +986,6 @@ void set_client_state(enum client_states newstate)
   menus_init();
   update_turn_done_button_state();
   conn_list_dialog_update();
-  if (can_client_change_view()) {
-    update_map_canvas_visible();
-  }
 
   /* If turn was going to change, that is now aborted. */
   set_server_busy(FALSE);

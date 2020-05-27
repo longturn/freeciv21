@@ -35,6 +35,8 @@ extern "C" {
 #include "player.h"
 #include "packets.h"
 
+extern FILE *pdump_file;
+
 enum debug_globals {
   DEBUG_FERRIES,
   DEBUG_LAST

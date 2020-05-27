@@ -67,10 +67,6 @@ static void script_client_code_free(void);
 static void script_client_code_load(struct section_file *file);
 static void script_client_code_save(struct section_file *file);
 
-static void script_client_output(struct fc_lua *fcl, enum log_level level,
-                                 const char *format, ...)
-            fc__attribute((__format__ (__printf__, 3, 4)));
-
 static void script_client_signal_create(void);
 
 /*****************************************************************************
@@ -200,7 +196,7 @@ bool script_client_init(void)
     return TRUE;
   }
 
-  main_fcl = luascript_new(script_client_output);
+  main_fcl = luascript_new(NULL);
   if (main_fcl == NULL) {
     luascript_destroy(main_fcl); /* TODO: main_fcl is NULL here... */
     main_fcl = NULL;
@@ -222,47 +218,6 @@ bool script_client_init(void)
   script_client_signal_create();
 
   return TRUE;
-}
-
-/*****************************************************************************
-  Ouput a message on the client lua console.
-*****************************************************************************/
-static void script_client_output(struct fc_lua *fcl, enum log_level level,
-                                 const char *format, ...)
-{
-  va_list args;
-  struct ft_color ftc_luaconsole = ftc_luaconsole_error;
-
-  switch (level) {
-  case LOG_FATAL:
-    /* Special case - will quit the client. */
-    {
-      char buf[1024];
-
-      va_start(args, format);
-      fc_vsnprintf(buf, sizeof(buf), format, args);
-      va_end(args);
-
-      log_fatal("%s", buf);
-    }
-    break;
-  case LOG_ERROR:
-    ftc_luaconsole = ftc_luaconsole_error;
-    break;
-  case LOG_NORMAL:
-    ftc_luaconsole = ftc_luaconsole_normal;
-    break;
-  case LOG_VERBOSE:
-    ftc_luaconsole = ftc_luaconsole_verbose;
-    break;
-  case LOG_DEBUG:
-    ftc_luaconsole = ftc_luaconsole_debug;
-    break;
-  }
-
-  va_start(args, format);
-  luaconsole_vprintf(ftc_luaconsole, format, args);
-  va_end(args);
 }
 
 /*****************************************************************************
@@ -320,4 +275,8 @@ void script_client_signal_emit(const char *signal_name, int nargs, ...)
 static void script_client_signal_create(void)
 {
   luascript_signal_create(main_fcl, "new_tech", 0);
+  luascript_signal_create(main_fcl, "unit_info", 1, API_TYPE_UNIT);
+  luascript_signal_create(main_fcl, "unit_remove", 1, API_TYPE_INT);
+  luascript_signal_create(main_fcl, "combat_info", 4, API_TYPE_INT,
+                          API_TYPE_INT, API_TYPE_INT, API_TYPE_INT);
 }

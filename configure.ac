@@ -367,6 +367,7 @@ if test "x$fcweb" = "xtrue" ; then
 fi
 
 gui_gtk2=no
+gui_cli=no
 gui_gtk3_22=no
 gui_gtk3=no
 gui_sdl=no
@@ -920,6 +921,15 @@ if test "x$client" != "xno"; then
     gui_stub_libs="-lm"
   fi
 
+  dnl Stub-specific overrides
+  if test "x$gui_cli" = "xyes" || test "x$client" = "xall" ; then
+    gui_cli=yes
+    if test "x$client" = "xauto" ; then
+      client=yes
+    fi
+    gui_cli_libs="-lm"
+  fi
+
   dnl If client still "auto", error out since we couldn't select any of them
   if test "x$client" = "xauto" ; then
     AC_MSG_ERROR([can not build any of the supported clients])
@@ -934,6 +944,7 @@ if test "x$client" = "xall" ; then
      test "x$gui_sdl2" = "xyes" ||
      test "x$gui_xaw" = "xyes" ||
      test "x$gui_qt" = "xyes" ||
+     test "x$gui_cli" = "xyes" ||
      test "x$gui_stub" = "xyes" ; then
     client=yes
   else
@@ -1149,6 +1160,9 @@ AM_CONDITIONAL([RULEDIT], [test "x$ruledit" = "xyes"])
 AC_SUBST([gui_gtk2_cflags])
 AC_SUBST([gui_gtk2_libs])
 AC_SUBST([gui_gtk2_ldflags])
+AC_SUBST([gui_cli_cflags])
+AC_SUBST([gui_cli_libs])
+AC_SUBST([gui_cli_ldflags])
 AC_SUBST([gui_gtk3_22_cflags])
 AC_SUBST([gui_gtk3_22_libs])
 AC_SUBST([gui_gtk3_22_ldflags])
@@ -1194,6 +1208,7 @@ AC_SUBST([HOST_PATH_SEPARATOR])
 AC_SUBST([HOST_DIR_SEPARATOR])
 AM_CONDITIONAL(AUDIO_SDL, test "x$SDL_mixer" != "xno")
 AM_CONDITIONAL(CLIENT_GUI_SDL, test "x$gui_sdl" = "xyes")
+AM_CONDITIONAL(CLIENT_GUI_CLI, test "x$gui_cli" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_SDL2, test "x$gui_sdl2" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_GTK_2_0, test "x$gui_gtk2" = "xyes")
 AM_CONDITIONAL(CLIENT_GUI_GTK_3_22, test "x$gui_gtk3_22" = "xyes")
@@ -1664,6 +1679,7 @@ AC_CONFIG_FILES([Makefile
 	  client/agents/Makefile
 	  client/include/Makefile
 	  client/gui-sdl/Makefile
+          client/gui-cli/Makefile
           client/gui-sdl2/Makefile
 	  client/gui-gtk-2.0/Makefile
 	  client/gui-gtk-3.0/Makefile
@@ -1751,6 +1767,7 @@ AC_MSG_NOTICE([
     Gtk-3.22: $gui_gtk3_22
     SDL:      $gui_sdl
     QT:       $gui_qt
+    CLI:     $gui_cli
     Stub:     $gui_stub
 
   In-development client frontends:

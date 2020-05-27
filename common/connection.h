@@ -193,6 +193,9 @@ struct connection {
 
       /* Holds the id of the request which caused this packet. Can be zero. */
       int request_id_of_currently_handled_packet;
+
+      /* Timestamp in ms of game start */
+      long game_start_time_ms;
     } client;
 
     struct {

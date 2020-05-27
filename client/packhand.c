@@ -1932,18 +1932,6 @@ void handle_unit_short_info(const struct packet_unit_short_info *packet)
 void handle_set_topology(int topology_id)
 {
   game.map.topology_id = topology_id;
-
-  if (forced_tileset_name[0] == '\0'
-      && (tileset_map_topo_compatible(topology_id, tileset) != TOPO_COMPATIBLE
-          || strcmp(tileset_basename(tileset), game.control.preferred_tileset))) {
-    const char *ts_to_load;
-
-    ts_to_load = tileset_name_for_topology(topology_id);
-
-    if (ts_to_load != NULL && ts_to_load[0] != '\0') {
-      tilespec_reread_frozen_refresh(ts_to_load);
-    }
-  }
 }
 
 /****************************************************************************
@@ -1958,10 +1946,6 @@ void handle_map_info(int xsize, int ysize, int topology_id)
 
   game.map.xsize = xsize;
   game.map.ysize = ysize;
-
-  if (tileset_map_topo_compatible(topology_id, tileset) == TOPO_INCOMP_HARD) {
-    tileset_error(LOG_NORMAL, _("Map topology and tileset incompatible."));
-  }
 
   game.map.topology_id = topology_id;
 
@@ -2180,7 +2164,6 @@ void handle_player_info(const struct packet_player_info *pinfo)
     }
 
     player_set_color(pplayer, prgbcolor);
-    tileset_player_init(tileset, pplayer);
 
     rgbcolor_destroy(prgbcolor);
 
@@ -3092,43 +3075,6 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
     game.ruleset_description[0] = '\0';
   }
 
-  if (packet->preferred_tileset[0] != '\0') {
-    /* There is tileset suggestion */
-    if (strcmp(packet->preferred_tileset, tileset_basename(tileset))) {
-      /* It's not currently in use */
-      if (gui_options.autoaccept_tileset_suggestion) {
-        tilespec_reread(game.control.preferred_tileset, TRUE, 1.0f);
-      } else {
-        popup_tileset_suggestion_dialog();
-      }
-    }
-  }
-
-  if (packet->preferred_soundset[0] != '\0') {
-    /* There is soundset suggestion */
-    if (strcmp(packet->preferred_soundset, sound_set_name)) {
-      /* It's not currently in use */
-      if (gui_options.autoaccept_soundset_suggestion) {
-        audio_restart(game.control.preferred_soundset, music_set_name);
-      } else {
-        popup_soundset_suggestion_dialog();
-      }
-    }
-  }
-
-  if (packet->preferred_musicset[0] != '\0') {
-    /* There is musicset suggestion */
-    if (strcmp(packet->preferred_musicset, music_set_name)) {
-      /* It's not currently in use */
-      if (gui_options.autoaccept_musicset_suggestion) {
-        audio_restart(sound_set_name, game.control.preferred_musicset);
-      } else {
-        popup_musicset_suggestion_dialog();
-      }
-    }
-  }
-
-  tileset_ruleset_reset(tileset);
 }
 
 /****************************************************************************
@@ -3192,11 +3138,7 @@ void handle_rulesets_ready(void)
     unit_type_action_cache_set(ptype);
   } unit_type_iterate_end;
 
-  /* Adjust editor for changed ruleset. */
-  editor_ruleset_changed();
-
   /* We are not going to crop any more sprites from big sprites, free them. */
-  finish_loading_sprites(tileset);
 
   game.client.ruleset_ready = TRUE;
 }
@@ -3284,7 +3226,6 @@ void handle_ruleset_unit(const struct packet_ruleset_unit *p)
 
   PACKET_STRVEC_EXTRACT(u->helptext, p->helptext);
 
-  tileset_setup_unit_type(tileset, u);
 }
 
 /****************************************************************************
@@ -3352,7 +3293,6 @@ void handle_ruleset_tech(const struct packet_ruleset_tech *p)
   a->num_reqs = p->num_reqs;
   PACKET_STRVEC_EXTRACT(a->helptext, p->helptext);
 
-  tileset_setup_tech_type(tileset, a);
 }
 
 /****************************************************************************
@@ -3426,7 +3366,6 @@ void handle_ruleset_building(const struct packet_ruleset_building *p)
   }
 #endif /* DEBUG */
 
-  tileset_setup_impr_type(tileset, b);
 }
 
 /****************************************************************************
@@ -3473,7 +3412,6 @@ void handle_ruleset_government(const struct packet_ruleset_government *p)
 
   PACKET_STRVEC_EXTRACT(gov->helptext, p->helptext);
 
-  tileset_setup_government(tileset, gov);
 }
 
 /****************************************************************************
@@ -3558,7 +3496,6 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
 
   PACKET_STRVEC_EXTRACT(pterrain->helptext, p->helptext);
 
-  tileset_setup_tile_type(tileset, pterrain);
 }
 
 /****************************************************************************
@@ -3603,7 +3540,6 @@ void handle_ruleset_resource(const struct packet_ruleset_resource *p)
     presource->output[o] = p->output[o];
   } output_type_iterate_end;
 
-  tileset_setup_resource(tileset, presource);
 }
 
 /****************************************************************************
@@ -3696,7 +3632,6 @@ void handle_ruleset_extra(const struct packet_ruleset_extra *p)
 
   PACKET_STRVEC_EXTRACT(pextra->helptext, p->helptext);
 
-  tileset_setup_extra(tileset, pextra);
 }
 
 /****************************************************************************
@@ -3977,7 +3912,6 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
     pnation->init_buildings[i] = packet->init_buildings[i];
   }
 
-  tileset_setup_nation_flag(tileset, pnation);
 }
 
 /****************************************************************************
@@ -4035,7 +3969,6 @@ void handle_ruleset_city(const struct packet_ruleset_city *packet)
   sz_strlcpy(cs->citizens_graphic, packet->citizens_graphic);
   sz_strlcpy(cs->citizens_graphic_alt, packet->citizens_graphic_alt);
 
-  tileset_setup_city_tiles(tileset, id);
 }
 
 /**************************************************************************
@@ -4094,7 +4027,6 @@ void handle_ruleset_game(const struct packet_ruleset_game *packet)
                                    packet->background_green,
                                    packet->background_blue);
 
-  tileset_background_init(tileset);
 }
 
 /****************************************************************************
@@ -4119,7 +4051,6 @@ void handle_ruleset_specialist(const struct packet_ruleset_specialist *p)
 
   PACKET_STRVEC_EXTRACT(s->helptext, p->helptext);
 
-  tileset_setup_specialist_type(tileset, p->id);
 }
 
 /**************************************************************************

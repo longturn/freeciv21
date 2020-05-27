@@ -9,12 +9,8 @@ appdatafiledir = @APPDATADIR@
 desktopfile_DATA =
 appdatafile_DATA =
 
-if CLIENT_GUI_SDL
-GUI_SUBDIRS += gui-sdl
-desktopfile_DATA += \
-	freeciv-sdl.desktop
-appdatafile_DATA += \
-	freeciv-sdl.appdata.xml
+if CLIENT_GUI_CLI
+GUI_SUBDIRS += gui-cli
 endif
 if CLIENT_GUI_SDL2
 GUI_SUBDIRS += gui-sdl2
@@ -209,6 +205,21 @@ freeciv_gtk2_LDADD = \
  $(INTLLIBS) $(CLIENT_LIBS) $(SOUND_LIBS) $(CLIENTICON) \
  $(MAPIMG_WAND_LIBS) \
  $(gui_gtk2_libs)
+endif
+
+if CLIENT_GUI_CLI
+bin_PROGRAMS += freeciv-cli
+noinst_LTLIBRARIES += libfcgui-cli.la
+libfcgui_cli_la_SOURCES = $(freeciv_client_src)
+libfcgui_cli_la_LIBADD = gui-cli/libgui-cli.la $(clientlibs)
+freeciv_cli_SOURCES = $(gui_interface_src) $(gui_cbs_src)
+freeciv_cli_LDFLAGS = $(gui_cli_ldflags)
+freeciv_cli_LDADD = \
+ libfcgui-cli.la $(SOUND_LIBS) gui-cli/gui_main.lo \
+ $(top_builddir)/common/libfreeciv.la \
+ $(INTLLIBS) $(CLIENT_LIBS) $(CLIENTICON) \
+ $(TINYCTHR_LIBS) $(MAPIMG_WAND_LIBS) \
+ $(gui_cli_libs)
 endif
 
 if CLIENT_GUI_GTK_3_22

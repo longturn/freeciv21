@@ -81,7 +81,7 @@ void unit_select_dialog_popup(struct tile *ptile)
 /**********************************************************************//**
   Update the dialog window to select units on a particular tile.
 **************************************************************************/
-void unit_select_dialog_update_real(void)
+void unit_select_dialog_update_real(void *unused)
 {
   /* PORTME */
 }
@@ -116,11 +116,10 @@ void popup_revolution_dialog(void)
   should take.
 **************************************************************************/
 void popup_action_selection(struct unit *actor_unit,
-                            struct city *target_city,
-                            struct unit *target_unit,
-                            struct tile *target_tile,
-                            struct extra_type *target_extra,
-                            const struct act_prob *act_probs)
+                                   struct city *target_city,
+                                   struct unit *target_unit,
+                                   struct tile *target_tile,
+                                   const struct act_prob *act_probs)
 {
   /* PORTME */
 }
@@ -129,8 +128,7 @@ void popup_action_selection(struct unit *actor_unit,
   Popup a window asking a diplomatic unit if it wishes to incite the
   given enemy city.
 **************************************************************************/
-void popup_incite_dialog(struct unit *actor, struct city *pcity, int cost,
-                         const struct action *paction)
+void popup_incite_dialog(struct unit *actor, struct city *pcity, int cost)
 {
   /* PORTME */
 }
@@ -139,8 +137,7 @@ void popup_incite_dialog(struct unit *actor, struct city *pcity, int cost,
   Popup a dialog asking a diplomatic unit if it wishes to bribe the
   given enemy unit.
 **************************************************************************/
-void popup_bribe_dialog(struct unit *actor, struct unit *punit, int cost,
-                        const struct action *paction)
+void popup_bribe_dialog(struct unit *actor, struct unit *punit, int cost)
 {
   /* PORTME */
 }
@@ -149,8 +146,7 @@ void popup_bribe_dialog(struct unit *actor, struct unit *punit, int cost,
   Popup a dialog asking a diplomatic unit if it wishes to sabotage the
   given enemy city.
 **************************************************************************/
-void popup_sabotage_dialog(struct unit *actor, struct city *pcity,
-                           const struct action *paction)
+void popup_sabotage_dialog(struct unit *actor, struct city *pcity)
 {
   /* PORTME */
 }
@@ -262,37 +258,12 @@ int action_selection_target_unit(void)
 }
 
 /**********************************************************************//**
-  Returns id of the target tile of the actions currently handled in action
-  selection dialog when the action selection dialog is open and it has a
-  tile target. Returns TILE_INDEX_NONE if no action selection dialog is
-  open.
-**************************************************************************/
-int action_selection_target_tile(void)
-{
-  /* PORTME */
-  return TILE_INDEX_NONE;
-}
-
-/**********************************************************************//**
-  Returns id of the target extra of the actions currently handled in action
-  selection dialog when the action selection dialog is open and it has an
-  extra target. Returns EXTRA_NONE if no action selection dialog is open
-  or no extra target is present in the action selection dialog.
-**************************************************************************/
-int action_selection_target_extra(void)
-{
-  /* PORTME */
-  return EXTRA_NONE;
-}
-
-/**********************************************************************//**
   Updates the action selection dialog with new information.
 **************************************************************************/
 void action_selection_refresh(struct unit *actor_unit,
                               struct city *target_city,
                               struct unit *target_unit,
                               struct tile *target_tile,
-                              struct extra_type *target_extra,
                               const struct act_prob *act_probs)
 {
   /* TODO: port me. */
@@ -357,18 +328,6 @@ bool gui_request_transport(struct unit *pcargo, struct tile *ptile)
 **************************************************************************/
 void gui_popup_combat_info(int attacker_unit_id, int defender_unit_id,
                            int attacker_hp, int defender_hp,
-                           bool make_att_veteran, bool make_def_veteran)
+                           bool make_winner_veteran)
 {
-}
-
-/***************************************************************************
-  Popup dialog showing given image and text,
-  start playing given sound, stop playing sound when popup is closed.
-  Take all space available to show image if fullsize is set.
-  If there are other the same popups show them in queue.
-***************************************************************************/
-void show_img_play_snd(const char *img_path, const char *snd_path,
-                       const char *desc, bool fullsize)
-{
-  /* PORTME */
 }

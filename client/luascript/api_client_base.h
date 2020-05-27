@@ -23,7 +23,10 @@ extern "C" {
 
 struct lua_State;
 
+Player *api_client_player(lua_State *L);
 void api_client_chat_base(lua_State *L, const char *msg);
+void api_client_unit_do_action(lua_State *L, Unit *punit, int action,
+                               int target, int value, const char *name);
 
 #ifdef __cplusplus
 }

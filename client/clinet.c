@@ -405,7 +405,7 @@ void input_from_server(int fd)
 
   fc_assert_ret(fd == client.conn.sock);
 
-  nb = read_from_connection(&client.conn, FALSE);
+  nb = read_from_connection(&client.conn, TRUE);
   if (0 <= nb) {
     agents_freeze_hint();
     while (client.conn.used) {

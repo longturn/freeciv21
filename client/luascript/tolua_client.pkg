@@ -31,6 +31,8 @@ $#include "script_client.h"
 
 /* Chat module. */
 
+Player *api_client_player @ client_player(lua_State *L);
+
 module chat {
   void api_client_chat_base
     @ base (lua_State *L, const char *message);

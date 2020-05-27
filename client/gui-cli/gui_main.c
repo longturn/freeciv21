@@ -23,7 +23,6 @@
 #include "fc_interface.h"
 #include "game.h"
 #include "netintf.h"
-#include "server_settings.h"
 
 /* utility */
 #include "dataio.h"
@@ -60,6 +59,17 @@ const char *client_string = "gui-stub";
 
 const char * const gui_character_encoding = "UTF-8";
 const bool gui_use_transliteration = FALSE;
+
+/****************************************************************************
+  Called by the tileset code to set the font size that should be used to
+  draw the city names and productions.
+****************************************************************************/
+void gui_set_city_names_font_sizes(int my_city_names_font_size,
+                                   int my_city_productions_font_size)
+{
+  log_error("Unimplemented set_city_names_font_sizes.");
+  /* PORTME. Optional to pay any attention to this. */
+}
 
 /**********************************************************************//**
   Do any necessary pre-initialization of the UI, if necessary.
@@ -126,64 +136,6 @@ static void charsets_init(void)
 }
 
 /**********************************************************************//**
-  Returns the name of the server setting with the specified id.
-**************************************************************************/
-static const char *client_ss_name_get(server_setting_id id)
-{
-  struct option *pset = optset_option_by_number(server_optset, id);
-
-  if (pset) {
-    return option_name(pset);
-  } else {
-    log_error("No server setting with the id %d exists.", id);
-    return NULL;
-  }
-}
-
-/**********************************************************************//**
-  Returns the type of the server setting with the specified id.
-**************************************************************************/
-static enum sset_type client_ss_type_get(server_setting_id id)
-{
-  enum option_type opt_type;
-  struct option *pset = optset_option_by_number(server_optset, id);
-
-  if (!pset) {
-    log_error("No server setting with the id %d exists.", id);
-    return sset_type_invalid();
-  }
-
-  opt_type = option_type(pset);
-
-  /* The option type isn't client only. */
-  fc_assert_ret_val_msg((opt_type != OT_FONT
-                         && opt_type != OT_COLOR
-                         && opt_type != OT_VIDEO_MODE),
-                        sset_type_invalid(),
-                        "%s is a client option type but not a server "
-                        "setting type",
-                        option_type_name(option_type(pset)));
-
-  /* The option type is valid. */
-  fc_assert_ret_val(sset_type_is_valid((enum sset_type)opt_type),
-                    sset_type_invalid());
-
-  /* Each server setting type value equals the client option type value with
-   * the same meaning. */
-  FC_STATIC_ASSERT((enum sset_type)OT_BOOLEAN == SST_BOOL
-                   && (enum sset_type)OT_INTEGER == SST_INT
-                   && (enum sset_type)OT_STRING == SST_STRING
-                   && (enum sset_type)OT_ENUM == SST_ENUM
-                   && (enum sset_type)OT_BITWISE == SST_BITWISE
-                   && SST_COUNT == (enum sset_type)5,
-                   server_setting_type_not_equal_to_client_option_type);
-
-  /* Exploit the fact that each server setting type value corresponds to the
-   * client option type value with the same meaning. */
-  return (enum sset_type)opt_type;
-}
-
-/**********************************************************************//**
   Return the vision of the player on a tile. Client version of
   ./server/maphand/map_is_known_and_seen().
 **************************************************************************/
@@ -194,65 +146,16 @@ static bool client_map_is_known_and_seen(const struct tile *ptile,
   return dbv_isset(&pplayer->client.tile_vision[vlayer], tile_index(ptile));
 }
 
-/**********************************************************************//**
-  Returns the id of the city the player believes exists at 'ptile'.
-**************************************************************************/
-static int client_plr_tile_city_id_get(const struct tile *ptile,
-                                       const struct player *pplayer)
-{
-  struct city *pcity = tile_city(ptile);
-
-  /* Can't look up what other players think. */
-  fc_assert(pplayer == client_player());
-
-  return pcity ? pcity->id : IDENTITY_NUMBER_ZERO;
-}
-
-/**********************************************************************//**
-  Returns the id of the server setting with the specified name.
-**************************************************************************/
-static server_setting_id client_ss_by_name(const char *name)
-{
-  struct option *pset = optset_option_by_name(server_optset, name);
-
-  if (pset) {
-    return option_number(pset);
-  } else {
-    log_error("No server setting named %s exists.", name);
-    return SERVER_SETTING_NONE;
-  }
-}
-
-/**********************************************************************//**
-  Returns the value of the boolean server setting with the specified id.
-**************************************************************************/
-static bool client_ss_val_bool_get(server_setting_id id)
-{
-  struct option *pset = optset_option_by_number(server_optset, id);
-
-  if (pset) {
-    return option_bool_get(pset);
-  } else {
-    log_error("No server setting with the id %d exists.", id);
-    return FALSE;
-  }
-}
-
-/**********************************************************************//**
+/***************************************************************
   Initialize client specific functions.
-**************************************************************************/
+***************************************************************/
 static void fc_interface_init_client(void)
 {
   struct functions *funcs = fc_interface_funcs();
 
-  funcs->server_setting_by_name = client_ss_by_name;
-  funcs->server_setting_name_get = client_ss_name_get;
-  funcs->server_setting_type_get = client_ss_type_get;
-  funcs->server_setting_val_bool_get = client_ss_val_bool_get;
   funcs->create_extra = NULL;
   funcs->destroy_extra = NULL;
   funcs->player_tile_vision_get = client_map_is_known_and_seen;
-  funcs->player_tile_city_id_get = client_plr_tile_city_id_get;
   funcs->gui_color_free = color_free;
 
   /* Keep this function call at the end. It checks if all required functions
@@ -346,11 +249,33 @@ static void print_usage(const char *argv0)
 static void parse_options(int argc, char **argv)
 {
   int i = 1;
+  char *option = NULL;
 
   while (i < argc) {
     if (is_option("--help", argv[i])) {
       print_usage(argv[0]);
       exit(EXIT_SUCCESS);
+    } else if ((option = get_option_malloc("--name", argv, &i, argc, FALSE))) {
+      sz_strlcpy(user_name, option);
+      free(option);
+    } else if ((option = get_option_malloc("--port", argv, &i, argc, FALSE))) {
+      if (!str_to_int(option, &server_port)) {
+        fc_fprintf(stderr,
+                   _("Invalid port \"%s\" specified with --port option.\n"),
+                   option);
+        fc_fprintf(stderr, _("Try using --help.\n"));
+        exit(EXIT_FAILURE);
+      }
+      free(option);
+    } else if ((option = get_option_malloc("--server", argv, &i, argc, FALSE))) {
+      sz_strlcpy(server_host, option);
+      free(option);
+    } else if ((option = get_option_malloc("--dump", argv, &i, argc, FALSE))) {
+      pdump_file = fopen(option, "w");
+      free(option);
+    } else if ((option = get_option_malloc("--Word", argv, &i, argc, FALSE))) {
+      sz_strlcpy(password, option);
+      free(option);
     } else {
       fc_fprintf(stderr, _("Unrecognized option: \"%s\"\n"), argv[i]);
       exit(EXIT_FAILURE);
@@ -369,13 +294,6 @@ void gui_ui_main(int argc, char *argv[])
   char errbuf[512];
 
   parse_options(argc, argv);
-
-  sz_strlcpy(user_name, "zeko");
-  sz_strlcpy(server_host, "localhost");
-  server_port = 5578;
-
-  /* PORTME */
-  fc_fprintf(stderr, "Freeciv rules!\n");
 
   /* Main loop here */
   if (connect_to_server(user_name, server_host, server_port,
@@ -419,7 +337,7 @@ enum gui_type gui_get_gui_type(void)
 /**********************************************************************//**
   Update the connected users list at pregame state.
 **************************************************************************/
-void gui_real_conn_list_dialog_update(void)
+void gui_real_conn_list_dialog_update(void *unused)
 {
   /* PORTME */
 }
@@ -503,7 +421,6 @@ void gui_add_idle_callback(void (callback)(void *), void *data)
   /* PORTME */
 
   /* This is a reasonable fallback if it's not ported. */
-  log_error("Unimplemented add_idle_callback.");
   (callback)(data);
 }
 
@@ -558,12 +475,4 @@ void gui_gui_update_font(const char *font_name, const char *font_value)
 void gui_insert_client_build_info(char *outbuf, size_t outlen)
 {
   /* PORTME */
-}
-
-/**********************************************************************//**
-  Make dynamic adjustments to first-launch default options.
-**************************************************************************/
-void gui_adjust_default_options(void)
-{
-  /* Nothing in case of this gui */
 }

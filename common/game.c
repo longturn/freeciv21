@@ -55,6 +55,7 @@
 #include "game.h"
 
 struct civ_game game;
+FILE *pdump_file = NULL;
 
 /*
 struct player_score {
