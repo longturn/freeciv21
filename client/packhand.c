@@ -357,8 +357,10 @@ void handle_server_join_reply(bool you_can_join, const char *message,
 
     set_client_page(PAGE_MAIN);
   }
-  
+
+  dsend_packet_chat_msg_req(&client.conn, "/allowtake O ");
   dsend_packet_chat_msg_req(&client.conn, "/observe ");
+  dsend_packet_chat_msg_req(&client.conn, "/allowtake \"O\" ");
 
   if (strcmp(s_capability, our_capability) == 0) {
     return;
