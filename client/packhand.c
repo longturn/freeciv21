@@ -838,7 +838,6 @@ void handle_city_info(const struct packet_city_info *packet)
 
   /* Update the description if necessary. */
   if (update_descriptions) {
-    update_city_description(pcity);
   }
 
   /* Update focus unit info label if necessary. */
@@ -853,22 +852,16 @@ void handle_city_info(const struct packet_city_info *packet)
 
   /* Update the science dialog if necessary. */
   if (need_science_dialog_update) {
-    science_report_dialog_update();
   }
 
   /* Update the units dialog if necessary. */
   if (need_units_dialog_update) {
-    units_report_dialog_update();
   }
 
   /* Update the economy dialog if necessary. */
   if (need_economy_dialog_update) {
-    economy_report_dialog_update();
   }
 
-  /* Update the panel text (including civ population). */
-  update_info_label();
-  
   /* update caravan dialog */
   if ((production_changed || shield_stock_changed)
       && action_selection_target_city() == pcity->id) {   
@@ -880,11 +873,6 @@ void handle_city_info(const struct packet_city_info *packet)
                                   FALSE);
   }
 
-  if (gui_options.draw_city_trade_routes
-      && (trade_routes_changed
-          || (city_is_new && 0 < city_num_trade_routes(pcity)))) {
-    update_map_canvas_visible();
-  }
 }
 
 /****************************************************************************
