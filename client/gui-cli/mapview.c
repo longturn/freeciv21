@@ -41,22 +41,6 @@
 ****************************************************************************/
 void update_info_label(void)
 {
-  /* PORTME */
-  char buffer[512];
-
-  fc_snprintf(buffer, sizeof(buffer),
-              _("Population: %s\n"
-                "Year: %s\n"
-                "Gold %d\n"
-                "Tax: %d Lux: %d Sci: %d"),
-              population_to_text(civ_population(client_player())),
-              calendar_text(),
-              client.conn.playing->economic.gold,
-              client.conn.playing->economic.tax,
-              client.conn.playing->economic.luxury,
-              client.conn.playing->economic.science);
-
-  /* ... */
 }
 
 /************************************************************************//**
@@ -73,7 +57,6 @@ void update_info_label(void)
 ****************************************************************************/
 void update_unit_info_label(struct unit_list *punitlist)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -82,7 +65,6 @@ void update_unit_info_label(struct unit_list *punitlist)
 ****************************************************************************/
 void update_mouse_cursor(enum cursor_type new_cursor_type)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -91,9 +73,6 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
 ****************************************************************************/
 void gui_update_timeout_label(void)
 {
-  /* PORTME */
-    
-  /* set some widget based on get_timeout_label_text() */
 }
 
 /************************************************************************//**
@@ -126,7 +105,6 @@ void update_turn_done_button(bool do_restore)
 void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
                          struct sprite *flake, struct sprite *gov)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -134,7 +112,6 @@ void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
 ****************************************************************************/
 struct canvas *get_overview_window(void)
 {
-  /* PORTME */
   return NULL;
 }
 
@@ -145,7 +122,6 @@ struct canvas *get_overview_window(void)
 void flush_mapcanvas(int canvas_x, int canvas_y,
                      int pixel_width, int pixel_height)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -155,7 +131,6 @@ void flush_mapcanvas(int canvas_x, int canvas_y,
 void dirty_rect(int canvas_x, int canvas_y,
                 int pixel_width, int pixel_height)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -163,7 +138,6 @@ void dirty_rect(int canvas_x, int canvas_y,
 ****************************************************************************/
 void dirty_all(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -173,7 +147,6 @@ void dirty_all(void)
 ****************************************************************************/
 void flush_dirty(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -183,7 +156,6 @@ void flush_dirty(void)
 ****************************************************************************/
 void gui_flush(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -192,7 +164,6 @@ void gui_flush(void)
 ****************************************************************************/
 void update_map_canvas_scrollbars(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -200,7 +171,6 @@ void update_map_canvas_scrollbars(void)
 ****************************************************************************/
 void update_map_canvas_scrollbars_size(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -216,7 +186,6 @@ void update_city_descriptions(void)
 ****************************************************************************/
 void put_cross_overlay_tile(struct tile *ptile)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -224,7 +193,6 @@ void put_cross_overlay_tile(struct tile *ptile)
 ****************************************************************************/
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -232,9 +200,6 @@ void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 ****************************************************************************/
 void tileset_changed(void)
 {
-  /* PORTME */
-  /* Here you should do any necessary redraws (for instance, the city
-   * dialogs usually need to be resized). */
 }
 
 /************************************************************************//**
@@ -243,7 +208,6 @@ void tileset_changed(void)
 ****************************************************************************/
 void get_overview_area_dimensions(int *width, int *height)
 {
-  /* PORTME */
   *width = 0;
   *height = 0;
 }
@@ -256,7 +220,6 @@ void get_overview_area_dimensions(int *width, int *height)
 ****************************************************************************/
 void overview_size_changed(void)
 {
-  /* PORTME */
 }
 
 /************************************************************************//**
@@ -264,7 +227,6 @@ void overview_size_changed(void)
 ****************************************************************************/
 void update_overview_scroll_window_pos(int x, int y)
 {
-  /* TODO: PORTME. */
 }
 
 /**************************************************************************
@@ -272,5 +234,4 @@ void update_overview_scroll_window_pos(int x, int y)
 **************************************************************************/
 void gui_start_turn(void)
 {
-  /* PORTME */
 }
