@@ -85,3 +85,7 @@ if(FREECIV_ENABLE_NLS)
   target_include_directories(utility PUBLIC ${Intl_INCLUDE_DIRS})
   target_link_libraries(utility PUBLIC ${Intl_LIBRARIES})
 endif()
+
+if (FREECIV_HAVE_ICONV)
+  target_link_libraries(utility PRIVATE Iconv::Iconv)
+endif()

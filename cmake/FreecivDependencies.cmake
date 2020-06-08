@@ -48,6 +48,11 @@ set(FREECIV_HAVE_TINYCTHR FALSE)
 # Required for utility
 find_package(CURL REQUIRED)
 find_package(ICU COMPONENTS uc REQUIRED)
+find_package(Iconv)
+if(Iconv_FOUND)
+  set(HAVE_ICONV TRUE) # For compiler macro
+  set(FREECIV_HAVE_ICONV TRUE) # For CMake code
+endif()
 find_package(Readline)
 if(Readline_FOUND)
   set(FREECIV_HAVE_LIBREADLINE TRUE)
