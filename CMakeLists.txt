@@ -9,6 +9,9 @@ project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
 include(FreecivDependencies)
 include(FreecivHelpers)
 
+# Put all executables at the root of the build tree
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
 # Include subdirectories with the actual project definitions
 add_subdirectory(utility)
 add_subdirectory(common)
