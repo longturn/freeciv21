@@ -146,11 +146,20 @@ else()
   error("Could not find a supported networking library")
 endif()
 
-# Client-specific dependencies
-if(FREECIV_ENABLE_CLIENT)
+if (FREECIV_BUILD_LIBCLIENT)
   # Version comparison library (this should really be part of utility/)
   add_subdirectory(dependencies/cvercmp)
+endif()
 
+# GUI dependencies
+if (FREECIV_ENABLE_CLIENT
+    OR FREECIV_ENABLE_FCMP_QT
+    OR FREECIV_ENABLE_RULEDIT)
   # May want to relax the version later
   find_package(Qt5 5.10 COMPONENTS Widgets REQUIRED)
+endif()
+
+# FCMP-specific dependencies
+if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
+  find_package(SQLite3 REQUIRED)
 endif()

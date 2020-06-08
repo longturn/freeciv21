@@ -13,9 +13,12 @@ include(FreecivHelpers)
 add_subdirectory(utility)
 add_subdirectory(common)
 
-if(FREECIV_ENABLE_CLIENT)
+if (FREECIV_BUILD_LIBCLIENT)
   add_subdirectory(client)
 endif()
-if(FREECIV_ENABLE_SERVER)
+if (FREECIV_BUILD_LIBSERVER)
   add_subdirectory(server)
 endif()
+
+# Always add tools, conditionals are inside
+add_subdirectory(tools)
