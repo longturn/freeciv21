@@ -1,4 +1,7 @@
-# Wapper arount tolua
+include(CheckCCompilerFlag)
+include(CheckCXXCompilerFlag)
+
+# Wapper around tolua
 function(tolua_generate)
   cmake_parse_arguments(
     ARG "" "INPUT;HEADER;SOURCE;PACKAGE_NAME" "" ${ARGN})
@@ -24,4 +27,16 @@ function(tolua_generate)
     DEPENDS
       ${CMAKE_CURRENT_SOURCE_DIR}/${ARG_INPUT}
   )
+endfunction()
+
+# Adds a PUBLIC flag to target if supported by the compiler
+function(freeciv_add_flag_if_supported target flag)
+  string(MAKE_C_IDENTIFIER "${flag}" varname)
+  string(TOUPPER "${flag}" varname)
+  check_c_compiler_flag("${flag}" "FREECIV_C_COMPILER_HAS_${varname}")
+  check_cxx_compiler_flag("${flag}" "FREECIV_CXX_COMPILER_HAS_${varname}")
+  if (FREECIV_C_COMPILER_HAS_${varname}
+      AND FREECIV_CXX_COMPILER_HAS_${varname})
+    target_compile_options(${target} PUBLIC "${flag}")
+  endif()
 endfunction()
