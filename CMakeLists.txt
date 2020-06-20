@@ -32,3 +32,42 @@ endif()
 
 # Always add tools, conditionals are inside
 add_subdirectory(tools)
+
+# Always install the documentation
+install(
+  FILES
+  ABOUT-NLS
+  AUTHORS
+  ChangeLog
+  COPYING
+  INSTALL
+  NEWS
+  doc/BUGS
+  doc/CodingStyle
+  doc/FAQ
+  doc/HACKING
+  doc/INSTALL.Cygwin
+  doc/INSTALL.meson
+  doc/HOWTOPLAY
+  doc/README.achievements
+  doc/README.actions
+  doc/README.agents
+  doc/README.AI
+  doc/README.AI_modules
+  doc/README.attributes
+  doc/README.delta
+  doc/README.effects
+  doc/README.fcdb
+  doc/README.governor
+  doc/README.graphics
+  doc/README.modpack_installer
+  doc/README.msys2
+  doc/README.nations
+  doc/README.packaging
+  doc/README.rulesets
+  doc/README.tilesets
+  doc/README.scenarios
+  doc/README.scorelog
+  doc/README.sound
+  doc/TODO
+  TYPE DOC)
