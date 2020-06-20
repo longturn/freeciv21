@@ -46,7 +46,10 @@ set(FREECIV_C11_THR FALSE)
 set(FREECIV_HAVE_TINYCTHR FALSE)
 
 # Required for utility
-find_package(CURL REQUIRED)
+if (NOT EMSCRIPTEN)
+  find_package(CURL REQUIRED)
+  set(HAVE_CURL TRUE)
+endif()
 find_package(ICU COMPONENTS uc REQUIRED)
 find_package(Iconv)
 if(Iconv_FOUND)
@@ -72,7 +75,7 @@ endif()
 # on Debian it's linked to Lua 5.2). We always build the library. When not
 # cross-compiling, we can also build the program. When cross-compiling, an
 # externally provided tolua program is required.
-if(CMAKE_CROSSCOMPILING)
+if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
   find_package(ToLuaProgram REQUIRED)
 else()
   find_package(ToLuaProgram)
@@ -101,6 +104,11 @@ if(UNIX)
   set(CMAKE_EXTRA_INCLUDE_FILES "netinet/in.h")
   check_type_size(ip_mreqn SIZEOF_IP_MREQN)
   unset(CMAKE_EXTRA_INCLUDE_FILES)
+endif()
+
+# Some systems don't have a well-defined root user
+if (EMSCRIPTEN)
+  set(ALWAYS_ROOT TRUE)
 endif()
 
 # Networking library
@@ -149,6 +157,11 @@ if(HAVE_SYS_SOCKET_H)
   endif()
 else()
   error("Could not find a supported networking library")
+endif()
+
+if (EMSCRIPTEN)
+  # This is a bit hacky and maybe it should be removed.
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -s ERROR_ON_UNDEFINED_SYMBOLS=0")
 endif()
 
 if (FREECIV_BUILD_LIBCLIENT)

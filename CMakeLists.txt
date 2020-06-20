@@ -1,4 +1,10 @@
 cmake_minimum_required(VERSION 3.10...3.17 FATAL_ERROR)
+
+# Set up cmake search path
+if (EMSCRIPTEN)
+  message(STATUS "Using Emscripten-specific settings")
+  list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/emscripten)
+endif()
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 include(FreecivBuildOptions)

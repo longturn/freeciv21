@@ -53,7 +53,6 @@ add_library(
   iterator.c
   log.c
   mem.c
-  netfile.c
   netintf.c
   rand.c
   registry.c
@@ -69,6 +68,9 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
+if (HAVE_CURL)
+  target_sources(utility PRIVATE netfile.c)
+endif()
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})

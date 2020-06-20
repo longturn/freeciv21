@@ -1,5 +1,9 @@
-add_subdirectory(ruleutil)
-add_subdirectory(shared)
+if (FREECIV_ENABLE_RULEDIT OR FREECIV_ENABLE_RULEUP)
+  add_subdirectory(ruleutil)
+endif()
+if (FREECIV_ENABLE_CIVMANUAL OR FREECIV_ENABLE_RULEUP)
+  add_subdirectory(shared)
+endif()
 
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   add_subdirectory(fcmp)
