@@ -21,6 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 # Include subdirectories with the actual project definitions
 add_subdirectory(utility)
 add_subdirectory(common)
+add_subdirectory(data)
 
 if (FREECIV_BUILD_LIBCLIENT)
   add_subdirectory(client)
