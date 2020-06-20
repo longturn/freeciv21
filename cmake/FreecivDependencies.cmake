@@ -2,6 +2,10 @@ include(CheckCSourceCompiles)
 include(CheckIncludeFile)
 include(CheckFunctionExists)
 include(CheckTypeSize)
+include(GNUInstallDirs) # For install paths
+
+# We install so many files... skip up-to-date messages
+set(CMAKE_INSTALL_MESSAGE LAZY)
 
 # errors out if an include file is not found
 macro(require_include_file file variable)

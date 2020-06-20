@@ -3,12 +3,12 @@
 
 #define CMAKE_BUILD
 
-#define LOCALEDIR "@LOCALEDIR@"
+#define LOCALEDIR "${CMAKE_INSTALL_FULL_LOCALEDIR}"
 
 #cmakedefine BUG_URL "${BUG_URL}"
 #define WIKI_URL "http://www.freeciv.org/"
 
-#define DATASUBDIR "@DATASUBDIR@"
+#define DATASUBDIR "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}"
 
 #define AI_MOD_DEFAULT "classic"
 
@@ -20,13 +20,13 @@
 #define INIT_BRACE_BEGIN {
 #define INIT_BRACE_END   }
 
-#define DEFAULT_DATA_PATH ".:data:@FREECIV_STORAGE_DIR@/" DATASUBDIR ":@DATADIR@/freeciv"
-#define DEFAULT_SAVE_PATH ".:@FREECIV_STORAGE_DIR@/saves"
-#define DEFAULT_SCENARIO_PATH ".:data/scenarios:@FREECIV_STORAGE_DIR@/" DATASUBDIR "/scenarios:@FREECIV_STORAGE_DIR@/scenarios:@DATADIR@/freeciv/scenarios"
+#define DEFAULT_DATA_PATH ".:data:${FREECIV_STORAGE_DIR}/" DATASUBDIR ":${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}"
+#define DEFAULT_SAVE_PATH ".:${FREECIV_STORAGE_DIR}/saves"
+#define DEFAULT_SCENARIO_PATH ".:data/scenarios:${FREECIV_STORAGE_DIR}/" DATASUBDIR "/scenarios:${FREECIV_STORAGE_DIR}/scenarios:${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}/scenarios"
 
-#define MPICON_PATH "@DATADIR@/freeciv/misc/mpicon.png"
+#define MPICON_PATH "${CMAKE_INSTALL_FULL_DATADIR}/${PROJECT_NAME}/misc/mpicon.png"
 
-#define BINDIR "@BINDIR@"
+#define BINDIR "${CMAKE_INSTALL_FULL_BINDIR}"
 
 #define _GNU_SOURCE
 
