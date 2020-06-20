@@ -28,6 +28,17 @@ function(add_ruleset)
     "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/${ARG_NAME}")
 endfunction()
 
+function(add_tileset)
+  cmake_parse_arguments(ARG "" "NAME;README" "" ${ARGN})
+  install(
+    FILES ${ARG_NAME}.tilespec
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+  install(
+    DIRECTORY ${ARG_NAME}
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png PATTERN *.spec PATTERN README.*)
+endfunction()
+
 if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
   # Nations
   add_subdirectory(nation)
@@ -55,4 +66,45 @@ if (FREECIV_ENABLE_SERVER OR FREECIV_ENABLE_RULEDIT)
   install(
     FILES override/nation.ruleset
     DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/override")
+endif()
+
+if (FREECIV_ENABLE_CLIENT)
+  # Tilesets
+  add_tileset(NAME amplio)
+  add_tileset(NAME amplio2)
+  add_tileset(NAME cimpletoon)
+  add_tileset(NAME hex2t)
+  add_tileset(NAME hexemplio)
+  add_tileset(NAME isophex)
+  add_tileset(NAME isotrident)
+  add_tileset(NAME trident)
+
+  # Misc
+  install(
+    FILES helpdata.txt
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}")
+  install(
+    DIRECTORY buildings
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png)
+  install(
+    DIRECTORY flags
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png)
+  install(
+    DIRECTORY misc
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png PATTERN *.tilespec PATTERN *.spec)
+  install(
+    DIRECTORY override
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png PATTERN *.spec)
+  install(
+    DIRECTORY themes/gui-qt
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}/themes"
+    FILES_MATCHING PATTERN *.jpg PATTERN *.png PATTERN *.qss)
+  install(
+    DIRECTORY wonders
+    DESTINATION "${CMAKE_INSTALL_DATADIR}/${PROJECT_NAME}"
+    FILES_MATCHING PATTERN *.png)
 endif()
