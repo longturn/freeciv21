@@ -26,3 +26,12 @@ if (FREECIV_ENABLE_RULEUP)
   target_link_libraries(freeciv-ruleup tools_shared)
   target_link_libraries(freeciv-ruleup tools_ruleutil)
 endif()
+
+install(
+  TARGETS
+  freeciv-manual
+  freeciv-modpack
+  freeciv-modpack-qt
+  freeciv-ruledit
+  freeciv-ruleup
+  OPTIONAL)
