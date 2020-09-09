@@ -124,6 +124,7 @@ struct vision_site {
   bool unhappy;
   int style;
   int city_image;
+  enum capital_type capital;
 
   bv_imprs improvements;
 };
