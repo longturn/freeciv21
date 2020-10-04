@@ -16,9 +16,17 @@
 /* common */
 #include "traits.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 int ai_trait_get_value(enum trait tr, struct player *pplayer);
 
 void ai_traits_init(struct player *pplayer);
 void ai_traits_close(struct player *pplayer);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__AITRAITS_H */

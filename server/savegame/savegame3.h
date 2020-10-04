@@ -13,8 +13,16 @@
 #ifndef FC__SAVEGAME3_H
 #define FC__SAVEGAME3_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 void savegame3_load(struct section_file *sfile);
 void savegame3_save(struct section_file *sfile, const char *save_reason,
                     bool scenario);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__SAVEGAME3_H */

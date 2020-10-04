@@ -17,6 +17,10 @@
 
 #include "hand_gen.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* A category of reasons why an action isn't enabled. */
 enum ane_kind {
   /* Explanation: wrong actor unit. */
@@ -138,5 +142,9 @@ enum ane_kind action_not_enabled_reason(struct unit *punit,
 bool unit_server_side_agent_set(struct player *pplayer,
                                 struct unit *punit,
                                 enum server_side_agent agent);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__UNITHAND_H */

@@ -13,7 +13,15 @@
 #ifndef FC__STARTPOS_H
 #define FC__STARTPOS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 bool create_start_positions(enum map_startpos mode,
                             struct unit_type *initial_unit);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC_STARTPOS_H */

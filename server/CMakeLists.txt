@@ -22,9 +22,9 @@ add_library(
   server_gen
   STATIC
   # The generated code calls these directly
-  cityhand.c
-  handchat.c
-  infrapts.c
+  cityhand.cpp
+  handchat.cpp
+  infrapts.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
 )
@@ -32,49 +32,51 @@ add_library(
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
+set_property(TARGET server_gen APPEND PROPERTY COMPILE_FLAGS -fpermissive)
+
 target_link_libraries(server_gen PUBLIC common)
 
 add_library(
   server
   STATIC
-  actiontools.c
-  aiiface.c
-  animals.c
-  auth.c
-  barbarian.c
-  citizenshand.c
-  citytools.c
-  cityturn.c
-  civserver.c
-  commands.c
-  connecthand.c
-  console.c
-  diplhand.c
-  diplomats.c
-  edithand.c
-  fcdb.c
-  gamehand.c
-  maphand.c
-  meta.c
-  mood.c
-  notify.c
-  plrhand.c
-  report.c
-  rscompat.c
-  rssanity.c
-  ruleset.c
-  sanitycheck.c
-  score.c
-  sernet.c
-  settings.c
-  spacerace.c
-  srv_log.c
-  srv_main.c
-  stdinhand.c
-  techtools.c
-  unithand.c
-  unittools.c
-  voting.c
+  actiontools.cpp
+  aiiface.cpp
+  animals.cpp
+  auth.cpp
+  barbarian.cpp
+  citizenshand.cpp
+  citytools.cpp
+  cityturn.cpp
+  civserver.cpp
+  commands.cpp
+  connecthand.cpp
+  console.cpp
+  diplhand.cpp
+  diplomats.cpp
+  edithand.cpp
+  fcdb.cpp
+  gamehand.cpp
+  maphand.cpp
+  meta.cpp
+  mood.cpp
+  notify.cpp
+  plrhand.cpp
+  report.cpp
+  rscompat.cpp
+  rssanity.cpp
+  ruleset.cpp
+  sanitycheck.cpp
+  score.cpp
+  sernet.cpp
+  settings.cpp
+  spacerace.cpp
+  srv_log.cpp
+  srv_main.cpp
+  stdinhand.cpp
+  techtools.cpp
+  unithand.cpp
+  unittools.cpp
+  voting.cpp
 )
 
 target_include_directories(server PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -88,6 +90,8 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/default)
 target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 
 target_link_libraries(server PUBLIC server_gen)
+
+set_property(TARGET server APPEND PROPERTY COMPILE_FLAGS -fpermissive)
 
 add_subdirectory(advisors)
 add_subdirectory(generator)
@@ -107,7 +111,7 @@ if(FREECIV_HAVE_LIBREADLINE)
   target_link_libraries(server PRIVATE Readline::readline)
 endif()
 
-# Create an empty file to build the server from. srv_main.c is needed by ruledit
+# Create an empty file to build the server from. srv_main.cpp is needed by ruledit
 # so it has to be in the freeciv_server library.
 if(NOT EXISTS ${CMAKE_CURRENT_BINARY_DIR}/null.c)
   file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/null.c "")

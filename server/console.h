@@ -16,6 +16,10 @@
 /* utility */
 #include "support.h"            /* bool type and fc__attribute */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define MAX_LEN_CONSOLE_LINE 1024  /* closing '\0' included */
 
 /* 
@@ -87,5 +91,9 @@ void con_set_style(bool i);
 
 /* return server output style */
 bool con_get_style(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__CONSOLE_H */

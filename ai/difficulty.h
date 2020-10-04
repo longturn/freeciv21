@@ -13,10 +13,18 @@
 #ifndef FC__DIFFICULTY_H
 #define FC__DIFFICULTY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 void set_ai_level_directer(struct player *pplayer, enum ai_level level);
 
 char *ai_level_help(const char *cmdname);
 
 bool ai_fuzzy(const struct player *pplayer, bool normal_decision);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__DIFFICULTY_H */

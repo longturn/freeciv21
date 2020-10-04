@@ -21,6 +21,10 @@
 #include "fc_types.h"
 #include "game.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct conn_list;
 
 struct server_arguments {
@@ -124,5 +128,9 @@ extern struct server_arguments srvarg;
 extern bool force_end_of_sniff;
 
 void update_nations_with_startpos(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__SRV_MAIN_H */

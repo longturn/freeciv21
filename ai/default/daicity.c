@@ -760,9 +760,9 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
   struct unit_type *utype;
   Continent_id place = tile_continent(pcenter);
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
-  struct dai_private_data *private = (struct dai_private_data *)ait->private;
+  struct dai_private_data *pprivate = (struct dai_private_data *)ait->pprivate;
 
-  if (!private->contemplace_workers) {
+  if (!pprivate->contemplace_workers) {
     /* AI type uses custom method to set worker want and type. */
     return;
   }

@@ -15,6 +15,10 @@
 
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #if ((IS_BETA_VERSION || IS_DEVEL_VERSION) && !defined(FREECIV_NDEBUG)) \
   || defined(FREECIV_DEBUG)
 #  define SANITY_CHECKING
@@ -44,5 +48,8 @@ void real_sanity_check( const char *file, const char *function, int line);
 
 #endif /* SANITY_CHECKING */
 
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__SANITYCHECK_H */

@@ -136,7 +136,7 @@ void climate_change(bool warming, int effect)
               warming ? "Global warming" : "Nuclear winter", effect);
 
   while (effect > 0 && (k--) > 0) {
-    struct terrain *old, *candidates[2], *new;
+    struct terrain *old, *candidates[2], *tnew;
     struct tile *ptile;
     int i;
 
@@ -166,15 +166,15 @@ void climate_change(bool warming, int effect)
      * specific to this tile, fall back to the other, rather than letting this
      * tile be immune to change. */
     for (i=0; i<2; i++) {
-      new = candidates[i];
+      tnew = candidates[i];
 
       /* If the preferred transformation simply hasn't been specified
        * for this terrain at all, don't fall back to the other. */
-      if (new == T_NONE) {
+      if (tnew == T_NONE) {
         break;
       }
 
-      if (tile_city(ptile) != NULL && terrain_has_flag(new, TER_NO_CITIES)) {
+      if (tile_city(ptile) != NULL && terrain_has_flag(tnew, TER_NO_CITIES)) {
         /* do not change to a terrain with the flag TER_NO_CITIES if the tile
          * has a city */
         continue;
@@ -182,7 +182,7 @@ void climate_change(bool warming, int effect)
 
       /* Only change between water and land at coastlines, and between
        * frozen and unfrozen at ice margin */
-      if (!terrain_surroundings_allow_change(ptile, new)) {
+      if (!terrain_surroundings_allow_change(ptile, tnew)) {
         continue;
       }
       
@@ -194,11 +194,11 @@ void climate_change(bool warming, int effect)
       continue;
     }
 
-    if (new != T_NONE && old != new) {
+    if (tnew != T_NONE && old != tnew) {
       effect--;
 
       /* Really change the terrain. */
-      tile_change_terrain(ptile, new);
+      tile_change_terrain(ptile, tnew);
       check_terrain_change(ptile, old);
       update_tile_knowledge(ptile);
 
@@ -208,7 +208,7 @@ void climate_change(bool warming, int effect)
           unit_activity_handling(punit, ACTIVITY_IDLE);
         }
       } unit_list_iterate_end;
-    } else if (old == new) {
+    } else if (old == tnew) {
       /* This counts toward a climate change although nothing is changed. */
       effect--;
     }
@@ -2431,10 +2431,10 @@ void create_extra(struct tile *ptile, struct extra_type *pextra,
 void destroy_extra(struct tile *ptile, struct extra_type *pextra)
 {
   bv_player base_seen;
-  bool virtual = tile_virtual_check(ptile);
+  bool is_virtual = tile_virtual_check(ptile);
 
   /* Remember what players were able to see the base. */
-  if (!virtual) {
+  if (!is_virtual) {
     BV_CLR_ALL(base_seen);
     players_iterate(pplayer) {
       if (map_is_known_and_seen(ptile, pplayer, V_MAIN)) {
@@ -2443,7 +2443,7 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
     } players_iterate_end;
   }
 
-  if (!virtual && is_extra_caused_by(pextra, EC_BASE)) {
+  if (!is_virtual && is_extra_caused_by(pextra, EC_BASE)) {
     struct base_type *pbase = extra_base_get(pextra);
     struct player *owner = extra_owner(ptile);
 
@@ -2467,7 +2467,7 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
 
   tile_remove_extra(ptile, pextra);
 
-  if (!virtual) {
+  if (!is_virtual) {
     /* Remove base from vision of players which were able to see the base. */
     players_iterate(pplayer) {
       if (BV_ISSET(base_seen, player_index(pplayer))

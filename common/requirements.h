@@ -239,38 +239,38 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 /* XXX Some versions of g++ can't cope with the struct literals */
 #define requirement_fulfilled_by_government(_gov_, _rqs_)                  \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_GOVERNMENT, .value = {.govern = (_gov_)}})
+      &(struct universal){.value = {.govern = (_gov_)}, .kind = VUT_GOVERNMENT})
 #define requirement_fulfilled_by_nation(_nat_, _rqs_)                      \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_NATION, .value = {.nation = (_nat_)}})
+      &(struct universal){.value = {.nation = (_nat_)}, .kind = VUT_NATION})
 #define requirement_fulfilled_by_improvement(_imp_, _rqs_)                 \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
-                        .value = {.building = (_imp_)}})
+    &(struct universal){.value = {.building = (_imp_)},                    \
+                        .kind = VUT_IMPROVEMENT})
 #define requirement_fulfilled_by_terrain(_ter_, _rqs_)                 \
   universal_fulfills_requirements(FALSE, (_rqs_),                      \
-    &(struct universal){.kind = VUT_TERRAIN,                           \
-                        .value = {.terrain = (_ter_)}})
+    &(struct universal){.value = {.terrain = (_ter_)},                     \
+                        .kind = VUT_TERRAIN})
 #define requirement_fulfilled_by_unit_class(_uc_, _rqs_)                   \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_UCLASS, .value = {.uclass = (_uc_)}})
+      &(struct universal){.value = {.uclass = (_uc_)}, .kind = VUT_UCLASS})
 #define requirement_fulfilled_by_unit_type(_ut_, _rqs_)                    \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_UTYPE, .value = {.utype = (_ut_)}})
+      &(struct universal){.value = {.utype = (_ut_)}, .kind = VUT_UTYPE})
 #define requirement_fulfilled_by_extra(_ex_, _rqs_)                        \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_EXTRA, .value = {.extra = (_ex_)}})
+      &(struct universal){.value = {.extra = (_ex_)}, .kind = VUT_EXTRA})
 #define requirement_fulfilled_by_output_type(_o_, _rqs_)                   \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_OTYPE, .value = {.outputtype = (_o_)}})
+      &(struct universal){.value = {.outputtype = (_o_)}, .kind = VUT_OTYPE})
 #define requirement_fulfilled_by_action(_act_, _rqs_)                      \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_ACTION, .value = {.action = (_act_)}})
+      &(struct universal){.value = {.action = (_act_)}, .kind = VUT_ACTION})
 
 #define requirement_needs_improvement(_imp_, _rqs_)                        \
   universal_fulfills_requirements(TRUE, (_rqs_),                           \
-    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
-                        .value = {.building = (_imp_)}})
+    &(struct universal){.value = {.building = (_imp_)},                    \
+                        .kind = VUT_IMPROVEMENT})
 
 int requirement_kind_ereq(const int value,
                           const enum req_range range,

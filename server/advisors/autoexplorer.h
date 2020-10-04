@@ -13,8 +13,16 @@
 #ifndef FC__AUTOEXPLORER_H
 #define FC__AUTOEXPLORER_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct unit;
 
 enum unit_move_result manage_auto_explorer(struct unit *punit);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__AUTOEXPLORER_H */

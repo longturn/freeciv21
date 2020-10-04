@@ -13,6 +13,14 @@
 #ifndef FC__ADVRULESET_H
 #define FC__ADVRULESET_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 void adv_units_ruleset_init(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif   /* FC__ADVRULESET_H */

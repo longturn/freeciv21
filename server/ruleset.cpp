@@ -3088,16 +3088,16 @@ static bool load_ruleset_terrain(struct section_file *file,
       slist = secfile_lookup_str_vec(file, &nval, "%s.native_to", tsection);
       BV_CLR_ALL(pterrain->native_to);
       for (j = 0; j < nval; j++) {
-        struct unit_class *class = unit_class_by_rule_name(slist[j]);
+        struct unit_class *uclass = unit_class_by_rule_name(slist[j]);
 
-        if (!class) {
+        if (!uclass) {
           ruleset_error(LOG_ERROR,
                         "\"%s\" [%s] is native to unknown unit class \"%s\".",
                         filename, tsection, slist[j]);
           ok = FALSE;
           break;
         } else {
-          BV_SET(pterrain->native_to, uclass_index(class));
+          BV_SET(pterrain->native_to, uclass_index(uclass));
         }
       }
       free(slist);
@@ -6915,15 +6915,15 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     achievements_iterate(pach) {
       int id = achievement_index(pach);
       const char *sec_name = section_name(section_list_get(sec, id));
-      const char *typename;
+      const char *type_name;
       const char *msg;
 
-      typename = secfile_lookup_str_default(file, NULL, "%s.type", sec_name);
+      type_name = secfile_lookup_str_default(file, NULL, "%s.type", sec_name);
 
-      pach->type = achievement_type_by_name(typename, fc_strcasecmp);
+      pach->type = achievement_type_by_name(type_name, fc_strcasecmp);
       if (!achievement_type_is_valid(pach->type)) {
         ruleset_error(LOG_ERROR, "Achievement has unknown type \"%s\".",
-                      typename != NULL ? typename : "(NULL)");
+                      type_name != NULL ? type_name : "(NULL)");
         ok = FALSE;
       }
 
@@ -7968,9 +7968,10 @@ static void send_ruleset_action_auto_performers(struct conn_list *dest)
 static void send_ruleset_trade_routes(struct conn_list *dest)
 {
   struct packet_ruleset_trade packet;
-  enum trade_route_type type;
+  int itype;
 
-  for (type = TRT_NATIONAL; type < TRT_LAST; type++) {
+  for (itype = TRT_NATIONAL; itype < TRT_LAST; itype++) {
+    enum trade_route_type type = itype;
     struct trade_route_settings *set = trade_route_settings_by_type(type);
 
     packet.id = type;
@@ -8161,7 +8162,7 @@ static void send_ruleset_clauses(struct conn_list *dest)
   int i;
 
   for (i = 0; i < CLAUSE_COUNT; i++) {
-    struct clause_info *info = clause_info_get(i);
+    struct clause_info *info = clause_info_get(clause_type(i));
     int j;
 
     packet.type = i;

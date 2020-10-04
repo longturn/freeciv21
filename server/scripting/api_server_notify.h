@@ -17,6 +17,10 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct lua_State;
 
 void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
@@ -27,5 +31,9 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
                              int event, const char *message);
 void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
                                        int event, const char *message);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* API_SERVER_NOTIFY */

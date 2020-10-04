@@ -13,6 +13,10 @@
 #ifndef FC__HEIGHT_MAP_H
 #define FC__HEIGHT_MAP_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* Wrappers for easy access.  They are a macros so they can be a lvalues.*/
 #define hmap(_tile) (height_map[tile_index(_tile)])
 
@@ -40,5 +44,9 @@ void make_random_hmap(int smooth);
 void make_pseudofractal1_hmap(int extra_div);
 
 bool area_is_too_flat(struct tile *ptile, int thill, int my_height);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__HEIGHT__MAP_H */

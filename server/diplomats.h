@@ -15,6 +15,10 @@
 
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 bool diplomat_embassy(struct player *pplayer, struct unit *pdiplomat,
                       struct city *pcity, const struct action *paction);
 bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
@@ -55,5 +59,9 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
                    struct city *tgt_city, const struct action *paction);
 
 int count_diplomats_on_tile(struct tile *ptile);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__DIPLOMATS_H */

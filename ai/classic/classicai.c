@@ -76,7 +76,7 @@ static void cai_module_close(void)
 {
   struct ai_type *deftype = classic_ai_get_self();
 
-  FC_FREE(deftype->private);
+  FC_FREE(deftype->pprivate);
 }
 
 /**********************************************************************//**
@@ -582,15 +582,15 @@ static void cai_consider_wonder_city(struct city *pcity, bool *result)
 **************************************************************************/
 bool fc_ai_classic_setup(struct ai_type *ai)
 {
-  struct dai_private_data *private;
+  struct dai_private_data *pprivate;
 
   classic_ai_set_self(ai);
 
   strncpy(ai->name, "classic", sizeof(ai->name));
 
-  private = fc_malloc(sizeof(struct dai_private_data));
-  private->contemplace_workers = TRUE;
-  ai->private = private;
+  pprivate = fc_malloc(sizeof(struct dai_private_data));
+  pprivate->contemplace_workers = TRUE;
+  ai->pprivate = pprivate;
 
   ai->funcs.module_close = cai_module_close;
 

@@ -20,6 +20,10 @@
 /* common */
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define MIN_UNREST_DIST   5
 #define MAX_UNREST_DIST   8
 
@@ -35,5 +39,9 @@ bool is_land_barbarian(struct player *pplayer);
 bool is_sea_barbarian(struct player *pplayer);
 
 struct player *create_barbarian_player(enum barbarian_type type);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__BARBARIAN_H */

@@ -17,6 +17,10 @@
 
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct connection;
 struct conn_list;
 struct packet_authentication_reply;
@@ -47,5 +51,9 @@ bool connection_delegate_take(struct connection *pconn,
 bool connection_delegate_restore(struct connection *pconn);
 
 void connection_close_server(struct connection *pconn, const char *reason);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__CONNECTHAND_H */

@@ -17,6 +17,10 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct lua_State;
 
 /* type of clima change */
@@ -78,5 +82,9 @@ void api_edit_unit_moving_allow(lua_State *L, Unit *punit);
 
 void api_edit_city_add_history(lua_State *L, City *pcity, int amount);
 void api_edit_player_add_history(lua_State *L, Player *pplayer, int amount);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* API_SERVER_EDIT_H */

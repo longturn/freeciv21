@@ -18,6 +18,10 @@
 #include "packets.h"
 #include "unitlist.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define LOG_BUILD_TARGET LOG_DEBUG
 
 #define SPECLIST_TAG traderoute_packet
@@ -118,5 +122,9 @@ void clear_worker_tasks(struct city *pcity);
 void package_and_send_worker_tasks(struct city *pcity);
 
 int city_production_buy_gold_cost(const struct city *pcity);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__CITYTOOLS_H */

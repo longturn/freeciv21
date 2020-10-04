@@ -13,9 +13,17 @@
 #ifndef FC__ADVCITY_H
 #define FC__ADVCITY_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct city;
 struct adv_data;
 
 int adv_eval_calc_city(struct city *pcity, struct adv_data *adv);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif   /* FC__ADVCITY_H */

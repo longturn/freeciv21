@@ -13,6 +13,10 @@
 #ifndef FC__HANDICAPS_H
 #define FC__HANDICAPS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* See handicap_desc() for what these do. */
 enum handicap_type {
   H_DIPLOMAT = 0,
@@ -48,5 +52,9 @@ void handicaps_set(struct player *pplayer, bv_handicap handicaps);
 bool has_handicap(const struct player *pplayer, enum handicap_type htype);
 
 const char *handicap_desc(enum handicap_type htype, bool *inverted);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__HANDICAPS_H */

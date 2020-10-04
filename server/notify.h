@@ -27,6 +27,10 @@
 /* server */
 #include "srv_main.h"           /* enum server_states */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct research;
 
 
@@ -124,5 +128,9 @@ void event_cache_phases_invalidate(void);
 struct section_file;
 void event_cache_load(struct section_file *file, const char *section);
 void event_cache_save(struct section_file *file, const char *section);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__NOTIFY_H */

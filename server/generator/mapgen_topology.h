@@ -16,6 +16,10 @@
 /* utility */
 #include "support.h"            /* bool type */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* this is the maximal colatitude at equators returned by 
    map_colatitude */
 
@@ -51,5 +55,9 @@ extern int ice_base_colatitude;
 int map_colatitude(const struct tile *ptile);
 bool near_singularity(const struct tile *ptile);
 void generator_init_topology(bool autosize);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__MAPGEN_TOPOLOGY_H */

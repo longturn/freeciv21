@@ -136,15 +136,14 @@ struct Treaty *find_treaty(struct player *plr0, struct player *plr1)
 static enum diplstate_type dst_closest(enum diplstate_type a,
                                        enum diplstate_type b)
 {
-  static const int how_close[DS_LAST] = {
-    [DS_NO_CONTACT] = 0,
-    [DS_WAR] = 1,
-    [DS_CEASEFIRE] = 2,
-    [DS_ARMISTICE] = 3,
-    [DS_PEACE] = 4,
-    [DS_ALLIANCE] = 5,
-    [DS_TEAM] = 6,
-  };
+  static int how_close[DS_LAST];
+  how_close[DS_NO_CONTACT] = 0;
+  how_close[DS_WAR] = 1;
+  how_close[DS_CEASEFIRE] = 2;
+  how_close[DS_ARMISTICE] = 3;
+  how_close[DS_PEACE] = 4;
+  how_close[DS_ALLIANCE] = 5;
+  how_close[DS_TEAM] = 6;
 
   if (how_close[a] < how_close[b]) {
     return b;

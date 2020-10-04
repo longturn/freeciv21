@@ -20,9 +20,17 @@
 /* server */
 #include "fcdb.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct lua_State;
 
 const char *api_fcdb_option(lua_State *L, const char *type);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__API_FCDB_BASE_H */
 

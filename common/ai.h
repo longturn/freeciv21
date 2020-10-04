@@ -50,7 +50,7 @@ struct ai_type
 {
   char name[MAX_LEN_NAME];
 
-  void *private;
+  void *pprivate;
 
   struct {
     /* Called for every AI type when server quits. */

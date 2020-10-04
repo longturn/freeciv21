@@ -3121,7 +3121,7 @@ void city_landlocked_sell_coastal_improvements(struct tile *ptile)
                || VUT_TERRAINCLASS == preq->source.kind)
               && !is_req_active(city_owner(pcity), NULL, pcity, NULL,
                                 NULL, NULL, NULL, NULL, NULL, NULL,
-				preq, TRUE)) {
+				preq, RPT_CERTAIN)) {
             int price = impr_sell_gold(pimprove);
 
             do_sell_building(pplayer, pcity, pimprove, "landlocked");

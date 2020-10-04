@@ -21,6 +21,10 @@
 /* common */
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct ai_data;
 
 /* 
@@ -125,5 +129,9 @@ void timing_results_real(void);
 #define TIMING_LOG(timer, activity)
 #define TIMING_RESULTS()
 #endif /* FREECIV_DEBUG */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__SRV_LOG_H */

@@ -17,6 +17,10 @@
 #include "fc_types.h"
 #include "map.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 void auto_settlers_ruleset_init(void);
 
 struct settlermap;
@@ -94,5 +98,9 @@ extern action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 #define as_rmextra_action_iterate_end                                     \
   action_list_iterate_end                                                 \
 }
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif   /* FC__AUTOSETTLERS_H */

@@ -20,6 +20,10 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct section_file;
 struct connection;
 
@@ -47,6 +51,10 @@ void script_server_signal_emit(const char *signal_name, ...);
 
 /* Functions */
 bool script_server_call(const char *func_name, ...);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__SCRIPT_SERVER_H */
 

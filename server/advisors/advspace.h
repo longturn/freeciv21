@@ -19,9 +19,17 @@
 /* common */
 #include "fc_types.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct player_spaceship;
 
 bool adv_spaceship_autoplace(struct player *pplayer,
                              struct player_spaceship *ship);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__ADVSPACE_H */

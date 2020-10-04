@@ -18,6 +18,10 @@
 
 #define MORT 24
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 adv_want amortize(adv_want benefit, int delay);
 
 /*
@@ -26,5 +30,9 @@ adv_want amortize(adv_want benefit, int delay);
  *
  */
 #define POWER_DIVIDER 	(POWER_FACTOR * 3)
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif   /* FC__ADVTOOLS_H */

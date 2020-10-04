@@ -16,6 +16,10 @@
 /* server/advisors */
 #include "advtools.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct player;
 
 struct adv_city {
@@ -57,5 +61,9 @@ void adv_city_worker_rmextra_set(struct city *pcity, int city_tile_index,
                                  const struct extra_type *pextra, int value);
 int adv_city_worker_rmextra_get(const struct city *pcity, int city_tile_index,
                                 const struct extra_type *pextra);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif   /* FC__INFRACACHE_H */

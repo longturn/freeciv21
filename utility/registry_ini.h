@@ -168,30 +168,30 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
                                       const char *path, ...)
                                       fc__attribute((__format__(__printf__, 7, 8)));
 #define secfile_insert_str(secfile, string, path, ...)                      \
-  secfile_insert_str_full(secfile, string, NULL, FALSE, FALSE, FALSE,       \
+  secfile_insert_str_full(secfile, string, NULL, FALSE, FALSE, EST_NORMAL,       \
                           path, ## __VA_ARGS__)
 #define secfile_insert_str_noescape(secfile, string, path, ...)             \
-  secfile_insert_str_full(secfile, string, NULL, FALSE, TRUE, FALSE,        \
+  secfile_insert_str_full(secfile, string, NULL, FALSE, TRUE, EST_NORMAL,        \
                           path, ## __VA_ARGS__)
 #define secfile_insert_str_comment(secfile, string, comment, path, ...)     \
-  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE, FALSE,     \
+  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE, EST_NORMAL,     \
                           path, ## __VA_ARGS__)
 #define secfile_insert_str_noescape_comment(secfile, string,                \
                                             comment, path, ...)             \
-  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE, FALSE,     \
+  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE, EST_NORMAL,     \
                           path, ## __VA_ARGS__)
 #define secfile_replace_str(secfile, string, path, ...)                     \
-  secfile_insert_str_full(secfile, string, NULL, TRUE, FALSE, FALSE,        \
+  secfile_insert_str_full(secfile, string, NULL, TRUE, FALSE, EST_NORMAL,        \
                           path, ## __VA_ARGS__)
 #define secfile_replace_str_noescape(secfile, string, path, ...)            \
-  secfile_insert_str_full(secfile, string, NULL, TRUE, TRUE, FALSE,         \
+  secfile_insert_str_full(secfile, string, NULL, TRUE, TRUE, EST_NORMAL,         \
                           path, ## __VA_ARGS__)
 #define secfile_replace_str_comment(secfile, string, comment, path, ...)    \
-  secfile_insert_str_full(secfile, string, comment, TRUE, TRUE, FALSE,      \
+  secfile_insert_str_full(secfile, string, comment, TRUE, TRUE, EST_NORMAL,      \
                           path, ## __VA_ARGS__)
 #define secfile_replace_str_noescape_comment(secfile, string,               \
                                              comment, path, ...)            \
-  secfile_insert_str_full(secfile, string, comment, TRUE, TRUE, FALSE,      \
+  secfile_insert_str_full(secfile, string, comment, TRUE, TRUE, EST_NORMAL,      \
                           path, ## __VA_ARGS__)
 size_t secfile_insert_str_vec_full(struct section_file *secfile,
                                    const char *const *strings, size_t dim,

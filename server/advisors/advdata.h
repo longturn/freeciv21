@@ -13,6 +13,10 @@
 #ifndef FC__ADVDATA_H
 #define FC__ADVDATA_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 /* utility */
 #include "bitvector.h"
 #include "support.h"            /* bool type */
@@ -156,5 +160,9 @@ bool adv_wants_science(struct player *pplayer);
 
 bool adv_is_player_dangerous(struct player *pplayer,
                              struct player *aplayer);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__ADVDATA_H */

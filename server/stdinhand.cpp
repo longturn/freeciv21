@@ -1650,10 +1650,10 @@ static bool timeout_command(struct connection *caller, char *str, bool check)
 **************************************************************************/
 static enum sset_level lookup_option_level(const char *name)
 {
-  enum sset_level i;
+  int i;
 
   for (i = SSET_ALL; i < OLEVELS_NUM; i++) {
-    if (0 == fc_strcasecmp(name, sset_level_name(i))) {
+    if (0 == fc_strcasecmp(name, sset_level_name(sset_level(i)))) {
       return i;
     }
   }
@@ -4859,7 +4859,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     case M_PRE_EXACT:
     case M_PRE_ONLY:
       /* We have a match */
-      luaarg = arg + strlen(lua_args_name(ind));
+      luaarg = arg + strlen(lua_args_name(lua_args(ind)));
       luaarg = skip_leading_spaces(luaarg);
       break;
     case M_PRE_EMPTY:
@@ -6328,7 +6328,7 @@ static void show_help_command(struct connection *caller,
 static void show_help_command_list(struct connection *caller,
                                    enum command_id help_cmd)
 {
-  enum command_id i;
+  int i;
 
   cmd_reply(help_cmd, caller, C_COMMENT, horiz_line);
   cmd_reply(help_cmd, caller, C_COMMENT,
@@ -6336,7 +6336,8 @@ static void show_help_command_list(struct connection *caller,
   cmd_reply(help_cmd, caller, C_COMMENT, horiz_line);
   if (!caller && con_get_style()) {
     for (i = 0; i < CMD_NUM; i++) {
-      cmd_reply(help_cmd, caller, C_COMMENT, "%s", command_name_by_number(i));
+      cmd_reply(help_cmd, caller, C_COMMENT, "%s",
+                command_name_by_number(command_id(i)));
     }
   } else {
     char buf[MAX_LEN_CONSOLE_LINE];

@@ -15,6 +15,10 @@
 
 #include "ai.h" /* incident_type */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 void ai_init(void);
 
 bool load_ai_module(const char *modname);
@@ -25,5 +29,9 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
                    const struct action *paction,
                    struct player *violator, struct player *victim);
 void call_ai_refresh(void);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__AIIFACE_H */

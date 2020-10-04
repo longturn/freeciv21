@@ -17,6 +17,10 @@
 
 #include "support.h"            /* bool type */
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #define DEFAULT_META_SERVER_NO_SEND  TRUE
 #define DEFAULT_META_SERVER_ADDR     FREECIV_META_URL
 #define METASERVER_REFRESH_INTERVAL   (3*60)
@@ -48,5 +52,9 @@ bool server_open_meta(bool persistent);
 bool is_metaserver_open(void);
 
 bool send_server_info_to_metaserver(enum meta_flag flag);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif /* FC__META_H */

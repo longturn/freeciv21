@@ -13,6 +13,10 @@
 #ifndef FC__PLRHAND_H
 #define FC__PLRHAND_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct connection;
 struct conn_list;
 struct nation_type;
@@ -166,5 +170,9 @@ struct rgbcolor *playercolor_get(int id);
 void player_set_to_ai_mode(struct player *pplayer,
                            enum ai_level skill_level);
 void player_set_under_human_control(struct player *pplayer);
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
 
 #endif  /* FC__PLRHAND_H */
