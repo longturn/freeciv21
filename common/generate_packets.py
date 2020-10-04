@@ -2026,6 +2026,10 @@ static int stats_total_sent;
 #include "fc_types.h"
 #include "packets.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 struct connection;
 
 bool server_handle_packet(enum packet_type type, const void *packet,
@@ -2054,6 +2058,10 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                     else:
                         f.write('void handle_%s(struct player *pplayer%s);\n'%(a,b))
         f.write('''
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
+
 #endif /* FC__HAND_GEN_H */
 ''')
         f.close()
