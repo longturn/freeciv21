@@ -188,7 +188,7 @@ int get_tokens(const char *str, char **tokens, size_t num_tokens,
      }
    }
 
-   tokens[token] = fc_malloc(len + 1);
+   tokens[token] = static_cast<char *>(fc_malloc(len + 1));
    (void) fc_strlcpy(tokens[token], str, len + 1); /* adds the '\0' */
 
    str += len + padlength;
