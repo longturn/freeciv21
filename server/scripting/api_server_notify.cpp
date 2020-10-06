@@ -36,7 +36,7 @@ void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
 {
   LUASCRIPT_CHECK_STATE(L);
 
-  notify_embassies(pplayer, ptile, event, ftc_any, "%s", message);
+  notify_embassies(pplayer, ptile, static_cast<event_type>(event), ftc_any, "%s", message);
 }
 
 /*************************************************************************//**
@@ -47,7 +47,7 @@ void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
 {
   LUASCRIPT_CHECK_STATE(L);
 
-  notify_player(pplayer, ptile, event, ftc_any, "%s", message);
+  notify_player(pplayer, ptile, static_cast<event_type>(event), ftc_any, "%s", message);
 }
 
 /*************************************************************************//**
@@ -62,7 +62,7 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
 
   pres = research_get(pplayer);
 
-  notify_research(pres, include_plr ? NULL : pplayer, event,
+  notify_research(pres, include_plr ? NULL : pplayer, static_cast<event_type>(event),
                   ftc_any, "%s", message);
 }
 
@@ -78,5 +78,5 @@ void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
 
   pres = research_get(pplayer);
 
-  notify_research_embassies(pres, NULL, event, ftc_any, "%s", message);
+  notify_research_embassies(pres, NULL, static_cast<event_type>(event), ftc_any, "%s", message);
 }

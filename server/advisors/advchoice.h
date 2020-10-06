@@ -13,10 +13,6 @@
 #ifndef FC__ADVCHOICE_H
 #define FC__ADVCHOICE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 /* Uncomment to have choice information tracked */
 /* #define ADV_CHOICE_TRACK */
 
@@ -94,9 +90,5 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
     }                                                                    \
   } while (FALSE);
 #endif /* FREECIV_NDEBUG */
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* FC__ADVCHOICE_H */

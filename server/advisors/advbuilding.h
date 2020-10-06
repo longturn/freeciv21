@@ -16,10 +16,6 @@
 /* server/advisors */
 #include "advchoice.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 #define FOOD_WEIGHTING 30
 #define SHIELD_WEIGHTING 17
 #define TRADE_WEIGHTING 18
@@ -40,9 +36,5 @@ void building_advisor(struct player *pplayer);
 
 void advisor_choose_build(struct player *pplayer, struct city *pcity);
 void building_advisor_choose(struct city *pcity, struct adv_choice *choice);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif   /* FC__BUILDINGADV_H */
