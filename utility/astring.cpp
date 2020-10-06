@@ -92,7 +92,7 @@ static inline char *astr_buffer_get(size_t *alloc)
 {
   if (!astr_buffer) {
     astr_buffer_alloc = 65536;
-    astr_buffer = fc_malloc(astr_buffer_alloc);
+    astr_buffer = static_cast<char *>(fc_malloc(astr_buffer_alloc));
     atexit(astr_buffer_free);
   }
 
@@ -106,7 +106,7 @@ static inline char *astr_buffer_get(size_t *alloc)
 static inline char *astr_buffer_grow(size_t *alloc)
 {
   astr_buffer_alloc *= 2;
-  astr_buffer = fc_realloc(astr_buffer, astr_buffer_alloc);
+  astr_buffer = static_cast<char *>(fc_realloc(astr_buffer, astr_buffer_alloc));
 
   *alloc = astr_buffer_alloc;
   return astr_buffer;
