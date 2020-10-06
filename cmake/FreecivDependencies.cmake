@@ -90,6 +90,8 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 # Compression
 find_package(ZLIB REQUIRED)
 
+# it works !
+set(HAVE_GETTIMEOFDAY_H TRUE)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
@@ -104,7 +106,6 @@ if(UNIX)
   require_function_exists(opendir FREECIV_HAVE_OPENDIR)
   require_function_exists(getaddrinfo HAVE_GETADDRINFO)
   require_function_exists(getnameinfo HAVE_GETNAMEINFO)
-  require_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
 
   set(CMAKE_EXTRA_INCLUDE_FILES "netinet/in.h")
   check_type_size(ip_mreqn SIZEOF_IP_MREQN)
