@@ -92,7 +92,6 @@ freeciv_add_flag_if_supported(
 # in C++. Add -fpermissive so GCC is happier.
 set_property(
     SOURCE
-    genhash.cpp
     genlist.cpp
     inputfile.cpp
     ioz.cpp

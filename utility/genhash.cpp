@@ -207,12 +207,13 @@ genhash_new_nbuckets(genhash_val_fn_t key_val_func,
                      genhash_free_fn_t data_free_func,
                      size_t num_buckets)
 {
-  struct genhash *pgenhash = fc_malloc(sizeof(*pgenhash));
+  genhash *pgenhash = new genhash;
 
   log_debug("New genhash table with %lu buckets",
             (long unsigned) num_buckets);
 
-  pgenhash->buckets = fc_calloc(num_buckets, sizeof(*pgenhash->buckets));
+  pgenhash->buckets = static_cast<genhash_entry **>(
+    fc_calloc(num_buckets, sizeof(*pgenhash->buckets)));
   pgenhash->key_val_func = key_val_func;
   pgenhash->key_comp_func = key_comp_func;
   pgenhash->key_copy_func = key_copy_func;
@@ -296,7 +297,7 @@ void genhash_destroy(struct genhash *pgenhash)
   pgenhash->no_shrink = TRUE;
   genhash_clear(pgenhash);
   free(pgenhash->buckets);
-  free(pgenhash);
+  delete pgenhash;
 }
 
 /************************************************************************//**
@@ -310,7 +311,8 @@ static void genhash_resize_table(struct genhash *pgenhash,
 
   fc_assert(new_nbuckets >= pgenhash->num_entries);
 
-  new_buckets = fc_calloc(new_nbuckets, sizeof(*pgenhash->buckets));
+  new_buckets = static_cast<genhash_entry **>(
+    fc_calloc(new_nbuckets, sizeof(*pgenhash->buckets)));
 
   bucket = pgenhash->buckets;
   end = bucket + pgenhash->num_buckets;
@@ -455,7 +457,7 @@ static inline void genhash_slot_create(struct genhash *pgenhash,
                                        const void *key, const void *data,
                                        genhash_val_t hash_val)
 {
-  struct genhash_entry *entry = fc_malloc(sizeof(*entry));
+  genhash_entry *entry = new genhash_entry;
 
   entry->key = (NULL != pgenhash->key_copy_func
                 ? pgenhash->key_copy_func(key) : (void *) key);
@@ -549,14 +551,14 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
 
   fc_assert_ret_val(NULL != pgenhash, NULL);
 
-  new_genhash = fc_malloc(sizeof(*new_genhash));
+  new_genhash = new genhash;
 
   /* Copy fields. */
   *new_genhash = *pgenhash;
 
   /* But make fresh buckets. */
-  new_genhash->buckets = fc_calloc(new_genhash->num_buckets,
-                                   sizeof(*new_genhash->buckets));
+  new_genhash->buckets = static_cast<genhash_entry **>(
+      fc_calloc(new_genhash->num_buckets, sizeof(*new_genhash->buckets)));
 
   /* Let's re-insert all data */
   src_bucket = pgenhash->buckets;
