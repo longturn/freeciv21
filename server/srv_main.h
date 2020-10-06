@@ -21,10 +21,6 @@
 #include "fc_types.h"
 #include "game.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 struct conn_list;
 
 struct server_arguments {
@@ -108,6 +104,7 @@ const char *server_ss_name_get(server_setting_id id);
 enum sset_type server_ss_type_get(server_setting_id id);
 bool server_ss_val_bool_get(server_setting_id id);
 int server_ss_val_int_get(server_setting_id id);
+unsigned int server_ss_val_bitwise_get(server_setting_id id);
 
 bool server_packet_input(struct connection *pconn, void *packet, int type);
 void start_game(void);
@@ -128,9 +125,5 @@ extern struct server_arguments srvarg;
 extern bool force_end_of_sniff;
 
 void update_nations_with_startpos(void);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* FC__SRV_MAIN_H */

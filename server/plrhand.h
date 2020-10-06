@@ -13,10 +13,6 @@
 #ifndef FC__PLRHAND_H
 #define FC__PLRHAND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 struct connection;
 struct conn_list;
 struct nation_type;
@@ -45,6 +41,7 @@ void update_revolution(struct player *pplayer);
 void government_change(struct player *pplayer, struct government *gov,
                        bool revolution_finished);
 int revolution_length(struct government *gov, struct player *plr);
+void update_capital(struct player *pplayer);
 
 struct player_economic player_limit_to_max_rates(struct player *pplayer);
 
@@ -170,9 +167,5 @@ struct rgbcolor *playercolor_get(int id);
 void player_set_to_ai_mode(struct player *pplayer,
                            enum ai_level skill_level);
 void player_set_under_human_control(struct player *pplayer);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif  /* FC__PLRHAND_H */
