@@ -21,6 +21,9 @@
 // Qt
 #include <QWidget>
 
+/* ruledit */
+#include "req_vec_fix.h"
+
 class QPushButton;
 class QLabel;
 class QLineEdit;
@@ -58,11 +61,11 @@ class tab_enabler : public QWidget
     void select_enabler();
     void add_now();
     void repair_now();
+    void incoming_rec_vec_change(const requirement_vector *vec);
     void delete_now();
     void edit_type(QAction *action);
     void edit_target_reqs();
     void edit_actor_reqs();
 };
-
 
 #endif // FC__TAB_ENABLERS_H

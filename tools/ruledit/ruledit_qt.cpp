@@ -43,6 +43,7 @@
 #include "effect_edit.h"
 #include "requirers_dlg.h"
 #include "req_edit.h"
+#include "req_vec_fix.h"
 #include "ruledit.h"
 #include "tab_building.h"
 #include "tab_enablers.h"
@@ -196,6 +197,7 @@ void ruledit_gui::setup(QWidget *central_in)
   central->setLayout(full_layout);
 
   req_edits = req_edit_list_new();
+  this->req_vec_fixers = req_vec_fix_list_new();
   effect_edits = effect_edit_list_new();
 }
 
@@ -244,6 +246,15 @@ void ruledit_gui::launch_now()
   } else {
     display_msg(R__("Ruleset loading failed!"));
   }
+}
+
+/**********************************************************************//**
+  A requirement vector may have been changed.
+  @param vec the requirement vector that may have been changed.
+**************************************************************************/
+void ruledit_gui::incoming_rec_vec_change(const requirement_vector *vec)
+{
+  emit rec_vec_may_have_changed(vec);
 }
 
 /**********************************************************************//**
@@ -305,6 +316,10 @@ void ruledit_gui::open_req_edit(QString target, struct requirement_vector *preqs
 
   redit->show();
 
+  connect(redit,
+          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
+          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+
   req_edit_list_append(req_edits, redit);
 }
 
@@ -314,6 +329,42 @@ void ruledit_gui::open_req_edit(QString target, struct requirement_vector *preqs
 void ruledit_gui::unregister_req_edit(class req_edit *redit)
 {
   req_edit_list_remove(req_edits, redit);
+}
+
+/**********************************************************************//**
+  Open req_vec_fix dialog.
+**************************************************************************/
+void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
+{
+  req_vec_fix *fixer;
+
+  req_vec_fix_list_iterate(req_vec_fixers, old_fixer) {
+    if (old_fixer->item() == item_info->item()) {
+      item_info->close();
+
+      /* Already open */
+      return;
+    }
+  } req_vec_fix_list_iterate_end;
+
+  fixer = new req_vec_fix(this, item_info);
+
+  fixer->refresh();
+  fixer->show();
+
+  connect(fixer,
+          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
+          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+
+  req_vec_fix_list_append(req_vec_fixers, fixer);
+}
+
+/**********************************************************************//**
+  Unregister closed req_vec_fix dialog.
+**************************************************************************/
+void ruledit_gui::unregister_req_vec_fix(req_vec_fix *fixer)
+{
+  req_vec_fix_list_remove(req_vec_fixers, fixer);
 }
 
 /**********************************************************************//**

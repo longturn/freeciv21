@@ -23,6 +23,9 @@
 #include <QListWidget>
 #include <QToolButton>
 
+// common
+#include "requirements.h"
+
 class ruledit_gui;
 
 class req_edit : public QDialog
@@ -37,12 +40,22 @@ class req_edit : public QDialog
 
     struct requirement_vector *req_vector;
 
+signals:
+  /********************************************************************//**
+    A requirement vector may have been changed.
+    @param vec the requirement vector that was changed.
+  ************************************************************************/
+  void rec_vec_may_have_changed(const requirement_vector *vec);
+
   private:
     ruledit_gui *ui;
 
     QListWidget *req_list;
 
     struct requirement *selected;
+    struct requirement selected_values;
+    void clear_selected();
+    void update_selected();
 
     QToolButton *edit_type_button;
     QToolButton *edit_value_enum_button;
@@ -63,6 +76,8 @@ class req_edit : public QDialog
     void req_present_menu(QAction *action);
     void univ_value_enum_menu(QAction *action);
     void univ_value_edit();
+
+    void incoming_rec_vec_change(const requirement_vector *vec);
 
   protected:
     void closeEvent(QCloseEvent *event);
