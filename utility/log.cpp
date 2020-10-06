@@ -65,7 +65,7 @@ static int log_num_files = 0;
 static struct log_fileinfo *log_files = NULL;
 #endif /* FREECIV_DEBUG */
 
-static char *log_level_names[] = {
+static const char *log_level_names[] = {
   "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL
 };
 
@@ -127,7 +127,7 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     }
     if (level <= max_level) {
       if (NULL != ret_level) {
-        *ret_level = level;
+        *ret_level = static_cast<log_level>(level);
       }
       return TRUE;
     } else {
@@ -436,7 +436,7 @@ static void log_real(enum log_level level, bool print_from_where,
   static unsigned int next = 2; /* next total to print update */
   static unsigned int prev = 0; /* total on last update */
   /* only count as repeat if same level */
-  static enum log_level prev_level = -1;
+  static enum log_level prev_level = static_cast<log_level>(-1);
   char buf[MAX_LEN_LOG_LINE];
   FILE *fs;
 

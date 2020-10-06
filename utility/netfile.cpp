@@ -73,7 +73,8 @@ static size_t netfile_memwrite_cb(char *ptr, size_t size, size_t nmemb, void *us
   struct netfile_write_cb_data *data = (struct netfile_write_cb_data *)userdata;
 
   if (size > 0) {
-    data->mem = fc_realloc(data->mem, data->size + size * nmemb);
+    data->mem = static_cast<char *>(
+      fc_realloc(data->mem, data->size + size * nmemb));
     memcpy(data->mem + data->size, ptr, size * nmemb);
     data->size += size * nmemb;
   }
@@ -188,7 +189,8 @@ bool netfile_download_file(const char *URL, const char *filename,
 ***********************************************************************/
 struct netfile_post *netfile_start_post(void)
 {
-  return fc_calloc(1, sizeof(struct netfile_post));
+  return static_cast<netfile_post *>(
+    fc_calloc(1, sizeof(struct netfile_post)));
 }
 
 /*******************************************************************//** 

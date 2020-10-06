@@ -92,12 +92,6 @@ freeciv_add_flag_if_supported(
 # in C++. Add -fpermissive so GCC is happier.
 set_property(
     SOURCE
-    inputfile.cpp
-    ioz.cpp
-    log.cpp
-    mem.cpp
-    netfile.cpp
-    netintf.cpp
     registry_ini.cpp
     section_file.cpp
     shared.cpp

@@ -444,17 +444,14 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
 ****************************************************************************/
 fz_FILE *fz_from_stream(FILE *stream)
 {
-  fz_FILE *fp;
-
   if (!stream) {
     return NULL;
   }
 
-  fp = fc_malloc(sizeof(*fp));
-  fp->method = FZ_PLAIN;
-  fp->memory = FALSE;
-  fp->u.plain = stream;
-  return fp;
+  return new fz_FILE{
+    .method = FZ_PLAIN,
+    .memory = false,
+    .u = { .plain = stream }};
 }
 
 /************************************************************************//**

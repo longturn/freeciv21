@@ -386,7 +386,7 @@ static struct fc_sockaddr_list *net_lookup_getaddrinfo(const char *name,
       union fc_sockaddr *caddr;
 
       fc_assert_action(current->ai_addrlen <= sizeof(*caddr), continue);
-      caddr = fc_malloc(sizeof(*caddr));
+      caddr = new fc_sockaddr;
       memcpy(caddr, current->ai_addr, current->ai_addrlen);
 
       fc_sockaddr_list_append(addrs, caddr);
