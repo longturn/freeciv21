@@ -76,9 +76,9 @@ static void con_handle_log(enum log_level level, const char *message,
   /* Write debug/verbose message to console only when not written to file. */
   if (!file_too || level <= LOG_NORMAL) {
     if (console_rfcstyle) {
-      con_write(C_LOG_BASE + level, "%s", message);
+      con_write(static_cast<rfc_status>(C_LOG_BASE + level), "%s", message);
     } else {
-      con_write(C_LOG_BASE + level, "%d: %s", level, message);
+      con_write(static_cast<rfc_status>(C_LOG_BASE + level), "%d: %s", level, message);
     }
   }
 }

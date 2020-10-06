@@ -823,8 +823,9 @@ actor_reqs    =
       "DiplRel", "Foreign", "Local", FALSE
     }
 target_reqs    =
-    { "type",   "name", "range", "present"
-      "TerrainFlag","NoCities","Local",FALSE
+    { "type",        "name",     "range", "present"
+      "CityTile",    "Claimed",  "Local", TRUE
+      "TerrainFlag", "NoCities", "Local", FALSE
     }
 
 [actionenabler_join_city]
@@ -948,22 +949,62 @@ actor_reqs    =
       "DiplRel",   "Foreign",  "Local", FALSE
     }
 
-[actionenabler_paradrop_base]
+[actionenabler_paradrop_base_to_foreign]
 action = "Paradrop Unit"
 actor_reqs    =
-    { "type",      "name",         "range", "present"
-      "UnitFlag",  "Paratroopers", "Local", TRUE
-      "UnitState", "Transporting", "Local", FALSE
-      "Extra",     "Airbase",      "Local", TRUE
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "3",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "Extra",        "Airbase",      "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", TRUE
     }
 
-[actionenabler_paradrop_city]
+[actionenabler_paradrop_base_to_unclaimed]
 action = "Paradrop Unit"
 actor_reqs    =
-    { "type",      "name",         "range", "present"
-      "UnitFlag",  "Paratroopers", "Local", TRUE
-      "UnitState", "Transporting", "Local", FALSE
-      "CityTile",  "Center",       "Local", TRUE
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "3",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "Extra",        "Airbase",      "Local", TRUE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", FALSE
+    }
+
+[actionenabler_paradrop_city_to_foreign]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "3",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "CityTile",     "Center",       "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", TRUE
+    }
+
+[actionenabler_paradrop_city_to_unclaimed]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "3",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "CityTile",     "Center",       "Local", TRUE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", FALSE
     }
 
 [actionenabler_upgrade_unit]
@@ -1172,24 +1213,6 @@ actor_reqs    =
       "UnitState",    "OnNativeTile", "Local"
     }
 
-[actionenabler_disembark_from_native_city]
-action        = "Transport Disembark"
-actor_reqs    =
-    { "type",         "name",        "range"
-      "UnitState",    "Transported", "Local"
-      "MinMoveFrags", "1",           "Local"
-      "CityTile",     "Center",      "Local"
-    }
-
-[actionenabler_disembark_from_native_terrspeed]
-action        = "Transport Disembark"
-actor_reqs    =
-    { "type",          "name",         "range", "present"
-      "UnitState",     "Transported",  "Local", TRUE
-      "MinMoveFrags",  "1",            "Local", TRUE
-      "UnitClassFlag", "TerrainSpeed", "Local", FALSE
-    }
-
 [actionenabler_disembark_from_non_native]
 action        = "Transport Disembark 2"
 actor_reqs    =
@@ -1197,8 +1220,6 @@ actor_reqs    =
       "UnitState",      "Transported",  "Local", TRUE
       "MinMoveFrags",   "1",            "Local", TRUE
       "UnitState",      "OnNativeTile", "Local", FALSE
-      "CityTile",       "Center",       "Local", FALSE
-      "UnitClassFlag",  "TerrainSpeed", "Local", TRUE
     }
 
 [actionenabler_embark]

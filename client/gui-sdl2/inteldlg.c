@@ -315,7 +315,7 @@ void update_intel_dialog(struct player *p)
 
     /* ---------- */
 
-    pCapital = player_capital(p);
+    pCapital = player_primary_capital(p);
     research = research_get(p);
     change_ptsize_utf8(pstr, adj_font(10));
     pstr->style &= ~TTF_STYLE_BOLD;

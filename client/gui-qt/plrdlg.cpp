@@ -451,7 +451,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     return;
   }
   me = client_player();
-  pcity = player_capital(pplayer);
+  pcity = player_primary_capital(pplayer);
   research = research_get(pplayer);
 
   switch (research->researching) {

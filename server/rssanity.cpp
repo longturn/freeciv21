@@ -15,6 +15,9 @@
 #include <fc_config.h>
 #endif
 
+/* utility */
+#include "deprecations.h"
+
 /* common */
 #include "achievements.h"
 #include "actions.h"
@@ -423,7 +426,8 @@ static bool sanity_check_req_vec(const struct requirement_vector *preqs,
     }
   } requirement_vector_iterate_end;
 
-  problem = req_vec_get_first_contradiction(preqs);
+  problem = req_vec_get_first_contradiction(preqs,
+                                            req_vec_vector_number, preqs);
   if (problem != NULL) {
     log_error("%s: %s.", list_for, problem->description);
     req_vec_problem_free(problem);
@@ -727,7 +731,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         continue;
       }
 
-      preq = advance_requires(padvance, i);
+      preq = advance_requires(padvance, static_cast<tech_req>(i));
 
       if (A_NEVER == preq) {
         continue;
@@ -1040,7 +1044,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     }
 
     for (bfi = 0; bfi < BF_COUNT; bfi++) {
-      if (!base_flag_is_retired(bfi)) {
+      if (!base_flag_is_retired(static_cast<base_flag_id>(bfi))) {
         /* Still valid. */
         continue;
       }
@@ -1049,7 +1053,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         ruleset_error(LOG_ERROR,
                       "Base %s uses the retired base flag %s!",
                       extra_name_translation(pextra),
-                      base_flag_id_name(bfi));
+                      base_flag_id_name(static_cast<base_flag_id>(bfi)));
       }
     }
   } extra_type_by_cause_iterate_end;
@@ -1156,18 +1160,24 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       } requirement_vector_iterate_end;
 
       if (!ignore_retired) {
-        /* Support for letting the following hard requirements be implicit
-         * were retired in Freeciv 3.0. Make sure that the opposite of each
-         * hard action requirement blocks all its action enablers. */
+        /* Support for letting some of the following hard requirements be
+         * implicit were retired in Freeciv 3.0. Others were retired later.
+         * Make sure that the opposite of each hard action requirement
+         * blocks all its action enablers. */
 
-        const char *error_message;
+        struct req_vec_problem *problem
+            = action_enabler_suggest_repair(enabler);
 
-        if ((error_message
-             = action_enabler_obligatory_reqs_missing(enabler))) {
-            ruleset_error(LOG_ERROR, error_message,
-                          action_id_rule_name(act));
-            ok = FALSE;
-          }
+        if (problem != NULL) {
+          ruleset_error(LOG_ERROR, "%s", problem->description);
+          ok = FALSE;
+        }
+
+        problem = action_enabler_suggest_improvement(enabler);
+        if (problem != NULL) {
+          /* There is a potential for improving this enabler. */
+          log_deprecation("%s", problem->description);
+        }
       }
     } action_enabler_list_iterate_end;
   } action_iterate_end;

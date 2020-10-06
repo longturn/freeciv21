@@ -108,8 +108,6 @@ bool are_requirements_contradictions(const struct requirement *req1,
 bool does_req_contradicts_reqs(const struct requirement *req,
                                const struct requirement_vector *vec);
 
-bool requirement_vector_contradiction_clean(struct requirement_vector *vec);
-
 bool is_req_active(const struct player *target_player,
 		   const struct player *other_player,
 		   const struct city *target_city,
@@ -144,6 +142,54 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
                         enum universals_n kind);
 
 
+/**
+ * @brief req_vec_num_in_item a requirement vectors number in an item.
+ *
+ * A ruleset item can have more than one requirement vector. This numbers
+ * them. Allows applying a change suggested based on one ruleset item to
+ * another ruleset item of the same kind - say to a copy.
+ */
+typedef signed char req_vec_num_in_item;
+
+/**********************************************************************//**
+  Returns the requirement vector number of the specified requirement
+  vector in the specified parent item or -1 if the vector doesn't belong to
+  the parent item.
+  @param parent_item the item that may own the vector.
+  @param vec the requirement vector to number.
+  @return the requirement vector number the vector has in the parent item.
+**************************************************************************/
+typedef req_vec_num_in_item
+(*requirement_vector_number)(const void *parent_item,
+                             const struct requirement_vector *vec);
+
+/********************************************************************//**
+  Returns a writable pointer to the specified requirement vector in the
+  specified parent item or NULL if the parent item doesn't have a
+  requirement vector with that requirement vector number.
+  @param parent_item the item that should have the requirement vector.
+  @param number the item's requirement vector number.
+  @return a pointer to the specified requirement vector.
+************************************************************************/
+typedef struct requirement_vector *
+(*requirement_vector_by_number)(const void *parent_item,
+                                req_vec_num_in_item number);
+
+/*********************************************************************//**
+  Returns the name of the specified requirement vector number in the
+  parent item or NULL if parent items of the kind this function is for
+  don't have a requirement vector with that number.
+  @param number the requirement vector to name
+  @return the requirement vector name or NULL.
+**************************************************************************/
+typedef const char *(*requirement_vector_namer)(req_vec_num_in_item number);
+
+req_vec_num_in_item
+req_vec_vector_number(const void *parent_item,
+                      const struct requirement_vector *vec);
+struct requirement_vector *
+req_vec_by_number(const void *parent_item, req_vec_num_in_item number);
+
 /* Interactive friendly requirement vector change suggestions and
  * reasoning. */
 #define SPECENUM_NAME req_vec_change_operation
@@ -158,25 +204,34 @@ struct req_vec_change {
   enum req_vec_change_operation operation;
   struct requirement req;
 
-  const struct requirement_vector *based_on;
+  req_vec_num_in_item vector_number;
 };
 
 struct req_vec_problem {
-  char description[MAX_LEN_NAME * 3];
+  /* Can't use name_translation because it is MAX_LEN_NAME long and a
+   * description may contain more than one name. */
+  char description[500];
+  char description_translated[500];
 
   int num_suggested_solutions;
   struct req_vec_change *suggested_solutions;
 };
 
+const char *req_vec_change_translation(const struct req_vec_change *change,
+                                       const requirement_vector_namer namer);
+
 bool req_vec_change_apply(const struct req_vec_change *modification,
-                          struct requirement_vector *target);
+                          requirement_vector_by_number getter,
+                          const void *parent_item);
 
 struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
                                             const char *description, ...);
 void req_vec_problem_free(struct req_vec_problem *issue);
 
 struct req_vec_problem *
-req_vec_get_first_contradiction(const struct requirement_vector *vec);
+req_vec_get_first_contradiction(const struct requirement_vector *vec,
+                                requirement_vector_number get_num,
+                                const void *parent_item);
 
 
 /* General universal functions. */
@@ -221,6 +276,9 @@ universal_fulfills_requirement(const struct requirement *preq,
 bool universal_fulfills_requirements(bool check_necessary,
                                      const struct requirement_vector *reqs,
                                      const struct universal *source);
+bool sv_universal_fulfills_requirements(bool check_necessary,
+                                     const struct requirement_vector *reqs,
+                                     const struct universal source);                                     
 bool universal_is_relevant_to_requirement(const struct requirement *req,
                                           const struct universal *source);
 
@@ -239,38 +297,37 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 /* XXX Some versions of g++ can't cope with the struct literals */
 #define requirement_fulfilled_by_government(_gov_, _rqs_)                  \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.govern = (_gov_)}, .kind = VUT_GOVERNMENT})
+      &(struct universal){.kind = VUT_GOVERNMENT, .value = {.govern = (_gov_)}})
 #define requirement_fulfilled_by_nation(_nat_, _rqs_)                      \
-  universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.nation = (_nat_)}, .kind = VUT_NATION})
+  sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
+      (struct universal){.value = {.nation = (_nat_)}, .kind = VUT_NATION})
 #define requirement_fulfilled_by_improvement(_imp_, _rqs_)                 \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-    &(struct universal){.value = {.building = (_imp_)},                    \
-                        .kind = VUT_IMPROVEMENT})
+    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
+                        .value = {.building = (_imp_)}})
 #define requirement_fulfilled_by_terrain(_ter_, _rqs_)                 \
-  universal_fulfills_requirements(FALSE, (_rqs_),                      \
-    &(struct universal){.value = {.terrain = (_ter_)},                     \
-                        .kind = VUT_TERRAIN})
+  sv_universal_fulfills_requirements(FALSE, (_rqs_),                      \
+    (struct universal){.value = {.terrain = (_ter_)}, .kind = VUT_TERRAIN})
 #define requirement_fulfilled_by_unit_class(_uc_, _rqs_)                   \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.uclass = (_uc_)}, .kind = VUT_UCLASS})
+      &(struct universal){.kind = VUT_UCLASS, .value = {.uclass = (_uc_)}})
 #define requirement_fulfilled_by_unit_type(_ut_, _rqs_)                    \
-  universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.utype = (_ut_)}, .kind = VUT_UTYPE})
+  sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
+      (struct universal){.value = {.utype = (_ut_)}, .kind = VUT_UTYPE})
 #define requirement_fulfilled_by_extra(_ex_, _rqs_)                        \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.extra = (_ex_)}, .kind = VUT_EXTRA})
+      &(struct universal){.kind = VUT_EXTRA, .value = {.extra = (_ex_)}})
 #define requirement_fulfilled_by_output_type(_o_, _rqs_)                   \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.outputtype = (_o_)}, .kind = VUT_OTYPE})
+      &(struct universal){.kind = VUT_OTYPE, .value = {.outputtype = (_o_)}})
 #define requirement_fulfilled_by_action(_act_, _rqs_)                      \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.value = {.action = (_act_)}, .kind = VUT_ACTION})
+      &(struct universal){.kind = VUT_ACTION, .value = {.action = (_act_)}})
 
 #define requirement_needs_improvement(_imp_, _rqs_)                        \
   universal_fulfills_requirements(TRUE, (_rqs_),                           \
-    &(struct universal){.value = {.building = (_imp_)},                    \
-                        .kind = VUT_IMPROVEMENT})
+    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
+                        .value = {.building = (_imp_)}})
 
 int requirement_kind_ereq(const int value,
                           const enum req_range range,

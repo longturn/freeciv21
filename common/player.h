@@ -260,6 +260,8 @@ struct player {
   /* Turn in which the player's revolution is over; see update_revolution. */
   int revolution_finishes;
 
+  int primary_capital_id;
+
   bv_player real_embassy;
   const struct player_diplstate **diplstates;
   struct nation_style *style;
@@ -440,7 +442,7 @@ int num_known_tech_with_flag(const struct player *pplayer,
 			     enum tech_flag_id flag);
 int player_get_expected_income(const struct player *pplayer);
 
-struct city *player_capital(const struct player *pplayer);
+struct city *player_primary_capital(const struct player *pplayer);
 
 const char *love_text(const int love);
 

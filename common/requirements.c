@@ -1216,32 +1216,6 @@ bool does_req_contradicts_reqs(const struct requirement *req,
 }
 
 /**********************************************************************//**
-  Clean up self contradictions from a requirement vector.
-
-  When two requirements conflicts the earliest requirement is removed.
-  This allows requirement adjustment code to append the new requirement(s)
-  and leave the contradiction clean up to this function.
-**************************************************************************/
-bool requirement_vector_contradiction_clean(struct requirement_vector *vec)
-{
-  struct req_vec_problem *problem;
-  bool had_contradiction = FALSE;
-
-  problem = req_vec_get_first_contradiction(vec);
-  while (problem != NULL) {
-    had_contradiction = TRUE;
-
-    fc_assert_ret_val(problem->num_suggested_solutions > 0, TRUE);
-    req_vec_change_apply(&problem->suggested_solutions[0], vec);
-
-    req_vec_problem_free(problem);
-    problem = req_vec_get_first_contradiction(vec);
-  }
-
-  return had_contradiction;
-}
-
-/**********************************************************************//**
   Returns TRUE if players are in the same requirements range.
 **************************************************************************/
 static inline bool players_in_same_range(const struct player *pplayer1,
@@ -3392,7 +3366,7 @@ bool is_req_in_vec(const struct requirement *req,
 
 /**********************************************************************//**
   Returns TRUE iff the specified requirement vector has a positive
-  requirment of the specified requirement type.
+  requirement of the specified requirement type.
   @param reqs the requirement vector to look in
   @param kind the requirement type to look for
 **************************************************************************/
@@ -3408,19 +3382,125 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
 }
 
 /**********************************************************************//**
+  Returns the requirement vector number of the specified requirement
+  vector in the specified requirement vector.
+  @param parent_item the item that may own the vector.
+  @param vec the requirement vector to number.
+  @return the requirement vector number the vector has in the parent item.
+**************************************************************************/
+req_vec_num_in_item
+req_vec_vector_number(const void *parent_item,
+                      const struct requirement_vector *vec)
+{
+  if (vec) {
+    return 0;
+  } else {
+    return -1;
+  }
+}
+
+/********************************************************************//**
+  Returns a writable pointer to the specified requirement vector in the
+  specified requirement vector or NULL if the parent item doesn't have a
+  requirement vector with that requirement vector number.
+  @param parent_item the item that should have the requirement vector.
+  @param number the item's requirement vector number.
+  @return a pointer to the specified requirement vector.
+************************************************************************/
+struct requirement_vector *
+req_vec_by_number(const void *parent_item, req_vec_num_in_item number)
+{
+  fc_assert_ret_val(number == 0, NULL);
+  return (struct requirement_vector *)parent_item;
+}
+
+/**********************************************************************//**
+  Returns the specified requirement vector change as a translated string
+  ready for use in the user interface.
+  N.B.: The returned string is static, so every call to this function
+  overwrites the previous.
+  @param change the requirement vector change
+  @param namer a function that returns a description of the vector to
+               change for the item the vector belongs to.
+  @return the specified requirement vector change
+**************************************************************************/
+const char *req_vec_change_translation(const struct req_vec_change *change,
+                                       const requirement_vector_namer namer)
+{
+  const char *req_vec_description;
+  static char buf[MAX_LEN_NAME * 3];
+
+  fc_assert_ret_val(change, NULL);
+  fc_assert_ret_val(req_vec_change_operation_is_valid(change->operation),
+                    NULL);
+
+  /* Get rid of the previous. */
+  buf[0] = '\0';
+
+  if (namer == NULL) {
+    /* TRANS: default description of a requirement vector
+     * (used in ruledit) */
+    req_vec_description = _("the requirement vector");
+  } else {
+    req_vec_description = namer(change->vector_number);
+  }
+
+  switch (change->operation) {
+  case RVCO_REMOVE:
+    fc_snprintf(buf, sizeof(buf),
+                /* TRANS: remove a requirement from a requirement vector
+                 * (in ruledit).
+                 * The first %s is the operation.
+                 * The second %s is the requirement.
+                 * The third %s is a description of the requirement vector,
+                 * like "actor_reqs" */
+                _("%s %s from %s"),
+                req_vec_change_operation_name(change->operation),
+                req_to_fstring(&change->req),
+                req_vec_description);
+    break;
+  case RVCO_APPEND:
+    fc_snprintf(buf, sizeof(buf),
+                /* TRANS: append a requirement to a requirement vector
+                 * (in ruledit).
+                 * The first %s is the operation.
+                 * The second %s is the requirement.
+                 * The third %s is a description of the requirement vector,
+                 * like "actor_reqs" */
+                _("%s %s to %s"),
+                req_vec_change_operation_name(change->operation),
+                req_to_fstring(&change->req),
+                req_vec_description);
+    break;
+  case RVCO_NOOP:
+    fc_snprintf(buf, sizeof(buf),
+                /* TRANS: do nothing to a requirement vector (in ruledit).
+                 * The first %s is a description of the requirement vector,
+                 * like "actor_reqs" */
+                _("Do nothing to %s"), req_vec_description);
+    break;
+  }
+
+  return buf;
+}
+
+/**********************************************************************//**
   Returns TRUE iff the specified requirement vector modification was
-  successfully applied to the specified target requirment vector.
+  successfully applied to the specified target requirement vector.
   @param modification the requirement vector change
-  @param target the requirement vector the change should be applied to
+  @param getter a function that returns a pointer to the requirement
+                vector the change should be applied to given a ruleset
+                item and the vectors number in the item.
+  @param parent_item the item to apply the change to.
   @return if the specified modification was successfully applied
 **************************************************************************/
 bool req_vec_change_apply(const struct req_vec_change *modification,
-                          struct requirement_vector *target)
+                          requirement_vector_by_number getter,
+                          const void *parent_item)
 {
+  struct requirement_vector *target
+      = getter(parent_item, modification->vector_number);
   int i = 0;
-
-  /* No current users changes a requirement vector based on another. */
-  fc_assert(modification->based_on == target);
 
   switch (modification->operation) {
   case RVCO_APPEND:
@@ -3462,6 +3542,8 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   va_start(ap, descr);
   fc_vsnprintf(out->description, sizeof(out->description),
                descr, ap);
+  fc_vsnprintf(out->description_translated, sizeof(out->description),
+               descr, ap);
   va_end(ap);
 
   out->num_suggested_solutions = num_suggested_solutions;
@@ -3470,7 +3552,7 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   for (i = 0; i < out->num_suggested_solutions; i++) {
     /* No suggestions are ready yet. */
     out->suggested_solutions[i].operation = RVCO_NOOP;
-    out->suggested_solutions[i].based_on = NULL;
+    out->suggested_solutions[i].vector_number = -1;
     out->suggested_solutions[i].req.source.kind = VUT_NONE;
   }
 
@@ -3496,16 +3578,28 @@ void req_vec_problem_free(struct req_vec_problem *issue)
   It is the responsibility of the caller to free the suggestion when it is
   done with it.
   @param vec the requirement vector to look in.
+  @param get_num function that returns the requirement vector's number in
+                 the parent item.
+  @param parent_item the item that owns the vector.
   @return the first self contradiction found.
 **************************************************************************/
 struct req_vec_problem *
-req_vec_get_first_contradiction(const struct requirement_vector *vec)
+req_vec_get_first_contradiction(const struct requirement_vector *vec,
+                                requirement_vector_number get_num,
+                                const void *parent_item)
 {
   int i, j;
+  req_vec_num_in_item vec_num;
 
   if (vec == NULL || requirement_vector_size(vec) == 0) {
     /* No vector. */
     return NULL;
+  }
+
+  if (get_num == NULL || parent_item == NULL) {
+    vec_num = 0;
+  } else {
+    vec_num = get_num(parent_item, vec);
   }
 
   /* Look for contradictions */
@@ -3523,11 +3617,11 @@ req_vec_get_first_contradiction(const struct requirement_vector *vec)
 
         /* The solution is to remove one of the contradictions. */
         problem->suggested_solutions[0].operation = RVCO_REMOVE;
-        problem->suggested_solutions[0].based_on = vec;
+        problem->suggested_solutions[0].vector_number = vec_num;
         problem->suggested_solutions[0].req = *preq;
 
         problem->suggested_solutions[1].operation = RVCO_REMOVE;
-        problem->suggested_solutions[1].based_on = vec;
+        problem->suggested_solutions[1].vector_number = vec_num;
         problem->suggested_solutions[1].req = *nreq;
 
         /* Only the first contradiction is reported. */
@@ -4175,6 +4269,39 @@ bool universal_fulfills_requirements(bool check_necessary,
 
   requirement_vector_iterate(reqs, preq) {
     switch ((*universal_found_function[source->kind])(preq, source)) {
+    case ITF_NOT_APPLICABLE:
+      continue;
+    case ITF_NO:
+      if (preq->present) {
+        return FALSE;
+      }
+      break;
+    case ITF_YES:
+      if (preq->present) {
+        necessary = TRUE;
+      } else {
+        return FALSE;
+      }
+      break;
+    }
+  } requirement_vector_iterate_end;
+
+  return (!check_necessary || necessary);
+}
+
+bool sv_universal_fulfills_requirements(bool check_necessary,
+                                     const struct requirement_vector *reqs,
+                                     const struct universal source)
+{
+  bool necessary = FALSE;
+
+  fc_assert_ret_val_msg(universal_found_function[source.kind],
+                        !check_necessary,
+                        "No req item found function for %s",
+                        universal_type_rule_name(&source));
+
+  requirement_vector_iterate(reqs, preq) {
+    switch ((*universal_found_function[source.kind])(preq, &source)) {
     case ITF_NOT_APPLICABLE:
       continue;
     case ITF_NO:

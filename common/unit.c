@@ -2114,7 +2114,7 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
 
   default_hp = unit_type_get(punit)->hp;
   cost = unit_owner(punit)->economic.gold + game.info.base_bribe_cost;
-  capital = player_capital(unit_owner(punit));
+  capital = player_primary_capital(unit_owner(punit));
 
   /* Consider the distance to the capital. */
   if (capital != NULL) {

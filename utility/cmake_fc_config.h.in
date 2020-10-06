@@ -147,6 +147,9 @@
 /* unistd.h available */
 #cmakedefine HAVE_UNISTD_H
 
+/* gettimeofday.h available */
+#cmakedefine HAVE_GETTIMEOFDAY
+
 /* sys/time.h available */
 #cmakedefine HAVE_SYS_TIME_H
 

@@ -46,11 +46,22 @@ struct action_enabler_contradiction {
   bool is_target;
 };
 
+/* One or more alternative obligatory hard requirement contradictions. */
+struct ae_contra_or {
+  int alternatives;
+  /* The obligatory hard requirement is fulfilled if a contradiction exists
+   * that doesn't contradict the action enabler. */
+  struct action_enabler_contradiction *alternative;
+
+  /* How many obligatory reqs use this */
+  int users;
+};
+
 /* An obligatory hard action requirement */
 struct obligatory_req {
   /* The requirement is fulfilled if the action enabler doesn't contradict
-   * this. */
-  struct action_enabler_contradiction contra;
+   * one of the contradictions listed here. */
+  struct ae_contra_or *contras;
 
   /* The error message to show when the hard obligatory requirement is
    * missing. Must be there. */
@@ -134,6 +145,117 @@ FC_STATIC_ASSERT(MAP_DISTANCE_MAX <= ACTION_DISTANCE_LAST_NON_SIGNAL,
                  action_range_can_not_cover_the_whole_map);
 
 /**********************************************************************//**
+  Returns a new array of alternative action enabler contradictions. Only
+  one has to not contradict the enabler for it to be seen as fulfilled.
+  @param alternatives the number of action enabler contradictions
+                      followed by the enabler contradictions specified as
+                      alternating contradicting requirement and a bool
+                      that is TRUE if the requirement contradicts the
+                      enabler's target requirement vector and FALSE if it
+                      contradicts the enabler's actor vector.
+  @returns a new array of alternative action enabler contradictions.
+**************************************************************************/
+static struct ae_contra_or *req_contradiction_or(int alternatives, ...)
+{
+  struct ae_contra_or *out;
+  int i;
+  va_list args;
+
+  fc_assert_ret_val(alternatives > 0, NULL);
+  out = fc_malloc(sizeof(out));
+  out->users = 0;
+  out->alternatives = alternatives;
+  out->alternative = fc_malloc(sizeof(out->alternative[0]) * alternatives);
+
+  va_start(args, alternatives);
+  for (i = 0; i < alternatives; i++) {
+    struct requirement contradiction = va_arg(args, struct requirement);
+    bool is_target = va_arg(args, int);
+
+    out->alternative[i].req = contradiction;
+    out->alternative[i].is_target = is_target;
+  }
+  va_end(args);
+
+  return out;
+}
+
+/**********************************************************************//**
+  Tell an ae_contra_or that one of its users is done with it.
+  @param contra the ae_contra_or the user is done with.
+**************************************************************************/
+static void ae_contra_close(struct ae_contra_or *contra)
+{
+  contra->users--;
+
+  if (contra->users < 1) {
+    /* No users left. Delete. */
+    FC_FREE(contra->alternative);
+    FC_FREE(contra);
+  }
+}
+
+/**********************************************************************//**
+  Register an obligatory hard requirement for the specified action results.
+  @param contras if one alternative here doesn't contradict the enabler it
+                 is accepted.
+  @param error_message error message if an enabler contradicts all contras.
+  @param args list of action results that should be unable to contradict
+              all specified contradictions.
+**************************************************************************/
+static void voblig_hard_req_reg(struct ae_contra_or *contras,
+                                const char *error_message,
+                                va_list args)
+{
+  struct obligatory_req oreq;
+  enum action_result res;
+
+  /* A non null action message is used to indicate that an obligatory hard
+   * requirement is missing. */
+  fc_assert_ret(error_message);
+
+  /* Pack the obligatory hard requirement. */
+  oreq.contras = contras;
+  oreq.error_msg = error_message;
+
+  /* Add the obligatory hard requirement to each action result it applies
+   * to. */
+  while (ACTRES_NONE != (res = va_arg(args, enum action_result))) {
+    /* Any invalid action result should terminate the loop before this
+     * assertion. */
+    fc_assert_ret_msg(action_result_is_valid(res),
+                      "Invalid action result %d", res);
+
+    /* Add to list for action result */
+    obligatory_req_vector_append(&obligatory_hard_reqs[res], oreq);
+
+    /* Register the new user. */
+    oreq.contras->users++;
+  }
+}
+
+/**********************************************************************//**
+  Register an obligatory hard requirement for the specified action results.
+  @param contras if one alternative here doesn't contradict the enabler it
+                 is accepted.
+  @param error_message error message if an enabler contradicts all contras.
+                       Followed by a list of action results that should be
+                       unable to contradict all specified contradictions.
+**************************************************************************/
+static void oblig_hard_req_reg(struct ae_contra_or *contras,
+                               const char *error_message,
+                               ...)
+{
+  va_list args;
+
+  /* Add the obligatory hard requirement to each action result it applies
+   * to. */
+  va_start(args, error_message);
+  voblig_hard_req_reg(contras, error_message, args);
+  va_end(args);
+}
+
+/**********************************************************************//**
   Register an obligatory hard requirement for the action results it
   applies to.
 
@@ -145,31 +267,16 @@ static void oblig_hard_req_register(struct requirement contradiction,
                                     const char *error_message,
                                     ...)
 {
-  struct obligatory_req oreq;
+  struct ae_contra_or *contra;
   va_list args;
-  enum action_result res;
-
-  /* A non null action message is used to indicate that an obligatory hard
-   * requirement is missing. */
-  fc_assert_ret(error_message);
 
   /* Pack the obligatory hard requirement. */
-  oreq.contra.req = contradiction;
-  oreq.contra.is_target = is_target;
-  oreq.error_msg = error_message;
+  contra = req_contradiction_or(1, contradiction, is_target);
 
-  /* Add the obligatory hard requirement to each action it applies to. */
+  /* Add the obligatory hard requirement to each action result it applies
+   * to. */
   va_start(args, error_message);
-
-  while (ACTRES_NONE != (res = va_arg(args, enum action_result))) {
-    /* Any invalid action result should terminate the loop before this
-     * assertion. */
-    fc_assert_ret_msg(action_result_is_valid(res),
-                      "Invalid action result %d", res);
-
-    obligatory_req_vector_append(&obligatory_hard_reqs[res], oreq);
-  }
-
+  voblig_hard_req_reg(contra, error_message, args);
   va_end(args);
 }
 
@@ -352,6 +459,30 @@ static void hard_code_oblig_hard_reqs(void)
                              " that the actor doesn't have"
                              " the NoHome utype flag."),
                           ACTRES_HOME_CITY, ACTRES_NONE);
+
+  /* Why this is a hard requirement:
+   * - preserve the semantics of the NonMil unit type flag. */
+  oblig_hard_req_reg(req_contradiction_or(
+                       3,
+                       req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL,
+                                       FALSE, FALSE, TRUE,
+                                       UTYF_CIVILIAN),
+                       FALSE,
+                       req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
+                                       FALSE, TRUE, TRUE, DS_PEACE),
+                       FALSE,
+                       req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL,
+                                       FALSE, TRUE, TRUE,
+                                       CITYT_CLAIMED),
+                       TRUE),
+                     /* TRANS: error message for ruledit */
+                     N_("All action enablers for %s must require"
+                        " that the actor has the NonMil utype flag"
+                        " or that the target tile is unclaimed"
+                        " or that the diplomatic relation to"
+                        " the target tile owner isn't peace."),
+                     ACTRES_PARADROP,
+                     ACTRES_NONE);
 
   /* Why this is a hard requirement: Preserve semantics of NonMil
    * flag. Need to replace other uses in game engine before this can
@@ -1101,6 +1232,9 @@ void actions_free(void)
 
   /* Free the obligatory hard action requirements. */
   for (i = 0; i < ACTRES_NONE; i++) {
+    obligatory_req_vector_iterate(&obligatory_hard_reqs[i], oreq) {
+      ae_contra_close(oreq->contras);
+    } obligatory_req_vector_iterate_end;
     obligatory_req_vector_free(&obligatory_hard_reqs[i]);
   }
 
@@ -1623,11 +1757,11 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
 }
 
 /**********************************************************************//**
-  Get information about starting the action in the current situation.
-  Suitable for a tool tip for the button that starts it.
+  Explain an action probability in a way suitable for a tool tip for the
+  button that starts it.
+  @return an explanation of what an action probability means
 **************************************************************************/
-const char *action_get_tool_tip(const action_id act_id,
-                                const struct act_prob prob)
+const char *action_prob_explain(const struct act_prob prob)
 {
   static struct astring tool_tip = ASTRING_INIT;
 
@@ -2021,130 +2155,16 @@ action_enablers_for_action(action_id action)
 }
 
 /**********************************************************************//**
-  Returns an error message text if the action enabler is missing at least
-  one of its action's obligatory hard requirement. Returns NULL if all
-  obligatory hard requirements are there.
-
-  An action may force its enablers to include one or more of its hard
-  requirements. (See the section "Actions and their hard requirements" of
-  doc/README.actions)
-
-  This doesn't include those of the action's hard requirements that can't
-  be expressed as a requirement vector or hard requirements that the
-  action doesn't force enablers to include.
-**************************************************************************/
-const char *
-action_enabler_obligatory_reqs_missing(struct action_enabler *enabler)
-{
-  struct action *paction;
-
-  /* Sanity check: a non existing action enabler is missing but it doesn't
-   * miss any obligatory hard requirements. */
-  fc_assert_ret_val(enabler, NULL);
-
-  /* Sanity check: a non existing action doesn't have any obligatory hard
-   * requirements. */
-  fc_assert_ret_val(action_id_exists(enabler->action), NULL);
-  paction = action_by_number(enabler->action);
-
-  if (paction->result == ACTRES_NONE) {
-    /* No hard coded results means no obiligatory requirements. */
-    return NULL;
-  }
-
-  obligatory_req_vector_iterate(&obligatory_hard_reqs[paction->result],
-                                obreq) {
-    struct requirement_vector *ae_vec;
-
-    /* Select action enabler requirement vector. */
-    ae_vec = (obreq->contra.is_target ? &enabler->target_reqs :
-                                        &enabler->actor_reqs);
-
-    if (!does_req_contradicts_reqs(&obreq->contra.req, ae_vec)) {
-      /* Sanity check: doesn't return NULL when a problem is detected. */
-      fc_assert_ret_val(obreq->error_msg,
-                        "Missing obligatory hard requirement for %s.");
-
-      return obreq->error_msg;
-    }
-  } obligatory_req_vector_iterate_end;
-
-  /* No missing obligatory hard requirements. */
-  return NULL;
-}
-
-/**********************************************************************//**
-  Inserts any missing obligatory hard requirements in the action enabler
-  based on its action.
-
-  See action_enabler_obligatory_reqs_missing()
-**************************************************************************/
-bool action_enabler_obligatory_reqs_add(struct action_enabler *enabler)
-{
-  struct action *paction;
-  bool had_contradiction = FALSE;
-
-  /* Sanity check: a non existing action enabler is missing but it doesn't
-   * miss any obligatory hard requirements. */
-  fc_assert_ret_val(enabler, FALSE);
-
-  /* Sanity check: a non existing action doesn't have any obligatory hard
-   * requirements. */
-  fc_assert_ret_val(action_id_exists(enabler->action), FALSE);
-  paction = action_by_number(enabler->action);
-
-  if (paction->result == ACTRES_NONE) {
-    /* No hard coded results means no obiligatory requirements. */
-    return NULL;
-  }
-
-  obligatory_req_vector_iterate(&obligatory_hard_reqs[paction->result],
-                                obreq) {
-    struct requirement_vector *ae_vec;
-
-    /* Select action enabler requirement vector. */
-    ae_vec = (obreq->contra.is_target ? &enabler->target_reqs :
-                                        &enabler->actor_reqs);
-
-    if (!does_req_contradicts_reqs(&obreq->contra.req, ae_vec)) {
-      struct requirement missing;
-
-      /* Change the requirement from what should conflict to what is
-       * wanted. */
-      missing.present = !obreq->contra.req.present;
-      missing.source = obreq->contra.req.source;
-      missing.range = obreq->contra.req.range;
-      missing.survives = obreq->contra.req.survives;
-      missing.quiet = obreq->contra.req.quiet;
-
-      /* Insert the missing requirement. */
-      requirement_vector_append(ae_vec, missing);
-    }
-  } obligatory_req_vector_iterate_end;
-
-  /* Remove anything that conflicts with the newly added reqs. */
-  if (requirement_vector_contradiction_clean(&enabler->actor_reqs)) {
-    had_contradiction = TRUE;
-  }
-  if (requirement_vector_contradiction_clean(&enabler->target_reqs)) {
-    had_contradiction = TRUE;
-  }
-
-  /* Sanity check: obligatory requirement insertion should have fixed the
-   * action enabler. */
-  fc_assert(action_enabler_obligatory_reqs_missing(enabler) == NULL);
-
-  return had_contradiction;
-}
-
-/**********************************************************************//**
   Returns a suggestion to add an obligatory hard requirement to an action
   enabler or NULL if no hard obligatory reqs were missing. It is the
   responsibility of the caller to free the suggestion when it is done with
   it.
+  @param enabler the action enabler to suggest a fix for.
+  @return a problem with fix suggestions or NULL if no obligatory hard
+          requirement problems were detected.
 **************************************************************************/
-static struct req_vec_problem *
-action_enabler_suggest_a_fix_oblig(const struct action_enabler *enabler)
+struct req_vec_problem *
+action_enabler_suggest_repair_oblig(const struct action_enabler *enabler)
 {
   struct action *paction;
 
@@ -2164,35 +2184,257 @@ action_enabler_suggest_a_fix_oblig(const struct action_enabler *enabler)
 
   obligatory_req_vector_iterate(&obligatory_hard_reqs[paction->result],
       obreq) {
-    const struct requirement_vector *ae_vec;
+    struct req_vec_problem *out;
+    int i;
+    bool fulfilled = FALSE;
 
-    /* Select action enabler requirement vector. */
-    ae_vec = (obreq->contra.is_target ? &enabler->target_reqs :
-                                        &enabler->actor_reqs);
+    /* Check each alternative. */
+    for (i = 0; i < obreq->contras->alternatives; i++) {
+      const struct requirement_vector *ae_vec;
 
-    if (!does_req_contradicts_reqs(&obreq->contra.req, ae_vec)) {
-      struct req_vec_problem *out;
+      /* Select action enabler requirement vector. */
+      ae_vec = (obreq->contras->alternative[i].is_target
+                ? &enabler->target_reqs
+                : &enabler->actor_reqs);
 
-      out = req_vec_problem_new(1, obreq->error_msg,
-                                action_rule_name(paction));
+      if (does_req_contradicts_reqs(&obreq->contras->alternative[i].req,
+                                    ae_vec)) {
+        /* It is enough that one alternative accepts the enabler. */
+        fulfilled = TRUE;
+        break;
+      }
 
-      out->suggested_solutions[0].operation = RVCO_APPEND;
-      out->suggested_solutions[0].based_on = ae_vec;
+      /* Fall back to the next alternative */
+    }
+
+    if (fulfilled) {
+      /* This obligatory hard requirement isn't a problem. */
+      continue;
+    }
+
+    /* Missing hard obligatory requirement detected */
+
+    out = req_vec_problem_new(obreq->contras->alternatives,
+                              obreq->error_msg,
+                              action_rule_name(paction));
+
+    for (i = 0; i < obreq->contras->alternatives; i++) {
+      const struct requirement_vector *ae_vec;
+
+      /* Select action enabler requirement vector. */
+      ae_vec = (obreq->contras->alternative[i].is_target
+                ? &enabler->target_reqs
+                : &enabler->actor_reqs);
+
+      /* The suggested fix is to append a requirement that makes the enabler
+       * contradict the missing hard obligatory requirement detector. */
+      out->suggested_solutions[i].operation = RVCO_APPEND;
+      out->suggested_solutions[i].vector_number
+          = action_enabler_vector_number(enabler, ae_vec);
 
       /* Change the requirement from what should conflict to what is
        * wanted. */
-      out->suggested_solutions[0].req.present = !obreq->contra.req.present;
-      out->suggested_solutions[0].req.source = obreq->contra.req.source;
-      out->suggested_solutions[0].req.range = obreq->contra.req.range;
-      out->suggested_solutions[0].req.survives = obreq->contra.req.survives;
-      out->suggested_solutions[0].req.quiet = obreq->contra.req.quiet;
-
-      return out;
+      out->suggested_solutions[i].req.present
+          = !obreq->contras->alternative[i].req.present;
+      out->suggested_solutions[i].req.source
+          = obreq->contras->alternative[i].req.source;
+      out->suggested_solutions[i].req.range
+          = obreq->contras->alternative[i].req.range;
+      out->suggested_solutions[i].req.survives
+          = obreq->contras->alternative[i].req.survives;
+      out->suggested_solutions[i].req.quiet
+          = obreq->contras->alternative[i].req.quiet;
     }
+
+    /* Return the first problem found. The next problem will be detected
+     * during the next call. */
+    return out;
   } obligatory_req_vector_iterate_end;
 
   /* No obligatory req problems found. */
   return NULL;
+}
+
+/**********************************************************************//**
+  Returns the first local DiplRel requirement in the specified requirement
+  vector or NULL if it doesn't have a local DiplRel requirement.
+  @param vec the requirement vector to look in
+  @return the first local DiplRel requirement.
+**************************************************************************/
+static struct requirement *
+req_vec_first_local_diplrel(const struct requirement_vector *vec)
+{
+  requirement_vector_iterate(vec, preq) {
+    if (preq->source.kind == VUT_DIPLREL
+        && preq->range == REQ_RANGE_LOCAL) {
+      return preq;
+    }
+  } requirement_vector_iterate_end;
+
+  return NULL;
+}
+
+/**********************************************************************//**
+  Returns the first requirement in the specified requirement vector that
+  contradicts the specified requirement or NULL if no contradiction was
+  detected.
+  @param req the requirement that may contradict the vector
+  @param vec the requirement vector to look in
+  @return the first local DiplRel requirement.
+**************************************************************************/
+static struct requirement *
+req_vec_first_contradiction_in_vec(const struct requirement *req,
+                                   const struct requirement_vector *vec)
+{
+  /* If the requirement is contradicted by any requirement in the vector it
+   * contradicts the entire requirement vector. */
+  requirement_vector_iterate(vec, preq) {
+    if (are_requirements_contradictions(req, preq)) {
+      return preq;
+    }
+  } requirement_vector_iterate_end;
+
+  /* Not a singe requirement in the requirement vector is contradicted be
+   * the specified requirement. */
+  return NULL;
+}
+
+/**********************************************************************//**
+  Detects a local DiplRel requirement in a tile targeted action without
+  an explicit claimed requirement in the target reqs.
+  @param enabler the enabler to look at
+  @return the problem or NULL if no problem was found
+**************************************************************************/
+static struct req_vec_problem *
+enabler_tile_tgt_local_diplrel_implies_claimed(
+    const struct action_enabler *enabler)
+{
+  struct req_vec_problem *out;
+  struct requirement *local_diplrel;
+  struct requirement *claimed_req;
+  struct requirement tile_is_claimed;
+  struct requirement tile_is_unclaimed;
+
+  struct action *paction = action_by_number(enabler->action);
+
+  if (action_get_target_kind(paction) != ATK_TILE) {
+    /* Not tile targeted */
+    return NULL;
+  }
+
+  local_diplrel = req_vec_first_local_diplrel(&enabler->actor_reqs);
+  if (local_diplrel == NULL) {
+    /* No local diplrel */
+    return NULL;
+  }
+
+  /* Tile is unclaimed as a requirement. */
+  tile_is_unclaimed.range = REQ_RANGE_LOCAL;
+  tile_is_unclaimed.survives = FALSE;
+  tile_is_unclaimed.source.kind = VUT_CITYTILE;
+  tile_is_unclaimed.present = FALSE;
+  tile_is_unclaimed.source.value.citytile = CITYT_CLAIMED;
+
+  claimed_req = req_vec_first_contradiction_in_vec(&tile_is_unclaimed,
+                                                   &enabler->target_reqs);
+
+  if (claimed_req) {
+    /* Already clear */
+    return NULL;
+  }
+
+  /* Tile is claimed as a requirement. */
+  tile_is_claimed.range = REQ_RANGE_LOCAL;
+  tile_is_claimed.survives = FALSE;
+  tile_is_claimed.source.kind = VUT_CITYTILE;
+  tile_is_claimed.present = TRUE;
+  tile_is_claimed.source.value.citytile = CITYT_CLAIMED;
+
+  out = req_vec_problem_new(
+          1,
+          /* TRANS: ruledit shows this when an enabler for a tile targeted
+           * action requires that the actor has a diplomatic relationship to
+           * the target but doesn't require that the target tile is claimed.
+           * (DiplRel requirements to an unclaimed tile are never fulfilled
+           * so this is implicit.) */
+          N_("Requirement {%s} implies a claimed "
+             "tile. No diplomatic relation to Nature."),
+          req_to_fstring(local_diplrel));
+
+  /* The solution is to add the requirement that the tile is claimed */
+  out->suggested_solutions[0].req = tile_is_claimed;
+  out->suggested_solutions[0].vector_number
+      = action_enabler_vector_number(enabler, &enabler->target_reqs);
+  out->suggested_solutions[0].operation = RVCO_APPEND;
+
+  return out;
+}
+
+/**********************************************************************//**
+  Returns the first action enabler specific contradiction in the specified
+  enabler or NULL if no enabler specific contradiction is found.
+  @param enabler the enabler to look at
+  @return the first problem and maybe a suggested fix
+**************************************************************************/
+static struct req_vec_problem *
+enabler_first_self_contradiction(const struct action_enabler *enabler)
+{
+  struct req_vec_problem *out;
+  struct requirement *local_diplrel;
+  struct requirement *unclaimed_req;
+  struct requirement tile_is_claimed;
+
+  struct action *paction = action_by_number(enabler->action);
+
+  if (action_get_target_kind(paction) != ATK_TILE) {
+    /* Not tile targeted */
+    return NULL;
+  }
+
+  local_diplrel = req_vec_first_local_diplrel(&enabler->actor_reqs);
+  if (local_diplrel == NULL) {
+    /* No local diplrel */
+    return NULL;
+  }
+
+  /* Tile is claimed as a requirement. */
+  tile_is_claimed.range = REQ_RANGE_LOCAL;
+  tile_is_claimed.survives = FALSE;
+  tile_is_claimed.source.kind = VUT_CITYTILE;
+  tile_is_claimed.present = TRUE;
+  tile_is_claimed.source.value.citytile = CITYT_CLAIMED;
+
+  unclaimed_req = req_vec_first_contradiction_in_vec(&tile_is_claimed,
+                                                     &enabler->target_reqs);
+
+  if (unclaimed_req == NULL) {
+    /* No unclaimed req */
+    return NULL;
+  }
+
+  out = req_vec_problem_new(
+          2,
+          /* TRANS: ruledit shows this when an enabler for a tile targeted
+           * action requires that the target tile is unclaimed and that the
+           * actor has a diplomatic relationship to the target. (DiplRel
+           * requirements to an unclaimed tile are never fulfilled.) */
+          N_("No diplomatic relation to Nature."
+             " Requirements {%s} and {%s} contradict each other."),
+          req_to_fstring(local_diplrel), req_to_fstring(unclaimed_req));
+
+  /* The first suggestion is to remove the diplrel */
+  out->suggested_solutions[0].req = *local_diplrel;
+  out->suggested_solutions[0].vector_number
+      = action_enabler_vector_number(enabler, &enabler->actor_reqs);
+  out->suggested_solutions[0].operation = RVCO_REMOVE;
+
+  /* The 2nd is to remove the requirement that the tile is unclaimed */
+  out->suggested_solutions[1].req = *unclaimed_req;
+  out->suggested_solutions[1].vector_number
+      = action_enabler_vector_number(enabler, &enabler->target_reqs);
+  out->suggested_solutions[1].operation = RVCO_REMOVE;
+
+  return out;
 }
 
 /**********************************************************************//**
@@ -2201,27 +2443,179 @@ action_enabler_suggest_a_fix_oblig(const struct action_enabler *enabler)
   free the suggestion when it is done with it.
 **************************************************************************/
 struct req_vec_problem *
-action_enabler_suggest_a_fix(const struct action_enabler *enabler)
+action_enabler_suggest_repair(const struct action_enabler *enabler)
 {
   struct req_vec_problem *out;
 
-  out = action_enabler_suggest_a_fix_oblig(enabler);
+  out = action_enabler_suggest_repair_oblig(enabler);
   if (out != NULL) {
     return out;
   }
 
-  out = req_vec_get_first_contradiction(&enabler->actor_reqs);
+  out = req_vec_get_first_contradiction(&enabler->actor_reqs,
+                                        action_enabler_vector_number,
+                                        enabler);
   if (out != NULL) {
     return out;
   }
 
-  out = req_vec_get_first_contradiction(&enabler->target_reqs);
+  out = req_vec_get_first_contradiction(&enabler->target_reqs,
+                                        action_enabler_vector_number,
+                                        enabler);
+  if (out != NULL) {
+    return out;
+  }
+
+  /* Enabler specific contradictions. */
+  out = enabler_first_self_contradiction(enabler);
+  if (out != NULL) {
+    return out;
+  }
+
+  /* Needed in action not enabled explanation finding. */
+  out = enabler_tile_tgt_local_diplrel_implies_claimed(enabler);
   if (out != NULL) {
     return out;
   }
 
   /* No problems found. */
   return NULL;
+}
+
+/**********************************************************************//**
+  Returns the first action enabler specific clarification possibility in
+  the specified enabler or NULL if no enabler specific contradiction is
+  found.
+  @param enabler the enabler to look at
+  @return the first problem and maybe a suggested fix
+**************************************************************************/
+static struct req_vec_problem *
+enabler_first_clarification(const struct action_enabler *enabler)
+{
+  struct req_vec_problem *out;
+
+  out = NULL;
+
+  return out;
+}
+
+/**********************************************************************//**
+  Returns a suggestion to improve the specified action enabler or NULL if
+  nothing to improve is found to be needed. It is the responsibility of the
+  caller to free the suggestion when it is done with it. A possible
+  improvement isn't always an error.
+  @param enabler the enabler to improve
+  @return a suggestion to improve the specified action enabler
+**************************************************************************/
+struct req_vec_problem *
+action_enabler_suggest_improvement(const struct action_enabler *enabler)
+{
+  struct action *paction;
+  struct req_vec_problem *out;
+
+  out = action_enabler_suggest_repair(enabler);
+  if (out) {
+    /* A bug, not just a potential improvement */
+    return out;
+  }
+
+  paction = action_by_number(enabler->action);
+
+  /* Detect unused action enablers. */
+  if (action_get_actor_kind(paction) == AAK_UNIT) {
+    bool has_user = FALSE;
+
+    unit_type_iterate(pactor) {
+      if (action_actor_utype_hard_reqs_ok(paction->result, pactor)
+          && requirement_fulfilled_by_unit_type(pactor,
+                                                &(enabler->actor_reqs))) {
+        has_user = TRUE;
+        break;
+      }
+    } unit_type_iterate_end;
+
+    if (!has_user) {
+      /* TRANS: ruledit warns a user about an unused action enabler */
+      out = req_vec_problem_new(0, N_("This action enabler is never used"
+                                      " by any unit."));
+    }
+  }
+  if (out != NULL) {
+    return out;
+  }
+
+  out = enabler_first_clarification(enabler);
+
+  return out;
+}
+
+/**********************************************************************//**
+  Returns the requirement vector number of the specified requirement
+  vector in the specified action enabler.
+  @param enabler the action enabler that may own the vector.
+  @param vec the requirement vector to number.
+  @return the requirement vector number the vector has in this enabler.
+**************************************************************************/
+req_vec_num_in_item
+action_enabler_vector_number(const void *enabler,
+                             const struct requirement_vector *vec)
+{
+  struct action_enabler *ae = (struct action_enabler *)enabler;
+
+  if (vec == &ae->actor_reqs) {
+    return 0;
+  } else if (vec == &ae->target_reqs) {
+    return 1;
+  } else {
+    return -1;
+  }
+}
+
+/********************************************************************//**
+  Returns a writable pointer to the specified requirement vector in the
+  action enabler or NULL if the action enabler doesn't have a requirement
+  vector with that requirement vector number.
+  @param enabler the action enabler that may own the vector.
+  @param number the item's requirement vector number.
+  @return a pointer to the specified requirement vector.
+************************************************************************/
+struct requirement_vector *
+action_enabler_vector_by_number(const void *enabler,
+                                req_vec_num_in_item number)
+{
+  struct action_enabler *ae = (struct action_enabler *)enabler;
+
+  fc_assert_ret_val(number >= 0, NULL);
+
+  switch (number) {
+  case 0:
+    return &ae->actor_reqs;
+  case 1:
+    return &ae->target_reqs;
+  default:
+    return NULL;
+  }
+}
+
+/*********************************************************************//**
+  Returns the name of the given requirement vector number n in an action
+  enabler or NULL if enablers don't have a requirement vector with that
+  number.
+  @param vec the requirement vector to name
+  @return the requirement vector name or NULL.
+**************************************************************************/
+const char *action_enabler_vector_by_number_name(req_vec_num_in_item vec)
+{
+  switch (vec) {
+  case 0:
+    /* TRANS: requirement vector in an action enabler (ruledit) */
+    return _("actor_reqs");
+  case 1:
+    /* TRANS: requirement vector in an action enabler (ruledit) */
+    return _("target_reqs");
+  default:
+    return NULL;
+  }
 }
 
 /**********************************************************************//**
@@ -2478,10 +2872,10 @@ struct action *action_is_blocked_by(const action_id act_id,
 }
 
 /**********************************************************************//**
-  Returns TRUE if the specified unit type can perform the wanted action
-  given that an action enabler later will enable it.
+  Returns TRUE if the specified unit type can perform an action with the
+  wanted result given that an action enabler later will enable it.
 
-  This is done by checking the action's hard requirements. Hard
+  This is done by checking the action result's hard requirements. Hard
   requirements must be TRUE before an action can be done. The reason why
   is usually that code dealing with the action assumes that the
   requirements are true. A requirement may also end up here if it can't be
@@ -2490,10 +2884,17 @@ struct action *action_is_blocked_by(const action_id act_id,
 
   When adding a new hard requirement here:
    * explain why it is a hard requirement in a comment.
+
+  @param result the action result to check the hard reqs for
+  @param actor_unittype the unit type that may be able to act
+  @param ignore_third_party ignore if potential targets etc exists
+  @return TRUE iff the specified unit type can perform the wanted action
+          given that an action enabler later will enable it.
 **************************************************************************/
-bool
-action_actor_utype_hard_reqs_ok(enum action_result result,
-                                const struct unit_type *actor_unittype)
+static bool
+action_actor_utype_hard_reqs_ok_full(enum action_result result,
+                                     const struct unit_type *actor_unittype,
+                                     bool ignore_third_party)
 {
   switch (result) {
   case ACTRES_JOIN_CITY:
@@ -2544,6 +2945,27 @@ action_actor_utype_hard_reqs_ok(enum action_result result,
     }
     break;
 
+  case ACTRES_TRANSPORT_BOARD:
+  case ACTRES_TRANSPORT_EMBARK:
+  case ACTRES_TRANSPORT_ALIGHT:
+  case ACTRES_TRANSPORT_DISEMBARK:
+    if (!ignore_third_party) {
+      bool has_transporter = FALSE;
+
+      unit_type_iterate(utrans) {
+        if (can_unit_type_transport(utrans, utype_class(actor_unittype))) {
+          has_transporter = TRUE;
+          break;
+        }
+      } unit_type_iterate_end;
+
+      if (!has_transporter) {
+        /* Reason: no other unit can transport this unit. */
+        return FALSE;
+      }
+    }
+    break;
+
   case ACTRES_ESTABLISH_EMBASSY:
   case ACTRES_SPY_INVESTIGATE_CITY:
   case ACTRES_SPY_POISON:
@@ -2589,10 +3011,6 @@ action_actor_utype_hard_reqs_ok(enum action_result result,
   case ACTRES_BASE:
   case ACTRES_MINE:
   case ACTRES_IRRIGATE:
-  case ACTRES_TRANSPORT_BOARD:
-  case ACTRES_TRANSPORT_EMBARK:
-  case ACTRES_TRANSPORT_ALIGHT:
-  case ACTRES_TRANSPORT_DISEMBARK:
   case ACTRES_SPY_ATTACK:
   case ACTRES_NONE:
     /* No hard unit type requirements. */
@@ -2600,6 +3018,30 @@ action_actor_utype_hard_reqs_ok(enum action_result result,
   }
 
   return TRUE;
+}
+
+/**********************************************************************//**
+  Returns TRUE if the specified unit type can perform an action with the
+  wanted result given that an action enabler later will enable it.
+
+  This is done by checking the action result's hard requirements. Hard
+  requirements must be TRUE before an action can be done. The reason why
+  is usually that code dealing with the action assumes that the
+  requirements are true. A requirement may also end up here if it can't be
+  expressed in a requirement vector or if its absence makes the action
+  pointless.
+
+  @param result the action result to check the hard reqs for
+  @param actor_unittype the unit type that may be able to act
+  @return TRUE iff the specified unit type can perform the wanted action
+          given that an action enabler later will enable it.
+**************************************************************************/
+bool
+action_actor_utype_hard_reqs_ok(enum action_result result,
+                                const struct unit_type *actor_unittype)
+{
+  return action_actor_utype_hard_reqs_ok_full(result, actor_unittype,
+                                              FALSE);
 }
 
 /**********************************************************************//**
@@ -2623,7 +3065,7 @@ action_hard_reqs_actor(enum action_result result,
                        const bool omniscient,
                        const struct city *homecity)
 {
-  if (!action_actor_utype_hard_reqs_ok(result, actor_unittype)) {
+  if (!action_actor_utype_hard_reqs_ok_full(result, actor_unittype, TRUE)) {
     /* Info leak: The actor player knows the type of his unit. */
     /* The actor unit type can't perform the action because of hard
      * unit type requirements. */
@@ -2636,13 +3078,6 @@ action_hard_reqs_actor(enum action_result result,
     /* Info leak: The player knows if his unit already has paradropped this
      * turn. */
     if (actor_unit->paradropped) {
-      return TRI_NO;
-    }
-
-    /* Reason: Support the paratroopers_mr_req unit type field. */
-    /* Info leak: The player knows how many move fragments his unit has
-     * left. */
-    if (actor_unit->moves_left < actor_unittype->paratroopers_mr_req) {
       return TRI_NO;
     }
 
@@ -4002,8 +4437,8 @@ is_action_enabled_unit_on_tile_full(const action_id wanted_action,
                            NULL, actor_tile,
                            actor_unit, unit_type_get(actor_unit),
                            NULL, NULL,
-                           tile_owner(target_tile), NULL, NULL,
-                           target_tile, NULL, NULL, NULL, NULL,
+                           tile_owner(target_tile), tile_city(target_tile),
+                           NULL, target_tile, NULL, NULL, NULL, NULL,
                            target_extra,
                            actor_home);
 }
@@ -5040,7 +5475,7 @@ action_prob_vs_tile_full(const struct unit *actor_unit,
                      unit_owner(actor_unit), tile_city(actor_tile),
                      NULL, actor_tile, actor_unit, NULL,
                      NULL, NULL, actor_home,
-                     tile_owner(target_tile), NULL, NULL,
+                     tile_owner(target_tile), tile_city(target_tile), NULL,
                      target_tile, NULL, NULL, NULL, NULL, target_extra);
 }
 
@@ -5118,6 +5553,62 @@ struct act_prob action_prob_self(const struct unit* actor_unit,
                                unit_home(actor_unit),
                                unit_tile(actor_unit),
                                act_id);
+}
+
+/**********************************************************************//**
+  Returns the actor unit's probability of successfully performing the
+  specified action against the action specific target.
+  @param paction the action to perform
+  @param act_unit the actor unit
+  @param tgt_city the target for city targeted actions
+  @param tgt_unit the target for unit targeted actions
+  @param tgt_tile the target for tile and unit stack targeted actions
+  @param extra_tgt the target for extra sub targeted actions
+  @return the action probability of performing the action
+**************************************************************************/
+struct act_prob action_prob_unit_vs_tgt(const struct action *paction,
+                                        const struct unit *act_unit,
+                                        const struct city *tgt_city,
+                                        const struct unit *tgt_unit,
+                                        const struct tile *tgt_tile,
+                                        const struct extra_type *extra_tgt)
+{
+  /* Assume impossible until told otherwise. */
+  struct act_prob prob = ACTPROB_IMPOSSIBLE;
+
+  fc_assert_ret_val(paction, ACTPROB_IMPOSSIBLE);
+  fc_assert_ret_val(act_unit, ACTPROB_IMPOSSIBLE);
+
+  switch (action_get_target_kind(paction)) {
+  case ATK_UNITS:
+    if (tgt_tile) {
+      prob = action_prob_vs_units(act_unit, paction->id, tgt_tile);
+    }
+    break;
+  case ATK_TILE:
+    if (tgt_tile) {
+      prob = action_prob_vs_tile(act_unit, paction->id, tgt_tile, extra_tgt);
+    }
+    break;
+  case ATK_CITY:
+    if (tgt_city) {
+      prob = action_prob_vs_city(act_unit, paction->id, tgt_city);
+    }
+    break;
+  case ATK_UNIT:
+    if (tgt_unit) {
+      prob = action_prob_vs_unit(act_unit, paction->id, tgt_unit);
+    }
+    break;
+  case ATK_SELF:
+    prob = action_prob_self(act_unit, paction->id);
+    break;
+  case ATK_COUNT:
+    log_error("Invalid action target kind");
+    break;
+  }
+
+  return prob;
 }
 
 /**********************************************************************//**

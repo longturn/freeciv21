@@ -1280,7 +1280,7 @@ static bool compresstype_callback(int value,
 static bool plrcol_validate(int value, struct connection *caller,
                             char *reject_msg, size_t reject_msg_len)
 {
-  enum plrcolor_mode mode = value;
+  enum plrcolor_mode mode = static_cast<plrcolor_mode>(value);
   if (mode == PLRCOL_NATION_ORDER) {
     nations_iterate(pnation) {
       if (nation_color(pnation)) {
@@ -3725,21 +3725,21 @@ static bool set_enum_value(struct setting *pset, int val)
   switch (pset->enumerator.store_size) {
    case sizeof(int):
      {
-       int *to_int = pset->enumerator.pvalue;
+       int *to_int = static_cast<int*>(pset->enumerator.pvalue);
 
        *to_int = val;
      }
      break;
    case sizeof(char):
      {
-       char *to_char = pset->enumerator.pvalue;
+       char *to_char = static_cast<char*>(pset->enumerator.pvalue);
 
        *to_char = (char) val;
      }
      break;
    case sizeof(short):
      {
-       short *to_short = pset->enumerator.pvalue;
+       short *to_short = static_cast<short*>(pset->enumerator.pvalue);
 
        *to_short = (short) val;
      }
@@ -4393,8 +4393,8 @@ static void setting_game_set(struct setting *pset, bool init)
   case SST_STRING:
     if (init) {
       pset->string.game_value
-        = fc_calloc(1, pset->string.value_size
-                       * sizeof(pset->string.game_value));
+        = static_cast<char*>(fc_calloc(1, pset->string.value_size
+                       * sizeof(pset->string.game_value)));
     }
     fc_strlcpy(pset->string.game_value, pset->string.value,
               pset->string.value_size);
@@ -5086,7 +5086,7 @@ void send_server_setting_control(struct connection *pconn)
   control.categories_num = SSET_NUM_CATEGORIES;
   for (i = 0; i < SSET_NUM_CATEGORIES; i++) {
     /* Send untranslated name */
-    sz_strlcpy(control.category_names[i], sset_category_name(i));
+    sz_strlcpy(control.category_names[i], sset_category_name(static_cast<sset_category>(i)));
   }
 
   /* Send off the control packet. */

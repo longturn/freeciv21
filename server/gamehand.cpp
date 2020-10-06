@@ -106,7 +106,7 @@ enum unit_role_id crole_to_role_id(char crole)
   case 'A':
     return L_START_ATTACK_STRONG;
   default: 
-    return 0;
+    return static_cast<unit_role_id>(0);
   }
 }
 
@@ -318,8 +318,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
                     wld.map.server.team_placement);
 
   /* Initialize starting state. */
-  pstate = fc_malloc(sizeof(*pstate));
-  pstate->startpos = fc_malloc(state_array_size);
+  pstate = static_cast<team_placement_state *>(fc_malloc(sizeof(*pstate)));
+  pstate->startpos = static_cast<int*>(fc_malloc(state_array_size));
   memcpy(pstate->startpos, pbest_state->startpos, state_array_size);
   pstate->score = pbest_state->score;
 
@@ -391,8 +391,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
         if (delta <= 0) {
           repeat = TRUE;
-          pnew = fc_malloc(sizeof(*pnew));
-          pnew->startpos = fc_malloc(state_array_size);
+          pnew = static_cast<team_placement_state *>(fc_malloc(sizeof(*pnew)));
+          pnew->startpos = static_cast<int*>(fc_malloc(state_array_size));
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
           pnew->startpos[i] = t2;
           pnew->startpos[j] = t1;
@@ -592,8 +592,8 @@ void init_new_game(void)
       }
       config.total_startpos_num = (config.usable_startpos_num
                                    + player_count() - players_to_place);
-      config.startpos = fc_malloc(sizeof(*config.startpos)
-                                  * config.total_startpos_num);
+      config.startpos = static_cast<tile **>(malloc(sizeof(*config.startpos)
+                                  * config.total_startpos_num));
       i = 0;
       startpos_list_iterate(flexible_list, plink, psp) {
         config.startpos[i++] = startpos_tile(psp);
@@ -611,8 +611,8 @@ void init_new_game(void)
       fc_assert(i == config.total_startpos_num);
 
       /* Initialize state. */
-      state.startpos = fc_malloc(sizeof(*state.startpos)
-                                 * config.total_startpos_num);
+      state.startpos = static_cast<int*>(fc_malloc(sizeof(*state.startpos)
+                                 * config.total_startpos_num));
       state.score = 0;
       i = 0;
       j = config.usable_startpos_num;

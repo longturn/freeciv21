@@ -1081,7 +1081,7 @@ static void begin_turn(bool is_new_turn)
   if (is_new_turn) {
     if (game.info.phase_mode != game.server.phase_mode_stored) {
       event_cache_phases_invalidate();
-      game.info.phase_mode = game.server.phase_mode_stored;
+      game.info.phase_mode = static_cast<phase_mode_type>(game.server.phase_mode_stored);
     }
   }
 
@@ -1988,7 +1988,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
 
   if (!pconn->established) {
     log_error("Received game packet %s(%d) from unaccepted connection %s.",
-              packet_name(type), type, conn_description(pconn));
+              packet_name(static_cast<packet_type>(type)), type, conn_description(pconn));
     return TRUE;
   }
 
@@ -2012,7 +2012,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
       return TRUE;
     }
 
-    if (!server_handle_packet(type, packet, NULL, pconn)) {
+    if (!server_handle_packet(static_cast<packet_type>(type), packet, NULL, pconn)) {
       log_error("Received unknown packet %d from %s.",
                 type, conn_description(pconn));
     }
@@ -2028,7 +2028,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     }
     /* don't support these yet */
     log_error("Received packet %s(%d) from non-player connection %s.",
-              packet_name(type), type, conn_description(pconn));
+              packet_name(static_cast<packet_type>(type)), type, conn_description(pconn));
     return TRUE;
   }
 
@@ -2043,7 +2043,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
                 packet_name(type), type, server_states_name(S_S_OVER));
     } else {
       log_error("Got a packet of type %s(%d) outside %s.",
-                packet_name(type), type, server_states_name(S_S_RUNNING));
+                packet_name(static_cast<packet_type>(type)), type, server_states_name(S_S_RUNNING));
     }
     return TRUE;
   }
@@ -2052,14 +2052,14 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
 
   if (!pplayer->is_alive && type != PACKET_REPORT_REQ) {
     log_error("Got a packet of type %s(%d) from a dead player.",
-              packet_name(type), type);
+              packet_name(static_cast<packet_type>(type)), type);
     return TRUE;
   }
   
   /* Make sure to set this back to NULL before leaving this function: */
   pplayer->current_conn = pconn;
 
-  if (!server_handle_packet(type, packet, pplayer, pconn)) {
+  if (!server_handle_packet(static_cast<packet_type>(type), packet, pplayer, pconn)) {
     log_error("Received unknown packet %d from %s.",
               type, conn_description(pconn));
   }
@@ -2399,9 +2399,9 @@ const char *aifill(int amount)
     sz_strlcpy(pplayer->username, _(ANON_USER_NAME));
     pplayer->unassigned_user = TRUE;
 
-    pplayer->ai_common.skill_level = game.info.skill_level;
+    pplayer->ai_common.skill_level = static_cast<ai_level>(game.info.skill_level);
     set_as_ai(pplayer);
-    set_ai_level_directer(pplayer, game.info.skill_level);
+    set_ai_level_directer(pplayer, static_cast<ai_level>(game.info.skill_level));
 
     CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
 

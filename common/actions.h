@@ -599,8 +599,6 @@ const char *action_get_ui_name_mnemonic(action_id act_id,
 const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
                                    const struct act_prob prob,
                                    const char *custom);
-const char *action_get_tool_tip(const action_id act_id,
-                                const struct act_prob prob);
 
 const char *action_ui_name_ruleset_var_name(int act);
 const char *action_ui_name_default(int act);
@@ -623,11 +621,20 @@ action_enabler_copy(const struct action_enabler *original);
 void action_enabler_add(struct action_enabler *enabler);
 bool action_enabler_remove(struct action_enabler *enabler);
 
-const char *
-action_enabler_obligatory_reqs_missing(struct action_enabler *enabler);
-bool action_enabler_obligatory_reqs_add(struct action_enabler *enabler);
 struct req_vec_problem *
-action_enabler_suggest_a_fix(const struct action_enabler *enabler);
+action_enabler_suggest_repair_oblig(const struct action_enabler *enabler);
+struct req_vec_problem *
+action_enabler_suggest_repair(const struct action_enabler *enabler);
+struct req_vec_problem *
+action_enabler_suggest_improvement(const struct action_enabler *enabler);
+
+req_vec_num_in_item
+action_enabler_vector_number(const void *enabler,
+                             const struct requirement_vector *vec);
+struct requirement_vector *
+action_enabler_vector_by_number(const void *enabler,
+                                req_vec_num_in_item vec);
+const char *action_enabler_vector_by_number_name(req_vec_num_in_item vec);
 
 struct action *action_is_blocked_by(const action_id act_id,
                                     const struct unit *actor_unit,
@@ -674,6 +681,13 @@ struct act_prob action_prob_vs_tile(const struct unit *actor,
 
 struct act_prob action_prob_self(const struct unit *actor,
                                  const action_id act_id);
+
+struct act_prob action_prob_unit_vs_tgt(const struct action *paction,
+                                        const struct unit *act_unit,
+                                        const struct city *tgt_city,
+                                        const struct unit *tgt_unit,
+                                        const struct tile *tgt_tile,
+                                        const struct extra_type *sub_tgt);
 
 struct act_prob
 action_speculate_unit_on_city(action_id act_id,
@@ -729,6 +743,8 @@ double action_prob_to_0_to_1_pessimist(const struct act_prob ap);
 
 struct act_prob action_prob_fall_back(const struct act_prob *ap1,
                                       const struct act_prob *ap2);
+
+const char *action_prob_explain(const struct act_prob prob);
 
 struct act_prob action_prob_new_impossible(void);
 struct act_prob action_prob_new_not_relevant(void);

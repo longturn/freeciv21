@@ -543,7 +543,7 @@ event_cache_data_new(const struct packet_chat_msg *packet,
     return NULL;
   }
 
-  pdata = fc_malloc(sizeof(*pdata));
+  pdata = static_cast<event_cache_data*>(fc_malloc(sizeof(*pdata)));
   pdata->packet = *packet;
   pdata->timestamp = timestamp;
   pdata->server_state = server_status;
@@ -705,7 +705,7 @@ event_cache_player_add(struct event_cache_players *players,
                        const struct player *pplayer)
 {
   if (NULL == players) {
-    players = fc_malloc(sizeof(*players));
+    players = static_cast<event_cache_players*>(fc_malloc(sizeof(*players)));
     BV_CLR_ALL(players->vector);
   }
 

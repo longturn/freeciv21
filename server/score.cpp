@@ -160,7 +160,7 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
 **************************************************************************/
 static void build_landarea_map(struct claim_map *pcmap)
 {
-  bv_player *claims = fc_calloc(MAP_INDEX_SIZE, sizeof(*claims));
+  bv_player *claims = static_cast<bv_player*>(fc_calloc(MAP_INDEX_SIZE, sizeof(*claims)));
 
   memset(pcmap, 0, sizeof(*pcmap));
 

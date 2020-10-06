@@ -303,6 +303,7 @@ struct city {
   struct player *original; /* Cannot be NULL. */
   int id;
   int style;
+  enum capital_type capital;
 
   /* the people */
   citizens size;
@@ -742,10 +743,9 @@ bool city_exist(int id);
 /* Iterates over all output types in the game. */
 #define output_type_iterate(output)					    \
 {									    \
-  int ioutput;						    \
+  int output;						    \
 									    \
-  for (ioutput = 0; ioutput < O_LAST; ioutput++) {                          \
-      Output_type_id output = ioutput;
+  for (output = 0; output < O_LAST; output++) {
 
 #define output_type_iterate_end						    \
   }									    \

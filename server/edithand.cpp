@@ -87,7 +87,7 @@ void edithand_init(void)
   if (unfogged_players != NULL) {
     free(unfogged_players);
   }
-  unfogged_players = fc_calloc(player_slot_count(), sizeof(bool));
+  unfogged_players = static_cast<bool*>(calloc(player_slot_count(), sizeof(bool)));
 }
 
 /************************************************************************//**

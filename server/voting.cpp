@@ -350,7 +350,7 @@ struct vote *vote_new(struct connection *caller,
   remove_vote(get_vote_by_caller(caller));
 
   /* Make a new vote */
-  pvote = fc_malloc(sizeof(struct vote));
+  pvote = static_cast<vote*>(fc_malloc(sizeof(struct vote)));
   pvote->caller_id = caller->id;
   pvote->command_id = command_id;
   pcmd = command_by_number(command_id);
@@ -634,7 +634,7 @@ static struct vote_cast *vote_cast_new(struct vote *pvote)
     return NULL;
   }
 
-  pvc = fc_malloc(sizeof(struct vote_cast));
+  pvc = static_cast<vote_cast*>(fc_malloc(sizeof(struct vote_cast)));
   pvc->conn_id = -1;
   pvc->vote_cast = VOTE_ABSTAIN;
 

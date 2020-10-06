@@ -69,7 +69,9 @@ struct tile *tile_claimer(const struct tile *ptile)
 void tile_set_owner(struct tile *ptile, struct player *pplayer,
                     struct tile *claimer)
 {
-  if (BORDERS_DISABLED != game.info.borders) {
+  if (BORDERS_DISABLED != game.info.borders
+      /* City tiles are always owned by the city owner. */
+      || (tile_city(ptile) != NULL || ptile->owner != NULL)) {
     ptile->owner = pplayer;
     ptile->claimer = claimer;
   }
@@ -442,9 +444,9 @@ int tile_activity_time(enum unit_activity activity, const struct tile *ptile,
   case ACTIVITY_TRANSFORM:
     return pterrain->transform_time * ACTIVITY_FACTOR;
   case ACTIVITY_CULTIVATE:
-    return pterrain->irrigation_time * ACTIVITY_FACTOR;
+    return pterrain->cultivate_time * ACTIVITY_FACTOR;
   case ACTIVITY_PLANT:
-    return pterrain->mining_time * ACTIVITY_FACTOR;
+    return pterrain->plant_time * ACTIVITY_FACTOR;
   case ACTIVITY_IRRIGATE:
   case ACTIVITY_MINE:
   case ACTIVITY_BASE:

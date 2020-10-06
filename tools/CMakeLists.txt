@@ -29,9 +29,9 @@ endif()
 
 install(
   TARGETS
-  freeciv-manual
-  freeciv-modpack
-  freeciv-modpack-qt
-  freeciv-ruledit
-  freeciv-ruleup
+  #freeciv-manual
+  #freeciv-modpack
+  #freeciv-modpack-qt
+  #freeciv-ruledit
+  #freeciv-ruleup
   OPTIONAL)

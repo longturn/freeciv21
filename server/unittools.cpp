@@ -2856,16 +2856,7 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
    * server/unithand's action not enabled system (expl_act_not_enabl(),
    * ane_kind, explain_why_no_action_enabled(), etc)
    */
-  if (map_is_known_and_seen(ptile, pplayer, V_MAIN)) {
-    if (is_military_unit(punit)
-        && !player_can_invade_tile(pplayer, ptile)) {
-      notify_player(pplayer, ptile, E_BAD_COMMAND, ftc_server,
-                    _("Cannot invade unless you break peace with "
-                      "%s first."),
-                    player_name(tile_owner(ptile)));
-      return FALSE;
-    }
-  } else {
+  if (!map_is_known_and_seen(ptile, pplayer, V_MAIN)) {
     /* Only take in account values from player map. */
     const struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
 
@@ -2883,16 +2874,6 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
         && pplayers_non_attack(pplayer, plrtile->owner)) {
       notify_player(pplayer, ptile, E_BAD_COMMAND, ftc_server,
                     _("Cannot attack unless you declare war first."));
-      return FALSE;
-    }
-
-    if (is_military_unit(punit)
-        && NULL != plrtile->owner
-        && players_non_invade(pplayer, plrtile->owner)) {
-      notify_player(pplayer, ptile, E_BAD_COMMAND, ftc_server,
-                    _("Cannot invade unless you break peace with "
-                      "%s first."),
-                    player_name(plrtile->owner));
       return FALSE;
     }
   }
@@ -2938,7 +2919,9 @@ bool do_paradrop(struct unit *punit, struct tile *ptile,
 
   /* All ok */
   punit->paradropped = TRUE;
-  if (unit_move(punit, ptile, unit_type_get(punit)->paratroopers_mr_sub,
+  if (unit_move(punit, ptile,
+                /* Done by Action_Success_Actor_Move_Cost */
+                0,
                 NULL, game.info.paradrop_to_transport,
                 /* A paradrop into a non allied city results in a city
                  * occupation. */
@@ -3192,7 +3175,7 @@ static bool unit_survive_autoattack(struct unit *punit)
   adjc_iterate(&(wld.map), unit_tile(punit), ptile) {
     /* First add all eligible units to a autoattack list */
     unit_list_iterate(ptile->units, penemy) {
-      struct autoattack_prob *probability = fc_malloc(sizeof(*probability));
+      struct autoattack_prob *probability = static_cast<autoattack_prob*>(fc_malloc(sizeof(*probability)));
       struct tile *tgt_tile = unit_tile(punit);
 
       fc_assert_action(tgt_tile, continue);
@@ -3565,7 +3548,7 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
                   "Unit number %d (%p) has done an incomplete move.",
                   punit->id, punit);
   } else {
-    pdata = fc_malloc(sizeof(*pdata));
+    pdata = static_cast<struct unit_move_data *>(fc_malloc(sizeof(*pdata)));
     pdata->ref_count = 1;
     pdata->punit = punit;
     punit->server.moving = pdata;
@@ -4864,7 +4847,7 @@ struct unit_order *create_unit_orders(int length,
     return NULL;
   }
 
-  unit_orders = fc_malloc(length * sizeof(*(unit_orders)));
+  unit_orders = static_cast<unit_order*>(fc_malloc(length * sizeof(*(unit_orders))));
   memcpy(unit_orders, orders, length * sizeof(*(unit_orders)));
 
   return unit_orders;

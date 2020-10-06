@@ -992,7 +992,26 @@ static void reestablish_city_trade_routes(struct city *pcity)
     send_city_info(city_owner(pcity), partner);
   } trade_routes_iterate_safe_end;
 }
+/************************************************************************//**
+  Removes outdated (nonexistant) cities from a player
+****************************************************************************/
+void reality_check_city(struct player *pplayer, struct tile *ptile)
+{
+  struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
 
+  if (pdcity) {
+    struct city *pcity = tile_city(ptile);
+
+    if (!pcity || pcity->id != pdcity->identity) {
+      struct player_tile *playtile = map_get_player_tile(ptile, pplayer);
+
+      dlsend_packet_city_remove(pplayer->connections, pdcity->identity);
+      fc_assert_ret(playtile->site == pdcity);
+      playtile->site = NULL;
+      vision_site_destroy(pdcity);
+    }
+  }
+}
 /************************************************************************//**
   Create saved small wonders in random cities. Usually used to save the
   palace when the capital was conquered. Respects the 'savepalace'
@@ -1077,8 +1096,8 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   bool new_extras;
   const int units_num = unit_list_size(pcenter->units);
   bv_player *could_see_unit = (units_num > 0
-                               ? fc_malloc(sizeof(*could_see_unit)
-                                           * units_num)
+                               ? static_cast<bv_player*>(fc_malloc(sizeof(*could_see_unit)
+                                           * units_num))
                                : NULL);
   int i;
 
@@ -2444,7 +2463,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
 
   i = 0;
   trade_routes_iterate(pcity, proute) {
-    struct packet_traderoute_info *tri_packet = fc_malloc(sizeof(struct packet_traderoute_info));
+    struct packet_traderoute_info *tri_packet = static_cast<packet_traderoute_info*>(malloc(sizeof(struct packet_traderoute_info)));
 
     tri_packet->city = pcity->id;
     tri_packet->index = i;
@@ -2556,6 +2575,7 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
   bool unhappy = city_unhappy(pcity);
   int style = pcity->style;
   int city_image = get_city_bonus(pcity, EFT_CITY_IMAGE);
+  enum capital_type capital = pcity->capital;
 
   BV_CLR_ALL(improvements);
   improvement_iterate(pimprove) {
@@ -2586,6 +2606,7 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
              && pdcity->unhappy == unhappy
              && pdcity->style == style
              && pdcity->city_image == city_image
+             && pdcity->capital == capital
              && BV_ARE_EQUAL(pdcity->improvements, improvements)
              && vision_site_size_get(pdcity) == city_size_get(pcity)
              && vision_site_owner(pdcity) == city_owner(pcity)
@@ -2598,32 +2619,12 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
   pdcity->walls = walls;
   pdcity->style = style;
   pdcity->city_image = city_image;
+  pdcity->capital = capital;
   pdcity->happy = happy;
   pdcity->unhappy = unhappy;
   pdcity->improvements = improvements;
 
   return TRUE;
-}
-
-/************************************************************************//**
-  Removes outdated (nonexistant) cities from a player
-****************************************************************************/
-void reality_check_city(struct player *pplayer, struct tile *ptile)
-{
-  struct vision_site *pdcity = map_get_player_city(ptile, pplayer);
-
-  if (pdcity) {
-    struct city *pcity = tile_city(ptile);
-
-    if (!pcity || pcity->id != pdcity->identity) {
-      struct player_tile *playtile = map_get_player_tile(ptile, pplayer);
-
-      dlsend_packet_city_remove(pplayer->connections, pdcity->identity);
-      fc_assert_ret(playtile->site == pdcity);
-      playtile->site = NULL;
-      vision_site_destroy(pdcity);
-    }
-  }
 }
 
 /************************************************************************//**
@@ -2853,7 +2854,7 @@ void city_units_upkeep(const struct city *pcity)
 
   memset(free_uk, 0, O_LAST * sizeof(*free_uk));
   output_type_iterate(o) {
-    free_uk[o] = get_city_output_bonus(pcity, get_output_type(o),
+    free_uk[o] = get_city_output_bonus(pcity, get_output_type(static_cast<Output_type_id>(o)),
                                        EFT_UNIT_UPKEEP_FREE_PER_CITY);
   } output_type_iterate_end;
 
@@ -2864,7 +2865,7 @@ void city_units_upkeep(const struct city *pcity)
     update = FALSE;
 
     output_type_iterate(o) {
-      cost = utype_upkeep_cost(ut, plr, o);
+      cost = utype_upkeep_cost(ut, plr, static_cast<Output_type_id>(o));
       if (cost > 0) {
         if (free_uk[o] > cost) {
           free_uk[o] -= cost;
@@ -3148,7 +3149,7 @@ void city_landlocked_sell_coastal_improvements(struct tile *ptile)
 void city_refresh_vision(struct city *pcity)
 {
   v_radius_t vision_radius_sq =
-      V_RADIUS(get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ), 2, 2);
+      V_RADIUS(static_cast<short>(get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ)), static_cast<short>(2), static_cast<short>(2));
 
   vision_change_sight(pcity->server.vision, vision_radius_sq);
   ASSERT_VISION(pcity->server.vision);

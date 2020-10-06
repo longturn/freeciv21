@@ -172,7 +172,7 @@ struct player *create_barbarian_player(enum barbarian_type type)
   /* Do the ai */
   set_as_ai(barbarians);
   barbarians->ai_common.barbarian_type = type;
-  set_ai_level_directer(barbarians, game.info.skill_level);
+  set_ai_level_directer(barbarians, static_cast<ai_level>(game.info.skill_level));
 
   presearch = research_get(barbarians);
   init_tech(presearch, TRUE);
@@ -308,7 +308,7 @@ bool unleash_barbarians(struct tile *ptile)
   /* Get information about surrounding terrains in terrain class level.
    * Only needed if we consider moving units away to random directions. */
   for (dir = 0; dir < 8; dir++) {
-    dir_tiles[dir] = mapstep(&(wld.map), ptile, dir);
+    dir_tiles[dir] = mapstep(&(wld.map), ptile, static_cast<direction8>(dir));
     if (dir_tiles[dir] == NULL) {
       terrainc[dir] = terrain_class_invalid();
     } else if (!is_non_allied_unit_tile(dir_tiles[dir], barbarians)) {
@@ -371,7 +371,7 @@ bool unleash_barbarians(struct tile *ptile)
         struct unit_type *candidate;
         int rdir = random_unchecked_direction(ocean_tiles - checked_count, checked);
 
-        candidate = find_a_unit_type(L_BARBARIAN_BOAT, -1);
+        candidate = find_a_unit_type(L_BARBARIAN_BOAT, static_cast<unit_role_id>(-1));
         if (is_native_tile(candidate, dir_tiles[rdir])) {
           boat = create_unit(barbarians, dir_tiles[rdir], candidate,
                              0, 0, -1);
@@ -627,7 +627,7 @@ static void try_summon_barbarians(void)
       CALL_PLR_AI_FUNC(phase_begin, barbarians, barbarians, TRUE);
     }
 
-    boat = find_a_unit_type(L_BARBARIAN_BOAT,-1);
+    boat = find_a_unit_type(L_BARBARIAN_BOAT,static_cast<unit_role_id>(-1));
 
     if (is_native_tile(boat, utile)
         && (is_safe_ocean(&(wld.map), utile)

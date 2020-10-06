@@ -700,7 +700,8 @@ void map_vision_update(struct player *pplayer, struct tile *ptile,
 void map_set_border_vision(struct player *pplayer,
                            const bool is_enabled)
 {
-  const v_radius_t radius_sq = V_RADIUS(is_enabled ? 1 : -1, 0, 0);
+  const v_radius_t radius_sq = V_RADIUS(is_enabled ? static_cast<short>(1) : static_cast<short>(-1),
+                                   static_cast<short>(0), static_cast<short>(0));
 
   if (pplayer->server.border_vision == is_enabled) {
     /* No change. Changing the seen count beyond what already exists would
@@ -757,9 +758,9 @@ void map_show_tile(struct player *src_player, struct tile *ptile)
 	}
 
         vision_layer_iterate(v) {
-          if (0 < map_get_seen(pplayer, ptile, v)) {
+          if (0 < map_get_seen(pplayer, ptile, static_cast<vision_layer>(v))) {
             unit_list_iterate(ptile->units, punit) {
-              if (unit_is_visible_on_layer(punit, v)) {
+              if (unit_is_visible_on_layer(punit, static_cast<vision_layer>(v))) {
                 send_unit_info(pplayer->connections, punit);
               }
             } unit_list_iterate_end;
@@ -798,9 +799,9 @@ void map_hide_tile(struct player *src_player, struct tile *ptile)
 
         /* Remove units. */
         vision_layer_iterate(v) {
-          if (0 < map_get_seen(pplayer, ptile, v)) {
+          if (0 < map_get_seen(pplayer, ptile, static_cast<vision_layer>(v))) {
             unit_list_iterate(ptile->units, punit) {
-              if (unit_is_visible_on_layer(punit, v)) {
+              if (unit_is_visible_on_layer(punit, static_cast<vision_layer>(v))) {
                 unit_goes_out_of_sight(pplayer, punit);
               }
             } unit_list_iterate_end;
@@ -1145,8 +1146,8 @@ void show_map_to_all(void)
 void player_map_init(struct player *pplayer)
 {
   pplayer->server.private_map
-    = fc_realloc(pplayer->server.private_map,
-                 MAP_INDEX_SIZE * sizeof(*pplayer->server.private_map));
+    = static_cast<player_tile*>(fc_realloc(pplayer->server.private_map,
+                 MAP_INDEX_SIZE * sizeof(*pplayer->server.private_map)));
 
   whole_map_iterate(&(wld.map), ptile) {
     player_tile_init(ptile, pplayer);
@@ -1568,9 +1569,9 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile) {
           const v_radius_t change =
-              V_RADIUS(map_get_own_seen(pplayer, ptile, V_MAIN),
-                       map_get_own_seen(pplayer, ptile, V_INVIS),
-                       map_get_own_seen(pplayer, ptile, V_SUBSURFACE));
+              V_RADIUS(static_cast<short>(map_get_own_seen(pplayer, ptile, V_MAIN)),
+                       static_cast<short>(map_get_own_seen(pplayer, ptile, V_INVIS)),
+                       static_cast<short>(map_get_own_seen(pplayer, ptile, V_SUBSURFACE)));
 
           if (0 < change[V_MAIN] || 0 < change[V_INVIS]) {
             map_change_seen(pplayer2, ptile, change,
@@ -1626,9 +1627,9 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile) {
           const v_radius_t change =
-              V_RADIUS(-map_get_own_seen(pplayer, ptile, V_MAIN),
-                       -map_get_own_seen(pplayer, ptile, V_INVIS),
-                       -map_get_own_seen(pplayer, ptile, V_SUBSURFACE));
+              V_RADIUS(static_cast<short>(-map_get_own_seen(pplayer, ptile, V_MAIN)),
+                       static_cast<short>(-map_get_own_seen(pplayer, ptile, V_INVIS)),
+                       static_cast<short>(-map_get_own_seen(pplayer, ptile, V_SUBSURFACE)));
 
           if (0 > change[V_MAIN] || 0 > change[V_INVIS]) {
             map_change_seen(pplayer2, ptile, change, FALSE);
@@ -2251,7 +2252,7 @@ void map_claim_base(struct tile *ptile, struct extra_type *pextra,
 
   units_num = unit_list_size(ptile->units);
   could_see_unit = (units_num > 0
-                    ? fc_malloc(sizeof(*could_see_unit) * units_num)
+                    ? static_cast<bv_player*>(fc_malloc(sizeof(*could_see_unit) * units_num))
                     : NULL);
 
   i = 0;
@@ -2274,19 +2275,20 @@ void map_claim_base(struct tile *ptile, struct extra_type *pextra,
   /* Transfer base provided vision to new owner */
   if (powner != NULL) {
     const v_radius_t old_radius_sq = V_RADIUS(-1, -1, -1);
-    const v_radius_t new_radius_sq = V_RADIUS(pbase->vision_main_sq,
-                                              pbase->vision_invis_sq,
-                                              pbase->vision_subs_sq);
+    const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(pbase->vision_main_sq),
+                                              static_cast<short>(pbase->vision_invis_sq),
+                                              static_cast<short>(pbase->vision_subs_sq));
 
     map_vision_update(powner, ptile, old_radius_sq, new_radius_sq,
                       game.server.vision_reveal_tiles);
   }
 
   if (ploser != NULL) {
-    const v_radius_t old_radius_sq = V_RADIUS(pbase->vision_main_sq,
-                                              pbase->vision_invis_sq,
-                                              pbase->vision_subs_sq);
-    const v_radius_t new_radius_sq = V_RADIUS(-1, -1, -1);
+    const v_radius_t old_radius_sq = V_RADIUS(static_cast<short>(pbase->vision_main_sq),
+                                              static_cast<short>(pbase->vision_invis_sq),
+                                              static_cast<short>(pbase->vision_subs_sq));
+    const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(-1),
+                                          static_cast<short>(-1), static_cast<short>(-1));
 
     map_vision_update(ploser, ptile, old_radius_sq, new_radius_sq,
                       game.server.vision_reveal_tiles);
@@ -2455,10 +2457,10 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
         && (0 <= pbase->vision_main_sq || 0 <= pbase->vision_invis_sq)) {
       /* Base provides vision, but no borders. */
       const v_radius_t old_radius_sq =
-        V_RADIUS(0 <= pbase->vision_main_sq ? pbase->vision_main_sq : -1,
-                 0 <= pbase->vision_invis_sq ? pbase->vision_invis_sq : -1,
-                 0 <= pbase->vision_subs_sq ? pbase->vision_subs_sq : -1);
-      const v_radius_t new_radius_sq = V_RADIUS(-1, -1, -1);
+        V_RADIUS(0 <= pbase->vision_main_sq ? static_cast<short>(pbase->vision_main_sq) : static_cast<short>(-1),
+                 0 <= pbase->vision_invis_sq ? static_cast<short>(pbase->vision_invis_sq) : static_cast<short>(-1),
+                 0 <= pbase->vision_subs_sq ? static_cast<short>(pbase->vision_subs_sq) : static_cast<short>(-1));
+      const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(-1), static_cast<short>(-1), static_cast<short>(-1));
 
       map_vision_update(owner, ptile, old_radius_sq, new_radius_sq,
                         game.server.vision_reveal_tiles);

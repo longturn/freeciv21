@@ -1032,8 +1032,9 @@ actor_reqs    =
       "DiplRel", "Foreign", "Local", FALSE
     }
 target_reqs    =
-    { "type",   "name", "range", "present"
-      "TerrainFlag","NoCities","Local",FALSE
+    { "type",        "name",     "range", "present"
+      "CityTile",    "Claimed",  "Local", TRUE
+      "TerrainFlag", "NoCities", "Local", FALSE
     }
 
 [actionenabler_join_city]
@@ -1200,50 +1201,128 @@ actor_reqs    =
       "DiplRel",   "Foreign",  "Local", FALSE
     }
 
-[actionenabler_paradrop_not_forest_base]
+[actionenabler_paradrop_base_to_foreign_not_forest]
 action = "Paradrop Unit"
 actor_reqs    =
-    { "type",      "name",         "range", "present"
-      "UnitFlag",  "Paratroopers", "Local", TRUE
-      "UnitState", "Transporting", "Local", FALSE
-      "ExtraFlag", "ParadropFrom", "Local", TRUE
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "ExtraFlag",    "ParadropFrom", "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
     }
 target_reqs    =
-    { "type",   "name", "range", "present"
+    { "type",        "name",             "range", "present"
+      "CityTile",    "Claimed",          "Local", TRUE
       "TerrainFlag", "DifficultLanding", "Local", FALSE
     }
 
-[actionenabler_paradrop_veteran_base]
+[actionenabler_paradrop_base_to_unclaimed_not_forest]
 action = "Paradrop Unit"
 actor_reqs    =
-    { "type",      "name",         "range", "present"
-      "UnitFlag",  "Paratroopers", "Local", TRUE
-      "UnitState", "Transporting", "Local", FALSE
-      "MinVeteran", 1,             "Local", TRUE
-      "ExtraFlag", "ParadropFrom", "Local", TRUE
-    }
-
-[actionenabler_paradrop_not_forest_city]
-action = "Paradrop Unit"
-actor_reqs    =
-    { "type",      "name",         "range", "present"
-      "UnitFlag",  "Paratroopers", "Local", TRUE
-      "UnitState", "Transporting", "Local", FALSE
-      "CityTile",  "Center",       "Local", TRUE
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "ExtraFlag",    "ParadropFrom", "Local", TRUE
     }
 target_reqs    =
-    { "type",   "name", "range", "present"
+    { "type",        "name",             "range", "present"
+      "TerrainFlag", "DifficultLanding", "Local", FALSE
+      "CityTile",    "Claimed",          "Local", FALSE
+    }
+
+[actionenabler_paradrop_veteran_base_to_foreign]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "MinVeteran",    1,             "Local", TRUE
+      "ExtraFlag",    "ParadropFrom", "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", TRUE
+    }
+
+[actionenabler_paradrop_veteran_base_to_unclaimed]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "MinVeteran",    1,             "Local", TRUE
+      "ExtraFlag",    "ParadropFrom", "Local", TRUE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", FALSE
+    }
+
+[actionenabler_paradrop_city_to_foreign_not_forest]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "CityTile",     "Center",       "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
+    }
+target_reqs    =
+    { "type",        "name",             "range", "present"
+      "CityTile",    "Claimed",          "Local", TRUE
       "TerrainFlag", "DifficultLanding", "Local", FALSE
     }
 
-[actionenabler_paradrop_veteran_city]
+[actionenabler_paradrop_city_to_unclaimed_not_forest]
 action = "Paradrop Unit"
 actor_reqs    =
-    { "type",       "name",         "range", "present"
-      "UnitFlag",   "Paratroopers", "Local", TRUE
-      "UnitState",  "Transporting", "Local", FALSE
-      "MinVeteran", 1,              "Local", TRUE
-      "CityTile",   "Center",       "Local", TRUE
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "CityTile",     "Center",       "Local", TRUE
+    }
+target_reqs    =
+    { "type",        "name",             "range", "present"
+      "CityTile",    "Claimed",          "Local", FALSE
+      "TerrainFlag", "DifficultLanding", "Local", FALSE
+    }
+
+[actionenabler_paradrop_veteran_city_to_foreign]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "MinVeteran",   1,              "Local", TRUE
+      "CityTile",     "Center",       "Local", TRUE
+      "DiplRel",      "Peace",        "Local", FALSE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", TRUE
+    }
+
+[actionenabler_paradrop_veteran_city_to_unclaimed]
+action = "Paradrop Unit"
+actor_reqs    =
+    { "type",         "name",         "range", "present"
+      "UnitFlag",     "Paratroopers", "Local", TRUE
+      "MinMoveFrags", "6",            "Local", TRUE
+      "UnitState",    "Transporting", "Local", FALSE
+      "MinVeteran",   1,              "Local", TRUE
+      "CityTile",     "Center",       "Local", TRUE
+    }
+target_reqs   =
+    { "type",     "name",    "range", "present"
+      "CityTile", "Claimed", "Local", FALSE
     }
 
 [actionenabler_upgrade_unit]
@@ -1581,15 +1660,6 @@ actor_reqs    =
       "CityTile",     "Center",      "Local"
     }
 
-[actionenabler_disembark_from_native_terrspeed]
-action        = "Transport Disembark"
-actor_reqs    =
-    { "type",          "name",         "range", "present"
-      "UnitState",     "Transported",  "Local", TRUE
-      "MinMoveFrags",  "1",            "Local", TRUE
-      "UnitClassFlag", "TerrainSpeed", "Local", FALSE
-    }
-
 [actionenabler_disembark_from_non_native]
 action        = "Transport Disembark 2"
 actor_reqs    =
@@ -1598,7 +1668,6 @@ actor_reqs    =
       "MinMoveFrags",   "1",            "Local", TRUE
       "UnitState",      "OnNativeTile", "Local", FALSE
       "CityTile",       "Center",       "Local", FALSE
-      "UnitClassFlag",  "TerrainSpeed", "Local", TRUE
     }
 
 [actionenabler_embark]

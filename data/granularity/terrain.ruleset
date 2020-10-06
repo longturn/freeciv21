@@ -63,10 +63,10 @@ min_start_native_area = 0
 
 ; How many fragments each movement point has.
 ; For example road movement costs are relative to this.
-move_fragments = 1
+move_fragments = 6
 
 ; How many move_fragments IgTer unit movement costs
-igter_cost = 1
+igter_cost = 4
 
 ; Whether diagonal movement has increased cost (no effect with hex topology)
 ; The cost increase is more accurate with larger values for move_fragments
@@ -113,6 +113,8 @@ ocean_resources = FALSE
 ;                        Nonzero values only affect extras with build_time 0.
 ; road_time            = time to build roads; if 0, cannot build any roads.
 ;                        Nonzero values only affect extras with build_time 0.
+; cultivate_time       = time to cultivate
+; plant_time           = time to plant
 ; irrigation_result    = result of 'irrigate' activity; one of:
 ;                        "no"  -- cannot irrigate
 ;                        "yes" -- can build extra
@@ -221,6 +223,8 @@ road_shield_incr_pct = 0
 road_trade_incr_pct  = 100
 base_time            = 1
 road_time            = 1
+cultivate_time       = 0
+plant_time           = 0
 irrigation_result    = "yes"
 irrigation_food_incr = 1
 irrigation_time      = 5
@@ -265,6 +269,8 @@ road_shield_incr_pct = 0
 road_trade_incr_pct  = 0
 base_time            = 1
 road_time            = 1
+cultivate_time       = 0
+plant_time           = 0
 irrigation_result    = "no"
 irrigation_food_incr = 0
 irrigation_time      = 0
@@ -309,6 +315,8 @@ road_shield_incr_pct = 0
 road_trade_incr_pct  = 100
 base_time            = 1
 road_time            = 1
+cultivate_time       = 0
+plant_time           = 0
 irrigation_result    = "no"
 irrigation_food_incr = 0
 irrigation_time      = 0
@@ -544,23 +552,51 @@ name           = _("Path")
 category       = "Infra"
 causes         = "Road"
 ;rmcauses       = ""
-infracost      = 5
+infracost      = 3
+graphic        = "road.path"
+graphic_alt    = "road.road"
+activity_gfx   = "unit.path"
+act_gfx_alt    = "unit.road"
+act_gfx_alt2   = "-"
+rmact_gfx      = "None"
+rmact_gfx_alt  = "-"
+buildable      = TRUE
+hidden_by      = "Road"
+;reqs           =
+;    { "type", "name", "range"
+; No requirements
+;    }
+build_time     = 1
+removal_time   = 0
+flags          = "AutoOnCityCenter"
+helptext       = _("Path is the simplest road type, buildable from the beginning.")
+
+[extra_road]
+name           = _("Road")
+category       = "Infra"
+causes         = "Road"
+;rmcauses       = ""
+infracost      = 6
 graphic        = "road.road"
 graphic_alt    = "-"
-activity_gfx   = "None"
+activity_gfx   = "unit.road"
 act_gfx_alt    = "-"
 act_gfx_alt2   = "-"
 rmact_gfx      = "None"
 rmact_gfx_alt  = "-"
 buildable      = TRUE
-;reqs           =
-;    { "type", "name", "range"
-; No requirements
-;    }
-build_time     = 0
+reqs           =
+    { "type",  "name",          "range"
+      "Tech",  "Road Building", "Player"
+      "Extra", "Path",          "Local"
+    }
+build_time     = 3
 removal_time   = 0
 flags          = "AutoOnCityCenter"
-helptext       = _("Path is the simplest road type, buildable from the beginning.")
+helptext       = _("\
+Roads allow your land units to move more quickly, and on some terrain,\
+ also provide a trade bonus.\
+")
 
 [extra_gresource]
 name           = _("Generic Resource")
@@ -667,10 +703,21 @@ rmact_gfx_alt  = "-"
 
 [road_path]
 extra          = "Path"
-move_cost      = 1
+move_cost      = 6
 food_incr      = 0
 shield_incr    = 0
 trade_incr     = 0
+food_bonus     = 0
+shield_bonus   = 0
+trade_bonus    = 0
+compat_special = "None"
+
+[road_road]
+extra          = "Road"
+move_cost      = 3
+food_incr      = 0
+shield_incr    = 0
+trade_incr     = 100
 food_bonus     = 0
 shield_bonus   = 0
 trade_bonus    = 0

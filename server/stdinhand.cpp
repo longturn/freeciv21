@@ -222,9 +222,9 @@ static enum command_id command_named(const char *token, bool accept_ambiguity)
                         fc_strncasecmp, NULL, token, &ind);
 
   if (result < M_PRE_AMBIGUOUS) {
-    return ind;
+    return static_cast<command_id>(ind);
   } else if (result == M_PRE_AMBIGUOUS) {
-    return accept_ambiguity ? ind : CMD_AMBIGUOUS;
+    return accept_ambiguity ? static_cast<command_id>(ind) : CMD_AMBIGUOUS;
   } else {
     return CMD_UNRECOGNIZED;
   }
@@ -703,8 +703,8 @@ void toggle_ai_player_direct(struct connection *caller, struct player *pplayer)
 	      player_name(pplayer));
     player_set_to_ai_mode(pplayer,
                           !ai_level_is_valid(pplayer->ai_common.skill_level)
-                          ? game.info.skill_level
-                          : pplayer->ai_common.skill_level);
+                          ? static_cast<ai_level>(game.info.skill_level)
+                          : static_cast<ai_level>(pplayer->ai_common.skill_level));
     fc_assert(is_ai(pplayer));
   } else {
     cmd_reply(CMD_AITOGGLE, caller, C_OK,
@@ -940,7 +940,7 @@ enum rfc_status create_command_newcomer(const char *name,
 
   pplayer->was_created = TRUE; /* must use /remove explicitly to remove */
   set_as_ai(pplayer);
-  set_ai_level_directer(pplayer, game.info.skill_level);
+  set_ai_level_directer(pplayer, static_cast<ai_level>(game.info.skill_level));
 
   CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
 
@@ -1071,7 +1071,7 @@ enum rfc_status create_command_pregame(const char *name,
   pplayer->was_created = TRUE; /* must use /remove explicitly to remove */
   pplayer->random_name = rand_name;
   set_as_ai(pplayer);
-  set_ai_level_directer(pplayer, game.info.skill_level);
+  set_ai_level_directer(pplayer, static_cast<ai_level>(game.info.skill_level));
   CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
   send_player_info_c(pplayer, game.est_connections);
 
@@ -1271,7 +1271,7 @@ static void write_init_script(char *script_filename)
             cmdlevel_name(first_access_level));
 
     fprintf(script_file, "%s\n",
-            ai_level_cmd(game.info.skill_level));
+            ai_level_cmd(static_cast<ai_level>(game.info.skill_level)));
 
     if (*srvarg.metaserver_addr != '\0'
         && ((0 != strcmp(srvarg.metaserver_addr, DEFAULT_META_SERVER_ADDR)))) {
@@ -1594,7 +1594,7 @@ static const char *olvlname_accessor(int i)
   if (i == 0) {
     return "rulesetdir";
   } else if (i < OLEVELS_NUM+1) {
-    return sset_level_name(i-1);
+    return sset_level_name(static_cast<sset_level>(i-1));
   } else {
     return optname_accessor(i-OLEVELS_NUM-1);
   }
@@ -1654,7 +1654,7 @@ static enum sset_level lookup_option_level(const char *name)
 
   for (i = SSET_ALL; i < OLEVELS_NUM; i++) {
     if (0 == fc_strcasecmp(name, sset_level_name(sset_level(i)))) {
-      return i;
+      return static_cast<sset_level>(i);
     }
   }
 
@@ -5079,7 +5079,7 @@ static bool delegate_command(struct connection *caller, char *arg,
     }
   }
 
-  if (!delegate_args_is_valid(ind)) {
+  if (!delegate_args_is_valid(static_cast<delegate_args>(ind))) {
     char buf[256] = "";
     enum delegate_args valid_args;
 
@@ -6108,7 +6108,7 @@ static bool cut_client_connection(struct connection *caller, char *name,
 **************************************************************************/
 static time_t *time_duplicate(const time_t *t)
 {
-  time_t *d = fc_malloc(sizeof(*d));
+  time_t *d = static_cast<time_t*>(fc_malloc(sizeof(*d)));
   *d = *t;
   return d;
 }
@@ -6345,7 +6345,7 @@ static void show_help_command_list(struct connection *caller,
 
     buf[0] = '\0';
     for (i=0, j=0; i<CMD_NUM; i++) {
-      if (may_use(caller, i)) {
+      if (may_use(caller, static_cast<command_id>(i))) {
         cat_snprintf(buf, sizeof(buf), "%-19s", command_name_by_number(i));
         if ((++j % 4) == 0) {
           cmd_reply(help_cmd, caller, C_COMMENT, "%s", buf);
@@ -6472,7 +6472,7 @@ static bool show_help(struct connection *caller, char *arg)
   fc_assert_ret_val(match_result < M_PRE_AMBIGUOUS, FALSE);
   
   if (ind < CMD_NUM) {
-    show_help_command(caller, CMD_HELP, ind);
+    show_help_command(caller, CMD_HELP, static_cast<command_id>(ind));
     return TRUE;
   }
   ind -= CMD_NUM;
@@ -6888,7 +6888,7 @@ static bool show_list(struct connection *caller, char *arg)
   remove_leading_trailing_spaces(arg);
   match_result = match_prefix(list_accessor, list_args_max() + 1, 0,
                               fc_strncasecmp, NULL, arg, &ind_int);
-  ind = ind_int;
+  ind = static_cast<list_args>(ind_int);
 
   if (match_result > M_PRE_EMPTY) {
     cmd_reply(CMD_LIST, caller, C_SYNTAX,
@@ -7093,7 +7093,7 @@ static char *connection_generator(const char *text, int state)
 **************************************************************************/
 static const char *cmdlevel_arg1_accessor(int idx)
 {
-  return cmdlevel_name(idx);
+  return cmdlevel_name(static_cast<cmdlevel>(idx));
 }
 
 /**********************************************************************//**

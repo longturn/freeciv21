@@ -827,6 +827,12 @@ void handle_city_info(const struct packet_city_info *packet)
     pcity->client.walls = NUM_WALL_TYPES;
   }
   pcity->style = packet->style;
+  pcity->capital = packet->capital;
+  if (packet->capital == CAPITAL_PRIMARY) {
+    powner->primary_capital_id = pcity->id;
+  } else if (powner->primary_capital_id == pcity->id) {
+    powner->primary_capital_id = 0;
+  }
   pcity->client.city_image = packet->city_image;
   pcity->steal = packet->steal;
 
@@ -1148,6 +1154,12 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
   }
   pcity->client.walls = packet->walls;
   pcity->style = packet->style;
+  pcity->capital = packet->capital;
+  if (packet->capital == CAPITAL_PRIMARY) {
+    powner->primary_capital_id = pcity->id;
+  } else if (powner->primary_capital_id == pcity->id) {
+    powner->primary_capital_id = 0;
+  }
   pcity->client.city_image = packet->city_image;
 
   pcity->client.happy = packet->happy;
@@ -3400,8 +3412,6 @@ void handle_ruleset_unit(const struct packet_ruleset_unit *p)
     u->upkeep[o] = p->upkeep[o];
   } output_type_iterate_end;
   u->paratroopers_range = p->paratroopers_range;
-  u->paratroopers_mr_req = p->paratroopers_mr_req;
-  u->paratroopers_mr_sub = p->paratroopers_mr_sub;
   u->bombard_rate       = p->bombard_rate;
   u->city_size          = p->city_size;
   u->city_slots         = p->city_slots;
@@ -3810,6 +3820,8 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
 
   pterrain->base_time = p->base_time;
   pterrain->road_time = p->road_time;
+  pterrain->cultivate_time = p->cultivate_time;
+  pterrain->plant_time = p->plant_time;
   pterrain->irrigation_result = terrain_by_number(p->irrigation_result);
   pterrain->irrigation_food_incr = p->irrigation_food_incr;
   pterrain->irrigation_time = p->irrigation_time;

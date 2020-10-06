@@ -511,14 +511,14 @@ enum server_events server_sniff_all_input(void)
 
       if (storage_dir != NULL) {
         int fcdl = strlen(storage_dir) + 1;
-        char *fc_dir = fc_malloc(fcdl);
+        char *fc_dir = static_cast<char*>(fc_malloc(fcdl));
 
         if (fc_dir != NULL) {
           fc_snprintf(fc_dir, fcdl, "%s", storage_dir);
 
           if (make_dir(fc_dir)) {
             history_file
-              = fc_malloc(strlen(fc_dir) + 1 + strlen(HISTORY_FILENAME) + 1);
+              = static_cast<char*>(fc_malloc(strlen(fc_dir) + 1 + strlen(HISTORY_FILENAME) + 1));
             if (history_file) {
               strcpy(history_file, fc_dir);
               strcat(history_file, "/");
@@ -1131,7 +1131,7 @@ int server_open_socket(void)
   on = 1;
 
   /* Loop to create sockets, bind, listen. */
-  listen_socks = fc_calloc(name_count, sizeof(listen_socks[0]));
+  listen_socks = static_cast<int*>(fc_calloc(name_count, sizeof(listen_socks[0])));
   listen_count = 0;
 
   fc_sockaddr_list_iterate(list, paddr) {

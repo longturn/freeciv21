@@ -104,6 +104,7 @@ if(UNIX)
   require_function_exists(opendir FREECIV_HAVE_OPENDIR)
   require_function_exists(getaddrinfo HAVE_GETADDRINFO)
   require_function_exists(getnameinfo HAVE_GETNAMEINFO)
+  require_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
 
   set(CMAKE_EXTRA_INCLUDE_FILES "netinet/in.h")
   check_type_size(ip_mreqn SIZEOF_IP_MREQN)
@@ -114,6 +115,8 @@ endif()
 if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)
 endif()
+
+
 
 # Networking library
 # TODO Windows support
@@ -133,7 +136,7 @@ if(HAVE_SYS_SOCKET_H)
   require_include_file("netinet/in.h" FREECIV_HAVE_NETINET_IN_H)
   require_include_file("sys/select.h" HAVE_SYS_SELECT_H)
   require_include_file("sys/select.h" FREECIV_HAVE_SYS_SELECT_H)
-
+  
   # IPv6 functions of POSIX-2001, not strictly required
   check_function_exists(inet_pton HAVE_INET_PTON)
   check_function_exists(inet_ntop HAVE_INET_NTOP)

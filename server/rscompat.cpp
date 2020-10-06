@@ -120,6 +120,142 @@ int rscompat_check_capabilities(struct section_file *file,
   return format;
 }
 
+
+/**********************************************************************//**
+  Add all hard obligatory requirements to an action enabler or disable it.
+  @param ae the action enabler to add requirements to.
+  @return TRUE iff adding obligatory hard reqs for the enabler's action
+               needs to restart - say if an enabler was added or removed.
+**************************************************************************/
+static bool
+rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
+{
+  struct req_vec_problem *problem;
+
+  struct action *paction = action_by_number(ae->action);
+  /* Some changes requires starting to process an action's enablers from
+   * the beginning. */
+  bool needs_restart = FALSE;
+
+  while ((problem = action_enabler_suggest_repair(ae)) != NULL) {
+    /* A hard obligatory requirement is missing. */
+
+    int i;
+
+    if (problem->num_suggested_solutions == 0) {
+      /* Didn't get any suggestions about how to solve this. */
+
+      log_error("Dropping an action enabler for %s."
+                " Don't know how to fix: %s.",
+                action_rule_name(paction), problem->description);
+      ae->disabled = TRUE;
+
+      req_vec_problem_free(problem);
+      return TRUE;
+    }
+
+    /* Sanity check. */
+    fc_assert_ret_val(problem->num_suggested_solutions > 0,
+                      needs_restart);
+
+    /* Only append is supported for upgrade */
+    for (i = 0; i < problem->num_suggested_solutions; i++) {
+      if (problem->suggested_solutions[i].operation != RVCO_APPEND) {
+        /* A problem that isn't caused by missing obligatory hard
+         * requirements has been detected. Probably an old requirement that
+         * contradicted a hard requirement that wasn't documented by making
+         * it obligatory. In that case the enabler was never in use. The
+         * action it self would have blocked it. */
+
+        log_error("While adding hard obligatory reqs to action enabler"
+                  " for %s: %s Dropping it.",
+                  action_rule_name(paction), problem->description);
+        ae->disabled = TRUE;
+        req_vec_problem_free(problem);
+        return TRUE;
+      }
+    }
+
+    for (i = 0; i < problem->num_suggested_solutions; i++) {
+      struct action_enabler *new_enabler;
+
+      /* There can be more than one suggestion to apply. In that case both
+       * are applied to their own copy. The original should therefore be
+       * kept for now. */
+      new_enabler = action_enabler_copy(ae);
+
+      /* Apply the solution. */
+      if (!req_vec_change_apply(&problem->suggested_solutions[i],
+                                action_enabler_vector_by_number,
+                                new_enabler)) {
+        log_error("Failed to apply solution %s for %s to action enabler"
+                  " for %s. Dropping it.",
+                  req_vec_change_translation(
+                    &problem->suggested_solutions[i],
+                    action_enabler_vector_by_number_name),
+                  problem->description, action_rule_name(paction));
+        new_enabler->disabled = TRUE;
+        req_vec_problem_free(problem);
+        return TRUE;
+      }
+
+      if (problem->num_suggested_solutions - 1 == i) {
+        /* The last modification is to the original enabler. */
+        ae->action = new_enabler->action;
+        ae->disabled = new_enabler->disabled;
+        requirement_vector_copy(&ae->actor_reqs,
+                                &new_enabler->actor_reqs);
+        requirement_vector_copy(&ae->target_reqs,
+                                &new_enabler->target_reqs);
+        FC_FREE(new_enabler);
+      } else {
+        /* Register the new enabler */
+        action_enabler_add(new_enabler);
+
+        /* This changes the number of action enablers. */
+        needs_restart = TRUE;
+      }
+    }
+
+    req_vec_problem_free(problem);
+
+    if (needs_restart) {
+      /* May need to apply future upgrades to the copies too. */
+      return TRUE;
+    }
+  }
+
+  return needs_restart;
+}
+
+/**********************************************************************//**
+  Update existing action enablers for new hard obligatory requirements.
+  Disable those that can't be upgraded.
+**************************************************************************/
+void rscompat_enablers_add_obligatory_hard_reqs(void)
+{
+  action_iterate(act_id) {
+    bool restart_enablers_for_action;
+    do {
+      restart_enablers_for_action = FALSE;
+      action_enabler_list_iterate(action_enablers_for_action(act_id), ae) {
+        if (ae->disabled) {
+          /* Ignore disabled enablers */
+          continue;
+        }
+        if (rscompat_enabler_add_obligatory_hard_reqs(ae)) {
+          /* Something important, probably the number of action enablers
+           * for this action, changed. Start over again on this action's
+           * enablers. */
+          restart_enablers_for_action = TRUE;
+          break;
+        }
+      } action_enabler_list_iterate_end;
+    } while (restart_enablers_for_action == TRUE);
+  } action_iterate_end;
+}
+
+
 /**********************************************************************//**
   Find and return the first unused unit type user flag. If all unit type
   user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
@@ -130,7 +266,7 @@ static int first_free_unit_type_user_flag(void)
 
   /* Find the first unused user defined unit type flag. */
   for (flag = 0; flag < MAX_NUM_USER_UNIT_FLAGS; flag++) {
-    if (unit_type_flag_id_name_cb(flag + UTYF_USER_FLAG_1) == NULL) {
+    if (unit_type_flag_id_name_cb(static_cast<unit_type_flag_id>(flag + UTYF_USER_FLAG_1)) == NULL) {
       return flag;
     }
   }
@@ -149,7 +285,7 @@ static int first_free_unit_class_user_flag(void)
 
   /* Find the first unused user defined unit class flag. */
   for (flag = 0; flag < MAX_NUM_USER_UCLASS_FLAGS; flag++) {
-    if (unit_class_flag_id_name_cb(flag + UCF_USER_FLAG_1) == NULL) {
+    if (unit_class_flag_id_name_cb(static_cast<unit_class_flag_id>(flag + UCF_USER_FLAG_1)) == NULL) {
       return flag;
     }
   }
@@ -168,7 +304,7 @@ static int first_free_terrain_user_flag(void)
 
   /* Find the first unused user defined terrain flag. */
   for (flag = 0; flag < MAX_NUM_USER_TER_FLAGS; flag++) {
-    if (terrain_flag_id_name_cb(flag + TER_USER_1) == NULL) {
+    if (terrain_flag_id_name_cb(static_cast<terrain_flag_id>(flag + TER_USER_1)) == NULL) {
       return flag;
     }
   }
@@ -246,7 +382,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_flags_31[i].name);
         return FALSE;
       }
-      set_user_unit_type_flag_name(first_free + i,
+      set_user_unit_type_flag_name(static_cast<unit_type_flag_id>(first_free + i),
                                    new_flags_31[i].name,
                                    new_flags_31[i].helptxt);
     }
@@ -273,7 +409,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_class_flags_31[i].name);
         return FALSE;
       }
-      set_user_unit_class_flag_name(first_free + i,
+      set_user_unit_class_flag_name(static_cast<unit_class_flag_id>(first_free + i),
                                     new_class_flags_31[i].name,
                                     new_class_flags_31[i].helptxt);
     }
@@ -317,7 +453,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_flags_31[i].name);
         return FALSE;
       }
-      set_user_terrain_flag_name(first_free + i,
+      set_user_terrain_flag_name(static_cast<terrain_flag_id>(first_free + i),
                                  new_flags_31[i].name,
                                  new_flags_31[i].helptxt);
     }
@@ -576,6 +712,36 @@ void rscompat_postprocess(struct rscompat_info *info)
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
                                             TRUE, "Expel Unit"));
 
+    /* Post successful action move fragment loss for targets of
+     * "Paradrop Unit" has moved to the Action_Success_Actor_Move_Cost
+     * effect. */
+    unit_type_iterate(putype) {
+      if (!utype_can_do_action(putype, ACTION_PARADROP)) {
+        /* Not relevant */
+        continue;
+      }
+
+      if (putype->rscompat_cache.paratroopers_mr_sub == 0) {
+        /* Not relevant */
+        continue;
+      }
+
+      /* Subtract the value via the Action_Success_Actor_Move_Cost effect */
+      peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
+                           putype->rscompat_cache.paratroopers_mr_sub,
+                           NULL);
+
+      /* The reduction only applies to "Paradrop Unit". */
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, TRUE, FALSE,
+                                     "Paradrop Unit"));
+
+      /* The reduction only applies to this unit type. */
+      effect_req_append(peffect,
+                        req_from_str("UnitType", "Local", FALSE, TRUE, FALSE,
+                                     utype_rule_name(putype)));
+    } unit_type_iterate_end;
+
     /* Fortifying rules have been unhardcoded to effects. */
     peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, NULL);
 
@@ -623,7 +789,7 @@ void rscompat_postprocess(struct rscompat_info *info)
         int flag;
 
         flag = unit_type_flag_id_by_name("Infra", fc_strcasecmp);
-        fc_assert(unit_type_flag_id_is_valid(flag));
+        fc_assert(unit_type_flag_id_is_valid(static_cast<unit_type_flag_id>(flag)));
         BV_SET(ptype->flags, flag);
       }
     } unit_type_iterate_end;
@@ -716,12 +882,8 @@ void rscompat_postprocess(struct rscompat_info *info)
     action_enabler_add(enabler);
 
     /* Update action enablers. */
+    rscompat_enablers_add_obligatory_hard_reqs();
     action_enablers_iterate(ae) {
-      if (action_enabler_obligatory_reqs_missing(ae)) {
-        /* Add previously implicit obligatory hard requirement(s). */
-        action_enabler_obligatory_reqs_add(ae);
-      }
-
       /* "Attack" is split in a unit consuming and a non unit consuming
        * version. */
       if (ae->action == ACTION_ATTACK) {
@@ -828,12 +990,89 @@ void rscompat_postprocess(struct rscompat_info *info)
       }
     } action_enablers_iterate_end;
 
+    /* The paratroopers_mr_req field has moved to the enabler for the
+     * "Paradrop Unit" action. */
+    {
+      bool generic_in_use = FALSE;
+      struct action_enabler_list *ae_custom = action_enabler_list_new();
+
+      action_enabler_list_iterate(
+            action_enablers_for_action(ACTION_PARADROP), ae) {
+        unit_type_iterate(putype) {        
+          if (!requirement_fulfilled_by_unit_type(putype,
+                                                  &(ae->actor_reqs))) {
+            /* This action enabler isn't for this unit type at all. */
+            continue;
+          }
+
+          requirement_vector_iterate(&ae->actor_reqs, preq) {
+            if (preq->source.kind == VUT_MINMOVES) {
+              if (!preq->present) {
+                /* A max move fragments req has been found. Is it too
+                 * large? */
+                if (preq->source.value.minmoves
+                    < putype->rscompat_cache.paratroopers_mr_req) {
+                  /* Avoid self contradiciton */
+                  continue;
+                }
+              }
+            }
+          } requirement_vector_iterate_end;
+
+          if (putype->rscompat_cache.paratroopers_mr_req > 0) {
+            /* This unit type needs a custom enabler */
+
+            enabler = action_enabler_copy(ae);
+
+            /* This enabler is specific to the unit type */
+            e_req = req_from_values(VUT_UTYPE,
+                                    REQ_RANGE_LOCAL,
+                                    FALSE, TRUE, FALSE,
+                                    utype_number(putype));
+            requirement_vector_append(&enabler->actor_reqs, e_req);
+
+            /* Add the minimum amout of move fragments */
+            e_req = req_from_values(VUT_MINMOVES,
+                                    REQ_RANGE_LOCAL,
+                                    FALSE, TRUE, FALSE,
+                                    putype->rscompat_cache
+                                    .paratroopers_mr_req);
+            requirement_vector_append(&enabler->actor_reqs, e_req);
+
+            action_enabler_list_append(ae_custom, enabler);
+
+            log_debug("paratroopers_mr_req upgrade: %s uses custom enabler",
+                      utype_rule_name(putype));
+          } else {
+            /* The old one works just fine */
+
+            generic_in_use = TRUE;
+
+            log_debug("paratroopers_mr_req upgrade: %s uses generic enabler",
+                      utype_rule_name(putype));
+          }
+        } unit_type_iterate_end;
+
+        if (!generic_in_use) {
+          /* The generic enabler isn't in use any more */
+          action_enabler_remove(ae);
+        }
+      } action_enabler_list_iterate_end;
+
+      action_enabler_list_iterate(ae_custom, ae) {
+        /* Append the custom enablers. */
+        action_enabler_add(ae);
+      } action_enabler_list_iterate_end;
+
+      action_enabler_list_destroy(ae_custom);
+    }
+
     /* Enable all clause types */
     {
       int i;
 
       for (i = 0; i < CLAUSE_COUNT; i++) {
-        struct clause_info *cinfo = clause_info_get(i);
+        struct clause_info *cinfo = clause_info_get(static_cast<clause_type>(i));
 
         cinfo->enabled = TRUE;
       }

@@ -87,6 +87,9 @@ struct ane_expl {
     /* The player to advice declaring war on. */
     struct player *no_war_with;
 
+    /* The player to advice breaking peace with. */
+    struct player *peace_with;
+
     /* The nation that can't be involved. */
     struct nation_type *no_act_nation;
 
@@ -113,7 +116,7 @@ static void illegal_action(struct player *pplayer,
                            struct unit *actor,
                            action_id stopped_action,
                            struct player *tgt_player,
-                           const struct tile *target_tile,
+                           struct tile *target_tile,
                            const struct city *target_city,
                            const struct unit *target_unit,
                            bool disturb_player,
@@ -406,8 +409,9 @@ static bool do_expel_unit(struct player *pplayer,
 
   target_tile = unit_tile(target);
 
-  /* Expel the target unit to his owner's capital. */
-  pcity = player_capital(uplayer);
+  /* Expel the target unit to his owner's primary capital. */
+  /* TODO: Could be also nearest secondary capital */
+  pcity = player_primary_capital(uplayer);
 
   /* N.B: unit_link() always returns the same pointer. */
   sz_strlcpy(target_link, unit_link(target));
@@ -659,82 +663,6 @@ static bool do_unit_embark(struct player *act_player,
 }
 
 /**********************************************************************//**
-  Returns TRUE iff the ruleset allows acting against a tile claimed by
-  someone the actor has the specified diplomatic relation to.
-**************************************************************************/
-static bool rs_allows_tgt_tile_owner(const struct action *paction,
-                                     int relation,
-                                     const struct unit_type *punit_type)
-{
-  struct requirement tile_is_claimed;
-  struct requirement tile_is_foreign;
-
-  fc_assert_ret_val(action_get_target_kind(paction) == ATK_TILE, FALSE);
-
-  /* Tile is claimed as a requirement. */
-  tile_is_claimed.range = REQ_RANGE_LOCAL;
-  tile_is_claimed.survives = FALSE;
-  tile_is_claimed.source.kind = VUT_CITYTILE;
-  tile_is_claimed.present = TRUE;
-  tile_is_claimed.source.value.citytile = CITYT_CLAIMED;
-
-  /* Tile is foreign as a requirement. */
-  tile_is_foreign.range = REQ_RANGE_LOCAL;
-  tile_is_foreign.survives = FALSE;
-  tile_is_foreign.source.kind = VUT_DIPLREL;
-  tile_is_foreign.present = TRUE;
-  tile_is_foreign.source.value.diplrel = relation;
-
-  action_enabler_list_iterate(
-        action_enablers_for_action(paction->id), enabler) {
-    if (!requirement_fulfilled_by_unit_type(punit_type,
-                                            &(enabler->actor_reqs))) {
-      /* This action enabler isn't for this unit type at all. */
-      continue;
-    }
-
-    if (!(does_req_contradicts_reqs(&tile_is_claimed,
-                                    &(enabler->target_reqs))
-          || does_req_contradicts_reqs(&tile_is_foreign,
-                                       &(enabler->actor_reqs)))) {
-      /* This ruleset permits doing the action to foreign tiles. */
-      return TRUE;
-    }
-  } action_enabler_list_iterate_end;
-
-  /* This ruleset forbids doing the action to foreign tiles. */
-  return FALSE;
-}
-
-/**********************************************************************//**
-  Returns TRUE iff the fact that the target tile is tile claimed by
-  someone the player isn't at war with blocks the specified action.
-**************************************************************************/
-static bool war_makes_legal_tile_tgt(const struct action *paction,
-                                     const struct player *act_player,
-                                     const struct unit *act_unit,
-                                     const struct tile *tgt_tile)
-{
-  fc_assert_ret_val(act_unit, FALSE);
-
-  if (tgt_tile == NULL || tile_owner(tgt_tile) == NULL) {
-    /* No one to declare war on */
-    return FALSE;
-  }
-
-  if (rs_allows_tgt_tile_owner(paction,
-                               player_diplstate_get(act_player,
-                                                    tile_owner(tgt_tile))
-                               ->type,
-                               unit_type_get(act_unit))) {
-    /* The current diplstate isn't a problem. */
-    return FALSE;
-  }
-
-  return rs_allows_tgt_tile_owner(paction, DS_WAR, unit_type_get(act_unit));
-}
-
-/**********************************************************************//**
   Returns TRUE iff the player is able to change his diplomatic
   relationship to the other player to war.
 
@@ -769,8 +697,11 @@ static struct player *need_war_player_hlp(const struct unit *actor,
                                           const struct city *target_city,
                                           const struct unit *target_unit)
 {
+  struct player *target_player = NULL;
   struct player *actor_player = unit_owner(actor);
   struct action *paction = action_by_number(act);
+
+  fc_assert_ret_val(paction != NULL, NULL);
 
   if (action_id_get_actor_kind(act) != AAK_UNIT) {
     /* No unit can ever do this action so it isn't relevant. */
@@ -787,25 +718,21 @@ static struct player *need_war_player_hlp(const struct unit *actor,
   switch (paction->result) {
   case ACTRES_BOMBARD:
   case ACTRES_ATTACK:
-    /* Target is tile or unit stack but a city (or unit) can block it. */
+    /* Target is a unit stack but a city can block it. */
+    fc_assert_action(action_get_target_kind(paction) == ATK_UNITS, break);
     if (target_tile) {
       struct city *tcity;
-      struct unit *tunit;
 
       if ((tcity = tile_city(target_tile))
           && rel_may_become_war(unit_owner(actor), city_owner(tcity))) {
         return city_owner(tcity);
-      }
-
-      if ((tunit = is_non_attack_unit_tile(target_tile, unit_owner(actor)))
-          && rel_may_become_war(unit_owner(actor), unit_owner(tunit))) {
-        return unit_owner(tunit);
       }
     }
     break;
 
   case ACTRES_PARADROP:
     /* Target is a tile but a city or unit can block it. */
+    fc_assert_action(action_get_target_kind(paction) == ATK_TILE, break);
     if (target_tile
         && map_is_known_and_seen(target_tile, actor_player, V_MAIN)) {
       /* Seen tile unit savers */
@@ -883,40 +810,21 @@ static struct player *need_war_player_hlp(const struct unit *actor,
   }
 
   /* Look for war requirements from the action enablers. */
-  if (action_id_get_target_kind(act) == ATK_TILE) {
-    if (!war_makes_legal_tile_tgt(paction, actor_player, actor,
-                                  target_tile)) {
-      /* A lack of war isn't the problem. */
-      return NULL;
-    }
-  } else {
-    if (can_utype_do_act_if_tgt_diplrel(unit_type_get(actor),
-                                        act, DS_WAR, FALSE)) {
-      /* The unit can do the action even if there isn't war. */
-      return NULL;
-    }
-  }
-
-  switch (action_id_get_target_kind(act)) {
+  switch (action_get_target_kind(paction)) {
   case ATK_CITY:
     if (target_city == NULL) {
       /* No target city. */
       return NULL;
     }
 
-    if (rel_may_become_war(unit_owner(actor), city_owner(target_city))) {
-      return city_owner(target_city);
-    }
+    target_player = city_owner(target_city);
     break;
   case ATK_UNIT:
     if (target_unit == NULL) {
       /* No target unit. */
       return NULL;
     }
-
-    if (rel_may_become_war(unit_owner(actor), unit_owner(target_unit))) {
-      return unit_owner(target_unit);
-    }
+    target_player = unit_owner(target_unit);
     break;
   case ATK_UNITS:
     if (target_tile == NULL) {
@@ -925,8 +833,9 @@ static struct player *need_war_player_hlp(const struct unit *actor,
     }
 
     unit_list_iterate(target_tile->units, tunit) {
-      if (rel_may_become_war(unit_owner(actor), unit_owner(tunit))) {
-        return unit_owner(tunit);
+      if (rel_may_become_war(actor_player, unit_owner(tunit))) {
+        target_player = unit_owner(tunit);
+        break;
       }
     } unit_list_iterate_end;
     break;
@@ -935,10 +844,7 @@ static struct player *need_war_player_hlp(const struct unit *actor,
       /* No target tile. */
       return NULL;
     }
-
-    if (rel_may_become_war(unit_owner(actor), tile_owner(target_tile))) {
-      return tile_owner(target_tile);
-    }
+    target_player = tile_owner(target_tile);
     break;
   case ATK_SELF:
     /* Can't declare war on itself. */
@@ -950,8 +856,37 @@ static struct player *need_war_player_hlp(const struct unit *actor,
     return NULL;
   }
 
-  /* Declaring war won't enable the specified action. */
-  return NULL;
+  if (target_player == NULL) {
+    /* Declaring war won't enable the specified action. */
+    return NULL;
+  }
+
+  if (!rel_may_become_war(actor_player, target_player)) {
+    /* Can't declare war. */
+    return NULL;
+  }
+
+  if (can_utype_do_act_if_tgt_diplrel(unit_type_get(actor),
+                                      act,
+                                      player_diplstate_get(actor_player,
+                                                           target_player)
+                                      ->type,
+                                      TRUE)) {
+    /* The current diplrel isn't a problem. */
+    return NULL;
+  }
+  if (!can_utype_do_act_if_tgt_diplrel(unit_type_get(actor),
+                                       act, DS_WAR, TRUE)) {
+    /* War won't make this action legal. */
+    return NULL;
+  }
+  /* No check if other, non war, diplomatic states also could make the
+   * action legal. This is need_war_player() so war is always the answer.
+   * If you disagree and decide to add support please check that
+   * webperimental's "can't found a city on a tile belonging to a non enemy"
+   * rule still is detected. */
+
+  return target_player;
 }
 
 /**********************************************************************//**
@@ -1091,7 +1026,7 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
   const struct player *act_player = unit_owner(punit);
   const struct unit_type *act_utype = unit_type_get(punit);
   struct player *tgt_player = NULL;
-  struct ane_expl *explnat = fc_malloc(sizeof(struct ane_expl));
+  struct ane_expl *explnat = static_cast<ane_expl*>(fc_malloc(sizeof(struct ane_expl)));
   bool can_exist = can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit));
   bool on_native = is_native_tile(unit_type_get(punit), unit_tile(punit));
   int action_custom;
@@ -1307,6 +1242,19 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
              && (action_has_result_safe(paction, ACTRES_TRADE_ROUTE)
                  || action_has_result_safe(paction, ACTRES_MARKETPLACE))) {
     explnat->kind = ANEK_ACTOR_HAS_NO_HOME_CITY;
+  } else if (act_player && tgt_player
+             && (player_diplstate_get(act_player, tgt_player)->type
+                 == DS_PEACE)
+             && can_utype_do_act_if_tgt_diplrel(unit_type_get(punit),
+                                                act_id,
+                                                DS_PEACE,
+                                                FALSE)
+             && !can_utype_do_act_if_tgt_diplrel(unit_type_get(punit),
+                                                 act_id,
+                                                 DS_PEACE,
+                                                 TRUE)) {
+    explnat->kind = ANEK_PEACE;
+    explnat->peace_with = tgt_player;
   } else if ((must_war_player = need_war_player(punit,
                                                 act_id,
                                                 target_tile,
@@ -1642,6 +1590,16 @@ static void explain_why_no_action_enabled(struct unit *punit,
 #endif /* FREECIV_WEB */
                     "."),
                   player_name(explnat->no_war_with));
+    break;
+  case ANEK_PEACE:
+    notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
+                  _("You must break peace with %s first.  Try using"
+                    " the Nations report"
+#ifndef FREECIV_WEB
+                    " (F3)"
+#endif /* FREECIV_WEB */
+                    "."),
+                  player_name(explnat->peace_with));
     break;
   case ANEK_DOMESTIC:
     notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
@@ -2050,8 +2008,8 @@ void handle_unit_get_actions(struct connection *pc,
   Try to explain to the player why an action is illegal.
 
   Event type should be E_BAD_COMMAND if the player should know that the
-  action is illegal or E_UNIT_ILLEGAL_ACTION if the player potentially new
-  information is being revealed.
+  action is illegal or E_UNIT_ILLEGAL_ACTION if new information potentially
+  is being revealed to the player.
 **************************************************************************/
 void illegal_action_msg(struct player *pplayer,
                         const enum event_type event,
@@ -2228,6 +2186,24 @@ void illegal_action_msg(struct player *pplayer,
                   unit_name_translation(actor),
                   action_id_name_translation(stopped_action),
                   player_name(explnat->no_war_with));
+    break;
+  case ANEK_PEACE:
+    notify_player(pplayer, unit_tile(actor),
+                  event, ftc_server,
+                  /* TRANS: action name.
+                   * "Your Spy can't do Industrial Sabotage while you
+                   * are at peace with Prester John. Try using the
+                   * Nations report (F3)." */
+                  _("Your %s can't do %s while you"
+                    " are at peace with %s. Try using"
+                    " the Nations report"
+#ifndef FREECIV_WEB
+                    " (F3)"
+#endif /* FREECIV_WEB */
+                    "."),
+                  unit_name_translation(actor),
+                  action_id_name_translation(stopped_action),
+                  player_name(explnat->peace_with));
     break;
   case ANEK_DOMESTIC:
     notify_player(pplayer, unit_tile(actor),
@@ -2476,70 +2452,199 @@ void illegal_action_msg(struct player *pplayer,
 }
 
 /**********************************************************************//**
+  Punish a player for trying to perform an action that turned out to be
+  illegal. The punishment, if any at all, is specified by the ruleset.
+  @param pplayer the player to punish.
+  @param information_revealed if finding out that the action is illegal
+                              reveals new information.
+  @param act_unit the actor unit performing the action.
+  @param stopped_action the illegal action.
+  @param tgt_player the owner of the intended target of the action.
+  @param tgt_tile the tile of the target of the action.
+  @param requester who ordered the action performed?
+  @return TRUE iff player was punished for trying to do the illegal action.
+**************************************************************************/
+static bool illegal_action_pay_price(struct player *pplayer,
+                                     bool information_revealed,
+                                     struct unit *act_unit,
+                                     struct action *stopped_action,
+                                     struct player *tgt_player,
+                                     struct tile *tgt_tile,
+                                     const enum action_requester requester)
+{
+  int punishment_mp;
+  int punishment_hp;
+
+  /* Don't punish the player for something the game did. Don't tell the
+   * player that the rules required the game to try to do something
+   * illegal. */
+  fc_assert_ret_val_msg((requester == ACT_REQ_PLAYER
+                         || requester == ACT_REQ_SS_AGENT),
+                        FALSE,
+                        "The player wasn't responsible for this.");
+
+  if (!information_revealed) {
+    /* The player already had enough information to determine that this
+     * action is illegal. Don't punish a client error or an accident. */
+    return FALSE;
+  }
+
+  /* The mistake may have a cost. */
+
+  /* HP cost */
+  punishment_hp = get_target_bonus_effects(NULL,
+                                           unit_owner(act_unit),
+                                           tgt_player,
+                                           NULL,
+                                           NULL,
+                                           NULL,
+                                           act_unit,
+                                           unit_type_get(act_unit),
+                                           NULL,
+                                           NULL,
+                                           stopped_action,
+                                           EFT_ILLEGAL_ACTION_HP_COST);
+
+  /* Stay in range */
+  punishment_hp = MAX(0, punishment_hp);
+
+  /* Punish the unit's hit points. */
+  act_unit->hp = MAX(0, act_unit->hp - punishment_hp);
+
+  if (punishment_hp != 0) {
+    if (utype_is_moved_to_tgt_by_action(stopped_action,
+                                        unit_type_get(act_unit))) {
+      /* The consolation prize is some information about the potentially
+       * distant target tile and maybe some contacts. */
+      map_show_circle(pplayer, tgt_tile,
+                      unit_type_get(act_unit)->vision_radius_sq);
+      maybe_make_contact(tgt_tile, pplayer);
+    }
+
+    if (act_unit->hp > 0) {
+      /* The actor unit survived */
+
+      /* The player probably wants to be disturbed if his unit was punished
+       * with the loss of hit points. */
+      notify_player(pplayer, unit_tile(act_unit),
+                    E_UNIT_ILLEGAL_ACTION, ftc_server,
+                    /* TRANS: Spy ... 5 ... Drop Paratrooper */
+                    _("Your %s lost %d hit points while attempting to"
+                      " do %s."),
+                    unit_name_translation(act_unit), punishment_hp,
+                    action_name_translation(stopped_action));
+      send_unit_info(NULL, act_unit);
+    } else {
+      /* The unit didn't survive */
+
+      /* The player probably wants to be disturbed if his unit was punished
+       * with death. */
+      notify_player(pplayer, unit_tile(act_unit),
+                    E_UNIT_ILLEGAL_ACTION, ftc_server,
+                    /* TRANS: Spy ... Drop Paratrooper */
+                    _("Your %s was killed while attempting to do %s."),
+                    unit_name_translation(act_unit),
+                    action_name_translation(stopped_action));
+
+      wipe_unit(act_unit, ULR_KILLED, NULL);
+      act_unit = NULL;
+
+      return TRUE;
+    }
+  }
+
+  /* MP cost */
+  punishment_mp = get_target_bonus_effects(NULL,
+                                           unit_owner(act_unit),
+                                           tgt_player,
+                                           NULL,
+                                           NULL,
+                                           NULL,
+                                           act_unit,
+                                           unit_type_get(act_unit),
+                                           NULL,
+                                           NULL,
+                                           stopped_action,
+                                           EFT_ILLEGAL_ACTION_MOVE_COST);
+
+  /* Stay in range */
+  punishment_mp = MAX(0, punishment_mp);
+
+  /* Punish the unit's move fragments. */
+  act_unit->moves_left = MAX(0, act_unit->moves_left - punishment_mp);
+  send_unit_info(NULL, act_unit);
+
+  if (punishment_mp != 0) {
+    /* The player probably wants to be disturbed if his unit was punished
+     * with the loss of movement points. */
+    notify_player(pplayer, unit_tile(act_unit),
+                  E_UNIT_ILLEGAL_ACTION, ftc_server,
+                  /* TRANS: Spy ... movement point text that may include
+                   * fractions. */
+                  _("Your %s lost %s MP for attempting an illegal action."),
+                  unit_name_translation(act_unit),
+                  move_points_text(punishment_mp, TRUE));
+  }
+
+  return punishment_mp != 0 || punishment_hp != 0;
+}
+
+/**********************************************************************//**
   Tell the client that the action it requested is illegal. This can be
   caused by the player (and therefore the client) not knowing that some
   condition of an action no longer is true.
 **************************************************************************/
 static void illegal_action(struct player *pplayer,
                            struct unit *actor,
-                           action_id stopped_action,
+                           action_id stopped_action_id,
                            struct player *tgt_player,
-                           const struct tile *target_tile,
+                           struct tile *target_tile,
                            const struct city *target_city,
                            const struct unit *target_unit,
                            bool disturb_player,
                            const enum action_requester requester)
 {
-  int punishment_mp;
+  bool information_revealed;
+  bool was_punished;
+
+  struct action *stopped_action = action_by_number(stopped_action_id);
 
   /* Why didn't the game check before trying something illegal? Did a good
    * reason to not call is_action_enabled_unit_on...() appear? The game is
    * omniscient... */
   fc_assert(requester != ACT_REQ_RULES);
 
-  /* Don't punish the player for something the game did. Don't tell the
-   * player that the rules required the game to try to do something
-   * illegal. */
-  fc_assert_ret_msg((requester == ACT_REQ_PLAYER
-                     || requester == ACT_REQ_SS_AGENT),
-                    "The player wasn't responsible for this.");
 
-  /* The mistake may have a cost. */
-  punishment_mp = get_target_bonus_effects(NULL,
-                                           unit_owner(actor),
-                                           tgt_player,
-                                           NULL,
-                                           NULL,
-                                           NULL,
-                                           actor,
-                                           unit_type_get(actor),
-                                           NULL,
-                                           NULL,
-                                           action_by_number(stopped_action),
-                                           EFT_ILLEGAL_ACTION_MOVE_COST);
+  information_revealed = action_prob_possible(action_prob_unit_vs_tgt(
+                                                 stopped_action,
+                                                 actor,
+                                                 target_city, target_unit,
+                                                 target_tile, NULL));
 
-  actor->moves_left = MAX(0, actor->moves_left - punishment_mp);
-
-  send_unit_info(NULL, actor);
-
-  if (punishment_mp) {
-    /* The player probably wants to be disturbed if his unit was punished
-     * with the loss of movement points. */
-    notify_player(pplayer, unit_tile(actor),
-                  E_UNIT_ILLEGAL_ACTION, ftc_server,
-                  /* TRANS: Spy ... movement point text that may include
-                   * fractions. */
-                  _("Your %s lost %s MP for attempting an illegal action."),
-                  unit_name_translation(actor),
-                  move_points_text(punishment_mp, TRUE));
+  if (disturb_player) {
+    /* This is a foreground request. */
+    illegal_action_msg(pplayer, (information_revealed
+                                 ? E_UNIT_ILLEGAL_ACTION : E_BAD_COMMAND),
+                       actor, stopped_action_id,
+                       target_tile, target_city, target_unit);
   }
 
-  if (disturb_player || punishment_mp) {
-    /* This is a foreground request or the actor unit was punished with
-     * the loss of movement points. */
-    illegal_action_msg(pplayer, E_UNIT_ILLEGAL_ACTION,
-                       actor, stopped_action,
-                       target_tile, target_city, target_unit);
+  was_punished = illegal_action_pay_price(pplayer, information_revealed,
+                                          actor, stopped_action,
+                                          tgt_player, target_tile,
+                                          requester);
+
+  if (!disturb_player && was_punished) {
+    /* FIXME: Temporary work around to prevent wrong information and/or
+     * crashes. See hrm Bug #879880 */
+    /* TODO: Get the explanation before the punishment and show it here.
+     * See hrm Bug #879881 */
+    notify_player(pplayer, unit_tile(actor),
+                  (information_revealed
+                   ? E_UNIT_ILLEGAL_ACTION : E_BAD_COMMAND), ftc_server,
+                  _("No explanation why you couldn't do %s. This is a bug."
+                    " Sorry about that. -- Sveinung"),
+                  action_id_name_translation(stopped_action_id));
   }
 }
 
@@ -2573,10 +2678,11 @@ void handle_unit_action_query(struct connection *pc,
 {
   struct player *pplayer = pc->playing;
   struct unit *pactor = player_unit_by_number(pplayer, actor_id);
+  struct action *paction = action_by_number(action_type);
   struct unit *punit = game_unit_by_number(target_id);
   struct city *pcity = game_city_by_number(target_id);
 
-  if (!action_id_exists(action_type)) {
+  if (NULL == paction) {
     /* Non existing action */
     log_error("handle_unit_action_query() the action %d doesn't exist.",
               action_type);
@@ -2593,8 +2699,8 @@ void handle_unit_action_query(struct connection *pc,
     return;
   }
 
-  switch ((enum gen_action)action_type) {
-  case ACTION_SPY_BRIBE_UNIT:
+  switch (paction->result) {
+  case ACTRES_SPY_BRIBE_UNIT:
     if (punit
         && is_action_enabled_unit_on_unit(action_type,
                                           pactor, punit)) {
@@ -2610,8 +2716,7 @@ void handle_unit_action_query(struct connection *pc,
       return;
     }
     break;
-  case ACTION_SPY_INCITE_CITY:
-  case ACTION_SPY_INCITE_CITY_ESC:
+  case ACTRES_SPY_INCITE_CITY:
     if (pcity
         && is_action_enabled_unit_on_city(action_type,
                                           pactor, pcity)) {
@@ -2627,7 +2732,7 @@ void handle_unit_action_query(struct connection *pc,
       return;
     }
     break;
-  case ACTION_UPGRADE_UNIT:
+  case ACTRES_UPGRADE_UNIT:
     if (pcity
         && is_action_enabled_unit_on_city(action_type,
                                           pactor, pcity)) {
@@ -2652,9 +2757,8 @@ void handle_unit_action_query(struct connection *pc,
       return;
     }
     break;
-  case ACTION_SPY_TARGETED_SABOTAGE_CITY:
-  case ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC:
-  case ACTION_STRIKE_BUILDING:
+  case ACTRES_SPY_TARGETED_SABOTAGE_CITY:
+  case ACTRES_STRIKE_BUILDING:
     if (pcity
         && is_action_enabled_unit_on_city(action_type,
                                           pactor, pcity)) {
@@ -3890,6 +3994,7 @@ static bool unit_do_destroy_city(struct player *act_player,
 {
   int tgt_city_id;
   struct player *tgt_player;
+  bool capital;
   bool try_civil_war = FALSE;
 
   /* Sanity check: The actor still exists. */
@@ -3907,14 +4012,16 @@ static bool unit_do_destroy_city(struct player *act_player,
   /* Save city ID. */
   tgt_city_id = tgt_city->id;
 
-  if (is_capital(tgt_city)
+  capital = (player_primary_capital(tgt_player) == tgt_city);
+
+  if (capital
       && (tgt_player->spaceship.state == SSHIP_STARTED
           || tgt_player->spaceship.state == SSHIP_LAUNCHED)) {
     /* Destroying this city destroys the victim's space ship. */
     spaceship_lost(tgt_player);
   }
 
-  if (is_capital(tgt_city)
+  if (capital
       && civil_war_possible(tgt_player, TRUE, TRUE)
       && normal_player_count() < MAX_NUM_PLAYERS
       && civil_war_triggered(tgt_player)) {
@@ -5018,11 +5125,11 @@ static bool do_unit_establish_trade(struct player *pplayer,
     } trade_route_list_iterate_end;
 
     /* Actually create the new trade route */
-    proute_from = fc_malloc(sizeof(struct trade_route));
+    proute_from = static_cast<trade_route*>(fc_malloc(sizeof(struct trade_route)));
     proute_from->partner = pcity_dest->id;
     proute_from->goods = goods;
 
-    proute_to = fc_malloc(sizeof(struct trade_route));
+    proute_to = static_cast<trade_route*>(fc_malloc(sizeof(struct trade_route)));
     proute_to->partner = pcity_homecity->id;
     proute_to->goods = goods;
 
@@ -5600,7 +5707,7 @@ void handle_worker_task(struct player *pplayer,
       return;
     }
 
-    ptask = fc_malloc(sizeof(struct worker_task));
+    ptask = static_cast<worker_task*>(fc_malloc(sizeof(struct worker_task)));
     worker_task_init(ptask);
     worker_task_list_append(pcity->task_reqs, ptask);
   } else {

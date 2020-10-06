@@ -75,9 +75,8 @@ extern "C" {
  * ranges. */
 
 #define vision_layer_iterate(v) {                                           \
-  int iv;                                                      \
-  for (iv = 0; iv < V_COUNT; iv++) {                                        \
-      enum vision_layer v = iv;
+  int v;                                                      \
+  for (v = 0; v < V_COUNT; v++) {
 #define vision_layer_iterate_end }}
 
 
@@ -124,6 +123,7 @@ struct vision_site {
   bool unhappy;
   int style;
   int city_image;
+  enum capital_type capital;
 
   bv_imprs improvements;
 };

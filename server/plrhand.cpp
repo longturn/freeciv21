@@ -2597,7 +2597,7 @@ static struct player *split_player(struct player *pplayer)
   cplayer->ai_common.maxbuycost = pplayer->ai_common.maxbuycost;
   cplayer->ai_common.warmth = pplayer->ai_common.warmth;
   cplayer->ai_common.frost = pplayer->ai_common.frost;
-  set_ai_level_direct(cplayer, game.info.skill_level);
+  set_ai_level_direct(cplayer, static_cast<ai_level>(game.info.skill_level));
 
   /* change the original player */
   if (government_of_player(pplayer) != game.government_during_revolution) {
