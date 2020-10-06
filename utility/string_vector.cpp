@@ -57,7 +57,7 @@ static char *string_duplicate(const char *string)
 **************************************************************************/
 struct strvec *strvec_new(void)
 {
-  struct strvec *psv = fc_malloc(sizeof(struct strvec));
+  strvec *psv = new strvec;
 
   psv->vec = NULL;
   psv->size = 0;
@@ -86,10 +86,11 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     return;
   } else if (!psv->vec) {
     /* Initial reserve */
-    psv->vec = fc_calloc(reserve, sizeof(char *));
+    psv->vec = static_cast<char **>(fc_calloc(reserve, sizeof(char *)));
   } else if (reserve > psv->size) {
     /* Expand the vector. */
-    psv->vec = fc_realloc(psv->vec, reserve * sizeof(char *));
+    psv->vec = static_cast<char **>(
+      fc_realloc(psv->vec, reserve * sizeof(char *)));
     memset(psv->vec + psv->size, 0, (reserve - psv->size) * sizeof(char *));
   } else {
     /* Shrink the vector: free the extra strings. */
@@ -98,7 +99,8 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     for (i = psv->size - 1; i >= reserve; i--) {
       string_free(psv->vec[i]);
     }
-    psv->vec = fc_realloc(psv->vec, reserve * sizeof(char *));
+    psv->vec = static_cast<char **>(
+      fc_realloc(psv->vec, reserve * sizeof(char *)));
   }
   psv->size = reserve;
 }
@@ -140,11 +142,12 @@ void strvec_from_str(struct strvec *psv, char separator, const char *str)
 
   strvec_clear(psv);
   while ((p = strchr(str, separator))) {
-    new_str = fc_malloc(p - str + 1);
+    new_str = static_cast<char *>(fc_malloc(p - str + 1));
     memcpy(new_str, str, p - str);
     new_str[p - str] = '\0';
     psv->size++;
-    psv->vec = fc_realloc(psv->vec, psv->size * sizeof(char *));
+    psv->vec = static_cast<char **>(
+      fc_realloc(psv->vec, psv->size * sizeof(char *)));
     psv->vec[psv->size - 1] = new_str;
     str = p + 1;
   }

@@ -119,8 +119,10 @@ static void icu_buffers_initial(void)
 {
   if (icu_buffer1 == NULL) {
     icu_buffer_uchars = 1024;
-    icu_buffer1 = fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar));
-    icu_buffer2 = fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar));
+    icu_buffer1 = static_cast<UChar *>(
+      fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar)));
+    icu_buffer2 = static_cast<UChar *>(
+      fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar)));
 
     /* Make sure there's zero after the buffer published with cmp_buffer_uchars */
     icu_buffer1[icu_buffer_uchars] = 0;
@@ -134,8 +136,10 @@ static void icu_buffers_initial(void)
 static void icu_buffers_increase(void)
 {
   icu_buffer_uchars *= 1.5;
-  icu_buffer1 = fc_realloc(icu_buffer1, (icu_buffer_uchars + 1) * sizeof(UChar));
-  icu_buffer2 = fc_realloc(icu_buffer2, (icu_buffer_uchars + 1) * sizeof(UChar));
+  icu_buffer1 = static_cast<UChar *>(
+    fc_realloc(icu_buffer1, (icu_buffer_uchars + 1) * sizeof(UChar)));
+  icu_buffer2 = static_cast<UChar *>(
+    fc_realloc(icu_buffer2, (icu_buffer_uchars + 1) * sizeof(UChar)));
 
   /* Make sure there's zero after the buffer published with cmp_buffer_uchars */
   icu_buffer1[icu_buffer_uchars] = 0;
@@ -667,7 +671,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
     /* replace string is longer than search string; allocated enough memory
      * for the worst case */
     (*len) = len_max;
-    str = fc_realloc(str, len_max);
+    str = static_cast<char *>(fc_realloc(str, len_max));
   }
 
   success = fc_strrep(str, (*len), search, replace);
@@ -882,7 +886,7 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
     size_t len;
 
     if (!buf) {
-      buf = malloc(VSNP_BUF_SIZE);
+      buf = static_cast<char *>(malloc(VSNP_BUF_SIZE));
 
       if (!buf) {
 	fprintf(stderr, "Could not allocate %i bytes for vsnprintf() "

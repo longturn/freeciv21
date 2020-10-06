@@ -87,17 +87,6 @@ target_compile_definitions(utility PUBLIC HAVE_CONFIG_H)
 freeciv_add_flag_if_supported(
   utility -Wno-tautological-constant-out-of-range-compare)
 
-# Make it build as C++
-# The files below have stuff like casts from void* to something else that break
-# in C++. Add -fpermissive so GCC is happier.
-set_property(
-    SOURCE
-    section_file.cpp
-    shared.cpp
-    string_vector.cpp
-    support.cpp
-    APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
 if(FREECIV_ENABLE_NLS)
   target_include_directories(utility PUBLIC ${Intl_INCLUDE_DIRS})
   target_link_libraries(utility PUBLIC ${Intl_LIBRARIES})
