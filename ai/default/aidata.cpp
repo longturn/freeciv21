@@ -66,8 +66,8 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
   ai->last_num_oceans = -1;
 
   ai->diplomacy.player_intel_slots
-    = fc_calloc(player_slot_count(),
-                sizeof(*ai->diplomacy.player_intel_slots));
+    = static_cast<const ai_dip_intel**>(fc_calloc(player_slot_count(),
+                sizeof(*ai->diplomacy.player_intel_slots)));
   player_slots_iterate(pslot) {
     const struct ai_dip_intel **player_intel_slot
       = ai->diplomacy.player_intel_slots + player_slot_index(pslot);
@@ -203,8 +203,8 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
 
   /*** Statistics ***/
 
-  ai->stats.workers = fc_calloc(adv->num_continents + 1, sizeof(int));
-  ai->stats.ocean_workers = fc_calloc(adv->num_oceans + 1, sizeof(int));
+  ai->stats.workers = static_cast<int*>(fc_calloc(adv->num_continents + 1, sizeof(int)));
+  ai->stats.ocean_workers = static_cast<int*>(fc_calloc(adv->num_oceans + 1, sizeof(int)));
   unit_list_iterate(pplayer->units, punit) {
     struct tile *ptile = unit_tile(punit);
 
@@ -357,7 +357,7 @@ static void dai_diplomacy_new(struct ai_type *ait,
 
   fc_assert_ret(*player_intel_slot == NULL);
 
-  player_intel = fc_calloc(1, sizeof(*player_intel));
+  player_intel = static_cast<ai_dip_intel*>(fc_calloc(1, sizeof(*player_intel)));
   *player_intel_slot = player_intel;
 }
 
@@ -515,7 +515,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
   int dist;
   int bonus = 0; /* in percentage */
   int revolution_turns;
-  struct universal source = { .kind = VUT_GOVERNMENT, .value.govern = gov };
+  struct universal source = { .value = {.govern = gov}, .kind = VUT_GOVERNMENT };
   struct adv_data *adv;
   int turns = 9999; /* TODO: Set to correct value */
   int nplayers;

@@ -242,7 +242,7 @@ char *ai_level_help(const char *cmdname)
   enum ai_level level = ai_level_by_name(cmdname, fc_strcasecmp);
   struct astring help = ASTRING_INIT, features = ASTRING_INIT;
   bv_handicap handicaps;
-  enum handicap_type h;
+  int h;
 
   fc_assert(ai_level_is_valid(level));
 
@@ -265,7 +265,7 @@ char *ai_level_help(const char *cmdname)
   handicaps = handicap_of_skill_level(level);
   for (h = 0; h < H_LAST; h++) {
     bool inverted;
-    const char *desc = handicap_desc(h, &inverted);
+    const char *desc = handicap_desc(static_cast<handicap_type>(h), &inverted);
 
     if (desc && BV_ISSET(handicaps, h) != inverted) {
       astr_add_line(&features, "%s", desc);

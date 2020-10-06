@@ -823,7 +823,7 @@ bool dai_can_unit_type_follow_unit_type(const struct unit_type *follower,
                                         const struct unit_type *followee,
                                         struct ai_type *ait)
 {
-  struct unit_type_ai *utai = utype_ai_data(follower, ait);
+  struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(follower, ait));
 
   unit_type_list_iterate(utai->potential_charges, pcharge) {
     if (pcharge == followee) {
@@ -2004,7 +2004,7 @@ static void dai_caravan_goto(struct ai_type *ait, struct player *pplayer,
 static void caravan_optimize_callback(const struct caravan_result *result,
                                       void *data)
 {
-  const struct unit *caravan = data;
+  const struct unit *caravan = static_cast<const unit*>(data);
 
   log_base(LOG_CARAVAN3, "%s %s[%d](%d,%d) %s: %s %s worth %g",
            nation_rule_name(nation_of_unit(caravan)),
@@ -2707,7 +2707,6 @@ static void dai_set_defenders(struct ai_type *ait, struct player *pplayer)
           int loglevel = pcity->server.debug ? LOG_AI_TEST : LOG_DEBUG;
 
           total_defense += best_want;
-          UNIT_LOG(loglevel, best, "Defending city");
           dai_unit_new_task(ait, best, AIUNIT_DEFEND_HOME, pcity->tile);
           count++;
         }
@@ -2778,7 +2777,7 @@ const struct impr_type *utype_needs_improvement(const struct unit_type *putype,
     if (!dai_can_requirement_be_met_in_city(preq,
                                             city_owner(pcity), pcity)) {
       /* The unit type can't be built at all. */
-      return FALSE;
+      return nullptr;
     }
     if (VUT_IMPROVEMENT == preq->source.kind && preq->present) {
       /* This is (one of) the building(s) required. */
@@ -3068,7 +3067,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
   update_simple_ai_types();
 
   unit_type_iterate(ptype) {
-    struct unit_type_ai *utai = fc_malloc(sizeof(*utai));
+    struct unit_type_ai *utai = static_cast<unit_type_ai*>(fc_malloc(sizeof(*utai)));
 
     utai->firepower1 = FALSE;
     utai->ferry = FALSE;
@@ -3087,7 +3086,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
       if (pbonus->type == CBONUS_FIREPOWER1) {
         unit_type_iterate(penemy) {
           if (utype_has_flag(penemy, pbonus->flag)) {
-            struct unit_type_ai *utai = utype_ai_data(penemy, ait);
+            struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(penemy, ait));
 
             utai->firepower1 = TRUE;
           }
@@ -3097,7 +3096,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
 
     /* Consider potential cargo */
     if (punittype->transport_capacity > 0) {
-      struct unit_type_ai *utai = utype_ai_data(punittype, ait);
+      struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(punittype, ait));
 
       unit_type_iterate(pctype) {
         struct unit_class *pcargo = utype_class(pctype);
@@ -3140,7 +3139,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
       } unit_class_list_iterate_end;
 
       if (can_move_like_charge) {
-        struct unit_type_ai *utai = utype_ai_data(punittype, ait);
+        struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(punittype, ait));
         unit_type_list_append(utai->potential_charges, pcharge);
       }
 
@@ -3154,7 +3153,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
 void dai_units_ruleset_close(struct ai_type *ait)
 {
   unit_type_iterate(ptype) {
-    struct unit_type_ai *utai = utype_ai_data(ptype, ait);
+    struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(ptype, ait));
 
     if (utai == NULL) {
       continue;
@@ -3173,7 +3172,7 @@ void dai_unit_init(struct ai_type *ait, struct unit *punit)
 {
   /* Make sure that contents of unit_ai structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
-  struct unit_ai *unit_data = fc_calloc(1, sizeof(struct unit_ai));
+  struct unit_ai *unit_data = static_cast<unit_ai*>(fc_calloc(1, sizeof(struct unit_ai)));
 
   unit_data->done = FALSE;
   unit_data->cur_pos = NULL;
@@ -3293,7 +3292,7 @@ static bool role_unit_cb(struct unit_type *ptype, void *data)
 struct unit_type *dai_role_utype_for_terrain_class(struct city *pcity, int role,
                                                    enum terrain_class tc)
 {
-  struct role_unit_cb_data cb_data = { .build_city = pcity, .tc = tc };
+  struct role_unit_cb_data cb_data = {.tc = tc , .build_city = pcity};
 
   return role_units_iterate_backwards(role, role_unit_cb, &cb_data);
 }

@@ -121,7 +121,7 @@ static int num_affected_units(const struct effect *peffect,
   int unit_count = 0;
 
   unit_class_iterate(pclass) {
-    if (requirement_fulfilled_by_unit_class(pclass, &peffect->reqs)) {
+    if (requirement_fulfilled_by_unit_class(pclass, &(peffect->reqs))) {
       unit_count += ai->stats.units.byclass[uclass_index(pclass)];
     }
   } unit_class_iterate_end;

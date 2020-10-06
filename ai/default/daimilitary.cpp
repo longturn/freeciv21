@@ -578,7 +578,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
       unsigned int vulnerability;
       int defbonus_pct;
       const struct unit_type *utype = unit_type_get(punit);
-      struct unit_type_ai *utai = utype_ai_data(utype, ait);
+      struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(utype, ait));
 
 #ifdef FREECIV_WEB
       int unit_distance = real_map_distance(ptile, unit_tile(punit));

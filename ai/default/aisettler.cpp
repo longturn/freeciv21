@@ -225,7 +225,7 @@ static struct cityresult *cityresult_new(struct tile *ptile)
 
   fc_assert_ret_val(ptile != NULL, NULL);
 
-  result = fc_calloc(1, sizeof(*result));
+  result = static_cast<cityresult*>(fc_calloc(1, sizeof(*result)));
   result->tile = ptile;
   result->total = 0;
   result->result = -666;
@@ -457,7 +457,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
 *****************************************************************************/
 struct tile_data_cache *tile_data_cache_new(void)
 {
-  struct tile_data_cache *ptdc_copy = fc_calloc(1, sizeof(*ptdc_copy));
+  struct tile_data_cache *ptdc_copy = static_cast<tile_data_cache*>(fc_calloc(1, sizeof(*ptdc_copy)));
 
   /* Set the turn the tile data cache was created. */
   ptdc_copy->turn = game.info.turn;
@@ -635,10 +635,10 @@ static void print_cityresult(struct player *pplayer,
   fc_assert_ret(cr->tdc_hash != NULL);
   fc_assert_ret(tiles > 0);
 
-  city_map_reserved = fc_calloc(tiles, sizeof(*city_map_reserved));
-  city_map_food = fc_calloc(tiles, sizeof(*city_map_food));
-  city_map_shield = fc_calloc(tiles, sizeof(*city_map_shield));
-  city_map_trade = fc_calloc(tiles, sizeof(*city_map_trade));
+  city_map_reserved = static_cast<int*>(fc_calloc(tiles, sizeof(*city_map_reserved)));
+  city_map_food = static_cast<int*>(fc_calloc(tiles, sizeof(*city_map_food)));
+  city_map_shield = static_cast<int*>(fc_calloc(tiles, sizeof(*city_map_shield)));
+  city_map_trade = static_cast<int*>(fc_calloc(tiles, sizeof(*city_map_trade)));
 
   city_map_iterate(cr->city_radius_sq, cindex, x, y) {
     tile_data_cache_hash_lookup(cr->tdc_hash, cindex, &ptdc);
@@ -995,7 +995,7 @@ void dai_auto_settler_init(struct ai_plr *ai)
   fc_assert_ret(ai != NULL);
   fc_assert_ret(ai->settler == NULL);
 
-  ai->settler = fc_calloc(1, sizeof(*ai->settler));
+  ai->settler = static_cast<ai_settler*>(fc_calloc(1, sizeof(*ai->settler)));
   ai->settler->tdc_hash = tile_data_cache_hash_new();
 
 #ifdef FREECIV_DEBUG

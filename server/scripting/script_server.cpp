@@ -32,6 +32,8 @@
 #include "mem.h"
 #include "registry.h"
 
+
+extern "C" {
 /* common/scriptcore */
 #include "api_game_specenum.h"
 #include "luascript.h"
@@ -41,7 +43,7 @@
 #include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
-
+}
 /* server */
 #include "console.h"
 #include "stdinhand.h"
@@ -310,14 +312,9 @@ bool script_server_init(void)
   tolua_game_open(fcl_main->state);
   tolua_signal_open(fcl_main->state);
 
-#ifdef MESON_BUILD
-  /* Tolua adds 'tolua_' prefix to _open() function names,
-   * and we can't pass it a basename where the original
-   * 'tolua_' has been stripped when generating from meson. */
-  tolua_tolua_server_open(fcl_main->state);
-#else  /* MESON_BUILD */
-  tolua_server_open(fcl_main->state);
-#endif /* MESON_BUILD */
+// sveinung
+  //tolua_server_open(fcl_main->state);
+
 
   tolua_common_z_open(fcl_main->state);
 
@@ -343,14 +340,9 @@ bool script_server_init(void)
   api_specenum_open(fcl_unsafe->state);
   tolua_game_open(fcl_unsafe->state);
 
-#ifdef MESON_BUILD
-  /* Tolua adds 'tolua_' prefix to _open() function names,
-   * and we can't pass it a basename where the original
-   * 'tolua_' has been stripped when generating from meson. */
-  tolua_tolua_server_open(fcl_unsafe->state);
-#else  /* MESON_BUILD */
-  tolua_server_open(fcl_unsafe->state);
-#endif /* MESON_BUILD */
+// sveinung
+//  tolua_server_open(fcl_unsafe->state);
+
 
   tolua_common_z_open(fcl_unsafe->state);
 

@@ -91,7 +91,7 @@ static struct unit_type *dai_hunter_guess_best(struct city *pcity,
   struct player *pplayer = city_owner(pcity);
 
   unit_type_iterate(ut) {
-    struct unit_type_ai *utai = utype_ai_data(ut, ait);
+    struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(ut, ait));
     int desire;
 
     if (!allow_gold_upkeep && utype_upkeep_cost(ut, pplayer, O_GOLD) > 0) {

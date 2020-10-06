@@ -309,8 +309,8 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
   sv_universal_fulfills_requirements(FALSE, (_rqs_),                      \
     (struct universal){.value = {.terrain = (_ter_)}, .kind = VUT_TERRAIN})
 #define requirement_fulfilled_by_unit_class(_uc_, _rqs_)                   \
-  universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_UCLASS, .value = {.uclass = (_uc_)}})
+  sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
+      (struct universal){.value = {.uclass = (_uc_)}, .kind = VUT_UCLASS})
 #define requirement_fulfilled_by_unit_type(_ut_, _rqs_)                    \
   sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
       (struct universal){.value = {.utype = (_ut_)}, .kind = VUT_UTYPE})

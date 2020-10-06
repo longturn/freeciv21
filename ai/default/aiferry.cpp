@@ -151,7 +151,7 @@ static void aiferry_print_stats(struct ai_type *ait, struct player *pplayer)
 **************************************************************************/
 bool dai_is_ferry_type(const struct unit_type *pferry, struct ai_type *ait)
 {
-  struct unit_type_ai *utai = utype_ai_data(pferry, ait);
+  struct unit_type_ai *utai = static_cast<unit_type_ai*>(utype_ai_data(pferry, ait));
 
   return utai->ferry;
 }

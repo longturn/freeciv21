@@ -1103,7 +1103,7 @@ static void resolve_city_emergency(struct ai_type *ait, struct player *pplayer,
 **************************************************************************/
 void dai_city_alloc(struct ai_type *ait, struct city *pcity)
 {
-  struct ai_city *city_data = fc_calloc(1, sizeof(struct ai_city));
+  struct ai_city *city_data = static_cast<ai_city*>(fc_calloc(1, sizeof(struct ai_city)));
 
   city_data->building_wait = BUILDING_WAIT_MINIMUM;
   adv_init_choice(&(city_data->choice));
@@ -1410,7 +1410,7 @@ adv_want dai_city_want(struct player *pplayer, struct city *acity,
     city_tile_iterate(city_map_radius_sq_get(acity), acenter, ptile) {
       if (tile_worked(ptile) == acity) {
         output_type_iterate(o) {
-          prod[o] += city_tile_output(acity, ptile, celebrating, o);
+          prod[o] += city_tile_output(acity, ptile, celebrating, static_cast<output_type_id>(o));
         } output_type_iterate_end;
       }
     } city_tile_iterate_end;
@@ -1426,8 +1426,8 @@ adv_want dai_city_want(struct player *pplayer, struct city *acity,
   } trade_routes_iterate_end;
   prod[O_GOLD] += get_city_tithes_bonus(acity);
   output_type_iterate(o) {
-    bonus[o] = get_final_city_output_bonus(acity, o);
-    waste[o] = city_waste(acity, o, prod[o] * bonus[o] / 100, NULL);
+    bonus[o] = get_final_city_output_bonus(acity, static_cast<output_type_id>(o));
+    waste[o] = city_waste(acity, static_cast<output_type_id>(o), prod[o] * bonus[o] / 100, NULL);
   } output_type_iterate_end;
   add_tax_income(pplayer,
 		 prod[O_TRADE] * bonus[O_TRADE] / 100 - waste[O_TRADE],
@@ -1550,8 +1550,8 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
   bool can_build = TRUE;
   struct government *gov = government_of_player(pplayer);
   struct universal source = {
-    .kind = VUT_IMPROVEMENT,
-    .value = {.building = pimprove}
+    .value = {.building = pimprove},
+    .kind = VUT_IMPROVEMENT
   };
   const bool is_coinage = improvement_has_flag(pimprove, IF_GOLD);
   int turns = 9999;

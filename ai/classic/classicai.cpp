@@ -588,7 +588,7 @@ bool fc_ai_classic_setup(struct ai_type *ai)
 
   strncpy(ai->name, "classic", sizeof(ai->name));
 
-  pprivate = fc_malloc(sizeof(struct dai_private_data));
+  pprivate = static_cast<dai_private_data*>(fc_malloc(sizeof(struct dai_private_data)));
   pprivate->contemplace_workers = TRUE;
   ai->pprivate = pprivate;
 

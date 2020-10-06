@@ -36,7 +36,7 @@
 **************************************************************************/
 void dai_player_alloc(struct ai_type *ait, struct player *pplayer)
 {
-  struct ai_plr *player_data = fc_calloc(1, sizeof(struct ai_plr));
+  struct ai_plr *player_data = static_cast<ai_plr*>(fc_calloc(1, sizeof(struct ai_plr)));
 
   player_set_ai_data(pplayer, ait, player_data);
 
@@ -131,7 +131,7 @@ void dai_player_load_relations(struct ai_type *ait, const char *aitstr,
   adip->countdown
     = secfile_lookup_int_default(file, -1, "%s.countdown", buf);
   adip->war_reason
-    = secfile_lookup_int_default(file, 0, "%s.war_reason", buf);
+    = static_cast<war_reason>(secfile_lookup_int_default(file, 0, "%s.war_reason", buf));
   adip->ally_patience
     = secfile_lookup_int_default(file, 0, "%s.patience", buf);
   adip->warned_about_space

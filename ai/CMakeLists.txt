@@ -1,10 +1,10 @@
 add_library(
   ai
   STATIC
-  aitraits.c
+  aitraits.cpp
   classic
-  difficulty.c
-  handicaps.c
+  difficulty.cpp
+  handicaps.cpp
 )
 
 target_include_directories(ai PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
