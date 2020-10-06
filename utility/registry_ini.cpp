@@ -1300,13 +1300,13 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
    * of the file. */
   if (dim > 0
       && NULL != secfile_insert_str_full(secfile, strings[0], comment,
-                                         allow_replace, no_escape, FALSE,
+                                         allow_replace, no_escape, EST_NORMAL,
                                          "%s", fullpath)) {
     ret++;
   }
   for (i = 1; i < dim; i++) {
     if (NULL != secfile_insert_str_full(secfile, strings[i], comment,
-                                        allow_replace, no_escape, FALSE,
+                                        allow_replace, no_escape, EST_NORMAL,
                                         "%s,%d", fullpath, (int) i)) {
       ret++;
     }

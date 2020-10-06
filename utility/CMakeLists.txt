@@ -33,43 +33,43 @@ configure_file(cmake_fc_config.h.in fc_config.h)
 add_library(
   utility
   STATIC
-  astring.c
-  bitvector.c
-  bugs.c
-  capability.c
-  deprecations.c
-  distribute.c
-  fc_cmdline.c
-  fc_dirent.c
-  fc_utf8.c
-  fcbacktrace.c
-  fciconv.c
-  fcintl.c
-  fcthread.c
-  genhash.c
-  genlist.c
-  inputfile.c
-  ioz.c
-  iterator.c
-  log.c
-  mem.c
-  netintf.c
-  rand.c
-  registry.c
-  registry_ini.c
-  registry_xml.c
-  section_file.c
-  shared.c
-  string_vector.c
-  support.c
-  timing.c
-  md5.c
+  astring.cpp
+  bitvector.cpp
+  bugs.cpp
+  capability.cpp
+  deprecations.cpp
+  distribute.cpp
+  fc_cmdline.cpp
+  fc_dirent.cpp
+  fc_utf8.cpp
+  fcbacktrace.cpp
+  fciconv.cpp
+  fcintl.cpp
+  fcthread.cpp
+  genhash.cpp
+  genlist.cpp
+  inputfile.cpp
+  ioz.cpp
+  iterator.cpp
+  log.cpp
+  mem.cpp
+  netintf.cpp
+  rand.cpp
+  registry.cpp
+  registry_ini.cpp
+  registry_xml.cpp
+  section_file.cpp
+  shared.cpp
+  string_vector.cpp
+  support.cpp
+  timing.cpp
+  md5.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
 if (HAVE_CURL)
-  target_sources(utility PRIVATE netfile.c)
+  target_sources(utility PRIVATE netfile.cpp)
 endif()
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -86,6 +86,33 @@ target_compile_definitions(utility PUBLIC HAVE_CONFIG_H)
 # Suppress warnings from specenum_gen.h
 freeciv_add_flag_if_supported(
   utility -Wno-tautological-constant-out-of-range-compare)
+
+# Make it build as C++
+# The files below have stuff like casts from void* to something else that break
+# in C++. Add -fpermissive so GCC is happier.
+set_property(
+    SOURCE
+    astring.cpp
+    bitvector.cpp
+    fc_cmdline.cpp
+    fc_utf8.cpp
+    fciconv.cpp
+    fcintl.cpp
+    fcthread.cpp
+    genhash.cpp
+    genlist.cpp
+    inputfile.cpp
+    ioz.cpp
+    log.cpp
+    mem.cpp
+    netfile.cpp
+    netintf.cpp
+    registry_ini.cpp
+    section_file.cpp
+    shared.cpp
+    string_vector.cpp
+    support.cpp
+    APPEND PROPERTY COMPILE_FLAGS -fpermissive)
 
 if(FREECIV_ENABLE_NLS)
   target_include_directories(utility PUBLIC ${Intl_INCLUDE_DIRS})
