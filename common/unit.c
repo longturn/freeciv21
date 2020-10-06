@@ -885,8 +885,6 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
                                       struct extra_type *target,
 				      const struct tile *ptile)
 {
-  struct terrain *pterrain = tile_terrain(ptile);
-
   /* Check that no build activity conflicting with one already in progress
    * gets executed. */
   /* FIXME: Should check also the cases where one of the activities is terrain
@@ -924,56 +922,32 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
                                           punit, ptile, target);
 
   case ACTIVITY_MINE:
-    if (pterrain->mining_result != pterrain
-        && pterrain->mining_result != T_NONE) {
-      return FALSE;
-    } else if (pterrain->mining_result == pterrain) {
-      /* The call below doesn't support actor tile speculation. */
-      fc_assert_msg(unit_tile(punit) == ptile,
-                    "Please use action_speculate_unit_on_tile()");
-      return is_action_enabled_unit_on_tile(ACTION_MINE, punit,
-                                            ptile, target);
-    } else {
-      return FALSE;
-    }
+    /* The call below doesn't support actor tile speculation. */
+    fc_assert_msg(unit_tile(punit) == ptile,
+                  "Please use action_speculate_unit_on_tile()");
+    return is_action_enabled_unit_on_tile(ACTION_MINE, punit,
+                                          ptile, target);
 
   case ACTIVITY_PLANT:
-    if (pterrain->mining_result != pterrain
-        && pterrain->mining_result != T_NONE) {
-      /* The call below doesn't support actor tile speculation. */
-      fc_assert_msg(unit_tile(punit) == ptile,
-                    "Please use action_speculate_unit_on_tile()");
-      return is_action_enabled_unit_on_tile(ACTION_PLANT,
-                                            punit, ptile, NULL);
-    } else {
-      return FALSE;
-    }
+    /* The call below doesn't support actor tile speculation. */
+    fc_assert_msg(unit_tile(punit) == ptile,
+                  "Please use action_speculate_unit_on_tile()");
+    return is_action_enabled_unit_on_tile(ACTION_PLANT,
+                                          punit, ptile, NULL);
 
   case ACTIVITY_IRRIGATE:
-    if (pterrain->irrigation_result != pterrain
-        && pterrain->irrigation_result != T_NONE) {
-      return FALSE;
-    } else if (pterrain->irrigation_result == pterrain) {
-      /* The call below doesn't support actor tile speculation. */
-      fc_assert_msg(unit_tile(punit) == ptile,
-                    "Please use action_speculate_unit_on_tile()");
-      return is_action_enabled_unit_on_tile(ACTION_IRRIGATE, punit,
-                                            ptile, target);
-    } else {
-      return FALSE;
-    }
+    /* The call below doesn't support actor tile speculation. */
+    fc_assert_msg(unit_tile(punit) == ptile,
+                  "Please use action_speculate_unit_on_tile()");
+    return is_action_enabled_unit_on_tile(ACTION_IRRIGATE, punit,
+                                          ptile, target);
 
   case ACTIVITY_CULTIVATE:
-    if (pterrain->irrigation_result != pterrain
-        && pterrain->irrigation_result != T_NONE) {
-      /* The call below doesn't support actor tile speculation. */
-      fc_assert_msg(unit_tile(punit) == ptile,
-                    "Please use action_speculate_unit_on_tile()");
-      return is_action_enabled_unit_on_tile(ACTION_CULTIVATE,
-                                            punit, ptile, NULL);
-    } else {
-      return FALSE;
-    }
+    /* The call below doesn't support actor tile speculation. */
+    fc_assert_msg(unit_tile(punit) == ptile,
+                  "Please use action_speculate_unit_on_tile()");
+    return is_action_enabled_unit_on_tile(ACTION_CULTIVATE,
+                                          punit, ptile, NULL);
 
   case ACTIVITY_FORTIFYING:
     /* The call below doesn't support actor tile speculation. */
@@ -2108,21 +2082,25 @@ void unit_set_ai_data(struct unit *punit, const struct ai_type *ai,
 int unit_bribe_cost(struct unit *punit, struct player *briber)
 {
   int cost, default_hp, dist = 0;
-  struct city *capital;
+  struct tile *ptile = unit_tile(punit);
 
   fc_assert_ret_val(punit != NULL, 0);
 
   default_hp = unit_type_get(punit)->hp;
   cost = unit_owner(punit)->economic.gold + game.info.base_bribe_cost;
-  capital = player_primary_capital(unit_owner(punit));
 
   /* Consider the distance to the capital. */
-  if (capital != NULL) {
-    dist = MIN(GAME_UNIT_BRIBE_DIST_MAX,
-               map_distance(capital->tile, unit_tile(punit)));
-  } else {
-    dist = GAME_UNIT_BRIBE_DIST_MAX;
-  }
+  dist = GAME_UNIT_BRIBE_DIST_MAX;
+  city_list_iterate(unit_owner(punit)->cities, capital) {
+    if (is_capital(capital)) {
+      int tmp = map_distance(capital->tile, ptile);
+
+      if (tmp < dist) {
+        dist = tmp;
+      }
+    }
+  } city_list_iterate_end;
+
   cost /= dist + 2;
 
   /* Consider the build cost. */
@@ -2132,7 +2110,7 @@ int unit_bribe_cost(struct unit *punit, struct player *briber)
   cost += (cost
            * get_target_bonus_effects(NULL, unit_owner(punit), briber,
                                       game_city_by_number(punit->homecity),
-                                      NULL, unit_tile(punit),
+                                      NULL, ptile,
                                       punit, unit_type_get(punit), NULL, NULL,
                                       NULL,
                                       EFT_UNIT_BRIBE_COST_PCT))

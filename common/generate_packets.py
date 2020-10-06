@@ -2058,10 +2058,11 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                     else:
                         f.write('void handle_%s(struct player *pplayer%s);\n'%(a,b))
         f.write('''
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
+                
 #endif /* FC__HAND_GEN_H */
 ''')
         f.close()

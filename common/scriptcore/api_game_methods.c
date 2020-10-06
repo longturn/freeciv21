@@ -298,7 +298,8 @@ bool api_methods_is_city_happy(lua_State *L, City *pcity)
   LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
-  return city_happy(pcity);
+  /* Note: if clients ever have virtual cities or sth, needs amending */
+  return is_server() ? city_happy(pcity) : pcity->client.happy;
 }
 
 /*************************************************************************//**
@@ -309,7 +310,8 @@ bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
   LUASCRIPT_CHECK_STATE(L, FALSE);
   LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
 
-  return city_unhappy(pcity);
+  /* Note: if clients ever have virtual cities or sth, needs amending */
+  return is_server() ? city_unhappy(pcity) : pcity->client.unhappy;
 }
 
 /*************************************************************************//**
@@ -1012,12 +1014,12 @@ Tile *api_methods_unit_tile_get(lua_State *L, Unit *punit)
 /*************************************************************************//**
   Get unit orientation
 *****************************************************************************/
-Direction api_methods_unit_orientation_get(lua_State *L, Unit *punit)
+const Direction *api_methods_unit_orientation_get(lua_State *L, Unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L, direction8_invalid());
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, direction8_invalid());
+  LUASCRIPT_CHECK_STATE(L, NULL);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, NULL);
 
-  return punit->facing;
+  return luascript_dir(punit->facing);
 }
 
 /*************************************************************************//**
