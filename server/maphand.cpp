@@ -700,8 +700,7 @@ void map_vision_update(struct player *pplayer, struct tile *ptile,
 void map_set_border_vision(struct player *pplayer,
                            const bool is_enabled)
 {
-  const v_radius_t radius_sq = V_RADIUS(is_enabled ? static_cast<short>(1) : static_cast<short>(-1),
-                                   static_cast<short>(0), static_cast<short>(0));
+  const v_radius_t radius_sq = V_RADIUS(is_enabled ? 1 : -1, 0, 0);
 
   if (pplayer->server.border_vision == is_enabled) {
     /* No change. Changing the seen count beyond what already exists would
@@ -1569,9 +1568,9 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile) {
           const v_radius_t change =
-              V_RADIUS(static_cast<short>(map_get_own_seen(pplayer, ptile, V_MAIN)),
-                       static_cast<short>(map_get_own_seen(pplayer, ptile, V_INVIS)),
-                       static_cast<short>(map_get_own_seen(pplayer, ptile, V_SUBSURFACE)));
+              V_RADIUS(map_get_own_seen(pplayer, ptile, V_MAIN),
+                       map_get_own_seen(pplayer, ptile, V_INVIS),
+                       map_get_own_seen(pplayer, ptile, V_SUBSURFACE));
 
           if (0 < change[V_MAIN] || 0 < change[V_INVIS]) {
             map_change_seen(pplayer2, ptile, change,
@@ -1627,9 +1626,9 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile) {
           const v_radius_t change =
-              V_RADIUS(static_cast<short>(-map_get_own_seen(pplayer, ptile, V_MAIN)),
-                       static_cast<short>(-map_get_own_seen(pplayer, ptile, V_INVIS)),
-                       static_cast<short>(-map_get_own_seen(pplayer, ptile, V_SUBSURFACE)));
+              V_RADIUS(-map_get_own_seen(pplayer, ptile, V_MAIN),
+                       -map_get_own_seen(pplayer, ptile, V_INVIS),
+                       -map_get_own_seen(pplayer, ptile, V_SUBSURFACE));
 
           if (0 > change[V_MAIN] || 0 > change[V_INVIS]) {
             map_change_seen(pplayer2, ptile, change, FALSE);
@@ -2275,20 +2274,19 @@ void map_claim_base(struct tile *ptile, struct extra_type *pextra,
   /* Transfer base provided vision to new owner */
   if (powner != NULL) {
     const v_radius_t old_radius_sq = V_RADIUS(-1, -1, -1);
-    const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(pbase->vision_main_sq),
-                                              static_cast<short>(pbase->vision_invis_sq),
-                                              static_cast<short>(pbase->vision_subs_sq));
+    const v_radius_t new_radius_sq = V_RADIUS(pbase->vision_main_sq,
+                                              pbase->vision_invis_sq,
+                                              pbase->vision_subs_sq);
 
     map_vision_update(powner, ptile, old_radius_sq, new_radius_sq,
                       game.server.vision_reveal_tiles);
   }
 
   if (ploser != NULL) {
-    const v_radius_t old_radius_sq = V_RADIUS(static_cast<short>(pbase->vision_main_sq),
-                                              static_cast<short>(pbase->vision_invis_sq),
-                                              static_cast<short>(pbase->vision_subs_sq));
-    const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(-1),
-                                          static_cast<short>(-1), static_cast<short>(-1));
+    const v_radius_t old_radius_sq = V_RADIUS(pbase->vision_main_sq,
+                                              pbase->vision_invis_sq,
+                                              pbase->vision_subs_sq);
+    const v_radius_t new_radius_sq = V_RADIUS(-1, -1, -1);
 
     map_vision_update(ploser, ptile, old_radius_sq, new_radius_sq,
                       game.server.vision_reveal_tiles);
@@ -2433,10 +2431,10 @@ void create_extra(struct tile *ptile, struct extra_type *pextra,
 void destroy_extra(struct tile *ptile, struct extra_type *pextra)
 {
   bv_player base_seen;
-  bool is_virtual = tile_virtual_check(ptile);
+  bool vvirtual = tile_virtual_check(ptile);
 
   /* Remember what players were able to see the base. */
-  if (!is_virtual) {
+  if (!vvirtual) {
     BV_CLR_ALL(base_seen);
     players_iterate(pplayer) {
       if (map_is_known_and_seen(ptile, pplayer, V_MAIN)) {
@@ -2445,7 +2443,7 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
     } players_iterate_end;
   }
 
-  if (!is_virtual && is_extra_caused_by(pextra, EC_BASE)) {
+  if (!vvirtual && is_extra_caused_by(pextra, EC_BASE)) {
     struct base_type *pbase = extra_base_get(pextra);
     struct player *owner = extra_owner(ptile);
 
@@ -2457,10 +2455,10 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
         && (0 <= pbase->vision_main_sq || 0 <= pbase->vision_invis_sq)) {
       /* Base provides vision, but no borders. */
       const v_radius_t old_radius_sq =
-        V_RADIUS(0 <= pbase->vision_main_sq ? static_cast<short>(pbase->vision_main_sq) : static_cast<short>(-1),
-                 0 <= pbase->vision_invis_sq ? static_cast<short>(pbase->vision_invis_sq) : static_cast<short>(-1),
-                 0 <= pbase->vision_subs_sq ? static_cast<short>(pbase->vision_subs_sq) : static_cast<short>(-1));
-      const v_radius_t new_radius_sq = V_RADIUS(static_cast<short>(-1), static_cast<short>(-1), static_cast<short>(-1));
+        V_RADIUS(0 <= pbase->vision_main_sq ? pbase->vision_main_sq : -1,
+                 0 <= pbase->vision_invis_sq ? pbase->vision_invis_sq : -1,
+                 0 <= pbase->vision_subs_sq ? pbase->vision_subs_sq : -1);
+      const v_radius_t new_radius_sq = V_RADIUS(-1, -1, -1);
 
       map_vision_update(owner, ptile, old_radius_sq, new_radius_sq,
                         game.server.vision_reveal_tiles);
@@ -2469,7 +2467,7 @@ void destroy_extra(struct tile *ptile, struct extra_type *pextra)
 
   tile_remove_extra(ptile, pextra);
 
-  if (!is_virtual) {
+  if (!vvirtual) {
     /* Remove base from vision of players which were able to see the base. */
     players_iterate(pplayer) {
       if (BV_ISSET(base_seen, player_index(pplayer))

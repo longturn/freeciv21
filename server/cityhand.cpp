@@ -428,14 +428,13 @@ void handle_city_change(struct player *pplayer, int city_id,
   struct universal prod;
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
-  if (!universals_n_is_valid(universals_n(production_kind))) {
+  if (!universals_n_is_valid(static_cast<universals_n>(production_kind))) {
     log_error("[%s] bad production_kind %d.", __FUNCTION__,
               production_kind);
     prod.kind = VUT_NONE;
     return;
   } else {
-    prod = universal_by_number(universals_n(production_kind),
-                               production_value);
+    prod = universal_by_number(static_cast<universals_n>(production_kind), production_value);
     if (!universals_n_is_valid(prod.kind)) {
       log_error("[%s] production_kind %d with bad production_value %d.",
                 __FUNCTION__, production_kind, production_value);
@@ -586,7 +585,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
   }
 
   if (!pcity->cm_parameter) {
-    pcity->cm_parameter = (cm_parameter*) fc_calloc(1, sizeof(struct cm_parameter));
+    pcity->cm_parameter = static_cast<cm_parameter*>(fc_calloc(1, sizeof(struct cm_parameter)));
   }
 
   cm_copy_parameter(pcity->cm_parameter, &parameter);

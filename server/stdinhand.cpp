@@ -704,7 +704,7 @@ void toggle_ai_player_direct(struct connection *caller, struct player *pplayer)
     player_set_to_ai_mode(pplayer,
                           !ai_level_is_valid(pplayer->ai_common.skill_level)
                           ? static_cast<ai_level>(game.info.skill_level)
-                          : static_cast<ai_level>(pplayer->ai_common.skill_level));
+                          : pplayer->ai_common.skill_level);
     fc_assert(is_ai(pplayer));
   } else {
     cmd_reply(CMD_AITOGGLE, caller, C_OK,
@@ -1421,8 +1421,14 @@ static bool cmdlevel_command(struct connection *caller, char *str, bool check)
               _("Command access levels in effect:"));
     cmd_reply(CMD_CMDLEVEL, caller, C_COMMENT, horiz_line);
     conn_list_iterate(game.est_connections, pconn) {
-      cmd_reply(CMD_CMDLEVEL, caller, C_COMMENT, "cmdlevel %s %s",
-                cmdlevel_name(conn_get_access(pconn)), pconn->username);
+      const char *lvl_name = cmdlevel_name(conn_get_access(pconn));
+
+      if (lvl_name != NULL) {
+        cmd_reply(CMD_CMDLEVEL, caller, C_COMMENT, "cmdlevel %s %s",
+                  lvl_name, pconn->username);
+      } else {
+        fc_assert(lvl_name != NULL); /* Always fails when reached. */
+      }
     } conn_list_iterate_end;
     cmd_reply(CMD_CMDLEVEL, caller, C_COMMENT,
               _("Command access level for new connections: %s"),
@@ -1653,7 +1659,7 @@ static enum sset_level lookup_option_level(const char *name)
   int i;
 
   for (i = SSET_ALL; i < OLEVELS_NUM; i++) {
-    if (0 == fc_strcasecmp(name, sset_level_name(sset_level(i)))) {
+    if (0 == fc_strcasecmp(name, sset_level_name(static_cast<sset_level>(i)))) {
       return static_cast<sset_level>(i);
     }
   }
@@ -4859,7 +4865,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     case M_PRE_EXACT:
     case M_PRE_ONLY:
       /* We have a match */
-      luaarg = arg + strlen(lua_args_name(lua_args(ind)));
+      luaarg = arg + strlen(lua_args_name(static_cast<lua_args>(ind)));
       luaarg = skip_leading_spaces(luaarg);
       break;
     case M_PRE_EMPTY:
@@ -6336,8 +6342,7 @@ static void show_help_command_list(struct connection *caller,
   cmd_reply(help_cmd, caller, C_COMMENT, horiz_line);
   if (!caller && con_get_style()) {
     for (i = 0; i < CMD_NUM; i++) {
-      cmd_reply(help_cmd, caller, C_COMMENT, "%s",
-                command_name_by_number(command_id(i)));
+      cmd_reply(help_cmd, caller, C_COMMENT, "%s", command_name_by_number(i));
     }
   } else {
     char buf[MAX_LEN_CONSOLE_LINE];

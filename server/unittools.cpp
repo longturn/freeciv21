@@ -3530,9 +3530,9 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
   struct unit_move_data *pdata;
   struct player *powner = unit_owner(punit);
   const v_radius_t radius_sq =
-        V_RADIUS(static_cast<short>(get_unit_vision_at(punit, pdesttile, V_MAIN)),
-                 static_cast<short>(get_unit_vision_at(punit, pdesttile, V_INVIS)),
-                 static_cast<short>(get_unit_vision_at(punit, pdesttile, V_SUBSURFACE)));
+        V_RADIUS(get_unit_vision_at(punit, pdesttile, V_MAIN),
+                 get_unit_vision_at(punit, pdesttile, V_INVIS),
+                 get_unit_vision_at(punit, pdesttile, V_SUBSURFACE));
   struct vision *new_vision;
   bool success;
 
@@ -3548,7 +3548,7 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
                   "Unit number %d (%p) has done an incomplete move.",
                   punit->id, punit);
   } else {
-    pdata = static_cast<struct unit_move_data *>(fc_malloc(sizeof(*pdata)));
+    pdata = static_cast<struct unit_move_data*>(fc_malloc(sizeof(*pdata)));
     pdata->ref_count = 1;
     pdata->punit = punit;
     punit->server.moving = pdata;
@@ -4559,9 +4559,9 @@ void unit_refresh_vision(struct unit *punit)
   struct vision *uvision = punit->server.vision;
   const struct tile *utile = unit_tile(punit);
   const v_radius_t radius_sq =
-      V_RADIUS(static_cast<short>(get_unit_vision_at(punit, utile, V_MAIN)),
-               static_cast<short>(get_unit_vision_at(punit, utile, V_INVIS)),
-               static_cast<short>(get_unit_vision_at(punit, utile, V_SUBSURFACE)));
+      V_RADIUS(get_unit_vision_at(punit, utile, V_MAIN),
+               get_unit_vision_at(punit, utile, V_INVIS),
+               get_unit_vision_at(punit, utile, V_SUBSURFACE));
 
   vision_change_sight(uvision, radius_sq);
   ASSERT_VISION(uvision);
