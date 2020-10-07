@@ -2185,7 +2185,7 @@ static void sg_load_map_owner(struct loaddata *loading)
       int number;
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
-      scanin(&ptr1, ",", token1, sizeof(token1));
+      scanin(const_cast<char**>(&ptr1), ",", token1, sizeof(token1));
       sg_failure_ret(token1[0] != '\0',
                      "Map size not correct (map.owner%d).", y);
       if (strcmp(token1, "-") == 0) {
@@ -2196,7 +2196,7 @@ static void sg_load_map_owner(struct loaddata *loading)
         owner = player_by_number(number);
       }
 
-      scanin(&ptr2, ",", token2, sizeof(token2));
+      scanin(const_cast<char**>(&ptr2), ",", token2, sizeof(token2));
       sg_failure_ret(token2[0] != '\0',
                      "Map size not correct (map.source%d).", y);
       if (strcmp(token2, "-") == 0) {
@@ -2208,7 +2208,7 @@ static void sg_load_map_owner(struct loaddata *loading)
       }
 
       if (loading->version >= 30) {
-        scanin(&ptr3, ",", token3, sizeof(token3));
+        scanin(const_cast<char**>(&ptr3), ",", token3, sizeof(token3));
         sg_failure_ret(token3[0] != '\0',
                        "Map size not correct (map.eowner%d).", y);
         if (strcmp(token3, "-") == 0) {
@@ -2257,7 +2257,7 @@ static void sg_load_map_worked(struct loaddata *loading)
       int number;
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
-      scanin(&ptr, ",", token, sizeof(token));
+      scanin(const_cast<char**>(&ptr), ",", token, sizeof(token));
       sg_failure_ret('\0' != token[0],
                      "Savegame corrupt - map size not correct.");
       if (strcmp(token, "-") == 0) {
@@ -4606,7 +4606,7 @@ static void sg_load_player_vision(struct loaddata *loading,
         int number;
         struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
-        scanin(&ptr, ",", token, sizeof(token));
+        scanin(const_cast<char**>(&ptr), ",", token, sizeof(token));
         sg_failure_ret('\0' != token[0],
                        "Savegame corrupt - map size not correct.");
         if (strcmp(token, "-") == 0) {
@@ -4619,7 +4619,7 @@ static void sg_load_player_vision(struct loaddata *loading,
         }
 
         if (loading->version >= 30) {
-          scanin(&ptr2, ",", token2, sizeof(token2));
+          scanin(const_cast<char**>(&ptr2), ",", token2, sizeof(token2));
           sg_failure_ret('\0' != token2[0],
                          "Savegame corrupt - map size not correct.");
           if (strcmp(token2, "-") == 0) {
