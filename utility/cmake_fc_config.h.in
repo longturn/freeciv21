@@ -227,6 +227,9 @@
 /* gmtime_r() available */
 #cmakedefine HAVE_GMTIME_R
 
+/* gettimeofday() available */
+#cmakedefine HAVE_GETTIMEOFDAY
+
 /* inet_aton() available */
 #cmakedefine HAVE_INET_ATON
 
