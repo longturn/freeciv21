@@ -40,11 +40,9 @@ struct genlist *genlist_new_full(genlist_free_fn_t free_data_func)
 {
   genlist *pgenlist = new genlist;
 
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
   pgenlist->nelements = 0;
   pgenlist->head_link = NULL;
   pgenlist->tail_link = NULL;
-#endif /* ZERO_VARIABLES_FOR_SEARCHING */
   fc_init_mutex(&pgenlist->mutex);
   pgenlist->free_data_func = free_data_func;
 
