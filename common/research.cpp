@@ -405,7 +405,6 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
 {
   bv_techs done;
   Tech_type_id techs[game.control.num_tech_types];
-  enum tech_req req;
   int techs_num;
   int i;
 
@@ -432,7 +431,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
     }
 
     /* Check if required techs are research_reqs reachable. */
-    for (req = 0; req < AR_SIZE; req++) {
+    for (int req = 0; req < AR_SIZE; req++) {
       Tech_type_id req_tech = advance_required(techs[i], req);
 
       if (valid_advance_by_number(req_tech) == NULL) {
@@ -472,9 +471,7 @@ static bool research_get_reachable(const struct research *presearch,
           return FALSE;
         }
       } else {
-        enum tech_req req;
-
-        for (req = 0; req < AR_SIZE; req++) {
+        for (int req = 0; req < AR_SIZE; req++) {
           if (valid_advance(advance_requires(proot, req)) == NULL) {
             return FALSE;
           }
@@ -519,7 +516,6 @@ static bool research_get_root_reqs_known(const struct research *presearch,
 ****************************************************************************/
 void research_update(struct research *presearch)
 {
-  enum tech_flag_id flag;
   int techs_researched;
 
   advance_index_iterate(A_FIRST, i) {
@@ -605,7 +601,7 @@ void research_update(struct research *presearch)
   } advance_index_iterate_end;
 #endif /* FREECIV_DEBUG */
 
-  for (flag = 0; flag <= tech_flag_id_max(); flag++) {
+  for (int flag = 0; flag <= tech_flag_id_max(); flag++) {
     /* Iterate over all possible tech flags (0..max). */
     presearch->num_known_tech_with_flag[flag] = 0;
 

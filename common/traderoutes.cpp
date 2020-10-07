@@ -133,9 +133,7 @@ int trade_route_type_trade_pct(enum trade_route_type type)
 *************************************************************************/
 void trade_route_types_init(void)
 {
-  enum trade_route_type type;
-
-  for (type = TRT_NATIONAL; type < TRT_LAST; type++) {
+  for (int type = TRT_NATIONAL; type < TRT_LAST; type++) {
     struct trade_route_settings *set = trade_route_settings_by_type(type);
 
     set->trade_pct = 100;
@@ -157,9 +155,7 @@ const char *trade_route_type_name(enum trade_route_type type)
 *************************************************************************/
 enum trade_route_type trade_route_type_by_name(const char *name)
 {
-  enum trade_route_type type;
-
-  for (type = TRT_NATIONAL; type < TRT_LAST; type++) {
+  for (int type = TRT_NATIONAL; type < TRT_LAST; type++) {
     if (!fc_strcasecmp(trade_route_type_names[type], name)) {
       return type;
     }
@@ -183,9 +179,7 @@ const char *traderoute_cancelling_type_name(enum traderoute_illegal_cancelling t
 *************************************************************************/
 enum traderoute_illegal_cancelling traderoute_cancelling_type_by_name(const char *name)
 {
-  enum traderoute_illegal_cancelling type;
-
-  for (type = TRI_ACTIVE; type < TRI_LAST; type++) {
+  for (int type = TRI_ACTIVE; type < TRI_LAST; type++) {
     if (!fc_strcasecmp(traderoute_cancelling_type_names[type], name)) {
       return type;
     }

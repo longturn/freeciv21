@@ -299,8 +299,6 @@ static void generate_map_indices(void)
 ***********************************************************************/
 void map_init_topology(void)
 {
-  enum direction8 dir;
-
   /* sanity check for iso topologies*/
   fc_assert(!MAP_IS_ISOMETRIC || (wld.map.ysize % 2) == 0);
 
@@ -321,7 +319,7 @@ void map_init_topology(void)
   dir_cardinality[8] = FALSE;
 
   /* Values for actual directions */
-  for (dir = 0; dir < 8; dir++) {
+  for (int dir = 0; dir < 8; dir++) {
     if (is_valid_dir_calculate(dir)) {
       wld.map.valid_dirs[wld.map.num_valid_dirs] = dir;
       wld.map.num_valid_dirs++;
@@ -1594,7 +1592,7 @@ bool startpos_is_excluding(const struct startpos *psp)
 ***********************************************************************/
 const struct nation_hash *startpos_raw_nations(const struct startpos *psp)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
+  fc_assert_ret_val(NULL != psp, nullptr);
   return psp->nations;
 }
 

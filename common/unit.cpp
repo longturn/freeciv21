@@ -573,10 +573,9 @@ bool can_unit_do_autosettlers(const struct unit *punit)
 **************************************************************************/
 void setup_real_activities_array(void)
 {
-  Activity_type_id act;
   int i = 0;
 
-  for (act = 0; act < ACTIVITY_LAST; act++) {
+  for (int act = 0; act < ACTIVITY_LAST; act++) {
     if (is_real_activity(act)) {
       real_activities[i++] = act;
     }

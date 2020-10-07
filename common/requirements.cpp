@@ -1897,7 +1897,7 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
     if (!target_tile) {
       return TRI_MAYBE;
     }
-    return pterrain && tile_terrain(target_tile) == pterrain;
+    return BOOL_TO_TRISTATE(pterrain && tile_terrain(target_tile) == pterrain);
   case REQ_RANGE_CADJACENT:
     if (!target_tile) {
       return TRI_MAYBE;
@@ -2817,7 +2817,7 @@ static enum fc_tristate is_citystatus_in_range(const struct city *target_city,
   if (citystatus == CITYS_OWNED_BY_ORIGINAL) {
     switch (range) {
     case REQ_RANGE_CITY:
-      return city_owner(target_city) == target_city->original;
+      return BOOL_TO_TRISTATE(city_owner(target_city) == target_city->original);
     case REQ_RANGE_TRADEROUTE:
       {
         bool found = FALSE;
@@ -3111,14 +3111,14 @@ bool is_req_active(const struct player *target_player,
     switch (req->range) {
     case REQ_RANGE_WORLD:
       /* "None" does not count */
-      eval = ((game.info.global_advance_count - 1) >= req->source.value.min_techs);
+      eval = BOOL_TO_TRISTATE((game.info.global_advance_count - 1) >= req->source.value.min_techs);
       break;
     case REQ_RANGE_PLAYER:
       if (target_player == NULL) {
         eval = TRI_MAYBE;
       } else {
         /* "None" does not count */
-        eval = ((research_get(target_player)->techs_researched - 1) >= req->source.value.min_techs);
+        eval = BOOL_TO_TRISTATE((research_get(target_player)->techs_researched - 1) >= req->source.value.min_techs);
       }
       break;
     default:

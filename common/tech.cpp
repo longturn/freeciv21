@@ -535,25 +535,24 @@ static void advance_req_iter_next(struct iterator *it)
 {
   struct advance_req_iter *iter = ADVANCE_REQ_ITER(it);
   const struct advance *padvance = *iter->current, *preq;
-  enum tech_req req;
-  bool new = FALSE;
+  bool is_new = FALSE;
 
-  for (req = AR_ONE; req < AR_SIZE; req++) {
+  for (int req = AR_ONE; req < AR_SIZE; req++) {
     preq = valid_advance(advance_requires(padvance, req));
     if (NULL != preq
         && A_NONE != advance_number(preq)
         && !BV_ISSET(iter->done, advance_number(preq))) {
       BV_SET(iter->done, advance_number(preq));
-      if (new) {
+      if (is_new) {
         *iter->end++ = preq;
       } else {
         *iter->current = preq;
-        new = TRUE;
+        is_new = TRUE;
       }
     }
   }
 
-  if (!new) {
+  if (!is_new) {
     iter->current++;
   }
 }
@@ -627,10 +626,9 @@ static void advance_root_req_iter_next(struct iterator *it)
    * requirements may have more). */
   while (advance_root_req_iter_valid(it)) {
     const struct advance *padvance = *iter->current;
-    enum tech_req req;
-    bool new = FALSE;
+    bool is_new = FALSE;
 
-    for (req = AR_ONE; req < AR_SIZE; req++) {
+    for (int req = AR_ONE; req < AR_SIZE; req++) {
       const struct advance *preq
         = valid_advance(advance_requires(padvance, req));
 
@@ -644,16 +642,16 @@ static void advance_root_req_iter_next(struct iterator *it)
         if (advance_required(advance_number(preq), AR_ROOT) != A_NONE) {
           /* Yes, this subtree needs iterating over at some point, starting
            * with preq (whose own root_req we'll consider in a bit) */
-          if (!new) {
+          if (!is_new) {
             *iter->current = preq;
-            new = TRUE;
+            is_new = TRUE;
           } else {
             *iter->end++ = preq; /* make a note for later */
           }
         }
       }
     }
-    if (!new) {
+    if (!is_new) {
       /* Didn't find an interesting new subtree. */
       iter->current++;
     }

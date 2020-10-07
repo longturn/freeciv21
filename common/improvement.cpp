@@ -535,8 +535,8 @@ static bool improvement_has_side_effects(const struct city *pcity,
 static bool improvement_has_effects(const struct city *pcity,
                                     const struct impr_type *pimprove)
 {
-  struct universal source = { .kind = VUT_IMPROVEMENT,
-                              .value = { .building = pimprove } };
+  struct universal source = { .value = { .building = pimprove },
+                              .kind = VUT_IMPROVEMENT };
   struct effect_list *plist = get_req_source_effects(&source);
 
   if (!plist || improvement_obsolete(city_owner(pcity), pimprove, pcity)) {

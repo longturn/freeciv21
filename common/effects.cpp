@@ -497,9 +497,9 @@ bool building_has_effect(const struct impr_type *pimprove,
                          enum effect_type effect_type)
 {
   struct universal source = {
-    .kind = VUT_IMPROVEMENT,
     /* just to bamboozle the annoying compiler warning */
-    .value = {.building = improvement_by_number(improvement_number(pimprove))}
+    .value = {.building = improvement_by_number(improvement_number(pimprove))},
+    .kind = VUT_IMPROVEMENT
   };
   struct effect_list *plist = get_req_source_effects(&source);
 
@@ -561,8 +561,8 @@ bool is_building_replaced(const struct city *pcity,
 {
   struct effect_list *plist;
   struct universal source = {
-    .kind = VUT_IMPROVEMENT,
-    .value = {.building = pimprove}
+    .value = {.building = pimprove},
+    .kind = VUT_IMPROVEMENT
   };
 
   plist = get_req_source_effects(&source);
@@ -976,8 +976,8 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
                                     enum effect_type effect_type,
                                     const enum req_problem_type prob_type)
 {
-  struct universal source = { .kind = VUT_IMPROVEMENT,
-                              .value = {.building = pimprove}};
+  struct universal source = { .value = {.building = pimprove},
+                              .kind = VUT_IMPROVEMENT };
   struct effect_list *plist = get_req_source_effects(&source);
 
   if (plist) {

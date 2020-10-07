@@ -637,9 +637,7 @@ struct output_type *get_output_type(Output_type_id output)
 **************************************************************************/
 Output_type_id output_type_by_identifier(const char *id)
 {
-  Output_type_id o;
-
-  for (o = 0; o < O_LAST; o++) {
+  for (int o = 0; o < O_LAST; o++) {
     if (fc_strcasecmp(output_types[o].id, id) == 0) {
       return o;
     }
