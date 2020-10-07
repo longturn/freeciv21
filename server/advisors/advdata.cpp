@@ -224,7 +224,7 @@ static void count_my_units(struct player *pplayer)
     if (utype_can_do_action(punit->utype, ACTION_AIRLIFT)) {
       adv->stats.units.airliftable++;
     }
-    if (can_upgrade_unittype(pplayer, unit_type_get(punit)) >= 0) {
+    if (can_upgrade_unittype(pplayer, unit_type_get(punit))) {
       adv->stats.units.upgradeable++;
     }
   } unit_list_iterate_end;
