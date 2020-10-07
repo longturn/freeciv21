@@ -654,7 +654,8 @@ void free_user_home_dir(void)
 char *freeciv_storage_dir(void)
 {
   if (storage_dir_freeciv == NULL) {
-    storage_dir_freeciv = fc_malloc(strlen(FREECIV_STORAGE_DIR) + 1);
+    storage_dir_freeciv =
+      static_cast<char *>(fc_malloc(strlen(FREECIV_STORAGE_DIR) + 1));
 
     strcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
@@ -785,7 +786,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
       } else {
         int len = strlen(home) + i;   /* +1 -1 */
 
-        allocated = fc_malloc(len);
+        allocated = static_cast<char *>(fc_malloc(len));
         ret = &allocated;
 
         fc_snprintf(allocated, len, "%s%s", home, tok + 1);
@@ -1181,7 +1182,6 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
 
     /* Scan all entries in the directory. */
     while ((entry = readdir(dir))) {
-      struct fileinfo *file;
       char *ptr;
       /* Strdup the entry so we can safely write to it. */
       char *filename = fc_strdup(entry->d_name);
@@ -1192,11 +1192,11 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
         char *fullname;
         size_t len = strlen(dirname) + strlen(filename) + 2;
 
-        fullname = fc_malloc(len);
+        fullname = static_cast<char *>(fc_malloc(len));
         fc_snprintf(fullname, len, "%s" DIR_SEPARATOR "%s", dirname, filename);
 
         if (fc_stat(fullname, &buf) == 0) {
-          file = fc_malloc(sizeof(*file));
+          fileinfo *file = new fileinfo;
 
           /* Clip the suffix. */
           *ptr = '\0';
@@ -1364,7 +1364,7 @@ char *setup_langname(void)
 ****************************************************************************/
 static void autocap_update(void)
 {
-  char *autocap_opt_in[] = { "fi", NULL };
+  const char *autocap_opt_in[] = { "fi", NULL };
   int i;
   bool ac_enabled = FALSE;
 
@@ -1617,10 +1617,10 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 ****************************************************************************/
 char *get_multicast_group(bool ipv6_preferred)
 {
-  static char *default_multicast_group_ipv4 = "225.1.1.1";
+  static const char *default_multicast_group_ipv4 = "225.1.1.1";
 #ifdef FREECIV_IPV6_SUPPORT
   /* TODO: Get useful group (this is node local) */
-  static char *default_multicast_group_ipv6 = "FF31::8000:15B4";
+  static const char *default_multicast_group_ipv6 = "FF31::8000:15B4";
 #endif /* IPv6 support */
 
   if (mc_group == NULL) {
@@ -1687,7 +1687,7 @@ char *interpret_tilde_alloc(const char *filename)
 
     filename += 2; /* Skip past "~/" */
     sz = strlen(home) + strlen(filename) + 2;
-    buf = fc_malloc(sz);
+    buf = static_cast<char *>(fc_malloc(sz));
     fc_snprintf(buf, sz, "%s/%s", home, filename);
     return buf;
   } else if (filename[0] == '~' && filename[1] == '\0') {
@@ -1803,7 +1803,7 @@ bool path_is_absolute(const char *filename)
   trailing whitespace.  You can scan for "" to conveniently grab the
   remainder of a string.
 ****************************************************************************/
-char scanin(const char **buf, char *delimiters, char *dest, int size)
+char scanin(char **buf, char *delimiters, char *dest, int size)
 {
   char *ptr, found = '?';
 

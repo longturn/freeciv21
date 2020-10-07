@@ -361,7 +361,7 @@ char *fc_utf8_validate_trunc_dup(const char *utf8_string)
 
   (void) fc_utf8_validate(utf8_string, &end);
   size = end - utf8_string;
-  ret = fc_malloc(size + 1);    /* Keep a spot for '\0'. */
+  ret = static_cast<char *>(fc_malloc(size + 1)); // Keep a spot for '\0'.
   memcpy(ret, utf8_string, size);
   ret[size] = '\0';
 
@@ -423,7 +423,7 @@ char *fc_utf8_validate_rep_dup(const char *utf8_string)
   }
 
   /* Do the allocation. */
-  ret = fc_malloc(size);
+  ret = static_cast<char *>(fc_malloc(size));
   base_fc_utf8_strlcpy_rep(ret, utf8_string, size);
 
   return ret;

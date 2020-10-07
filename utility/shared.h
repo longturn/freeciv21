@@ -255,7 +255,7 @@ char *skip_to_basename(char *filepath);
 bool make_dir(const char *pathname);
 bool path_is_absolute(const char *filename);
 
-char scanin(const char **buf, char *delimiters, char *dest, int size);
+char scanin(char **buf, char *delimiters, char *dest, int size);
 
 void array_shuffle(int *array, int n);
 

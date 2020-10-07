@@ -72,7 +72,7 @@ const char *section_name(const struct section *psection)
 **************************************************************************/
 struct section_file *secfile_new(bool allow_duplicates)
 {
-  struct section_file *secfile = fc_malloc(sizeof(struct section_file));
+  section_file *secfile = new section_file;
 
   secfile->name = NULL;
   secfile->num_entries = 0;

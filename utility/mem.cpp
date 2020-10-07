@@ -146,7 +146,8 @@ void *fc_real_calloc(size_t nelem, size_t elsize,
 char *real_fc_strdup(const char *str,
                      const char *called_as, int line, const char *file)
 {
-  char *dest = fc_real_malloc(strlen(str)+1, called_as, line, file);
+  char *dest = static_cast<char *>(
+    fc_real_malloc(strlen(str)+1, called_as, line, file));
 
   /* no need to check whether dest is non-NULL! */
   strcpy(dest, str);

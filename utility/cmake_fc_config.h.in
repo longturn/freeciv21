@@ -28,7 +28,9 @@
 
 #define BINDIR "${CMAKE_INSTALL_FULL_BINDIR}"
 
+#ifndef _GNU_SOURCE
 #define _GNU_SOURCE
+#endif
 
 /* Release cycle information */
 #cmakedefine IS_DEVEL_VERSION
@@ -227,6 +229,9 @@
 
 /* gmtime_r() available */
 #cmakedefine HAVE_GMTIME_R
+
+/* gettimeofday() available */
+#cmakedefine HAVE_GETTIMEOFDAY
 
 /* inet_aton() available */
 #cmakedefine HAVE_INET_ATON

@@ -224,7 +224,7 @@ struct inputfile *inf_from_file(const char *filename,
 
   fc_assert_ret_val(NULL != filename, NULL);
   fc_assert_ret_val(0 < strlen(filename), NULL);
-  fp = fz_from_file(filename, "r", -1, 0);
+  fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
   if (!fp) {
     return NULL;
   }
@@ -243,7 +243,7 @@ struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
   struct inputfile *inf;
 
   fc_assert_ret_val(NULL != stream, NULL);
-  inf = fc_malloc(sizeof(*inf));
+  inf = new inputfile;
   init_zeros(inf);
 
   inf->filename = NULL;
@@ -395,7 +395,7 @@ static bool check_include(struct inputfile *inf)
   }
   c++;
   bare_name_len = c - bare_name_start;
-  bare_name = fc_malloc(bare_name_len);
+  bare_name = static_cast<char *>(fc_malloc(bare_name_len));
   strncpy(bare_name, bare_name_start, bare_name_len - 1);
   bare_name[bare_name_len - 1] = '\0';
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
@@ -871,7 +871,7 @@ static const char *get_token_value(struct inputfile *inf)
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
-    fp = fz_from_file(rfname, "r", -1, 0);
+    fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
     if (!fp) {
       inf_log(inf, LOG_ERROR,
               _("Cannot open stringfile \"%s\"."), rfname);

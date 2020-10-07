@@ -59,7 +59,8 @@ void dbv_init(struct dbv *pdbv, int bits)
   fc_assert_ret(bits > 0 && bits < MAX_DBV_LENGTH);
 
   pdbv->bits = bits;
-  pdbv->vec = fc_calloc(1, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec));
+  pdbv->vec = static_cast<unsigned char *>(
+    fc_calloc(1, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
 
   dbv_clr_all(pdbv);
 }
@@ -80,8 +81,8 @@ void dbv_resize(struct dbv *pdbv, int bits)
 
     if (bits != pdbv->bits) {
       pdbv->bits = bits;
-      pdbv->vec = fc_realloc(pdbv->vec,
-                             _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec));
+      pdbv->vec = static_cast<unsigned char *>(
+        fc_realloc(pdbv->vec, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
     }
 
     dbv_clr_all(pdbv);

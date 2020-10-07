@@ -1300,13 +1300,13 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
    * of the file. */
   if (dim > 0
       && NULL != secfile_insert_str_full(secfile, strings[0], comment,
-                                         allow_replace, no_escape, FALSE,
+                                         allow_replace, no_escape, EST_NORMAL,
                                          "%s", fullpath)) {
     ret++;
   }
   for (i = 1; i < dim; i++) {
     if (NULL != secfile_insert_str_full(secfile, strings[i], comment,
-                                        allow_replace, no_escape, FALSE,
+                                        allow_replace, no_escape, EST_NORMAL,
                                         "%s,%d", fullpath, (int) i)) {
       ret++;
     }
@@ -1878,7 +1878,7 @@ bool *secfile_lookup_bool_vec(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(bool));
+  vec = static_cast<bool *>(fc_malloc(i * sizeof(bool)));
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_bool(secfile, vec + i, "%s,%d", fullpath, (int) i)) {
       SECFILE_LOG(secfile, NULL,
@@ -2025,7 +2025,7 @@ int *secfile_lookup_int_vec(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(int));
+  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_int(secfile, vec + i, "%s,%d", fullpath, (int) i)) {
       SECFILE_LOG(secfile, NULL,
@@ -2185,7 +2185,7 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(const char *));
+  vec = static_cast<const char **>(fc_malloc(i * sizeof(const char *)));
   for (i = 0; i < *dim; i++) {
     if (!(vec[i] = secfile_lookup_str(secfile, "%s,%d",
                                       fullpath, (int) i))) {
@@ -2324,7 +2324,7 @@ int *secfile_lookup_plain_enum_vec_full(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(int));
+  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_plain_enum_full(secfile, vec + i, is_valid_fn,
                                         by_name_fn, "%s,%d",
@@ -2507,7 +2507,7 @@ int *secfile_lookup_bitwise_enum_vec_full(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(int));
+  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_bitwise_enum_full(secfile, vec + i, is_valid_fn,
                                           by_name_fn, "%s,%d",
@@ -2723,7 +2723,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = fc_malloc(i * sizeof(int));
+  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_enum_data(secfile, vec + i, bitwise, name_fn, data,
                                   "%s,%d", fullpath, (int) i)) {
@@ -2844,7 +2844,7 @@ struct section *secfile_section_new(struct section_file *secfile,
     return NULL;
   }
 
-  psection = fc_malloc(sizeof(struct section));
+  psection = new section;
   psection->special = EST_NORMAL;
   psection->name = fc_strdup(name);
   psection->entries = entry_list_new_full(entry_destroy);
@@ -3048,9 +3048,9 @@ static struct entry *entry_new(struct section *psection, const char *name)
     return NULL;
   }
 
-  pentry = fc_malloc(sizeof(struct entry));
+  pentry = new entry;
   pentry->name = fc_strdup(name);
-  pentry->type = -1;    /* Invalid case. */
+  pentry->type = ENTRY_ILLEGAL; // Invalid case
   pentry->used = 0;
   pentry->comment = NULL;
 

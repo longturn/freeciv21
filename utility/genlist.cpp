@@ -38,13 +38,11 @@ struct genlist *genlist_new(void)
 ****************************************************************************/
 struct genlist *genlist_new_full(genlist_free_fn_t free_data_func)
 {
-  struct genlist *pgenlist = fc_calloc(1, sizeof(*pgenlist));
+  genlist *pgenlist = new genlist;
 
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
   pgenlist->nelements = 0;
   pgenlist->head_link = NULL;
   pgenlist->tail_link = NULL;
-#endif /* ZERO_VARIABLES_FOR_SEARCHING */
   fc_init_mutex(&pgenlist->mutex);
   pgenlist->free_data_func = free_data_func;
 
@@ -62,7 +60,7 @@ void genlist_destroy(struct genlist *pgenlist)
 
   genlist_clear(pgenlist);
   fc_destroy_mutex(&pgenlist->mutex);
-  free(pgenlist);
+  delete pgenlist;
 }
 
 /************************************************************************//**
@@ -72,7 +70,7 @@ static void genlist_link_new(struct genlist *pgenlist, void *dataptr,
                              struct genlist_link *prev,
                              struct genlist_link *next)
 {
-  struct genlist_link *plink = fc_malloc(sizeof(*plink));
+  genlist_link *plink = new genlist_link;
 
   plink->dataptr = dataptr;
   plink->prev = prev;
@@ -606,7 +604,7 @@ void genlist_sort(struct genlist *pgenlist,
     return;
   }
 
-  sortbuf = fc_malloc(n * sizeof(void *));
+  sortbuf = new void*[n];
   myiter = genlist_head(pgenlist);
   for (i = 0; i < n; i++, myiter = myiter->next) {
     sortbuf[i] = myiter->dataptr;
@@ -618,7 +616,7 @@ void genlist_sort(struct genlist *pgenlist,
   for (i = 0; i < n; i++, myiter = myiter->next) {
     myiter->dataptr = sortbuf[i];
   }
-  FC_FREE(sortbuf);
+  delete[] sortbuf;
 }
 
 /************************************************************************//**

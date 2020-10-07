@@ -169,7 +169,8 @@ int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
   pthread_attr_t attr;
 
   /* Freed by child thread once it's finished with data */
-  struct fc_thread_wrap_data *data = fc_malloc(sizeof(*data));
+  struct fc_thread_wrap_data *data =
+    static_cast<fc_thread_wrap_data *>(fc_malloc(sizeof(*data)));
 
   data->arg = arg;
   data->func = function;

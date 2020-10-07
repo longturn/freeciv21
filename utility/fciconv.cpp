@@ -229,7 +229,7 @@ char *convert_string(const char *text,
     char *myresult;
 
     if (alloc) {
-      buf = fc_malloc(to_len);
+      buf = static_cast<char *>(fc_malloc(to_len));
     }
 
     myresult = buf;
@@ -238,7 +238,7 @@ char *convert_string(const char *text,
      * in between. */
     iconv(cd, NULL, NULL, NULL, NULL);
 
-    res = iconv(cd, (ICONV_CONST char **)&mytext, &flen, &myresult, &tlen);
+    res = iconv(cd, (char **)&mytext, &flen, &myresult, &tlen);
     if (res == (size_t) (-1)) {
       if (errno != E2BIG) {
         /* Invalid input. */
