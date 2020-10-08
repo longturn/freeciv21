@@ -76,7 +76,7 @@ static struct {
   const char *enum_name;
   char *tag_name;
   enum event_section_n esn;
-  char *descr_orig;
+  const char *descr_orig;
   char *full_descr;
   enum event_type event;
 } events[] = {
@@ -259,8 +259,8 @@ const char *get_event_message_text(enum event_type event)
 **************************************************************************/
 static int compar_event_message_texts(const void *i1, const void *i2)
 {
-  const enum event_type *j1 = i1;
-  const enum event_type *j2 = i2;
+  const enum event_type *j1 = static_cast<const event_type *>(i1);
+  const enum event_type *j2 = static_cast<const event_type *>(i2);
   
   return fc_strcasecmp(get_event_message_text(*j1),
                        get_event_message_text(*j2));
@@ -339,7 +339,7 @@ void events_init(void)
       const char *event_format = Q_(event_sections[events[i].esn]);
       int l = 1 + strlen(event_format) + strlen(_(events[i].descr_orig));
 
-      events[i].full_descr = fc_malloc(l);
+      events[i].full_descr = new char[l];
       fc_snprintf(events[i].full_descr, l, event_format,
                   _(events[i].descr_orig));
     } else {
@@ -361,7 +361,7 @@ void events_init(void)
 
   for (i = 0; i <= event_type_max(); i++) {
     /* Initialise sorted list of all (even possble missing) events. */
-    sorted_events[i] = i;
+    sorted_events[i] = event_type(i);
   }
   qsort(sorted_events, event_type_max() + 1, sizeof(*sorted_events),
         compar_event_message_texts);
@@ -377,7 +377,7 @@ void events_free(void)
   for (i = 0; i <= event_type_max(); i++) {
     if (E_S_XYZZY > events[i].esn) {
       /* We have allocated memory for this event */
-      free(events[i].full_descr);
+      delete[] events[i].full_descr;
       events[i].full_descr = NULL;
     }
   }
