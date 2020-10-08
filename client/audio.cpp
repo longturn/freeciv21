@@ -519,7 +519,7 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
 static void real_audio_play_music(const char *const tag, char *const alt_tag,
                                   bool keepstyle)
 {
-  char *pretty_alt_tag = alt_tag ? alt_tag : static_cast<char*>("(null)");
+  char *pretty_alt_tag = alt_tag ? alt_tag : const_cast<char*>("(null)");
 
   fc_assert_ret(tag != NULL);
 
