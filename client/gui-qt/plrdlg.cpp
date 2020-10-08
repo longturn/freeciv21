@@ -425,7 +425,7 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   QStringList sorted_list_a;
   QStringList sorted_list_b;
   struct player *pplayer;
-  int a , b;
+  int a, b;
   bool added;
   bool entry_exist = false;
   struct player *me;

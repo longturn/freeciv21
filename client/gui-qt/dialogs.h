@@ -47,6 +47,7 @@ void update_nationset_combo();
 void popup_races_dialog(struct player *pplayer);
 void restart_notify_dialogs();
 
+
 class qdef_act
 {
   Q_DISABLE_COPY(qdef_act);

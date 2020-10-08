@@ -2129,7 +2129,7 @@ void fc_client::update_sidebar_tooltips()
     sw_economy->set_tooltip(buf);
     if (player_primary_capital(client_player())) {
       sw_cities->set_tooltip(text_happiness_cities(
-                                          player_primary_capital(client_player())));
+                                     player_primary_capital(client_player())));
     }
   } else {
     sw_tax->set_tooltip("");

@@ -67,6 +67,7 @@
 
 #include "options.h"
 
+int INIT = 0;
 
 struct client_options gui_options = {
 /** Defaults for options normally on command line **/
@@ -527,7 +528,7 @@ struct option {
   enum option_type type;
 
   /* Common accessors. */
-  const struct option_common_vtable common_vtable;
+  const struct option_common_vtable *common_vtable;
   /* Specific typed accessors. */
   union{
     /* Specific boolean accessors (OT_BOOLEAN == type). */
@@ -563,7 +564,7 @@ struct option {
                     spec_table, changed_cb, cb_data) {                      \
   .poptset = optset,                                                        \
   .type = spec_type,                                                        \
-  .common_vtable = common_table,                                           \
+  .common_vtable = &common_table,                                           \
   INIT_BRACE_BEGIN                                                          \
     .spec_table_var = &spec_table                                           \
   INIT_BRACE_END,                                                           \
@@ -616,7 +617,7 @@ int option_number(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
 
-  return poption->common_vtable.number(poption);
+  return poption->common_vtable->number(poption);
 }
 
 /************************************************************************//**
@@ -626,7 +627,7 @@ const char *option_name(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable.name(poption);
+  return poption->common_vtable->name(poption);
 }
 
 /************************************************************************//**
@@ -636,7 +637,7 @@ const char *option_description(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable.description(poption);
+  return poption->common_vtable->description(poption);
 }
 
 /************************************************************************//**
@@ -646,7 +647,7 @@ const char *option_help_text(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable.help_text(poption);
+  return poption->common_vtable->help_text(poption);
 }
 
 /************************************************************************//**
@@ -667,7 +668,7 @@ int option_category(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
 
-  return poption->common_vtable.category(poption);
+  return poption->common_vtable->category(poption);
 }
 
 /************************************************************************//**
@@ -678,7 +679,7 @@ const char *option_category_name(const struct option *poption)
   fc_assert_ret_val(NULL != poption, NULL);
 
   return optset_category_name(poption->poptset,
-                              poption->common_vtable.category(poption));
+                              poption->common_vtable->category(poption));
 }
 
 /************************************************************************//**
@@ -688,7 +689,7 @@ bool option_is_changeable(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, FALSE);
 
-  return poption->common_vtable.is_changeable(poption);
+  return poption->common_vtable->is_changeable(poption);
 }
 
 /************************************************************************//**
@@ -698,7 +699,7 @@ struct option *option_next(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable.next(poption);
+  return poption->common_vtable->next(poption);
 }
 
 /************************************************************************//**
@@ -4358,6 +4359,14 @@ void handle_server_setting_bool
 
   fc_assert_ret(NULL != poption);
 
+  if (NULL == poption->common_vtable) {
+    /* Not initialized yet. */
+    poption->poptset = server_optset;
+    poption->common_vtable = &server_option_common_vtable;
+    poption->type = OT_BOOLEAN;
+    poption->str_vtable = &server_option_str_vtable;
+  }
+
   fc_assert_ret_msg(OT_BOOLEAN == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4386,11 +4395,11 @@ void handle_server_setting_int
 
   fc_assert_ret(NULL != poption);
 
-  if (0) {
+  if (NULL == poption->common_vtable) {
     /* Not initialized yet. */
     poption->poptset = server_optset;
     ////sveinung
-    //poption->common_vtable = &server_option_common_vtable;
+    poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_INTEGER;
     poption->int_vtable = &server_option_int_vtable;
   }
@@ -4424,6 +4433,13 @@ void handle_server_setting_str
 
   fc_assert_ret(NULL != poption);
 
+  if (NULL == poption->common_vtable) {
+    /* Not initialized yet. */
+    poption->poptset = server_optset;
+    poption->common_vtable = &server_option_common_vtable;
+    poption->type = OT_STRING;
+    poption->str_vtable = &server_option_str_vtable;
+  }
 
   fc_assert_ret_msg(OT_STRING == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
@@ -4462,6 +4478,14 @@ void handle_server_setting_enum
   bool need_gui_add = FALSE;
 
   fc_assert_ret(NULL != poption);
+
+  if (NULL == poption->common_vtable) {
+    /* Not initialized yet. */
+    poption->poptset = server_optset;
+    poption->common_vtable = &server_option_common_vtable;
+    poption->type = OT_ENUM;
+    poption->str_vtable = &server_option_str_vtable;
+  }
 
   fc_assert_ret_msg(OT_ENUM == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
@@ -4544,6 +4568,14 @@ void handle_server_setting_bitwise
   bool need_gui_add = FALSE;
 
   fc_assert_ret(NULL != poption);
+
+  if (NULL == poption->common_vtable) {
+    /* Not initialized yet. */
+    poption->poptset = server_optset;
+    poption->common_vtable = &server_option_common_vtable;
+    poption->type = OT_BITWISE;
+    poption->bitwise_vtable = &server_option_bitwise_vtable;
+  }
 
   fc_assert_ret_msg(OT_BITWISE == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
