@@ -123,7 +123,8 @@ enum text_tag_type {
   TTT_STRIKE,
   TTT_UNDERLINE,
   TTT_COLOR,
-  TTT_LINK
+  TTT_LINK,
+  TTT_INVALID,
 };
 
 /* The different text_tag link types.
@@ -131,7 +132,8 @@ enum text_tag_type {
 enum text_link_type {
   TLT_CITY,
   TLT_TILE,
-  TLT_UNIT
+  TLT_UNIT,
+  TLT_INVALID,
 };
 
 /* Default maximal link size */

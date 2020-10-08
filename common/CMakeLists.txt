@@ -100,7 +100,6 @@ target_include_directories(common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 set_property(
   SOURCE
   actions.cpp
-  featured_text.cpp
   improvement.cpp
   map.cpp
   player.cpp

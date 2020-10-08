@@ -264,14 +264,14 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         return FALSE;
       }
 
-      ptag->link.type = -1;
-      for (i = 0; (name = text_link_type_name(i)); i++) {
+      ptag->link.type = TLT_INVALID;
+      for (i = 0; (name = text_link_type_name(text_link_type(i))); i++) {
         if (0 == fc_strncasecmp(buf, name, strlen(name))) {
-          ptag->link.type = i;
+          ptag->link.type = text_link_type(i);
           break;
         }
       }
-      if (ptag->link.type == -1) {
+      if (ptag->link.type == TLT_INVALID) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "target link type not supported (\"%s\").", buf);
         return FALSE;
@@ -422,7 +422,7 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
     return TRUE;
   case TTT_LINK:
     {
-      ptag->link.type = va_arg(args, enum text_link_type);
+      ptag->link.type = text_link_type(va_arg(args, int));
       switch (ptag->link.type) {
       case TLT_CITY:
         {
@@ -639,7 +639,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t stop_offset,
                               ...)
 {
-  struct text_tag *ptag = fc_malloc(sizeof(struct text_tag));
+  auto ptag = new text_tag;
   va_list args;
   bool ok;
 
@@ -661,13 +661,11 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
 **************************************************************************/
 struct text_tag *text_tag_copy(const struct text_tag *ptag)
 {
-  struct text_tag *pnew_tag;
-
   if (!ptag) {
     return NULL;
   }
 
-  pnew_tag = fc_malloc(sizeof(struct text_tag));
+  auto pnew_tag = new text_tag;
   *pnew_tag = *ptag;
 
   return pnew_tag;
@@ -741,7 +739,7 @@ enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
     log_error("text_tag_link_type(): incompatible tag type.");
-    return -1;
+    return TLT_INVALID;
   }
 
   return ptag->link.type;
@@ -756,7 +754,7 @@ int text_tag_link_id(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
     log_error("text_tag_link_id(): incompatible tag type.");
-    return -1;
+    return TTT_INVALID;
   }
 
   return ptag->link.id;
@@ -813,27 +811,27 @@ static size_t extract_sequence_text(const char *featured_text,
   }
   type_len = name - buf_in;
 
-  *type = -1;
-  for (i = 0; (name = text_tag_type_name(i)); i++) {
+  *type = TTT_INVALID;
+  for (i = 0; (name = text_tag_type_name(static_cast<enum text_tag_type>(i))); i++) {
     name_len = strlen(name);
     if (name_len == type_len && 0 == fc_strncasecmp(name, buf_in, name_len)) {
       buf_in += name_len;
-      *type = i;
+      *type = static_cast<enum text_tag_type>(i);
       break;
     }
   }
-  if (*type == -1) {
+  if (*type == TTT_INVALID) {
     /* Try with short names. */
-    for (i = 0; (name = text_tag_type_short_name(i)); i++) {
+    for (i = 0; (name = text_tag_type_short_name(static_cast<enum text_tag_type>(i))); i++) {
       name_len = strlen(name);
       if (name_len == type_len
           && 0 == fc_strncasecmp(name, buf_in, name_len)) {
         buf_in += name_len;
-        *type = i;
+        *type = static_cast<enum text_tag_type>(i);
         break;
       }
     }
-    if (*type == -1) {
+    if (*type == TTT_INVALID) {
       return 0; /* Not valid. */
     }
   }
@@ -889,7 +887,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
         case ST_START:
           if (tags) {
             /* Create a new tag. */
-            struct text_tag *ptag = fc_malloc(sizeof(struct text_tag));
+            text_tag *ptag = new text_tag;
 
             if (text_tag_init_from_sequence(ptag, type,
                                             text_out - plain_text, buf)) {
@@ -939,7 +937,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
               text_out_len -= len;
               if (tags) {
                 /* Set it in the list. */
-                struct text_tag *ptag = fc_malloc(sizeof(struct text_tag));
+                auto ptag = new text_tag;
 
                 *ptag = tag;
                 ptag->stop_offset = text_out - plain_text;
