@@ -31,9 +31,17 @@ GUI_FUNC_PROTO(void, real_set_client_page, enum client_pages page)
 GUI_FUNC_PROTO(enum client_pages, get_current_client_page, void)
 GUI_FUNC_PROTO(void, update_start_page, void)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Actually defined in update_queue.c */
 void set_client_page(enum client_pages page);
 void client_start_server_and_set_page(enum client_pages page);
 enum client_pages get_client_page(void);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* FC__PAGES_G_H */
