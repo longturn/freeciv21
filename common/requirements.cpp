@@ -87,7 +87,7 @@ void universal_value_from_str(struct universal *source, const char *value)
   case VUT_TECHFLAG:
     source->value.techflag
       = tech_flag_id_by_name(value, fc_strcasecmp);
-    if (tech_flag_id_is_valid(source->value.techflag)) {
+    if (tech_flag_id_is_valid(tech_flag_id(source->value.techflag))) {
       return;
     }
     break;
@@ -142,7 +142,7 @@ void universal_value_from_str(struct universal *source, const char *value)
   case VUT_TERRFLAG:
     source->value.terrainflag
       = terrain_flag_id_by_name(value, fc_strcasecmp);
-    if (terrain_flag_id_is_valid(source->value.terrainflag)) {
+    if (terrain_flag_id_is_valid(terrain_flag_id(source->value.terrainflag))) {
       return;
     }
     break;
@@ -178,7 +178,7 @@ void universal_value_from_str(struct universal *source, const char *value)
     break;
   case VUT_UTFLAG:
     source->value.unitflag = unit_type_flag_id_by_name(value, fc_strcasecmp);
-    if (unit_type_flag_id_is_valid(source->value.unitflag)) {
+    if (unit_type_flag_id_is_valid(unit_type_flag_id(source->value.unitflag))) {
       return;
     }
     break;
@@ -191,7 +191,7 @@ void universal_value_from_str(struct universal *source, const char *value)
   case VUT_UCFLAG:
     source->value.unitclassflag
       = unit_class_flag_id_by_name(value, fc_strcasecmp);
-    if (unit_class_flag_id_is_valid(source->value.unitclassflag)) {
+    if (unit_class_flag_id_is_valid(unit_class_flag_id(source->value.unitclassflag))) {
       return;
     }
     break;
@@ -288,25 +288,25 @@ void universal_value_from_str(struct universal *source, const char *value)
   case VUT_TERRAINCLASS:
     source->value.terrainclass
       = terrain_class_by_name(value, fc_strcasecmp);
-    if (terrain_class_is_valid(source->value.terrainclass)) {
+    if (terrain_class_is_valid(terrain_class(source->value.terrainclass))) {
       return;
     }
     break;
   case VUT_BASEFLAG:
     source->value.baseflag = base_flag_id_by_name(value, fc_strcasecmp);
-    if (base_flag_id_is_valid(source->value.baseflag)) {
+    if (base_flag_id_is_valid(base_flag_id(source->value.baseflag))) {
       return;
     }
     break;
   case VUT_ROADFLAG:
     source->value.roadflag = road_flag_id_by_name(value, fc_strcasecmp);
-    if (road_flag_id_is_valid(source->value.roadflag)) {
+    if (road_flag_id_is_valid(road_flag_id(source->value.roadflag))) {
       return;
     }
     break;
   case VUT_EXTRAFLAG:
     source->value.extraflag = extra_flag_id_by_name(value, fc_strcasecmp);
-    if (extra_flag_id_is_valid(source->value.extraflag)) {
+    if (extra_flag_id_is_valid(extra_flag_id(source->value.extraflag))) {
       return;
     }
     break;
@@ -336,7 +336,7 @@ void universal_value_from_str(struct universal *source, const char *value)
   case VUT_TERRAINALTER:
     source->value.terrainalter
       = terrain_alteration_by_name(value, fc_strcasecmp);
-    if (terrain_alteration_is_valid(source->value.terrainalter)) {
+    if (terrain_alteration_is_valid(terrain_alteration(source->value.terrainalter))) {
       return;
     }
     break;
@@ -412,7 +412,7 @@ struct universal universal_by_number(const enum universals_n kind,
     }
     break;
   case VUT_IMPR_GENUS:
-    source.value.impr_genus = value;
+    source.value.impr_genus = impr_genus_id(value);
     return source;
   case VUT_EXTRA:
     source.value.extra = extra_by_number(value);
@@ -475,10 +475,10 @@ struct universal universal_by_number(const enum universals_n kind,
     source.value.minveteran = value;
     return source;
   case VUT_UNITSTATE:
-    source.value.unit_state = value;
+    source.value.unit_state = ustate_prop(value);
     return source;
   case VUT_ACTIVITY:
-    source.value.activity = value;
+    source.value.activity = unit_activity(value);
     return source;
   case VUT_MINMOVES:
     source.value.minmoves = value;
@@ -499,7 +499,7 @@ struct universal universal_by_number(const enum universals_n kind,
     }
     break;
   case VUT_OTYPE:
-    source.value.outputtype = value;
+    source.value.outputtype = output_type_id(value);
     return source;
   case VUT_SPECIALIST:
     source.value.specialist = specialist_by_number(value);
@@ -514,7 +514,7 @@ struct universal universal_by_number(const enum universals_n kind,
     source.value.minforeignpct = value;
     return source;
   case VUT_AI_LEVEL:
-    source.value.ai_level = value;
+    source.value.ai_level = ai_level(value);
     return source;
   case VUT_MAXTILEUNITS:
     source.value.max_tile_units = value;
@@ -538,7 +538,7 @@ struct universal universal_by_number(const enum universals_n kind,
     source.value.mincalfrag = value;
     return source;
   case VUT_TOPO:
-    source.value.topo_property = value;
+    source.value.topo_property = topo_flag(value);
     return source;
   case VUT_SERVERSETTING:
     source.value.ssetval = value;
@@ -547,10 +547,10 @@ struct universal universal_by_number(const enum universals_n kind,
     source.value.terrainalter = value;
     return source;
   case VUT_CITYTILE:
-    source.value.citytile = value;
+    source.value.citytile = citytile_type(value);
     return source;
   case VUT_CITYSTATUS:
-    source.value.citystatus = value;
+    source.value.citystatus = citystatus_type(value);
     return source;
   case VUT_COUNT:
     break;
@@ -991,8 +991,8 @@ struct requirement req_from_values(int type, int range,
 {
   struct requirement req;
 
-  req.source = universal_by_number(type, value);
-  req.range = range;
+  req.source = universal_by_number(universals_n(type), value);
+  req.range = req_range(range);
   req.survives = survives;
   req.present = present;
   req.quiet = quiet;
@@ -2907,7 +2907,7 @@ bool is_req_active(const struct player *target_player,
     break;
  case VUT_TECHFLAG:
     eval = is_techflag_in_range(target_player, req->range,
-                                req->source.value.techflag);
+                                tech_flag_id(req->source.value.techflag));
     break;
   case VUT_GOVERNMENT:
     /* The requirement is filled if the player is using the government. */
@@ -2958,7 +2958,7 @@ bool is_req_active(const struct player *target_player,
   case VUT_TERRFLAG:
     eval = is_terrainflag_in_range(target_tile, target_city,
                                    req->range, req->survives,
-                                   req->source.value.terrainflag);
+                                   terrain_flag_id(req->source.value.terrainflag));
     break;
   case VUT_NATION:
     eval = is_nation_in_range(target_player, req->range, req->survives,
@@ -2987,8 +2987,8 @@ bool is_req_active(const struct player *target_player,
     break;
   case VUT_UTFLAG:
     eval = is_unitflag_in_range(target_unittype,
-				req->range, req->survives,
-				req->source.value.unitflag);
+                                req->range, req->survives,
+                                unit_type_flag_id(req->source.value.unitflag));
     break;
   case VUT_UCLASS:
     if (target_unittype == NULL) {
@@ -3005,7 +3005,7 @@ bool is_req_active(const struct player *target_player,
     } else {
       eval = is_unitclassflag_in_range(target_unittype,
                                        req->range, req->survives,
-                                       req->source.value.unitclassflag);
+                                       unit_class_flag_id(req->source.value.unitclassflag));
     }
     break;
   case VUT_MINVETERAN:
@@ -3158,22 +3158,22 @@ bool is_req_active(const struct player *target_player,
   case VUT_TERRAINCLASS:
     eval = is_terrain_class_in_range(target_tile, target_city,
                                      req->range, req->survives,
-                                     req->source.value.terrainclass);
+                                     terrain_class(req->source.value.terrainclass));
     break;
   case VUT_BASEFLAG:
     eval = is_baseflag_in_range(target_tile, target_city,
                                  req->range, req->survives,
-                                 req->source.value.baseflag);
+                                 base_flag_id(req->source.value.baseflag));
     break;
   case VUT_ROADFLAG:
     eval = is_roadflag_in_range(target_tile, target_city,
                                  req->range, req->survives,
-                                 req->source.value.roadflag);
+                                 road_flag_id(req->source.value.roadflag));
     break;
   case VUT_EXTRAFLAG:
     eval = is_extraflag_in_range(target_tile, target_city,
                                  req->range, req->survives,
-                                 req->source.value.extraflag);
+                                 extra_flag_id(req->source.value.extraflag));
     break;
   case VUT_MINYEAR:
     eval = BOOL_TO_TRISTATE(game.info.year >= req->source.value.minyear);
@@ -3194,7 +3194,7 @@ bool is_req_active(const struct player *target_player,
     } else {
       eval = is_terrain_alter_possible_in_range(target_tile,
                                                 req->range, req->survives,
-                                                req->source.value.terrainalter);
+                                                terrain_alteration(req->source.value.terrainalter));
     }
     break;
   case VUT_CITYTILE:
@@ -3533,11 +3533,10 @@ bool req_vec_change_apply(const struct req_vec_change *modification,
 struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
                                             const char *descr, ...)
 {
-  struct req_vec_problem *out;
   int i;
   va_list ap;
 
-  out = fc_malloc(sizeof(*out));
+  auto out = new req_vec_problem;
 
   va_start(ap, descr);
   fc_vsnprintf(out->description, sizeof(out->description),
@@ -3547,8 +3546,7 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
   va_end(ap);
 
   out->num_suggested_solutions = num_suggested_solutions;
-  out->suggested_solutions = fc_malloc(out->num_suggested_solutions
-                                       * sizeof(struct req_vec_change));
+  out->suggested_solutions = new req_vec_change[out->num_suggested_solutions];
   for (i = 0; i < out->num_suggested_solutions; i++) {
     /* No suggestions are ready yet. */
     out->suggested_solutions[i].operation = RVCO_NOOP;
@@ -3566,10 +3564,10 @@ struct req_vec_problem *req_vec_problem_new(int num_suggested_solutions,
 **************************************************************************/
 void req_vec_problem_free(struct req_vec_problem *issue)
 {
-  FC_FREE(issue->suggested_solutions);
+  delete[] issue->suggested_solutions;
   issue->num_suggested_solutions = 0;
 
-  FC_FREE(issue);
+  delete issue;
 }
 
 /**********************************************************************//**
@@ -3776,7 +3774,7 @@ const char *universal_rule_name(const struct universal *psource)
   case VUT_ADVANCE:
     return advance_rule_name(psource->value.advance);
   case VUT_TECHFLAG:
-    return tech_flag_id_name(psource->value.techflag);
+    return tech_flag_id_name(tech_flag_id(psource->value.techflag));
   case VUT_GOVERNMENT:
     return government_rule_name(psource->value.govern);
   case VUT_ACHIEVEMENT:
@@ -3794,7 +3792,7 @@ const char *universal_rule_name(const struct universal *psource)
   case VUT_TERRAIN:
     return terrain_rule_name(psource->value.terrain);
   case VUT_TERRFLAG:
-    return terrain_flag_id_name(psource->value.terrainflag);
+    return terrain_flag_id_name(terrain_flag_id(psource->value.terrainflag));
   case VUT_NATION:
     return nation_rule_name(psource->value.nation);
   case VUT_NATIONGROUP:
@@ -3806,11 +3804,11 @@ const char *universal_rule_name(const struct universal *psource)
   case VUT_UTYPE:
     return utype_rule_name(psource->value.utype);
   case VUT_UTFLAG:
-    return unit_type_flag_id_name(psource->value.unitflag);
+    return unit_type_flag_id_name(unit_type_flag_id(psource->value.unitflag));
   case VUT_UCLASS:
     return uclass_rule_name(psource->value.uclass);
   case VUT_UCFLAG:
-    return unit_class_flag_id_name(psource->value.unitclassflag);
+    return unit_class_flag_id_name(unit_class_flag_id(psource->value.unitclassflag));
   case VUT_MINVETERAN:
     fc_snprintf(buffer, sizeof(buffer), "%d", psource->value.minveteran);
 
@@ -3859,15 +3857,15 @@ const char *universal_rule_name(const struct universal *psource)
     fc_snprintf(buffer, sizeof(buffer), "%d", psource->value.max_tile_units);
     return buffer;
   case VUT_TERRAINCLASS:
-    return terrain_class_name(psource->value.terrainclass);
+    return terrain_class_name(terrain_class(psource->value.terrainclass));
   case VUT_BASEFLAG:
-    return base_flag_id_name(psource->value.baseflag);
+    return base_flag_id_name(base_flag_id(psource->value.baseflag));
   case VUT_ROADFLAG:
-    return road_flag_id_name(psource->value.roadflag);
+    return road_flag_id_name(road_flag_id(psource->value.roadflag));
   case VUT_EXTRAFLAG:
-    return extra_flag_id_name(psource->value.extraflag);
+    return extra_flag_id_name(extra_flag_id(psource->value.extraflag));
   case VUT_TERRAINALTER:
-    return terrain_alteration_name(psource->value.terrainalter);
+    return terrain_alteration_name(terrain_alteration(psource->value.terrainalter));
   case VUT_COUNT:
     break;
   }
@@ -3898,7 +3896,7 @@ const char *universal_name_translation(const struct universal *psource,
     return buf;
   case VUT_TECHFLAG:
     cat_snprintf(buf, bufsz, _("\"%s\" tech"),
-                 tech_flag_id_translated_name(psource->value.techflag));
+                 tech_flag_id_translated_name(tech_flag_id(psource->value.techflag)));
     return buf;
   case VUT_GOVERNMENT:
     fc_strlcat(buf, government_name_translation(psource->value.govern),
@@ -3954,7 +3952,7 @@ const char *universal_name_translation(const struct universal *psource,
                  /* TRANS: Unit type flag */
                  Q_("?utflag:\"%s\" units"),
                  unit_type_flag_id_translated_name(
-                   psource->value.unitflag));
+                   unit_type_flag_id(psource->value.unitflag)));
     return buf;
   case VUT_UCLASS:
     cat_snprintf(buf, bufsz,
@@ -3967,7 +3965,7 @@ const char *universal_name_translation(const struct universal *psource,
                  /* TRANS: Unit class flag */
                  Q_("?ucflag:\"%s\" units"),
                  unit_class_flag_id_translated_name(
-                   psource->value.unitclassflag));
+                   unit_class_flag_id(psource->value.unitclassflag)));
     return buf;
   case VUT_MINVETERAN:
     /* FIXME */
@@ -4084,32 +4082,32 @@ const char *universal_name_translation(const struct universal *psource,
   case VUT_TERRAINCLASS:
     /* TRANS: Terrain class: "Land terrain" */
     cat_snprintf(buf, bufsz, _("%s terrain"),
-                 terrain_class_name_translation(psource->value.terrainclass));
+                 terrain_class_name_translation(terrain_class(psource->value.terrainclass)));
     return buf;
   case VUT_TERRFLAG:
     cat_snprintf(buf, bufsz,
                  /* TRANS: Terrain flag */
                  Q_("?terrflag:\"%s\" terrain"),
                  terrain_flag_id_translated_name(
-                   psource->value.terrainflag));
+                   terrain_flag_id(psource->value.terrainflag)));
     return buf;
   case VUT_BASEFLAG:
     cat_snprintf(buf, bufsz,
                  /* TRANS: Base flag */
                  Q_("?baseflag:\"%s\" base"),
-                 base_flag_id_translated_name(psource->value.baseflag));
+                 base_flag_id_translated_name(base_flag_id(psource->value.baseflag)));
     return buf;
   case VUT_ROADFLAG:
     cat_snprintf(buf, bufsz,
                  /* TRANS: Road flag */
                  Q_("?roadflag:\"%s\" road"),
-                 road_flag_id_translated_name(psource->value.roadflag));
+                 road_flag_id_translated_name(road_flag_id(psource->value.roadflag)));
     return buf;
   case VUT_EXTRAFLAG:
     cat_snprintf(buf, bufsz,
                  /* TRANS: Extra flag */
                  Q_("?extraflag:\"%s\" extra"),
-                 extra_flag_id_translated_name(psource->value.extraflag));
+                 extra_flag_id_translated_name(extra_flag_id(psource->value.extraflag)));
     return buf;
   case VUT_MINYEAR:
     cat_snprintf(buf, bufsz, _("After %s"),
@@ -4133,7 +4131,7 @@ const char *universal_name_translation(const struct universal *psource,
   case VUT_TERRAINALTER:
     /* TRANS: "Irrigation possible" */
     cat_snprintf(buf, bufsz, _("%s possible"),
-                 Q_(terrain_alteration_name(psource->value.terrainalter)));
+                 Q_(terrain_alteration_name(terrain_alteration(psource->value.terrainalter))));
     return buf;
   case VUT_CITYTILE:
     switch (psource->value.citytile) {
@@ -4392,7 +4390,7 @@ static enum req_item_found unit_class_found(const struct requirement *preq,
                                                              : ITF_NO;
   case VUT_UCFLAG:
     return uclass_has_flag(source->value.uclass,
-                           preq->source.value.unitclassflag) ? ITF_YES
+                           unit_class_flag_id(preq->source.value.unitclassflag)) ? ITF_YES
                                                              : ITF_NO;
 
   default:
@@ -4420,7 +4418,7 @@ static enum req_item_found unit_type_found(const struct requirement *preq,
                           preq->source.value.unitflag) ? ITF_YES : ITF_NO;
   case VUT_UCFLAG:
     return uclass_has_flag(utype_class(source->value.utype),
-                           preq->source.value.unitclassflag) ? ITF_YES
+                           unit_class_flag_id(preq->source.value.unitclassflag)) ? ITF_YES
                                                              : ITF_NO;
   default:
     /* Not found and not relevant. */
@@ -4505,17 +4503,17 @@ static enum req_item_found extra_type_found(const struct requirement *preq,
     return source->value.extra == preq->source.value.extra ? ITF_YES : ITF_NO;
   case VUT_EXTRAFLAG:
     return extra_has_flag(source->value.extra,
-                          preq->source.value.extraflag) ? ITF_YES : ITF_NO;
+                          extra_flag_id(preq->source.value.extraflag)) ? ITF_YES : ITF_NO;
   case VUT_BASEFLAG:
     {
       struct base_type *b = extra_base_get(source->value.extra);
-      return b && base_has_flag(b, preq->source.value.baseflag)
+      return b && base_has_flag(b, base_flag_id(preq->source.value.baseflag))
         ? ITF_YES : ITF_NO;
     }
   case VUT_ROADFLAG:
     {
       struct road_type *r = extra_road_get(source->value.extra);
-      return r && road_has_flag(r, preq->source.value.roadflag)
+      return r && road_has_flag(r, road_flag_id(preq->source.value.roadflag))
         ? ITF_YES : ITF_NO;
     }
   default:

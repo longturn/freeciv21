@@ -101,7 +101,6 @@ set_property(
   SOURCE
   actions.cpp
   improvement.cpp
-  requirements.cpp
   unittype.cpp
   APPEND PROPERTY COMPILE_FLAGS -fpermissive)
 
