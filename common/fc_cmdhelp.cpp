@@ -59,7 +59,8 @@ static int cmdarg_compare(const struct cmdarg *const *pcmdarg0,
 *****************************************************************************/
 struct cmdhelp *cmdhelp_new(const char *cmdname)
 {
-  struct cmdhelp *pcmdhelp = fc_calloc(1, sizeof(*pcmdhelp));
+  struct cmdhelp *pcmdhelp = static_cast<cmdhelp *>(
+    fc_calloc(1, sizeof(*pcmdhelp)));
 
   pcmdhelp->cmdname = fc_strdup(fc_basename(cmdname));
   pcmdhelp->cmdarglist = cmdarg_list_new();
@@ -146,7 +147,8 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
 static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
                                  const char *helpstr)
 {
-  struct cmdarg *pcmdarg = fc_calloc(1, sizeof(*pcmdarg));
+  struct cmdarg *pcmdarg = static_cast<cmdarg *>(
+    fc_calloc(1, sizeof(*pcmdarg)));
 
   if (shortarg && strlen(shortarg) == 1) {
     pcmdarg->shortarg = shortarg[0];

@@ -32,7 +32,7 @@
 ****************************************************************************/
 struct vision *vision_new(struct player *pplayer, struct tile *ptile)
 {
-  struct vision *vision = fc_malloc(sizeof(*vision));
+  auto *vision = new struct vision;
 
   vision->player = pplayer;
   vision->tile = ptile;
@@ -81,7 +81,8 @@ void vision_site_destroy(struct vision_site *psite)
 struct vision_site *vision_site_new(int identity, struct tile *location,
                                     struct player *owner)
 {
-  struct vision_site *psite = fc_calloc(1, sizeof(*psite));
+  vision_site *psite = static_cast<vision_site *>(
+    fc_calloc(1, sizeof(*psite)));
 
   psite->identity = identity;
   psite->location = location;

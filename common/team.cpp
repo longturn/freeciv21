@@ -55,7 +55,8 @@ void team_slots_init(void)
   int i;
 
   /* Init team slots and names. */
-  team_slots.slots = fc_calloc(team_slot_count(), sizeof(*team_slots.slots));
+  team_slots.slots = static_cast<team_slot *>(
+    fc_calloc(team_slot_count(), sizeof(*team_slots.slots)));
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < team_slot_count(); i++) {
@@ -335,7 +336,7 @@ struct team *team_new(struct team_slot *tslot)
 
   /* Now create the team. */
   log_debug("Create team for slot %d.", team_slot_index(tslot));
-  pteam = fc_calloc(1, sizeof(*pteam));
+  pteam = static_cast<team *>(fc_calloc(1, sizeof(*pteam)));
   pteam->slot = tslot;
   tslot->team = pteam;
 

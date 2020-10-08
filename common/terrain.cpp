@@ -258,9 +258,7 @@ bool terrain_has_resource(const struct terrain *pterrain,
 **************************************************************************/
 struct resource_type *resource_type_init(struct extra_type *pextra)
 {
-  struct resource_type *presource;
-
-  presource = fc_malloc(sizeof(*presource));
+  auto presource = new resource_type;
 
   pextra->data.resource = presource;
 

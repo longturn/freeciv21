@@ -52,7 +52,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
                           const struct extra_type *new_tgt)
 {
   /* This temporary working state is a bit big to allocate on the stack */
-  struct {
+  struct tmp_state {
     int extra_total[MAX_EXTRA_TYPES][ACTIVITY_LAST];
     int extra_units[MAX_EXTRA_TYPES][ACTIVITY_LAST];
     int rmextra_total[MAX_EXTRA_TYPES][ACTIVITY_LAST];
@@ -61,7 +61,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     int activity_units[ACTIVITY_LAST];
   } *t;
 
-  t = fc_calloc(1, sizeof(*t));
+  t = static_cast<tmp_state *>(fc_calloc(1, sizeof(*t)));
 
   memset(calc, 0, sizeof(*calc));
 
@@ -188,7 +188,7 @@ int turns_to_activity_done(const struct tile *ptile,
                            const struct extra_type *tgt,
                            const struct unit *pmodunit)
 {
-  struct actcalc *calc = malloc(sizeof(struct actcalc));
+  auto *calc = new actcalc;
   int turns;
 
   /* Calculate time for _all_ tile activities */
@@ -217,7 +217,7 @@ int turns_to_activity_done(const struct tile *ptile,
 ****************************************************************************/
 const char *concat_tile_activity_text(struct tile *ptile)
 {
-  struct actcalc *calc = fc_malloc(sizeof(struct actcalc));
+  auto *calc = new actcalc;
   int num_activities = 0;
   static struct astring str = ASTRING_INIT;
 

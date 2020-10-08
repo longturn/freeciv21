@@ -576,8 +576,8 @@ void setup_real_activities_array(void)
   int i = 0;
 
   for (int act = 0; act < ACTIVITY_LAST; act++) {
-    if (is_real_activity(act)) {
-      real_activities[i++] = act;
+    if (is_real_activity(unit_activity(act))) {
+      real_activities[i++] = unit_activity(act);
     }
   }
 
@@ -1512,7 +1512,7 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
 {
   /* Make sure that contents of unit structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
-  struct unit *punit = fc_calloc(1, sizeof(*punit));
+  struct unit *punit = static_cast<unit *>(fc_calloc(1, sizeof(*punit)));
   int max_vet_lvl;
 
   /* It does not register the unit so the id is set to 0. */
@@ -1585,7 +1585,8 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
     punit->server.action_turn = -2;
     /* punit->server.moving = NULL; set by fc_calloc(). */
 
-    punit->server.adv = fc_calloc(1, sizeof(*punit->server.adv));
+    punit->server.adv = static_cast<unit_adv *>(
+      fc_calloc(1, sizeof(*punit->server.adv)));
 
     CALL_FUNC_EACH_AI(unit_alloc, punit);
   } else {

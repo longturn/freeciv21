@@ -37,7 +37,7 @@ void styles_alloc(int count)
 {
   int i;
 
-  styles = fc_malloc(count * sizeof(struct nation_style));
+  styles = new nation_style[count];
 
   for (i = 0; i < count; i++) {
     styles[i].id = i;
@@ -50,7 +50,7 @@ void styles_alloc(int count)
 **************************************************************************/
 void styles_free(void)
 {
-  FC_FREE(styles);
+  delete[] styles;
   styles = NULL;
 }
 
@@ -134,7 +134,7 @@ void music_styles_alloc(int count)
 {
   int i;
 
-  music_styles = fc_malloc(count * sizeof(struct music_style));
+  music_styles = new music_style[count];
 
   for (i = 0; i < count; i++) {
     music_styles[i].id = i;
@@ -151,7 +151,7 @@ void music_styles_free(void)
     requirement_vector_free(&(pmus->reqs));
   } music_styles_iterate_end;
 
-  FC_FREE(music_styles);
+  delete[] music_styles;
   music_styles = NULL;
 }
 

@@ -217,7 +217,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     }
   } clause_list_iterate_end;
 
-  pclause = fc_malloc(sizeof(*pclause));
+  pclause = new Clause;
 
   pclause->type  = type;
   pclause->from  = pfrom;
@@ -239,7 +239,7 @@ void clause_infos_init(void)
   int i;
 
   for (i = 0; i < CLAUSE_COUNT; i++) {
-    clause_infos[i].type = i;
+    clause_infos[i].type = clause_type(i);
     clause_infos[i].enabled = FALSE;
     requirement_vector_init(&(clause_infos[i].giver_reqs));
     requirement_vector_init(&(clause_infos[i].receiver_reqs));

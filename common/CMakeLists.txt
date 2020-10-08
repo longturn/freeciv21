@@ -99,39 +99,17 @@ target_include_directories(common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 set_property(
   SOURCE
-  achievements.cpp
   actions.cpp
-  base.cpp
-  citizens.cpp
   city.cpp
-  clientutils.cpp
-  diptreaty.cpp
-  effects.cpp
   events.cpp
   featured_text.cpp
-  fc_cmdhelp.cpp
-  game.cpp
-  government.cpp
   improvement.cpp
   map.cpp
-  mapimg.cpp
-  nation.cpp
   player.cpp
   reqtext.cpp
   requirements.cpp
   research.cpp
-  rgbcolor.cpp
-  road.cpp
-  specialist.cpp
-  style.cpp
-  team.cpp
-  tech.cpp
-  terrain.cpp
-  tile.cpp
-  traderoutes.cpp
-  unit.cpp
   unittype.cpp
-  vision.cpp
   APPEND PROPERTY COMPILE_FLAGS -fpermissive)
 
 add_subdirectory(aicore)

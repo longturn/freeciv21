@@ -178,7 +178,7 @@ const char *specialists_abbreviation_string(void)
   buf[0] = '\0';
 
   specialist_type_iterate(sp) {
-    char *separator = (buf[0] == '\0') ? "" : "/";
+    const char *separator = (buf[0] == '\0') ? "" : "/";
 
     cat_snprintf(buf, sizeof(buf), "%s%s", separator,
                  specialist_abbreviation_translation(specialist_by_number(sp)));
@@ -203,7 +203,7 @@ const char *specialists_string(const citizens *specialist_list)
   buf[0] = '\0';
 
   specialist_type_iterate(sp) {
-    char *separator = (buf[0] == '\0') ? "" : "/";
+    const char *separator = (buf[0] == '\0') ? "" : "/";
 
     cat_snprintf(buf, sizeof(buf), "%s%d", separator, specialist_list[sp]);
   } specialist_type_iterate_end;

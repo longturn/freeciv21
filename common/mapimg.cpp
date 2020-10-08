@@ -1796,9 +1796,7 @@ static char *mapimg_generate_name(struct mapdef *pmapdef)
 ****************************************************************************/
 static struct mapdef *mapdef_new(bool colortest)
 {
-  struct mapdef *pmapdef;
-
-  pmapdef = fc_malloc(sizeof(*pmapdef));
+  auto pmapdef = new mapdef;
 
   /* default values */
   pmapdef->maparg[0] = '\0';
@@ -1862,9 +1860,7 @@ static const struct toolkit *img_toolkit_get(enum imagetool tool)
 ****************************************************************************/
 static struct img *img_new(struct mapdef *mapdef, int topo, int xsize, int ysize)
 {
-  struct img *pimg;
-
-  pimg = fc_malloc(sizeof(*pimg));
+  auto pimg = new img;
 
   pimg->def = mapdef;
   pimg->turn = game.info.turn;
@@ -1944,8 +1940,8 @@ static struct img *img_new(struct mapdef *mapdef, int topo, int xsize, int ysize
   }
 
   /* Here the map image is saved as an array of RGB color values. */
-  pimg->map = fc_calloc(pimg->imgsize.x * pimg->imgsize.y,
-                        sizeof(*pimg->map));
+  pimg->map = static_cast<const rgbcolor **>(
+    fc_calloc(pimg->imgsize.x * pimg->imgsize.y, sizeof(*pimg->map)));
   /* Initialise map. */
   memset(pimg->map, 0, pimg->imgsize.x * pimg->imgsize.y);
 

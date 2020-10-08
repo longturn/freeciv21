@@ -35,7 +35,7 @@ struct rgbcolor *rgbcolor_new(int r, int g, int b)
 {
   struct rgbcolor *prgbcolor;
 
-  prgbcolor = fc_calloc(1, sizeof(*prgbcolor));
+  prgbcolor = static_cast<rgbcolor *>(fc_calloc(1, sizeof(*prgbcolor)));
   prgbcolor->r = r;
   prgbcolor->g = g;
   prgbcolor->b = b;

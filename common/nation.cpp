@@ -238,10 +238,8 @@ nation_leaders(const struct nation_type *pnation)
 struct nation_leader *nation_leader_new(struct nation_type *pnation,
                                         const char *name, bool is_male)
 {
-  struct nation_leader *pleader;
-
   NATION_CHECK(pnation, return NULL);
-  pleader = fc_malloc(sizeof(*pleader));
+  auto pleader = new nation_leader;
   pleader->name = fc_strdup(name);
   pleader->is_male = is_male;
 
@@ -347,7 +345,7 @@ struct nation_city *nation_city_new(struct nation_type *pnation,
   fc_assert_ret_val(is_server(), NULL);
 
   fc_assert(0 == NCP_NONE);
-  pncity = fc_calloc(1, sizeof(*pncity));       /* Set NCP_NONE. */
+  pncity = static_cast<nation_city *>(fc_calloc(1, sizeof(*pncity))); // Set NCP_NONE.
   pncity->name = fc_strdup(name);
 
   nation_city_list_append(pnation->server.default_cities, pncity);
@@ -584,8 +582,8 @@ static void nation_init(struct nation_type *pnation)
     pnation->server.parent_nations = nation_list_new();
     pnation->server.conflicts_with = nation_list_new();
     /* server.rgb starts out NULL */
-    pnation->server.traits = fc_calloc(TRAIT_COUNT,
-                                       sizeof(*pnation->server.traits));
+    pnation->server.traits = static_cast<trait_limits *>(
+      fc_calloc(TRAIT_COUNT, sizeof(*pnation->server.traits)));
   }
 }
 
@@ -619,7 +617,7 @@ void nations_alloc(int num)
 {
   int i;
 
-  nations = fc_malloc(sizeof(*nations) * num);
+  nations = new nation_type[num];
   game.control.nation_count = num;
 
   for (i = 0; i < num; i++) {
@@ -642,7 +640,7 @@ void nations_free(void)
     nation_free(nations + i);
   }
 
-  free(nations);
+  delete[] nations;
   nations = NULL;
   game.control.nation_count = 0;
 }

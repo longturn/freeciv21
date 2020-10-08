@@ -215,7 +215,7 @@ static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
                                            const char *ruler_male_title,
                                            const char *ruler_female_title)
 {
-  struct ruler_title *pruler_title = fc_malloc(sizeof(*pruler_title));
+  auto pruler_title = new ruler_title;
 
   pruler_title->pnation = pnation;
   name_set(&pruler_title->male, domain, ruler_male_title);
@@ -519,7 +519,7 @@ void governments_alloc(int num)
   int i;
 
   fc_assert(NULL == governments);
-  governments = fc_malloc(sizeof(*governments) * num);
+  governments = new government[num];
   game.control.government_count = num;
 
   for (i = 0; i < game.control.government_count; i++) {
@@ -542,7 +542,7 @@ void governments_free(void)
     government_free(governments + i);
   }
 
-  free(governments);
+  delete[] governments;
   governments = NULL;
   game.control.government_count = 0;
 }

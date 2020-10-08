@@ -171,10 +171,8 @@ struct effect_list *get_req_source_effects(struct universal *psource)
 struct effect *effect_new(enum effect_type type, int value,
                           struct multiplier *pmul)
 {
-  struct effect *peffect;
-
   /* Create the effect. */
-  peffect = fc_malloc(sizeof(*peffect));
+  auto peffect = new effect;
   peffect->type = type;
   peffect->value = value;
   peffect->multiplier = pmul;

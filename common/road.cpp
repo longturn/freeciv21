@@ -92,9 +92,7 @@ int compare_road_move_cost(const struct extra_type *const *p,
 ****************************************************************************/
 void road_type_init(struct extra_type *pextra, int idx)
 {
-  struct road_type *proad;
-
-  proad = fc_malloc(sizeof(*proad));
+  auto proad = new road_type;
 
   pextra->data.road = proad;
 

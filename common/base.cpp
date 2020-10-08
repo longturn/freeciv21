@@ -176,9 +176,7 @@ Base_type_id base_count(void)
 ****************************************************************************/
 void base_type_init(struct extra_type *pextra, int idx)
 {
-  struct base_type *pbase;
-
-  pbase = fc_malloc(sizeof(*pbase));
+  auto pbase = new base_type;
 
   pextra->data.base = pbase;
 

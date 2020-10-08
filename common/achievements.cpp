@@ -11,6 +11,8 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
+#include <vector>
+
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
@@ -292,7 +294,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     return get_literacy(pplayer) >= ach->value;
   case ACHIEVEMENT_LAND_AHOY:
     {
-      bool *seen = fc_calloc(wld.map.num_continents, sizeof(bool));
+      std::vector<bool> seen(wld.map.num_continents);
       int count = 0;
 
       whole_map_iterate(&(wld.map), ptile) {
@@ -314,7 +316,6 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
            *        to their current continent when they were last seen. */
           if (ptile->continent > 0 && !seen[ptile->continent - 1]) {
             if (++count >= ach->value) {
-              free(seen);
               return TRUE;
             }
             seen[ptile->continent - 1] = TRUE;
@@ -322,7 +323,6 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
         }
       } whole_map_iterate_end;
 
-      free(seen);
       return FALSE;
     }
   case ACHIEVEMENT_COUNT:

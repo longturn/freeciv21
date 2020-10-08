@@ -538,7 +538,7 @@ static void advance_req_iter_next(struct iterator *it)
   bool is_new = FALSE;
 
   for (int req = AR_ONE; req < AR_SIZE; req++) {
-    preq = valid_advance(advance_requires(padvance, req));
+    preq = valid_advance(advance_requires(padvance, tech_req(req)));
     if (NULL != preq
         && A_NONE != advance_number(preq)
         && !BV_ISSET(iter->done, advance_number(preq))) {
@@ -630,7 +630,7 @@ static void advance_root_req_iter_next(struct iterator *it)
 
     for (int req = AR_ONE; req < AR_SIZE; req++) {
       const struct advance *preq
-        = valid_advance(advance_requires(padvance, req));
+        = valid_advance(advance_requires(padvance, tech_req(req)));
 
       if (NULL != preq
           && A_NONE != advance_number(preq)
