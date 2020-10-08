@@ -484,8 +484,9 @@ cid cid_encode(struct universal target)
 cid cid_encode_unit(const struct unit_type *punittype)
 {
   struct universal target = {
-    .kind = VUT_UTYPE,
-    .value = {.utype = punittype}};
+    .value = {.utype = punittype},
+    .kind = VUT_UTYPE
+    };
 
   return cid_encode(target);
 }
@@ -496,8 +497,8 @@ cid cid_encode_unit(const struct unit_type *punittype)
 cid cid_encode_building(const struct impr_type *pimprove)
 {
   struct universal target = {
-    .kind = VUT_IMPROVEMENT,
-    .value = {.building = pimprove}
+    .value = {.building = pimprove},
+    .kind = VUT_IMPROVEMENT
   };
 
   return cid_encode(target);
@@ -607,7 +608,7 @@ static int target_get_section(struct universal target)
 **************************************************************************/
 static int fc_cmp(const void *p1, const void *p2)
 {
-  const struct item *i1 = p1, *i2 = p2;
+  const struct item *i1 = static_cast<const item*>(p1), *i2 = static_cast<const item*>(p2);
   int s1 = target_get_section(i1->item);
   int s2 = target_get_section(i2->item);
 
@@ -1478,7 +1479,7 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation)
 **************************************************************************/
 enum ai_level server_ai_level(void)
 {
-  enum ai_level lvl = game.info.skill_level;
+  enum ai_level lvl = static_cast<ai_level>(game.info.skill_level);
 
   players_iterate(pplayer) {
     if (is_ai(pplayer) && pplayer->ai_common.skill_level != lvl) {

@@ -182,7 +182,7 @@ void editor_ruleset_changed(void)
   int t;
 
   for (t = 0; t < NUM_EDITOR_TOOL_TYPES; t++) {
-    tool_set_init_value(t);
+    tool_set_init_value(static_cast<editor_tool_type>(t));
   }
 }
 
@@ -194,7 +194,7 @@ void editor_init(void)
 {
   fc_assert(editor == NULL);
 
-  editor = fc_calloc(1, sizeof(struct editor_state));
+  editor = static_cast<editor_state*>(fc_calloc(1, sizeof(struct editor_state)));
 
   tool_init(ETT_TERRAIN, _("Terrain"),
             ETF_HAS_VALUE | ETF_HAS_SIZE,
@@ -449,7 +449,7 @@ static inline bool tile_really_has_any_specials(const struct tile *ptile)
     return FALSE;
   }
 
-  extra_type_by_cause_iterate(EC_SPECIAL, pextra) {
+  extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra) {
     if (tile_has_extra(ptile, pextra)) {
       return TRUE;
     }
@@ -578,7 +578,7 @@ static void editor_grab_tool(const struct tile *ptile)
     int count = 0, i;
     struct extra_type *special = NULL;
 
-    extra_type_by_cause_iterate(EC_SPECIAL, s) {
+    extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), s) {
       specials_array[count++] = s;
     } extra_type_by_cause_iterate_end;
 
@@ -608,9 +608,9 @@ static void editor_grab_tool(const struct tile *ptile)
     return;
   }
 
-  editor_set_tool(ett);
-  if (editor_tool_has_value(ett)) {
-    editor_tool_set_value(ett, value);
+  editor_set_tool(static_cast<editor_tool_type>(ett));
+  if (editor_tool_has_value(static_cast<editor_tool_type>(ett))) {
+    editor_tool_set_value(static_cast<editor_tool_type>(ett), value);
   }
   editgui_refresh();
 }
@@ -1067,14 +1067,14 @@ void editor_tool_cycle_mode(enum editor_tool_type ett)
 
   for (count = 0; count < NUM_EDITOR_TOOL_MODES; count++) {
     mode = (mode + 1) % NUM_EDITOR_TOOL_MODES;
-    if (editor_tool_has_mode(ett, mode)) {
+    if (editor_tool_has_mode(ett, static_cast<editor_tool_mode>(mode))) {
       found = TRUE;
       break;
     }
   }
 
   if (found) {
-    editor_tool_set_mode(ett, mode);
+    editor_tool_set_mode(ett, static_cast<editor_tool_mode>(mode));
   }
 }
 
@@ -1438,7 +1438,7 @@ struct edit_buffer *edit_buffer_new(int type_flags)
     return NULL;
   }
 
-  ebuf = fc_calloc(1, sizeof(*ebuf));
+  ebuf = static_cast<edit_buffer*>(fc_calloc(1, sizeof(*ebuf)));
   ebuf->type_flags = type_flags;
   ebuf->vtiles = tile_list_new();
 
@@ -1530,7 +1530,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
       }
       break;
     case EBT_SPECIAL:
-      extra_type_by_cause_iterate(EC_SPECIAL, pextra) {
+      extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra) {
         if (tile_has_extra(ptile, pextra)) {
           tile_add_extra(vtile, pextra);
           copied = TRUE;
@@ -1678,7 +1678,7 @@ static void paste_tile(struct edit_buffer *ebuf,
       } extra_type_by_cause_iterate_end;
       break;
     case EBT_SPECIAL:
-      extra_type_by_cause_iterate(EC_SPECIAL, pextra) {
+      extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra) {
         if (tile_has_extra(vtile, pextra)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
           send_edit_tile = TRUE;

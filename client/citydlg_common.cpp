@@ -461,10 +461,7 @@ void get_city_dialog_production_row(char *buf[], size_t column_size,
   to some numeric city property. Contributions are returned in order,
   with duplicates merged.
 **************************************************************************/
-struct city_sum {
-  const char *format;
-  size_t n;
-  struct {
+struct msum {
     /* The net value that is accumulated. */
     double value;
     /* Description; compared for duplicate-merging.
@@ -477,7 +474,12 @@ struct city_sum {
     double aux;
     /* ...and the format string for the net aux value (appended to *desc) */
     const char *auxfmt;
-  } *sums;
+} *sums;
+
+struct city_sum {
+  const char *format;
+  size_t n;
+  msum *sums;
 };
 
 /**********************************************************************//**
@@ -488,7 +490,7 @@ struct city_sum {
 **************************************************************************/
 static struct city_sum *city_sum_new(const char *format)
 {
-  struct city_sum *sum = fc_malloc(sizeof(struct city_sum));
+  struct city_sum *sum = static_cast<city_sum*>(fc_malloc(sizeof(struct city_sum)));
 
   sum->format = format;
   sum->n = 0;
@@ -529,7 +531,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
   }
   
   /* Didn't find description already, so add it to the end. */
-  sum->sums = fc_realloc(sum->sums, (sum->n + 1) * sizeof(sum->sums[0]));
+  sum->sums = static_cast<msum*>(fc_realloc(sum->sums, (sum->n + 1) * sizeof(sum->sums[0])));
   sum->sums[sum->n].value   = value;
   sum->sums[sum->n].posdesc = posdesc;
   sum->sums[sum->n].negdesc = negdesc;
@@ -1194,7 +1196,7 @@ int get_city_citizen_types(struct city *pcity, enum citizen_feeling idx,
 
   specialist_type_iterate(sp) {
     for (n = 0; n < pcity->specialists[sp]; n++, i++) {
-      categories[i] = CITIZEN_SPECIALIST + sp;
+      categories[i] = static_cast<citizen_category>(static_cast<int>(CITIZEN_SPECIALIST) + static_cast<int>(sp));
     }
   } specialist_type_iterate_end;
 

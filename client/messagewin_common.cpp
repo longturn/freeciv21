@@ -103,16 +103,16 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
 {
   const size_t min_msg_len = 50;
   size_t msg_len = strlen(message);
-  char *s = fc_malloc(MAX(msg_len, min_msg_len) + 1);
+  char *s = static_cast<char*>(fc_malloc(MAX(msg_len, min_msg_len) + 1));
   int i, nspc;
   struct message *msg;
 
   if (messages_total + 2 > messages_alloc) {
     messages_alloc = messages_total + 32;
-    messages = fc_realloc(messages, messages_alloc * sizeof(struct message *));
+    messages = static_cast<struct message**>(fc_realloc(messages, messages_alloc * sizeof(struct message *)));
   }
 
-  msg = fc_malloc(sizeof(struct message));
+  msg = static_cast<struct message*>(fc_malloc(sizeof(struct message)));
   strcpy(s, message);
 
   nspc = min_msg_len - strlen(s);

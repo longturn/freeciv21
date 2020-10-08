@@ -54,6 +54,7 @@ struct update_queue_data {
 
 static void update_queue_data_destroy(struct update_queue_data *pdata);
 
+
 /* 'struct update_queue_hash' and related functions. */
 #define SPECHASH_TAG update_queue
 #define SPECHASH_IKEY_TYPE uq_callback_t
@@ -104,7 +105,7 @@ static inline void update_queue_push(uq_callback_t callback,
 static inline struct update_queue_data *
 update_queue_data_new(void *data, uq_free_fn_t free_data_func)
 {
-  struct update_queue_data *uq_data = fc_malloc(sizeof(*uq_data));
+  struct update_queue_data *uq_data = static_cast<update_queue_data*>(fc_malloc(sizeof(*uq_data)));
 
   uq_data->data = data;
   uq_data->free_data_func = free_data_func;
@@ -130,7 +131,7 @@ static inline struct waiting_queue_data *
 waiting_queue_data_new(uq_callback_t callback, void *data,
                        uq_free_fn_t free_data_func)
 {
-  struct waiting_queue_data *wq_data = fc_malloc(sizeof(*wq_data));
+  struct waiting_queue_data *wq_data = static_cast<waiting_queue_data*>(fc_malloc(sizeof(*wq_data)));
 
   wq_data->callback = callback;
   wq_data->uq_data = update_queue_data_new(data, free_data_func);
@@ -475,7 +476,7 @@ void update_queue_connect_processing_finished_full(int request_id,
 ****************************************************************************/
 static void set_client_page_callback(void *data)
 {
-  enum client_pages page = FC_PTR_TO_INT(data);
+  enum client_pages page = static_cast<client_pages>(FC_PTR_TO_INT(data));
 
   real_set_client_page(page);
 
@@ -523,7 +524,7 @@ enum client_pages get_client_page(void)
 
   if (update_queue_has_callback_full(set_client_page_callback,
                                      &data, NULL)) {
-    return FC_PTR_TO_INT(data);
+    return static_cast<client_pages>(FC_PTR_TO_INT(data));
   } else {
     return get_current_client_page();
   }
@@ -622,7 +623,7 @@ static void cities_update_callback(void *data)
 ****************************************************************************/
 void popup_city_dialog(struct city *pcity)
 {
-  pcity->client.need_updates |= CU_POPUP_DIALOG;
+  pcity->client.need_updates = static_cast<city_updates>(static_cast<int>(pcity->client.need_updates) | static_cast<int>(CU_POPUP_DIALOG));
   update_queue_add(cities_update_callback, NULL);
 }
 
@@ -631,7 +632,7 @@ void popup_city_dialog(struct city *pcity)
 ****************************************************************************/
 void refresh_city_dialog(struct city *pcity)
 {
-  pcity->client.need_updates |= CU_UPDATE_DIALOG;
+  pcity->client.need_updates = static_cast<city_updates>(static_cast<int>(pcity->client.need_updates) | static_cast<int>(CU_UPDATE_DIALOG));
   update_queue_add(cities_update_callback, NULL);
 }
 
@@ -640,7 +641,7 @@ void refresh_city_dialog(struct city *pcity)
 ****************************************************************************/
 void city_report_dialog_update_city(struct city *pcity)
 {
-  pcity->client.need_updates |= CU_UPDATE_REPORT;
+  pcity->client.need_updates = static_cast<city_updates>(static_cast<int>(pcity->client.need_updates) |  static_cast<int>(CU_UPDATE_REPORT));
   update_queue_add(cities_update_callback, NULL);
 }
 

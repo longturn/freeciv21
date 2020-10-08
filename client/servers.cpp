@@ -186,7 +186,8 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
     pserver->humans = n;
 
     if (pserver->nplayers > 0) {
-      pserver->players = fc_malloc(pserver->nplayers * sizeof(*pserver->players));
+      //sveinung ? moved players out of server
+      pserver->players = static_cast<players*>(fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
     } else {
       pserver->players = NULL;
     }
@@ -265,7 +266,7 @@ static bool meta_read_response(struct server_scan *scan)
 **************************************************************************/
 static void metaserver_scan(void *arg)
 {
-  struct server_scan *scan = arg;
+  struct server_scan *scan = static_cast<server_scan*>(arg);
 
   if (!begin_metaserver_scan(scan)) {
     fc_allocate_mutex(&scan->meta.mutex);
@@ -663,7 +664,7 @@ get_lan_server_list(struct server_scan *scan)
 
     log_debug("Received a valid announcement from a server on the LAN.");
 
-    pserver = fc_malloc(sizeof(*pserver));
+    pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
     pserver->host = fc_strdup(servername);
     pserver->port = port;
     pserver->version = fc_strdup(version);
@@ -702,7 +703,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   struct server_scan *scan;
   bool ok = FALSE;
 
-  scan = fc_calloc(1, sizeof(*scan));
+  scan = static_cast<server_scan*>(fc_calloc(1, sizeof(*scan)));
   scan->type = type;
   scan->error_func = error_func;
   scan->sock = -1;

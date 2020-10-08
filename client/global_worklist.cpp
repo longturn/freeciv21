@@ -45,6 +45,11 @@ enum global_worklist_status {
 };
 
 
+struct uni_name {
+   char *kind;
+   char *name;
+};
+
 /* The global worklist structure. */
 struct global_worklist {
   int id;
@@ -110,7 +115,10 @@ void global_worklists_build(void)
       for (i = 0; i < pgwl->unbuilt.length; i++) {
         struct universal source;
 
-        puni_name = pgwl->unbuilt.entries + i;
+        // sveinung
+        //puni_name = pgwl->unbuilt.entries + i;
+        puni_name->kind = pgwl->unbuilt.entries[i].kind;
+        puni_name->name = pgwl->unbuilt.entries[i].name;
         source = universal_by_rule_name(puni_name->kind, puni_name->name);
         if (source.kind == universals_n_invalid()) {
           /* This worklist is not valid on this ruleset.
@@ -129,7 +137,10 @@ void global_worklists_build(void)
 
       /* Now the worklist is built, change status. */
       for (i = 0; i < pgwl->unbuilt.length; i++) {
-        puni_name = pgwl->unbuilt.entries + i;
+        // sveinung
+        //puni_name = pgwl->unbuilt.entries + i;
+        puni_name->kind = pgwl->unbuilt.entries[i].kind;
+        puni_name->name = pgwl->unbuilt.entries[i].name;
         free(puni_name->kind);
         free(puni_name->name);
       }
@@ -156,7 +167,10 @@ void global_worklists_unbuild(void)
 
       pgwl->unbuilt.length = worklist_length(&worklist);
       for (i = 0; i < worklist_length(&worklist); i++) {
-        puni_name = pgwl->unbuilt.entries + i;
+        // sveinung
+        //puni_name = pgwl->unbuilt.entries + i;
+        puni_name->kind = pgwl->unbuilt.entries[i].kind;
+        puni_name->name = pgwl->unbuilt.entries[i].name;
         puni_name->kind =
           fc_strdup(universal_type_rule_name(worklist.entries + i));
         puni_name->name =
@@ -188,7 +202,7 @@ static struct global_worklist *
 global_worklist_alloc(enum global_worklist_status type)
 {
   static int last_id = 0;
-  struct global_worklist *pgwl = fc_calloc(1, sizeof(struct global_worklist));
+  struct global_worklist *pgwl = static_cast<global_worklist *>(fc_calloc(1, sizeof(struct global_worklist)));
 
   pgwl->id = ++last_id;
   pgwl->status = type;
@@ -225,7 +239,10 @@ void global_worklist_destroy(struct global_worklist *pgwl)
       int i;
 
       for (i = 0; i < pgwl->unbuilt.length; i++) {
-        puni_name = pgwl->unbuilt.entries + i;
+        // sveinung
+        //puni_name = pgwl->unbuilt.entries + i;
+        puni_name->kind = pgwl->unbuilt.entries[i].kind;
+        puni_name->name = pgwl->unbuilt.entries[i].name;
         free(puni_name->kind);
         free(puni_name->name);
       }

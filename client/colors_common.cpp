@@ -43,10 +43,10 @@ struct color_system {
 ****************************************************************************/
 struct color_system *color_system_read(struct section_file *file)
 {
-  struct color_system *colors = fc_malloc(sizeof(*colors));
+  struct color_system *colors = static_cast<color_system*>(fc_malloc(sizeof(*colors)));
   enum color_std stdcolor;
 
-  colors->stdcolors = fc_calloc(COLOR_LAST, sizeof(*colors->stdcolors));
+  colors->stdcolors = static_cast<rgbcolor **>(fc_calloc(COLOR_LAST, sizeof(*colors->stdcolors)));
 
   for (stdcolor = color_std_begin(); stdcolor != color_std_end();
        stdcolor = color_std_next(stdcolor)) {

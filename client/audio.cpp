@@ -199,7 +199,7 @@ static const char *audiospec_fullname(const char *audioset_name,
 {
   const char *suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   const char *audioset_default = music ? "stdmusic" : "stdsounds";/* Do not i18n! */
-  char *fname = fc_malloc(strlen(audioset_name) + strlen(suffix) + 1);
+  char *fname = static_cast<char*>(fc_malloc(strlen(audioset_name) + strlen(suffix) + 1));
   const char *dname;
 
   sprintf(fname, "%s%s", audioset_name, suffix);
@@ -519,7 +519,7 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
 static void real_audio_play_music(const char *const tag, char *const alt_tag,
                                   bool keepstyle)
 {
-  char *pretty_alt_tag = alt_tag ? alt_tag : "(null)";
+  char *pretty_alt_tag = alt_tag ? alt_tag : static_cast<char*>("(null)");
 
   fc_assert_ret(tag != NULL);
 

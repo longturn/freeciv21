@@ -70,119 +70,118 @@
 
 struct client_options gui_options = {
 /** Defaults for options normally on command line **/
+  "\0",                 //default_user_name
+  "localhost",          //.default_server_host = 
+  DEFAULT_SOCK_PORT,    //.default_server_port = 
+  FALSE,                //.use_prev_server = 
+  FALSE,    //.heartbeat_enabled = 
+  DEFAULT_METASERVER_OPTION, //.default_metaserver = 
+  "\0", // .default_tileset_square_name = 
+  "\0",  //.default_tileset_hex_name = 
+  "\0",  //.default_tileset_isohex_name = 
+  "stdsounds",  //.default_sound_set_name = 
+  "stdmusic",  //.default_music_set_name = 
+  "\0",   //.default_sound_plugin_name = 
+  GUI_DEFAULT_CHAT_LOGFILE,  //.default_chat_logfile = 
 
-  .default_user_name = "\0",
-  .default_server_host = "localhost",
-  .default_server_port = DEFAULT_SOCK_PORT,
-  .default_metaserver = DEFAULT_METASERVER_OPTION,
-  .default_tileset_square_name = "\0",
-  .default_tileset_hex_name = "\0",
-  .default_tileset_isohex_name = "\0",
-  .default_sound_set_name = "stdsounds",
-  .default_music_set_name = "stdmusic",
-  .default_sound_plugin_name = "\0",
-  .default_chat_logfile = GUI_DEFAULT_CHAT_LOGFILE,
-
-  .save_options_on_exit = TRUE,
-
-  .use_prev_server = FALSE,
-  .heartbeat_enabled = FALSE,
+  TRUE,  //.save_options_on_exit = 
 
 /** Migrations **/
-  .first_boot = FALSE,
-  .default_tileset_name = "\0",
-  .default_tileset_overhead_name = "\0",
-  .default_tileset_iso_name = "\0",
-  .gui_gtk3_migrated_from_gtk2 = FALSE,
-  .gui_gtk3_22_migrated_from_gtk3 = FALSE,
-  .gui_gtk4_migrated_from_gtk3_22 = FALSE,
-  .gui_sdl2_migrated_from_sdl = FALSE,
-  .gui_gtk2_migrated_from_2_5 = FALSE,
-  .gui_gtk3_migrated_from_2_5 = FALSE,
-  .gui_qt_migrated_from_2_5 = FALSE,
+  FALSE,  //.first_boot = 
+  "\0",  //.default_tileset_name = 
+  "\0",  //.default_tileset_overhead_name = 
+  "\0",  //.default_tileset_iso_name = 
+  FALSE, //.gui_gtk3_migrated_from_gtk2 = 
+  FALSE, //.gui_gtk3_22_migrated_from_gtk3 = 
+  FALSE, //.gui_gtk4_migrated_from_gtk3_22 = 
+  FALSE, //.gui_sdl2_migrated_from_sdl = 
+  FALSE, //.gui_gtk2_migrated_from_2_5 
+  FALSE, //.gui_gtk3_migrated_from_2_5 = 
+  FALSE, //.gui_qt_migrated_from_2_5 = 
 
-  .migrate_fullscreen = FALSE,
+  FALSE, //.migrate_fullscreen = 
 
 /** Local Options: **/
 
-  .solid_color_behind_units = FALSE,
-  .sound_bell_at_new_turn = FALSE,
-  .smooth_move_unit_msec = 30,
-  .smooth_center_slide_msec = 200,
-  .smooth_combat_step_msec = 10,
-  .ai_manual_turn_done = TRUE,
-  .auto_center_on_unit = TRUE,
-  .auto_center_on_automated = TRUE,
-  .auto_center_on_combat = FALSE,
-  .auto_center_each_turn = TRUE,
-  .wakeup_focus = TRUE,
-  .goto_into_unknown = TRUE,
-  .center_when_popup_city = TRUE,
-  .show_previous_turn_messages = TRUE,
-  .concise_city_production = FALSE,
-  .auto_turn_done = FALSE,
-  .meta_accelerators = TRUE,
-  .ask_city_name = TRUE,
-  .popup_new_cities = TRUE,
-  .popup_actor_arrival = TRUE,
-  .popup_attack_actions = TRUE,
-  .popup_last_move_to_allied = TRUE,
-  .keyboardless_goto = TRUE,
-  .enable_cursor_changes = TRUE,
-  .separate_unit_selection = FALSE,
-  .unit_selection_clears_orders = TRUE,
-  .highlight_our_names = FT_COLOR("#000000", "#FFFF00"),
+  FALSE, //.solid_color_behind_units = 
+  FALSE, //.sound_bell_at_new_turn = 
+  30, //.smooth_move_unit_msec = 
+  200, //.smooth_center_slide_msec = 
+  10, //.smooth_combat_step_msec = 
+  TRUE, //.ai_manual_turn_done = 
+  TRUE, //.auto_center_on_unit = 
+  TRUE, //.auto_center_on_automated = 
+  FALSE, //.auto_center_on_combat = 
+  TRUE, //.auto_center_each_turn = 
+  TRUE, //.wakeup_focus = 
+  TRUE, //.goto_into_unknown = 
+  TRUE, //.center_when_popup_city = 
+  TRUE, //.show_previous_turn_messages = 
+  FALSE, //.concise_city_production = 
+  FALSE, //.auto_turn_done = 
+  TRUE, //.meta_accelerators = 
+  TRUE, //.ask_city_name = 
+  TRUE, //.popup_new_cities = 
+  TRUE, //.popup_actor_arrival = 
+  TRUE, //.popup_attack_actions = 
+  TRUE, //.popup_last_move_to_allied = 
+  TRUE, //.update_city_text_in_refresh_tile = 
+  TRUE, //.keyboardless_goto = 
+  TRUE, //.enable_cursor_changes = 
+  FALSE, //.separate_unit_selection = 
+  TRUE, //.unit_selection_clears_orders = 
+  FT_COLOR("#000000", "#FFFF00"), //.highlight_our_names = 
 
-  .voteinfo_bar_use = TRUE,
-  .voteinfo_bar_always_show = FALSE,
-  .voteinfo_bar_hide_when_not_player = FALSE,
-  .voteinfo_bar_new_at_front = FALSE,
+  TRUE, //.voteinfo_bar_use = 
+  FALSE, //.voteinfo_bar_always_show = 
+  FALSE, //.voteinfo_bar_hide_when_not_player = 
+  FALSE, //.voteinfo_bar_new_at_front = 
 
-  .autoaccept_tileset_suggestion = FALSE,
-  .autoaccept_soundset_suggestion = FALSE,
-  .autoaccept_musicset_suggestion = FALSE,
+  FALSE, //.autoaccept_tileset_suggestion = 
+  FALSE, //.autoaccept_soundset_suggestion = 
+  FALSE, //.autoaccept_musicset_suggestion = 
 
-  .sound_enable_effects = TRUE,
-  .sound_enable_menu_music = TRUE,
-  .sound_enable_game_music = TRUE,
+  TRUE, //.sound_enable_effects = 
+  TRUE, //.sound_enable_menu_music = 
+  TRUE, //.sound_enable_game_music = 
 
 /* This option is currently set by the client - not by the user. */
-  .update_city_text_in_refresh_tile = TRUE,
 
-  .draw_city_outlines = TRUE,
-  .draw_city_output = FALSE,
-  .draw_map_grid = FALSE,
-  .draw_city_names = TRUE,
-  .draw_city_growth = TRUE,
-  .draw_city_productions = TRUE,
-  .draw_city_buycost = FALSE,
-  .draw_city_trade_routes = FALSE,
-  .draw_terrain = TRUE,
-  .draw_coastline = FALSE,
-  .draw_roads_rails = TRUE,
-  .draw_irrigation = TRUE,
-  .draw_mines = TRUE,
-  .draw_fortress_airbase = TRUE,
-  .draw_specials = TRUE,
-  .draw_huts = TRUE,
-  .draw_pollution = TRUE,
-  .draw_cities = TRUE,
-  .draw_units = TRUE,
-  .draw_focus_unit = FALSE,
-  .draw_fog_of_war = TRUE,
-  .draw_borders = TRUE,
-  .draw_native = FALSE,
-  .draw_full_citybar = TRUE,
-  .draw_unit_shields = TRUE,
-  .player_dlg_show_dead_players = TRUE,
-  .reqtree_show_icons = TRUE,
-  .reqtree_curved_lines = FALSE,
+  TRUE, //.draw_city_outlines = 
+  FALSE, //.draw_city_output = 
+  FALSE, //.draw_map_grid = 
+  TRUE, //.draw_city_names = 
+  TRUE, //.draw_city_growth = 
+  TRUE, //.draw_city_productions = 
+  FALSE, //.draw_city_buycost = 
+  FALSE, //.draw_city_trade_routes = 
+  TRUE, //.draw_terrain = 
+  FALSE, //.draw_coastline = 
+  TRUE, //.draw_roads_rails = 
+  TRUE, //.draw_irrigation = 
+  TRUE, //.draw_mines = 
+  TRUE, //.draw_fortress_airbase = 
+  TRUE, //.draw_specials = 
+  TRUE, //.draw_huts = 
+  TRUE, //.draw_pollution = 
+  TRUE, //.draw_cities = 
+  TRUE, //.draw_units = 
+  FALSE, //.draw_focus_unit = 
+  TRUE, //.draw_fog_of_war = 
+  TRUE, //.draw_borders = 
+  FALSE, //.draw_native = 
+  TRUE, //.draw_full_citybar = 
+  TRUE, //.draw_unit_shields = 
+  TRUE, //.player_dlg_show_dead_players = 
+  TRUE, //.reqtree_show_icons = 
+  FALSE, //.reqtree_curved_lines = 
+  FALSE, // SOMETHING ?
 
-/* options for map images */
-/*  .mapimg_format, */
-  .mapimg_zoom = 2,
-/* See the definition of MAPIMG_LAYER in mapimg.h. */
-  .mapimg_layer = {
+ // sveinung - this wasnt here
+  "png",  /*  .mapimg_format, */
+  /* options for map images */
+  2, //.mapimg_zoom = 
+   {  //.mapimg_layer =
     FALSE, /* a - MAPIMG_LAYER_AREA */
     TRUE,  /* b - MAPIMG_LAYER_BORDERS */
     TRUE,  /* c - MAPIMG_LAYER_CITIES */
@@ -191,180 +190,192 @@ struct client_options gui_options = {
     TRUE,  /* t - MAPIMG_LAYER_TERRAIN */
     TRUE   /* u - MAPIMG_LAYER_UNITS */
   },
+/* See the definition of MAPIMG_LAYER in mapimg.h. */
+     //.mapimg_layer =
+  // INIT LATER
 /*  .mapimg_filename, */
+  "mapimage filename",
 
-  .zoom_set = FALSE,
-  .zoom_default_level = 1.0,
+// sveinung
+  
+  FALSE, //.zoom_set = 
+  1.0, //.zoom_default_level = 
 
 /* gui-gtk-2.0 client specific options.
  * These are still kept just so users can migrate them to gtk3-client */
-  .gui_gtk2_default_theme_name = FC_GTK2_DEFAULT_THEME_NAME,
-  .gui_gtk2_map_scrollbars = FALSE,
-  .gui_gtk2_dialogs_on_top = TRUE,
-  .gui_gtk2_show_task_icons = TRUE,
-  .gui_gtk2_enable_tabs = TRUE,
-  .gui_gtk2_better_fog = TRUE,
-  .gui_gtk2_show_chat_message_time = FALSE,
-  .gui_gtk2_new_messages_go_to_top = FALSE,
-  .gui_gtk2_show_message_window_buttons = TRUE,
-  .gui_gtk2_metaserver_tab_first = FALSE,
-  .gui_gtk2_allied_chat_only = FALSE,
-  .gui_gtk2_mouse_over_map_focus = FALSE,
-  .gui_gtk2_chatline_autocompletion = TRUE,
-  .gui_gtk2_citydlg_xsize = GUI_GTK2_CITYDLG_DEFAULT_XSIZE,
-  .gui_gtk2_citydlg_ysize = GUI_GTK2_CITYDLG_DEFAULT_YSIZE,
-  .gui_gtk2_popup_tech_help = GUI_POPUP_TECH_HELP_RULESET,
-  .gui_gtk2_font_city_label = "Monospace 8",
-  .gui_gtk2_font_notify_label = "Monospace Bold 9",
-  .gui_gtk2_font_spaceship_label = "Monospace 8",
-  .gui_gtk2_font_help_label = "Sans Bold 10",
-  .gui_gtk2_font_help_link = "Sans 9",
-  .gui_gtk2_font_help_text = "Monospace 8",
-  .gui_gtk2_font_chatline = "Monospace 8",
-  .gui_gtk2_font_beta_label = "Sans Italic 10",
-  .gui_gtk2_font_small = "Sans 9",
-  .gui_gtk2_font_comment_label = "Sans Italic 9",
-  .gui_gtk2_font_city_names = "Sans Bold 10",
-  .gui_gtk2_font_city_productions = "Serif 10",
-  .gui_gtk2_font_reqtree_text = "Serif 10",
-
+  FC_GTK2_DEFAULT_THEME_NAME, //.gui_gtk2_default_theme_name = 
+   FALSE, //.gui_gtk2_map_scrollbars = 
+  TRUE, //.gui_gtk2_dialogs_on_top = 
+  TRUE, //.gui_gtk2_show_task_icons = 
+  TRUE, //.gui_gtk2_enable_tabs = 
+  TRUE, //.gui_gtk2_better_fog = 
+  FALSE, //.gui_gtk2_show_chat_message_time = 
+  FALSE, //.gui_gtk2_new_messages_go_to_top = 
+  TRUE, //.gui_gtk2_show_message_window_buttons = 
+  FALSE, //.gui_gtk2_metaserver_tab_first = 
+  FALSE, //.gui_gtk2_allied_chat_only = 
+  FALSE, //.gui_gtk2_mouse_over_map_focus = 
+  TRUE, //.gui_gtk2_chatline_autocompletion = 
+  GUI_GTK2_CITYDLG_DEFAULT_XSIZE, //.gui_gtk2_citydlg_xsize = 
+  GUI_GTK2_CITYDLG_DEFAULT_YSIZE, //.gui_gtk2_citydlg_ysize = 
+  GUI_POPUP_TECH_HELP_RULESET, //.gui_gtk2_popup_tech_help = 
+  "Monospace 8", //.gui_gtk2_font_city_label = 
+  "Monospace Bold 9", //.gui_gtk2_font_notify_label = 
+  "Monospace 8", //.gui_gtk2_font_spaceship_label = 
+  "Sans Bold 10", //.gui_gtk2_font_help_label = 
+  "Sans 9", //.gui_gtk2_font_help_link = 
+  "Monospace 8", //.gui_gtk2_font_help_text = 
+  "Monospace 8", //.gui_gtk2_font_chatline = 
+  "Sans Italic 10", //.gui_gtk2_font_beta_label = 
+  "Sans 9", //.gui_gtk2_font_small = 
+  "Sans Italic 9", //.gui_gtk2_font_comment_label = 
+  "Sans Bold 10", //.gui_gtk2_font_city_names = 
+  "Serif 10", //.gui_gtk2_font_city_productions = 
+  "Serif 10", //.gui_gtk2_font_reqtree_text = 
+/*** IM AWESOME ***/ 
 /* gui-gtk-3.0 client specific options. */
-  .gui_gtk3_default_theme_name = FC_GTK3_DEFAULT_THEME_NAME,
-  .gui_gtk3_fullscreen = FALSE,
-  .gui_gtk3_map_scrollbars = FALSE,
-  .gui_gtk3_dialogs_on_top = TRUE,
-  .gui_gtk3_show_task_icons = TRUE,
-  .gui_gtk3_enable_tabs = TRUE,
-  .gui_gtk3_show_chat_message_time = FALSE,
-  .gui_gtk3_new_messages_go_to_top = FALSE,
-  .gui_gtk3_show_message_window_buttons = TRUE,
-  .gui_gtk3_metaserver_tab_first = FALSE,
-  .gui_gtk3_allied_chat_only = FALSE,
-  .gui_gtk3_message_chat_location = GUI_GTK_MSGCHAT_SEPARATE,
-  .gui_gtk3_small_display_layout = FALSE,
-  .gui_gtk3_mouse_over_map_focus = FALSE,
-  .gui_gtk3_chatline_autocompletion = TRUE,
-  .gui_gtk3_citydlg_xsize = GUI_GTK3_CITYDLG_DEFAULT_XSIZE,
-  .gui_gtk3_citydlg_ysize = GUI_GTK3_CITYDLG_DEFAULT_YSIZE,
-  .gui_gtk3_popup_tech_help = GUI_POPUP_TECH_HELP_RULESET,
-  .gui_gtk3_governor_range_min = -20,
-  .gui_gtk3_governor_range_max = 20,
-  .gui_gtk3_font_city_label = "Monospace 8",
-  .gui_gtk3_font_notify_label = "Monospace Bold 9",
-  .gui_gtk3_font_spaceship_label = "Monospace 8",
-  .gui_gtk3_font_help_label = "Sans Bold 10",
-  .gui_gtk3_font_help_link = "Sans 9",
-  .gui_gtk3_font_help_text = "Monospace 8",
-  .gui_gtk3_font_chatline = "Monospace 8",
-  .gui_gtk3_font_beta_label = "Sans Italic 10",
-  .gui_gtk3_font_small = "Sans 9",
-  .gui_gtk3_font_comment_label = "Sans Italic 9",
-  .gui_gtk3_font_city_names = "Sans Bold 10",
-  .gui_gtk3_font_city_productions = "Serif 10",
-  .gui_gtk3_font_reqtree_text = "Serif 10",
+  FC_GTK3_DEFAULT_THEME_NAME, //.gui_gtk3_default_theme_name = 
+  FALSE, //.gui_gtk3_fullscreen = 
+  FALSE, //.gui_gtk3_map_scrollbars = 
+  TRUE, //.gui_gtk3_dialogs_on_top = 
+  TRUE, //.gui_gtk3_show_task_icons = 
+  TRUE,  //.gui_gtk3_enable_tabs = 
+  FALSE, //.gui_gtk3_show_chat_message_time = 
+  FALSE, //.gui_gtk3_show_chat_message_time = 
+  TRUE, //.gui_gtk3_show_message_window_buttons = 
+  FALSE, //.gui_gtk3_metaserver_tab_first = 
+  FALSE, //.gui_gtk3_allied_chat_only = 
+  GUI_GTK_MSGCHAT_SEPARATE, //.gui_gtk3_allied_chat_only = 
+  FALSE, //.gui_gtk3_small_display_layout = 
+  FALSE, //.gui_gtk3_small_display_layout = 
+  TRUE, //.gui_gtk3_chatline_autocompletion = 
+  GUI_GTK3_CITYDLG_DEFAULT_XSIZE, //.gui_gtk3_citydlg_xsize = 
+  GUI_GTK3_CITYDLG_DEFAULT_YSIZE, //.gui_gtk3_citydlg_ysize = 
+  GUI_POPUP_TECH_HELP_RULESET, //.gui_gtk3_popup_tech_help = 
+  -20,  //.gui_gtk3_governor_range_min = 
+  20,  //.gui_gtk3_governor_range_max = 
+  "Monospace 8", //.gui_gtk3_font_city_label = 
+  "Monospace Bold 9", //.gui_gtk3_font_notify_label = 
+  "Monospace 8", //.gui_gtk3_font_spaceship_label = 
+  "Sans Bold 10", //.gui_gtk3_font_help_label = 
+  "Sans 9", //.gui_gtk3_font_help_link = 
+  "Monospace 8", //.gui_gtk3_font_help_text = 
+  "Monospace 8", //.gui_gtk3_font_chatline = 
+  "Sans Italic 10", //.gui_gtk3_font_beta_label = 
+  "Sans 9", //.gui_gtk3_font_small = 
+  "Sans Italic 9", //.gui_gtk3_font_comment_label = 
+  "Sans Bold 10", //.gui_gtk3_font_city_names = 
+  "Serif 10", //.gui_gtk3_font_city_productions = 
+  "Serif 10", //.gui_gtk3_font_reqtree_text = 
+
+  /* If its broken then its Louis fault */
 
 /* gui-gtk-3.22 client specific options. */
-  .gui_gtk3_22_default_theme_name = FC_GTK3_22_DEFAULT_THEME_NAME,
-  .gui_gtk3_22_fullscreen = FALSE,
-  .gui_gtk3_22_map_scrollbars = FALSE,
-  .gui_gtk3_22_dialogs_on_top = TRUE,
-  .gui_gtk3_22_show_task_icons = TRUE,
-  .gui_gtk3_22_enable_tabs = TRUE,
-  .gui_gtk3_22_show_chat_message_time = FALSE,
-  .gui_gtk3_22_new_messages_go_to_top = FALSE,
-  .gui_gtk3_22_show_message_window_buttons = TRUE,
-  .gui_gtk3_22_metaserver_tab_first = FALSE,
-  .gui_gtk3_22_allied_chat_only = FALSE,
-  .gui_gtk3_22_message_chat_location = GUI_GTK_MSGCHAT_SEPARATE,
-  .gui_gtk3_22_small_display_layout = FALSE,
-  .gui_gtk3_22_mouse_over_map_focus = FALSE,
-  .gui_gtk3_22_chatline_autocompletion = TRUE,
-  .gui_gtk3_22_citydlg_xsize = GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE,
-  .gui_gtk3_22_citydlg_ysize = GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE,
-  .gui_gtk3_22_popup_tech_help = GUI_POPUP_TECH_HELP_RULESET,
-  .gui_gtk3_22_governor_range_min = -20,
-  .gui_gtk3_22_governor_range_max = 20,
-  .gui_gtk3_22_font_city_label = "Monospace 8",
-  .gui_gtk3_22_font_notify_label = "Monospace Bold 9",
-  .gui_gtk3_22_font_spaceship_label = "Monospace 8",
-  .gui_gtk3_22_font_help_label = "Sans Bold 10",
-  .gui_gtk3_22_font_help_link = "Sans 9",
-  .gui_gtk3_22_font_help_text = "Monospace 8",
-  .gui_gtk3_22_font_chatline = "Monospace 8",
-  .gui_gtk3_22_font_beta_label = "Sans Italic 10",
-  .gui_gtk3_22_font_small = "Sans 9",
-  .gui_gtk3_22_font_comment_label = "Sans Italic 9",
-  .gui_gtk3_22_font_city_names = "Sans Bold 10",
-  .gui_gtk3_22_font_city_productions = "Serif 10",
-  .gui_gtk3_22_font_reqtree_text = "Serif 10",
+  FC_GTK3_22_DEFAULT_THEME_NAME, //.gui_gtk3_22_default_theme_name = 
+  FALSE, //.gui_gtk3_22_fullscreen = 
+  FALSE, //.gui_gtk3_22_map_scrollbars = 
+  TRUE, //.gui_gtk3_22_dialogs_on_top = 
+  TRUE, //.gui_gtk3_22_show_task_icons = 
+  TRUE, //.gui_gtk3_22_enable_tabs = 
+  FALSE, //.gui_gtk3_22_show_chat_message_time = 
+  FALSE, //.gui_gtk3_22_new_messages_go_to_top = 
+  TRUE, //.gui_gtk3_22_show_message_window_buttons = 
+  FALSE, //.gui_gtk3_22_metaserver_tab_first = 
+  FALSE, //.gui_gtk3_22_allied_chat_only = 
+  GUI_GTK_MSGCHAT_SEPARATE, //.gui_gtk3_22_message_chat_location = 
+  FALSE, //.gui_gtk3_22_small_display_layout = 
+  FALSE, //.gui_gtk3_22_mouse_over_map_focus = 
+  TRUE, //.gui_gtk3_22_chatline_autocompletion = 
+  GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE, //.gui_gtk3_22_citydlg_xsize = 
+  GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE, //.gui_gtk3_22_citydlg_ysize = 
+  GUI_POPUP_TECH_HELP_RULESET, //.gui_gtk3_22_popup_tech_help = 
+  -20, //.gui_gtk3_22_governor_range_min = 
+  20, //.gui_gtk3_22_governor_range_max = 
+  "Monospace 8", //.gui_gtk3_22_font_city_label = 
+  "Monospace Bold 9", //.gui_gtk3_22_font_notify_label = 
+  "Monospace 8", //.gui_gtk3_22_font_spaceship_label = 
+  "Sans Bold 10", //.gui_gtk3_22_font_help_label = 
+  "Sans 9", //.gui_gtk3_22_font_help_link = 
+  "Monospace 8", //.gui_gtk3_22_font_help_text = 
+  "Monospace 8", //.gui_gtk3_22_font_chatline = 
+  "Sans Italic 10", //.gui_gtk3_22_font_beta_label = 
+  "Sans 9", //.gui_gtk3_22_font_small = 
+  "Sans Italic 9", //.gui_gtk3_22_font_comment_label = 
+  "Sans Bold 10", //.gui_gtk3_22_font_city_names = 
+  "Serif 10", //.gui_gtk3_22_font_city_productions = 
+  "Serif 10", //.gui_gtk3_22_font_reqtree_text = 
   
 /* gui-gtk-3.x client specific options. */
-  .gui_gtk4_default_theme_name = FC_GTK4_DEFAULT_THEME_NAME,
-  .gui_gtk4_fullscreen = FALSE,
-  .gui_gtk4_map_scrollbars = FALSE,
-  .gui_gtk4_dialogs_on_top = TRUE,
-  .gui_gtk4_show_task_icons = TRUE,
-  .gui_gtk4_enable_tabs = TRUE,
-  .gui_gtk4_show_chat_message_time = FALSE,
-  .gui_gtk4_new_messages_go_to_top = FALSE,
-  .gui_gtk4_show_message_window_buttons = TRUE,
-  .gui_gtk4_metaserver_tab_first = FALSE,
-  .gui_gtk4_allied_chat_only = FALSE,
-  .gui_gtk4_message_chat_location = GUI_GTK_MSGCHAT_SEPARATE,
-  .gui_gtk4_small_display_layout = FALSE,
-  .gui_gtk4_mouse_over_map_focus = FALSE,
-  .gui_gtk4_chatline_autocompletion = TRUE,
-  .gui_gtk4_citydlg_xsize = GUI_GTK4_CITYDLG_DEFAULT_XSIZE,
-  .gui_gtk4_citydlg_ysize = GUI_GTK4_CITYDLG_DEFAULT_YSIZE,
-  .gui_gtk4_popup_tech_help = GUI_POPUP_TECH_HELP_RULESET,
-  .gui_gtk4_governor_range_min = -20,
-  .gui_gtk4_governor_range_max = 20,
-  .gui_gtk4_font_city_label = "Monospace 8",
-  .gui_gtk4_font_notify_label = "Monospace Bold 9",
-  .gui_gtk4_font_spaceship_label = "Monospace 8",
-  .gui_gtk4_font_help_label = "Sans Bold 10",
-  .gui_gtk4_font_help_link = "Sans 9",
-  .gui_gtk4_font_help_text = "Monospace 8",
-  .gui_gtk4_font_chatline = "Monospace 8",
-  .gui_gtk4_font_beta_label = "Sans Italic 10",
-  .gui_gtk4_font_small = "Sans 9",
-  .gui_gtk4_font_comment_label = "Sans Italic 9",
-  .gui_gtk4_font_city_names = "Sans Bold 10",
-  .gui_gtk4_font_city_productions = "Serif 10",
-  .gui_gtk4_font_reqtree_text = "Serif 10",
+  FC_GTK4_DEFAULT_THEME_NAME, //.gui_gtk4_default_theme_name = 
+  FALSE, //.gui_gtk4_fullscreen = 
+  FALSE, //.gui_gtk4_map_scrollbars = 
+  TRUE, //.gui_gtk4_dialogs_on_top = 
+  TRUE, //.gui_gtk4_show_task_icons = 
+  TRUE, //.gui_gtk4_enable_tabs = 
+  FALSE, //.gui_gtk4_show_chat_message_time = 
+  FALSE, //.gui_gtk4_new_messages_go_to_top = 
+  TRUE, //.gui_gtk4_show_message_window_buttons = 
+  FALSE, //.gui_gtk4_metaserver_tab_first = 
+  FALSE, //.gui_gtk4_allied_chat_only = 
+  GUI_GTK_MSGCHAT_SEPARATE, //.gui_gtk4_message_chat_location = 
+  FALSE, //.gui_gtk4_small_display_layout = 
+  FALSE, //.gui_gtk4_mouse_over_map_focus = 
+  TRUE, //.gui_gtk4_chatline_autocompletion = 
+  GUI_GTK4_CITYDLG_DEFAULT_XSIZE, //.gui_gtk4_citydlg_xsize = 
+  GUI_GTK4_CITYDLG_DEFAULT_YSIZE, //.gui_gtk4_citydlg_ysize = 
+  GUI_POPUP_TECH_HELP_RULESET, //.gui_gtk4_popup_tech_help = 
+  -20, //.gui_gtk4_governor_range_min = 
+  20, //.gui_gtk4_governor_range_max = 
+  "Monospace 8", //.gui_gtk4_font_city_label = 
+  "Monospace Bold 9", //.gui_gtk4_font_notify_label = 
+  "Monospace 8", //.gui_gtk4_font_spaceship_label = 
+  "Sans Bold 10", //.gui_gtk4_font_help_label = 
+  "Sans 9", //.gui_gtk4_font_help_link = 
+  "Monospace 8", //.gui_gtk4_font_help_text = 
+  "Monospace 8", //.gui_gtk4_font_chatline = 
+  "Sans Italic 10", //.gui_gtk4_font_beta_label = 
+  "Sans 9", //.gui_gtk4_font_small = 
+  "Sans Italic 9", //.gui_gtk4_font_comment_label = 
+  "Sans Bold 10", //.gui_gtk4_font_city_names = 
+  "Serif 10", //.gui_gtk4_font_city_productions = 
+  "Serif 10", //.gui_gtk4_font_reqtree_text = 
 
 /* gui-sdl client specific options. */
-  .gui_sdl_fullscreen = FALSE,
-  .gui_sdl_screen = VIDEO_MODE(640, 480),
-  .gui_sdl_do_cursor_animation = TRUE,
-  .gui_sdl_use_color_cursors = TRUE,
+  FALSE, //.gui_sdl_fullscreen = 
+  VIDEO_MODE(640, 480), //.gui_sdl_screen = 
+  TRUE, //.gui_sdl_do_cursor_animation = 
+  TRUE, //.gui_sdl_use_color_cursors = 
 
 /* gui-sdl2 client specific options. */
-  .gui_sdl2_default_theme_name = FC_SDL2_DEFAULT_THEME_NAME,
-  .gui_sdl2_fullscreen = FALSE,
-  .gui_sdl2_screen = VIDEO_MODE(640, 480),
-  .gui_sdl2_swrenderer = FALSE,
-  .gui_sdl2_do_cursor_animation = TRUE,
-  .gui_sdl2_use_color_cursors = TRUE,
-  .gui_sdl2_font_city_names = "10",
-  .gui_sdl2_font_city_productions = "10",
+  FC_SDL2_DEFAULT_THEME_NAME, //.gui_sdl2_default_theme_name = 
+  FALSE, //.gui_sdl2_fullscreen = 
+  VIDEO_MODE(640, 480), //.gui_sdl2_screen = 
+  FALSE, //.gui_sdl2_swrenderer = 
+  TRUE, //.gui_sdl2_do_cursor_animation = 
+  TRUE, //.gui_sdl2_use_color_cursors = 
+  "10", //.gui_sdl2_font_city_names = 
+  "10",  //.gui_sdl2_font_city_productions = 
+
+
 
 /* gui-qt client specific options. */
-  .gui_qt_fullscreen = FALSE,
-  .gui_qt_show_preview = TRUE,
-  .gui_qt_sidebar_left = TRUE,
-  .gui_qt_default_theme_name = FC_QT_DEFAULT_THEME_NAME,
-  .gui_qt_font_default = "Sans Serif,10,-1,5,75,0,0,0,0,0",
-  .gui_qt_font_notify_label = "Monospace,8,-1,5,75,0,0,0,0,0",
-  .gui_qt_font_help_label = "Sans Serif,9,-1,5,50,0,0,0,0,0",
-  .gui_qt_font_help_text = "Monospace,8,-1,5,50,0,0,0,0,0",
-  .gui_qt_font_chatline = "Monospace,8,-1,5,50,0,0,0,0,0",
-  .gui_qt_font_city_names = "Sans Serif,10,-1,5,75,0,0,0,0,0",
-  .gui_qt_font_city_productions = "Sans Serif,10,-1,5,50,1,0,0,0,0",
-  .gui_qt_font_reqtree_text = "Sans Serif,10,-1,5,50,1,0,0,0,0",
-  .gui_qt_show_titlebar = TRUE,
-  .gui_qt_wakeup_text = "Wake up %1"
+  FALSE, //.gui_qt_fullscreen = 
+  TRUE, //.gui_qt_show_preview = 
+  TRUE, //.gui_qt_sidebar_left = 
+  "NightStalker"
+  "Monospace,8,-1,5,75,0,0,0,0,0", //.gui_qt_font_notify_label = 
+  "Sans Serif,9,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_label = 
+  "Monospace,8,-1,5,50,0,0,0,0,0", //.gui_qt_font_help_text = 
+  "Monospace,8,-1,5,50,0,0,0,0,0", //.gui_qt_font_chatline = 
+  "Sans Serif,10,-1,5,75,0,0,0,0,0", //.gui_qt_font_city_names = 
+  "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions = 
+  "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text = 
+  TRUE, //.gui_qt_show_titlebar = 
+  //sveinung
+   //.gui_qt_wakeup_text = 
+  //"Wake up %1",
 };
+
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
  * of non-initialized datas when calling the changed callback. */
@@ -441,6 +452,70 @@ const char *optset_category_name(const struct option_set *poptset,
   return poptset->category_name(category);
 }
 
+  struct option_common_vtable {
+    int (*number) (const struct option *);
+    const char * (*name) (const struct option *);
+    const char * (*description) (const struct option *);
+    const char * (*help_text) (const struct option *);
+    int (*category) (const struct option *);
+    bool (*is_changeable) (const struct option *);
+    struct option * (*next) (const struct option *);
+  };
+
+  struct option_bool_vtable {
+      bool (*get) (const struct option *);
+      bool (*def) (const struct option *);
+      bool (*set) (struct option *, bool);
+    };
+
+struct option_int_vtable {
+      int (*get) (const struct option *);
+      int (*def) (const struct option *);
+      int (*minimum) (const struct option *);
+      int (*maximum) (const struct option *);
+      bool (*set) (struct option *, int);
+    };
+    /* Specific string accessors (OT_STRING == type). */
+struct option_str_vtable {
+      const char * (*get) (const struct option *);
+      const char * (*def) (const struct option *);
+      const struct strvec * (*values) (const struct option *);
+      bool (*set) (struct option *, const char *);
+    };
+    /* Specific enum accessors (OT_ENUM == type). */
+struct option_enum_vtable {
+      int (*get) (const struct option *);
+      int (*def) (const struct option *);
+      const struct strvec * (*values) (const struct option *);
+      bool (*set) (struct option *, int);
+      int (*cmp) (const char *, const char *);
+    };
+    /* Specific bitwise accessors (OT_BITWISE == type). */
+struct option_bitwise_vtable {
+      unsigned (*get) (const struct option *);
+      unsigned (*def) (const struct option *);
+      const struct strvec * (*values) (const struct option *);
+      bool (*set) (struct option *, unsigned);
+    };
+    /* Specific font accessors (OT_FONT == type). */
+struct option_font_vtable {
+      const char * (*get) (const struct option *);
+      const char * (*def) (const struct option *);
+      const char * (*target) (const struct option *);
+      bool (*set) (struct option *, const char *);
+    };
+    /* Specific color accessors (OT_COLOR == type). */
+struct option_color_vtable {
+      struct ft_color (*get) (const struct option *);
+      struct ft_color (*def) (const struct option *);
+      bool (*set) (struct option *, struct ft_color);
+    };
+    /* Specific video mode accessors (OT_VIDEO_MODE == type). */
+struct option_video_mode_vtable {
+      struct video_mode (*get) (const struct option *);
+      struct video_mode (*def) (const struct option *);
+      bool (*set) (struct option *, struct video_mode);
+    };
 
 /****************************************************************************
   The base class for options.
@@ -452,72 +527,25 @@ struct option {
   enum option_type type;
 
   /* Common accessors. */
-  const struct option_common_vtable {
-    int (*number) (const struct option *);
-    const char * (*name) (const struct option *);
-    const char * (*description) (const struct option *);
-    const char * (*help_text) (const struct option *);
-    int (*category) (const struct option *);
-    bool (*is_changeable) (const struct option *);
-    struct option * (*next) (const struct option *);
-  } *common_vtable;
+  const struct option_common_vtable common_vtable;
   /* Specific typed accessors. */
-  union {
+  union{
     /* Specific boolean accessors (OT_BOOLEAN == type). */
-    const struct option_bool_vtable {
-      bool (*get) (const struct option *);
-      bool (*def) (const struct option *);
-      bool (*set) (struct option *, bool);
-    } *bool_vtable;
+    const struct option_bool_vtable *bool_vtable;
     /* Specific integer accessors (OT_INTEGER == type). */
-    const struct option_int_vtable {
-      int (*get) (const struct option *);
-      int (*def) (const struct option *);
-      int (*minimum) (const struct option *);
-      int (*maximum) (const struct option *);
-      bool (*set) (struct option *, int);
-    } *int_vtable;
+    const struct option_int_vtable *int_vtable;
     /* Specific string accessors (OT_STRING == type). */
-    const struct option_str_vtable {
-      const char * (*get) (const struct option *);
-      const char * (*def) (const struct option *);
-      const struct strvec * (*values) (const struct option *);
-      bool (*set) (struct option *, const char *);
-    } *str_vtable;
+    const struct option_str_vtable *str_vtable;
     /* Specific enum accessors (OT_ENUM == type). */
-    const struct option_enum_vtable {
-      int (*get) (const struct option *);
-      int (*def) (const struct option *);
-      const struct strvec * (*values) (const struct option *);
-      bool (*set) (struct option *, int);
-      int (*cmp) (const char *, const char *);
-    } *enum_vtable;
+    const struct option_enum_vtable  *enum_vtable;
     /* Specific bitwise accessors (OT_BITWISE == type). */
-    const struct option_bitwise_vtable {
-      unsigned (*get) (const struct option *);
-      unsigned (*def) (const struct option *);
-      const struct strvec * (*values) (const struct option *);
-      bool (*set) (struct option *, unsigned);
-    } *bitwise_vtable;
+    const struct option_bitwise_vtable *bitwise_vtable;
     /* Specific font accessors (OT_FONT == type). */
-    const struct option_font_vtable {
-      const char * (*get) (const struct option *);
-      const char * (*def) (const struct option *);
-      const char * (*target) (const struct option *);
-      bool (*set) (struct option *, const char *);
-    } *font_vtable;
+    const struct option_font_vtable  *font_vtable;
     /* Specific color accessors (OT_COLOR == type). */
-    const struct option_color_vtable {
-      struct ft_color (*get) (const struct option *);
-      struct ft_color (*def) (const struct option *);
-      bool (*set) (struct option *, struct ft_color);
-    } *color_vtable;
+    const struct option_color_vtable *color_vtable;
     /* Specific video mode accessors (OT_VIDEO_MODE == type). */
-    const struct option_video_mode_vtable {
-      struct video_mode (*get) (const struct option *);
-      struct video_mode (*def) (const struct option *);
-      bool (*set) (struct option *, struct video_mode);
-    } *video_mode_vtable;
+    const struct option_video_mode_vtable *video_mode_vtable;
   };
 
   /* Called after the value changed. */
@@ -535,7 +563,7 @@ struct option {
                     spec_table, changed_cb, cb_data) {                      \
   .poptset = optset,                                                        \
   .type = spec_type,                                                        \
-  .common_vtable = &common_table,                                           \
+  .common_vtable = common_table,                                           \
   INIT_BRACE_BEGIN                                                          \
     .spec_table_var = &spec_table                                           \
   INIT_BRACE_END,                                                           \
@@ -588,7 +616,7 @@ int option_number(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
 
-  return poption->common_vtable->number(poption);
+  return poption->common_vtable.number(poption);
 }
 
 /************************************************************************//**
@@ -598,7 +626,7 @@ const char *option_name(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable->name(poption);
+  return poption->common_vtable.name(poption);
 }
 
 /************************************************************************//**
@@ -608,7 +636,7 @@ const char *option_description(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable->description(poption);
+  return poption->common_vtable.description(poption);
 }
 
 /************************************************************************//**
@@ -618,7 +646,7 @@ const char *option_help_text(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable->help_text(poption);
+  return poption->common_vtable.help_text(poption);
 }
 
 /************************************************************************//**
@@ -626,7 +654,8 @@ const char *option_help_text(const struct option *poption)
 ****************************************************************************/
 enum option_type option_type(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, -1);
+  //sveinung
+  //fc_assert_ret_val(NULL != poption, -1);
 
   return poption->type;
 }
@@ -638,7 +667,7 @@ int option_category(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, -1);
 
-  return poption->common_vtable->category(poption);
+  return poption->common_vtable.category(poption);
 }
 
 /************************************************************************//**
@@ -649,7 +678,7 @@ const char *option_category_name(const struct option *poption)
   fc_assert_ret_val(NULL != poption, NULL);
 
   return optset_category_name(poption->poptset,
-                              poption->common_vtable->category(poption));
+                              poption->common_vtable.category(poption));
 }
 
 /************************************************************************//**
@@ -659,7 +688,7 @@ bool option_is_changeable(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, FALSE);
 
-  return poption->common_vtable->is_changeable(poption);
+  return poption->common_vtable.is_changeable(poption);
 }
 
 /************************************************************************//**
@@ -669,7 +698,7 @@ struct option *option_next(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
 
-  return poption->common_vtable->next(poption);
+  return poption->common_vtable.next(poption);
 }
 
 /************************************************************************//**
@@ -1267,13 +1296,13 @@ static bool client_option_is_changeable(const struct option *poption);
 static struct option *client_option_next(const struct option *poption);
 
 static const struct option_common_vtable client_option_common_vtable = {
-  .number = client_option_number,
-  .name = client_option_name,
-  .description = client_option_description,
-  .help_text = client_option_help_text,
-  .category = client_option_category,
-  .is_changeable = client_option_is_changeable,
-  .next = client_option_next
+  client_option_number, //.number = 
+  client_option_name, //.name = 
+  client_option_description, //.description = 
+  client_option_help_text, //.help_text = 
+  client_option_category, //.category = 
+  client_option_is_changeable, //.is_changeable = 
+  client_option_next //.next = 
 };
 
 static bool client_option_bool_get(const struct option *poption);
@@ -1281,9 +1310,9 @@ static bool client_option_bool_def(const struct option *poption);
 static bool client_option_bool_set(struct option *poption, bool val);
 
 static const struct option_bool_vtable client_option_bool_vtable = {
-  .get = client_option_bool_get,
-  .def = client_option_bool_def,
-  .set = client_option_bool_set
+  client_option_bool_get, //.get = 
+  client_option_bool_def, //.def = 
+  client_option_bool_set //.set = 
 };
 
 static int client_option_int_get(const struct option *poption);
@@ -1850,6 +1879,7 @@ static void font_changed_callback(struct option *poption);
 static void mapimg_changed_callback(struct option *poption);
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
+static void sound_volume_callback(struct option *poption);
 
 static struct client_option client_options[] = {
   GEN_STR_OPTION(default_user_name,
@@ -2317,6 +2347,13 @@ static struct client_option client_options[] = {
                      "assuming there's suitable "
                      "sound plugin and musicset with menu music tracks."),
                   COC_SOUND, GUI_STUB, TRUE, menu_music_enable_callback),
+  GEN_INT_OPTION(sound_effects_volume,
+                 N_("Sound volume"),
+                 N_("Volume scale from 0-100"),
+                 COC_SOUND, GUI_STUB, 100,
+                 0, 100,
+                 sound_volume_callback),
+
   GEN_BOOL_OPTION(autoaccept_soundset_suggestion,
                   N_("Autoaccept soundset suggestions"),
                   N_("If this option is enabled, any soundset suggested by "
@@ -4232,8 +4269,8 @@ void handle_server_setting_control
   if (0 < packet->categories_num) {
     server_options_categories_num = packet->categories_num;
     server_options_categories =
-        fc_calloc(server_options_categories_num,
-                  sizeof(*server_options_categories));
+        static_cast<char**>(fc_calloc(server_options_categories_num,
+                  sizeof(*server_options_categories)));
 
     for (i = 0; i < server_options_categories_num; i++) {
       /* NB: Translate now. */
@@ -4244,7 +4281,7 @@ void handle_server_setting_control
   /* Allocate server options. */
   if (0 < packet->settings_num) {
     server_options_num = packet->settings_num;
-    server_options = fc_calloc(server_options_num, sizeof(*server_options));
+    server_options = static_cast<server_option*>(fc_calloc(server_options_num, sizeof(*server_options)));
   }
 }
 
@@ -4321,13 +4358,6 @@ void handle_server_setting_bool
 
   fc_assert_ret(NULL != poption);
 
-  if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
-    poption->poptset = server_optset;
-    poption->common_vtable = &server_option_common_vtable;
-    poption->type = OT_BOOLEAN;
-    poption->bool_vtable = &server_option_bool_vtable;
-  }
   fc_assert_ret_msg(OT_BOOLEAN == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4356,10 +4386,11 @@ void handle_server_setting_int
 
   fc_assert_ret(NULL != poption);
 
-  if (NULL == poption->common_vtable) {
+  if (0) {
     /* Not initialized yet. */
     poption->poptset = server_optset;
-    poption->common_vtable = &server_option_common_vtable;
+    ////sveinung
+    //poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_INTEGER;
     poption->int_vtable = &server_option_int_vtable;
   }
@@ -4393,13 +4424,7 @@ void handle_server_setting_str
 
   fc_assert_ret(NULL != poption);
 
-  if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
-    poption->poptset = server_optset;
-    poption->common_vtable = &server_option_common_vtable;
-    poption->type = OT_STRING;
-    poption->str_vtable = &server_option_str_vtable;
-  }
+
   fc_assert_ret_msg(OT_STRING == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4438,13 +4463,6 @@ void handle_server_setting_enum
 
   fc_assert_ret(NULL != poption);
 
-  if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
-    poption->poptset = server_optset;
-    poption->common_vtable = &server_option_common_vtable;
-    poption->type = OT_ENUM;
-    poption->enum_vtable = &server_option_enum_vtable;
-  }
   fc_assert_ret_msg(OT_ENUM == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4527,13 +4545,6 @@ void handle_server_setting_bitwise
 
   fc_assert_ret(NULL != poption);
 
-  if (NULL == poption->common_vtable) {
-    /* Not initialized yet. */
-    poption->poptset = server_optset;
-    poption->common_vtable = &server_option_common_vtable;
-    poption->type = OT_BITWISE;
-    poption->bitwise_vtable = &server_option_bitwise_vtable;
-  }
   fc_assert_ret_msg(OT_BITWISE == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -6264,6 +6275,14 @@ static void manual_turn_done_callback(struct option *poption)
       user_ended_turn();
     }
   }
+}
+
+/****************************************************************************
+  Callback for changing music volume
+****************************************************************************/
+static void sound_volume_callback(struct option *poption)
+{
+  audio_set_volume(gui_options.sound_effects_volume / 100.0);
 }
 
 /************************************************************************//**

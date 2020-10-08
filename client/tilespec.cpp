@@ -1,7 +1,7 @@
 /***********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
+   it under the terms of the GNU General Public License as publishedtileset_layer by
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
@@ -137,7 +137,9 @@
 enum direction4 {
   DIR4_NORTH = 0, DIR4_SOUTH, DIR4_EAST, DIR4_WEST
 };
-static const char direction4letters[4] = "udrl";
+
+/// lol sveinung 5 in 4
+static const char direction4letters[5] = "udrl";
 /* This must correspond to enum edge_type. */
 static const char edge_name[EDGE_COUNT][3] = {"ns", "we", "ud", "lr"};
 
@@ -156,15 +158,7 @@ enum sprite_type {
   CELL_CORNER		/* corner of tile */
 };
 
-struct drawing_data {
-  bool init;
-
-  char *name;
-
-  int num_layers; /* 1 thru MAX_NUM_LAYERS. */
-#define MAX_NUM_LAYERS 3
-
-  struct drawing_layer {
+struct drawing_layer {
     bool is_tall;
     int offset_x, offset_y;
 
@@ -182,7 +176,20 @@ struct drawing_data {
     /* List of those sprites in 'cells' that are allocated by some other
      * means than load_sprite() and thus are not freed by unload_all_sprites(). */
     struct sprite_vector allocated;
-  } layer[MAX_NUM_LAYERS];
+};
+
+
+
+
+struct drawing_data {
+  bool init;
+
+  char *name;
+
+  int num_layers; /* 1 thru MAX_NUM_LAYERS. */
+#define MAX_NUM_LAYERS 3
+
+  struct drawing_layer layer[MAX_NUM_LAYERS];
 
   bool is_reversed;
 
@@ -195,11 +202,13 @@ struct city_style_threshold {
   struct sprite *sprite;
 };
 
-struct city_sprite {
-  struct {
+struct styles{
     int land_num_thresholds;
     struct city_style_threshold *land_thresholds;
-  } *styles;
+  };
+
+struct city_sprite {
+  struct styles *styles;
   int num_styles;
 };
 
@@ -208,6 +217,13 @@ struct river_sprites {
     *spec[MAX_INDEX_CARDINAL],
     *outlet[MAX_INDEX_CARDINAL];
 };
+
+  struct citizen_graphic {
+    /* Each citizen type has up to MAX_NUM_CITIZEN_SPRITES different
+     * sprites, as defined by the tileset. */
+    int count;
+    struct sprite *sprite[MAX_NUM_CITIZEN_SPRITES];
+  };
 
 struct named_sprites {
   struct sprite
@@ -242,12 +258,7 @@ struct named_sprites {
   struct sprite_vector nation_flag;
   struct sprite_vector nation_shield;
 
-  struct citizen_graphic {
-    /* Each citizen type has up to MAX_NUM_CITIZEN_SPRITES different
-     * sprites, as defined by the tileset. */
-    int count;
-    struct sprite *sprite[MAX_NUM_CITIZEN_SPRITES];
-  } citizen[CITIZEN_LAST], specialist[SP_MAX];
+  struct citizen_graphic citizen[CITIZEN_LAST], specialist[SP_MAX];
   struct sprite *spaceship[SPACESHIP_COUNT];
   struct {
     int hot_x, hot_y;
@@ -329,7 +340,7 @@ struct named_sprites {
     struct sprite
       *activity,
       *rmact;
-    enum extrastyle_id extrastyle;
+    int extrastyle;
     union {
       struct sprite *single;
       struct sprite *cardinals[MAX_INDEX_CARDINAL];
@@ -450,8 +461,13 @@ static void drawing_data_destroy(struct drawing_data *draw);
 
 #define SPECHASH_TAG estyle
 #define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_ENUM_DATA_TYPE extrastyle_id
+#define SPECHASH_INT_DATA_TYPE extrastyle_id
 #include "spechash.h"
+
+struct tileset_layer {
+    char **match_types;
+    size_t match_count;
+  }; 
 
 struct tileset {
   char name[512];
@@ -508,10 +524,7 @@ struct tileset {
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
 
-  struct tileset_layer {
-    char **match_types;
-    size_t match_count;
-  } layers[MAX_NUM_LAYERS];
+  struct tileset_layer layers[MAX_NUM_LAYERS];
 
   struct specfile_list *specfiles;
   struct small_sprite_list *small_sprites;
@@ -604,7 +617,7 @@ void tileset_error(enum log_level level, const char *format, ...)
 ****************************************************************************/
 static struct drawing_data *drawing_data_new(void)
 {
-  struct drawing_data *draw = fc_calloc(1, sizeof(*draw));
+  struct drawing_data *draw = static_cast<drawing_data*>(fc_calloc(1, sizeof(*draw)));
 
   draw->name = NULL;
 
@@ -927,7 +940,7 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
 ****************************************************************************/
 static struct tileset *tileset_new(void)
 {
-  struct tileset *t = fc_calloc(1, sizeof(*t));
+  struct tileset *t = static_cast<struct tileset*>(fc_calloc(1, sizeof(*t)));
 
   t->specfiles = specfile_list_new();
   t->small_sprites = small_sprite_list_new();
@@ -1621,7 +1634,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         xr = x_top_left + (dx + pixel_border_x) * column;
         yb = y_top_left + (dy + pixel_border_y) * row;
 
-        ss = fc_malloc(sizeof(*ss));
+        ss = static_cast<small_sprite*>(fc_malloc(sizeof(*ss)));
         ss->ref_count = 0;
         ss->file = NULL;
         ss->x = xr;
@@ -1675,7 +1688,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     hot_x = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_x", i);
     hot_y = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_y", i);
 
-    ss = fc_malloc(sizeof(*ss));
+    ss = static_cast<small_sprite*>(fc_malloc(sizeof(*ss)));
     ss->ref_count = 0;
     ss->file = fc_strdup(filename);
     ss->sf = NULL;
@@ -1715,8 +1728,8 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
   while ((gfx_current_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
     char *full_name =
-      fc_malloc(strlen(gfx_filename) + strlen(".")
-                + strlen(gfx_current_fileext) + 1);
+      static_cast<char*>(fc_malloc(strlen(gfx_filename) + strlen(".")
+                + strlen(gfx_current_fileext) + 1));
 
     sprintf(full_name, "%s.%s", gfx_filename, gfx_current_fileext);
 
@@ -1825,7 +1838,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset summary found */
     len = strlen(tstr);
-    t->summary = fc_malloc(len + 1);
+    t->summary = static_cast<char*>(fc_malloc(len + 1));
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
     /* No summary */
@@ -1841,7 +1854,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset description found */
     len = strlen(tstr);
-    t->description = fc_malloc(len + 1);
+    t->description = static_cast<char*>(fc_malloc(len + 1));
     fc_strlcpy(t->description, tstr, len + 1);
   } else {
     /* No description */
@@ -2165,14 +2178,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       }
       if (!found) {
         log_error("layer_order: Missing layer \"%s\"",
-                  mapview_layer_name(i));
+                  mapview_layer_name(static_cast<mapview_layer>(i)));
         goto ON_ERROR;
       }
     }
   } else {
     /* There is no layer_order tag in the specfile -> use the default */
     for (i = 0; i < LAYER_COUNT; i++) {
-      t->layer_order[i] = i;
+      t->layer_order[i] = static_cast<mapview_layer>(i);
     }
   }
 
@@ -2348,7 +2361,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       sprite_type
 	= secfile_lookup_str_default(file, "whole", "%s.layer%d_sprite_type",
                                      sec_name, l);
-      dlp->sprite_type = check_sprite_type(sprite_type, sec_name);
+      dlp->sprite_type = static_cast<enum sprite_type>(check_sprite_type(sprite_type, sec_name));
 
       switch (dlp->sprite_type) {
       case CELL_WHOLE:
@@ -2388,16 +2401,11 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                                       "extras.styles%d.name",
                                                       i)); i++) {
     const char *style_name;
-    enum extrastyle_id style;
+    int style;
 
     style_name = secfile_lookup_str_default(file, "Single1",
                                             "extras.styles%d.style", i);
     style = extrastyle_id_by_name(style_name, fc_strcasecmp);
-    if (!extrastyle_id_is_valid(style)) {
-      log_error("Unknown extra style \"%s\" for road \"%s\"",
-                style_name, extraname);
-      goto ON_ERROR;
-    }
 
     if (!estyle_hash_insert(t->estyle_hash, extraname, style)) {
       log_error("warning: duplicate extrastyle entry [%s].", extraname);
@@ -2415,7 +2423,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   fc_assert(t->sprite_hash == NULL);
   t->sprite_hash = sprite_hash_new();
   for (i = 0; i < num_spec_files; i++) {
-    struct specfile *sf = fc_malloc(sizeof(*sf));
+    struct specfile *sf = static_cast<specfile*>(fc_malloc(sizeof(*sf)));
     const char *dname;
 
     log_debug("spec file %s", spec_filenames[i]);
@@ -2782,7 +2790,7 @@ static void tileset_setup_citizen_types(struct tileset *t)
 
   /* Load the citizen sprite graphics, no specialist. */
   for (i = 0; i < CITIZEN_LAST; i++) {
-    const char *name = citizen_rule_name(i);
+    const char *name = citizen_rule_name(static_cast<citizen_category>(i));
 
     for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
       fc_snprintf(buffer, sizeof(buffer), "citizen.%s_%d", name, j);
@@ -2857,7 +2865,7 @@ static int load_city_thresholds_sprites(struct tileset *t, const char *tag,
                 gfx_in_use, tag, size);
     if ((sprite = load_sprite(t, buffer, TRUE, TRUE))) {
       num_thresholds++;
-      *thresholds = fc_realloc(*thresholds, num_thresholds * sizeof(**thresholds));
+      *thresholds = static_cast<city_style_threshold*>(fc_realloc(*thresholds, num_thresholds * sizeof(**thresholds)));
       (*thresholds)[num_thresholds - 1].sprite = sprite;
     } else if (size == 0) {
       if (gfx_in_use == graphic) {
@@ -2884,15 +2892,15 @@ static int load_city_thresholds_sprites(struct tileset *t, const char *tag,
 static struct city_sprite *load_city_sprite(struct tileset *t,
                                             const char *tag)
 {
-  struct city_sprite *city_sprite = fc_malloc(sizeof(*city_sprite));
+  struct city_sprite *city_sprite = static_cast<struct city_sprite*>(fc_malloc(sizeof(*city_sprite)));
   int style;
 
   /* Store number of styles we have allocated memory for.
    * game.control.styles_count might change if client disconnects from
    * server and connects new one. */
   city_sprite->num_styles = game.control.styles_count;
-  city_sprite->styles = fc_malloc(city_sprite->num_styles
-				  * sizeof(*city_sprite->styles));
+  city_sprite->styles = static_cast<styles*>(fc_malloc(city_sprite->num_styles
+				  * sizeof(*city_sprite->styles)));
 
   for (style = 0; style < city_sprite->num_styles; style++) {
     city_sprite->styles[style].land_num_thresholds =
@@ -3004,7 +3012,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
 
   for (i = 0; i < E_COUNT; i++) {
-    const char *tag = get_event_tag(i);
+    const char *tag = get_event_tag(static_cast<event_type>(i));
 
     SET_SPRITE(events[i], tag);
   }
@@ -3170,11 +3178,11 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
   output_type_iterate(o) {
     fc_snprintf(buffer, sizeof(buffer),
-                "upkeep.%s", get_output_identifier(o));
+                "upkeep.%s", get_output_identifier(static_cast<Output_type_id>(o)));
     SET_SPRITE_OPT(upkeep.output[o][0], buffer);
     for (i = 1; i < MAX_NUM_UPKEEP_SPRITES; i++) {
       fc_snprintf(buffer2, sizeof(buffer2),
-                  "upkeep.%s%d", get_output_identifier(o), i+1);
+                  "upkeep.%s%d", get_output_identifier(static_cast<Output_type_id>(o)), i+1);
       if (sprite_exists(t, buffer2)) {
         SET_SPRITE(upkeep.output[o][i], buffer2);
         fc_strlcpy(buffer, buffer2, sizeof(buffer));
@@ -3308,8 +3316,8 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     }
     break;
   case DARKNESS_CORNER:
-    t->sprites.tx.fullfog = fc_realloc(t->sprites.tx.fullfog,
-				       81 * sizeof(*t->sprites.tx.fullfog));
+    t->sprites.tx.fullfog = static_cast<sprite**>(fc_realloc(t->sprites.tx.fullfog,
+				       81 * sizeof(*t->sprites.tx.fullfog)));
     for (i = 0; i < 81; i++) {
       /* Unknown, fog, known. */
       char ids[] = {'u', 'f', 'k'};
@@ -3581,7 +3589,7 @@ void tileset_setup_extra(struct tileset *t,
                          struct extra_type *pextra)
 {
   const int id = extra_index(pextra);
-  enum extrastyle_id extrastyle;
+  int extrastyle;
 
   if (!fc_strcasecmp(pextra->graphic_str, "none")) {
     /* Extra without graphics */
@@ -3708,7 +3716,7 @@ static void tileset_setup_road(struct tileset *t,
   char full_tag_name[MAX_LEN_NAME + strlen("_isolated")];
   const int id = extra_index(pextra);
   int i;
-  enum extrastyle_id extrastyle = t->sprites.extras[id].extrastyle;
+  int extrastyle = t->sprites.extras[id].extrastyle;
 
   /* Isolated road graphics are used by ESTYLE_ROAD_ALL_SEPARATE and
      ESTYLE_ROAD_PARITY_COMBINED. */
@@ -3936,10 +3944,10 @@ void tileset_setup_tile_type(struct tileset *t,
 	};
 
 	dlp->cells
-	  = fc_calloc(number, sizeof(*dlp->cells));
+	  =static_cast<struct sprite**>(fc_calloc(number, sizeof(*dlp->cells)));
 
 	for (i = 0; i < number; i++) {
-	  enum direction4 dir = i % NUM_CORNER_DIRS;
+	  enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
 	  int value = i / NUM_CORNER_DIRS;
 
 	  switch (dlp->match_style) {
@@ -3973,7 +3981,7 @@ void tileset_setup_tile_type(struct tileset *t,
 	    break;
 	  case MATCH_FULL:
 	    {
-	      int this = dlp->match_index[0];
+	      int tthis = dlp->match_index[0];
 	      int n, s, e, w;
 	      int v1, v2, v3;
 
@@ -3988,26 +3996,26 @@ void tileset_setup_tile_type(struct tileset *t,
 	      /* Assume merged cells.  This should be a separate option. */
 	      switch (dir) {
 	      case DIR4_NORTH:
-		s = this;
+		s = tthis;
 		w = v1;
 		n = v2;
 		e = v3;
 		break;
 	      case DIR4_EAST:
-		w = this;
+		w = tthis;
 		n = v1;
 		e = v2;
 		s = v3;
 		break;
 	      case DIR4_SOUTH:
-		n = this;
+		n = tthis;
 		e = v1;
 		s = v2;
 		w = v3;
 		break;
 	      case DIR4_WEST:
 	      default:		/* avoid warnings */
-		e = this;
+		e = tthis;
 		s = v1;
 		w = v2;
 		n = v3;
@@ -4092,7 +4100,7 @@ void tileset_setup_tile_type(struct tileset *t,
     const int offsets[4][2] = {
       {W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}
     };
-    enum direction4 dir = 0;
+    int dir = 0;
 
     for (; dir < 4; dir++) {
       draw->blend[dir] = crop_sprite(draw->blender, offsets[dir][0],
@@ -4205,11 +4213,11 @@ static void build_tile_data(const struct tile *ptile,
                             struct terrain **tterrain_near,
                             bv_extras *textras_near)
 {
-  enum direction8 dir;
+  int dir;
 
   /* Loop over all adjacent tiles.  We should have an iterator for this. */
   for (dir = 0; dir < 8; dir++) {
-    struct tile *tile1 = mapstep(&(wld.map), ptile, dir);
+    struct tile *tile1 = mapstep(&(wld.map), ptile, static_cast<direction8>(dir));
 
     if (tile1 && client_tile_get_known(tile1) != TILE_UNKNOWN) {
       struct terrain *terrain1 = tile_terrain(tile1);
@@ -4491,10 +4499,10 @@ static int fill_road_sprite_array(const struct tileset *t,
   bool road, road_near[8], hider, hider_near[8];
   bool land_near[8], hland_near[8];
   bool draw_road[8], draw_single_road;
-  enum direction8 dir;
+  int dir;
   int extra_idx = -1;
   bool cl = FALSE;
-  enum extrastyle_id extrastyle;
+  int extrastyle;
   const struct road_type *proad = extra_road_get(pextra);
 
   extra_idx = extra_index(pextra);
@@ -4537,7 +4545,7 @@ static int fill_road_sprite_array(const struct tileset *t,
 
     /* Check if there is adjacent road/rail. */
     if (!is_cardinal_only_road(pextra)
-        || is_cardinal_tileset_dir(t, dir)) {
+        || is_cardinal_tileset_dir(t, static_cast<direction8>(dir))) {
       road_near[dir] = FALSE;
       extra_type_list_iterate(proad->integrators, iextra) {
         if (BV_ISSET(textras_near[dir], extra_index(iextra))) {
@@ -4567,7 +4575,7 @@ static int fill_road_sprite_array(const struct tileset *t,
       bool land_dir = FALSE;
 
       if (!is_cardinal_only_road(phider)
-          || is_cardinal_tileset_dir(t, dir)) {
+          || is_cardinal_tileset_dir(t, static_cast<direction8>(dir))) {
         if (BV_ISSET(textras_near[dir], extra_index(phider))) {
           hider_near[dir] = TRUE;
           hider_dir = TRUE;
@@ -4837,7 +4845,7 @@ static int fill_terrain_sprite_blending(const struct tileset *t,
   const int offsets[4][2] = {
     {W/2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}
   };
-  enum direction4 dir = 0;
+  int dir = 0;
 
   /*
    * We want to mark unknown tiles so that an unreal tile will be
@@ -4845,7 +4853,7 @@ static int fill_terrain_sprite_blending(const struct tileset *t,
    * get the "unknown" dither along the edge of the map.
    */
   for (; dir < 4; dir++) {
-    struct tile *tile1 = mapstep(&(wld.map), ptile, DIR4_TO_DIR8[dir]);
+    struct tile *tile1 = mapstep(&(wld.map), ptile, static_cast<direction8>(DIR4_TO_DIR8[dir]));
     struct terrain *other;
 
     if (!tile1
@@ -4930,7 +4938,7 @@ static int fill_terrain_sprite_array(struct tileset *t,
 {
   struct drawn_sprite *saved_sprs = sprs;
   struct drawing_layer *dlp = &draw->layer[l];
-  int this = dlp->match_index[0];
+  int tthis = dlp->match_index[0];
   int that = dlp->match_index[1];
   int ox = dlp->offset_x;
   int oy = dlp->offset_y;
@@ -4967,9 +4975,9 @@ static int fill_terrain_sprite_array(struct tileset *t,
 	  int tileno = 0;
 
 	  for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-	    enum direction8 dir = t->cardinal_tileset_dirs[i];
+	    enum direction8 dir = t->cardinal_tileset_dirs[static_cast<direction8>(i)];
 
-	    if (MATCH(dir) == this) {
+	    if (MATCH(dir) == tthis) {
 	      tileno |= 1 << i;
 	    }
 	  }
@@ -5010,7 +5018,7 @@ static int fill_terrain_sprite_array(struct tileset *t,
       for (i = 0; i < NUM_CORNER_DIRS; i++) {
 	const int count = dlp->match_indices;
 	int array_index = 0;
-	enum direction8 dir = dir_ccw(DIR4_TO_DIR8[i]);
+	enum direction8 dir = dir_ccw(static_cast<direction8>(DIR4_TO_DIR8[i]));
 	int x = (t->type == TS_ISOMETRIC ? iso_offsets[i][0] : noniso_offsets[i][0]);
 	int y = (t->type == TS_ISOMETRIC ? iso_offsets[i][1] : noniso_offsets[i][1]);
 	int m[3] = {MATCH(dir_ccw(dir)), MATCH(dir), MATCH(dir_cw(dir))};
@@ -5022,9 +5030,9 @@ static int fill_terrain_sprite_array(struct tileset *t,
 	  /* We have no need for matching, just plug the piece in place. */
 	  break;
 	case MATCH_SAME:
-	  array_index = array_index * 2 + (m[2] != this);
-	  array_index = array_index * 2 + (m[1] != this);
-	  array_index = array_index * 2 + (m[0] != this);
+	  array_index = array_index * 2 + (m[2] != tthis);
+	  array_index = array_index * 2 + (m[1] != tthis);
+	  array_index = array_index * 2 + (m[0] != tthis);
 	  break;
 	case MATCH_PAIR:
 	  array_index = array_index * 2 + (m[2] == that);
@@ -5092,7 +5100,7 @@ static int fill_terrain_sprite_darkness(struct tileset *t,
       const int W = t->normal_tile_width, H = t->normal_tile_height;
       int offsets[4][2] = {{W / 2, 0}, {0, H / 2}, {W / 2, H / 2}, {0, 0}};
 
-      if (UNKNOWN(DIR4_TO_DIR8[i])) {
+      if (UNKNOWN(static_cast<direction8>(DIR4_TO_DIR8[i]))) {
 	ADD_SPRITE(t->sprites.tx.darkness[i], TRUE,
                    offsets[i][0], offsets[i][1]);
       }
@@ -6792,7 +6800,7 @@ int fill_basic_road_sprite_array(const struct tileset *t,
   struct drawn_sprite *saved_sprs = sprs;
   int idx;
   int i;
-  enum extrastyle_id extrastyle;
+  int extrastyle;
 
   if (!t || !sprs || !pextra) {
     return 0;

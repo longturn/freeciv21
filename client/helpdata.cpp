@@ -215,7 +215,8 @@ static bool insert_generated_text(char *outbuf, size_t outlen, const char *name)
         char irrigation_time[4], mining_time[4], transform_time[4];
         const char *terrain, *irrigation_result,
                    *mining_result,*transform_result;
-        struct universal for_terr = { .kind = VUT_TERRAIN, .value = { .terrain = pterrain }};
+        struct universal for_terr = {.value = { .terrain = pterrain },
+                                     .kind = VUT_TERRAIN };
 
         fc_snprintf(irrigation_time, sizeof(irrigation_time),
                     "%d", pterrain->irrigation_time);
@@ -659,10 +660,10 @@ static struct help_item *new_help_item(int type)
 {
   struct help_item *pitem;
   
-  pitem = fc_malloc(sizeof(struct help_item));
+  pitem = static_cast<help_item*>(fc_malloc(sizeof(struct help_item)));
   pitem->topic = NULL;
   pitem->text = NULL;
-  pitem->type = type;
+  pitem->type = static_cast<help_page_type>(type);
   return pitem;
 }
 
@@ -747,7 +748,7 @@ void boot_help_texts(void)
 
         for (i = 2; help_type_names[i]; i++) {
           if (strcmp(gen_str, help_type_names[i]) == 0) {
-            current_type = i;
+            current_type = static_cast<help_page_type>(i);
             break;
           }
         }
@@ -924,7 +925,7 @@ void boot_help_texts(void)
                     + strlen(_(game.ruleset_summary))
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                               _(game.control.name), game.control.version,
                               _(game.ruleset_summary));
@@ -934,7 +935,7 @@ void boot_help_texts(void)
                     + strlen(_(game.ruleset_summary))
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s\n\n%s",
                               _(game.control.name), _(game.ruleset_summary));
                 }
@@ -949,7 +950,7 @@ void boot_help_texts(void)
                     + strlen(nodesc)
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                               _(game.control.name), game.control.version,
                               nodesc);
@@ -959,7 +960,7 @@ void boot_help_texts(void)
                     + strlen(nodesc)
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s\n\n%s",
                               _(game.control.name),
                               nodesc);
@@ -999,7 +1000,7 @@ void boot_help_texts(void)
                     + strlen(_(summary))
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                               _(ts_name), version, _(summary));
                 } else {
@@ -1008,7 +1009,7 @@ void boot_help_texts(void)
                     + strlen(_(summary))
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s\n\n%s",
                               _(ts_name), _(summary));
                 }
@@ -1023,7 +1024,7 @@ void boot_help_texts(void)
                     + strlen(nodesc)
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                               _(ts_name), version,
                               nodesc);
@@ -1033,7 +1034,7 @@ void boot_help_texts(void)
                     + strlen(nodesc)
                     + 1;
 
-                  pitem->text = fc_malloc(len + desc_len);
+                  pitem->text = static_cast<char*>(fc_malloc(len + desc_len));
                   fc_snprintf(pitem->text, len, "%s\n\n%s",
                               _(ts_name),
                               nodesc);
@@ -1272,8 +1273,8 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
 {
   bool reqs = FALSE;
   struct universal source = {
-    .kind = VUT_IMPROVEMENT,
-    .value = {.building = pimprove}
+    .value = {.building = pimprove},
+    .kind = VUT_IMPROVEMENT
   };
 
   fc_assert_ret_val(NULL != buf && 0 < bufsz, NULL);
@@ -1764,8 +1765,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   if (utype->defense_strength > 0) {
     struct universal unit_is_in_city[] = {
-      { .kind = VUT_UTYPE, .value = { .utype = utype }},
-      { .kind = VUT_CITYTILE, .value = { .citytile = CITYT_CENTER }},
+      { .value = { .utype = utype }, .kind = VUT_UTYPE},
+      { .value = { .citytile = CITYT_CENTER }, .kind = VUT_CITYTILE},
     };
     int bonus = effect_value_from_universals(
           EFT_FORTIFY_DEFENSE_BONUS,
@@ -1802,8 +1803,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 	    _("  * Can attack units on non-native tiles.\n"));
   }
   for (flagid = UCF_USER_FLAG_1; flagid <= UCF_LAST_USER_FLAG; flagid++) {
-    if (uclass_has_flag(pclass, flagid)) {
-      const char *helptxt = unit_class_flag_helptxt(flagid);
+    if (uclass_has_flag(pclass, static_cast<unit_class_flag_id>(flagid))) {
+      const char *helptxt = unit_class_flag_helptxt(static_cast<unit_class_flag_id>(flagid));
 
       if (helptxt != NULL) {
         /* TRANS: indented unit class property, preserve leading spaces */
@@ -1968,7 +1969,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   for (flagid = UTYF_USER_FLAG_1 ; flagid <= UTYF_LAST_USER_FLAG; flagid++) {
     if (utype_has_flag(utype, flagid)) {
-      const char *helptxt = unit_type_flag_helptxt(flagid);
+      const char *helptxt = unit_type_flag_helptxt(static_cast<unit_type_flag_id>(flagid));
 
       if (helptxt != NULL) {
         /* TRANS: bullet point; note trailing space */
@@ -2420,11 +2421,10 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                        " escape after completing the mission.\n"),
                      utype_name_translation(utype));
       }
-
       {
         struct universal req_pattern[] = {
-          { .kind = VUT_ACTION, .value.action = paction },
-          { .kind = VUT_UTYPE,  .value.utype = utype },
+          { .value = {.action = paction }, .kind = VUT_ACTION },
+          { .value = { .utype = utype }, .kind = VUT_UTYPE },
         };
         int success_move_frag_cost = effect_value_from_universals(
             EFT_ACTION_SUCCESS_MOVE_COST,
@@ -2522,7 +2522,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         };
 
         struct universal req_pattern[] = {
-          { .kind = VUT_ACTION,  .value.action = paction },
+          { .value = { .action = paction }, .kind = VUT_ACTION },
           { .kind = VUT_DIPLREL, /* value filled in later */ },
         };
 
@@ -2772,10 +2772,12 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         break;
       case ACTRES_FORTIFY:
         {
+          struct universal uni_cazfi =  {.value = { .utype = utype },
+                                         .kind = VUT_UTYPE};
           struct universal unit_is_fortified[] = {
-            { .kind = VUT_ACTIVITY,
-              .value = { .activity = ACTIVITY_FORTIFIED }},
-            { .kind = VUT_UTYPE, .value = { .utype = utype }},
+            { .value = { .activity = ACTIVITY_FORTIFIED },
+              .kind = VUT_ACTIVITY},
+            { .value = { .utype = utype }, .kind = VUT_UTYPE},
           };
           int bonus = effect_value_from_universals(
                 EFT_FORTIFY_DEFENSE_BONUS,
@@ -2783,10 +2785,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
           if (utype->defense_strength <= 0
               || (effect_cumulative_max(EFT_FORTIFY_DEFENSE_BONUS,
-                                        &(struct universal){
-                                          .kind = VUT_UTYPE,
-                                          .value = { .utype = utype }})
-                  <= 0)) {
+                                        &uni_cazfi) <= 0)) {
             cat_snprintf(buf, bufsz,
                          /* TRANS: indented unit action property, preserve
                           * leading spaces */
@@ -2815,7 +2814,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         if (action_id_would_be_blocked_by(act, blocker)) {
           /* action name alone can be MAX_LEN_NAME, leave space for extra characters */
           int maxlen = MAX_LEN_NAME + 16;
-          char *quoted = fc_malloc(maxlen);
+          char *quoted = static_cast<char*>(fc_malloc(maxlen));
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */
@@ -2956,8 +2955,8 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   struct astring astr = ASTRING_INIT;
   struct advance *vap = valid_advance_by_number(i);
   struct universal source = {
-    .kind = VUT_ADVANCE,
-    .value = {.advance = vap}
+    .value = {.advance = vap},
+    .kind = VUT_ADVANCE
   };
   int flagid;
 
@@ -3140,8 +3139,8 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   for (flagid = TECH_USER_1 ; flagid <= TECH_USER_LAST; flagid++) {
-    if (advance_has_flag(i, flagid)) {
-      const char *helptxt = tech_flag_helptxt(flagid);
+    if (advance_has_flag(i, static_cast<tech_flag_id>(flagid))) {
+      const char *helptxt = tech_flag_helptxt(static_cast<tech_flag_id>(flagid));
 
       if (helptxt != NULL) {
         /* TRANS: bullet point; note trailing space */
@@ -3180,8 +3179,8 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, struct terrain *pterrain)
 {
   struct universal source = {
-    .kind = VUT_TERRAIN,
-    .value = {.terrain = pterrain}
+    .value = {.terrain = pterrain}, 
+    .kind = VUT_TERRAIN
   };
   int flagid;
 
@@ -3259,7 +3258,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
   }
   for (flagid = TER_USER_1 ; flagid <= TER_USER_LAST; flagid++) {
     if (terrain_has_flag(pterrain, flagid)) {
-      const char *helptxt = terrain_flag_helptxt(flagid);
+      const char *helptxt = terrain_flag_helptxt(static_cast<terrain_flag_id>(flagid));
 
       if (helptxt != NULL) {
         /* TRANS: bullet point; note trailing space */
@@ -3351,8 +3350,8 @@ static void extra_bonus_for_terrain(struct extra_type *pextra,
                                     int *bonus)
 {
   struct universal req_pattern[] = {
-    { .kind = VUT_EXTRA,   .value.extra = pextra },
-    { .kind = VUT_TERRAIN, .value.terrain = pterrain },
+    { .value = {.extra = pextra}, .kind = VUT_EXTRA },
+    { .value = {.terrain = pterrain}, .kind = VUT_TERRAIN },
     { .kind = VUT_OTYPE    /* value filled in later */ }
   };
 
@@ -3393,7 +3392,7 @@ static void extra_bonus_for_terrain(struct extra_type *pextra,
 
   output_type_iterate(o) {
     /* Fill in rest of requirement template */
-    req_pattern[2].value.outputtype = o;
+    req_pattern[2].value.outputtype = static_cast<Output_type_id>(o);
     switch (o) {
     case O_FOOD:
     case O_SHIELD:
@@ -3462,8 +3461,8 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   struct base_type *pbase;
   struct road_type *proad;
   struct universal source = {
-    .kind = VUT_EXTRA,
-    .value = {.extra = pextra}
+    .value = {.extra = pextra}, 
+    .kind = VUT_EXTRA
   };
 
   int flagid;
@@ -3812,8 +3811,8 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   for (flagid = EF_USER_FLAG_1; flagid <= EF_LAST_USER_FLAG; flagid++) {
-    if (extra_has_flag(pextra, flagid)) {
-      const char *helptxt = extra_flag_helptxt(flagid);
+    if (extra_has_flag(pextra, static_cast<extra_flag_id>(flagid))) {
+      const char *helptxt = extra_flag_helptxt(static_cast<extra_flag_id>(flagid));
 
       if (helptxt != NULL) {
         /* TRANS: bullet point; note trailing space */
@@ -3999,8 +3998,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
 {
   bool reqs = FALSE;
   struct universal source = {
-    .kind = VUT_GOVERNMENT,
-    .value = {.govern = gov}
+    .value = {.govern = gov}, 
+    .kind = VUT_GOVERNMENT
   };
 
   fc_assert_ret(NULL != buf && 0 < bufsz);
@@ -4070,7 +4069,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
          break;
        case VUT_UTFLAG:
          if (!unit_type_flag_id_is_valid(unitflag)) {
-           unitflag = preq->source.value.unitflag;
+           unitflag = static_cast<unit_type_flag_id>(preq->source.value.unitflag);
            /* FIXME: can't easily get world bonus for unit type flag */
            world_value_valid = FALSE;
          } else {
@@ -4136,7 +4135,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         }
 
         output_type_iterate(ot) {
-          struct output_type *pot = get_output_type(ot);
+          struct output_type *pot = get_output_type(static_cast<Output_type_id>(ot));
 
           if (!harvested_only || pot->harvested) {
             strvec_append(outputs, _(pot->name));
@@ -4665,7 +4664,7 @@ char *helptext_unit_upkeep_str(const struct unit_type *utype)
       /* TRANS: "2 Food" or ", 1 Shield" */
       cat_snprintf(buf, sizeof(buf), _("%s%d %s"),
                    (any > 0 ? Q_("?blistmore:, ") : ""), utype->upkeep[o],
-                   get_output_name(o));
+                   get_output_name(static_cast<Output_type_id>(o)));
       any++;
     }
   } output_type_iterate_end;
@@ -4690,8 +4689,8 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
                      const char *user_text)
 {
   struct universal source = {
-    .kind = VUT_NATION,
-    .value = {.nation = pnation}
+    .value = {.nation = pnation},
+    .kind = VUT_NATION
   };
   bool print_break = TRUE;
 

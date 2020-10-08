@@ -302,9 +302,8 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
   sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
       (struct universal){.value = {.nation = (_nat_)}, .kind = VUT_NATION})
 #define requirement_fulfilled_by_improvement(_imp_, _rqs_)                 \
-  universal_fulfills_requirements(FALSE, (_rqs_),                          \
-    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
-                        .value = {.building = (_imp_)}})
+  sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
+    (struct universal){.value = {.building = (_imp_)}, .kind = VUT_IMPROVEMENT})
 #define requirement_fulfilled_by_terrain(_ter_, _rqs_)                 \
   sv_universal_fulfills_requirements(FALSE, (_rqs_),                      \
     (struct universal){.value = {.terrain = (_ter_)}, .kind = VUT_TERRAIN})

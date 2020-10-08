@@ -133,15 +133,15 @@ static int diplstate_value(const struct player *plr)
 {
   /* these values are scaled so that adding/subtracting
      the number of turns left makes sense */
-  static const int diplstate_cmp_lookup[DS_LAST] = {
-    [DS_TEAM] = 1 << 16,
-    [DS_ALLIANCE] = 2 << 16,
-    [DS_PEACE] = 3 << 16,
-    [DS_ARMISTICE] = 4 << 16,
-    [DS_CEASEFIRE] = 5 << 16,
-    [DS_WAR] = 6 << 16,
-    [DS_NO_CONTACT] = 7 << 16
-  };
+
+  static int diplstate_cmp_lookup[DS_LAST];
+    diplstate_cmp_lookup[DS_TEAM] = 1 << 16;
+    diplstate_cmp_lookup[DS_ALLIANCE] = 2 << 16;
+    diplstate_cmp_lookup[DS_PEACE] = 3 << 16;
+    diplstate_cmp_lookup[DS_ARMISTICE] = 4 << 16;
+    diplstate_cmp_lookup[DS_CEASEFIRE] = 5 << 16;
+    diplstate_cmp_lookup[DS_WAR] = 6 << 16;
+    diplstate_cmp_lookup[DS_NO_CONTACT] = 7 << 16;
 
   const struct player_diplstate *pds;
   int ds_value;

@@ -71,7 +71,7 @@ void init_themes(void)
       get_gui_specific_themes_directories(&num_directories);
   
   directories = 
-      fc_malloc(sizeof(struct theme_directory) * num_directories);
+      static_cast<theme_directory*>(fc_malloc(sizeof(struct theme_directory) * num_directories));
           
   for (i = 0; i < num_directories; i++) {
     directories[i].path = gui_directories[i];

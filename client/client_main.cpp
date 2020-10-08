@@ -766,9 +766,9 @@ void client_packet_input(void *packet, int type)
       && PACKET_EARLY_CHAT_MSG != type
       && PACKET_SERVER_INFO != type) {
     log_error("Received packet %s (%d) before establishing connection!",
-              packet_name(type), type);
+              packet_name(static_cast<packet_type>(type)), type);
     disconnect_from_server();
-  } else if (!client_handle_packet(type, packet)) {
+  } else if (!client_handle_packet(static_cast<packet_type>(type), packet)) {
     log_error("Received unknown packet (type %d) from server!", type);
     disconnect_from_server();
   }

@@ -63,11 +63,11 @@ const char *get_tile_output_text(const struct tile *ptile)
 
   for (i = 0; i < O_LAST; i++) {
     int before_penalty = 0;
-    int x = city_tile_output(NULL, ptile, FALSE, i);
+    int x = city_tile_output(NULL, ptile, FALSE, static_cast<Output_type_id>(i));
 
     if (NULL != client.conn.playing) {
       before_penalty = get_player_output_bonus(client.conn.playing,
-                                               get_output_type(i),
+                                               get_output_type(static_cast<Output_type_id>(i)),
                                                EFT_OUTPUT_PENALTY_TILE);
     }
 
@@ -575,7 +575,7 @@ const char *get_airlift_text(const struct unit_list *punits,
   int cur = 0, max = 0;
 
   unit_list_iterate(punits, punit) {
-    enum texttype this = AL_IMPOSSIBLE;
+    enum texttype tthis = AL_IMPOSSIBLE;
     enum unit_airlift_result result;
 
     /* NULL will tell us about the capability of airlifting from source */
@@ -589,7 +589,7 @@ const char *get_airlift_text(const struct unit_list *punits,
     case AR_BAD_SRC_CITY:
     case AR_BAD_DST_CITY:
       /* No chance of an airlift. */
-      this = AL_IMPOSSIBLE;
+      tthis = AL_IMPOSSIBLE;
       break;
     case AR_OK:
     case AR_OK_SRC_UNKNOWN:
@@ -605,22 +605,22 @@ const char *get_airlift_text(const struct unit_list *punits,
         if (!src && (game.info.airlifting_style & AIRLIFTING_UNLIMITED_DEST)) {
           /* No restrictions on destination (and we can infer this even for
            * other players' cities). */
-          this = AL_INFINITE;
+          tthis = AL_INFINITE;
         } else if (client_player() == city_owner(pcity)) {
           /* A city we know about. */
           int this_cur = pcity->airlift, this_max = city_airlift_max(pcity);
 
           if (this_max <= 0) {
             /* City known not to be airlift-capable. */
-            this = AL_IMPOSSIBLE;
+            tthis = AL_IMPOSSIBLE;
           } else {
             if (src
                 && (game.info.airlifting_style & AIRLIFTING_UNLIMITED_SRC)) {
               /* Unlimited capacity. */
-              this = AL_INFINITE;
+              tthis = AL_INFINITE;
             } else {
               /* Limited capacity (possibly zero right now). */
-              this = AL_FINITE;
+              tthis = AL_FINITE;
               /* Store the numbers. This whole setup assumes that numeric
                * capacity isn't unit-dependent. */
               if (best == AL_FINITE) {
@@ -632,14 +632,14 @@ const char *get_airlift_text(const struct unit_list *punits,
           }
         } else {
           /* Unknown capacity. */
-          this = AL_UNKNOWN;
+          tthis = AL_UNKNOWN;
         }
       }
       break;
     }
 
     /* Now take the most optimistic view. */
-    best = MAX(best, this);
+    best = MAX(best, tthis);
   } unit_list_iterate_end;
 
   switch (best) {

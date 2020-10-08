@@ -68,7 +68,7 @@ struct goto_map {
       struct pf_path *return_path;
     } patrol;
   };
-  struct pf_parameter template;
+  struct pf_parameter ttemplate;
 };
 
 /* get 'struct goto_map_list' and related functions: */
@@ -107,7 +107,7 @@ static struct tile *goto_destination = NULL;
 ****************************************************************************/
 static struct goto_map *goto_map_new(struct unit *punit)
 {
-  struct goto_map *goto_map = fc_malloc(sizeof(*goto_map));
+  struct goto_map *goto_map = static_cast<struct goto_map*>(fc_malloc(sizeof(*goto_map)));
 
   goto_map->focus = punit;
   goto_map->parts = NULL;
@@ -401,7 +401,7 @@ static void fill_parameter_part(struct pf_parameter *param,
                                 const struct goto_map *goto_map,
                                 const struct part *p)
 {
-  *param = goto_map->template;
+  *param = goto_map->ttemplate;
 
   if (p->start_tile == p->end_tile) {
     /* Copy is enough, we didn't move last part. */
@@ -436,14 +436,14 @@ static void add_part(struct goto_map *goto_map)
 
   goto_map->num_parts++;
   goto_map->parts =
-      fc_realloc(goto_map->parts,
-                 goto_map->num_parts * sizeof(*goto_map->parts));
+      static_cast<part*>(fc_realloc(goto_map->parts,
+                 goto_map->num_parts * sizeof(*goto_map->parts)));
   p = &goto_map->parts[goto_map->num_parts - 1];
 
   if (goto_map->num_parts == 1) {
     /* first part */
     p->start_tile = unit_tile(punit);
-    parameter = goto_map->template;
+    parameter = goto_map->ttemplate;
   } else {
     struct part *prev = &goto_map->parts[goto_map->num_parts - 2];
 
@@ -914,7 +914,7 @@ static void goto_fill_parameter_base(struct pf_parameter *parameter,
 static void goto_fill_parameter_full(struct goto_map *goto_map,
                                      const struct unit *punit)
 {
-  struct pf_parameter *parameter = &goto_map->template;
+  struct pf_parameter *parameter = &goto_map->ttemplate;
 
   goto_fill_parameter_base(parameter, punit);
 
@@ -1144,10 +1144,10 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
   if (!goto_is_active()) {
     return FALSE;
   }
-
-  *state = -1;
-  *turns = -1;
-  *waypoint = FALSE;
+  
+  *state = GTS_INVALID;
+  *turns = GTS_INVALID;
+  *waypoint = GTS_INVALID;
 
   if (hover_state == HOVER_CONNECT) {
     /* In connect mode, we want to know the turn number the activity will
@@ -1403,7 +1403,7 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
       log_goto_packet("  packet[%d] = wait: %d,%d", i, TILE_XY(old_tile));
     } else {
       order_list[i].order = orders;
-      order_list[i].dir = get_direction_for_step(&(wld.map), old_tile, new_tile);
+      order_list[i].dir = static_cast<direction8>(get_direction_for_step(&(wld.map), old_tile, new_tile));
       order_list[i].activity = ACTIVITY_LAST;
       order_list[i].target = NO_TARGET;
       order_list[i].sub_target = NO_TARGET;
@@ -1750,8 +1750,8 @@ void send_connect_route(enum unit_activity activity,
         fc_assert(!same_pos(new_tile, old_tile));
 
         p.orders[p.length].order = ORDER_MOVE;
-        p.orders[p.length].dir = get_direction_for_step(&(wld.map),
-                                                        old_tile, new_tile);
+        p.orders[p.length].dir = static_cast<direction8>(get_direction_for_step(&(wld.map),
+                                                        old_tile, new_tile));
         p.orders[p.length].activity = ACTIVITY_LAST;
         p.orders[p.length].target = NO_TARGET;
         p.orders[p.length].sub_target = NO_TARGET;
@@ -1931,7 +1931,7 @@ void send_goto_route(void)
       }
 
       order.order = goto_last_order;
-      order.dir = last_order_dir;
+      order.dir = static_cast<direction8>(last_order_dir);
       order.activity = ACTIVITY_LAST;
       order.target = last_order_target;
       order.sub_target = goto_last_sub_tgt;

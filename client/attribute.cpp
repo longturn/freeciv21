@@ -93,7 +93,7 @@ static bool attr_key_comp(const struct attr_key *pkey1,
 ****************************************************************************/
 static struct attr_key *attr_key_dup(const struct attr_key *pkey)
 {
-  struct attr_key *pnew_key = fc_malloc(sizeof(*pnew_key));
+  struct attr_key *pnew_key = static_cast<attr_key*>(fc_malloc(sizeof(*pnew_key)));
 
   *pnew_key = *pkey;
   return pnew_key;

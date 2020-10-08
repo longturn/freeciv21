@@ -48,9 +48,9 @@ static void usdata_destroy(struct usdata *data);
 static struct usdata *usdata_new(void)
 {
   enum unit_select_location_mode loc;
-  enum unit_activity act;
+  int act;
 
-  struct usdata *data = fc_calloc(1, sizeof(*data));
+  struct usdata *data = static_cast<usdata*>(fc_calloc(1, sizeof(*data)));
 
   data->utype = NULL;
 
@@ -73,7 +73,7 @@ static void usdata_destroy(struct usdata *data)
 {
   if (data != NULL) {
     enum unit_select_location_mode loc;
-    enum unit_activity act;
+    int act;
 
     for (loc = unit_select_location_mode_begin();
          loc != unit_select_location_mode_end();
@@ -151,7 +151,7 @@ static void usdlg_data_add_unit(struct usdata_hash *ushash,
                                 struct unit *punit)
 {
   struct usdata *data;
-  enum unit_activity act;
+  int act;
   const struct unit_type *ptype = unit_type_get(punit);
 
   fc_assert_ret(ushash);
@@ -166,7 +166,7 @@ static void usdlg_data_add_unit(struct usdata_hash *ushash,
   }
 
   for (act = 0; act < ACTIVITY_LAST; act++) {
-    if (usdlg_check_unit_activity(punit, act)) {
+    if (usdlg_check_unit_activity(punit, static_cast<unit_activity>(act))) {
       enum unit_select_location_mode loc;
 
       for (loc = unit_select_location_mode_begin();

@@ -1358,10 +1358,11 @@ static bool can_be_irrigated(const struct tile *ptile,
                              const struct unit *punit)
 {
   struct terrain* pterrain = tile_terrain(ptile);
-  struct universal for_unit = { .kind = VUT_UTYPE,
-                                .value.utype = unit_type_get(punit)};
-  struct universal for_tile = { .kind = VUT_TERRAIN,
-                                .value.terrain = tile_terrain(ptile)};
+  struct universal for_unit = { .value = { .utype = unit_type_get(punit)},
+                                .kind = VUT_UTYPE,
+                                };
+  struct universal for_tile = { .value = { .terrain = tile_terrain(ptile)},
+                                .kind = VUT_TERRAIN,};
 
   if (T_UNKNOWN == pterrain) {
     return FALSE;
@@ -1751,7 +1752,7 @@ void request_unit_non_action_move(struct unit *punit,
 
   p.length = 1;
   p.orders[0].order = ORDER_MOVE;
-  p.orders[0].dir = dir;
+  p.orders[0].dir = static_cast<direction8>(dir);
   p.orders[0].activity = ACTIVITY_LAST;
   p.orders[0].target = NO_TARGET;
   p.orders[0].sub_target = NO_TARGET;
@@ -1776,7 +1777,7 @@ void request_move_unit_direction(struct unit *punit, int dir)
   struct tile *dest_tile;
 
   /* Catches attempts to move off map */
-  dest_tile = mapstep(&(wld.map), unit_tile(punit), dir);
+  dest_tile = mapstep(&(wld.map), unit_tile(punit), static_cast<direction8>(dir));
   if (!dest_tile) {
     return;
   }
@@ -1806,7 +1807,7 @@ void request_move_unit_direction(struct unit *punit, int dir)
   p.length = 1;
   p.orders[0].order = (gui_options.popup_last_move_to_allied
                        ? ORDER_ACTION_MOVE : ORDER_MOVE);
-  p.orders[0].dir = dir;
+  p.orders[0].dir = static_cast<direction8>(dir);
   p.orders[0].activity = ACTIVITY_LAST;
   p.orders[0].target = NO_TARGET;
   p.orders[0].sub_target = NO_TARGET;
@@ -1852,7 +1853,7 @@ void request_new_unit_activity_targeted(struct unit *punit,
 **************************************************************************/
 static void client_disband_unit_data_destroy(void *p)
 {
-  struct client_disband_unit_data *data = p;
+  struct client_disband_unit_data *data = static_cast<client_disband_unit_data *>(p);
 
   free(data);
 }
@@ -1867,7 +1868,7 @@ static void do_disband_alternative(void *p)
   struct tile *ptile;
   int last_request_id_used;
   struct client_disband_unit_data *next;
-  struct client_disband_unit_data *data = p;
+  struct client_disband_unit_data *data = static_cast<client_disband_unit_data*>(p);
   int act;
 
   fc_assert_ret(can_client_issue_orders());
@@ -1892,7 +1893,7 @@ static void do_disband_alternative(void *p)
   act = disband_unit_alternatives[data->alt];
 
   /* Prepare the data for the next try in case this try fails. */
-  next = fc_malloc(sizeof(struct client_disband_unit_data));
+  next = static_cast<client_disband_unit_data*>(fc_malloc(sizeof(struct client_disband_unit_data)));
   next->unit_id = data->unit_id;
   next->alt = data->alt - 1;
 
@@ -1961,7 +1962,7 @@ void request_unit_disband(struct unit *punit)
   struct client_disband_unit_data *data;
 
   /* Set up disband data. Start at the end of the array. */
-  data = fc_malloc(sizeof(struct client_disband_unit_data));
+  data = static_cast<client_disband_unit_data*>(fc_malloc(sizeof(struct client_disband_unit_data)));
   data->unit_id = punit->id;
   data->alt = 2;
 
@@ -3538,7 +3539,8 @@ void key_unit_transform(void)
 **************************************************************************/
 void key_unit_assign_battlegroup(int battlegroup, bool append)
 {
-  if (NULL != client.conn.playing && can_client_issue_orders()
+  // sveinung error: ordered comparison between pointer and zero ('struct unit_list **' and 'int')
+ /* if (NULL != client.conn.playing && can_client_issue_orders()
       && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
     if (!append) {
       unit_list_iterate_safe(battlegroups[battlegroup], punit) {
@@ -3569,7 +3571,7 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
     unit_list_iterate(battlegroups[battlegroup], punit) {
       unit_focus_add(punit);
     } unit_list_iterate_end;
-  }
+  }*/
 }
 
 /**********************************************************************//**
@@ -3577,6 +3579,7 @@ void key_unit_assign_battlegroup(int battlegroup, bool append)
 **************************************************************************/
 void key_unit_select_battlegroup(int battlegroup, bool append)
 {
+  /*
   if (NULL != client.conn.playing && can_client_change_view()
       && battlegroups >= 0 && battlegroup < MAX_NUM_BATTLEGROUPS) {
     int i = 0;
@@ -3585,8 +3588,9 @@ void key_unit_select_battlegroup(int battlegroup, bool append)
       unit_focus_set(NULL);
       return;
     }
-
+*/
     /* FIXME: this is very inefficient and can be improved. */
+    /*
     unit_list_iterate(battlegroups[battlegroup], punit) {
       if (i == 0 && !append) {
 	unit_focus_set(punit);
@@ -3596,6 +3600,7 @@ void key_unit_select_battlegroup(int battlegroup, bool append)
       i++;
     } unit_list_iterate_end;
   }
+  */
 }
 
 /**********************************************************************//**

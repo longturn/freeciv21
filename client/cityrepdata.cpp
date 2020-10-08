@@ -252,7 +252,7 @@ static const char *cr_entry_specialist(const struct city *pcity,
 				       const void *data)
 {
   static char buf[8];
-  const struct specialist *sp = data;
+  const struct specialist *sp = static_cast<const specialist*>(data);
 
   fc_snprintf(buf, sizeof(buf), "%2d",
               pcity->specialists[specialist_index(sp)]);
@@ -836,8 +836,8 @@ void init_city_report_game_data(void)
   num_creport_cols = ARRAY_SIZE(base_city_report_specs)
                    + specialist_count() + 1;
   city_report_specs
-    = fc_realloc(city_report_specs,
-		 num_creport_cols * sizeof(*city_report_specs));
+    = static_cast<city_report_spec*>(fc_realloc(city_report_specs,
+		 num_creport_cols * sizeof(*city_report_specs)));
   p = &city_report_specs[0];
 
   fc_snprintf(sp_explanations, sizeof(sp_explanations),
@@ -933,7 +933,7 @@ static void init_datum_string(struct datum *dat, const char *left,
   int len = right - left;
 
   dat->is_numeric = FALSE;
-  dat->val.string_value = fc_malloc(len + 1);
+  dat->val.string_value = static_cast<char*>(fc_malloc(len + 1));
   memcpy(dat->val.string_value, left, len);
   dat->val.string_value[len] = 0;
 }

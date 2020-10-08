@@ -165,6 +165,7 @@ struct client_options
   bool sound_enable_effects;
   bool sound_enable_menu_music;
   bool sound_enable_game_music;
+  int sound_effects_volume;
 
   bool draw_city_outlines;
   bool draw_city_output;
@@ -205,8 +206,7 @@ struct client_options
   bool zoom_set;
   float zoom_default_level;
 
-/* gui-gtk-2.0 client specific options.
- * These are still kept just so users can migrate them to gtk3-client */
+ /* These are still kept just so users can migrate them to gtk3-client */
 #define FC_GTK2_DEFAULT_THEME_NAME "Freeciv"
   char gui_gtk2_default_theme_name[512];
   bool gui_gtk2_map_scrollbars;

@@ -441,7 +441,7 @@ void update_animation(void)
 ****************************************************************************/
 static inline struct gotoline_counter *gotoline_counter_new(void)
 {
-  struct gotoline_counter *pglc = fc_calloc(1, sizeof(*pglc));
+  struct gotoline_counter *pglc = static_cast<gotoline_counter*>(fc_calloc(1, sizeof(*pglc)));
   return pglc;
 }
 
@@ -1413,7 +1413,7 @@ void put_unit_city_overlays(struct unit *punit,
   }
 
   output_type_iterate(o) {
-    sprite = get_unit_upkeep_sprite(tileset, o, punit, upkeep_cost);
+    sprite = get_unit_upkeep_sprite(tileset, static_cast<Output_type_id>(o), punit, upkeep_cost);
     if (sprite) {
       canvas_put_sprite_full(pcanvas, canvas_x, canvas_y, sprite);
     }
@@ -1481,7 +1481,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
   get_sprite_dimensions(mysprite, &width, &height);
 
   if (frame_by_frame_animation) {
-    struct animation *anim = fc_malloc(sizeof(struct animation));
+    struct animation *anim = static_cast<animation*>(fc_malloc(sizeof(struct animation)));
 
     anim->type = ANIM_NUKE;
     anim->id = -1;
@@ -2512,7 +2512,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   unqueue_mapview_updates(TRUE);
 
   if (frame_by_frame_animation) {
-    struct animation *anim = fc_malloc(sizeof(struct animation));
+    struct animation *anim = static_cast<animation*>(fc_malloc(sizeof(struct animation)));
     struct unit *winning_unit;
     int winner_end_hp;
 
@@ -2543,7 +2543,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                              anim->battle.winner_hp_start - winner_end_hp);
     animation_add(anim);
 
-    anim = fc_malloc(sizeof(struct animation));
+    anim = static_cast<animation*>(fc_malloc(sizeof(struct animation)));
     anim->type = ANIM_EXPL;
     anim->id = winning_unit->id;
     anim->expl.tile = losing_unit->tile;
@@ -2676,7 +2676,7 @@ void move_unit_map_canvas(struct unit *punit,
     tuh = tileset_unit_height(tileset) * map_zoom;
 
     if (frame_by_frame_animation) {
-      struct animation *anim = fc_malloc(sizeof(struct animation));
+      struct animation *anim = static_cast<animation*>(fc_malloc(sizeof(struct animation)));
 
       anim->type = ANIM_MOVEMENT;
       anim->id = punit->id;
@@ -2981,7 +2981,7 @@ static void queue_add_callback(void)
 void queue_mapview_update(enum update_type update)
 {
   if (can_client_change_view()) {
-    needed_updates |= update;
+    needed_updates = static_cast<update_type>(static_cast<int>(needed_updates) | static_cast<int>(update));
     queue_add_callback();
   }
 }
@@ -3037,9 +3037,11 @@ void unqueue_mapview_updates(bool write_to_screen)
     {0, 0, W, H},
     {-W / 2, -H / 2, 2 * W, 2 * H},
     {(W - UW) / 2, H - UH, UW, UH},
-    {-(max_desc_width - W) / 2, H, max_desc_width, max_desc_height},
+    {-(max_desc_width - W) / 2, H, static_cast<float>(max_desc_width),
+                                   static_cast<float>(max_desc_height)},
     {-(city_width - W) / 2, -(city_height - H) / 2, city_width, city_height},
-    {-(max_label_width - W) / 2, H, max_label_width, max_label_height}
+    {-(max_label_width - W) / 2, H, static_cast<float>(max_label_width),
+                                   static_cast<float>(max_label_height)}
   };
   struct tile_list *my_tile_updates[TILE_UPDATE_COUNT];
 
@@ -3760,7 +3762,7 @@ static struct link_mark *link_mark_find(enum text_link_type type, int id)
 static struct link_mark *link_mark_new(enum text_link_type type,
                                        int id, int turns)
 {
-  struct link_mark *pmark = fc_malloc(sizeof(struct link_mark));
+  struct link_mark *pmark = static_cast<link_mark*>(fc_malloc(sizeof(struct link_mark)));
 
   pmark->type = type;
   pmark->id = id;

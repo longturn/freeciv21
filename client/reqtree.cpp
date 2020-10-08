@@ -124,14 +124,14 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
   fc_assert_ret(req != NULL);
 
   node->require =
-      fc_realloc(node->require,
-		 sizeof(*node->require) * (node->nrequire + 1));
+      static_cast<tree_node**>(fc_realloc(node->require,
+		 sizeof(*node->require) * (node->nrequire + 1)));
   node->require[node->nrequire] = req;
   node->nrequire++;
 
   req->provide =
-      fc_realloc(req->provide,
-		 sizeof(*req->provide) * (req->nprovide + 1));
+      static_cast<tree_node**>(fc_realloc(req->provide,
+		 sizeof(*req->provide) * (req->nprovide + 1)));
   req->provide[req->nprovide] = node;
   req->nprovide++;
 }
@@ -141,7 +141,7 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
 *************************************************************************/
 static struct tree_node *new_tree_node(void)
 {
-  struct tree_node *node = fc_malloc(sizeof(*node));
+  struct tree_node *node = static_cast<tree_node*>(fc_malloc(sizeof(*node)));
 
   node->nrequire = 0;
   node->nprovide = 0;
@@ -389,7 +389,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
                                             bool show_all)
 {
   const struct research *presearch = research_get(pplayer);
-  struct reqtree *tree = fc_malloc(sizeof(*tree));
+  struct reqtree *tree = static_cast<reqtree*>(fc_malloc(sizeof(*tree)));
   int j;
   struct tree_node *nodes[advance_count()];
 
@@ -447,7 +447,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
 
   /* Copy nodes from local array to dynamically allocated one. 
    * Skip non-existing entries */
-  tree->nodes = fc_calloc(advance_count(), sizeof(*tree->nodes));
+  tree->nodes = static_cast<tree_node**>(fc_calloc(advance_count(), sizeof(*tree->nodes)));
   j = 0;
   advance_index_iterate(A_FIRST, tech) {
     if (nodes[tech]) {
@@ -558,10 +558,10 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   }
 
   /* create new tree */
-  new_tree = fc_malloc(sizeof(*new_tree));
+  new_tree = static_cast<reqtree*>(fc_malloc(sizeof(*new_tree)));
   new_tree->nodes =
-      fc_malloc(sizeof(new_tree->nodes) *
-		(tree->num_nodes + num_dummy_nodes));
+      static_cast<tree_node**>(fc_malloc(sizeof(new_tree->nodes) *
+		(tree->num_nodes + num_dummy_nodes)));
   new_tree->num_nodes = tree->num_nodes + num_dummy_nodes;
   
   /* copy normal nodes */
@@ -647,8 +647,8 @@ static void set_layers(struct reqtree *tree)
     /* Counters for order - order number for the next node in the layer */
     int T[num_layers];
 
-    tree->layers = fc_malloc(sizeof(*tree->layers) * num_layers);
-    tree->layer_size = fc_malloc(sizeof(*tree->layer_size) * num_layers);
+    tree->layers = static_cast<tree_node***>(fc_malloc(sizeof(*tree->layers) * num_layers));
+    tree->layer_size = static_cast<int *>(malloc(sizeof(*tree->layer_size) * num_layers));
     for (i = 0; i < num_layers; i++) {
       T[i] = 0;
       tree->layer_size[i] = 0;
@@ -659,7 +659,7 @@ static void set_layers(struct reqtree *tree)
 
     for (i = 0; i < num_layers; i++) {
       tree->layers[i] =
-	  fc_malloc(sizeof(*tree->layers[i]) * tree->layer_size[i]);
+	  static_cast<tree_node**>(fc_malloc(sizeof(*tree->layers[i]) * tree->layer_size[i]));
     }
     for (i = 0; i < tree->num_nodes; i++) {
       struct tree_node *node = tree->nodes[i];
@@ -681,7 +681,8 @@ struct node_and_float {
 *************************************************************************/
 static int cmp_func(const void *_a, const void *_b)
 {
-  const struct node_and_float *a = _a, *b = _b;
+  const struct node_and_float *a = static_cast<const node_and_float*>(_a),
+                              *b = static_cast<const node_and_float*>(_b);
 
   if (a->value > b->value) {
     return 1;

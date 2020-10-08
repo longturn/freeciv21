@@ -25,6 +25,13 @@ extern "C" {
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
 
+  struct players
+  {
+    char *name;
+    char *type;
+    char *host;
+    char *nation;
+  };
 struct server
 {
   char *host;
@@ -35,15 +42,7 @@ struct server
   char *state;
   char *topic;
   char *message;
-
-  struct players
-  {
-    char *name;
-    char *type;
-    char *host;
-    char *nation;
-  } *players;
-
+  players *players;
   int nplayers;
   int humans;
 };
