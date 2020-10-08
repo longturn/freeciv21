@@ -335,7 +335,8 @@ static int cmp(int v1, int v2)
 **************************************************************************/
 int compare_iter_index(const void *a, const void *b)
 {
-  const struct iter_index *index1 = a, *index2 = b;
+  const iter_index *index1 = static_cast<const iter_index *>(a),
+                   *index2 = static_cast<const iter_index *>(b);
   int value;
 
   value = cmp(index1->dist, index2->dist);
@@ -446,8 +447,9 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
     return;
   }
 
-  city_map_data = fc_calloc(city_map_tiles(city_map_radius_sq_get(pcity)),
-                            sizeof(*city_map_data));
+  city_map_data = static_cast<int *>(
+    fc_calloc(city_map_tiles(city_map_radius_sq_get(pcity)),
+                             sizeof(*city_map_data)));
 
   city_map_iterate(city_map_radius_sq_get(pcity), cindex, x, y) {
     struct tile *ptile = city_map_to_tile(city_tile(pcity),
@@ -556,7 +558,7 @@ void generate_city_map_indices(void)
   }
 
   fc_assert(NULL == city_map_index);
-  city_map_index = fc_malloc(city_count_tiles * sizeof(*city_map_index));
+  city_map_index = new iter_index[city_count_tiles];
 
   /* copy the index numbers from city_map_index_tmp into city_map_index */
   for (i = 0; i < city_count_tiles; i++) {
@@ -599,7 +601,7 @@ void generate_city_map_indices(void)
 **************************************************************************/
 void free_city_map_index(void)
 {
-  FC_FREE(city_map_index);
+  delete[] city_map_index;
 }
 
 /**********************************************************************//**
@@ -639,7 +641,7 @@ Output_type_id output_type_by_identifier(const char *id)
 {
   for (int o = 0; o < O_LAST; o++) {
     if (fc_strcasecmp(output_types[o].id, id) == 0) {
-      return o;
+      return output_type_id(o);
     }
   }
 
@@ -2292,9 +2294,9 @@ static inline void city_tile_cache_update(struct city *pcity)
   /* initialize tile_cache if needed */
   if (pcity->tile_cache == NULL || pcity->tile_cache_radius_sq == -1
       || pcity->tile_cache_radius_sq != radius_sq) {
-    pcity->tile_cache = fc_realloc(pcity->tile_cache,
-                                   city_map_tiles(radius_sq)
-                                   * sizeof(*(pcity->tile_cache)));
+    pcity->tile_cache = static_cast<tile_cache *>(
+      fc_realloc(pcity->tile_cache,
+                 city_map_tiles(radius_sq) * sizeof(*(pcity->tile_cache))));
     pcity->tile_cache_radius_sq = radius_sq;
   }
 
@@ -3242,7 +3244,8 @@ void city_styles_alloc(int num)
 {
   int i;
 
-  city_styles = fc_calloc(num, sizeof(*city_styles));
+  city_styles = static_cast<citystyle *>(
+    fc_calloc(num, sizeof(*city_styles)));
   game.control.styles_count = num;
 
   for (i = 0; i < game.control.styles_count; i++) {
@@ -3279,7 +3282,7 @@ struct city *create_city_virtual(struct player *pplayer,
 
   /* Make sure that contents of city structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
-  struct city *pcity = fc_calloc(1, sizeof(*pcity));
+  struct city *pcity = static_cast<city *>(fc_calloc(1, sizeof(*pcity)));
 
   fc_assert_ret_val(NULL != name, NULL);        /* No unnamed cities! */
   sz_strlcpy(pcity->name, name);
