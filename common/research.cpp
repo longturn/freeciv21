@@ -432,7 +432,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
 
     /* Check if required techs are research_reqs reachable. */
     for (int req = 0; req < AR_SIZE; req++) {
-      Tech_type_id req_tech = advance_required(techs[i], req);
+      Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
 
       if (valid_advance_by_number(req_tech) == NULL) {
         return FALSE;
@@ -472,7 +472,7 @@ static bool research_get_reachable(const struct research *presearch,
         }
       } else {
         for (int req = 0; req < AR_SIZE; req++) {
-          if (valid_advance(advance_requires(proot, req)) == NULL) {
+          if (valid_advance(advance_requires(proot, tech_req(req))) == NULL) {
             return FALSE;
           }
         }
@@ -607,7 +607,7 @@ void research_update(struct research *presearch)
 
     advance_index_iterate(A_NONE, i) {
       if (TECH_KNOWN == research_invention_state(presearch, i)
-          && advance_has_flag(i, flag)) {
+          && advance_has_flag(i, tech_flag_id(flag))) {
         presearch->num_known_tech_with_flag[flag]++;
       }
     } advance_index_iterate_end;
@@ -625,7 +625,7 @@ void research_update(struct research *presearch)
 enum tech_state research_invention_state(const struct research *presearch,
                                          Tech_type_id tech)
 {
-  fc_assert_ret_val(NULL != valid_advance_by_number(tech), -1);
+  fc_assert_ret_val(NULL != valid_advance_by_number(tech), tech_state(-1));
 
   if (NULL != presearch) {
     return presearch->inventions[tech].state;
@@ -645,7 +645,7 @@ enum tech_state research_invention_set(struct research *presearch,
 {
   enum tech_state old;
 
-  fc_assert_ret_val(NULL != valid_advance_by_number(tech), -1);
+  fc_assert_ret_val(NULL != valid_advance_by_number(tech), tech_state(-1));
 
   old = presearch->inventions[tech].state;
   if (old == value) {
@@ -1228,7 +1228,7 @@ size_t research_player_iter_sizeof(void)
 ****************************************************************************/
 static inline bool research_player_iter_valid_state(struct iterator *it)
 {
-  const struct player *pplayer = iterator_get(it);
+  const player *pplayer = static_cast<const player *>(iterator_get(it));
 
   return (NULL == pplayer || pplayer->is_alive);
 }
