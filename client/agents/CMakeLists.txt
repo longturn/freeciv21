@@ -1,10 +1,10 @@
 add_library(
   agents
   STATIC
-  agents.c
-  cma_core.c
-  cma_fec.c
-  sha.c
+  agents.cpp
+  cma_core.cpp
+  cma_fec.cpp
+  sha.cpp
 )
 
 target_include_directories(agents PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

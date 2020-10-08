@@ -44,11 +44,22 @@
 
 #define MAX_AGENTS			10
 
-struct my_agent;
+  struct my_agent {
+    struct agent agent;
+    int first_outstanding_request_id, last_outstanding_request_id;
+    struct {
+      struct timer *network_wall_timer;
+      int wait_at_network, wait_at_network_requests;
+    } stats;
+  };
+
+
+
+enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY, OCT_TILE };
 
 struct call {
   struct my_agent *agent;
-  enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY, OCT_TILE } type;
+  oct type;
   enum callback_type cb_type;
   int arg;
 };
@@ -72,14 +83,7 @@ struct call {
  */
 static struct {
   int entries_used;
-  struct my_agent {
-    struct agent agent;
-    int first_outstanding_request_id, last_outstanding_request_id;
-    struct {
-      struct timer *network_wall_timer;
-      int wait_at_network, wait_at_network_requests;
-    } stats;
-  } entries[MAX_AGENTS];
+  struct my_agent entries[MAX_AGENTS];
   struct call_list *calls;
 } agents;
 
@@ -150,7 +154,7 @@ static void enqueue_call(enum oct type,
   }
   va_end(ap);
 
-  pcall2 = fc_malloc(sizeof(struct call));
+  pcall2 = static_cast<call*>(fc_malloc(sizeof(struct call)));
 
   pcall2->agent = agent;
   pcall2->type = type;

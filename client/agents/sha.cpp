@@ -105,7 +105,7 @@ void simple_historian_init(void)
 {
   struct agent self;
 
-  previous_tiles = fc_malloc(MAP_INDEX_SIZE * sizeof(*previous_tiles));
+  previous_tiles = static_cast<tile*>(fc_malloc(MAP_INDEX_SIZE * sizeof(*previous_tiles)));
   memset(previous_tiles, 0, MAP_INDEX_SIZE * sizeof(*previous_tiles));
 
   previous_units = unit_list_new();
