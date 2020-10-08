@@ -219,7 +219,7 @@ static void voblig_hard_req_reg(struct ae_contra_or *contras,
 
   /* Add the obligatory hard requirement to each action result it applies
    * to. */
-  while (ACTRES_NONE != (res = va_arg(args, enum action_result))) {
+  while (ACTRES_NONE != (res = action_result(va_arg(args, int)))) {
     /* Any invalid action result should terminate the loop before this
      * assertion. */
     fc_assert_ret_msg(action_result_is_valid(res),
