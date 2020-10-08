@@ -6,6 +6,7 @@ add_executable(
   edit_utype.cpp
   effect_edit.cpp
   req_edit.cpp
+  req_vec_fix.cpp
   requirers_dlg.cpp
   ruledit.cpp
   ruledit_qt.cpp
