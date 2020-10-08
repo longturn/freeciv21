@@ -73,9 +73,9 @@ endif()
 
 # Lua
 #
-# Lua is not binary compatible even between minor releases. We stick to Lua 5.3.
+# Lua is not binary compatible even between minor releases. We stick to Lua 5.4.
 #
-# The tolua program is compatible with Lua 5.3, but the library may not be (eg
+# The tolua program is compatible with Lua 5.4, but the library may not be (eg
 # on Debian it's linked to Lua 5.2). We always build the library. When not
 # cross-compiling, we can also build the program. When cross-compiling, an
 # externally provided tolua program is required.
@@ -84,7 +84,7 @@ if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
 else()
   find_package(ToLuaProgram)
 endif()
-add_subdirectory(dependencies/lua-5.3)
+add_subdirectory(dependencies/lua-5.4)
 add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 
 # Compression
