@@ -77,7 +77,7 @@ extern "C" {
 #define vision_layer_iterate(v) {                                           \
   int iv;                                                      \
   for (iv = 0; iv < V_COUNT; iv++) {                                        \
-      enum vision_layer v = iv;
+      enum vision_layer v = (enum vision_layer) iv;
 #define vision_layer_iterate_end }}
 
 

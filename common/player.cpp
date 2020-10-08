@@ -265,7 +265,8 @@ static void player_diplstate_new(const struct player *plr1,
 
   fc_assert_ret(*diplstate_slot == NULL);
 
-  diplstate = fc_calloc(1, sizeof(*diplstate));
+  diplstate = static_cast<player_diplstate *>(
+    fc_calloc(1, sizeof(*diplstate)));
   *diplstate_slot = diplstate;
 }
 
@@ -332,8 +333,8 @@ void player_slots_init(void)
   int i;
 
   /* Init player slots. */
-  player_slots.slots = fc_calloc(player_slot_count(),
-                                 sizeof(*player_slots.slots));
+  player_slots.slots = static_cast<player_slot *>(
+    fc_calloc(player_slot_count(), sizeof(*player_slots.slots)));
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < player_slot_count(); i++) {
@@ -481,12 +482,12 @@ struct player *player_new(struct player_slot *pslot)
 
   /* Now create the player. */
   log_debug("Create player for slot %d.", player_slot_index(pslot));
-  pplayer = fc_calloc(1, sizeof(*pplayer));
+  pplayer = static_cast<player *>(fc_calloc(1, sizeof(*pplayer)));
   pplayer->slot = pslot;
   pslot->player = pplayer;
 
-  pplayer->diplstates = fc_calloc(player_slot_count(),
-                                  sizeof(*pplayer->diplstates));
+  pplayer->diplstates = static_cast<const player_diplstate **>(
+    fc_calloc(player_slot_count(), sizeof(*pplayer->diplstates)));
   player_slots_iterate(dslot) {
     const struct player_diplstate **diplstate_slot
       = pplayer->diplstates + player_slot_index(dslot);
@@ -1522,9 +1523,9 @@ int diplrel_by_rule_name(const char *value)
 const char *diplrel_rule_name(int value)
 {
   if (value < DS_LAST) {
-    return diplstate_type_name(value);
+    return diplstate_type_name(diplstate_type(value));
   } else {
-    return diplrel_other_name(value);
+    return diplrel_other_name(diplrel_other(value));
   }
 }
 
@@ -1534,9 +1535,9 @@ const char *diplrel_rule_name(int value)
 const char *diplrel_name_translation(int value)
 {
   if (value < DS_LAST) {
-    return diplstate_type_translated_name(value);
+    return diplstate_type_translated_name(diplstate_type(value));
   } else {
-    return _(diplrel_other_name(value));
+    return _(diplrel_other_name(diplrel_other(value)));
   }
 }
 
@@ -1609,8 +1610,8 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   int j;
 
   /* Storage for the mutually exclusive requirement sets. */
-  bv_diplrel_all_reqs *mess = fc_malloc(DIPLREL_MESS_SIZE
-                                        * sizeof(bv_diplrel_all_reqs));
+  bv_diplrel_all_reqs *mess = static_cast<bv_diplrel_all_reqs *>(
+    fc_malloc(DIPLREL_MESS_SIZE * sizeof(bv_diplrel_all_reqs)));
 
   /* Position in mess. */
   int mess_pos = 0;
