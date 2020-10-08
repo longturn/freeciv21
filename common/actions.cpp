@@ -157,15 +157,14 @@ FC_STATIC_ASSERT(MAP_DISTANCE_MAX <= ACTION_DISTANCE_LAST_NON_SIGNAL,
 **************************************************************************/
 static struct ae_contra_or *req_contradiction_or(int alternatives, ...)
 {
-  struct ae_contra_or *out;
   int i;
   va_list args;
 
   fc_assert_ret_val(alternatives > 0, NULL);
-  out = fc_malloc(sizeof(out));
+  auto out = new ae_contra_or;
   out->users = 0;
   out->alternatives = alternatives;
-  out->alternative = fc_malloc(sizeof(out->alternative[0]) * alternatives);
+  out->alternative = new action_enabler_contradiction[alternatives];
 
   va_start(args, alternatives);
   for (i = 0; i < alternatives; i++) {
@@ -190,8 +189,8 @@ static void ae_contra_close(struct ae_contra_or *contra)
 
   if (contra->users < 1) {
     /* No users left. Delete. */
-    FC_FREE(contra->alternative);
-    FC_FREE(contra);
+    delete[] contra->alternative;
+    delete contra;
   }
 }
 
@@ -1282,9 +1281,7 @@ static struct action *action_new(action_id id,
                                  const int max_distance,
                                  bool actor_consuming_always)
 {
-  struct action *action;
-
-  action = fc_malloc(sizeof(*action));
+  auto action = new struct action;
 
   action->id = id;
 
@@ -1360,7 +1357,7 @@ unit_action_new(action_id id,
 bool action_id_exists(const action_id act_id)
 {
   /* Actions are still hard coded. */
-  return gen_action_is_valid(act_id) && actions[act_id];
+  return gen_action_is_valid(gen_action(act_id)) && actions[act_id];
 }
 
 /**********************************************************************//**
@@ -1589,7 +1586,7 @@ const char *action_id_rule_name(action_id act_id)
 {
   fc_assert_msg(actions[act_id], "Action %d don't exist.", act_id);
 
-  return gen_action_name(act_id);
+  return gen_action_name(gen_action(act_id));
 }
 
 /**********************************************************************//**
@@ -1598,7 +1595,7 @@ const char *action_id_rule_name(action_id act_id)
 **************************************************************************/
 const char *action_id_name_translation(action_id act_id)
 {
-  return action_prepare_ui_name(act_id, "", ACTPROB_NA, NULL);
+  return action_prepare_ui_name(gen_action(act_id), "", ACTPROB_NA, NULL);
 }
 
 /**********************************************************************//**
@@ -1607,7 +1604,8 @@ const char *action_id_name_translation(action_id act_id)
 const char *action_get_ui_name_mnemonic(action_id act_id,
                                         const char *mnemonic)
 {
-  return action_prepare_ui_name(act_id, mnemonic, ACTPROB_NA, NULL);
+  return action_prepare_ui_name(gen_action(act_id), mnemonic,
+                                ACTPROB_NA, NULL);
 }
 
 /**********************************************************************//**
@@ -2069,9 +2067,7 @@ bool action_removes_extra(const struct action *paction,
 **************************************************************************/
 struct action_enabler *action_enabler_new(void)
 {
-  struct action_enabler *enabler;
-
-  enabler = fc_malloc(sizeof(*enabler));
+  auto enabler = new action_enabler;
   enabler->disabled = FALSE;
   requirement_vector_init(&enabler->actor_reqs);
   requirement_vector_init(&enabler->target_reqs);
@@ -2091,7 +2087,7 @@ void action_enabler_free(struct action_enabler *enabler)
   requirement_vector_free(&enabler->actor_reqs);
   requirement_vector_free(&enabler->target_reqs);
 
-  free(enabler);
+  delete enabler;
 }
 
 /**********************************************************************//**
@@ -4839,7 +4835,7 @@ action_prob(const action_id wanted_action,
 
   chance = ACTPROB_NOT_IMPLEMENTED;
 
-  known = fc_tristate_and(known,
+  known = fc_tristate_and(BOOL_TO_TRISTATE(known),
                           action_enabled_local(wanted_action,
                                                actor_player, actor_city,
                                                actor_building, actor_tile,
@@ -4895,7 +4891,7 @@ action_prob(const action_id wanted_action,
     break;
   case ACTRES_SPY_STEAL_TECH:
     /* Do the victim have anything worth taking? */
-    known = fc_tristate_and(known,
+    known = fc_tristate_and(BOOL_TO_TRISTATE(known),
                             tech_can_be_stolen(actor_player,
                                                target_player));
 
@@ -4904,7 +4900,7 @@ action_prob(const action_id wanted_action,
     break;
   case ACTRES_SPY_TARGETED_STEAL_TECH:
     /* Do the victim have anything worth taking? */
-    known = fc_tristate_and(known,
+    known = fc_tristate_and(BOOL_TO_TRISTATE(known),
                             tech_can_be_stolen(actor_player,
                                                target_player));
 
