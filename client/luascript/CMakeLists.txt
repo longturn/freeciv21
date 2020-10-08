@@ -8,8 +8,8 @@ tolua_generate(
 add_library(
   luascript
   STATIC
-  api_client_base.c
-  script_client.c
+  api_client_base.cpp
+  script_client.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.c
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h
