@@ -101,7 +101,6 @@ set_property(
   SOURCE
   actions.cpp
   improvement.cpp
-  map.cpp
   player.cpp
   reqtext.cpp
   requirements.cpp

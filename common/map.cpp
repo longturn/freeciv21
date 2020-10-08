@@ -11,6 +11,8 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
+#include <stdexcept>
+
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
@@ -250,8 +252,7 @@ static void generate_map_indices(void)
   tiles = (nat_max_x - nat_min_x + 1) * (nat_max_y - nat_min_y + 1);
 
   fc_assert(NULL == wld.map.iterate_outwards_indices);
-  wld.map.iterate_outwards_indices =
-      fc_malloc(tiles * sizeof(*wld.map.iterate_outwards_indices));
+  wld.map.iterate_outwards_indices = new iter_index[tiles];
 
   for (nat_x = nat_min_x; nat_x <= nat_max_x; nat_x++) {
     for (nat_y = nat_min_y; nat_y <= nat_max_y; nat_y++) {
@@ -320,15 +321,15 @@ void map_init_topology(void)
 
   /* Values for actual directions */
   for (int dir = 0; dir < 8; dir++) {
-    if (is_valid_dir_calculate(dir)) {
-      wld.map.valid_dirs[wld.map.num_valid_dirs] = dir;
+    if (is_valid_dir_calculate(direction8(dir))) {
+      wld.map.valid_dirs[wld.map.num_valid_dirs] = direction8(dir);
       wld.map.num_valid_dirs++;
       dir_validity[dir] = TRUE;
     } else {
       dir_validity[dir] = FALSE;
     }
-    if (is_cardinal_dir_calculate(dir)) {
-      wld.map.cardinal_dirs[wld.map.num_cardinal_dirs] = dir;
+    if (is_cardinal_dir_calculate(direction8(dir))) {
+      wld.map.cardinal_dirs[wld.map.num_cardinal_dirs] = direction8(dir);
       wld.map.num_cardinal_dirs++;
       dir_cardinality[dir] = TRUE;
     } else {
@@ -491,7 +492,8 @@ void map_allocate(struct civ_map *amap)
             (void *) amap->tiles, amap->xsize, amap->ysize);
 
   fc_assert_ret(NULL == amap->tiles);
-  amap->tiles = fc_calloc(MAP_INDEX_SIZE, sizeof(*amap->tiles));
+  amap->tiles = static_cast<tile *>(
+    fc_calloc(MAP_INDEX_SIZE, sizeof(*amap->tiles)));
 
   /* Note this use of whole_map_iterate may be a bit sketchy, since the
    * tile values (ptile->index, etc.) haven't been set yet.  It might be
@@ -1142,7 +1144,8 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
   if (tries == max_tries) {
     int count = 0, *positions;
 
-    positions = fc_calloc(MAP_INDEX_SIZE, sizeof(*positions));
+    positions = static_cast<int *>(
+      fc_calloc(MAP_INDEX_SIZE, sizeof(*positions)));
 
     whole_map_iterate(nmap, check_tile) {
       if (filter(check_tile, data)) {
@@ -1216,7 +1219,7 @@ enum direction8 dir_cw(enum direction8 dir)
     return DIR8_NORTH;
   default:
     fc_assert(FALSE);
-    return -1;
+    throw std::logic_error("Invalid direction");
   }
 }
 
@@ -1245,7 +1248,7 @@ enum direction8 dir_ccw(enum direction8 dir)
     return DIR8_WEST;
   default:
     fc_assert(FALSE);
-    return -1;
+    throw std::logic_error("Invalid direction");
   }
 }
 
@@ -1427,7 +1430,7 @@ bool is_singular_tile(const struct tile *ptile, int dist)
 ***********************************************************************/
 static struct startpos *startpos_new(struct tile *ptile)
 {
-  struct startpos *psp = fc_malloc(sizeof(*psp));
+  auto *psp = new startpos;
 
   psp->location = ptile;
   psp->exclude = FALSE;
@@ -1443,7 +1446,7 @@ static void startpos_destroy(struct startpos *psp)
 {
   fc_assert_ret(NULL != psp);
   nation_hash_destroy(psp->nations);
-  free(psp);
+  delete psp;
 }
 
 /*******************************************************************//**
@@ -1621,8 +1624,10 @@ static void startpos_exclude_iter_next(struct iterator *startpos_iter)
   do {
     iterator_next(&iter->nation_iter);
   } while (iterator_valid(&iter->nation_iter)
-           || !nation_hash_lookup(iter->psp->nations,
-                                  iterator_get(&iter->nation_iter), NULL));
+           || !nation_hash_lookup(
+                iter->psp->nations,
+                static_cast<const nation_type *>(
+                    iterator_get(&iter->nation_iter)), NULL));
 }
 
 /*******************************************************************//**
@@ -1699,7 +1704,10 @@ struct startpos *map_startpos_new(struct tile *ptile)
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
   psp = startpos_new(ptile);
-  startpos_hash_replace(wld.map.startpos_table, tile_hash_key(ptile), psp);
+  startpos_hash_replace(
+    wld.map.startpos_table,
+    static_cast<tile *>(tile_hash_key(ptile)),
+    psp);
 
   return psp;
 }
@@ -1715,7 +1723,10 @@ struct startpos *map_startpos_get(const struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, NULL);
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
-  startpos_hash_lookup(wld.map.startpos_table, tile_hash_key(ptile), &psp);
+  startpos_hash_lookup(
+    wld.map.startpos_table,
+    static_cast<tile *>(tile_hash_key(ptile)),
+    &psp);
 
   return psp;
 }
@@ -1729,7 +1740,8 @@ bool map_startpos_remove(struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, FALSE);
   fc_assert_ret_val(NULL != wld.map.startpos_table, FALSE);
 
-  return startpos_hash_remove(wld.map.startpos_table, tile_hash_key(ptile));
+  return startpos_hash_remove(
+    wld.map.startpos_table, static_cast<tile *>(tile_hash_key(ptile)));
 }
 
 /*******************************************************************//**
@@ -1764,5 +1776,5 @@ enum direction8 rand_direction(void)
 ***********************************************************************/
 enum direction8 opposite_direction(enum direction8 dir)
 {
-  return direction8_max() - dir;
+  return direction8(direction8_max() - dir);
 }
