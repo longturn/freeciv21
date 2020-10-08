@@ -1849,7 +1849,7 @@ static void precalc_one(int i,
   } unit_type_iterate_end;
 
   if (n_with_role[i] > 0) {
-    with_role[i] = fc_malloc(n_with_role[i] * sizeof(*with_role[i]));
+    with_role[i] = new unit_type *[n_with_role[i]];
     j = 0;
     unit_type_iterate(u) {
       if (func_has(u, i)) {
@@ -1868,7 +1868,7 @@ void role_unit_precalcs_free(void)
   int i;
 
   for (i = 0; i < MAX_UNIT_ROLES; i++) {
-    free(with_role[i]);
+    delete[] with_role[i];
     with_role[i] = NULL;
     n_with_role[i] = 0;
   }
@@ -2341,10 +2341,10 @@ struct veteran_system *veteran_system_new(int count)
   /* There must be at least one level. */
   fc_assert_ret_val(count > 0, NULL);
 
-  vsystem = fc_calloc(1, sizeof(*vsystem));
+  vsystem = static_cast<veteran_system *>(fc_calloc(1, sizeof(*vsystem)));
   vsystem->levels = count;
-  vsystem->definitions = fc_calloc(vsystem->levels,
-                                   sizeof(*vsystem->definitions));
+  vsystem->definitions = static_cast<veteran_level *>(
+    fc_calloc(vsystem->levels, sizeof(*vsystem->definitions)));
 
   return vsystem;
 }
