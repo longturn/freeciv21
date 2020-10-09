@@ -437,9 +437,7 @@ struct connection *conn_by_number(int id)
 **************************************************************************/
 struct socket_packet_buffer *new_socket_packet_buffer(void)
 {
-  struct socket_packet_buffer *buf;
-
-  buf = fc_malloc(sizeof(*buf));
+  auto buf = new socket_packet_buffer;
   buf->ndata = 0;
   buf->do_buffer_sends = 0;
   buf->nsize = 10*MAX_LEN_PACKET;
@@ -555,13 +553,11 @@ void free_compression_queue(struct connection *pc)
 **************************************************************************/
 static void init_packet_hashs(struct connection *pc)
 {
-  enum packet_type i;
-
-  pc->phs.sent = fc_malloc(sizeof(*pc->phs.sent) * PACKET_LAST);
-  pc->phs.received = fc_malloc(sizeof(*pc->phs.received) * PACKET_LAST);
+  pc->phs.sent = new genhash *[PACKET_LAST];
+  pc->phs.received = new genhash *[PACKET_LAST];
   pc->phs.handlers = packet_handlers_initial();
 
-  for (i = 0; i < PACKET_LAST; i++) {
+  for (int i = 0; i < PACKET_LAST; i++) {
     pc->phs.sent[i] = NULL;
     pc->phs.received[i] = NULL;
   }
@@ -672,7 +668,7 @@ void conn_reset_delta_state(struct connection *pc)
   int i;
 
   for (i = 0; i < PACKET_LAST; i++) {
-    if (packet_has_game_info_flag(i)) {
+    if (packet_has_game_info_flag(packet_type(i))) {
       if (NULL != pc->phs.sent && NULL != pc->phs.sent[i]) {
         genhash_clear(pc->phs.sent[i]);
       }
@@ -792,7 +788,7 @@ struct conn_pattern {
 struct conn_pattern *conn_pattern_new(enum conn_pattern_type type,
                                       const char *wildcard)
 {
-  struct conn_pattern *ppattern = fc_malloc(sizeof(*ppattern));
+  auto ppattern = new conn_pattern;
 
   ppattern->type = type;
   ppattern->wildcard = fc_strdup(wildcard);

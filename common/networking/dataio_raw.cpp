@@ -814,7 +814,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest, size_t max_dest_size)
   }
 
   remaining = dio_input_remaining(din);
-  c = ADD_TO_POINTER(din->src, din->current);
+  c = static_cast<char *>(ADD_TO_POINTER(din->src, din->current));
 
   /* avoid using strlen (or strcpy) on an (unsigned char*)  --dwp */
   for (offset = 0; offset < remaining && c[offset] != '\0'; offset++) {
@@ -891,9 +891,9 @@ bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
     return FALSE;
   }
 
-  order->order = iorder;
-  order->activity = iactivity;
-  order->dir = idir;
+  order->order = unit_orders(iorder);
+  order->activity = unit_activity(iactivity);
+  order->dir = direction8(idir);
 
   return TRUE;
 }
@@ -927,7 +927,7 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
     /*
      * FIXME: the value returned by universal_by_number() should be checked!
      */
-    univ = universal_by_number(kind, identifier);
+    univ = universal_by_number(universals_n(kind), identifier);
     worklist_append(pwl, &univ);
   }
 
@@ -947,7 +947,7 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values, int stop_value)
     return FALSE;
   }
 
-  vec = fc_calloc(count + 1, sizeof(*vec));
+  vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint8_raw(din, vec + inx)) {
       free (vec);
@@ -972,7 +972,7 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values, int stop_value)
     return FALSE;
   }
 
-  vec = fc_calloc(count + 1, sizeof(*vec));
+  vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint16_raw(din, vec + inx)) {
       free (vec);
@@ -1065,7 +1065,7 @@ void dio_put_requirement_raw(struct raw_data_out *dout,
 **************************************************************************/
 struct plocation *plocation_field_new(char *name)
 {
-  struct plocation *out = fc_malloc(sizeof(*out));
+  auto out = new plocation;
 
   out->kind = PADR_FIELD;
   out->name = name;
@@ -1079,7 +1079,7 @@ struct plocation *plocation_field_new(char *name)
 **************************************************************************/
 struct plocation *plocation_elem_new(int number)
 {
-  struct plocation *out = fc_malloc(sizeof(*out));
+  auto out = new plocation;
 
   out->kind = PADR_ELEMENT;
   out->number = number;
