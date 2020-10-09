@@ -1358,7 +1358,6 @@ fi
 AC_CHECK_LIB(nls,main)
 
 dnl Checks for header files.
-AC_HEADER_STDC
 AC_HEADER_SYS_WAIT
 AC_CHECK_HEADERS([fcntl.h sys/utsname.h \
                   sys/file.h signal.h strings.h execinfo.h \
@@ -1390,7 +1389,6 @@ fi
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-AC_HEADER_TIME
 AC_STRUCT_TM
 AC_CHECK_TYPES([socklen_t], [AC_DEFINE([FREECIV_HAVE_SOCKLEN_T], [1], [Have socklen_t type defined])],
 [],

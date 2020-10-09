@@ -1,13 +1,13 @@
 add_library(
   aicore
   STATIC
-  aiactions.c
-  aisupport.c
-  path_finding.c
-  pf_tools.c
-  cm.c
-  citymap.c
-  caravan.c
+  aiactions.cpp
+  aisupport.cpp
+  path_finding.cpp
+  pf_tools.cpp
+  cm.cpp
+  citymap.cpp
+  caravan.cpp
 )
 
 target_include_directories(aicore PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

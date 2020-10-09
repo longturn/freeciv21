@@ -904,10 +904,10 @@ typedef int server_setting_id;
 #define SPECENUM_BITVECTOR bv_causes
 #include "specenum_gen.h"
 #define EC_NONE EC_COUNT
-#define EC_SPECIAL (EC_NONE + 1)
-#define EC_DEFENSIVE (EC_NONE + 2)
-#define EC_NATURAL_DEFENSIVE (EC_NONE + 3)
-#define EC_LAST (EC_NONE + 4)
+#define EC_SPECIAL ((enum extra_cause) (EC_NONE + 1))
+#define EC_DEFENSIVE ((enum extra_cause) (EC_NONE + 2))
+#define EC_NATURAL_DEFENSIVE ((enum extra_cause) (EC_NONE + 3))
+#define EC_LAST ((enum extra_cause) (EC_NONE + 4))
 
 /* struct extra_type reserve 16 bits (0-15) for these. */
 FC_STATIC_ASSERT(EC_COUNT < 16, extra_causes_over_limit);

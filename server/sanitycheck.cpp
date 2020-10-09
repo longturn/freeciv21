@@ -178,9 +178,12 @@ static void check_map(const char *file, const char *function, int line)
 
     if (NULL != pcity) {
       SANITY_TILE(ptile, same_pos(pcity->tile, ptile));
-      if (BORDERS_DISABLED != game.info.borders) {
-        SANITY_TILE(ptile, tile_owner(ptile) != NULL);
-      }
+      SANITY_TILE(ptile, tile_owner(ptile) != NULL);
+    }
+
+    if (NULL == pcity && BORDERS_DISABLED == game.info.borders) {
+      /* Only city tiles are claimed when borders are disabled */
+      SANITY_TILE(ptile, tile_owner(ptile) == NULL);
     }
 
     if (is_ocean_tile(ptile)) {
@@ -236,9 +239,8 @@ static bool check_city_good(struct city *pcity, const char *file,
 
   SANITY_CITY(pcity, !terrain_has_flag(tile_terrain(pcenter), TER_NO_CITIES));
 
-  if (BORDERS_DISABLED != game.info.borders) {
-    SANITY_CITY(pcity, NULL != tile_owner(pcenter));
-  }
+  SANITY_CITY(pcity, NULL != tile_owner(pcenter));
+  SANITY_CITY(pcity, city_owner(pcity) == tile_owner(pcenter));
 
   if (NULL != tile_owner(pcenter)) {
     if (tile_owner(pcenter) != pplayer) {
@@ -493,7 +495,7 @@ static void check_units(const char *file, const char *function, int line)
 static void check_players(const char *file, const char *function, int line)
 {
   players_iterate(pplayer) {
-    int found_palace = 0;
+    int found_primary_capital = 0;
 
     if (!pplayer->is_alive) {
       /* Dead players' units and cities are disbanded in kill_player(). */
@@ -511,10 +513,10 @@ static void check_players(const char *file, const char *function, int line)
                    && !pplayer->server.got_first_city));
 
     city_list_iterate(pplayer->cities, pcity) {
-      if (is_capital(pcity)) {
-	found_palace++;
+      if (pcity->capital == CAPITAL_PRIMARY) {
+	found_primary_capital++;
       }
-      SANITY_CITY(pcity, found_palace <= 1);
+      SANITY_CITY(pcity, found_primary_capital <= 1);
     } city_list_iterate_end;
 
     players_iterate(pplayer2) {

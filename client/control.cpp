@@ -3037,7 +3037,8 @@ void key_cancel_action(void)
 }
 
 /**********************************************************************//**
-  Center the mapview on the player's capital, or print a failure message.
+  Center the mapview on the player's named capital,
+  or print a failure message.
 **************************************************************************/
 void key_center_capital(void)
 {

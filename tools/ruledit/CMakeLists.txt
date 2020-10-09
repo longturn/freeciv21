@@ -4,6 +4,8 @@ add_executable(
   freeciv-ruledit
   conversion_log.cpp
   req_edit.cpp
+  req_vec_fix.cpp
+  requirers_dlg.cpp
   ruledit.cpp
   tab_enablers.cpp
   tab_gov.cpp
@@ -29,3 +31,5 @@ target_link_libraries(freeciv-ruledit server)
 target_link_libraries(freeciv-ruledit tools_ruleutil)
 target_link_libraries(freeciv-ruledit tools_shared)
 target_link_libraries(freeciv-ruledit Qt5::Widgets)
+
+install(TARGETS freeciv-ruledit)

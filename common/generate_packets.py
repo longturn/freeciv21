@@ -1559,7 +1559,7 @@ def get_packet_functional_capability(packets):
             if f.add_cap:  all_caps[f.add_cap]=1
             if f.remove_cap:  all_caps[f.remove_cap]=1
     return '''
-const char *const packet_functional_capability = "%s";
+extern "C" const char *const packet_functional_capability = "%s";
 '''%' '.join(all_caps.keys())
 
 # Returns a code fragment which is the implementation of the

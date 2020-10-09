@@ -18,6 +18,7 @@ if (FREECIV_ENABLE_CIVMANUAL)
   target_link_libraries(freeciv-manual server)
   target_link_libraries(freeciv-manual client)
   target_link_libraries(freeciv-manual tools_shared)
+  install(TARGETS freeciv-manual)
 endif()
 
 if (FREECIV_ENABLE_RULEUP)
@@ -25,13 +26,6 @@ if (FREECIV_ENABLE_RULEUP)
   target_link_libraries(freeciv-ruleup server)
   target_link_libraries(freeciv-ruleup tools_shared)
   target_link_libraries(freeciv-ruleup tools_ruleutil)
+  install(TARGETS freeciv-ruleup)
 endif()
 
-install(
-  TARGETS
-  #freeciv-manual
-  #freeciv-modpack
-  #freeciv-modpack-qt
-  #freeciv-ruledit
-  #freeciv-ruleup
-  OPTIONAL)

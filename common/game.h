@@ -547,7 +547,8 @@ extern struct world wld;
  * first report is already generated at (SCORETURN - 1) */
 #define GAME_DEFAULT_SCORETURN       20
 
-#define GAME_DEFAULT_VICTORY_CONDITIONS (1 << VC_SPACERACE | 1 << VC_ALLIED)
+#define GAME_DEFAULT_VICTORY_CONDITIONS \
+    ((victory_condition_type) (1 << VC_SPACERACE | 1 << VC_ALLIED))
 #define GAME_DEFAULT_END_SPACESHIP   TRUE
 
 #define GAME_DEFAULT_SPACESHIP_TRAVEL_TIME 100

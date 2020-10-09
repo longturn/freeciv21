@@ -54,7 +54,7 @@ static int l_checkmode (const char *mode) {
 
 #if !defined(l_popen)		/* { */
 
-#if defined(LUA_USE_POPEN)      /* { */
+#if defined(LUA_USE_POSIX)	/* { */
 
 #define l_popen(L,c,m)		(fflush(NULL), popen(c,m))
 #define l_pclose(L,file)	(pclose(file))
@@ -103,7 +103,7 @@ static int l_checkmode (const char *mode) {
 
 #if !defined(l_fseek)		/* { */
 
-#if defined(LUA_USE_FSEEKO)	/* { */
+#if defined(LUA_USE_POSIX)	/* { */
 
 #include <sys/types.h>
 
@@ -215,7 +215,7 @@ static int f_close (lua_State *L) {
 
 static int io_close (lua_State *L) {
   if (lua_isnone(L, 1))  /* no argument? */
-    lua_getfield(L, LUA_REGISTRYINDEX, IO_OUTPUT);  /* use standard output */
+    lua_getfield(L, LUA_REGISTRYINDEX, IO_OUTPUT);  /* use default output */
   return f_close(L);
 }
 
@@ -270,6 +270,7 @@ static int io_open (lua_State *L) {
 */
 static int io_pclose (lua_State *L) {
   LStream *p = tolstream(L);
+  errno = 0;
   return luaL_execresult(L, l_pclose(L, p->f));
 }
 
@@ -296,7 +297,7 @@ static FILE *getiofile (lua_State *L, const char *findex) {
   lua_getfield(L, LUA_REGISTRYINDEX, findex);
   p = (LStream *)lua_touserdata(L, -1);
   if (isclosed(p))
-    luaL_error(L, "standard %s file is closed", findex + IOPREF_LEN);
+    luaL_error(L, "default %s file is closed", findex + IOPREF_LEN);
   return p->f;
 }
 

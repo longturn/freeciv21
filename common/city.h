@@ -745,7 +745,8 @@ bool city_exist(int id);
 {									    \
   int output;						    \
 									    \
-  for (output = 0; output < O_LAST; output++) {
+  for (ioutput = 0; ioutput < O_LAST; ioutput++) {                          \
+      Output_type_id output = (enum output_type_id) ioutput;
 
 #define output_type_iterate_end						    \
   }									    \
