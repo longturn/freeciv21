@@ -67,8 +67,6 @@
 
 #include "options.h"
 
-int INIT = 0;
-
 struct client_options gui_options = {
 /** Defaults for options normally on command line **/
   "\0",                 //default_user_name
@@ -518,6 +516,7 @@ struct option_video_mode_vtable {
       bool (*set) (struct option *, struct video_mode);
     };
 
+
 /****************************************************************************
   The base class for options.
 ****************************************************************************/
@@ -528,6 +527,7 @@ struct option {
   enum option_type type;
 
   /* Common accessors. */
+   /* Common accessors. */
   const struct option_common_vtable *common_vtable;
   /* Specific typed accessors. */
   union{
@@ -548,7 +548,6 @@ struct option {
     /* Specific video mode accessors (OT_VIDEO_MODE == type). */
     const struct option_video_mode_vtable *video_mode_vtable;
   };
-
   /* Called after the value changed. */
   void (*changed_callback) (struct option *option);
 
@@ -655,8 +654,7 @@ const char *option_help_text(const struct option *poption)
 ****************************************************************************/
 enum option_type option_type(const struct option *poption)
 {
-  //sveinung
-  //fc_assert_ret_val(NULL != poption, -1);
+  fc_assert_ret_val(NULL != poption, static_cast<enum option_type>(-1));
 
   return poption->type;
 }
@@ -666,7 +664,7 @@ enum option_type option_type(const struct option *poption)
 ****************************************************************************/
 int option_category(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, -1);
+  fc_assert_ret_val(NULL != poption, (-1));
 
   return poption->common_vtable->category(poption);
 }
@@ -1297,13 +1295,13 @@ static bool client_option_is_changeable(const struct option *poption);
 static struct option *client_option_next(const struct option *poption);
 
 static const struct option_common_vtable client_option_common_vtable = {
-  client_option_number, //.number = 
-  client_option_name, //.name = 
-  client_option_description, //.description = 
-  client_option_help_text, //.help_text = 
-  client_option_category, //.category = 
-  client_option_is_changeable, //.is_changeable = 
-  client_option_next //.next = 
+  .number = client_option_number,
+  .name = client_option_name,
+  .description = client_option_description,
+  .help_text = client_option_help_text,
+  .category = client_option_category,
+  .is_changeable = client_option_is_changeable,
+  .next = client_option_next
 };
 
 static bool client_option_bool_get(const struct option *poption);
@@ -1311,9 +1309,9 @@ static bool client_option_bool_def(const struct option *poption);
 static bool client_option_bool_set(struct option *poption, bool val);
 
 static const struct option_bool_vtable client_option_bool_vtable = {
-  client_option_bool_get, //.get = 
-  client_option_bool_def, //.def = 
-  client_option_bool_set //.set = 
+  .get = client_option_bool_get,
+  .def = client_option_bool_def,
+  .set = client_option_bool_set
 };
 
 static int client_option_int_get(const struct option *poption);
@@ -4364,9 +4362,8 @@ void handle_server_setting_bool
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_BOOLEAN;
-    poption->str_vtable = &server_option_str_vtable;
+    poption->bool_vtable = &server_option_bool_vtable;
   }
-
   fc_assert_ret_msg(OT_BOOLEAN == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4398,7 +4395,6 @@ void handle_server_setting_int
   if (NULL == poption->common_vtable) {
     /* Not initialized yet. */
     poption->poptset = server_optset;
-    ////sveinung
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_INTEGER;
     poption->int_vtable = &server_option_int_vtable;
@@ -4440,7 +4436,6 @@ void handle_server_setting_str
     poption->type = OT_STRING;
     poption->str_vtable = &server_option_str_vtable;
   }
-
   fc_assert_ret_msg(OT_STRING == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4484,9 +4479,8 @@ void handle_server_setting_enum
     poption->poptset = server_optset;
     poption->common_vtable = &server_option_common_vtable;
     poption->type = OT_ENUM;
-    poption->str_vtable = &server_option_str_vtable;
+    poption->enum_vtable = &server_option_enum_vtable;
   }
-
   fc_assert_ret_msg(OT_ENUM == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
@@ -4576,7 +4570,6 @@ void handle_server_setting_bitwise
     poption->type = OT_BITWISE;
     poption->bitwise_vtable = &server_option_bitwise_vtable;
   }
-
   fc_assert_ret_msg(OT_BITWISE == poption->type,
                     "Server setting \"%s\" (nb %d) has type %s (%d), "
                     "expected %s (%d)",
