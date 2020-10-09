@@ -420,7 +420,7 @@ static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
   fc_assert(params->fuel_left_initially == 1);
 #endif /* PF_DEBUG */
   pos->fuel_left = 1;
-  pos->dir_to_here = node->dir_to_here;
+  pos->dir_to_here = direction8(node->dir_to_here);
   pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
 
   if (node->cost > 0) {
@@ -450,7 +450,7 @@ pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
 #endif /* PF_DEBUG */
 
   ptile = dest_tile;
-  path = fc_malloc(sizeof(*path));
+  path = new pf_path;
 
   /* 1: Count the number of steps to get here.
    * To do it, backtrack until we hit the starting point */
@@ -466,7 +466,7 @@ pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
 
   /* 2: Allocate the memory */
   path->length = i + 1;
-  path->positions = fc_malloc((i + 1) * sizeof(*(path->positions)));
+  path->positions = new pf_position[i + 1];
 
   /* 3: Backtrack again and fill the positions this time */
   ptile = dest_tile;
@@ -477,7 +477,7 @@ pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
     /* fill_position doesn't set direction */
     path->positions[i].dir_to_next_pos = dir_next;
 
-    dir_next = node->dir_to_here;
+    dir_next = direction8(node->dir_to_here);
 
     if (i > 0) {
       /* Step further back, if we haven't finished yet */
@@ -616,7 +616,7 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
   struct pf_normal_node *node = pfnm->lattice + tindex;
   const struct pf_parameter *params = pf_map_parameter(pfm);
   int cost_of_path;
-  enum pf_move_scope scope = node->move_scope;
+  pf_move_scope scope = pf_move_scope(node->move_scope);
 
   /* There is no exit from DONT_LEAVE tiles! */
   if (node->behavior != TB_DONT_LEAVE
@@ -664,7 +664,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
       /* Evaluate the cost of the move. */
       if (PF_ACTION_NONE != node1->action) {
         if (NULL != params->is_action_possible
-            && !params->is_action_possible(tile, scope, tile1, node1->action,
+            && !params->is_action_possible(tile, scope, tile1,
+                                           pf_action(node1->action),
                                            params)) {
           continue;
         }
@@ -682,7 +683,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
       } else if (node1->node_known_type == TILE_UNKNOWN) {
         cost = params->utype->unknown_move_cost;
       } else {
-        cost = params->get_MC(tile, scope, tile1, node1->move_scope, params);
+        cost = params->get_MC(tile, scope, tile1,
+                              pf_move_scope(node1->move_scope), params);
       }
       if (cost == PF_IMPOSSIBLE_MC) {
         continue;
@@ -860,7 +862,7 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_normal_node *node;
 
-  pfnm = fc_malloc(sizeof(*pfnm));
+  pfnm = new pf_normal_map;
   base_map = &pfnm->base_map;
   params = &base_map->params;
 #ifdef PF_DEBUG
@@ -869,7 +871,8 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pfnm->lattice = fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_normal_node));
+  pfnm->lattice = static_cast<pf_normal_node *>(
+    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_normal_node)));
   pfnm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
   if (NULL == parameter->get_costs) {
@@ -1180,7 +1183,7 @@ static void pf_danger_map_fill_position(const struct pf_danger_map *pfdm,
   fc_assert(params->fuel_left_initially == 1);
 #endif /* PF_DEBUG */
   pos->fuel_left = 1;
-  pos->dir_to_here = node->dir_to_here;
+  pos->dir_to_here = direction8(node->dir_to_here);
   pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
 
   if (node->cost > 0) {
@@ -1214,9 +1217,9 @@ static struct pf_path *
 pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
                              struct tile *ptile)
 {
-  struct pf_path *path = fc_malloc(sizeof(*path));
+  auto path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
-  struct pf_danger_pos *danger_seg = NULL;
+  struct pf_danger_node::pf_danger_pos *danger_seg = NULL;
   bool waited = FALSE;
   struct pf_danger_node *node = pfdm->lattice + tile_index(ptile);
   int length = 1;
@@ -1242,14 +1245,14 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
 
     if (!node->is_dangerous || !danger_seg) {
       /* We are in the normal node and dir_to_here field is valid */
-      dir_next = node->dir_to_here;
+      dir_next = direction8(node->dir_to_here);
       /* d_node->danger_segment is the indicator of what lies ahead
        * if it's non-NULL, we are entering a danger segment,
        * if it's NULL, we are not on one so danger_seg should be NULL. */
       danger_seg = node->danger_segment;
     } else {
       /* We are in a danger segment. */
-      dir_next = danger_seg->dir_to_here;
+      dir_next = direction8(danger_seg->dir_to_here);
       danger_seg++;
     }
 
@@ -1259,7 +1262,7 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
   }
 
   /* Allocate memory for path. */
-  path->positions = fc_malloc(length * sizeof(struct pf_position));
+  path->positions = new pf_position[length];
   path->length = length;
 
   /* Reset variables for main iteration. */
@@ -1333,14 +1336,14 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
     /* 4: Calculate the next direction. */
     if (!node->is_dangerous || !danger_seg) {
       /* We are in the normal node and dir_to_here field is valid. */
-      dir_next = node->dir_to_here;
+      dir_next = direction8(node->dir_to_here);
       /* d_node->danger_segment is the indicator of what lies ahead.
        * If it's non-NULL, we are entering a danger segment,
        * If it's NULL, we are not on one so danger_seg should be NULL. */
       danger_seg = node->danger_segment;
     } else {
       /* We are in a danger segment. */
-      dir_next = danger_seg->dir_to_here;
+      dir_next = direction8(danger_seg->dir_to_here);
       danger_seg++;
     }
 
@@ -1376,7 +1379,7 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 {
   struct tile *ptile = PF_MAP(pfdm)->tile;
   struct pf_danger_node *node = pfdm->lattice + tile_index(ptile);
-  struct pf_danger_pos *pos;
+  struct pf_danger_node::pf_danger_pos *pos;
   int length = 0, i;
   const struct pf_parameter *params = pf_map_parameter(PF_MAP(pfdm));
 
@@ -1387,14 +1390,15 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 #endif /* PF_DEBUG */
 
   /* First iteration for determining segment length */
-  while (node->is_dangerous && direction8_is_valid(node->dir_to_here)) {
+  while (node->is_dangerous
+         && direction8_is_valid(direction8(node->dir_to_here))) {
     length++;
     ptile = mapstep(params->map, ptile, DIR_REVERSE(node->dir_to_here));
     node = pfdm->lattice + tile_index(ptile);
   }
 
   /* Allocate memory for segment */
-  node1->danger_segment = fc_malloc(length * sizeof(struct pf_danger_pos));
+  node1->danger_segment = new pf_danger_node::pf_danger_pos[length];
 
   /* Reset tile and node pointers for main iteration */
   ptile = PF_MAP(pfdm)->tile;
@@ -1403,7 +1407,7 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
   /* Now fill the positions */
   for (i = 0, pos = node1->danger_segment; i < length; i++, pos++) {
     /* Record the direction */
-    pos->dir_to_here = node->dir_to_here;
+    pos->dir_to_here = direction8(node->dir_to_here);
     pos->cost = node->cost;
     pos->extra_cost = node->extra_cost;
     if (i == length - 1) {
@@ -1488,18 +1492,18 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
   struct tile *tile = pfm->tile;
   int tindex = tile_index(tile);
   struct pf_danger_node *node = pfdm->lattice + tindex;
-  enum pf_move_scope scope = node->move_scope;
+  pf_move_scope scope = pf_move_scope(node->move_scope);
 
   /* The previous position is defined by 'tile' (tile pointer), 'node'
    * (the data of the tile for the pf_map), and index (the index of the
    * position in the Freeciv map). */
 
-  if (!direction8_is_valid(node->dir_to_here)
+  if (!direction8_is_valid(direction8(node->dir_to_here))
       && NULL != params->transported_by_initially) {
 #ifdef PF_DEBUG
     fc_assert(tile == params->start_tile);
 #endif
-    scope |= PF_MS_TRANSPORT;
+    scope = pf_move_scope(scope | PF_MS_TRANSPORT);
     if (!utype_can_freely_unload(params->utype,
                                  params->transported_by_initially)
         && NULL == tile_city(tile)
@@ -1562,7 +1566,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
         if (PF_ACTION_NONE != node1->action) {
           if (NULL != params->is_action_possible
               && !params->is_action_possible(tile, scope, tile1,
-                                             node1->action, params)) {
+                                             pf_action(node1->action),
+                                             params)) {
             continue;
           }
           /* action move cost depends on action and unit type. */
@@ -1579,7 +1584,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
         } else if (node1->node_known_type == TILE_UNKNOWN) {
           cost = params->utype->unknown_move_cost;
         } else {
-          cost = params->get_MC(tile, scope, tile1, node1->move_scope,
+          cost = params->get_MC(tile, scope, tile1,
+                                pf_move_scope(node1->move_scope),
                                 params);
         }
         if (cost == PF_IMPOSSIBLE_MC) {
@@ -1736,7 +1742,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
     }
 #endif
 
-    scope = node->move_scope;
+    scope = pf_move_scope(node->move_scope);
   }
 
   log_error("%s(): internal error.", __FUNCTION__);
@@ -1867,7 +1873,7 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_danger_node *node;
 
-  pfdm = fc_malloc(sizeof(*pfdm));
+  pfdm = new pf_danger_map;
   base_map = &pfdm->base_map;
   params = &base_map->params;
 #ifdef PF_DEBUG
@@ -1876,7 +1882,8 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pfdm->lattice = fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_danger_node));
+  pfdm->lattice = static_cast<pf_danger_node *>(
+    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_danger_node)));
   pfdm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pfdm->danger_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -2253,11 +2260,11 @@ static inline struct pf_fuel_pos *
 pf_fuel_pos_replace(struct pf_fuel_pos *pos, const struct pf_fuel_node *node)
 {
   if (NULL == pos) {
-    pos = fc_malloc(sizeof(*pos));
+    pos = new pf_fuel_pos;
     pos->ref_count = 1;
   } else if (1 < pos->ref_count) {
     pos->ref_count--;
-    pos = fc_malloc(sizeof(*pos));
+    pos = new pf_fuel_pos;
     pos->ref_count = 1;
   } else {
 #ifdef PF_DEBUG
@@ -2337,7 +2344,7 @@ static void pf_fuel_map_fill_position(const struct pf_fuel_map *pffm,
   pos->total_EC = head->extra_cost;
   pos->total_MC = (head->cost - pf_move_rate(params)
                    + pf_moves_left_initially(params));
-  pos->dir_to_here = head->dir_to_here;
+  pos->dir_to_here = direction8(head->dir_to_here);
   pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
   pf_fuel_finalize_position(pos, params, node, head);
 }
@@ -2364,7 +2371,7 @@ static struct pf_path *
 pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
                            struct tile *ptile)
 {
-  struct pf_path *path = fc_malloc(sizeof(*path));
+  auto path = new pf_path;
   enum direction8 dir_next = direction8_invalid();
   struct pf_fuel_node *node = pffm->lattice + tile_index(ptile);
   struct pf_fuel_pos *segment = node->segment;
@@ -2383,7 +2390,7 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   /* First iterate to find path length. */
   /* NB: the start point could be reached in the middle of a segment.
    * See comment for pf_fuel_map_create_segment(). */
-  while (direction8_is_valid(segment->dir_to_here)) {
+  while (direction8_is_valid(direction8(segment->dir_to_here))) {
     if (node->moves_left_req == 0) {
       /* A refuel point. */
       if (segment != node->segment) {
@@ -2411,7 +2418,7 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   }
 
   /* Allocate memory for path. */
-  path->positions = fc_malloc(length * sizeof(struct pf_position));
+  path->positions = new pf_position[length];
   path->length = length;
 
   /* Reset variables for main iteration. */
@@ -2465,7 +2472,7 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
     }
 
     /* 4: Calculate the next direction. */
-    dir_next = segment->dir_to_here;
+    dir_next = direction8(segment->dir_to_here);
 
     /* 5: Step further back. */
     iter_tile = mapstep(params->map, iter_tile, DIR_REVERSE(dir_next));
@@ -2527,7 +2534,8 @@ static inline void pf_fuel_map_create_segment(struct pf_fuel_map *pffm,
     pos = pf_fuel_pos_replace(pos, node);
     node->pos = pos;
     next->prev = pf_fuel_pos_ref(pos);
-  } while (0 != node->moves_left_req && direction8_is_valid(node->dir_to_here));
+  } while (0 != node->moves_left_req
+           && direction8_is_valid(direction8(node->dir_to_here)));
 }
 
 /************************************************************************//**
@@ -2622,7 +2630,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
   struct tile *tile = pfm->tile;
   int tindex = tile_index(tile);
   struct pf_fuel_node *node = pffm->lattice + tindex;
-  enum pf_move_scope scope = node->move_scope;
+  enum pf_move_scope scope = pf_move_scope(node->move_scope);
   int priority, waited_priority;
   bool waited = FALSE;
 
@@ -2630,12 +2638,12 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
    * (the data of the tile for the pf_map), and index (the index of the
    * position in the Freeciv map). */
 
-  if (!direction8_is_valid(node->dir_to_here)
+  if (!direction8_is_valid(direction8(node->dir_to_here))
       && NULL != params->transported_by_initially) {
 #ifdef PF_DEBUG
     fc_assert(tile == params->start_tile);
 #endif
-    scope |= PF_MS_TRANSPORT;
+    scope = pf_move_scope(scope | PF_MS_TRANSPORT);
     if (!utype_can_freely_unload(params->utype,
                                  params->transported_by_initially)
         && NULL == tile_city(tile)
@@ -2706,7 +2714,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
           if (PF_ACTION_NONE != node1->action) {
             if (NULL != params->is_action_possible
                 && !params->is_action_possible(tile, scope, tile1,
-                                               node1->action, params)) {
+                                               pf_action(node1->action),
+                                               params)) {
               node1->cost_to_here[dir] = PF_IMPOSSIBLE_MC + 2;
               continue;
             }
@@ -2724,7 +2733,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
           } else if (node1->node_known_type == TILE_UNKNOWN) {
             cost = params->utype->unknown_move_cost;
           } else {
-            cost = params->get_MC(tile, scope, tile1, node1->move_scope,
+            cost = params->get_MC(tile, scope, tile1,
+                                  pf_move_scope(node1->move_scope),
                                   params);
           }
 
@@ -2952,7 +2962,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
     }
 #endif /* PF_DEBUG */
 
-    scope = node->move_scope;
+    scope = pf_move_scope(node->move_scope);
   }
 
   log_error("%s(): internal error.", __FUNCTION__);
@@ -3083,7 +3093,7 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   struct pf_parameter *params;
   struct pf_fuel_node *node;
 
-  pffm = fc_malloc(sizeof(*pffm));
+  pffm = new pf_fuel_map;
   base_map = &pffm->base_map;
   params = &base_map->params;
 #ifdef PF_DEBUG
@@ -3092,7 +3102,8 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pffm->lattice = fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_fuel_node));
+  pffm->lattice = static_cast<pf_fuel_node *>(
+    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_fuel_node)));
   pffm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pffm->waited_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -3365,8 +3376,8 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 static struct pf_path *
 pf_path_new_to_start_tile(const struct pf_parameter *param)
 {
-  struct pf_path *path = fc_malloc(sizeof(*path));
-  struct pf_position *pos = fc_malloc(sizeof(*pos));
+  auto path = new pf_path;
+  auto pos = new pf_position;
 
   path->length = 1;
   pf_position_fill_start_tile(pos, param);
@@ -3402,10 +3413,9 @@ struct pf_path *pf_path_concat(struct pf_path *dest_path,
 
   if (dest_path == NULL) {
     /* Just copy path. */
-    dest_path = fc_malloc(sizeof(*dest_path));
+    dest_path = new pf_path;
     dest_path->length = src_path->length;
-    dest_path->positions = fc_malloc(sizeof(*dest_path->positions)
-                                     * dest_path->length);
+    dest_path->positions = new pf_position[dest_path->length];
     memcpy(dest_path->positions, src_path->positions,
            sizeof(*dest_path->positions) * dest_path->length);
     return dest_path;
@@ -3424,9 +3434,9 @@ struct pf_path *pf_path_concat(struct pf_path *dest_path,
   }
 
   dest_path->length = dest_end + src_path->length;
-  dest_path->positions = fc_realloc(dest_path->positions,
-                                    sizeof(*dest_path->positions)
-                                    * dest_path->length);
+  dest_path->positions = static_cast<pf_position *>(
+    fc_realloc(dest_path->positions,
+               sizeof(*dest_path->positions) * dest_path->length));
   /* Be careful to include the first position of src_path, it contains
    * the direction (it is undefined in the last position of dest_path) */
   memcpy(dest_path->positions + dest_end, src_path->positions,
@@ -3454,7 +3464,7 @@ bool pf_path_advance(struct pf_path *path, struct tile *ptile)
   }
   fc_assert_ret_val(i < path->length, FALSE);
   path->length -= i;
-  new_positions = fc_malloc(sizeof(*path->positions) * path->length);
+  new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions + i,
          path->length * sizeof(*path->positions));
   free(path->positions);
@@ -3486,7 +3496,7 @@ bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
   fc_assert_ret_val(i >= 0, FALSE);
 
   path->length = i + 1;
-  new_positions = fc_malloc(sizeof(*path->positions) * path->length);
+  new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions,
          path->length * sizeof(*path->positions));
   free(path->positions);
@@ -3557,7 +3567,7 @@ static void pf_reverse_map_destroy_param(struct pf_parameter *param);
 struct pf_reverse_map {
   struct tile *target_tile;     /* Where we want to go. */
   int max_turns;                /* The maximum of turns. */
-  struct pf_parameter template; /* Keep a parameter ready for usage. */
+  struct pf_parameter template_params; /* Keep a parameter ready for usage. */
   struct pf_pos_hash *hash;     /* A hash where pf_position are stored. */
 };
 
@@ -3660,8 +3670,8 @@ struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
                                           int max_turns, bool omniscient,
                                           const struct civ_map *map)
 {
-  struct pf_reverse_map *pfrm = fc_malloc(sizeof(struct pf_reverse_map));
-  struct pf_parameter *param = &pfrm->template;
+  auto pfrm = new pf_reverse_map;
+  struct pf_parameter *param = &pfrm->template_params;
 
   pfrm->target_tile = target_tile;
   pfrm->max_turns = max_turns;
@@ -3733,9 +3743,9 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
         break;
       } else if (pfm->tile == target_tile) {
         /* Found our position. Insert in hash, destroy map, and return. */
-        pos = fc_malloc(sizeof(*pos));
+        pos = new pf_position;
         pf_normal_map_fill_position(PF_NORMAL_MAP(pfm), target_tile, pos);
-        copy = fc_malloc(sizeof(*copy));
+        copy = new pf_parameter;
         *copy = *param;
         pf_pos_hash_insert(pfrm->hash, copy, pos);
         pf_map_destroy(pfm);
@@ -3747,9 +3757,9 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
     do {
       if (pfm->tile == target_tile) {
         /* Found our position. Insert in hash, destroy map, and return. */
-        pos = fc_malloc(sizeof(*pos));
+        pos = new pf_position;
         pf_normal_map_fill_position(PF_NORMAL_MAP(pfm), target_tile, pos);
-        copy = fc_malloc(sizeof(*copy));
+        copy = new pf_parameter;
         *copy = *param;
         pf_pos_hash_insert(pfrm->hash, copy, pos);
         pf_map_destroy(pfm);
@@ -3761,7 +3771,7 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
 
   /* Position not found. Let's insert NULL as position to avoid to iterate
    * the map again. */
-  copy = fc_malloc(sizeof(*copy));
+  copy = new pf_parameter;
   *copy = *param;
   pf_pos_hash_insert(pfrm->hash, copy, NULL);
   return NULL;
@@ -3775,7 +3785,7 @@ static inline const struct pf_position *
 pf_reverse_map_unit_pos(struct pf_reverse_map *pfrm,
                         const struct unit *punit)
 {
-  struct pf_parameter *param = &pfrm->template;
+  struct pf_parameter *param = &pfrm->template_params;
 
   /* Fill parameter. */
   param->start_tile = unit_tile(punit);
@@ -3797,7 +3807,7 @@ pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
                          const struct unit_type *punittype,
                          struct tile *ptile)
 {
-  struct pf_parameter *param = &pfrm->template;
+  struct pf_parameter *param = &pfrm->template_params;
   const struct player *pplayer = param->owner;
   int veteran_level = get_unittype_bonus(pplayer, ptile, punittype,
                                          EFT_VETERAN_BUILD);

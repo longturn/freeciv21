@@ -341,12 +341,13 @@ struct cm_result *cm_result_new(struct city *pcity)
   struct cm_result *result;
 
   /* initialise all values */
-  result = fc_calloc(1, sizeof(*result));
+  result = static_cast<cm_result *>(fc_calloc(1, sizeof(*result)));
   result->city_radius_sq = pcity ? city_map_radius_sq_get(pcity)
                                  : CITY_MAP_MAX_RADIUS_SQ;
   result->worker_positions
-    = fc_calloc(city_map_tiles(result->city_radius_sq),
-                sizeof(*result->worker_positions));
+    = static_cast<bool *>(
+        fc_calloc(city_map_tiles(result->city_radius_sq),
+                sizeof(*result->worker_positions)));
 
   /* test if the city pointer is valid; the cm_result struct can be
    * returned as it uses the maximal possible value for the size of
@@ -390,7 +391,7 @@ static void tile_type_init(struct cm_tile_type *type)
 ****************************************************************************/
 static struct cm_tile_type *tile_type_dup(const struct cm_tile_type *oldtype)
 {
-  struct cm_tile_type *newtype = fc_malloc(sizeof(*newtype));
+  auto newtype = new cm_tile_type;
 
   memcpy(newtype, oldtype, sizeof(*oldtype));
   tile_vector_init(&newtype->tiles);
@@ -627,8 +628,10 @@ static struct cm_fitness compute_fitness(const int surplus[],
 static void init_partial_solution(struct partial_solution *into,
                                   int ntypes, int idle, bool negative_ok)
 {
-  into->worker_counts = fc_calloc(ntypes, sizeof(*into->worker_counts));
-  into->prereqs_filled = fc_calloc(ntypes, sizeof(*into->prereqs_filled));
+  into->worker_counts = static_cast<int *>(
+    fc_calloc(ntypes, sizeof(*into->worker_counts)));
+  into->prereqs_filled = static_cast<int *>(
+    fc_calloc(ntypes, sizeof(*into->prereqs_filled)));
   if (negative_ok) {
     output_type_iterate(otype) {
       into->production[otype] = -FC_INFINITY;
@@ -858,8 +861,8 @@ static int compare_tile_type_by_lattice_order(const struct cm_tile_type *a,
 ****************************************************************************/
 static int compare_tile_type_by_fitness(const void *va, const void *vb)
 {
-  struct cm_tile_type * const *a = va;
-  struct cm_tile_type * const *b = vb;
+  auto a = static_cast<cm_tile_type * const *>(va);
+  auto b = static_cast<cm_tile_type * const *>(vb);
   double diff;
 
   if (*a == *b) {
@@ -890,8 +893,8 @@ static double compare_key_trade_bonus;
 ****************************************************************************/
 static int compare_tile_type_by_stat(const void *va, const void *vb)
 {
-  struct cm_tile_type * const *a = va;
-  struct cm_tile_type * const *b = vb;
+  auto a = static_cast<cm_tile_type * const *>(va);
+  auto b = static_cast<cm_tile_type * const *>(vb);
 
   if (*a == *b) {
     return 0;
@@ -1824,7 +1827,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   const int SCIENCE = 0, TAX = 1, LUXURY = 2;
   const struct player *pplayer = city_owner(pcity);
   int numtypes;
-  struct cm_state *state = fc_malloc(sizeof(*state));
+  auto state = new cm_state;
   int rates[3];
 
   log_base(LOG_CM_STATE, "creating cm_state for %s (size %d)",
@@ -1875,13 +1878,13 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   /* Initialize the current solution and choice stack to empty */
   init_partial_solution(&state->current, numtypes, city_size_get(pcity),
                         negative_ok);
-  state->choice.stack = fc_malloc(city_size_get(pcity)
-                                  * sizeof(*state->choice.stack));
+  state->choice.stack = new int[city_size_get(pcity)];
   state->choice.size = 0;
 
   /* Initialize workers map */
-  state->workers_map = fc_calloc(city_map_tiles_from_city(state->pcity),
-                                 sizeof(state->workers_map));
+  state->workers_map = static_cast<bool *>(
+    fc_calloc(city_map_tiles_from_city(state->pcity),
+              sizeof(state->workers_map)));
 
   return state;
 }
@@ -2402,8 +2405,9 @@ void cm_print_city(const struct city *pcity)
 ****************************************************************************/
 void cm_print_result(const struct cm_result *result)
 {
-  int *city_map_data = fc_calloc(city_map_tiles(result->city_radius_sq),
-                                 sizeof(*city_map_data));
+  int *city_map_data = static_cast<int *>(
+    fc_calloc(city_map_tiles(result->city_radius_sq),
+              sizeof(*city_map_data)));
 
   log_test("cm_print_result(result=%p)", (void *) result);
   log_test("  found_a_valid=%d disorder=%d happy=%d",

@@ -549,7 +549,7 @@ extern struct terrain_misc terrain_control;
 BV_DEFINE(dir_vector, 8);
 
 /* return the reverse of the direction */
-#define DIR_REVERSE(dir) (7 - (dir))
+#define DIR_REVERSE(dir) ((enum direction8) (7 - (dir)))
 
 enum direction8 dir_cw(enum direction8 dir);
 enum direction8 dir_ccw(enum direction8 dir);

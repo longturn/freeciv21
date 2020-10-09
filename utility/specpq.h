@@ -102,9 +102,9 @@ SPECPQ_PQ_ {
 ****************************************************************************/
 static inline SPECPQ_PQ *SPECPQ_FOO(_pq_new)(int initial_size)
 {
-  SPECPQ_PQ_ *pq = fc_malloc(sizeof(*pq));
+  SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) fc_malloc(sizeof(*pq));
 
-  pq->cells = fc_malloc(sizeof(*pq->cells) * initial_size);
+  pq->cells = (SPECPQ_CELL_ *) fc_malloc(sizeof(*pq->cells) * initial_size);
   pq->avail = initial_size;
   pq->step = initial_size;
   pq->size = 1;
@@ -155,7 +155,7 @@ static inline void SPECPQ_FOO(_pq_insert)(SPECPQ_PQ *_pq,
   if (pq->size >= pq->avail) {
     int newsize = pq->size + pq->step;
 
-    pq->cells = fc_realloc(pq->cells, sizeof(*pq->cells) * newsize);
+    pq->cells = (SPECPQ_CELL_ *) fc_realloc(pq->cells, sizeof(*pq->cells) * newsize);
     pq->avail = newsize;
   }
 

@@ -222,7 +222,7 @@ pf_get_move_scope(const struct tile *ptile,
                   enum pf_move_scope previous_scope,
                   const struct pf_parameter *param)
 {
-  enum pf_move_scope scope = PF_MS_NONE;
+  int scope = PF_MS_NONE;
   const struct unit_class *uclass = utype_class(param->utype);
   struct city *pcity = tile_city(ptile);
 
@@ -280,7 +280,7 @@ pf_get_move_scope(const struct tile *ptile,
     } unit_list_iterate_end;
   }
 
-  return scope;
+  return pf_move_scope(scope);
 }
 
 /************************************************************************//**
@@ -292,22 +292,23 @@ amphibious_move_scope(const struct tile *ptile,
                       enum pf_move_scope previous_scope,
                       const struct pf_parameter *param)
 {
-  struct pft_amphibious *amphibious = param->data;
-  enum pf_move_scope land_scope, sea_scope;
+  pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
+  int land_scope, sea_scope;
   bool dumb;
 
   land_scope = pf_get_move_scope(ptile, &dumb, previous_scope,
                                  &amphibious->land);
-  sea_scope = pf_get_move_scope(ptile, &dumb, land_scope, &amphibious->sea);
+  sea_scope = pf_get_move_scope(ptile, &dumb, pf_move_scope(land_scope),
+                                &amphibious->sea);
 
   if ((PF_MS_NATIVE | PF_MS_CITY) & sea_scope) {
     *can_disembark = (PF_MS_CITY & sea_scope
                       || utype_can_freely_unload(amphibious->land.utype,
                                                  amphibious->sea.utype)
                       || tile_has_native_base(ptile, amphibious->sea.utype));
-    return PF_MS_TRANSPORT | land_scope;
+    return pf_move_scope(PF_MS_TRANSPORT | land_scope);
   }
-  return ~PF_MS_TRANSPORT & land_scope;
+  return pf_move_scope(~PF_MS_TRANSPORT & land_scope);
 }
 
 /************************************************************************//**
@@ -390,16 +391,16 @@ static int amphibious_move(const struct tile *ptile,
                            enum pf_move_scope dst_scope,
                            const struct pf_parameter *param)
 {
-  struct pft_amphibious *amphibious = param->data;
+  pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   int cost, scale;
 
   if (PF_MS_TRANSPORT & src_scope) {
     if (PF_MS_TRANSPORT & dst_scope) {
       /* Sea move, moving from native terrain to a city, or leaving port. */
       cost = amphibious->sea.get_MC(ptile,
-                                    (PF_MS_CITY & src_scope) | PF_MS_NATIVE,
+                                    pf_move_scope((PF_MS_CITY & src_scope) | PF_MS_NATIVE),
                                     ptile1,
-                                    (PF_MS_CITY & dst_scope) | PF_MS_NATIVE,
+                                    pf_move_scope((PF_MS_CITY & dst_scope) | PF_MS_NATIVE),
                                     &amphibious->sea);
       scale = amphibious->sea_scale;
     } else if (PF_MS_NATIVE & dst_scope) {
@@ -436,7 +437,7 @@ static int amphibious_extra_cost(const struct tile *ptile,
                                  enum known_type known,
                                  const struct pf_parameter *param)
 {
-  struct pft_amphibious *amphibious = param->data;
+  pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
   int cost, scale;
 
@@ -519,7 +520,7 @@ static enum tile_behavior
 amphibious_behaviour(const struct tile *ptile, enum known_type known,
                      const struct pf_parameter *param)
 {
-  struct pft_amphibious *amphibious = param->data;
+  pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
 
   /* Simply a wrapper for the sea or land tile_behavior callbacks. */
@@ -639,7 +640,7 @@ static bool amphibious_is_pos_dangerous(const struct tile *ptile,
                                         enum known_type known,
                                         const struct pf_parameter *param)
 {
-  struct pft_amphibious *amphibious = param->data;
+  pft_amphibious *amphibious = static_cast<pft_amphibious *>(param->data);
   const bool ferry_move = is_native_tile(amphibious->sea.utype, ptile);
 
   /* Simply a wrapper for the sea or land danger callbacks. */
@@ -682,21 +683,21 @@ static inline void
 pft_enable_default_actions(struct pf_parameter *parameter)
 {
   if (!utype_has_flag(parameter->utype, UTYF_CIVILIAN)) {
-    parameter->actions |= PF_AA_UNIT_ATTACK;
+    parameter->actions = pf_action_account(parameter->actions | PF_AA_UNIT_ATTACK);
     parameter->get_action = pf_get_action;
     parameter->is_action_possible = pf_action_possible;
     if (!parameter->omniscience) {
       /* Consider units hided in cities. */
-      parameter->actions |= PF_AA_CITY_ATTACK;
+      parameter->actions = pf_action_account(parameter->actions | PF_AA_CITY_ATTACK);
     }
   }
   if (utype_may_act_at_all(parameter->utype)) {
     /* FIXME: it should consider action enablers. */
     if (aia_utype_is_considered_caravan_trade(parameter->utype)) {
-      parameter->actions |= PF_AA_TRADE_ROUTE;
+      parameter->actions = pf_action_account(parameter->actions | PF_AA_TRADE_ROUTE);
     }
     if (aia_utype_is_considered_spy(parameter->utype)) {
-      parameter->actions |= PF_AA_DIPLOMAT;
+      parameter->actions = pf_action_account(parameter->actions | PF_AA_DIPLOMAT);
     }
     parameter->get_action = pf_get_action;
     parameter->is_action_possible = pf_action_possible;
@@ -880,7 +881,7 @@ static void pft_fill_attack_param(struct pf_parameter *parameter,
   parameter->ignore_none_scopes = TRUE;
   pft_enable_default_actions(parameter);
   /* We want known units! */
-  parameter->actions &= ~PF_AA_CITY_ATTACK;
+  parameter->actions = pf_action_account(parameter->actions & ~PF_AA_CITY_ATTACK);
 
   if (!unit_type_really_ignores_zoc(punittype)) {
     parameter->get_zoc = is_my_zoc;

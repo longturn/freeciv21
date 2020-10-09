@@ -584,7 +584,7 @@ struct cewt_data {
 static bool cewt_callback(void *vdata, const struct city *dest,
                           int arrival_time, int moves_left)
 {
-  struct cewt_data *data = vdata;
+  cewt_data *data = static_cast<cewt_data *>(vdata);
 
   fc_assert_ret_val(data->result, FALSE);
 
@@ -675,7 +675,7 @@ struct cfbdw_data {
 static bool cfbdw_callback(void *vdata, const struct city *dest,
                            int arrival_time, int moves_left)
 {
-  struct cfbdw_data *data = vdata;
+  cfbdw_data *data = static_cast<cfbdw_data *>(vdata);
   struct caravan_result current;
 
   caravan_result_init(&current, data->best->src, dest, arrival_time);
@@ -789,7 +789,7 @@ struct cowt_data {
 static bool cowt_callback(void *vdata, const struct city *pcity,
                           int arrival_time, int moves_left)
 {
-  struct cowt_data *data = vdata;
+  cowt_data *data = static_cast<cowt_data *>(vdata);
   const struct unit *caravan = data->caravan;
   struct caravan_result current;
 
