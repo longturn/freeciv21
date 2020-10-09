@@ -5,6 +5,8 @@ Freeciv21
 
 Freeciv21 is an empire-building strategy game inspired by the history of human civilization. It takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments.
 
+![Logo](https://github.com/longturn/freeciv21/raw/server-as-cpp/data/freeciv-client.png)
+
 Please see the [doc](doc) directory for a complete list of documentation files.
 
 Freeciv21 is maintained by folks from [longturn.net](https://longturn.net). We welcome merge requests, bug reports and simple suggestions! Get in touch on [Discord](https://discord.gg/98krqGm) or `#longturn` on Freenode.
