@@ -743,7 +743,7 @@ bool city_exist(int id);
 /* Iterates over all output types in the game. */
 #define output_type_iterate(output)					    \
 {									    \
-  int output;						    \
+  int ioutput;						    \
 									    \
   for (ioutput = 0; ioutput < O_LAST; ioutput++) {                          \
       Output_type_id output = (enum output_type_id) ioutput;

@@ -297,7 +297,7 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 /* XXX Some versions of g++ can't cope with the struct literals */
 #define requirement_fulfilled_by_government(_gov_, _rqs_)                  \
   universal_fulfills_requirements(FALSE, (_rqs_),                          \
-      &(struct universal){.kind = VUT_GOVERNMENT, .value = {.govern = (_gov_)}})
+      &(struct universal){.value = {.govern = (_gov_)}, .kind = VUT_GOVERNMENT})
 #define requirement_fulfilled_by_nation(_nat_, _rqs_)                      \
   sv_universal_fulfills_requirements(FALSE, (_rqs_),                          \
       (struct universal){.value = {.nation = (_nat_)}, .kind = VUT_NATION})
@@ -325,8 +325,8 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 
 #define requirement_needs_improvement(_imp_, _rqs_)                        \
   universal_fulfills_requirements(TRUE, (_rqs_),                           \
-    &(struct universal){.kind = VUT_IMPROVEMENT,                           \
-                        .value = {.building = (_imp_)}})
+    &(struct universal){.value = {.building = (_imp_)}, \
+                        .kind = VUT_IMPROVEMENT})
 
 int requirement_kind_ereq(const int value,
                           const enum req_range range,

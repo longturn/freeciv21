@@ -257,140 +257,6 @@ void rscompat_enablers_add_obligatory_hard_reqs(void)
 
 
 /**********************************************************************//**
-  Add all hard obligatory requirements to an action enabler or disable it.
-  @param ae the action enabler to add requirements to.
-  @return TRUE iff adding obligatory hard reqs for the enabler's action
-               needs to restart - say if an enabler was added or removed.
-**************************************************************************/
-static bool
-rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
-{
-  struct req_vec_problem *problem;
-
-  struct action *paction = action_by_number(ae->action);
-  /* Some changes requires starting to process an action's enablers from
-   * the beginning. */
-  bool needs_restart = FALSE;
-
-  while ((problem = action_enabler_suggest_repair(ae)) != NULL) {
-    /* A hard obligatory requirement is missing. */
-
-    int i;
-
-    if (problem->num_suggested_solutions == 0) {
-      /* Didn't get any suggestions about how to solve this. */
-
-      log_error("Dropping an action enabler for %s."
-                " Don't know how to fix: %s.",
-                action_rule_name(paction), problem->description);
-      ae->disabled = TRUE;
-
-      req_vec_problem_free(problem);
-      return TRUE;
-    }
-
-    /* Sanity check. */
-    fc_assert_ret_val(problem->num_suggested_solutions > 0,
-                      needs_restart);
-
-    /* Only append is supported for upgrade */
-    for (i = 0; i < problem->num_suggested_solutions; i++) {
-      if (problem->suggested_solutions[i].operation != RVCO_APPEND) {
-        /* A problem that isn't caused by missing obligatory hard
-         * requirements has been detected. Probably an old requirement that
-         * contradicted a hard requirement that wasn't documented by making
-         * it obligatory. In that case the enabler was never in use. The
-         * action it self would have blocked it. */
-
-        log_error("While adding hard obligatory reqs to action enabler"
-                  " for %s: %s Dropping it.",
-                  action_rule_name(paction), problem->description);
-        ae->disabled = TRUE;
-        req_vec_problem_free(problem);
-        return TRUE;
-      }
-    }
-
-    for (i = 0; i < problem->num_suggested_solutions; i++) {
-      struct action_enabler *new_enabler;
-
-      /* There can be more than one suggestion to apply. In that case both
-       * are applied to their own copy. The original should therefore be
-       * kept for now. */
-      new_enabler = action_enabler_copy(ae);
-
-      /* Apply the solution. */
-      if (!req_vec_change_apply(&problem->suggested_solutions[i],
-                                action_enabler_vector_by_number,
-                                new_enabler)) {
-        log_error("Failed to apply solution %s for %s to action enabler"
-                  " for %s. Dropping it.",
-                  req_vec_change_translation(
-                    &problem->suggested_solutions[i],
-                    action_enabler_vector_by_number_name),
-                  problem->description, action_rule_name(paction));
-        new_enabler->disabled = TRUE;
-        req_vec_problem_free(problem);
-        return TRUE;
-      }
-
-      if (problem->num_suggested_solutions - 1 == i) {
-        /* The last modification is to the original enabler. */
-        ae->action = new_enabler->action;
-        ae->disabled = new_enabler->disabled;
-        requirement_vector_copy(&ae->actor_reqs,
-                                &new_enabler->actor_reqs);
-        requirement_vector_copy(&ae->target_reqs,
-                                &new_enabler->target_reqs);
-        FC_FREE(new_enabler);
-      } else {
-        /* Register the new enabler */
-        action_enabler_add(new_enabler);
-
-        /* This changes the number of action enablers. */
-        needs_restart = TRUE;
-      }
-    }
-
-    req_vec_problem_free(problem);
-
-    if (needs_restart) {
-      /* May need to apply future upgrades to the copies too. */
-      return TRUE;
-    }
-  }
-
-  return needs_restart;
-}
-
-/**********************************************************************//**
-  Update existing action enablers for new hard obligatory requirements.
-  Disable those that can't be upgraded.
-**************************************************************************/
-void rscompat_enablers_add_obligatory_hard_reqs(void)
-{
-  action_iterate(act_id) {
-    bool restart_enablers_for_action;
-    do {
-      restart_enablers_for_action = FALSE;
-      action_enabler_list_iterate(action_enablers_for_action(act_id), ae) {
-        if (ae->disabled) {
-          /* Ignore disabled enablers */
-          continue;
-        }
-        if (rscompat_enabler_add_obligatory_hard_reqs(ae)) {
-          /* Something important, probably the number of action enablers
-           * for this action, changed. Start over again on this action's
-           * enablers. */
-          restart_enablers_for_action = TRUE;
-          break;
-        }
-      } action_enabler_list_iterate_end;
-    } while (restart_enablers_for_action == TRUE);
-  } action_iterate_end;
-}
-
-/**********************************************************************//**
   Find and return the first unused unit type user flag. If all unit type
   user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
 **************************************************************************/
@@ -1132,7 +998,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
       action_enabler_list_iterate(
             action_enablers_for_action(ACTION_PARADROP), ae) {
-        unit_type_iterate(putype) {
+        unit_type_iterate(putype) {        
           if (!requirement_fulfilled_by_unit_type(putype,
                                                   &(ae->actor_reqs))) {
             /* This action enabler isn't for this unit type at all. */
