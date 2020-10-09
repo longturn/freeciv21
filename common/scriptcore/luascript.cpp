@@ -20,8 +20,10 @@
 #include <time.h>
 
 /* dependencies/lua */
+extern "C" {
 #include "lua.h"
 #include "lualib.h"
+}
 
 /* utility */
 #include "astring.h"
@@ -330,7 +332,7 @@ int luascript_arg_error(lua_State *L, int narg, const char *msg)
 struct fc_lua *luascript_new(luascript_log_func_t output_fct,
                              bool secured_environment)
 {
-  struct fc_lua *fcl = fc_calloc(1, sizeof(*fcl));
+  fc_lua *fcl = static_cast<fc_lua *>(fc_calloc(1, sizeof(*fcl)));
 
   fcl->state = luaL_newstate();
   if (!fcl->state) {
@@ -370,7 +372,7 @@ struct fc_lua *luascript_get_fcl(lua_State *L)
   /* Get the freeciv lua struct from the lua state. */
   lua_pushstring(L, LUASCRIPT_GLOBAL_VAR_NAME);
   lua_gettable(L, LUA_REGISTRYINDEX);
-  fcl = lua_touserdata(L, -1);
+  fcl = static_cast<fc_lua *>(lua_touserdata(L, -1));
 
   /* This is an error! */
   fc_assert_ret_val(fcl != NULL, NULL);

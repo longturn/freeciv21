@@ -18,8 +18,10 @@
 #include <stdarg.h>
 
 /* dependencies/lua */
+extern "C" {
 #include "lua.h"
 #include "lualib.h"
+}
 
 /* utility */
 #include "string_vector.h"
@@ -63,7 +65,7 @@ static struct luascript_func *func_new(bool required, int nargs,
                                        int nreturns,
                                        enum api_types *preturn_types)
 {
-  struct luascript_func *pfunc = fc_malloc(sizeof(*pfunc));
+  auto pfunc = new luascript_func;
 
   pfunc->required = required;
   pfunc->nargs = nargs;
@@ -128,8 +130,10 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                                va_list args)
 {
   struct luascript_func *pfunc;
-  enum api_types *parg_types = fc_calloc(nargs, sizeof(*parg_types));
-  enum api_types *pret_types = fc_calloc(nreturns, sizeof(*pret_types));
+  api_types *parg_types = static_cast<api_types *>(
+    fc_calloc(nargs, sizeof(*parg_types)));
+  api_types *pret_types = static_cast<api_types *>(
+    fc_calloc(nreturns, sizeof(*pret_types)));
   int i;
 
   fc_assert_ret(fcl);
@@ -142,11 +146,11 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
   }
 
   for (i = 0; i < nargs; i++) {
-    *(parg_types + i) = va_arg(args, int);
+    *(parg_types + i) = api_types(va_arg(args, int));
   }
 
   for (i = 0; i < nreturns; i++) {
-    *(pret_types + i) = va_arg(args, int);
+    *(pret_types + i) = api_types(va_arg(args, int));
   }
 
   pfunc = func_new(required, nargs, parg_types, nreturns, pret_types);

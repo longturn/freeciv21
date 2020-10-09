@@ -99,9 +99,9 @@ Unit_Type *api_find_role_unit_type(lua_State *L, const char *role_name,
 
   role_or_flag = unit_role_id_by_name(role_name, fc_strcasecmp);
 
-  if (!unit_role_id_is_valid(role_or_flag)) {
+  if (!unit_role_id_is_valid(unit_role_id(role_or_flag))) {
     role_or_flag = unit_type_flag_id_by_name(role_name, fc_strcasecmp);
-    if (!unit_type_flag_id_is_valid(role_or_flag)) {
+    if (!unit_type_flag_id_is_valid(unit_type_flag_id(role_or_flag))) {
       return NULL;
     }
   }
@@ -289,9 +289,9 @@ Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig)
 *****************************************************************************/
 Nonexistent *api_find_nonexistent(lua_State *L)
 {
-  static char *p = "";
+  static const char *p = "";
 
   LUASCRIPT_CHECK_STATE(L, NULL);
 
-  return p;
+  return (Nonexistent *) p;
 }

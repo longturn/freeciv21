@@ -18,9 +18,11 @@
 #include <string.h>
 
 /* dependencies/lua */
+extern "C" {
 #include "lua.h"
 #include "lualib.h"
 #include "lauxlib.h"
+}
 
 /* common */
 #include "events.h"

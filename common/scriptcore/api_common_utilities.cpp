@@ -67,7 +67,7 @@ void api_utilities_log_base(lua_State *L, int level, const char *message)
 
   LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!");
 
-  luascript_log(fcl, level, "%s", message);
+  luascript_log(fcl, log_level(level), "%s", message);
 }
 
 /********************************************************************//**

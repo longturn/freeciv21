@@ -26,16 +26,16 @@ tolua_generate(
 add_library(
   scriptcore
   STATIC
-  api_common_intl.c
-  api_common_utilities.c
-  api_game_effects.c
-  api_game_find.c
-  api_game_methods.c
-  api_game_specenum.c
-  api_signal_base.c
-  luascript.c
-  luascript_func.c
-  luascript_signal.c
+  api_common_intl.cpp
+  api_common_utilities.cpp
+  api_game_effects.cpp
+  api_game_find.cpp
+  api_game_methods.cpp
+  api_game_specenum.cpp
+  api_signal_base.cpp
+  luascript.cpp
+  luascript_func.cpp
+  luascript_signal.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.c
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.h
