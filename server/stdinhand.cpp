@@ -1600,7 +1600,7 @@ static const char *olvlname_accessor(int i)
   if (i == 0) {
     return "rulesetdir";
   } else if (i < OLEVELS_NUM+1) {
-    return sset_level_name(i-1);
+    return sset_level_name(sset_level(i-1));
   } else {
     return optname_accessor(i-OLEVELS_NUM-1);
   }
@@ -7102,7 +7102,7 @@ static char *connection_generator(const char *text, int state)
 **************************************************************************/
 static const char *cmdlevel_arg1_accessor(int idx)
 {
-  return cmdlevel_name(idx);
+  return cmdlevel_name(cmdlevel(idx));
 }
 
 /**********************************************************************//**
