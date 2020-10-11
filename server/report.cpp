@@ -1086,7 +1086,8 @@ static void plrdata_slot_init(struct plrdata_slot *plrdata,
 {
   fc_assert_ret(plrdata->name == NULL);
 
-  plrdata->name = fc_calloc(MAX_LEN_NAME, sizeof(plrdata->name));
+  plrdata->name = static_cast<char *>(
+    fc_calloc(MAX_LEN_NAME, sizeof(plrdata->name)));
   plrdata_slot_replace(plrdata, name);
 }
 
@@ -1271,11 +1272,11 @@ void log_civ_score_init(void)
     return;
   }
 
-  score_log = fc_calloc(1, sizeof(*score_log));
+  score_log = static_cast<logging_civ_score *>(fc_calloc(1, sizeof(*score_log)));
   score_log->fp = NULL;
   score_log->last_turn = -1;
-  score_log->plrdata = fc_calloc(player_slot_count(),
-                                 sizeof(*score_log->plrdata));
+  score_log->plrdata = static_cast<plrdata_slot *>(
+    fc_calloc(player_slot_count(), sizeof(*score_log->plrdata)));
   player_slots_iterate(pslot) {
     struct plrdata_slot *plrdata = score_log->plrdata
                                    + player_slot_index(pslot);
@@ -1327,7 +1328,7 @@ void log_civ_score_now(void)
   /* Add new tags only at end of this list. Maintaining the order of
    * old tags is critical. */
   static const struct {
-    char *name;
+    const char *name;
     int (*get_value) (const struct player *);
   } score_tags[] = {
     {"pop",             get_pop},
@@ -1532,8 +1533,8 @@ void make_history_report(void)
   game.server.scoreturn = (game.info.turn + GAME_DEFAULT_SCORETURN
                            + fc_rand(GAME_DEFAULT_SCORETURN));
 
-  historian_generic(&latest_history_report, game.server.scoreturn
-                    % (HISTORIAN_LAST + 1));
+  historian_generic(&latest_history_report,
+                    historian_type(game.server.scoreturn % (HISTORIAN_LAST + 1)));
   send_current_history_report(game.est_connections);
 }
 
