@@ -94,7 +94,7 @@ struct vision {
 };
 
 /* Initialize a vision radius array. */
-#define V_RADIUS(main_sq, invis_sq, subs_sq) { (main_sq), (invis_sq), (subs_sq) }
+#define V_RADIUS(main_sq, invis_sq, subs_sq) { (short)(main_sq), (short)(invis_sq), (short)(subs_sq) }
 
 #define ASSERT_VISION(v)						\
  do {									\

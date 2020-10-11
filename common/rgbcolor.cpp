@@ -88,7 +88,7 @@ void rgbcolor_destroy(struct rgbcolor *prgbcolor)
   <colorpath>.blue). Returns TRUE on success and FALSE on error.
 ****************************************************************************/
 bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
-                   char *path, ...)
+                   const char *path, ...)
 {
   int r, g, b;
   char colorpath[256];
