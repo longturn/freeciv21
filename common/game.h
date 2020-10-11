@@ -184,6 +184,8 @@ struct civ_game {
       int techpenalty;
       bool turnblock;
       int unitwaittime; // minimal time between two movements of a unit
+      bool unitwaittime_extended; // UWT applies to built and captured/bribed
+                                  // units.
       unsigned unitwaittime_style;
       int upgrade_veteran_loss;
       bool vision_reveal_tiles;
@@ -575,6 +577,7 @@ extern struct world wld;
 #define GAME_MIN_UNITWAITTIME 0
 #define GAME_MAX_UNITWAITTIME GAME_MAX_TIMEOUT
 #define GAME_DEFAULT_UNITWAITTIME 0
+#define GAME_DEFAULT_UNITWAITTIME_EXTENDED false
 
 #define GAME_DEFAULT_UNITWAITTIME_STYLE UWT_CLASSICAL
 

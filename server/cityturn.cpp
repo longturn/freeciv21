@@ -2482,6 +2482,13 @@ static struct unit *city_create_unit(struct city *pcity,
            pcity->rally_point.length * sizeof(struct unit_order));
   }
 
+  /* Initialize the new unit's action timestamp from when the city
+     production was changed or the unit bought */
+  if (game.server.unitwaittime_extended) {
+    punit->action_timestamp = pcity->server.prod_change_timestamp;
+    punit->action_turn = pcity->server.prod_change_turn;
+  }
+
   /* This might destroy pcity and/or punit: */
   script_server_signal_emit("unit_built", punit, pcity);
 

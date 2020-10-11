@@ -2774,6 +2774,18 @@ static struct setting settings[] = {
         nullptr, nullptr, unitwaittime_name,
         GAME_DEFAULT_UNITWAITTIME_STYLE),
 
+    GEN_BOOL(
+        "unitwaittime_extended", game.server.unitwaittime_extended,
+        SSET_RULES_FLEXIBLE, SSET_INTERNAL, SSET_VITAL, ALLOW_NONE,
+        ALLOW_BASIC,
+        N_("Unitwaittime also applies to newly-built and captured/bribed "
+           "units."),
+        N_("If set, newly-built units are subject to unitwaittime so that "
+           "the moment the city production was last touched counts as their "
+           "last \"action\". Also, getting captured/bribed counts as action "
+           "for the victim. "),
+        nullptr, nullptr, GAME_DEFAULT_UNITWAITTIME_EXTENDED),
+
     /* This setting points to the "stored" value; changing it won't have an
        effect until the next synchronization point (i.e., the start of the
        next turn). */

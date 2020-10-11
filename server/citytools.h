@@ -113,3 +113,5 @@ void clear_worker_tasks(struct city *pcity);
 void package_and_send_worker_tasks(struct city *pcity);
 
 int city_production_buy_gold_cost(const struct city *pcity);
+
+void city_did_prod_change(struct city *pcity);

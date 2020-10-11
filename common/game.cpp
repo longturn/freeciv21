@@ -405,6 +405,7 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.timeoutintinc = GAME_DEFAULT_TIMEOUTINTINC;
     game.server.turnblock = GAME_DEFAULT_TURNBLOCK;
     game.server.unitwaittime = GAME_DEFAULT_UNITWAITTIME;
+    game.server.unitwaittime_extended = GAME_DEFAULT_UNITWAITTIME_EXTENDED;
     game.server.plr_colors = nullptr;
   } else {
     // Client side takes care of itself in client_main()

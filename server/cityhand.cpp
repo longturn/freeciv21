@@ -343,6 +343,9 @@ void really_handle_city_buy(struct player *pplayer, struct city *pcity)
   }
   city_refresh(pcity);
 
+  /* Update action timestamp inherited by the bought unit */
+  city_did_prod_change(pcity);
+
   if (VUT_UTYPE == pcity->production.kind) {
     notify_player(pplayer, pcity->tile, E_UNIT_BUY, ftc_server,
                   // TRANS: bought an unit.
