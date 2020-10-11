@@ -4287,39 +4287,6 @@ bool universal_fulfills_requirements(bool check_necessary,
   return (!check_necessary || necessary);
 }
 
-bool sv_universal_fulfills_requirements(bool check_necessary,
-                                     const struct requirement_vector *reqs,
-                                     const struct universal source)
-{
-  bool necessary = FALSE;
-
-  fc_assert_ret_val_msg(universal_found_function[source.kind],
-                        !check_necessary,
-                        "No req item found function for %s",
-                        universal_type_rule_name(&source));
-
-  requirement_vector_iterate(reqs, preq) {
-    switch ((*universal_found_function[source.kind])(preq, &source)) {
-    case ITF_NOT_APPLICABLE:
-      continue;
-    case ITF_NO:
-      if (preq->present) {
-        return FALSE;
-      }
-      break;
-    case ITF_YES:
-      if (preq->present) {
-        necessary = TRUE;
-      } else {
-        return FALSE;
-      }
-      break;
-    }
-  } requirement_vector_iterate_end;
-
-  return (!check_necessary || necessary);
-}
-
 /**********************************************************************//**
   Version of universal_fulfills_requirements that takes the universal by
   value.

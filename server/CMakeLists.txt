@@ -32,11 +32,6 @@ add_library(
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-<<<<<<< HEAD
-#set_property(TARGET server_gen APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
-=======
->>>>>>> ce8ee145445d58abdb9c0d87f9d5dcacdce7f093
 target_link_libraries(server_gen PUBLIC common)
 
 add_library(
@@ -94,11 +89,6 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 
 target_link_libraries(server PUBLIC server_gen)
 
-<<<<<<< HEAD
-#set_property(TARGET server APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
-=======
->>>>>>> ce8ee145445d58abdb9c0d87f9d5dcacdce7f093
 add_subdirectory(advisors)
 add_subdirectory(generator)
 add_subdirectory(savegame)
