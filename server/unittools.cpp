@@ -3175,7 +3175,7 @@ static bool unit_survive_autoattack(struct unit *punit)
   adjc_iterate(&(wld.map), unit_tile(punit), ptile) {
     /* First add all eligible units to a autoattack list */
     unit_list_iterate(ptile->units, penemy) {
-      struct autoattack_prob *probability = fc_malloc(sizeof(*probability));
+      auto probability = new autoattack_prob;
       struct tile *tgt_tile = unit_tile(punit);
 
       fc_assert_action(tgt_tile, continue);
@@ -3288,7 +3288,7 @@ static bool unit_survive_autoattack(struct unit *punit)
 /**********************************************************************//**
   Cancel orders for the unit.
 **************************************************************************/
-static void cancel_orders(struct unit *punit, char *dbg_msg)
+static void cancel_orders(struct unit *punit, const char *dbg_msg)
 {
   free_unit_orders(punit);
   send_unit_info(NULL, punit);
@@ -3548,7 +3548,7 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
                   "Unit number %d (%p) has done an incomplete move.",
                   punit->id, punit);
   } else {
-    pdata = fc_malloc(sizeof(*pdata));
+    pdata = new struct unit_move_data;
     pdata->ref_count = 1;
     pdata->punit = punit;
     punit->server.moving = pdata;
@@ -4841,13 +4841,11 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
 struct unit_order *create_unit_orders(int length,
                                       const struct unit_order *orders)
 {
-  struct unit_order *unit_orders;
-
   if (!unit_order_list_is_sane(length, orders)) {
     return NULL;
   }
 
-  unit_orders = fc_malloc(length * sizeof(*(unit_orders)));
+  auto unit_orders = new unit_order[length];
   memcpy(unit_orders, orders, length * sizeof(*(unit_orders)));
 
   return unit_orders;
