@@ -32,8 +32,6 @@ add_library(
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
-set_property(TARGET server_gen APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
 target_link_libraries(server_gen PUBLIC common)
 
 add_library(
@@ -90,8 +88,6 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/default)
 target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 
 target_link_libraries(server PUBLIC server_gen)
-
-set_property(TARGET server APPEND PROPERTY COMPILE_FLAGS -fpermissive)
 
 add_subdirectory(advisors)
 add_subdirectory(generator)
