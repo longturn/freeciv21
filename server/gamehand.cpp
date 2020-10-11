@@ -106,7 +106,7 @@ enum unit_role_id crole_to_role_id(char crole)
   case 'A':
     return L_START_ATTACK_STRONG;
   default: 
-    return 0;
+    return unit_role_id(0);
   }
 }
 
@@ -290,7 +290,6 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   struct team_placement_pq *pqueue =
       team_placement_pq_new(pconfig->total_startpos_num * 4);
   int (*distance)(const struct tile *, const struct tile *) = NULL;
-  struct team_placement_state *pstate, *pnew;
   const struct tile *ptile1, *ptile2;
   long base_delta, delta;
   bool base_delta_calculated;
@@ -318,8 +317,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
                     wld.map.server.team_placement);
 
   /* Initialize starting state. */
-  pstate = fc_malloc(sizeof(*pstate));
-  pstate->startpos = fc_malloc(state_array_size);
+  auto pstate = new team_placement_state;
+  pstate->startpos = new int[pconfig->total_startpos_num];
   memcpy(pstate->startpos, pbest_state->startpos, state_array_size);
   pstate->score = pbest_state->score;
 
@@ -391,8 +390,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
         if (delta <= 0) {
           repeat = TRUE;
-          pnew = fc_malloc(sizeof(*pnew));
-          pnew->startpos = fc_malloc(state_array_size);
+          auto pnew = new team_placement_state;
+          pnew->startpos = new int[pconfig->total_startpos_num];
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
           pnew->startpos[i] = t2;
           pnew->startpos[j] = t1;
@@ -592,8 +591,7 @@ void init_new_game(void)
       }
       config.total_startpos_num = (config.usable_startpos_num
                                    + player_count() - players_to_place);
-      config.startpos = fc_malloc(sizeof(*config.startpos)
-                                  * config.total_startpos_num);
+      config.startpos = new tile *[config.total_startpos_num];
       i = 0;
       startpos_list_iterate(flexible_list, plink, psp) {
         config.startpos[i++] = startpos_tile(psp);
@@ -611,8 +609,7 @@ void init_new_game(void)
       fc_assert(i == config.total_startpos_num);
 
       /* Initialize state. */
-      state.startpos = fc_malloc(sizeof(*state.startpos)
-                                 * config.total_startpos_num);
+      state.startpos = new int[config.total_startpos_num];
       state.score = 0;
       i = 0;
       j = config.usable_startpos_num;
