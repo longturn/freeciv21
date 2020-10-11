@@ -23,7 +23,7 @@
 
 #ifdef __cplusplus
 extern "C" {
-#endif /* __cplusplus */
+#endif
 
 struct conn_list;
 
@@ -132,6 +132,6 @@ void update_nations_with_startpos(void);
 
 #ifdef __cplusplus
 }
-#endif /* __cplusplus */
+#endif
 
 #endif /* FC__SRV_MAIN_H */

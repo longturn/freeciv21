@@ -129,9 +129,10 @@ struct iterator *government_iter_init(struct government_iter *it);
   } governments_iterate_end;
 
 bool untargeted_revolution_allowed(void);
-
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+
 
 #endif  /* FC__GOVERNMENT_H */

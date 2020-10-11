@@ -92,6 +92,8 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 # Compression
 find_package(ZLIB REQUIRED)
 
+# it works !
+set(HAVE_GETTIMEOFDAY_H TRUE)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
@@ -119,6 +121,8 @@ if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)
 endif()
 
+
+
 # Networking library
 # TODO Windows support
 check_include_file("sys/socket.h" HAVE_SYS_SOCKET_H)
@@ -137,7 +141,7 @@ if(HAVE_SYS_SOCKET_H)
   require_include_file("netinet/in.h" FREECIV_HAVE_NETINET_IN_H)
   require_include_file("sys/select.h" HAVE_SYS_SELECT_H)
   require_include_file("sys/select.h" FREECIV_HAVE_SYS_SELECT_H)
-
+  
   # IPv6 functions of POSIX-2001, not strictly required
   check_function_exists(inet_pton HAVE_INET_PTON)
   check_function_exists(inet_ntop HAVE_INET_NTOP)
@@ -164,7 +168,11 @@ if(HAVE_SYS_SOCKET_H)
     message(FATAL_ERROR "Non-blocking sockets are not available")
   endif()
 else()
-  error("Could not find a supported networking library")
+  if(WIN32)
+    set(CMAKE_EXTRA_INCLUDE_FILES "winsock.h;ws2tcpip.h")
+  else()
+    message(FATAL_ERROR "Could not find a supported networking library")
+  endif()
 endif()
 
 if (EMSCRIPTEN)
@@ -189,3 +197,4 @@ endif()
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
 endif()
+set(HAVE_GETTIMEOFDAY_H TRUE)

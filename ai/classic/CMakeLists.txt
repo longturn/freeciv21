@@ -1,7 +1,7 @@
 add_library(
   ai_classic
   STATIC
-  classicai.c
+  classicai.cpp
 )
 
 target_include_directories(ai_classic PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

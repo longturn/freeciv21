@@ -27,7 +27,8 @@ enum goto_tile_state {
   GTS_MP_LEFT,
   GTS_EXHAUSTED_MP,
 
-  GTS_COUNT
+  GTS_COUNT,
+  GTS_INVALID = -1,
 };
 
 void init_client_goto(void);

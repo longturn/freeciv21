@@ -18,10 +18,6 @@
 
 #include "fc_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 struct conn_list;
 struct cm_result;
 
@@ -57,9 +53,5 @@ bool check_city_migrations(void);
 void check_disasters(void);
 
 void city_style_refresh(struct city *pcity);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif  /* FC__CITYTURN_H */

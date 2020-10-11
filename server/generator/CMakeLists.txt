@@ -1,13 +1,13 @@
 add_library(
   generator
   STATIC
-  fracture_map.c
-  height_map.c
-  mapgen.c
-  mapgen_topology.c
-  mapgen_utils.c
-  startpos.c
-  temperature_map.c
+  fracture_map.cpp
+  height_map.cpp
+  mapgen.cpp
+  mapgen_topology.cpp
+  mapgen_utils.cpp
+  startpos.cpp
+  temperature_map.cpp
 )
 
 target_include_directories(generator PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

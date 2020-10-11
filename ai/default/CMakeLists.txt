@@ -1,26 +1,26 @@
 add_library(
   ai_default
   STATIC
-  aiair.c
-  aidata.c
-  aidiplomat.c
-  aiferry.c
-  aiguard.c
-  aihand.c
-  aihunt.c
-  ailog.c
-  aiparatrooper.c
-  aiplayer.c
-  aisettler.c
-  aitech.c
-  aitools.c
-  aiunit.c
-  daiactions.c
-  daicity.c
-  daidiplomacy.c
-  daidomestic.c
-  daieffects.c
-  daimilitary.c
+  aiair.cpp
+  aidata.cpp
+  aidiplomat.cpp
+  aiferry.cpp
+  aiguard.cpp
+  aihand.cpp
+  aihunt.cpp
+  ailog.cpp
+  aiparatrooper.cpp
+  aiplayer.cpp
+  aisettler.cpp
+  aitech.cpp
+  aitools.cpp
+  aiunit.cpp
+  daiactions.cpp
+  daicity.cpp
+  daidiplomacy.cpp
+  daidomestic.cpp
+  daieffects.cpp
+  daimilitary.cpp
 )
 
 target_include_directories(ai_default PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

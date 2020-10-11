@@ -70,5 +70,4 @@ bool unit_server_side_agent_set(struct player *pplayer,
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
-
 #endif  /* FC__UNITHAND_H */

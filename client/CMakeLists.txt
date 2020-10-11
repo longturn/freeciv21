@@ -33,42 +33,42 @@ target_link_libraries(client_gen PUBLIC common)
 add_library(
   client
   STATIC
-  attribute.c
-  citydlg_common.c
-  cityrepdata.c
-  client_main.c
-  chatline_common.c
-  connectdlg_common.c
-  climisc.c
-  climap.c
-  clinet.c
-  colors_common.c
-  control.c
-  editor.c
-  global_worklist.c
-  gui_interface.c
-  goto.c
-  helpdata.c
-  luaconsole_common.c
-  mapctrl_common.c
-  mapview_common.c
-  messagewin_common.c
-  music.c
-  overview_common.c
-  plrdlg_common.c
-  options.c
-  repodlgs_common.c
-  reqtree.c
-  servers.c
-  text.c
-  themes_common.c
-  tilespec.c
-  unitselect_common.c
-  update_queue.c
-  voteinfo.c
-  zoom.c
-  audio.c
-  audio_none.c
+  attribute.cpp
+  citydlg_common.cpp
+  cityrepdata.cpp
+  client_main.cpp
+  chatline_common.cpp
+  connectdlg_common.cpp
+  climisc.cpp
+  climap.cpp
+  clinet.cpp
+  colors_common.cpp
+  control.cpp
+  editor.cpp
+  global_worklist.cpp
+  gui_interface.cpp
+  goto.cpp
+  helpdata.cpp
+  luaconsole_common.cpp
+  mapctrl_common.cpp
+  mapview_common.cpp
+  messagewin_common.cpp
+  music.cpp
+  overview_common.cpp
+  plrdlg_common.cpp
+  options.cpp
+  repodlgs_common.cpp
+  reqtree.cpp
+  servers.cpp
+  text.cpp
+  themes_common.cpp
+  tilespec.cpp
+  unitselect_common.cpp
+  update_queue.cpp
+  voteinfo.cpp
+  zoom.cpp
+  audio.cpp
+  audio_none.cpp
 )
 
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
@@ -84,7 +84,7 @@ target_link_libraries(client PUBLIC luascript)
 
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
-  add_executable(freeciv-qt packhand.c) # packhand.c depends on gui-qt
+  add_executable(freeciv-qt packhand.cpp) # packhand.c depends on gui-qt
   target_link_libraries(freeciv-qt client)
   target_link_libraries(freeciv-qt gui-qt)
   install(TARGETS freeciv-qt)

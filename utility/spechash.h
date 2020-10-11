@@ -476,7 +476,7 @@ SPECHASH_FOO(_hash_insert) (SPECHASH_HASH *tthis,
                             const SPECHASH_UDATA_TYPE udata)
 {
   return genhash_insert((struct genhash *) tthis,
-                        SPECHASH_UKEY_TO_IKEY(ukey),
+                        (const void*)SPECHASH_UKEY_TO_IKEY(ukey),
                         SPECHASH_UDATA_TO_IDATA(udata));
 }
 
@@ -490,7 +490,7 @@ SPECHASH_FOO(_hash_replace) (SPECHASH_HASH *tthis,
                              const SPECHASH_UDATA_TYPE udata)
 {
   return genhash_replace((struct genhash *) tthis,
-                         SPECHASH_UKEY_TO_IKEY(ukey),
+                         (const void*)SPECHASH_UKEY_TO_IKEY(ukey),
                          SPECHASH_UDATA_TO_IDATA(udata));
 }
 
@@ -507,7 +507,7 @@ SPECHASH_FOO(_hash_replace_full) (SPECHASH_HASH *tthis,
 {
   void *key_ptr, *data_ptr;
   bool ret = genhash_replace_full((struct genhash *) tthis,
-                                  SPECHASH_UKEY_TO_IKEY(ukey),
+                                  (const void*)SPECHASH_UKEY_TO_IKEY(ukey),
                                   SPECHASH_UDATA_TO_IDATA(udata),
                                   &key_ptr, &data_ptr);
 
@@ -530,7 +530,7 @@ SPECHASH_FOO(_hash_lookup) (const SPECHASH_HASH *tthis,
 {
   void *data_ptr;
   bool ret = genhash_lookup((const struct genhash *) tthis,
-                            SPECHASH_UKEY_TO_IKEY(ukey), &data_ptr);
+                            (const void*)SPECHASH_UKEY_TO_IKEY(ukey), &data_ptr);
 
   if (NULL != pudata) {
     *pudata = SPECHASH_IDATA_TO_UDATA((SPECHASH_IDATA_TYPE) data_ptr);
@@ -546,7 +546,7 @@ SPECHASH_FOO(_hash_remove) (SPECHASH_HASH *tthis,
                             const SPECHASH_UKEY_TYPE ukey)
 {
   return genhash_remove((struct genhash *) tthis,
-                        SPECHASH_UKEY_TO_IKEY(ukey));
+                        (const void*)SPECHASH_UKEY_TO_IKEY(ukey));
 }
 
 /****************************************************************************
@@ -560,7 +560,7 @@ SPECHASH_FOO(_hash_remove_full) (SPECHASH_HASH *tthis,
 {
   void *key_ptr, *data_ptr;
   bool ret = genhash_remove_full((struct genhash *) tthis,
-                                 SPECHASH_UKEY_TO_IKEY(ukey),
+                                 (const void*)SPECHASH_UKEY_TO_IKEY(ukey),
                                  &key_ptr, &data_ptr);
 
   if (NULL != deleted_pukey) {

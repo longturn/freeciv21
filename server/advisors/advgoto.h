@@ -13,10 +13,6 @@
 #ifndef FC__ADVGOTO_H
 #define FC__ADVGOTO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 /* common/aicore */
 #include "path_finding.h"
 
@@ -52,9 +48,5 @@ int adv_unittype_att_rating(const struct unit_type *punittype, int veteran,
 int adv_unit_att_rating(const struct unit *punit);
 int adv_unit_def_rating_basic(const struct unit *punit);
 int adv_unit_def_rating_basic_squared(const struct unit *punit);
-
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif   /* FC__ADVGOTO_H */

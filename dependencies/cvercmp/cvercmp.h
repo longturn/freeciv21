@@ -13,6 +13,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum cvercmp_type
 {
   CVERCMP_EQUAL = 0,
@@ -32,5 +36,9 @@ bool cvercmp_greater(const char *ver1, const char *ver2);
 bool cvercmp_lesser(const char *ver1, const char *ver2);
 bool cvercmp_min(const char *ver1, const char *ver2);
 bool cvercmp_max(const char *ver1, const char *ver2);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* H_CVERCMP */

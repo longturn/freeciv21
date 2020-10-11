@@ -1,17 +1,17 @@
 add_library(
   advisors
   STATIC
-  advbuilding.c
-  advchoice.c
-  advcity.c
-  advdata.c
-  advgoto.c
-  advruleset.c
-  advspace.c
-  advtools.c
-  autoexplorer.c
-  autosettlers.c
-  infracache.c
+  advbuilding.cpp
+  advchoice.cpp
+  advcity.cpp
+  advdata.cpp
+  advgoto.cpp
+  advruleset.cpp
+  advspace.cpp
+  advtools.cpp
+  autoexplorer.cpp
+  autosettlers.cpp
+  infracache.cpp
 )
 
 target_include_directories(advisors PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

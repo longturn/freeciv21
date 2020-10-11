@@ -108,7 +108,7 @@ void real_unit_log(const char *file, const char *function, int line,
     level = LOG_AI_TEST;                                                    \
     notify = TRUE;                                                          \
   } else {                                                                  \
-    level = MIN(loglevel, LOGLEVEL_UNIT);                                   \
+    level = loglevel;                                                       \
   }                                                                         \
   if (log_do_output_for_level(level)) {                                     \
     real_unit_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,       \

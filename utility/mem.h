@@ -31,12 +31,9 @@ extern "C" {
  * a log message, possibly cleanup, and ending with exit(1)
  */
 
-#define fc_malloc(sz)      fc_real_malloc((sz), "malloc", \
-                                          __FC_LINE__, __FILE__)
-#define fc_realloc(ptr,sz) fc_real_realloc((ptr), (sz), "realloc", \
-                                           __FC_LINE__, __FILE__)
-#define fc_calloc(n,esz)   fc_real_calloc((n), (esz), "calloc", \
-                                          __FC_LINE__, __FILE__)
+#define fc_malloc(sz)      malloc(sz)
+#define fc_realloc(ptr,sz) realloc(ptr, sz)
+#define fc_calloc(n,esz)   calloc(n, esz)
 
 #define FC_FREE(ptr)       do { free(ptr); (ptr) = NULL; } while (FALSE)
 
