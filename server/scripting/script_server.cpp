@@ -49,7 +49,9 @@ extern "C" {
 #include "stdinhand.h"
 
 /* server/scripting */
+extern "C" {
 #include "tolua_server_gen.h"
+}
 
 #include "script_server.h"
 
@@ -312,8 +314,7 @@ bool script_server_init(void)
   tolua_game_open(fcl_main->state);
   tolua_signal_open(fcl_main->state);
 
-// sveinung
-  //tolua_server_open(fcl_main->state);
+  tolua_server_open(fcl_main->state);
 
 
   tolua_common_z_open(fcl_main->state);
@@ -340,8 +341,7 @@ bool script_server_init(void)
   api_specenum_open(fcl_unsafe->state);
   tolua_game_open(fcl_unsafe->state);
 
-// sveinung
-//  tolua_server_open(fcl_unsafe->state);
+  tolua_server_open(fcl_unsafe->state);
 
 
   tolua_common_z_open(fcl_unsafe->state);
