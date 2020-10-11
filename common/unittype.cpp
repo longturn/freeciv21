@@ -738,7 +738,7 @@ struct range {
 **************************************************************************/
 static struct range *moves_left_range(struct requirement_vector *reqs)
 {
-  struct range *prange = fc_malloc(sizeof(prange));
+  auto prange = new range;
 
   prange->min = 0;
   prange->max = MOVES_LEFT_INFINITY;
