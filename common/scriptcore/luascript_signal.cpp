@@ -113,7 +113,7 @@ struct signal_callback {
 *****************************************************************************/
 static struct signal_callback *signal_callback_new(const char *name)
 {
-  struct signal_callback *pcallback = fc_malloc(sizeof(*pcallback));
+  auto pcallback = new signal_callback;
 
   pcallback->name = fc_strdup(name);
   return pcallback;
@@ -133,7 +133,7 @@ static void signal_callback_destroy(struct signal_callback *pcallback)
 *****************************************************************************/
 static struct signal *signal_new(int nargs, enum api_types *parg_types)
 {
-  struct signal *psignal = fc_malloc(sizeof(*psignal));
+  auto psignal = new signal;
 
   psignal->nargs = nargs;
   psignal->arg_types = parg_types;
@@ -217,13 +217,14 @@ static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
                   signal_name);
     return NULL;
   } else {
-    enum api_types *parg_types = fc_calloc(nargs, sizeof(*parg_types));
+    enum api_types *parg_types = static_cast<api_types *>(
+      fc_calloc(nargs, sizeof(*parg_types)));
     int i;
-    char *sn = fc_malloc(strlen(signal_name) + 1);
+    char *sn = new char[strlen(signal_name) + 1];
     struct signal *created;
 
     for (i = 0; i < nargs; i++) {
-      *(parg_types + i) = va_arg(args, int);
+      *(parg_types + i) = api_types(va_arg(args, int));
     }
     created = signal_new(nargs, parg_types);
     luascript_signal_hash_insert(fcl->signals, signal_name,

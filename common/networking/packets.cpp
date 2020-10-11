@@ -129,7 +129,7 @@ static bool conn_compression_flush(struct connection *pconn)
 
   /* Compression signalling currently assumes a 2-byte packet length; if that
    * changes, the protocol should probably be changed */
-  fc_assert_ret_val(data_type_size(pconn->packet_header.length) == 2, FALSE);
+  fc_assert_ret_val(data_type_size(data_type(pconn->packet_header.length)) == 2, FALSE);
 
   /* Include normal length field in decision */
   jumbo = (compressed_size+2 >= JUMBO_BORDER);
@@ -386,13 +386,13 @@ void *get_packet_from_connection_raw(struct connection *pc,
     return NULL;		/* connection was closed, stop reading */
   }
   
-  if (pc->buffer->ndata < data_type_size(pc->packet_header.length)) {
+  if (pc->buffer->ndata < data_type_size(data_type(pc->packet_header.length))) {
     /* Not got enough for a length field yet */
     return NULL;
   }
 
   dio_input_init(&din, pc->buffer->data, pc->buffer->ndata);
-  dio_get_type_raw(&din, pc->packet_header.length, &len_read);
+  dio_get_type_raw(&din, data_type(pc->packet_header.length), &len_read);
 
   /* The non-compressed case */
   whole_packet_len = len_read;
@@ -400,7 +400,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
 #ifdef USE_COMPRESSION
   /* Compression signalling currently assumes a 2-byte packet length; if that
    * changes, the protocol should probably be changed */
-  fc_assert(data_type_size(pc->packet_header.length) == 2);
+  fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
   if (len_read == JUMBO_SIZE) {
     compressed_packet = TRUE;
     header_size = 6;
@@ -444,8 +444,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
     do {
       error =
-        uncompress(decompressed, &decompressed_size,
-                   ADD_TO_POINTER(buffer->data, header_size),
+        uncompress(static_cast<Bytef *>(decompressed), &decompressed_size,
+                   static_cast<const Bytef *>(ADD_TO_POINTER(buffer->data, header_size)),
                    compressed_size);
 
       if (error == Z_DATA_ERROR) {
@@ -474,7 +474,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
     if (buffer->ndata + decompressed_size > buffer->nsize) {
       buffer->nsize += decompressed_size;
-      buffer->data = fc_realloc(buffer->data, buffer->nsize);
+      buffer->data = static_cast<unsigned char *>(
+        fc_realloc(buffer->data, buffer->nsize));
     }
 
     /*
@@ -503,16 +504,16 @@ void *get_packet_from_connection_raw(struct connection *pc,
    * At this point the packet is a plain uncompressed one. These have
    * to have to be at least the header bytes in size.
    */
-  if (whole_packet_len < (data_type_size(pc->packet_header.length)
-                          + data_type_size(pc->packet_header.type))) {
+  if (whole_packet_len < (data_type_size(data_type(pc->packet_header.length))
+                          + data_type_size(data_type(pc->packet_header.type)))) {
     log_verbose("The packet stream is corrupt. The connection "
                 "will be closed now.");
     connection_close(pc, _("decoding error"));
     return NULL;
   }
 
-  dio_get_type_raw(&din, pc->packet_header.type, &utype.itype);
-  utype.type = utype.itype;
+  dio_get_type_raw(&din, data_type(pc->packet_header.type), &utype.itype);
+  utype.type = packet_type(utype.itype);
 
   if (utype.type >= PACKET_LAST
       || (receive_handler = pc->phs.handlers->receive[utype.type]) == NULL) {
@@ -664,8 +665,8 @@ bool packet_check(struct data_in *din, struct connection *pc)
     int type, len;
 
     dio_input_rewind(din);
-    dio_get_type_raw(din, pc->packet_header.length, &len);
-    dio_get_type_raw(din, pc->packet_header.type, &type);
+    dio_get_type_raw(din, data_type(pc->packet_header.length), &len);
+    dio_get_type_raw(din, data_type(pc->packet_header.type), &type);
 
     log_packet("received long packet (type %d, len %d, rem %lu) from %s",
                type,
@@ -863,7 +864,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   /* Lookup handlers for the capabilities or create new handlers. */
   if (!packet_handler_hash_lookup(packet_handlers, functional_capability,
                                   &phandlers)) {
-    phandlers = fc_malloc(sizeof(*phandlers));
+    phandlers = new struct packet_handlers;
     memcpy(phandlers, packet_handlers_initial(), sizeof(*phandlers));
     packet_handlers_fill_capability(phandlers, functional_capability);
     packet_handler_hash_insert(packet_handlers, functional_capability,

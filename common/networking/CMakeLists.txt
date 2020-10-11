@@ -1,11 +1,11 @@
 add_library(
   networking
   STATIC
-  connection.c
-  dataio_json.c
-  dataio_raw.c
-  packets.c
-  packets_json.c
+  connection.cpp
+  dataio_json.cpp
+  dataio_raw.cpp
+  packets.cpp
+  packets_json.cpp
 )
 
 target_include_directories(networking PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
