@@ -264,7 +264,7 @@ static int first_free_unit_type_user_flag(void)
 
   /* Find the first unused user defined unit type flag. */
   for (flag = 0; flag < MAX_NUM_USER_UNIT_FLAGS; flag++) {
-    if (unit_type_flag_id_name_cb(flag + UTYF_USER_FLAG_1) == NULL) {
+    if (unit_type_flag_id_name_cb(unit_type_flag_id(flag + UTYF_USER_FLAG_1)) == NULL) {
       return flag;
     }
   }
@@ -283,7 +283,7 @@ static int first_free_unit_class_user_flag(void)
 
   /* Find the first unused user defined unit class flag. */
   for (flag = 0; flag < MAX_NUM_USER_UCLASS_FLAGS; flag++) {
-    if (unit_class_flag_id_name_cb(flag + UCF_USER_FLAG_1) == NULL) {
+    if (unit_class_flag_id_name_cb(unit_class_flag_id(flag + UCF_USER_FLAG_1)) == NULL) {
       return flag;
     }
   }
@@ -302,7 +302,7 @@ static int first_free_terrain_user_flag(void)
 
   /* Find the first unused user defined terrain flag. */
   for (flag = 0; flag < MAX_NUM_USER_TER_FLAGS; flag++) {
-    if (terrain_flag_id_name_cb(flag + TER_USER_1) == NULL) {
+    if (terrain_flag_id_name_cb(terrain_flag_id(flag + TER_USER_1)) == NULL) {
       return flag;
     }
   }
@@ -380,7 +380,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_flags_31[i].name);
         return FALSE;
       }
-      set_user_unit_type_flag_name(first_free + i,
+      set_user_unit_type_flag_name(unit_type_flag_id(first_free + i),
                                    new_flags_31[i].name,
                                    new_flags_31[i].helptxt);
     }
@@ -407,7 +407,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_class_flags_31[i].name);
         return FALSE;
       }
-      set_user_unit_class_flag_name(first_free + i,
+      set_user_unit_class_flag_name(unit_class_flag_id(first_free + i),
                                     new_class_flags_31[i].name,
                                     new_class_flags_31[i].helptxt);
     }
@@ -451,7 +451,7 @@ bool rscompat_names(struct rscompat_info *info)
                       new_flags_31[i].name);
         return FALSE;
       }
-      set_user_terrain_flag_name(first_free + i,
+      set_user_terrain_flag_name(terrain_flag_id(first_free + i),
                                  new_flags_31[i].name,
                                  new_flags_31[i].helptxt);
     }
@@ -787,7 +787,7 @@ void rscompat_postprocess(struct rscompat_info *info)
         int flag;
 
         flag = unit_type_flag_id_by_name("Infra", fc_strcasecmp);
-        fc_assert(unit_type_flag_id_is_valid(flag));
+        fc_assert(unit_type_flag_id_is_valid(unit_type_flag_id(flag)));
         BV_SET(ptype->flags, flag);
       }
     } unit_type_iterate_end;
@@ -1070,7 +1070,7 @@ void rscompat_postprocess(struct rscompat_info *info)
       int i;
 
       for (i = 0; i < CLAUSE_COUNT; i++) {
-        struct clause_info *cinfo = clause_info_get(i);
+        struct clause_info *cinfo = clause_info_get(clause_type(i));
 
         cinfo->enabled = TRUE;
       }
