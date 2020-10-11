@@ -497,7 +497,9 @@ double try_to_autoconnect(void)
   static int warning_shown = 0;
 #endif
 
-  if (!autoconnecting) {
+  // Don't repeat autoconnect if not autoconnecting or the user
+  // established a connection by himself.
+  if (!autoconnecting || client.conn.established) {
     return FC_INFINITY;
   }
 
