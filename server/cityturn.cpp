@@ -1130,13 +1130,14 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
   case VUT_UTYPE:
     ptarget = target->value.utype;
     build_reqs = &target->value.utype->build_reqs;
-    tgt_name = utype_name_translation(ptarget);
+    tgt_name = utype_name_translation(static_cast<const unit_type *>(ptarget));
     signal_name = "unit_cant_be_built";
     break;
   case VUT_IMPROVEMENT:
     ptarget = target->value.building;
     build_reqs = &target->value.building->reqs;
-    tgt_name = city_improvement_name_translation(pcity, ptarget);
+    tgt_name = city_improvement_name_translation(
+        pcity, static_cast<const impr_type *>(ptarget));
     signal_name = "building_cant_be_built";
     break;
   default:
@@ -1177,7 +1178,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        tech_flag_id_name(preq->source.value.techflag));
+                        tech_flag_id_name(tech_flag_id(preq->source.value.techflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "need_techflag");
         } else {
@@ -1602,7 +1603,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "  Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        terrain_class_name_translation(preq->source.value.terrainclass));
+                        terrain_class_name_translation(terrain_class(preq->source.value.terrainclass)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "need_terrainclass");
         } else {
@@ -1613,7 +1614,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                            "  Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        terrain_class_name_translation(preq->source.value.terrainclass));
+                        terrain_class_name_translation(terrain_class(preq->source.value.terrainclass)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "have_terrainclass");
         }
@@ -1627,7 +1628,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        terrain_flag_id_name(preq->source.value.terrainflag));
+                        terrain_flag_id_name(terrain_flag_id(preq->source.value.terrainflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "need_terrainflag");
         } else {
@@ -1638,7 +1639,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        terrain_flag_id_name(preq->source.value.terrainflag));
+                        terrain_flag_id_name(terrain_flag_id(preq->source.value.terrainflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "have_terrainflag");
         }
@@ -1652,7 +1653,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        base_flag_id_name(preq->source.value.baseflag));
+                        base_flag_id_name(base_flag_id(preq->source.value.baseflag)));
           script_server_signal_emit(signal_name,
                                     ptarget, pcity, "need_baseflag");
         } else {
@@ -1663,7 +1664,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        base_flag_id_name(preq->source.value.baseflag));
+                        base_flag_id_name(base_flag_id(preq->source.value.baseflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "have_baseflag");
         }
@@ -1677,7 +1678,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        road_flag_id_name(preq->source.value.roadflag));
+                        road_flag_id_name(road_flag_id(preq->source.value.roadflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "need_roadflag");
         } else {
@@ -1688,7 +1689,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        road_flag_id_name(preq->source.value.roadflag));
+                        road_flag_id_name(road_flag_id(preq->source.value.roadflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "have_roadflag");
         }
@@ -1702,7 +1703,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        extra_flag_id_translated_name(preq->source.value.extraflag));
+                        extra_flag_id_translated_name(extra_flag_id(preq->source.value.extraflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "need_extraflag");
         } else {
@@ -1713,7 +1714,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
                           "Postponing..."),
                         city_link(pcity),
                         tgt_name,
-                        extra_flag_id_translated_name(preq->source.value.extraflag));
+                        extra_flag_id_translated_name(extra_flag_id(preq->source.value.extraflag)));
           script_server_signal_emit(signal_name, ptarget,
                                     pcity, "have_extraflag");
         }
@@ -2421,8 +2422,7 @@ static struct unit *city_create_unit(struct city *pcity,
     punit->has_orders = TRUE;
     punit->orders.length = pcity->rally_point.length;
     punit->orders.vigilant = pcity->rally_point.vigilant;
-    punit->orders.list = fc_malloc(pcity->rally_point.length
-                                   * sizeof(struct unit_order));
+    punit->orders.list = new unit_order[pcity->rally_point.length];
     memcpy(punit->orders.list, pcity->rally_point.orders,
            pcity->rally_point.length * sizeof(struct unit_order));
   }
@@ -2815,7 +2815,7 @@ static bool player_balance_treasury_units_and_buildings
   city_list_iterate(pplayer->cities, pcity) {
     city_built_iterate(pcity, pimprove) {
       if (can_city_sell_building(pcity, pimprove)) {
-        struct cityimpr *ci = fc_malloc(sizeof(*ci));
+        auto ci = new cityimpr;
 
         ci->pcity = pcity;
         ci->pimprove = pimprove;
@@ -2914,7 +2914,7 @@ static bool city_balance_treasury_buildings(struct city *pcity)
   /* Create a vector of all buildings that can be sold. */
   city_built_iterate(pcity, pimprove) {
     if (can_city_sell_building(pcity, pimprove)) {
-      struct cityimpr *ci = fc_malloc(sizeof(*ci));
+      auto ci = new cityimpr;
 
       ci->pcity = pcity;
       ci->pimprove = pimprove;
