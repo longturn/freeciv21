@@ -16,6 +16,10 @@
 
 #include "connection.h"         /* enum cmdlevel */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 enum cmd_echo {
   CMD_ECHO_NONE = 0,
   CMD_ECHO_ADMINS,      /* i.e. all with 'admin' access and above. */
@@ -119,5 +123,9 @@ enum cmdlevel command_level(const struct command *pcommand);
 enum cmd_echo command_echo(const struct command *pcommand);
 int command_vote_flags(const struct command *pcommand);
 int command_vote_percent(const struct command *pcommand);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif				/* FC__COMMANDS_H */
