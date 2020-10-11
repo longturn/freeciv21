@@ -78,7 +78,8 @@ endif()
 # The tolua program is compatible with Lua 5.4, but the library may not be (eg
 # on Debian it's linked to Lua 5.2). We always build the library. When not
 # cross-compiling, we can also build the program. When cross-compiling, an
-# externally provided tolua program is required.
+# externally provided tolua program is required (or an emulator for the target
+# platform, eg qemu).
 if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
   find_package(ToLuaProgram REQUIRED)
 else()
@@ -93,6 +94,7 @@ find_package(ZLIB REQUIRED)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
+  require_include_file("libgen.h" HAVE_LIBGEN_H)
   require_include_file("pwd.h" HAVE_PWD_H)
   require_include_file("sys/time.h" HAVE_SYS_TIME_H)
   require_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)

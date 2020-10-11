@@ -22,4 +22,11 @@ if(NOT TARGET ToLuaProgram::tolua)
   )
 
   target_link_libraries(tolua_program tolua)
+
+  # On emscripten, we need to enable nodefs for tolua to be any useful
+  # Otherwise it cannot open files
+  if (EMSCRIPTEN)
+    target_compile_options(tolua_program PRIVATE "-O3")
+    target_link_options(tolua_program PRIVATE "SHELL:-s NODERAWFS=1")
+  endif()
 endif()
