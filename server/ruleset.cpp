@@ -523,7 +523,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
 
   for (j = 0; (flag = secfile_lookup_str_default(file, NULL, "%s.%s%d.flag",
                                                  sec, sub, j)); j++) {
-    struct combat_bonus *bonus = static_cast<combat_bonus*>(fc_malloc(sizeof(*bonus)));
+    auto bonus = new combat_bonus;
     const char *type;
 
     bonus->flag = unit_type_flag_id_by_name(rscompat_utype_flag_name_3_1(compat, flag),
@@ -1187,14 +1187,14 @@ static bool load_tech_names(struct section_file *file,
       break;
     }
 
-    set_user_tech_flag_name(static_cast<tech_flag_id>(TECH_USER_1 + i), flag, helptxt);
+    set_user_tech_flag_name(tech_flag_id(TECH_USER_1 + i), flag, helptxt);
   }
 
   if (ok) {
     size_t nval;
 
     for (; i < MAX_NUM_USER_TECH_FLAGS; i++) {
-      set_user_tech_flag_name(static_cast<tech_flag_id>(TECH_USER_1 + i), NULL, NULL);
+      set_user_tech_flag_name(tech_flag_id(TECH_USER_1 + i), NULL, NULL);
     }
 
     /* Tech classes */
@@ -1358,7 +1358,7 @@ static bool load_ruleset_techs(struct section_file *file,
         continue;
       }
       ival = tech_flag_id_by_name(sval, fc_strcasecmp);
-      if (!tech_flag_id_is_valid(static_cast<tech_flag_id>(ival))) {
+      if (!tech_flag_id_is_valid(tech_flag_id(ival))) {
         ruleset_error(LOG_ERROR, "\"%s\" [%s] \"%s\": bad flag name \"%s\".",
                       filename, sec_name, rule_name_get(&a->name), sval);
         ok = FALSE;
@@ -1512,13 +1512,15 @@ static bool load_unit_names(struct section_file *file,
       break;
     }
 
-    set_user_unit_type_flag_name(static_cast<unit_type_flag_id>(UTYF_USER_FLAG_1 + i), flag, helptxt);
+    set_user_unit_type_flag_name(unit_type_flag_id(UTYF_USER_FLAG_1 + i),
+                                 flag, helptxt);
   }
 
   if (ok) {
     /* Blank the remaining unit type user flags. */
     for (; i < MAX_NUM_USER_UNIT_FLAGS; i++) {
-      set_user_unit_type_flag_name(static_cast<unit_type_flag_id>(UTYF_USER_FLAG_1 + i), NULL, NULL);
+      set_user_unit_type_flag_name(unit_type_flag_id(UTYF_USER_FLAG_1 + i),
+                                   nullptr, nullptr);
     }
   }
 
@@ -1547,14 +1549,16 @@ static bool load_unit_names(struct section_file *file,
         break;
       }
 
-      set_user_unit_class_flag_name(static_cast<unit_class_flag_id>(UCF_USER_FLAG_1 + i), flag, helptxt);
+      set_user_unit_class_flag_name(unit_class_flag_id(UCF_USER_FLAG_1 + i),
+                                    flag, helptxt);
     }
   }
 
   if (ok) {
     /* Blank the remaining unit class user flags. */
     for (; i < MAX_NUM_USER_UCLASS_FLAGS; i++) {
-      set_user_unit_class_flag_name(static_cast<unit_class_flag_id>(UCF_USER_FLAG_1 + i), NULL, NULL);
+      set_user_unit_class_flag_name(unit_class_flag_id(UCF_USER_FLAG_1 + i),
+                                    nullptr, nullptr);
     }
   }
 
@@ -1826,11 +1830,11 @@ static bool load_ruleset_units(struct section_file *file,
           continue;
         }
         ival = unit_class_flag_id_by_name(sval, fc_strcasecmp);
-        if (!unit_class_flag_id_is_valid(static_cast<unit_class_flag_id>(ival))) {
+        if (!unit_class_flag_id_is_valid(unit_class_flag_id(ival))) {
           ok = FALSE;
           ival = unit_type_flag_id_by_name(rscompat_utype_flag_name_3_1(compat, sval),
                                            fc_strcasecmp);
-          if (unit_type_flag_id_is_valid(static_cast<unit_type_flag_id>(ival))) {
+          if (unit_type_flag_id_is_valid(unit_type_flag_id(ival))) {
             ruleset_error(LOG_ERROR,
                           "\"%s\" unit_class \"%s\": unit_type flag \"%s\"!",
                           filename, uclass_rule_name(uc), sval);
@@ -2039,7 +2043,7 @@ static bool load_ruleset_units(struct section_file *file,
       output_type_iterate(o) {
         u->upkeep[o] = secfile_lookup_int_default(file, 0, "%s.uk_%s",
                                                   sec_name,
-                                                  get_output_identifier(static_cast<Output_type_id>(o)));
+                                                  get_output_identifier(o));
       } output_type_iterate_end;
 
       slist = secfile_lookup_str_vec(file, &nval, "%s.cargo", sec_name);
@@ -2227,10 +2231,10 @@ static bool load_ruleset_units(struct section_file *file,
         } else {
           ival = unit_type_flag_id_by_name(rscompat_utype_flag_name_3_1(compat, sval),
                                            fc_strcasecmp);
-          if (!unit_type_flag_id_is_valid(static_cast<unit_type_flag_id>(ival))) {
+          if (!unit_type_flag_id_is_valid(unit_type_flag_id(ival))) {
             ok = FALSE;
             ival = unit_class_flag_id_by_name(sval, fc_strcasecmp);
-            if (unit_class_flag_id_is_valid(static_cast<unit_class_flag_id>(ival))) {
+            if (unit_class_flag_id_is_valid(unit_class_flag_id(ival))) {
               ruleset_error(LOG_ERROR, "\"%s\" unit_type \"%s\": unit_class flag!",
                             filename, utype_rule_name(u));
             } else {
@@ -2268,7 +2272,7 @@ static bool load_ruleset_units(struct section_file *file,
           continue;
         }
         ival = unit_role_id_by_name(sval, fc_strcasecmp);
-        if (!unit_role_id_is_valid(static_cast<unit_role_id>(ival))) {
+        if (!unit_role_id_is_valid(unit_role_id(ival))) {
           ruleset_error(LOG_ERROR, "\"%s\" unit_type \"%s\": bad role name \"%s\".",
                         filename, utype_rule_name(u), sval);
           ok = FALSE;
@@ -2417,7 +2421,7 @@ static bool load_ruleset_buildings(struct section_file *file,
           continue;
         }
         ival = impr_flag_id_by_name(sval, fc_strcasecmp);
-        if (!impr_flag_id_is_valid(static_cast<impr_flag_id>(ival))) {
+        if (!impr_flag_id_is_valid(impr_flag_id(ival))) {
           ruleset_error(LOG_ERROR,
                         "\"%s\" improvement \"%s\": bad flag name \"%s\".",
                         filename, improvement_rule_name(b), sval);
@@ -2527,13 +2531,13 @@ static bool load_terrain_names(struct section_file *file,
       break;
     }
 
-    set_user_terrain_flag_name(static_cast<terrain_flag_id>(TER_USER_1 + i), flag, helptxt);
+    set_user_terrain_flag_name(terrain_flag_id(TER_USER_1 + i), flag, helptxt);
   }
 
   if (ok) {
     /* Blank the remaining terrain user flag slots. */
     for (; i < MAX_NUM_USER_TER_FLAGS; i++) {
-      set_user_terrain_flag_name(static_cast<terrain_flag_id>(TER_USER_1 + i), NULL, NULL);
+      set_user_terrain_flag_name(terrain_flag_id(TER_USER_1 + i), nullptr, nullptr);
     }
   }
 
@@ -2560,13 +2564,13 @@ static bool load_terrain_names(struct section_file *file,
       break;
     }
 
-    set_user_extra_flag_name(static_cast<extra_flag_id>(EF_USER_FLAG_1 + i), flag, helptxt);
+    set_user_extra_flag_name(extra_flag_id(EF_USER_FLAG_1 + i), flag, helptxt);
   }
 
   if (ok) {
     /* Blank the remaining extra user flag slots. */
     for (; i < MAX_NUM_USER_EXTRA_FLAGS; i++) {
-      set_user_extra_flag_name(static_cast<extra_flag_id>(EF_USER_FLAG_1 + i), NULL, NULL);
+      set_user_extra_flag_name(extra_flag_id(EF_USER_FLAG_1 + i), NULL, NULL);
     }
 
     /* terrain names */
@@ -2592,7 +2596,7 @@ static bool load_terrain_names(struct section_file *file,
     if (terrain_sections) {
       free(terrain_sections);
     }
-    terrain_sections = static_cast<char*>(fc_calloc(nval, MAX_SECTION_LABEL));
+    terrain_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
 
     terrain_type_iterate(pterrain) {
       const int terri = terrain_index(pterrain);
@@ -2630,7 +2634,7 @@ static bool load_terrain_names(struct section_file *file,
     if (extra_sections) {
       free(extra_sections);
     }
-    extra_sections = static_cast<char*>(fc_calloc(nval, MAX_SECTION_LABEL));
+    extra_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
 
     if (ok) {
       for (idx = 0; idx < nval; idx++) {
@@ -2669,7 +2673,7 @@ static bool load_terrain_names(struct section_file *file,
     if (base_sections) {
       free(base_sections);
     }
-    base_sections = static_cast<char*>(fc_calloc(nval, MAX_SECTION_LABEL));
+    base_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
 
     /* Cannot use base_type_iterate() before bases are added to
      * EC_BASE caused_by list. Have to get them by extra_type_by_rule_name() */
@@ -2721,7 +2725,7 @@ static bool load_terrain_names(struct section_file *file,
     if (road_sections) {
       free(road_sections);
     }
-    road_sections = static_cast<char*>(fc_calloc(nval, MAX_SECTION_LABEL));
+    road_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
 
     /* Cannot use extra_type_by_cause_iterate(EC_ROAD) before roads are added to
      * EC_ROAD caused_by list. Have to get them by extra_type_by_rule_name() */
@@ -2773,7 +2777,7 @@ static bool load_terrain_names(struct section_file *file,
     if (resource_sections) {
       free(resource_sections);
     }
-    resource_sections = static_cast<char*>(fc_calloc(nval, MAX_SECTION_LABEL));
+    resource_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
 
     /* Cannot use resource_type_iterate() before resource are added to
      * EC_RESOURCE caused_by list. Have to get them by extra_type_by_rule_name() */
@@ -2951,11 +2955,12 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate(o) {
         pterrain->output[o]
           = secfile_lookup_int_default(file, 0, "%s.%s", tsection,
-                                       get_output_identifier(static_cast<output_type_id>(o)));
+                                       get_output_identifier(o));
       } output_type_iterate_end;
 
       res = secfile_lookup_str_vec(file, &nval, "%s.resources", tsection);
-      pterrain->resources = static_cast<extra_type**>(fc_calloc(nval + 1, sizeof(*pterrain->resources)));
+      pterrain->resources = static_cast<extra_type **>(
+          fc_calloc(nval + 1, sizeof(*pterrain->resources)));
       for (j = 0; j < nval; j++) {
         pterrain->resources[j] = lookup_resource(filename, res[j], tsection);
         if (pterrain->resources[j] == NULL) {
@@ -2974,7 +2979,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate(o) {
         pterrain->road_output_incr_pct[o]
           = secfile_lookup_int_default(file, 0, "%s.road_%s_incr_pct",
-                                       tsection, get_output_identifier(static_cast<Output_type_id>(o)));
+                                       tsection, get_output_identifier(o));
       } output_type_iterate_end;
 
       if (!lookup_time(file, &pterrain->base_time, tsection, "base_time",
@@ -3126,16 +3131,16 @@ static bool load_ruleset_terrain(struct section_file *file,
       slist = secfile_lookup_str_vec(file, &nval, "%s.native_to", tsection);
       BV_CLR_ALL(pterrain->native_to);
       for (j = 0; j < nval; j++) {
-        struct unit_class *classx = unit_class_by_rule_name(slist[j]);
+        struct unit_class *uclass = unit_class_by_rule_name(slist[j]);
 
-        if (!classx) {
+        if (!uclass) {
           ruleset_error(LOG_ERROR,
                         "\"%s\" [%s] is native to unknown unit class \"%s\".",
                         filename, tsection, slist[j]);
           ok = FALSE;
           break;
         } else {
-          BV_SET(pterrain->native_to, uclass_index(classx));
+          BV_SET(pterrain->native_to, uclass_index(uclass));
         }
       }
       free(slist);
@@ -3223,8 +3228,8 @@ static bool load_ruleset_terrain(struct section_file *file,
             && !is_extra_caused_by(pextra, EC_ROAD)
             && !is_extra_caused_by(pextra, EC_RESOURCE)) {
           /* Not a base, road, nor resource, so special */
-          pextra->data.special_idx = extra_type_list_size(extra_type_list_by_cause(static_cast<extra_cause>(EC_SPECIAL)));
-          extra_to_caused_by_list(pextra, static_cast<extra_cause>(EC_SPECIAL));
+          pextra->data.special_idx = extra_type_list_size(extra_type_list_by_cause(EC_SPECIAL));
+          extra_to_caused_by_list(pextra, EC_SPECIAL);
         }
 
         free(slist);
@@ -3326,9 +3331,9 @@ static bool load_ruleset_terrain(struct section_file *file,
                                                             section);
         if (pextra->defense_bonus != 0) {
           if (extra_has_flag(pextra, EF_NATURAL_DEFENSE)) {
-            extra_to_caused_by_list(pextra, static_cast<extra_cause>(EC_NATURAL_DEFENSIVE));
+            extra_to_caused_by_list(pextra, EC_NATURAL_DEFENSIVE);
           } else {
-            extra_to_caused_by_list(pextra, static_cast<extra_cause>(EC_DEFENSIVE));
+            extra_to_caused_by_list(pextra, EC_DEFENSIVE);
           }
         }
 
@@ -3510,7 +3515,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate (o) {
         presource->data.resource->output[o] =
 	  secfile_lookup_int_default(file, 0, "%s.%s", rsection,
-                                     get_output_identifier(static_cast<Output_type_id>(o)));
+                                     get_output_identifier(o));
       } output_type_iterate_end;
 
       sz_strlcpy(identifier,
@@ -3748,13 +3753,13 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate(o) {
         proad->tile_incr_const[o] =
           secfile_lookup_int_default(file, 0, "%s.%s_incr_const",
-                                     section, get_output_identifier(static_cast<Output_type_id>(o)));
+                                     section, get_output_identifier(o));
         proad->tile_incr[o] =
           secfile_lookup_int_default(file, 0, "%s.%s_incr",
-                                     section, get_output_identifier(static_cast<Output_type_id>(o)));
+                                     section, get_output_identifier(o));
         proad->tile_bonus[o] =
           secfile_lookup_int_default(file, 0, "%s.%s_bonus",
-                                     section, get_output_identifier(static_cast<Output_type_id>(o)));
+                                     section, get_output_identifier(o));
       } output_type_iterate_end;
 
       special = secfile_lookup_str_default(file, "None", "%s.compat_special", section);
@@ -4256,7 +4261,7 @@ static bool load_nation_names(struct section_file *file,
       if (!strcmp("freeciv", domain)) {
         pl->translation_domain = NULL;
       } else if (!strcmp("freeciv-nations", domain)) {
-        pl->translation_domain = static_cast<char*>(fc_malloc(strlen(domain) + 1));
+        pl->translation_domain = new char[strlen(domain) + 1];
         strcpy(pl->translation_domain, domain);
       } else {
         ruleset_error(LOG_ERROR, "Unsupported translation domain \"%s\" for %s",
@@ -4551,7 +4556,7 @@ static bool load_ruleset_nations(struct section_file *file,
   if (vec != NULL) {
     /* Copy to persistent vector */
     game.server.ruledit.embedded_nations
-      = static_cast<char**>(fc_malloc(game.server.ruledit.embedded_nations_count * sizeof(char *)));
+      = new char *[game.server.ruledit.embedded_nations_count];
 
     for (j = 0; j < game.server.ruledit.embedded_nations_count; j++) {
       game.server.ruledit.embedded_nations[j] = fc_strdup(vec[j]);
@@ -4590,7 +4595,7 @@ static bool load_ruleset_nations(struct section_file *file,
     if (vec != NULL) {
       /* Copy to persistent vector */
       game.server.ruledit.nc_agovs
-        = static_cast<char**>(fc_malloc(game.server.ruledit.ag_count * sizeof(char *)));
+        = new char *[game.server.ruledit.ag_count];
       game.server.ruledit.allowed_govs =
         (const char **)game.server.ruledit.nc_agovs;
 
@@ -4605,8 +4610,7 @@ static bool load_ruleset_nations(struct section_file *file,
                                  "compatibility.allowed_terrains");
     if (vec != NULL) {
       /* Copy to persistent vector */
-      game.server.ruledit.nc_aterrs
-        =static_cast<char**>( fc_malloc(game.server.ruledit.at_count * sizeof(char *)));
+      game.server.ruledit.nc_aterrs = new char *[game.server.ruledit.at_count];
       game.server.ruledit.allowed_terrains =
         (const char **)game.server.ruledit.nc_aterrs;
 
@@ -4621,8 +4625,7 @@ static bool load_ruleset_nations(struct section_file *file,
                                  "compatibility.allowed_styles");
     if (vec != NULL) {
       /* Copy to persistent vector */
-      game.server.ruledit.nc_astyles
-        = static_cast<char**>(fc_malloc(game.server.ruledit.as_count * sizeof(char *)));
+      game.server.ruledit.nc_astyles = new char *[game.server.ruledit.as_count];
       game.server.ruledit.allowed_styles =
         (const char **)game.server.ruledit.nc_astyles;
 
@@ -5887,7 +5890,7 @@ static bool load_action_kind(struct section_file *file, action_id act)
   if (action_target_kind_ruleset_var_name(act) != NULL) {
     /* Target kind can be loaded from the ruleset. */
     action_by_number(act)->target_kind
-      = static_cast<action_target_kind>(secfile_lookup_enum_default(file,
+      = action_target_kind(secfile_lookup_enum_default(file,
                                     RS_DEFAULT_USER_ACTION_TARGET_KIND,
                                     action_target_kind,
                                     "actions.%s",
@@ -6016,7 +6019,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
     /* Ruleset/modpack summary found */
     len = strlen(pref_text);
-    game.ruleset_summary = static_cast<char*>(fc_malloc(len + 1));
+    game.ruleset_summary = new char[len + 1];
     fc_strlcpy(game.ruleset_summary, pref_text, len + 1);
   } else {
     /* No summary */
@@ -6032,7 +6035,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
     /* Ruleset/modpack description found */
     len = strlen(pref_text);
-    game.ruleset_description = static_cast<char*>(fc_malloc(len + 1));
+    game.ruleset_description = new char[len + 1];
     fc_strlcpy(game.ruleset_description, pref_text, len + 1);
     game.control.desc_length = len;
   } else {
@@ -6048,10 +6051,10 @@ static bool load_ruleset_game(struct section_file *file, bool act,
   if (pref_text[0] != '\0') {
     int len = strlen(pref_text);
 
-    game.ruleset_capabilities = static_cast<char*>(fc_malloc(len + 1));
+    game.ruleset_capabilities = new char[len + 1];
     fc_strlcpy(game.ruleset_capabilities, pref_text, len +1);
   } else {
-    game.ruleset_capabilities = static_cast<char*>(fc_malloc(1));
+    game.ruleset_capabilities = new char[1];
     game.ruleset_capabilities[0] = '\0';
   }
 
@@ -6097,7 +6100,8 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         ok = FALSE;
         break;
       } else {
-        game.info.gameloss_style = static_cast<gameloss_style>(static_cast<int>(game.info.gameloss_style) | static_cast<int>(style));
+        game.info.gameloss_style =
+            gameloss_style(game.info.gameloss_style | style);
       }
     }
     free(slist);
@@ -6237,7 +6241,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                                              RS_MIN_CITY_CENTER_OUTPUT,
                                              RS_MAX_CITY_CENTER_OUTPUT,
                                              "civstyle.min_city_center_%s",
-                                             get_output_identifier(static_cast<Output_type_id>(o)));
+                                             get_output_identifier(o));
     } output_type_iterate_end;
   }
 
@@ -6953,15 +6957,15 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     achievements_iterate(pach) {
       int id = achievement_index(pach);
       const char *sec_name = section_name(section_list_get(sec, id));
-      const char *typenamex;
+      const char *type_name;
       const char *msg;
 
-      typenamex = secfile_lookup_str_default(file, NULL, "%s.type", sec_name);
+      type_name = secfile_lookup_str_default(file, NULL, "%s.type", sec_name);
 
-      pach->type = achievement_type_by_name(typenamex, fc_strcasecmp);
+      pach->type = achievement_type_by_name(type_name, fc_strcasecmp);
       if (!achievement_type_is_valid(pach->type)) {
         ruleset_error(LOG_ERROR, "Achievement has unknown type \"%s\".",
-                      typenamex != NULL ? typenamex : "(NULL)");
+                      type_name != NULL ? type_name : "(NULL)");
         ok = FALSE;
       }
 
@@ -7178,14 +7182,14 @@ static void send_ruleset_unit_classes(struct conn_list *dest)
 
     fpacket.id = i + UCF_USER_FLAG_1;
 
-    flagname = unit_class_flag_id_name(static_cast<unit_class_flag_id>(i + UCF_USER_FLAG_1));
+    flagname = unit_class_flag_id_name(unit_class_flag_id(i + UCF_USER_FLAG_1));
     if (flagname == NULL) {
       fpacket.name[0] = '\0';
     } else {
       sz_strlcpy(fpacket.name, flagname);
     }
 
-    helptxt = unit_class_flag_helptxt(static_cast<unit_class_flag_id>(i + UCF_USER_FLAG_1));
+    helptxt = unit_class_flag_helptxt(unit_class_flag_id(i + UCF_USER_FLAG_1));
     if (helptxt == NULL) {
       fpacket.helptxt[0] = '\0';
     } else {
@@ -7230,14 +7234,14 @@ static void send_ruleset_units(struct conn_list *dest)
 
     fpacket.id = i + UTYF_USER_FLAG_1;
 
-    flagname = unit_type_flag_id_name(static_cast<unit_type_flag_id>(i + UTYF_USER_FLAG_1));
+    flagname = unit_type_flag_id_name(unit_type_flag_id(i + UTYF_USER_FLAG_1));
     if (flagname == NULL) {
       fpacket.name[0] = '\0';
     } else {
       sz_strlcpy(fpacket.name, flagname);
     }
 
-    helptxt = unit_type_flag_helptxt(static_cast<unit_type_flag_id>(i + UTYF_USER_FLAG_1));
+    helptxt = unit_type_flag_helptxt(unit_type_flag_id(i + UTYF_USER_FLAG_1));
     if (helptxt == NULL) {
       fpacket.helptxt[0] = '\0';
     } else {
@@ -7413,14 +7417,14 @@ static void send_ruleset_techs(struct conn_list *dest)
 
     fpacket.id = i + TECH_USER_1;
 
-    flagname = tech_flag_id_name_cb(static_cast<tech_flag_id>(i + TECH_USER_1));
+    flagname = tech_flag_id_name_cb(tech_flag_id(i + TECH_USER_1));
     if (flagname == NULL) {
       fpacket.name[0] = '\0';
     } else {
       sz_strlcpy(fpacket.name, flagname);
     }
 
-    helptxt = tech_flag_helptxt(static_cast<tech_flag_id>(i + TECH_USER_1));
+    helptxt = tech_flag_helptxt(tech_flag_id(i + TECH_USER_1));
     if (helptxt == NULL) {
       fpacket.helptxt[0] = '\0';
     } else {
@@ -7545,14 +7549,14 @@ static void send_ruleset_terrain(struct conn_list *dest)
 
     fpacket.id = i + TER_USER_1;
 
-    flagname = terrain_flag_id_name_cb(static_cast<terrain_flag_id>(i + TER_USER_1));
+    flagname = terrain_flag_id_name_cb(terrain_flag_id(i + TER_USER_1));
     if (flagname == NULL) {
       fpacket.name[0] = '\0';
     } else {
       sz_strlcpy(fpacket.name, flagname);
     }
 
-    helptxt = terrain_flag_helptxt(static_cast<terrain_flag_id>(i + TER_USER_1));
+    helptxt = terrain_flag_helptxt(terrain_flag_id(i + TER_USER_1));
     if (helptxt == NULL) {
       fpacket.helptxt[0] = '\0';
     } else {
@@ -7665,14 +7669,14 @@ static void send_ruleset_extras(struct conn_list *dest)
 
     fpacket.id = i + EF_USER_FLAG_1;
 
-    flagname = extra_flag_id_name(static_cast<extra_flag_id>(i + EF_USER_FLAG_1));
+    flagname = extra_flag_id_name(extra_flag_id(i + EF_USER_FLAG_1));
     if (flagname == NULL) {
       fpacket.name[0] = '\0';
     } else {
       sz_strlcpy(fpacket.name, flagname);
     }
 
-    helptxt = extra_flag_helptxt(static_cast<extra_flag_id>(i + EF_USER_FLAG_1));
+    helptxt = extra_flag_helptxt(extra_flag_id(i + EF_USER_FLAG_1));
     if (helptxt == NULL) {
       fpacket.helptxt[0] = '\0';
     } else {
@@ -7700,7 +7704,7 @@ static void send_ruleset_extras(struct conn_list *dest)
 
     BV_CLR_ALL(packet.rmcauses);
     for (j = 0; j < ERM_COUNT; j++) {
-      if (is_extra_removed_by(e, static_cast<extra_rmcause>(j))) {
+      if (is_extra_removed_by(e, extra_rmcause(j))) {
         BV_SET(packet.rmcauses, j);
       }
     }
@@ -8008,12 +8012,13 @@ static void send_ruleset_action_auto_performers(struct conn_list *dest)
 static void send_ruleset_trade_routes(struct conn_list *dest)
 {
   struct packet_ruleset_trade packet;
-  int typex;
+  int itype;
 
-  for (typex = TRT_NATIONAL; typex < TRT_LAST; typex++) {
-    struct trade_route_settings *set = trade_route_settings_by_type(static_cast<trade_route_type>(typex));
+  for (itype = TRT_NATIONAL; itype < TRT_LAST; itype++) {
+    trade_route_type type = trade_route_type(itype);
+    struct trade_route_settings *set = trade_route_settings_by_type(type);
 
-    packet.id = typex;
+    packet.id = type;
     packet.trade_pct = set->trade_pct;
     packet.cancelling = set->cancelling;
     packet.bonus_type = set->bonus_type;
@@ -8201,10 +8206,10 @@ static void send_ruleset_clauses(struct conn_list *dest)
   int i;
 
   for (i = 0; i < CLAUSE_COUNT; i++) {
-    struct clause_info *info = clause_info_get(static_cast<clause_type>(i));
+    struct clause_info *info = clause_info_get(clause_type(i));
     int j;
 
-    packet.type = static_cast<clause_type>(i);
+    packet.type = clause_type(i);
     packet.enabled = info->enabled;
 
     j = 0;

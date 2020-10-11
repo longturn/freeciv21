@@ -145,8 +145,6 @@ static enum diplstate_type dst_closest(enum diplstate_type a,
   how_close[DS_ALLIANCE] = 5;
   how_close[DS_TEAM] = 6;
 
-
-
   if (how_close[a] < how_close[b]) {
     return b;
   } else {
@@ -872,9 +870,7 @@ void handle_diplomacy_init_meeting_req(struct player *pplayer,
   }
 
   if (could_meet_with_player(pplayer, pother)) {
-    struct Treaty *ptreaty;
-
-    ptreaty = static_cast<Treaty*>(fc_malloc(sizeof(*ptreaty)));
+    auto ptreaty = new Treaty;
     init_treaty(ptreaty, pplayer, pother);
     treaty_list_prepend(treaties, ptreaty);
 

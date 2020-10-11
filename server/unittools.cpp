@@ -3175,7 +3175,7 @@ static bool unit_survive_autoattack(struct unit *punit)
   adjc_iterate(&(wld.map), unit_tile(punit), ptile) {
     /* First add all eligible units to a autoattack list */
     unit_list_iterate(ptile->units, penemy) {
-      struct autoattack_prob *probability = static_cast<autoattack_prob*>(fc_malloc(sizeof(*probability)));
+      auto probability = new autoattack_prob;
       struct tile *tgt_tile = unit_tile(punit);
 
       fc_assert_action(tgt_tile, continue);
@@ -3288,7 +3288,7 @@ static bool unit_survive_autoattack(struct unit *punit)
 /**********************************************************************//**
   Cancel orders for the unit.
 **************************************************************************/
-static void cancel_orders(struct unit *punit, char *dbg_msg)
+static void cancel_orders(struct unit *punit, const char *dbg_msg)
 {
   free_unit_orders(punit);
   send_unit_info(NULL, punit);
@@ -3530,9 +3530,9 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
   struct unit_move_data *pdata;
   struct player *powner = unit_owner(punit);
   const v_radius_t radius_sq =
-        V_RADIUS(static_cast<short>(get_unit_vision_at(punit, pdesttile, V_MAIN)),
-                 static_cast<short>(get_unit_vision_at(punit, pdesttile, V_INVIS)),
-                 static_cast<short>(get_unit_vision_at(punit, pdesttile, V_SUBSURFACE)));
+        V_RADIUS(get_unit_vision_at(punit, pdesttile, V_MAIN),
+                 get_unit_vision_at(punit, pdesttile, V_INVIS),
+                 get_unit_vision_at(punit, pdesttile, V_SUBSURFACE));
   struct vision *new_vision;
   bool success;
 
@@ -3548,7 +3548,7 @@ static struct unit_move_data *unit_move_data(struct unit *punit,
                   "Unit number %d (%p) has done an incomplete move.",
                   punit->id, punit);
   } else {
-    pdata = static_cast<struct unit_move_data*>(fc_malloc(sizeof(*pdata)));
+    pdata = new struct unit_move_data;
     pdata->ref_count = 1;
     pdata->punit = punit;
     punit->server.moving = pdata;
@@ -4559,9 +4559,9 @@ void unit_refresh_vision(struct unit *punit)
   struct vision *uvision = punit->server.vision;
   const struct tile *utile = unit_tile(punit);
   const v_radius_t radius_sq =
-      V_RADIUS(static_cast<short>(get_unit_vision_at(punit, utile, V_MAIN)),
-               static_cast<short>(get_unit_vision_at(punit, utile, V_INVIS)),
-               static_cast<short>(get_unit_vision_at(punit, utile, V_SUBSURFACE)));
+      V_RADIUS(get_unit_vision_at(punit, utile, V_MAIN),
+               get_unit_vision_at(punit, utile, V_INVIS),
+               get_unit_vision_at(punit, utile, V_SUBSURFACE));
 
   vision_change_sight(uvision, radius_sq);
   ASSERT_VISION(uvision);
@@ -4841,13 +4841,11 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
 struct unit_order *create_unit_orders(int length,
                                       const struct unit_order *orders)
 {
-  struct unit_order *unit_orders;
-
   if (!unit_order_list_is_sane(length, orders)) {
     return NULL;
   }
 
-  unit_orders = static_cast<unit_order*>(fc_malloc(length * sizeof(*(unit_orders))));
+  auto unit_orders = new unit_order[length];
   memcpy(unit_orders, orders, length * sizeof(*(unit_orders)));
 
   return unit_orders;

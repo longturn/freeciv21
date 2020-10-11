@@ -69,7 +69,7 @@ bool rgbcolors_are_equal(const struct rgbcolor *c1, const struct rgbcolor *c2);
 void rgbcolor_destroy(struct rgbcolor *prgbcolor);
 
 bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
-                   char *path, ...)
+                   const char *path, ...)
                    fc__attribute((__format__ (__printf__, 3, 4)));
 void rgbcolor_save(struct section_file *file,
                    const struct rgbcolor *prgbcolor, char *path, ...)

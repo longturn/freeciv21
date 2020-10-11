@@ -1026,7 +1026,7 @@ static struct ane_expl *expl_act_not_enabl(struct unit *punit,
   const struct player *act_player = unit_owner(punit);
   const struct unit_type *act_utype = unit_type_get(punit);
   struct player *tgt_player = NULL;
-  struct ane_expl *explnat = static_cast<ane_expl*>(fc_malloc(sizeof(struct ane_expl)));
+  auto explnat = new ane_expl;
   bool can_exist = can_unit_exist_at_tile(&(wld.map), punit, unit_tile(punit));
   bool on_native = is_native_tile(unit_type_get(punit), unit_tile(punit));
   int action_custom;
@@ -5125,11 +5125,11 @@ static bool do_unit_establish_trade(struct player *pplayer,
     } trade_route_list_iterate_end;
 
     /* Actually create the new trade route */
-    proute_from = static_cast<trade_route*>(fc_malloc(sizeof(struct trade_route)));
+    proute_from = new trade_route;
     proute_from->partner = pcity_dest->id;
     proute_from->goods = goods;
 
-    proute_to = static_cast<trade_route*>(fc_malloc(sizeof(struct trade_route)));
+    proute_to = new trade_route;
     proute_to->partner = pcity_homecity->id;
     proute_to->goods = goods;
 
@@ -5707,7 +5707,7 @@ void handle_worker_task(struct player *pplayer,
       return;
     }
 
-    ptask = static_cast<worker_task*>(fc_malloc(sizeof(struct worker_task)));
+    ptask = new worker_task;
     worker_task_init(ptask);
     worker_task_list_append(pcity->task_reqs, ptask);
   } else {

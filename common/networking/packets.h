@@ -148,15 +148,15 @@ void packets_deinit(void);
   struct raw_data_out dout; \
   \
   dio_output_init(&dout, buffer, sizeof(buffer)); \
-  dio_put_type_raw(&dout, (data_type) pc->packet_header.length, 0); \
-  dio_put_type_raw(&dout, (data_type) pc->packet_header.type, packet_type);
+  dio_put_type_raw(&dout, (enum data_type) pc->packet_header.length, 0); \
+  dio_put_type_raw(&dout, (enum data_type) pc->packet_header.type, packet_type);
 
 #define SEND_PACKET_END(packet_type) \
   { \
     size_t size = dio_output_used(&dout); \
     \
     dio_output_rewind(&dout); \
-    dio_put_type_raw(&dout, (data_type) pc->packet_header.length, size); \
+    dio_put_type_raw(&dout, (enum data_type) pc->packet_header.length, size); \
     fc_assert(!dout.too_short); \
     return send_packet_data(pc, buffer, size, packet_type); \
   }
@@ -166,15 +166,15 @@ void packets_deinit(void);
   struct packet_type packet_buf, *result = &packet_buf; \
   \
   dio_input_init(&din, pc->buffer->data, \
-                 data_type_size(pc->packet_header.length)); \
+                 data_type_size((enum data_type) pc->packet_header.length)); \
   { \
     int size; \
   \
-    dio_get_type_raw(&din, pc->packet_header.length, &size); \
+    dio_get_type_raw(&din, (enum data_type) pc->packet_header.length, &size); \
     dio_input_init(&din, pc->buffer->data, MIN(size, pc->buffer->ndata)); \
   } \
-  dio_input_skip(&din, (data_type_size(pc->packet_header.length) \
-                        + data_type_size(pc->packet_header.type)));
+  dio_input_skip(&din, (data_type_size((enum data_type) pc->packet_header.length) \
+                        + data_type_size((enum data_type) pc->packet_header.type)));
 
 #define RECEIVE_PACKET_END(result) \
   if (!packet_check(&din, pc)) { \

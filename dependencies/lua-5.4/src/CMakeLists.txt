@@ -43,9 +43,15 @@ if(NOT MSVC)
   target_link_libraries(lua PUBLIC m)
 endif()
 
-if(UNIX)
+if (UNIX AND NOT EMSCRIPTEN)
   # POSIX is not UNIX but close
+  # Emscripten claims to be UNIX but doesn't have _longjmp, so rely only on
+  # standard C features. This means that a few Lua functions will be
+  # unsupported.
   target_compile_definitions(lua PUBLIC LUA_USE_POSIX)
+elseif (EMSCRIPTEN)
+  # Without optimizations, Lua easily overflows the V8 stack
+  target_compile_options(lua PRIVATE -O1)
 endif()
 if(FREECIV_HAVE_LIBREADLINE)
   target_compile_definitions(lua PUBLIC LUA_USE_READLINE)

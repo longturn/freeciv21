@@ -433,7 +433,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     /* Previously started thread */
     fc_thread_wait(meta_srv_thread);
   } else {
-    meta_srv_thread = static_cast<pthread_t*>(fc_malloc(sizeof(meta_srv_thread)));
+    meta_srv_thread = new pthread_t;
   }
 
   /* Send POST in new thread */

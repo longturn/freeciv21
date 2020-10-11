@@ -4321,6 +4321,17 @@ bool sv_universal_fulfills_requirements(bool check_necessary,
 }
 
 /**********************************************************************//**
+  Version of universal_fulfills_requirements that takes the universal by
+  value.
+**************************************************************************/
+bool sv_universal_fulfills_requirements(bool check_necessary,
+                                        const struct requirement_vector *reqs,
+                                        const struct universal source)
+{
+  return universal_fulfills_requirements(check_necessary, reqs, &source);
+}
+
+/**********************************************************************//**
   Returns TRUE iff the specified universal is relevant to fulfilling the
   specified requirement.
 **************************************************************************/

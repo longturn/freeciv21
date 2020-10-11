@@ -77,7 +77,7 @@ static struct {
   char *tag_name;
   enum event_section_n esn;
   const char *descr_orig;
-  char *full_descr;
+  const char *full_descr;
   enum event_type event;
 } events[] = {
   /* TRANS: this and following strings are names for events which cause the
@@ -339,9 +339,10 @@ void events_init(void)
       const char *event_format = Q_(event_sections[events[i].esn]);
       int l = 1 + strlen(event_format) + strlen(_(events[i].descr_orig));
 
-      events[i].full_descr = new char[l];
-      fc_snprintf(events[i].full_descr, l, event_format,
-                  _(events[i].descr_orig));
+      // Need a temporary because full_descr is a const char *
+      char *tmp = new char[l];
+      fc_snprintf(tmp, l, event_format, _(events[i].descr_orig));
+      events[i].full_descr = tmp;
     } else {
       /* No section part */
       events[i].full_descr = _(events[i].descr_orig);
