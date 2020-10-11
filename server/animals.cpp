@@ -129,7 +129,7 @@ void create_animals(void)
 
   set_as_ai(plr);
   plr->ai_common.barbarian_type = ANIMAL_BARBARIAN;
-  set_ai_level_directer(plr, game.info.skill_level);
+  set_ai_level_directer(plr, ai_level(game.info.skill_level));
 
   presearch = research_get(plr);
   init_tech(presearch, TRUE);
