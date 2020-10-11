@@ -818,7 +818,7 @@ enum server_events server_sniff_all_input(void)
                   (long int) didget, (long int) len);
       }
 #else  /* HAVE_GETLINE */
-      buffer = malloc(BUF_SIZE + 1);
+      buffer = new char[BUF_SIZE + 1];
 
       didget = read(0, buffer, BUF_SIZE);
       if (didget > 0) {
@@ -1131,7 +1131,8 @@ int server_open_socket(void)
   on = 1;
 
   /* Loop to create sockets, bind, listen. */
-  listen_socks = fc_calloc(name_count, sizeof(listen_socks[0]));
+  listen_socks = static_cast<int *>(
+      fc_calloc(name_count, sizeof(listen_socks[0])));
   listen_count = 0;
 
   fc_sockaddr_list_iterate(list, paddr) {
