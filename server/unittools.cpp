@@ -2200,6 +2200,11 @@ struct unit *unit_change_owner(struct unit *punit, struct player *pplayer,
   gained_unit->paradropped = punit->paradropped;
   gained_unit->server.birth_turn = punit->server.birth_turn;
 
+  if (game.server.unitwaittime_extended) {
+    // Counts as an action for unitwaittime
+    unit_did_action(gained_unit);
+  }
+
   send_unit_info(nullptr, gained_unit);
 
   // update unit upkeep in the homecity of the victim

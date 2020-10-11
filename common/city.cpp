@@ -3353,6 +3353,9 @@ struct city *create_city_virtual(struct player *pplayer, struct tile *ptile,
   if (is_server()) {
     pcity->server.mgr_score_calc_turn = -1; // -1 = never
 
+    pcity->server.prod_change_timestamp = time(NULL);
+    pcity->server.prod_change_turn = game.info.turn;
+
     CALL_FUNC_EACH_AI(city_alloc, pcity);
   } else {
     pcity->client.info_units_supported =
