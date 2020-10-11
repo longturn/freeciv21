@@ -1144,9 +1144,9 @@ void show_map_to_all(void)
 **************************************************************************/
 void player_map_init(struct player *pplayer)
 {
-  pplayer->server.private_map
-    = fc_realloc(pplayer->server.private_map,
-                 MAP_INDEX_SIZE * sizeof(*pplayer->server.private_map));
+  pplayer->server.private_map = static_cast<player_tile *>(
+      fc_realloc(pplayer->server.private_map,
+                 MAP_INDEX_SIZE * sizeof(*pplayer->server.private_map)));
 
   whole_map_iterate(&(wld.map), ptile) {
     player_tile_init(ptile, pplayer);
@@ -2251,7 +2251,7 @@ void map_claim_base(struct tile *ptile, struct extra_type *pextra,
 
   units_num = unit_list_size(ptile->units);
   could_see_unit = (units_num > 0
-                    ? fc_malloc(sizeof(*could_see_unit) * units_num)
+                    ? new bv_player[units_num]
                     : NULL);
 
   i = 0;
