@@ -25,10 +25,6 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.cpp
 )
 
-set_property(
-  SOURCE ${CMAKE_CURRENT_BINARY_DIR}/packets_gen.cpp
-  APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
 target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(common_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/aicore)

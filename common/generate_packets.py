@@ -595,7 +595,7 @@ field_addr.name = \"%(name)s\";
   if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &readin)) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s);
   }
-  real_packet->%(name)s = readin;
+  real_packet->%(name)s = static_cast<typeof(real_packet->%(name)s)>(readin);
 }'''%self.__dict__
 
         if self.is_struct:
@@ -1005,7 +1005,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
         if self.want_pre_send:
             pre1='''
   {
-    struct %(packet_name)s *tmp = fc_malloc(sizeof(*tmp));
+    auto tmp = new %(packet_name)s;
 
     *tmp = *packet;
     pre_send_%(packet_name)s(pc, tmp);
@@ -1092,7 +1092,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
   BV_CLR_ALL(fields);
 
   if (!genhash_lookup(*hash, real_packet, (void **) &old)) {
-    old = fc_malloc(sizeof(*old));
+    old = new %(packet_name)s;
     *old = *real_packet;
     genhash_insert(*hash, old, old);
     memset(old, 0, sizeof(*old));
@@ -1252,7 +1252,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
         extro='''
   if (NULL == old) {
-    old = fc_malloc(sizeof(*old));
+    old = new %(packet_name)s;
     *old = *real_packet;
     genhash_insert(*hash, old, old);
   } else {

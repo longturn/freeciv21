@@ -181,7 +181,7 @@ void packets_deinit(void);
     return NULL; \
   } \
   remove_packet_from_buffer(pc->buffer); \
-  result = fc_malloc(sizeof(*result)); \
+  result = new typeof(*result); \
   *result = packet_buf; \
   return result;
 
