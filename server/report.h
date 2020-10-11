@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #ifndef FC__REPORT_H
 #define FC__REPORT_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,8 +25,7 @@ struct conn_list;
 #define REPORT_TITLESIZE 1024
 #define REPORT_BODYSIZE (128 * MAX_NUM_PLAYER_SLOTS)
 
-struct history_report
-{
+struct history_report {
   int turn;
   char title[REPORT_TITLESIZE];
   char body[REPORT_BODYSIZE];
@@ -54,4 +53,4 @@ struct history_report *history_report_get(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__REPORT_H */
+#endif /* FC__REPORT_H */

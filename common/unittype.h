@@ -26,8 +26,8 @@ extern "C" {
 #include "name_translation.h"
 #include "requirements.h"
 
-struct astring;         /* Actually defined in "utility/astring.h". */
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
+struct astring; /* Actually defined in "utility/astring.h". */
+struct strvec;  /* Actually defined in "utility/string_vector.h". */
 
 struct ai_type;
 
@@ -103,8 +103,7 @@ struct ai_type;
 #include "specenum_gen.h"
 
 #define UCF_LAST_USER_FLAG UCF_USER_FLAG_12
-#define MAX_NUM_USER_UCLASS_FLAGS (UCF_LAST_USER_FLAG                     \
-                                   - UCF_USER_FLAG_1 + 1)
+#define MAX_NUM_USER_UCLASS_FLAGS (UCF_LAST_USER_FLAG - UCF_USER_FLAG_1 + 1)
 
 /* Used in savegame processing and clients. */
 #define SPECENUM_NAME unit_move_type
@@ -131,8 +130,9 @@ struct unit_class {
   struct name_translation name;
   bool ruledit_disabled;
   enum unit_move_type move_type;
-  int min_speed;           /* Minimum speed after damage and effects */
-  int hp_loss_pct;         /* Percentage of hitpoints lost each turn not in city or airbase */
+  int min_speed;   /* Minimum speed after damage and effects */
+  int hp_loss_pct; /* Percentage of hitpoints lost each turn not in city or
+                      airbase */
   int non_native_def_pct;
   enum hut_behavior hut_behavior;
   bv_unit_class_flags flags;
@@ -249,7 +249,8 @@ struct unit_class {
 /* Feel free to take this. */
 #define SPECENUM_VALUE28 UTYF_RESERVED_1
 #define SPECENUM_VALUE28NAME N_("Reserved 1")
-/* Unit can't be built in scenarios where founding new cities is prevented. */
+/* Unit can't be built in scenarios where founding new cities is prevented.
+ */
 #define SPECENUM_VALUE29 UTYF_NEWCITY_GAMES_ONLY
 #define SPECENUM_VALUE29NAME N_("?unitflag:NewCityGamesOnly")
 /* Can escape when killstack occours */
@@ -311,7 +312,6 @@ struct unit_class {
 #define SPECENUM_NAMEOVERRIDE
 #define SPECENUM_BITVECTOR bv_unit_type_flags
 #include "specenum_gen.h"
-
 
 /* Unit "roles": these are similar to unit flags but differ in that
    they don't represent intrinsic properties or abilities of units,
@@ -437,12 +437,12 @@ BV_DEFINE(bv_unit_type_roles, L_MAX);
 #include "specenum_gen.h"
 
 struct combat_bonus {
-  enum unit_type_flag_id  flag;
-  enum combat_bonus_type  type;
-  int                     value;
+  enum unit_type_flag_id flag;
+  enum combat_bonus_type type;
+  int value;
 
   /* Not listed in the help text. */
-  bool                    quiet;
+  bool quiet;
 };
 
 /* get 'struct combat_bonus_list' and related functions: */
@@ -450,8 +450,8 @@ struct combat_bonus {
 #define SPECLIST_TYPE struct combat_bonus
 #include "speclist.h"
 
-#define combat_bonus_list_iterate(bonuslist, pbonus) \
-    TYPED_LIST_ITERATE(struct combat_bonus, bonuslist, pbonus)
+#define combat_bonus_list_iterate(bonuslist, pbonus)                        \
+  TYPED_LIST_ITERATE(struct combat_bonus, bonuslist, pbonus)
 #define combat_bonus_list_iterate_end LIST_ITERATE_END
 
 BV_DEFINE(bv_unit_types, U_LAST);
@@ -473,21 +473,23 @@ struct veteran_system {
 struct unit_type {
   Unit_type_id item_number;
   struct name_translation name;
-  bool ruledit_disabled;              /* Does not really exist - hole in improvments array */
+  bool ruledit_disabled; /* Does not really exist - hole in improvments array
+                          */
   char graphic_str[MAX_LEN_NAME];
   char graphic_alt[MAX_LEN_NAME];
   char sound_move[MAX_LEN_NAME];
   char sound_move_alt[MAX_LEN_NAME];
   char sound_fight[MAX_LEN_NAME];
   char sound_fight_alt[MAX_LEN_NAME];
-  int build_cost;			/* Use wrappers to access this. */
-  int pop_cost;  /* number of workers the unit contains (e.g., settlers, engineers)*/
+  int build_cost; /* Use wrappers to access this. */
+  int pop_cost;   /* number of workers the unit contains (e.g., settlers,
+                     engineers)*/
   int attack_strength;
   int defense_strength;
   int move_rate;
   int unknown_move_cost; /* See utype_unknown_move_cost(). */
 
-  struct advance *require_advance;	/* may be NULL */
+  struct advance *require_advance; /* may be NULL */
   struct requirement_vector build_reqs;
 
   int vision_radius_sq;
@@ -505,7 +507,7 @@ struct unit_type {
   bv_unit_type_flags flags;
   bv_unit_type_roles roles;
 
-  int happy_cost;  /* unhappy people in home city */
+  int happy_cost; /* unhappy people in home city */
   int upkeep[O_LAST];
 
   /* Only valid for ACTION_PARADROP */
@@ -581,12 +583,14 @@ const char *utype_values_string(const struct unit_type *punittype);
 const char *utype_values_translation(const struct unit_type *punittype);
 
 /* General unit type flag and role routines */
-bool unit_has_type_flag(const struct unit *punit, enum unit_type_flag_id flag);
+bool unit_has_type_flag(const struct unit *punit,
+                        enum unit_type_flag_id flag);
 
 /**************************************************************************
   Return whether the given unit type has the flag.
 **************************************************************************/
-static inline bool utype_has_flag(const struct unit_type *punittype, int flag)
+static inline bool utype_has_flag(const struct unit_type *punittype,
+                                  int flag)
 {
   return BV_ISSET(punittype->flags, flag);
 }
@@ -595,8 +599,8 @@ bool unit_has_type_role(const struct unit *punit, enum unit_role_id role);
 bool utype_has_role(const struct unit_type *punittype, int role);
 
 void user_unit_type_flags_init(void);
-void set_user_unit_type_flag_name(enum unit_type_flag_id id, const char *name,
-                                  const char *helptxt);
+void set_user_unit_type_flag_name(enum unit_type_flag_id id,
+                                  const char *name, const char *helptxt);
 const char *unit_type_flag_helptxt(enum unit_type_flag_id id);
 
 bool utype_can_create_extra(const struct unit_type *putype,
@@ -633,8 +637,7 @@ bool utype_can_do_act_if_tgt_citytile(const struct unit_type *punit_type,
                                       const bool is_there);
 
 bool can_utype_do_act_if_tgt_diplrel(const struct unit_type *punit_type,
-                                     const action_id act_id,
-                                     const int prop,
+                                     const action_id act_id, const int prop,
                                      const bool is_there);
 
 bool utype_may_act_move_frags(const struct unit_type *punit_type,
@@ -676,14 +679,16 @@ typedef bool (*role_unit_callback)(struct unit_type *ptype, void *data);
 void role_unit_precalcs(void);
 void role_unit_precalcs_free(void);
 int num_role_units(int role);
-struct unit_type *role_units_iterate(int role, role_unit_callback cb, void *data);
-struct unit_type *role_units_iterate_backwards(int role, role_unit_callback cb, void *data);
+struct unit_type *role_units_iterate(int role, role_unit_callback cb,
+                                     void *data);
+struct unit_type *
+role_units_iterate_backwards(int role, role_unit_callback cb, void *data);
 struct unit_type *get_role_unit(int role, int role_index);
 struct unit_type *best_role_unit(const struct city *pcity, int role);
 struct unit_type *best_role_unit_for_player(const struct player *pplayer,
-					    int role);
+                                            int role);
 struct unit_type *first_role_unit_for_player(const struct player *pplayer,
-					     int role);
+                                             int role);
 bool role_units_translations(struct astring *astr, int flag, bool alts);
 
 /* General unit class routines */
@@ -719,12 +724,12 @@ static inline bool uclass_has_flag(const struct unit_class *punitclass,
 
 void user_unit_class_flags_init(void);
 void set_user_unit_class_flag_name(enum unit_class_flag_id id,
-                                   const char *name,
-                                   const char *helptxt);
+                                   const char *name, const char *helptxt);
 const char *unit_class_flag_helptxt(enum unit_class_flag_id id);
 
 /* Ancillary routines */
-int unit_build_shield_cost(const struct city *pcity, const struct unit *punit);
+int unit_build_shield_cost(const struct city *pcity,
+                           const struct unit *punit);
 int utype_build_shield_cost(const struct city *pcity,
                             const struct unit_type *punittype);
 int utype_build_shield_cost_base(const struct unit_type *punittype);
@@ -735,10 +740,10 @@ int utype_buy_gold_cost(const struct city *pcity,
                         int shields_in_stock);
 
 const struct veteran_system *
-  utype_veteran_system(const struct unit_type *punittype);
+utype_veteran_system(const struct unit_type *punittype);
 int utype_veteran_levels(const struct unit_type *punittype);
 const struct veteran_level *
-  utype_veteran_level(const struct unit_type *punittype, int level);
+utype_veteran_level(const struct unit_type *punittype, int level);
 const char *utype_veteran_name_translation(const struct unit_type *punittype,
                                            int level);
 bool utype_veteran_has_power_bonus(const struct unit_type *punittype);
@@ -759,23 +764,25 @@ void set_unit_move_type(struct unit_class *puclass);
 /* player related unit functions */
 int utype_upkeep_cost(const struct unit_type *ut, struct player *pplayer,
                       Output_type_id otype);
-int utype_happy_cost(const struct unit_type *ut, const struct player *pplayer);
+int utype_happy_cost(const struct unit_type *ut,
+                     const struct player *pplayer);
 
-const struct unit_type *can_upgrade_unittype(const struct player *pplayer,
-                                             const struct unit_type *punittype);
+const struct unit_type *
+can_upgrade_unittype(const struct player *pplayer,
+                     const struct unit_type *punittype);
 int unit_upgrade_price(const struct player *pplayer,
-		       const struct unit_type *from,
-		       const struct unit_type *to);
+                       const struct unit_type *from,
+                       const struct unit_type *to);
 
 bool utype_player_already_has_this_unique(const struct player *pplayer,
                                           const struct unit_type *putype);
 
 bool can_player_build_unit_direct(const struct player *p,
-				  const struct unit_type *punittype);
+                                  const struct unit_type *punittype);
 bool can_player_build_unit_later(const struct player *p,
-				 const struct unit_type *punittype);
+                                 const struct unit_type *punittype);
 bool can_player_build_unit_now(const struct player *p,
-			       const struct unit_type *punittype);
+                               const struct unit_type *punittype);
 
 #define utype_fuel(ptype) (ptype)->fuel
 
@@ -790,25 +797,26 @@ void unit_class_flags_free(void);
 struct unit_type *unit_type_array_first(void);
 const struct unit_type *unit_type_array_last(void);
 
-#define unit_type_iterate(_p)						\
-{									\
-  struct unit_type *_p = unit_type_array_first();			\
-  if (NULL != _p) {							\
-    for (; _p <= unit_type_array_last(); _p++) {
+#define unit_type_iterate(_p)                                               \
+  {                                                                         \
+    struct unit_type *_p = unit_type_array_first();                         \
+    if (NULL != _p) {                                                       \
+      for (; _p <= unit_type_array_last(); _p++) {
 
-#define unit_type_iterate_end						\
-    }									\
-  }									\
-}
+#define unit_type_iterate_end                                               \
+  }                                                                         \
+  }                                                                         \
+  }
 
-#define unit_type_re_active_iterate(_p)                                 \
-  unit_type_iterate(_p) {                                               \
+#define unit_type_re_active_iterate(_p)                                     \
+  unit_type_iterate(_p)                                                     \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define unit_type_re_active_iterate_end                                 \
-    }                                                                   \
-  } unit_type_iterate_end;
-
+#define unit_type_re_active_iterate_end                                     \
+  }                                                                         \
+  }                                                                         \
+  unit_type_iterate_end;
 
 void *utype_ai_data(const struct unit_type *ptype, const struct ai_type *ai);
 void utype_set_ai_data(struct unit_type *ptype, const struct ai_type *ai,
@@ -827,30 +835,32 @@ void set_unit_type_caches(struct unit_type *ptype);
 struct unit_class *unit_class_array_first(void);
 const struct unit_class *unit_class_array_last(void);
 
-#define unit_class_iterate(_p)						\
-{									\
-  struct unit_class *_p = unit_class_array_first();			\
-  if (NULL != _p) {							\
-    for (; _p <= unit_class_array_last(); _p++) {
+#define unit_class_iterate(_p)                                              \
+  {                                                                         \
+    struct unit_class *_p = unit_class_array_first();                       \
+    if (NULL != _p) {                                                       \
+      for (; _p <= unit_class_array_last(); _p++) {
 
-#define unit_class_iterate_end						\
-    }									\
-  }									\
-}
+#define unit_class_iterate_end                                              \
+  }                                                                         \
+  }                                                                         \
+  }
 
-#define unit_class_re_active_iterate(_p)                                 \
-  unit_class_iterate(_p) {                                               \
+#define unit_class_re_active_iterate(_p)                                    \
+  unit_class_iterate(_p)                                                    \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define unit_class_re_active_iterate_end                                 \
-    }                                                                    \
-  } unit_class_iterate_end;
+#define unit_class_re_active_iterate_end                                    \
+  }                                                                         \
+  }                                                                         \
+  unit_class_iterate_end;
 
 #define SPECLIST_TAG unit_class
 #define SPECLIST_TYPE struct unit_class
 #include "speclist.h"
 
-#define unit_class_list_iterate(uclass_list, pclass) \
+#define unit_class_list_iterate(uclass_list, pclass)                        \
   TYPED_LIST_ITERATE(struct unit_class, uclass_list, pclass)
 #define unit_class_list_iterate_end LIST_ITERATE_END
 
@@ -858,7 +868,7 @@ const struct unit_class *unit_class_array_last(void);
 #define SPECLIST_TYPE struct unit_type
 #include "speclist.h"
 
-#define unit_type_list_iterate(utype_list, ptype) \
+#define unit_type_list_iterate(utype_list, ptype)                           \
   TYPED_LIST_ITERATE(struct unit_type, utype_list, ptype)
 #define unit_type_list_iterate_end LIST_ITERATE_END
 
@@ -866,4 +876,4 @@ const struct unit_class *unit_class_array_last(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__UNITTYPE_H */
+#endif /* FC__UNITTYPE_H */

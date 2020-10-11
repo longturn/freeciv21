@@ -15,14 +15,13 @@
 #include <fc_config.h>
 #endif
 
-
 // Qt
 #include <QDialog>
 #include <QDialogButtonBox>
 #include <QGridLayout>
 #include <QLabel>
-#include <QMouseEvent>
 #include <QLineEdit>
+#include <QMouseEvent>
 #include <QScrollArea>
 #include <QSettings>
 #include <QVBoxLayout>
@@ -39,9 +38,11 @@ extern "C" void real_menus_init();
 
 static QHash<int, const char *> key_map;
 static QString button_name(Qt::MouseButton bt);
-static QMap<shortcut_id, fc_shortcut*>* hash_copy(QMap<shortcut_id, fc_shortcut*> *h);
+static QMap<shortcut_id, fc_shortcut *> *
+hash_copy(QMap<shortcut_id, fc_shortcut *> *h);
 fc_shortcuts *fc_shortcuts::m_instance = 0;
-QMap<shortcut_id, fc_shortcut*> fc_shortcuts::hash = QMap<shortcut_id, fc_shortcut*>();
+QMap<shortcut_id, fc_shortcut *> fc_shortcuts::hash =
+    QMap<shortcut_id, fc_shortcut *>();
 
 enum {
   RESPONSE_CANCEL,
@@ -53,128 +54,119 @@ enum {
 
 static int num_shortcuts = 57;
 fc_shortcut default_shortcuts[] = {
-  {SC_SCROLL_MAP, 0, Qt::RightButton, Qt::NoModifier, "Scroll map" },
-  {SC_CENTER_VIEW, Qt::Key_C, Qt::AllButtons, Qt::NoModifier,
-    _("Center View") },
-  {SC_FULLSCREEN, Qt::Key_Return, Qt::AllButtons, Qt::AltModifier,
-    _("Fullscreen") },
-  {SC_MINIMAP, Qt::Key_M, Qt::AllButtons, Qt::ControlModifier,
-    _("Show minimap") },
-  {SC_CITY_OUTPUT, Qt::Key_W, Qt::AllButtons, Qt::ControlModifier,
-    _("City Output") },
-  {SC_MAP_GRID, Qt::Key_G, Qt::AllButtons, Qt::ControlModifier,
-    _("Map Grid") },
-  {SC_NAT_BORDERS, Qt::Key_B, Qt::AllButtons, Qt::ControlModifier,
-    _("National Borders") },
-  {SC_QUICK_BUY, 0, Qt::LeftButton, Qt::ControlModifier | Qt::ShiftModifier,
-    _("Quick buy from map") },
-  {SC_QUICK_SELECT, 0, Qt::LeftButton, Qt::ControlModifier,
-    _("Quick production select from map") },
-  {SC_SELECT_BUTTON, 0, Qt::LeftButton, Qt::NoModifier,
-    _("Select button") },
-  {SC_ADJUST_WORKERS, 0, Qt::LeftButton,
-    Qt::MetaModifier | Qt::ControlModifier, _("Adjust workers") },
-  {SC_APPEND_FOCUS, 0, Qt::LeftButton, Qt::MetaModifier,
-    _("Append focus") },
-  {SC_POPUP_INFO, 0, Qt::MiddleButton, Qt::NoModifier,
-    _("Popup tile info") },
-  {SC_WAKEUP_SENTRIES, 0, Qt::MiddleButton, Qt::ControlModifier,
-    _("Wakeup sentries") },
-  {SC_MAKE_LINK, 0, Qt::RightButton, Qt::ControlModifier | Qt::AltModifier,
-    _("Show link to tile") },
-  {SC_PASTE_PROD, 0, Qt::RightButton,
-    Qt::ShiftModifier | Qt::ControlModifier, _("Paste production") },
-  {SC_COPY_PROD, 0, Qt::RightButton,
-    Qt::ShiftModifier, _("Copy production") },
-  {SC_HIDE_WORKERS, 0, Qt::RightButton,
-    Qt::ShiftModifier | Qt::AltModifier, _("Show/hide workers") },
-  {SC_SHOW_UNITS, Qt::Key_Space, Qt::AllButtons, Qt::ControlModifier,
-    _("Units selection (for tile under mouse position)") },
-  {SC_TRADE_ROUTES, Qt::Key_D, Qt::AllButtons, Qt::ControlModifier,
-    _("City Traderoutes") },
-  {SC_CITY_PROD, Qt::Key_P, Qt::AllButtons, Qt::ControlModifier,
-    _("City Production Levels") },
-  {SC_CITY_NAMES, Qt::Key_N, Qt::AllButtons, Qt::ControlModifier,
-    _("City Names") },
-  {SC_DONE_MOVING, Qt::Key_Space, Qt::AllButtons, Qt::NoModifier,
-    _("Done Moving") },
-  {SC_GOTOAIRLIFT, Qt::Key_T, Qt::AllButtons, Qt::NoModifier,
-    _("Go to/Airlift to City...") },
-  {SC_AUTOEXPLORE, Qt::Key_X, Qt::AllButtons, Qt::NoModifier,
-    _("Auto Explore") },
-  {SC_PATROL, Qt::Key_Q, Qt::AllButtons, Qt::NoModifier,
-    _("Patrol") },
-  {SC_UNSENTRY_TILE, Qt::Key_D, Qt::AllButtons,
-    Qt::ShiftModifier | Qt::ControlModifier, _("Unsentry All On Tile") },
-  {SC_DO, Qt::Key_D, Qt::AllButtons, Qt::NoModifier, _("Do...") },
-  {SC_UPGRADE_UNIT, Qt::Key_U, Qt::AllButtons, Qt::ControlModifier,
-    _("Upgrade") },
-  {SC_SETHOME, Qt::Key_H, Qt::AllButtons, Qt::NoModifier,
-    _("Set Home City") },
-  {SC_BUILDMINE, Qt::Key_M, Qt::AllButtons, Qt::NoModifier,
-    _("Build Mine") },
-  {SC_PLANT, Qt::Key_M, Qt::AllButtons, Qt::ShiftModifier,
-    _("Plant") },
-  {SC_BUILDIRRIGATION, Qt::Key_I, Qt::AllButtons, Qt::NoModifier,
-    _("Build Irrigation") },
-  {SC_CULTIVATE, Qt::Key_I, Qt::AllButtons, Qt::ShiftModifier,
-    _("Cultivate") },
-  {SC_BUILDROAD, Qt::Key_R, Qt::AllButtons, Qt::NoModifier,
-    _("Build Road") },
-  {SC_BUILDCITY, Qt::Key_B, Qt::AllButtons, Qt::NoModifier,
-    _("Build City") },
-  {SC_SENTRY, Qt::Key_S, Qt::AllButtons, Qt::NoModifier,
-    _("Sentry") },
-  {SC_FORTIFY, Qt::Key_F, Qt::AllButtons, Qt::NoModifier,
-    _("Fortify") },
-  {SC_GOTO, Qt::Key_G, Qt::AllButtons, Qt::NoModifier,
-    _("Go to Tile") },
-  {SC_WAIT, Qt::Key_W, Qt::AllButtons, Qt::NoModifier,
-    _("Wait") },
-  {SC_TRANSFORM, Qt::Key_O, Qt::AllButtons, Qt::NoModifier,
-    _("Transform") },
-  {SC_NUKE, Qt::Key_N, Qt::AllButtons, Qt::ShiftModifier,
-    _("Explode Nuclear") },
-  {SC_LOAD, Qt::Key_L, Qt::AllButtons, Qt::NoModifier,
-    _("Load") },
-  {SC_UNLOAD, Qt::Key_U, Qt::AllButtons, Qt::NoModifier,
-    _("Unload") },
-  {SC_BUY_MAP, 0, Qt::BackButton, Qt::NoModifier,
-    _("Quick buy current production from map") },
-  {SC_IFACE_LOCK, Qt::Key_L, Qt::AllButtons, Qt::ControlModifier
-    | Qt::ShiftModifier, _("Lock/unlock interface") },
-  {SC_AUTOMATE, Qt::Key_A, Qt::AllButtons, Qt::NoModifier,
-    _("Auto worker") },
-  {SC_PARADROP, Qt::Key_P, Qt::AllButtons, Qt::NoModifier,
-    _("Paradrop/clean pollution") },
-  {SC_POPUP_COMB_INF, Qt::Key_F1, Qt::AllButtons, Qt::ControlModifier,
-    _("Popup combat information") },
-  {SC_RELOAD_THEME, Qt::Key_F5, Qt::AllButtons, Qt::ControlModifier
-     | Qt::ShiftModifier, _("Reload theme") },
-  {SC_RELOAD_TILESET, Qt::Key_F6, Qt::AllButtons, Qt::ControlModifier
-    | Qt::ShiftModifier, _("Reload tileset") },
-  {SC_SHOW_FULLBAR, Qt::Key_F, Qt::AllButtons, Qt::ControlModifier,
-    _("Toggle city full bar visibility") },
-  {SC_ZOOM_IN, Qt::Key_Plus, Qt::AllButtons, Qt::NoModifier,
-    _("Reload zoomed in tileset") },
-  {SC_ZOOM_OUT, Qt::Key_Minus, Qt::AllButtons, Qt::NoModifier,
-    _("Reload zoomed out tileset") },
-  {SC_LOAD_LUA, Qt::Key_J, Qt::AllButtons, Qt::ControlModifier
-    | Qt::ShiftModifier, _("Load Lua script") },
-  {SC_RELOAD_LUA, Qt::Key_K, Qt::AllButtons, Qt::ControlModifier
-    | Qt::ShiftModifier, _("Load last loaded Lua script") },
-  {SC_ZOOM_RESET, Qt::Key_Backspace, Qt::AllButtons, Qt::ControlModifier,
-    _("Reload tileset with default scale") },
-  {SC_GOBUILDCITY, Qt::Key_B, Qt::AllButtons, Qt::ShiftModifier,
-    _("Go And Build City") },
-  {SC_GOJOINCITY, Qt::Key_J, Qt::AllButtons, Qt::ShiftModifier,
-    _("Go And Join City") }
-};
+    {SC_SCROLL_MAP, 0, Qt::RightButton, Qt::NoModifier, "Scroll map"},
+    {SC_CENTER_VIEW, Qt::Key_C, Qt::AllButtons, Qt::NoModifier,
+     _("Center View")},
+    {SC_FULLSCREEN, Qt::Key_Return, Qt::AllButtons, Qt::AltModifier,
+     _("Fullscreen")},
+    {SC_MINIMAP, Qt::Key_M, Qt::AllButtons, Qt::ControlModifier,
+     _("Show minimap")},
+    {SC_CITY_OUTPUT, Qt::Key_W, Qt::AllButtons, Qt::ControlModifier,
+     _("City Output")},
+    {SC_MAP_GRID, Qt::Key_G, Qt::AllButtons, Qt::ControlModifier,
+     _("Map Grid")},
+    {SC_NAT_BORDERS, Qt::Key_B, Qt::AllButtons, Qt::ControlModifier,
+     _("National Borders")},
+    {SC_QUICK_BUY, 0, Qt::LeftButton,
+     Qt::ControlModifier | Qt::ShiftModifier, _("Quick buy from map")},
+    {SC_QUICK_SELECT, 0, Qt::LeftButton, Qt::ControlModifier,
+     _("Quick production select from map")},
+    {SC_SELECT_BUTTON, 0, Qt::LeftButton, Qt::NoModifier,
+     _("Select button")},
+    {SC_ADJUST_WORKERS, 0, Qt::LeftButton,
+     Qt::MetaModifier | Qt::ControlModifier, _("Adjust workers")},
+    {SC_APPEND_FOCUS, 0, Qt::LeftButton, Qt::MetaModifier,
+     _("Append focus")},
+    {SC_POPUP_INFO, 0, Qt::MiddleButton, Qt::NoModifier,
+     _("Popup tile info")},
+    {SC_WAKEUP_SENTRIES, 0, Qt::MiddleButton, Qt::ControlModifier,
+     _("Wakeup sentries")},
+    {SC_MAKE_LINK, 0, Qt::RightButton, Qt::ControlModifier | Qt::AltModifier,
+     _("Show link to tile")},
+    {SC_PASTE_PROD, 0, Qt::RightButton,
+     Qt::ShiftModifier | Qt::ControlModifier, _("Paste production")},
+    {SC_COPY_PROD, 0, Qt::RightButton, Qt::ShiftModifier,
+     _("Copy production")},
+    {SC_HIDE_WORKERS, 0, Qt::RightButton,
+     Qt::ShiftModifier | Qt::AltModifier, _("Show/hide workers")},
+    {SC_SHOW_UNITS, Qt::Key_Space, Qt::AllButtons, Qt::ControlModifier,
+     _("Units selection (for tile under mouse position)")},
+    {SC_TRADE_ROUTES, Qt::Key_D, Qt::AllButtons, Qt::ControlModifier,
+     _("City Traderoutes")},
+    {SC_CITY_PROD, Qt::Key_P, Qt::AllButtons, Qt::ControlModifier,
+     _("City Production Levels")},
+    {SC_CITY_NAMES, Qt::Key_N, Qt::AllButtons, Qt::ControlModifier,
+     _("City Names")},
+    {SC_DONE_MOVING, Qt::Key_Space, Qt::AllButtons, Qt::NoModifier,
+     _("Done Moving")},
+    {SC_GOTOAIRLIFT, Qt::Key_T, Qt::AllButtons, Qt::NoModifier,
+     _("Go to/Airlift to City...")},
+    {SC_AUTOEXPLORE, Qt::Key_X, Qt::AllButtons, Qt::NoModifier,
+     _("Auto Explore")},
+    {SC_PATROL, Qt::Key_Q, Qt::AllButtons, Qt::NoModifier, _("Patrol")},
+    {SC_UNSENTRY_TILE, Qt::Key_D, Qt::AllButtons,
+     Qt::ShiftModifier | Qt::ControlModifier, _("Unsentry All On Tile")},
+    {SC_DO, Qt::Key_D, Qt::AllButtons, Qt::NoModifier, _("Do...")},
+    {SC_UPGRADE_UNIT, Qt::Key_U, Qt::AllButtons, Qt::ControlModifier,
+     _("Upgrade")},
+    {SC_SETHOME, Qt::Key_H, Qt::AllButtons, Qt::NoModifier,
+     _("Set Home City")},
+    {SC_BUILDMINE, Qt::Key_M, Qt::AllButtons, Qt::NoModifier,
+     _("Build Mine")},
+    {SC_PLANT, Qt::Key_M, Qt::AllButtons, Qt::ShiftModifier, _("Plant")},
+    {SC_BUILDIRRIGATION, Qt::Key_I, Qt::AllButtons, Qt::NoModifier,
+     _("Build Irrigation")},
+    {SC_CULTIVATE, Qt::Key_I, Qt::AllButtons, Qt::ShiftModifier,
+     _("Cultivate")},
+    {SC_BUILDROAD, Qt::Key_R, Qt::AllButtons, Qt::NoModifier,
+     _("Build Road")},
+    {SC_BUILDCITY, Qt::Key_B, Qt::AllButtons, Qt::NoModifier,
+     _("Build City")},
+    {SC_SENTRY, Qt::Key_S, Qt::AllButtons, Qt::NoModifier, _("Sentry")},
+    {SC_FORTIFY, Qt::Key_F, Qt::AllButtons, Qt::NoModifier, _("Fortify")},
+    {SC_GOTO, Qt::Key_G, Qt::AllButtons, Qt::NoModifier, _("Go to Tile")},
+    {SC_WAIT, Qt::Key_W, Qt::AllButtons, Qt::NoModifier, _("Wait")},
+    {SC_TRANSFORM, Qt::Key_O, Qt::AllButtons, Qt::NoModifier,
+     _("Transform")},
+    {SC_NUKE, Qt::Key_N, Qt::AllButtons, Qt::ShiftModifier,
+     _("Explode Nuclear")},
+    {SC_LOAD, Qt::Key_L, Qt::AllButtons, Qt::NoModifier, _("Load")},
+    {SC_UNLOAD, Qt::Key_U, Qt::AllButtons, Qt::NoModifier, _("Unload")},
+    {SC_BUY_MAP, 0, Qt::BackButton, Qt::NoModifier,
+     _("Quick buy current production from map")},
+    {SC_IFACE_LOCK, Qt::Key_L, Qt::AllButtons,
+     Qt::ControlModifier | Qt::ShiftModifier, _("Lock/unlock interface")},
+    {SC_AUTOMATE, Qt::Key_A, Qt::AllButtons, Qt::NoModifier,
+     _("Auto worker")},
+    {SC_PARADROP, Qt::Key_P, Qt::AllButtons, Qt::NoModifier,
+     _("Paradrop/clean pollution")},
+    {SC_POPUP_COMB_INF, Qt::Key_F1, Qt::AllButtons, Qt::ControlModifier,
+     _("Popup combat information")},
+    {SC_RELOAD_THEME, Qt::Key_F5, Qt::AllButtons,
+     Qt::ControlModifier | Qt::ShiftModifier, _("Reload theme")},
+    {SC_RELOAD_TILESET, Qt::Key_F6, Qt::AllButtons,
+     Qt::ControlModifier | Qt::ShiftModifier, _("Reload tileset")},
+    {SC_SHOW_FULLBAR, Qt::Key_F, Qt::AllButtons, Qt::ControlModifier,
+     _("Toggle city full bar visibility")},
+    {SC_ZOOM_IN, Qt::Key_Plus, Qt::AllButtons, Qt::NoModifier,
+     _("Reload zoomed in tileset")},
+    {SC_ZOOM_OUT, Qt::Key_Minus, Qt::AllButtons, Qt::NoModifier,
+     _("Reload zoomed out tileset")},
+    {SC_LOAD_LUA, Qt::Key_J, Qt::AllButtons,
+     Qt::ControlModifier | Qt::ShiftModifier, _("Load Lua script")},
+    {SC_RELOAD_LUA, Qt::Key_K, Qt::AllButtons,
+     Qt::ControlModifier | Qt::ShiftModifier,
+     _("Load last loaded Lua script")},
+    {SC_ZOOM_RESET, Qt::Key_Backspace, Qt::AllButtons, Qt::ControlModifier,
+     _("Reload tileset with default scale")},
+    {SC_GOBUILDCITY, Qt::Key_B, Qt::AllButtons, Qt::ShiftModifier,
+     _("Go And Build City")},
+    {SC_GOJOINCITY, Qt::Key_J, Qt::AllButtons, Qt::ShiftModifier,
+     _("Go And Join City")}};
 
-
-/**********************************************************************//**
-  Returns shortcut as string (eg. for menu)
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns shortcut as string (eg. for menu)
+ **************************************************************************/
 QString shortcut_to_string(fc_shortcut *sc)
 {
   QString ret, m, bn, k;
@@ -196,27 +188,23 @@ QString shortcut_to_string(fc_shortcut *sc)
   return ret;
 }
 
-/**********************************************************************//**
-  fc_shortcuts contructor
-**************************************************************************/
-fc_shortcuts::fc_shortcuts()
-{
-  init_default(true);
-}
+/**********************************************************************/ /**
+   fc_shortcuts contructor
+ **************************************************************************/
+fc_shortcuts::fc_shortcuts() { init_default(true); }
 
-/**********************************************************************//**
-  fc_shortcuts destructor
-**************************************************************************/
+/**********************************************************************/ /**
+   fc_shortcuts destructor
+ **************************************************************************/
 fc_shortcuts::~fc_shortcuts()
 {
   qDeleteAll(hash.begin(), hash.end());
   hash.clear();
 }
 
-
-/**********************************************************************//**
-  Returns description for given shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns description for given shortcut
+ **************************************************************************/
 QString fc_shortcuts::get_desc(shortcut_id id)
 {
   fc_shortcut *s;
@@ -224,9 +212,9 @@ QString fc_shortcuts::get_desc(shortcut_id id)
   return s->str;
 }
 
-/**********************************************************************//**
-  Returns shortcut for given id
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns shortcut for given id
+ **************************************************************************/
 fc_shortcut *fc_shortcuts::get_shortcut(shortcut_id id)
 {
   fc_shortcut *s;
@@ -234,17 +222,14 @@ fc_shortcut *fc_shortcuts::get_shortcut(shortcut_id id)
   return s;
 }
 
-/**********************************************************************//**
-  Returns id for given shortcut
-**************************************************************************/
-shortcut_id fc_shortcuts::get_id(fc_shortcut *sc)
-{
-  return hash.key(sc);
-}
+/**********************************************************************/ /**
+   Returns id for given shortcut
+ **************************************************************************/
+shortcut_id fc_shortcuts::get_id(fc_shortcut *sc) { return hash.key(sc); }
 
-/**********************************************************************//**
-  Sets given shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets given shortcut
+ **************************************************************************/
 void fc_shortcuts::set_shortcut(fc_shortcut *s)
 {
   fc_shortcut *sc;
@@ -254,9 +239,9 @@ void fc_shortcuts::set_shortcut(fc_shortcut *s)
   sc->mouse = s->mouse;
 }
 
-/**********************************************************************//**
-  Deletes current instance
-**************************************************************************/
+/**********************************************************************/ /**
+   Deletes current instance
+ **************************************************************************/
 void fc_shortcuts::drop()
 {
   if (m_instance) {
@@ -265,9 +250,9 @@ void fc_shortcuts::drop()
   }
 }
 
-/**********************************************************************//**
-  Returns given instance
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns given instance
+ **************************************************************************/
 fc_shortcuts *fc_shortcuts::sc()
 {
   if (!m_instance)
@@ -275,9 +260,9 @@ fc_shortcuts *fc_shortcuts::sc()
   return m_instance;
 }
 
-/**********************************************************************//**
-  Inits defaults shortcuts or reads from settings
-**************************************************************************/
+/**********************************************************************/ /**
+   Inits defaults shortcuts or reads from settings
+ **************************************************************************/
 void fc_shortcuts::init_default(bool read)
 {
   int i;
@@ -289,7 +274,7 @@ void fc_shortcuts::init_default(bool read)
     suc = read_shortcuts();
   }
   if (!suc) {
-    for (i = 0 ; i < num_shortcuts; i++) {
+    for (i = 0; i < num_shortcuts; i++) {
       s = new fc_shortcut();
       s->id = default_shortcuts[i].id;
       s->key = default_shortcuts[i].key;
@@ -301,10 +286,10 @@ void fc_shortcuts::init_default(bool read)
   }
 }
 
-/**********************************************************************//**
-  Constructor for setting shortcuts
-**************************************************************************/
-fc_shortcut_popup::fc_shortcut_popup(QWidget *parent): QDialog()
+/**********************************************************************/ /**
+   Constructor for setting shortcuts
+ **************************************************************************/
+fc_shortcut_popup::fc_shortcut_popup(QWidget *parent) : QDialog()
 {
   QVBoxLayout *vb = new QVBoxLayout;
   setParent(parent);
@@ -315,22 +300,22 @@ fc_shortcut_popup::fc_shortcut_popup(QWidget *parent): QDialog()
   sc = nullptr;
 }
 
-/**********************************************************************//**
-  Custom line edit contructor
-**************************************************************************/
-line_edit::line_edit(): QLineEdit()
+/**********************************************************************/ /**
+   Custom line edit contructor
+ **************************************************************************/
+line_edit::line_edit() : QLineEdit()
 {
   setContextMenuPolicy(Qt::NoContextMenu);
   setWindowModality(Qt::WindowModal);
 }
 
-/**********************************************************************//**
-  Mouse press event for line edit
-**************************************************************************/
+/**********************************************************************/ /**
+   Mouse press event for line edit
+ **************************************************************************/
 void line_edit::mousePressEvent(QMouseEvent *event)
 {
   fc_shortcut_popup *fcp;
-  shc.mouse =  event->button();
+  shc.mouse = event->button();
   shc.mod = event->modifiers();
   fcp = reinterpret_cast<fc_shortcut_popup *>(parentWidget());
   fcp->sc->mouse = shc.mouse;
@@ -339,9 +324,9 @@ void line_edit::mousePressEvent(QMouseEvent *event)
   parentWidget()->close();
 }
 
-/**********************************************************************//**
-  Key release event for line edit
-**************************************************************************/
+/**********************************************************************/ /**
+   Key release event for line edit
+ **************************************************************************/
 void line_edit::keyReleaseEvent(QKeyEvent *event)
 {
   fc_shortcut_popup *fcp;
@@ -355,9 +340,9 @@ void line_edit::keyReleaseEvent(QKeyEvent *event)
   parentWidget()->close();
 }
 
-/**********************************************************************//**
-  Popups line edit for setting shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Popups line edit for setting shortcut
+ **************************************************************************/
 void fc_shortcut_popup::run(fc_shortcut *s)
 {
   QPoint p(50, 20);
@@ -369,9 +354,9 @@ void fc_shortcut_popup::run(fc_shortcut *s)
   show();
 }
 
-/**********************************************************************//**
-  Closes given popup and sets shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Closes given popup and sets shortcut
+ **************************************************************************/
 void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
 {
   fc_sc_button *scp;
@@ -387,10 +372,10 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
   QDialog::closeEvent(ev);
 }
 
-/**********************************************************************//**
-  Checks is shortcut is already assigned and popups hud box then
-  or return false if is not assigned
-**************************************************************************/
+/**********************************************************************/ /**
+   Checks is shortcut is already assigned and popups hud box then
+   or return false if is not assigned
+ **************************************************************************/
 bool fc_shortcut_popup::check_if_exist()
 {
   fc_shortcut *fsc;
@@ -405,7 +390,8 @@ bool fc_shortcut_popup::check_if_exist()
         continue;
       }
       if (*sc == *fsc) {
-        desc = fc_shortcuts::sc()->get_desc(static_cast<shortcut_id>(id + 1));
+        desc =
+            fc_shortcuts::sc()->get_desc(static_cast<shortcut_id>(id + 1));
       }
       id++;
     }
@@ -414,7 +400,7 @@ bool fc_shortcut_popup::check_if_exist()
     }
     if (!desc.isEmpty()) {
       fc_sc_button *fsb;
-      fsb = qobject_cast<fc_sc_button*>(parentWidget());
+      fsb = qobject_cast<fc_sc_button *>(parentWidget());
       fsb->show_info(desc);
       return true;
     }
@@ -423,9 +409,9 @@ bool fc_shortcut_popup::check_if_exist()
   return false;
 }
 
-/**********************************************************************//**
-  Returns mouse button name
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns mouse button name
+ **************************************************************************/
 QString button_name(Qt::MouseButton bt)
 {
   switch (bt) {
@@ -490,18 +476,15 @@ QString button_name(Qt::MouseButton bt)
   }
 }
 
-/**********************************************************************//**
-  Constructor for button setting shortcut
-**************************************************************************/
-fc_sc_button::fc_sc_button(): QPushButton()
-{
-  sc = new fc_shortcut;
-}
+/**********************************************************************/ /**
+   Constructor for button setting shortcut
+ **************************************************************************/
+fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
 
-/**********************************************************************//**
-  Constructor setting given shortcut
-**************************************************************************/
-fc_sc_button::fc_sc_button(fc_shortcut *s): QPushButton()
+/**********************************************************************/ /**
+   Constructor setting given shortcut
+ **************************************************************************/
+fc_sc_button::fc_sc_button(fc_shortcut *s) : QPushButton()
 {
   sc_orig = s;
   sc = new fc_shortcut;
@@ -513,18 +496,18 @@ fc_sc_button::fc_sc_button(fc_shortcut *s): QPushButton()
   setText(shortcut_to_string(sc));
 }
 
-/**********************************************************************//**
-  Executes slot to show information about assigned shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Executes slot to show information about assigned shortcut
+ **************************************************************************/
 void fc_sc_button::show_info(QString str)
 {
   err_message = str;
   popup_error();
 }
 
-/**********************************************************************//**
-  Shows information about assigned shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Shows information about assigned shortcut
+ **************************************************************************/
 void fc_sc_button::popup_error()
 {
   hud_message_box *scinfo;
@@ -539,8 +522,8 @@ void fc_sc_button::popup_error()
   }
 
   /* TRANS: Given shortcut(%1) is already assigned */
-  title = QString(_("%1 is already assigned to"))
-                  .arg(shortcut_to_string(sc));
+  title =
+      QString(_("%1 is already assigned to")).arg(shortcut_to_string(sc));
   scinfo = new hud_message_box(gui()->central_wdg);
   scinfo->setStandardButtons(QMessageBox::Ok);
   scinfo->setDefaultButton(QMessageBox::Ok);
@@ -549,27 +532,24 @@ void fc_sc_button::popup_error()
   scinfo->show();
 }
 
-/**********************************************************************//**
-  Contructor for shortcut dialog
-**************************************************************************/
-fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent)
-  : QDialog(parent)
+/**********************************************************************/ /**
+   Contructor for shortcut dialog
+ **************************************************************************/
+fc_shortcuts_dialog::fc_shortcuts_dialog(QWidget *parent) : QDialog(parent)
 {
   setWindowTitle(_("Shortcuts options"));
   hashcopy = hash_copy(&fc_shortcuts::hash);
   init();
 }
 
-/**********************************************************************//**
-  Destructor for shortcut dialog
-**************************************************************************/
-fc_shortcuts_dialog::~fc_shortcuts_dialog()
-{
-}
+/**********************************************************************/ /**
+   Destructor for shortcut dialog
+ **************************************************************************/
+fc_shortcuts_dialog::~fc_shortcuts_dialog() {}
 
-/**********************************************************************//**
-  Inits shortcut dialog layout
-**************************************************************************/
+/**********************************************************************/ /**
+   Inits shortcut dialog layout
+ **************************************************************************/
 void fc_shortcuts_dialog::init()
 {
   fc_shortcut *sc;
@@ -599,37 +579,32 @@ void fc_shortcuts_dialog::init()
   but = new QPushButton(style()->standardIcon(QStyle::SP_DialogCancelButton),
                         _("Cancel"));
   button_box->addButton(but, QDialogButtonBox::ActionRole);
-  QObject::connect(but, &QPushButton::clicked, [this]() {
-    apply_option(RESPONSE_CANCEL);
-  });
+  QObject::connect(but, &QPushButton::clicked,
+                   [this]() { apply_option(RESPONSE_CANCEL); });
 
   but = new QPushButton(style()->standardIcon(QStyle::SP_DialogResetButton),
                         _("Reset"));
   button_box->addButton(but, QDialogButtonBox::ResetRole);
-  QObject::connect(but, &QPushButton::clicked, [this]() {
-    apply_option(RESPONSE_RESET);
-  });
+  QObject::connect(but, &QPushButton::clicked,
+                   [this]() { apply_option(RESPONSE_RESET); });
 
   but = new QPushButton(style()->standardIcon(QStyle::SP_DialogApplyButton),
                         _("Apply"));
   button_box->addButton(but, QDialogButtonBox::ActionRole);
-  QObject::connect(but, &QPushButton::clicked, [this]() {
-    apply_option(RESPONSE_APPLY);
-  });
+  QObject::connect(but, &QPushButton::clicked,
+                   [this]() { apply_option(RESPONSE_APPLY); });
 
   but = new QPushButton(style()->standardIcon(QStyle::SP_DialogSaveButton),
                         _("Save"));
   button_box->addButton(but, QDialogButtonBox::ActionRole);
-  QObject::connect(but, &QPushButton::clicked, [this]() {
-    apply_option(RESPONSE_SAVE);
-  });
+  QObject::connect(but, &QPushButton::clicked,
+                   [this]() { apply_option(RESPONSE_SAVE); });
 
   but = new QPushButton(style()->standardIcon(QStyle::SP_DialogOkButton),
                         _("Ok"));
   button_box->addButton(but, QDialogButtonBox::ActionRole);
-  QObject::connect(but, &QPushButton::clicked, [this]() {
-    apply_option(RESPONSE_OK);
-  });
+  QObject::connect(but, &QPushButton::clicked,
+                   [this]() { apply_option(RESPONSE_OK); });
 
   main_layout->addWidget(button_box);
   setLayout(main_layout);
@@ -640,9 +615,9 @@ void fc_shortcuts_dialog::init()
   setAttribute(Qt::WA_DeleteOnClose);
 }
 
-/**********************************************************************//**
-  Adds shortcut option for dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Adds shortcut option for dialog
+ **************************************************************************/
 void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
 {
   QHBoxLayout *hb;
@@ -652,7 +627,8 @@ void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
   hb = new QHBoxLayout();
 
   fc_sc_button *fb = new fc_sc_button(sc);
-  connect(fb, &QAbstractButton::clicked, this, &fc_shortcuts_dialog::edit_shortcut);
+  connect(fb, &QAbstractButton::clicked, this,
+          &fc_shortcuts_dialog::edit_shortcut);
 
   hb->addWidget(l, 1, Qt::AlignLeft);
   hb->addStretch();
@@ -661,9 +637,9 @@ void fc_shortcuts_dialog::add_option(fc_shortcut *sc)
   scroll_layout->addLayout(hb);
 }
 
-/**********************************************************************//**
-  Slot for editing shortcut
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for editing shortcut
+ **************************************************************************/
 void fc_shortcuts_dialog::edit_shortcut()
 {
   fc_sc_button *pb;
@@ -672,9 +648,9 @@ void fc_shortcuts_dialog::edit_shortcut()
   sb->run(pb->sc);
 }
 
-/**********************************************************************//**
-  Reinitializes layout
-**************************************************************************/
+/**********************************************************************/ /**
+   Reinitializes layout
+ **************************************************************************/
 void fc_shortcuts_dialog::refresh()
 {
   QLayout *layout;
@@ -696,9 +672,9 @@ void fc_shortcuts_dialog::refresh()
   init();
 }
 
-/**********************************************************************//**
-  Slot for buttons on bottom of shortcut dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for buttons on bottom of shortcut dialog
+ **************************************************************************/
 void fc_shortcuts_dialog::apply_option(int response)
 {
   switch (response) {
@@ -726,49 +702,50 @@ void fc_shortcuts_dialog::apply_option(int response)
   }
 }
 
-/**********************************************************************//**
-  Popups shortcut dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Popups shortcut dialog
+ **************************************************************************/
 void popup_shortcuts_dialog()
 {
   fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(gui());
   sh->show();
 }
 
-/**********************************************************************//**
-  Make deep copy of shortcut map
-**************************************************************************/
-QMap<shortcut_id, fc_shortcut *> *hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
+/**********************************************************************/ /**
+   Make deep copy of shortcut map
+ **************************************************************************/
+QMap<shortcut_id, fc_shortcut *> *
+hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
 {
-  QMap<shortcut_id, fc_shortcut*> *new_hash;
+  QMap<shortcut_id, fc_shortcut *> *new_hash;
   fc_shortcut *s;
   fc_shortcut *sc;
   int i;
   shortcut_id id;
-  new_hash = new QMap<shortcut_id, fc_shortcut*>;
+  new_hash = new QMap<shortcut_id, fc_shortcut *>;
 
-  for (i = 1 ; i < num_shortcuts + 1; i++) {
-      sc = new fc_shortcut();
-      id = static_cast<shortcut_id>(i);
-      s = h->value(id);
-      sc->id = id;
-      sc->key = s->key;
-      sc->mouse = s->mouse;
-      sc->mod = s->mod;
-      sc->str = s->str;
-      new_hash->insert(sc->id, sc);
+  for (i = 1; i < num_shortcuts + 1; i++) {
+    sc = new fc_shortcut();
+    id = static_cast<shortcut_id>(i);
+    s = h->value(id);
+    sc->id = id;
+    sc->key = s->key;
+    sc->mouse = s->mouse;
+    sc->mod = s->mod;
+    sc->str = s->str;
+    new_hash->insert(sc->id, sc);
   }
 
   return new_hash;
 }
 
-/**********************************************************************//**
-  Writes shortcuts to file
-**************************************************************************/
+/**********************************************************************/ /**
+   Writes shortcuts to file
+ **************************************************************************/
 void write_shortcuts()
 {
   fc_shortcut *sc;
-  QMap<shortcut_id, fc_shortcut*> h = fc_shortcuts::hash;
+  QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::hash;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               "freeciv-qt-client");
   s.beginWriteArray("Shortcuts");
@@ -783,9 +760,9 @@ void write_shortcuts()
   s.endArray();
 }
 
-/**********************************************************************//**
-  Reads shortcuts from file. Returns false if failed.
-**************************************************************************/
+/**********************************************************************/ /**
+   Reads shortcuts from file. Returns false if failed.
+ **************************************************************************/
 bool read_shortcuts()
 {
   int num, i;

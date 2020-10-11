@@ -19,10 +19,10 @@
 
 #include "fc_prehdrs.h"
 
+#include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <limits.h>
 
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
@@ -43,13 +43,13 @@
 
 /* commmon */
 #include "dataio.h"
-#include "game.h"
 #include "events.h"
+#include "game.h"
 #include "map.h"
 
 #include "packets_json.h"
 
-/* 
+/*
  * Valid values are 0, 1 and 2. For 2 you have to set generate_stats
  * to 1 in generate_packets.py.
  */
@@ -63,11 +63,11 @@ extern const char *const packet_functional_capability;
 #define SPECHASH_IDATA_FREE (packet_handler_hash_data_free_fn_t) free
 #include "spechash.h"
 
-/**********************************************************************//**
-  Read and return a packet from the connection 'pc'. The type of the
-  packet is written in 'ptype'. On error, the connection is closed and
-  the function returns NULL.
-**************************************************************************/
+/**********************************************************************/ /**
+   Read and return a packet from the connection 'pc'. The type of the
+   packet is written in 'ptype'. On error, the connection is closed and
+   the function returns NULL.
+ **************************************************************************/
 void *get_packet_from_connection_json(struct connection *pc,
                                       enum packet_type *ptype)
 {
@@ -84,9 +84,9 @@ void *get_packet_from_connection_json(struct connection *pc,
   json_t *pint;
 
   if (!pc->used) {
-    return NULL;		/* connection was closed, stop reading */
+    return NULL; /* connection was closed, stop reading */
   }
-  
+
   if (pc->buffer->ndata < data_type_size(pc->packet_header.length)) {
     /* Not got enough for a length field yet */
     return NULL;
@@ -98,8 +98,8 @@ void *get_packet_from_connection_json(struct connection *pc,
   /* The non-compressed case */
   whole_packet_len = len_read;
 
-  if ((unsigned)whole_packet_len > pc->buffer->ndata) {
-    return NULL;		/* not all data has been read */
+  if ((unsigned) whole_packet_len > pc->buffer->ndata) {
+    return NULL; /* not all data has been read */
   }
 
   /*
@@ -120,7 +120,8 @@ void *get_packet_from_connection_json(struct connection *pc,
    */
   if (is_server() && pc->server.last_request_id_seen == 0) {
     /* Try to parse JSON packet. Note that json string has '\0' */
-    pc->json_packet = json_loadb((char*)pc->buffer->data + 2, whole_packet_len - 3, 0, &error);
+    pc->json_packet = json_loadb((char *) pc->buffer->data + 2,
+                                 whole_packet_len - 3, 0, &error);
 
     /* Set the connection mode */
     pc->json_mode = (pc->json_packet != NULL);
@@ -128,7 +129,8 @@ void *get_packet_from_connection_json(struct connection *pc,
 
   if (pc->json_mode) {
     /* Parse JSON packet. Note that json string has '\0' */
-    pc->json_packet = json_loadb((char*)pc->buffer->data + 2, whole_packet_len - 3, 0, &error);
+    pc->json_packet = json_loadb((char *) pc->buffer->data + 2,
+                                 whole_packet_len - 3, 0, &error);
 
     /* Log errors before we scrap the data */
     if (!pc->json_packet) {
@@ -140,7 +142,8 @@ void *get_packet_from_connection_json(struct connection *pc,
 
     /* Shift remaining data to the front */
     pc->buffer->ndata -= whole_packet_len;
-    memmove(pc->buffer->data, pc->buffer->data + whole_packet_len, pc->buffer->ndata);
+    memmove(pc->buffer->data, pc->buffer->data + whole_packet_len,
+            pc->buffer->ndata);
 
     if (!pc->json_packet) {
       return NULL;
@@ -160,8 +163,7 @@ void *get_packet_from_connection_json(struct connection *pc,
     utype.type = utype.itype;
   }
 
-  if (utype.type < 0
-      || utype.type >= PACKET_LAST
+  if (utype.type < 0 || utype.type >= PACKET_LAST
       || (receive_handler = pc->phs.handlers->receive[utype.type]) == NULL) {
     log_verbose("Received unsupported packet type %d (%s). The connection "
                 "will be closed now.",
@@ -170,9 +172,8 @@ void *get_packet_from_connection_json(struct connection *pc,
     return NULL;
   }
 
-  log_packet("got packet type=(%s) len=%d from %s",
-             packet_name(utype.type), whole_packet_len,
-             is_server() ? pc->username : "server");
+  log_packet("got packet type=(%s) len=%d from %s", packet_name(utype.type),
+             whole_packet_len, is_server() ? pc->username : "server");
 
   *ptype = utype.type;
 
@@ -180,7 +181,7 @@ void *get_packet_from_connection_json(struct connection *pc,
     pc->incoming_packet_notify(pc, utype.type, whole_packet_len);
   }
 
-#if PACKET_SIZE_STATISTICS 
+#if PACKET_SIZE_STATISTICS
   {
     static struct {
       int counter;
@@ -195,8 +196,8 @@ void *get_packet_from_connection_json(struct connection *pc,
       int i;
 
       for (i = 0; i < PACKET_LAST; i++) {
-	packets_stats[i].counter = 0;
-	packets_stats[i].size = 0;
+        packets_stats[i].counter = 0;
+        packets_stats[i].size = 0;
       }
     }
 
@@ -209,9 +210,9 @@ void *get_packet_from_connection_json(struct connection *pc,
 
       log_test("Received packets:");
       for (i = 0; i < PACKET_LAST; i++) {
-	if (packets_stats[i].counter == 0)
-	  continue;
-	sum += packets_stats[i].size;
+        if (packets_stats[i].counter == 0)
+          continue;
+        sum += packets_stats[i].size;
         log_test("  [%-25.25s %3d]: %6d packets; %8d bytes total; "
                  "%5d bytes/packet average",
                  packet_name(i), i, packets_stats[i].counter,

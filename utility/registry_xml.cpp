@@ -28,9 +28,9 @@
 
 #include "registry_xml.h"
 
-/**********************************************************************//**
-  Load section file from xml-file
-**************************************************************************/
+/**********************************************************************/ /**
+   Load section file from xml-file
+ **************************************************************************/
 struct section_file *xmlfile_load(xmlDoc *sec_doc, const char *filename)
 {
   struct section_file *secfile;
@@ -41,14 +41,14 @@ struct section_file *xmlfile_load(xmlDoc *sec_doc, const char *filename)
   secfile = secfile_new(TRUE);
 
   xmlroot = xmlDocGetRootElement(sec_doc);
-  if (xmlroot == NULL || strcmp((const char *)xmlroot->name, "Freeciv")) {
+  if (xmlroot == NULL || strcmp((const char *) xmlroot->name, "Freeciv")) {
     /* TRANS: do not translate <Freeciv> */
     log_error(_("XML-file has no root node <Freeciv>"));
     secfile_destroy(secfile);
     return NULL;
   }
 
-  cap = (char *)xmlGetNsProp(xmlroot, (xmlChar *)"options", NULL);
+  cap = (char *) xmlGetNsProp(xmlroot, (xmlChar *) "options", NULL);
 
   if (cap == NULL) {
     log_error(_("XML-file has no capabilities defined!"));
@@ -78,7 +78,7 @@ struct section_file *xmlfile_load(xmlDoc *sec_doc, const char *filename)
       struct section *psection;
       xmlNodePtr sec_node;
 
-      psection = secfile_section_new(secfile, (const char *)current->name);
+      psection = secfile_section_new(secfile, (const char *) current->name);
       sec_node = current->children;
 
       while (sec_node != NULL) {
@@ -87,7 +87,8 @@ struct section_file *xmlfile_load(xmlDoc *sec_doc, const char *filename)
 
           while (value_node != NULL) {
             if (value_node->type == XML_TEXT_NODE) {
-              const char *content = (const char *) xmlNodeGetContent(value_node);
+              const char *content =
+                  (const char *) xmlNodeGetContent(value_node);
               int len = strlen(content);
               char buf[len + 1];
 

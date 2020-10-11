@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,4 +21,4 @@ GUI_FUNC_PROTO(void, popup_spaceship_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, popdown_spaceship_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, refresh_spaceship_dialog, struct player *pplayer)
 
-#endif  /* FC__SPACESHIPDLG_G_H */
+#endif /* FC__SPACESHIPDLG_G_H */

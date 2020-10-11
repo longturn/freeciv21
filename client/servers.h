@@ -25,15 +25,13 @@ extern "C" {
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
 
-  struct players
-  {
-    char *name;
-    char *type;
-    char *host;
-    char *nation;
-  };
-struct server
-{
+struct players {
+  char *name;
+  char *type;
+  char *host;
+  char *nation;
+};
+struct server {
   char *host;
   int port;
   char *capability;
@@ -51,29 +49,28 @@ struct server
 #define SPECLIST_TYPE struct server
 #include "speclist.h"
 
-#define server_list_iterate(serverlist, pserver) \
+#define server_list_iterate(serverlist, pserver)                            \
   TYPED_LIST_ITERATE(struct server, serverlist, pserver)
-#define server_list_iterate_end  LIST_ITERATE_END
+#define server_list_iterate_end LIST_ITERATE_END
 
 struct server_scan;
 
-struct srv_list
-{
+struct srv_list {
   struct server_list *servers;
   fc_mutex mutex;
 };
 
 enum server_scan_type {
-  SERVER_SCAN_LOCAL, /* Local servers, detected through a LAN scan */
+  SERVER_SCAN_LOCAL,  /* Local servers, detected through a LAN scan */
   SERVER_SCAN_GLOBAL, /* Global servers, read from the metaserver */
   SERVER_SCAN_LAST
 };
 
 typedef void (*ServerScanErrorFunc)(struct server_scan *scan,
-				    const char *message);
+                                    const char *message);
 
 struct server_scan *server_scan_begin(enum server_scan_type type,
-				      ServerScanErrorFunc error_func);
+                                      ServerScanErrorFunc error_func);
 enum server_scan_type server_scan_get_type(const struct server_scan *scan);
 enum server_scan_status {
   SCAN_STATUS_ERROR = 0,
@@ -83,8 +80,7 @@ enum server_scan_status {
   SCAN_STATUS_ABORT
 };
 enum server_scan_status server_scan_poll(struct server_scan *scan);
-struct srv_list *
-server_scan_get_list(struct server_scan *scan);
+struct srv_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);
 
 #ifdef __cplusplus

@@ -23,47 +23,46 @@
 
 #include "optiondlg.h"
 
-
-/************************************************************************//**
-  Popup the option dialog for the option set.
-  FIXME/PORTME
-****************************************************************************/
+/************************************************************************/ /**
+   Popup the option dialog for the option set.
+   FIXME/PORTME
+ ****************************************************************************/
 void option_dialog_popup(const char *name, const struct option_set *poptset)
 {
   log_error("%s(): PORTME!", __FUNCTION__);
 }
 
-/************************************************************************//**
-  Popdown the option dialog for the option set.
-  FIXME/PORTME
-****************************************************************************/
+/************************************************************************/ /**
+   Popdown the option dialog for the option set.
+   FIXME/PORTME
+ ****************************************************************************/
 void option_dialog_popdown(const struct option_set *poptset)
 {
   log_error("%s(): PORTME!", __FUNCTION__);
 }
 
-/************************************************************************//**
-  Update the GUI for the option.
-  FIXME/PORTME
-****************************************************************************/
+/************************************************************************/ /**
+   Update the GUI for the option.
+   FIXME/PORTME
+ ****************************************************************************/
 void option_gui_update(struct option *poption)
 {
   log_error("%s(): PORTME!", __FUNCTION__);
 }
 
-/************************************************************************//**
-  Add the GUI for the option.
-  FIXME/PORTME
-****************************************************************************/
+/************************************************************************/ /**
+   Add the GUI for the option.
+   FIXME/PORTME
+ ****************************************************************************/
 void option_gui_add(struct option *poption)
 {
   log_error("%s(): PORTME!", __FUNCTION__);
 }
 
-/************************************************************************//**
-  Remove the GUI for the option.
-  FIXME/PORTME
-****************************************************************************/
+/************************************************************************/ /**
+   Remove the GUI for the option.
+   FIXME/PORTME
+ ****************************************************************************/
 void option_gui_remove(struct option *poption)
 {
   log_error("%s(): PORTME!", __FUNCTION__);

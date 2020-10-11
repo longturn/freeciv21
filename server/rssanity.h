@@ -30,4 +30,4 @@ bool sanity_check_server_setting_value_in_req(ssetv ssetval);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__RSSANITY_H */
+#endif /* FC__RSSANITY_H */

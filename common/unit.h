@@ -23,7 +23,7 @@ extern "C" {
 /* common */
 #include "base.h"
 #include "fc_types.h"
-#include "terrain.h"		/* enum tile_special_type */
+#include "terrain.h" /* enum tile_special_type */
 #include "unittype.h"
 #include "vision.h"
 #include "world_object.h"
@@ -48,13 +48,9 @@ enum unit_orders {
   ORDER_LAST
 };
 
-enum unit_focus_status {
-  FOCUS_AVAIL, FOCUS_WAIT, FOCUS_DONE  
-};
+enum unit_focus_status { FOCUS_AVAIL, FOCUS_WAIT, FOCUS_DONE };
 
-enum goto_route_type {
-  ROUTE_GOTO, ROUTE_PATROL
-};
+enum goto_route_type { ROUTE_GOTO, ROUTE_PATROL };
 
 enum unit_upgrade_result {
   UU_OK,
@@ -69,18 +65,18 @@ enum unit_upgrade_result {
 
 enum unit_airlift_result {
   /* Codes treated as success: */
-  AR_OK,                /* This will definitely work */
-  AR_OK_SRC_UNKNOWN,    /* Source city's airlift capability is unknown */
-  AR_OK_DST_UNKNOWN,    /* Dest city's airlift capability is unknown */
+  AR_OK,             /* This will definitely work */
+  AR_OK_SRC_UNKNOWN, /* Source city's airlift capability is unknown */
+  AR_OK_DST_UNKNOWN, /* Dest city's airlift capability is unknown */
   /* Codes treated as failure: */
-  AR_NO_MOVES,          /* Unit has no moves left */
-  AR_WRONG_UNITTYPE,    /* Can't airlift this type of unit */
-  AR_OCCUPIED,          /* Can't airlift units with passengers */
-  AR_NOT_IN_CITY,       /* Unit not in a city */
-  AR_BAD_SRC_CITY,      /* Can't airlift from this src city */
-  AR_BAD_DST_CITY,      /* Can't airlift to this dst city */
-  AR_SRC_NO_FLIGHTS,    /* No flights available from src */
-  AR_DST_NO_FLIGHTS     /* No flights available to dst */
+  AR_NO_MOVES,       /* Unit has no moves left */
+  AR_WRONG_UNITTYPE, /* Can't airlift this type of unit */
+  AR_OCCUPIED,       /* Can't airlift units with passengers */
+  AR_NOT_IN_CITY,    /* Unit not in a city */
+  AR_BAD_SRC_CITY,   /* Can't airlift from this src city */
+  AR_BAD_DST_CITY,   /* Can't airlift to this dst city */
+  AR_SRC_NO_FLIGHTS, /* No flights available from src */
+  AR_DST_NO_FLIGHTS  /* No flights available to dst */
 };
 
 struct unit_adv {
@@ -89,7 +85,7 @@ struct unit_adv {
 
 struct unit_order {
   enum unit_orders order;
-  enum unit_activity activity;  /* Only valid for ORDER_ACTIVITY. */
+  enum unit_activity activity; /* Only valid for ORDER_ACTIVITY. */
   /* Only valid for ORDER_PERFORM_ACTION. Validity and meaning depend on
    * 'action'. See action_target_kind and action_sub_target_kind */
   int target;
@@ -172,7 +168,7 @@ struct unit {
    *   - Otherwise the unit is not done moving. */
   bool done_moving;
 
-  struct unit *transporter;   /* This unit is transported by ... */
+  struct unit *transporter;       /* This unit is transported by ... */
   struct unit_list *transporting; /* This unit transports ... */
 
   struct goods_type *carrying;
@@ -205,7 +201,7 @@ struct unit {
       int transported_by; /* Used for unit_short_info packets where we can't
                            * be sure that the information about the
                            * transporter is known. */
-      bool occupied;      /* TRUE if at least one cargo on the transporter. */
+      bool occupied; /* TRUE if at least one cargo on the transporter. */
 
       /* Equivalent to pcity->client.color. Only for cityfounder units. */
       bool colored;
@@ -250,49 +246,48 @@ struct unit {
 
 #ifdef FREECIV_DEBUG
 #define CHECK_UNIT(punit)                                                   \
-  (fc_assert(punit != NULL),                                                \
-   fc_assert(unit_type_get(punit) != NULL),                                 \
+  (fc_assert(punit != NULL), fc_assert(unit_type_get(punit) != NULL),       \
    fc_assert(unit_owner(punit) != NULL),                                    \
    fc_assert(player_by_number(player_index(unit_owner(punit)))              \
              == unit_owner(punit)),                                         \
    fc_assert(game_unit_by_number(punit->id) != NULL))
-#else  /* FREECIV_DEBUG */
+#else                     /* FREECIV_DEBUG */
 #define CHECK_UNIT(punit) /* Do nothing */
-#endif /* FREECIV_DEBUG */
+#endif                    /* FREECIV_DEBUG */
 
 void setup_real_activities_array(void);
 
 extern Activity_type_id real_activities[ACTIVITY_LAST];
 
-#define activity_type_list_iterate(_act_list_, _act_)                        \
-{                                                                            \
-  int _act_i_;                                                               \
-  for (_act_i_ = 0; _act_list_[_act_i_] != ACTIVITY_LAST; _act_i_++) {       \
-    Activity_type_id _act_ = _act_list_[_act_i_];
+#define activity_type_list_iterate(_act_list_, _act_)                       \
+  {                                                                         \
+    int _act_i_;                                                            \
+    for (_act_i_ = 0; _act_list_[_act_i_] != ACTIVITY_LAST; _act_i_++) {    \
+      Activity_type_id _act_ = _act_list_[_act_i_];
 
-#define activity_type_list_iterate_end                                       \
-  }                                                                          \
-}
+#define activity_type_list_iterate_end                                      \
+  }                                                                         \
+  }
 
 /* Iterates over the types of unit activity. */
-#define activity_type_iterate(_act_)					    \
-{									    \
-  activity_type_list_iterate(real_activities, _act_)
+#define activity_type_iterate(_act_)                                        \
+  {                                                                         \
+    activity_type_list_iterate(real_activities, _act_)
 
 #define activity_type_iterate_end                                           \
   activity_type_list_iterate_end                                            \
-}
+  }
 
 extern const Activity_type_id tile_changing_activities[];
 
 #define tile_changing_activities_iterate(_act_)                             \
-{                                                                           \
-  activity_type_list_iterate(tile_changing_activities, _act_)
+  {                                                                         \
+    activity_type_list_iterate(tile_changing_activities, _act_)
 
 #define tile_changing_activities_iterate_end                                \
   activity_type_list_iterate_end                                            \
-}
-  
+  }
+
 bool are_unit_orders_equal(const struct unit_order *order1,
                            const struct unit_order *order2);
 
@@ -302,9 +297,9 @@ int unit_shield_value(const struct unit *punit,
 bool unit_can_help_build_wonder_here(const struct unit *punit);
 bool unit_can_est_trade_route_here(const struct unit *punit);
 enum unit_airlift_result
-    test_unit_can_airlift_to(const struct player *restriction,
-                             const struct unit *punit,
-                             const struct city *pdest_city);
+test_unit_can_airlift_to(const struct player *restriction,
+                         const struct unit *punit,
+                         const struct city *pdest_city);
 bool unit_can_airlift_to(const struct unit *punit, const struct city *pcity);
 bool unit_has_orders(const struct unit *punit);
 
@@ -315,7 +310,7 @@ bool can_unit_alight_or_be_unloaded(const struct unit *pcargo,
                                     const struct unit *ptrans);
 bool can_unit_paradrop(const struct unit *punit);
 bool can_unit_change_homecity_to(const struct unit *punit,
-				 const struct city *pcity);
+                                 const struct city *pcity);
 bool can_unit_change_homecity(const struct unit *punit);
 const char *get_activity_text(enum unit_activity activity);
 bool can_unit_continue_current_activity(struct unit *punit);
@@ -339,19 +334,18 @@ int get_turns_for_activity_at(const struct unit *punit,
                               const struct tile *ptile,
                               struct extra_type *tgt);
 bool activity_requires_target(enum unit_activity activity);
-bool can_unit_do_autosettlers(const struct unit *punit); 
+bool can_unit_do_autosettlers(const struct unit *punit);
 bool is_unit_activity_on_tile(enum unit_activity activity,
                               const struct tile *ptile);
 bv_extras get_unit_tile_pillage_set(const struct tile *ptile);
 bool is_attack_unit(const struct unit *punit);
-bool is_military_unit(const struct unit *punit);           /* !set !dip !cara */
-bool unit_can_do_action(const struct unit *punit,
-                        const action_id act_id);
+bool is_military_unit(const struct unit *punit); /* !set !dip !cara */
+bool unit_can_do_action(const struct unit *punit, const action_id act_id);
 bool unit_can_do_action_result(const struct unit *punit,
                                enum action_result result);
 bool is_square_threatened(const struct player *pplayer,
                           const struct tile *ptile, bool omniscient);
-bool is_field_unit(const struct unit *punit);              /* ships+aero */
+bool is_field_unit(const struct unit *punit); /* ships+aero */
 bool is_hiding_unit(const struct unit *punit);
 bool unit_can_add_or_build_city(const struct unit *punit);
 
@@ -388,7 +382,8 @@ bool is_my_zoc(const struct player *unit_owner, const struct tile *ptile,
 bool unit_being_aggressive(const struct unit *punit);
 bool unit_type_really_ignores_zoc(const struct unit_type *punittype);
 
-bool is_build_activity(enum unit_activity activity, const struct tile *ptile);
+bool is_build_activity(enum unit_activity activity,
+                       const struct tile *ptile);
 bool is_clean_activity(enum unit_activity activity);
 bool is_terrain_change_activity(enum unit_activity activity);
 bool is_tile_activity(enum unit_activity activity);
@@ -441,11 +436,14 @@ int unit_transport_depth(const struct unit *ptrans);
 bool unit_is_cityfounder(const struct unit *punit);
 
 /* Iterate all transporters carrying '_pcargo', directly or indirectly. */
-#define unit_transports_iterate(_pcargo, _ptrans) {                         \
-  struct unit *_ptrans;                                                     \
-  for (_ptrans = unit_transport_get(_pcargo); NULL != _ptrans;              \
-       _ptrans = unit_transport_get(_ptrans)) {
-#define unit_transports_iterate_end }}
+#define unit_transports_iterate(_pcargo, _ptrans)                           \
+  {                                                                         \
+    struct unit *_ptrans;                                                   \
+    for (_ptrans = unit_transport_get(_pcargo); NULL != _ptrans;            \
+         _ptrans = unit_transport_get(_ptrans)) {
+#define unit_transports_iterate_end                                         \
+  }                                                                         \
+  }
 
 struct cargo_iter;
 size_t cargo_iter_sizeof(void) fc__attribute((const));
@@ -461,4 +459,4 @@ struct iterator *cargo_iter_init(struct cargo_iter *iter,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__UNIT_H */
+#endif /* FC__UNIT_H */

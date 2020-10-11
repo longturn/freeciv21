@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,20 +22,18 @@
 #include <QDialog>
 #include <QTextEdit>
 
-class conversion_log : public QDialog
-{
+class conversion_log : public QDialog {
   Q_OBJECT
 
-  public:
-    explicit conversion_log();
-    void add(const char *msg);
+public:
+  explicit conversion_log();
+  void add(const char *msg);
 
-  private:
-    QTextEdit *area;
+private:
+  QTextEdit *area;
 
-  private slots:
-    void close_now();
+private slots:
+  void close_now();
 };
-
 
 #endif // FC__CONVERSION_LOG_H

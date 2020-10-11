@@ -20,18 +20,12 @@
 
 #include "ratesdlg.h"
 
-/**********************************************************************//**
-  Popup (or raise) the (tax/science/luxury) rates selection dialog.
-**************************************************************************/
-void popup_rates_dialog(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Popup (or raise) the (tax/science/luxury) rates selection dialog.
+ **************************************************************************/
+void popup_rates_dialog(void) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update multipliers (policies) dialog.
-**************************************************************************/
-void real_multipliers_dialog_update(void *unused)
-{ 
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update multipliers (policies) dialog.
+ **************************************************************************/
+void real_multipliers_dialog_update(void *unused) { /* PORTME */ }

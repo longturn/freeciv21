@@ -23,29 +23,27 @@ class QTableWidget;
 
 class ruledit_gui;
 
-class tab_misc : public QWidget
-{
+class tab_misc : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_misc(ruledit_gui *ui_in);
-    void refresh();
-    void flush_widgets();
+public:
+  explicit tab_misc(ruledit_gui *ui_in);
+  void refresh();
+  void flush_widgets();
 
-  private slots:
-    void save_now();
-    void refresh_stats();
-    void edit_aae_effects();
-    void edit_all_effects();
+private slots:
+  void save_now();
+  void refresh_stats();
+  void edit_aae_effects();
+  void edit_all_effects();
 
-  private:
-    ruledit_gui *ui;
-    QLineEdit *name;
-    QLineEdit *version;
-    QLineEdit *savedir;
-    QRadioButton *savedir_version;
-    QTableWidget *stats;
+private:
+  ruledit_gui *ui;
+  QLineEdit *name;
+  QLineEdit *version;
+  QLineEdit *savedir;
+  QRadioButton *savedir_version;
+  QTableWidget *stats;
 };
-
 
 #endif // FC__TAB_MISC_H

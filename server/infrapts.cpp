@@ -1,5 +1,5 @@
 /***********************************************************************
- Freeciv - Copyright (C) 1996 - 2004 The Freeciv Project Team 
+ Freeciv - Copyright (C) 1996 - 2004 The Freeciv Project Team
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -23,9 +23,9 @@
 #include "notify.h"
 #include "plrhand.h"
 
-/************************************************************************//**
-  Handle player_place_infra packet
-****************************************************************************/
+/************************************************************************/ /**
+   Handle player_place_infra packet
+ ****************************************************************************/
 void handle_player_place_infra(struct player *pplayer, int tile, int extra)
 {
   struct tile *ptile;
@@ -71,7 +71,8 @@ void handle_player_place_infra(struct player *pplayer, int tile, int extra)
   if (pextra->build_time > 0) {
     ptile->infra_turns = pextra->build_time;
   } else {
-    ptile->infra_turns = tile_terrain(ptile)->placing_time * pextra->build_time_factor;
+    ptile->infra_turns =
+        tile_terrain(ptile)->placing_time * pextra->build_time_factor;
   }
 
   /* update_tile_knowledge() would not know to send the tile

@@ -31,14 +31,12 @@ struct iterator {
   bool (*valid)(const struct iterator *it);
 };
 
-#define ITERATOR(p) ((struct iterator *)(p))
+#define ITERATOR(p) ((struct iterator *) (p))
 
 /***********************************************************************
   Advances the iterator to point to the next item in the sequence.
 ***********************************************************************/
-static inline void iterator_next(struct iterator *it) {
-  it->next(it);
-}
+static inline void iterator_next(struct iterator *it) { it->next(it); }
 
 /***********************************************************************
   Returns the item currently pointed to by the iterator. Note that the
@@ -46,14 +44,16 @@ static inline void iterator_next(struct iterator *it) {
   whether the iterator is still valid (e.g. has not gone past the
   end of the sequence), use iterator_valid().
 ***********************************************************************/
-static inline void *iterator_get(const struct iterator *it) {
+static inline void *iterator_get(const struct iterator *it)
+{
   return it->get(it);
 }
 
 /***********************************************************************
   Returns TRUE if the iterator points to an item in the sequence.
 ***********************************************************************/
-static inline bool iterator_valid(const struct iterator *it) {
+static inline bool iterator_valid(const struct iterator *it)
+{
   return it->valid(it);
 }
 
@@ -78,19 +78,20 @@ static inline bool iterator_valid(const struct iterator *it) {
               first element in the sequence, or an invalid iterator.
   ... - Zero or more extra arguments that 'FUNC_init' expects.
 ***************************************************************************/
-#define generic_iterate(TYPE_it, TYPE_a, NAME_a, FUNC_size, FUNC_init, ...)\
-do {\
-  char MY_mem_##NAME_a[FUNC_size()];\
-  struct iterator *MY_it_##NAME_a;\
-  TYPE_a NAME_a;\
-  MY_it_##NAME_a =\
-    FUNC_init((TYPE_it *) (void *) MY_mem_##NAME_a , ## __VA_ARGS__);\
-  for (; iterator_valid(MY_it_##NAME_a); iterator_next(MY_it_##NAME_a)) {\
-    NAME_a = (TYPE_a) iterator_get(MY_it_##NAME_a);\
+#define generic_iterate(TYPE_it, TYPE_a, NAME_a, FUNC_size, FUNC_init, ...) \
+  do {                                                                      \
+    char MY_mem_##NAME_a[FUNC_size()];                                      \
+    struct iterator *MY_it_##NAME_a;                                        \
+    TYPE_a NAME_a;                                                          \
+    MY_it_##NAME_a =                                                        \
+        FUNC_init((TYPE_it *) (void *) MY_mem_##NAME_a, ##__VA_ARGS__);     \
+    for (; iterator_valid(MY_it_##NAME_a); iterator_next(MY_it_##NAME_a)) { \
+      NAME_a = (TYPE_a) iterator_get(MY_it_##NAME_a);
 
-#define generic_iterate_end\
-  }\
-} while (FALSE)
+#define generic_iterate_end                                                 \
+  }                                                                         \
+  }                                                                         \
+  while (FALSE)
 
 /***************************************************************************
   Iterator init functions cannot return NULL, so this dummy helper function

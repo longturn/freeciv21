@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@ extern "C" {
 #include "messagewin_g.h"
 }
 
-//Qt
+// Qt
 #include <QWidget>
 
-//qt-client
+// qt-client
 #include "chatline.h"
 #include "mapview.h"
 
@@ -39,18 +39,19 @@ class QTableWidget;
 /***************************************************************************
   Class representing message output
 ***************************************************************************/
-class messagewdg : public QWidget
-{
+class messagewdg : public QWidget {
   Q_OBJECT
 public:
   messagewdg(QWidget *parent);
   void msg_update();
   void clr();
   void msg(const struct message *pmsg);
+
 private:
   QTableWidget *mesg_table;
   QGridLayout *layout;
   QPixmap *pix;
+
 protected:
   void enterEvent(QEvent *event);
   void leaveEvent(QEvent *event);
@@ -64,8 +65,7 @@ public slots:
 /***************************************************************************
   Class which manages chat and messages
 ***************************************************************************/
-class info_tab : public fcwidget
-{
+class info_tab : public fcwidget {
   Q_OBJECT
 public:
   info_tab(QWidget *parent);
@@ -76,6 +76,7 @@ public:
   void maximize_chat();
   void restore_chat();
   bool chat_maximized;
+
 private:
   void update_menu();
   QPoint cursor;
@@ -86,11 +87,12 @@ private:
   bool resxy;
   bool resx;
   bool resy;
+
 protected:
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
   void mouseReleaseEvent(QMouseEvent *event);
-  int& e_pos();
+  int &e_pos();
 };
 
 #endif /* FC__MESSAGEWIN_H */

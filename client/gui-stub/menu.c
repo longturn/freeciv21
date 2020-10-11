@@ -20,20 +20,14 @@
 
 #include "menu.h"
 
-/**********************************************************************//**
-  Initialize menus (sensitivity, name, etc.) based on the
-  current state and current ruleset, etc.  Call menus_update().
-**************************************************************************/
-void real_menus_init(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Initialize menus (sensitivity, name, etc.) based on the
+   current state and current ruleset, etc.  Call menus_update().
+ **************************************************************************/
+void real_menus_init(void) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update all of the menus (sensitivity, name, etc.) based on the
-  current state.
-**************************************************************************/
-void real_menus_update(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update all of the menus (sensitivity, name, etc.) based on the
+   current state.
+ **************************************************************************/
+void real_menus_update(void) { /* PORTME */ }

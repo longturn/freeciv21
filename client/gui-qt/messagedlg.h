@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2003 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@ extern "C" {
 #include "messagedlg_g.h"
 }
 
-//Qt
+// Qt
 #include <QWidget>
 
 class QTableWidget;
@@ -26,11 +26,11 @@ class QGridLayout;
 /**************************************************************************
   Widget for displaying messages options
 **************************************************************************/
-class message_dlg : public QWidget
-{
+class message_dlg : public QWidget {
   Q_OBJECT
   QTableWidget *msgtab;
   QGridLayout *layout;
+
 public:
   message_dlg();
   ~message_dlg();

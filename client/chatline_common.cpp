@@ -20,9 +20,9 @@
 
 /* utility */
 #include "astring.h"
+#include "fc_utf8.h"
 #include "fcintl.h"
 #include "fcthread.h"
-#include "fc_utf8.h"
 #include "log.h"
 
 /* common */
@@ -40,67 +40,55 @@
 
 static fc_mutex ow_mutex;
 
-/**********************************************************************//**
-  Send the message as a chat to the server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send the message as a chat to the server.
+ **************************************************************************/
 int send_chat(const char *message)
 {
   return dsend_packet_chat_msg_req(&client.conn, message);
 }
 
-/**********************************************************************//**
-  Send the message as a chat to the server. Message is constructed
-  in printf style.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send the message as a chat to the server. Message is constructed
+   in printf style.
+ **************************************************************************/
 int send_chat_printf(const char *format, ...)
 {
   struct packet_chat_msg_req packet;
   va_list args;
 
   va_start(args, format);
-  fc_utf8_vsnprintf_trunc(packet.message, sizeof(packet.message),
-                          format, args);
+  fc_utf8_vsnprintf_trunc(packet.message, sizeof(packet.message), format,
+                          args);
   va_end(args);
 
   return send_packet_chat_msg_req(&client.conn, &packet);
 }
 
-/**********************************************************************//**
-  Allocate output window mutex
-**************************************************************************/
-void fc_allocate_ow_mutex(void)
-{
-  fc_allocate_mutex(&ow_mutex);
-}
+/**********************************************************************/ /**
+   Allocate output window mutex
+ **************************************************************************/
+void fc_allocate_ow_mutex(void) { fc_allocate_mutex(&ow_mutex); }
 
-/**********************************************************************//**
-  Release output window mutex
-**************************************************************************/
-void fc_release_ow_mutex(void)
-{
-  fc_release_mutex(&ow_mutex);
-}
+/**********************************************************************/ /**
+   Release output window mutex
+ **************************************************************************/
+void fc_release_ow_mutex(void) { fc_release_mutex(&ow_mutex); }
 
-/**********************************************************************//**
-  Initialize output window mutex
-**************************************************************************/
-void fc_init_ow_mutex(void)
-{
-  fc_init_mutex(&ow_mutex);
-}
+/**********************************************************************/ /**
+   Initialize output window mutex
+ **************************************************************************/
+void fc_init_ow_mutex(void) { fc_init_mutex(&ow_mutex); }
 
-/**********************************************************************//**
-  Destroy output window mutex
-**************************************************************************/
-void fc_destroy_ow_mutex(void)
-{
-  fc_destroy_mutex(&ow_mutex);
-}
+/**********************************************************************/ /**
+   Destroy output window mutex
+ **************************************************************************/
+void fc_destroy_ow_mutex(void) { fc_destroy_mutex(&ow_mutex); }
 
-/**********************************************************************//**
-  Add a line of text to the output ("chatline") window, like puts() would
-  do it in the console.
-**************************************************************************/
+/**********************************************************************/ /**
+   Add a line of text to the output ("chatline") window, like puts() would
+   do it in the console.
+ **************************************************************************/
 void output_window_append(const struct ft_color color,
                           const char *featured_text)
 {
@@ -108,13 +96,13 @@ void output_window_append(const struct ft_color color,
   struct text_tag_list *tags;
 
   /* Separate the text and the tags. */
-  featured_text_to_plain_text(featured_text, plain_text,
-                              sizeof(plain_text), &tags, FALSE);
+  featured_text_to_plain_text(featured_text, plain_text, sizeof(plain_text),
+                              &tags, FALSE);
 
   if (ft_color_requested(color)) {
     /* A color is requested. */
-    struct text_tag *ptag = text_tag_new(TTT_COLOR, 0, FT_OFFSET_UNSET,
-                                         color);
+    struct text_tag *ptag =
+        text_tag_new(TTT_COLOR, 0, FT_OFFSET_UNSET, color);
 
     if (ptag) {
       /* Prepends to the list, to avoid to overwrite inside colors. */
@@ -132,12 +120,12 @@ void output_window_append(const struct ft_color color,
   text_tag_list_destroy(tags);
 }
 
-/**********************************************************************//**
-  Add a line of text to the output ("chatline") window.  The text is
-  constructed in printf style.
-**************************************************************************/
-void output_window_vprintf(const struct ft_color color,
-                           const char *format, va_list args)
+/**********************************************************************/ /**
+   Add a line of text to the output ("chatline") window.  The text is
+   constructed in printf style.
+ **************************************************************************/
+void output_window_vprintf(const struct ft_color color, const char *format,
+                           va_list args)
 {
   char featured_text[MAX_LEN_MSG];
 
@@ -145,13 +133,12 @@ void output_window_vprintf(const struct ft_color color,
   output_window_append(color, featured_text);
 }
 
-
-/**********************************************************************//**
-  Add a line of text to the output ("chatline") window.  The text is
-  constructed in printf style.
-**************************************************************************/
-void output_window_printf(const struct ft_color color,
-                          const char *format, ...)
+/**********************************************************************/ /**
+   Add a line of text to the output ("chatline") window.  The text is
+   constructed in printf style.
+ **************************************************************************/
+void output_window_printf(const struct ft_color color, const char *format,
+                          ...)
 {
   va_list args;
 
@@ -160,9 +147,9 @@ void output_window_printf(const struct ft_color color,
   va_end(args);
 }
 
-/**********************************************************************//**
-  Add a line of text to the output ("chatline") window from server event.
-**************************************************************************/
+/**********************************************************************/ /**
+   Add a line of text to the output ("chatline") window from server event.
+ **************************************************************************/
 void output_window_event(const char *plain_text,
                          const struct text_tag_list *tags, int conn_id)
 {
@@ -171,9 +158,9 @@ void output_window_event(const char *plain_text,
   fc_release_ow_mutex();
 }
 
-/**********************************************************************//**
-  Standard welcome message.
-**************************************************************************/
+/**********************************************************************/ /**
+   Standard welcome message.
+ **************************************************************************/
 void chat_welcome_message(bool gui_has_copying_mitem)
 {
   output_window_append(ftc_any, _("Freeciv is free software and you are "
@@ -189,10 +176,10 @@ void chat_welcome_message(bool gui_has_copying_mitem)
   output_window_append(ftc_any, _("Now ... Go give 'em hell!"));
 }
 
-/**********************************************************************//**
-  Writes the supplied string into the file defined by the variable
-  'default_chat_logfile'.
-**************************************************************************/
+/**********************************************************************/ /**
+   Writes the supplied string into the file defined by the variable
+   'default_chat_logfile'.
+ **************************************************************************/
 void write_chatline_content(const char *txt)
 {
   FILE *fp = fc_fopen(gui_options.default_chat_logfile, "w");

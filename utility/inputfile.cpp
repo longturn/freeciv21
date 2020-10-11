@@ -26,7 +26,7 @@
   The data pointed to should not be modified.  The retuned pointer
   is valid _only_ until another inputfile is performed.  (So should
   be used immediately, or fc_strdup-ed etc.)
-  
+
   The tokens recognised are as follows:
   (Single quotes are delimiters used here, but are not part of the
   actual tokens/strings.)
@@ -35,31 +35,31 @@
 
   section_name:  '[foo]'
   returned token: 'foo'
-  
+
   entry_name:  'foo =' (optional whitespace allowed before '=')
   returned token: 'foo'
-  
+
   end_of_line: newline, or optional '#' or ';' (comment characters)
                followed by any other chars, then newline.
   returned token: should not be used except to check non-NULL.
-  
-  table_start: '{'  
-  returned token: should not be used except to check non-NULL.
-  
-  table_end: '}'  
+
+  table_start: '{'
   returned token: should not be used except to check non-NULL.
 
-  comma:  literal ','  
+  table_end: '}'
   returned token: should not be used except to check non-NULL.
-  
+
+  comma:  literal ','
+  returned token: should not be used except to check non-NULL.
+
   value:  a signed integer, or a double-quoted string, or a
           gettext-marked double quoted string.  Strings _may_ contain
-	  raw embedded newlines, and escaped doublequotes, or \.
-	  eg:  '123', '-999', '"foo"', '_("foo")'
+          raw embedded newlines, and escaped doublequotes, or \.
+          eg:  '123', '-999', '"foo"', '_("foo")'
   returned token: string containing number, for numeric, or string
           starting at first doublequote for strings, but ommiting
-	  trailing double-quote.  Note this does _not_ translate
-	  escaped doublequotes etc back to normal.
+          trailing double-quote.  Note this does _not_ translate
+          escaped doublequotes etc back to normal.
 
 ***********************************************************************/
 
@@ -77,39 +77,39 @@
 #include "ioz.h"
 #include "log.h"
 #include "mem.h"
-#include "shared.h"		/* TRUE, FALSE */
+#include "shared.h" /* TRUE, FALSE */
 #include "support.h"
 
 #include "inputfile.h"
 
-#define INF_DEBUG_FOUND     FALSE
+#define INF_DEBUG_FOUND FALSE
 #define INF_DEBUG_NOT_FOUND FALSE
 
-#define INF_MAGIC (0xabdc0132)	/* arbitrary */
+#define INF_MAGIC (0xabdc0132) /* arbitrary */
 
 struct inputfile {
-  unsigned int magic;		/* memory check */
-  char *filename;		/* filename as passed to fopen */
-  fz_FILE *fp;			/* read from this */
-  bool at_eof;			/* flag for end-of-file */
-  struct astring cur_line;	/* data from current line */
-  unsigned int cur_line_pos;    /* position in current line */
-  unsigned int line_num;        /* line number from file in cur_line */
-  struct astring token;		/* data returned to user */
-  struct astring partial;	/* used in accumulating multi-line strings;
-				   used only in get_token_value, but put
-				   here so it gets freed when file closed */
-  datafilename_fn_t datafn;	/* function like datafilename(); use a
-				   function pointer just to keep this
-				   inputfile module "generic" */
-  bool in_string;		/* set when reading multi-line strings,
-				   to know not to handle *include at start
-				   of line as include mechanism */
-  int string_start_line;	/* when in_string is true, this is the
-				   start line of current string */
+  unsigned int magic;        /* memory check */
+  char *filename;            /* filename as passed to fopen */
+  fz_FILE *fp;               /* read from this */
+  bool at_eof;               /* flag for end-of-file */
+  struct astring cur_line;   /* data from current line */
+  unsigned int cur_line_pos; /* position in current line */
+  unsigned int line_num;     /* line number from file in cur_line */
+  struct astring token;      /* data returned to user */
+  struct astring partial;    /* used in accumulating multi-line strings;
+                                used only in get_token_value, but put
+                                here so it gets freed when file closed */
+  datafilename_fn_t datafn;  /* function like datafilename(); use a
+                                function pointer just to keep this
+                                inputfile module "generic" */
+  bool in_string;            /* set when reading multi-line strings,
+                                to know not to handle *include at start
+                                of line as include mechanism */
+  int string_start_line;     /* when in_string is true, this is the
+                                start line of current string */
   struct inputfile *included_from; /* NULL for toplevel file, otherwise
-				      points back to files which this one
-				      has been included from */
+                                      points back to files which this one
+                                      has been included from */
 };
 
 /* A function to get a specific token type: */
@@ -126,16 +126,14 @@ static const char *get_token_value(struct inputfile *inf);
 static struct {
   const char *name;
   get_token_fn_t func;
-}
-tok_tab[INF_TOK_LAST] =
-{
-  { "section_name", get_token_section_name },
-  { "entry_name",   get_token_entry_name },
-  { "end_of_line",  get_token_eol },
-  { "table_start",  get_token_table_start },
-  { "table_end",    get_token_table_end },
-  { "comma",        get_token_comma },
-  { "value",        get_token_value },
+} tok_tab[INF_TOK_LAST] = {
+    {"section_name", get_token_section_name},
+    {"entry_name", get_token_entry_name},
+    {"end_of_line", get_token_eol},
+    {"table_start", get_token_table_start},
+    {"table_end", get_token_table_end},
+    {"comma", get_token_comma},
+    {"value", get_token_value},
 };
 
 static bool read_a_line(struct inputfile *inf);
@@ -143,23 +141,19 @@ static bool read_a_line(struct inputfile *inf);
 #define inf_log(inf, level, message, ...)                                   \
   if (log_do_output_for_level(level)) {                                     \
     do_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, level, "%s",         \
-           inf_log_str(inf, message, ## __VA_ARGS__));                      \
+           inf_log_str(inf, message, ##__VA_ARGS__));                       \
   }
-#define inf_warn(inf, message)                                              \
-  inf_log(inf, LOG_NORMAL, "%s", message);
+#define inf_warn(inf, message) inf_log(inf, LOG_NORMAL, "%s", message);
 
-/*******************************************************************//**
-  Return true if c is a 'comment' character: '#' or ';'
-***********************************************************************/
-static bool is_comment(int c)
-{
-  return (c == '#' || c == ';');
-}
+/*******************************************************************/ /**
+   Return true if c is a 'comment' character: '#' or ';'
+ ***********************************************************************/
+static bool is_comment(int c) { return (c == '#' || c == ';'); }
 
-/*******************************************************************//**
-  Set values to zeros; should have free'd/closed everything before
-  this if appropriate.
-***********************************************************************/
+/*******************************************************************/ /**
+   Set values to zeros; should have free'd/closed everything before
+   this if appropriate.
+ ***********************************************************************/
 static void init_zeros(struct inputfile *inf)
 {
   fc_assert_ret(NULL != inf);
@@ -176,18 +170,17 @@ static void init_zeros(struct inputfile *inf)
   astr_init(&inf->partial);
 }
 
-/*******************************************************************//**
-  Check sensible values for an opened inputfile.
-***********************************************************************/
+/*******************************************************************/ /**
+   Check sensible values for an opened inputfile.
+ ***********************************************************************/
 static bool inf_sanity_check(struct inputfile *inf)
 {
   fc_assert_ret_val(NULL != inf, FALSE);
   fc_assert_ret_val(INF_MAGIC == inf->magic, FALSE);
   fc_assert_ret_val(NULL != inf->fp, FALSE);
-  fc_assert_ret_val(FALSE == inf->at_eof
-                    || TRUE == inf->at_eof, FALSE);
-  fc_assert_ret_val(FALSE == inf->in_string
-                    || TRUE == inf->in_string, FALSE);
+  fc_assert_ret_val(FALSE == inf->at_eof || TRUE == inf->at_eof, FALSE);
+  fc_assert_ret_val(FALSE == inf->in_string || TRUE == inf->in_string,
+                    FALSE);
 
 #ifdef FREECIV_DEBUG
   fc_assert_ret_val(0 <= inf->string_start_line, FALSE);
@@ -199,10 +192,10 @@ static bool inf_sanity_check(struct inputfile *inf)
   return TRUE;
 }
 
-/*******************************************************************//**
-  Return the filename the inputfile was loaded as, or "(anonymous)"
-  if this inputfile was loaded from a stream rather than from a file.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return the filename the inputfile was loaded as, or "(anonymous)"
+   if this inputfile was loaded from a stream rather than from a file.
+ ***********************************************************************/
 static const char *inf_filename(struct inputfile *inf)
 {
   if (inf->filename) {
@@ -212,10 +205,10 @@ static const char *inf_filename(struct inputfile *inf)
   }
 }
 
-/*******************************************************************//**
-  Open the file, and return an allocated, initialized structure.
-  Returns NULL if the file could not be opened.
-***********************************************************************/
+/*******************************************************************/ /**
+   Open the file, and return an allocated, initialized structure.
+   Returns NULL if the file could not be opened.
+ ***********************************************************************/
 struct inputfile *inf_from_file(const char *filename,
                                 datafilename_fn_t datafn)
 {
@@ -234,10 +227,10 @@ struct inputfile *inf_from_file(const char *filename,
   return inf;
 }
 
-/*******************************************************************//**
-  Open the stream, and return an allocated, initialized structure.
-  Returns NULL if the file could not be opened.
-***********************************************************************/
+/*******************************************************************/ /**
+   Open the stream, and return an allocated, initialized structure.
+   Returns NULL if the file could not be opened.
+ ***********************************************************************/
 struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
 {
   struct inputfile *inf;
@@ -254,13 +247,12 @@ struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
   return inf;
 }
 
-
-/*******************************************************************//**
-  Close the file and free associated memory, but don't recurse
-  included_from files, and don't free the actual memory where
-  the inf record is stored (ie, the memory where the users pointer
-  points to).  This is used when closing an included file.
-***********************************************************************/
+/*******************************************************************/ /**
+   Close the file and free associated memory, but don't recurse
+   included_from files, and don't free the actual memory where
+   the inf record is stored (ie, the memory where the users pointer
+   points to).  This is used when closing an included file.
+ ***********************************************************************/
 static void inf_close_partial(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
@@ -272,8 +264,7 @@ static void inf_close_partial(struct inputfile *inf)
               fz_strerror(inf->fp));
     fz_fclose(inf->fp);
     inf->fp = NULL;
-  }
-  else if (fz_fclose(inf->fp) != 0) {
+  } else if (fz_fclose(inf->fp) != 0) {
     log_error("Error closing %s", inf_filename(inf));
   }
   if (inf->filename) {
@@ -291,12 +282,12 @@ static void inf_close_partial(struct inputfile *inf)
   log_debug("inputfile: sub-closed ok");
 }
 
-/*******************************************************************//**
-  Close the file and free associated memory, included any partially
-  recursed included files, and the memory allocated for 'inf' itself.
-  Should only be used on an actually open inputfile.
-  After this, the pointer should not be used.
-***********************************************************************/
+/*******************************************************************/ /**
+   Close the file and free associated memory, included any partially
+   recursed included files, and the memory allocated for 'inf' itself.
+   Should only be used on an actually open inputfile.
+   After this, the pointer should not be used.
+ ***********************************************************************/
 void inf_close(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
@@ -310,9 +301,9 @@ void inf_close(struct inputfile *inf)
   log_debug("inputfile: closed ok");
 }
 
-/*******************************************************************//**
-  Return TRUE if have data for current line.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return TRUE if have data for current line.
+ ***********************************************************************/
 static bool have_line(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), FALSE);
@@ -320,9 +311,9 @@ static bool have_line(struct inputfile *inf)
   return !astr_empty(&inf->cur_line);
 }
 
-/*******************************************************************//**
-  Return TRUE if current pos is at end of current line.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return TRUE if current pos is at end of current line.
+ ***********************************************************************/
 static bool at_eol(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), TRUE);
@@ -331,23 +322,23 @@ static bool at_eol(struct inputfile *inf)
   return (inf->cur_line_pos >= astr_len(&inf->cur_line));
 }
 
-/*******************************************************************//**
-  Return TRUE if current pos is at end of file.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return TRUE if current pos is at end of file.
+ ***********************************************************************/
 bool inf_at_eof(struct inputfile *inf)
 {
   fc_assert_ret_val(inf_sanity_check(inf), TRUE);
   return inf->at_eof;
 }
 
-/*******************************************************************//**
-  Check for an include command, which is an isolated line with:
-     *include "filename"
-  If a file is included via this mechanism, returns 1, and sets up
-  data appropriately: (*inf) will now correspond to the new file,
-  which is opened but no data read, and inf->included_from is set
-  to newly malloced memory which corresponds to the old file.
-***********************************************************************/
+/*******************************************************************/ /**
+   Check for an include command, which is an isolated line with:
+      *include "filename"
+   If a file is included via this mechanism, returns 1, and sets up
+   data appropriately: (*inf) will now correspond to the new file,
+   which is opened but no data read, and inf->included_from is set
+   to newly malloced memory which corresponds to the old file.
+ ***********************************************************************/
 static bool check_include(struct inputfile *inf)
 {
   const char *include_prefix = "*include";
@@ -387,9 +378,10 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
   bare_name_start = c;
-  while (*c != '\0' && *c != '\"') c++;
+  while (*c != '\0' && *c != '\"')
+    c++;
   if (*c != '\"') {
-    inf_log(inf, LOG_ERROR, 
+    inf_log(inf, LOG_ERROR,
             "Did not find closing doublequote for '*include' line");
     return FALSE;
   }
@@ -444,12 +436,12 @@ static bool check_include(struct inputfile *inf)
   return TRUE;
 }
 
-/*******************************************************************//**
-  Read a new line into cur_line.
-  Increments line_num and cur_line_pos.
-  Returns 0 if didn't read or other problem: treat as EOF.
-  Strips newline from input.
-***********************************************************************/
+/*******************************************************************/ /**
+   Read a new line into cur_line.
+   Increments line_num and cur_line_pos.
+   Returns 0 if didn't read or other problem: treat as EOF.
+   Strips newline from input.
+ ***********************************************************************/
 static bool read_a_line(struct inputfile *inf)
 {
   struct astring *line;
@@ -475,8 +467,8 @@ static bool read_a_line(struct inputfile *inf)
    * (or first position) in line.
    */
   for (;;) {
-    ret = fz_fgets((char *) astr_str(line) + pos,
-                   astr_capacity(line) - pos, inf->fp);
+    ret = fz_fgets((char *) astr_str(line) + pos, astr_capacity(line) - pos,
+                   inf->fp);
 
     if (!ret) {
       /* fgets failed */
@@ -496,7 +488,7 @@ static bool read_a_line(struct inputfile *inf)
     /* Cope with \n\r line endings if not caught by library:
      * strip off any leading \r */
     if (0 == pos && 0 < astr_len(line) && astr_str(line)[0] == '\r') {
-      memmove((char *)astr_str(line), astr_str(line)+1, astr_len(line));
+      memmove((char *) astr_str(line), astr_str(line) + 1, astr_len(line));
     }
 
     pos = astr_len(line);
@@ -530,8 +522,8 @@ static bool read_a_line(struct inputfile *inf)
       /* Pop the include, and get next line from file above instead. */
       struct inputfile *inc = inf->included_from;
       inf_close_partial(inf);
-      *inf = *inc;    /* so the user pointer in still valid
-                       * (and inf pointers in calling functions) */
+      *inf = *inc; /* so the user pointer in still valid
+                    * (and inf pointers in calling functions) */
       free(inc);
       return read_a_line(inf);
     }
@@ -539,11 +531,11 @@ static bool read_a_line(struct inputfile *inf)
   }
 }
 
-/*******************************************************************//**
-  Return a detailed log message, including information on current line
-  number etc. Message can be NULL: then just logs information on where
-  we are in the file.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return a detailed log message, including information on current line
+   number etc. Message can be NULL: then just logs information on where
+   we are in the file.
+ ***********************************************************************/
 char *inf_log_str(struct inputfile *inf, const char *message, ...)
 {
   va_list args;
@@ -573,7 +565,7 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
                  "\n  processing string starting at line %d",
                  inf->string_start_line);
   }
-  while ((inf = inf->included_from)) {  /* local pointer assignment */
+  while ((inf = inf->included_from)) { /* local pointer assignment */
     cat_snprintf(str, sizeof(str), "\n  included from file \"%s\", line %d",
                  inf_filename(inf), inf->line_num);
   }
@@ -581,9 +573,9 @@ char *inf_log_str(struct inputfile *inf, const char *message, ...)
   return str;
 }
 
-/*******************************************************************//**
-  Returns token of given type from given inputfile.
-***********************************************************************/
+/*******************************************************************/ /**
+   Returns token of given type from given inputfile.
+ ***********************************************************************/
 const char *inf_token(struct inputfile *inf, enum inf_token_type type)
 {
   const char *c;
@@ -615,10 +607,10 @@ const char *inf_token(struct inputfile *inf, enum inf_token_type type)
   return c;
 }
 
-/*******************************************************************//**
-  Read as many tokens of specified type as possible, discarding
-  the results; returns number of such tokens read and discarded.
-***********************************************************************/
+/*******************************************************************/ /**
+   Read as many tokens of specified type as possible, discarding
+   the results; returns number of such tokens read and discarded.
+ ***********************************************************************/
 int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
 {
   int count = 0;
@@ -630,11 +622,11 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type)
   return count;
 }
 
-/*******************************************************************//**
-  Returns section name in current position of inputfile. Returns NULL
-  if there is no section name on that position. Sets inputfile position
-  after section name.
-***********************************************************************/
+/*******************************************************************/ /**
+   Returns section name in current position of inputfile. Returns NULL
+   if there is no section name on that position. Sets inputfile position
+   after section name.
+ ***********************************************************************/
 static const char *get_token_section_name(struct inputfile *inf)
 {
   const char *c, *start;
@@ -654,15 +646,15 @@ static const char *get_token_section_name(struct inputfile *inf)
   }
   *((char *) c) = '\0'; /* Tricky. */
   astr_set(&inf->token, "%s", start);
-  *((char *) c) = ']';  /* Revert. */
+  *((char *) c) = ']'; /* Revert. */
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   return astr_str(&inf->token);
 }
 
-/*******************************************************************//**
-  Returns next entry name from inputfile. Skips white spaces and
-  comments. Sets inputfile position after entry name.
-***********************************************************************/
+/*******************************************************************/ /**
+   Returns next entry name from inputfile. Skips white spaces and
+   comments. Sets inputfile position after entry name.
+ ***********************************************************************/
 static const char *get_token_entry_name(struct inputfile *inf)
 {
   const char *c, *start, *end;
@@ -692,17 +684,17 @@ static const char *get_token_entry_name(struct inputfile *inf)
     return NULL;
   }
   trailing = *end;
-  *((char *) end) = '\0';       /* Tricky. */
+  *((char *) end) = '\0'; /* Tricky. */
   astr_set(&inf->token, "%s", start);
-  *((char *) end) = trailing;   /* Revert. */
+  *((char *) end) = trailing; /* Revert. */
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   return astr_str(&inf->token);
 }
 
-/*******************************************************************//**
-  If inputfile is at end-of-line, frees current line, and returns " ".
-  If there is still something on that line, returns NULL. 
-***********************************************************************/
+/*******************************************************************/ /**
+   If inputfile is at end-of-line, frees current line, and returns " ".
+   If there is still something on that line, returns NULL.
+ ***********************************************************************/
 static const char *get_token_eol(struct inputfile *inf)
 {
   const char *c;
@@ -727,12 +719,11 @@ static const char *get_token_eol(struct inputfile *inf)
   return astr_str(&inf->token);
 }
 
-/*******************************************************************//**
-  Get a flag token of a single character, with optional
-  preceeding whitespace.
-***********************************************************************/
-static const char *get_token_white_char(struct inputfile *inf,
-                                        char target)
+/*******************************************************************/ /**
+   Get a flag token of a single character, with optional
+   preceeding whitespace.
+ ***********************************************************************/
+static const char *get_token_white_char(struct inputfile *inf, char target)
 {
   const char *c;
 
@@ -750,33 +741,33 @@ static const char *get_token_white_char(struct inputfile *inf,
   return astr_str(&inf->token);
 }
 
-/*******************************************************************//**
-  Get flag token for table start, or NULL if that is not next token.
-***********************************************************************/
+/*******************************************************************/ /**
+   Get flag token for table start, or NULL if that is not next token.
+ ***********************************************************************/
 static const char *get_token_table_start(struct inputfile *inf)
 {
   return get_token_white_char(inf, '{');
 }
 
-/*******************************************************************//**
-  Get flag token for table end, or NULL if that is not next token.
-***********************************************************************/
+/*******************************************************************/ /**
+   Get flag token for table end, or NULL if that is not next token.
+ ***********************************************************************/
 static const char *get_token_table_end(struct inputfile *inf)
 {
   return get_token_white_char(inf, '}');
 }
 
-/*******************************************************************//**
-  Get flag token comma, or NULL if that is not next token.
-***********************************************************************/
+/*******************************************************************/ /**
+   Get flag token comma, or NULL if that is not next token.
+ ***********************************************************************/
 static const char *get_token_comma(struct inputfile *inf)
 {
   return get_token_white_char(inf, ',');
 }
 
-/*******************************************************************//**
-  This one is more complicated; note that it may read in multiple lines.
-***********************************************************************/
+/*******************************************************************/ /**
+   This one is more complicated; note that it may read in multiple lines.
+ ***********************************************************************/
 static const char *get_token_value(struct inputfile *inf)
 {
   struct astring *partial;
@@ -815,12 +806,12 @@ static const char *get_token_value(struct inputfile *inf)
     /* If its a comma, we don't want to obliterate it permanently,
      * so remember it: */
     trailing = *c;
-    *((char *) c) = '\0';       /* Tricky. */
+    *((char *) c) = '\0'; /* Tricky. */
 
     inf->cur_line_pos = c - astr_str(&inf->cur_line);
     astr_set(&inf->token, "%s", start);
 
-    *((char *) c) = trailing;   /* Revert. */
+    *((char *) c) = trailing; /* Revert. */
     return astr_str(&inf->token);
   }
 
@@ -861,25 +852,23 @@ static const char *get_token_value(struct inputfile *inf)
     /* We don't want to obliterate ending '*' permanently,
      * so remember it: */
     trailing = *(c - 1);
-    *((char *) (c - 1)) = '\0';     /* Tricky. */
+    *((char *) (c - 1)) = '\0'; /* Tricky. */
 
     rfname = fileinfoname(get_data_dirs(), start);
     if (rfname == NULL) {
-      inf_log(inf, LOG_ERROR, 
-              _("Cannot find stringfile \"%s\"."), start);
+      inf_log(inf, LOG_ERROR, _("Cannot find stringfile \"%s\"."), start);
       *((char *) c) = trailing; /* Revert. */
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
     fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
     if (!fp) {
-      inf_log(inf, LOG_ERROR,
-              _("Cannot open stringfile \"%s\"."), rfname);
+      inf_log(inf, LOG_ERROR, _("Cannot open stringfile \"%s\"."), rfname);
       return NULL;
     }
     log_debug("Stringfile \"%s\" opened ok", start);
     *((char *) (c - 1)) = trailing; /* Revert. */
-    astr_set(&inf->token, "*"); /* Mark as a string read from a file */
+    astr_set(&inf->token, "*");     /* Mark as a string read from a file */
 
     eof = FALSE;
     pos = 1; /* Past 'filestring' marker */
@@ -901,9 +890,8 @@ static const char *get_token_value(struct inputfile *inf)
     inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
 
     return astr_str(&inf->token);
-  } else if (border_character != '\"'
-      && border_character != '\''
-      && border_character != '$') {
+  } else if (border_character != '\"' && border_character != '\''
+             && border_character != '$') {
     /* A one-word string: maybe FALSE or TRUE. */
     start = c;
     while (fc_isalnum(*c)) {
@@ -916,12 +904,12 @@ static const char *get_token_value(struct inputfile *inf)
     /* If its a comma, we don't want to obliterate it permanently,
      * so remember it: */
     trailing = *c;
-    *((char *) c) = '\0';       /* Tricky. */
+    *((char *) c) = '\0'; /* Tricky. */
 
     inf->cur_line_pos = c - astr_str(&inf->cur_line);
     astr_set(&inf->token, "%s", start);
 
-    *((char *) c) = trailing;   /* Revert. */
+    *((char *) c) = trailing; /* Revert. */
     return astr_str(&inf->token);
   }
 
@@ -942,11 +930,11 @@ static const char *get_token_value(struct inputfile *inf)
   inf->string_start_line = inf->line_num;
   inf->in_string = TRUE;
 
-  partial = &inf->partial;      /* abbreviation */
+  partial = &inf->partial; /* abbreviation */
   astr_clear(partial);
 
-  start = c++;                  /* start includes the initial \", to
-                                 * distinguish from a number */
+  start = c++; /* start includes the initial \", to
+                * distinguish from a number */
   for (;;) {
     while (*c != '\0' && *c != border_character) {
       /* skip over escaped chars, including backslash-doublequote,
@@ -966,7 +954,7 @@ static const char *get_token_value(struct inputfile *inf)
 
     if (!read_a_line(inf)) {
       /* shouldn't happen */
-      inf_log(inf, LOG_ERROR, 
+      inf_log(inf, LOG_ERROR,
               "Bad return for multi-line string from read_a_line");
       return NULL;
     }
@@ -975,12 +963,12 @@ static const char *get_token_value(struct inputfile *inf)
 
   /* found end of string */
   trailing = *c;
-  *((char *) c) = '\0';         /* Tricky. */
+  *((char *) c) = '\0'; /* Tricky. */
 
   inf->cur_line_pos = c + 1 - astr_str(&inf->cur_line);
   astr_set(&inf->token, "%s%s", astr_str(partial), start);
 
-  *((char *) c) = trailing;     /* Revert. */
+  *((char *) c) = trailing; /* Revert. */
 
   /* check gettext tag at end: */
   if (has_i18n_marking) {

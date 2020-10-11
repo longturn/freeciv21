@@ -24,7 +24,6 @@
 #include "canvas.h"
 #include "pages.h"
 
-
 void setup_gui_funcs();
 
 void qtg_ui_init();
@@ -44,11 +43,12 @@ bool qtg_is_view_supported(enum ts_type type);
 void qtg_tileset_type_set(enum ts_type type);
 void qtg_free_intro_radar_sprites();
 struct sprite *qtg_load_gfxfile(const char *filename);
-struct sprite *qtg_create_sprite(int width, int height, struct color *pcolor);
-void qtg_get_sprite_dimensions(struct sprite *sprite, int *width, int *height);
-struct sprite *qtg_crop_sprite(struct sprite *source,
-                               int x, int y, int width, int height,
-                               struct sprite *mask,
+struct sprite *qtg_create_sprite(int width, int height,
+                                 struct color *pcolor);
+void qtg_get_sprite_dimensions(struct sprite *sprite, int *width,
+                               int *height);
+struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
+                               int width, int height, struct sprite *mask,
                                int mask_offset_x, int mask_offset_y,
                                float scale, bool smooth);
 void qtg_free_sprite(struct sprite *s);
@@ -60,35 +60,32 @@ struct canvas *qtg_canvas_create(int width, int height);
 void qtg_canvas_free(struct canvas *store);
 void qtg_canvas_set_zoom(struct canvas *store, float zoom);
 bool qtg_has_zoom_support();
-void qtg_canvas_copy(struct canvas *dest, struct canvas *src,
-		     int src_x, int src_y, int dest_x, int dest_y, int width,
-		     int height);
-void qtg_canvas_put_sprite(struct canvas *pcanvas,
-                           int canvas_x, int canvas_y,
-                           struct sprite *sprite,
-                           int offset_x, int offset_y, int width, int height);
-void qtg_canvas_put_sprite_full(struct canvas *pcanvas,
-                                int canvas_x, int canvas_y,
-                                struct sprite *sprite);
-void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas,
-                                  int canvas_x, int canvas_y,
-                                  struct sprite *psprite,
+void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
+                     int src_y, int dest_x, int dest_y, int width,
+                     int height);
+void qtg_canvas_put_sprite(struct canvas *pcanvas, int canvas_x,
+                           int canvas_y, struct sprite *sprite, int offset_x,
+                           int offset_y, int width, int height);
+void qtg_canvas_put_sprite_full(struct canvas *pcanvas, int canvas_x,
+                                int canvas_y, struct sprite *sprite);
+void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
+                                  int canvas_y, struct sprite *psprite,
                                   bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_rectangle(struct canvas *pcanvas,
-                              struct color *pcolor,
-                              int canvas_x, int canvas_y,
-                              int width, int height);
+void qtg_canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
+                              int canvas_x, int canvas_y, int width,
+                              int height);
 void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
-                                 struct sprite *psprite, struct color *pcolor,
-                                 int canvas_x, int canvas_y);
+                                 struct sprite *psprite,
+                                 struct color *pcolor, int canvas_x,
+                                 int canvas_y);
 void qtg_canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);
 void qtg_canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
-                                enum line_type ltype, int start_x, int start_y,
-                                int dx, int dy);
-void qtg_get_text_size(int *width, int *height,
-                       enum client_font font, const char *text);
+                                enum line_type ltype, int start_x,
+                                int start_y, int dx, int dy);
+void qtg_get_text_size(int *width, int *height, enum client_font font,
+                       const char *text);
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, struct color *pcolor,
                          const char *text);
@@ -100,7 +97,7 @@ void qtg_add_net_input(int sock);
 void qtg_remove_net_input();
 void qtg_real_conn_list_dialog_update(void *unused);
 void qtg_close_connection_dialog();
-void qtg_add_idle_callback(void (callback)(void *), void *data);
+void qtg_add_idle_callback(void(callback)(void *), void *data);
 void qtg_sound_bell();
 
 void qtg_real_set_client_page(enum client_pages page);
@@ -116,8 +113,10 @@ void qtg_gui_update_font(const char *font_name, const char *font_value);
 
 void qtg_editgui_refresh();
 void qtg_editgui_notify_object_created(int tag, int id);
-void qtg_editgui_notify_object_changed(int objtype, int object_id, bool removal);
-void qtg_editgui_popup_properties(const struct tile_list *tiles, int objtype);
+void qtg_editgui_notify_object_changed(int objtype, int object_id,
+                                       bool removal);
+void qtg_editgui_popup_properties(const struct tile_list *tiles,
+                                  int objtype);
 void qtg_editgui_tileset_changed();
 void qtg_editgui_popdown_all();
 
@@ -138,6 +137,7 @@ void qtg_update_infra_dialog();
 void qtg_gui_load_theme(const char *directory, const char *theme_name);
 void qtg_gui_clear_theme();
 char **qtg_get_gui_specific_themes_directories(int *count);
-char **qtg_get_useable_themes_in_directory(const char *directory, int *count);
+char **qtg_get_useable_themes_in_directory(const char *directory,
+                                           int *count);
 
 #endif /* FC__QTG_CXXSIDE_H */

@@ -35,9 +35,9 @@
 
 #include "gui_cbsetter.h"
 
-/**********************************************************************//**
-  Setup the gui callback table.
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup the gui callback table.
+ **************************************************************************/
 void setup_gui_funcs(void)
 {
   struct gui_funcs *funcs = get_gui_funcs();
@@ -120,6 +120,8 @@ void setup_gui_funcs(void)
 
   funcs->gui_load_theme = gui_gui_load_theme;
   funcs->gui_clear_theme = gui_gui_clear_theme;
-  funcs->get_gui_specific_themes_directories = gui_get_gui_specific_themes_directories;
-  funcs->get_useable_themes_in_directory = gui_get_useable_themes_in_directory;
+  funcs->get_gui_specific_themes_directories =
+      gui_get_gui_specific_themes_directories;
+  funcs->get_useable_themes_in_directory =
+      gui_get_useable_themes_in_directory;
 }

@@ -19,12 +19,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
-#include "events.h"		/* enum event_type */
-#include "fc_types.h"		/* struct tile */
-#include "featured_text.h"      /* struct text_tag_list */
+#include "events.h"        /* enum event_type */
+#include "fc_types.h"      /* struct tile */
+#include "featured_text.h" /* struct text_tag_list */
 
 struct message {
   char *descr;
@@ -42,8 +42,8 @@ struct message {
 
 void meswin_clear_older(int turn, int phase);
 void meswin_add(const char *message, const struct text_tag_list *tags,
-                struct tile *ptile, enum event_type event,
-                int turn, int phase);
+                struct tile *ptile, enum event_type event, int turn,
+                int phase);
 
 const struct message *meswin_get_message(int message_index);
 int meswin_get_num_messages(void);

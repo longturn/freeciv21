@@ -23,9 +23,9 @@
 
 #include "handicaps.h"
 
-/**********************************************************************//**
-  Initialize handicaps for player
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize handicaps for player
+ **************************************************************************/
 void handicaps_init(struct player *pplayer)
 {
   if (pplayer->ai_common.handicaps != NULL) {
@@ -33,12 +33,12 @@ void handicaps_init(struct player *pplayer)
   }
 
   pplayer->ai_common.handicaps = fc_malloc(sizeof(bv_handicap));
-  BV_CLR_ALL(*((bv_handicap *)pplayer->ai_common.handicaps));
+  BV_CLR_ALL(*((bv_handicap *) pplayer->ai_common.handicaps));
 }
 
-/**********************************************************************//**
-  Free resources associated with player handicaps.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free resources associated with player handicaps.
+ **************************************************************************/
 void handicaps_close(struct player *pplayer)
 {
   if (pplayer->ai_common.handicaps == NULL) {
@@ -49,34 +49,34 @@ void handicaps_close(struct player *pplayer)
   pplayer->ai_common.handicaps = NULL;
 }
 
-/**********************************************************************//**
-  Set player handicaps
-**************************************************************************/
+/**********************************************************************/ /**
+   Set player handicaps
+ **************************************************************************/
 void handicaps_set(struct player *pplayer, bv_handicap handicaps)
 {
-  *((bv_handicap *)pplayer->ai_common.handicaps) = handicaps;
+  *((bv_handicap *) pplayer->ai_common.handicaps) = handicaps;
 }
 
-/**********************************************************************//**
-  AI players may have handicaps - allowing them to cheat or preventing
-  them from using certain algorithms.  This function returns whether the
-  player has the given handicap.  Human players are assumed to have no
-  handicaps.
-**************************************************************************/
+/**********************************************************************/ /**
+   AI players may have handicaps - allowing them to cheat or preventing
+   them from using certain algorithms.  This function returns whether the
+   player has the given handicap.  Human players are assumed to have no
+   handicaps.
+ **************************************************************************/
 bool has_handicap(const struct player *pplayer, enum handicap_type htype)
 {
   if (is_human(pplayer)) {
     return TRUE;
   }
 
-  return BV_ISSET(*((bv_handicap *)pplayer->ai_common.handicaps), htype);
+  return BV_ISSET(*((bv_handicap *) pplayer->ai_common.handicaps), htype);
 }
 
-/**********************************************************************//**
-  Return a short (translated) string describing the handicap, for help.
-  In some cases it's better to describe what happens if the handicap is
-  absent; 'inverted' is set TRUE in these cases.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return a short (translated) string describing the handicap, for help.
+   In some cases it's better to describe what happens if the handicap is
+   absent; 'inverted' is set TRUE in these cases.
+ **************************************************************************/
 const char *handicap_desc(enum handicap_type htype, bool *inverted)
 {
   *inverted = FALSE;
@@ -98,7 +98,8 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
     return _("Has no restrictions on tax rates.");
   case H_TARGETS:
     *inverted = TRUE;
-    return _("Can target units and cities in unseen or unexplored territory.");
+    return _(
+        "Can target units and cities in unseen or unexplored territory.");
   case H_HUTS:
     *inverted = TRUE;
     return _("Knows the location of huts in unexplored territory.");
@@ -128,7 +129,7 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
     return _("Can change city production type without penalty.");
 #ifdef FREECIV_WEB
   case H_ASSESS_DANGER_LIMITED:
-    return _("Limits the distance to search for threatening enemy units.");    
+    return _("Limits the distance to search for threatening enemy units.");
 #endif
   case H_LAST:
     break; /* fall through -- should never see this */

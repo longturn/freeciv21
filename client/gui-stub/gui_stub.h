@@ -17,4 +17,4 @@
 /* gui-stub is implemented through callback interface */
 #define GUI_CB_MODE 1
 
-#endif  /* FC__GUI_STUB_H */
+#endif /* FC__GUI_STUB_H */

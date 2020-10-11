@@ -30,42 +30,43 @@
 #include "fc_client.h"
 #include "plrdlg.h"
 
-/**********************************************************************//**
-  Help function to draw checkbox inside delegate
-**************************************************************************/
-static QRect check_box_rect(const QStyleOptionViewItem
-                            &view_item_style_options)
+/**********************************************************************/ /**
+   Help function to draw checkbox inside delegate
+ **************************************************************************/
+static QRect
+check_box_rect(const QStyleOptionViewItem &view_item_style_options)
 {
   QStyleOptionButton cbso;
   QRect check_box_rect = QApplication::style()->subElementRect(
-                           QStyle::SE_CheckBoxIndicator, &cbso);
-  QPoint check_box_point(view_item_style_options.rect.x() +
-                         view_item_style_options.rect.width() / 2 -
-                         check_box_rect.width() / 2,
-                         view_item_style_options.rect.y() +
-                         view_item_style_options.rect.height() / 2 -
-                         check_box_rect.height() / 2);
+      QStyle::SE_CheckBoxIndicator, &cbso);
+  QPoint check_box_point(view_item_style_options.rect.x()
+                             + view_item_style_options.rect.width() / 2
+                             - check_box_rect.width() / 2,
+                         view_item_style_options.rect.y()
+                             + view_item_style_options.rect.height() / 2
+                             - check_box_rect.height() / 2);
   return QRect(check_box_point, check_box_rect.size());
 }
 
-/**********************************************************************//**
-  Slighty increase deafult cell height
-**************************************************************************/
+/**********************************************************************/ /**
+   Slighty increase deafult cell height
+ **************************************************************************/
 QSize plr_item_delegate::sizeHint(const QStyleOptionViewItem &option,
                                   const QModelIndex &index) const
 {
   QSize r;
 
-  r =  QItemDelegate::sizeHint(option, index);
+  r = QItemDelegate::sizeHint(option, index);
   r.setHeight(r.height() + 4);
   return r;
 }
 
-/**********************************************************************//**
-  Paint evenet for custom player item delegation
-**************************************************************************/
-void plr_item_delegate::paint(QPainter *painter, const QStyleOptionViewItem
-                              &option, const QModelIndex &index) const
+/**********************************************************************/ /**
+   Paint evenet for custom player item delegation
+ **************************************************************************/
+void plr_item_delegate::paint(QPainter *painter,
+                              const QStyleOptionViewItem &option,
+                              const QModelIndex &index) const
 {
   QStyleOptionButton but;
   QStyleOptionButton cbso;
@@ -83,7 +84,7 @@ void plr_item_delegate::paint(QPainter *painter, const QStyleOptionViewItem
                                   index.data().value<QPixmap>());
     break;
   case COL_COLOR:
-    pix.fill(index.data().value <QColor> ());
+    pix.fill(index.data().value<QColor>());
     QItemDelegate::drawBackground(painter, opt, index);
     QItemDelegate::drawDecoration(painter, opt, option.rect, pix);
     break;
@@ -109,7 +110,7 @@ void plr_item_delegate::paint(QPainter *painter, const QStyleOptionViewItem
     rct = option.rect;
     rct.setTop((rct.top() + rct.bottom()) / 2
                - opt.fontMetrics.height() / 2);
-    rct.setBottom((rct.top()+rct.bottom()) / 2
+    rct.setBottom((rct.top() + rct.bottom()) / 2
                   + opt.fontMetrics.height() / 2);
     if (index.data().toInt() == -1) {
       str = "?";
@@ -124,25 +125,25 @@ void plr_item_delegate::paint(QPainter *painter, const QStyleOptionViewItem
   painter->restore();
 }
 
-/**********************************************************************//**
-  Constructor for plr_item
-**************************************************************************/
-plr_item::plr_item(struct player *pplayer): QObject()
+/**********************************************************************/ /**
+   Constructor for plr_item
+ **************************************************************************/
+plr_item::plr_item(struct player *pplayer) : QObject()
 {
   ipplayer = pplayer;
 }
 
-/**********************************************************************//**
-  Sets data for plr_item (not used)
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets data for plr_item (not used)
+ **************************************************************************/
 bool plr_item::setData(int column, const QVariant &value, int role)
 {
   return false;
 }
 
-/**********************************************************************//**
-  Returns data from item
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns data from item
+ **************************************************************************/
 QVariant plr_item::data(int column, int role) const
 {
   QFont f;
@@ -152,7 +153,7 @@ QVariant plr_item::data(int column, int role) const
   struct player_dlg_column *pdc;
 
   if (role == Qt::UserRole) {
-    return QVariant::fromValue((void *)ipplayer);
+    return QVariant::fromValue((void *) ipplayer);
   }
   if (role != Qt::DisplayRole) {
     return QVariant();
@@ -189,39 +190,40 @@ QVariant plr_item::data(int column, int role) const
   }
 }
 
-/**********************************************************************//**
-  Constructor for player model
-**************************************************************************/
-plr_model::plr_model(QObject *parent): QAbstractListModel(parent)
+/**********************************************************************/ /**
+   Constructor for player model
+ **************************************************************************/
+plr_model::plr_model(QObject *parent) : QAbstractListModel(parent)
 {
   populate();
 }
 
-/**********************************************************************//**
-  Destructor for player model
-**************************************************************************/
+/**********************************************************************/ /**
+   Destructor for player model
+ **************************************************************************/
 plr_model::~plr_model()
 {
   qDeleteAll(plr_list);
   plr_list.clear();
 }
 
-/**********************************************************************//**
-  Returns data from model
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns data from model
+ **************************************************************************/
 QVariant plr_model::data(const QModelIndex &index, int role) const
 {
-  if (!index.isValid()) return QVariant();
+  if (!index.isValid())
+    return QVariant();
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount())
     return plr_list[index.row()]->data(index.column(), role);
   return QVariant();
 }
 
-/**********************************************************************//**
-  Returns header data from model
-**************************************************************************/
-QVariant plr_model::headerData(int section, Qt::Orientation orientation, 
+/**********************************************************************/ /**
+   Returns header data from model
+ **************************************************************************/
+QVariant plr_model::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {
   struct player_dlg_column *pcol;
@@ -234,16 +236,18 @@ QVariant plr_model::headerData(int section, Qt::Orientation orientation,
   return QVariant();
 }
 
-/**********************************************************************//**
-  Sets data in model
-**************************************************************************/
-bool plr_model::setData(const QModelIndex &index, const QVariant &value, 
+/**********************************************************************/ /**
+   Sets data in model
+ **************************************************************************/
+bool plr_model::setData(const QModelIndex &index, const QVariant &value,
                         int role)
 {
-  if (!index.isValid() || role != Qt::DisplayRole) return false;
-  if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0 
-    && index.column() < columnCount()) {
-    bool change = plr_list[index.row()]->setData(index.column(), value, role);
+  if (!index.isValid() || role != Qt::DisplayRole)
+    return false;
+  if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
+      && index.column() < columnCount()) {
+    bool change =
+        plr_list[index.row()]->setData(index.column(), value, role);
     if (change) {
       notify_plr_changed(index.row());
     }
@@ -252,17 +256,17 @@ bool plr_model::setData(const QModelIndex &index, const QVariant &value,
   return false;
 }
 
-/**********************************************************************//**
-  Notifies that row has been changed
-**************************************************************************/
+/**********************************************************************/ /**
+   Notifies that row has been changed
+ **************************************************************************/
 void plr_model::notify_plr_changed(int row)
 {
   emit dataChanged(index(row, 0), index(row, columnCount() - 1));
 }
 
-/**********************************************************************//**
-  Fills model with data
-**************************************************************************/
+/**********************************************************************/ /**
+   Fills model with data
+ **************************************************************************/
 void plr_model::populate()
 {
   plr_item *pi;
@@ -270,20 +274,22 @@ void plr_model::populate()
   qDeleteAll(plr_list);
   plr_list.clear();
   beginResetModel();
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if ((is_barbarian(pplayer))) {
       continue;
     }
     pi = new plr_item(pplayer);
     plr_list << pi;
-  } players_iterate_end;
+  }
+  players_iterate_end;
   endResetModel();
 }
 
-/**********************************************************************//**
-  Constructor for plr_widget
-**************************************************************************/
-plr_widget::plr_widget(plr_report *pr): QTreeView()
+/**********************************************************************/ /**
+   Constructor for plr_widget
+ **************************************************************************/
+plr_widget::plr_widget(plr_report *pr) : QTreeView()
 {
   plr = pr;
   other_player = NULL;
@@ -305,18 +311,18 @@ plr_widget::plr_widget(plr_report *pr): QTreeView()
   setAlternatingRowColors(true);
   header()->setContextMenuPolicy(Qt::CustomContextMenu);
   hide_columns();
-  connect(header(), &QWidget::customContextMenuRequested,
-          this, &plr_widget::display_header_menu);
-  connect(selectionModel(),
-          SIGNAL(selectionChanged(const QItemSelection &,
-                                  const QItemSelection &)),
-          SLOT(nation_selected(const QItemSelection &,
-                               const QItemSelection &)));
+  connect(header(), &QWidget::customContextMenuRequested, this,
+          &plr_widget::display_header_menu);
+  connect(
+      selectionModel(),
+      SIGNAL(
+          selectionChanged(const QItemSelection &, const QItemSelection &)),
+      SLOT(nation_selected(const QItemSelection &, const QItemSelection &)));
 }
 
-/**********************************************************************//**
-  Restores selection of previously selected nation
-**************************************************************************/
+/**********************************************************************/ /**
+   Restores selection of previously selected nation
+ **************************************************************************/
 void plr_widget::restore_selection()
 {
   QItemSelection selection;
@@ -338,13 +344,14 @@ void plr_widget::restore_selection()
       selection.append(QItemSelectionRange(i));
     }
   }
-  selectionModel()->select(selection, QItemSelectionModel::Rows
-                           | QItemSelectionModel::SelectCurrent);
+  selectionModel()->select(selection,
+                           QItemSelectionModel::Rows
+                               | QItemSelectionModel::SelectCurrent);
 }
 
-/**********************************************************************//**
-  Displays menu on header by right clicking
-**************************************************************************/
+/**********************************************************************/ /**
+   Displays menu on header by right clicking
+ **************************************************************************/
 void plr_widget::display_header_menu(const QPoint &)
 {
   QMenu *hideshow_column = new QMenu(this);
@@ -352,8 +359,8 @@ void plr_widget::display_header_menu(const QPoint &)
   QList<QAction *> actions;
   for (int i = 0; i < list_model->columnCount(); ++i) {
     QAction *myAct = hideshow_column->addAction(
-                       list_model->headerData(i, Qt::Horizontal, 
-                                              Qt::DisplayRole).toString());
+        list_model->headerData(i, Qt::Horizontal, Qt::DisplayRole)
+            .toString());
     myAct->setCheckable(true);
     myAct->setChecked(!isColumnHidden(i));
     actions.append(myAct);
@@ -380,9 +387,9 @@ void plr_widget::display_header_menu(const QPoint &)
   hideshow_column->popup(QCursor::pos());
 }
 
-/**********************************************************************//**
-  Returns information about column if hidden
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns information about column if hidden
+ **************************************************************************/
 QVariant plr_model::hide_data(int section) const
 {
   struct player_dlg_column *pcol;
@@ -390,9 +397,9 @@ QVariant plr_model::hide_data(int section) const
   return pcol->show;
 }
 
-/**********************************************************************//**
-  Hides columns in plr widget, depending on info from plr_list
-**************************************************************************/
+/**********************************************************************/ /**
+   Hides columns in plr widget, depending on info from plr_list
+ **************************************************************************/
 void plr_widget::hide_columns()
 {
   int col;
@@ -404,9 +411,9 @@ void plr_widget::hide_columns()
   }
 }
 
-/**********************************************************************//**
-  Slot for selecting player/nation
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for selecting player/nation
+ **************************************************************************/
 void plr_widget::nation_selected(const QItemSelection &sl,
                                  const QItemSelection &ds)
 {
@@ -493,31 +500,31 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   }
   /** Formatting rich text */
   intel_str =
-    /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
-    QString("<table><tr><td><b>") + _("Nation") + QString("</b></td><td>")
-    + QString(nation_adjective_for_player(pplayer)).toHtmlEscaped()
-    + QString("</td><tr><td><b>") + _("Ruler:") + QString("</b></td><td>")
-    + QString(ruler_title_for_player(pplayer, tbuf, sizeof(tbuf)))
-      .toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Government:")
-    + QString("</b></td><td>") + egov.toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Capital:")
-    + QString("</b></td><td>")
-    + QString(((!pcity) ? _("(Unknown)") : city_name_get(pcity)))
-      .toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Gold:")
-    + QString("</b></td><td>") + egold.toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Tax:")
-    + QString("</b></td><td>") + etax.toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Science:")
-    + QString("</b></td><td>") + esci.toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Luxury:")
-    + QString("</b></td><td>") + elux.toHtmlEscaped()
-    + QString("</td></tr><tr><td><b>") + _("Researching:")
-    + QString("</b></td><td>") + res.toHtmlEscaped()
-    + QString("<td></tr><tr><td><b>") + _("Culture:")
-    + QString("</b></td><td>") + cult.toHtmlEscaped()
-    + QString("</td></table>");
+      /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
+      QString("<table><tr><td><b>") + _("Nation") + QString("</b></td><td>")
+      + QString(nation_adjective_for_player(pplayer)).toHtmlEscaped()
+      + QString("</td><tr><td><b>") + _("Ruler:") + QString("</b></td><td>")
+      + QString(ruler_title_for_player(pplayer, tbuf, sizeof(tbuf)))
+            .toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Government:")
+      + QString("</b></td><td>") + egov.toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Capital:")
+      + QString("</b></td><td>")
+      + QString(((!pcity) ? _("(Unknown)") : city_name_get(pcity)))
+            .toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Gold:")
+      + QString("</b></td><td>") + egold.toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Tax:")
+      + QString("</b></td><td>") + etax.toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Science:")
+      + QString("</b></td><td>") + esci.toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Luxury:")
+      + QString("</b></td><td>") + elux.toHtmlEscaped()
+      + QString("</td></tr><tr><td><b>") + _("Researching:")
+      + QString("</b></td><td>") + res.toHtmlEscaped()
+      + QString("<td></tr><tr><td><b>") + _("Culture:")
+      + QString("</b></td><td>") + cult.toHtmlEscaped()
+      + QString("</td></table>");
 
   for (int i = 0; i < static_cast<int>(DS_LAST); i++) {
     added = false;
@@ -525,7 +532,8 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       ally_str += "<br>";
     }
     entry_exist = false;
-    players_iterate_alive(other) {
+    players_iterate_alive(other)
+    {
       if (other == pplayer || is_barbarian(other)) {
         continue;
       }
@@ -533,22 +541,23 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       if (static_cast<int>(state->type) == i
           && (global_observer || could_intel_with_player(me, pplayer))) {
         if (!added) {
-          ally_str = ally_str  + QString("<b>")
+          ally_str = ally_str + QString("<b>")
                      + QString(diplstate_type_translated_name(
-                                 static_cast<diplstate_type>(i)))
-                       .toHtmlEscaped()
-                     + ": "  + QString("</b>") + nl;
+                                   static_cast<diplstate_type>(i)))
+                           .toHtmlEscaped()
+                     + ": " + QString("</b>") + nl;
           added = true;
         }
         if (gives_shared_vision(pplayer, other)) {
           ally_str = ally_str + "(◐‿◑)";
         }
         ally_str = ally_str
-          + QString(nation_plural_for_player(other)).toHtmlEscaped()
-          + ", ";
+                   + QString(nation_plural_for_player(other)).toHtmlEscaped()
+                   + ", ";
         entry_exist = true;
       }
-    } players_iterate_alive_end;
+    }
+    players_iterate_alive_end;
     if (entry_exist) {
       ally_str.replace(ally_str.lastIndexOf(","), 1, ".");
     }
@@ -558,16 +567,16 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     if (player_has_embassy(me, pplayer) && me != pplayer) {
       a = 0;
       b = 0;
-      techs_known = QString(_("<b>Techs unknown by %1:</b>")).
-                    arg(QString(nation_plural_for_player(pplayer))
-                        .toHtmlEscaped());
+      techs_known = QString(_("<b>Techs unknown by %1:</b>"))
+                        .arg(QString(nation_plural_for_player(pplayer))
+                                 .toHtmlEscaped());
       techs_unknown = QString(_("<b>Techs unknown by you :</b>"));
 
-      advance_iterate(A_FIRST, padvance) {
+      advance_iterate(A_FIRST, padvance)
+      {
         tech_id = advance_number(padvance);
         if (research_invention_state(my_research, tech_id) == TECH_KNOWN
-            && (research_invention_state(research, tech_id) 
-                != TECH_KNOWN)) {
+            && (research_invention_state(research, tech_id) != TECH_KNOWN)) {
           a++;
           sorted_list_a << research_advance_name_translation(research,
                                                              tech_id);
@@ -578,18 +587,17 @@ void plr_widget::nation_selected(const QItemSelection &sl,
           sorted_list_b << research_advance_name_translation(research,
                                                              tech_id);
         }
-      } advance_iterate_end;
+      }
+      advance_iterate_end;
       sorted_list_a.sort(Qt::CaseInsensitive);
       sorted_list_b.sort(Qt::CaseInsensitive);
       foreach (res, sorted_list_a) {
-        techs_known = techs_known + QString("<i>")
-                      + res.toHtmlEscaped() + ","
-                      + QString("</i>") + sp;
+        techs_known = techs_known + QString("<i>") + res.toHtmlEscaped()
+                      + "," + QString("</i>") + sp;
       }
       foreach (res, sorted_list_b) {
-        techs_unknown = techs_unknown + QString("<i>")
-                        + res.toHtmlEscaped() + ","
-                        + QString("</i>") + sp;
+        techs_unknown = techs_unknown + QString("<i>") + res.toHtmlEscaped()
+                        + "," + QString("</i>") + sp;
       }
       if (a == 0) {
         techs_known = techs_known + QString("<i>") + sp
@@ -606,34 +614,35 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       tech_str = techs_known + nl + techs_unknown;
     }
   } else {
-    tech_str = QString(_("<b>Techs known by %1:</b>")).
-               arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
-    advance_iterate(A_FIRST, padvance) {
+    tech_str =
+        QString(_("<b>Techs known by %1:</b>"))
+            .arg(QString(nation_plural_for_player(pplayer)).toHtmlEscaped());
+    advance_iterate(A_FIRST, padvance)
+    {
       tech_id = advance_number(padvance);
       if (research_invention_state(research, tech_id) == TECH_KNOWN) {
-        sorted_list_a << research_advance_name_translation(research, tech_id);
+        sorted_list_a << research_advance_name_translation(research,
+                                                           tech_id);
       }
-    } advance_iterate_end;
+    }
+    advance_iterate_end;
     sorted_list_a.sort(Qt::CaseInsensitive);
     foreach (res, sorted_list_a) {
       tech_str = tech_str + QString("<i>") + res.toHtmlEscaped() + ","
-                    + QString("</i>") + sp;
+                 + QString("</i>") + sp;
     }
   }
   plr->update_report(false);
 }
 
-/**********************************************************************//**
-  Returns model used in widget
-**************************************************************************/
-plr_model *plr_widget::get_model() const
-{
-  return list_model;
-}
+/**********************************************************************/ /**
+   Returns model used in widget
+ **************************************************************************/
+plr_model *plr_widget::get_model() const { return list_model; }
 
-/**********************************************************************//**
-  Destructor for player widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Destructor for player widget
+ **************************************************************************/
 plr_widget::~plr_widget()
 {
   delete pid;
@@ -643,10 +652,10 @@ plr_widget::~plr_widget()
   gui()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
 }
 
-/**********************************************************************//**
-  Constructor for plr_report
-**************************************************************************/
-plr_report::plr_report():QWidget()
+/**********************************************************************/ /**
+   Constructor for plr_report
+ **************************************************************************/
+plr_report::plr_report() : QWidget()
 {
   v_splitter = new QSplitter(Qt::Vertical);
   h_splitter = new QSplitter(Qt::Horizontal);
@@ -692,10 +701,14 @@ plr_report::plr_report():QWidget()
   hlayout->addWidget(toggle_ai_but);
   hlayout->addStretch();
   layout->addLayout(hlayout);
-  connect(meet_but, &QAbstractButton::pressed, this, &plr_report::req_meeeting);
-  connect(cancel_but, &QAbstractButton::pressed, this, &plr_report::req_caancel_threaty);
-  connect(withdraw_but, &QAbstractButton::pressed, this, &plr_report::req_wiithdrw_vision);
-  connect(toggle_ai_but, &QAbstractButton::pressed, this, &plr_report::toggle_ai_mode);
+  connect(meet_but, &QAbstractButton::pressed, this,
+          &plr_report::req_meeeting);
+  connect(cancel_but, &QAbstractButton::pressed, this,
+          &plr_report::req_caancel_threaty);
+  connect(withdraw_but, &QAbstractButton::pressed, this,
+          &plr_report::req_wiithdrw_vision);
+  connect(toggle_ai_but, &QAbstractButton::pressed, this,
+          &plr_report::toggle_ai_mode);
   setLayout(layout);
   if (gui()->qt_settings.player_repo_sort_col != -1) {
     plr_wdg->sortByColumn(gui()->qt_settings.player_repo_sort_col,
@@ -703,17 +716,14 @@ plr_report::plr_report():QWidget()
   }
 }
 
-/**********************************************************************//**
-  Destructor for plr_report
-**************************************************************************/
-plr_report::~plr_report()
-{
-  gui()->remove_repo_dlg("PLR");
-}
+/**********************************************************************/ /**
+   Destructor for plr_report
+ **************************************************************************/
+plr_report::~plr_report() { gui()->remove_repo_dlg("PLR"); }
 
-/**********************************************************************//**
-  Adds plr_report to tab widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Adds plr_report to tab widget
+ **************************************************************************/
 void plr_report::init()
 {
   gui()->gimme_place(this, "PLR");
@@ -721,10 +731,9 @@ void plr_report::init()
   gui()->game_tab_widget->setCurrentIndex(index);
 }
 
-
-/**********************************************************************//**
-  Public function to call meeting
-**************************************************************************/
+/**********************************************************************/ /**
+   Public function to call meeting
+ **************************************************************************/
 void plr_report::call_meeting()
 {
   if (meet_but->isEnabled()) {
@@ -732,39 +741,37 @@ void plr_report::call_meeting()
   }
 }
 
-/**********************************************************************//**
-  Slot for canceling threaty (name changed to cheat autoconnect, and
-  doubled execution)
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for canceling threaty (name changed to cheat autoconnect, and
+   doubled execution)
+ **************************************************************************/
 void plr_report::req_caancel_threaty()
 {
-  dsend_packet_diplomacy_cancel_pact(&client.conn, 
-                                     player_number(other_player),
-                                     CLAUSE_CEASEFIRE);
+  dsend_packet_diplomacy_cancel_pact(
+      &client.conn, player_number(other_player), CLAUSE_CEASEFIRE);
 }
 
-/**********************************************************************//**
-  Slot for meeting request
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for meeting request
+ **************************************************************************/
 void plr_report::req_meeeting()
 {
   dsend_packet_diplomacy_init_meeting_req(&client.conn,
                                           player_number(other_player));
 }
 
-/**********************************************************************//**
-  Slot for withdrawing vision
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for withdrawing vision
+ **************************************************************************/
 void plr_report::req_wiithdrw_vision()
 {
-  dsend_packet_diplomacy_cancel_pact(&client.conn, 
-                                     player_number(other_player),
-                                     CLAUSE_VISION);
+  dsend_packet_diplomacy_cancel_pact(
+      &client.conn, player_number(other_player), CLAUSE_VISION);
 }
 
-/**********************************************************************//**
-  Slot for changing AI mode
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for changing AI mode
+ **************************************************************************/
 void plr_report::toggle_ai_mode()
 {
   QAction *toggle_ai_act;
@@ -805,27 +812,27 @@ void plr_report::toggle_ai_mode()
   ai_menu->popup(QCursor::pos());
 }
 
-/**********************************************************************//**
-  Handle mouse click
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle mouse click
+ **************************************************************************/
 void plr_widget::mousePressEvent(QMouseEvent *event)
 {
-  QModelIndex index =  this->indexAt(event->pos());
-  if (index.isValid() &&  event->button() == Qt::RightButton
+  QModelIndex index = this->indexAt(event->pos());
+  if (index.isValid() && event->button() == Qt::RightButton
       && can_client_issue_orders()) {
-     plr->call_meeting();
+    plr->call_meeting();
   }
   QTreeView::mousePressEvent(event);
 }
 
-/**********************************************************************//**
-  Updates widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates widget
+ **************************************************************************/
 void plr_report::update_report(bool update_selection)
 {
   QModelIndex qmi;
   int player_count = 0;
-  
+
   /* Force updating selected player information */
   if (update_selection) {
     qmi = plr_wdg->currentIndex();
@@ -835,12 +842,14 @@ void plr_report::update_report(bool update_selection)
     }
   }
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if ((is_barbarian(pplayer))) {
       continue;
     }
     player_count++;
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (player_count != plr_wdg->get_model()->rowCount()) {
     plr_wdg->get_model()->populate();
@@ -858,12 +867,13 @@ void plr_report::update_report(bool update_selection)
   if (other_player == NULL || !can_client_issue_orders()) {
     return;
   }
-  if (NULL != client.conn.playing
-      && other_player != client.conn.playing) {
+  if (NULL != client.conn.playing && other_player != client.conn.playing) {
 
-    // We keep button sensitive in case of DIPL_SENATE_BLOCKING, so that player
-    // can request server side to check requirements of those effects with omniscience
-    if (pplayer_can_cancel_treaty(client_player(), other_player) != DIPL_ERROR) {
+    // We keep button sensitive in case of DIPL_SENATE_BLOCKING, so that
+    // player can request server side to check requirements of those effects
+    // with omniscience
+    if (pplayer_can_cancel_treaty(client_player(), other_player)
+        != DIPL_ERROR) {
       cancel_but->setEnabled(true);
     }
     toggle_ai_but->setEnabled(true);
@@ -878,9 +888,9 @@ void plr_report::update_report(bool update_selection)
   plr_wdg->restore_selection();
 }
 
-/**********************************************************************//**
-  Display the player list dialog.  Optionally raise it.
-**************************************************************************/
+/**********************************************************************/ /**
+   Display the player list dialog.  Optionally raise it.
+ **************************************************************************/
 void popup_players_dialog(bool raise)
 {
   int i;
@@ -900,15 +910,15 @@ void popup_players_dialog(bool raise)
       gui()->game_tab_widget->setCurrentIndex(0);
       return;
     }
-    pr = reinterpret_cast<plr_report*>(w);
+    pr = reinterpret_cast<plr_report *>(w);
     gui()->game_tab_widget->setCurrentWidget(pr);
     pr->update_report();
   }
 }
 
-/**********************************************************************//**
-  Update all information in the player list dialog.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update all information in the player list dialog.
+ **************************************************************************/
 void real_players_dialog_update(void *unused)
 {
   int i;
@@ -925,9 +935,9 @@ void real_players_dialog_update(void *unused)
   }
 }
 
-/**********************************************************************//**
-  Closes players report
-**************************************************************************/
+/**********************************************************************/ /**
+   Closes players report
+ **************************************************************************/
 void popdown_players_report()
 {
   int i;

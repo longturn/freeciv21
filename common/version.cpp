@@ -29,30 +29,30 @@
 #include "fc_gitrev_gen.h"
 #endif /* GITREV */
 
-/*******************************************************************//**
-  Return string containing both name of Freeciv and version.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return string containing both name of Freeciv and version.
+ ***********************************************************************/
 const char *freeciv_name_version(void)
 {
   static char msgbuf[256];
 
 #if IS_BETA_VERSION
-  fc_snprintf(msgbuf, sizeof (msgbuf), _("Freeciv version %s %s"),
+  fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv version %s %s"),
               VERSION_STRING, _("(beta version)"));
 #elif defined(GITREV) && !defined(FC_GITREV_OFF)
-  fc_snprintf(msgbuf, sizeof (msgbuf), _("Freeciv version %s (%s)"),
+  fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv version %s (%s)"),
               VERSION_STRING, fc_git_revision());
 #else
-  fc_snprintf(msgbuf, sizeof (msgbuf), _("Freeciv version %s"),
+  fc_snprintf(msgbuf, sizeof(msgbuf), _("Freeciv version %s"),
               VERSION_STRING);
 #endif
 
   return msgbuf;
 }
 
-/*******************************************************************//**
-  Return string describing version type.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return string describing version type.
+ ***********************************************************************/
 const char *word_version(void)
 {
 #if IS_BETA_VERSION
@@ -62,10 +62,10 @@ const char *word_version(void)
 #endif
 }
 
-/*******************************************************************//**
-  Returns string with git revision information if it is possible to
-  determine. Can return also some fallback string or even NULL.
-***********************************************************************/
+/*******************************************************************/ /**
+   Returns string with git revision information if it is possible to
+   determine. Can return also some fallback string or even NULL.
+ ***********************************************************************/
 const char *fc_git_revision(void)
 {
 #if defined(GITREV) && !defined(FC_GITREV_OFF)
@@ -76,52 +76,39 @@ const char *fc_git_revision(void)
               translate ? _(FC_GITREV1) : FC_GITREV1, FC_GITREV2);
 
   return buf; /* Either revision, or modified revision */
-#else  /* FC_GITREV_OFF */
+#else         /* FC_GITREV_OFF */
   return NULL;
-#endif /* FC_GITREV_OFF */
+#endif        /* FC_GITREV_OFF */
 }
 
-/*******************************************************************//**
-  Returns version string that can be used to compare two freeciv builds.
-  This does not handle git revisions, as there's no way to compare
-  which of the two commits is "higher".
-***********************************************************************/
-const char *fc_comparable_version(void)
-{
-  return VERSION_STRING;
-}
+/*******************************************************************/ /**
+   Returns version string that can be used to compare two freeciv builds.
+   This does not handle git revisions, as there's no way to compare
+   which of the two commits is "higher".
+ ***********************************************************************/
+const char *fc_comparable_version(void) { return VERSION_STRING; }
 
-/*******************************************************************//**
-  Return the BETA message.
-  If returns NULL, not a beta version.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return the BETA message.
+   If returns NULL, not a beta version.
+ ***********************************************************************/
 const char *beta_message(void)
 {
 #if IS_BETA_VERSION
   static char msgbuf[500];
-  static const char *month[] =
-  {
-    NULL,
-    N_("January"),
-    N_("February"),
-    N_("March"),
-    N_("April"),
-    N_("May"),
-    N_("June"),
-    N_("July"),
-    N_("August"),
-    N_("September"),
-    N_("October"),
-    N_("November"),
-    N_("December")
-  };
+  static const char *month[] = {
+      NULL,          N_("January"),   N_("February"), N_("March"),
+      N_("April"),   N_("May"),       N_("June"),     N_("July"),
+      N_("August"),  N_("September"), N_("October"),  N_("November"),
+      N_("December")};
 
   if (FREECIV_RELEASE_MONTH > 0) {
-    fc_snprintf(msgbuf, sizeof(msgbuf),
-                /* TRANS: No full stop after the URL, could cause confusion. */
-                _("THIS IS A BETA VERSION\n"
-                  "Freeciv %s will be released in %s, at %s"),
-                NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
+    fc_snprintf(
+        msgbuf, sizeof(msgbuf),
+        /* TRANS: No full stop after the URL, could cause confusion. */
+        _("THIS IS A BETA VERSION\n"
+          "Freeciv %s will be released in %s, at %s"),
+        NEXT_STABLE_VERSION, _(NEXT_RELEASE_MONTH), WIKI_URL);
   } else {
     fc_snprintf(msgbuf, sizeof(msgbuf),
                 _("THIS IS A BETA VERSION\n"
@@ -134,24 +121,24 @@ const char *beta_message(void)
 #endif /* IS_BETA_VERSION */
 }
 
-/*******************************************************************//**
-  Return the Freeciv motto.
-  (The motto is common code:
-   only one instance of the string in the source;
-   only one time gettext needs to translate it. --jjm)
-***********************************************************************/
+/*******************************************************************/ /**
+   Return the Freeciv motto.
+   (The motto is common code:
+    only one instance of the string in the source;
+    only one time gettext needs to translate it. --jjm)
+ ***********************************************************************/
 const char *freeciv_motto(void)
 {
   return _("'Cause civilization should be free!");
 }
 
-/*******************************************************************//**
-  Return version string in a format suitable to be written to created
-  datafiles as human readable information.
-***********************************************************************/
+/*******************************************************************/ /**
+   Return version string in a format suitable to be written to created
+   datafiles as human readable information.
+ ***********************************************************************/
 const char *freeciv_datafile_version(void)
 {
-  static char buf[500] = { '\0' };
+  static char buf[500] = {'\0'};
 
   if (buf[0] == '\0') {
     const char *ver_rev;

@@ -27,18 +27,20 @@
 
 #include "advruleset.h"
 
-/**********************************************************************//**
-  Initialise the unit data from the ruleset for the advisors.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialise the unit data from the ruleset for the advisors.
+ **************************************************************************/
 void adv_units_ruleset_init(void)
 {
-  unit_class_iterate(pclass) {
-    bool move_land_enabled  = FALSE; /* Can move at some land terrains */
+  unit_class_iterate(pclass)
+  {
+    bool move_land_enabled = FALSE;  /* Can move at some land terrains */
     bool move_land_disabled = FALSE; /* Cannot move at some land terrains */
-    bool move_sea_enabled   = FALSE; /* Can move at some ocean terrains */
-    bool move_sea_disabled  = FALSE; /* Cannot move at some ocean terrains */
+    bool move_sea_enabled = FALSE;   /* Can move at some ocean terrains */
+    bool move_sea_disabled = FALSE;  /* Cannot move at some ocean terrains */
 
-    terrain_type_iterate(pterrain) {
+    terrain_type_iterate(pterrain)
+    {
       if (is_native_to_class(pclass, pterrain, NULL)) {
         /* Can move at terrain */
         if (is_ocean(pterrain)) {
@@ -54,7 +56,8 @@ void adv_units_ruleset_init(void)
           move_land_disabled = TRUE;
         }
       }
-    } terrain_type_iterate_end;
+    }
+    terrain_type_iterate_end;
 
     if (move_land_enabled && !move_land_disabled) {
       pclass->adv.land_move = MOVE_FULL;
@@ -73,29 +76,35 @@ void adv_units_ruleset_init(void)
       fc_assert(!move_sea_enabled);
       pclass->adv.sea_move = MOVE_NONE;
     }
+  }
+  unit_class_iterate_end;
 
-  } unit_class_iterate_end;
-
-  unit_type_iterate(ptype) {
+  unit_type_iterate(ptype)
+  {
     ptype->adv.igwall = TRUE;
 
-    effect_list_iterate(get_effects(EFT_DEFEND_BONUS), peffect) {
+    effect_list_iterate(get_effects(EFT_DEFEND_BONUS), peffect)
+    {
       if (peffect->value > 0) {
-        requirement_vector_iterate(&peffect->reqs, preq) {
-          if (!is_req_active(NULL, NULL, NULL, NULL, NULL, NULL, ptype,
-                             NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
+        requirement_vector_iterate(&peffect->reqs, preq)
+        {
+          if (!is_req_active(NULL, NULL, NULL, NULL, NULL, NULL, ptype, NULL,
+                             NULL, NULL, preq, RPT_POSSIBLE)) {
             ptype->adv.igwall = FALSE;
             break;
           }
-        } requirement_vector_iterate_end;
+        }
+        requirement_vector_iterate_end;
       }
       if (!ptype->adv.igwall) {
         break;
       }
-    } effect_list_iterate_end;
+    }
+    effect_list_iterate_end;
 
     ptype->adv.worker = utype_has_flag(ptype, UTYF_SETTLERS);
-  } unit_type_iterate_end;
+  }
+  unit_type_iterate_end;
 
   /* Initialize autosettlers actions */
   auto_settlers_ruleset_init();

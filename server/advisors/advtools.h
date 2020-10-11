@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,6 +25,6 @@ adv_want amortize(adv_want benefit, int delay);
  * is divided by POWER_DIVIDER.
  *
  */
-#define POWER_DIVIDER 	(POWER_FACTOR * 3)
+#define POWER_DIVIDER (POWER_FACTOR * 3)
 
-#endif   /* FC__ADVTOOLS_H */
+#endif /* FC__ADVTOOLS_H */

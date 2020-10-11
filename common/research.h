@@ -131,8 +131,7 @@ enum tech_state research_invention_set(struct research *presearch,
 bool research_invention_reachable(const struct research *presearch,
                                   const Tech_type_id tech);
 bool research_invention_gettable(const struct research *presearch,
-                                 const Tech_type_id tech,
-                                 bool allow_holes);
+                                 const Tech_type_id tech, bool allow_holes);
 
 Tech_type_id research_goal_step(const struct research *presearch,
                                 Tech_type_id goal);
@@ -155,8 +154,8 @@ size_t research_iter_sizeof(void);
 struct iterator *research_iter_init(struct research_iter *it);
 
 #define researches_iterate(_presearch)                                      \
-  generic_iterate(struct research_iter, struct research *,                  \
-                  _presearch, research_iter_sizeof, research_iter_init)
+  generic_iterate(struct research_iter, struct research *, _presearch,      \
+                  research_iter_sizeof, research_iter_init)
 #define researches_iterate_end generic_iterate_end
 
 struct research_player_iter;
@@ -175,4 +174,4 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__RESEARCH_H */
+#endif /* FC__RESEARCH_H */

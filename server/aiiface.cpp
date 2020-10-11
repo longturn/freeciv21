@@ -49,9 +49,9 @@ bool fc_ai_stub_setup(struct ai_type *ai);
 static struct ai_type *default_ai = NULL;
 
 #ifdef AI_MODULES
-/**********************************************************************//**
-  Return string describing module loading error. Never returns NULL.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return string describing module loading error. Never returns NULL.
+ **************************************************************************/
 static const char *fc_module_error(void)
 {
   static char def_err[] = "Unknown error";
@@ -64,15 +64,15 @@ static const char *fc_module_error(void)
   return errtxt;
 }
 
-/**********************************************************************//**
-  Load ai module from file.
-**************************************************************************/
+/**********************************************************************/ /**
+   Load ai module from file.
+ **************************************************************************/
 bool load_ai_module(const char *modname)
 {
   struct ai_type *ai = ai_type_alloc();
   bool setup_success;
   lt_dlhandle handle;
-  bool (*setup_func)(struct ai_type *ai);
+  bool (*setup_func)(struct ai_type * ai);
   const char *(*capstr_func)(void);
   const char *capstr;
   char buffer[2048];
@@ -88,7 +88,8 @@ bool load_ai_module(const char *modname)
   fc_snprintf(buffer, sizeof(buffer), "%s", filename);
   handle = lt_dlopenext(buffer);
   if (handle == NULL) {
-    log_error(_("Cannot open AI module %s (%s)"), filename, fc_module_error());
+    log_error(_("Cannot open AI module %s (%s)"), filename,
+              fc_module_error());
     return FALSE;
   }
 
@@ -127,13 +128,15 @@ bool load_ai_module(const char *modname)
 }
 #endif /* AI_MODULES */
 
-/**********************************************************************//**
-  Initialize ai stuff
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize ai stuff
+ **************************************************************************/
 void ai_init(void)
 {
   bool failure = FALSE;
-#if !defined(AI_MODULES) || defined(AI_MOD_STATIC_CLASSIC) || defined(AI_MOD_STATIC_THREADED) || defined(AI_MOD_STATIC_TEX) || defined(AI_MOD_STATIC_STUB)
+#if !defined(AI_MODULES) || defined(AI_MOD_STATIC_CLASSIC)                  \
+    || defined(AI_MOD_STATIC_THREADED) || defined(AI_MOD_STATIC_TEX)        \
+    || defined(AI_MOD_STATIC_STUB)
   /* First !defined(AI_MODULES) case is for default ai support. */
   struct ai_type *ai;
 #endif
@@ -148,10 +151,10 @@ void ai_init(void)
     /* First search ai modules under directory ai/<module> under
        current directory. This allows us to run freeciv without
        installing it. */
-    const char *moduledirs[] = { "classic", "threaded", "tex", "stub", NULL };
+    const char *moduledirs[] = {"classic", "threaded", "tex", "stub", NULL};
     int i;
 
-    for (i = 0; moduledirs[i] != NULL ; i++) {
+    for (i = 0; moduledirs[i] != NULL; i++) {
       char buf[2048];
 
       fc_snprintf(buf, sizeof(buf), "ai/%s", moduledirs[i]);
@@ -221,45 +224,44 @@ void ai_init(void)
   }
 #endif /* AI_MODULES */
   if (default_ai == NULL || failure) {
-    log_error(_("Failed to setup default AI module \"%s\", cannot continue."),
-              AI_MOD_DEFAULT);
+    log_error(
+        _("Failed to setup default AI module \"%s\", cannot continue."),
+        AI_MOD_DEFAULT);
     exit(EXIT_FAILURE);
   }
 }
 
-/**********************************************************************//**
-  Call incident function of victim.
-**************************************************************************/
+/**********************************************************************/ /**
+   Call incident function of victim.
+ **************************************************************************/
 void call_incident(enum incident_type type, enum casus_belli_range scope,
-                   const struct action *paction,
-                   struct player *violator, struct player *victim)
+                   const struct action *paction, struct player *violator,
+                   struct player *victim)
 {
   if (scope == CBR_VICTIM_ONLY) {
-    CALL_PLR_AI_FUNC(incident, victim,
-                     type, scope, paction, victim, violator, victim);
+    CALL_PLR_AI_FUNC(incident, victim, type, scope, paction, victim,
+                     violator, victim);
   } else {
     fc_assert(scope == CBR_INTERNATIONAL_OUTRAGE);
-    players_iterate(receiver) {
-      CALL_PLR_AI_FUNC(incident, victim,
-                       type, scope, paction, receiver, violator, victim);
+    players_iterate(receiver)
+    {
+      CALL_PLR_AI_FUNC(incident, victim, type, scope, paction, receiver,
+                       violator, victim);
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 }
 
-/**********************************************************************//**
-  Call ai refresh() callback for all players.
-**************************************************************************/
+/**********************************************************************/ /**
+   Call ai refresh() callback for all players.
+ **************************************************************************/
 void call_ai_refresh(void)
 {
-  players_iterate(pplayer) {
-    CALL_PLR_AI_FUNC(refresh, pplayer, pplayer);
-  } players_iterate_end;
+  players_iterate(pplayer) { CALL_PLR_AI_FUNC(refresh, pplayer, pplayer); }
+  players_iterate_end;
 }
 
-/**********************************************************************//**
-  Return name of default ai type.
-**************************************************************************/
-const char *default_ai_type_name(void)
-{
-  return default_ai->name;
-}
+/**********************************************************************/ /**
+   Return name of default ai type.
+ **************************************************************************/
+const char *default_ai_type_name(void) { return default_ai->name; }

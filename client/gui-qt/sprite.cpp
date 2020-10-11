@@ -27,11 +27,11 @@
 
 static const char **gfx_array_extensions = nullptr;
 
-/************************************************************************//**
-  Return a NULL-terminated, permanently allocated array of possible
-  graphics types extensions.  Extensions listed first will be checked
-  first.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a NULL-terminated, permanently allocated array of possible
+   graphics types extensions.  Extensions listed first will be checked
+   first.
+ ****************************************************************************/
 const char **gfx_fileextensions(void)
 {
   QList<QByteArray> gfx_ext;
@@ -59,11 +59,11 @@ const char **gfx_fileextensions(void)
   return gfx_array_extensions;
 }
 
-/************************************************************************//**
-  Load the given graphics file into a sprite.  This function loads an
-  entire image file, which may later be broken up into individual sprites
-  with crop_sprite.
-****************************************************************************/
+/************************************************************************/ /**
+   Load the given graphics file into a sprite.  This function loads an
+   entire image file, which may later be broken up into individual sprites
+   with crop_sprite.
+ ****************************************************************************/
 struct sprite *qtg_load_gfxfile(const char *filename)
 {
   sprite *entire = new sprite;
@@ -80,30 +80,29 @@ struct sprite *qtg_load_gfxfile(const char *filename)
   return entire;
 }
 
-/************************************************************************//**
-  Create a new sprite by cropping and taking only the given portion of
-  the image.
+/************************************************************************/ /**
+   Create a new sprite by cropping and taking only the given portion of
+   the image.
 
-  source gives the sprite that is to be cropped.
+   source gives the sprite that is to be cropped.
 
-  x,y, width, height gives the rectangle to be cropped.  The pixel at
-  position of the source sprite will be at (0,0) in the new sprite, and
-  the new sprite will have dimensions (width, height).
+   x,y, width, height gives the rectangle to be cropped.  The pixel at
+   position of the source sprite will be at (0,0) in the new sprite, and
+   the new sprite will have dimensions (width, height).
 
-  mask gives an additional mask to be used for clipping the new
-  sprite. Only the transparency value of the mask is used in
-  crop_sprite. The formula is: dest_trans = src_trans *
-  mask_trans. Note that because the transparency is expressed as an
-  integer it is common to divide it by 256 afterwards.
+   mask gives an additional mask to be used for clipping the new
+   sprite. Only the transparency value of the mask is used in
+   crop_sprite. The formula is: dest_trans = src_trans *
+   mask_trans. Note that because the transparency is expressed as an
+   integer it is common to divide it by 256 afterwards.
 
-  mask_offset_x, mask_offset_y is the offset of the mask relative to the
-  origin of the source image.  The pixel at (mask_offset_x,mask_offset_y)
-  in the mask image will be used to clip pixel (0,0) in the source image
-  which is pixel (-x,-y) in the new image.
-****************************************************************************/
-struct sprite *qtg_crop_sprite(struct sprite *source,
-                               int x, int y, int width, int height,
-                               struct sprite *mask,
+   mask_offset_x, mask_offset_y is the offset of the mask relative to the
+   origin of the source image.  The pixel at (mask_offset_x,mask_offset_y)
+   in the mask image will be used to clip pixel (0,0) in the source image
+   which is pixel (-x,-y) in the new image.
+ ****************************************************************************/
+struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
+                               int width, int height, struct sprite *mask,
                                int mask_offset_x, int mask_offset_y,
                                float scale, bool smooth)
 {
@@ -120,8 +119,9 @@ struct sprite *qtg_crop_sprite(struct sprite *source,
   if (!width || !height) {
     return NULL;
   }
-  if (scale != 1.0f && (tileset_hex_height(tileset) > 0
-      || tileset_hex_width(tileset) > 0)) {
+  if (scale != 1.0f
+      && (tileset_hex_height(tileset) > 0
+          || tileset_hex_width(tileset) > 0)) {
     hex = 1;
   }
   widthzoom = ceil(width * scale) + hex;
@@ -157,27 +157,28 @@ struct sprite *qtg_crop_sprite(struct sprite *source,
   return cropped;
 }
 
-/************************************************************************//**
-  Find the dimensions of the sprite.
-****************************************************************************/
-void qtg_get_sprite_dimensions(struct sprite *sprite, int *width, int *height)
+/************************************************************************/ /**
+   Find the dimensions of the sprite.
+ ****************************************************************************/
+void qtg_get_sprite_dimensions(struct sprite *sprite, int *width,
+                               int *height)
 {
   *width = sprite->pm->width();
   *height = sprite->pm->height();
 }
 
-/************************************************************************//**
-  Free a sprite and all associated image data.
-****************************************************************************/
+/************************************************************************/ /**
+   Free a sprite and all associated image data.
+ ****************************************************************************/
 void qtg_free_sprite(struct sprite *s)
 {
   delete s->pm;
   delete s;
 }
 
-/************************************************************************//**
-  Create a new sprite with the given height, width and color.
-****************************************************************************/
+/************************************************************************/ /**
+   Create a new sprite with the given height, width and color.
+ ****************************************************************************/
 struct sprite *qtg_create_sprite(int width, int height, struct color *pcolor)
 {
   struct sprite *created = new sprite;

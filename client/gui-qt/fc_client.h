@@ -80,35 +80,33 @@ class QTimer;
 class QTreeWidget;
 struct fc_shortcut;
 
-
 /****************************************************************************
   Class helping reading icons/pixmaps from themes/gui-qt/icons folder
 ****************************************************************************/
-class fc_icons
-{
+class fc_icons {
   Q_DISABLE_COPY(fc_icons);
 
 private:
   explicit fc_icons();
-  static fc_icons* m_instance;
+  static fc_icons *m_instance;
 
 public:
-  static fc_icons* instance();
+  static fc_icons *instance();
   static void drop();
-  QIcon get_icon(const QString& id);
-  QPixmap *get_pixmap(const QString& id);
-  QString get_path(const QString& id);
+  QIcon get_icon(const QString &id);
+  QPixmap *get_pixmap(const QString &id);
+  QString get_path(const QString &id);
 };
 
 /****************************************************************************
   Widget holding all game tabs
 ****************************************************************************/
-class fc_game_tab_widget: public QStackedWidget
-{
+class fc_game_tab_widget : public QStackedWidget {
   Q_OBJECT
 public:
   fc_game_tab_widget();
   void init();
+
 protected:
   void resizeEvent(QResizeEvent *event);
 private slots:
@@ -118,8 +116,7 @@ private slots:
 /****************************************************************************
   Some qt-specific options like size to save between restarts
 ****************************************************************************/
-struct fc_settings
-{
+struct fc_settings {
   float chat_fwidth;
   float chat_fheight;
   float chat_fx_pos;
@@ -150,10 +147,10 @@ struct fc_settings
 /****************************************************************************
   Corner widget for menu
 ****************************************************************************/
-class fc_corner : public QWidget
-{
+class fc_corner : public QWidget {
   Q_OBJECT
   QMainWindow *mw;
+
 public:
   fc_corner(QMainWindow *qmw);
 public slots:
@@ -162,13 +159,10 @@ public slots:
   void close_fc();
 };
 
-
-class fc_client : public QMainWindow,
-                  private chat_listener
-{
+class fc_client : public QMainWindow, private chat_listener {
   Q_OBJECT
   QWidget *main_wdg;
-  QWidget *pages[ (int) PAGE_GAME + 2];
+  QWidget *pages[(int) PAGE_GAME + 2];
   QWidget *connect_lan;
   QWidget *connect_metaserver;
   QWidget *game_main_widget;
@@ -195,21 +189,21 @@ class fc_client : public QMainWindow,
   QPushButton *start_button;
   QPushButton *nation_button;
 
-  QDialogButtonBox* button_box;
+  QDialogButtonBox *button_box;
 
   QSocketNotifier *server_notifier;
 
   chat_input *chat_line;
 
-  QTableWidget* lan_widget;
-  QTableWidget* wan_widget;
-  QTableWidget* info_widget;
-  QTableWidget* saves_load;
-  QTableWidget* scenarios_load;
-  QTreeWidget* start_players_tree;
+  QTableWidget *lan_widget;
+  QTableWidget *wan_widget;
+  QTableWidget *info_widget;
+  QTableWidget *saves_load;
+  QTableWidget *scenarios_load;
+  QTreeWidget *start_players_tree;
 
-  QTimer* meta_scan_timer;
-  QTimer* lan_scan_timer;
+  QTimer *meta_scan_timer;
+  QTimer *lan_scan_timer;
   QTimer *update_info_timer;
 
   QStatusBar *status_bar;
@@ -276,7 +270,7 @@ public:
   fc_sidewidget *sw_diplo;
   float map_scale;
   bool map_font_scale;
-  void gimme_place(QWidget* widget, QString str);
+  void gimme_place(QWidget *widget, QString str);
   int gimme_index_of(QString str);
   void remove_repo_dlg(QString str);
   bool is_repo_dlg_open(QString str);
@@ -314,7 +308,8 @@ public slots:
 
 protected slots:
 
-  void slot_selection_changed(const QItemSelection&, const QItemSelection&);
+  void slot_selection_changed(const QItemSelection &,
+                              const QItemSelection &);
 
 private:
   void chat_message_received(const QString &message,
@@ -327,7 +322,7 @@ private:
   void create_game_page();
   void create_loading_page();
   bool chat_active_on_page(enum client_pages);
-  void destroy_server_scans (void);
+  void destroy_server_scans(void);
   void update_server_list(enum server_scan_type sstype,
                           const struct server_list *list);
   bool check_server_scan(server_scan *scan_data);
@@ -341,7 +336,7 @@ private:
   void read_settings();
 
   enum client_pages page;
-  QMap<QString, QWidget*> opened_repo_dlgs;
+  QMap<QString, QWidget *> opened_repo_dlgs;
   QStringList status_bar_queue;
   QString current_file;
   bool send_new_aifill_to_server;
@@ -353,20 +348,19 @@ protected:
 
 signals:
   void keyCaught(QKeyEvent *e);
-
 };
 
 /***************************************************************************
   Class for showing options in PAGE_START, options like ai_fill, ruleset
   etc.
 ***************************************************************************/
-class pregame_options : public QWidget
-{
+class pregame_options : public QWidget {
   Q_OBJECT
   QComboBox *ailevel;
   QComboBox *cruleset;
   QPushButton *nation;
   QSpinBox *max_players;
+
 public:
   pregame_options(QWidget *parent);
   void init();
@@ -388,5 +382,3 @@ public slots:
 class fc_client *gui();
 
 #endif /* FC__FC_CLIENT_H */
-
-

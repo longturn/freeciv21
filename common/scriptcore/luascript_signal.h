@@ -22,7 +22,7 @@ extern "C" {
 
 struct fc_lua;
 
-typedef char * signal_deprecator;
+typedef char *signal_deprecator;
 
 void luascript_signal_init(struct fc_lua *fcl);
 void luascript_signal_free(struct fc_lua *fcl);

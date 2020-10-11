@@ -21,7 +21,7 @@
 /* common */
 #include "extras.h"
 #include "fc_types.h"
-#include "game.h"  /* FIXME it's extra_type_iterate that needs this really */
+#include "game.h" /* FIXME it's extra_type_iterate that needs this really */
 #include "tile.h"
 
 #include "clientutils.h"
@@ -40,12 +40,12 @@ struct actcalc {
   int activity_turns[ACTIVITY_LAST];
 };
 
-/************************************************************************//**
-  Calculate completion time for all unit activities on tile.
-  If pmodunit is supplied, take into account the effect if it changed to
-  doing new_act on new_tgt instead of whatever it's currently doing (if
-  anything).
-****************************************************************************/
+/************************************************************************/ /**
+   Calculate completion time for all unit activities on tile.
+   If pmodunit is supplied, take into account the effect if it changed to
+   doing new_act on new_tgt instead of whatever it's currently doing (if
+   anything).
+ ****************************************************************************/
 static void calc_activity(struct actcalc *calc, const struct tile *ptile,
                           const struct unit *pmodunit,
                           Activity_type_id new_act,
@@ -59,14 +59,15 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     int rmextra_units[MAX_EXTRA_TYPES][ACTIVITY_LAST];
     int activity_total[ACTIVITY_LAST];
     int activity_units[ACTIVITY_LAST];
-  } *t;
+  } * t;
 
   t = static_cast<tmp_state *>(fc_calloc(1, sizeof(*t)));
 
   memset(calc, 0, sizeof(*calc));
 
   /* Contributions from real units */
-  unit_list_iterate(ptile->units, punit) {
+  unit_list_iterate(ptile->units, punit)
+  {
     Activity_type_id act = punit->activity;
 
     if (punit == pmodunit) {
@@ -91,7 +92,8 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
       t->activity_total[act] += get_activity_rate_this_turn(punit);
       t->activity_units[act] += get_activity_rate(punit);
     }
-  } unit_list_iterate_end;
+  }
+  unit_list_iterate_end;
 
   /* Hypothetical contribution from pmodunit, if it changed to specified
    * activity/target */
@@ -112,7 +114,8 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
           && new_tgt == pmodunit->changed_from_target) {
         t->rmextra_total[eidx][new_act] += pmodunit->changed_from_count;
       }
-      t->rmextra_total[eidx][new_act] += get_activity_rate_this_turn(pmodunit);
+      t->rmextra_total[eidx][new_act] +=
+          get_activity_rate_this_turn(pmodunit);
       t->rmextra_units[eidx][new_act] += get_activity_rate(pmodunit);
     } else {
       if (new_act == pmodunit->changed_from) {
@@ -124,18 +127,20 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
   }
 
   /* Turn activity counts into turn estimates */
-  activity_type_iterate(act) {
+  activity_type_iterate(act)
+  {
     int remains, turns;
 
-    extra_type_iterate(ep) {
+    extra_type_iterate(ep)
+    {
       int ei = extra_index(ep);
 
       {
         int units_total = t->extra_units[ei][act];
 
         if (units_total > 0) {
-          remains
-              = tile_activity_time(act, ptile, ep)- t->extra_total[ei][act];
+          remains =
+              tile_activity_time(act, ptile, ep) - t->extra_total[ei][act];
           if (remains > 0) {
             turns = 1 + (remains + units_total - 1) / units_total;
           } else {
@@ -149,8 +154,8 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
         int units_total = t->rmextra_units[ei][act];
 
         if (units_total > 0) {
-          remains
-              = tile_activity_time(act, ptile, ep) - t->rmextra_total[ei][act];
+          remains =
+              tile_activity_time(act, ptile, ep) - t->rmextra_total[ei][act];
           if (remains > 0) {
             turns = 1 + (remains + units_total - 1) / units_total;
           } else {
@@ -160,12 +165,14 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
           calc->rmextra_turns[ei][act] = turns;
         }
       }
-    } extra_type_iterate_end;
+    }
+    extra_type_iterate_end;
 
     int units_total = t->activity_units[act];
 
     if (units_total > 0) {
-      remains = tile_activity_time(act, ptile, NULL) - t->activity_total[act];
+      remains =
+          tile_activity_time(act, ptile, NULL) - t->activity_total[act];
       if (remains > 0) {
         turns = 1 + (remains + units_total - 1) / units_total;
       } else {
@@ -174,17 +181,17 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
       }
       calc->activity_turns[act] = turns;
     }
-  } activity_type_iterate_end;
+  }
+  activity_type_iterate_end;
 }
 
-/************************************************************************//**
-  How many turns until the activity 'act' on target 'tgt' at 'ptile' would
-  be complete, taking into account existing units and possible contribution
-  from 'pmodunit' if it were also to help with the activity ('pmodunit' may
-  be NULL to just account for current activities).
-****************************************************************************/
-int turns_to_activity_done(const struct tile *ptile,
-                           Activity_type_id act,
+/************************************************************************/ /**
+   How many turns until the activity 'act' on target 'tgt' at 'ptile' would
+   be complete, taking into account existing units and possible contribution
+   from 'pmodunit' if it were also to help with the activity ('pmodunit' may
+   be NULL to just account for current activities).
+ ****************************************************************************/
+int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
                            const struct extra_type *tgt,
                            const struct unit *pmodunit)
 {
@@ -212,9 +219,9 @@ int turns_to_activity_done(const struct tile *ptile,
   return turns;
 }
 
-/************************************************************************//**
-  Creates the activity progress text for the given tile.
-****************************************************************************/
+/************************************************************************/ /**
+   Creates the activity progress text for the given tile.
+ ****************************************************************************/
 const char *concat_tile_activity_text(struct tile *ptile)
 {
   auto *calc = new actcalc;
@@ -225,9 +232,11 @@ const char *concat_tile_activity_text(struct tile *ptile)
 
   calc_activity(calc, ptile, NULL, ACTIVITY_LAST, NULL);
 
-  activity_type_iterate(i) {
+  activity_type_iterate(i)
+  {
     if (is_build_activity(i, ptile)) {
-      extra_type_iterate(ep) {
+      extra_type_iterate(ep)
+      {
         int ei = extra_index(ep);
 
         if (calc->extra_turns[ei][i] > 0) {
@@ -238,7 +247,8 @@ const char *concat_tile_activity_text(struct tile *ptile)
                    calc->extra_turns[ei][i]);
           num_activities++;
         }
-      } extra_type_iterate_end;
+      }
+      extra_type_iterate_end;
     } else if (is_clean_activity(i)) {
       enum extra_rmcause rmcause = ERM_NONE;
 
@@ -258,7 +268,8 @@ const char *concat_tile_activity_text(struct tile *ptile)
       };
 
       if (rmcause != ERM_NONE) {
-        extra_type_by_rmcause_iterate(rmcause, ep) {
+        extra_type_by_rmcause_iterate(rmcause, ep)
+        {
           int ei = extra_index(ep);
 
           if (calc->rmextra_turns[ei][i] > 0) {
@@ -271,19 +282,21 @@ const char *concat_tile_activity_text(struct tile *ptile)
                      extra_name_translation(ep), calc->rmextra_turns[ei][i]);
             num_activities++;
           }
-        } extra_type_by_rmcause_iterate_end;
+        }
+        extra_type_by_rmcause_iterate_end;
       }
     } else if (is_tile_activity(i)) {
       if (calc->activity_turns[i] > 0) {
         if (num_activities > 0) {
           astr_add(&str, "/");
         }
-        astr_add(&str, "%s(%d)",
-                 get_activity_text(i), calc->activity_turns[i]);
+        astr_add(&str, "%s(%d)", get_activity_text(i),
+                 calc->activity_turns[i]);
         num_activities++;
       }
     }
-  } activity_type_iterate_end;
+  }
+  activity_type_iterate_end;
 
   FC_FREE(calc);
 

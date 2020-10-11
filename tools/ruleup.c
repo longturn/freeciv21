@@ -47,9 +47,9 @@ static char *rs_selected = NULL;
 static char *od_selected = NULL;
 static int fatal_assertions = -1;
 
-/**********************************************************************//**
-  Parse freeciv-ruleup commandline parameters.
-**************************************************************************/
+/**********************************************************************/ /**
+   Parse freeciv-ruleup commandline parameters.
+ **************************************************************************/
 static void rup_parse_cmdline(int argc, char *argv[])
 {
   int i = 1;
@@ -60,22 +60,23 @@ static void rup_parse_cmdline(int argc, char *argv[])
     if (is_option("--help", argv[i])) {
       struct cmdhelp *help = cmdhelp_new(argv[0]);
 
-      cmdhelp_add(help, "h", "help",
-                  _("Print a summary of the options"));
+      cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
 #ifndef FREECIV_NDEBUG
       cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not translate. */
+                  /* TRANS: "Fatal" is exactly what user must type, do not
+                     translate. */
                   _("Fatal [SIGNAL]"),
                   _("Raise a signal on failed assertion"));
 #endif /* FREECIV_NDEBUG */
       cmdhelp_add(help, "r",
-                  /* TRANS: "ruleset" is exactly what user must type, do not translate. */
-                  _("ruleset RULESET"),
-                  _("Update RULESET"));
+                  /* TRANS: "ruleset" is exactly what user must type, do not
+                     translate. */
+                  _("ruleset RULESET"), _("Update RULESET"));
       cmdhelp_add(help, "o",
-		  /* TRANS: "output" is exactly what user must type, do not translate. */
-		  _("output DIRECTORY"),
-		  _("Create directory DIRECTORY for output"));
+                  /* TRANS: "output" is exactly what user must type, do not
+                     translate. */
+                  _("output DIRECTORY"),
+                  _("Create directory DIRECTORY for output"));
 
       /* The function below prints a header and footer for the options.
        * Furthermore, the options are sorted. */
@@ -85,19 +86,20 @@ static void rup_parse_cmdline(int argc, char *argv[])
       cmdline_option_values_free();
 
       exit(EXIT_SUCCESS);
-    } else if ((option = get_option_malloc("--ruleset", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--ruleset", argv, &i, argc, TRUE))) {
       if (rs_selected != NULL) {
-        fc_fprintf(stderr,
-                   _("Multiple rulesets requested. Only one ruleset at time supported.\n"));
+        fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
+                             "at time supported.\n"));
       } else {
         rs_selected = option;
       }
-    } else if ((option = get_option_malloc("--output", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--output", argv, &i, argc, TRUE))) {
       if (od_selected != NULL) {
-	fc_fprintf(stderr,
-		   _("Multiple output directories given.\n"));
+        fc_fprintf(stderr, _("Multiple output directories given.\n"));
       } else {
-	od_selected = option;
+        od_selected = option;
       }
 #ifndef FREECIV_NDEBUG
     } else if (is_option("--Fatal", argv[i])) {
@@ -122,30 +124,27 @@ static void rup_parse_cmdline(int argc, char *argv[])
   }
 }
 
-/**********************************************************************//**
-  Conversion log callback
-**************************************************************************/
-static void conv_log(const char *msg)
-{
-  log_normal("%s", msg);
-}
+/**********************************************************************/ /**
+   Conversion log callback
+ **************************************************************************/
+static void conv_log(const char *msg) { log_normal("%s", msg); }
 
-/**********************************************************************//**
-  Main entry point for freeciv-ruleup
-**************************************************************************/
+/**********************************************************************/ /**
+   Main entry point for freeciv-ruleup
+ **************************************************************************/
 int main(int argc, char **argv)
 {
   enum log_level loglevel = LOG_NORMAL;
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-# ifndef FREECIV_NDEBUG
+#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
-#  ifdef FREECIV_DEBUG
+#ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#  endif /* FREECIV_DEBUG */
+#endif /* FREECIV_DEBUG */
   }
-# endif /* FREECIV_NDEBUG */
+#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   init_nls();
@@ -154,7 +153,7 @@ int main(int argc, char **argv)
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   rup_parse_cmdline(argc, argv);
-  
+
   log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
   init_connections();

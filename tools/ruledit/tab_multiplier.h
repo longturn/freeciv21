@@ -27,33 +27,32 @@ class QRadioButton;
 
 class ruledit_gui;
 
-class tab_multiplier : public QWidget
-{
+class tab_multiplier : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_multiplier(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_multiplier(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_multiplier_info(struct multiplier *pmul);
-    bool initialize_new_multiplier(struct multiplier *pmul);
+private:
+  ruledit_gui *ui;
+  void update_multiplier_info(struct multiplier *pmul);
+  bool initialize_new_multiplier(struct multiplier *pmul);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QListWidget *mpr_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QListWidget *mpr_list;
+  QRadioButton *same_name;
 
-    struct multiplier *selected;
+  struct multiplier *selected;
 
-  private slots:
-    void name_given();
-    void select_multiplier();
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_reqs();
+private slots:
+  void name_given();
+  void select_multiplier();
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_reqs();
 };
 
 #endif // FC__TAB_MULTIPLIER_H

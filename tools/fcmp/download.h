@@ -30,10 +30,8 @@ extern "C" {
 typedef void (*dl_msg_callback)(const char *msg);
 typedef void (*dl_pb_callback)(int downloaded, int max);
 
-const char *download_modpack(const char *URL,
-			     const struct fcmp_params *fcmp,
-                             dl_msg_callback mcb,
-                             dl_pb_callback pbcb);
+const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
+                             dl_msg_callback mcb, dl_pb_callback pbcb);
 
 typedef void (*modpack_list_setup_cb)(const char *name, const char *URL,
                                       const char *version,

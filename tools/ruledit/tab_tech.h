@@ -34,49 +34,47 @@ class QToolButton;
 
 class ruledit_gui;
 
-class tab_tech : public QWidget
-{
+class tab_tech : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_tech(ruledit_gui *ui_in);
-    void refresh();
-    static void techs_to_menu(QMenu *fill_menu);
-    static QString tech_name(struct advance *padv);
+public:
+  explicit tab_tech(ruledit_gui *ui_in);
+  void refresh();
+  static void techs_to_menu(QMenu *fill_menu);
+  static QString tech_name(struct advance *padv);
 
-  private:
-    ruledit_gui *ui;
-    void update_tech_info(struct advance *adv);
-    QMenu *prepare_req_button(QToolButton *button, enum tech_req rn);
-    bool initialize_new_tech(struct advance *padv);
+private:
+  ruledit_gui *ui;
+  void update_tech_info(struct advance *adv);
+  QMenu *prepare_req_button(QToolButton *button, enum tech_req rn);
+  bool initialize_new_tech(struct advance *padv);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QToolButton *req1_button;
-    QToolButton *req2_button;
-    QToolButton *root_req_button;
-    QMenu *req1;
-    QMenu *req2;
-    QMenu *root_req;
-    QListWidget *tech_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QToolButton *req1_button;
+  QToolButton *req2_button;
+  QToolButton *root_req_button;
+  QMenu *req1;
+  QMenu *req2;
+  QMenu *root_req;
+  QListWidget *tech_list;
+  QRadioButton *same_name;
 
-    struct advance *selected;
+  struct advance *selected;
 
-  private slots:
-    void name_given();
-    void select_tech();
-    void req1_jump();
-    void req2_jump();
-    void root_req_jump();
-    void req1_menu(QAction *action);
-    void req2_menu(QAction *action);
-    void root_req_menu(QAction *action);
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_effects();
+private slots:
+  void name_given();
+  void select_tech();
+  void req1_jump();
+  void req2_jump();
+  void root_req_jump();
+  void req1_menu(QAction *action);
+  void req2_menu(QAction *action);
+  void root_req_menu(QAction *action);
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_effects();
 };
-
 
 #endif // FC__TAB_TECH_H

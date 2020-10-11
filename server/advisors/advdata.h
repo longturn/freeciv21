@@ -15,7 +15,7 @@
 
 /* utility */
 #include "bitvector.h"
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
@@ -24,16 +24,16 @@
 /* server/advisors */
 #include "advtools.h"
 
-/* 
+/*
  * This file and advdata.c contains global data structures for the AI
- * and some of the functions that fill them with useful values at the 
- * start of every turn. 
+ * and some of the functions that fill them with useful values at the
+ * start of every turn.
  */
 
 enum adv_improvement_status {
-  ADV_IMPR_CALCULATE, /* Calculate exactly its effect */
+  ADV_IMPR_CALCULATE,      /* Calculate exactly its effect */
   ADV_IMPR_CALCULATE_FULL, /* Calculate including tile changes */
-  ADV_IMPR_ESTIMATE,  /* Estimate its effect using wild guesses */
+  ADV_IMPR_ESTIMATE,       /* Estimate its effect using wild guesses */
   ADV_IMPR_LAST
 };
 
@@ -65,10 +65,10 @@ struct adv_data {
 
   /* Keeps track of which continents are fully explored already */
   struct {
-    bool *ocean;      /* are we done exploring this ocean? */
-    bool *continent;  /* are we done exploring this continent? */
-    bool land_done;   /* nothing more on land to explore anywhere */
-    bool sea_done;    /* nothing more to explore at sea */
+    bool *ocean;     /* are we done exploring this ocean? */
+    bool *continent; /* are we done exploring this continent? */
+    bool land_done;  /* nothing more on land to explore anywhere */
+    bool sea_done;   /* nothing more to explore at sea */
   } explore;
 
   /* This struct is used for statistical unit building, eg to ensure
@@ -100,7 +100,7 @@ struct adv_data {
   } dipl;
 
   int num_continents; /* last time we updated our continent data */
-  int num_oceans; /* last time we updated our continent data */
+  int num_oceans;     /* last time we updated our continent data */
 
   /* Dynamic weights used in addition to Syela's hardcoded weights */
   int shield_priority;
@@ -121,13 +121,13 @@ struct adv_data {
   /* Goals */
   struct {
     struct {
-      struct government *gov;        /* The ideal government */
-      adv_want val;                  /* Its value (relative to the current gov) */
-      int req;                       /* The tech requirement for the ideal gov */
+      struct government *gov; /* The ideal government */
+      adv_want val;           /* Its value (relative to the current gov) */
+      int req;                /* The tech requirement for the ideal gov */
     } govt;
-    struct government *revolution;   /* The best gov of the now available */
+    struct government *revolution; /* The best gov of the now available */
   } goal;
-  
+
   /* Whether science would benefit player at all */
   bool wants_science;
 
@@ -154,7 +154,6 @@ void adv_best_government(struct player *pplayer);
 
 bool adv_wants_science(struct player *pplayer);
 
-bool adv_is_player_dangerous(struct player *pplayer,
-                             struct player *aplayer);
+bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer);
 
 #endif /* FC__ADVDATA_H */

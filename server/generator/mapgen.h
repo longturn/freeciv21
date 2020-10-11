@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #ifndef FC__MAPGEN_H
 #define FC__MAPGEN_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #ifdef __cplusplus
 extern "C" {
@@ -25,4 +25,4 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__MAPGEN_H */
+#endif /* FC__MAPGEN_H */

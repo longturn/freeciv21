@@ -19,8 +19,7 @@
 struct city;
 struct texai_req;
 
-struct texai_city
-{
+struct texai_city {
   struct ai_city defai; /* Keep this first so default ai finds it */
   int unit_wants[U_LAST];
 };
@@ -28,16 +27,17 @@ struct texai_city
 void texai_city_alloc(struct ai_type *ait, struct city *pcity);
 void texai_city_free(struct ai_type *ait, struct city *pcity);
 
-void texai_city_worker_requests_create(struct ai_type *ait, struct player *pplayer,
+void texai_city_worker_requests_create(struct ai_type *ait,
+                                       struct player *pplayer,
                                        struct city *pcity);
-void texai_city_worker_wants(struct ai_type *ait,
-                             struct player *pplayer, struct city *pcity);
+void texai_city_worker_wants(struct ai_type *ait, struct player *pplayer,
+                             struct city *pcity);
 void texai_req_worker_task_rcv(struct texai_req *req);
 
 static inline struct texai_city *texai_city_data(struct ai_type *ait,
                                                  const struct city *pcity)
 {
-  return (struct texai_city *)city_ai_data(pcity, ait);
+  return (struct texai_city *) city_ai_data(pcity, ait);
 }
 
 #endif /* FC__TEXAICITY_H */

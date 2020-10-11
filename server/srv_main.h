@@ -14,8 +14,8 @@
 #define FC__SRV_MAIN_H
 
 /* utility */
-#include "log.h"        /* enum log_level */
-#include "net_types.h"  /* announce_type */
+#include "log.h"       /* enum log_level */
+#include "net_types.h" /* announce_type */
 
 /* common */
 #include "fc_types.h"
@@ -56,13 +56,13 @@ struct server_arguments {
   /* exit the server on game ending */
   bool exit_on_end;
   /* authentication options */
-  bool fcdb_enabled;            /* defaults to FALSE */
-  char *fcdb_conf;              /* freeciv database configuration file */
-  bool auth_enabled;            /* defaults to FALSE */
-  bool auth_allow_guests;       /* defaults to FALSE */
-  bool auth_allow_newusers;     /* defaults to FALSE */
+  bool fcdb_enabled;        /* defaults to FALSE */
+  char *fcdb_conf;          /* freeciv database configuration file */
+  bool auth_enabled;        /* defaults to FALSE */
+  bool auth_allow_guests;   /* defaults to FALSE */
+  bool auth_allow_newusers; /* defaults to FALSE */
   enum announce_type announce;
-  int fatal_assertions;         /* default to -1 (disabled). */
+  int fatal_assertions; /* default to -1 (disabled). */
 };
 
 /* used in savegame values */
@@ -89,7 +89,6 @@ extern struct civserver {
   char game_identifier[MAX_LEN_GAME_IDENTIFIER];
 } server;
 
-
 void init_game_seed(void);
 void srv_init(void);
 void srv_main(void);
@@ -113,8 +112,8 @@ unsigned int server_ss_val_bitwise_get(server_setting_id id);
 bool server_packet_input(struct connection *pconn, void *packet, int type);
 void start_game(void);
 const char *pick_random_player_name(const struct nation_type *pnation);
-void player_nation_defaults(struct player *pplayer, struct nation_type *pnation,
-                            bool set_name);
+void player_nation_defaults(struct player *pplayer,
+                            struct nation_type *pnation, bool set_name);
 void send_all_info(struct conn_list *dest);
 
 void identity_number_release(int id);

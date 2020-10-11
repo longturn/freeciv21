@@ -18,7 +18,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "connection.h"
@@ -322,8 +322,8 @@ extern "C" {
 struct effect {
   enum effect_type type;
 
-  /* pointer to multipliers (NULL means that this effect has no multiplier  */
-  struct  multiplier *multiplier;
+  /* pointer to multipliers (NULL means that this effect has no multiplier */
+  struct multiplier *multiplier;
 
   /* The "value" of the effect.  The meaning of this varies between
    * effects.  When get_xxx_bonus() is called the value of all applicable
@@ -339,7 +339,7 @@ struct effect {
 #define SPECLIST_TAG effect
 #define SPECLIST_TYPE struct effect
 #include "speclist.h"
-#define effect_list_iterate(effect_list, peffect) \
+#define effect_list_iterate(effect_list, peffect)                           \
   TYPED_LIST_ITERATE(struct effect, effect_list, peffect)
 #define effect_list_iterate_end LIST_ITERATE_END
 
@@ -349,8 +349,8 @@ struct effect *effect_copy(struct effect *old);
 void effect_req_append(struct effect *peffect, struct requirement req);
 
 struct astring;
-void get_effect_req_text(const struct effect *peffect,
-                         char *buf, size_t buf_len);
+void get_effect_req_text(const struct effect *peffect, char *buf,
+                         size_t buf_len);
 void get_effect_list_req_text(const struct effect_list *plist,
                               struct astring *astr);
 
@@ -377,15 +377,14 @@ int get_world_bonus(enum effect_type effect_type);
 int get_player_bonus(const struct player *plr, enum effect_type effect_type);
 int get_city_bonus(const struct city *pcity, enum effect_type effect_type);
 int get_city_specialist_output_bonus(const struct city *pcity,
-				     const struct specialist *pspecialist,
-				     const struct output_type *poutput,
-				     enum effect_type effect_type);
+                                     const struct specialist *pspecialist,
+                                     const struct output_type *poutput,
+                                     enum effect_type effect_type);
 int get_city_tile_output_bonus(const struct city *pcity,
-			       const struct tile *ptile,
-			       const struct output_type *poutput,
-			       enum effect_type effect_type);
-int get_tile_output_bonus(const struct city *pcity,
-                          const struct tile *ptile,
+                               const struct tile *ptile,
+                               const struct output_type *poutput,
+                               enum effect_type effect_type);
+int get_tile_output_bonus(const struct city *pcity, const struct tile *ptile,
                           const struct output_type *poutput,
                           enum effect_type effect_type);
 int get_player_output_bonus(const struct player *pplayer,
@@ -395,12 +394,12 @@ int get_city_output_bonus(const struct city *pcity,
                           const struct output_type *poutput,
                           enum effect_type effect_type);
 int get_building_bonus(const struct city *pcity,
-		       const struct impr_type *building,
-		       enum effect_type effect_type);
+                       const struct impr_type *building,
+                       enum effect_type effect_type);
 int get_unittype_bonus(const struct player *pplayer,
-		       const struct tile *ptile, /* pcity is implied */
-		       const struct unit_type *punittype,
-		       enum effect_type effect_type);
+                       const struct tile *ptile, /* pcity is implied */
+                       const struct unit_type *punittype,
+                       enum effect_type effect_type);
 int get_unit_bonus(const struct unit *punit, enum effect_type effect_type);
 int get_tile_bonus(const struct tile *ptile, const struct unit *punit,
                    enum effect_type etype);
@@ -412,25 +411,21 @@ int get_player_bonus_effects(struct effect_list *plist,
                              const struct player *pplayer,
                              enum effect_type effect_type);
 int get_city_bonus_effects(struct effect_list *plist,
-			   const struct city *pcity,
-			   const struct output_type *poutput,
-			   enum effect_type effect_type);
+                           const struct city *pcity,
+                           const struct output_type *poutput,
+                           enum effect_type effect_type);
 
-int get_target_bonus_effects(struct effect_list *plist,
-                             const struct player *target_player,
-                             const struct player *other_player,
-                             const struct city *target_city,
-                             const struct impr_type *target_building,
-                             const struct tile *target_tile,
-                             const struct unit *target_unit,
-                             const struct unit_type *target_unittype,
-                             const struct output_type *target_output,
-                             const struct specialist *target_specialist,
-                             const struct action *target_action,
-                             enum effect_type effect_type);
+int get_target_bonus_effects(
+    struct effect_list *plist, const struct player *target_player,
+    const struct player *other_player, const struct city *target_city,
+    const struct impr_type *target_building, const struct tile *target_tile,
+    const struct unit *target_unit, const struct unit_type *target_unittype,
+    const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct action *target_action, enum effect_type effect_type);
 
 bool building_has_effect(const struct impr_type *pimprove,
-			 enum effect_type effect_type);
+                         enum effect_type effect_type);
 int get_current_construction_bonus(const struct city *pcity,
                                    enum effect_type effect_type,
                                    const enum req_problem_type prob_type);
@@ -441,11 +436,11 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
 
 struct effect_list *get_effects(enum effect_type effect_type);
 
-typedef bool (*iec_cb)(struct effect*, void *data);
+typedef bool (*iec_cb)(struct effect *, void *data);
 bool iterate_effect_cache(iec_cb cb, void *data);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__EFFECTS_H */
+#endif /* FC__EFFECTS_H */

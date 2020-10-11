@@ -39,7 +39,7 @@ struct cmdarg {
 #define SPECLIST_TAG cmdarg
 #define SPECLIST_TYPE struct cmdarg
 #include "speclist.h"
-#define cmdarg_list_iterate(cmdarg_list, pcmdarg)                            \
+#define cmdarg_list_iterate(cmdarg_list, pcmdarg)                           \
   TYPED_LIST_ITERATE(struct cmdarg, cmdarg_list, pcmdarg)
 #define cmdarg_list_iterate_end LIST_ITERATE_END
 
@@ -54,13 +54,13 @@ static void cmdarg_destroy(struct cmdarg *pcmdarg);
 static int cmdarg_compare(const struct cmdarg *const *pcmdarg0,
                           const struct cmdarg *const *pcmdarg1);
 
-/*************************************************************************//**
-  Create a new command help struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Create a new command help struct.
+ *****************************************************************************/
 struct cmdhelp *cmdhelp_new(const char *cmdname)
 {
-  struct cmdhelp *pcmdhelp = static_cast<cmdhelp *>(
-    fc_calloc(1, sizeof(*pcmdhelp)));
+  struct cmdhelp *pcmdhelp =
+      static_cast<cmdhelp *>(fc_calloc(1, sizeof(*pcmdhelp)));
 
   pcmdhelp->cmdname = fc_strdup(fc_basename(cmdname));
   pcmdhelp->cmdarglist = cmdarg_list_new();
@@ -68,25 +68,27 @@ struct cmdhelp *cmdhelp_new(const char *cmdname)
   return pcmdhelp;
 }
 
-/*************************************************************************//**
-  Destroy a command help struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Destroy a command help struct.
+ *****************************************************************************/
 void cmdhelp_destroy(struct cmdhelp *pcmdhelp)
 {
   if (pcmdhelp) {
     if (pcmdhelp->cmdname) {
       free(pcmdhelp->cmdname);
     }
-    cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg) {
+    cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg)
+    {
       cmdarg_destroy(pcmdarg);
-    } cmdarg_list_iterate_end;
+    }
+    cmdarg_list_iterate_end;
   }
   free(pcmdhelp);
 }
 
-/*************************************************************************//**
-  Add a command help moption.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a command help moption.
+ *****************************************************************************/
 void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
                  const char *longarg, const char *helpstr, ...)
 {
@@ -102,9 +104,9 @@ void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
   cmdarg_list_append(pcmdhelp->cmdarglist, pcmdarg);
 }
 
-/*************************************************************************//**
-  Display the help for the command.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Display the help for the command.
+ *****************************************************************************/
 void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
                      bool report_bugs)
 {
@@ -112,7 +114,8 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
              pcmdhelp->cmdname);
 
   cmdarg_list_sort(pcmdhelp->cmdarglist, cmdarg_compare);
-  cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg) {
+  cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg)
+  {
     if (pcmdarg->shortarg != '\0') {
       fc_fprintf(stderr, "  -%c, --%-15s %s\n", pcmdarg->shortarg,
                  pcmdarg->longarg, pcmdarg->helpstr);
@@ -120,7 +123,8 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
       fc_fprintf(stderr, "      --%-15s %s\n", pcmdarg->longarg,
                  pcmdarg->helpstr);
     }
-  } cmdarg_list_iterate_end;
+  }
+  cmdarg_list_iterate_end;
 
   if (gui_options) {
     char buf[128];
@@ -141,14 +145,14 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
   }
 }
 
-/*************************************************************************//**
-  Create a new command argument struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Create a new command argument struct.
+ *****************************************************************************/
 static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
                                  const char *helpstr)
 {
-  struct cmdarg *pcmdarg = static_cast<cmdarg *>(
-    fc_calloc(1, sizeof(*pcmdarg)));
+  struct cmdarg *pcmdarg =
+      static_cast<cmdarg *>(fc_calloc(1, sizeof(*pcmdarg)));
 
   if (shortarg && strlen(shortarg) == 1) {
     pcmdarg->shortarg = shortarg[0];
@@ -162,9 +166,9 @@ static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
   return pcmdarg;
 }
 
-/*************************************************************************//**
-  Destroy a command argument struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Destroy a command argument struct.
+ *****************************************************************************/
 static void cmdarg_destroy(struct cmdarg *pcmdarg)
 {
   if (pcmdarg) {
@@ -178,9 +182,9 @@ static void cmdarg_destroy(struct cmdarg *pcmdarg)
   free(pcmdarg);
 }
 
-/*************************************************************************//**
-  Compare two command argument definitions.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Compare two command argument definitions.
+ *****************************************************************************/
 static int cmdarg_compare(const struct cmdarg *const *pp0,
                           const struct cmdarg *const *pp1)
 {
@@ -213,8 +217,8 @@ static int cmdarg_compare(const struct cmdarg *const *pp0,
   c0 = (int) (unsigned char) fc_tolower(pcmdarg0->shortarg);
   c1 = (int) (unsigned char) fc_tolower(pcmdarg1->shortarg);
   if (c0 == c1) {
-    return (int) (unsigned char)pcmdarg0->shortarg
-           - (int) (unsigned char)pcmdarg1->shortarg;
+    return (int) (unsigned char) pcmdarg0->shortarg
+           - (int) (unsigned char) pcmdarg1->shortarg;
   } else {
     return c0 - c1;
   }

@@ -64,13 +64,13 @@
 /* utility */
 #include "log.h"
 #include "mem.h"
-#include "shared.h"     /* ARRAY_SIZE */
+#include "shared.h" /* ARRAY_SIZE */
 #include "support.h"
 
 #include "genhash.h"
 
-#define FULL_RATIO 0.75         /* consider expanding when above this */
-#define MIN_RATIO 0.24          /* shrink when below this */
+#define FULL_RATIO 0.75 /* consider expanding when above this */
+#define MIN_RATIO 0.24  /* shrink when below this */
 
 struct genhash_entry {
   void *key;
@@ -90,7 +90,7 @@ struct genhash {
   genhash_free_fn_t data_free_func;
   size_t num_buckets;
   size_t num_entries;
-  bool no_shrink;               /* Do not auto-shrink when set. */
+  bool no_shrink; /* Do not auto-shrink when set. */
 };
 
 struct genhash_iter {
@@ -101,42 +101,41 @@ struct genhash_iter {
 
 #define GENHASH_ITER(p) ((struct genhash_iter *) (p))
 
-
-/************************************************************************//**
-  A supplied genhash function appropriate to nul-terminated strings.
-  Prefers table sizes that are prime numbers.
-****************************************************************************/
+/************************************************************************/ /**
+   A supplied genhash function appropriate to nul-terminated strings.
+   Prefers table sizes that are prime numbers.
+ ****************************************************************************/
 genhash_val_t genhash_str_val_func(const char *vkey)
 {
   unsigned long result = 0;
 
   for (; *vkey != '\0'; vkey++) {
-    result *= 5; 
+    result *= 5;
     result += *vkey;
   }
   result &= 0xFFFFFFFF; /* To make results independent of sizeof(long) */
   return result;
 }
 
-/************************************************************************//**
-  A supplied function for comparison of nul-terminated strings:
-****************************************************************************/
+/************************************************************************/ /**
+   A supplied function for comparison of nul-terminated strings:
+ ****************************************************************************/
 bool genhash_str_comp_func(const char *vkey1, const char *vkey2)
 {
   return 0 == strcmp(vkey1, vkey2);
 }
 
-/************************************************************************//**
-  Copy function for string allocation.
-****************************************************************************/
+/************************************************************************/ /**
+   Copy function for string allocation.
+ ****************************************************************************/
 char *genhash_str_copy_func(const char *vkey)
 {
   return fc_strdup(NULL != vkey ? vkey : "");
 }
 
-/************************************************************************//**
-  Free function for string allocation.
-****************************************************************************/
+/************************************************************************/ /**
+   Free function for string allocation.
+ ****************************************************************************/
 void genhash_str_free_func(char *vkey)
 {
 #ifdef FREECIV_DEBUG
@@ -145,32 +144,31 @@ void genhash_str_free_func(char *vkey)
   free(vkey);
 }
 
-/************************************************************************//**
-  Calculate a "reasonable" number of buckets for a given number of entries.
-  Gives a prime number far from powers of 2, allowing at least a factor of
-  2 from the given number of entries for breathing room.
+/************************************************************************/ /**
+   Calculate a "reasonable" number of buckets for a given number of entries.
+   Gives a prime number far from powers of 2, allowing at least a factor of
+   2 from the given number of entries for breathing room.
 
-  Generalized restrictions on the behavior of this function:
-  * MIN_BUCKETS <= genhash_calc_num_buckets(x)
-  * genhash_calc_num_buckets(x) * MIN_RATIO < x  whenever
-    x > MIN_BUCKETS * MIN_RATIO.
-  * genhash_calc_num_buckets(x) * FULL_RATIO > x.
-  This one is more of a recommendation, to ensure enough free space:
-  * genhash_calc_num_buckets(x) >= 2 * x.
-****************************************************************************/
-#define MIN_BUCKETS 29  /* Historical purposes. */
+   Generalized restrictions on the behavior of this function:
+   * MIN_BUCKETS <= genhash_calc_num_buckets(x)
+   * genhash_calc_num_buckets(x) * MIN_RATIO < x  whenever
+     x > MIN_BUCKETS * MIN_RATIO.
+   * genhash_calc_num_buckets(x) * FULL_RATIO > x.
+   This one is more of a recommendation, to ensure enough free space:
+   * genhash_calc_num_buckets(x) >= 2 * x.
+ ****************************************************************************/
+#define MIN_BUCKETS 29 /* Historical purposes. */
 static size_t genhash_calc_num_buckets(size_t num_entries)
 {
   /* A bunch of prime numbers close to successive elements of the sequence
    * A_n = 3 * 2 ^ n; to be used for table sizes. */
   static const size_t sizes[] = {
-    MIN_BUCKETS,          53,         97,           193,
-    389,       769,       1543,       3079,         6151,
-    12289,     24593,     49157,      98317,        196613,
-    393241,    786433,    1572869,    3145739,      6291469,
-    12582917,  25165843,  50331653,   100663319,    201326611,
-    402653189, 805306457, 1610612741, 3221225473ul, 4294967291ul
-  };
+      MIN_BUCKETS, 53,         97,           193,         389,
+      769,         1543,       3079,         6151,        12289,
+      24593,       49157,      98317,        196613,      393241,
+      786433,      1572869,    3145739,      6291469,     12582917,
+      25165843,    50331653,   100663319,    201326611,   402653189,
+      805306457,   1610612741, 3221225473ul, 4294967291ul};
   const size_t *pframe = sizes, *pmid;
   int fsize = ARRAY_SIZE(sizes) - 1, lpart;
 
@@ -189,23 +187,22 @@ static size_t genhash_calc_num_buckets(size_t num_entries)
   return *pframe;
 }
 
-/************************************************************************//**
-  Internal constructor, specifying exact number of buckets.
-  Allows to specify functions to free the memory allocated for the key and
-  user-data that get called when removing the bucket from the hash table or
-  changing key/user-data values.
+/************************************************************************/ /**
+   Internal constructor, specifying exact number of buckets.
+   Allows to specify functions to free the memory allocated for the key and
+   user-data that get called when removing the bucket from the hash table or
+   changing key/user-data values.
 
-  NB: Be sure to check the "copy constructor" genhash_copy() if you change
-  this function significantly.
-****************************************************************************/
-static struct genhash *
-genhash_new_nbuckets(genhash_val_fn_t key_val_func,
-                     genhash_comp_fn_t key_comp_func,
-                     genhash_copy_fn_t key_copy_func,
-                     genhash_free_fn_t key_free_func,
-                     genhash_copy_fn_t data_copy_func,
-                     genhash_free_fn_t data_free_func,
-                     size_t num_buckets)
+   NB: Be sure to check the "copy constructor" genhash_copy() if you change
+   this function significantly.
+ ****************************************************************************/
+static struct genhash *genhash_new_nbuckets(genhash_val_fn_t key_val_func,
+                                            genhash_comp_fn_t key_comp_func,
+                                            genhash_copy_fn_t key_copy_func,
+                                            genhash_free_fn_t key_free_func,
+                                            genhash_copy_fn_t data_copy_func,
+                                            genhash_free_fn_t data_free_func,
+                                            size_t num_buckets)
 {
   genhash *pgenhash = new genhash;
 
@@ -213,7 +210,7 @@ genhash_new_nbuckets(genhash_val_fn_t key_val_func,
             (long unsigned) num_buckets);
 
   pgenhash->buckets = static_cast<genhash_entry **>(
-    fc_calloc(num_buckets, sizeof(*pgenhash->buckets)));
+      fc_calloc(num_buckets, sizeof(*pgenhash->buckets)));
   pgenhash->key_val_func = key_val_func;
   pgenhash->key_comp_func = key_comp_func;
   pgenhash->key_copy_func = key_copy_func;
@@ -227,45 +224,42 @@ genhash_new_nbuckets(genhash_val_fn_t key_val_func,
   return pgenhash;
 }
 
-/************************************************************************//**
-  Constructor specifying number of entries.
-  Allows to specify functions to free the memory allocated for the key and
-  user-data that get called when removing the bucket from the hash table or
-  changing key/user-data values.
-****************************************************************************/
-struct genhash *
-genhash_new_nentries_full(genhash_val_fn_t key_val_func,
-                          genhash_comp_fn_t key_comp_func,
-                          genhash_copy_fn_t key_copy_func,
-                          genhash_free_fn_t key_free_func,
-                          genhash_copy_fn_t data_copy_func,
-                          genhash_free_fn_t data_free_func,
-                          size_t nentries)
+/************************************************************************/ /**
+   Constructor specifying number of entries.
+   Allows to specify functions to free the memory allocated for the key and
+   user-data that get called when removing the bucket from the hash table or
+   changing key/user-data values.
+ ****************************************************************************/
+struct genhash *genhash_new_nentries_full(genhash_val_fn_t key_val_func,
+                                          genhash_comp_fn_t key_comp_func,
+                                          genhash_copy_fn_t key_copy_func,
+                                          genhash_free_fn_t key_free_func,
+                                          genhash_copy_fn_t data_copy_func,
+                                          genhash_free_fn_t data_free_func,
+                                          size_t nentries)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func,
-                              key_copy_func, key_free_func,
-                              data_copy_func, data_free_func,
+  return genhash_new_nbuckets(key_val_func, key_comp_func, key_copy_func,
+                              key_free_func, data_copy_func, data_free_func,
                               genhash_calc_num_buckets(nentries));
 }
 
-/************************************************************************//**
-  Constructor specifying number of entries.
-****************************************************************************/
+/************************************************************************/ /**
+   Constructor specifying number of entries.
+ ****************************************************************************/
 struct genhash *genhash_new_nentries(genhash_val_fn_t key_val_func,
                                      genhash_comp_fn_t key_comp_func,
                                      size_t nentries)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func,
-                              NULL, NULL, NULL, NULL,
-                              genhash_calc_num_buckets(nentries));
+  return genhash_new_nbuckets(key_val_func, key_comp_func, NULL, NULL, NULL,
+                              NULL, genhash_calc_num_buckets(nentries));
 }
 
-/************************************************************************//**
-  Constructor with unspecified number of entries.
-  Allows to specify functions to free the memory allocated for the key and
-  user-data that get called when removing the bucket from the hash table or
-  changing key/user-data values.
-****************************************************************************/
+/************************************************************************/ /**
+   Constructor with unspecified number of entries.
+   Allows to specify functions to free the memory allocated for the key and
+   user-data that get called when removing the bucket from the hash table or
+   changing key/user-data values.
+ ****************************************************************************/
 struct genhash *genhash_new_full(genhash_val_fn_t key_val_func,
                                  genhash_comp_fn_t key_comp_func,
                                  genhash_copy_fn_t key_copy_func,
@@ -273,24 +267,24 @@ struct genhash *genhash_new_full(genhash_val_fn_t key_val_func,
                                  genhash_copy_fn_t data_copy_func,
                                  genhash_free_fn_t data_free_func)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func,
-                              key_copy_func, key_free_func,
-                              data_copy_func, data_free_func, MIN_BUCKETS);
+  return genhash_new_nbuckets(key_val_func, key_comp_func, key_copy_func,
+                              key_free_func, data_copy_func, data_free_func,
+                              MIN_BUCKETS);
 }
 
-/************************************************************************//**
-  Constructor with unspecified number of entries.
-****************************************************************************/
+/************************************************************************/ /**
+   Constructor with unspecified number of entries.
+ ****************************************************************************/
 struct genhash *genhash_new(genhash_val_fn_t key_val_func,
                             genhash_comp_fn_t key_comp_func)
 {
-  return genhash_new_nbuckets(key_val_func, key_comp_func,
-                              NULL, NULL, NULL, NULL, MIN_BUCKETS);
+  return genhash_new_nbuckets(key_val_func, key_comp_func, NULL, NULL, NULL,
+                              NULL, MIN_BUCKETS);
 }
 
-/************************************************************************//**
-  Destructor: free internal memory.
-****************************************************************************/
+/************************************************************************/ /**
+   Destructor: free internal memory.
+ ****************************************************************************/
 void genhash_destroy(struct genhash *pgenhash)
 {
   fc_assert_ret(NULL != pgenhash);
@@ -300,9 +294,9 @@ void genhash_destroy(struct genhash *pgenhash)
   delete pgenhash;
 }
 
-/************************************************************************//**
-  Resize the genhash table: relink entries.
-****************************************************************************/
+/************************************************************************/ /**
+   Resize the genhash table: relink entries.
+ ****************************************************************************/
 static void genhash_resize_table(struct genhash *pgenhash,
                                  size_t new_nbuckets)
 {
@@ -312,7 +306,7 @@ static void genhash_resize_table(struct genhash *pgenhash,
   fc_assert(new_nbuckets >= pgenhash->num_entries);
 
   new_buckets = static_cast<genhash_entry **>(
-    fc_calloc(new_nbuckets, sizeof(*pgenhash->buckets)));
+      fc_calloc(new_nbuckets, sizeof(*pgenhash->buckets)));
 
   bucket = pgenhash->buckets;
   end = bucket + pgenhash->num_buckets;
@@ -330,13 +324,13 @@ static void genhash_resize_table(struct genhash *pgenhash,
   pgenhash->num_buckets = new_nbuckets;
 }
 
-/************************************************************************//**
-  Call this when an entry might be added or deleted: resizes the genhash
-  table if seems like a good idea.  Count deleted entries in check
-  because efficiency may be degraded if there are too many deleted
-  entries.  But for determining new size, ignore deleted entries,
-  since they'll be removed by rehashing.
-****************************************************************************/
+/************************************************************************/ /**
+   Call this when an entry might be added or deleted: resizes the genhash
+   table if seems like a good idea.  Count deleted entries in check
+   because efficiency may be degraded if there are too many deleted
+   entries.  But for determining new size, ignore deleted entries,
+   since they'll be removed by rehashing.
+ ****************************************************************************/
 #define genhash_maybe_expand(htab) genhash_maybe_resize((htab), TRUE)
 #define genhash_maybe_shrink(htab) genhash_maybe_resize((htab), FALSE)
 static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
@@ -365,21 +359,21 @@ static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
 
   log_debug("%s genhash (entries = %lu, buckets =  %lu, new = %lu, "
             "%s limit = %lu)",
-            (new_nbuckets < pgenhash->num_buckets ? "Shrinking"
-             : (new_nbuckets > pgenhash->num_buckets
-                ? "Expanding" : "Rehashing")),
+            (new_nbuckets < pgenhash->num_buckets
+                 ? "Shrinking"
+                 : (new_nbuckets > pgenhash->num_buckets ? "Expanding"
+                                                         : "Rehashing")),
             (long unsigned) pgenhash->num_entries,
             (long unsigned) pgenhash->num_buckets,
-            (long unsigned) new_nbuckets,
-            expandingp ? "up": "down", (long unsigned) limit);
+            (long unsigned) new_nbuckets, expandingp ? "up" : "down",
+            (long unsigned) limit);
   genhash_resize_table(pgenhash, new_nbuckets);
   return TRUE;
 }
 
-
-/************************************************************************//**
-  Calculate genhash value given hash table and key.
-****************************************************************************/
+/************************************************************************/ /**
+   Calculate genhash value given hash table and key.
+ ****************************************************************************/
 static inline genhash_val_t genhash_val_calc(const struct genhash *pgenhash,
                                              const void *key)
 {
@@ -390,13 +384,12 @@ static inline genhash_val_t genhash_val_calc(const struct genhash *pgenhash,
   }
 }
 
-/************************************************************************//**
-  Return slot (entry pointer) in genhash table where key resides, or where
-  it should go if it is to be a new key.
-****************************************************************************/
+/************************************************************************/ /**
+   Return slot (entry pointer) in genhash table where key resides, or where
+   it should go if it is to be a new key.
+ ****************************************************************************/
 static inline struct genhash_entry **
-genhash_slot_lookup(const struct genhash *pgenhash,
-                    const void *key,
+genhash_slot_lookup(const struct genhash *pgenhash, const void *key,
                     genhash_val_t hash_val)
 {
   struct genhash_entry **slot;
@@ -420,9 +413,9 @@ genhash_slot_lookup(const struct genhash *pgenhash,
   return slot;
 }
 
-/************************************************************************//**
-  Function to store from invalid data.
-****************************************************************************/
+/************************************************************************/ /**
+   Function to store from invalid data.
+ ****************************************************************************/
 static inline void genhash_default_get(void **pkey, void **data)
 {
   if (NULL != pkey) {
@@ -433,9 +426,9 @@ static inline void genhash_default_get(void **pkey, void **data)
   }
 }
 
-/************************************************************************//**
-  Function to store data.
-****************************************************************************/
+/************************************************************************/ /**
+   Function to store data.
+ ****************************************************************************/
 static inline void genhash_slot_get(struct genhash_entry *const *slot,
                                     void **pkey, void **data)
 {
@@ -449,9 +442,9 @@ static inline void genhash_slot_get(struct genhash_entry *const *slot,
   }
 }
 
-/************************************************************************//**
-  Create the entry and call the copy callbacks.
-****************************************************************************/
+/************************************************************************/ /**
+   Create the entry and call the copy callbacks.
+ ****************************************************************************/
 static inline void genhash_slot_create(struct genhash *pgenhash,
                                        struct genhash_entry **slot,
                                        const void *key, const void *data,
@@ -459,18 +452,20 @@ static inline void genhash_slot_create(struct genhash *pgenhash,
 {
   genhash_entry *entry = new genhash_entry;
 
-  entry->key = (NULL != pgenhash->key_copy_func
-                ? pgenhash->key_copy_func(key) : (void *) key);
-  entry->data = (NULL != pgenhash->data_copy_func
-                 ? pgenhash->data_copy_func(data) : (void *) data);
+  entry->key =
+      (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
+                                       : (void *) key);
+  entry->data =
+      (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
+                                        : (void *) data);
   entry->hash_val = hash_val;
   entry->next = *slot;
   *slot = entry;
 }
 
-/************************************************************************//**
-  Free the entry slot and call the free callbacks.
-****************************************************************************/
+/************************************************************************/ /**
+   Free the entry slot and call the free callbacks.
+ ****************************************************************************/
 static inline void genhash_slot_free(struct genhash *pgenhash,
                                      struct genhash_entry **slot)
 {
@@ -486,9 +481,9 @@ static inline void genhash_slot_free(struct genhash *pgenhash,
   free(entry);
 }
 
-/************************************************************************//**
-  Clear previous values (with free callback) and call the copy callbacks.
-****************************************************************************/
+/************************************************************************/ /**
+   Clear previous values (with free callback) and call the copy callbacks.
+ ****************************************************************************/
 static inline void genhash_slot_set(struct genhash *pgenhash,
                                     struct genhash_entry **slot,
                                     const void *key, const void *data)
@@ -501,16 +496,18 @@ static inline void genhash_slot_set(struct genhash *pgenhash,
   if (NULL != pgenhash->data_free_func) {
     pgenhash->data_free_func(entry->data);
   }
-  entry->key = (NULL != pgenhash->key_copy_func
-                ? pgenhash->key_copy_func(key) : (void *) key);
-  entry->data = (NULL != pgenhash->data_copy_func
-                 ? pgenhash->data_copy_func(data) : (void *) data);
+  entry->key =
+      (NULL != pgenhash->key_copy_func ? pgenhash->key_copy_func(key)
+                                       : (void *) key);
+  entry->data =
+      (NULL != pgenhash->data_copy_func ? pgenhash->data_copy_func(data)
+                                        : (void *) data);
 }
 
-/************************************************************************//**
-  Prevent or allow the genhash table automatically shrinking. Returns the
-  old value of the setting.
-****************************************************************************/
+/************************************************************************/ /**
+   Prevent or allow the genhash table automatically shrinking. Returns the
+   old value of the setting.
+ ****************************************************************************/
 bool genhash_set_no_shrink(struct genhash *pgenhash, bool no_shrink)
 {
   bool old;
@@ -521,27 +518,27 @@ bool genhash_set_no_shrink(struct genhash *pgenhash, bool no_shrink)
   return old;
 }
 
-/************************************************************************//**
-  Returns the number of entries in the genhash table.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the number of entries in the genhash table.
+ ****************************************************************************/
 size_t genhash_size(const struct genhash *pgenhash)
 {
   fc_assert_ret_val(NULL != pgenhash, 0);
   return pgenhash->num_entries;
 }
 
-/************************************************************************//**
-  Returns the number of buckets in the genhash table.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the number of buckets in the genhash table.
+ ****************************************************************************/
 size_t genhash_capacity(const struct genhash *pgenhash)
 {
   fc_assert_ret_val(NULL != pgenhash, 0);
   return pgenhash->num_buckets;
 }
 
-/************************************************************************//**
-  Returns a newly allocated mostly deep copy of the given genhash table.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns a newly allocated mostly deep copy of the given genhash table.
+ ****************************************************************************/
 struct genhash *genhash_copy(const struct genhash *pgenhash)
 {
   struct genhash *new_genhash;
@@ -578,9 +575,9 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
   return new_genhash;
 }
 
-/************************************************************************//**
-  Remove all entries of the genhash table.
-****************************************************************************/
+/************************************************************************/ /**
+   Remove all entries of the genhash table.
+ ****************************************************************************/
 void genhash_clear(struct genhash *pgenhash)
 {
   struct genhash_entry **bucket, **end;
@@ -599,10 +596,10 @@ void genhash_clear(struct genhash *pgenhash)
   genhash_maybe_shrink(pgenhash);
 }
 
-/************************************************************************//**
-  Insert entry: returns TRUE if inserted, or FALSE if there was already an
-  entry with the same key, in which case the entry was not inserted.
-****************************************************************************/
+/************************************************************************/ /**
+   Insert entry: returns TRUE if inserted, or FALSE if there was already an
+   entry with the same key, in which case the entry was not inserted.
+ ****************************************************************************/
 bool genhash_insert(struct genhash *pgenhash, const void *key,
                     const void *data)
 {
@@ -626,26 +623,26 @@ bool genhash_insert(struct genhash *pgenhash, const void *key,
   }
 }
 
-/************************************************************************//**
-  Insert entry, replacing any existing entry which has the same key.
-  Returns TRUE if a data have been replaced, FALSE if it was a simple
-  insertion.
-****************************************************************************/
+/************************************************************************/ /**
+   Insert entry, replacing any existing entry which has the same key.
+   Returns TRUE if a data have been replaced, FALSE if it was a simple
+   insertion.
+ ****************************************************************************/
 bool genhash_replace(struct genhash *pgenhash, const void *key,
                      const void *data)
 {
   return genhash_replace_full(pgenhash, key, data, NULL, NULL);
 }
 
-/************************************************************************//**
-  Insert entry, replacing any existing entry which has the same key.
-  Returns TRUE if a data have been replaced, FALSE if it was a simple
-  insertion.
+/************************************************************************/ /**
+   Insert entry, replacing any existing entry which has the same key.
+   Returns TRUE if a data have been replaced, FALSE if it was a simple
+   insertion.
 
-  Returns in 'old_pkey' and 'old_pdata' the old content of the bucket if
-  they are not NULL. NB: It can returns freed pointers if free functions
-  were supplied to the genhash table.
-****************************************************************************/
+   Returns in 'old_pkey' and 'old_pdata' the old content of the bucket if
+   they are not NULL. NB: It can returns freed pointers if free functions
+   were supplied to the genhash table.
+ ****************************************************************************/
 bool genhash_replace_full(struct genhash *pgenhash, const void *key,
                           const void *data, void **old_pkey,
                           void **old_pdata)
@@ -654,7 +651,8 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
   genhash_val_t hash_val;
 
   fc_assert_action(NULL != pgenhash,
-                   genhash_default_get(old_pkey, old_pdata); return FALSE);
+                   genhash_default_get(old_pkey, old_pdata);
+                   return FALSE);
 
   hash_val = genhash_val_calc(pgenhash, key);
   slot = genhash_slot_lookup(pgenhash, key, hash_val);
@@ -676,17 +674,17 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
   }
 }
 
-/************************************************************************//**
-  Lookup data. Return TRUE on success, then pdata - if not NULL will be set
-  to the data value.
-****************************************************************************/
+/************************************************************************/ /**
+   Lookup data. Return TRUE on success, then pdata - if not NULL will be set
+   to the data value.
+ ****************************************************************************/
 bool genhash_lookup(const struct genhash *pgenhash, const void *key,
                     void **pdata)
 {
   struct genhash_entry **slot;
 
-  fc_assert_action(NULL != pgenhash,
-                   genhash_default_get(NULL, pdata); return FALSE);
+  fc_assert_action(NULL != pgenhash, genhash_default_get(NULL, pdata);
+                   return FALSE);
 
   slot = genhash_slot_lookup(pgenhash, key, genhash_val_calc(pgenhash, key));
   if (NULL != *slot) {
@@ -698,21 +696,21 @@ bool genhash_lookup(const struct genhash *pgenhash, const void *key,
   }
 }
 
-/************************************************************************//**
-  Delete an entry from the genhash table. Returns TRUE on success.
-****************************************************************************/
+/************************************************************************/ /**
+   Delete an entry from the genhash table. Returns TRUE on success.
+ ****************************************************************************/
 bool genhash_remove(struct genhash *pgenhash, const void *key)
 {
   return genhash_remove_full(pgenhash, key, NULL, NULL);
 }
 
-/************************************************************************//**
-  Delete an entry from the genhash table. Returns TRUE on success.
+/************************************************************************/ /**
+   Delete an entry from the genhash table. Returns TRUE on success.
 
-  Returns in 'deleted_pkey' and 'deleted_pdata' the old contents of the
-  deleted entry if not NULL. NB: It can returns freed pointers if free
-  functions were supplied to the genhash table.
-****************************************************************************/
+   Returns in 'deleted_pkey' and 'deleted_pdata' the old contents of the
+   deleted entry if not NULL. NB: It can returns freed pointers if free
+   functions were supplied to the genhash table.
+ ****************************************************************************/
 bool genhash_remove_full(struct genhash *pgenhash, const void *key,
                          void **deleted_pkey, void **deleted_pdata)
 {
@@ -736,19 +734,18 @@ bool genhash_remove_full(struct genhash *pgenhash, const void *key,
   }
 }
 
-
-/************************************************************************//**
-  Returns TRUE iff the hash tables contains the same pairs of key/data.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE iff the hash tables contains the same pairs of key/data.
+ ****************************************************************************/
 bool genhashs_are_equal(const struct genhash *pgenhash1,
                         const struct genhash *pgenhash2)
 {
   return genhashs_are_equal_full(pgenhash1, pgenhash2, NULL);
 }
 
-/************************************************************************//**
-  Returns TRUE iff the hash tables contains the same pairs of key/data.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE iff the hash tables contains the same pairs of key/data.
+ ****************************************************************************/
 bool genhashs_are_equal_full(const struct genhash *pgenhash1,
                              const struct genhash *pgenhash2,
                              genhash_comp_fn_t data_comp_func)
@@ -790,36 +787,32 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
   return TRUE;
 }
 
+/************************************************************************/ /**
+   "Sizeof" function implementation for generic_iterate genhash iterators.
+ ****************************************************************************/
+size_t genhash_iter_sizeof(void) { return sizeof(struct genhash_iter); }
 
-/************************************************************************//**
-  "Sizeof" function implementation for generic_iterate genhash iterators.
-****************************************************************************/
-size_t genhash_iter_sizeof(void)
-{
-  return sizeof(struct genhash_iter);
-}
-
-/************************************************************************//**
-  Helper function for genhash (key, value) pair iteration.
-****************************************************************************/
+/************************************************************************/ /**
+   Helper function for genhash (key, value) pair iteration.
+ ****************************************************************************/
 void *genhash_iter_key(const struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
   return (void *) iter->iterator->key;
 }
 
-/************************************************************************//**
-  Helper function for genhash (key, value) pair iteration.
-****************************************************************************/
+/************************************************************************/ /**
+   Helper function for genhash (key, value) pair iteration.
+ ****************************************************************************/
 void *genhash_iter_value(const struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
   return (void *) iter->iterator->data;
 }
 
-/************************************************************************//**
-  Iterator interface 'next' function implementation.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterator interface 'next' function implementation.
+ ****************************************************************************/
 static void genhash_iter_next(struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
@@ -837,32 +830,32 @@ static void genhash_iter_next(struct iterator *genhash_iter)
   }
 }
 
-/************************************************************************//**
-  Iterator interface 'get' function implementation. This just returns the
-  iterator itself, so you would need to use genhash_iter_get_key/value to
-  get the actual keys and values.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterator interface 'get' function implementation. This just returns the
+   iterator itself, so you would need to use genhash_iter_get_key/value to
+   get the actual keys and values.
+ ****************************************************************************/
 static void *genhash_iter_get(const struct iterator *genhash_iter)
 {
   return (void *) genhash_iter;
 }
 
-/************************************************************************//**
-  Iterator interface 'valid' function implementation.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterator interface 'valid' function implementation.
+ ****************************************************************************/
 static bool genhash_iter_valid(const struct iterator *genhash_iter)
 {
   struct genhash_iter *iter = GENHASH_ITER(genhash_iter);
   return iter->bucket < iter->end;
 }
 
-/************************************************************************//**
-  Common genhash iterator initializer.
-****************************************************************************/
+/************************************************************************/ /**
+   Common genhash iterator initializer.
+ ****************************************************************************/
 static inline struct iterator *
 genhash_iter_init_common(struct genhash_iter *iter,
                          const struct genhash *pgenhash,
-                         void * (*get) (const struct iterator *))
+                         void *(*get)(const struct iterator *) )
 {
   if (NULL == pgenhash) {
     return invalid_iter_init(ITERATOR(iter));
@@ -885,29 +878,29 @@ genhash_iter_init_common(struct genhash_iter *iter,
   return ITERATOR(iter);
 }
 
-/************************************************************************//**
-  Returns an iterator that iterates over both keys and values of the genhash
-  table. NB: iterator_get() returns an iterator pointer, so use the helper
-  functions genhash_iter_get_{key,value} to access the key and value.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns an iterator that iterates over both keys and values of the genhash
+   table. NB: iterator_get() returns an iterator pointer, so use the helper
+   functions genhash_iter_get_{key,value} to access the key and value.
+ ****************************************************************************/
 struct iterator *genhash_iter_init(struct genhash_iter *iter,
                                    const struct genhash *pgenhash)
 {
   return genhash_iter_init_common(iter, pgenhash, genhash_iter_get);
 }
 
-/************************************************************************//**
-  Returns an iterator over the genhash table's k genhashgenhashenhashys.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns an iterator over the genhash table's k genhashgenhashenhashys.
+ ****************************************************************************/
 struct iterator *genhash_key_iter_init(struct genhash_iter *iter,
                                        const struct genhash *pgenhash)
 {
   return genhash_iter_init_common(iter, pgenhash, genhash_iter_key);
 }
 
-/************************************************************************//**
-  Returns an iterator over the hash table's values.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns an iterator over the hash table's values.
+ ****************************************************************************/
 struct iterator *genhash_value_iter_init(struct genhash_iter *iter,
                                          const struct genhash *pgenhash)
 {

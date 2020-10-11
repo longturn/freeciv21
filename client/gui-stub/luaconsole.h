@@ -15,4 +15,4 @@
 
 #include "luaconsole_g.h"
 
-#endif  /* FC__LUACONSOLE_H */
+#endif /* FC__LUACONSOLE_H */

@@ -28,7 +28,8 @@
 #include "fcbacktrace.h"
 
 /* We don't want backtrace-spam to testmatic logs */
-#if defined(FREECIV_DEBUG) && defined(HAVE_BACKTRACE) && !defined(FREECIV_TESTMATIC)
+#if defined(FREECIV_DEBUG) && defined(HAVE_BACKTRACE)                       \
+    && !defined(FREECIV_TESTMATIC)
 #define BACKTRACE_ACTIVE 1
 #endif
 
@@ -49,9 +50,9 @@ static void backtrace_log(enum log_level level, bool print_from_where,
                           const char *where, const char *msg);
 #endif /* BACKTRACE_ACTIVE */
 
-/********************************************************************//**
-  Take backtrace log callback to use
-************************************************************************/
+/********************************************************************/ /**
+   Take backtrace log callback to use
+ ************************************************************************/
 void backtrace_init(void)
 {
 #ifdef BACKTRACE_ACTIVE
@@ -59,9 +60,9 @@ void backtrace_init(void)
 #endif
 }
 
-/********************************************************************//**
-  Remove backtrace log callback from use
-************************************************************************/
+/********************************************************************/ /**
+   Remove backtrace log callback from use
+ ************************************************************************/
 void backtrace_deinit(void)
 {
 #ifdef BACKTRACE_ACTIVE
@@ -79,9 +80,9 @@ void backtrace_deinit(void)
 }
 
 #ifdef BACKTRACE_ACTIVE
-/********************************************************************//**
-  Write one line of backtrace
-************************************************************************/
+/********************************************************************/ /**
+   Write one line of backtrace
+ ************************************************************************/
 static void write_backtrace_line(enum log_level level, bool print_from_where,
                                  const char *where, const char *msg)
 {
@@ -92,9 +93,9 @@ static void write_backtrace_line(enum log_level level, bool print_from_where,
   }
 }
 
-/********************************************************************//**
-  Main backtrace callback called from logging code.
-************************************************************************/
+/********************************************************************/ /**
+   Main backtrace callback called from logging code.
+ ************************************************************************/
 static void backtrace_log(enum log_level level, bool print_from_where,
                           const char *where, const char *msg)
 {
@@ -110,9 +111,9 @@ static void backtrace_log(enum log_level level, bool print_from_where,
 
 #endif /* BACKTRACE_ACTIVE */
 
-/********************************************************************//**
-  Print backtrace
-************************************************************************/
+/********************************************************************/ /**
+   Print backtrace
+ ************************************************************************/
 void backtrace_print(enum log_level level)
 {
 #ifdef BACKTRACE_ACTIVE

@@ -26,10 +26,10 @@
 
 #include "colors.h"
 
-/************************************************************************//**
-  Allocate a color (adjusting it for our colormap if necessary on paletted
-  systems) and return a pointer to it.
-****************************************************************************/
+/************************************************************************/ /**
+   Allocate a color (adjusting it for our colormap if necessary on paletted
+   systems) and return a pointer to it.
+ ****************************************************************************/
 struct color *gui_color_alloc(int r, int g, int b)
 {
   struct color *color = fc_malloc(sizeof(*color));
@@ -42,19 +42,19 @@ struct color *gui_color_alloc(int r, int g, int b)
   return color;
 }
 
-/************************************************************************//**
-  Free a previously allocated color.  See color_alloc.
-****************************************************************************/
+/************************************************************************/ /**
+   Free a previously allocated color.  See color_alloc.
+ ****************************************************************************/
 void gui_color_free(struct color *color)
 {
   /* PORTME */
   free(color);
 }
 
-/************************************************************************//**
-  Return a number indicating the perceptual brightness of this color
-  relative to others (larger is brighter).
-****************************************************************************/
+/************************************************************************/ /**
+   Return a number indicating the perceptual brightness of this color
+   relative to others (larger is brighter).
+ ****************************************************************************/
 int color_brightness_score(struct color *pcolor)
 {
   /* PORTME */

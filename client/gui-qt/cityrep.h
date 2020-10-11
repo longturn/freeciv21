@@ -30,24 +30,24 @@ extern "C" {
 #include <QTreeView>
 #include <QWidget>
 
-//common
+// common
 #include "city.h"
 
-//client
+// client
 #include "citydlg_common.h"
 #include "cityrepdata.h"
 #include "climisc.h"
 #include "global_worklist.h"
 
-//agents
+// agents
 #include "cma_fec.h"
 
 // gui-qt
 #include "sprite.h"
 
-#define NEG_VAL(x)  ((x)<0 ? (x) : (-x))
-#define CMA_NONE        (10000)
-#define CMA_CUSTOM      (10001)
+#define NEG_VAL(x) ((x) < 0 ? (x) : (-x))
+#define CMA_NONE (10000)
+#define CMA_CUSTOM (10001)
 
 class QMenu;
 class QHBoxLayout;
@@ -58,24 +58,24 @@ class QTableWidget;
 class QVBoxLayout;
 class city_report;
 
-class city_sort_model:public QSortFilterProxyModel
-{
+class city_sort_model : public QSortFilterProxyModel {
   bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
 
 /***************************************************************************
   Item delegate for painting in model of city table
 ***************************************************************************/
-class city_item_delegate:public QItemDelegate {
+class city_item_delegate : public QItemDelegate {
   Q_OBJECT
 
 public:
- city_item_delegate(QObject *parent);
- ~city_item_delegate() {}
- void paint(QPainter *painter, const QStyleOptionViewItem &option,
-            const QModelIndex &index) const;
- QSize sizeHint (const QStyleOptionViewItem & option,
-                 const QModelIndex & index) const;
+  city_item_delegate(QObject *parent);
+  ~city_item_delegate() {}
+  void paint(QPainter *painter, const QStyleOptionViewItem &option,
+             const QModelIndex &index) const;
+  QSize sizeHint(const QStyleOptionViewItem &option,
+                 const QModelIndex &index) const;
+
 private:
   int item_height;
 };
@@ -83,15 +83,17 @@ private:
 /***************************************************************************
   Single item in model of city view table
 ***************************************************************************/
-class city_item: public QObject {
-Q_OBJECT
+class city_item : public QObject {
+  Q_OBJECT
 
 public:
   city_item(struct city *pcity);
   inline int columnCount() const { return NUM_CREPORT_COLS; }
   QVariant data(int column, int role = Qt::DisplayRole) const;
-  bool setData(int column, const QVariant &value, int role = Qt::DisplayRole);
-  struct city* get_city();
+  bool setData(int column, const QVariant &value,
+               int role = Qt::DisplayRole);
+  struct city *get_city();
+
 private:
   struct city *i_city;
 };
@@ -99,17 +101,18 @@ private:
 /***************************************************************************
   City model
 ***************************************************************************/
-class city_model : public QAbstractListModel
-{
+class city_model : public QAbstractListModel {
   Q_OBJECT
 public:
   city_model(QObject *parent = 0);
   ~city_model();
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const {
+  inline int rowCount(const QModelIndex &index = QModelIndex()) const
+  {
     Q_UNUSED(index);
     return city_list.size();
   }
-  int columnCount(const QModelIndex &parent = QModelIndex()) const {
+  int columnCount(const QModelIndex &parent = QModelIndex()) const
+  {
     Q_UNUSED(parent);
     return NUM_CREPORT_COLS;
   }
@@ -125,6 +128,7 @@ public:
   void all_changed();
 private slots:
   void notify_city_changed(int row);
+
 private:
   QList<city_item *> city_list;
 };
@@ -132,8 +136,7 @@ private:
 /***************************************************************************
   City widget to show city model
 ***************************************************************************/
-class city_widget: public QTreeView
-{
+class city_widget : public QTreeView {
   Q_OBJECT
   city_model *list_model;
   QSortFilterProxyModel *filter_model;
@@ -155,7 +158,8 @@ class city_widget: public QTreeView
     SELECT_AVAIL_UNITS,
     SELECT_AVAIL_IMPR,
     SELECT_AVAIL_WONDERS
-    };
+  };
+
 public:
   city_widget(city_report *ctr);
   ~city_widget();
@@ -166,11 +170,11 @@ public:
 public slots:
   void display_header_menu(const QPoint &);
   void hide_columns();
-  void city_doubleclick(const QModelIndex& index);
+  void city_doubleclick(const QModelIndex &index);
   void city_view();
   void clear_worlist();
   void cities_selected(const QItemSelection &sl, const QItemSelection &ds);
-  void display_list_menu(const QPoint&);
+  void display_list_menu(const QPoint &);
   void buy();
   void center();
   void select_all();
@@ -179,6 +183,7 @@ public slots:
   void select_coastal();
   void select_building_something();
   void select_same_island();
+
 private:
   void restore_selection();
   void select_city(struct city *pcity);
@@ -188,27 +193,28 @@ private:
   void gen_production_labels(menu_labels which, QMap<QString, cid> &list,
                              bool append_units, bool append_wonders,
                              TestCityFunc test_func, bool global = false);
-  void fill_data(menu_labels which,QMap<QString, cid> &custom_labels,
+  void fill_data(menu_labels which, QMap<QString, cid> &custom_labels,
                  QMenu *menu);
   void fill_production_menus(city_widget::menu_labels what,
-                  QMap<QString, cid> &custom_labels,
-                  TestCityFunc test_func, QMenu *menu);
+                             QMap<QString, cid> &custom_labels,
+                             TestCityFunc test_func, QMenu *menu);
 };
 
 /***************************************************************************
   Widget to show as tab widget in cities view.
 ***************************************************************************/
-class city_report: public QWidget
-{
+class city_report : public QWidget {
   Q_OBJECT
   city_widget *city_wdg;
   QVBoxLayout *layout;
+
 public:
   city_report();
   ~city_report();
   void update_report();
   void update_city(struct city *pcity);
   void init();
+
 private:
   int index;
 };

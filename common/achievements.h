@@ -22,8 +22,7 @@ extern "C" {
 #include "name_translation.h"
 #include "player.h"
 
-struct achievement
-{
+struct achievement {
   int id;
   struct name_translation name;
   bool ruledit_disabled;
@@ -61,24 +60,25 @@ bool achievement_player_has(const struct achievement *pach,
                             const struct player *pplayer);
 bool achievement_claimed(const struct achievement *pach);
 
-#define achievements_iterate(_ach_)                                \
-{                                                                  \
-  int _i_;                                                         \
-  for (_i_ = 0; _i_ < game.control.num_achievement_types; _i_++) { \
-    struct achievement *_ach_ = achievement_by_number(_i_);
+#define achievements_iterate(_ach_)                                         \
+  {                                                                         \
+    int _i_;                                                                \
+    for (_i_ = 0; _i_ < game.control.num_achievement_types; _i_++) {        \
+      struct achievement *_ach_ = achievement_by_number(_i_);
 
-#define achievements_iterate_end                             \
-  }                                                          \
-}
+#define achievements_iterate_end                                            \
+  }                                                                         \
+  }
 
-#define achievements_re_active_iterate(_p)                   \
-  achievements_iterate(_p) {                                 \
+#define achievements_re_active_iterate(_p)                                  \
+  achievements_iterate(_p)                                                  \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define achievements_re_active_iterate_end                   \
-    }                                                        \
-  } achievements_iterate_end;
-
+#define achievements_re_active_iterate_end                                  \
+  }                                                                         \
+  }                                                                         \
+  achievements_iterate_end;
 
 int get_literacy(const struct player *pplayer);
 

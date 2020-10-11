@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -16,16 +16,16 @@
 #include <stdarg.h>
 
 /* utility */
-#include "support.h"            /* fc__attribute */
+#include "support.h" /* fc__attribute */
 
 /* common */
 #include "events.h"
 #include "fc_types.h"
-#include "featured_text.h"      /* ftc_*: color pre-definitions. */
+#include "featured_text.h" /* ftc_*: color pre-definitions. */
 #include "packets.h"
 
 /* server */
-#include "srv_main.h"           /* enum server_states */
+#include "srv_main.h" /* enum server_states */
 
 #ifdef __cplusplus
 extern "C" {
@@ -33,72 +33,52 @@ extern "C" {
 
 struct research;
 
-
 void package_chat_msg(struct packet_chat_msg *packet,
                       const struct connection *sender,
-                      const struct ft_color color,
-                      const char *format, ...)
-                      fc__attribute((__format__ (__printf__, 4, 5)));
+                      const struct ft_color color, const char *format, ...)
+    fc__attribute((__format__(__printf__, 4, 5)));
 void vpackage_chat_msg(struct packet_chat_msg *packet,
                        const struct connection *sender,
-                       const struct ft_color color,
-                       const char *format,
+                       const struct ft_color color, const char *format,
                        va_list vargs);
-void package_event(struct packet_chat_msg *packet,
-                   const struct tile *ptile,
-                   enum event_type event,
-                   const struct ft_color color,
+void package_event(struct packet_chat_msg *packet, const struct tile *ptile,
+                   enum event_type event, const struct ft_color color,
                    const char *format, ...)
-                   fc__attribute((__format__ (__printf__, 5, 6)));
-void vpackage_event(struct packet_chat_msg *packet,
-                    const struct tile *ptile,
-                    enum event_type event,
-                    const struct ft_color color,
-                    const char *format,
-                    va_list vargs);
+    fc__attribute((__format__(__printf__, 5, 6)));
+void vpackage_event(struct packet_chat_msg *packet, const struct tile *ptile,
+                    enum event_type event, const struct ft_color color,
+                    const char *format, va_list vargs);
 
-void notify_conn(struct conn_list *dest,
-                 const struct tile *ptile,
-                 enum event_type event,
-                 const struct ft_color color,
+void notify_conn(struct conn_list *dest, const struct tile *ptile,
+                 enum event_type event, const struct ft_color color,
                  const char *format, ...)
-                 fc__attribute((__format__ (__printf__, 5, 6)));
-void notify_conn_early(struct conn_list *dest,
-                       const struct tile *ptile,
-                       enum event_type event,
-                       const struct ft_color color,
+    fc__attribute((__format__(__printf__, 5, 6)));
+void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
+                       enum event_type event, const struct ft_color color,
                        const char *format, ...)
-                       fc__attribute((__format__ (__printf__, 5, 6)));
-void notify_player(const struct player *pplayer,
-                   const struct tile *ptile,
-                   enum event_type event,
-                   const struct ft_color color,
+    fc__attribute((__format__(__printf__, 5, 6)));
+void notify_player(const struct player *pplayer, const struct tile *ptile,
+                   enum event_type event, const struct ft_color color,
                    const char *format, ...)
-                   fc__attribute((__format__ (__printf__, 5, 6)));
-void notify_embassies(const struct player *pplayer,
-                      const struct tile *ptile,
-                      enum event_type event,
-                      const struct ft_color color,
+    fc__attribute((__format__(__printf__, 5, 6)));
+void notify_embassies(const struct player *pplayer, const struct tile *ptile,
+                      enum event_type event, const struct ft_color color,
                       const char *format, ...)
-                      fc__attribute((__format__ (__printf__, 5, 6)));
-void notify_team(const struct player *pplayer,
-                 const struct tile *ptile,
-                 enum event_type event,
-                 const struct ft_color color,
+    fc__attribute((__format__(__printf__, 5, 6)));
+void notify_team(const struct player *pplayer, const struct tile *ptile,
+                 enum event_type event, const struct ft_color color,
                  const char *format, ...)
-                 fc__attribute((__format__ (__printf__, 5, 6)));
+    fc__attribute((__format__(__printf__, 5, 6)));
 void notify_research(const struct research *presearch,
-                     const struct player *exclude,
-                     enum event_type event,
-                     const struct ft_color color,
-                     const char *format, ...)
-                     fc__attribute((__format__ (__printf__, 5, 6)));
+                     const struct player *exclude, enum event_type event,
+                     const struct ft_color color, const char *format, ...)
+    fc__attribute((__format__(__printf__, 5, 6)));
 void notify_research_embassies(const struct research *presearch,
                                const struct player *exclude,
                                enum event_type event,
                                const struct ft_color color,
                                const char *format, ...)
-                               fc__attribute((__format__ (__printf__, 5, 6)));
+    fc__attribute((__format__(__printf__, 5, 6)));
 
 /* Event cache. */
 
@@ -111,13 +91,13 @@ void event_cache_clear(void);
 void event_cache_remove_old(void);
 
 void event_cache_add_for_all(const struct packet_chat_msg *packet);
-void event_cache_add_for_global_observers(const struct packet_chat_msg *packet);
+void event_cache_add_for_global_observers(
+    const struct packet_chat_msg *packet);
 void event_cache_add_for_player(const struct packet_chat_msg *packet,
                                 const struct player *pplayer);
 struct event_cache_players *
 event_cache_player_add(struct event_cache_players *players,
-                       const struct player *pplayer)
-                       fc__warn_unused_result;
+                       const struct player *pplayer) fc__warn_unused_result;
 void event_cache_add_for_players(const struct packet_chat_msg *packet,
                                  struct event_cache_players *players);
 
@@ -133,4 +113,4 @@ void event_cache_save(struct section_file *file, const char *section);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__NOTIFY_H */
+#endif /* FC__NOTIFY_H */

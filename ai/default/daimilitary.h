@@ -21,13 +21,13 @@
 #include "advchoice.h"
 
 #ifdef FREECIV_WEB
-#define ASSESS_DANGER_MAX_DISTANCE         40
-#define AI_HANDICAP_DISTANCE_LIMIT         6  //TODO: 20 for non-web
-#endif /* FREECIV_WEB */
+#define ASSESS_DANGER_MAX_DISTANCE 40
+#define AI_HANDICAP_DISTANCE_LIMIT 6 // TODO: 20 for non-web
+#endif                               /* FREECIV_WEB */
 
 /* When an enemy has this or lower number of cities left, try harder
    to finish him off. */
-#define FINISH_HIM_CITY_COUNT              5
+#define FINISH_HIM_CITY_COUNT 5
 
 typedef struct unit_list *(player_unit_list_getter)(struct player *pplayer);
 
@@ -35,11 +35,9 @@ struct unit_type *dai_choose_defender_versus(struct city *pcity,
                                              struct unit *attacker);
 void military_advisor_choose_tech(struct player *pplayer,
                                   struct adv_choice *choice);
-struct adv_choice *military_advisor_choose_build(struct ai_type *ait,
-                                                 struct player *pplayer,
-                                                 struct city *pcity,
-                                                 const struct civ_map *mamap,
-                                                 player_unit_list_getter ul_cb);
+struct adv_choice *military_advisor_choose_build(
+    struct ai_type *ait, struct player *pplayer, struct city *pcity,
+    const struct civ_map *mamap, player_unit_list_getter ul_cb);
 void dai_assess_danger_player(struct ai_type *ait, struct player *pplayer,
                               const struct civ_map *dmap);
 int assess_defense_quadratic(struct ai_type *ait, struct city *pcity);
@@ -54,4 +52,4 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                                struct city *pcity, unsigned int danger,
                                struct adv_choice *choice);
 
-#endif  /* FC__DAIMILITARY_H */
+#endif /* FC__DAIMILITARY_H */

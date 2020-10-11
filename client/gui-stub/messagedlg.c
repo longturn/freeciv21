@@ -23,10 +23,7 @@
 
 #include "messagedlg.h"
 
-/**********************************************************************//**
-  Popup a window to let the user edit their message options.
-**************************************************************************/
-void popup_messageopt_dialog(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Popup a window to let the user edit their message options.
+ **************************************************************************/
+void popup_messageopt_dialog(void) { /* PORTME */ }

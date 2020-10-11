@@ -30,10 +30,11 @@
 
 #include "edit_utype.h"
 
-/**********************************************************************//**
-  Setup edit_utype object
-**************************************************************************/
-edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in) : QDialog()
+/**********************************************************************/ /**
+   Setup edit_utype object
+ **************************************************************************/
+edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in)
+    : QDialog()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
   QGridLayout *unit_layout = new QGridLayout();
@@ -53,7 +54,8 @@ edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in) : QDialog
   req_button->setParent(this);
   req_button->setMenu(req);
   tab_tech::techs_to_menu(req);
-  connect(req_button, SIGNAL(triggered(QAction *)), this, SLOT(req_menu(QAction *)));
+  connect(req_button, SIGNAL(triggered(QAction *)), this,
+          SLOT(req_menu(QAction *)));
 
   unit_layout->addWidget(label, 0, 0);
   unit_layout->addWidget(req_button, 0, 1);
@@ -65,17 +67,17 @@ edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in) : QDialog
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void edit_utype::refresh()
 {
   req_button->setText(tab_tech::tech_name(utype->require_advance));
 }
 
-/**********************************************************************//**
-  User selected tech to be req of utype
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected tech to be req of utype
+ **************************************************************************/
 void edit_utype::req_menu(QAction *action)
 {
   struct advance *padv;

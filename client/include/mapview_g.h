@@ -14,7 +14,7 @@
 #define FC__MAPVIEW_G_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
@@ -34,8 +34,8 @@ GUI_FUNC_PROTO(void, update_mouse_cursor, enum cursor_type new_cursor_type)
 GUI_FUNC_PROTO(void, update_timeout_label, void)
 GUI_FUNC_PROTO(void, update_turn_done_button, bool do_restore)
 GUI_FUNC_PROTO(void, update_city_descriptions, void)
-GUI_FUNC_PROTO(void, set_indicator_icons, struct sprite *bulb, struct sprite *sol,
-               struct sprite *flake, struct sprite *gov)
+GUI_FUNC_PROTO(void, set_indicator_icons, struct sprite *bulb,
+               struct sprite *sol, struct sprite *flake, struct sprite *gov)
 
 GUI_FUNC_PROTO(void, start_turn, void)
 
@@ -44,8 +44,8 @@ GUI_FUNC_PROTO(void, update_overview_scroll_window_pos, int x, int y)
 GUI_FUNC_PROTO(void, get_overview_area_dimensions, int *width, int *height)
 GUI_FUNC_PROTO(struct canvas *, get_overview_window, void)
 
-GUI_FUNC_PROTO(void, dirty_rect, int canvas_x, int canvas_y,
-               int pixel_width, int pixel_height)
+GUI_FUNC_PROTO(void, dirty_rect, int canvas_x, int canvas_y, int pixel_width,
+               int pixel_height)
 GUI_FUNC_PROTO(void, dirty_all, void)
 GUI_FUNC_PROTO(void, flush_dirty, void)
 GUI_FUNC_PROTO(void, gui_flush, void)
@@ -59,4 +59,4 @@ GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
                int w, int h)
 GUI_FUNC_PROTO(void, tileset_changed, void)
 
-#endif  /* FC__MAPVIEW_G_H */
+#endif /* FC__MAPVIEW_G_H */

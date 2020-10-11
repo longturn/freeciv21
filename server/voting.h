@@ -13,47 +13,45 @@
 #ifndef FC__VOTING_H
 #define FC__VOTING_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
 enum vote_condition_flags {
-  VCF_NONE          = 0,
-  VCF_NODISSENT     = (1 << 0), /* No 'no' votes.' */
-  VCF_NOPASSALONE   = (1 << 1), /* Can't pass with just one vote for,
-                                 * when there are multiple voters. */
-  VCF_TEAMONLY      = (1 << 2)  /* Only team members can vote on it. */
+  VCF_NONE = 0,
+  VCF_NODISSENT = (1 << 0),   /* No 'no' votes.' */
+  VCF_NOPASSALONE = (1 << 1), /* Can't pass with just one vote for,
+                               * when there are multiple voters. */
+  VCF_TEAMONLY = (1 << 2)     /* Only team members can vote on it. */
 };
 
-enum vote_type {
-  VOTE_YES, VOTE_NO, VOTE_ABSTAIN, VOTE_NUM
-};
+enum vote_type { VOTE_YES, VOTE_NO, VOTE_ABSTAIN, VOTE_NUM };
 
 /* Forward declarations. */
 struct connection;
 struct conn_list;
 
 struct vote_cast {
-  enum vote_type vote_cast;     /* see enum above */
-  int conn_id;                  /* user id */
+  enum vote_type vote_cast; /* see enum above */
+  int conn_id;              /* user id */
 };
 
 #define SPECLIST_TAG vote_cast
 #define SPECLIST_TYPE struct vote_cast
 #include "speclist.h"
-#define vote_cast_list_iterate(alist, pvc) \
-    TYPED_LIST_ITERATE(struct vote_cast, alist, pvc)
-#define vote_cast_list_iterate_end  LIST_ITERATE_END
+#define vote_cast_list_iterate(alist, pvc)                                  \
+  TYPED_LIST_ITERATE(struct vote_cast, alist, pvc)
+#define vote_cast_list_iterate_end LIST_ITERATE_END
 
 struct vote {
-  int caller_id;     /* caller connection id */
+  int caller_id; /* caller connection id */
   int command_id;
   char cmdline[512]; /* Must match MAX_LEN_CONSOLE_LINE. */
   int turn_count;    /* Number of turns active. */
   struct vote_cast_list *votes_cast;
-  int vote_no;       /* place in the queue */
+  int vote_no; /* place in the queue */
   int yes;
   int no;
   int abstain;
@@ -64,9 +62,9 @@ struct vote {
 #define SPECLIST_TAG vote
 #define SPECLIST_TYPE struct vote
 #include "speclist.h"
-#define vote_list_iterate(alist, pvote) \
-    TYPED_LIST_ITERATE(struct vote, alist, pvote)
-#define vote_list_iterate_end  LIST_ITERATE_END
+#define vote_list_iterate(alist, pvote)                                     \
+  TYPED_LIST_ITERATE(struct vote, alist, pvote)
+#define vote_list_iterate_end LIST_ITERATE_END
 
 extern struct vote_list *vote_list;
 extern int vote_number_sequence;
@@ -78,18 +76,15 @@ void voting_turn(void);
 int count_voters(const struct vote *pvote);
 void clear_all_votes(void);
 void cancel_connection_votes(struct connection *pconn);
-bool conn_can_vote(const struct connection *pconn,
-                   const struct vote *pvote);
+bool conn_can_vote(const struct connection *pconn, const struct vote *pvote);
 bool conn_can_see_vote(const struct connection *pconn,
-		       const struct vote *pvote);
+                       const struct vote *pvote);
 struct vote *get_vote_by_no(int vote_no);
-void connection_vote(struct connection *pconn,
-                     struct vote *pvote,
+void connection_vote(struct connection *pconn, struct vote *pvote,
                      enum vote_type type);
 struct vote *get_vote_by_caller(const struct connection *caller);
 void remove_vote(struct vote *pvote);
-struct vote *vote_new(struct connection *caller,
-                      const char *allargs,
+struct vote *vote_new(struct connection *caller, const char *allargs,
                       int command_id);
 bool vote_would_pass_immediately(const struct connection *caller,
                                  int command_id);

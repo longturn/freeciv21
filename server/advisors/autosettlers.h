@@ -26,15 +26,12 @@ void adv_settlers_free(void);
 
 void auto_settlers_player(struct player *pplayer);
 
-void auto_settler_findwork(struct player *pplayer, 
-                           struct unit *punit,
-                           struct settlermap *state,
-                           int recursion);
+void auto_settler_findwork(struct player *pplayer, struct unit *punit,
+                           struct settlermap *state, int recursion);
 
 bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
                              struct settlermap *state, int recursion,
-                             struct pf_path *path,
-                             struct tile *best_tile,
+                             struct pf_path *path, struct tile *best_tile,
                              enum unit_activity best_act,
                              struct extra_type **best_target,
                              int completion_time);
@@ -57,7 +54,8 @@ void adv_unit_new_task(struct unit *punit, enum adv_unit_task task,
 bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
                            struct tile *ptile);
 
-adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad);
+adv_want adv_settlers_road_bonus(struct tile *ptile,
+                                 struct road_type *proad);
 
 bool auto_settlers_speculate_can_act_at(const struct unit *punit,
                                         enum unit_activity activity,
@@ -67,32 +65,32 @@ bool auto_settlers_speculate_can_act_at(const struct unit *punit,
 
 extern action_id as_actions_transform[MAX_NUM_ACTIONS];
 
-#define as_transform_action_iterate(_act_)                                \
-{                                                                         \
-  action_list_iterate(as_actions_transform, _act_)
+#define as_transform_action_iterate(_act_)                                  \
+  {                                                                         \
+    action_list_iterate(as_actions_transform, _act_)
 
-#define as_transform_action_iterate_end                                   \
-  action_list_iterate_end                                                 \
-}
+#define as_transform_action_iterate_end                                     \
+  action_list_iterate_end                                                   \
+  }
 
 extern action_id as_actions_extra[MAX_NUM_ACTIONS];
 
-#define as_extra_action_iterate(_act_)                                    \
-{                                                                         \
-  action_list_iterate(as_actions_extra, _act_)
+#define as_extra_action_iterate(_act_)                                      \
+  {                                                                         \
+    action_list_iterate(as_actions_extra, _act_)
 
-#define as_extra_action_iterate_end                                       \
-  action_list_iterate_end                                                 \
-}
+#define as_extra_action_iterate_end                                         \
+  action_list_iterate_end                                                   \
+  }
 
 extern action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 
-#define as_rmextra_action_iterate(_act_)                                  \
-{                                                                         \
-  action_list_iterate(as_actions_rmextra, _act_)
+#define as_rmextra_action_iterate(_act_)                                    \
+  {                                                                         \
+    action_list_iterate(as_actions_rmextra, _act_)
 
-#define as_rmextra_action_iterate_end                                     \
-  action_list_iterate_end                                                 \
-}
+#define as_rmextra_action_iterate_end                                       \
+  action_list_iterate_end                                                   \
+  }
 
-#endif   /* FC__AUTOSETTLERS_H */
+#endif /* FC__AUTOSETTLERS_H */

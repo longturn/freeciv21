@@ -39,9 +39,9 @@
 
 #include "tab_gov.h"
 
-/**********************************************************************//**
-  Setup tab_gov object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup tab_gov object
+ **************************************************************************/
 tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -57,7 +57,8 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
 
   gov_list = new QListWidget(this);
 
-  connect(gov_list, SIGNAL(itemSelectionChanged()), this, SLOT(select_gov()));
+  connect(gov_list, SIGNAL(itemSelectionChanged()), this,
+          SLOT(select_gov()));
   main_layout->addWidget(gov_list);
 
   gov_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -73,7 +74,8 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this, SLOT(same_name_toggle(bool)));
+  connect(same_name, SIGNAL(toggled(bool)), this,
+          SLOT(same_name_toggle(bool)));
   name = new QLineEdit(this);
   name->setText("None");
   connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
@@ -81,7 +83,8 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
   gov_layout->addWidget(same_name, 1, 1);
   gov_layout->addWidget(name, 1, 2);
 
-  reqs_button = new QPushButton(QString::fromUtf8(R__("Requirements")), this);
+  reqs_button =
+      new QPushButton(QString::fromUtf8(R__("Requirements")), this);
   connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
   gov_layout->addWidget(reqs_button, 2, 2);
 
@@ -89,12 +92,14 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
   connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
   gov_layout->addWidget(effects_button, 3, 2);
 
-  add_button = new QPushButton(QString::fromUtf8(R__("Add Government")), this);
+  add_button =
+      new QPushButton(QString::fromUtf8(R__("Add Government")), this);
   connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
   gov_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
-  delete_button = new QPushButton(QString::fromUtf8(R__("Remove this Government")), this);
+  delete_button = new QPushButton(
+      QString::fromUtf8(R__("Remove this Government")), this);
   connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
   gov_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
@@ -106,26 +111,28 @@ tab_gov::tab_gov(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void tab_gov::refresh()
 {
   gov_list->clear();
 
-  governments_iterate(pgov) {
+  governments_iterate(pgov)
+  {
     if (!pgov->ruledit_disabled) {
       QListWidgetItem *item =
-        new QListWidgetItem(QString::fromUtf8(government_rule_name(pgov)));
+          new QListWidgetItem(QString::fromUtf8(government_rule_name(pgov)));
 
       gov_list->insertItem(government_index(pgov), item);
     }
-  } governments_iterate_end;
+  }
+  governments_iterate_end;
 }
 
-/**********************************************************************//**
-  Update info of the government
-**************************************************************************/
+/**********************************************************************/ /**
+   Update info of the government
+ **************************************************************************/
 void tab_gov::update_gov_info(struct government *pgov)
 {
   selected = pgov;
@@ -151,9 +158,9 @@ void tab_gov::update_gov_info(struct government *pgov)
   }
 }
 
-/**********************************************************************//**
-  User selected government from the list.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected government from the list.
+ **************************************************************************/
 void tab_gov::select_gov()
 {
   QList<QListWidgetItem *> select_list = gov_list->selectedItems();
@@ -166,16 +173,17 @@ void tab_gov::select_gov()
   }
 }
 
-/**********************************************************************//**
-  User entered name for the government
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered name for the government
+ **************************************************************************/
 void tab_gov::name_given()
 {
   if (selected != nullptr) {
     QByteArray name_bytes;
     QByteArray rname_bytes;
 
-    governments_iterate(pgov) {
+    governments_iterate(pgov)
+    {
       if (pgov != selected && !pgov->ruledit_disabled) {
         rname_bytes = rname->text().toUtf8();
         if (!strcmp(government_rule_name(pgov), rname_bytes.data())) {
@@ -184,7 +192,8 @@ void tab_gov::name_given()
           return;
         }
       }
-    } governments_iterate_end;
+    }
+    governments_iterate_end;
 
     if (same_name->isChecked()) {
       name->setText(rname->text());
@@ -192,23 +201,22 @@ void tab_gov::name_given()
 
     name_bytes = name->text().toUtf8();
     rname_bytes = rname->text().toUtf8();
-    names_set(&(selected->name), 0,
-              name_bytes.data(),
-              rname_bytes.data());
+    names_set(&(selected->name), 0, name_bytes.data(), rname_bytes.data());
     refresh();
   }
 }
 
-/**********************************************************************//**
-  User requested government deletion 
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested government deletion
+ **************************************************************************/
 void tab_gov::delete_now()
 {
   if (selected != 0) {
     requirers_dlg *requirers;
 
     requirers = ui->create_requirers(government_rule_name(selected));
-    if (is_government_needed(selected, &ruledit_qt_display_requirers, requirers)) {
+    if (is_government_needed(selected, &ruledit_qt_display_requirers,
+                             requirers)) {
       return;
     }
 
@@ -219,9 +227,9 @@ void tab_gov::delete_now()
   }
 }
 
-/**********************************************************************//**
-  Initialize new government for use.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize new government for use.
+ **************************************************************************/
 bool tab_gov::initialize_new_gov(struct government *pgov)
 {
   if (government_by_rule_name("New Government") != nullptr) {
@@ -233,15 +241,16 @@ bool tab_gov::initialize_new_gov(struct government *pgov)
   return true;
 }
 
-/**********************************************************************//**
-  User requested new government
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested new government
+ **************************************************************************/
 void tab_gov::add_now()
 {
   struct government *new_gov;
 
   // Try to reuse freed government slot
-  governments_iterate(pgov) {
+  governments_iterate(pgov)
+  {
     if (pgov->ruledit_disabled) {
       if (initialize_new_gov(pgov)) {
         pgov->ruledit_disabled = false;
@@ -250,7 +259,8 @@ void tab_gov::add_now()
       }
       return;
     }
-  } governments_iterate_end;
+  }
+  governments_iterate_end;
 
   // Try to add completely new government
   if (game.control.num_goods_types >= MAX_GOODS_TYPES) {
@@ -270,9 +280,9 @@ void tab_gov::add_now()
   }
 }
 
-/**********************************************************************//**
-  Toggled whether rule_name and name should be kept identical
-**************************************************************************/
+/**********************************************************************/ /**
+   Toggled whether rule_name and name should be kept identical
+ **************************************************************************/
 void tab_gov::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -281,9 +291,9 @@ void tab_gov::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************//**
-  User wants to edit reqs
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit reqs
+ **************************************************************************/
 void tab_gov::edit_reqs()
 {
   if (selected != nullptr) {
@@ -292,9 +302,9 @@ void tab_gov::edit_reqs()
   }
 }
 
-/**********************************************************************//**
-  User wants to edit effects
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit effects
+ **************************************************************************/
 void tab_gov::edit_effects()
 {
   if (selected != nullptr) {

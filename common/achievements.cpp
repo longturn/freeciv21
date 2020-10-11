@@ -36,9 +36,9 @@
 
 static struct achievement achievements[MAX_ACHIEVEMENT_TYPES];
 
-/************************************************************************//**
-  Initialize achievements.
-****************************************************************************/
+/************************************************************************/ /**
+   Initialize achievements.
+ ****************************************************************************/
 void achievements_init(void)
 {
   int i;
@@ -55,9 +55,9 @@ void achievements_init(void)
   }
 }
 
-/************************************************************************//**
-  Free the memory associated with achievements
-****************************************************************************/
+/************************************************************************/ /**
+   Free the memory associated with achievements
+ ****************************************************************************/
 void achievements_free(void)
 {
   int i;
@@ -72,9 +72,9 @@ void achievements_free(void)
   }
 }
 
-/**********************************************************************//**
-  Return the achievement id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the achievement id.
+ **************************************************************************/
 int achievement_number(const struct achievement *pach)
 {
   fc_assert_ret_val(NULL != pach, -1);
@@ -82,9 +82,9 @@ int achievement_number(const struct achievement *pach)
   return pach->id;
 }
 
-/**********************************************************************//**
-  Return the achievement index.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the achievement index.
+ **************************************************************************/
 int achievement_index(const struct achievement *pach)
 {
   fc_assert_ret_val(NULL != pach, -1);
@@ -92,59 +92,63 @@ int achievement_index(const struct achievement *pach)
   return pach - achievements;
 }
 
-/**********************************************************************//**
-  Return achievements of given id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return achievements of given id.
+ **************************************************************************/
 struct achievement *achievement_by_number(int id)
 {
-  fc_assert_ret_val(id >= 0 && id < game.control.num_achievement_types, NULL);
+  fc_assert_ret_val(id >= 0 && id < game.control.num_achievement_types,
+                    NULL);
 
   return &achievements[id];
 }
 
-/**********************************************************************//**
-  Return translated name of this achievement type.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return translated name of this achievement type.
+ **************************************************************************/
 const char *achievement_name_translation(struct achievement *pach)
 {
   return name_translation_get(&pach->name);
 }
 
-/**********************************************************************//**
-  Return untranslated name of this achievement type.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return untranslated name of this achievement type.
+ **************************************************************************/
 const char *achievement_rule_name(struct achievement *pach)
 {
   return rule_name_get(&pach->name);
 }
 
-/**********************************************************************//**
-  Returns achievement matching rule name or NULL if there is no achievement
-  with such name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns achievement matching rule name or NULL if there is no achievement
+   with such name.
+ **************************************************************************/
 struct achievement *achievement_by_rule_name(const char *name)
 {
   const char *qs = Qn_(name);
 
-  achievements_iterate(pach) {
+  achievements_iterate(pach)
+  {
     if (!fc_strcasecmp(achievement_rule_name(pach), qs)) {
       return pach;
     }
-  } achievements_iterate_end;
+  }
+  achievements_iterate_end;
 
   return NULL;
 }
 
-/**********************************************************************//**
-  Check if some player has now achieved the achievement and return the player
-  in question.
-**************************************************************************/
+/**********************************************************************/ /**
+   Check if some player has now achieved the achievement and return the
+ player in question.
+ **************************************************************************/
 struct player *achievement_plr(struct achievement *ach,
                                struct player_list *achievers)
 {
   struct player *credited = NULL;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (achievement_check(ach, pplayer)) {
       if (!ach->unique) {
         pplayer->history += ach->culture;
@@ -152,7 +156,8 @@ struct player *achievement_plr(struct achievement *ach,
       }
       player_list_append(achievers, pplayer);
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (ach->first != NULL) {
     /* Already have first one credited. */
@@ -162,7 +167,8 @@ struct player *achievement_plr(struct achievement *ach,
   if (player_list_size(achievers) > 0) {
     /* If multiple players achieved at the same turn, randomly select one
      * as the one who won the race. */
-    credited = player_list_get(achievers, fc_rand(player_list_size(achievers)));
+    credited =
+        player_list_get(achievers, fc_rand(player_list_size(achievers)));
 
     ach->first = credited;
 
@@ -178,9 +184,9 @@ struct player *achievement_plr(struct achievement *ach,
   return credited;
 }
 
-/**********************************************************************//**
-  Check if player has now achieved the achievement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Check if player has now achieved the achievement.
+ **************************************************************************/
 bool achievement_check(struct achievement *ach, struct player *pplayer)
 {
   if ((ach->unique && ach->first != NULL)
@@ -192,84 +198,90 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
   switch (ach->type) {
   case ACHIEVEMENT_SPACESHIP:
     return pplayer->spaceship.state == SSHIP_LAUNCHED;
-  case ACHIEVEMENT_MAP:
+  case ACHIEVEMENT_MAP: {
+    int max_unknown;
+    int required;
+    int total;
+    int known = 0;
+    int unknown = 0;
+
+    /* We calculate max_unknown first for getting the
+     * rounding correctly.
+     * Consider 50 tile map from which we want 25% known.
+     * 50 * 25% = 12.5. Would we round that number of tiles
+     * down, we would get < 25% that's minimum requirement.
+     * Instead we round down (50 - 12.5 = 37.5) -> 37 and then
+     * get the minimum number of full tiles as 50 - 37 = 13. */
+    total = map_num_tiles();
+    max_unknown = (total * (100 - ach->value)) / 100;
+    required = total - max_unknown;
+
+    whole_map_iterate(&(wld.map), ptile)
     {
-      int max_unknown;
-      int required;
-      int total;
-      int known = 0;
-      int unknown = 0;
+      bool this_is_known = FALSE;
 
-      /* We calculate max_unknown first for getting the
-       * rounding correctly.
-       * Consider 50 tile map from which we want 25% known.
-       * 50 * 25% = 12.5. Would we round that number of tiles
-       * down, we would get < 25% that's minimum requirement.
-       * Instead we round down (50 - 12.5 = 37.5) -> 37 and then
-       * get the minimum number of full tiles as 50 - 37 = 13. */
-      total = map_num_tiles();
-      max_unknown = (total * (100 - ach->value)) / 100;
-      required = total - max_unknown;
-
-      whole_map_iterate(&(wld.map), ptile) {
-        bool this_is_known = FALSE;
-
-        if (is_server()) {
-          if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
-            this_is_known = TRUE;
-          }
-        } else {
-          /* Client */
-          if (ptile->terrain != T_UNKNOWN) {
-            this_is_known = TRUE;
-          }
+      if (is_server()) {
+        if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
+          this_is_known = TRUE;
         }
-
-        if (this_is_known) {
-          known++;
-          if (known >= required) {
-            return TRUE;
-          }
-        } else {
-          unknown++;
-          if (unknown >= max_unknown) {
-            return FALSE;
-          }
+      } else {
+        /* Client */
+        if (ptile->terrain != T_UNKNOWN) {
+          this_is_known = TRUE;
         }
-      } whole_map_iterate_end;
+      }
+
+      if (this_is_known) {
+        known++;
+        if (known >= required) {
+          return TRUE;
+        }
+      } else {
+        unknown++;
+        if (unknown >= max_unknown) {
+          return FALSE;
+        }
+      }
     }
+    whole_map_iterate_end;
+  }
 
     return FALSE;
-  case ACHIEVEMENT_MULTICULTURAL:
+  case ACHIEVEMENT_MULTICULTURAL: {
+    bv_player seen_citizens;
+    int count = 0;
+
+    BV_CLR_ALL(seen_citizens);
+
+    city_list_iterate(pplayer->cities, pcity)
     {
-      bv_player seen_citizens;
-      int count = 0;
+      citizens_iterate(pcity, pslot, pnat)
+      {
+        int idx = player_index(player_slot_get_player(pslot));
 
-      BV_CLR_ALL(seen_citizens);
-
-      city_list_iterate(pplayer->cities, pcity) {
-        citizens_iterate(pcity, pslot, pnat) {
-          int idx = player_index(player_slot_get_player(pslot));
-
-          if (!BV_ISSET(seen_citizens, idx)) {
-            BV_SET(seen_citizens, idx);
-            count++;
-            if (count >= ach->value) {
-              /* There's at least value different nationalities. */
-              return TRUE;
-            }
+        if (!BV_ISSET(seen_citizens, idx)) {
+          BV_SET(seen_citizens, idx);
+          count++;
+          if (count >= ach->value) {
+            /* There's at least value different nationalities. */
+            return TRUE;
           }
-        } citizens_iterate_end;
-      } city_list_iterate_end;
+        }
+      }
+      citizens_iterate_end;
     }
+    city_list_iterate_end;
+  }
 
     return FALSE;
   case ACHIEVEMENT_CULTURED_CITY:
-    city_list_iterate(pplayer->cities, pcity) {
+    city_list_iterate(pplayer->cities, pcity)
+    {
       if (city_culture(pcity) >= ach->value) {
         return TRUE;
       }
-    } city_list_iterate_end;
+    }
+    city_list_iterate_end;
 
     return FALSE;
   case ACHIEVEMENT_CULTURED_NATION:
@@ -279,52 +291,55 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     return FALSE;
   case ACHIEVEMENT_LUCKY:
-    return ((int)fc_rand(10000) < ach->value);
+    return ((int) fc_rand(10000) < ach->value);
   case ACHIEVEMENT_HUTS:
     return pplayer->server.huts >= ach->value;
   case ACHIEVEMENT_METROPOLIS:
-    city_list_iterate(pplayer->cities, pcity) {
+    city_list_iterate(pplayer->cities, pcity)
+    {
       if (city_size_get(pcity) >= ach->value) {
         return TRUE;
       }
-    } city_list_iterate_end;
+    }
+    city_list_iterate_end;
 
     return FALSE;
   case ACHIEVEMENT_LITERATE:
     return get_literacy(pplayer) >= ach->value;
-  case ACHIEVEMENT_LAND_AHOY:
+  case ACHIEVEMENT_LAND_AHOY: {
+    std::vector<bool> seen(wld.map.num_continents);
+    int count = 0;
+
+    whole_map_iterate(&(wld.map), ptile)
     {
-      std::vector<bool> seen(wld.map.num_continents);
-      int count = 0;
+      bool this_is_known = FALSE;
 
-      whole_map_iterate(&(wld.map), ptile) {
-        bool this_is_known = FALSE;
-
-        if (is_server()) {
-          if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
-            this_is_known = TRUE;
-          }
-        } else {
-          /* Client */
-          if (ptile->terrain != T_UNKNOWN) {
-            this_is_known = TRUE;
-          }
+      if (is_server()) {
+        if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
+          this_is_known = TRUE;
         }
-
-        if (this_is_known) {
-          /* FIXME: This makes the assumption that fogged tiles belonged
-           *        to their current continent when they were last seen. */
-          if (ptile->continent > 0 && !seen[ptile->continent - 1]) {
-            if (++count >= ach->value) {
-              return TRUE;
-            }
-            seen[ptile->continent - 1] = TRUE;
-          }
+      } else {
+        /* Client */
+        if (ptile->terrain != T_UNKNOWN) {
+          this_is_known = TRUE;
         }
-      } whole_map_iterate_end;
+      }
 
-      return FALSE;
+      if (this_is_known) {
+        /* FIXME: This makes the assumption that fogged tiles belonged
+         *        to their current continent when they were last seen. */
+        if (ptile->continent > 0 && !seen[ptile->continent - 1]) {
+          if (++count >= ach->value) {
+            return TRUE;
+          }
+          seen[ptile->continent - 1] = TRUE;
+        }
+      }
     }
+    whole_map_iterate_end;
+
+    return FALSE;
+  }
   case ACHIEVEMENT_COUNT:
     break;
   }
@@ -334,9 +349,9 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
   return FALSE;
 }
 
-/**********************************************************************//**
-  Return message to send to first player gaining the achievement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return message to send to first player gaining the achievement.
+ **************************************************************************/
 const char *achievement_first_msg(struct achievement *pach)
 {
   fc_assert(pach->first_msg != NULL);
@@ -344,9 +359,9 @@ const char *achievement_first_msg(struct achievement *pach)
   return _(pach->first_msg);
 }
 
-/**********************************************************************//**
-  Return message to send to other players gaining the achievement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return message to send to other players gaining the achievement.
+ **************************************************************************/
 const char *achievement_later_msg(struct achievement *pach)
 {
   fc_assert(pach->cons_msg != NULL);
@@ -354,9 +369,9 @@ const char *achievement_later_msg(struct achievement *pach)
   return _(pach->cons_msg);
 }
 
-/**********************************************************************//**
-  Has the given player got the achievement?
-**************************************************************************/
+/**********************************************************************/ /**
+   Has the given player got the achievement?
+ **************************************************************************/
 bool achievement_player_has(const struct achievement *pach,
                             const struct player *pplayer)
 {
@@ -367,18 +382,18 @@ bool achievement_player_has(const struct achievement *pach,
   return BV_ISSET(pach->achievers, player_index(pplayer));
 }
 
-/**********************************************************************//**
-  Has anybody got the achievement?
-**************************************************************************/
+/**********************************************************************/ /**
+   Has anybody got the achievement?
+ **************************************************************************/
 bool achievement_claimed(const struct achievement *pach)
 {
   return pach->first != NULL;
 }
 
-/**********************************************************************//**
-  Literacy score calculated one way. See also get_literacy2() for
-  alternative way.
-**************************************************************************/
+/**********************************************************************/ /**
+   Literacy score calculated one way. See also get_literacy2() for
+   alternative way.
+ **************************************************************************/
 int get_literacy(const struct player *pplayer)
 {
   int pop = civ_population(pplayer);

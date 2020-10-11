@@ -77,20 +77,15 @@ enum munit {
   SAVE
 };
 
-enum delay_order{
-  D_GOTO,
-  D_NUKE,
-  D_PARADROP,
-  D_FORT
-};
+enum delay_order { D_GOTO, D_NUKE, D_PARADROP, D_FORT };
 
 /**************************************************************************
   Class holding city list for rally points
 **************************************************************************/
-class qfc_rally_list
-{
+class qfc_rally_list {
 public:
-  qfc_rally_list() {
+  qfc_rally_list()
+  {
     hover_tile = false;
     hover_city = false;
   };
@@ -104,13 +99,13 @@ void multiairlift(struct city *acity, Unit_type_id ut);
 /**************************************************************************
   Class representing one unit for delayed goto
 **************************************************************************/
-class qfc_delayed_unit_item
-{
+class qfc_delayed_unit_item {
 public:
-  qfc_delayed_unit_item(delay_order dg, int i) {
-   order = dg;
-   id = i;
-   ptile = nullptr;
+  qfc_delayed_unit_item(delay_order dg, int i)
+  {
+    order = dg;
+    id = i;
+    ptile = nullptr;
   }
   delay_order order;
   int id;
@@ -120,21 +115,19 @@ public:
 /**************************************************************************
   Class holding unit list for delayed goto
 **************************************************************************/
-class qfc_units_list
-{
+class qfc_units_list {
 public:
   qfc_units_list();
-  void add(qfc_delayed_unit_item* fui);
+  void add(qfc_delayed_unit_item *fui);
   void clear();
-  QList<qfc_delayed_unit_item*> unit_list;
+  QList<qfc_delayed_unit_item *> unit_list;
   int nr_units;
 };
 
 /**************************************************************************
   Helper item for trade calculation
 ***************************************************************************/
-class trade_city
-{
+class trade_city {
 public:
   trade_city(struct city *pcity);
 
@@ -147,20 +140,18 @@ public:
   QList<struct city *> pos_cities;
   struct city *city;
   struct tile *tile;
-
 };
 
 /**************************************************************************
   Struct of 2 tiles, used for drawing trade routes.
   Also assigned caravan if it was sent
 ***************************************************************************/
-struct qtiles
-{
+struct qtiles {
   struct tile *t1;
   struct tile *t2;
   struct unit *autocaravan;
 
-  bool operator==(const qtiles& a) const
+  bool operator==(const qtiles &a) const
   {
     return (t1 == a.t1 && t2 == a.t2 && autocaravan == a.autocaravan);
   }
@@ -169,15 +160,14 @@ struct qtiles
 /**************************************************************************
   Class trade generator, used for calulating possible trade routes
 ***************************************************************************/
-class trade_generator
-{
+class trade_generator {
 public:
   trade_generator();
 
   bool hover_city;
   QList<qtiles> lines;
   QList<struct city *> virtual_cities;
-  QList<trade_city*> cities;
+  QList<trade_city *> cities;
 
   void add_all_cities();
   void add_city(struct city *pcity);
@@ -191,26 +181,24 @@ private:
   bool discard_any(trade_city *tc, int freeroutes);
   bool discard_one(trade_city *tc);
   int find_over_max(struct city *pcity);
-  trade_city* find_most_free();
+  trade_city *find_most_free();
   void check_if_done(trade_city *tc1, trade_city *tc2);
   void discard();
   void discard_trade(trade_city *tc1, trade_city *tc2);
   void find_certain_routes();
 };
 
-
 /****************************************************************************
   Instantiable government menu.
 ****************************************************************************/
-class gov_menu : public QMenu
-{
+class gov_menu : public QMenu {
   Q_OBJECT
   static QSet<gov_menu *> instances;
 
   QVector<QAction *> actions;
 
 public:
-  gov_menu(QWidget* parent = 0);
+  gov_menu(QWidget *parent = 0);
   virtual ~gov_menu();
 
   static void create_all();
@@ -227,15 +215,14 @@ public slots:
 /****************************************************************************
   Go to and... menu.
 ****************************************************************************/
-class go_act_menu : public QMenu
-{
+class go_act_menu : public QMenu {
   Q_OBJECT
   static QSet<go_act_menu *> instances;
 
   QMap<QAction *, int> items;
 
 public:
-  go_act_menu(QWidget* parent = 0);
+  go_act_menu(QWidget *parent = 0);
   virtual ~go_act_menu();
 
   static void reset_all();
@@ -252,8 +239,7 @@ public slots:
 /**************************************************************************
   Class representing global menus in gameview
 **************************************************************************/
-class mr_menu : public QMenuBar
-{
+class mr_menu : public QMenuBar {
   Q_OBJECT
   QMenu *airlift_menu;
   QMenu *bases_menu;
@@ -265,8 +251,9 @@ class mr_menu : public QMenuBar
   QActionGroup *action_vs_unit;
   QMenu *action_unit_menu;
   QMenu *action_city_menu;
-  QHash<munit, QAction*> menu_list;
+  QHash<munit, QAction *> menu_list;
   qfc_units_list units_list;
+
 public:
   mr_menu();
   void setup_menus();
@@ -412,7 +399,7 @@ private slots:
   void slot_traveler();
 
 private:
-  struct tile* find_last_unit_pos(struct unit* punit, int pos);
+  struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };
 
 #endif /* FC__MENU_H */

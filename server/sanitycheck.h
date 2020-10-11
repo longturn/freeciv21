@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,32 +19,31 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#if ((IS_BETA_VERSION || IS_DEVEL_VERSION) && !defined(FREECIV_NDEBUG)) \
-  || defined(FREECIV_DEBUG)
-#  define SANITY_CHECKING
+#if ((IS_BETA_VERSION || IS_DEVEL_VERSION) && !defined(FREECIV_NDEBUG))     \
+    || defined(FREECIV_DEBUG)
+#define SANITY_CHECKING
 #endif
 
 #ifdef SANITY_CHECKING
 
-#  define sanity_check_city(x) \
-  real_sanity_check_city(x, __FILE__,__FUNCTION__,  __FC_LINE__)
+#define sanity_check_city(x)                                                \
+  real_sanity_check_city(x, __FILE__, __FUNCTION__, __FC_LINE__)
 void real_sanity_check_city(struct city *pcity, const char *file,
                             const char *function, int line);
 
-#  define sanity_check_tile(x) \
-  real_sanity_check_tile(x, __FILE__,__FUNCTION__,  __FC_LINE__)
+#define sanity_check_tile(x)                                                \
+  real_sanity_check_tile(x, __FILE__, __FUNCTION__, __FC_LINE__)
 void real_sanity_check_tile(struct tile *ptile, const char *file,
                             const char *function, int line);
 
-#  define sanity_check() \
-  real_sanity_check(__FILE__, __FUNCTION__, __FC_LINE__)
-void real_sanity_check( const char *file, const char *function, int line);
+#define sanity_check() real_sanity_check(__FILE__, __FUNCTION__, __FC_LINE__)
+void real_sanity_check(const char *file, const char *function, int line);
 
 #else /* SANITY_CHECKING */
 
-#  define sanity_check_city(x) (void)0
-#  define sanity_check_tile(x) (void)0
-#  define sanity_check() (void)0
+#define sanity_check_city(x) (void) 0
+#define sanity_check_tile(x) (void) 0
+#define sanity_check() (void) 0
 
 #endif /* SANITY_CHECKING */
 
@@ -52,4 +51,4 @@ void real_sanity_check( const char *file, const char *function, int line);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SANITYCHECK_H */
+#endif /* FC__SANITYCHECK_H */

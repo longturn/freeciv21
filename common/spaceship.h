@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ extern "C" {
 
 /* utility */
 #include "bitvector.h"
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
@@ -81,8 +81,12 @@ the one which must be there for P2 and P3).
 
 **********************************************************************/
 
-enum spaceship_state {SSHIP_NONE, SSHIP_STARTED,
-		      SSHIP_LAUNCHED, SSHIP_ARRIVED};
+enum spaceship_state {
+  SSHIP_NONE,
+  SSHIP_STARTED,
+  SSHIP_LAUNCHED,
+  SSHIP_ARRIVED
+};
 
 #define NUM_SS_STRUCTURALS 32 /* Used in the network protocol. */
 #define NUM_SS_COMPONENTS 16
@@ -117,8 +121,8 @@ struct player_spaceship {
 };
 
 struct sship_part_info {
-  int x, y;			/* position of tile centre */
-  int required;			/* required for struct connection */
+  int x, y;     /* position of tile centre */
+  int required; /* required for struct connection */
 };
 
 extern const struct sship_part_info structurals_info[NUM_SS_STRUCTURALS];
@@ -128,8 +132,7 @@ extern const struct sship_part_info modules_info[NUM_SS_MODULES];
 void spaceship_init(struct player_spaceship *ship);
 int num_spaceship_structurals_placed(const struct player_spaceship *ship);
 
-struct spaceship_component
-{
+struct spaceship_component {
   enum spaceship_place_type type;
   int num;
 };

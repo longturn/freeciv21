@@ -20,18 +20,12 @@
 
 #include "plrdlg.h"
 
-/**********************************************************************//**
-  Display the player list dialog.  Optionally raise it.
-**************************************************************************/
-void popup_players_dialog(bool raise)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Display the player list dialog.  Optionally raise it.
+ **************************************************************************/
+void popup_players_dialog(bool raise) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update all information in the player list dialog.
-**************************************************************************/
-void real_players_dialog_update(void *unused)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update all information in the player list dialog.
+ **************************************************************************/
+void real_players_dialog_update(void *unused) { /* PORTME */ }

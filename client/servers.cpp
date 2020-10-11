@@ -104,10 +104,10 @@ extern enum announce_type announce;
 static bool begin_metaserver_scan(struct server_scan *scan);
 static void delete_server_list(struct server_list *server_list);
 
-/**********************************************************************//**
-  The server sends a stream in a registry 'ini' type format.
-  Read it using secfile functions and fill the server_list structs.
-**************************************************************************/
+/**********************************************************************/ /**
+   The server sends a stream in a registry 'ini' type format.
+   Read it using secfile functions and fill the server_list structs.
+ **************************************************************************/
 static struct server_list *parse_metaserver_data(fz_FILE *f)
 {
   struct server_list *server_list;
@@ -122,13 +122,15 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   }
 
   latest_ver = secfile_lookup_str_default(file, NULL, "versions." FOLLOWTAG);
-  comment = secfile_lookup_str_default(file, NULL, "version_comments." FOLLOWTAG);
+  comment =
+      secfile_lookup_str_default(file, NULL, "version_comments." FOLLOWTAG);
 
   if (latest_ver != NULL) {
     const char *my_comparable = fc_comparable_version();
     char vertext[2048];
 
-    log_verbose("Metaserver says latest '" FOLLOWTAG "' version is '%s'; we have '%s'",
+    log_verbose("Metaserver says latest '" FOLLOWTAG
+                "' version is '%s'; we have '%s'",
                 latest_ver, my_comparable);
     if (cvercmp_greater(latest_ver, my_comparable)) {
       const char *const followtag = "?vertag:" FOLLOWTAG;
@@ -160,7 +162,8 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   for (i = 0; i < nservers; i++) {
     const char *host, *port, *version, *state, *message, *nplayers, *nhumans;
     int n;
-    struct server *pserver = (struct server*)fc_malloc(sizeof(struct server));
+    struct server *pserver =
+        (struct server *) fc_malloc(sizeof(struct server));
 
     host = secfile_lookup_str_default(file, "", "server%d.host", i);
     pserver->host = fc_strdup(host);
@@ -186,24 +189,25 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
     pserver->humans = n;
 
     if (pserver->nplayers > 0) {
-      //sveinung ? moved players out of server
-      pserver->players = static_cast<players*>(fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
+      // sveinung ? moved players out of server
+      pserver->players = static_cast<players *>(
+          fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
     } else {
       pserver->players = NULL;
     }
 
-    for (j = 0; j < pserver->nplayers ; j++) {
+    for (j = 0; j < pserver->nplayers; j++) {
       const char *name, *nation, *type, *plrhost;
 
-      name = secfile_lookup_str_default(file, "", 
-                                        "server%d.player%d.name", i, j);
+      name = secfile_lookup_str_default(file, "", "server%d.player%d.name",
+                                        i, j);
       pserver->players[j].name = fc_strdup(name);
 
-      type = secfile_lookup_str_default(file, "",
-                                        "server%d.player%d.type", i, j);
+      type = secfile_lookup_str_default(file, "", "server%d.player%d.type",
+                                        i, j);
       pserver->players[j].type = fc_strdup(type);
 
-      plrhost = secfile_lookup_str_default(file, "", 
+      plrhost = secfile_lookup_str_default(file, "",
                                            "server%d.player%d.host", i, j);
       pserver->players[j].host = fc_strdup(plrhost);
 
@@ -220,9 +224,9 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   return server_list;
 }
 
-/**********************************************************************//**
-  Read the reply string from the metaserver.
-**************************************************************************/
+/**********************************************************************/ /**
+   Read the reply string from the metaserver.
+ **************************************************************************/
 static bool meta_read_response(struct server_scan *scan)
 {
   fz_FILE *f;
@@ -261,12 +265,12 @@ static bool meta_read_response(struct server_scan *scan)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Metaserver scan thread entry point
-**************************************************************************/
+/**********************************************************************/ /**
+   Metaserver scan thread entry point
+ **************************************************************************/
 static void metaserver_scan(void *arg)
 {
-  struct server_scan *scan = static_cast<server_scan*>(arg);
+  struct server_scan *scan = static_cast<server_scan *>(arg);
 
   if (!begin_metaserver_scan(scan)) {
     fc_allocate_mutex(&scan->meta.mutex);
@@ -286,12 +290,12 @@ static void metaserver_scan(void *arg)
   fc_release_mutex(&scan->meta.mutex);
 }
 
-/**********************************************************************//**
-  Begin a metaserver scan for servers.
+/**********************************************************************/ /**
+   Begin a metaserver scan for servers.
 
-  Returns FALSE on error (in which case errbuf will contain an error
-  message).
-**************************************************************************/
+   Returns FALSE on error (in which case errbuf will contain an error
+   message).
+ **************************************************************************/
 static bool begin_metaserver_scan(struct server_scan *scan)
 {
   struct netfile_post *post;
@@ -310,18 +314,19 @@ static bool begin_metaserver_scan(struct server_scan *scan)
   return retval;
 }
 
-/**********************************************************************//**
-  Frees everything associated with a server list including
-  the server list itself (so the server_list is no longer
-  valid after calling this function)
-**************************************************************************/
+/**********************************************************************/ /**
+   Frees everything associated with a server list including
+   the server list itself (so the server_list is no longer
+   valid after calling this function)
+ **************************************************************************/
 static void delete_server_list(struct server_list *server_list)
 {
   if (!server_list) {
     return;
   }
 
-  server_list_iterate(server_list, ptmp) {
+  server_list_iterate(server_list, ptmp)
+  {
     int i;
     int n = ptmp->nplayers;
 
@@ -341,16 +346,17 @@ static void delete_server_list(struct server_list *server_list)
     }
 
     free(ptmp);
-  } server_list_iterate_end;
+  }
+  server_list_iterate_end;
 
   server_list_destroy(server_list);
 }
 
-/**********************************************************************//**
-  Broadcast an UDP package to all servers on LAN, requesting information
-  about the server. The packet is send to all Freeciv servers in the same
-  multicast group as the client.
-**************************************************************************/
+/**********************************************************************/ /**
+   Broadcast an UDP package to all servers on LAN, requesting information
+   about the server. The packet is send to all Freeciv servers in the same
+   multicast group as the client.
+ **************************************************************************/
 static bool begin_lanserver_scan(struct server_scan *scan)
 {
   union fc_sockaddr addr;
@@ -409,8 +415,9 @@ static bool begin_lanserver_scan(struct server_scan *scan)
 
   fc_nonblock(scan->sock);
 
-  if (setsockopt(scan->sock, SOL_SOCKET, SO_REUSEADDR,
-                 (char *)&opt, sizeof(opt)) == -1) {
+  if (setsockopt(scan->sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt,
+                 sizeof(opt))
+      == -1) {
     log_error("SO_REUSEADDR failed: %s", fc_strerror(fc_get_errno()));
   }
 
@@ -423,7 +430,7 @@ static bool begin_lanserver_scan(struct server_scan *scan)
     addr.saddr_in6.sin6_addr = in6addr_any;
   } else
 #endif /* IPv6 support */
-  if (family == AF_INET) {
+      if (family == AF_INET) {
     addr.saddr.sa_family = AF_INET;
     addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT + 1);
     addr.saddr_in4.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -453,12 +460,14 @@ static bool begin_lanserver_scan(struct server_scan *scan)
     mreq6.ipv6mr_interface = 0; /* TODO: Interface selection */
 
     if (setsockopt(scan->sock, IPPROTO_IPV6, FC_IPV6_ADD_MEMBERSHIP,
-                   (const char*)&mreq6, sizeof(mreq6)) < 0) {
+                   (const char *) &mreq6, sizeof(mreq6))
+        < 0) {
       char errstr[2048];
 
-      fc_snprintf(errstr, sizeof(errstr),
-                  _("Adding membership for IPv6 LAN announcement group failed:\n%s"),
-                fc_strerror(fc_get_errno()));
+      fc_snprintf(
+          errstr, sizeof(errstr),
+          _("Adding membership for IPv6 LAN announcement group failed:\n%s"),
+          fc_strerror(fc_get_errno()));
       scan->error_func(scan, errstr);
     }
   } else
@@ -469,16 +478,18 @@ static bool begin_lanserver_scan(struct server_scan *scan)
     mreq4.imr_address.s_addr = htonl(INADDR_ANY);
     mreq4.imr_ifindex = 0;
 #else
-     mreq4.imr_interface.s_addr = htonl(INADDR_ANY);
+    mreq4.imr_interface.s_addr = htonl(INADDR_ANY);
 #endif
 
     if (setsockopt(scan->sock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-                   (const char*)&mreq4, sizeof(mreq4)) < 0) {
+                   (const char *) &mreq4, sizeof(mreq4))
+        < 0) {
       char errstr[2048];
 
-      fc_snprintf(errstr, sizeof(errstr),
-                  _("Adding membership for IPv4 LAN announcement group failed:\n%s"),
-                  fc_strerror(fc_get_errno()));
+      fc_snprintf(
+          errstr, sizeof(errstr),
+          _("Adding membership for IPv4 LAN announcement group failed:\n%s"),
+          fc_strerror(fc_get_errno()));
       scan->error_func(scan, errstr);
 
       return FALSE;
@@ -500,7 +511,7 @@ static bool begin_lanserver_scan(struct server_scan *scan)
     addr.saddr_in6.sin6_port = htons(SERVER_LAN_PORT);
   } else
 #endif /* IPv6 Support */
-  if (family == AF_INET) {
+      if (family == AF_INET) {
     fc_inet_aton(group, &addr.saddr_in4.sin_addr, FALSE);
     addr.saddr.sa_family = AF_INET;
     addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT);
@@ -517,14 +528,14 @@ static bool begin_lanserver_scan(struct server_scan *scan)
 #ifndef FREECIV_HAVE_WINSOCK
   /* Set the Time-to-Live field for the packet  */
   ttl = SERVER_LAN_TTL;
-  if (setsockopt(send_sock, IPPROTO_IP, IP_MULTICAST_TTL, (const char*)&ttl, 
-                 sizeof(ttl))) {
+  if (setsockopt(send_sock, IPPROTO_IP, IP_MULTICAST_TTL,
+                 (const char *) &ttl, sizeof(ttl))) {
     log_error("setsockopt failed: %s", fc_strerror(fc_get_errno()));
     return FALSE;
   }
 #endif /* FREECIV_HAVE_WINSOCK */
 
-  if (setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, (const char*)&opt, 
+  if (setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, (const char *) &opt,
                  sizeof(opt))) {
     log_error("setsockopt failed: %s", fc_strerror(fc_get_errno()));
     return FALSE;
@@ -533,10 +544,9 @@ static bool begin_lanserver_scan(struct server_scan *scan)
   dio_output_init(&dout, buffer, sizeof(buffer));
   dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
   size = dio_output_used(&dout);
- 
 
-  if (sendto(send_sock, buffer, size, 0, &addr.saddr,
-             sockaddr_size(&addr)) < 0) {
+  if (sendto(send_sock, buffer, size, 0, &addr.saddr, sockaddr_size(&addr))
+      < 0) {
     /* This can happen when there's no network connection - it should
      * give an in-game message. */
     log_error("lanserver scan sendto failed: %s",
@@ -555,12 +565,11 @@ static bool begin_lanserver_scan(struct server_scan *scan)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Listens for UDP packets broadcasted from a server that responded
-  to the request-packet sent from the client.
-**************************************************************************/
-static enum server_scan_status
-get_lan_server_list(struct server_scan *scan)
+/**********************************************************************/ /**
+   Listens for UDP packets broadcasted from a server that responded
+   to the request-packet sent from the client.
+ **************************************************************************/
+static enum server_scan_status get_lan_server_list(struct server_scan *scan)
 {
   socklen_t fromlen;
   union fc_sockaddr fromend;
@@ -586,8 +595,9 @@ get_lan_server_list(struct server_scan *scan)
 
     /* Try to receive a packet from a server.  No select loop is needed;
      * we just keep on reading until recvfrom returns -1. */
-    if (recvfrom(scan->sock, msgbuf, sizeof(msgbuf), 0,
-		 &fromend.saddr, &fromlen) < 0) {
+    if (recvfrom(scan->sock, msgbuf, sizeof(msgbuf), 0, &fromend.saddr,
+                 &fromlen)
+        < 0) {
       break;
     }
 
@@ -610,23 +620,24 @@ get_lan_server_list(struct server_scan *scan)
       char dst[INET6_ADDRSTRLEN];
       char host[NI_MAXHOST], service[NI_MAXSERV];
 
-      if (!getnameinfo(&fromend.saddr, fromlen, host, NI_MAXHOST,
-                       service, NI_MAXSERV, NI_NUMERICSERV)) {
+      if (!getnameinfo(&fromend.saddr, fromlen, host, NI_MAXHOST, service,
+                       NI_MAXSERV, NI_NUMERICSERV)) {
         nameinfo = TRUE;
       }
       if (!nameinfo) {
         if (fromend.saddr.sa_family == AF_INET6) {
-          inet_ntop(AF_INET6, &fromend.saddr_in6.sin6_addr,
-                    dst, sizeof(dst));
+          inet_ntop(AF_INET6, &fromend.saddr_in6.sin6_addr, dst,
+                    sizeof(dst));
         } else if (fromend.saddr.sa_family == AF_INET) {
-          inet_ntop(AF_INET, &fromend.saddr_in4.sin_addr, dst, sizeof(dst));;
+          inet_ntop(AF_INET, &fromend.saddr_in4.sin_addr, dst, sizeof(dst));
+          ;
         } else {
-	  fc_assert(FALSE);
+          fc_assert(FALSE);
 
-	  log_error("Unsupported address family in get_lan_server_list()");
+          log_error("Unsupported address family in get_lan_server_list()");
 
-	  fc_snprintf(dst, sizeof(dst), "Unknown");
-	}
+          fc_snprintf(dst, sizeof(dst), "Unknown");
+        }
       }
 #else  /* IPv6 support */
       const char *dst = NULL;
@@ -634,7 +645,7 @@ get_lan_server_list(struct server_scan *scan)
       const char *host = NULL;
 
       from = gethostbyaddr((char *) &fromend.saddr_in4.sin_addr,
-			   sizeof(fromend.saddr_in4.sin_addr), AF_INET);
+                           sizeof(fromend.saddr_in4.sin_addr), AF_INET);
       if (from) {
         host = from->h_name;
         nameinfo = TRUE;
@@ -649,13 +660,15 @@ get_lan_server_list(struct server_scan *scan)
 
     /* UDP can send duplicate or delayed packets. */
     fc_allocate_mutex(&scan->srvrs.mutex);
-    server_list_iterate(scan->srvrs.servers, aserver) {
+    server_list_iterate(scan->srvrs.servers, aserver)
+    {
       if (0 == fc_strcasecmp(aserver->host, servername)
           && aserver->port == port) {
-	duplicate = TRUE;
-	break;
+        duplicate = TRUE;
+        break;
       }
-    } server_list_iterate_end;
+    }
+    server_list_iterate_end;
 
     if (duplicate) {
       fc_release_mutex(&scan->srvrs.mutex);
@@ -685,45 +698,43 @@ get_lan_server_list(struct server_scan *scan)
   return SCAN_STATUS_WAITING;
 }
 
-/**********************************************************************//**
-  Creates a new server scan and returns it, or NULL if impossible.
+/**********************************************************************/ /**
+   Creates a new server scan and returns it, or NULL if impossible.
 
-  Depending on 'type' the scan will look for either local or internet
-  games.
+   Depending on 'type' the scan will look for either local or internet
+   games.
 
-  error_func provides a callback to be used in case of error; this
-  callback probably should call server_scan_finish.
+   error_func provides a callback to be used in case of error; this
+   callback probably should call server_scan_finish.
 
-  NB: You must call server_scan_finish() when you are done with the
-  scan to free the memory and resources allocated by it.
-**************************************************************************/
+   NB: You must call server_scan_finish() when you are done with the
+   scan to free the memory and resources allocated by it.
+ **************************************************************************/
 struct server_scan *server_scan_begin(enum server_scan_type type,
                                       ServerScanErrorFunc error_func)
 {
   struct server_scan *scan;
   bool ok = FALSE;
 
-  scan = static_cast<server_scan*>(fc_calloc(1, sizeof(*scan)));
+  scan = static_cast<server_scan *>(fc_calloc(1, sizeof(*scan)));
   scan->type = type;
   scan->error_func = error_func;
   scan->sock = -1;
   fc_init_mutex(&scan->srvrs.mutex);
 
   switch (type) {
-  case SERVER_SCAN_GLOBAL:
-    {
-      int thr_ret;
+  case SERVER_SCAN_GLOBAL: {
+    int thr_ret;
 
-      fc_init_mutex(&scan->meta.mutex);
-      scan->meta.status = SCAN_STATUS_WAITING;
-      thr_ret = fc_thread_start(&scan->meta.thr, metaserver_scan, scan);
-      if (thr_ret) {
-        ok = FALSE;
-      } else {
-        ok = TRUE;
-      }
+    fc_init_mutex(&scan->meta.mutex);
+    scan->meta.status = SCAN_STATUS_WAITING;
+    thr_ret = fc_thread_start(&scan->meta.thr, metaserver_scan, scan);
+    if (thr_ret) {
+      ok = FALSE;
+    } else {
+      ok = TRUE;
     }
-    break;
+  } break;
   case SERVER_SCAN_LOCAL:
     ok = begin_lanserver_scan(scan);
     break;
@@ -739,10 +750,10 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   return scan;
 }
 
-/**********************************************************************//**
-  A simple query function to determine the type of a server scan (previously
-  allocated in server_scan_begin).
-**************************************************************************/
+/**********************************************************************/ /**
+   A simple query function to determine the type of a server scan (previously
+   allocated in server_scan_begin).
+ **************************************************************************/
 enum server_scan_type server_scan_get_type(const struct server_scan *scan)
 {
   if (!scan) {
@@ -751,21 +762,21 @@ enum server_scan_type server_scan_get_type(const struct server_scan *scan)
   return scan->type;
 }
 
-/**********************************************************************//**
-  A function to query servers of the server scan. This will check any
-  pending network data and update the server list.
+/**********************************************************************/ /**
+   A function to query servers of the server scan. This will check any
+   pending network data and update the server list.
 
-  The return value indicates the status of the server scan:
-    SCAN_STATUS_ERROR   - The scan failed and should be aborted.
-    SCAN_STATUS_WAITING - The scan is in progress (continue polling).
-    SCAN_STATUS_PARTIAL - The scan received some data, with more expected.
-                          Get the servers with server_scan_get_list(), and
-                          continue polling.
-    SCAN_STATUS_DONE    - The scan received all data it expected to receive.
-                          Get the servers with server_scan_get_list(), and
-                          stop calling this function.
-    SCAN_STATUS_ABORT   - The scan has been aborted
-**************************************************************************/
+   The return value indicates the status of the server scan:
+     SCAN_STATUS_ERROR   - The scan failed and should be aborted.
+     SCAN_STATUS_WAITING - The scan is in progress (continue polling).
+     SCAN_STATUS_PARTIAL - The scan received some data, with more expected.
+                           Get the servers with server_scan_get_list(), and
+                           continue polling.
+     SCAN_STATUS_DONE    - The scan received all data it expected to receive.
+                           Get the servers with server_scan_get_list(), and
+                           stop calling this function.
+     SCAN_STATUS_ABORT   - The scan has been aborted
+ **************************************************************************/
 enum server_scan_status server_scan_poll(struct server_scan *scan)
 {
   if (!scan) {
@@ -773,17 +784,15 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
   }
 
   switch (scan->type) {
-  case SERVER_SCAN_GLOBAL:
-    {
-      enum server_scan_status status;
+  case SERVER_SCAN_GLOBAL: {
+    enum server_scan_status status;
 
-      fc_allocate_mutex(&scan->meta.mutex);
-      status = scan->meta.status;
-      fc_release_mutex(&scan->meta.mutex);
+    fc_allocate_mutex(&scan->meta.mutex);
+    status = scan->meta.status;
+    fc_release_mutex(&scan->meta.mutex);
 
-      return status;
-    }
-    break;
+    return status;
+  } break;
   case SERVER_SCAN_LOCAL:
     return get_lan_server_list(scan);
     break;
@@ -794,11 +803,10 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
   return SCAN_STATUS_ERROR;
 }
 
-/**********************************************************************//**
-  Returns the srv_list currently held by the scan (may be NULL).
-**************************************************************************/
-struct srv_list *
-server_scan_get_list(struct server_scan *scan)
+/**********************************************************************/ /**
+   Returns the srv_list currently held by the scan (may be NULL).
+ **************************************************************************/
+struct srv_list *server_scan_get_list(struct server_scan *scan)
 {
   if (!scan) {
     return NULL;
@@ -807,10 +815,10 @@ server_scan_get_list(struct server_scan *scan)
   return &scan->srvrs;
 }
 
-/**********************************************************************//**
-  Closes the socket listening on the scan, frees the list of servers, and
-  frees the memory allocated for 'scan' by server_scan_begin().
-**************************************************************************/
+/**********************************************************************/ /**
+   Closes the socket listening on the scan, frees the list of servers, and
+   frees the memory allocated for 'scan' by server_scan_begin().
+ **************************************************************************/
 void server_scan_finish(struct server_scan *scan)
 {
   if (!scan) {
@@ -828,8 +836,9 @@ void server_scan_finish(struct server_scan *scan)
     fc_destroy_mutex(&scan->meta.mutex);
 
     /* This mainly duplicates code from below "else" block.
-     * That's intentional, since they will be completely different in future versions.
-     * We are better prepared for that by having them separately already. */
+     * That's intentional, since they will be completely different in future
+     * versions. We are better prepared for that by having them separately
+     * already. */
     if (scan->sock >= 0) {
       fc_closesocket(scan->sock);
       scan->sock = -1;

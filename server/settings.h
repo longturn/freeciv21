@@ -26,51 +26,51 @@ extern "C" {
 #include "server_settings.h"
 
 struct sset_val_name {
-  const char *support;          /* Untranslated long support name, used 
-                                 * for saving. */
-  const char *pretty;           /* Translated, used to display to the
-                                 * users. */
+  const char *support; /* Untranslated long support name, used
+                        * for saving. */
+  const char *pretty;  /* Translated, used to display to the
+                        * users. */
 };
 
 /* Categories allow options to be usefully organized when presented to the
  * user */
 #define SPECENUM_NAME sset_category
-#define SPECENUM_VALUE0     SSET_GEOLOGY
+#define SPECENUM_VALUE0 SSET_GEOLOGY
 #define SPECENUM_VALUE0NAME N_("Geological")
-#define SPECENUM_VALUE1     SSET_SOCIOLOGY
+#define SPECENUM_VALUE1 SSET_SOCIOLOGY
 #define SPECENUM_VALUE1NAME N_("Sociological")
-#define SPECENUM_VALUE2     SSET_ECONOMICS
+#define SPECENUM_VALUE2 SSET_ECONOMICS
 #define SPECENUM_VALUE2NAME N_("Economic")
-#define SPECENUM_VALUE3     SSET_MILITARY
+#define SPECENUM_VALUE3 SSET_MILITARY
 #define SPECENUM_VALUE3NAME N_("Military")
-#define SPECENUM_VALUE4     SSET_SCIENCE
+#define SPECENUM_VALUE4 SSET_SCIENCE
 #define SPECENUM_VALUE4NAME N_("Scientific")
-#define SPECENUM_VALUE5     SSET_INTERNAL
+#define SPECENUM_VALUE5 SSET_INTERNAL
 #define SPECENUM_VALUE5NAME N_("Internal")
-#define SPECENUM_VALUE6     SSET_NETWORK
+#define SPECENUM_VALUE6 SSET_NETWORK
 #define SPECENUM_VALUE6NAME N_("Networking")
 /* keep this last */
-#define SPECENUM_COUNT      SSET_NUM_CATEGORIES
+#define SPECENUM_COUNT SSET_NUM_CATEGORIES
 #include "specenum_gen.h"
 
 /* Levels allow options to be subdivided and thus easier to navigate */
 #define SPECENUM_NAME sset_level
-#define SPECENUM_VALUE0     SSET_NONE
+#define SPECENUM_VALUE0 SSET_NONE
 #define SPECENUM_VALUE0NAME N_("?ssetlevel:None")
-#define SPECENUM_VALUE1     SSET_ALL
+#define SPECENUM_VALUE1 SSET_ALL
 #define SPECENUM_VALUE1NAME N_("All")
-#define SPECENUM_VALUE2     SSET_VITAL
+#define SPECENUM_VALUE2 SSET_VITAL
 #define SPECENUM_VALUE2NAME N_("Vital")
-#define SPECENUM_VALUE3     SSET_SITUATIONAL
+#define SPECENUM_VALUE3 SSET_SITUATIONAL
 #define SPECENUM_VALUE3NAME N_("Situational")
-#define SPECENUM_VALUE4     SSET_RARE
+#define SPECENUM_VALUE4 SSET_RARE
 #define SPECENUM_VALUE4NAME N_("Rare")
-#define SPECENUM_VALUE5     SSET_CHANGED
+#define SPECENUM_VALUE5 SSET_CHANGED
 #define SPECENUM_VALUE5NAME N_("Changed")
-#define SPECENUM_VALUE6     SSET_LOCKED
+#define SPECENUM_VALUE6 SSET_LOCKED
 #define SPECENUM_VALUE6NAME N_("Locked")
 /* keep this last */
-#define SPECENUM_COUNT      OLEVELS_NUM
+#define SPECENUM_COUNT OLEVELS_NUM
 #include "specenum_gen.h"
 
 /* forward declaration */
@@ -146,8 +146,8 @@ bool setting_enum_validate(const struct setting *pset, const char *val,
                            size_t reject_msg_len);
 
 /* Type SST_BITWISE setting functions. */
-const char *setting_bitwise_bit(const struct setting *pset,
-                                int bit, bool pretty);
+const char *setting_bitwise_bit(const struct setting *pset, int bit,
+                                bool pretty);
 bool setting_bitwise_set(struct setting *pset, const char *val,
                          struct connection *caller, char *reject_msg,
                          size_t reject_msg_len);
@@ -167,23 +167,24 @@ void setting_lock_set(struct setting *pset, bool lock);
 #define SPECLIST_TYPE struct setting
 #include "speclist.h"
 
-#define setting_list_iterate(_setting_list, _setting)                        \
+#define setting_list_iterate(_setting_list, _setting)                       \
   TYPED_LIST_ITERATE(struct setting, _setting_list, _setting)
-#define setting_list_iterate_end                                             \
-  LIST_ITERATE_END
+#define setting_list_iterate_end LIST_ITERATE_END
 
 /* Iterate over all settings; this additionally checks if the list is
  * created and valid. */
-#define settings_iterate(_level, _pset)                                      \
-{                                                                            \
-  struct setting_list *_setting_list = settings_list_get(_level);            \
-  if (_setting_list != NULL) {                                               \
-    setting_list_iterate(_setting_list, _pset) {
+#define settings_iterate(_level, _pset)                                     \
+  {                                                                         \
+    struct setting_list *_setting_list = settings_list_get(_level);         \
+    if (_setting_list != NULL) {                                            \
+      setting_list_iterate(_setting_list, _pset)                            \
+      {
 
-#define settings_iterate_end                                                 \
-    } setting_list_iterate_end;                                              \
-  }                                                                          \
-}
+#define settings_iterate_end                                                \
+  }                                                                         \
+  setting_list_iterate_end;                                                 \
+  }                                                                         \
+  }
 
 void settings_game_start(void);
 void settings_game_save(struct section_file *file, const char *section);
@@ -199,7 +200,8 @@ int settings_number(void);
 void settings_list_update(void);
 struct setting_list *settings_list_get(enum sset_level level);
 
-bool settings_ruleset(struct section_file *file, const char *section, bool act);
+bool settings_ruleset(struct section_file *file, const char *section,
+                      bool act);
 
 void send_server_setting(struct conn_list *dest, const struct setting *pset);
 void send_server_settings(struct conn_list *dest);
@@ -215,4 +217,4 @@ enum setting_default_level setting_get_setdef(const struct setting *pset);
 }
 #endif /* __cplusplus */
 
-#endif				/* FC__SETTINGS_H */
+#endif /* FC__SETTINGS_H */

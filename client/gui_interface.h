@@ -46,14 +46,15 @@ struct gui_funcs {
   bool (*is_view_supported)(enum ts_type type);
   void (*tileset_type_set)(enum ts_type type);
   void (*free_intro_radar_sprites)(void);
-  struct sprite * (*load_gfxfile)(const char *filename);
-  struct sprite * (*create_sprite)(int width, int height, struct color *pcolor);
-  void (*get_sprite_dimensions)(struct sprite *sprite, int *width, int *height);
-  struct sprite * (*crop_sprite)(struct sprite *source,
-                                 int x, int y, int width, int height,
-                                 struct sprite *mask,
-                                 int mask_offset_x, int mask_offset_y,
-                                 float scale, bool smooth);
+  struct sprite *(*load_gfxfile)(const char *filename);
+  struct sprite *(*create_sprite)(int width, int height,
+                                  struct color *pcolor);
+  void (*get_sprite_dimensions)(struct sprite *sprite, int *width,
+                                int *height);
+  struct sprite *(*crop_sprite)(struct sprite *source, int x, int y,
+                                int width, int height, struct sprite *mask,
+                                int mask_offset_x, int mask_offset_y,
+                                float scale, bool smooth);
   void (*free_sprite)(struct sprite *s);
 
   struct color *(*color_alloc)(int r, int g, int b);
@@ -63,35 +64,33 @@ struct gui_funcs {
   void (*canvas_free)(struct canvas *store);
   void (*canvas_set_zoom)(struct canvas *store, float zoom);
   bool (*has_zoom_support)(void);
-  void (*canvas_copy)(struct canvas *dest, struct canvas *src,
-                      int src_x, int src_y, int dest_x, int dest_y, int width,
+  void (*canvas_copy)(struct canvas *dest, struct canvas *src, int src_x,
+                      int src_y, int dest_x, int dest_y, int width,
                       int height);
-  void (*canvas_put_sprite)(struct canvas *pcanvas,
-                            int canvas_x, int canvas_y,
-                            struct sprite *psprite,
-                            int offset_x, int offset_y, int width, int height);
-  void (*canvas_put_sprite_full)(struct canvas *pcanvas,
-                                 int canvas_x, int canvas_y,
-                                 struct sprite *psprite);
-  void (*canvas_put_sprite_fogged)(struct canvas *pcanvas,
-                                   int canvas_x, int canvas_y,
-                                   struct sprite *psprite,
+  void (*canvas_put_sprite)(struct canvas *pcanvas, int canvas_x,
+                            int canvas_y, struct sprite *psprite,
+                            int offset_x, int offset_y, int width,
+                            int height);
+  void (*canvas_put_sprite_full)(struct canvas *pcanvas, int canvas_x,
+                                 int canvas_y, struct sprite *psprite);
+  void (*canvas_put_sprite_fogged)(struct canvas *pcanvas, int canvas_x,
+                                   int canvas_y, struct sprite *psprite,
                                    bool fog, int fog_x, int fog_y);
-  void (*canvas_put_rectangle)(struct canvas *pcanvas,
-                               struct color *pcolor,
-                               int canvas_x, int canvas_y,
-                               int width, int height);
+  void (*canvas_put_rectangle)(struct canvas *pcanvas, struct color *pcolor,
+                               int canvas_x, int canvas_y, int width,
+                               int height);
   void (*canvas_fill_sprite_area)(struct canvas *pcanvas,
-                                  struct sprite *psprite, struct color *pcolor,
-                                  int canvas_x, int canvas_y);
+                                  struct sprite *psprite,
+                                  struct color *pcolor, int canvas_x,
+                                  int canvas_y);
   void (*canvas_put_line)(struct canvas *pcanvas, struct color *pcolor,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
-  void (*canvas_put_curved_line)(struct canvas *pcanvas, struct color *pcolor,
-                                 enum line_type ltype, int start_x, int start_y,
-                                 int dx, int dy);
-  void (*get_text_size)(int *width, int *height,
-                        enum client_font font, const char *text);
+  void (*canvas_put_curved_line)(struct canvas *pcanvas,
+                                 struct color *pcolor, enum line_type ltype,
+                                 int start_x, int start_y, int dx, int dy);
+  void (*get_text_size)(int *width, int *height, enum client_font font,
+                        const char *text);
   void (*canvas_put_text)(struct canvas *pcanvas, int canvas_x, int canvas_y,
                           enum client_font font, struct color *pcolor,
                           const char *text);
@@ -103,7 +102,7 @@ struct gui_funcs {
   void (*remove_net_input)(void);
   void (*real_conn_list_dialog_update)(void *unused);
   void (*close_connection_dialog)(void);
-  void (*add_idle_callback)(void (callback)(void *), void *data);
+  void (*add_idle_callback)(void(callback)(void *), void *data);
   void (*sound_bell)(void);
 
   void (*real_set_client_page)(enum client_pages page);
@@ -116,8 +115,10 @@ struct gui_funcs {
 
   void (*editgui_refresh)(void);
   void (*editgui_notify_object_created)(int tag, int id);
-  void (*editgui_notify_object_changed)(int objtype, int object_id, bool removal);
-  void (*editgui_popup_properties)(const struct tile_list *tiles, int objtype);
+  void (*editgui_notify_object_changed)(int objtype, int object_id,
+                                        bool removal);
+  void (*editgui_popup_properties)(const struct tile_list *tiles,
+                                   int objtype);
   void (*editgui_tileset_changed)(void);
   void (*editgui_popdown_all)(void);
 
@@ -141,7 +142,8 @@ struct gui_funcs {
   void (*gui_load_theme)(const char *directory, const char *theme_name);
   void (*gui_clear_theme)(void);
   char **(*get_gui_specific_themes_directories)(int *count);
-  char **(*get_useable_themes_in_directory)(const char *directory, int *count);
+  char **(*get_useable_themes_in_directory)(const char *directory,
+                                            int *count);
 };
 
 struct gui_funcs *get_gui_funcs(void);

@@ -23,7 +23,7 @@
 
 // Qt
 #include <QDialog>
-# include <QList>
+#include <QList>
 
 // common
 #include "government.h"
@@ -48,8 +48,7 @@ class QSlider;
 /**************************************************************************
  * Custom slider with two settable values
  *************************************************************************/
-class fc_double_edge : public QWidget
-{
+class fc_double_edge : public QWidget {
   Q_OBJECT
 
 private:
@@ -60,27 +59,27 @@ private:
   bool on_max;
   int max_rates;
   QPixmap cursor_pix;
+
 public:
   fc_double_edge(QWidget *parent = NULL);
   ~fc_double_edge();
   int current_min;
   int current_max;
   QSize sizeHint() const;
+
 protected:
   void paintEvent(QPaintEvent *event);
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
-
 };
 
 /**************************************************************************
  * Dialog used to change tax rates
  *************************************************************************/
-class tax_rates_dialog: public qfc_dialog
-{
-Q_OBJECT
+class tax_rates_dialog : public qfc_dialog {
+  Q_OBJECT
 
-  public:
+public:
   tax_rates_dialog(QWidget *parent = 0);
 
 private:
@@ -94,14 +93,14 @@ private slots:
 /**************************************************************************
  * Dialog used to change policies
  *************************************************************************/
-class multipler_rates_dialog: public QDialog
-{
+class multipler_rates_dialog : public QDialog {
   Q_OBJECT
 
 public:
-  explicit multipler_rates_dialog(QWidget* parent = 0);
+  explicit multipler_rates_dialog(QWidget *parent = 0);
+
 private:
-  QList<QSlider*> slider_list;
+  QList<QSlider *> slider_list;
   QPushButton *cancel_button;
   QPushButton *ok_button;
 private slots:
@@ -109,7 +108,6 @@ private slots:
   void slot_ok_button_pressed();
   void slot_cancel_button_pressed();
 };
-
 
 void popup_multiplier_dialog(void);
 

@@ -35,18 +35,20 @@ struct color_system {
   struct rgbcolor **stdcolors;
 };
 
-/************************************************************************//**
-  Called when the client first starts to allocate the default colors.
+/************************************************************************/ /**
+   Called when the client first starts to allocate the default colors.
 
-  Currently this must be called in ui_main, generally after UI
-  initialization.
-****************************************************************************/
+   Currently this must be called in ui_main, generally after UI
+   initialization.
+ ****************************************************************************/
 struct color_system *color_system_read(struct section_file *file)
 {
-  struct color_system *colors = static_cast<color_system*>(fc_malloc(sizeof(*colors)));
+  struct color_system *colors =
+      static_cast<color_system *>(fc_malloc(sizeof(*colors)));
   enum color_std stdcolor;
 
-  colors->stdcolors = static_cast<rgbcolor **>(fc_calloc(COLOR_LAST, sizeof(*colors->stdcolors)));
+  colors->stdcolors = static_cast<rgbcolor **>(
+      fc_calloc(COLOR_LAST, sizeof(*colors->stdcolors)));
 
   for (stdcolor = color_std_begin(); stdcolor != color_std_end();
        stdcolor = color_std_next(stdcolor)) {
@@ -64,9 +66,9 @@ struct color_system *color_system_read(struct section_file *file)
   return colors;
 }
 
-/************************************************************************//**
-  Called when the client first starts to free any allocated colors.
-****************************************************************************/
+/************************************************************************/ /**
+   Called when the client first starts to free any allocated colors.
+ ****************************************************************************/
 void color_system_free(struct color_system *colors)
 {
   enum color_std stdcolor;
@@ -81,9 +83,9 @@ void color_system_free(struct color_system *colors)
   free(colors);
 }
 
-/************************************************************************//**
-  Return the RGB color, allocating it if necessary.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the RGB color, allocating it if necessary.
+ ****************************************************************************/
 struct color *ensure_color(struct rgbcolor *rgb)
 {
   fc_assert_ret_val(rgb != NULL, NULL);
@@ -94,9 +96,9 @@ struct color *ensure_color(struct rgbcolor *rgb)
   return rgb->color;
 }
 
-/************************************************************************//**
-  Return a pointer to the given "standard" color.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a pointer to the given "standard" color.
+ ****************************************************************************/
 struct color *get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
@@ -106,23 +108,22 @@ struct color *get_color(const struct tileset *t, enum color_std stdcolor)
   return ensure_color(*(colors->stdcolors + stdcolor));
 }
 
-/************************************************************************//**
-  Return whether the player has a color assigned yet.
-  Should only be FALSE in pregame.
-****************************************************************************/
-bool player_has_color(const struct tileset *t,
-                      const struct player *pplayer)
+/************************************************************************/ /**
+   Return whether the player has a color assigned yet.
+   Should only be FALSE in pregame.
+ ****************************************************************************/
+bool player_has_color(const struct tileset *t, const struct player *pplayer)
 {
   fc_assert_ret_val(pplayer != NULL, NULL);
 
   return pplayer->rgb != NULL;
 }
 
-/************************************************************************//**
-  Return the color of the player.
-  In pregame, callers should check player_has_color() before calling
-  this.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the color of the player.
+   In pregame, callers should check player_has_color() before calling
+   this.
+ ****************************************************************************/
 struct color *get_player_color(const struct tileset *t,
                                const struct player *pplayer)
 {
@@ -132,9 +133,9 @@ struct color *get_player_color(const struct tileset *t,
   return ensure_color(pplayer->rgb);
 }
 
-/************************************************************************//**
-  Return a pointer to the given "terrain" color.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a pointer to the given "terrain" color.
+ ****************************************************************************/
 struct color *get_terrain_color(const struct tileset *t,
                                 const struct terrain *pterrain)
 {
@@ -144,10 +145,10 @@ struct color *get_terrain_color(const struct tileset *t,
   return ensure_color(pterrain->rgb);
 }
 
-/************************************************************************//**
-  Find the colour from 'candidates' with the best perceptual contrast from
-  'subject'.
-****************************************************************************/
+/************************************************************************/ /**
+   Find the colour from 'candidates' with the best perceptual contrast from
+   'subject'.
+ ****************************************************************************/
 struct color *color_best_contrast(struct color *subject,
                                   struct color **candidates, int ncandidates)
 {

@@ -25,9 +25,9 @@
 
 #include "api_game_find.h"
 
-/*************************************************************************//**
-  Return a player with the given player_id.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return a player with the given player_id.
+ *****************************************************************************/
 Player *api_find_player(lua_State *L, int player_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -35,9 +35,9 @@ Player *api_find_player(lua_State *L, int player_id)
   return player_by_number(player_id);
 }
 
-/*************************************************************************//**
-  Return a player city with the given city_id.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return a player city with the given city_id.
+ *****************************************************************************/
 City *api_find_city(lua_State *L, Player *pplayer, int city_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -49,9 +49,9 @@ City *api_find_city(lua_State *L, Player *pplayer, int city_id)
   }
 }
 
-/*************************************************************************//**
-  Return a player unit with the given unit_id.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return a player unit with the given unit_id.
+ *****************************************************************************/
 Unit *api_find_unit(lua_State *L, Player *pplayer, int unit_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -63,11 +63,11 @@ Unit *api_find_unit(lua_State *L, Player *pplayer, int unit_id)
   }
 }
 
-/*************************************************************************//**
-  Return a unit that can transport ptype at a given ptile.
-*****************************************************************************/
-Unit *api_find_transport_unit(lua_State *L, Player *pplayer, Unit_Type *ptype,
-                              Tile *ptile)
+/*************************************************************************/ /**
+   Return a unit that can transport ptype at a given ptile.
+ *****************************************************************************/
+Unit *api_find_transport_unit(lua_State *L, Player *pplayer,
+                              Unit_Type *ptype, Tile *ptile)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, NULL);
@@ -85,10 +85,10 @@ Unit *api_find_transport_unit(lua_State *L, Player *pplayer, Unit_Type *ptype,
   }
 }
 
-/*************************************************************************//**
-  Return a unit type for given role or flag.
-  (Prior to 2.6.0, this worked only for roles.)
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return a unit type for given role or flag.
+   (Prior to 2.6.0, this worked only for roles.)
+ *****************************************************************************/
 Unit_Type *api_find_role_unit_type(lua_State *L, const char *role_name,
                                    Player *pplayer)
 {
@@ -115,9 +115,9 @@ Unit_Type *api_find_role_unit_type(lua_State *L, const char *role_name,
   }
 }
 
-/*************************************************************************//**
-  Return the tile at the given native coordinates.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the tile at the given native coordinates.
+ *****************************************************************************/
 Tile *api_find_tile(lua_State *L, int nat_x, int nat_y)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -125,9 +125,9 @@ Tile *api_find_tile(lua_State *L, int nat_x, int nat_y)
   return native_pos_to_tile(&(wld.map), nat_x, nat_y);
 }
 
-/*************************************************************************//**
-  Return the tile at the given index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the tile at the given index.
+ *****************************************************************************/
 Tile *api_find_tile_by_index(lua_State *L, int tindex)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -135,9 +135,9 @@ Tile *api_find_tile_by_index(lua_State *L, int tindex)
   return index_to_tile(&(wld.map), tindex);
 }
 
-/*************************************************************************//**
-  Return the government with the given Government_type_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the government with the given Government_type_id index.
+ *****************************************************************************/
 Government *api_find_government(lua_State *L, int government_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -145,9 +145,9 @@ Government *api_find_government(lua_State *L, int government_id)
   return government_by_number(government_id);
 }
 
-/*************************************************************************//**
-  Return the governmet with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the governmet with the given name_orig.
+ *****************************************************************************/
 Government *api_find_government_by_name(lua_State *L, const char *name_orig)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -156,9 +156,9 @@ Government *api_find_government_by_name(lua_State *L, const char *name_orig)
   return government_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the nation type with the given nation_type_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the nation type with the given nation_type_id index.
+ *****************************************************************************/
 Nation_Type *api_find_nation_type(lua_State *L, int nation_type_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -166,10 +166,11 @@ Nation_Type *api_find_nation_type(lua_State *L, int nation_type_id)
   return nation_by_number(nation_type_id);
 }
 
-/*************************************************************************//**
-  Return the nation type with the given name_orig.
-*****************************************************************************/
-Nation_Type *api_find_nation_type_by_name(lua_State *L, const char *name_orig)
+/*************************************************************************/ /**
+   Return the nation type with the given name_orig.
+ *****************************************************************************/
+Nation_Type *api_find_nation_type_by_name(lua_State *L,
+                                          const char *name_orig)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_ARG_NIL(L, name_orig, 2, string, NULL);
@@ -177,9 +178,9 @@ Nation_Type *api_find_nation_type_by_name(lua_State *L, const char *name_orig)
   return nation_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the action type with the given action_id number.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the action type with the given action_id number.
+ *****************************************************************************/
 Action *api_find_action(lua_State *L, action_id act_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -187,9 +188,9 @@ Action *api_find_action(lua_State *L, action_id act_id)
   return action_by_number(act_id);
 }
 
-/*************************************************************************//**
-  Return the action with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the action with the given name_orig.
+ *****************************************************************************/
 Action *api_find_action_by_name(lua_State *L, const char *name_orig)
 {
 
@@ -199,9 +200,9 @@ Action *api_find_action_by_name(lua_State *L, const char *name_orig)
   return action_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the improvement type with the given impr_type_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the improvement type with the given impr_type_id index.
+ *****************************************************************************/
 Building_Type *api_find_building_type(lua_State *L, int building_type_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -209,9 +210,9 @@ Building_Type *api_find_building_type(lua_State *L, int building_type_id)
   return improvement_by_number(building_type_id);
 }
 
-/*************************************************************************//**
-  Return the improvement type with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the improvement type with the given name_orig.
+ *****************************************************************************/
 Building_Type *api_find_building_type_by_name(lua_State *L,
                                               const char *name_orig)
 {
@@ -221,9 +222,9 @@ Building_Type *api_find_building_type_by_name(lua_State *L,
   return improvement_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the unit type with the given unit_type_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the unit type with the given unit_type_id index.
+ *****************************************************************************/
 Unit_Type *api_find_unit_type(lua_State *L, int unit_type_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -231,9 +232,9 @@ Unit_Type *api_find_unit_type(lua_State *L, int unit_type_id)
   return utype_by_number(unit_type_id);
 }
 
-/*************************************************************************//**
-  Return the unit type with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the unit type with the given name_orig.
+ *****************************************************************************/
 Unit_Type *api_find_unit_type_by_name(lua_State *L, const char *name_orig)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -242,9 +243,9 @@ Unit_Type *api_find_unit_type_by_name(lua_State *L, const char *name_orig)
   return unit_type_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the tech type with the given tech_type_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the tech type with the given tech_type_id index.
+ *****************************************************************************/
 Tech_Type *api_find_tech_type(lua_State *L, int tech_type_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -252,9 +253,9 @@ Tech_Type *api_find_tech_type(lua_State *L, int tech_type_id)
   return advance_by_number(tech_type_id);
 }
 
-/*************************************************************************//**
-  Return the tech type with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the tech type with the given name_orig.
+ *****************************************************************************/
 Tech_Type *api_find_tech_type_by_name(lua_State *L, const char *name_orig)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -263,9 +264,9 @@ Tech_Type *api_find_tech_type_by_name(lua_State *L, const char *name_orig)
   return advance_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return the terrain with the given terrain_id index.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the terrain with the given terrain_id index.
+ *****************************************************************************/
 Terrain *api_find_terrain(lua_State *L, int terrain_id)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -273,9 +274,9 @@ Terrain *api_find_terrain(lua_State *L, int terrain_id)
   return terrain_by_number(terrain_id);
 }
 
-/*************************************************************************//**
-  Return the terrain with the given name_orig.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the terrain with the given name_orig.
+ *****************************************************************************/
 Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -284,9 +285,9 @@ Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig)
   return terrain_by_rule_name(name_orig);
 }
 
-/*************************************************************************//**
-  Return a dummy pointer.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return a dummy pointer.
+ *****************************************************************************/
 Nonexistent *api_find_nonexistent(lua_State *L)
 {
   static const char *p = "";

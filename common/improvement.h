@@ -21,14 +21,14 @@ extern "C" {
 
 /* utility */
 #include "bitvector.h"
-#include "support.h"            /* bool */
+#include "support.h" /* bool */
 
 /* common */
 #include "fc_types.h"
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
+struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /* B_LAST is a value that is guaranteed to be larger than all
  * actual Impr_type_id values.  It is used as a flag value; it can
@@ -68,15 +68,16 @@ BV_DEFINE(bv_imprs, B_LAST);
 struct impr_type {
   Impr_type_id item_number;
   struct name_translation name;
-  bool ruledit_disabled;                /* Does not really exist - hole in improvements array */
-  char graphic_str[MAX_LEN_NAME];	/* city icon of improv. */
-  char graphic_alt[MAX_LEN_NAME];	/* city icon of improv. */
+  bool ruledit_disabled; /* Does not really exist - hole in improvements
+                            array */
+  char graphic_str[MAX_LEN_NAME]; /* city icon of improv. */
+  char graphic_alt[MAX_LEN_NAME]; /* city icon of improv. */
   struct requirement_vector reqs;
   struct requirement_vector obsolete_by;
-  int build_cost;			/* Use wrappers to access this. */
+  int build_cost; /* Use wrappers to access this. */
   int upkeep;
-  int sabotage;		/* Base chance of diplomat sabotage succeeding. */
-  enum impr_genus_id genus;		/* genus; e.g. GreatWonder */
+  int sabotage; /* Base chance of diplomat sabotage succeeding. */
+  enum impr_genus_id genus; /* genus; e.g. GreatWonder */
   bv_impr_flags flags;
   struct strvec *helptext;
   char soundtag[MAX_LEN_NAME];
@@ -87,9 +88,7 @@ struct impr_type {
   bool allows_extras;
   bool prevents_disaster;
   bool protects_vs_actions;
-  
 };
-
 
 /* General improvement accessor functions. */
 Impr_type_id improvement_count(void);
@@ -118,7 +117,8 @@ int impr_base_build_shield_cost(const struct impr_type *pimprove);
 int impr_estimate_build_shield_cost(const struct player *pplayer,
                                     const struct tile *ptile,
                                     const struct impr_type *pimprove);
-int impr_buy_gold_cost(const struct city *pcity, const struct impr_type *pimprove,
+int impr_buy_gold_cost(const struct city *pcity,
+                       const struct impr_type *pimprove,
                        int shields_in_stock);
 int impr_sell_gold(const struct impr_type *pimprove);
 
@@ -135,23 +135,27 @@ bool can_improvement_go_obsolete(const struct impr_type *pimprove);
 bool can_sell_building(const struct impr_type *pimprove);
 bool can_city_sell_building(const struct city *pcity,
                             const struct impr_type *pimprove);
-enum test_result test_player_sell_building_now(struct player *pplayer,
-                                               struct city *pcity,
-                                               const struct impr_type *pimprove);
+enum test_result
+test_player_sell_building_now(struct player *pplayer, struct city *pcity,
+                              const struct impr_type *pimprove);
 
-const struct impr_type *improvement_replacement(const struct impr_type *pimprove);
+const struct impr_type *
+improvement_replacement(const struct impr_type *pimprove);
 
 /* Macros for struct packet_game_info::great_wonder_owners[]. */
-#define WONDER_DESTROYED (MAX_NUM_PLAYER_SLOTS + 1)  /* Used as player id. */
-#define WONDER_NOT_OWNED (MAX_NUM_PLAYER_SLOTS + 2)  /* Used as player id. */
+#define WONDER_DESTROYED (MAX_NUM_PLAYER_SLOTS + 1) /* Used as player id.   \
+                                                     */
+#define WONDER_NOT_OWNED (MAX_NUM_PLAYER_SLOTS + 2) /* Used as player id.   \
+                                                     */
 #define WONDER_OWNED(player_id) ((player_id) < MAX_NUM_PLAYER_SLOTS)
 
 /* Macros for struct player::wonders[]. */
-#define WONDER_LOST (-1)        /* Used as city id. */
-#define WONDER_NOT_BUILT 0      /* Used as city id. */
+#define WONDER_LOST (-1)   /* Used as city id. */
+#define WONDER_NOT_BUILT 0 /* Used as city id. */
 #define WONDER_BUILT(city_id) ((city_id) > 0)
 
-void wonder_built(const struct city *pcity, const struct impr_type *pimprove);
+void wonder_built(const struct city *pcity,
+                  const struct impr_type *pimprove);
 void wonder_destroyed(const struct city *pcity,
                       const struct impr_type *pimprove);
 
@@ -175,7 +179,7 @@ struct city *city_from_small_wonder(const struct player *pplayer,
 
 /* player related improvement functions */
 bool improvement_obsolete(const struct player *pplayer,
-			  const struct impr_type *pimprove,
+                          const struct impr_type *pimprove,
                           const struct city *pcity);
 bool is_improvement_productive(const struct city *pcity,
                                const struct impr_type *pimprove);
@@ -198,27 +202,29 @@ void improvement_feature_cache_init(void);
 struct impr_type *improvement_array_first(void);
 const struct impr_type *improvement_array_last(void);
 
-#define improvement_iterate(_p)						\
-{									\
-  struct impr_type *_p = improvement_array_first();			\
-  if (NULL != _p) {							\
-    for (; _p <= improvement_array_last(); _p++) {
+#define improvement_iterate(_p)                                             \
+  {                                                                         \
+    struct impr_type *_p = improvement_array_first();                       \
+    if (NULL != _p) {                                                       \
+      for (; _p <= improvement_array_last(); _p++) {
 
-#define improvement_iterate_end						\
-    }									\
-  }									\
-}
+#define improvement_iterate_end                                             \
+  }                                                                         \
+  }                                                                         \
+  }
 
-#define improvement_re_active_iterate(_p)                               \
-  improvement_iterate(_p) {                                             \
+#define improvement_re_active_iterate(_p)                                   \
+  improvement_iterate(_p)                                                   \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define improvement_re_active_iterate_end                               \
-    }                                                                   \
-  } improvement_iterate_end;
+#define improvement_re_active_iterate_end                                   \
+  }                                                                         \
+  }                                                                         \
+  improvement_iterate_end;
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__IMPROVEMENT_H */
+#endif /* FC__IMPROVEMENT_H */

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,4 +21,4 @@ struct color {
   int r, g, b;
 };
 
-#endif				/* FC__COLORS_H */
+#endif /* FC__COLORS_H */

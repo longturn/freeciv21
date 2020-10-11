@@ -20,26 +20,23 @@
 
 #include "zoom.h"
 
-
 float map_zoom = 1.0;
 bool zoom_enabled = FALSE;
 
-static float zoom_steps[] = {
-  -1.0, 0.13, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0, 2.5, 3.0, 4.0, -1.0
-};
+static float zoom_steps[] = {-1.0, 0.13, 0.25, 0.5, 0.75, 1.0, 1.25,
+                             1.5,  2.0,  2.5,  3.0, 4.0,  -1.0};
 
-static struct zoom_data
-{
+static struct zoom_data {
   bool active;
   float tgt;
   float factor;
   float interval;
   bool tgt_1_0;
-} zdata = { FALSE, 0.0, 0.0 };
+} zdata = {FALSE, 0.0, 0.0};
 
-/**********************************************************************//**
-  Set map zoom level.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set map zoom level.
+ **************************************************************************/
 void zoom_set(float new_zoom)
 {
   zoom_enabled = TRUE;
@@ -48,9 +45,9 @@ void zoom_set(float new_zoom)
   map_canvas_resized(mapview.width, mapview.height);
 }
 
-/**********************************************************************//**
-  Set map zoom level to exactly one.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set map zoom level to exactly one.
+ **************************************************************************/
 void zoom_1_0(void)
 {
   zoom_enabled = FALSE;
@@ -59,18 +56,16 @@ void zoom_1_0(void)
   map_canvas_resized(mapview.width, mapview.height);
 }
 
-/**********************************************************************//**
-  Zoom level one step up
-**************************************************************************/
+/**********************************************************************/ /**
+   Zoom level one step up
+ **************************************************************************/
 void zoom_step_up(void)
 {
   int i;
 
   /* Even if below previous step, close enough is considered to be in
    * previous step so that change is not miniscule */
-  for (i = 1 ;
-       zoom_steps[i] < map_zoom * 1.05 && zoom_steps[i] > 0.0 ;
-       i++ ) {
+  for (i = 1; zoom_steps[i] < map_zoom * 1.05 && zoom_steps[i] > 0.0; i++) {
     /* empty */
   }
 
@@ -83,18 +78,17 @@ void zoom_step_up(void)
   }
 }
 
-/**********************************************************************//**
-  Zoom level one step down
-**************************************************************************/
+/**********************************************************************/ /**
+   Zoom level one step down
+ **************************************************************************/
 void zoom_step_down(void)
 {
   int i;
 
   /* Even if above previous step, close enough is considered to be in
    * previous step so that change is not miniscule */
-  for (i = ARRAY_SIZE(zoom_steps) - 2 ;
-       zoom_steps[i] * 1.05 > map_zoom && zoom_steps[i] > 0.0 ;
-       i-- ) {
+  for (i = ARRAY_SIZE(zoom_steps) - 2;
+       zoom_steps[i] * 1.05 > map_zoom && zoom_steps[i] > 0.0; i--) {
     /* empty */
   }
 
@@ -107,14 +101,13 @@ void zoom_step_down(void)
   }
 }
 
-/**********************************************************************//**
-  Start zoom animation.
-**************************************************************************/
+/**********************************************************************/ /**
+   Start zoom animation.
+ **************************************************************************/
 void zoom_start(float tgt, bool tgt_1_0, float factor, float interval)
 {
   zdata.tgt = tgt;
-  if ((tgt < map_zoom && factor > 1.0)
-      || (tgt > map_zoom && factor < 1.0)) {
+  if ((tgt < map_zoom && factor > 1.0) || (tgt > map_zoom && factor < 1.0)) {
     factor = 1.0 / factor;
   }
   zdata.factor = factor;
@@ -123,9 +116,9 @@ void zoom_start(float tgt, bool tgt_1_0, float factor, float interval)
   zdata.active = TRUE;
 }
 
-/**********************************************************************//**
-  Next step from the active zoom.
-**************************************************************************/
+/**********************************************************************/ /**
+   Next step from the active zoom.
+ **************************************************************************/
 bool zoom_update(double time_until_next_call)
 {
   if (zdata.active) {

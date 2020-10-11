@@ -27,7 +27,7 @@ extern "C" {
 #include "unittype.h"
 
 struct base_type;
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
+struct strvec; /* Actually defined in "utility/string_vector.h". */
 struct rgbcolor;
 
 /* Used in the network protocol. */
@@ -53,7 +53,7 @@ struct resource_type {
 
 /* === */
 
-#define T_NONE (NULL) /* A special flag meaning no terrain type. */
+#define T_NONE (NULL)    /* A special flag meaning no terrain type. */
 #define T_UNKNOWN (NULL) /* An unknown terrain. */
 
 /* The first terrain value. */
@@ -74,7 +74,7 @@ struct resource_type {
 #define SPECENUM_VALUE1 TC_OCEAN
 /* TRANS: terrain class: used adjectivally */
 #define SPECENUM_VALUE1NAME N_("Oceanic")
-#define SPECENUM_COUNT  TC_COUNT
+#define SPECENUM_COUNT TC_COUNT
 #include "specenum_gen.h"
 
 /* Types of alterations available to terrain.
@@ -95,7 +95,7 @@ struct resource_type {
 /* Can build roads and/or railroads */
 #define SPECENUM_VALUE2 TA_CAN_ROAD
 #define SPECENUM_VALUE2NAME N_("CanRoad")
-#define SPECENUM_COUNT  TA_COUNT
+#define SPECENUM_COUNT TA_COUNT
 #include "specenum_gen.h"
 
 /* Used in the network protocol. */
@@ -177,12 +177,12 @@ struct terrain {
   int item_number;
   struct name_translation name;
   bool ruledit_disabled; /* Does not really exist - hole in terrain array */
-  char graphic_str[MAX_LEN_NAME];	/* add tile_ prefix */
+  char graphic_str[MAX_LEN_NAME]; /* add tile_ prefix */
   char graphic_alt[MAX_LEN_NAME];
 
   char identifier; /* Single-character identifier used in games saved. */
-  char identifier_load; /* Single-character identifier that was used in the savegame
-                         * loaded. */
+  char identifier_load; /* Single-character identifier that was used in the
+                         * savegame loaded. */
 
 #define TERRAIN_UNKNOWN_IDENTIFIER 'u'
 
@@ -268,46 +268,42 @@ const char *terrain_name_translation(const struct terrain *pterrain);
 #define terrain_has_flag(terr, flag) BV_ISSET((terr)->flags, flag)
 
 bool is_terrain_flag_card_near(const struct tile *ptile,
-			       enum terrain_flag_id flag);
+                               enum terrain_flag_id flag);
 bool is_terrain_flag_near_tile(const struct tile *ptile,
-			       enum terrain_flag_id flag);
+                               enum terrain_flag_id flag);
 int count_terrain_flag_near_tile(const struct tile *ptile,
-				 bool cardinal_only, bool percentage,
-				 enum terrain_flag_id flag);
+                                 bool cardinal_only, bool percentage,
+                                 enum terrain_flag_id flag);
 void user_terrain_flags_init(void);
 void user_terrain_flags_free(void);
-void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name, const char *helptxt);
+void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
+                                const char *helptxt);
 const char *terrain_flag_helptxt(enum terrain_flag_id id);
 
 /* Terrain-specific functions. */
-#define is_ocean(pterrain) ((pterrain) != T_UNKNOWN \
-                            && terrain_type_terrain_class(pterrain) == TC_OCEAN)
-#define is_ocean_tile(ptile) \
-  is_ocean(tile_terrain(ptile))
+#define is_ocean(pterrain)                                                  \
+  ((pterrain) != T_UNKNOWN                                                  \
+   && terrain_type_terrain_class(pterrain) == TC_OCEAN)
+#define is_ocean_tile(ptile) is_ocean(tile_terrain(ptile))
 
 bool terrain_has_resource(const struct terrain *pterrain,
                           const struct extra_type *presource);
 
 /* Functions to operate on a general terrain type. */
 bool is_terrain_card_near(const struct tile *ptile,
-			  const struct terrain *pterrain,
-                          bool check_self);
+                          const struct terrain *pterrain, bool check_self);
 bool is_terrain_near_tile(const struct tile *ptile,
-			  const struct terrain *pterrain,
-                          bool check_self);
-int count_terrain_near_tile(const struct tile *ptile,
-			    bool cardinal_only, bool percentage,
-			    const struct terrain *pterrain);
+                          const struct terrain *pterrain, bool check_self);
+int count_terrain_near_tile(const struct tile *ptile, bool cardinal_only,
+                            bool percentage, const struct terrain *pterrain);
 int count_terrain_property_near_tile(const struct tile *ptile,
                                      bool cardinal_only, bool percentage,
                                      enum mapgen_terrain_property prop);
 
 bool is_resource_card_near(const struct tile *ptile,
-                           const struct extra_type *pres,
-                           bool check_self);
+                           const struct extra_type *pres, bool check_self);
 bool is_resource_near_tile(const struct tile *ptile,
-                           const struct extra_type *pres,
-                           bool check_self);
+                           const struct extra_type *pres, bool check_self);
 
 struct resource_type *resource_type_init(struct extra_type *pextra);
 void resource_types_free(void);
@@ -328,9 +324,12 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
 /* Functions to operate on a terrain class. */
 const char *terrain_class_name_translation(enum terrain_class tclass);
 
-enum terrain_class terrain_type_terrain_class(const struct terrain *pterrain);
-bool is_terrain_class_card_near(const struct tile *ptile, enum terrain_class tclass);
-bool is_terrain_class_near_tile(const struct tile *ptile, enum terrain_class tclass);
+enum terrain_class
+terrain_type_terrain_class(const struct terrain *pterrain);
+bool is_terrain_class_card_near(const struct tile *ptile,
+                                enum terrain_class tclass);
+bool is_terrain_class_near_tile(const struct tile *ptile,
+                                enum terrain_class tclass);
 int count_terrain_class_near_tile(const struct tile *ptile,
                                   bool cardinal_only, bool percentage,
                                   enum terrain_class tclass);
@@ -346,27 +345,29 @@ void terrains_free(void);
 struct terrain *terrain_array_first(void);
 const struct terrain *terrain_array_last(void);
 
-#define terrain_type_iterate(_p)					\
-{									\
-  struct terrain *_p = terrain_array_first();				\
-  if (NULL != _p) {							\
-    for (; _p <= terrain_array_last(); _p++) {
+#define terrain_type_iterate(_p)                                            \
+  {                                                                         \
+    struct terrain *_p = terrain_array_first();                             \
+    if (NULL != _p) {                                                       \
+      for (; _p <= terrain_array_last(); _p++) {
 
-#define terrain_type_iterate_end					\
-    }									\
-  }									\
-}
+#define terrain_type_iterate_end                                            \
+  }                                                                         \
+  }                                                                         \
+  }
 
-#define terrain_re_active_iterate(_p)                      \
-  terrain_type_iterate(_p) {                               \
+#define terrain_re_active_iterate(_p)                                       \
+  terrain_type_iterate(_p)                                                  \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define terrain_re_active_iterate_end                      \
-    }                                                      \
-  } terrain_type_iterate_end;
+#define terrain_re_active_iterate_end                                       \
+  }                                                                         \
+  }                                                                         \
+  terrain_type_iterate_end;
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__TERRAIN_H */
+#endif /* FC__TERRAIN_H */

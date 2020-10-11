@@ -73,7 +73,7 @@ struct loaddata {
     const char **order;
     size_t size;
   } trait;
- /* loaded in sg_load_savefile(); needed in sg_load_map(), ... */
+  /* loaded in sg_load_savefile(); needed in sg_load_map(), ... */
   struct {
     struct extra_type **order;
     size_t size;
@@ -150,29 +150,29 @@ struct loaddata {
 
 #define sg_warn(condition, message, ...)                                    \
   if (!(condition)) {                                                       \
-    log_sg(message, ## __VA_ARGS__);                                        \
+    log_sg(message, ##__VA_ARGS__);                                         \
   }
 #define sg_warn_ret(condition, message, ...)                                \
   if (!(condition)) {                                                       \
-    log_sg(message, ## __VA_ARGS__);                                        \
+    log_sg(message, ##__VA_ARGS__);                                         \
     return;                                                                 \
   }
 #define sg_warn_ret_val(condition, _val, message, ...)                      \
   if (!(condition)) {                                                       \
-    log_sg(message, ## __VA_ARGS__);                                        \
+    log_sg(message, ##__VA_ARGS__);                                         \
     return _val;                                                            \
   }
 
 #define sg_failure_ret(condition, message, ...)                             \
   if (!(condition)) {                                                       \
     sg_success = FALSE;                                                     \
-    log_sg(message, ## __VA_ARGS__);                                        \
+    log_sg(message, ##__VA_ARGS__);                                         \
     sg_check_ret();                                                         \
   }
 #define sg_failure_ret_val(condition, _val, message, ...)                   \
   if (!(condition)) {                                                       \
     sg_success = FALSE;                                                     \
-    log_sg(message, ## __VA_ARGS__);                                        \
+    log_sg(message, ##__VA_ARGS__);                                         \
     sg_check_ret_val(_val);                                                 \
   }
 

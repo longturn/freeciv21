@@ -57,9 +57,9 @@ struct ruledit_arguments reargs;
 
 static int fatal_assertions = -1;
 
-/**********************************************************************//**
-  Main entry point for freeciv-ruledit
-**************************************************************************/
+/**********************************************************************/ /**
+   Main entry point for freeciv-ruledit
+ **************************************************************************/
 int main(int argc, char **argv)
 {
   enum log_level loglevel = LOG_NORMAL;
@@ -67,13 +67,13 @@ int main(int argc, char **argv)
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-# ifndef FREECIV_NDEBUG
+#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
-#  ifdef FREECIV_DEBUG
+#ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#  endif /* FREECIV_DEBUG */
+#endif /* FREECIV_DEBUG */
   }
-# endif /* FREECIV_NDEBUG */
+#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   init_nls();
@@ -132,9 +132,9 @@ int main(int argc, char **argv)
   return EXIT_SUCCESS;
 }
 
-/**********************************************************************//**
-  Parse freeciv-ruledit commandline.
-**************************************************************************/
+/**********************************************************************/ /**
+   Parse freeciv-ruledit commandline.
+ **************************************************************************/
 static int re_parse_cmdline(int argc, char *argv[])
 {
   int i = 1;
@@ -150,17 +150,16 @@ static int re_parse_cmdline(int argc, char *argv[])
     } else if (is_option("--help", argv[i])) {
       struct cmdhelp *help = cmdhelp_new(argv[0]);
 
-      cmdhelp_add(help, "h", "help",
-                  R__("Print a summary of the options"));
-      cmdhelp_add(help, "v", "version",
-                  R__("Print the version number"));
+      cmdhelp_add(help, "h", "help", R__("Print a summary of the options"));
+      cmdhelp_add(help, "v", "version", R__("Print the version number"));
       cmdhelp_add(help, "r",
                   /* TRANS: argument (don't translate) VALUE (translate) */
                   R__("ruleset RULESET"),
                   R__("Ruleset to use as the starting point."));
 #ifndef FREECIV_NDEBUG
       cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not translate. */
+                  /* TRANS: "Fatal" is exactly what user must type, do not
+                     translate. */
                   _("Fatal [SIGNAL]"),
                   _("Raise a signal on failed assertion"));
 #endif /* FREECIV_NDEBUG */
@@ -174,7 +173,8 @@ static int re_parse_cmdline(int argc, char *argv[])
       fc_fprintf(stderr, "%s \n", freeciv_name_version());
 
       exit(EXIT_SUCCESS);
-    } else if ((option = get_option_malloc("--ruleset", argv, &i, argc, true))) {
+    } else if ((option =
+                    get_option_malloc("--ruleset", argv, &i, argc, true))) {
       if (reargs.ruleset) {
         fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));
       } else {
@@ -206,9 +206,9 @@ static int re_parse_cmdline(int argc, char *argv[])
   return ui_options;
 }
 
-/**********************************************************************//**
-  Show widget if experimental features enabled, hide otherwise
-**************************************************************************/
+/**********************************************************************/ /**
+   Show widget if experimental features enabled, hide otherwise
+ **************************************************************************/
 void show_experimental(QWidget *wdg)
 {
 #ifdef RULEDIT_EXPERIMENTAL

@@ -28,8 +28,8 @@
 #include "shared.h"
 #include "support.h"
 
-#include "log.h"
 #include "deprecations.h"
+#include "log.h"
 
 #define MAX_LEN_LOG_LINE 5120
 
@@ -66,29 +66,28 @@ static struct log_fileinfo *log_files = NULL;
 #endif /* FREECIV_DEBUG */
 
 static const char *log_level_names[] = {
-  "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL
-};
+    "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL};
 
 /* A helper variable to indicate that there is no log message. The '%s' is
  * added to use it as format string as well as the argument. */
 const char *nologmsg = "nologmsg:%s";
 
-/**********************************************************************//**
-  level_str should be either "0", "1", "2", "3", "4" or
-  "4:filename" or "4:file1:file2" or "4:filename,100,200" etc
+/**********************************************************************/ /**
+   level_str should be either "0", "1", "2", "3", "4" or
+   "4:filename" or "4:file1:file2" or "4:filename,100,200" etc
 
-  If everything goes ok, returns TRUE. If there was a parsing problem,
-  prints to stderr, and returns FALSE.
+   If everything goes ok, returns TRUE. If there was a parsing problem,
+   prints to stderr, and returns FALSE.
 
-  Return in ret_level the requested level only if level_str is a simple
-  number (like "0", "1", "2").
+   Return in ret_level the requested level only if level_str is a simple
+   number (like "0", "1", "2").
 
-  Also sets up the log_files data structure. Does _not_ set fc_log_level.
-**************************************************************************/
+   Also sets up the log_files data structure. Does _not_ set fc_log_level.
+ **************************************************************************/
 bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
 {
   const char *c;
-  int n = 0;                    /* number of filenames */
+  int n = 0; /* number of filenames */
   unsigned int level;
   int ln;
   int first_len = -1;
@@ -113,7 +112,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     if (!str_to_uint(level_str, &level)) {
       level = LOG_DEBUG + 1;
       for (ln = 0; log_level_names[ln] != NULL && level > LOG_DEBUG; ln++) {
-        if (!fc_strncasecmp(level_str, log_level_names[ln], strlen(level_str))) {
+        if (!fc_strncasecmp(level_str, log_level_names[ln],
+                            strlen(level_str))) {
           level = ln;
         }
       }
@@ -122,8 +122,9 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
         return FALSE;
       }
     } else {
-        log_deprecation( _("Do not provide log level with a numerical value."
-            " Use one of the levels Fatal, Error, Warning, Normal, Verbose, Debug") );
+      log_deprecation(_("Do not provide log level with a numerical value."
+                        " Use one of the levels Fatal, Error, Warning, "
+                        "Normal, Verbose, Debug"));
     }
     if (level <= max_level) {
       if (NULL != ret_level) {
@@ -131,13 +132,14 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
       }
       return TRUE;
     } else {
-      fc_fprintf(stderr, _("Bad log level %d in \"%s\".\n"),
-                 level, level_str);
+      fc_fprintf(stderr, _("Bad log level %d in \"%s\".\n"), level,
+                 level_str);
 #ifndef FREECIV_DEBUG
       if (level == max_level + 1) {
         fc_fprintf(stderr,
                    _("Freeciv must be compiled with the FREECIV_DEBUG flag "
-                     "to use debug level %d.\n"), max_level + 1);
+                     "to use debug level %d.\n"),
+                   max_level + 1);
       }
 #endif /* FREECIV_DEBUG */
       return FALSE;
@@ -158,8 +160,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     level = c[0] - '0';
     if (c[1] == ':') {
       if (level > max_level) {
-        fc_fprintf(stderr, _("Bad log level %c in \"%s\".\n"),
-                   c[0], level_str);
+        fc_fprintf(stderr, _("Bad log level %c in \"%s\".\n"), c[0],
+                   level_str);
         return FALSE;
       }
     } else {
@@ -170,8 +172,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
   }
   i = log_num_files;
   log_num_files += n;
-  log_files = fc_realloc(log_files,
-                         log_num_files * sizeof(struct log_fileinfo));
+  log_files =
+      fc_realloc(log_files, log_num_files * sizeof(struct log_fileinfo));
 
   dupled = fc_strdup(c + 2);
   tok = strtok(dupled, ":");
@@ -237,12 +239,12 @@ out:
 #endif /* FREECIV_DEBUG */
 }
 
-/**********************************************************************//**
-  Initialise the log module. Either 'filename' or 'callback' may be NULL.
-  If both are NULL, print to stderr. If both are non-NULL, both callback, 
-  and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
-  signal on failed assertion.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialise the log module. Either 'filename' or 'callback' may be NULL.
+   If both are NULL, print to stderr. If both are non-NULL, both callback,
+   and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
+   signal on failed assertion.
+ **************************************************************************/
 void log_init(const char *filename, enum log_level initial_level,
               log_callback_fn callback, log_prefix_fn prefix,
               int fatal_assertions)
@@ -265,17 +267,14 @@ void log_init(const char *filename, enum log_level initial_level,
   log_debug("LOG_DEBUG test");
 }
 
-/**********************************************************************//**
-   Deinitialize logging module.
-**************************************************************************/
-void log_close(void)
-{
-  fc_destroy_mutex(&logfile_mutex);
-}
+/**********************************************************************/ /**
+    Deinitialize logging module.
+ **************************************************************************/
+void log_close(void) { fc_destroy_mutex(&logfile_mutex); }
 
-/**********************************************************************//**
-  Adjust the log preparation callback function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust the log preparation callback function.
+ **************************************************************************/
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback)
 {
   log_pre_callback_fn old = log_pre_callback;
@@ -285,9 +284,9 @@ log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback)
   return old;
 }
 
-/**********************************************************************//**
-  Adjust the callback function after initial log_init().
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust the callback function after initial log_init().
+ **************************************************************************/
 log_callback_fn log_set_callback(log_callback_fn callback)
 {
   log_callback_fn old = log_callback;
@@ -297,9 +296,9 @@ log_callback_fn log_set_callback(log_callback_fn callback)
   return old;
 }
 
-/**********************************************************************//**
-  Adjust the prefix callback function after initial log_init().
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust the prefix callback function after initial log_init().
+ **************************************************************************/
 log_prefix_fn log_set_prefix(log_prefix_fn prefix)
 {
   log_prefix_fn old = log_prefix;
@@ -309,25 +308,19 @@ log_prefix_fn log_set_prefix(log_prefix_fn prefix)
   return old;
 }
 
-/**********************************************************************//**
-  Adjust the logging level after initial log_init().
-**************************************************************************/
-void log_set_level(enum log_level level)
-{
-  fc_log_level = level;
-}
+/**********************************************************************/ /**
+   Adjust the logging level after initial log_init().
+ **************************************************************************/
+void log_set_level(enum log_level level) { fc_log_level = level; }
 
-/**********************************************************************//**
-  Returns the current log level.
-**************************************************************************/
-enum log_level log_get_level(void)
-{
-  return fc_log_level;
-}
+/**********************************************************************/ /**
+   Returns the current log level.
+ **************************************************************************/
+enum log_level log_get_level(void) { return fc_log_level; }
 
-/**********************************************************************//**
-  Return name of the given log level
-**************************************************************************/
+/**********************************************************************/ /**
+   Return name of the given log level
+ **************************************************************************/
 const char *log_level_name(enum log_level lvl)
 {
   if (lvl < LOG_FATAL || lvl > LOG_DEBUG) {
@@ -338,10 +331,10 @@ const char *log_level_name(enum log_level lvl)
 }
 
 #ifdef FREECIV_DEBUG
-/**********************************************************************//**
-  Returns wether we should do an output for this level, in this file,
-  at this line.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns wether we should do an output for this level, in this file,
+   at this line.
+ **************************************************************************/
 bool log_do_output_for_level_at_location(enum log_level level,
                                          const char *file, int line)
 {
@@ -349,8 +342,7 @@ bool log_do_output_for_level_at_location(enum log_level level,
   int i;
 
   for (i = 0, pfile = log_files; i < log_num_files; i++, pfile++) {
-    if (pfile->level >= level
-        && 0 == strcmp(pfile->name, file)
+    if (pfile->level >= level && 0 == strcmp(pfile->name, file)
         && ((0 == pfile->min && 0 == pfile->max)
             || (pfile->min <= line && pfile->max >= line))) {
       return TRUE;
@@ -360,10 +352,10 @@ bool log_do_output_for_level_at_location(enum log_level level,
 }
 #endif /* FREECIV_DEBUG */
 
-/**********************************************************************//**
-  Unconditionally print a simple string.
-  Let the callback do its own level formatting and add a '\n' if it wants.
-**************************************************************************/
+/**********************************************************************/ /**
+   Unconditionally print a simple string.
+   Let the callback do its own level formatting and add a '\n' if it wants.
+ **************************************************************************/
 static void log_write(FILE *fs, enum log_level level, bool print_from_where,
                       const char *where, const char *message)
 {
@@ -397,13 +389,13 @@ static void log_write(FILE *fs, enum log_level level, bool print_from_where,
   }
 }
 
-/**********************************************************************//**
-  Unconditionally print a log message. This function is usually protected
-  by do_log_for().
-**************************************************************************/
+/**********************************************************************/ /**
+   Unconditionally print a log message. This function is usually protected
+   by do_log_for().
+ **************************************************************************/
 void vdo_log(const char *file, const char *function, int line,
-             bool print_from_where, enum log_level level,
-             char *buf, int buflen, const char *message, va_list args)
+             bool print_from_where, enum log_level level, char *buf,
+             int buflen, const char *message, va_list args)
 {
   char buf_where[MAX_LEN_LOG_LINE];
 
@@ -413,8 +405,8 @@ void vdo_log(const char *file, const char *function, int line,
    * simultaneously. */
 
   fc_vsnprintf(buf, buflen, message, args);
-  fc_snprintf(buf_where, sizeof(buf_where), "in %s() [%s::%d]: ",
-              function, file, line);
+  fc_snprintf(buf_where, sizeof(buf_where), "in %s() [%s::%d]: ", function,
+              file, line);
 
   /* In the default configuration log_pre_callback is equal to log_real(). */
   if (log_pre_callback) {
@@ -422,17 +414,18 @@ void vdo_log(const char *file, const char *function, int line,
   }
 }
 
-/**********************************************************************//**
-  Really print a log message.
-  For repeat message, may wait and print instead "last message repeated ..."
-  at some later time.
-  Calls log_callback if non-null, else prints to stderr.
-**************************************************************************/
+/**********************************************************************/ /**
+   Really print a log message.
+   For repeat message, may wait and print instead "last message repeated ..."
+   at some later time.
+   Calls log_callback if non-null, else prints to stderr.
+ **************************************************************************/
 static void log_real(enum log_level level, bool print_from_where,
                      const char *where, const char *msg)
 {
   static char last_msg[MAX_LEN_LOG_LINE] = "";
-  static unsigned int repeated = 0; /* total times current message repeated */
+  static unsigned int repeated =
+      0;                        /* total times current message repeated */
   static unsigned int next = 2; /* next total to print update */
   static unsigned int prev = 0; /* total on last update */
   /* only count as repeat if same level */
@@ -444,7 +437,7 @@ static void log_real(enum log_level level, bool print_from_where,
     fc_allocate_mutex(&logfile_mutex);
     if (!(fs = fc_fopen(log_filename, "a"))) {
       fc_fprintf(stderr,
-                 _("Couldn't open logfile: %s for appending \"%s\".\n"), 
+                 _("Couldn't open logfile: %s for appending \"%s\".\n"),
                  log_filename, msg);
       exit(EXIT_FAILURE);
     }
@@ -452,20 +445,20 @@ static void log_real(enum log_level level, bool print_from_where,
     fs = stderr;
   }
 
-  if (level == prev_level && 0 == strncmp(msg, last_msg,
-                                          MAX_LEN_LOG_LINE - 1)) {
+  if (level == prev_level
+      && 0 == strncmp(msg, last_msg, MAX_LEN_LOG_LINE - 1)) {
     repeated++;
     if (repeated == next) {
       fc_snprintf(buf, sizeof(buf),
                   PL_("last message repeated %d time",
-                      "last message repeated %d times",
-                      repeated-prev), repeated-prev);
+                      "last message repeated %d times", repeated - prev),
+                  repeated - prev);
       if (repeated > 2) {
-        cat_snprintf(buf, sizeof(buf), 
-                     /* TRANS: preserve leading space */
-                     PL_(" (total %d repeat)",
-                         " (total %d repeats)",
-                         repeated), repeated);
+        cat_snprintf(
+            buf, sizeof(buf),
+            /* TRANS: preserve leading space */
+            PL_(" (total %d repeat)", " (total %d repeats)", repeated),
+            repeated);
       }
       log_write(fs, prev_level, print_from_where, where, buf);
       prev = repeated;
@@ -478,13 +471,14 @@ static void log_real(enum log_level level, bool print_from_where,
         log_write(fs, prev_level, print_from_where, where, last_msg);
       } else {
         fc_snprintf(buf, sizeof(buf),
-                    PL_("last message repeated %d time", 
-                        "last message repeated %d times",
-                        repeated - prev), repeated - prev);
+                    PL_("last message repeated %d time",
+                        "last message repeated %d times", repeated - prev),
+                    repeated - prev);
         if (repeated > 2) {
-          cat_snprintf(buf, sizeof(buf), 
-                       PL_(" (total %d repeat)", " (total %d repeats)",
-                           repeated),  repeated);
+          cat_snprintf(
+              buf, sizeof(buf),
+              PL_(" (total %d repeat)", " (total %d repeats)", repeated),
+              repeated);
         }
         log_write(fs, prev_level, print_from_where, where, buf);
       }
@@ -505,48 +499,48 @@ static void log_real(enum log_level level, bool print_from_where,
   }
 }
 
-/**********************************************************************//**
-  Unconditionally print a log message. This function is usually protected
-  by do_log_for().
-  For repeat message, may wait and print instead
-  "last message repeated ..." at some later time.
-  Calls log_callback if non-null, else prints to stderr.
-**************************************************************************/
+/**********************************************************************/ /**
+   Unconditionally print a log message. This function is usually protected
+   by do_log_for().
+   For repeat message, may wait and print instead
+   "last message repeated ..." at some later time.
+   Calls log_callback if non-null, else prints to stderr.
+ **************************************************************************/
 void do_log(const char *file, const char *function, int line,
-            bool print_from_where, enum log_level level,
-            const char *message, ...)
+            bool print_from_where, enum log_level level, const char *message,
+            ...)
 {
   char buf[MAX_LEN_LOG_LINE];
   va_list args;
 
   va_start(args, message);
-  vdo_log(file, function, line, print_from_where, level,
-          buf, MAX_LEN_LOG_LINE, message, args);
+  vdo_log(file, function, line, print_from_where, level, buf,
+          MAX_LEN_LOG_LINE, message, args);
   va_end(args);
 }
 
-/**********************************************************************//**
-  Set what signal the fc_assert* macros should raise on failed assertion
-  (-1 to disable).
-**************************************************************************/
+/**********************************************************************/ /**
+   Set what signal the fc_assert* macros should raise on failed assertion
+   (-1 to disable).
+ **************************************************************************/
 void fc_assert_set_fatal(int fatal_assertions)
 {
   fc_fatal_assertions = fatal_assertions;
 }
 
 #ifndef FREECIV_NDEBUG
-/**********************************************************************//**
-  Returns wether the fc_assert* macros should raise a signal on failed
-  assertion.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns wether the fc_assert* macros should raise a signal on failed
+   assertion.
+ **************************************************************************/
 void fc_assert_fail(const char *file, const char *function, int line,
                     const char *assertion, const char *message, ...)
 {
   enum log_level level = (0 <= fc_fatal_assertions ? LOG_FATAL : LOG_ERROR);
 
   if (NULL != assertion) {
-    do_log(file, function, line, TRUE, level,
-           "assertion '%s' failed.", assertion);
+    do_log(file, function, line, TRUE, level, "assertion '%s' failed.",
+           assertion);
   }
 
   if (NULL != message && NOLOGMSG != message) {

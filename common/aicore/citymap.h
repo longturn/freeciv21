@@ -17,7 +17,6 @@
 extern "C" {
 #endif /* __cplusplus */
 
-
 /* utility */
 #include "support.h" /* bool type */
 

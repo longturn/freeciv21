@@ -28,34 +28,30 @@
 #include "connectdlg_g.h"
 
 /* client */
-#include "chatline_common.h"	/* for append_output_window */
+#include "chatline_common.h" /* for append_output_window */
 #include "client_main.h"
 #include "connectdlg.h"
 #include "packhand_gen.h"
 
+/**********************************************************************/ /**
+   Close and destroy the dialog. But only if we don't have a local
+   server running (that we started).
+ **************************************************************************/
+void gui_close_connection_dialog(void) { /* PORTME */ }
 
-/**********************************************************************//**
-  Close and destroy the dialog. But only if we don't have a local
-  server running (that we started).
-**************************************************************************/
-void gui_close_connection_dialog(void)
-{
-  /* PORTME */
-}
-
-/**********************************************************************//**
-  Configure the dialog depending on what type of authentication request the
-  server is making.
-**************************************************************************/
+/**********************************************************************/ /**
+   Configure the dialog depending on what type of authentication request the
+   server is making.
+ **************************************************************************/
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
   switch (type) {
   case AUTH_NEWUSER_FIRST:
-     /* PORTME: switch configs if need be */
+    /* PORTME: switch configs if need be */
     return;
   case AUTH_NEWUSER_RETRY:
-     /* PORTME: switch configs if need be */
+    /* PORTME: switch configs if need be */
     return;
   case AUTH_LOGIN_FIRST:
     /* if we magically have a password already present in 'password'
@@ -67,33 +63,29 @@ void handle_authentication_req(enum authentication_type type,
       send_packet_authentication_reply(&client.conn, &reply);
       return;
     } else {
-     /* PORTME: switch configs if need be */
+      /* PORTME: switch configs if need be */
     }
     return;
   case AUTH_LOGIN_RETRY:
-     /* PORTME: switch configs if need be */
+    /* PORTME: switch configs if need be */
     return;
   }
 
   log_error("Unsupported authentication type %d: %s.", type, message);
 }
 
-/**********************************************************************//**
-  Provide a packet handler for packet_game_load.
+/**********************************************************************/ /**
+   Provide a packet handler for packet_game_load.
 
-  This regenerates the player information from a loaded game on the
-  server.
-**************************************************************************/
+   This regenerates the player information from a loaded game on the
+   server.
+ **************************************************************************/
 void handle_game_load(bool load_successful, const char *filename)
-{ 
-  /* PORTME */
-}
-
-
-/**********************************************************************//**
-  Provide an interface for connecting to a Freeciv server.
-**************************************************************************/
-void gui_server_connect(void)
 {
   /* PORTME */
 }
+
+/**********************************************************************/ /**
+   Provide an interface for connecting to a Freeciv server.
+ **************************************************************************/
+void gui_server_connect(void) { /* PORTME */ }

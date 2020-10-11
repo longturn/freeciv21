@@ -23,7 +23,7 @@ struct cmdhelp *cmdhelp_new(const char *cmdname);
 void cmdhelp_destroy(struct cmdhelp *pcmdhelp);
 void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
                  const char *longarg, const char *helpstr, ...)
-                 fc__attribute((__format__(__printf__, 4, 5)));
+    fc__attribute((__format__(__printf__, 4, 5)));
 void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
                      bool report_bugs);
 
@@ -31,4 +31,4 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__FC_CMDHELP_H */
+#endif /* FC__FC_CMDHELP_H */

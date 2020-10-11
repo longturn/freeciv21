@@ -26,10 +26,10 @@
 struct player;
 
 enum winning_strategy {
-  WIN_OPEN,     /* still undetermined */
-  WIN_WAR,      /* we have no other choice than to crush all opposition */
-  WIN_SPACE,    /* we will race for space, peace very important */
-  WIN_CAPITAL   /* we cannot win unless we take war_target's capital */
+  WIN_OPEN,   /* still undetermined */
+  WIN_WAR,    /* we have no other choice than to crush all opposition */
+  WIN_SPACE,  /* we will race for space, peace very important */
+  WIN_CAPITAL /* we cannot win unless we take war_target's capital */
 };
 
 #define SPECENUM_NAME war_reason
@@ -53,11 +53,11 @@ struct ai_dip_intel {
   struct player *at_war_with_ally;
   struct player *is_allied_with_ally;
 
-  signed char spam;      /* timer to avoid spamming a player with chat */
-  int distance;   /* average distance to that player's cities */
-  int countdown;  /* we're on a countdown to war declaration */
-  enum war_reason war_reason; /* why we declare war */
-  signed char ally_patience; /* we EXPECT our allies to help us! */
+  signed char spam; /* timer to avoid spamming a player with chat */
+  int distance;     /* average distance to that player's cities */
+  int countdown;    /* we're on a countdown to war declaration */
+  enum war_reason war_reason;        /* why we declare war */
+  signed char ally_patience;         /* we EXPECT our allies to help us! */
   signed char asked_about_peace;     /* don't ask again */
   signed char asked_about_alliance;  /* don't nag! */
   signed char asked_about_ceasefire; /* don't ... you get the point */
@@ -65,23 +65,22 @@ struct ai_dip_intel {
 };
 
 /* max size of a short */
-#define MAX_NUM_ID (1+MAX_UINT16)
+#define MAX_NUM_ID (1 + MAX_UINT16)
 
 BV_DEFINE(bv_id, MAX_NUM_ID);
 
-struct ai_plr
-{
+struct ai_plr {
   bool phase_initialized;
 
   int last_num_continents;
   int last_num_oceans;
 
   struct {
-    int passengers;   /* number of passengers waiting for boats */
+    int passengers; /* number of passengers waiting for boats */
     int boats;
     int available_boats;
 
-    int *workers;     /* cities to workers on continent */
+    int *workers; /* cities to workers on continent */
     int *ocean_workers;
 
     bv_id diplomat_reservations;
@@ -91,9 +90,9 @@ struct ai_plr
   struct {
     const struct ai_dip_intel **player_intel_slots;
     enum winning_strategy strategy;
-    int timer; /* pursue our goals with some stubbornness, in turns */
-    char love_coeff;          /* Reduce love with this % each turn */
-    char love_incr;           /* Modify love with this fixed amount */
+    int timer;       /* pursue our goals with some stubbornness, in turns */
+    char love_coeff; /* Reduce love with this % each turn */
+    char love_incr;  /* Modify love with this fixed amount */
     int req_love_for_peace;
     int req_love_for_alliance;
   } diplomacy;
@@ -102,7 +101,7 @@ struct ai_plr
   struct ai_settler *settler;
 
   /* The units of tech_want seem to be shields */
-  adv_want tech_want[A_LAST+1];
+  adv_want tech_want[A_LAST + 1];
 };
 
 void dai_data_init(struct ai_type *ait, struct player *pplayer);
@@ -120,8 +119,8 @@ struct ai_dip_intel *dai_diplomacy_get(struct ai_type *ait,
                                        const struct player *plr1,
                                        const struct player *plr2);
 
-void dai_gov_value(struct ai_type *ait, struct player *pplayer, struct government *gov,
-                   adv_want *val, bool *override);
+void dai_gov_value(struct ai_type *ait, struct player *pplayer,
+                   struct government *gov, adv_want *val, bool *override);
 
 void dai_adjust_policies(struct ai_type *ait, struct player *pplayer);
 

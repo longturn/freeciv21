@@ -22,10 +22,10 @@ extern "C" {
 #include "gotodlg_g.h"
 }
 
-//Qt
+// Qt
 #include <QWidget>
 
-//common
+// common
 #include "unit.h"
 
 class QTableWidget;
@@ -38,8 +38,7 @@ class QLabel;
 /***************************************************************************
  Class for displaying goto/airlift dialog (widget)
 ***************************************************************************/
-class goto_dialog : public QWidget
-{
+class goto_dialog : public QWidget {
   Q_OBJECT
   QTableWidget *goto_tab;
   QPushButton *goto_city;
@@ -63,6 +62,7 @@ private slots:
   void close_dlg();
   void item_selected(const QItemSelection &sl, const QItemSelection &ds);
   void checkbox_changed(int state);
+
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event);

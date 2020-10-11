@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,24 +21,22 @@
 
 class ruledit_gui;
 
-class tab_nation : public QWidget
-{
+class tab_nation : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_nation(ruledit_gui *ui_in);
-    void refresh();
-    void flush_widgets();
+public:
+  explicit tab_nation(ruledit_gui *ui_in);
+  void refresh();
+  void flush_widgets();
 
-  private slots:
-    void nationlist_toggle(bool checked);
+private slots:
+  void nationlist_toggle(bool checked);
 
-  private:
-    ruledit_gui *ui;
+private:
+  ruledit_gui *ui;
 
-    QRadioButton *via_include;
-    QLineEdit *nationlist;
+  QRadioButton *via_include;
+  QLineEdit *nationlist;
 };
-
 
 #endif // FC__TAB_MISC_H

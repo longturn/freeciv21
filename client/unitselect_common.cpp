@@ -42,15 +42,15 @@ static bool usdlg_check_unit_location(const struct unit *punit,
 static struct usdata *usdata_new(void);
 static void usdata_destroy(struct usdata *data);
 
-/*************************************************************************//**
-  Create a unit selection data struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Create a unit selection data struct.
+ *****************************************************************************/
 static struct usdata *usdata_new(void)
 {
   enum unit_select_location_mode loc;
   int act;
 
-  struct usdata *data = static_cast<usdata*>(fc_calloc(1, sizeof(*data)));
+  struct usdata *data = static_cast<usdata *>(fc_calloc(1, sizeof(*data)));
 
   data->utype = NULL;
 
@@ -66,9 +66,9 @@ static struct usdata *usdata_new(void)
   return data;
 }
 
-/*************************************************************************//**
-  Destroy a unit selection struct.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Destroy a unit selection struct.
+ *****************************************************************************/
 static void usdata_destroy(struct usdata *data)
 {
   if (data != NULL) {
@@ -88,29 +88,36 @@ static void usdata_destroy(struct usdata *data)
   }
 }
 
-/*************************************************************************//**
-  Create a unit selection data set.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Create a unit selection data set.
+ *****************************************************************************/
 struct usdata_hash *usdlg_data_new(const struct tile *ptile)
 {
   struct usdata_hash *ushash = usdata_hash_new();
 
   /* Add units of the player(s). */
   if (client_is_global_observer()) {
-    players_iterate(pplayer) {
-      unit_list_iterate(pplayer->units, punit) {
+    players_iterate(pplayer)
+    {
+      unit_list_iterate(pplayer->units, punit)
+      {
         usdlg_data_add_unit(ushash, ptile, punit);
-      } unit_list_iterate_end;
-    } players_iterate_end;
+      }
+      unit_list_iterate_end;
+    }
+    players_iterate_end;
   } else {
     struct player *pplayer = client_player();
-    unit_list_iterate(pplayer->units, punit) {
+    unit_list_iterate(pplayer->units, punit)
+    {
       usdlg_data_add_unit(ushash, ptile, punit);
-    } unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
   }
 
   /* Add units on the tile (SELLOC_UNITS). */
-  unit_list_iterate(ptile->units, punit) {
+  unit_list_iterate(ptile->units, punit)
+  {
     /* Save all top level transporters on the tile (SELLOC_UNITS) as 'idle'
      * units (ACTIVITY_IDLE). */
     if (!unit_transported(punit)) {
@@ -127,28 +134,27 @@ struct usdata_hash *usdlg_data_new(const struct tile *ptile)
 
       unit_list_append(data->units[SELLOC_UNITS][ACTIVITY_IDLE], punit);
     }
-  } unit_list_iterate_end;
+  }
+  unit_list_iterate_end;
 
   return ushash;
 }
 
-/*************************************************************************//**
-  Destroy a unit selection data set.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Destroy a unit selection data set.
+ *****************************************************************************/
 void usdlg_data_destroy(struct usdata_hash *ushash)
 {
-  usdata_hash_data_iterate(ushash, data) {
-    usdata_destroy(data);
-  } usdata_hash_data_iterate_end;
+  usdata_hash_data_iterate(ushash, data) { usdata_destroy(data); }
+  usdata_hash_data_iterate_end;
   usdata_hash_destroy(ushash);
 }
 
-/*************************************************************************//**
-  Add a unit into the unit selection data hash.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a unit into the unit selection data hash.
+ *****************************************************************************/
 static void usdlg_data_add_unit(struct usdata_hash *ushash,
-                                const struct tile *ptile,
-                                struct unit *punit)
+                                const struct tile *ptile, struct unit *punit)
 {
   struct usdata *data;
   int act;
@@ -180,9 +186,9 @@ static void usdlg_data_add_unit(struct usdata_hash *ushash,
   }
 }
 
-/*************************************************************************//**
-  Returns TRUE if the unit activity is equal to 'act'.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Returns TRUE if the unit activity is equal to 'act'.
+ *****************************************************************************/
 static bool usdlg_check_unit_activity(const struct unit *punit,
                                       enum unit_activity act)
 {
@@ -191,9 +197,9 @@ static bool usdlg_check_unit_activity(const struct unit *punit,
   return (punit->activity == act);
 }
 
-/*************************************************************************//**
-  Returns TRUE if the unit locations corresponds to 'loc'.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Returns TRUE if the unit locations corresponds to 'loc'.
+ *****************************************************************************/
 static bool usdlg_check_unit_location(const struct unit *punit,
                                       const struct tile *ptile,
                                       enum unit_select_location_mode loc)

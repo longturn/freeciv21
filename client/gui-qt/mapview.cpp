@@ -38,15 +38,15 @@
 #include "menu.h" // gov_menu
 #include "movement.h"
 #include "overview_common.h"
-#include "sprite.h"
 #include "repodlgs.h"
+#include "sprite.h"
 #include "text.h"
 
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
 #include "mapview.h"
+#include "qtg_cxxside.h"
 #include "sidebar.h"
 
 const char *get_timeout_label_text();
@@ -64,20 +64,20 @@ extern int last_center_capital;
 extern int last_center_player_city;
 extern int last_center_enemy_city;
 
-/**********************************************************************//**
-  Check if point x, y is in area (px -> pxe, py - pye)
-**************************************************************************/
+/**********************************************************************/ /**
+   Check if point x, y is in area (px -> pxe, py - pye)
+ **************************************************************************/
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye)
 {
   if (x >= px && y >= py && x <= pxe && y <= pye) {
-      return true;
-    }
+    return true;
+  }
   return false;
 }
 
-/**********************************************************************//**
-  Draws calculated trade routes
-**************************************************************************/
+/**********************************************************************/ /**
+   Draws calculated trade routes
+ **************************************************************************/
 void draw_calculated_trade_routes(QPainter *painter)
 {
   int dx, dy;
@@ -88,8 +88,7 @@ void draw_calculated_trade_routes(QPainter *painter)
   struct color *pcolor;
   QPen pen;
 
-  if (!can_client_control()
-      || gui()->trade_gen.cities.empty()) {
+  if (!can_client_control() || gui()->trade_gen.cities.empty()) {
     return;
   }
   pcolor = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_NO_BUILT);
@@ -145,18 +144,18 @@ void draw_calculated_trade_routes(QPainter *painter)
   }
 }
 
-/**********************************************************************//**
-  Constructor for idle callbacks
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for idle callbacks
+ **************************************************************************/
 mr_idle::mr_idle()
 {
   connect(&timer, &QTimer::timeout, this, &mr_idle::idling);
   timer.start(5);
 }
 
-/**********************************************************************//**
-  Destructor for idle callbacks
-**************************************************************************/
+/**********************************************************************/ /**
+   Destructor for idle callbacks
+ **************************************************************************/
 mr_idle::~mr_idle()
 {
   call_me_back *cb;
@@ -167,31 +166,28 @@ mr_idle::~mr_idle()
   }
 }
 
-/**********************************************************************//**
-  Slot used to execute 1 callback from callbacks stored in idle list
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot used to execute 1 callback from callbacks stored in idle list
+ **************************************************************************/
 void mr_idle::idling()
 {
   call_me_back *cb;
 
   while (!callback_list.isEmpty()) {
     cb = callback_list.dequeue();
-    (cb->callback) (cb->data);
+    (cb->callback)(cb->data);
     delete cb;
   }
 }
 
-/**********************************************************************//**
-  Adds one callback to execute later
-**************************************************************************/
-void mr_idle::add_callback(call_me_back *cb)
-{
-  callback_list.enqueue(cb);
-}
+/**********************************************************************/ /**
+   Adds one callback to execute later
+ **************************************************************************/
+void mr_idle::add_callback(call_me_back *cb) { callback_list.enqueue(cb); }
 
-/**********************************************************************//**
-  Constructor for map
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for map
+ **************************************************************************/
 map_view::map_view() : QWidget()
 {
   menu_click = false;
@@ -206,9 +202,9 @@ map_view::map_view() : QWidget()
   setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 }
 
-/**********************************************************************//**
-  Updates cursor
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates cursor
+ **************************************************************************/
 void map_view::update_cursor(enum cursor_type ct)
 {
   int i;
@@ -224,13 +220,12 @@ void map_view::update_cursor(enum cursor_type ct)
   setCursor(*(gui()->fc_cursors[i][0]));
 }
 
-/**********************************************************************//**
-  Timer for cursor
-**************************************************************************/
+/**********************************************************************/ /**
+   Timer for cursor
+ **************************************************************************/
 void map_view::timer_event()
 {
-  if (gui()->infotab->underMouse()
-      || gui()->minimapview_wdg->underMouse()
+  if (gui()->infotab->underMouse() || gui()->minimapview_wdg->underMouse()
       || gui()->sidebar_wdg->underMouse()) {
     update_cursor(CURSOR_DEFAULT);
     return;
@@ -245,36 +240,32 @@ void map_view::timer_event()
   setCursor(*(gui()->fc_cursors[cursor][cursor_frame]));
 }
 
-/**********************************************************************//**
-  Updates fonts
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates fonts
+ **************************************************************************/
 void map_view::update_font(const QString &name, const QFont &font)
 {
-  if (name == fonts::city_names
-      || name == fonts::city_productions) {
+  if (name == fonts::city_names || name == fonts::city_productions) {
     update_map_canvas_visible();
   }
 }
 
-/**********************************************************************//**
-  Focus lost event
-**************************************************************************/
+/**********************************************************************/ /**
+   Focus lost event
+ **************************************************************************/
 void map_view::focusOutEvent(QFocusEvent *event)
 {
   update_cursor(CURSOR_DEFAULT);
 }
 
-/**********************************************************************//**
-  Leave event
-**************************************************************************/
-void map_view::leaveEvent(QEvent *event)
-{
-  update_cursor(CURSOR_DEFAULT);
-}
+/**********************************************************************/ /**
+   Leave event
+ **************************************************************************/
+void map_view::leaveEvent(QEvent *event) { update_cursor(CURSOR_DEFAULT); }
 
-/**********************************************************************//**
-  Slot inherited from QPixamp
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot inherited from QPixamp
+ **************************************************************************/
 void map_view::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -284,9 +275,9 @@ void map_view::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************//**
-  Redraws given rectangle on map
-**************************************************************************/
+/**********************************************************************/ /**
+   Redraws given rectangle on map
+ **************************************************************************/
 void map_view::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->drawPixmap(event->rect(), mapview.store->map_pixmap,
@@ -294,10 +285,10 @@ void map_view::paint(QPainter *painter, QPaintEvent *event)
   draw_calculated_trade_routes(painter);
 }
 
-/**********************************************************************//**
-  Sets new point for new search 
-**************************************************************************/
-void map_view::resume_searching(int pos_x ,int pos_y ,int &w, int &h,
+/**********************************************************************/ /**
+   Sets new point for new search
+ **************************************************************************/
+void map_view::resume_searching(int pos_x, int pos_y, int &w, int &h,
                                 int wdth, int hght, int recursive_nr)
 {
   int new_pos_x, new_pos_y;
@@ -318,18 +309,18 @@ void map_view::resume_searching(int pos_x ,int pos_y ,int &w, int &h,
   find_place(new_pos_x, new_pos_y, w, h, wdth, hght, recursive_nr);
 }
 
-/**********************************************************************//**
-  Searches place for widget with size w and height h
-  Starts looking from position pos_x, pos_y, going clockwork
-  Returns position as (w,h)
-  Along with resume_searching its recursive function.
-**************************************************************************/
-void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth, 
+/**********************************************************************/ /**
+   Searches place for widget with size w and height h
+   Starts looking from position pos_x, pos_y, going clockwork
+   Returns position as (w,h)
+   Along with resume_searching its recursive function.
+ **************************************************************************/
+void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
                           int hght, int recursive_nr)
 {
   int i;
   int x, y, xe, ye;
-  QList <fcwidget *>widgets = this->findChildren <fcwidget *>();
+  QList<fcwidget *> widgets = this->findChildren<fcwidget *>();
   bool cont_searching = false;
 
   if (recursive_nr >= 1000) {
@@ -350,7 +341,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
     x = widgets[i]->pos().x();
     y = widgets[i]->pos().y();
 
-    if (x == 0 && y ==0) {
+    if (x == 0 && y == 0) {
       continue;
     }
     xe = widgets[i]->pos().x() + widgets[i]->width();
@@ -379,9 +370,9 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
   }
 }
 
-/**********************************************************************//**
-  Constructor for move widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for move widget
+ **************************************************************************/
 move_widget::move_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -394,17 +385,14 @@ move_widget::move_widget(QWidget *parent) : QLabel()
   setFixedSize(16, 16);
 }
 
-/**********************************************************************//**
-  Puts move widget to left top corner
-**************************************************************************/
-void move_widget::put_to_corner()
-{
-  move(0, 0);
-}
+/**********************************************************************/ /**
+   Puts move widget to left top corner
+ **************************************************************************/
+void move_widget::put_to_corner() { move(0, 0); }
 
-/**********************************************************************//**
-  Mouse handler for move widget (moves parent widget)
-**************************************************************************/
+/**********************************************************************/ /**
+   Mouse handler for move widget (moves parent widget)
+ **************************************************************************/
 void move_widget::mouseMoveEvent(QMouseEvent *event)
 {
   if (!gui()->interface_locked) {
@@ -412,10 +400,10 @@ void move_widget::mouseMoveEvent(QMouseEvent *event)
   }
 }
 
-/**********************************************************************//**
-  Sets moving point for move widget;
-**************************************************************************/
-void move_widget::mousePressEvent(QMouseEvent* event)
+/**********************************************************************/ /**
+   Sets moving point for move widget;
+ **************************************************************************/
+void move_widget::mousePressEvent(QMouseEvent *event)
 {
   if (!gui()->interface_locked) {
     point = event->globalPos() - parentWidget()->geometry().topLeft();
@@ -423,9 +411,9 @@ void move_widget::mousePressEvent(QMouseEvent* event)
   update();
 }
 
-/**********************************************************************//**
-  Constructor for resize widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for resize widget
+ **************************************************************************/
 resize_widget::resize_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -437,19 +425,19 @@ resize_widget::resize_widget(QWidget *parent) : QLabel()
   delete pix;
 }
 
-/**********************************************************************//**
-  Puts resize widget to left top corner
-**************************************************************************/
+/**********************************************************************/ /**
+   Puts resize widget to left top corner
+ **************************************************************************/
 void resize_widget::put_to_corner()
 {
   move(parentWidget()->width() - width(),
        parentWidget()->height() - height());
 }
 
-/**********************************************************************//**
-  Mouse handler for resize widget (resizes parent widget)
-**************************************************************************/
-void resize_widget::mouseMoveEvent(QMouseEvent * event)
+/**********************************************************************/ /**
+   Mouse handler for resize widget (resizes parent widget)
+ **************************************************************************/
+void resize_widget::mouseMoveEvent(QMouseEvent *event)
 {
   QPoint qp, np;
 
@@ -464,10 +452,10 @@ void resize_widget::mouseMoveEvent(QMouseEvent * event)
   parentWidget()->resize(np.x(), np.y());
 }
 
-/**********************************************************************//**
-  Sets moving point for resize widget;
-**************************************************************************/
-void resize_widget::mousePressEvent(QMouseEvent* event)
+/**********************************************************************/ /**
+   Sets moving point for resize widget;
+ **************************************************************************/
+void resize_widget::mousePressEvent(QMouseEvent *event)
 {
   QPoint qp;
 
@@ -480,9 +468,9 @@ void resize_widget::mousePressEvent(QMouseEvent* event)
   update();
 }
 
-/**********************************************************************//**
-  Constructor for close widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for close widget
+ **************************************************************************/
 close_widget::close_widget(QWidget *parent) : QLabel()
 {
   QPixmap *pix;
@@ -494,18 +482,18 @@ close_widget::close_widget(QWidget *parent) : QLabel()
   delete pix;
 }
 
-/**********************************************************************//**
-  Puts close widget to right top corner
-**************************************************************************/
+/**********************************************************************/ /**
+   Puts close widget to right top corner
+ **************************************************************************/
 void close_widget::put_to_corner()
 {
-  move(parentWidget()->width()-width(), 0);
+  move(parentWidget()->width() - width(), 0);
 }
 
-/**********************************************************************//**
-  Mouse handler for close widget, hides parent widget
-**************************************************************************/
-void close_widget::mousePressEvent(QMouseEvent* event)
+/**********************************************************************/ /**
+   Mouse handler for close widget, hides parent widget
+ **************************************************************************/
+void close_widget::mousePressEvent(QMouseEvent *event)
 {
   if (gui()->interface_locked) {
     return;
@@ -516,9 +504,9 @@ void close_widget::mousePressEvent(QMouseEvent* event)
   }
 }
 
-/**********************************************************************//**
-  Notifies parent to do custom action, parent is already hidden.
-**************************************************************************/
+/**********************************************************************/ /**
+   Notifies parent to do custom action, parent is already hidden.
+ **************************************************************************/
 void close_widget::notify_parent()
 {
   fcwidget *fcw;
@@ -527,9 +515,9 @@ void close_widget::notify_parent()
   fcw->update_menu();
 }
 
-/**********************************************************************//**
-  Constructor for minimap
-**************************************************************************/
+/**********************************************************************/ /**
+   Constructor for minimap
+ **************************************************************************/
 minimap_view::minimap_view(QWidget *parent) : fcwidget()
 {
   setParent(parent);
@@ -538,19 +526,19 @@ minimap_view::minimap_view(QWidget *parent) : fcwidget()
   h_ratio = 0.0;
   // Dark magic: This call is required for the widget to work.
   resize(0, 0);
-  background = QBrush(QColor (0, 0, 0));
+  background = QBrush(QColor(0, 0, 0));
   setCursor(Qt::CrossCursor);
   rw = new resize_widget(this);
   rw->put_to_corner();
   pix = new QPixmap;
   scale_factor = 1.0;
-  connect(&thread, &minimap_thread::rendered_image,
-          this, &minimap_view::update_pixmap);
+  connect(&thread, &minimap_thread::rendered_image, this,
+          &minimap_view::update_pixmap);
 }
 
-/**********************************************************************//**
-  Minimap_view destructor
-**************************************************************************/
+/**********************************************************************/ /**
+   Minimap_view destructor
+ **************************************************************************/
 minimap_view::~minimap_view()
 {
   if (pix) {
@@ -558,9 +546,9 @@ minimap_view::~minimap_view()
   }
 }
 
-/**********************************************************************//**
-  Paint event for minimap
-**************************************************************************/
+/**********************************************************************/ /**
+   Paint event for minimap
+ **************************************************************************/
 void minimap_view::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -570,9 +558,9 @@ void minimap_view::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************//**
-  Sets scaling factor for minimap
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets scaling factor for minimap
+ **************************************************************************/
 void minimap_view::scale(double factor)
 {
   scale_factor *= factor;
@@ -582,9 +570,9 @@ void minimap_view::scale(double factor)
   update_image();
 }
 
-/**********************************************************************//**
-  Converts gui to overview position.
-**************************************************************************/
+/**********************************************************************/ /**
+   Converts gui to overview position.
+ **************************************************************************/
 static void gui_to_overview(int *ovr_x, int *ovr_y, int gui_x, int gui_y)
 {
   double ntl_x, ntl_y;
@@ -609,10 +597,10 @@ static void gui_to_overview(int *ovr_x, int *ovr_y, int gui_x, int gui_y)
     ntl_y = map_y;
   }
 
-  *ovr_x = floor((ntl_x - (double)gui_options.overview.map_x0)
-           * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - (double)gui_options.overview.map_y0)
-           * OVERVIEW_TILE_SIZE);
+  *ovr_x = floor((ntl_x - (double) gui_options.overview.map_x0)
+                 * OVERVIEW_TILE_SIZE);
+  *ovr_y = floor((ntl_y - (double) gui_options.overview.map_y0)
+                 * OVERVIEW_TILE_SIZE);
 
   if (current_topo_has_flag(TF_WRAPX)) {
     *ovr_x = FC_WRAP(*ovr_x, NATURAL_WIDTH * OVERVIEW_TILE_SIZE);
@@ -626,34 +614,31 @@ static void gui_to_overview(int *ovr_x, int *ovr_y, int gui_x, int gui_y)
   }
 }
 
-/**********************************************************************//**
-  Called by close widget, cause widget has been hidden. Updates menu.
-**************************************************************************/
+/**********************************************************************/ /**
+   Called by close widget, cause widget has been hidden. Updates menu.
+ **************************************************************************/
 void minimap_view::update_menu()
 {
   ::gui()->menu_bar->minimap_status->setChecked(false);
 }
 
-/**********************************************************************//**
-  Minimap is being moved, position is being remembered
-**************************************************************************/
-void minimap_view::moveEvent(QMoveEvent* event)
-{
-  position = event->pos();
-}
+/**********************************************************************/ /**
+   Minimap is being moved, position is being remembered
+ **************************************************************************/
+void minimap_view::moveEvent(QMoveEvent *event) { position = event->pos(); }
 
-/**********************************************************************//**
-  Minimap is just unhidden, old position is restored
-**************************************************************************/
-void minimap_view::showEvent(QShowEvent* event)
+/**********************************************************************/ /**
+   Minimap is just unhidden, old position is restored
+ **************************************************************************/
+void minimap_view::showEvent(QShowEvent *event)
 {
   move(position);
   event->setAccepted(true);
 }
 
-/**********************************************************************//**
-  Draws viewport on minimap
-**************************************************************************/
+/**********************************************************************/ /**
+   Draws viewport on minimap
+ **************************************************************************/
 void minimap_view::draw_viewport(QPainter *painter)
 {
   int i, x[4], y[4];
@@ -687,9 +672,9 @@ void minimap_view::draw_viewport(QPainter *painter)
   }
 }
 
-/**********************************************************************//**
-  Scales point from real overview coords to scaled overview coords.
-**************************************************************************/
+/**********************************************************************/ /**
+   Scales point from real overview coords to scaled overview coords.
+ **************************************************************************/
 void minimap_view::scale_point(int &x, int &y)
 {
   int ax, bx;
@@ -705,9 +690,9 @@ void minimap_view::scale_point(int &x, int &y)
   y = y - dy;
 }
 
-/**********************************************************************//**
-  Scales point from scaled overview coords to real overview coords.
-**************************************************************************/
+/**********************************************************************/ /**
+   Scales point from scaled overview coords to real overview coords.
+ **************************************************************************/
 void unscale_point(double scale_factor, int &x, int &y)
 {
   int ax, bx;
@@ -723,41 +708,33 @@ void unscale_point(double scale_factor, int &x, int &y)
   y = qRound(y / scale_factor);
 }
 
-/**********************************************************************//**
-  Sets minimap scale to default
-**************************************************************************/
-void minimap_view::reset()
-{
-  scale_factor = 1;
-}
+/**********************************************************************/ /**
+   Sets minimap scale to default
+ **************************************************************************/
+void minimap_view::reset() { scale_factor = 1; }
 
-/**********************************************************************//**
-  Slot for updating pixmap from thread's image
-**************************************************************************/
+/**********************************************************************/ /**
+   Slot for updating pixmap from thread's image
+ **************************************************************************/
 void minimap_view::update_pixmap(const QImage &image)
 {
   *pix = QPixmap::fromImage(image);
   update();
 }
 
-/**********************************************************************//**
-  Minimap thread's contructor
-**************************************************************************/
-minimap_thread::minimap_thread(QObject *parent) : QThread(parent)
-{
-}
+/**********************************************************************/ /**
+   Minimap thread's contructor
+ **************************************************************************/
+minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
 
-/**********************************************************************//**
-  Minimap thread's desctructor
-**************************************************************************/
-minimap_thread::~minimap_thread()
-{
-  wait();
-}
+/**********************************************************************/ /**
+   Minimap thread's desctructor
+ **************************************************************************/
+minimap_thread::~minimap_thread() { wait(); }
 
-/**********************************************************************//**
-  Starts thread
-**************************************************************************/
+/**********************************************************************/ /**
+   Starts thread
+ **************************************************************************/
 void minimap_thread::render(double scale_factor, int width, int height)
 {
   QMutexLocker locker(&mutex);
@@ -767,9 +744,9 @@ void minimap_thread::render(double scale_factor, int width, int height)
   start(LowPriority);
 }
 
-/**********************************************************************//**
-  Updates minimap's image in thread
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates minimap's image in thread
+ **************************************************************************/
 void minimap_thread::run()
 {
   QImage tpix;
@@ -798,8 +775,8 @@ void minimap_thread::run()
       pixmap_copy(dst, src, x, 0, 0, iy, ix, y);
       pixmap_copy(dst, src, x, y, 0, 0, ix, iy);
       tpix = gui_options.overview.window->map_pixmap.toImage();
-      wf = static_cast <float>(gui_options.overview.width) / scale;
-      hf = static_cast <float>(gui_options.overview.height) / scale;
+      wf = static_cast<float>(gui_options.overview.width) / scale;
+      hf = static_cast<float>(gui_options.overview.height) / scale;
       x = 0;
       y = 0;
       unscale_point(scale, x, y);
@@ -809,21 +786,21 @@ void minimap_thread::run()
       image_copy(&bigger_pix, &tpix, 0, 0, delta_x, delta_y,
                  gui_options.overview.width, gui_options.overview.height);
       gpix = bigger_pix.copy(delta_x + x, delta_y + y, wf, hf);
-      image = gpix.scaled(mini_width, mini_height,
-                          Qt::IgnoreAspectRatio, Qt::FastTransformation);
+      image = gpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
+                          Qt::FastTransformation);
     } else {
       tpix = gui_options.overview.map->map_pixmap.toImage();
-      image = tpix.scaled(mini_width, mini_height,
-                          Qt::IgnoreAspectRatio, Qt::FastTransformation);
+      image = tpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
+                          Qt::FastTransformation);
     }
   }
   emit rendered_image(image);
   mutex.unlock();
 }
 
-/**********************************************************************//**
-  Updates minimap's pixmap
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates minimap's pixmap
+ **************************************************************************/
 void minimap_view::update_image()
 {
   if (isHidden()) {
@@ -832,10 +809,10 @@ void minimap_view::update_image()
   thread.render(scale_factor, width(), height());
 }
 
-/**********************************************************************//**
-  Redraws visible map using stored pixmap
-**************************************************************************/
-void minimap_view::paint(QPainter * painter, QPaintEvent * event)
+/**********************************************************************/ /**
+   Redraws visible map using stored pixmap
+ **************************************************************************/
+void minimap_view::paint(QPainter *painter, QPaintEvent *event)
 {
   int x, y, ix, iy;
 
@@ -858,10 +835,10 @@ void minimap_view::paint(QPainter * painter, QPaintEvent * event)
   rw->put_to_corner();
 }
 
-/**********************************************************************//**
-  Called when minimap has been resized
-**************************************************************************/
-void minimap_view::resizeEvent(QResizeEvent* event)
+/**********************************************************************/ /**
+   Called when minimap has been resized
+ **************************************************************************/
+void minimap_view::resizeEvent(QResizeEvent *event)
 {
   QSize size;
   size = event->size();
@@ -870,18 +847,18 @@ void minimap_view::resizeEvent(QResizeEvent* event)
       && size.height() > 0) {
     w_ratio = static_cast<float>(width()) / gui_options.overview.width;
     h_ratio = static_cast<float>(height()) / gui_options.overview.height;
-    gui()->qt_settings.minimap_width = static_cast<float>(size.width())
-                                       / mapview.width;
-    gui()->qt_settings.minimap_height = static_cast<float>(size.height())
-                                        / mapview.height;
+    gui()->qt_settings.minimap_width =
+        static_cast<float>(size.width()) / mapview.width;
+    gui()->qt_settings.minimap_height =
+        static_cast<float>(size.height()) / mapview.height;
   }
   update_image();
 }
 
-/**********************************************************************//**
-  Wheel event for minimap - zooms it in or out
-**************************************************************************/
-void minimap_view::wheelEvent(QWheelEvent * event)
+/**********************************************************************/ /**
+   Wheel event for minimap - zooms it in or out
+ **************************************************************************/
+void minimap_view::wheelEvent(QWheelEvent *event)
 {
   if (event->delta() > 0) {
     zoom_in();
@@ -891,9 +868,9 @@ void minimap_view::wheelEvent(QWheelEvent * event)
   event->accept();
 }
 
-/**********************************************************************//**
-  Sets scale factor to scale minimap 20% up
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets scale factor to scale minimap 20% up
+ **************************************************************************/
 void minimap_view::zoom_in()
 {
   if (scale_factor < gui_options.overview.width / 8) {
@@ -901,21 +878,18 @@ void minimap_view::zoom_in()
   }
 }
 
-/**********************************************************************//**
-  Sets scale factor to scale minimap 20% down
-**************************************************************************/
-void minimap_view::zoom_out()
-{
-  scale(0.833);
-}
+/**********************************************************************/ /**
+   Sets scale factor to scale minimap 20% down
+ **************************************************************************/
+void minimap_view::zoom_out() { scale(0.833); }
 
-/**********************************************************************//**
-  Mouse Handler for minimap_view
-  Left button - moves minimap
-  Right button - recenters on some point
-  For wheel look mouseWheelEvent
-**************************************************************************/
-void minimap_view::mousePressEvent(QMouseEvent * event)
+/**********************************************************************/ /**
+   Mouse Handler for minimap_view
+   Left button - moves minimap
+   Right button - recenters on some point
+   For wheel look mouseWheelEvent
+ **************************************************************************/
+void minimap_view::mousePressEvent(QMouseEvent *event)
 {
   int fx, fy;
   int x, y;
@@ -946,10 +920,10 @@ void minimap_view::mousePressEvent(QMouseEvent * event)
   event->setAccepted(true);
 }
 
-/**********************************************************************//**
-  Called when mouse button was pressed. Used to moving minimap.
-**************************************************************************/
-void minimap_view::mouseMoveEvent(QMouseEvent* event)
+/**********************************************************************/ /**
+   Called when mouse button was pressed. Used to moving minimap.
+ **************************************************************************/
+void minimap_view::mouseMoveEvent(QMouseEvent *event)
 {
   if (gui()->interface_locked) {
     return;
@@ -962,34 +936,29 @@ void minimap_view::mouseMoveEvent(QMouseEvent* event)
     move(event->globalPos() - cursor);
     setCursor(Qt::SizeAllCursor);
     gui()->qt_settings.minimap_x = static_cast<float>(p.x()) / mapview.width;
-    gui()->qt_settings.minimap_y = static_cast<float>(p.y())
-                                   / mapview.height;
+    gui()->qt_settings.minimap_y =
+        static_cast<float>(p.y()) / mapview.height;
   }
 }
 
-/**********************************************************************//**
-  Called when mouse button unpressed. Restores cursor.
-**************************************************************************/
-void minimap_view::mouseReleaseEvent(QMouseEvent* event)
+/**********************************************************************/ /**
+   Called when mouse button unpressed. Restores cursor.
+ **************************************************************************/
+void minimap_view::mouseReleaseEvent(QMouseEvent *event)
 {
   setCursor(Qt::CrossCursor);
 }
 
+/**********************************************************************/ /**
+   Typically an info box is provided to tell the player about the state
+   of their civilization.  This function is called when the label is
+   changed.
+ **************************************************************************/
+void update_info_label(void) { gui()->update_info_label(); }
 
-/**********************************************************************//**
-  Typically an info box is provided to tell the player about the state
-  of their civilization.  This function is called when the label is
-  changed.
-**************************************************************************/
-void update_info_label(void)
-{
-  gui()->update_info_label();
-}
-
-
-/**********************************************************************//**
-  Real update, updates only once per 300 ms.
-**************************************************************************/
+/**********************************************************************/ /**
+   Real update, updates only once per 300 ms.
+ **************************************************************************/
 void fc_client::update_info_label(void)
 {
   QString s, eco_info;
@@ -1000,8 +969,8 @@ void fc_client::update_info_label(void)
   if (update_info_timer == nullptr) {
     update_info_timer = new QTimer();
     update_info_timer->setSingleShot(true);
-    connect(update_info_timer, &QTimer::timeout,
-            this, &fc_client::update_info_label);
+    connect(update_info_timer, &QTimer::timeout, this,
+            &fc_client::update_info_label);
     update_info_timer->start(300);
     return;
   }
@@ -1014,25 +983,28 @@ void fc_client::update_info_label(void)
     real_menus_update();
   }
   /* TRANS: T is shortcut from Turn */
-  s = QString(_("%1 \nT:%2")).arg(calendar_text(),
-                                  QString::number(game.info.turn));
+  s = QString(_("%1 \nT:%2"))
+          .arg(calendar_text(), QString::number(game.info.turn));
 
   sw_map->set_custom_labels(s);
   sw_map->update_final_pixmap();
 
-  set_indicator_icons(client_research_sprite(),
-                      client_warming_sprite(),
+  set_indicator_icons(client_research_sprite(), client_warming_sprite(),
                       client_cooling_sprite(), client_government_sprite());
 
   if (client.conn.playing != NULL) {
     if (player_get_expected_income(client.conn.playing) > 0) {
-      eco_info = QString(_("%1 (+%2)"))
-                 .arg(QString::number(client.conn.playing->economic.gold),
-                      QString::number(player_get_expected_income(client.conn.playing)));
+      eco_info =
+          QString(_("%1 (+%2)"))
+              .arg(QString::number(client.conn.playing->economic.gold),
+                   QString::number(
+                       player_get_expected_income(client.conn.playing)));
     } else {
-      eco_info = QString(_("%1 (%2)"))
-                 .arg(QString::number(client.conn.playing->economic.gold),
-                      QString::number(player_get_expected_income(client.conn.playing)));
+      eco_info =
+          QString(_("%1 (%2)"))
+              .arg(QString::number(client.conn.playing->economic.gold),
+                   QString::number(
+                       player_get_expected_income(client.conn.playing)));
     }
     sw_economy->set_custom_labels(eco_info);
   } else {
@@ -1044,19 +1016,18 @@ void fc_client::update_info_label(void)
   update_info_timer = nullptr;
 }
 
+/**********************************************************************/ /**
+   Update the information label which gives info on the current unit
+   and the tile under the current unit, for specified unit.  Note that
+   in practice punit is always the focus unit.
 
-/**********************************************************************//**
-  Update the information label which gives info on the current unit
-  and the tile under the current unit, for specified unit.  Note that
-  in practice punit is always the focus unit.
+   Clears label if punit is NULL.
 
-  Clears label if punit is NULL.
-
-  Typically also updates the cursor for the map_canvas (this is
-  related because the info label may includes "select destination"
-  prompt etc).  And it may call update_unit_pix_label() to update the
-  icons for units on this tile.
-**************************************************************************/
+   Typically also updates the cursor for the map_canvas (this is
+   related because the info label may includes "select destination"
+   prompt etc).  And it may call update_unit_pix_label() to update the
+   icons for units on this tile.
+ **************************************************************************/
 void update_unit_info_label(struct unit_list *punitlist)
 {
   if (gui()->unitinfo_wdg->isVisible()) {
@@ -1064,77 +1035,75 @@ void update_unit_info_label(struct unit_list *punitlist)
   }
 }
 
-/**********************************************************************//**
-  Update the mouse cursor. Cursor type depends on what user is doing and
-  pointing.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update the mouse cursor. Cursor type depends on what user is doing and
+   pointing.
+ **************************************************************************/
 void update_mouse_cursor(enum cursor_type new_cursor_type)
 {
   gui()->mapview_wdg->update_cursor(new_cursor_type);
 }
 
-/**********************************************************************//**
-  Update the timeout display.  The timeout is the time until the turn
-  ends, in seconds.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update the timeout display.  The timeout is the time until the turn
+   ends, in seconds.
+ **************************************************************************/
 void qtg_update_timeout_label(void)
 {
   gui()->sw_endturn->set_custom_labels(QString(get_timeout_label_text()));
   gui()->sw_endturn->update_final_pixmap();
 }
 
-/**********************************************************************//**
-  If do_restore is false it should change the turn button style (to
-  draw the user's attention to it).  If called regularly from a timer
-  this will give a blinking turn done button.  If do_restore is true
-  this should reset the turn done button to the default style.
-**************************************************************************/
+/**********************************************************************/ /**
+   If do_restore is false it should change the turn button style (to
+   draw the user's attention to it).  If called regularly from a timer
+   this will give a blinking turn done button.  If do_restore is true
+   this should reset the turn done button to the default style.
+ **************************************************************************/
 void update_turn_done_button(bool do_restore)
 {
   if (!get_turn_done_button_state()) {
     return;
   }
   side_blink_endturn(do_restore);
-
 }
 
-
-/**********************************************************************//**
-  Set information for the indicator icons typically shown in the main
-  client window.  The parameters tell which sprite to use for the
-  indicator.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set information for the indicator icons typically shown in the main
+   client window.  The parameters tell which sprite to use for the
+   indicator.
+ **************************************************************************/
 void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
                          struct sprite *flake, struct sprite *gov)
 {
   gui()->sw_indicators->update_final_pixmap();
 }
 
-/**********************************************************************//**
-  Return a canvas that is the overview window.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return a canvas that is the overview window.
+ **************************************************************************/
 struct canvas *get_overview_window(void)
 {
   gui()->minimapview_wdg->update_image();
   return NULL;
 }
 
-/**********************************************************************//**
-  Flush the given part of the canvas buffer (if there is one) to the
-  screen.
-**************************************************************************/
-static void flush_mapcanvas(int canvas_x, int canvas_y,
-                            int pixel_width, int pixel_height)
+/**********************************************************************/ /**
+   Flush the given part of the canvas buffer (if there is one) to the
+   screen.
+ **************************************************************************/
+static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
+                            int pixel_height)
 {
   gui()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width, pixel_height);
 }
 
-/**********************************************************************//**
-  Mark the rectangular region as "dirty" so that we know to flush it
-  later.
-**************************************************************************/
-void dirty_rect(int canvas_x, int canvas_y,
-                int pixel_width, int pixel_height)
+/**********************************************************************/ /**
+   Mark the rectangular region as "dirty" so that we know to flush it
+   later.
+ **************************************************************************/
+void dirty_rect(int canvas_x, int canvas_y, int pixel_width,
+                int pixel_height)
 {
   if (mapview_is_frozen()) {
     return;
@@ -1148,9 +1117,9 @@ void dirty_rect(int canvas_x, int canvas_y,
   }
 }
 
-/**********************************************************************//**
-  Mark the entire screen area as "dirty" so that we can flush it later.
-**************************************************************************/
+/**********************************************************************/ /**
+   Mark the entire screen area as "dirty" so that we can flush it later.
+ **************************************************************************/
 void dirty_all(void)
 {
   if (mapview_is_frozen()) {
@@ -1159,11 +1128,11 @@ void dirty_all(void)
   num_dirty_rects = MAX_DIRTY_RECTS;
 }
 
-/**********************************************************************//**
-  Flush all regions that have been previously marked as dirty.  See
-  dirty_rect and dirty_all.  This function is generally called after we've
-  processed a batch of drawing operations.
-**************************************************************************/
+/**********************************************************************/ /**
+   Flush all regions that have been previously marked as dirty.  See
+   dirty_rect and dirty_all.  This function is generally called after we've
+   processed a batch of drawing operations.
+ **************************************************************************/
 void flush_dirty(void)
 {
   if (mapview_is_frozen()) {
@@ -1183,46 +1152,34 @@ void flush_dirty(void)
   num_dirty_rects = 0;
 }
 
-/**********************************************************************//**
-  Do any necessary synchronization to make sure the screen is up-to-date.
-  The canvas should have already been flushed to screen via flush_dirty -
-  all this function does is make sure the hardware has caught up.
-**************************************************************************/
-void gui_flush(void)
-{
-  gui()->mapview_wdg->update();
-}
+/**********************************************************************/ /**
+   Do any necessary synchronization to make sure the screen is up-to-date.
+   The canvas should have already been flushed to screen via flush_dirty -
+   all this function does is make sure the hardware has caught up.
+ **************************************************************************/
+void gui_flush(void) { gui()->mapview_wdg->update(); }
 
-/**********************************************************************//**
-  Update (refresh) the locations of the mapview scrollbars (if it uses
-  them).
-**************************************************************************/
-void update_map_canvas_scrollbars(void)
-{
-  gui()->mapview_wdg->update();
-}
+/**********************************************************************/ /**
+   Update (refresh) the locations of the mapview scrollbars (if it uses
+   them).
+ **************************************************************************/
+void update_map_canvas_scrollbars(void) { gui()->mapview_wdg->update(); }
 
-/**********************************************************************//**
-  Update the size of the sliders on the scrollbars.
-**************************************************************************/
-void update_map_canvas_scrollbars_size(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update the size of the sliders on the scrollbars.
+ **************************************************************************/
+void update_map_canvas_scrollbars_size(void) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update (refresh) all city descriptions on the mapview.
-**************************************************************************/
-void update_city_descriptions(void)
-{
-  update_map_canvas_visible();
-}
+/**********************************************************************/ /**
+   Update (refresh) all city descriptions on the mapview.
+ **************************************************************************/
+void update_city_descriptions(void) { update_map_canvas_visible(); }
 
-/**********************************************************************//**
-  Put overlay tile to pixmap
-**************************************************************************/
-void pixmap_put_overlay_tile(int canvas_x, int  canvas_y,
-                              struct sprite *ssprite)
+/**********************************************************************/ /**
+   Put overlay tile to pixmap
+ **************************************************************************/
+void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
+                             struct sprite *ssprite)
 {
   if (!ssprite) {
     return;
@@ -1231,9 +1188,9 @@ void pixmap_put_overlay_tile(int canvas_x, int  canvas_y,
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Draw a cross-hair overlay on a tile.
-**************************************************************************/
+/**********************************************************************/ /**
+   Draw a cross-hair overlay on a tile.
+ **************************************************************************/
 void put_cross_overlay_tile(struct tile *ptile)
 {
   float canvas_x, canvas_y;
@@ -1242,20 +1199,19 @@ void put_cross_overlay_tile(struct tile *ptile)
     pixmap_put_overlay_tile(canvas_x, canvas_y,
                             get_attention_crosshair_sprite(tileset));
   }
-
 }
 
-/**********************************************************************//**
-  Area Selection
-**************************************************************************/
+/**********************************************************************/ /**
+   Area Selection
+ **************************************************************************/
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  This function is called when the tileset is changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   This function is called when the tileset is changed.
+ **************************************************************************/
 void tileset_changed(void)
 {
   int i;
@@ -1269,71 +1225,60 @@ void tileset_changed(void)
     i = gui()->gimme_index_of("SCI");
     fc_assert(i != -1);
     w = gui()->game_tab_widget->widget(i);
-    sci_rep = reinterpret_cast<science_report*>(w);
+    sci_rep = reinterpret_cast<science_report *>(w);
     sci_rep->reset_tree();
     sci_rep->update_report();
     sci_rep->repaint();
   }
 }
 
-/**********************************************************************//**
-  Return the dimensions of the area (container widget; maximum size) for
-  the overview.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the dimensions of the area (container widget; maximum size) for
+   the overview.
+ **************************************************************************/
 void get_overview_area_dimensions(int *width, int *height)
 {
   *width = 0;
   *height = 0;
 }
 
-/**********************************************************************//**
-  Called when the map size changes. This may be used to change the
-  size of the GUI element holding the overview canvas. The
-  overview.width and overview.height are updated if this function is
-  called.
-  It's used for first creation of overview only, later overview stays the
-  same size, scaled by qt-specific function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Called when the map size changes. This may be used to change the
+   size of the GUI element holding the overview canvas. The
+   overview.width and overview.height are updated if this function is
+   called.
+   It's used for first creation of overview only, later overview stays the
+   same size, scaled by qt-specific function.
+ **************************************************************************/
 void overview_size_changed(void)
 {
   gui()->minimapview_wdg->resize(0, 0);
-  gui()->minimapview_wdg->move(gui()->qt_settings.minimap_x
-                               * mapview.width,
+  gui()->minimapview_wdg->move(gui()->qt_settings.minimap_x * mapview.width,
                                gui()->qt_settings.minimap_y
-                               * mapview.height);
-  gui()->minimapview_wdg->resize(gui()->qt_settings.minimap_width
-                                 * mapview.width,
-                                 gui()->qt_settings.minimap_height
-                                 * mapview.height);
+                                   * mapview.height);
+  gui()->minimapview_wdg->resize(
+      gui()->qt_settings.minimap_width * mapview.width,
+      gui()->qt_settings.minimap_height * mapview.height);
 }
 
-/**********************************************************************//**
-  Sets the position of the overview scroll window based on mapview position.
-**************************************************************************/
-void update_overview_scroll_window_pos(int x, int y)
-{
-  /* TODO: PORTME. */
-}
+/**********************************************************************/ /**
+   Sets the position of the overview scroll window based on mapview position.
+ **************************************************************************/
+void update_overview_scroll_window_pos(int x, int y) { /* TODO: PORTME. */ }
 
-/**********************************************************************//**
-  Return whether the map should be drawn or not.
-**************************************************************************/
-bool mapview_is_frozen(void)
-{
-  return (0 < mapview_frozen_level);
-}
+/**********************************************************************/ /**
+   Return whether the map should be drawn or not.
+ **************************************************************************/
+bool mapview_is_frozen(void) { return (0 < mapview_frozen_level); }
 
-/**********************************************************************//**
-  Freeze the drawing of the map.
-**************************************************************************/
-void mapview_freeze(void)
-{
-  mapview_frozen_level++;
-}
+/**********************************************************************/ /**
+   Freeze the drawing of the map.
+ **************************************************************************/
+void mapview_freeze(void) { mapview_frozen_level++; }
 
-/**********************************************************************//**
-  Thaw the drawing of the map.
-**************************************************************************/
+/**********************************************************************/ /**
+   Thaw the drawing of the map.
+ **************************************************************************/
 void mapview_thaw(void)
 {
   if (1 < mapview_frozen_level) {
@@ -1345,10 +1290,10 @@ void mapview_thaw(void)
   }
 }
 
-/**********************************************************************//**
-  Constructor for info_tile
-**************************************************************************/
-info_tile::info_tile(struct tile *ptile, QWidget *parent): QLabel(parent)
+/**********************************************************************/ /**
+   Constructor for info_tile
+ **************************************************************************/
+info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
 {
   setParent(parent);
   info_font = *fc_font::instance()->get_font(fonts::notify_label);
@@ -1356,9 +1301,9 @@ info_tile::info_tile(struct tile *ptile, QWidget *parent): QLabel(parent)
   calc_size();
 }
 
-/**********************************************************************//**
-  Calculates size of info_tile and moves it to be fully visible
-**************************************************************************/
+/**********************************************************************/ /**
+   Calculates size of info_tile and moves it to be fully visible
+ **************************************************************************/
 void info_tile::calc_size()
 {
   QFontMetrics fm(info_font);
@@ -1372,7 +1317,7 @@ void info_tile::calc_size()
   str = popup_info_text(itile);
   str_list = str.split("\n");
 
-  foreach(str, str_list) {
+  foreach (str, str_list) {
     w = qMax(w, fm.horizontalAdvance(str));
   }
   setFixedHeight(str_list.count() * (fm.height() + 5));
@@ -1392,9 +1337,9 @@ void info_tile::calc_size()
   }
 }
 
-/**********************************************************************//**
-  Redirected paint event for info_tile
-**************************************************************************/
+/**********************************************************************/ /**
+   Redirected paint event for info_tile
+ **************************************************************************/
 void info_tile::paint(QPainter *painter, QPaintEvent *event)
 {
   QFontMetrics fm(info_font);
@@ -1409,9 +1354,9 @@ void info_tile::paint(QPainter *painter, QPaintEvent *event)
   }
 }
 
-/**********************************************************************//**
-  Paint event for info_tile
-**************************************************************************/
+/**********************************************************************/ /**
+   Paint event for info_tile
+ **************************************************************************/
 void info_tile::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -1421,9 +1366,9 @@ void info_tile::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/**********************************************************************//**
-  Updates fonts
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates fonts
+ **************************************************************************/
 void info_tile::update_font(const QString &name, const QFont &font)
 {
   if (name == fonts::notify_label) {
@@ -1433,9 +1378,9 @@ void info_tile::update_font(const QString &name, const QFont &font)
   }
 }
 
-/**********************************************************************//**
-  New turn callback
-**************************************************************************/
+/**********************************************************************/ /**
+   New turn callback
+ **************************************************************************/
 void qtg_start_turn()
 {
   show_new_turn_info();

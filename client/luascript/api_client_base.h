@@ -30,4 +30,3 @@ void api_client_chat_base(lua_State *L, const char *msg);
 #endif /* __cplusplus */
 
 #endif /* FC__API_CLIENT_BASE_H */
-

@@ -31,9 +31,9 @@
 
 #include "api_common_utilities.h"
 
-/********************************************************************//**
-  Generate random number.
-************************************************************************/
+/********************************************************************/ /**
+   Generate random number.
+ ************************************************************************/
 int api_utilities_random(lua_State *L, int min, int max)
 {
   double roll;
@@ -45,17 +45,17 @@ int api_utilities_random(lua_State *L, int min, int max)
   return (min + floor(roll * (max - min + 1)));
 }
 
-/********************************************************************//**
-  Return the version of freeciv lua script
-************************************************************************/
+/********************************************************************/ /**
+   Return the version of freeciv lua script
+ ************************************************************************/
 const char *api_utilities_fc_version(lua_State *L)
 {
   return freeciv_name_version();
 }
 
-/********************************************************************//**
-  One log message. This module is used by script_game and script_auth.
-************************************************************************/
+/********************************************************************/ /**
+   One log message. This module is used by script_game and script_auth.
+ ************************************************************************/
 void api_utilities_log_base(lua_State *L, int level, const char *message)
 {
   struct fc_lua *fcl;
@@ -70,9 +70,9 @@ void api_utilities_log_base(lua_State *L, int level, const char *message)
   luascript_log(fcl, log_level(level), "%s", message);
 }
 
-/********************************************************************//**
-  Convert text describing direction into direction
-************************************************************************/
+/********************************************************************/ /**
+   Convert text describing direction into direction
+ ************************************************************************/
 const Direction *api_utilities_str2dir(lua_State *L, const char *dir)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -81,9 +81,9 @@ const Direction *api_utilities_str2dir(lua_State *L, const char *dir)
   return luascript_dir(direction8_by_name(dir, fc_strcasecmp));
 }
 
-/********************************************************************//**
-  Previous (counter-clockwise) valid direction
-************************************************************************/
+/********************************************************************/ /**
+   Previous (counter-clockwise) valid direction
+ ************************************************************************/
 const Direction *api_utilities_dir_ccw(lua_State *L, Direction dir)
 {
   Direction new_dir = dir;
@@ -97,9 +97,9 @@ const Direction *api_utilities_dir_ccw(lua_State *L, Direction dir)
   return luascript_dir(new_dir);
 }
 
-/********************************************************************//**
-  Next (clockwise) valid direction
-************************************************************************/
+/********************************************************************/ /**
+   Next (clockwise) valid direction
+ ************************************************************************/
 const Direction *api_utilities_dir_cw(lua_State *L, Direction dir)
 {
   Direction new_dir = dir;
@@ -113,10 +113,10 @@ const Direction *api_utilities_dir_cw(lua_State *L, Direction dir)
   return luascript_dir(new_dir);
 }
 
-/********************************************************************//**
-  Opposite direction - validity not checked, but it's valid iff
-  original direction is.
-************************************************************************/
+/********************************************************************/ /**
+   Opposite direction - validity not checked, but it's valid iff
+   original direction is.
+ ************************************************************************/
 const Direction *api_utilities_opposite_dir(lua_State *L, Direction dir)
 {
   LUASCRIPT_CHECK_STATE(L, NULL);
@@ -124,22 +124,25 @@ const Direction *api_utilities_opposite_dir(lua_State *L, Direction dir)
   return luascript_dir(opposite_direction(dir));
 }
 
-/********************************************************************//**
-  Lua script wants to warn about use of deprecated construct.
-************************************************************************/
+/********************************************************************/ /**
+   Lua script wants to warn about use of deprecated construct.
+ ************************************************************************/
 void api_utilities_deprecation_warning(lua_State *L, char *method,
                                        char *replacement,
                                        char *deprecated_since)
 {
   if (are_deprecation_warnings_enabled()) {
-    /* TODO: Keep track which deprecations we have already warned about, and do not keep spamming
-     * about them. */
+    /* TODO: Keep track which deprecations we have already warned about, and
+     * do not keep spamming about them. */
     if (deprecated_since != NULL && replacement != NULL) {
-      log_deprecation_always("Deprecated: lua construct \"%s\", deprecated since \"%s\", used. "
-                             "Use \"%s\" instead", method, deprecated_since, replacement);
+      log_deprecation_always(
+          "Deprecated: lua construct \"%s\", deprecated since \"%s\", used. "
+          "Use \"%s\" instead",
+          method, deprecated_since, replacement);
     } else if (replacement != NULL) {
       log_deprecation_always("Deprecated: lua construct \"%s\" used. "
-                             "Use \"%s\" instead", method, replacement);
+                             "Use \"%s\" instead",
+                             method, replacement);
     } else {
       log_deprecation_always("Deprecated: lua construct \"%s\" used.",
                              method);

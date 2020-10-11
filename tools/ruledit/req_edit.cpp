@@ -36,11 +36,12 @@
 
 #include "req_edit.h"
 
-/**********************************************************************//**
-  Setup req_edit object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup req_edit object
+ **************************************************************************/
 req_edit::req_edit(ruledit_gui *ui_in, QString target,
-                   struct requirement_vector *preqs) : QDialog()
+                   struct requirement_vector *preqs)
+    : QDialog()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
   QGridLayout *reqedit_layout = new QGridLayout();
@@ -60,7 +61,8 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
 
   req_list = new QListWidget(this);
 
-  connect(req_list, SIGNAL(itemSelectionChanged()), this, SLOT(select_req()));
+  connect(req_list, SIGNAL(itemSelectionChanged()), this,
+          SLOT(select_req()));
   main_layout->addWidget(req_list);
 
   lbl = new QLabel(R__("Type:"));
@@ -69,16 +71,19 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_type_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_type_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(req_type_menu(QAction *)));
+  connect(menu, SIGNAL(triggered(QAction *)), this,
+          SLOT(req_type_menu(QAction *)));
   edit_type_button->setMenu(menu);
-  universals_iterate(univ_id) {
+  universals_iterate(univ_id)
+  {
     struct universal dummy;
 
     dummy.kind = univ_id;
     if (universal_value_initial(&dummy)) {
       menu->addAction(universals_n_name(univ_id));
     }
-  } universals_iterate_end;
+  }
+  universals_iterate_end;
   active_layout->addWidget(edit_type_button, 1, 0);
 
   lbl = new QLabel(R__("Value:"));
@@ -87,15 +92,16 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   edit_value_enum_menu = new QMenu();
   edit_value_enum_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_value_enum_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(edit_value_enum_menu, SIGNAL(triggered(QAction *)),
-          this, SLOT(univ_value_enum_menu(QAction *)));
+  connect(edit_value_enum_menu, SIGNAL(triggered(QAction *)), this,
+          SLOT(univ_value_enum_menu(QAction *)));
   edit_value_enum_button->setMenu(edit_value_enum_menu);
   edit_value_enum_menu->setVisible(false);
   active_layout->addWidget(edit_value_enum_button, 3, 0);
   edit_value_nbr_field = new QLineEdit();
   edit_value_nbr_field->setVisible(false);
-  connect(edit_value_nbr_field, SIGNAL(returnPressed()), this, SLOT(univ_value_edit()));
-  active_layout->addWidget(edit_value_nbr_field, 4,0 );
+  connect(edit_value_nbr_field, SIGNAL(returnPressed()), this,
+          SLOT(univ_value_edit()));
+  active_layout->addWidget(edit_value_nbr_field, 4, 0);
 
   lbl = new QLabel(R__("Range:"));
   active_layout->addWidget(lbl, 5, 0);
@@ -103,18 +109,19 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_range_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_range_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(req_range_menu(QAction *)));
+  connect(menu, SIGNAL(triggered(QAction *)), this,
+          SLOT(req_range_menu(QAction *)));
   edit_range_button->setMenu(menu);
-  req_range_iterate(range_id) {
-    menu->addAction(req_range_name(range_id));
-  } req_range_iterate_end;
+  req_range_iterate(range_id) { menu->addAction(req_range_name(range_id)); }
+  req_range_iterate_end;
   active_layout->addWidget(edit_range_button, 6, 0);
 
   edit_present_button = new QToolButton();
   menu = new QMenu();
   edit_present_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_present_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(req_present_menu(QAction *)));
+  connect(menu, SIGNAL(triggered(QAction *)), this,
+          SLOT(req_present_menu(QAction *)));
   edit_present_button->setMenu(menu);
   menu->addAction("Allows");
   menu->addAction("Prevents");
@@ -122,11 +129,13 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
 
   main_layout->addLayout(active_layout);
 
-  add_button = new QPushButton(QString::fromUtf8(R__("Add Requirement")), this);
+  add_button =
+      new QPushButton(QString::fromUtf8(R__("Add Requirement")), this);
   connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
   reqedit_layout->addWidget(add_button, 0, 0);
 
-  delete_button = new QPushButton(QString::fromUtf8(R__("Delete Requirement")), this);
+  delete_button =
+      new QPushButton(QString::fromUtf8(R__("Delete Requirement")), this);
   connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
   reqedit_layout->addWidget(delete_button, 1, 0);
 
@@ -142,16 +151,17 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   setWindowTitle(target);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void req_edit::refresh()
 {
   int i = 0;
 
   req_list->clear();
 
-  requirement_vector_iterate(req_vector, preq) {
+  requirement_vector_iterate(req_vector, preq)
+  {
     char buf[512];
     QListWidgetItem *item;
 
@@ -171,14 +181,15 @@ void req_edit::refresh()
     if (selected == preq) {
       item->setSelected(true);
     }
-  } requirement_vector_iterate_end;
+  }
+  requirement_vector_iterate_end;
 
   fill_active();
 }
 
-/**********************************************************************//**
-  The selected requirement has changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   The selected requirement has changed.
+ **************************************************************************/
 void req_edit::update_selected()
 {
   if (selected != nullptr) {
@@ -186,9 +197,9 @@ void req_edit::update_selected()
   }
 }
 
-/**********************************************************************//**
-  Unselect the currently selected requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Unselect the currently selected requirement.
+ **************************************************************************/
 void req_edit::clear_selected()
 {
   selected = nullptr;
@@ -201,23 +212,24 @@ void req_edit::clear_selected()
   selected_values.quiet = false;
 }
 
-/**********************************************************************//**
-  User pushed close button
-**************************************************************************/
+/**********************************************************************/ /**
+   User pushed close button
+ **************************************************************************/
 void req_edit::close_now()
 {
   ui->unregister_req_edit(this);
   done(0);
 }
 
-/**********************************************************************//**
-  User selected requirement from the list.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected requirement from the list.
+ **************************************************************************/
 void req_edit::select_req()
 {
   int i = 0;
 
-  requirement_vector_iterate(req_vector, preq) {
+  requirement_vector_iterate(req_vector, preq)
+  {
     QListWidgetItem *item = req_list->item(i++);
 
     if (item != nullptr && item->isSelected()) {
@@ -226,24 +238,24 @@ void req_edit::select_req()
       fill_active();
       return;
     }
-  } requirement_vector_iterate_end;
+  }
+  requirement_vector_iterate_end;
 }
 
-struct uvb_data
-{
+struct uvb_data {
   QLineEdit *number;
   QToolButton *enum_button;
   QMenu *menu;
   struct universal *univ;
 };
 
-/**********************************************************************//**
-  Callback for filling menu values
-**************************************************************************/
+/**********************************************************************/ /**
+   Callback for filling menu values
+ **************************************************************************/
 static void universal_value_cb(const char *value, bool current, void *cbdata)
 {
-  struct uvb_data *data = (struct uvb_data *)cbdata;
-  
+  struct uvb_data *data = (struct uvb_data *) cbdata;
+
   if (value == NULL) {
     int kind, val;
 
@@ -259,9 +271,9 @@ static void universal_value_cb(const char *value, bool current, void *cbdata)
   }
 }
 
-/**********************************************************************//**
-  Fill active menus from selected req.
-**************************************************************************/
+/**********************************************************************/ /**
+   Fill active menus from selected req.
+ **************************************************************************/
 void req_edit::fill_active()
 {
   if (selected != nullptr) {
@@ -285,14 +297,14 @@ void req_edit::fill_active()
   }
 }
 
-/**********************************************************************//**
-  User selected type for the requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected type for the requirement.
+ **************************************************************************/
 void req_edit::req_type_menu(QAction *action)
 {
   QByteArray un_bytes = action->text().toUtf8();
-  enum universals_n univ = universals_n_by_name(un_bytes.data(),
-                                                fc_strcasecmp);
+  enum universals_n univ =
+      universals_n_by_name(un_bytes.data(), fc_strcasecmp);
 
   if (selected != nullptr) {
     selected->source.kind = univ;
@@ -305,14 +317,13 @@ void req_edit::req_type_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************//**
-  User selected range for the requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected range for the requirement.
+ **************************************************************************/
 void req_edit::req_range_menu(QAction *action)
 {
   QByteArray un_bytes = action->text().toUtf8();
-  enum req_range range = req_range_by_name(un_bytes.data(),
-                                           fc_strcasecmp);
+  enum req_range range = req_range_by_name(un_bytes.data(), fc_strcasecmp);
 
   if (selected != nullptr) {
     selected->range = range;
@@ -324,9 +335,9 @@ void req_edit::req_range_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************//**
-  User selected 'present' value for the requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected 'present' value for the requirement.
+ **************************************************************************/
 void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
@@ -343,9 +354,9 @@ void req_edit::req_present_menu(QAction *action)
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************//**
-  User selected value for the requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected value for the requirement.
+ **************************************************************************/
 void req_edit::univ_value_enum_menu(QAction *action)
 {
   if (selected != nullptr) {
@@ -360,16 +371,15 @@ void req_edit::univ_value_enum_menu(QAction *action)
   }
 }
 
-/**********************************************************************//**
-  User entered numerical requirement value.
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered numerical requirement value.
+ **************************************************************************/
 void req_edit::univ_value_edit()
 {
   if (selected != nullptr) {
     QByteArray num_bytes = edit_value_nbr_field->text().toUtf8();
 
-    universal_value_from_str(&selected->source,
-                             num_bytes.data());
+    universal_value_from_str(&selected->source, num_bytes.data());
 
     update_selected();
     refresh();
@@ -378,15 +388,15 @@ void req_edit::univ_value_edit()
   }
 }
 
-/**********************************************************************//**
-  User requested new requirement
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested new requirement
+ **************************************************************************/
 void req_edit::add_now()
 {
   struct requirement new_req;
 
-  new_req = req_from_values(VUT_NONE, REQ_RANGE_LOCAL,
-                            false, true, false, 0);
+  new_req =
+      req_from_values(VUT_NONE, REQ_RANGE_LOCAL, false, true, false, 0);
 
   requirement_vector_append(req_vector, new_req);
 
@@ -395,9 +405,9 @@ void req_edit::add_now()
   emit rec_vec_may_have_changed(req_vector);
 }
 
-/**********************************************************************//**
-  User requested requirement deletion 
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested requirement deletion
+ **************************************************************************/
 void req_edit::delete_now()
 {
   if (selected != nullptr) {
@@ -418,22 +428,24 @@ void req_edit::delete_now()
   }
 }
 
-/**********************************************************************//**
-  The requirement vector may have been changed.
-  @param vec the requirement vector that may have been changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   The requirement vector may have been changed.
+   @param vec the requirement vector that may have been changed.
+ **************************************************************************/
 void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
 {
   if (req_vector == vec) {
     /* The selected requirement may be gone */
 
     selected = nullptr;
-    requirement_vector_iterate(req_vector, preq) {
+    requirement_vector_iterate(req_vector, preq)
+    {
       if (are_requirements_equal(preq, &selected_values)) {
         selected = preq;
         break;
       }
-    } requirement_vector_iterate_end;
+    }
+    requirement_vector_iterate_end;
 
     if (selected == nullptr) {
       /* The currently selected requirement was deleted. */
@@ -444,9 +456,9 @@ void req_edit::incoming_rec_vec_change(const requirement_vector *vec)
   }
 }
 
-/**********************************************************************//**
-  User clicked windows close button.
-**************************************************************************/
+/**********************************************************************/ /**
+   User clicked windows close button.
+ **************************************************************************/
 void req_edit::closeEvent(QCloseEvent *event)
 {
   ui->unregister_req_edit(this);

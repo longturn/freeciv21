@@ -30,8 +30,8 @@ Player *api_find_player(lua_State *L, int player_id);
 City *api_find_city(lua_State *L, Player *pplayer, int city_id);
 
 Unit *api_find_unit(lua_State *L, Player *pplayer, int unit_id);
-Unit *api_find_transport_unit(lua_State *L, Player *pplayer, Unit_Type *ptype,
-                              Tile *ptile);
+Unit *api_find_transport_unit(lua_State *L, Player *pplayer,
+                              Unit_Type *ptype, Tile *ptile);
 Tile *api_find_tile(lua_State *L, int nat_x, int nat_y);
 Tile *api_find_tile_by_index(lua_State *L, int tindex);
 
@@ -63,4 +63,3 @@ Nonexistent *api_find_nonexistent(lua_State *L);
 #endif /* __cplusplus */
 
 #endif /* API_GAME_FIND */
-

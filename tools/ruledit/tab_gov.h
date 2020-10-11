@@ -27,34 +27,33 @@ class QRadioButton;
 
 class ruledit_gui;
 
-class tab_gov : public QWidget
-{
+class tab_gov : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_gov(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_gov(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_gov_info(struct government *pgov);
-    bool initialize_new_gov(struct government *pgov);
+private:
+  ruledit_gui *ui;
+  void update_gov_info(struct government *pgov);
+  bool initialize_new_gov(struct government *pgov);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QListWidget *gov_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QListWidget *gov_list;
+  QRadioButton *same_name;
 
-    struct government *selected;
+  struct government *selected;
 
-  private slots:
-    void name_given();
-    void select_gov();
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_reqs();
-    void edit_effects();
+private slots:
+  void name_given();
+  void select_gov();
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_reqs();
+  void edit_effects();
 };
 
 #endif // FC__TAB_GOV_H

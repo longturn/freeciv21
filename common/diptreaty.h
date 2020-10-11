@@ -19,7 +19,7 @@ extern "C" {
 
 /* utility */
 #include "requirements.h"
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* Used in the network protocol */
 #define SPECENUM_NAME clause_type
@@ -49,8 +49,7 @@ extern "C" {
 #define is_pact_clause(x)                                                   \
   ((x == CLAUSE_CEASEFIRE) || (x == CLAUSE_PEACE) || (x == CLAUSE_ALLIANCE))
 
-struct clause_info
-{
+struct clause_info {
   enum clause_type type;
   bool enabled;
   struct requirement_vector giver_reqs;
@@ -63,9 +62,9 @@ struct Clause;
 #define SPECLIST_TYPE struct Clause
 #include "speclist.h"
 
-#define clause_list_iterate(clauselist, pclause) \
-    TYPED_LIST_ITERATE(struct Clause, clauselist, pclause)
-#define clause_list_iterate_end  LIST_ITERATE_END
+#define clause_list_iterate(clauselist, pclause)                            \
+  TYPED_LIST_ITERATE(struct Clause, clauselist, pclause)
+#define clause_list_iterate_end LIST_ITERATE_END
 
 struct Clause {
   enum clause_type type;
@@ -86,11 +85,11 @@ bool could_meet_with_player(const struct player *pplayer,
 bool could_intel_with_player(const struct player *pplayer,
                              const struct player *aplayer);
 
-void init_treaty(struct Treaty *ptreaty, 
-                 struct player *plr0, struct player *plr1);
-bool add_clause(struct Treaty *ptreaty, struct player *pfrom, 
+void init_treaty(struct Treaty *ptreaty, struct player *plr0,
+                 struct player *plr1);
+bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
                 enum clause_type type, int val);
-bool remove_clause(struct Treaty *ptreaty, struct player *pfrom, 
+bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
                    enum clause_type type, int val);
 void clear_treaty(struct Treaty *ptreaty);
 

@@ -14,7 +14,7 @@
 #define FC__GRAPHICS_G_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* client/include */
 #include "sprite_g.h"
@@ -32,4 +32,4 @@ GUI_FUNC_PROTO(void, load_cursors, void)
 
 GUI_FUNC_PROTO(void, free_intro_radar_sprites, void)
 
-#endif  /* FC__GRAPHICS_G_H */
+#endif /* FC__GRAPHICS_G_H */

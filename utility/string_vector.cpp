@@ -14,7 +14,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdlib.h>             /* qsort() */
+#include <stdlib.h> /* qsort() */
 #include <string.h>
 
 /* utility */
@@ -31,9 +31,9 @@ struct strvec {
   size_t size;
 };
 
-/**********************************************************************//**
-  Free a string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free a string.
+ **************************************************************************/
 static void string_free(char *string)
 {
   if (string) {
@@ -41,9 +41,9 @@ static void string_free(char *string)
   }
 }
 
-/**********************************************************************//**
-  Duplicate a string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Duplicate a string.
+ **************************************************************************/
 static char *string_duplicate(const char *string)
 {
   if (string) {
@@ -52,9 +52,9 @@ static char *string_duplicate(const char *string)
   return NULL;
 }
 
-/**********************************************************************//**
-  Create a new string vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Create a new string vector.
+ **************************************************************************/
 struct strvec *strvec_new(void)
 {
   strvec *psv = new strvec;
@@ -65,18 +65,18 @@ struct strvec *strvec_new(void)
   return psv;
 }
 
-/**********************************************************************//**
-  Destroy a string vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Destroy a string vector.
+ **************************************************************************/
 void strvec_destroy(struct strvec *psv)
 {
   strvec_clear(psv);
   free(psv);
 }
 
-/**********************************************************************//**
-  Set the size of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set the size of the vector.
+ **************************************************************************/
 void strvec_reserve(struct strvec *psv, size_t reserve)
 {
   if (reserve == psv->size) {
@@ -89,8 +89,8 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     psv->vec = static_cast<char **>(fc_calloc(reserve, sizeof(char *)));
   } else if (reserve > psv->size) {
     /* Expand the vector. */
-    psv->vec = static_cast<char **>(
-      fc_realloc(psv->vec, reserve * sizeof(char *)));
+    psv->vec =
+        static_cast<char **>(fc_realloc(psv->vec, reserve * sizeof(char *)));
     memset(psv->vec + psv->size, 0, (reserve - psv->size) * sizeof(char *));
   } else {
     /* Shrink the vector: free the extra strings. */
@@ -99,16 +99,16 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     for (i = psv->size - 1; i >= reserve; i--) {
       string_free(psv->vec[i]);
     }
-    psv->vec = static_cast<char **>(
-      fc_realloc(psv->vec, reserve * sizeof(char *)));
+    psv->vec =
+        static_cast<char **>(fc_realloc(psv->vec, reserve * sizeof(char *)));
   }
   psv->size = reserve;
 }
 
-/**********************************************************************//**
-  Stores the string vector from a normal vector. If size == -1, it will
-  assume it is a NULL terminated vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Stores the string vector from a normal vector. If size == -1, it will
+   assume it is a NULL terminated vector.
+ **************************************************************************/
 void strvec_store(struct strvec *psv, const char *const *vec, size_t size)
 {
   if (size == (size_t) -1) {
@@ -126,15 +126,15 @@ void strvec_store(struct strvec *psv, const char *const *vec, size_t size)
   }
 }
 
-/**********************************************************************//**
-  Build the string vector from a string until 'str_size' bytes are read.
-  Passing -1 for 'str_size' will assume 'str' as the expected format. Note
-  it's a bit dangerous.
+/**********************************************************************/ /**
+   Build the string vector from a string until 'str_size' bytes are read.
+   Passing -1 for 'str_size' will assume 'str' as the expected format. Note
+   it's a bit dangerous.
 
-  This string format is a list of strings separated by 'separator'.
+   This string format is a list of strings separated by 'separator'.
 
-  See also strvec_to_str().
-**************************************************************************/
+   See also strvec_to_str().
+ **************************************************************************/
 void strvec_from_str(struct strvec *psv, char separator, const char *str)
 {
   const char *p;
@@ -147,7 +147,7 @@ void strvec_from_str(struct strvec *psv, char separator, const char *str)
     new_str[p - str] = '\0';
     psv->size++;
     psv->vec = static_cast<char **>(
-      fc_realloc(psv->vec, psv->size * sizeof(char *)));
+        fc_realloc(psv->vec, psv->size * sizeof(char *)));
     psv->vec[psv->size - 1] = new_str;
     str = p + 1;
   }
@@ -156,9 +156,9 @@ void strvec_from_str(struct strvec *psv, char separator, const char *str)
   }
 }
 
-/**********************************************************************//**
-  Remove all strings from the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove all strings from the vector.
+ **************************************************************************/
 void strvec_clear(struct strvec *psv)
 {
   size_t i;
@@ -176,11 +176,11 @@ void strvec_clear(struct strvec *psv)
   psv->size = 0;
 }
 
-/**********************************************************************//**
-  Remove strings which are duplicated inside the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove strings which are duplicated inside the vector.
+ **************************************************************************/
 void strvec_remove_duplicate(struct strvec *psv,
-                             int (*cmp_func) (const char *, const char *))
+                             int (*cmp_func)(const char *, const char *))
 {
   size_t i, j;
   const char *str1, *str2;
@@ -192,8 +192,7 @@ void strvec_remove_duplicate(struct strvec *psv,
   for (i = 1; i < psv->size; i++) {
     if ((str1 = psv->vec[i])) {
       for (j = 0; j < i; j++) {
-        if ((str2 = psv->vec[j])
-            && 0 == cmp_func(str2, str1)) {
+        if ((str2 = psv->vec[j]) && 0 == cmp_func(str2, str1)) {
           strvec_remove(psv, i);
           i--;
           break;
@@ -203,10 +202,10 @@ void strvec_remove_duplicate(struct strvec *psv,
   }
 }
 
-/**********************************************************************//**
-  Remove all empty strings from the vector and removes all leading and
-  trailing spaces.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove all empty strings from the vector and removes all leading and
+   trailing spaces.
+ **************************************************************************/
 void strvec_remove_empty(struct strvec *psv)
 {
   size_t i;
@@ -234,9 +233,9 @@ void strvec_remove_empty(struct strvec *psv)
   }
 }
 
-/**********************************************************************//**
-  Copy a string vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Copy a string vector.
+ **************************************************************************/
 void strvec_copy(struct strvec *dest, const struct strvec *src)
 {
   size_t i;
@@ -255,19 +254,19 @@ void strvec_copy(struct strvec *dest, const struct strvec *src)
   }
 }
 
-/**********************************************************************//**
-  Sort the string vector, using qsort().
-**************************************************************************/
-void strvec_sort(struct strvec *psv, int (*sort_func) (const char *const *,
-                                                       const char *const *))
+/**********************************************************************/ /**
+   Sort the string vector, using qsort().
+ **************************************************************************/
+void strvec_sort(struct strvec *psv,
+                 int (*sort_func)(const char *const *, const char *const *))
 {
   qsort(psv->vec, psv->size, sizeof(const char *),
-        (int (*) (const void *, const void *)) sort_func);
+        (int (*)(const void *, const void *)) sort_func);
 }
 
-/**********************************************************************//**
-  Insert a string at the start of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert a string at the start of the vector.
+ **************************************************************************/
 void strvec_prepend(struct strvec *psv, const char *string)
 {
   strvec_reserve(psv, psv->size + 1);
@@ -275,18 +274,18 @@ void strvec_prepend(struct strvec *psv, const char *string)
   psv->vec[0] = string_duplicate(string);
 }
 
-/**********************************************************************//**
-  Insert a string at the end of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert a string at the end of the vector.
+ **************************************************************************/
 void strvec_append(struct strvec *psv, const char *string)
 {
   strvec_reserve(psv, psv->size + 1);
   psv->vec[psv->size - 1] = string_duplicate(string);
 }
 
-/**********************************************************************//**
-  Insert a string at the index of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert a string at the index of the vector.
+ **************************************************************************/
 void strvec_insert(struct strvec *psv, size_t svindex, const char *string)
 {
   if (svindex <= 0) {
@@ -301,10 +300,10 @@ void strvec_insert(struct strvec *psv, size_t svindex, const char *string)
   }
 }
 
-/**********************************************************************//**
-  Replace a string at the index of the vector.
-  Returns TRUE if the element has been really set.
-**************************************************************************/
+/**********************************************************************/ /**
+   Replace a string at the index of the vector.
+   Returns TRUE if the element has been really set.
+ **************************************************************************/
 bool strvec_set(struct strvec *psv, size_t svindex, const char *string)
 {
   if (strvec_index_valid(psv, svindex)) {
@@ -315,10 +314,10 @@ bool strvec_set(struct strvec *psv, size_t svindex, const char *string)
   return FALSE;
 }
 
-/**********************************************************************//**
-  Remove the string at the index from the vector.
-  Returns TRUE if the element has been really removed.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove the string at the index from the vector.
+   Returns TRUE if the element has been really removed.
+ **************************************************************************/
 bool strvec_remove(struct strvec *psv, size_t svindex)
 {
   if (!strvec_index_valid(psv, svindex)) {
@@ -340,19 +339,15 @@ bool strvec_remove(struct strvec *psv, size_t svindex)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns the size of the vector.
-**************************************************************************/
-size_t strvec_size(const struct strvec *psv)
-{
-  return psv->size;
-}
+/**********************************************************************/ /**
+   Returns the size of the vector.
+ **************************************************************************/
+size_t strvec_size(const struct strvec *psv) { return psv->size; }
 
-/**********************************************************************//**
-  Returns TRUE if stv1 and stv2 are equal.
-**************************************************************************/
-bool are_strvecs_equal(const struct strvec *stv1,
-                       const struct strvec *stv2)
+/**********************************************************************/ /**
+   Returns TRUE if stv1 and stv2 are equal.
+ **************************************************************************/
+bool are_strvecs_equal(const struct strvec *stv1, const struct strvec *stv2)
 {
   int i;
 
@@ -369,43 +364,44 @@ bool are_strvecs_equal(const struct strvec *stv1,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns the datas of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the datas of the vector.
+ **************************************************************************/
 const char *const *strvec_data(const struct strvec *psv)
 {
   return (const char **) psv->vec;
 }
 
-/**********************************************************************//**
-  Returns TRUE if the index is valid.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE if the index is valid.
+ **************************************************************************/
 bool strvec_index_valid(const struct strvec *psv, size_t svindex)
 {
   return svindex < psv->size;
 }
 
-/**********************************************************************//**
-  Returns the string at the index of the vector.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the string at the index of the vector.
+ **************************************************************************/
 const char *strvec_get(const struct strvec *psv, size_t svindex)
 {
   return strvec_index_valid(psv, svindex) ? psv->vec[svindex] : NULL;
 }
 
-/**********************************************************************//**
-  Build the string from a string vector.
+/**********************************************************************/ /**
+   Build the string from a string vector.
 
-  This string format is a list of strings separated by 'separator'.
+   This string format is a list of strings separated by 'separator'.
 
-  See also strvec_from_str().
-**************************************************************************/
-void strvec_to_str(const struct strvec *psv, char separator,
-                   char *buf, size_t buf_len)
+   See also strvec_from_str().
+ **************************************************************************/
+void strvec_to_str(const struct strvec *psv, char separator, char *buf,
+                   size_t buf_len)
 {
   int len;
 
-  strvec_iterate(psv, str) {
+  strvec_iterate(psv, str)
+  {
     len = fc_snprintf(buf, buf_len, "%s", str) + 1;
     if (1 >= len) {
       /* Truncated. */
@@ -417,30 +413,30 @@ void strvec_to_str(const struct strvec *psv, char separator,
     if (0 < buf_len) {
       *(buf - 1) = separator;
     }
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
 
   buf[0] = '\0';
 }
 
-/**********************************************************************//**
-  Build a localized string with the elements of the string vector. Elements
-  will be "or"-separated.
+/**********************************************************************/ /**
+   Build a localized string with the elements of the string vector. Elements
+   will be "or"-separated.
 
-  See also astr_build_or_list(), strvec_to_and_list().
-**************************************************************************/
-const char *strvec_to_or_list(const struct strvec *psv,
-                              struct astring *astr)
+   See also astr_build_or_list(), strvec_to_and_list().
+ **************************************************************************/
+const char *strvec_to_or_list(const struct strvec *psv, struct astring *astr)
 {
   fc_assert_ret_val(NULL != psv, NULL);
   return astr_build_or_list(astr, (const char **) psv->vec, psv->size);
 }
 
-/**********************************************************************//**
-  Build a localized string with the elements of the string vector. Elements
-  will be "and"-separated.
+/**********************************************************************/ /**
+   Build a localized string with the elements of the string vector. Elements
+   will be "and"-separated.
 
-  See also astr_build_and_list(), strvec_to_or_list().
-**************************************************************************/
+   See also astr_build_and_list(), strvec_to_or_list().
+ **************************************************************************/
 const char *strvec_to_and_list(const struct strvec *psv,
                                struct astring *astr)
 {

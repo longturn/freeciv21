@@ -19,12 +19,7 @@ extern "C" {
 
 #include "fc_types.h"
 
-enum client_vote_type {
-  CVT_NONE = 0,
-  CVT_YES,
-  CVT_NO,
-  CVT_ABSTAIN
-};
+enum client_vote_type { CVT_NONE = 0, CVT_YES, CVT_NO, CVT_ABSTAIN };
 
 struct voteinfo {
   /* Set by the server via packets. */
@@ -65,4 +60,3 @@ bool voteinfo_bar_can_be_shown(void);
 #endif /* __cplusplus */
 
 #endif /* FC__VOTEINFO_H */
-

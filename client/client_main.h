@@ -19,7 +19,7 @@ extern "C" {
 
 #include "fc_types.h"
 
-#include "packets.h"		/* enum report_type */
+#include "packets.h" /* enum report_type */
 #include "worklist.h"
 
 /*
@@ -27,7 +27,7 @@ extern "C" {
  * called. TIMER_INTERVAL has to stay 500 because real_timer_callback
  * also updates the timeout info.
  */
-#define TIMER_INTERVAL (int)(real_timer_callback() * 1000)
+#define TIMER_INTERVAL (int) (real_timer_callback() * 1000)
 
 /* Client states (see also enum server_states in srv_main.h).
  * Changing those values don't break the network compatibility.
@@ -40,7 +40,7 @@ extern "C" {
  * C_S_RUNNING:      Connected ith game in progress.
  * C_S_OVER:         Connected with game over.
  */
-enum client_states { 
+enum client_states {
   C_S_INITIAL,
   C_S_DISCONNECTED,
   C_S_PREPARING,
@@ -76,7 +76,7 @@ extern char server_host[512];
 extern char user_name[512];
 extern char password[MAX_LEN_PASSWORD];
 extern char metaserver[512];
-extern int  server_port;
+extern int server_port;
 extern bool auto_connect;
 extern bool auto_spawn;
 extern bool waiting_for_end_turn;
@@ -85,7 +85,7 @@ extern bool waiting_for_end_turn;
 extern bool hackless;
 #endif /* FREECIV_DEBUG */
 
-struct global_worklist_list;    /* Defined in global_worklist.[ch]. */
+struct global_worklist_list; /* Defined in global_worklist.[ch]. */
 
 /* Structure for holding global client data.
  *
@@ -124,11 +124,11 @@ bool is_client_quitting(void);
 void start_quitting(void);
 
 /* Set in GUI code. */
-extern const char * const gui_character_encoding;
+extern const char *const gui_character_encoding;
 extern const bool gui_use_transliteration;
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CLIENT_MAIN_H */
+#endif /* FC__CLIENT_MAIN_H */

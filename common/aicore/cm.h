@@ -31,10 +31,10 @@ extern "C" {
  */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
-#include "city.h"               /* CITY_MAP_MAX_SIZE */
+#include "city.h" /* CITY_MAP_MAX_SIZE */
 
 /* A description of the goal. */
 struct cm_parameter {

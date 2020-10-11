@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -22,4 +22,4 @@ GUI_FUNC_PROTO(void, real_menus_update, void)
 void menus_init(void);
 void menus_update(void);
 
-#endif  /* FC__MENU_G_H */
+#endif /* FC__MENU_G_H */

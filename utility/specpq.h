@@ -65,7 +65,7 @@ extern "C" {
 #error Must define a SPECPQ_DATA_TYPE to use this header
 #endif
 
-#define SPECPQ_PASTE_(x, y) x ## y
+#define SPECPQ_PASTE_(x, y) x##y
 #define SPECPQ_PASTE(x, y) SPECPQ_PASTE_(x, y)
 
 #define SPECPQ_PQ struct SPECPQ_PASTE(SPECPQ_TAG, _pq)
@@ -77,16 +77,17 @@ extern "C" {
 SPECPQ_PQ;
 
 /* Function related typedefs. */
-typedef void (*SPECPQ_FOO(_pq_data_free_fn_t)) (SPECPQ_DATA_TYPE);
-
+typedef void (*SPECPQ_FOO(_pq_data_free_fn_t))(SPECPQ_DATA_TYPE);
 
 /* Private. */
-SPECPQ_CELL_ {
+SPECPQ_CELL_
+{
   SPECPQ_DATA_TYPE data;
   SPECPQ_PRIORITY_TYPE priority;
 };
 
-SPECPQ_PQ_ {
+SPECPQ_PQ_
+{
   int size;
   int avail;
   int step;
@@ -126,8 +127,8 @@ static inline void SPECPQ_FOO(_pq_destroy)(SPECPQ_PQ *_pq)
   Alternative destructor for queue structure.
 ****************************************************************************/
 static inline void
-SPECPQ_FOO(_pq_destroy_full)(SPECPQ_PQ *_pq,
-                             SPECPQ_FOO(_pq_data_free_fn_t) data_free)
+    SPECPQ_FOO(_pq_destroy_full)(SPECPQ_PQ *_pq,
+                                 SPECPQ_FOO(_pq_data_free_fn_t) data_free)
 {
   SPECPQ_PQ_ *pq = (SPECPQ_PQ_ *) _pq;
   int i;
@@ -155,7 +156,8 @@ static inline void SPECPQ_FOO(_pq_insert)(SPECPQ_PQ *_pq,
   if (pq->size >= pq->avail) {
     int newsize = pq->size + pq->step;
 
-    pq->cells = (SPECPQ_CELL_ *) fc_realloc(pq->cells, sizeof(*pq->cells) * newsize);
+    pq->cells =
+        (SPECPQ_CELL_ *) fc_realloc(pq->cells, sizeof(*pq->cells) * newsize);
     pq->avail = newsize;
   }
 

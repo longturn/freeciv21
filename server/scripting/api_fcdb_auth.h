@@ -32,4 +32,3 @@ const char *api_auth_get_ipaddr(lua_State *L, Connection *pconn);
 #endif /* __cplusplus */
 
 #endif /* FC__API_FCDB_AUTH_H */
-

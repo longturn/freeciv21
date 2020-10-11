@@ -41,10 +41,9 @@
 
 #include "cma_fec.h"
 
-
-#define RESULT_COLUMNS		10
-#define BUFFER_SIZE		100
-#define MAX_LEN_PRESET_NAME	80
+#define RESULT_COLUMNS 10
+#define BUFFER_SIZE 100
+#define MAX_LEN_PRESET_NAME 80
 
 struct cma_preset {
   char *descr;
@@ -55,24 +54,24 @@ struct cma_preset {
 #define SPECLIST_TYPE struct cma_preset
 #include "speclist.h"
 
-#define preset_list_iterate(presetlist, ppreset) \
-    TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
-#define preset_list_iterate_end  LIST_ITERATE_END
+#define preset_list_iterate(presetlist, ppreset)                            \
+  TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
+#define preset_list_iterate_end LIST_ITERATE_END
 
 static struct preset_list *preset_list = NULL;
 
-/**********************************************************************//**
-  Is called if the game removes a city. It will clear the
-  "fe parameter" attribute to reduce the size of the savegame.
-**************************************************************************/
+/**********************************************************************/ /**
+   Is called if the game removes a city. It will clear the
+   "fe parameter" attribute to reduce the size of the savegame.
+ **************************************************************************/
 static void city_remove(int city_id)
 {
   attr_city_set(ATTR_CITY_CMAFE_PARAMETER, city_id, 0, NULL);
 }
 
-/**********************************************************************//**
-  Initialize the presets if there are no presets loaded on startup.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize the presets if there are no presets loaded on startup.
+ **************************************************************************/
 void cmafec_init(void)
 {
   struct agent self;
@@ -88,9 +87,9 @@ void cmafec_init(void)
   register_agent(&self);
 }
 
-/**********************************************************************//**
-  Free resources allocated for presets system.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free resources allocated for presets system.
+ **************************************************************************/
 void cmafec_free(void)
 {
   while (cmafec_preset_num() > 0) {
@@ -99,19 +98,19 @@ void cmafec_free(void)
   preset_list_destroy(preset_list);
 }
 
-/**********************************************************************//**
-  Sets the front-end parameter.
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets the front-end parameter.
+ **************************************************************************/
 void cmafec_set_fe_parameter(struct city *pcity,
                              const struct cm_parameter *const parameter)
 {
   cma_set_parameter(ATTR_CITY_CMAFE_PARAMETER, pcity->id, parameter);
 }
 
-/**********************************************************************//**
-  Return the front-end parameter for the given city. Returns a dummy
-  parameter if no parameter was set.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the front-end parameter for the given city. Returns a dummy
+   parameter if no parameter was set.
+ **************************************************************************/
 void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
 {
   struct cm_parameter parameter;
@@ -130,26 +129,27 @@ void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
   }
 }
 
-/**********************************************************************//**
-  Adds a preset.
-**************************************************************************/
+/**********************************************************************/ /**
+   Adds a preset.
+ **************************************************************************/
 void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
 {
-  struct cma_preset *ppreset = static_cast<cma_preset*>(fc_malloc(sizeof(struct cma_preset)));
+  struct cma_preset *ppreset =
+      static_cast<cma_preset *>(fc_malloc(sizeof(struct cma_preset)));
 
   if (preset_list == NULL) {
     preset_list = preset_list_new();
   }
 
   cm_copy_parameter(&ppreset->parameter, pparam);
-  ppreset->descr = static_cast<char*>(fc_malloc(MAX_LEN_PRESET_NAME));
+  ppreset->descr = static_cast<char *>(fc_malloc(MAX_LEN_PRESET_NAME));
   (void) fc_strlcpy(ppreset->descr, descr_name, MAX_LEN_PRESET_NAME);
   preset_list_prepend(preset_list, ppreset);
 }
 
-/**********************************************************************//**
-  Removes a preset.
-**************************************************************************/
+/**********************************************************************/ /**
+   Removes a preset.
+ **************************************************************************/
 void cmafec_preset_remove(int idx)
 {
   struct cma_preset *ppreset;
@@ -163,9 +163,9 @@ void cmafec_preset_remove(int idx)
   free(ppreset);
 }
 
-/**********************************************************************//**
-  Returns the indexed preset's description.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the indexed preset's description.
+ **************************************************************************/
 char *cmafec_preset_get_descr(int idx)
 {
   struct cma_preset *ppreset;
@@ -176,9 +176,9 @@ char *cmafec_preset_get_descr(int idx)
   return ppreset->descr;
 }
 
-/**********************************************************************//**
-  Returns the indexed preset's parameter.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the indexed preset's parameter.
+ **************************************************************************/
 const struct cm_parameter *cmafec_preset_get_parameter(int idx)
 {
   struct cma_preset *ppreset;
@@ -189,12 +189,12 @@ const struct cm_parameter *cmafec_preset_get_parameter(int idx)
   return &ppreset->parameter;
 }
 
-/**********************************************************************//**
-  Returns the index of the preset which matches the given
-  parameter. Returns -1 if no preset could be found.
-**************************************************************************/
-int cmafec_preset_get_index_of_parameter(const struct cm_parameter
-                                         *const parameter)
+/**********************************************************************/ /**
+   Returns the index of the preset which matches the given
+   parameter. Returns -1 if no preset could be found.
+ **************************************************************************/
+int cmafec_preset_get_index_of_parameter(
+    const struct cm_parameter *const parameter)
 {
   int i;
 
@@ -207,17 +207,14 @@ int cmafec_preset_get_index_of_parameter(const struct cm_parameter
   return -1;
 }
 
-/**********************************************************************//**
-  Returns the total number of presets.
-**************************************************************************/
-int cmafec_preset_num(void)
-{
-  return preset_list_size(preset_list);
-}
+/**********************************************************************/ /**
+   Returns the total number of presets.
+ **************************************************************************/
+int cmafec_preset_num(void) { return preset_list_size(preset_list); }
 
-/**********************************************************************//**
-  Return short description of city governor preset
-**************************************************************************/
+/**********************************************************************/ /**
+   Return short description of city governor preset
+ **************************************************************************/
 const char *cmafec_get_short_descr_of_city(const struct city *pcity)
 {
   struct cm_parameter parameter;
@@ -229,12 +226,12 @@ const char *cmafec_get_short_descr_of_city(const struct city *pcity)
   }
 }
 
-/**********************************************************************//**
-  Returns the description of the matching preset or "custom" if no
-  preset could be found.
-**************************************************************************/
-const char *cmafec_get_short_descr(const struct cm_parameter *const
-                                   parameter)
+/**********************************************************************/ /**
+   Returns the description of the matching preset or "custom" if no
+   preset could be found.
+ **************************************************************************/
+const char *
+cmafec_get_short_descr(const struct cm_parameter *const parameter)
 {
   int idx = cmafec_preset_get_index_of_parameter(parameter);
 
@@ -245,9 +242,9 @@ const char *cmafec_get_short_descr(const struct cm_parameter *const
   }
 }
 
-/**********************************************************************//**
-  Return string describing when city is assumed to grow.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return string describing when city is assumed to grow.
+ **************************************************************************/
 static const char *get_city_growth_string(struct city *pcity, int surplus)
 {
   int stock, cost, turns;
@@ -279,9 +276,9 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   return buffer;
 }
 
-/**********************************************************************//**
-  Return string describing when city is assumed to finish current production
-**************************************************************************/
+/**********************************************************************/ /**
+   Return string describing when city is assumed to finish current production
+ **************************************************************************/
 static const char *get_prod_complete_string(struct city *pcity, int surplus)
 {
   int stock, cost, turns;
@@ -293,8 +290,10 @@ static const char *get_prod_complete_string(struct city *pcity, int surplus)
   }
 
   if (city_production_has_flag(pcity, IF_GOLD)) {
-    fc_strlcpy(buffer, improvement_name_translation
-               (pcity->production.value.building), sizeof(buffer));
+    fc_strlcpy(
+        buffer,
+        improvement_name_translation(pcity->production.value.building),
+        sizeof(buffer));
     return buffer;
   }
   stock = pcity->shield_stock + surplus;
@@ -316,13 +315,12 @@ static const char *get_prod_complete_string(struct city *pcity, int surplus)
   return buffer;
 }
 
-/**********************************************************************//**
-  Return string describing result
-**************************************************************************/
-const char *cmafec_get_result_descr(struct city *pcity,
-                                    const struct cm_result *result,
-                                    const struct cm_parameter *const
-                                    parameter)
+/**********************************************************************/ /**
+   Return string describing result
+ **************************************************************************/
+const char *
+cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
+                        const struct cm_parameter *const parameter)
 {
   int j;
   char buf[RESULT_COLUMNS][BUFFER_SIZE];
@@ -338,9 +336,11 @@ const char *cmafec_get_result_descr(struct city *pcity,
     for (j = 0; j < RESULT_COLUMNS; j++)
       fc_snprintf(buf[j], BUFFER_SIZE, "---");
   } else {
-    output_type_iterate(o) {
+    output_type_iterate(o)
+    {
       fc_snprintf(buf[o], BUFFER_SIZE, "%+3d", result->surplus[o]);
-    } output_type_iterate_end;
+    }
+    output_type_iterate_end;
 
     fc_snprintf(buf[6], BUFFER_SIZE, "%d/%s%s",
                 city_size_get(pcity) - cm_result_specialists(result),
@@ -367,72 +367,61 @@ const char *cmafec_get_result_descr(struct city *pcity,
                 "Production completed: %s"),
               buf[9], buf[O_FOOD], buf[O_GOLD], buf[O_SHIELD], buf[O_LUXURY],
               buf[O_TRADE], buf[O_SCIENCE],
-              MAX(0, 20 - (int)get_internal_string_length(citizen_types)), "",
-              citizen_types,
-              buf[6], buf[7], buf[8]);
+              MAX(0, 20 - (int) get_internal_string_length(citizen_types)),
+              "", citizen_types, buf[6], buf[7], buf[8]);
 
   log_debug("\n%s", buffer);
   return buffer;
 }
 
-
-/**********************************************************************//**
-  Create default cma presets for a new user (or without configuration file)
-**************************************************************************/
+/**********************************************************************/ /**
+   Create default cma presets for a new user (or without configuration file)
+ **************************************************************************/
 void create_default_cma_presets(void)
 {
- int i;
- struct cm_parameter parameters[] = {
-   { /* very happy */
-     .minimal_surplus = {0, 0, 0, -20, 0, 0},
-     .require_happy = FALSE,
-     .allow_disorder = FALSE,
-     .allow_specialists = TRUE,
-     .factor = {10, 5, 0, 4, 0, 4},
-     .happy_factor = 25
-   },
-   { /* prefer food */
-     .minimal_surplus = {-20, 0, 0, -20, 0, 0},
-     .require_happy = FALSE,
-     .allow_disorder = FALSE,
-     .allow_specialists = TRUE,
-     .factor = {25, 5, 0, 4, 0, 4},
-     .happy_factor = 0
-   },
-   { /* prefer prod */
-     .minimal_surplus = {0, -20, 0, -20, 0, 0},
-     .require_happy = FALSE,
-     .allow_disorder = FALSE,
-     .allow_specialists = TRUE,
-     .factor = {10, 25, 0, 4, 0, 4},
-     .happy_factor = 0
-   },
-   { /* prefer gold */
-     .minimal_surplus = {0, 0, 0, -20, 0, 0},
-     .require_happy = FALSE,
-     .allow_disorder = FALSE,
-     .allow_specialists = TRUE,
-     .factor = {10, 5, 0, 25, 0, 4},
-     .happy_factor = 0
-   },
-   { /* prefer science */
-     .minimal_surplus = {0, 0, 0, -20, 0, 0},
-     .require_happy = FALSE,
-     .allow_disorder = FALSE,
-     .allow_specialists = TRUE,
-     .factor = {10, 5, 0, 4, 0, 25},
-     .happy_factor = 0
-   }
- };
- const char *names[ARRAY_SIZE(parameters)] = {
-   N_("?cma:Very happy"),
-   N_("?cma:Prefer food"),
-   N_("?cma:Prefer production"),
-   N_("?cma:Prefer gold"),
-   N_("?cma:Prefer science")
- };
+  int i;
+  struct cm_parameter parameters[] = {
+      {/* very happy */
+       .minimal_surplus = {0, 0, 0, -20, 0, 0},
+       .require_happy = FALSE,
+       .allow_disorder = FALSE,
+       .allow_specialists = TRUE,
+       .factor = {10, 5, 0, 4, 0, 4},
+       .happy_factor = 25},
+      {/* prefer food */
+       .minimal_surplus = {-20, 0, 0, -20, 0, 0},
+       .require_happy = FALSE,
+       .allow_disorder = FALSE,
+       .allow_specialists = TRUE,
+       .factor = {25, 5, 0, 4, 0, 4},
+       .happy_factor = 0},
+      {/* prefer prod */
+       .minimal_surplus = {0, -20, 0, -20, 0, 0},
+       .require_happy = FALSE,
+       .allow_disorder = FALSE,
+       .allow_specialists = TRUE,
+       .factor = {10, 25, 0, 4, 0, 4},
+       .happy_factor = 0},
+      {/* prefer gold */
+       .minimal_surplus = {0, 0, 0, -20, 0, 0},
+       .require_happy = FALSE,
+       .allow_disorder = FALSE,
+       .allow_specialists = TRUE,
+       .factor = {10, 5, 0, 25, 0, 4},
+       .happy_factor = 0},
+      {/* prefer science */
+       .minimal_surplus = {0, 0, 0, -20, 0, 0},
+       .require_happy = FALSE,
+       .allow_disorder = FALSE,
+       .allow_specialists = TRUE,
+       .factor = {10, 5, 0, 4, 0, 25},
+       .happy_factor = 0}};
+  const char *names[ARRAY_SIZE(parameters)] = {
+      N_("?cma:Very happy"), N_("?cma:Prefer food"),
+      N_("?cma:Prefer production"), N_("?cma:Prefer gold"),
+      N_("?cma:Prefer science")};
 
- for (i = ARRAY_SIZE(parameters) - 1; i >= 0; i--) {
-   cmafec_preset_add(Q_(names[i]), &parameters[i]);
- }
+  for (i = ARRAY_SIZE(parameters) - 1; i >= 0; i--) {
+    cmafec_preset_add(Q_(names[i]), &parameters[i]);
+  }
 }

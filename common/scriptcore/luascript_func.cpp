@@ -39,11 +39,11 @@ static struct luascript_func *func_new(bool required, int nargs,
 static void func_destroy(struct luascript_func *pfunc);
 
 struct luascript_func {
-  bool required;                 /* if this function is required */
-  int nargs;                     /* number of arguments to pass */
-  int nreturns;                  /* number of return values to accept */
-  enum api_types *arg_types;     /* argument types */
-  enum api_types *return_types;  /* return types */
+  bool required;                /* if this function is required */
+  int nargs;                    /* number of arguments to pass */
+  int nreturns;                 /* number of return values to accept */
+  enum api_types *arg_types;    /* argument types */
+  enum api_types *return_types; /* return types */
 };
 
 #define SPECHASH_TAG luascript_func
@@ -52,14 +52,13 @@ struct luascript_func {
 #define SPECHASH_IDATA_FREE func_destroy
 #include "spechash.h"
 
-#define luascript_func_hash_keys_iterate(phash, key)                         \
+#define luascript_func_hash_keys_iterate(phash, key)                        \
   TYPED_HASH_KEYS_ITERATE(char *, phash, key)
-#define luascript_func_hash_keys_iterate_end                                 \
-  HASH_KEYS_ITERATE_END
+#define luascript_func_hash_keys_iterate_end HASH_KEYS_ITERATE_END
 
-/*************************************************************************//**
-  Create a new function definition.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Create a new function definition.
+ *****************************************************************************/
 static struct luascript_func *func_new(bool required, int nargs,
                                        enum api_types *parg_types,
                                        int nreturns,
@@ -76,9 +75,9 @@ static struct luascript_func *func_new(bool required, int nargs,
   return pfunc;
 }
 
-/*************************************************************************//**
-  Free a function definition.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Free a function definition.
+ *****************************************************************************/
 static void func_destroy(struct luascript_func *pfunc)
 {
   if (pfunc->arg_types) {
@@ -88,11 +87,11 @@ static void func_destroy(struct luascript_func *pfunc)
   free(pfunc);
 }
 
-/*************************************************************************//**
-  Test if all function are defines. If it fails (return value FALSE), the
-  missing functions are listed in 'missing_func_required' and
-  'missing_func_optional'.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Test if all function are defines. If it fails (return value FALSE), the
+   missing functions are listed in 'missing_func_required' and
+   'missing_func_optional'.
+ *****************************************************************************/
 bool luascript_func_check(struct fc_lua *fcl,
                           struct strvec *missing_func_required,
                           struct strvec *missing_func_optional)
@@ -102,12 +101,13 @@ bool luascript_func_check(struct fc_lua *fcl,
   fc_assert_ret_val(fcl, FALSE);
   fc_assert_ret_val(fcl->funcs, FALSE);
 
-  luascript_func_hash_keys_iterate(fcl->funcs, func_name) {
+  luascript_func_hash_keys_iterate(fcl->funcs, func_name)
+  {
     if (!luascript_check_function(fcl, func_name)) {
       struct luascript_func *pfunc;
 
-      fc_assert_ret_val(luascript_func_hash_lookup(fcl->funcs, func_name,
-                                                   &pfunc), FALSE);
+      fc_assert_ret_val(
+          luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc), FALSE);
 
       if (pfunc->required) {
         strvec_append(missing_func_required, func_name);
@@ -117,23 +117,24 @@ bool luascript_func_check(struct fc_lua *fcl,
 
       ret = FALSE;
     }
-  } luascript_func_hash_keys_iterate_end;
+  }
+  luascript_func_hash_keys_iterate_end;
 
   return ret;
 }
 
-/*************************************************************************//**
-  Add a lua function.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a lua function.
+ *****************************************************************************/
 void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                                bool required, int nargs, int nreturns,
                                va_list args)
 {
   struct luascript_func *pfunc;
-  api_types *parg_types = static_cast<api_types *>(
-    fc_calloc(nargs, sizeof(*parg_types)));
-  api_types *pret_types = static_cast<api_types *>(
-    fc_calloc(nreturns, sizeof(*pret_types)));
+  api_types *parg_types =
+      static_cast<api_types *>(fc_calloc(nargs, sizeof(*parg_types)));
+  api_types *pret_types =
+      static_cast<api_types *>(fc_calloc(nreturns, sizeof(*pret_types)));
   int i;
 
   fc_assert_ret(fcl);
@@ -157,9 +158,9 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
   luascript_func_hash_insert(fcl->funcs, func_name, pfunc);
 }
 
-/*************************************************************************//**
-  Add a lua function.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a lua function.
+ *****************************************************************************/
 void luascript_func_add(struct fc_lua *fcl, const char *func_name,
                         bool required, int nargs, int nreturns, ...)
 {
@@ -170,10 +171,9 @@ void luascript_func_add(struct fc_lua *fcl, const char *func_name,
   va_end(args);
 }
 
-
-/*************************************************************************//**
-  Free the function definitions.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Free the function definitions.
+ *****************************************************************************/
 void luascript_func_free(struct fc_lua *fcl)
 {
   if (fcl && fcl->funcs) {
@@ -182,9 +182,9 @@ void luascript_func_free(struct fc_lua *fcl)
   }
 }
 
-/*************************************************************************//**
-  Initialize the structures needed to save functions definitions.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Initialize the structures needed to save functions definitions.
+ *****************************************************************************/
 void luascript_func_init(struct fc_lua *fcl)
 {
   fc_assert_ret(fcl != NULL);
@@ -195,13 +195,13 @@ void luascript_func_init(struct fc_lua *fcl)
   }
 }
 
-/*************************************************************************//**
-  Call a lua function; return value is TRUE if no errors occurred, otherwise
-  FALSE.
+/*************************************************************************/ /**
+   Call a lua function; return value is TRUE if no errors occurred, otherwise
+   FALSE.
 
-  Example call to the lua function 'user_load()':
-    success = luascript_func_call(L, "user_load", pconn, &password);
-*****************************************************************************/
+   Example call to the lua function 'user_load()':
+     success = luascript_func_call(L, "user_load", pconn, &password);
+ *****************************************************************************/
 bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
                                 va_list args)
 {
@@ -213,8 +213,10 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
   fc_assert_ret_val(fcl->funcs, FALSE);
 
   if (!luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc)) {
-    luascript_log(fcl, LOG_ERROR, "Lua function '%s' does not exist, "
-                                  "so cannot be invoked.", func_name);
+    luascript_log(fcl, LOG_ERROR,
+                  "Lua function '%s' does not exist, "
+                  "so cannot be invoked.",
+                  func_name);
     return FALSE;
   }
 
@@ -244,13 +246,13 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
   return success;
 }
 
-/*************************************************************************//**
-  Call a lua function; return value is TRUE if no errors occurred, otherwise
-  FALSE.
+/*************************************************************************/ /**
+   Call a lua function; return value is TRUE if no errors occurred, otherwise
+   FALSE.
 
-  Example call to the lua function 'user_load()':
-    success = luascript_func_call(L, "user_load", pconn, &password);
-*****************************************************************************/
+   Example call to the lua function 'user_load()':
+     success = luascript_func_call(L, "user_load", pconn, &password);
+ *****************************************************************************/
 bool luascript_func_call(struct fc_lua *fcl, const char *func_name, ...)
 {
   va_list args;
@@ -263,9 +265,9 @@ bool luascript_func_call(struct fc_lua *fcl, const char *func_name, ...)
   return success;
 }
 
-/*************************************************************************//**
-  Return iff the function is required.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return iff the function is required.
+ *****************************************************************************/
 bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name)
 {
   struct luascript_func *pfunc;

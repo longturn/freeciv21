@@ -27,7 +27,7 @@ extern "C" {
  *
  * The constant may be changed since it isn't externally visible used.
  */
-#define POWER_FACTOR	10
+#define POWER_FACTOR 10
 
 enum unit_attack_result {
   ATT_OK,
@@ -40,19 +40,21 @@ enum unit_attack_result {
 bool is_unit_reachable_at(const struct unit *defender,
                           const struct unit *attacker,
                           const struct tile *location);
-enum unit_attack_result unit_attack_unit_at_tile_result(const struct unit *punit,
-                                                        const struct unit *pdefender,
-                                                        const struct tile *dest_tile);
-enum unit_attack_result unit_attack_units_at_tile_result(const struct unit *punit,
-                                                         const struct tile *ptile);
+enum unit_attack_result
+unit_attack_unit_at_tile_result(const struct unit *punit,
+                                const struct unit *pdefender,
+                                const struct tile *dest_tile);
+enum unit_attack_result
+unit_attack_units_at_tile_result(const struct unit *punit,
+                                 const struct tile *ptile);
 bool can_unit_attack_tile(const struct unit *punit,
                           const struct tile *ptile);
 
 double win_chance(int as, int ahp, int afp, int ds, int dhp, int dfp);
 
 void get_modified_firepower(const struct unit *attacker,
-                            const struct unit *defender,
-                            int *att_fp, int *def_fp);
+                            const struct unit *defender, int *att_fp,
+                            int *def_fp);
 double unit_win_chance(const struct unit *attacker,
                        const struct unit *defender);
 
@@ -61,8 +63,8 @@ struct city *sdi_try_defend(const struct player *owner,
                             const struct tile *ptile);
 
 int get_attack_power(const struct unit *punit);
-int base_get_attack_power(const struct unit_type *punittype,
-                          int veteran, int moves_left);
+int base_get_attack_power(const struct unit_type *punittype, int veteran,
+                          int moves_left);
 int base_get_defense_power(const struct unit *punit);
 int get_total_defense_power(const struct unit *attacker,
                             const struct unit *defender);
@@ -71,8 +73,8 @@ int get_fortified_defense_power(const struct unit *attacker,
 int get_virtual_defense_power(const struct unit_type *attacker,
                               const struct unit_type *defender,
                               struct player *defending_player,
-                              struct tile *ptile,
-                              bool fortified, int veteran);
+                              struct tile *ptile, bool fortified,
+                              int veteran);
 int get_total_attack_power(const struct unit *attacker,
                            const struct unit *defender);
 

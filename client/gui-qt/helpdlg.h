@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -43,8 +43,7 @@ class QVBoxLayout;
 
 class help_widget;
 
-class help_dialog : public qfc_dialog
-{
+class help_dialog : public qfc_dialog {
   Q_OBJECT
   QPushButton *prev_butt;
   QPushButton *next_butt;
@@ -55,6 +54,7 @@ class help_dialog : public qfc_dialog
   QHash<QTreeWidgetItem *, const help_item *> topics_map;
   int history_pos;
   void make_tree();
+
 public:
   help_dialog(QWidget *parent = 0);
   void update_fonts();
@@ -72,12 +72,12 @@ protected:
 
 private slots:
   void item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev);
+
 private:
   void update_buttons();
 };
 
-class help_widget : public QWidget
-{
+class help_widget : public QWidget {
   Q_OBJECT
   QFrame *box_wdg;
   QLabel *title_label;
@@ -99,9 +99,8 @@ class help_widget : public QWidget
   void show_info_panel();
   void add_info_pixmap(QPixmap *pm, bool shadow = false);
   void add_info_label(const QString &text);
-  void add_info_progress(const QString& label, int progress,
-                         int min, int max,
-                         const QString& value = QString());
+  void add_info_progress(const QString &label, int progress, int min,
+                         int max, const QString &value = QString());
   void add_extras_of_act_for_terrain(struct terrain *pterr,
                                      enum unit_activity act,
                                      const char *label);
@@ -111,10 +110,10 @@ class help_widget : public QWidget
 
   void set_bottom_panel(QWidget *widget);
 
-  QLayout *create_terrain_widget(const QString& title,
-                                 const struct canvas* image,
-                                 const QString& legend,
-                                 const QString& tooltip = QString());
+  QLayout *create_terrain_widget(const QString &title,
+                                 const struct canvas *image,
+                                 const QString &legend,
+                                 const QString &tooltip = QString());
 
   void set_topic_other(const help_item *item, const char *title);
 
@@ -135,6 +134,7 @@ public:
   help_widget(const help_item *item, QWidget *parent = 0);
   ~help_widget();
   void update_fonts();
+
 private:
   QString link_me(const char *str, help_page_type hpt);
 

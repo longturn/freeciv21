@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,22 +18,21 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
-#include "featured_text.h"      /* struct text_tag_list, struct ft_color */
+#include "featured_text.h" /* struct text_tag_list, struct ft_color */
 
 int send_chat(const char *message);
 int send_chat_printf(const char *format, ...)
-    fc__attribute((__format__ (__printf__, 1, 2)));
+    fc__attribute((__format__(__printf__, 1, 2)));
 
 void output_window_append(const struct ft_color color,
                           const char *featured_text);
-void output_window_vprintf(const struct ft_color color,
-                           const char *format, va_list args);
-void output_window_printf(const struct ft_color color,
-                          const char *format, ...)
-                          fc__attribute((__format__ (__printf__, 2, 3)));
+void output_window_vprintf(const struct ft_color color, const char *format,
+                           va_list args);
+void output_window_printf(const struct ft_color color, const char *format,
+                          ...) fc__attribute((__format__(__printf__, 2, 3)));
 void output_window_event(const char *plain_text,
                          const struct text_tag_list *tags, int conn_id);
 
@@ -49,4 +48,4 @@ void fc_destroy_ow_mutex(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CHATLINE_COMMON_H */
+#endif /* FC__CHATLINE_COMMON_H */

@@ -5,7 +5,7 @@
    the Free Software Foundation; either version 2, or (at your option)
    any later version.
 
-   This program is distributed in the hope that it will be useful, 
+   This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
@@ -17,8 +17,8 @@
 #include "fc_prehdrs.h"
 
 #include <fcntl.h>
+#include <signal.h> /* SIGTERM and kill */
 #include <stdio.h>
-#include <signal.h>             /* SIGTERM and kill */
 #include <string.h>
 #include <time.h>
 
@@ -27,11 +27,11 @@
 #endif
 
 #ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>		/* fchmod */
+#include <sys/types.h> /* fchmod */
 #endif
 
 #ifdef HAVE_SYS_STAT_H
-#include <sys/stat.h>		/* fchmod */
+#include <sys/stat.h> /* fchmod */
 #endif
 
 #ifdef HAVE_SYS_WAIT_H
@@ -56,20 +56,20 @@
 /* client */
 #include "client_main.h"
 #include "climisc.h"
-#include "clinet.h"		/* connect_to_server() */
+#include "clinet.h" /* connect_to_server() */
 #include "packhand_gen.h"
 
 #include "chatline_common.h"
-#include "connectdlg_g.h"
 #include "connectdlg_common.h"
+#include "connectdlg_g.h"
 #include "tilespec.h"
 
-#define WAIT_BETWEEN_TRIES 100000 /* usecs */ 
+#define WAIT_BETWEEN_TRIES 100000 /* usecs */
 #define NUMBER_OF_TRIES 500
 
 #if defined(HAVE_WORKING_FORK) && !defined(FREECIV_MSWINDOWS)
-/* We are yet to see FREECIV_MSWINDOWS setup where even HAVE_WORKING_FORK would
- * mean fork() that actually works for us. */
+/* We are yet to see FREECIV_MSWINDOWS setup where even HAVE_WORKING_FORK
+ * would mean fork() that actually works for us. */
 #define HAVE_USABLE_FORK
 #endif
 
@@ -86,10 +86,10 @@ static bool client_has_hack = FALSE;
 
 int internal_server_port;
 
-/************************************************************************** 
+/**************************************************************************
 The general chain of events:
 
-Two distinct paths are taken depending on the choice of mode: 
+Two distinct paths are taken depending on the choice of mode:
 
 if the user selects the multi- player mode, then a packet_req_join_game
 packet is sent to the server. It is either successful or not. The end.
@@ -111,9 +111,9 @@ then:
          the game.
 **************************************************************************/
 
-/**********************************************************************//**
-  Tests if the client has started the server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Tests if the client has started the server.
+ **************************************************************************/
 bool is_server_running(void)
 {
   if (server_quitting) {
@@ -128,21 +128,18 @@ bool is_server_running(void)
 #endif
 }
 
-/**********************************************************************//**
-  Returns TRUE if the client has hack access.
-**************************************************************************/
-bool can_client_access_hack(void)
-{
-  return client_has_hack;
-}
+/**********************************************************************/ /**
+   Returns TRUE if the client has hack access.
+ **************************************************************************/
+bool can_client_access_hack(void) { return client_has_hack; }
 
-/**********************************************************************//**
-  Kills the server if the client has started it.
+/**********************************************************************/ /**
+   Kills the server if the client has started it.
 
-  If the 'force' parameter is unset, we just do a /quit.  If it's set, then
-  we'll send a signal to the server to kill it (use this when the socket
-  is disconnected already).
-**************************************************************************/
+   If the 'force' parameter is unset, we just do a /quit.  If it's set, then
+   we'll send a signal to the server to kill it (use this when the socket
+   is disconnected already).
+ **************************************************************************/
 void client_kill_server(bool force)
 {
 #ifdef HAVE_USABLE_FORK
@@ -199,7 +196,7 @@ void client_kill_server(bool force)
       TerminateProcess(server_process, 0);
       CloseHandle(server_process);
       if (loghandle != INVALID_HANDLE_VALUE) {
-	CloseHandle(loghandle);
+        CloseHandle(loghandle);
       }
       server_process = INVALID_HANDLE_VALUE;
       loghandle = INVALID_HANDLE_VALUE;
@@ -208,12 +205,12 @@ void client_kill_server(bool force)
     }
   }
   client_has_hack = FALSE;
-}   
+}
 
-/**********************************************************************//**
-  Forks a server if it can. Returns FALSE if we find we
-  couldn't start the server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Forks a server if it can. Returns FALSE if we find we
+   couldn't start the server.
+ **************************************************************************/
 bool client_start_server(void)
 {
 #if !defined(HAVE_USABLE_FORK) && !defined(FREECIV_MSWINDOWS)
@@ -280,9 +277,10 @@ bool client_start_server(void)
 
   storage = freeciv_storage_dir();
   if (storage == NULL) {
-    output_window_append(ftc_client, _("Cannot find freeciv storage directory"));
     output_window_append(ftc_client,
-                         _("You'll have to start server manually. Sorry..."));
+                         _("Cannot find freeciv storage directory"));
+    output_window_append(
+        ftc_client, _("You'll have to start server manually. Sorry..."));
     return FALSE;
   }
 
@@ -294,14 +292,16 @@ bool client_start_server(void)
     const int max_nargs = 25;
     char *argv[max_nargs + 1];
     char port_buf[32];
-    char dbg_lvl_buf[32]; /* Do not move this inside the block where it gets filled,
-                           * it's needed via the argv[x] pointer later on, so must
-                           * remain in scope. */
+    char dbg_lvl_buf[32]; /* Do not move this inside the block where it gets
+                           * filled, it's needed via the argv[x] pointer
+                           * later on, so must remain in scope. */
 
     /* Set up the command-line parameters. */
     fc_snprintf(port_buf, sizeof(port_buf), "%d", internal_server_port);
-    fc_snprintf(savesdir, sizeof(savesdir), "%s" DIR_SEPARATOR "saves", storage);
-    fc_snprintf(scensdir, sizeof(scensdir), "%s" DIR_SEPARATOR "scenarios", storage);
+    fc_snprintf(savesdir, sizeof(savesdir), "%s" DIR_SEPARATOR "saves",
+                storage);
+    fc_snprintf(scensdir, sizeof(scensdir), "%s" DIR_SEPARATOR "scenarios",
+                storage);
 #ifdef FREECIV_WEB
     argv[argc++] = "freeciv-web";
 #else  /* FREECIV_WEB */
@@ -367,7 +367,7 @@ bool client_start_server(void)
 
       /* inside the child */
 
-      /* avoid terminal spam, but still make server output available */ 
+      /* avoid terminal spam, but still make server output available */
       fclose(stdout);
       fclose(stderr);
 
@@ -384,8 +384,8 @@ bool client_start_server(void)
         fchmod(1, 0644);
       }
 
-      /* If it's still attatched to our terminal, things get messed up, 
-        but freeciv-server needs *something* */ 
+      /* If it's still attatched to our terminal, things get messed up,
+        but freeciv-server needs *something* */
       fclose(stdin);
       fd = open("/dev/null", O_RDONLY);
       if (fd != 0) {
@@ -395,11 +395,12 @@ bool client_start_server(void)
       /* these won't return on success */
 #ifdef FREECIV_DEBUG
       /* Search under current directory (what ever that happens to be)
-       * only in debug builds. This allows running freeciv directly from build
+       * only in debug builds. This allows running freeciv directly from
+       * build
        * tree, but could be considered security risk in release builds. */
 #ifdef FREECIV_WEB
       execvp("./server/freeciv-web", argv);
-#else  /* FREECIV_WEB */
+#else /* FREECIV_WEB */
 #ifdef MESON_BUILD
       execvp("./freeciv-server", argv);
 #else  /* MESON_BUILD */
@@ -416,19 +417,19 @@ bool client_start_server(void)
       execvp("freeciv-server", argv);
 #endif /* FREECIV_WEB */
 
-      /* This line is only reached if freeciv-server cannot be started, 
+      /* This line is only reached if freeciv-server cannot be started,
        * so we kill the forked process.
-       * Calling exit here is dangerous due to X11 problems (async replies) */ 
+       * Calling exit here is dangerous due to X11 problems (async replies)
+       */
       _exit(1);
-    } 
+    }
   }
-#else /* HAVE_USABLE_FORK */
+#else  /* HAVE_USABLE_FORK */
 #ifdef FREECIV_MSWINDOWS
   if (logfile) {
     loghandle = CreateFile(logfile, GENERIC_WRITE,
-                           FILE_SHARE_READ | FILE_SHARE_WRITE,
-                           NULL,
-			   OPEN_ALWAYS, 0, NULL);
+                           FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                           OPEN_ALWAYS, 0, NULL);
   }
 
   ZeroMemory(&si, sizeof(si));
@@ -443,7 +444,7 @@ bool client_start_server(void)
   scriptcmdline[0] = 0;
   savefilecmdline[0] = 0;
 
-  /* the server expects command line arguments to be in local encoding */ 
+  /* the server expects command line arguments to be in local encoding */
   if (logfile) {
     char *logfile_in_local_encoding =
         internal_to_local_string_malloc(logfile);
@@ -457,7 +458,7 @@ bool client_start_server(void)
     char *scriptfile_in_local_encoding =
         internal_to_local_string_malloc(scriptfile);
 
-    fc_snprintf(scriptcmdline, sizeof(scriptcmdline),  " --read %s",
+    fc_snprintf(scriptcmdline, sizeof(scriptcmdline), " --read %s",
                 scriptfile_in_local_encoding);
     free(scriptfile_in_local_encoding);
   }
@@ -465,16 +466,20 @@ bool client_start_server(void)
     char *savefile_in_local_encoding =
         internal_to_local_string_malloc(savefile);
 
-    fc_snprintf(savefilecmdline, sizeof(savefilecmdline),  " --file %s",
+    fc_snprintf(savefilecmdline, sizeof(savefilecmdline), " --file %s",
                 savefile_in_local_encoding);
     free(savefile_in_local_encoding);
   }
 
-  fc_snprintf(savesdir, sizeof(savesdir), "%s" DIR_SEPARATOR "saves", storage);
-  internal_to_local_string_buffer(savesdir, savescmdline, sizeof(savescmdline));
+  fc_snprintf(savesdir, sizeof(savesdir), "%s" DIR_SEPARATOR "saves",
+              storage);
+  internal_to_local_string_buffer(savesdir, savescmdline,
+                                  sizeof(savescmdline));
 
-  fc_snprintf(scensdir, sizeof(scensdir), "%s" DIR_SEPARATOR "scenarios", storage);
-  internal_to_local_string_buffer(scensdir, scenscmdline, sizeof(scenscmdline));
+  fc_snprintf(scensdir, sizeof(scensdir), "%s" DIR_SEPARATOR "scenarios",
+              storage);
+  internal_to_local_string_buffer(scensdir, scenscmdline,
+                                  sizeof(scenscmdline));
 
   if (are_deprecation_warnings_enabled()) {
     depr = " --warnings";
@@ -490,48 +495,45 @@ bool client_start_server(void)
   fc_snprintf(options, sizeof(options),
               "-p %d --bind localhost -q 1 -e%s%s%s --saves \"%s\" "
               "--scenarios \"%s\" -A none %s%s",
-              internal_server_port, logcmdline, scriptcmdline, savefilecmdline,
-              savescmdline, scenscmdline, rsparam, depr);
+              internal_server_port, logcmdline, scriptcmdline,
+              savefilecmdline, savescmdline, scenscmdline, rsparam, depr);
 #ifdef FREECIV_DEBUG
 #ifdef FREECIV_WEB
-  fc_snprintf(cmdline1, sizeof(cmdline1),
-              "./server/freeciv-web %s", options);
+  fc_snprintf(cmdline1, sizeof(cmdline1), "./server/freeciv-web %s",
+              options);
 #else  /* FREECIV_WEB */
   fc_snprintf(cmdline1, sizeof(cmdline1), "./fcser %s", options);
-  fc_snprintf(cmdline2, sizeof(cmdline2),
-              "./server/freeciv-server %s", options);
+  fc_snprintf(cmdline2, sizeof(cmdline2), "./server/freeciv-server %s",
+              options);
 #endif /* FREECIV_WEB */
 #endif /* FREECIV_DEBUG */
 #ifdef FREECIV_WEB
-  fc_snprintf(cmdline3, sizeof(cmdline2),
-              BINDIR "/freeciv-web %s", options);
-  fc_snprintf(cmdline4, sizeof(cmdline3),
-              "freeciv-web %s", options);
+  fc_snprintf(cmdline3, sizeof(cmdline2), BINDIR "/freeciv-web %s", options);
+  fc_snprintf(cmdline4, sizeof(cmdline3), "freeciv-web %s", options);
 #else  /* FREECIV_WEB */
-  fc_snprintf(cmdline3, sizeof(cmdline3),
-              BINDIR "/freeciv-server %s", options);
-  fc_snprintf(cmdline4, sizeof(cmdline4),
-              "freeciv-server %s", options);
+  fc_snprintf(cmdline3, sizeof(cmdline3), BINDIR "/freeciv-server %s",
+              options);
+  fc_snprintf(cmdline4, sizeof(cmdline4), "freeciv-server %s", options);
 #endif /* FREECIV_WEB */
 
   if (
 #ifdef FREECIV_DEBUG
       !CreateProcess(NULL, cmdline1, NULL, NULL, TRUE,
-                     DETACHED_PROCESS | NORMAL_PRIORITY_CLASS,
-                     NULL, NULL, &si, &pi)
+                     DETACHED_PROCESS | NORMAL_PRIORITY_CLASS, NULL, NULL,
+                     &si, &pi)
 #ifndef FREECIV_WEB
       && !CreateProcess(NULL, cmdline2, NULL, NULL, TRUE,
-                        DETACHED_PROCESS | NORMAL_PRIORITY_CLASS,
-                        NULL, NULL, &si, &pi)
+                        DETACHED_PROCESS | NORMAL_PRIORITY_CLASS, NULL, NULL,
+                        &si, &pi)
 #endif /* FREECIV_WEB */
       &&
 #endif /* FREECIV_DEBUG */
       !CreateProcess(NULL, cmdline3, NULL, NULL, TRUE,
-                     DETACHED_PROCESS | NORMAL_PRIORITY_CLASS,
-                     NULL, NULL, &si, &pi)
+                     DETACHED_PROCESS | NORMAL_PRIORITY_CLASS, NULL, NULL,
+                     &si, &pi)
       && !CreateProcess(NULL, cmdline4, NULL, NULL, TRUE,
-                        DETACHED_PROCESS | NORMAL_PRIORITY_CLASS,
-                        NULL, NULL, &si, &pi)) {
+                        DETACHED_PROCESS | NORMAL_PRIORITY_CLASS, NULL, NULL,
+                        &si, &pi)) {
     log_error("Failed to start server process.");
 #ifdef FREECIV_DEBUG
     log_verbose("Tried with commandline: '%s'", cmdline1);
@@ -552,9 +554,10 @@ bool client_start_server(void)
 #endif /* FREECIV_MSWINDOWS */
 #endif /* HAVE_USABLE_FORK */
 
-  /* a reasonable number of tries */ 
-  while (connect_to_server(user_name, "localhost", internal_server_port, 
-                           buf, sizeof(buf)) == -1) {
+  /* a reasonable number of tries */
+  while (connect_to_server(user_name, "localhost", internal_server_port, buf,
+                           sizeof(buf))
+         == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
 #ifdef HAVE_USABLE_FORK
 #ifndef FREECIV_MSWINDOWS
@@ -570,9 +573,9 @@ bool client_start_server(void)
   }
 
   /* weird, but could happen, if server doesn't support new startup stuff
-   * capabilities won't help us here... */ 
+   * capabilities won't help us here... */
   if (!client.conn.used) {
-    /* possible that server is still running. kill it */ 
+    /* possible that server is still running. kill it */
     client_kill_server(TRUE);
 
     log_error("Failed to connect to spawned server!");
@@ -621,13 +624,13 @@ bool client_start_server(void)
 #endif /* HAVE_USABLE_FORK || FREECIV_MSWINDOWS */
 }
 
-/**********************************************************************//**
-  Generate a random string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Generate a random string.
+ **************************************************************************/
 static void randomize_string(char *str, size_t n)
 {
   const char chars[] =
-    "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
   int i;
 
   for (i = 0; i < n - 1; i++) {
@@ -636,14 +639,14 @@ static void randomize_string(char *str, size_t n)
   str[i] = '\0';
 }
 
-/**********************************************************************//**
-  If the client is capable of 'wanting hack', then the server will
-  send the client a filename in the packet_join_game_reply packet.
+/**********************************************************************/ /**
+   If the client is capable of 'wanting hack', then the server will
+   send the client a filename in the packet_join_game_reply packet.
 
-  This function creates the file with a suitably random string in it
-  and then sends the string to the server. If the server can open
-  and read the string, then the client is given hack access.
-**************************************************************************/
+   This function creates the file with a suitably random string in it
+   and then sends the string to the server. If the server can open
+   and read the string, then the client is given hack access.
+ **************************************************************************/
 void send_client_wants_hack(const char *filename)
 {
   if (filename[0] != '\0') {
@@ -664,7 +667,7 @@ void send_client_wants_hack(const char *filename)
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname),
                 "%s" DIR_SEPARATOR "%s", sdir, filename);
 
-    /* generate an authentication token */ 
+    /* generate an authentication token */
     randomize_string(req.token, sizeof(req.token));
 
     file = secfile_new(FALSE);
@@ -675,14 +678,14 @@ void send_client_wants_hack(const char *filename)
     }
     secfile_destroy(file);
 
-    /* tell the server what we put into the file */ 
+    /* tell the server what we put into the file */
     send_packet_single_want_hack_req(&client.conn, &req);
   }
 }
 
-/**********************************************************************//**
-  Handle response (by the server) if the client has got hack or not.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle response (by the server) if the client has got hack or not.
+ **************************************************************************/
 void handle_single_want_hack_reply(bool you_have_hack)
 {
   /* remove challenge file */
@@ -708,11 +711,11 @@ void handle_single_want_hack_reply(bool you_have_hack)
   }
 }
 
-/**********************************************************************//**
-  Send server command to save game.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send server command to save game.
+ **************************************************************************/
 void send_save_game(const char *filename)
-{   
+{
   if (filename) {
     send_chat_printf("/save %s", filename);
   } else {
@@ -720,9 +723,9 @@ void send_save_game(const char *filename)
   }
 }
 
-/**********************************************************************//**
-  Handle the list of rulesets sent by the server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle the list of rulesets sent by the server.
+ **************************************************************************/
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
   char *rulesets[packet->ruleset_count];
@@ -735,7 +738,7 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
     rulesets[i] = fc_strdup(packet->rulesets[i]);
 
     if (len > suf_len
-	&& strcmp(rulesets[i] + len - suf_len, RULESET_SUFFIX) == 0) {
+        && strcmp(rulesets[i] + len - suf_len, RULESET_SUFFIX) == 0) {
       rulesets[i][len - suf_len] = '\0';
     }
   }
@@ -746,10 +749,10 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
   }
 }
 
-/**********************************************************************//**
-  Called by the GUI code when the user sets the ruleset.  The ruleset
-  passed in here should match one of the strings given to set_rulesets().
-**************************************************************************/
+/**********************************************************************/ /**
+   Called by the GUI code when the user sets the ruleset.  The ruleset
+   passed in here should match one of the strings given to set_rulesets().
+ **************************************************************************/
 void set_ruleset(const char *ruleset)
 {
   char buf[4096];

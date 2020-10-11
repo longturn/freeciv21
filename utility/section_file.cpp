@@ -30,21 +30,17 @@ static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
 /* Debug function for every new entry. */
 #define DEBUG_ENTRIES(...) /* log_debug(__VA_ARGS__); */
 
-/**********************************************************************//**
-  Returns the last error which occurred in a string.  It never returns NULL.
-**************************************************************************/
-const char *secfile_error(void)
-{
-  return error_buffer;
-}
+/**********************************************************************/ /**
+   Returns the last error which occurred in a string.  It never returns NULL.
+ **************************************************************************/
+const char *secfile_error(void) { return error_buffer; }
 
-/**********************************************************************//**
-  Edit the error_buffer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Edit the error_buffer.
+ **************************************************************************/
 void secfile_log(const struct section_file *secfile,
-                 const struct section *psection,
-                 const char *file, const char *function, int line,
-                 const char *format, ...)
+                 const struct section *psection, const char *file,
+                 const char *function, int line, const char *format, ...)
 {
   char message[MAX_LEN_ERRORBUF];
   va_list args;
@@ -54,22 +50,22 @@ void secfile_log(const struct section_file *secfile,
   va_end(args);
 
   fc_snprintf(error_buffer, sizeof(error_buffer),
-              "In %s() [%s:%d]: secfile '%s' in section '%s': %s",
-              function, file, line, secfile_name(secfile),
+              "In %s() [%s:%d]: secfile '%s' in section '%s': %s", function,
+              file, line, secfile_name(secfile),
               psection != NULL ? section_name(psection) : "NULL", message);
 }
 
-/**********************************************************************//**
-  Returns the section name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the section name.
+ **************************************************************************/
 const char *section_name(const struct section *psection)
 {
   return (NULL != psection ? psection->name : NULL);
 }
 
-/**********************************************************************//**
-  Create a new empty section file.
-**************************************************************************/
+/**********************************************************************/ /**
+   Create a new empty section file.
+ **************************************************************************/
 struct section_file *secfile_new(bool allow_duplicates)
 {
   section_file *secfile = new section_file;
@@ -89,9 +85,9 @@ struct section_file *secfile_new(bool allow_duplicates)
   return secfile;
 }
 
-/**********************************************************************//**
-  Free a section file.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free a section file.
+ **************************************************************************/
 void secfile_destroy(struct section_file *secfile)
 {
   SECFILE_RETURN_IF_FAIL(secfile, NULL, secfile != NULL);
@@ -116,11 +112,11 @@ void secfile_destroy(struct section_file *secfile)
   free(secfile);
 }
 
-/**********************************************************************//**
-  Set if we could consider values 0 and 1 as boolean. By default, this is
-  not allowed, but we need to keep compatibility with old Freeciv version
-  for savegames, ruleset etc.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set if we could consider values 0 and 1 as boolean. By default, this is
+   not allowed, but we need to keep compatibility with old Freeciv version
+   for savegames, ruleset etc.
+ **************************************************************************/
 void secfile_allow_digital_boolean(struct section_file *secfile,
                                    bool allow_digital_boolean)
 {
@@ -128,9 +124,9 @@ void secfile_allow_digital_boolean(struct section_file *secfile,
   secfile->allow_digital_boolean = allow_digital_boolean;
 }
 
-/**********************************************************************//**
-  Add entry to section from token.
-**************************************************************************/
+/**********************************************************************/ /**
+   Add entry to section from token.
+ **************************************************************************/
 bool entry_from_token(struct section *psection, const char *name,
                       const char *tok)
 {
@@ -153,7 +149,8 @@ bool entry_from_token(struct section *psection, const char *name,
     return TRUE;
   }
 
-  if (fc_isdigit(tok[0]) || (('-' == tok[0] || '+' == tok[0]) && fc_isdigit(tok[1]))) {
+  if (fc_isdigit(tok[0])
+      || (('-' == tok[0] || '+' == tok[0]) && fc_isdigit(tok[1]))) {
     float fvalue;
 
     if (str_to_float(tok, &fvalue)) {

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,8 +37,8 @@ int server_open_socket(void);
 void flush_packets(void);
 void close_connections_and_socket(void);
 void init_connections(void);
-int server_make_connection(int new_sock,
-                           const char *client_addr, const char *client_ip);
+int server_make_connection(int new_sock, const char *client_addr,
+                           const char *client_ip);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
 
@@ -46,4 +46,4 @@ void handle_client_heartbeat(struct connection *pconn);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SERNET_H */
+#endif /* FC__SERNET_H */

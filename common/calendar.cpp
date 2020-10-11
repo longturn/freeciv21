@@ -21,17 +21,18 @@
 
 #include "calendar.h"
 
-/************************************************************************//**
-  Advance the calendar in the passed game_info structure
-  (may only be a copy of the real one).
-  FIXME: would be nice to pass a struct containing just the
-  calendar, not the whole game_info struct.
-****************************************************************************/
+/************************************************************************/ /**
+   Advance the calendar in the passed game_info structure
+   (may only be a copy of the real one).
+   FIXME: would be nice to pass a struct containing just the
+   calendar, not the whole game_info struct.
+ ****************************************************************************/
 void game_next_year(struct packet_game_info *info)
 {
   int increase = get_world_bonus(EFT_TURN_YEARS);
   const int slowdown = (victory_enabled(VC_SPACERACE)
-			? get_world_bonus(EFT_SLOW_DOWN_TIMELINE) : 0);
+                            ? get_world_bonus(EFT_SLOW_DOWN_TIMELINE)
+                            : 0);
   int fragment_years;
 
   if (info->year_0_hack) {
@@ -40,11 +41,11 @@ void game_next_year(struct packet_game_info *info)
     info->year_0_hack = FALSE;
   }
 
-    /* !McFred: 
-       - want year += 1 for spaceship.
-    */
+  /* !McFred:
+     - want year += 1 for spaceship.
+  */
 
-  /* test game with 7 normal AI's, gen 4 map, foodbox 10, foodbase 0: 
+  /* test game with 7 normal AI's, gen 4 map, foodbox 10, foodbase 0:
    * Gunpowder about 0 AD
    * Railroad  about 500 AD
    * Electricity about 1000 AD
@@ -74,7 +75,8 @@ void game_next_year(struct packet_game_info *info)
     fragment_years = info->fragment_count / game.calendar.calendar_fragments;
 
     increase += fragment_years;
-    info->fragment_count -= fragment_years * game.calendar.calendar_fragments;
+    info->fragment_count -=
+        fragment_years * game.calendar.calendar_fragments;
   }
 
   info->year += increase;
@@ -85,19 +87,19 @@ void game_next_year(struct packet_game_info *info)
   }
 }
 
-/************************************************************************//**
-  Advance the game year.
-****************************************************************************/
+/************************************************************************/ /**
+   Advance the game year.
+ ****************************************************************************/
 void game_advance_year(void)
 {
   game_next_year(&game.info);
   game.info.turn++;
 }
 
-/************************************************************************//**
-  Produce a statically allocated textual representation of the given
-  calendar fragment.
-****************************************************************************/
+/************************************************************************/ /**
+   Produce a statically allocated textual representation of the given
+   calendar fragment.
+ ****************************************************************************/
 const char *textcalfrag(int frag)
 {
   static char buf[MAX_LEN_NAME];
@@ -113,10 +115,10 @@ const char *textcalfrag(int frag)
   return buf;
 }
 
-/************************************************************************//**
-  Produce a statically allocated textual representation of the given
-  year.
-****************************************************************************/
+/************************************************************************/ /**
+   Produce a statically allocated textual representation of the given
+   year.
+ ****************************************************************************/
 const char *textyear(int year)
 {
   static char y[32];
@@ -134,10 +136,10 @@ const char *textyear(int year)
   return y;
 }
 
-/************************************************************************//**
-  Produce a statically allocated textual representation of the current
-  calendar time.
-****************************************************************************/
+/************************************************************************/ /**
+   Produce a statically allocated textual representation of the current
+   calendar time.
+ ****************************************************************************/
 const char *calendar_text(void)
 {
   if (game.calendar.calendar_fragments) {

@@ -17,7 +17,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #include "fc_types.h"
 
@@ -25,15 +25,15 @@ extern "C" {
 #define NUM_CREPORT_COLS (num_city_report_spec())
 
 struct city_report_spec {
-  bool show;			/* modify this to customize */
-  int width;			/* 0 means variable; rightmost only */
-  int space;			/* number of leading spaces (see below) */
-  const char *title1;		/* already translated or NULL */
-  const char *title2;		/* already translated or NULL */
-  const char *explanation;	/* already translated */ 
+  bool show;               /* modify this to customize */
+  int width;               /* 0 means variable; rightmost only */
+  int space;               /* number of leading spaces (see below) */
+  const char *title1;      /* already translated or NULL */
+  const char *title2;      /* already translated or NULL */
+  const char *explanation; /* already translated */
   void *data;
-  const char *(*func)(const struct city * pcity, const void *data);
-  const char *tagname;		/* for save_options */
+  const char *(*func)(const struct city *pcity, const void *data);
+  const char *tagname; /* for save_options */
 };
 
 extern struct city_report_spec *city_report_specs;
@@ -46,7 +46,7 @@ extern struct city_report_spec *city_report_specs;
    you can avoid explicit space between columns if they are bracketted,
    but the problem is that with a configurable report you don't know
    what's going to be next to what.
-   
+
    Here specify width, and leading space, although different clients
    may interpret these differently (gui-gtk and gui-mui ignore space
    field, handling columns without additional spacing).
@@ -74,4 +74,4 @@ bool can_city_sell_universal(const struct city *pcity,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CITYREPDATA_H */
+#endif /* FC__CITYREPDATA_H */

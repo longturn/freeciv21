@@ -29,10 +29,10 @@ struct fc_thread_wrap_data {
   void (*func)(void *arg);
 };
 
-/*******************************************************************//**
-  Wrapper which fingerprint matches one required by pthread_create().
-  Calls function which matches fingerprint required by fc_thread_start()
-***********************************************************************/
+/*******************************************************************/ /**
+   Wrapper which fingerprint matches one required by pthread_create().
+   Calls function which matches fingerprint required by fc_thread_start()
+ ***********************************************************************/
 static int fc_thread_wrapper(void *arg)
 {
   struct fc_thread_wrap_data *data = (struct fc_thread_wrap_data *) arg;
@@ -44,10 +44,10 @@ static int fc_thread_wrapper(void *arg)
   return EXIT_SUCCESS;
 }
 
-/*******************************************************************//**
-  Create new thread
-***********************************************************************/
-int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
+/*******************************************************************/ /**
+   Create new thread
+ ***********************************************************************/
+int fc_thread_start(fc_thread *thread, void (*function)(void *arg),
                     void *arg)
 {
   int ret;
@@ -63,9 +63,9 @@ int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
   return ret != thrd_success;
 }
 
-/*******************************************************************//**
-  Wait for thread to finish
-***********************************************************************/
+/*******************************************************************/ /**
+   Wait for thread to finish
+ ***********************************************************************/
 void fc_thread_wait(fc_thread *thread)
 {
   int *return_value = NULL;
@@ -73,69 +73,51 @@ void fc_thread_wait(fc_thread *thread)
   thrd_join(*thread, return_value);
 }
 
-/*******************************************************************//**
-  Initialize mutex
-***********************************************************************/
+/*******************************************************************/ /**
+   Initialize mutex
+ ***********************************************************************/
 void fc_init_mutex(fc_mutex *mutex)
 {
-  mtx_init(mutex, mtx_plain|mtx_recursive);
+  mtx_init(mutex, mtx_plain | mtx_recursive);
 }
 
-/*******************************************************************//**
-  Destroy mutex
-***********************************************************************/
-void fc_destroy_mutex(fc_mutex *mutex)
-{
-  mtx_destroy(mutex);
-}
+/*******************************************************************/ /**
+   Destroy mutex
+ ***********************************************************************/
+void fc_destroy_mutex(fc_mutex *mutex) { mtx_destroy(mutex); }
 
-/*******************************************************************//**
-  Lock mutex
-***********************************************************************/
-void fc_allocate_mutex(fc_mutex *mutex)
-{
-  mtx_lock(mutex);
-}
+/*******************************************************************/ /**
+   Lock mutex
+ ***********************************************************************/
+void fc_allocate_mutex(fc_mutex *mutex) { mtx_lock(mutex); }
 
-/*******************************************************************//**
-  Release mutex
-***********************************************************************/
-void fc_release_mutex(fc_mutex *mutex)
-{
-  mtx_unlock(mutex);
-}
+/*******************************************************************/ /**
+   Release mutex
+ ***********************************************************************/
+void fc_release_mutex(fc_mutex *mutex) { mtx_unlock(mutex); }
 
-/*******************************************************************//**
-  Initialize condition
-***********************************************************************/
-void fc_thread_cond_init(fc_thread_cond *cond)
-{
-  cnd_init(cond);
-}
+/*******************************************************************/ /**
+   Initialize condition
+ ***********************************************************************/
+void fc_thread_cond_init(fc_thread_cond *cond) { cnd_init(cond); }
 
-/*******************************************************************//**
-  Destroy condition
-***********************************************************************/
-void fc_thread_cond_destroy(fc_thread_cond *cond)
-{
-  cnd_destroy(cond);
-}
+/*******************************************************************/ /**
+   Destroy condition
+ ***********************************************************************/
+void fc_thread_cond_destroy(fc_thread_cond *cond) { cnd_destroy(cond); }
 
-/*******************************************************************//**
-  Wait for condition to be fulfilled
-***********************************************************************/
+/*******************************************************************/ /**
+   Wait for condition to be fulfilled
+ ***********************************************************************/
 void fc_thread_cond_wait(fc_thread_cond *cond, fc_mutex *mutex)
 {
   cnd_wait(cond, mutex);
 }
 
-/*******************************************************************//**
-  Signal other thread to continue on fulfilled condition
-***********************************************************************/
-void fc_thread_cond_signal(fc_thread_cond *cond)
-{
-  cnd_signal(cond);
-}
+/*******************************************************************/ /**
+   Signal other thread to continue on fulfilled condition
+ ***********************************************************************/
+void fc_thread_cond_signal(fc_thread_cond *cond) { cnd_signal(cond); }
 
 #elif defined(FREECIV_HAVE_PTHREAD)
 
@@ -144,10 +126,10 @@ struct fc_thread_wrap_data {
   void (*func)(void *arg);
 };
 
-/*******************************************************************//**
-  Wrapper which fingerprint matches one required by pthread_create().
-  Calls function which matches fingerprint required by fc_thread_start()
-***********************************************************************/
+/*******************************************************************/ /**
+   Wrapper which fingerprint matches one required by pthread_create().
+   Calls function which matches fingerprint required by fc_thread_start()
+ ***********************************************************************/
 static void *fc_thread_wrapper(void *arg)
 {
   struct fc_thread_wrap_data *data = (struct fc_thread_wrap_data *) arg;
@@ -159,10 +141,10 @@ static void *fc_thread_wrapper(void *arg)
   return NULL;
 }
 
-/*******************************************************************//**
-  Create new thread
-***********************************************************************/
-int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
+/*******************************************************************/ /**
+   Create new thread
+ ***********************************************************************/
+int fc_thread_start(fc_thread *thread, void (*function)(void *arg),
                     void *arg)
 {
   int ret;
@@ -170,7 +152,7 @@ int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
 
   /* Freed by child thread once it's finished with data */
   struct fc_thread_wrap_data *data =
-    static_cast<fc_thread_wrap_data *>(fc_malloc(sizeof(*data)));
+      static_cast<fc_thread_wrap_data *>(fc_malloc(sizeof(*data)));
 
   data->arg = arg;
   data->func = function;
@@ -187,9 +169,9 @@ int fc_thread_start(fc_thread *thread, void (*function) (void *arg),
   return ret;
 }
 
-/*******************************************************************//**
-  Wait for thread to finish
-***********************************************************************/
+/*******************************************************************/ /**
+   Wait for thread to finish
+ ***********************************************************************/
 void fc_thread_wait(fc_thread *thread)
 {
   void **return_value = NULL;
@@ -197,9 +179,9 @@ void fc_thread_wait(fc_thread *thread)
   pthread_join(*thread, return_value);
 }
 
-/*******************************************************************//**
-  Initialize mutex
-***********************************************************************/
+/*******************************************************************/ /**
+   Initialize mutex
+ ***********************************************************************/
 void fc_init_mutex(fc_mutex *mutex)
 {
   pthread_mutexattr_t attr;
@@ -212,57 +194,48 @@ void fc_init_mutex(fc_mutex *mutex)
   pthread_mutexattr_destroy(&attr);
 }
 
-/*******************************************************************//**
-  Destroy mutex
-***********************************************************************/
-void fc_destroy_mutex(fc_mutex *mutex)
-{
-  pthread_mutex_destroy(mutex);
-}
+/*******************************************************************/ /**
+   Destroy mutex
+ ***********************************************************************/
+void fc_destroy_mutex(fc_mutex *mutex) { pthread_mutex_destroy(mutex); }
 
-/*******************************************************************//**
-  Lock mutex
-***********************************************************************/
-void fc_allocate_mutex(fc_mutex *mutex)
-{
-  pthread_mutex_lock(mutex);
-}
+/*******************************************************************/ /**
+   Lock mutex
+ ***********************************************************************/
+void fc_allocate_mutex(fc_mutex *mutex) { pthread_mutex_lock(mutex); }
 
-/*******************************************************************//**
-  Release mutex
-***********************************************************************/
-void fc_release_mutex(fc_mutex *mutex)
-{
-  pthread_mutex_unlock(mutex);
-}
+/*******************************************************************/ /**
+   Release mutex
+ ***********************************************************************/
+void fc_release_mutex(fc_mutex *mutex) { pthread_mutex_unlock(mutex); }
 
-/*******************************************************************//**
-  Initialize condition
-***********************************************************************/
+/*******************************************************************/ /**
+   Initialize condition
+ ***********************************************************************/
 void fc_thread_cond_init(fc_thread_cond *cond)
 {
   pthread_cond_init(cond, NULL);
 }
 
-/*******************************************************************//**
-  Destroy condition
-***********************************************************************/
+/*******************************************************************/ /**
+   Destroy condition
+ ***********************************************************************/
 void fc_thread_cond_destroy(fc_thread_cond *cond)
 {
   pthread_cond_destroy(cond);
 }
 
-/*******************************************************************//**
-  Wait for condition to be fulfilled
-***********************************************************************/
+/*******************************************************************/ /**
+   Wait for condition to be fulfilled
+ ***********************************************************************/
 void fc_thread_cond_wait(fc_thread_cond *cond, fc_mutex *mutex)
 {
   pthread_cond_wait(cond, mutex);
 }
 
-/*******************************************************************//**
-  Signal other thread to continue on fulfilled condition
-***********************************************************************/
+/*******************************************************************/ /**
+   Signal other thread to continue on fulfilled condition
+ ***********************************************************************/
 void fc_thread_cond_signal(fc_thread_cond *cond)
 {
   pthread_cond_signal(cond);
@@ -275,10 +248,10 @@ struct fc_thread_wrap_data {
   void (*func)(void *arg);
 };
 
-/*******************************************************************//**
-  Wrapper which fingerprint matches one required by CreateThread().
-  Calls function which matches fingerprint required by fc_thread_start()
-***********************************************************************/
+/*******************************************************************/ /**
+   Wrapper which fingerprint matches one required by CreateThread().
+   Calls function which matches fingerprint required by fc_thread_start()
+ ***********************************************************************/
 static DWORD WINAPI fc_thread_wrapper(LPVOID arg)
 {
   struct fc_thread_wrap_data *data = (struct fc_thread_wrap_data *) arg;
@@ -290,10 +263,11 @@ static DWORD WINAPI fc_thread_wrapper(LPVOID arg)
   return 0;
 }
 
-/*******************************************************************//**
-  Create new thread
-***********************************************************************/
-int fc_thread_start(fc_thread *thread, void (*function) (void *arg), void *arg)
+/*******************************************************************/ /**
+   Create new thread
+ ***********************************************************************/
+int fc_thread_start(fc_thread *thread, void (*function)(void *arg),
+                    void *arg)
 {
   /* Freed by child thread once it's finished with data */
   struct fc_thread_wrap_data *data = fc_malloc(sizeof(*data));
@@ -310,9 +284,9 @@ int fc_thread_start(fc_thread *thread, void (*function) (void *arg), void *arg)
   return 0;
 }
 
-/*******************************************************************//**
-  Wait for thread to finish
-***********************************************************************/
+/*******************************************************************/ /**
+   Wait for thread to finish
+ ***********************************************************************/
 void fc_thread_wait(fc_thread *thread)
 {
   DWORD exit_code;
@@ -327,37 +301,31 @@ void fc_thread_wait(fc_thread *thread)
   CloseHandle(*thread);
 }
 
-/*******************************************************************//**
-  Initialize mutex
-***********************************************************************/
+/*******************************************************************/ /**
+   Initialize mutex
+ ***********************************************************************/
 void fc_init_mutex(fc_mutex *mutex)
 {
   *mutex = CreateMutex(NULL, FALSE, NULL);
 }
 
-/*******************************************************************//**
-  Destroy mutex
-***********************************************************************/
-void fc_destroy_mutex(fc_mutex *mutex)
-{
-  CloseHandle(*mutex);
-}
+/*******************************************************************/ /**
+   Destroy mutex
+ ***********************************************************************/
+void fc_destroy_mutex(fc_mutex *mutex) { CloseHandle(*mutex); }
 
-/*******************************************************************//**
-  Lock mutex
-***********************************************************************/
+/*******************************************************************/ /**
+   Lock mutex
+ ***********************************************************************/
 void fc_allocate_mutex(fc_mutex *mutex)
 {
   WaitForSingleObject(*mutex, INFINITE);
 }
 
-/*******************************************************************//**
-  Release mutex
-***********************************************************************/
-void fc_release_mutex(fc_mutex *mutex)
-{
-  ReleaseMutex(*mutex);
-}
+/*******************************************************************/ /**
+   Release mutex
+ ***********************************************************************/
+void fc_release_mutex(fc_mutex *mutex) { ReleaseMutex(*mutex); }
 
 /* TODO: Windows thread condition variable support.
  *       Currently related functions are always dummy ones below
@@ -369,40 +337,35 @@ void fc_release_mutex(fc_mutex *mutex)
 
 #endif /* FREECIV_HAVE_PTHREAD || FREECIV_HAVE_WINTHREADS */
 
-
 #ifndef FREECIV_HAVE_THREAD_COND
 
 /* Dummy thread condition variable functions */
 
-/*******************************************************************//**
-  Dummy fc_thread_cond_init()
-***********************************************************************/
-void fc_thread_cond_init(fc_thread_cond *cond)
-{}
+/*******************************************************************/ /**
+   Dummy fc_thread_cond_init()
+ ***********************************************************************/
+void fc_thread_cond_init(fc_thread_cond *cond) {}
 
-/*******************************************************************//**
-  Dummy fc_thread_cond_destroy()
-***********************************************************************/
-void fc_thread_cond_destroy(fc_thread_cond *cond)
-{}
+/*******************************************************************/ /**
+   Dummy fc_thread_cond_destroy()
+ ***********************************************************************/
+void fc_thread_cond_destroy(fc_thread_cond *cond) {}
 
-/*******************************************************************//**
-  Dummy fc_thread_cond_wait()
-***********************************************************************/
-void fc_thread_cond_wait(fc_thread_cond *cond, fc_mutex *mutex)
-{}
+/*******************************************************************/ /**
+   Dummy fc_thread_cond_wait()
+ ***********************************************************************/
+void fc_thread_cond_wait(fc_thread_cond *cond, fc_mutex *mutex) {}
 
-/*******************************************************************//**
-  Dummy fc_thread_cond_signal()
-***********************************************************************/
-void fc_thread_cond_signal(fc_thread_cond *cond)
-{}
+/*******************************************************************/ /**
+   Dummy fc_thread_cond_signal()
+ ***********************************************************************/
+void fc_thread_cond_signal(fc_thread_cond *cond) {}
 
 #endif /* !FREECIV_HAVE_THREAD_COND */
 
-/*******************************************************************//**
-  Has freeciv thread condition variable implementation
-***********************************************************************/
+/*******************************************************************/ /**
+   Has freeciv thread condition variable implementation
+ ***********************************************************************/
 bool has_thread_cond_impl(void)
 {
 #ifdef FREECIV_HAVE_THREAD_COND

@@ -20,27 +20,17 @@
 
 #include "spaceshipdlg.h"
 
+/**********************************************************************/ /**
+   Popup (or raise) the spaceship dialog for the given player.
+ **************************************************************************/
+void popup_spaceship_dialog(struct player *pplayer) { /* PORTME */ }
 
-/**********************************************************************//**
-  Popup (or raise) the spaceship dialog for the given player.
-**************************************************************************/
-void popup_spaceship_dialog(struct player *pplayer)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Close the spaceship dialog for the given player.
+ **************************************************************************/
+void popdown_spaceship_dialog(struct player *pplayer) { /* PORTME */ }
 
-/**********************************************************************//**
-  Close the spaceship dialog for the given player.
-**************************************************************************/
-void popdown_spaceship_dialog(struct player *pplayer)
-{
-  /* PORTME */
-}
-
-/**********************************************************************//**
-  Refresh (update) the spaceship dialog for the given player.
-**************************************************************************/
-void refresh_spaceship_dialog(struct player *pplayer)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Refresh (update) the spaceship dialog for the given player.
+ **************************************************************************/
+void refresh_spaceship_dialog(struct player *pplayer) { /* PORTME */ }

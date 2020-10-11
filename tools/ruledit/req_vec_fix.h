@@ -41,95 +41,93 @@ enum req_vec_problem_seriousness {
 void mark_item(QListWidgetItem *item,
                enum req_vec_problem_seriousness problem_level);
 
-/**********************************************************************//**
-  Ruleset entity specific methods for the ruleset item having its
-  requirements fixed.
-**************************************************************************/
-class req_vec_fix_item
-{
+/**********************************************************************/ /**
+   Ruleset entity specific methods for the ruleset item having its
+   requirements fixed.
+ **************************************************************************/
+class req_vec_fix_item {
 public:
-  /********************************************************************//**
-    Tell the helper that it has outlived its usefulness.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Tell the helper that it has outlived its usefulness.
+   ************************************************************************/
   virtual void close() = 0;
 
-  /********************************************************************//**
-    Returns a pointer to the ruleset item.
-    @return a pointer to the ruleset item.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns a pointer to the ruleset item.
+     @return a pointer to the ruleset item.
+   ************************************************************************/
   virtual const void *item() = 0;
 
-  /********************************************************************//**
-    Returns a pointer to the working copy of the ruleset item.
-    @return a pointer to the working copy of the ruleset item.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns a pointer to the working copy of the ruleset item.
+     @return a pointer to the working copy of the ruleset item.
+   ************************************************************************/
   virtual void *item_working_copy() = 0;
 
-  /********************************************************************//**
-    Returns a name to describe the item, hopefully good enough to
-    distinguish it from other items. Must be short enough for a quick
-    mention.
-    @return a (not always unique) name for the ruleset item.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns a name to describe the item, hopefully good enough to
+     distinguish it from other items. Must be short enough for a quick
+     mention.
+     @return a (not always unique) name for the ruleset item.
+   ************************************************************************/
   virtual const char *name() = 0;
 
-  /********************************************************************//**
-    Returns the next detected requirement vector problem for the ruleset
-    item or nullptr if no fix is found to be needed.
-    @return the next requirement vector problem for the item.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns the next detected requirement vector problem for the ruleset
+     item or nullptr if no fix is found to be needed.
+     @return the next requirement vector problem for the item.
+   ************************************************************************/
   virtual struct req_vec_problem *find_next_problem() = 0;
 
-  /********************************************************************//**
-    Do all the changes the user has accepted to the ruleset item.
-    N.B.: This could be called *before* all problems are fixed if the user
-    wishes to try to fix problems by hand or to come back and fix the
-    remaining problems later.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Do all the changes the user has accepted to the ruleset item.
+     N.B.: This could be called *before* all problems are fixed if the user
+     wishes to try to fix problems by hand or to come back and fix the
+     remaining problems later.
+   ************************************************************************/
   virtual void apply_accepted_changes() = 0;
 
-  /********************************************************************//**
-    Undo all the changes the user has accepted to the ruleset item.
-    N.B.: This could be called *after* all problems are fixed if the user
-    wishes to see all problems and try to fix them by hand.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Undo all the changes the user has accepted to the ruleset item.
+     N.B.: This could be called *after* all problems are fixed if the user
+     wishes to see all problems and try to fix them by hand.
+   ************************************************************************/
   virtual void undo_accepted_changes() = 0;
 
-  /********************************************************************//**
-    Returns the number of requirement vectors in this item.
-    @return the number of requirement vectors the item has.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns the number of requirement vectors in this item.
+     @return the number of requirement vectors the item has.
+   ************************************************************************/
   virtual int num_vectors() = 0;
 
-  /********************************************************************//**
-    Returns a function pointer to a function that names this item kind's
-    requirement vector number number. Useful when there is more than one
-    requirement vector.
-    @return the requirement vector namer for ruleset items of this kind.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns a function pointer to a function that names this item kind's
+     requirement vector number number. Useful when there is more than one
+     requirement vector.
+     @return the requirement vector namer for ruleset items of this kind.
+   ************************************************************************/
   virtual requirement_vector_namer vector_namer() = 0;
 
-  /********************************************************************//**
-    Returns a function pointer to a function that returns a writable
-    pointer to the specified requirement vector in the specified parent
-    item.
-    @return a writable pointer to the requirement vector getter function.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Returns a function pointer to a function that returns a writable
+     pointer to the specified requirement vector in the specified parent
+     item.
+     @return a writable pointer to the requirement vector getter function.
+   ************************************************************************/
   virtual requirement_vector_by_number vector_getter() = 0;
 
-  /********************************************************************//**
-    Check if the specified vector belongs to this item
-    @param vec the requirement vector that may belong to this item.
-    @return true iff the vector belongs to this item.
-  ************************************************************************/
+  /********************************************************************/ /**
+     Check if the specified vector belongs to this item
+     @param vec the requirement vector that may belong to this item.
+     @return true iff the vector belongs to this item.
+   ************************************************************************/
   virtual bool vector_in_item(const struct requirement_vector *vec) = 0;
 };
 
-/**********************************************************************//**
-  Widget for choosing among the suggested solutions to a problem.
-**************************************************************************/
-class req_vec_fix_problem : public QWidget
-{
+/**********************************************************************/ /**
+   Widget for choosing among the suggested solutions to a problem.
+ **************************************************************************/
+class req_vec_fix_problem : public QWidget {
   Q_OBJECT
 
 public:
@@ -146,11 +144,10 @@ private slots:
   void accept_solution();
 };
 
-/**********************************************************************//**
-  Widget for solving requirement vector problems for a ruleset item.
-**************************************************************************/
-class req_vec_fix : public QWidget
-{
+/**********************************************************************/ /**
+   Widget for solving requirement vector problems for a ruleset item.
+ **************************************************************************/
+class req_vec_fix : public QWidget {
   Q_OBJECT
 
 public:
@@ -162,10 +159,10 @@ public:
   bool refresh(void);
 
 signals:
-  /********************************************************************//**
-    A requirement vector may have been changed.
-    @param vec the requirement vector that was changed.
-  ************************************************************************/
+  /********************************************************************/ /**
+     A requirement vector may have been changed.
+     @param vec the requirement vector that was changed.
+   ************************************************************************/
   void rec_vec_may_have_changed(const requirement_vector *vec);
 
 private:

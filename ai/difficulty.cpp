@@ -33,9 +33,9 @@ static int fuzzy_of_skill_level(enum ai_level level);
 static int science_cost_of_skill_level(enum ai_level level);
 static int expansionism_of_skill_level(enum ai_level level);
 
-/**********************************************************************//**
-  Set an AI level and related quantities, with no feedback.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set an AI level and related quantities, with no feedback.
+ **************************************************************************/
 void set_ai_level_directer(struct player *pplayer, enum ai_level level)
 {
   handicaps_set(pplayer, handicap_of_skill_level(level));
@@ -45,9 +45,9 @@ void set_ai_level_directer(struct player *pplayer, enum ai_level level)
   pplayer->ai_common.skill_level = level;
 }
 
-/**********************************************************************//**
-  Returns handicap bitvector for given AI skill level
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns handicap bitvector for given AI skill level
+ **************************************************************************/
 static bv_handicap handicap_of_skill_level(enum ai_level level)
 {
   bv_handicap handicap;
@@ -57,77 +57,77 @@ static bv_handicap handicap_of_skill_level(enum ai_level level)
   BV_CLR_ALL(handicap);
 
   switch (level) {
-   case AI_LEVEL_AWAY:
-     BV_SET(handicap, H_AWAY);
-     BV_SET(handicap, H_FOG);
-     BV_SET(handicap, H_MAP);
-     BV_SET(handicap, H_RATES);
-     BV_SET(handicap, H_TARGETS);
-     BV_SET(handicap, H_HUTS);
-     BV_SET(handicap, H_REVOLUTION);
+  case AI_LEVEL_AWAY:
+    BV_SET(handicap, H_AWAY);
+    BV_SET(handicap, H_FOG);
+    BV_SET(handicap, H_MAP);
+    BV_SET(handicap, H_RATES);
+    BV_SET(handicap, H_TARGETS);
+    BV_SET(handicap, H_HUTS);
+    BV_SET(handicap, H_REVOLUTION);
 #ifdef FREECIV_WEB
-     BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
+    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
 #endif
-     BV_SET(handicap, H_PRODCHGPEN);
-     break;
-   case AI_LEVEL_NOVICE:
-   case AI_LEVEL_HANDICAPPED:
-     BV_SET(handicap, H_RATES);
-     BV_SET(handicap, H_TARGETS);
-     BV_SET(handicap, H_HUTS);
-     BV_SET(handicap, H_NOPLANES);
-     BV_SET(handicap, H_DIPLOMAT);
-     BV_SET(handicap, H_LIMITEDHUTS);
-     BV_SET(handicap, H_DEFENSIVE);
-     BV_SET(handicap, H_DIPLOMACY);
-     BV_SET(handicap, H_REVOLUTION);
-     BV_SET(handicap, H_EXPANSION);
-     BV_SET(handicap, H_DANGER);
-     BV_SET(handicap, H_CEASEFIRE);
-     BV_SET(handicap, H_NOBRIBE_WF);
+    BV_SET(handicap, H_PRODCHGPEN);
+    break;
+  case AI_LEVEL_NOVICE:
+  case AI_LEVEL_HANDICAPPED:
+    BV_SET(handicap, H_RATES);
+    BV_SET(handicap, H_TARGETS);
+    BV_SET(handicap, H_HUTS);
+    BV_SET(handicap, H_NOPLANES);
+    BV_SET(handicap, H_DIPLOMAT);
+    BV_SET(handicap, H_LIMITEDHUTS);
+    BV_SET(handicap, H_DEFENSIVE);
+    BV_SET(handicap, H_DIPLOMACY);
+    BV_SET(handicap, H_REVOLUTION);
+    BV_SET(handicap, H_EXPANSION);
+    BV_SET(handicap, H_DANGER);
+    BV_SET(handicap, H_CEASEFIRE);
+    BV_SET(handicap, H_NOBRIBE_WF);
 #ifdef FREECIV_WEB
-     BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
+    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
 #endif
-     BV_SET(handicap, H_PRODCHGPEN);
-     break;
-   case AI_LEVEL_EASY:
-     BV_SET(handicap, H_RATES);
-     BV_SET(handicap, H_TARGETS);
-     BV_SET(handicap, H_HUTS);
-     BV_SET(handicap, H_NOPLANES);
-     BV_SET(handicap, H_DIPLOMAT);
-     BV_SET(handicap, H_LIMITEDHUTS);
-     BV_SET(handicap, H_DEFENSIVE);
-     BV_SET(handicap, H_DIPLOMACY);
-     BV_SET(handicap, H_REVOLUTION);
-     BV_SET(handicap, H_EXPANSION);
-     BV_SET(handicap, H_CEASEFIRE);
+    BV_SET(handicap, H_PRODCHGPEN);
+    break;
+  case AI_LEVEL_EASY:
+    BV_SET(handicap, H_RATES);
+    BV_SET(handicap, H_TARGETS);
+    BV_SET(handicap, H_HUTS);
+    BV_SET(handicap, H_NOPLANES);
+    BV_SET(handicap, H_DIPLOMAT);
+    BV_SET(handicap, H_LIMITEDHUTS);
+    BV_SET(handicap, H_DEFENSIVE);
+    BV_SET(handicap, H_DIPLOMACY);
+    BV_SET(handicap, H_REVOLUTION);
+    BV_SET(handicap, H_EXPANSION);
+    BV_SET(handicap, H_CEASEFIRE);
 #ifdef FREECIV_WEB
-     BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
+    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
 #endif
-     BV_SET(handicap, H_NOBRIBE_WF);
-     break;
-   case AI_LEVEL_NORMAL:
-     BV_SET(handicap, H_RATES);
-     BV_SET(handicap, H_TARGETS);
-     BV_SET(handicap, H_HUTS);
-     BV_SET(handicap, H_DIPLOMAT);
-     BV_SET(handicap, H_CEASEFIRE);
-     BV_SET(handicap, H_NOBRIBE_WF);
-     break;
+    BV_SET(handicap, H_NOBRIBE_WF);
+    break;
+  case AI_LEVEL_NORMAL:
+    BV_SET(handicap, H_RATES);
+    BV_SET(handicap, H_TARGETS);
+    BV_SET(handicap, H_HUTS);
+    BV_SET(handicap, H_DIPLOMAT);
+    BV_SET(handicap, H_CEASEFIRE);
+    BV_SET(handicap, H_NOBRIBE_WF);
+    break;
 
 #ifdef FREECIV_DEBUG
-   case AI_LEVEL_EXPERIMENTAL:
-     BV_SET(handicap, H_EXPERIMENTAL);
-     break;
+  case AI_LEVEL_EXPERIMENTAL:
+    BV_SET(handicap, H_EXPERIMENTAL);
+    break;
 #endif /* FREECIV_DEBUG */
 
-   case AI_LEVEL_CHEATING:
-     BV_SET(handicap, H_RATES);
-     break;
-   case AI_LEVEL_HARD:
-     /* No handicaps */
-     break;
+  case AI_LEVEL_CHEATING:
+    BV_SET(handicap, H_RATES);
+    break;
+  case AI_LEVEL_HARD:
+    /* No handicaps */
+    break;
   case AI_LEVEL_COUNT:
     fc_assert(level != AI_LEVEL_COUNT);
     break;
@@ -136,10 +136,10 @@ static bv_handicap handicap_of_skill_level(enum ai_level level)
   return handicap;
 }
 
-/**********************************************************************//**
-  Return the AI fuzziness (0 to 1000) corresponding to a given skill
-  level (1 to 10).  See ai_fuzzy() in common/player.c
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the AI fuzziness (0 to 1000) corresponding to a given skill
+   level (1 to 10).  See ai_fuzzy() in common/player.c
+ **************************************************************************/
 static int fuzzy_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -167,13 +167,13 @@ static int fuzzy_of_skill_level(enum ai_level level)
   return 0;
 }
 
-/**********************************************************************//**
-  Return the AI's science development cost; a science development cost of 100
-  means that the AI develops science at the same speed as a human; a science
-  development cost of 200 means that the AI develops science at half the speed
-  of a human, and a science development cost of 50 means that the AI develops
-  science twice as fast as the human.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the AI's science development cost; a science development cost of
+ 100 means that the AI develops science at the same speed as a human; a
+ science development cost of 200 means that the AI develops science at half
+ the speed of a human, and a science development cost of 50 means that the AI
+ develops science twice as fast as the human.
+ **************************************************************************/
 static int science_cost_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -200,11 +200,11 @@ static int science_cost_of_skill_level(enum ai_level level)
   return 100;
 }
 
-/**********************************************************************//**
-  Return the AI expansion tendency, a percentage factor to value new cities,
-  compared to defaults.  0 means _never_ build new cities, > 100 means to
-  (over?)value them even more than the default (already expansionistic) AI.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the AI expansion tendency, a percentage factor to value new cities,
+   compared to defaults.  0 means _never_ build new cities, > 100 means to
+   (over?)value them even more than the default (already expansionistic) AI.
+ **************************************************************************/
 static int expansionism_of_skill_level(enum ai_level level)
 {
   fc_assert(ai_level_is_valid(level));
@@ -231,11 +231,11 @@ static int expansionism_of_skill_level(enum ai_level level)
   return 100;
 }
 
-/**********************************************************************//**
-  Helper function for skill level command help.
-  'cmdname' is a server command name.
-  Caller must free returned string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for skill level command help.
+   'cmdname' is a server command name.
+   Caller must free returned string.
+ **************************************************************************/
 char *ai_level_help(const char *cmdname)
 {
   /* Translate cmdname to AI level. */
@@ -265,7 +265,8 @@ char *ai_level_help(const char *cmdname)
   handicaps = handicap_of_skill_level(level);
   for (h = 0; h < H_LAST; h++) {
     bool inverted;
-    const char *desc = handicap_desc(static_cast<handicap_type>(h), &inverted);
+    const char *desc =
+        handicap_desc(static_cast<handicap_type>(h), &inverted);
 
     if (desc && BV_ISSET(handicaps, h) != inverted) {
       astr_add_line(&features, "%s", desc);
@@ -279,8 +280,8 @@ char *ai_level_help(const char *cmdname)
     int science = science_cost_of_skill_level(level);
 
     if (science != 100) {
-      astr_add_line(&features,
-                    _("Research takes %d%% as long as usual."), science);
+      astr_add_line(&features, _("Research takes %d%% as long as usual."),
+                    science);
     }
   }
   if (expansionism_of_skill_level(level) < 100) {
@@ -320,22 +321,22 @@ char *ai_level_help(const char *cmdname)
   return astr_to_str(&help);
 }
 
-/**********************************************************************//**
-  Return the value normal_decision (a boolean), except if the AI is fuzzy,
-  then sometimes flip the value.  The intention of this is that instead of
-    if (condition) { action }
-  you can use
-    if (ai_fuzzy(pplayer, condition)) { action }
-  to sometimes flip a decision, to simulate an AI with some confusion,
-  indecisiveness, forgetfulness etc. In practice its often safer to use
-    if (condition && ai_fuzzy(pplayer,1)) { action }
-  for an action which only makes sense if condition holds, but which a
-  fuzzy AI can safely "forget".  Note that for a non-fuzzy AI, or for a
-  human player being helped by the AI (eg, autosettlers), you can ignore
-  the "ai_fuzzy(pplayer," part, and read the previous example as:
-    if (condition && 1) { action }
-  --dwp
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the value normal_decision (a boolean), except if the AI is fuzzy,
+   then sometimes flip the value.  The intention of this is that instead of
+     if (condition) { action }
+   you can use
+     if (ai_fuzzy(pplayer, condition)) { action }
+   to sometimes flip a decision, to simulate an AI with some confusion,
+   indecisiveness, forgetfulness etc. In practice its often safer to use
+     if (condition && ai_fuzzy(pplayer,1)) { action }
+   for an action which only makes sense if condition holds, but which a
+   fuzzy AI can safely "forget".  Note that for a non-fuzzy AI, or for a
+   human player being helped by the AI (eg, autosettlers), you can ignore
+   the "ai_fuzzy(pplayer," part, and read the previous example as:
+     if (condition && 1) { action }
+   --dwp
+ **************************************************************************/
 bool ai_fuzzy(const struct player *pplayer, bool normal_decision)
 {
   if (!is_ai(pplayer) || pplayer->ai_common.fuzzy == 0) {

@@ -34,7 +34,11 @@ enum cursor_hover_state {
 
 /* Selecting unit from a stack without popup. */
 enum quickselect_type {
-  SELECT_POPUP = 0, SELECT_SEA, SELECT_LAND, SELECT_APPEND,  SELECT_FOCUS
+  SELECT_POPUP = 0,
+  SELECT_SEA,
+  SELECT_LAND,
+  SELECT_APPEND,
+  SELECT_FOCUS
 };
 
 void control_init(void);
@@ -53,29 +57,27 @@ extern int goto_last_sub_tgt;
 extern enum unit_orders goto_last_order;
 extern bool non_ai_unit_focus;
 
-bool can_unit_do_connect(struct unit *punit,
-                         enum unit_activity activity,
+bool can_unit_do_connect(struct unit *punit, enum unit_activity activity,
                          struct extra_type *tgt);
 
-int check_recursive_road_connect(struct tile *ptile, const struct extra_type *pextra,
-                                 const struct unit *punit, const struct player *pplayer, int rec);
+int check_recursive_road_connect(struct tile *ptile,
+                                 const struct extra_type *pextra,
+                                 const struct unit *punit,
+                                 const struct player *pplayer, int rec);
 
 void do_move_unit(struct unit *punit, struct unit *target_unit);
 void do_unit_goto(struct tile *ptile);
 void do_unit_paradrop_to(struct unit *punit, struct tile *ptile);
 void do_unit_patrol_to(struct tile *ptile);
-void do_unit_connect(struct tile *ptile,
-		     enum unit_activity activity,
+void do_unit_connect(struct tile *ptile, enum unit_activity activity,
                      struct extra_type *tgt);
 void do_map_click(struct tile *ptile, enum quickselect_type qtype);
 void control_mouse_cursor(struct tile *ptile);
 
 void set_hover_state(struct unit_list *punits, enum cursor_hover_state state,
                      enum unit_activity connect_activity,
-                     struct extra_type *tgt,
-                     int last_tgt,
-                     int goto_last_sub_tgt,
-                     action_id goto_last_action,
+                     struct extra_type *tgt, int last_tgt,
+                     int goto_last_sub_tgt, action_id goto_last_action,
                      enum unit_orders goto_last_order);
 void clear_hover_state(void);
 void request_center_focus_unit(void);
@@ -84,8 +86,8 @@ void request_unit_non_action_move(struct unit *punit,
 void request_move_unit_direction(struct unit *punit, int dir);
 void request_new_unit_activity(struct unit *punit, enum unit_activity act);
 void request_new_unit_activity_targeted(struct unit *punit,
-					enum unit_activity act,
-					struct extra_type *tgt);
+                                        enum unit_activity act,
+                                        struct extra_type *tgt);
 void request_unit_load(struct unit *pcargo, struct unit *ptransporter,
                        struct tile *ptile);
 void request_unit_unload(struct unit *pcargo);
@@ -99,8 +101,8 @@ void request_unit_connect(enum unit_activity activity,
                           struct extra_type *tgt);
 void request_unit_disband(struct unit *punit);
 void request_unit_fortify(struct unit *punit);
-void request_unit_goto(enum unit_orders last_order,
-                       action_id act_id, int sub_tgt_id);
+void request_unit_goto(enum unit_orders last_order, action_id act_id,
+                       int sub_tgt_id);
 void request_unit_move_done(void);
 void request_unit_paradrop(struct unit_list *punits);
 void request_unit_patrol(void);
@@ -115,28 +117,28 @@ void request_units_wait(struct unit_list *punits);
 void request_unit_wakeup(struct unit *punit);
 
 #define SPECENUM_NAME unit_select_type_mode
-#define SPECENUM_VALUE0   SELTYPE_SINGLE
-#define SPECENUM_VALUE1   SELTYPE_SAME
-#define SPECENUM_VALUE2   SELTYPE_ALL
+#define SPECENUM_VALUE0 SELTYPE_SINGLE
+#define SPECENUM_VALUE1 SELTYPE_SAME
+#define SPECENUM_VALUE2 SELTYPE_ALL
 #include "specenum_gen.h"
 
 #define SPECENUM_NAME unit_select_location_mode
-#define SPECENUM_VALUE0   SELLOC_UNITS  /* Units on tile. */
-#define SPECENUM_VALUE1   SELLOC_TILE   /* Tile. */
-#define SPECENUM_VALUE2   SELLOC_CONT   /* Continent. */
-#define SPECENUM_VALUE3   SELLOC_LAND   /* Move type: land. */
-#define SPECENUM_VALUE4   SELLOC_SEA    /* Move type: sea. */
-#define SPECENUM_VALUE5   SELLOC_BOTH   /* Move type: both. */
-#define SPECENUM_VALUE6   SELLOC_WORLD  /* World. */
-#define SPECENUM_COUNT    SELLOC_COUNT
+#define SPECENUM_VALUE0 SELLOC_UNITS /* Units on tile. */
+#define SPECENUM_VALUE1 SELLOC_TILE  /* Tile. */
+#define SPECENUM_VALUE2 SELLOC_CONT  /* Continent. */
+#define SPECENUM_VALUE3 SELLOC_LAND  /* Move type: land. */
+#define SPECENUM_VALUE4 SELLOC_SEA   /* Move type: sea. */
+#define SPECENUM_VALUE5 SELLOC_BOTH  /* Move type: both. */
+#define SPECENUM_VALUE6 SELLOC_WORLD /* World. */
+#define SPECENUM_COUNT SELLOC_COUNT
 #include "specenum_gen.h"
 
 void request_unit_select(struct unit_list *punits,
                          enum unit_select_type_mode seltype,
                          enum unit_select_location_mode selloc);
 
-void request_do_action(action_id action, int actor_id,
-                       int target_id, int sub_tgt, const char *name);
+void request_do_action(action_id action, int actor_id, int target_id,
+                       int sub_tgt, const char *name);
 void request_action_details(action_id action, int actor_id, int target_id);
 void request_toggle_city_outlines(void);
 void request_toggle_city_output(void);
@@ -233,8 +235,7 @@ void key_unit_auto_explore(void);
 void key_unit_auto_settle(void);
 void key_unit_build_city(void);
 void key_unit_build_wonder(void);
-void key_unit_connect(enum unit_activity activity,
-                      struct extra_type *tgt);
+void key_unit_connect(enum unit_activity activity, struct extra_type *tgt);
 void key_unit_action_select(void);
 void key_unit_action_select_tgt(void);
 void key_unit_convert(void);
@@ -278,4 +279,4 @@ extern int num_units_below;
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CONTROL_H */
+#endif /* FC__CONTROL_H */

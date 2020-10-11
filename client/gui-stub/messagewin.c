@@ -20,28 +20,22 @@
 
 #include "messagewin.h"
 
-/**********************************************************************//**
-  Display the message dialog.  Optionally raise it.
-  Typically triggered by F10.
-**************************************************************************/
-void meswin_dialog_popup(bool raise)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Display the message dialog.  Optionally raise it.
+   Typically triggered by F10.
+ **************************************************************************/
+void meswin_dialog_popup(bool raise) { /* PORTME */ }
 
-/**********************************************************************//**
-  Return whether the message dialog is open.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return whether the message dialog is open.
+ **************************************************************************/
 bool meswin_dialog_is_open(void)
 {
   /* PORTME */
   return FALSE;
 }
 
-/**********************************************************************//**
-  Do the work of updating (populating) the message dialog.
-**************************************************************************/
-void real_meswin_dialog_update(void *unused)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Do the work of updating (populating) the message dialog.
+ **************************************************************************/
+void real_meswin_dialog_update(void *unused) { /* PORTME */ }

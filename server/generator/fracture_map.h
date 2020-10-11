@@ -39,4 +39,4 @@ void make_fracture_relief(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__FRACTURE__MAP_H */
+#endif /* FC__FRACTURE__MAP_H */

@@ -14,7 +14,7 @@
 #define FC__AIAIR_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"

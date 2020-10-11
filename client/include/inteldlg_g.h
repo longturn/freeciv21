@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2003 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,4 +21,4 @@ GUI_FUNC_PROTO(void, close_intel_dialog, struct player *p)
 GUI_FUNC_PROTO(void, popup_intel_dialog, struct player *p)
 GUI_FUNC_PROTO(void, update_intel_dialog, struct player *p)
 
-#endif  /* FC__INTELDLG_G_H */
+#endif /* FC__INTELDLG_G_H */

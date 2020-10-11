@@ -41,8 +41,8 @@ struct rgbcolor {
 #include "speclist.h"
 
 #define rgbcolor_list_iterate(rgbcolorlist, prgbcolor)                      \
-    TYPED_LIST_ITERATE(struct rgbcolor, rgbcolorlist, prgbcolor)
-#define rgbcolor_list_iterate_end  LIST_ITERATE_END
+  TYPED_LIST_ITERATE(struct rgbcolor, rgbcolorlist, prgbcolor)
+#define rgbcolor_list_iterate_end LIST_ITERATE_END
 
 /* Check the RGB color values. If a value is not in the interval [0, 255]
  * clip it to the interval boundaries. */
@@ -53,7 +53,8 @@ struct rgbcolor {
     _c = CLIP(0, _c, 255);                                                  \
     if (_c != _color_save) {                                                \
       log_error("Invalid value for '%s' in color definition '%s' (%d). "    \
-                "Setting it to '%d'.", _colorname, _str, _color_save, _c);  \
+                "Setting it to '%d'.",                                      \
+                _colorname, _str, _color_save, _c);                         \
     }                                                                       \
   }
 #define rgbcolor_check(_str, _r, _g, _b)                                    \
@@ -65,15 +66,16 @@ struct rgbcolor {
 
 struct rgbcolor *rgbcolor_new(int r, int g, int b);
 struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor);
-bool rgbcolors_are_equal(const struct rgbcolor *c1, const struct rgbcolor *c2);
+bool rgbcolors_are_equal(const struct rgbcolor *c1,
+                         const struct rgbcolor *c2);
 void rgbcolor_destroy(struct rgbcolor *prgbcolor);
 
 bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
                    const char *path, ...)
-                   fc__attribute((__format__ (__printf__, 3, 4)));
+    fc__attribute((__format__(__printf__, 3, 4)));
 void rgbcolor_save(struct section_file *file,
                    const struct rgbcolor *prgbcolor, char *path, ...)
-                   fc__attribute((__format__ (__printf__, 3, 4)));
+    fc__attribute((__format__(__printf__, 3, 4)));
 
 bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len);
@@ -85,4 +87,4 @@ int rgbcolor_brightness_score(struct rgbcolor *prgbcolor);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__RGBCOLOR_H */
+#endif /* FC__RGBCOLOR_H */

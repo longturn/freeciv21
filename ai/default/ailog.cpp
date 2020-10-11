@@ -33,39 +33,37 @@
 
 #include "ailog.h"
 
-
-/**********************************************************************//**
-  Produce logline fragment for srv_log.
-**************************************************************************/
+/**********************************************************************/ /**
+   Produce logline fragment for srv_log.
+ **************************************************************************/
 void dai_city_log(struct ai_type *ait, char *buffer, int buflength,
                   const struct city *pcity)
 {
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
-  fc_snprintf(buffer, buflength, "d%d u%d g%d",
-              city_data->danger, city_data->urgency,
-              city_data->grave_danger);
+  fc_snprintf(buffer, buflength, "d%d u%d g%d", city_data->danger,
+              city_data->urgency, city_data->grave_danger);
 }
 
-/**********************************************************************//**
-  Produce logline fragment for srv_log.
-**************************************************************************/
+/**********************************************************************/ /**
+   Produce logline fragment for srv_log.
+ **************************************************************************/
 void dai_unit_log(struct ai_type *ait, char *buffer, int buflength,
                   const struct unit *punit)
 {
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
 
-  fc_snprintf(buffer, buflength, "%d %d",
-              unit_data->bodyguard, unit_data->ferryboat);
+  fc_snprintf(buffer, buflength, "%d %d", unit_data->bodyguard,
+              unit_data->ferryboat);
 }
 
-/**********************************************************************//**
-  Log player tech messages.
-**************************************************************************/
-void real_tech_log(struct ai_type *ait, const char *file, const char *function,
-                   int line, enum log_level level, bool send_notify,
-                   const struct player *pplayer, struct advance *padvance,
-                   const char *msg, ...)
+/**********************************************************************/ /**
+   Log player tech messages.
+ **************************************************************************/
+void real_tech_log(struct ai_type *ait, const char *file,
+                   const char *function, int line, enum log_level level,
+                   bool send_notify, const struct player *pplayer,
+                   struct advance *padvance, const char *msg, ...)
 {
   char buffer[500];
   char buffer2[500];
@@ -77,9 +75,9 @@ void real_tech_log(struct ai_type *ait, const char *file, const char *function,
   }
 
   plr_data = def_ai_player_data(pplayer, ait);
-  fc_snprintf(buffer, sizeof(buffer), "%s::%s (want " ADV_WANT_PRINTF ", dist %d) ",
-              player_name(pplayer),
-              advance_rule_name(padvance),
+  fc_snprintf(buffer, sizeof(buffer),
+              "%s::%s (want " ADV_WANT_PRINTF ", dist %d) ",
+              player_name(pplayer), advance_rule_name(padvance),
               plr_data->tech_want[advance_index(padvance)],
               research_goal_unknown_techs(research_get(pplayer),
                                           advance_number(padvance)));
@@ -95,15 +93,14 @@ void real_tech_log(struct ai_type *ait, const char *file, const char *function,
   do_log(file, function, line, FALSE, level, "%s", buffer);
 }
 
-/**********************************************************************//**
-  Log player messages, they will appear like this
+/**********************************************************************/ /**
+   Log player messages, they will appear like this
 
-  where ti is timer, co countdown and lo love for target, who is e.
-**************************************************************************/
+   where ti is timer, co countdown and lo love for target, who is e.
+ **************************************************************************/
 void real_diplo_log(struct ai_type *ait, const char *file,
-                    const char *function, int line,
-                    enum log_level level, bool send_notify,
-                    const struct player *pplayer,
+                    const char *function, int line, enum log_level level,
+                    bool send_notify, const struct player *pplayer,
                     const struct player *aplayer, const char *msg, ...)
 {
   char buffer[500];
@@ -114,14 +111,13 @@ void real_diplo_log(struct ai_type *ait, const char *file,
   /* Don't use ai_data_get since it can have side effects. */
   adip = dai_diplomacy_get(ait, pplayer, aplayer);
 
-  fc_snprintf(buffer, sizeof(buffer), "%s->%s(l%d,c%d,d%d%s): ",
-              player_name(pplayer),
-              player_name(aplayer),
-              pplayer->ai_common.love[player_index(aplayer)],
-              adip->countdown,
-              adip->distance,
-              adip->is_allied_with_enemy ? "?" :
-              (adip->at_war_with_ally ? "!" : ""));
+  fc_snprintf(
+      buffer, sizeof(buffer),
+      "%s->%s(l%d,c%d,d%d%s): ", player_name(pplayer), player_name(aplayer),
+      pplayer->ai_common.love[player_index(aplayer)], adip->countdown,
+      adip->distance,
+      adip->is_allied_with_enemy ? "?"
+                                 : (adip->at_war_with_ally ? "!" : ""));
 
   va_start(ap, msg);
   fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
@@ -134,15 +130,15 @@ void real_diplo_log(struct ai_type *ait, const char *file,
   do_log(file, function, line, FALSE, level, "%s", buffer);
 }
 
-/**********************************************************************//**
-  Log message for bodyguards. They will appear like this
-    2: Polish Mech. Inf.[485] bodyguard (38,22){Riflemen:574@37,23} was ...
-  note that these messages are likely to wrap if long.
-**************************************************************************/
+/**********************************************************************/ /**
+   Log message for bodyguards. They will appear like this
+     2: Polish Mech. Inf.[485] bodyguard (38,22){Riflemen:574@37,23} was ...
+   note that these messages are likely to wrap if long.
+ **************************************************************************/
 void real_bodyguard_log(struct ai_type *ait, const char *file,
-                        const char *function, int line,
-                        enum log_level level,  bool send_notify,
-                        const struct unit *punit, const char *msg, ...)
+                        const char *function, int line, enum log_level level,
+                        bool send_notify, const struct unit *punit,
+                        const char *msg, ...)
 {
   char buffer[500];
   char buffer2[500];
@@ -171,14 +167,10 @@ void real_bodyguard_log(struct ai_type *ait, const char *file,
   }
   /* else perhaps the charge died */
 
-  fc_snprintf(buffer, sizeof(buffer),
-              "%s %s[%d] %s (%d,%d){%s:%d@%d,%d} ",
-              nation_rule_name(nation_of_unit(punit)),
-              unit_rule_name(punit),
-              punit->id,
-              type,
-              TILE_XY(unit_tile(punit)),
-              s, id, charge_x, charge_y);
+  fc_snprintf(buffer, sizeof(buffer), "%s %s[%d] %s (%d,%d){%s:%d@%d,%d} ",
+              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+              punit->id, type, TILE_XY(unit_tile(punit)), s, id, charge_x,
+              charge_y);
 
   va_start(ap, msg);
   fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);

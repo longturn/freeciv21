@@ -20,58 +20,55 @@
 
 #include "diplodlg.h"
 
-/**********************************************************************//**
-  Update a player's acceptance status of a treaty (traditionally shown
-  with the thumbs-up/thumbs-down sprite).
-**************************************************************************/
+/**********************************************************************/ /**
+   Update a player's acceptance status of a treaty (traditionally shown
+   with the thumbs-up/thumbs-down sprite).
+ **************************************************************************/
 void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
-				    bool other_accepted)
+                                    bool other_accepted)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Handle the start of a diplomacy meeting - usually by poping up a
-  diplomacy dialog.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle the start of a diplomacy meeting - usually by poping up a
+   diplomacy dialog.
+ **************************************************************************/
 void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Update the diplomacy dialog by adding a clause.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update the diplomacy dialog by adding a clause.
+ **************************************************************************/
 void handle_diplomacy_create_clause(int counterpart, int giver,
-				    enum clause_type type, int value)
+                                    enum clause_type type, int value)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Update the diplomacy dialog when the meeting is canceled (the dialog
-  should be closed).
-**************************************************************************/
+/**********************************************************************/ /**
+   Update the diplomacy dialog when the meeting is canceled (the dialog
+   should be closed).
+ **************************************************************************/
 void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Update the diplomacy dialog by removing a clause.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update the diplomacy dialog by removing a clause.
+ **************************************************************************/
 void handle_diplomacy_remove_clause(int counterpart, int giver,
-				    enum clause_type type, int value)
+                                    enum clause_type type, int value)
 {
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Close all open diplomacy dialogs.
+/**********************************************************************/ /**
+   Close all open diplomacy dialogs.
 
-  Called when the client disconnects from game.
-**************************************************************************/
-void close_all_diplomacy_dialogs(void)
-{
-  /* PORTME */
-}
+   Called when the client disconnects from game.
+ **************************************************************************/
+void close_all_diplomacy_dialogs(void) { /* PORTME */ }

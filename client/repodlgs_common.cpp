@@ -18,8 +18,8 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"                /* free() */
-#include "support.h"            /* fc_snprintf() */
+#include "mem.h"     /* free() */
+#include "support.h" /* fc_snprintf() */
 
 /* common */
 #include "game.h"
@@ -31,18 +31,17 @@
 
 /* client */
 #include "client_main.h"
-#include "connectdlg_common.h"  /* is_server_running() */
+#include "connectdlg_common.h" /* is_server_running() */
 #include "control.h"
 #include "options.h"
 #include "packhand_gen.h"
 
 #include "repodlgs_common.h"
 
-
-/************************************************************************//**
-  Fills out the array of struct improvement_entry given by
-  entries. The array must be able to hold at least B_LAST entries.
-****************************************************************************/
+/************************************************************************/ /**
+   Fills out the array of struct improvement_entry given by
+   entries. The array must be able to hold at least B_LAST entries.
+ ****************************************************************************/
 void get_economy_report_data(struct improvement_entry *entries,
                              int *num_entries_used, int *total_cost,
                              int *total_income)
@@ -55,10 +54,12 @@ void get_economy_report_data(struct improvement_entry *entries,
     return;
   }
 
-  improvement_iterate(pimprove) {
+  improvement_iterate(pimprove)
+  {
     if (is_improvement(pimprove)) {
       int count = 0, redundant = 0, cost = 0;
-      city_list_iterate(client.conn.playing->cities, pcity) {
+      city_list_iterate(client.conn.playing->cities, pcity)
+      {
         if (city_has_building(pcity, pimprove)) {
           count++;
           cost += city_improvement_upkeep(pcity, pimprove);
@@ -83,25 +84,28 @@ void get_economy_report_data(struct improvement_entry *entries,
       /* Currently there is no building expense under anarchy.  It's
        * not a good idea to hard-code this in the client, but what
        * else can we do? */
-      if (government_of_player(client.conn.playing) !=
-          game.government_during_revolution) {
+      if (government_of_player(client.conn.playing)
+          != game.government_during_revolution) {
         *total_cost += cost;
       }
     }
-  } improvement_iterate_end;
+  }
+  improvement_iterate_end;
 
-  city_list_iterate(client.conn.playing->cities, pcity) {
+  city_list_iterate(client.conn.playing->cities, pcity)
+  {
     *total_income += pcity->prod[O_GOLD];
     if (city_production_has_flag(pcity, IF_GOLD)) {
       *total_income += MAX(0, pcity->surplus[O_SHIELD]);
     }
-  } city_list_iterate_end;
+  }
+  city_list_iterate_end;
 }
 
-/************************************************************************//**
-  Returns an array of units with gold_upkeep. Number of units in 
-  the array is added to num_entries_used.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns an array of units with gold_upkeep. Number of units in
+   the array is added to num_entries_used.
+ ****************************************************************************/
 void get_economy_report_units_data(struct unit_entry *entries,
                                    int *num_entries_used, int *total_cost)
 {
@@ -114,7 +118,8 @@ void get_economy_report_units_data(struct unit_entry *entries,
     return;
   }
 
-  unit_type_iterate(unittype) {
+  unit_type_iterate(unittype)
+  {
     cost = utype_upkeep_cost(unittype, client.conn.playing, O_GOLD);
 
     if (cost == 0) {
@@ -125,15 +130,18 @@ void get_economy_report_units_data(struct unit_entry *entries,
     count = 0;
     partial_cost = 0;
 
-    city_list_iterate(client.conn.playing->cities, pcity) {
-      unit_list_iterate(pcity->units_supported, punit) {
-	if (unit_type_get(punit) == unittype) {
+    city_list_iterate(client.conn.playing->cities, pcity)
+    {
+      unit_list_iterate(pcity->units_supported, punit)
+      {
+        if (unit_type_get(punit) == unittype) {
           count++;
           partial_cost += punit->upkeep[O_GOLD];
         }
-
-      } unit_list_iterate_end;
-    } city_list_iterate_end;
+      }
+      unit_list_iterate_end;
+    }
+    city_list_iterate_end;
 
     if (count == 0) {
       continue;
@@ -146,19 +154,21 @@ void get_economy_report_units_data(struct unit_entry *entries,
     entries[*num_entries_used].cost = cost;
     entries[*num_entries_used].total_cost = partial_cost;
     (*num_entries_used)++;
-
-  } unit_type_iterate_end;
+  }
+  unit_type_iterate_end;
 }
 
-/************************************************************************//**
-  Sell all improvements of the given type in all cities.  If "redundant_only"
-  is specified then only those improvements that are replaced will be sold.
+/************************************************************************/ /**
+   Sell all improvements of the given type in all cities.  If
+ "redundant_only" is specified then only those improvements that are replaced
+ will be sold.
 
-  The "message" string will be filled with a GUI-friendly message about
-  what was sold.
-****************************************************************************/
-void sell_all_improvements(const struct impr_type *pimprove, bool redundant_only,
-                           char *message, size_t message_sz)
+   The "message" string will be filled with a GUI-friendly message about
+   what was sold.
+ ****************************************************************************/
+void sell_all_improvements(const struct impr_type *pimprove,
+                           bool redundant_only, char *message,
+                           size_t message_sz)
 {
   int count = 0, gold = 0;
 
@@ -167,38 +177,40 @@ void sell_all_improvements(const struct impr_type *pimprove, bool redundant_only
     return;
   }
 
-  city_list_iterate(client.conn.playing->cities, pcity) {
+  city_list_iterate(client.conn.playing->cities, pcity)
+  {
     if (!pcity->did_sell && city_has_building(pcity, pimprove)
-        && (!redundant_only
-            || is_improvement_redundant(pcity, pimprove))) {
+        && (!redundant_only || is_improvement_redundant(pcity, pimprove))) {
       count++;
       gold += impr_sell_gold(pimprove);
       city_sell_improvement(pcity, improvement_number(pimprove));
     }
-  } city_list_iterate_end;
+  }
+  city_list_iterate_end;
 
   if (count > 0) {
     /* FIXME: plurality of count is ignored! */
     /* TRANS: "Sold 3 Harbor for 90 gold." (Pluralisation is in gold --
      * second %d -- not in buildings.) */
-    fc_snprintf(message, message_sz, PL_("Sold %d %s for %d gold.",
-                                         "Sold %d %s for %d gold.", gold),
-                count, improvement_name_translation(pimprove), gold);
+    fc_snprintf(
+        message, message_sz,
+        PL_("Sold %d %s for %d gold.", "Sold %d %s for %d gold.", gold),
+        count, improvement_name_translation(pimprove), gold);
   } else {
     fc_snprintf(message, message_sz, _("No %s could be sold."),
                 improvement_name_translation(pimprove));
   }
 }
 
-/************************************************************************//**
-  Disband all supported units of the given type.  If in_cities_only is
-  specified then only units inside our cities will be disbanded.
+/************************************************************************/ /**
+   Disband all supported units of the given type.  If in_cities_only is
+   specified then only units inside our cities will be disbanded.
 
-  The "message" string will be filled with a GUI-friendly message about
-  what was sold.
-****************************************************************************/
-void disband_all_units(const struct unit_type *punittype, bool in_cities_only,
-                       char *message, size_t message_sz)
+   The "message" string will be filled with a GUI-friendly message about
+   what was sold.
+ ****************************************************************************/
+void disband_all_units(const struct unit_type *punittype,
+                       bool in_cities_only, char *message, size_t message_sz)
 {
   int count = 0;
 
@@ -214,10 +226,12 @@ void disband_all_units(const struct unit_type *punittype, bool in_cities_only,
     return;
   }
 
-  city_list_iterate(client.conn.playing->cities, pcity) {
+  city_list_iterate(client.conn.playing->cities, pcity)
+  {
     /* Only supported units are disbanded.  Units with no homecity have no
      * cost and are not disbanded. */
-    unit_list_iterate(pcity->units_supported, punit) {
+    unit_list_iterate(pcity->units_supported, punit)
+    {
       struct city *incity = tile_city(unit_tile(punit));
 
       if (unit_type_get(punit) == punittype
@@ -226,12 +240,14 @@ void disband_all_units(const struct unit_type *punittype, bool in_cities_only,
         count++;
         request_unit_disband(punit);
       }
-    } unit_list_iterate_end;
-  } city_list_iterate_end;
+    }
+    unit_list_iterate_end;
+  }
+  city_list_iterate_end;
 
   if (count > 0) {
-    fc_snprintf(message, message_sz, _("Disbanded %d %s."),
-                count, utype_name_translation(punittype));
+    fc_snprintf(message, message_sz, _("Disbanded %d %s."), count,
+                utype_name_translation(punittype));
   } else {
     fc_snprintf(message, message_sz, _("No %s could be disbanded."),
                 utype_name_translation(punittype));

@@ -15,7 +15,7 @@
 #define FC__SCRIPT_FCDB_H
 
 /* utility */
-#include "support.h"            /* fc__attribute() */
+#include "support.h" /* fc__attribute() */
 
 /* server */
 #include "fcdb.h"

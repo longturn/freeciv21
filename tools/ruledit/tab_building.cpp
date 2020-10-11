@@ -39,9 +39,9 @@
 
 #include "tab_building.h"
 
-/**********************************************************************//**
-  Setup tab_building object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup tab_building object
+ **************************************************************************/
 tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -57,7 +57,8 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
 
   bldg_list = new QListWidget(this);
 
-  connect(bldg_list, SIGNAL(itemSelectionChanged()), this, SLOT(select_bldg()));
+  connect(bldg_list, SIGNAL(itemSelectionChanged()), this,
+          SLOT(select_bldg()));
   main_layout->addWidget(bldg_list);
 
   bldg_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -73,7 +74,8 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this, SLOT(same_name_toggle(bool)));
+  connect(same_name, SIGNAL(toggled(bool)), this,
+          SLOT(same_name_toggle(bool)));
   name = new QLineEdit(this);
   name->setText("None");
   connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
@@ -81,7 +83,8 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   bldg_layout->addWidget(same_name, 1, 1);
   bldg_layout->addWidget(name, 1, 2);
 
-  reqs_button = new QPushButton(QString::fromUtf8(R__("Requirements")), this);
+  reqs_button =
+      new QPushButton(QString::fromUtf8(R__("Requirements")), this);
   connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
   bldg_layout->addWidget(reqs_button, 2, 2);
 
@@ -94,7 +97,8 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   bldg_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
-  delete_button = new QPushButton(QString::fromUtf8(R__("Remove this Building")), this);
+  delete_button =
+      new QPushButton(QString::fromUtf8(R__("Remove this Building")), this);
   connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
   bldg_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
@@ -106,25 +110,28 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void tab_building::refresh()
 {
   bldg_list->clear();
 
-  improvement_iterate(pimpr) {
+  improvement_iterate(pimpr)
+  {
     if (!pimpr->ruledit_disabled) {
-      QListWidgetItem *item = new QListWidgetItem(improvement_rule_name(pimpr));
+      QListWidgetItem *item =
+          new QListWidgetItem(improvement_rule_name(pimpr));
 
       bldg_list->insertItem(improvement_index(pimpr), item);
     }
-  } improvement_iterate_end;
+  }
+  improvement_iterate_end;
 }
 
-/**********************************************************************//**
-  Update info of the building
-**************************************************************************/
+/**********************************************************************/ /**
+   Update info of the building
+ **************************************************************************/
 void tab_building::update_bldg_info(struct impr_type *pimpr)
 {
   selected = pimpr;
@@ -150,9 +157,9 @@ void tab_building::update_bldg_info(struct impr_type *pimpr)
   }
 }
 
-/**********************************************************************//**
-  User selected building from the list.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected building from the list.
+ **************************************************************************/
 void tab_building::select_bldg()
 {
   QList<QListWidgetItem *> select_list = bldg_list->selectedItems();
@@ -165,16 +172,17 @@ void tab_building::select_bldg()
   }
 }
 
-/**********************************************************************//**
-  User entered name for the building
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered name for the building
+ **************************************************************************/
 void tab_building::name_given()
 {
   if (selected != nullptr) {
     QByteArray name_bytes;
     QByteArray rname_bytes;
 
-    improvement_iterate(pimpr) {
+    improvement_iterate(pimpr)
+    {
       if (pimpr != selected && !pimpr->ruledit_disabled) {
         rname_bytes = rname->text().toUtf8();
         if (!strcmp(improvement_rule_name(pimpr), rname_bytes.data())) {
@@ -183,7 +191,8 @@ void tab_building::name_given()
           return;
         }
       }
-    } improvement_iterate_end;
+    }
+    improvement_iterate_end;
 
     if (same_name->isChecked()) {
       name->setText(rname->text());
@@ -191,23 +200,22 @@ void tab_building::name_given()
 
     name_bytes = name->text().toUtf8();
     rname_bytes = rname->text().toUtf8();
-    names_set(&(selected->name), 0,
-              name_bytes.data(),
-              rname_bytes.data());
+    names_set(&(selected->name), 0, name_bytes.data(), rname_bytes.data());
     refresh();
   }
 }
 
-/**********************************************************************//**
-  User requested building deletion 
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested building deletion
+ **************************************************************************/
 void tab_building::delete_now()
 {
   if (selected != 0) {
     requirers_dlg *requirers;
 
     requirers = ui->create_requirers(improvement_rule_name(selected));
-    if (is_building_needed(selected, &ruledit_qt_display_requirers, requirers)) {
+    if (is_building_needed(selected, &ruledit_qt_display_requirers,
+                           requirers)) {
       return;
     }
 
@@ -218,9 +226,9 @@ void tab_building::delete_now()
   }
 }
 
-/**********************************************************************//**
-  Initialize new tech for use.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize new tech for use.
+ **************************************************************************/
 bool tab_building::initialize_new_bldg(struct impr_type *pimpr)
 {
   if (improvement_by_rule_name("New Building") != nullptr) {
@@ -231,15 +239,16 @@ bool tab_building::initialize_new_bldg(struct impr_type *pimpr)
   return true;
 }
 
-/**********************************************************************//**
-  User requested new building
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested new building
+ **************************************************************************/
 void tab_building::add_now2()
 {
   struct impr_type *new_bldg;
 
   // Try to reuse freed building slot
-  improvement_iterate(pimpr) {
+  improvement_iterate(pimpr)
+  {
     if (pimpr->ruledit_disabled) {
       if (initialize_new_bldg(pimpr)) {
         pimpr->ruledit_disabled = false;
@@ -248,7 +257,8 @@ void tab_building::add_now2()
       }
       return;
     }
-  } improvement_iterate_end;
+  }
+  improvement_iterate_end;
 
   // Try to add completely new building
   if (game.control.num_impr_types >= B_LAST) {
@@ -268,9 +278,9 @@ void tab_building::add_now2()
   }
 }
 
-/**********************************************************************//**
-  Toggled whether rule_name and name should be kept identical
-**************************************************************************/
+/**********************************************************************/ /**
+   Toggled whether rule_name and name should be kept identical
+ **************************************************************************/
 void tab_building::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -279,9 +289,9 @@ void tab_building::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************//**
-  User wants to edit reqs
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit reqs
+ **************************************************************************/
 void tab_building::edit_reqs()
 {
   if (selected != nullptr) {
@@ -290,9 +300,9 @@ void tab_building::edit_reqs()
   }
 }
 
-/**********************************************************************//**
-  User wants to edit effects
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit effects
+ **************************************************************************/
 void tab_building::edit_effects()
 {
   if (selected != nullptr) {

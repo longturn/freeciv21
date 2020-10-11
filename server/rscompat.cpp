@@ -39,28 +39,28 @@
 
 #include "rscompat.h"
 
-#define enough_new_user_flags(_new_flags_, _name_,                        \
-                              _LAST_USER_FLAG_, _LAST_USER_FLAG_PREV_)    \
-FC_STATIC_ASSERT((ARRAY_SIZE(_new_flags_)                                 \
-                  <= _LAST_USER_FLAG_ - _LAST_USER_FLAG_PREV_),           \
-                 not_enough_new_##_name_##_user_flags)
+#define enough_new_user_flags(_new_flags_, _name_, _LAST_USER_FLAG_,        \
+                              _LAST_USER_FLAG_PREV_)                        \
+  FC_STATIC_ASSERT((ARRAY_SIZE(_new_flags_)                                 \
+                    <= _LAST_USER_FLAG_ - _LAST_USER_FLAG_PREV_),           \
+                   not_enough_new_##_name_##_user_flags)
 
 #define UTYF_LAST_USER_FLAG_3_0 UTYF_USER_FLAG_40
 #define UCF_LAST_USER_FLAG_3_0 UCF_USER_FLAG_8
 #define TER_LAST_USER_FLAG_3_0 TER_USER_8
 
-/**********************************************************************//**
-  Initialize rscompat information structure
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize rscompat information structure
+ **************************************************************************/
 void rscompat_init_info(struct rscompat_info *info)
 {
   memset(info, 0, sizeof(*info));
 }
 
-/**********************************************************************//**
-  Ruleset files should have a capabilities string datafile.options
-  This checks the string and that the required capabilities are satisfied.
-**************************************************************************/
+/**********************************************************************/ /**
+   Ruleset files should have a capabilities string datafile.options
+   This checks the string and that the required capabilities are satisfied.
+ **************************************************************************/
 int rscompat_check_capabilities(struct section_file *file,
                                 const char *filename,
                                 struct rscompat_info *info)
@@ -77,9 +77,9 @@ int rscompat_check_capabilities(struct section_file *file,
   }
 
   if (info->compat_mode) {
-    /* Check alternative capstr first, so that when we do the main capstr check,
-     * we already know that failures there are fatal (error message correct, can return
-     * immediately) */
+    /* Check alternative capstr first, so that when we do the main capstr
+     * check, we already know that failures there are fatal (error message
+     * correct, can return immediately) */
 
     if (has_capabilities(RULESET_COMPAT_CAP, datafile_options)
         && has_capabilities(datafile_options, RULESET_COMPAT_CAP)) {
@@ -98,7 +98,8 @@ int rscompat_check_capabilities(struct section_file *file,
     }
     if (!has_capabilities(datafile_options, RULESET_CAPABILITIES)) {
       log_fatal("\"%s\": ruleset datafile claims required option(s)"
-                " that we don't support:", filename);
+                " that we don't support:",
+                filename);
       log_fatal("  datafile options: %s", datafile_options);
       log_fatal("  supported options: %s", RULESET_CAPABILITIES);
       ruleset_error(LOG_ERROR, "Capability problem");
@@ -120,12 +121,12 @@ int rscompat_check_capabilities(struct section_file *file,
   return format;
 }
 
-/**********************************************************************//**
-  Add all hard obligatory requirements to an action enabler or disable it.
-  @param ae the action enabler to add requirements to.
-  @return TRUE iff adding obligatory hard reqs for the enabler's action
-               needs to restart - say if an enabler was added or removed.
-**************************************************************************/
+/**********************************************************************/ /**
+   Add all hard obligatory requirements to an action enabler or disable it.
+   @param ae the action enabler to add requirements to.
+   @return TRUE iff adding obligatory hard reqs for the enabler's action
+                needs to restart - say if an enabler was added or removed.
+ **************************************************************************/
 static bool
 rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
 {
@@ -154,8 +155,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
     }
 
     /* Sanity check. */
-    fc_assert_ret_val(problem->num_suggested_solutions > 0,
-                      needs_restart);
+    fc_assert_ret_val(problem->num_suggested_solutions > 0, needs_restart);
 
     /* Only append is supported for upgrade */
     for (i = 0; i < problem->num_suggested_solutions; i++) {
@@ -187,12 +187,12 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
       if (!req_vec_change_apply(&problem->suggested_solutions[i],
                                 action_enabler_vector_by_number,
                                 new_enabler)) {
-        log_error("Failed to apply solution %s for %s to action enabler"
-                  " for %s. Dropping it.",
-                  req_vec_change_translation(
-                    &problem->suggested_solutions[i],
-                    action_enabler_vector_by_number_name),
-                  problem->description, action_rule_name(paction));
+        log_error(
+            "Failed to apply solution %s for %s to action enabler"
+            " for %s. Dropping it.",
+            req_vec_change_translation(&problem->suggested_solutions[i],
+                                       action_enabler_vector_by_number_name),
+            problem->description, action_rule_name(paction));
         new_enabler->disabled = TRUE;
         req_vec_problem_free(problem);
         return TRUE;
@@ -202,10 +202,8 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
         /* The last modification is to the original enabler. */
         ae->action = new_enabler->action;
         ae->disabled = new_enabler->disabled;
-        requirement_vector_copy(&ae->actor_reqs,
-                                &new_enabler->actor_reqs);
-        requirement_vector_copy(&ae->target_reqs,
-                                &new_enabler->target_reqs);
+        requirement_vector_copy(&ae->actor_reqs, &new_enabler->actor_reqs);
+        requirement_vector_copy(&ae->target_reqs, &new_enabler->target_reqs);
         FC_FREE(new_enabler);
       } else {
         /* Register the new enabler */
@@ -227,17 +225,19 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
   return needs_restart;
 }
 
-/**********************************************************************//**
-  Update existing action enablers for new hard obligatory requirements.
-  Disable those that can't be upgraded.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update existing action enablers for new hard obligatory requirements.
+   Disable those that can't be upgraded.
+ **************************************************************************/
 void rscompat_enablers_add_obligatory_hard_reqs(void)
 {
-  action_iterate(act_id) {
+  action_iterate(act_id)
+  {
     bool restart_enablers_for_action;
     do {
       restart_enablers_for_action = FALSE;
-      action_enabler_list_iterate(action_enablers_for_action(act_id), ae) {
+      action_enabler_list_iterate(action_enablers_for_action(act_id), ae)
+      {
         if (ae->disabled) {
           /* Ignore disabled enablers */
           continue;
@@ -249,22 +249,25 @@ void rscompat_enablers_add_obligatory_hard_reqs(void)
           restart_enablers_for_action = TRUE;
           break;
         }
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
     } while (restart_enablers_for_action == TRUE);
-  } action_iterate_end;
+  }
+  action_iterate_end;
 }
 
-/**********************************************************************//**
-  Find and return the first unused unit type user flag. If all unit type
-  user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
-**************************************************************************/
+/**********************************************************************/ /**
+   Find and return the first unused unit type user flag. If all unit type
+   user flags are taken MAX_NUM_USER_UNIT_FLAGS is returned.
+ **************************************************************************/
 static int first_free_unit_type_user_flag(void)
 {
   int flag;
 
   /* Find the first unused user defined unit type flag. */
   for (flag = 0; flag < MAX_NUM_USER_UNIT_FLAGS; flag++) {
-    if (unit_type_flag_id_name_cb(unit_type_flag_id(flag + UTYF_USER_FLAG_1)) == NULL) {
+    if (unit_type_flag_id_name_cb(unit_type_flag_id(flag + UTYF_USER_FLAG_1))
+        == NULL) {
       return flag;
     }
   }
@@ -273,17 +276,19 @@ static int first_free_unit_type_user_flag(void)
   return MAX_NUM_USER_UNIT_FLAGS;
 }
 
-/**********************************************************************//**
-  Find and return the first unused unit class user flag. If all unit class
-  user flags are taken MAX_NUM_USER_UCLASS_FLAGS is returned.
-**************************************************************************/
+/**********************************************************************/ /**
+   Find and return the first unused unit class user flag. If all unit class
+   user flags are taken MAX_NUM_USER_UCLASS_FLAGS is returned.
+ **************************************************************************/
 static int first_free_unit_class_user_flag(void)
 {
   int flag;
 
   /* Find the first unused user defined unit class flag. */
   for (flag = 0; flag < MAX_NUM_USER_UCLASS_FLAGS; flag++) {
-    if (unit_class_flag_id_name_cb(unit_class_flag_id(flag + UCF_USER_FLAG_1)) == NULL) {
+    if (unit_class_flag_id_name_cb(
+            unit_class_flag_id(flag + UCF_USER_FLAG_1))
+        == NULL) {
       return flag;
     }
   }
@@ -292,17 +297,18 @@ static int first_free_unit_class_user_flag(void)
   return MAX_NUM_USER_UCLASS_FLAGS;
 }
 
-/**********************************************************************//**
-  Find and return the first unused terrain user flag. If all terrain
-  user flags are taken MAX_NUM_USER_TER_FLAGS is returned.
-**************************************************************************/
+/**********************************************************************/ /**
+   Find and return the first unused terrain user flag. If all terrain
+   user flags are taken MAX_NUM_USER_TER_FLAGS is returned.
+ **************************************************************************/
 static int first_free_terrain_user_flag(void)
 {
   int flag;
 
   /* Find the first unused user defined terrain flag. */
   for (flag = 0; flag < MAX_NUM_USER_TER_FLAGS; flag++) {
-    if (terrain_flag_id_name_cb(terrain_flag_id(flag + TER_USER_1)) == NULL) {
+    if (terrain_flag_id_name_cb(terrain_flag_id(flag + TER_USER_1))
+        == NULL) {
       return flag;
     }
   }
@@ -311,16 +317,16 @@ static int first_free_terrain_user_flag(void)
   return MAX_NUM_USER_TER_FLAGS;
 }
 
-/**********************************************************************//**
-  Do compatibility things with names before they are referred to. Runs
-  after names are loaded from the ruleset but before the ruleset objects
-  that may refer to them are loaded.
+/**********************************************************************/ /**
+   Do compatibility things with names before they are referred to. Runs
+   after names are loaded from the ruleset but before the ruleset objects
+   that may refer to them are loaded.
 
-  This is needed when previously hard coded items that are referred to in
-  the ruleset them self becomes ruleset defined.
+   This is needed when previously hard coded items that are referred to in
+   the ruleset them self becomes ruleset defined.
 
-  Returns FALSE if an error occurs.
-**************************************************************************/
+   Returns FALSE if an error occurs.
+ **************************************************************************/
 bool rscompat_names(struct rscompat_info *info)
 {
   if (info->ver_units < 20) {
@@ -332,13 +338,13 @@ bool rscompat_names(struct rscompat_info *info)
       const char *name;
       const char *helptxt;
     } new_flags_31[] = {
-      { N_("Infra"), N_("Can build infrastructure.") },
-      { N_("BeachLander"), N_("Won't lose all movement when moving from"
-                              " non-native terrain to native terrain.") },
-      { N_("Cant_Fortify"), NULL },
+        {N_("Infra"), N_("Can build infrastructure.")},
+        {N_("BeachLander"), N_("Won't lose all movement when moving from"
+                               " non-native terrain to native terrain.")},
+        {N_("Cant_Fortify"), NULL},
     };
-    enough_new_user_flags(new_flags_31, unit_type,
-                          UTYF_LAST_USER_FLAG, UTYF_LAST_USER_FLAG_3_0);
+    enough_new_user_flags(new_flags_31, unit_type, UTYF_LAST_USER_FLAG,
+                          UTYF_LAST_USER_FLAG_3_0);
 
     /* Some unit class flags moved to the ruleset between 3.0 and 3.1.
      * Add them back as user flags.
@@ -348,13 +354,13 @@ bool rscompat_names(struct rscompat_info *info)
       const char *name;
       const char *helptxt;
     } new_class_flags_31[] = {
-      { N_("Missile"), N_("Unit is destroyed when it attacks") },
-      { N_("CanPillage"), N_("Can pillage tile improvements.") },
-      { N_("CanFortify"), N_("Gets a 50% defensive bonus while"
-                             " in cities.") },
+        {N_("Missile"), N_("Unit is destroyed when it attacks")},
+        {N_("CanPillage"), N_("Can pillage tile improvements.")},
+        {N_("CanFortify"), N_("Gets a 50% defensive bonus while"
+                              " in cities.")},
     };
-    enough_new_user_flags(new_class_flags_31, unit_class,
-                          UCF_LAST_USER_FLAG, UCF_LAST_USER_FLAG_3_0);
+    enough_new_user_flags(new_class_flags_31, unit_class, UCF_LAST_USER_FLAG,
+                          UCF_LAST_USER_FLAG_3_0);
 
     int first_free;
     int i;
@@ -422,10 +428,10 @@ bool rscompat_names(struct rscompat_info *info)
       const char *name;
       const char *helptxt;
     } new_flags_31[] = {
-      { N_("NoFortify"), N_("No units can fortify on this terrain.") },
+        {N_("NoFortify"), N_("No units can fortify on this terrain.")},
     };
-    enough_new_user_flags(new_flags_31, terrain,
-                          TER_USER_LAST, TER_LAST_USER_FLAG_3_0);
+    enough_new_user_flags(new_flags_31, terrain, TER_USER_LAST,
+                          TER_LAST_USER_FLAG_3_0);
 
     int first_free;
     int i;
@@ -461,18 +467,18 @@ bool rscompat_names(struct rscompat_info *info)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Handle a universal being separated from an original universal.
+/**********************************************************************/ /**
+   Handle a universal being separated from an original universal.
 
-  A universal may be split into two new universals. An effect may mention
-  the universal that now has been split in its requirement list. In that
-  case two effect - one for the original and one for the universal being
-  separated from it - are needed.
+   A universal may be split into two new universals. An effect may mention
+   the universal that now has been split in its requirement list. In that
+   case two effect - one for the original and one for the universal being
+   separated from it - are needed.
 
-  Check if the original universal is mentioned in the requirement list of
-  peffect. Handle creating one effect for the original and one for the
-  universal that has been separated out if it is.
-**************************************************************************/
+   Check if the original universal is mentioned in the requirement list of
+   peffect. Handle creating one effect for the original and one for the
+   universal that has been separated out if it is.
+ **************************************************************************/
 static bool effect_handle_split_universal(struct effect *peffect,
                                           struct universal original,
                                           struct universal separated)
@@ -482,64 +488,69 @@ static bool effect_handle_split_universal(struct effect *peffect,
     struct effect *peffect_copy = effect_copy(peffect);
 
     /* Replace the original requirement with the separated requirement. */
-    return universal_replace_in_req_vec(&peffect_copy->reqs,
-                                        &original, &separated);
+    return universal_replace_in_req_vec(&peffect_copy->reqs, &original,
+                                        &separated);
   }
 
   return FALSE;
 }
 
-/**********************************************************************//**
-  Adjust effects
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust effects
+ **************************************************************************/
 static bool effect_list_compat_cb(struct effect *peffect, void *data)
 {
-  struct rscompat_info *info = (struct rscompat_info *)data;
+  struct rscompat_info *info = (struct rscompat_info *) data;
 
   if (info->ver_effects < 20) {
     /* Attack has been split in regular "Attack" and "Suicide Attack". */
-    effect_handle_split_universal(peffect,
-        universal_by_number(VUT_ACTION, ACTION_ATTACK),
+    effect_handle_split_universal(
+        peffect, universal_by_number(VUT_ACTION, ACTION_ATTACK),
         universal_by_number(VUT_ACTION, ACTION_SUICIDE_ATTACK));
 
     /* "Nuke City" and "Nuke Units" has been split from "Explode Nuclear".
      * "Explode Nuclear" is now only about exploding at the current tile. */
-    effect_handle_split_universal(peffect,
-        universal_by_number(VUT_ACTION, ACTION_NUKE),
+    effect_handle_split_universal(
+        peffect, universal_by_number(VUT_ACTION, ACTION_NUKE),
         universal_by_number(VUT_ACTION, ACTION_NUKE_CITY));
-    effect_handle_split_universal(peffect,
-        universal_by_number(VUT_ACTION, ACTION_NUKE),
+    effect_handle_split_universal(
+        peffect, universal_by_number(VUT_ACTION, ACTION_NUKE),
         universal_by_number(VUT_ACTION, ACTION_NUKE_UNITS));
 
     /* Production or building targeted actions have been split in one action
      * for each target. */
-    effect_handle_split_universal(peffect,
+    effect_handle_split_universal(
+        peffect,
         universal_by_number(VUT_ACTION, ACTION_SPY_TARGETED_SABOTAGE_CITY),
-        universal_by_number(VUT_ACTION, ACTION_SPY_SABOTAGE_CITY_PRODUCTION));
-    effect_handle_split_universal(peffect,
-        universal_by_number(VUT_ACTION, ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC),
-        universal_by_number(VUT_ACTION, ACTION_SPY_SABOTAGE_CITY_PRODUCTION_ESC));
+        universal_by_number(VUT_ACTION,
+                            ACTION_SPY_SABOTAGE_CITY_PRODUCTION));
+    effect_handle_split_universal(
+        peffect,
+        universal_by_number(VUT_ACTION,
+                            ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC),
+        universal_by_number(VUT_ACTION,
+                            ACTION_SPY_SABOTAGE_CITY_PRODUCTION_ESC));
 
     if (peffect->type == EFT_ILLEGAL_ACTION_MOVE_COST) {
       /* Boarding a transporter became action enabler controlled in
        * Freeciv 3.1. Old hard coded rules had no punishment for trying to
        * do this when it is illegal according to the rules. */
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE,
-                                              FALSE, FALSE,
-                                              "Transport Board"));
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE,
-                                              FALSE, FALSE,
-                                              "Transport Embark"));
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                                     "Transport Board"));
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                                     "Transport Embark"));
 
       /* Disembarking became action enabler controlled in Freeciv 3.1. Old
        * hard coded rules had no punishment for trying to do those when it
        * is illegal according to the rules. */
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE,
-                                              FALSE, FALSE,
-                                              "Transport Disembark"));
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE,
-                                              FALSE, FALSE,
-                                              "Transport Disembark 2"));
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                                     "Transport Disembark"));
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                                     "Transport Disembark 2"));
     }
   }
 
@@ -547,12 +558,12 @@ static bool effect_list_compat_cb(struct effect *peffect, void *data)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Turn old effect to an action enabler.
-**************************************************************************/
+/**********************************************************************/ /**
+   Turn old effect to an action enabler.
+ **************************************************************************/
 static void effect_to_enabler(action_id action, struct section_file *file,
-                              const char *sec_name, struct rscompat_info *compat,
-                              const char *type)
+                              const char *sec_name,
+                              struct rscompat_info *compat, const char *type)
 {
   int value = secfile_lookup_int_default(file, 1, "%s.value", sec_name);
   char buf[1024];
@@ -572,8 +583,8 @@ static void effect_to_enabler(action_id action, struct section_file *file,
      *       their type. */
     requirement_vector_copy(&enabler->actor_reqs, reqs);
 
-    settler_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
-                                  UTYF_SETTLERS);
+    settler_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE,
+                                  FALSE, UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, settler_req);
 
     /* Add the enabler to the ruleset. */
@@ -581,7 +592,8 @@ static void effect_to_enabler(action_id action, struct section_file *file,
 
     if (compat->log_cb != NULL) {
       fc_snprintf(buf, sizeof(buf),
-                  "Converted effect %s in %s to an action enabler. Make sure requirements "
+                  "Converted effect %s in %s to an action enabler. Make "
+                  "sure requirements "
                   "are correctly divided to actor and target requirements.",
                   type, sec_name);
       compat->log_cb(buf);
@@ -589,23 +601,27 @@ static void effect_to_enabler(action_id action, struct section_file *file,
   } else if (value < 0) {
     if (compat->log_cb != NULL) {
       fc_snprintf(buf, sizeof(buf),
-                  "%s effect with negative value in %s can't be automatically converted "
-                  "to an action enabler. Do that manually.", type, sec_name);
+                  "%s effect with negative value in %s can't be "
+                  "automatically converted "
+                  "to an action enabler. Do that manually.",
+                  type, sec_name);
       compat->log_cb(buf);
     }
   }
 }
 
-/**********************************************************************//**
-  Check if effect name refers to one of the removed effects, and handle it
-  if it does. Returns TRUE iff name was a valid old name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Check if effect name refers to one of the removed effects, and handle it
+   if it does. Returns TRUE iff name was a valid old name.
+ **************************************************************************/
 bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
-                             const char *sec_name, struct rscompat_info *compat)
+                             const char *sec_name,
+                             struct rscompat_info *compat)
 {
   if (compat->ver_effects < 20) {
     if (!fc_strcasecmp(type, "Transform_Possible")) {
-      effect_to_enabler(ACTION_TRANSFORM_TERRAIN, file, sec_name, compat, type);
+      effect_to_enabler(ACTION_TRANSFORM_TERRAIN, file, sec_name, compat,
+                        type);
       return TRUE;
     }
     if (!fc_strcasecmp(type, "Irrig_TF_Possible")) {
@@ -629,9 +645,9 @@ bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
   return FALSE;
 }
 
-/**********************************************************************//**
-  Do compatibility things after regular ruleset loading.
-**************************************************************************/
+/**********************************************************************/ /**
+   Do compatibility things after regular ruleset loading.
+ **************************************************************************/
 void rscompat_postprocess(struct rscompat_info *info)
 {
   if (!info->compat_mode) {
@@ -649,8 +665,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Bombard"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         MAX_MOVE_FRAGS, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
     /* The reduction only applies to "Bombard". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -658,8 +673,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Heal Unit"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         MAX_MOVE_FRAGS, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
     /* The reduction only applies to "Heal Unit". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -667,8 +681,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Expel Unit"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         SINGLE_MOVE, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
 
     /* The reduction only applies to "Expel Unit". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -676,8 +689,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Capture Units"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         SINGLE_MOVE, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
 
     /* The reduction only applies to "Capture Units". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -685,8 +697,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Establish Embassy"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         1, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
 
     /* The reduction only applies to "Establish Embassy". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -694,8 +705,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for "Investigate City"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                         1, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
 
     /* The reduction only applies to "Investigate City". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -703,8 +713,8 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Post successful action move fragment loss for targets of "Expel Unit"
      * has moved to the ruleset. */
-    peffect = effect_new(EFT_ACTION_SUCCESS_TARGET_MOVE_COST,
-                         MAX_MOVE_FRAGS, NULL);
+    peffect = effect_new(EFT_ACTION_SUCCESS_TARGET_MOVE_COST, MAX_MOVE_FRAGS,
+                         NULL);
 
     /* The reduction only applies to "Expel Unit". */
     effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
@@ -713,7 +723,8 @@ void rscompat_postprocess(struct rscompat_info *info)
     /* Post successful action move fragment loss for targets of
      * "Paradrop Unit" has moved to the Action_Success_Actor_Move_Cost
      * effect. */
-    unit_type_iterate(putype) {
+    unit_type_iterate(putype)
+    {
       if (!utype_can_do_action(putype, ACTION_PARADROP)) {
         /* Not relevant */
         continue;
@@ -726,19 +737,18 @@ void rscompat_postprocess(struct rscompat_info *info)
 
       /* Subtract the value via the Action_Success_Actor_Move_Cost effect */
       peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                           putype->rscompat_cache.paratroopers_mr_sub,
-                           NULL);
+                           putype->rscompat_cache.paratroopers_mr_sub, NULL);
 
       /* The reduction only applies to "Paradrop Unit". */
-      effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, TRUE, FALSE,
-                                     "Paradrop Unit"));
+      effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+                                              FALSE, "Paradrop Unit"));
 
       /* The reduction only applies to this unit type. */
       effect_req_append(peffect,
                         req_from_str("UnitType", "Local", FALSE, TRUE, FALSE,
                                      utype_rule_name(putype)));
-    } unit_type_iterate_end;
+    }
+    unit_type_iterate_end;
 
     /* Fortifying rules have been unhardcoded to effects. */
     peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, NULL);
@@ -756,13 +766,13 @@ void rscompat_postprocess(struct rscompat_info *info)
     effect_req_append(peffect, req_from_str("CityTile", "Local", FALSE, TRUE,
                                             FALSE, "Center"));
     /* Not cumulative with regular fortified bonus */
-    effect_req_append(peffect, req_from_str("Activity", "Local", FALSE, FALSE,
-                                            FALSE, "Fortified"));
+    effect_req_append(peffect, req_from_str("Activity", "Local", FALSE,
+                                            FALSE, FALSE, "Fortified"));
     /* Unit flags */
-    effect_req_append(peffect, req_from_str("UnitClassFlag", "Local", FALSE, TRUE,
-                                            FALSE, "CanFortify"));
-    effect_req_append(peffect, req_from_str("UnitFlag", "Local", FALSE, FALSE,
-                                            FALSE, "Cant_Fortify"));
+    effect_req_append(peffect, req_from_str("UnitClassFlag", "Local", FALSE,
+                                            TRUE, FALSE, "CanFortify"));
+    effect_req_append(peffect, req_from_str("UnitFlag", "Local", FALSE,
+                                            FALSE, FALSE, "Cant_Fortify"));
 
     /* The probability that "Steal Maps" and "Steal Maps Escape" steals the
      * map of a tile has moved to the ruleset. */
@@ -782,7 +792,8 @@ void rscompat_postprocess(struct rscompat_info *info)
   }
 
   if (info->ver_units < 20) {
-    unit_type_iterate(ptype) {
+    unit_type_iterate(ptype)
+    {
       if (utype_has_flag(ptype, UTYF_SETTLERS)) {
         int flag;
 
@@ -790,7 +801,8 @@ void rscompat_postprocess(struct rscompat_info *info)
         fc_assert(unit_type_flag_id_is_valid(unit_type_flag_id(flag)));
         BV_SET(ptype->flags, flag);
       }
-    } unit_type_iterate_end;
+    }
+    unit_type_iterate_end;
   }
 
   if (info->ver_game < 20) {
@@ -840,8 +852,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
                          "Cant_Fortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
-    e_req = req_from_str("CityTile", "Local", FALSE, TRUE, TRUE,
-                         "Center");
+    e_req = req_from_str("CityTile", "Local", FALSE, TRUE, TRUE, "Center");
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
@@ -881,7 +892,8 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     /* Update action enablers. */
     rscompat_enablers_add_obligatory_hard_reqs();
-    action_enablers_iterate(ae) {
+    action_enablers_iterate(ae)
+    {
       /* "Attack" is split in a unit consuming and a non unit consuming
        * version. */
       if (ae->action == ACTION_ATTACK) {
@@ -889,10 +901,9 @@ void rscompat_postprocess(struct rscompat_info *info)
         enabler = action_enabler_copy(ae);
 
         /* One allows regular attacks. */
-        requirement_vector_append(&ae->actor_reqs,
-                                  req_from_str("UnitClassFlag", "Local",
-                                               FALSE, FALSE, TRUE,
-                                               "Missile"));
+        requirement_vector_append(
+            &ae->actor_reqs, req_from_str("UnitClassFlag", "Local", FALSE,
+                                          FALSE, TRUE, "Missile"));
 
         /* The other allows suicide attacks. */
         enabler->action = ACTION_SUICIDE_ATTACK;
@@ -927,36 +938,30 @@ void rscompat_postprocess(struct rscompat_info *info)
         /* "Explode Nuclear" required this to target an adjacent tile. */
         /* While this isn't a real move (because of enemy city/units) at
          * target tile it pretends to be one. */
-        requirement_vector_append(&city->actor_reqs,
-                                  req_from_values(VUT_MINMOVES,
-                                                  REQ_RANGE_LOCAL,
-                                                  FALSE, TRUE, FALSE, 1));
+        requirement_vector_append(
+            &city->actor_reqs, req_from_values(VUT_MINMOVES, REQ_RANGE_LOCAL,
+                                               FALSE, TRUE, FALSE, 1));
         requirement_vector_append(&units->actor_reqs,
                                   req_from_values(VUT_MINMOVES,
-                                                  REQ_RANGE_LOCAL,
-                                                  FALSE, TRUE, FALSE, 1));
+                                                  REQ_RANGE_LOCAL, FALSE,
+                                                  TRUE, FALSE, 1));
 
         /* Be slightly stricter about the relationship to target unit stacks
          * than "Explode Nuclear" was before it would target an adjacent
          * tile. I think the intention was that you shouldn't nuke your
          * friends and allies. */
-        requirement_vector_append(&city->actor_reqs,
-                                  req_from_values(VUT_DIPLREL,
-                                                  REQ_RANGE_LOCAL,
-                                                  FALSE, TRUE, FALSE,
-                                                  DS_WAR));
-        requirement_vector_append(&units->actor_reqs,
-                                  req_from_values(VUT_DIPLREL,
-                                                  REQ_RANGE_LOCAL,
-                                                  FALSE, TRUE, FALSE,
-                                                  DS_WAR));
+        requirement_vector_append(
+            &city->actor_reqs, req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
+                                               FALSE, TRUE, FALSE, DS_WAR));
+        requirement_vector_append(
+            &units->actor_reqs, req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
+                                                FALSE, TRUE, FALSE, DS_WAR));
 
         /* Only display one nuke action at once. */
-        requirement_vector_append(&units->target_reqs,
-                                  req_from_values(VUT_CITYTILE,
-                                                  REQ_RANGE_LOCAL,
-                                                  FALSE, FALSE, FALSE,
-                                                  CITYT_CENTER));
+        requirement_vector_append(
+            &units->target_reqs,
+            req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
+                            FALSE, CITYT_CENTER));
 
         /* Add after the action was changed. */
         action_enabler_add(city);
@@ -986,7 +991,8 @@ void rscompat_postprocess(struct rscompat_info *info)
         /* Add after the action was changed. */
         action_enabler_add(enabler);
       }
-    } action_enablers_iterate_end;
+    }
+    action_enablers_iterate_end;
 
     /* The paratroopers_mr_req field has moved to the enabler for the
      * "Paradrop Unit" action. */
@@ -995,15 +1001,18 @@ void rscompat_postprocess(struct rscompat_info *info)
       struct action_enabler_list *ae_custom = action_enabler_list_new();
 
       action_enabler_list_iterate(
-            action_enablers_for_action(ACTION_PARADROP), ae) {
-        unit_type_iterate(putype) {
+          action_enablers_for_action(ACTION_PARADROP), ae)
+      {
+        unit_type_iterate(putype)
+        {
           if (!requirement_fulfilled_by_unit_type(putype,
                                                   &(ae->actor_reqs))) {
             /* This action enabler isn't for this unit type at all. */
             continue;
           }
 
-          requirement_vector_iterate(&ae->actor_reqs, preq) {
+          requirement_vector_iterate(&ae->actor_reqs, preq)
+          {
             if (preq->source.kind == VUT_MINMOVES) {
               if (!preq->present) {
                 /* A max move fragments req has been found. Is it too
@@ -1015,7 +1024,8 @@ void rscompat_postprocess(struct rscompat_info *info)
                 }
               }
             }
-          } requirement_vector_iterate_end;
+          }
+          requirement_vector_iterate_end;
 
           if (putype->rscompat_cache.paratroopers_mr_req > 0) {
             /* This unit type needs a custom enabler */
@@ -1023,18 +1033,14 @@ void rscompat_postprocess(struct rscompat_info *info)
             enabler = action_enabler_copy(ae);
 
             /* This enabler is specific to the unit type */
-            e_req = req_from_values(VUT_UTYPE,
-                                    REQ_RANGE_LOCAL,
-                                    FALSE, TRUE, FALSE,
-                                    utype_number(putype));
+            e_req = req_from_values(VUT_UTYPE, REQ_RANGE_LOCAL, FALSE, TRUE,
+                                    FALSE, utype_number(putype));
             requirement_vector_append(&enabler->actor_reqs, e_req);
 
             /* Add the minimum amout of move fragments */
-            e_req = req_from_values(VUT_MINMOVES,
-                                    REQ_RANGE_LOCAL,
-                                    FALSE, TRUE, FALSE,
-                                    putype->rscompat_cache
-                                    .paratroopers_mr_req);
+            e_req = req_from_values(
+                VUT_MINMOVES, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+                putype->rscompat_cache.paratroopers_mr_req);
             requirement_vector_append(&enabler->actor_reqs, e_req);
 
             action_enabler_list_append(ae_custom, enabler);
@@ -1049,18 +1055,22 @@ void rscompat_postprocess(struct rscompat_info *info)
             log_debug("paratroopers_mr_req upgrade: %s uses generic enabler",
                       utype_rule_name(putype));
           }
-        } unit_type_iterate_end;
+        }
+        unit_type_iterate_end;
 
         if (!generic_in_use) {
           /* The generic enabler isn't in use any more */
           action_enabler_remove(ae);
         }
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
-      action_enabler_list_iterate(ae_custom, ae) {
+      action_enabler_list_iterate(ae_custom, ae)
+      {
         /* Append the custom enablers. */
         action_enabler_add(ae);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
       action_enabler_list_destroy(ae_custom);
     }
@@ -1086,9 +1096,9 @@ void rscompat_postprocess(struct rscompat_info *info)
   autoadjust_ruleset_data();
 }
 
-/**********************************************************************//**
-  Replace deprecated auto_attack configuration.
-**************************************************************************/
+/**********************************************************************/ /**
+   Replace deprecated auto_attack configuration.
+ **************************************************************************/
 bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
                               struct action_auto_perf *auto_perf,
                               size_t psize,
@@ -1099,21 +1109,18 @@ bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
   if (compat->ver_game < 20) {
     /* Auto attack happens during war. */
     requirement_vector_append(&auto_perf->reqs,
-                              req_from_values(VUT_DIPLREL,
-                                              REQ_RANGE_LOCAL,
+                              req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
                                               FALSE, TRUE, TRUE, DS_WAR));
 
     /* Needs a movement point to auto attack. */
     requirement_vector_append(&auto_perf->reqs,
-                              req_from_values(VUT_MINMOVES,
-                                              REQ_RANGE_LOCAL,
+                              req_from_values(VUT_MINMOVES, REQ_RANGE_LOCAL,
                                               FALSE, TRUE, TRUE, 1));
 
     for (i = 0; i < psize; i++) {
       /* Add each protecor_flag as a !present requirement. */
       requirement_vector_append(&auto_perf->reqs,
-                                req_from_values(VUT_UTFLAG,
-                                                REQ_RANGE_LOCAL,
+                                req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL,
                                                 FALSE, FALSE, TRUE,
                                                 protecor_flag[i]));
     }
@@ -1127,9 +1134,9 @@ bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Replace slow_invasions and friends.
-**************************************************************************/
+/**********************************************************************/ /**
+   Replace slow_invasions and friends.
+ **************************************************************************/
 bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
                                      bool slow_invasions)
 {
@@ -1146,8 +1153,8 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
     if (slow_invasions) {
       /* Use for disembarking from native terrain so disembarking from
        * non native terain is handled by "Transport Disembark 2". */
-      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                              FALSE, TRUE, TRUE, USP_NATIVE_TILE);
+      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, TRUE,
+                              TRUE, USP_NATIVE_TILE);
       requirement_vector_append(&enabler->actor_reqs, e_req);
     }
 
@@ -1161,7 +1168,6 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
 
       struct action_enabler_list *to_upgrade;
 
-
       /* Add the actions */
 
       /* Use "Transport Disembark 2" for disembarking from non native. */
@@ -1174,7 +1180,6 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       /* TRANS: _Disembark from non native (100% chance of success). */
       sz_strlcpy(paction->ui_name, N_("%sDisembark from non native%s"));
 
-
       /* Use "Conquer City 2" for conquring from non native. */
       paction = action_by_number(ACTION_CONQUER_CITY2);
       /* "Conquer City" and "Conquer City 2" won't appear in
@@ -1185,183 +1190,164 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       /* TRANS: _Conquer City from non native (100% chance of success). */
       sz_strlcpy(paction->ui_name, N_("%sConquer City from non native%s"));
 
-
       /* Enablers for disembark */
 
       /* City center counts as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_values(VUT_CITYTILE,
-                              REQ_RANGE_LOCAL,
-                              FALSE, TRUE, TRUE,
-                              CITYT_CENTER);
+      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, TRUE,
+                              TRUE, CITYT_CENTER);
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
-
 
       /* No TerrainSpeed sees everything as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL,
-                              FALSE, FALSE, TRUE,
-                              UCF_TERRAIN_SPEED);
+      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, FALSE,
+                              TRUE, UCF_TERRAIN_SPEED);
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
-
 
       /* "BeachLander" sees everything as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_str("UnitFlag", "Local",
-                           FALSE, TRUE, TRUE,
+      e_req = req_from_str("UnitFlag", "Local", FALSE, TRUE, TRUE,
                            "BeachLander");
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
-
 
       /* "Transport Disembark 2" enabler */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK2;
 
       /* Native terrain is native. */
-      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                              FALSE, FALSE, TRUE, USP_NATIVE_TILE);
+      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, FALSE,
+                              TRUE, USP_NATIVE_TILE);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* City is native. */
-      e_req = req_from_values(VUT_CITYTILE,
-                              REQ_RANGE_LOCAL,
-                              FALSE, FALSE, TRUE,
-                              CITYT_CENTER);
+      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
+                              TRUE, CITYT_CENTER);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* "BeachLander" sees everything as native. */
-      e_req = req_from_str("UnitFlag", "Local",
-                           FALSE, FALSE, TRUE,
+      e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
                            "BeachLander");
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* No TerrainSpeed sees everything as native. */
-      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL,
-                              FALSE, TRUE, TRUE,
+      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, TRUE,
                               UCF_TERRAIN_SPEED);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       action_enabler_add(enabler);
 
-
       /* Take movement for disembarking and conquering native terrain from
        * non native terrain */
 
       /* Take movement for disembarking from non native terrain */
-      peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                           MAX_MOVE_FRAGS, NULL);
+      peffect =
+          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
       /* The reduction only applies to "Transport Disembark 2". */
-      effect_req_append(peffect, req_from_str("Action", "Local",
-                                              FALSE, TRUE, TRUE,
-                                              "Transport Disembark 2"));
+      effect_req_append(peffect,
+                        req_from_str("Action", "Local", FALSE, TRUE, TRUE,
+                                     "Transport Disembark 2"));
 
       /* No reduction here unless disembarking to native terrain. */
-      effect_req_append(peffect, req_from_values(VUT_UNITSTATE,
-                                                 REQ_RANGE_LOCAL,
-                                                 FALSE, TRUE, TRUE,
-                                                 USP_NATIVE_TILE));
-
+      effect_req_append(peffect,
+                        req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
+                                        FALSE, TRUE, TRUE, USP_NATIVE_TILE));
 
       /* Take movement for conquering from non native terrain */
-      peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST,
-                           MAX_MOVE_FRAGS, NULL);
+      peffect =
+          effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
       /* The reduction only applies to "Conquer City 2". */
-      effect_req_append(peffect, req_from_str("Action", "Local",
-                                              FALSE, TRUE, TRUE,
-                                              "Conquer City 2"));
+      effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+                                              TRUE, "Conquer City 2"));
 
       /* No reduction here unless disembarking to native terrain. */
-      effect_req_append(peffect, req_from_values(VUT_UNITSTATE,
-                                                 REQ_RANGE_LOCAL,
-                                                 FALSE, TRUE, TRUE,
-                                                 USP_NATIVE_TILE));
+      effect_req_append(peffect,
+                        req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
+                                        FALSE, TRUE, TRUE, USP_NATIVE_TILE));
 
       /* Upgrade exisiting Conquer City action enablers */
       to_upgrade = action_enabler_list_copy(
-            action_enablers_for_action(ACTION_CONQUER_CITY));
+          action_enablers_for_action(ACTION_CONQUER_CITY));
 
-      action_enabler_list_iterate(to_upgrade, conquer_city_enabler) {
+      action_enabler_list_iterate(to_upgrade, conquer_city_enabler)
+      {
         /* City center counts as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_values(VUT_CITYTILE,
-                                REQ_RANGE_LOCAL,
-                                FALSE, TRUE, TRUE,
-                                CITYT_CENTER);
+        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, TRUE,
+                                TRUE, CITYT_CENTER);
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
-
-      action_enabler_list_iterate(to_upgrade, conquer_city_enabler) {
+      action_enabler_list_iterate(to_upgrade, conquer_city_enabler)
+      {
         /* No TerrainSpeed sees everything as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL,
-                                FALSE, FALSE, TRUE,
-                                UCF_TERRAIN_SPEED);
+        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, FALSE,
+                                TRUE, UCF_TERRAIN_SPEED);
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
-
-      action_enabler_list_iterate(to_upgrade, conquer_city_enabler) {
+      action_enabler_list_iterate(to_upgrade, conquer_city_enabler)
+      {
         /* "BeachLander" sees everything as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_str("UnitFlag", "Local",
-                             FALSE, TRUE, TRUE,
+        e_req = req_from_str("UnitFlag", "Local", FALSE, TRUE, TRUE,
                              "BeachLander");
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
-
-      action_enabler_list_iterate(to_upgrade, conquer_city_enabler) {
+      action_enabler_list_iterate(to_upgrade, conquer_city_enabler)
+      {
         /* Use "Conquer City 2" for conquring from non native. */
         enabler = action_enabler_copy(conquer_city_enabler);
         enabler->action = ACTION_CONQUER_CITY2;
 
         /* Native terrain is native. */
-        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                                FALSE, FALSE, TRUE, USP_NATIVE_TILE);
+        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, FALSE,
+                                TRUE, USP_NATIVE_TILE);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* City is native. */
-        e_req = req_from_values(VUT_CITYTILE,
-                                REQ_RANGE_LOCAL,
-                                FALSE, FALSE, TRUE,
-                                CITYT_CENTER);
+        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
+                                TRUE, CITYT_CENTER);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* No TerrainSpeed sees everything as native. */
-        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL,
-                                FALSE, TRUE, TRUE,
-                                UCF_TERRAIN_SPEED);
+        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, TRUE,
+                                TRUE, UCF_TERRAIN_SPEED);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* "BeachLander" sees everything as native. */
-        e_req = req_from_str("UnitFlag", "Local",
-                             FALSE, FALSE, TRUE,
+        e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
                              "BeachLander");
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         action_enabler_add(enabler);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
-
-      action_enabler_list_iterate(to_upgrade, conquer_city_enabler) {
+      action_enabler_list_iterate(to_upgrade, conquer_city_enabler)
+      {
         /* Use for conquering from native terrain so conquest from
          * non native terain is handled by "Conquer City 2". */
-        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                                FALSE, TRUE, TRUE, USP_NATIVE_TILE);
+        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, TRUE,
+                                TRUE, USP_NATIVE_TILE);
         requirement_vector_append(&conquer_city_enabler->actor_reqs, e_req);
-      } action_enabler_list_iterate_end;
+      }
+      action_enabler_list_iterate_end;
 
       action_enabler_list_destroy(to_upgrade);
     }
@@ -1370,29 +1356,27 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Replace deprecated requirement type names with currently valid ones.
+/**********************************************************************/ /**
+   Replace deprecated requirement type names with currently valid ones.
 
-  The extra arguments are for situation where some, but not all, instances
-  of a requirement type should become something else.
-**************************************************************************/
+   The extra arguments are for situation where some, but not all, instances
+   of a requirement type should become something else.
+ **************************************************************************/
 const char *rscompat_req_type_name_3_1(const char *old_type,
                                        const char *old_range,
                                        bool old_survives, bool old_present,
-                                       bool old_quiet,
-                                       const char *old_value)
+                                       bool old_quiet, const char *old_value)
 {
   return old_type;
 }
 
-/**********************************************************************//**
-  Replace deprecated requirement type names with currently valid ones.
+/**********************************************************************/ /**
+   Replace deprecated requirement type names with currently valid ones.
 
-  The extra arguments are for situation where some, but not all, instances
-  of a requirement type should become something else.
-**************************************************************************/
-const char *rscompat_req_name_3_1(const char *type,
-                                  const char *old_name)
+   The extra arguments are for situation where some, but not all, instances
+   of a requirement type should become something else.
+ **************************************************************************/
+const char *rscompat_req_name_3_1(const char *type, const char *old_name)
 {
   if (!fc_strcasecmp("DiplRel", type)
       && !fc_strcasecmp("Is foreign", old_name)) {
@@ -1402,9 +1386,9 @@ const char *rscompat_req_name_3_1(const char *type,
   return old_name;
 }
 
-/**********************************************************************//**
-  Replace deprecated unit type flag names with currently valid ones.
-**************************************************************************/
+/**********************************************************************/ /**
+   Replace deprecated unit type flag names with currently valid ones.
+ **************************************************************************/
 const char *rscompat_utype_flag_name_3_1(struct rscompat_info *compat,
                                          const char *old_type)
 {
@@ -1414,9 +1398,9 @@ const char *rscompat_utype_flag_name_3_1(struct rscompat_info *compat,
   return old_type;
 }
 
-/**********************************************************************//**
-  Adjust freeciv-3.0 ruleset extra definitions to freeciv-3.1
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust freeciv-3.0 ruleset extra definitions to freeciv-3.1
+ **************************************************************************/
 void rscompat_extra_adjust_3_1(struct rscompat_info *compat,
                                struct extra_type *pextra)
 {

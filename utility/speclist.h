@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  * That is, a (sometimes) type-checked genlist. (Or at least a
  * genlist with related functions with distinctly typed parameters.)
  * (Or, maybe, what you end up doing when you don't use C++ ?)
- * 
+ *
  * Before including this file, you must define the following:
  *   SPECLIST_TAG - this tag will be used to form names for functions etc.
  * You may also define:
@@ -137,8 +137,8 @@ extern "C" {
 #define SPECLIST_TYPE struct SPECLIST_TAG
 #endif
 
-#define SPECLIST_PASTE_(x, y) x ## y
-#define SPECLIST_PASTE(x, y) SPECLIST_PASTE_(x,y)
+#define SPECLIST_PASTE_(x, y) x##y
+#define SPECLIST_PASTE(x, y) SPECLIST_PASTE_(x, y)
 
 #define SPECLIST_LIST struct SPECLIST_PASTE(SPECLIST_TAG, _list)
 #define SPECLIST_LINK struct SPECLIST_PASTE(SPECLIST_TAG, _list_link)
@@ -151,21 +151,20 @@ SPECLIST_LIST;
 SPECLIST_LINK;
 
 /* Function related typedefs. */
-typedef void (*SPECLIST_FOO(_list_free_fn_t)) (SPECLIST_TYPE *);
-typedef SPECLIST_TYPE *
-(*SPECLIST_FOO(_list_copy_fn_t)) (const SPECLIST_TYPE *);
-typedef bool (*SPECLIST_FOO(_list_comp_fn_t)) (const SPECLIST_TYPE *,
-                                               const SPECLIST_TYPE *);
-typedef bool (*SPECLIST_FOO(_list_cond_fn_t)) (const SPECLIST_TYPE *);
-
+typedef void (*SPECLIST_FOO(_list_free_fn_t))(SPECLIST_TYPE *);
+typedef SPECLIST_TYPE *(*SPECLIST_FOO(_list_copy_fn_t))(
+    const SPECLIST_TYPE *);
+typedef bool (*SPECLIST_FOO(_list_comp_fn_t))(const SPECLIST_TYPE *,
+                                              const SPECLIST_TYPE *);
+typedef bool (*SPECLIST_FOO(_list_cond_fn_t))(const SPECLIST_TYPE *);
 
 /****************************************************************************
   Create a new speclist.
 ****************************************************************************/
-static inline SPECLIST_LIST *SPECLIST_FOO(_list_new) (void)
-fc__warn_unused_result;
+static inline SPECLIST_LIST *
+    SPECLIST_FOO(_list_new)(void) fc__warn_unused_result;
 
-static inline SPECLIST_LIST *SPECLIST_FOO(_list_new) (void)
+static inline SPECLIST_LIST *SPECLIST_FOO(_list_new)(void)
 {
   return (SPECLIST_LIST *) genlist_new();
 }
@@ -174,20 +173,21 @@ static inline SPECLIST_LIST *SPECLIST_FOO(_list_new) (void)
   Create a new speclist with a free callback.
 ****************************************************************************/
 static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_new_full) (SPECLIST_FOO(_list_free_fn_t) free_data_func)
-fc__warn_unused_result;
+    SPECLIST_FOO(_list_new_full)(SPECLIST_FOO(_list_free_fn_t)
+                                     free_data_func) fc__warn_unused_result;
 
 static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_new_full) (SPECLIST_FOO(_list_free_fn_t) free_data_func)
+    SPECLIST_FOO(_list_new_full)(SPECLIST_FOO(_list_free_fn_t)
+                                     free_data_func)
 {
-  return ((SPECLIST_LIST *)
-          genlist_new_full((genlist_free_fn_t) free_data_func));
+  return ((SPECLIST_LIST *) genlist_new_full(
+      (genlist_free_fn_t) free_data_func));
 }
 
 /****************************************************************************
   Free a speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_destroy) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_destroy)(SPECLIST_LIST *tthis)
 {
   genlist_destroy((struct genlist *) tthis);
 }
@@ -195,12 +195,11 @@ static inline void SPECLIST_FOO(_list_destroy) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Duplicate a speclist.
 ****************************************************************************/
-static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_copy) (const SPECLIST_LIST *tthis)
-fc__warn_unused_result;
+static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy)(
+    const SPECLIST_LIST *tthis) fc__warn_unused_result;
 
 static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_copy) (const SPECLIST_LIST *tthis)
+    SPECLIST_FOO(_list_copy)(const SPECLIST_LIST *tthis)
 {
   return (SPECLIST_LIST *) genlist_copy((const struct genlist *) tthis);
 }
@@ -209,27 +208,23 @@ SPECLIST_FOO(_list_copy) (const SPECLIST_LIST *tthis)
   Duplicate a speclist with a free callback and a function to copy each
   element.
 ****************************************************************************/
-static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_copy_full) (const SPECLIST_LIST *tthis,
-                               SPECLIST_FOO(_list_copy_fn_t) copy_data_func,
-                               SPECLIST_FOO(_list_free_fn_t) free_data_func)
-fc__warn_unused_result;
+static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy_full)(
+    const SPECLIST_LIST *tthis, SPECLIST_FOO(_list_copy_fn_t) copy_data_func,
+    SPECLIST_FOO(_list_free_fn_t) free_data_func) fc__warn_unused_result;
 
-static inline SPECLIST_LIST *
-SPECLIST_FOO(_list_copy_full) (const SPECLIST_LIST *tthis,
-                               SPECLIST_FOO(_list_copy_fn_t) copy_data_func,
-                               SPECLIST_FOO(_list_free_fn_t) free_data_func)
+static inline SPECLIST_LIST *SPECLIST_FOO(_list_copy_full)(
+    const SPECLIST_LIST *tthis, SPECLIST_FOO(_list_copy_fn_t) copy_data_func,
+    SPECLIST_FOO(_list_free_fn_t) free_data_func)
 {
-  return ((SPECLIST_LIST *)
-          genlist_copy_full((const struct genlist *) tthis,
-                            (genlist_copy_fn_t) copy_data_func,
-                            (genlist_free_fn_t) free_data_func));
+  return ((SPECLIST_LIST *) genlist_copy_full(
+      (const struct genlist *) tthis, (genlist_copy_fn_t) copy_data_func,
+      (genlist_free_fn_t) free_data_func));
 }
 
 /****************************************************************************
   Remove all elements from the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_clear) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_clear)(SPECLIST_LIST *tthis)
 {
   genlist_clear((struct genlist *) tthis);
 }
@@ -237,7 +232,7 @@ static inline void SPECLIST_FOO(_list_clear) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Remove all element duplicates (the speclist must be sorted before).
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_unique) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_unique)(SPECLIST_LIST *tthis)
 {
   genlist_unique((struct genlist *) tthis);
 }
@@ -246,9 +241,8 @@ static inline void SPECLIST_FOO(_list_unique) (SPECLIST_LIST *tthis)
   Remove all element duplicates (the speclist must be sorted before), using
   'comp_data_func' to determine if the elements are equivalents.
 ****************************************************************************/
-static inline void
-SPECLIST_FOO(_list_unique_full) (SPECLIST_LIST *tthis,
-                                 SPECLIST_FOO(_list_comp_fn_t) comp_data_func)
+static inline void SPECLIST_FOO(_list_unique_full)(
+    SPECLIST_LIST *tthis, SPECLIST_FOO(_list_comp_fn_t) comp_data_func)
 {
   genlist_unique_full((struct genlist *) tthis,
                       (genlist_comp_fn_t) comp_data_func);
@@ -257,8 +251,8 @@ SPECLIST_FOO(_list_unique_full) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Push back an element into the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_append) (SPECLIST_LIST *tthis,
-                                               SPECLIST_TYPE *pfoo)
+static inline void SPECLIST_FOO(_list_append)(SPECLIST_LIST *tthis,
+                                              SPECLIST_TYPE *pfoo)
 {
   genlist_append((struct genlist *) tthis, pfoo);
 }
@@ -266,8 +260,8 @@ static inline void SPECLIST_FOO(_list_append) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Push front an element into the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_prepend) (SPECLIST_LIST *tthis,
-                                                SPECLIST_TYPE *pfoo)
+static inline void SPECLIST_FOO(_list_prepend)(SPECLIST_LIST *tthis,
+                                               SPECLIST_TYPE *pfoo)
 {
   genlist_prepend((struct genlist *) tthis, pfoo);
 }
@@ -275,8 +269,8 @@ static inline void SPECLIST_FOO(_list_prepend) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Insert an element into the speclist at the given position.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_insert) (SPECLIST_LIST *tthis,
-                                               SPECLIST_TYPE *pfoo, int idx)
+static inline void SPECLIST_FOO(_list_insert)(SPECLIST_LIST *tthis,
+                                              SPECLIST_TYPE *pfoo, int idx)
 {
   genlist_insert((struct genlist *) tthis, pfoo, idx);
 }
@@ -284,9 +278,9 @@ static inline void SPECLIST_FOO(_list_insert) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Insert an element after the specified link.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_insert_after) (SPECLIST_LIST *tthis,
-                                                     SPECLIST_TYPE *pfoo,
-                                                     SPECLIST_LINK *plink)
+static inline void SPECLIST_FOO(_list_insert_after)(SPECLIST_LIST *tthis,
+                                                    SPECLIST_TYPE *pfoo,
+                                                    SPECLIST_LINK *plink)
 {
   genlist_insert_after((struct genlist *) tthis, pfoo,
                        (struct genlist_link *) plink);
@@ -295,7 +289,7 @@ static inline void SPECLIST_FOO(_list_insert_after) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Insert an element before the specified link.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_insert_before) (SPECLIST_LIST *tthis,
+static inline void SPECLIST_FOO(_list_insert_before)(SPECLIST_LIST *tthis,
                                                      SPECLIST_TYPE *pfoo,
                                                      SPECLIST_LINK *plink)
 {
@@ -306,8 +300,8 @@ static inline void SPECLIST_FOO(_list_insert_before) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Search 'pfoo' in the speclist, and remove it. Returns TRUE on success.
 ****************************************************************************/
-static inline bool SPECLIST_FOO(_list_remove) (SPECLIST_LIST *tthis,
-                                               const SPECLIST_TYPE *pfoo)
+static inline bool SPECLIST_FOO(_list_remove)(SPECLIST_LIST *tthis,
+                                              const SPECLIST_TYPE *pfoo)
 {
   return genlist_remove((struct genlist *) tthis, pfoo);
 }
@@ -316,9 +310,8 @@ static inline bool SPECLIST_FOO(_list_remove) (SPECLIST_LIST *tthis,
   Remove the first element which fit the conditional function. Returns
   TRUE on success.
 ****************************************************************************/
-static inline bool
-SPECLIST_FOO(_list_remove_if) (SPECLIST_LIST *tthis,
-                               SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
+static inline bool SPECLIST_FOO(_list_remove_if)(
+    SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
   return genlist_remove_if((struct genlist *) tthis,
                            (genlist_cond_fn_t) cond_data_func);
@@ -327,8 +320,8 @@ SPECLIST_FOO(_list_remove_if) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Remove 'pfoo' of the whole list. Returns the number of removed elements.
 ****************************************************************************/
-static inline int SPECLIST_FOO(_list_remove_all) (SPECLIST_LIST *tthis,
-                                                  const SPECLIST_TYPE *pfoo)
+static inline int SPECLIST_FOO(_list_remove_all)(SPECLIST_LIST *tthis,
+                                                 const SPECLIST_TYPE *pfoo)
 {
   return genlist_remove_all((struct genlist *) tthis, pfoo);
 }
@@ -337,10 +330,8 @@ static inline int SPECLIST_FOO(_list_remove_all) (SPECLIST_LIST *tthis,
   Remove all elements which fit the conditional function. Returns the
   number of removed elements.
 ****************************************************************************/
-static inline bool
-SPECLIST_FOO(_list_remove_all_if) (SPECLIST_LIST *tthis,
-                                   SPECLIST_FOO(_list_cond_fn_t)
-                                   cond_data_func)
+static inline bool SPECLIST_FOO(_list_remove_all_if)(
+    SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
   return genlist_remove_all_if((struct genlist *) tthis,
                                (genlist_cond_fn_t) cond_data_func);
@@ -353,8 +344,8 @@ SPECLIST_FOO(_list_remove_all_if) (SPECLIST_LIST *tthis,
   NB: After calling this function 'plink' is no more usable. You should
   have saved the next or previous link before.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_erase) (SPECLIST_LIST *tthis,
-                                              SPECLIST_LINK *plink)
+static inline void SPECLIST_FOO(_list_erase)(SPECLIST_LIST *tthis,
+                                             SPECLIST_LINK *plink)
 {
   genlist_erase((struct genlist *) tthis, (struct genlist_link *) plink);
 }
@@ -362,7 +353,7 @@ static inline void SPECLIST_FOO(_list_erase) (SPECLIST_LIST *tthis,
 /****************************************************************************
   Remove the first element of the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_pop_front) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_pop_front)(SPECLIST_LIST *tthis)
 {
   genlist_pop_front((struct genlist *) tthis);
 }
@@ -370,7 +361,7 @@ static inline void SPECLIST_FOO(_list_pop_front) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Remove the last element of the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_pop_back) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_pop_back)(SPECLIST_LIST *tthis)
 {
   genlist_pop_back((struct genlist *) tthis);
 }
@@ -378,7 +369,7 @@ static inline void SPECLIST_FOO(_list_pop_back) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Return the number of elements inside the speclist.
 ****************************************************************************/
-static inline int SPECLIST_FOO(_list_size) (const SPECLIST_LIST *tthis)
+static inline int SPECLIST_FOO(_list_size)(const SPECLIST_LIST *tthis)
 {
   return genlist_size((const struct genlist *) tthis);
 }
@@ -387,17 +378,17 @@ static inline int SPECLIST_FOO(_list_size) (const SPECLIST_LIST *tthis)
   Return the element at position in the speclist.
 ****************************************************************************/
 static inline SPECLIST_TYPE *
-SPECLIST_FOO(_list_get) (const SPECLIST_LIST *tthis, int slindex)
+    SPECLIST_FOO(_list_get)(const SPECLIST_LIST *tthis, int slindex)
 {
-  return ((SPECLIST_TYPE *)
-          genlist_get((const struct genlist *) tthis, slindex));
+  return ((SPECLIST_TYPE *) genlist_get((const struct genlist *) tthis,
+                                        slindex));
 }
 
 /****************************************************************************
   Return the first element of the speclist.
 ****************************************************************************/
 static inline SPECLIST_TYPE *
-SPECLIST_FOO(_list_front) (const SPECLIST_LIST *tthis)
+    SPECLIST_FOO(_list_front)(const SPECLIST_LIST *tthis)
 {
   return (SPECLIST_TYPE *) genlist_front((const struct genlist *) tthis);
 }
@@ -406,7 +397,7 @@ SPECLIST_FOO(_list_front) (const SPECLIST_LIST *tthis)
   Return the last element of the speclist.
 ****************************************************************************/
 static inline SPECLIST_TYPE *
-SPECLIST_FOO(_list_back) (const SPECLIST_LIST *tthis)
+    SPECLIST_FOO(_list_back)(const SPECLIST_LIST *tthis)
 {
   return (SPECLIST_TYPE *) genlist_back((const struct genlist *) tthis);
 }
@@ -415,17 +406,17 @@ SPECLIST_FOO(_list_back) (const SPECLIST_LIST *tthis)
   Return the element at position in the speclist.
 ****************************************************************************/
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_link_get) (const SPECLIST_LIST *tthis, int slindex)
+    SPECLIST_FOO(_list_link_get)(const SPECLIST_LIST *tthis, int slindex)
 {
-  return ((SPECLIST_LINK *)
-          genlist_link_get((const struct genlist *) tthis, slindex));
+  return ((SPECLIST_LINK *) genlist_link_get((const struct genlist *) tthis,
+                                             slindex));
 }
 
 /****************************************************************************
   Return the head link of the speclist.
 ****************************************************************************/
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_head) (const SPECLIST_LIST *tthis)
+    SPECLIST_FOO(_list_head)(const SPECLIST_LIST *tthis)
 {
   return (SPECLIST_LINK *) genlist_head((const struct genlist *) tthis);
 }
@@ -434,7 +425,7 @@ SPECLIST_FOO(_list_head) (const SPECLIST_LIST *tthis)
   Return the tail link of the speclist.
 ****************************************************************************/
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_tail) (const SPECLIST_LIST *tthis)
+    SPECLIST_FOO(_list_tail)(const SPECLIST_LIST *tthis)
 {
   return (SPECLIST_LINK *) genlist_tail((const struct genlist *) tthis);
 }
@@ -443,32 +434,30 @@ SPECLIST_FOO(_list_tail) (const SPECLIST_LIST *tthis)
   Return the link of the first element which match the data 'pfoo'.
 ****************************************************************************/
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_search) (const SPECLIST_LIST *tthis,
-                            const SPECLIST_TYPE *pfoo)
+    SPECLIST_FOO(_list_search)(const SPECLIST_LIST *tthis,
+                               const SPECLIST_TYPE *pfoo)
 {
-  return ((SPECLIST_LINK *)
-          genlist_search((const struct genlist *) tthis, pfoo));
+  return ((SPECLIST_LINK *) genlist_search((const struct genlist *) tthis,
+                                           pfoo));
 }
 
 /****************************************************************************
   Return the link of the first element which match the conditional function.
 ****************************************************************************/
-static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_search_if) (const SPECLIST_LIST *tthis,
-                               SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
+static inline SPECLIST_LINK *SPECLIST_FOO(_list_search_if)(
+    const SPECLIST_LIST *tthis, SPECLIST_FOO(_list_cond_fn_t) cond_data_func)
 {
-  return ((SPECLIST_LINK *)
-          genlist_search_if((const struct genlist *) tthis,
-                            (genlist_cond_fn_t) cond_data_func));
+  return ((SPECLIST_LINK *) genlist_search_if(
+      (const struct genlist *) tthis, (genlist_cond_fn_t) cond_data_func));
 }
 
 /****************************************************************************
   Sort the speclist.
 ****************************************************************************/
 static inline void
-SPECLIST_FOO(_list_sort) (SPECLIST_LIST * tthis,
-                          int (*compar) (const SPECLIST_TYPE *const *,
-                                         const SPECLIST_TYPE *const *))
+    SPECLIST_FOO(_list_sort)(SPECLIST_LIST *tthis,
+                             int (*compar)(const SPECLIST_TYPE *const *,
+                                           const SPECLIST_TYPE *const *))
 {
   genlist_sort((struct genlist *) tthis,
                (int (*)(const void *, const void *)) compar);
@@ -477,7 +466,7 @@ SPECLIST_FOO(_list_sort) (SPECLIST_LIST * tthis,
 /****************************************************************************
   Shuffle the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_shuffle) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_shuffle)(SPECLIST_LIST *tthis)
 {
   genlist_shuffle((struct genlist *) tthis);
 }
@@ -485,7 +474,7 @@ static inline void SPECLIST_FOO(_list_shuffle) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Reverse the order of the elements of the speclist.
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_reverse) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_reverse)(SPECLIST_LIST *tthis)
 {
   genlist_reverse((struct genlist *) tthis);
 }
@@ -493,7 +482,7 @@ static inline void SPECLIST_FOO(_list_reverse) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Allocate speclist mutex
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_allocate_mutex) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_allocate_mutex)(SPECLIST_LIST *tthis)
 {
   genlist_allocate_mutex((struct genlist *) tthis);
 }
@@ -501,7 +490,7 @@ static inline void SPECLIST_FOO(_list_allocate_mutex) (SPECLIST_LIST *tthis)
 /****************************************************************************
   Release speclist mutex
 ****************************************************************************/
-static inline void SPECLIST_FOO(_list_release_mutex) (SPECLIST_LIST *tthis)
+static inline void SPECLIST_FOO(_list_release_mutex)(SPECLIST_LIST *tthis)
 {
   genlist_release_mutex((struct genlist *) tthis);
 }
@@ -510,38 +499,36 @@ static inline void SPECLIST_FOO(_list_release_mutex) (SPECLIST_LIST *tthis)
   Return the data of the link.
 ****************************************************************************/
 static inline SPECLIST_TYPE *
-SPECLIST_FOO(_list_link_data) (const SPECLIST_LINK *plink)
+    SPECLIST_FOO(_list_link_data)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_TYPE *)
-          genlist_link_data((const struct genlist_link *) plink));
+  return ((SPECLIST_TYPE *) genlist_link_data(
+      (const struct genlist_link *) plink));
 }
 
 /****************************************************************************
   Return the previous link.
 ****************************************************************************/
-static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_link_prev) (const SPECLIST_LINK *plink)
-fc__warn_unused_result;
+static inline SPECLIST_LINK *SPECLIST_FOO(_list_link_prev)(
+    const SPECLIST_LINK *plink) fc__warn_unused_result;
 
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_link_prev) (const SPECLIST_LINK *plink)
+    SPECLIST_FOO(_list_link_prev)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_LINK *)
-          genlist_link_prev((const struct genlist_link *) plink));
+  return ((SPECLIST_LINK *) genlist_link_prev(
+      (const struct genlist_link *) plink));
 }
 
 /****************************************************************************
   Return the next link.
 ****************************************************************************/
-static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_link_next) (const SPECLIST_LINK *plink)
-fc__warn_unused_result;
+static inline SPECLIST_LINK *SPECLIST_FOO(_list_link_next)(
+    const SPECLIST_LINK *plink) fc__warn_unused_result;
 
 static inline SPECLIST_LINK *
-SPECLIST_FOO(_list_link_next) (const SPECLIST_LINK *plink)
+    SPECLIST_FOO(_list_link_next)(const SPECLIST_LINK *plink)
 {
-  return ((SPECLIST_LINK *)
-          genlist_link_next((const struct genlist_link *) plink));
+  return ((SPECLIST_LINK *) genlist_link_next(
+      (const struct genlist_link *) plink));
 }
 
 #undef SPECLIST_TAG
@@ -552,18 +539,18 @@ SPECLIST_FOO(_list_link_next) (const SPECLIST_LINK *plink)
 #undef SPECLIST_FOO
 
 /* Base macros that the users can specialize. */
-#ifndef FC__SPECLIST_H  /* Defines this only once, no multiple inclusions. */
+#ifndef FC__SPECLIST_H /* Defines this only once, no multiple inclusions.   \
+                        */
 #define FC__SPECLIST_H
 
 #ifdef FREECIV_DEBUG
-#  define TYPED_LIST_CHECK(ARG_list)                                       \
-  fc_assert_action(NULL != ARG_list, break)
+#define TYPED_LIST_CHECK(ARG_list) fc_assert_action(NULL != ARG_list, break)
 #else
-#  define TYPED_LIST_CHECK(ARG_list) /* Nothing. */
-#endif /* FREECIV_DEBUG */
+#define TYPED_LIST_CHECK(ARG_list) /* Nothing. */
+#endif                             /* FREECIV_DEBUG */
 
 /* Speclist data iterator.
- * 
+ *
  * Using *_list_remove(NAME_data) is safe in this loop (but it may be
  * inefficient due to the linear research of the data, see also
  * *_list_erase()).
@@ -573,22 +560,24 @@ SPECLIST_FOO(_list_link_next) (const SPECLIST_LINK *plink)
  * ARG_list - The speclist to iterate.
  * NAME_data - The name of the data iterator (defined inside the macro). */
 #define TYPED_LIST_ITERATE(TYPE_data, ARG_list, NAME_data)                  \
-do {                                                                        \
-  const struct genlist_link *NAME_data##_iter;                              \
-  TYPE_data *NAME_data;                                                     \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);       \
-  while (NULL != NAME_data##_iter) {                                        \
-    NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);          \
-    NAME_data##_iter = genlist_link_next(NAME_data##_iter);
+  do {                                                                      \
+    const struct genlist_link *NAME_data##_iter;                            \
+    TYPE_data *NAME_data;                                                   \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);     \
+    while (NULL != NAME_data##_iter) {                                      \
+      NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
+      NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_ITERATE_END                                                    \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 /* Mutex protected speclist data iterator.
- * 
+ *
  * Using *_list_remove(NAME_data) is safe in this loop (but it may be
  * inefficient due to the linear research of the data, see also
  * *_list_erase()).
@@ -599,26 +588,28 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_data - The name of the data iterator (defined inside the macro). */
 #define MUTEXED_LIST_ITERATE(TYPE_data, LIST_tag, ARG_list, NAME_data)      \
-do {                                                                        \
-  const struct genlist_link *NAME_data##_iter;                              \
-  TYPE_data *NAME_data;                                                     \
-  LIST_tag##_list_allocate_mutex(ARG_list);                                 \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);       \
-  while (NULL != NAME_data##_iter) {                                        \
-    NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);          \
-    NAME_data##_iter = genlist_link_next(NAME_data##_iter);
+  do {                                                                      \
+    const struct genlist_link *NAME_data##_iter;                            \
+    TYPE_data *NAME_data;                                                   \
+    LIST_tag##_list_allocate_mutex(ARG_list);                               \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    NAME_data##_iter = genlist_head((const struct genlist *) ARG_list);     \
+    while (NULL != NAME_data##_iter) {                                      \
+      NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
+      NAME_data##_iter = genlist_link_next(NAME_data##_iter);
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define MUTEXED_ITERATE_END(LIST_tag, ARG_list)                             \
   }                                                                         \
-    LIST_tag##_list_release_mutex(ARG_list);                                \
-} while (FALSE);
+  LIST_tag##_list_release_mutex(ARG_list);                                  \
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 #define MUTEXED_ITERATE_BREAK(LIST_tag, ARG_list)                           \
-do {                                                                        \
-  LIST_tag##_list_release_mutex(ARG_list);                                  \
-} while (FALSE);
+  do {                                                                      \
+    LIST_tag##_list_release_mutex(ARG_list);                                \
+  } while (FALSE);
 
 /* Same, but iterate backwards:
  *
@@ -626,19 +617,21 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_data - The name of the data iterator (defined inside the macro). */
 #define TYPED_LIST_ITERATE_REV(TYPE_data, ARG_list, NAME_data)              \
-do {                                                                        \
-  const struct genlist_link *NAME_data##_iter;                              \
-  TYPE_data *NAME_data;                                                     \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  NAME_data##_iter = genlist_tail((const struct genlist *) ARG_list);       \
-  while (NULL != NAME_data##_iter) {                                        \
-    NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);          \
-    NAME_data##_iter = genlist_link_prev(NAME_data##_iter);
+  do {                                                                      \
+    const struct genlist_link *NAME_data##_iter;                            \
+    TYPE_data *NAME_data;                                                   \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    NAME_data##_iter = genlist_tail((const struct genlist *) ARG_list);     \
+    while (NULL != NAME_data##_iter) {                                      \
+      NAME_data = (TYPE_data *) genlist_link_data(NAME_data##_iter);        \
+      NAME_data##_iter = genlist_link_prev(NAME_data##_iter);
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_ITERATE_REV_END                                                \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 /* Speclist link iterator.
  *
@@ -649,20 +642,21 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_link - The name of the link iterator (defined inside the macro). */
 #define TYPED_LIST_LINK_ITERATE(TYPE_link, ARG_list, NAME_link)             \
-do {                                                                        \
-  TYPE_link *NAME_link = ((TYPE_link *)                                     \
-                          genlist_head((const struct genlist *) ARG_list)); \
-  TYPE_link *NAME_link##_next;                                              \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  for (; NULL != NAME_link; NAME_link = NAME_link##_next) {                 \
-    NAME_link##_next = ((TYPE_link *)                                       \
-                        genlist_link_next((struct genlist_link *)           \
-                                          NAME_link));
+  do {                                                                      \
+    TYPE_link *NAME_link =                                                  \
+        ((TYPE_link *) genlist_head((const struct genlist *) ARG_list));    \
+    TYPE_link *NAME_link##_next;                                            \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    for (; NULL != NAME_link; NAME_link = NAME_link##_next) {               \
+      NAME_link##_next = ((TYPE_link *) genlist_link_next(                  \
+          (struct genlist_link *) NAME_link));
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_LINK_ITERATE_END                                               \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 /* Same, but iterate backwards:
  *
@@ -670,20 +664,21 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_link - The name of the link iterator (defined inside the macro). */
 #define TYPED_LIST_LINK_ITERATE_REV(TYPE_link, ARG_list, NAME_link)         \
-do {                                                                        \
-  TYPE_link *NAME_link = ((TYPE_link *)                                     \
-                          genlist_tail((const struct genlist *) ARG_list)); \
-  TYPE_link *NAME_link##_prev;                                              \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {                 \
-    NAME_link##_prev = ((TYPE_link *)                                       \
-                        genlist_link_prev((struct genlist_link *)           \
-                                          NAME_link));
+  do {                                                                      \
+    TYPE_link *NAME_link =                                                  \
+        ((TYPE_link *) genlist_tail((const struct genlist *) ARG_list));    \
+    TYPE_link *NAME_link##_prev;                                            \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {               \
+      NAME_link##_prev = ((TYPE_link *) genlist_link_prev(                  \
+          (struct genlist_link *) NAME_link));
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_LINK_ITERATE_REV_END                                           \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 /* Speclist link and data iterator.
  *
@@ -695,25 +690,26 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_link - The name of the link iterator (defined inside the macro).
  * NAME_data - The name of the data iterator (defined inside the macro). */
-#define TYPED_LIST_BOTH_ITERATE(TYPE_link, TYPE_data,                       \
-                                ARG_list, NAME_link, NAME_data)             \
-do {                                                                        \
-  TYPE_link *NAME_link = ((TYPE_link *)                                     \
-                          genlist_head((const struct genlist *) ARG_list)); \
-  TYPE_link *NAME_link##_next;                                              \
-  TYPE_data *NAME_data;                                                     \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  for (; NULL != NAME_link; NAME_link = NAME_link##_next) {                 \
-    NAME_link##_next = ((TYPE_link *)                                       \
-                        genlist_link_next((struct genlist_link *)           \
-                                          NAME_link));                      \
-    NAME_data = ((TYPE_data *)                                              \
-                 genlist_link_data((struct genlist_link *) NAME_link));
+#define TYPED_LIST_BOTH_ITERATE(TYPE_link, TYPE_data, ARG_list, NAME_link,  \
+                                NAME_data)                                  \
+  do {                                                                      \
+    TYPE_link *NAME_link =                                                  \
+        ((TYPE_link *) genlist_head((const struct genlist *) ARG_list));    \
+    TYPE_link *NAME_link##_next;                                            \
+    TYPE_data *NAME_data;                                                   \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    for (; NULL != NAME_link; NAME_link = NAME_link##_next) {               \
+      NAME_link##_next = ((TYPE_link *) genlist_link_next(                  \
+          (struct genlist_link *) NAME_link));                              \
+      NAME_data = ((TYPE_data *) genlist_link_data(                         \
+          (struct genlist_link *) NAME_link));
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_BOTH_ITERATE_END                                               \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 /* Same, but iterate backwards:
  *
@@ -722,25 +718,26 @@ do {                                                                        \
  * ARG_list - The speclist to iterate.
  * NAME_link - The name of the link iterator (defined inside the macro).
  * NAME_data - The name of the data iterator (defined inside the macro). */
-#define TYPED_LIST_BOTH_ITERATE_REV(TYPE_link, TYPE_data,                   \
-                                ARG_list, NAME_link, NAME_data)             \
-do {                                                                        \
-  TYPE_link *NAME_link = ((TYPE_link *)                                     \
-                          genlist_tail((const struct genlist *) ARG_list)); \
-  TYPE_link *NAME_link##_prev;                                              \
-  TYPE_data *NAME_data;                                                     \
-  TYPED_LIST_CHECK(ARG_list);                                               \
-  for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {                 \
-    NAME_link##_prev = ((TYPE_link *)                                       \
-                        genlist_link_prev((struct genlist_link *)           \
-                                          NAME_link));                      \
-    NAME_data = ((TYPE_data *)                                              \
-                 genlist_link_data((struct genlist_link *) NAME_link));
+#define TYPED_LIST_BOTH_ITERATE_REV(TYPE_link, TYPE_data, ARG_list,         \
+                                    NAME_link, NAME_data)                   \
+  do {                                                                      \
+    TYPE_link *NAME_link =                                                  \
+        ((TYPE_link *) genlist_tail((const struct genlist *) ARG_list));    \
+    TYPE_link *NAME_link##_prev;                                            \
+    TYPE_data *NAME_data;                                                   \
+    TYPED_LIST_CHECK(ARG_list);                                             \
+    for (; NULL != NAME_link; NAME_link = NAME_link##_prev) {               \
+      NAME_link##_prev = ((TYPE_link *) genlist_link_prev(                  \
+          (struct genlist_link *) NAME_link));                              \
+      NAME_data = ((TYPE_data *) genlist_link_data(                         \
+          (struct genlist_link *) NAME_link));
 
-/* Balance for above: */ 
+/* Balance for above: */
 #define LIST_BOTH_ITERATE_REV_END                                           \
   }                                                                         \
-} while (FALSE);
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 #endif /* FC__SPECLIST_H */
 

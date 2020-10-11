@@ -27,34 +27,33 @@ class QRadioButton;
 
 class ruledit_gui;
 
-class tab_extras : public QWidget
-{
+class tab_extras : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_extras(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_extras(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_extra_info(struct extra_type *pextra);
-    bool initialize_new_extra(struct extra_type *pextra);
+private:
+  ruledit_gui *ui;
+  void update_extra_info(struct extra_type *pextra);
+  bool initialize_new_extra(struct extra_type *pextra);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QListWidget *extra_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QListWidget *extra_list;
+  QRadioButton *same_name;
 
-    struct extra_type *selected;
+  struct extra_type *selected;
 
-  private slots:
-    void name_given();
-    void select_extra();
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_reqs();
-    void edit_effects();
+private slots:
+  void name_given();
+  void select_extra();
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_reqs();
+  void edit_effects();
 };
 
 #endif // FC__TAB_EXTRAS_H

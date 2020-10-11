@@ -16,21 +16,21 @@
 #endif
 
 /* utility */
-#include "log.h"                /* fc_assert */
+#include "log.h" /* fc_assert */
 
 #include "distribute.h"
 
-/************************************************************************//**
-  Distribute "number" elements into "groups" groups with ratios given by
-  the elements in "ratios".  The resulting division is put into the "result"
-  array.
+/************************************************************************/ /**
+   Distribute "number" elements into "groups" groups with ratios given by
+   the elements in "ratios".  The resulting division is put into the "result"
+   array.
 
-  For instance this code is used to distribute trade among science, tax, and
-  luxury.  In this case "number" is the amount of trade, "groups" is 3,
-  and ratios[3] = {sci_rate, tax_rate, lux_rate}.
+   For instance this code is used to distribute trade among science, tax, and
+   luxury.  In this case "number" is the amount of trade, "groups" is 3,
+   and ratios[3] = {sci_rate, tax_rate, lux_rate}.
 
-  The algorithm used to determine the distribution is Hamilton's Method.
-****************************************************************************/
+   The algorithm used to determine the distribution is Hamilton's Method.
+ ****************************************************************************/
 void distribute(int number, int groups, int *ratios, int *result)
 {
   int i, sum = 0, rest[groups], max_groups[groups], max_count, max;
@@ -38,7 +38,7 @@ void distribute(int number, int groups, int *ratios, int *result)
   const int original_number = number;
 #endif
 
-  /* 
+  /*
    * Distribution of a number of items into a number of groups with a given
    * ratio.  This follows a modified Hare/Niemeyer algorithm (also known
    * as "Hamilton's Method"):
@@ -78,12 +78,12 @@ void distribute(int number, int groups, int *ratios, int *result)
     /* Find the largest remaining fraction(s). */
     for (i = 0; i < groups; i++) {
       if (rest[i] > max) {
-	max_count = 1;
-	max_groups[0] = i;
-	max = rest[i];
+        max_count = 1;
+        max_groups[0] = i;
+        max = rest[i];
       } else if (rest[i] == max) {
-	max_groups[max_count] = i;
-	max_count++;
+        max_groups[max_count] = i;
+        max_count++;
       }
     }
 
@@ -99,10 +99,10 @@ void distribute(int number, int groups, int *ratios, int *result)
        * smallest whole number. */
       fc_assert(max_count > 1);
       for (i = 1; i < max_count; i++) {
-	if (result[max_groups[i]] < min) {
-	  min = result[max_groups[i]];
-	  which_min = max_groups[i];
-	}
+        if (result[max_groups[i]] < min) {
+          min = result[max_groups[i]];
+          which_min = max_groups[i];
+        }
       }
       result[which_min]++;
       rest[which_min] = 0;

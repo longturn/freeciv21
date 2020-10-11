@@ -23,8 +23,7 @@ extern "C" {
 /* modinst */
 #include "download.h"
 
-struct install_info
-{
+struct install_info {
   char name[MAX_LEN_NAME];
   enum modpack_type type;
   char version[MAX_LEN_NAME];
@@ -34,9 +33,9 @@ struct install_info
 #define SPECLIST_TYPE struct install_info
 #include "speclist.h"
 
-#define install_info_list_iterate(ii_list, item) \
+#define install_info_list_iterate(ii_list, item)                            \
   TYPED_LIST_ITERATE(struct install_info, ii_list, item)
-#define install_info_list_iterate_end  LIST_ITERATE_END
+#define install_info_list_iterate_end LIST_ITERATE_END
 
 /* Backward compatibility to pre-sqlite database versions */
 void load_install_info_list(const char *filename);
@@ -47,8 +46,7 @@ void close_mpdbs(void);
 
 bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version);
-const char *mpdb_installed_version(const char *name,
-                                   enum modpack_type type);
+const char *mpdb_installed_version(const char *name, enum modpack_type type);
 
 #ifdef __cplusplus
 }

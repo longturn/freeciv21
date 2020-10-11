@@ -43,9 +43,10 @@ extern "C" {
 
 /* Ruledit */
 #define R__(String) dgettext("freeciv-ruledit", String)
-#define RQ_(String) skip_intl_qualifier_prefix(dgettext("freeciv-ruledit", String))
+#define RQ_(String)                                                         \
+  skip_intl_qualifier_prefix(dgettext("freeciv-ruledit", String))
 
-#else  /* FREECIV_ENABLE_NLS */
+#else /* FREECIV_ENABLE_NLS */
 
 /* Core freeciv */
 #define _(String) (String)
@@ -73,7 +74,7 @@ extern "C" {
 #define Qn_(String) skip_intl_qualifier_prefix(String)
 
 const char *skip_intl_qualifier_prefix(const char *str)
-            fc__attribute((__format_arg__(1)));
+    fc__attribute((__format_arg__(1)));
 
 char *capitalized_string(const char *str);
 void free_capitalized(char *str);
@@ -86,4 +87,4 @@ const char *get_locale_dir(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__FCINTL_H */
+#endif /* FC__FCINTL_H */

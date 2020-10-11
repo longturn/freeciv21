@@ -17,8 +17,8 @@
 extern "C" {
 #endif /* __cplusplus */
 
-typedef void (*uq_callback_t) (void *data);
-typedef void (*uq_free_fn_t) (void *data);
+typedef void (*uq_callback_t)(void *data);
+typedef void (*uq_free_fn_t)(void *data);
 #define UQ_FREEDATA(fn) ((uq_free_fn_t) fn)
 
 /* General update queue. */
@@ -45,19 +45,15 @@ bool update_queue_has_callback_full(uq_callback_t callback,
 void update_queue_connect_processing_started(int request_id,
                                              uq_callback_t callback,
                                              void *data);
-void update_queue_connect_processing_started_full(int request_id,
-                                                  uq_callback_t callback,
-                                                  void *data,
-                                                  uq_free_fn_t
-                                                  free_data_func);
+void update_queue_connect_processing_started_full(
+    int request_id, uq_callback_t callback, void *data,
+    uq_free_fn_t free_data_func);
 void update_queue_connect_processing_finished(int request_id,
                                               uq_callback_t callback,
                                               void *data);
-void update_queue_connect_processing_finished_full(int request_id,
-                                                   uq_callback_t callback,
-                                                   void *data,
-                                                   uq_free_fn_t
-                                                   free_data_func);
+void update_queue_connect_processing_finished_full(
+    int request_id, uq_callback_t callback, void *data,
+    uq_free_fn_t free_data_func);
 
 bool update_queue_is_switching_page(void);
 

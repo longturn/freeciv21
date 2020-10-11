@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -42,16 +42,16 @@ extern "C" {
 
 /* utility */
 #include "fcthread.h"
-#include "support.h"    /* bool, fc__warn_unused_result */
+#include "support.h" /* bool, fc__warn_unused_result */
 
 /* A single element of a genlist, opaque type. */
 struct genlist_link;
 
 /* Function type definitions. */
-typedef void (*genlist_free_fn_t) (void *);
-typedef void * (*genlist_copy_fn_t) (const void *);
-typedef bool (*genlist_cond_fn_t) (const void *);
-typedef bool (*genlist_comp_fn_t) (const void *, const void *);
+typedef void (*genlist_free_fn_t)(void *);
+typedef void *(*genlist_copy_fn_t)(const void *);
+typedef bool (*genlist_cond_fn_t)(const void *);
+typedef bool (*genlist_comp_fn_t)(const void *, const void *);
 
 /* A genlist, storing the number of elements (for quick retrieval and
  * testing for empty lists), and pointers to the first and last elements
@@ -63,18 +63,18 @@ struct genlist {
   struct genlist_link *tail_link;
   genlist_free_fn_t free_data_func;
 };
-  
+
 struct genlist *genlist_new(void) fc__warn_unused_result;
-struct genlist *genlist_new_full(genlist_free_fn_t free_data_func)
-                fc__warn_unused_result;
+struct genlist *
+genlist_new_full(genlist_free_fn_t free_data_func) fc__warn_unused_result;
 void genlist_destroy(struct genlist *pgenlist);
 
-struct genlist *genlist_copy(const struct genlist *pgenlist)
-                fc__warn_unused_result;
-struct genlist *genlist_copy_full(const struct genlist *pgenlist,
-                                  genlist_copy_fn_t copy_data_func,
-                                  genlist_free_fn_t free_data_func)
-                fc__warn_unused_result;
+struct genlist *
+genlist_copy(const struct genlist *pgenlist) fc__warn_unused_result;
+struct genlist *
+genlist_copy_full(const struct genlist *pgenlist,
+                  genlist_copy_fn_t copy_data_func,
+                  genlist_free_fn_t free_data_func) fc__warn_unused_result;
 
 void genlist_clear(struct genlist *pgenlist);
 
@@ -104,8 +104,10 @@ int genlist_size(const struct genlist *pgenlist);
 void *genlist_get(const struct genlist *pgenlist, int idx);
 void *genlist_front(const struct genlist *pgenlist);
 void *genlist_back(const struct genlist *pgenlist);
-struct genlist_link *genlist_link_get(const struct genlist *pgenlist, int idx);
-inline static struct genlist_link *genlist_head(const struct genlist *pgenlist)
+struct genlist_link *genlist_link_get(const struct genlist *pgenlist,
+                                      int idx);
+inline static struct genlist_link *
+genlist_head(const struct genlist *pgenlist)
 {
   return (NULL != pgenlist ? pgenlist->head_link : NULL);
 }
@@ -117,13 +119,12 @@ struct genlist_link *genlist_search_if(const struct genlist *pgenlist,
                                        genlist_cond_fn_t cond_data_func);
 
 void genlist_sort(struct genlist *pgenlist,
-                  int (*compar) (const void *, const void *));
+                  int (*compar)(const void *, const void *));
 void genlist_shuffle(struct genlist *pgenlist);
 void genlist_reverse(struct genlist *pgenlist);
 
 void genlist_allocate_mutex(struct genlist *pgenlist);
 void genlist_release_mutex(struct genlist *pgenlist);
-
 
 /* A single element of a genlist, storing the pointer to user
  * data, and pointers to the next and previous elements: */
@@ -143,8 +144,8 @@ static inline void *genlist_link_data(const struct genlist_link *plink)
 /****************************************************************************
   Returns the previous link.
 ****************************************************************************/
-fc__warn_unused_result
-static inline struct genlist_link *genlist_link_prev(const struct genlist_link *plink)
+fc__warn_unused_result static inline struct genlist_link *
+genlist_link_prev(const struct genlist_link *plink)
 {
   return plink->prev;
 }
@@ -152,14 +153,14 @@ static inline struct genlist_link *genlist_link_prev(const struct genlist_link *
 /****************************************************************************
   Returns the next link.
 ****************************************************************************/
-fc__warn_unused_result
-static inline struct genlist_link *genlist_link_next(const struct genlist_link *plink)
+fc__warn_unused_result static inline struct genlist_link *
+genlist_link_next(const struct genlist_link *plink)
 {
   return plink->next;
 }
-  
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__GENLIST_H */
+#endif /* FC__GENLIST_H */

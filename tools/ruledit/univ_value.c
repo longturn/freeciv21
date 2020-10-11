@@ -31,12 +31,12 @@
 
 #include "univ_value.h"
 
-/********************************************************************//**
-  Initialize universal value with a value suitable for the kind.
+/********************************************************************/ /**
+   Initialize universal value with a value suitable for the kind.
 
-  Returns TRUE iff there's any values universal kind can have with
-  current ruleset.
-************************************************************************/
+   Returns TRUE iff there's any values universal kind can have with
+   current ruleset.
+ ************************************************************************/
 bool universal_value_initial(struct universal *src)
 {
   switch (src->kind) {
@@ -74,7 +74,7 @@ bool universal_value_initial(struct universal *src)
     src->value.utype = utype_by_number(0);
     return TRUE;
   case VUT_UTFLAG:
-    src->value.unitflag = (enum unit_type_flag_id)0;
+    src->value.unitflag = (enum unit_type_flag_id) 0;
     return TRUE;
   case VUT_UCLASS:
     if (game.control.num_unit_classes <= 0) {
@@ -83,10 +83,10 @@ bool universal_value_initial(struct universal *src)
     src->value.uclass = uclass_by_number(0);
     return TRUE;
   case VUT_UCFLAG:
-    src->value.unitclassflag = (enum unit_class_flag_id)0;
+    src->value.unitclassflag = (enum unit_class_flag_id) 0;
     return TRUE;
   case VUT_OTYPE:
-    src->value.outputtype = (enum output_type_id)0;
+    src->value.outputtype = (enum output_type_id) 0;
     return TRUE;
   case VUT_SPECIALIST:
     if (game.control.num_specialist_types <= 0) {
@@ -200,8 +200,8 @@ bool universal_value_initial(struct universal *src)
     src->value.topo_property = TF_ISO;
     return TRUE;
   case VUT_SERVERSETTING:
-    src->value.ssetval
-        = ssetv_from_values(server_setting_by_name("killstack"), TRUE);
+    src->value.ssetval =
+        ssetv_from_values(server_setting_by_name("killstack"), TRUE);
     return TRUE;
   case VUT_IMPR_GENUS:
     src->value.impr_genus = IG_IMPROVEMENT;
@@ -223,11 +223,11 @@ bool universal_value_initial(struct universal *src)
   return FALSE;
 }
 
-/********************************************************************//**
-  Call cb for each value possible for the universal kind.
-************************************************************************/
-void universal_kind_values(struct universal *univ,
-                           univ_kind_values_cb cb, void *data)
+/********************************************************************/ /**
+   Call cb for each value possible for the universal kind.
+ ************************************************************************/
+void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
+                           void *data)
 {
   int i;
 
@@ -235,64 +235,88 @@ void universal_kind_values(struct universal *univ,
   case VUT_NONE:
     break;
   case VUT_ADVANCE:
-    advance_re_active_iterate(padv) {
+    advance_re_active_iterate(padv)
+    {
       cb(advance_rule_name(padv), univ->value.advance == padv, data);
-    } advance_re_active_iterate_end;
+    }
+    advance_re_active_iterate_end;
     break;
   case VUT_GOVERNMENT:
-    governments_re_active_iterate(pgov) {
+    governments_re_active_iterate(pgov)
+    {
       cb(government_rule_name(pgov), univ->value.govern == pgov, data);
-    } governments_re_active_iterate_end;
+    }
+    governments_re_active_iterate_end;
     break;
   case VUT_IMPROVEMENT:
-    improvement_re_active_iterate(pimpr) {
+    improvement_re_active_iterate(pimpr)
+    {
       cb(improvement_rule_name(pimpr), univ->value.building == pimpr, data);
-    } improvement_re_active_iterate_end;
+    }
+    improvement_re_active_iterate_end;
     break;
   case VUT_TERRAIN:
-    terrain_re_active_iterate(pterr) {
+    terrain_re_active_iterate(pterr)
+    {
       cb(terrain_rule_name(pterr), univ->value.terrain == pterr, data);
-    } terrain_re_active_iterate_end;
+    }
+    terrain_re_active_iterate_end;
     break;
   case VUT_NATION:
-    nations_iterate(pnat) {
+    nations_iterate(pnat)
+    {
       cb(nation_rule_name(pnat), univ->value.nation == pnat, data);
-    } nations_iterate_end;
+    }
+    nations_iterate_end;
     break;
   case VUT_UTYPE:
-    unit_type_re_active_iterate(putype) {
+    unit_type_re_active_iterate(putype)
+    {
       cb(utype_rule_name(putype), univ->value.utype == putype, data);
-    } unit_type_re_active_iterate_end;
+    }
+    unit_type_re_active_iterate_end;
     break;
   case VUT_UCLASS:
-    unit_class_re_active_iterate(pclass) {
+    unit_class_re_active_iterate(pclass)
+    {
       cb(uclass_rule_name(pclass), univ->value.uclass == pclass, data);
-    } unit_class_re_active_iterate_end;
+    }
+    unit_class_re_active_iterate_end;
     break;
   case VUT_OTYPE:
-    output_type_iterate(otype) {
+    output_type_iterate(otype)
+    {
       cb(get_output_name(otype), univ->value.outputtype == otype, data);
-    } output_type_iterate_end;
+    }
+    output_type_iterate_end;
     break;
   case VUT_GOOD:
-    goods_type_re_active_iterate(pgood) {
+    goods_type_re_active_iterate(pgood)
+    {
       cb(goods_rule_name(pgood), univ->value.good == pgood, data);
-    } goods_type_re_active_iterate_end;
+    }
+    goods_type_re_active_iterate_end;
     break;
   case VUT_NATIONALITY:
-    nations_iterate(pnat) {
+    nations_iterate(pnat)
+    {
       cb(nation_rule_name(pnat), univ->value.nationality == pnat, data);
-    } nations_iterate_end;
+    }
+    nations_iterate_end;
     break;
   case VUT_EXTRA:
-    extra_type_re_active_iterate(pextra) {
+    extra_type_re_active_iterate(pextra)
+    {
       cb(extra_rule_name(pextra), univ->value.extra == pextra, data);
-    } extra_type_re_active_iterate_end;
+    }
+    extra_type_re_active_iterate_end;
     break;
   case VUT_STYLE:
-    styles_re_active_iterate(pstyle) {
+    styles_re_active_iterate(pstyle)
+    {
       cb(style_rule_name(pstyle), univ->value.style == pstyle, data);
-    } styles_re_active_iterate_end;
+    }
+    styles_re_active_iterate_end;
     break;
   case VUT_AI_LEVEL:
     for (i = 0; i < AI_LEVEL_COUNT; i++) {
@@ -300,9 +324,11 @@ void universal_kind_values(struct universal *univ,
     }
     break;
   case VUT_SPECIALIST:
-    specialist_type_re_active_iterate(pspe) {
+    specialist_type_re_active_iterate(pspe)
+    {
       cb(specialist_rule_name(pspe), univ->value.specialist == pspe, data);
-    } specialist_type_re_active_iterate_end;
+    }
+    specialist_type_re_active_iterate_end;
     break;
   case VUT_TERRAINCLASS:
     for (i = 0; i < TC_COUNT; i++) {
@@ -360,9 +386,11 @@ void universal_kind_values(struct universal *univ,
     }
     break;
   case VUT_ACHIEVEMENT:
-    achievements_re_active_iterate(pach) {
+    achievements_re_active_iterate(pach)
+    {
       cb(achievement_rule_name(pach), univ->value.achievement == pach, data);
-    } achievements_re_active_iterate_end;
+    }
+    achievements_re_active_iterate_end;
     break;
   case VUT_DIPLREL:
     for (i = 0; i < DS_LAST; i++) {
@@ -378,14 +406,19 @@ void universal_kind_values(struct universal *univ,
     }
     break;
   case VUT_ACTIVITY:
-    activity_type_iterate(act) {
+    activity_type_iterate(act)
+    {
       cb(unit_activity_name(act), univ->value.activity == act, data);
-    } activity_type_iterate_end;
+    }
+    activity_type_iterate_end;
     break;
   case VUT_NATIONGROUP:
-    nation_groups_iterate(pgroup) {
-      cb(nation_group_rule_name(pgroup), univ->value.nationgroup == pgroup, data);
-    } nation_groups_iterate_end;
+    nation_groups_iterate(pgroup)
+    {
+      cb(nation_group_rule_name(pgroup), univ->value.nationgroup == pgroup,
+         data);
+    }
+    nation_groups_iterate_end;
     break;
   case VUT_TOPO:
     for (i = 0; i < TOPO_FLAG_BITS; i++) {
@@ -396,8 +429,7 @@ void universal_kind_values(struct universal *univ,
     for (i = 0;
          /* Only binary settings with the value TRUE are currently
           * supported. */
-         i < settings_number();
-         i++) {
+         i < settings_number(); i++) {
       if (sanity_check_server_setting_value_in_req(i)) {
         cb(ssetv_rule_name(i),
            univ->value.ssetval == ssetv_from_values(i, TRUE), data);
@@ -410,11 +442,13 @@ void universal_kind_values(struct universal *univ,
     }
     break;
   case VUT_ACTION:
-    action_iterate(act) {
+    action_iterate(act)
+    {
       struct action *pact = action_by_number(act);
 
       cb(action_rule_name(pact), univ->value.action == pact, data);
-    } action_iterate_end;
+    }
+    action_iterate_end;
     break;
   case VUT_MINSIZE:
   case VUT_MINYEAR:

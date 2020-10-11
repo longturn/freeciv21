@@ -21,42 +21,40 @@
 /* server */
 #include "srv_main.h"
 
-
 #include "tools_fc_interface.h"
 
-
-/***********************************************************************//**
-  Unused but required by fc_interface_init()
-***************************************************************************/
+/***********************************************************************/ /**
+   Unused but required by fc_interface_init()
+ ***************************************************************************/
 static bool tool_player_tile_vision_get(const struct tile *ptile,
                                         const struct player *pplayer,
                                         enum vision_layer vision)
 {
-  log_error("Assumed unused function %s called.",  __FUNCTION__);
+  log_error("Assumed unused function %s called.", __FUNCTION__);
   return FALSE;
 }
 
-/***********************************************************************//**
-  Unused but required by fc_interface_init()
-***************************************************************************/
+/***********************************************************************/ /**
+   Unused but required by fc_interface_init()
+ ***************************************************************************/
 static int tool_player_tile_city_id_get(const struct tile *ptile,
                                         const struct player *pplayer)
 {
-  log_error("Assumed unused function %s called.",  __FUNCTION__);
+  log_error("Assumed unused function %s called.", __FUNCTION__);
   return IDENTITY_NUMBER_ZERO;
 }
 
-/***********************************************************************//**
-  Unused but required by fc_interface_init()
-***************************************************************************/
+/***********************************************************************/ /**
+   Unused but required by fc_interface_init()
+ ***************************************************************************/
 static void tool_gui_color_free(struct color *pcolor)
 {
-  log_error("Assumed unused function %s called.",  __FUNCTION__);
+  log_error("Assumed unused function %s called.", __FUNCTION__);
 }
 
-/***********************************************************************//**
-  Initialize tool specific functions.
-***************************************************************************/
+/***********************************************************************/ /**
+   Initialize tool specific functions.
+ ***************************************************************************/
 void fc_interface_init_tool(void)
 {
   struct functions *funcs = fc_interface_funcs();

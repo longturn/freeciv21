@@ -44,8 +44,8 @@
 #include "fcthread.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "netfile.h"
+#include "netintf.h"
 #include "support.h"
 #include "timing.h"
 
@@ -74,22 +74,19 @@ static char meta_message[256] = "";
 
 static fc_thread *meta_srv_thread = NULL;
 
-/*********************************************************************//**
-  The default metaserver patches for this server
-*************************************************************************/
-const char *default_meta_patches_string(void)
-{
-  return "none";
-}
+/*********************************************************************/ /**
+   The default metaserver patches for this server
+ *************************************************************************/
+const char *default_meta_patches_string(void) { return "none"; }
 
-/*********************************************************************//**
-  Return static string with default info line to send to metaserver.
-*************************************************************************/
+/*********************************************************************/ /**
+   Return static string with default info line to send to metaserver.
+ *************************************************************************/
 const char *default_meta_message_string(void)
 {
 #if IS_BETA_VERSION
   return "unstable pre-" NEXT_STABLE_VERSION ": beware";
-#else  /* IS_BETA_VERSION */
+#else /* IS_BETA_VERSION */
 #if IS_DEVEL_VERSION
   return "development version: beware";
 #else  /* IS_DEVEL_VERSION */
@@ -98,25 +95,19 @@ const char *default_meta_message_string(void)
 #endif /* IS_BETA_VERSION */
 }
 
-/*********************************************************************//**
-  The metaserver patches
-*************************************************************************/
-const char *get_meta_patches_string(void)
-{
-  return meta_patches;
-}
+/*********************************************************************/ /**
+   The metaserver patches
+ *************************************************************************/
+const char *get_meta_patches_string(void) { return meta_patches; }
 
-/*********************************************************************//**
-  The metaserver message
-*************************************************************************/
-const char *get_meta_message_string(void)
-{
-  return meta_message;
-}
+/*********************************************************************/ /**
+   The metaserver message
+ *************************************************************************/
+const char *get_meta_message_string(void) { return meta_message; }
 
-/*********************************************************************//**
-  The server metaserver type
-*************************************************************************/
+/*********************************************************************/ /**
+   The server metaserver type
+ *************************************************************************/
 static const char *get_meta_type_string(void)
 {
   if (game.server.meta_info.type[0] != '\0') {
@@ -126,9 +117,9 @@ static const char *get_meta_type_string(void)
   return NULL;
 }
 
-/*********************************************************************//**
-  The metaserver message set by user
-*************************************************************************/
+/*********************************************************************/ /**
+   The metaserver message set by user
+ *************************************************************************/
 const char *get_user_meta_message_string(void)
 {
   if (game.server.meta_info.user_message[0] != '\0') {
@@ -138,12 +129,12 @@ const char *get_user_meta_message_string(void)
   return NULL;
 }
 
-/*********************************************************************//**
-  Update meta message. Set it to user meta message, if it is available.
-  Otherwise use provided message.
-  It is ok to call this with NULL message. Then it only replaces current
-  meta message with user meta message if available.
-*************************************************************************/
+/*********************************************************************/ /**
+   Update meta message. Set it to user meta message, if it is available.
+   Otherwise use provided message.
+   It is ok to call this with NULL message. Then it only replaces current
+   meta message with user meta message if available.
+ *************************************************************************/
 void maybe_automatic_meta_message(const char *automatic)
 {
   const char *user_message;
@@ -161,25 +152,25 @@ void maybe_automatic_meta_message(const char *automatic)
   set_meta_message_string(user_message);
 }
 
-/*********************************************************************//**
-  Set the metaserver patches string
-*************************************************************************/
+/*********************************************************************/ /**
+   Set the metaserver patches string
+ *************************************************************************/
 void set_meta_patches_string(const char *string)
 {
   sz_strlcpy(meta_patches, string);
 }
 
-/*********************************************************************//**
-  Set the metaserver message string
-*************************************************************************/
+/*********************************************************************/ /**
+   Set the metaserver message string
+ *************************************************************************/
 void set_meta_message_string(const char *string)
 {
   sz_strlcpy(meta_message, string);
 }
 
-/*********************************************************************//**
-  Set user defined metaserver message string
-*************************************************************************/
+/*********************************************************************/ /**
+   Set user defined metaserver message string
+ *************************************************************************/
 void set_user_meta_message_string(const char *string)
 {
   if (string != NULL && string[0] != '\0') {
@@ -188,25 +179,23 @@ void set_user_meta_message_string(const char *string)
   } else {
     /* Remove user meta message. We will use automatic messages instead */
     game.server.meta_info.user_message[0] = '\0';
-    set_meta_message_string(default_meta_message_string());    
+    set_meta_message_string(default_meta_message_string());
   }
 }
 
-/*********************************************************************//**
-  Return string describing both metaserver name and port.
-*************************************************************************/
-char *meta_addr_port(void)
-{
-  return srvarg.metaserver_addr;
-}
+/*********************************************************************/ /**
+   Return string describing both metaserver name and port.
+ *************************************************************************/
+char *meta_addr_port(void) { return srvarg.metaserver_addr; }
 
-/*********************************************************************//**
-  We couldn't find or connect to the metaserver.
-*************************************************************************/
+/*********************************************************************/ /**
+   We couldn't find or connect to the metaserver.
+ *************************************************************************/
 static void metaserver_failed(void)
 {
   if (!persistent_meta_connection) {
-    con_puts(C_METAERROR, _("Not reporting to the metaserver in this game."));
+    con_puts(C_METAERROR,
+             _("Not reporting to the metaserver in this game."));
     con_flush();
 
     server_close_meta();
@@ -216,26 +205,26 @@ static void metaserver_failed(void)
   }
 }
 
-/*********************************************************************//**
-  Insert a setting in the metaserver message. Return TRUE if it succeded.
-*************************************************************************/
+/*********************************************************************/ /**
+   Insert a setting in the metaserver message. Return TRUE if it succeded.
+ *************************************************************************/
 static inline bool meta_insert_setting(struct netfile_post *post,
                                        const char *set_name)
 {
   const struct setting *pset = setting_by_name(set_name);
   char buf[256];
 
-  fc_assert_ret_val_msg(NULL != pset, FALSE,
-                        "Setting \"%s\" not found!", set_name);
+  fc_assert_ret_val_msg(NULL != pset, FALSE, "Setting \"%s\" not found!",
+                        set_name);
   netfile_add_form_str(post, "vn[]", setting_name(pset));
   netfile_add_form_str(post, "vv[]",
                        setting_value_name(pset, FALSE, buf, sizeof(buf)));
   return TRUE;
 }
 
-/*********************************************************************//**
-  Send POST to metaserver. This runs in its own thread.
-*************************************************************************/
+/*********************************************************************/ /**
+   Send POST to metaserver. This runs in its own thread.
+ *************************************************************************/
 static void send_metaserver_post(void *arg)
 {
   struct netfile_post *post = (struct netfile_post *) arg;
@@ -255,9 +244,9 @@ static void send_metaserver_post(void *arg)
   netfile_close_post(post);
 }
 
-/*********************************************************************//**
-  Construct the POST message and send info to metaserver.
-*************************************************************************/
+/*********************************************************************/ /**
+   Construct the POST message and send info to metaserver.
+ *************************************************************************/
 static bool send_to_metaserver(enum meta_flag flag)
 {
   int players = 0;
@@ -287,7 +276,8 @@ static bool send_to_metaserver(enum meta_flag flag)
   }
 
   if (game.control.version[0] != '\0') {
-    fc_snprintf(rs, sizeof(rs), "%s %s", game.control.name, game.control.version);
+    fc_snprintf(rs, sizeof(rs), "%s %s", game.control.name,
+                game.control.version);
   } else {
     sz_strlcpy(rs, game.control.name);
   }
@@ -309,13 +299,11 @@ static bool send_to_metaserver(enum meta_flag flag)
       netfile_add_form_str(post, "type", srvtype);
     }
     netfile_add_form_str(post, "version", VERSION_STRING);
-    netfile_add_form_str(post, "patches",
-                         get_meta_patches_string());
+    netfile_add_form_str(post, "patches", get_meta_patches_string());
     netfile_add_form_str(post, "capability", our_capability);
 
     netfile_add_form_str(post, "serverid", srvarg.serverid);
-    netfile_add_form_str(post, "message",
-                         get_meta_message_string());
+    netfile_add_form_str(post, "message", get_meta_message_string());
 
     /* NOTE: send info for ALL players or none at all. */
     if (normal_player_count() == 0) {
@@ -324,7 +312,8 @@ static bool send_to_metaserver(enum meta_flag flag)
       players = 0; /* a counter for players_available */
       humans = 0;
 
-      players_iterate(plr) {
+      players_iterate(plr)
+      {
         bool is_player_available = TRUE;
         char type[15];
         struct connection *pconn = conn_by_user(plr->username);
@@ -345,18 +334,17 @@ static bool send_to_metaserver(enum meta_flag flag)
         netfile_add_form_str(post, "plt[]", type);
         netfile_add_form_str(post, "pll[]", player_name(plr));
         netfile_add_form_str(post, "pln[]",
-                             plr->nation != NO_NATION_SELECTED 
-                             ? nation_plural_for_player(plr)
-                             : "none");
+                             plr->nation != NO_NATION_SELECTED
+                                 ? nation_plural_for_player(plr)
+                                 : "none");
         netfile_add_form_str(post, "plf[]",
-                             plr->nation != NO_NATION_SELECTED 
-                             ? nation_of_player(plr)->flag_graphic_str
-                             : "none");
-        netfile_add_form_str(post, "plh[]",
-                             pconn ? pconn->addr : "");
+                             plr->nation != NO_NATION_SELECTED
+                                 ? nation_of_player(plr)->flag_graphic_str
+                                 : "none");
+        netfile_add_form_str(post, "plh[]", pconn ? pconn->addr : "");
 
         /* is this player available to take?
-         * TODO: there's some duplication here with 
+         * TODO: there's some duplication here with
          * stdinhand.c:is_allowed_to_take() */
         if (is_barbarian(plr) && !strchr(game.server.allow_take, 'b')) {
           is_player_available = FALSE;
@@ -383,7 +371,8 @@ static bool send_to_metaserver(enum meta_flag flag)
         if (is_human(plr) && plr->is_alive) {
           humans++;
         }
-      } players_iterate_end;
+      }
+      players_iterate_end;
 
       /* send the number of available players. */
       netfile_add_form_int(post, "available", players);
@@ -392,10 +381,9 @@ static bool send_to_metaserver(enum meta_flag flag)
 
     /* Send some variables: should be listed in inverted order? */
     {
-      static const char *settings[] = {
-        "timeout", "endturn", "minplayers", "maxplayers",
-        "aifill", "allowtake", "generator"
-      };
+      static const char *settings[] = {"timeout",    "endturn", "minplayers",
+                                       "maxplayers", "aifill",  "allowtake",
+                                       "generator"};
       int i;
 
       for (i = 0; i < ARRAY_SIZE(settings); i++) {
@@ -442,18 +430,18 @@ static bool send_to_metaserver(enum meta_flag flag)
   return TRUE;
 }
 
-/*********************************************************************//**
-  Stop sending updates to metaserver
-*************************************************************************/
+/*********************************************************************/ /**
+   Stop sending updates to metaserver
+ *************************************************************************/
 void server_close_meta(void)
 {
   server_is_open = FALSE;
   persistent_meta_connection = FALSE;
 }
 
-/*********************************************************************//**
-  Lookup the correct address for the metaserver.
-*************************************************************************/
+/*********************************************************************/ /**
+   Lookup the correct address for the metaserver.
+ *************************************************************************/
 bool server_open_meta(bool persistent)
 {
   if (meta_patches[0] == '\0') {
@@ -470,17 +458,14 @@ bool server_open_meta(bool persistent)
   return TRUE;
 }
 
-/*********************************************************************//**
-  Are we sending info to the metaserver?
-*************************************************************************/
-bool is_metaserver_open(void)
-{
-  return server_is_open;
-}
+/*********************************************************************/ /**
+   Are we sending info to the metaserver?
+ *************************************************************************/
+bool is_metaserver_open(void) { return server_is_open; }
 
-/*********************************************************************//**
-  Control when we send info to the metaserver.
-*************************************************************************/
+/*********************************************************************/ /**
+   Control when we send info to the metaserver.
+ *************************************************************************/
 bool send_server_info_to_metaserver(enum meta_flag flag)
 {
   static struct timer *last_send_timer = NULL;
@@ -500,7 +485,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
   }
 
   /* if we're bidding farewell, ignore all timers */
-  if (flag == META_GOODBYE) { 
+  if (flag == META_GOODBYE) {
     if (last_send_timer) {
       timer_destroy(last_send_timer);
       last_send_timer = NULL;
@@ -516,18 +501,20 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
   }
 
   /* don't allow the user to spam the metaserver with updates */
-  if (last_send_timer && (timer_read_seconds(last_send_timer)
-                                          < METASERVER_MIN_UPDATE_INTERVAL)) {
+  if (last_send_timer
+      && (timer_read_seconds(last_send_timer)
+          < METASERVER_MIN_UPDATE_INTERVAL)) {
     if (flag == META_INFO) {
       want_update = TRUE; /* we couldn't update now, but update a.s.a.p. */
     }
     return FALSE;
   }
 
-  /* if we're asking for a refresh, only do so if 
+  /* if we're asking for a refresh, only do so if
    * we've exceeded the refresh interval */
-  if ((flag == META_REFRESH) && !want_update && last_send_timer 
-      && (timer_read_seconds(last_send_timer) < METASERVER_REFRESH_INTERVAL)) {
+  if ((flag == META_REFRESH) && !want_update && last_send_timer
+      && (timer_read_seconds(last_send_timer)
+          < METASERVER_REFRESH_INTERVAL)) {
     return FALSE;
   }
 

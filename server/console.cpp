@@ -49,10 +49,10 @@ static bool readline_received_enter = TRUE;
 static int con_dump(enum rfc_status rfc_status, const char *message, ...);
 #endif
 
-/********************************************************************//**
-  Function to handle log messages.
-  This must match the log_callback_fn typedef signature.
-************************************************************************/
+/********************************************************************/ /**
+   Function to handle log messages.
+   This must match the log_callback_fn typedef signature.
+ ************************************************************************/
 static void con_handle_log(enum log_level level, const char *message,
                            bool file_too)
 {
@@ -60,17 +60,18 @@ static void con_handle_log(enum log_level level, const char *message,
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s", message);
   } else if (LOG_FATAL >= level) {
     /* Make sure that message is not left to buffers when server dies */
-    conn_list_iterate(game.est_connections, pconn) {
+    conn_list_iterate(game.est_connections, pconn)
+    {
       pconn->send_buffer->do_buffer_sends = 0;
 #ifdef USE_COMPRESSION
       pconn->compression.frozen_level = 0;
 #endif
-    } conn_list_iterate_end;
+    }
+    conn_list_iterate_end;
 
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s", message);
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
-                _("Please report this message at %s"),
-                BUG_URL);
+                _("Please report this message at %s"), BUG_URL);
   }
 
   /* Write debug/verbose message to console only when not written to file. */
@@ -83,9 +84,9 @@ static void con_handle_log(enum log_level level, const char *message,
   }
 }
 
-/********************************************************************//**
-Print the prompt if it is not the last thing printed.
-************************************************************************/
+/********************************************************************/ /**
+ Print the prompt if it is not the last thing printed.
+ ************************************************************************/
 static void con_update_prompt(void)
 {
   if (console_prompt_is_showing || !console_show_prompt) {
@@ -99,7 +100,7 @@ static void con_update_prompt(void)
     rl_forced_update_display();
   }
 #else  /* FREECIV_HAVE_LIBREADLINE */
-  con_dump(C_READY,"> ");
+  con_dump(C_READY, "> ");
   con_flush();
 #endif /* FREECIV_HAVE_LIBREADLINE */
 
@@ -107,10 +108,10 @@ static void con_update_prompt(void)
 }
 
 #ifdef FREECIV_DEBUG
-/********************************************************************//**
-  Prefix for log messages saved to file. At the moment the turn and the
-  current date and time are used.
-************************************************************************/
+/********************************************************************/ /**
+   Prefix for log messages saved to file. At the moment the turn and the
+   current date and time are used.
+ ************************************************************************/
 static const char *log_prefix(void)
 {
   static char buf[128];
@@ -133,17 +134,17 @@ static const char *log_prefix(void)
 }
 #endif /* FREECIV_DEBUG */
 
-/********************************************************************//**
-  Deprecation warning callback to send event to clients.
-************************************************************************/
+/********************************************************************/ /**
+   Deprecation warning callback to send event to clients.
+ ************************************************************************/
 static void depr_warn_callback(const char *msg)
 {
   notify_conn(NULL, NULL, E_DEPRECATION_WARNING, ftc_warning, "%s", msg);
 }
 
-/********************************************************************//**
-  Initialize logging via console.
-************************************************************************/
+/********************************************************************/ /**
+   Initialize logging via console.
+ ************************************************************************/
 void con_log_init(const char *log_filename, enum log_level level,
                   int fatal_assertions)
 {
@@ -151,16 +152,15 @@ void con_log_init(const char *log_filename, enum log_level level,
   log_init(log_filename, level, con_handle_log, log_prefix,
            fatal_assertions);
 #else
-  log_init(log_filename, level, con_handle_log, NULL,
-           fatal_assertions);
+  log_init(log_filename, level, con_handle_log, NULL, fatal_assertions);
 #endif /* FREECIV_DEBUG */
   backtrace_init();
   deprecation_warn_cb_set(depr_warn_callback);
 }
 
-/********************************************************************//**
-  Deinitialize logging
-************************************************************************/
+/********************************************************************/ /**
+   Deinitialize logging
+ ************************************************************************/
 void con_log_close(void)
 {
   backtrace_deinit();
@@ -169,14 +169,14 @@ void con_log_close(void)
 }
 
 #ifndef FREECIV_HAVE_LIBREADLINE
-/********************************************************************//**
-  Write to console without line-break, don't print prompt.
-************************************************************************/
+/********************************************************************/ /**
+   Write to console without line-break, don't print prompt.
+ ************************************************************************/
 static int con_dump(enum rfc_status rfc_status, const char *message, ...)
 {
   static char buf[MAX_LEN_CONSOLE_LINE];
   va_list args;
-  
+
   va_start(args, message);
   fc_vsnprintf(buf, sizeof(buf), message, args);
   va_end(args);
@@ -194,9 +194,9 @@ static int con_dump(enum rfc_status rfc_status, const char *message, ...)
 }
 #endif /* FREECIV_HAVE_LIBREADLINE */
 
-/********************************************************************//**
-  Write to console and add line-break, and show prompt if required.
-************************************************************************/
+/********************************************************************/ /**
+   Write to console and add line-break, and show prompt if required.
+ ************************************************************************/
 void con_write(enum rfc_status rfc_status, const char *message, ...)
 {
   /* First buffer contains featured text tags */
@@ -213,13 +213,13 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   con_puts(rfc_status, buf2);
 }
 
-/********************************************************************//**
-  Write to console and add line-break, and show prompt if required.
-  Same as con_write, but without the format string stuff.
-  The real reason for this is because __attribute__ complained
-  with con_write(C_COMMENT,"") of "warning: zero-length format string";
-  this allows con_puts(C_COMMENT,"");
-************************************************************************/
+/********************************************************************/ /**
+   Write to console and add line-break, and show prompt if required.
+   Same as con_write, but without the format string stuff.
+   The real reason for this is because __attribute__ complained
+   with con_write(C_COMMENT,"") of "warning: zero-length format string";
+   this allows con_puts(C_COMMENT,"");
+ ************************************************************************/
 void con_puts(enum rfc_status rfc_status, const char *str)
 {
   if (console_prompt_is_showing) {
@@ -234,17 +234,14 @@ void con_puts(enum rfc_status rfc_status, const char *str)
   con_update_prompt();
 }
 
-/********************************************************************//**
-  Ensure timely update.
-************************************************************************/
-void con_flush(void)
-{
-  fflush(stdout);
-}
+/********************************************************************/ /**
+   Ensure timely update.
+ ************************************************************************/
+void con_flush(void) { fflush(stdout); }
 
-/********************************************************************//**
-  Set style.
-************************************************************************/
+/********************************************************************/ /**
+   Set style.
+ ************************************************************************/
 void con_set_style(bool i)
 {
   console_rfcstyle = i;
@@ -255,17 +252,14 @@ void con_set_style(bool i)
   }
 }
 
-/********************************************************************//**
-  Returns rfc-style.
-************************************************************************/
-bool con_get_style(void)
-{
-  return console_rfcstyle;
-}
+/********************************************************************/ /**
+   Returns rfc-style.
+ ************************************************************************/
+bool con_get_style(void) { return console_rfcstyle; }
 
-/********************************************************************//**
-  Initialize prompt; display initial message.
-************************************************************************/
+/********************************************************************/ /**
+   Initialize prompt; display initial message.
+ ************************************************************************/
 void con_prompt_init(void)
 {
   static bool first = TRUE;
@@ -277,26 +271,23 @@ void con_prompt_init(void)
   }
 }
 
-/********************************************************************//**
-  Make sure a prompt is printed, and re-printed after every message.
-************************************************************************/
+/********************************************************************/ /**
+   Make sure a prompt is printed, and re-printed after every message.
+ ************************************************************************/
 void con_prompt_on(void)
 {
   console_show_prompt = TRUE;
   con_update_prompt();
 }
 
-/********************************************************************//**
-  Do not print a prompt after log messages.
-************************************************************************/
-void con_prompt_off(void)
-{
-  console_show_prompt = FALSE;
-}
+/********************************************************************/ /**
+   Do not print a prompt after log messages.
+ ************************************************************************/
+void con_prompt_off(void) { console_show_prompt = FALSE; }
 
-/********************************************************************//**
-  User pressed enter: will need a new prompt
-************************************************************************/
+/********************************************************************/ /**
+   User pressed enter: will need a new prompt
+ ************************************************************************/
 void con_prompt_enter(void)
 {
   console_prompt_is_showing = FALSE;
@@ -305,9 +296,9 @@ void con_prompt_enter(void)
 #endif
 }
 
-/********************************************************************//**
-  Clear "user pressed enter" state (used in special cases).
-************************************************************************/
+/********************************************************************/ /**
+   Clear "user pressed enter" state (used in special cases).
+ ************************************************************************/
 void con_prompt_enter_clear(void)
 {
   console_prompt_is_showing = TRUE;

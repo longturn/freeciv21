@@ -32,17 +32,16 @@ extern "C" {
 
 /* network, order dependent */
 enum known_type {
- TILE_UNKNOWN = 0,
- TILE_KNOWN_UNSEEN = 1,
- TILE_KNOWN_SEEN = 2,
+  TILE_UNKNOWN = 0,
+  TILE_KNOWN_UNSEEN = 1,
+  TILE_KNOWN_SEEN = 2,
 };
 
 /* Convenience macro for accessing tile coordinates.  This should only be
  * used for debugging. */
-#define TILE_XY(ptile) ((ptile) ? index_to_map_pos_x(tile_index(ptile))      \
-                                : -1),                                       \
-                       ((ptile) ? index_to_map_pos_y(tile_index(ptile))      \
-                                : -1)
+#define TILE_XY(ptile)                                                      \
+  ((ptile) ? index_to_map_pos_x(tile_index(ptile)) : -1),                   \
+      ((ptile) ? index_to_map_pos_y(tile_index(ptile)) : -1)
 
 #define TILE_INDEX_NONE (-1)
 
@@ -52,16 +51,16 @@ struct tile {
               * (index_to_native_pos()). */
   Continent_id continent;
   bv_extras extras;
-  struct extra_type *resource;          /* NULL for no resource */
-  struct terrain *terrain;		/* NULL for unknown tiles */
+  struct extra_type *resource; /* NULL for no resource */
+  struct terrain *terrain;     /* NULL for unknown tiles */
   struct unit_list *units;
-  struct city *worked;			/* NULL for not worked */
-  struct player *owner;			/* NULL for not owned */
+  struct city *worked;  /* NULL for not worked */
+  struct player *owner; /* NULL for not owned */
   struct extra_type *placing;
   int infra_turns;
   struct player *extras_owner;
   struct tile *claimer;
-  char *label;                          /* NULL for no label */
+  char *label; /* NULL for no label */
   char *spec_sprite;
 };
 
@@ -82,7 +81,6 @@ struct tile {
   TYPED_HASH_KEYS_ITERATE(struct tile *, hash, ptile)
 #define tile_hash_iterate_end HASH_KEYS_ITERATE_END
 
-
 /* Tile accessor functions. */
 #define tile_index(_pt_) (_pt_)->index
 
@@ -100,8 +98,9 @@ void tile_set_owner(struct tile *ptile, struct player *pplayer,
 
 #define tile_resource(_tile) ((_tile)->resource)
 static inline bool tile_resource_is_valid(const struct tile *ptile)
-{ return ptile->resource != NULL
-    && BV_ISSET(ptile->extras, ptile->resource->id);
+{
+  return ptile->resource != NULL
+         && BV_ISSET(ptile->extras, ptile->resource->id);
 }
 /*const struct resource *tile_resource(const struct tile *ptile);*/
 void tile_set_resource(struct tile *ptile, struct extra_type *presource);
@@ -146,17 +145,21 @@ bool tile_has_river(const struct tile *tile);
 
 bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt);
 bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt);
-#define tile_has_extra(ptile, pextra) BV_ISSET(ptile->extras, extra_index(pextra))
-bool tile_has_conflicting_extra(const struct tile *ptile, const struct extra_type *pextra);
-bool tile_has_visible_extra(const struct tile *ptile, const struct extra_type *pextra);
+#define tile_has_extra(ptile, pextra)                                       \
+  BV_ISSET(ptile->extras, extra_index(pextra))
+bool tile_has_conflicting_extra(const struct tile *ptile,
+                                const struct extra_type *pextra);
+bool tile_has_visible_extra(const struct tile *ptile,
+                            const struct extra_type *pextra);
 bool tile_has_cause_extra(const struct tile *ptile, enum extra_cause cause);
 void tile_add_extra(struct tile *ptile, const struct extra_type *pextra);
 void tile_remove_extra(struct tile *ptile, const struct extra_type *pextra);
-bool tile_has_extra_flag(const struct tile *ptile, enum extra_flag_id flag);;
+bool tile_has_extra_flag(const struct tile *ptile, enum extra_flag_id flag);
+;
 
 /* Vision related */
 enum known_type tile_get_known(const struct tile *ptile,
-			      const struct player *pplayer);
+                               const struct player *pplayer);
 
 bool tile_is_seen(const struct tile *target_tile,
                   const struct player *pow_player);
@@ -165,8 +168,7 @@ bool tile_is_seen(const struct tile *target_tile,
  * this amount, and divided by them later before being used.  This may
  * help to avoid rounding errors; however it should probably be removed. */
 #define ACTIVITY_FACTOR 10
-int tile_activity_time(enum unit_activity activity,
-		       const struct tile *ptile,
+int tile_activity_time(enum unit_activity activity, const struct tile *ptile,
                        const struct extra_type *tgt);
 
 /* These are higher-level functions that handle side effects on the tile. */
@@ -174,9 +176,9 @@ void tile_change_terrain(struct tile *ptile, struct terrain *pterrain);
 bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
                          struct extra_type *tgt);
 
-#define TILE_LB_TERRAIN_RIVER    (1 << 0)
-#define TILE_LB_RIVER_RESOURCE   (1 << 1)
-#define TILE_LB_RESOURCE_POLL    (1 << 2)
+#define TILE_LB_TERRAIN_RIVER (1 << 0)
+#define TILE_LB_RIVER_RESOURCE (1 << 1)
+#define TILE_LB_RESOURCE_POLL (1 << 2)
 const char *tile_get_info_text(const struct tile *ptile,
                                bool include_nuisances, int linebreaks);
 

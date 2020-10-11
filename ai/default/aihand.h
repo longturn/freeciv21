@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,4 +21,4 @@ void dai_do_last_activities(struct ai_type *ait, struct player *pplayer);
 void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
                    int *income);
 
-#endif  /* FC__AIHAND_H */
+#endif /* FC__AIHAND_H */

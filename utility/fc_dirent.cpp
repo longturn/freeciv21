@@ -22,16 +22,16 @@
 
 #include "fc_dirent.h"
 
-/**************************************************************//**
-  Wrapper function for opendir() with filename conversion to local
-  encoding on Windows.
-******************************************************************/
+/**************************************************************/ /**
+   Wrapper function for opendir() with filename conversion to local
+   encoding on Windows.
+ ******************************************************************/
 DIR *fc_opendir(const char *dir_to_open)
 {
 #ifdef FREECIV_MSWINDOWS
   DIR *result;
   char *dirname_in_local_encoding =
-    internal_to_local_string_malloc(dir_to_open);
+      internal_to_local_string_malloc(dir_to_open);
 
   result = opendir(dirname_in_local_encoding);
   free(dirname_in_local_encoding);

@@ -33,14 +33,12 @@ extern "C" {
 #define TRAIT_MAX_VALUE (TRAIT_DEFAULT_VALUE * TRAIT_DEFAULT_VALUE)
 #define TRAIT_MAX_VALUE_SR (TRAIT_DEFAULT_VALUE)
 
-struct ai_trait
-{
-  int val;   /* Value assigned in the beginning */
-  int mod;   /* This is modification that changes during game. */
+struct ai_trait {
+  int val; /* Value assigned in the beginning */
+  int mod; /* This is modification that changes during game. */
 };
 
-struct trait_limits
-{
+struct trait_limits {
   int min;
   int max;
   int fixed;
@@ -50,4 +48,4 @@ struct trait_limits
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__TRAITS_H */
+#endif /* FC__TRAITS_H */

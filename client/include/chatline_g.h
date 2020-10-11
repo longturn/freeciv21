@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,10 +18,9 @@
 #include "gui_proto_constructor.h"
 
 GUI_FUNC_PROTO(void, real_output_window_append, const char *astring,
-               const struct text_tag_list *tags,
-               int conn_id)
+               const struct text_tag_list *tags, int conn_id)
 GUI_FUNC_PROTO(void, version_message, const char *vertext)
 GUI_FUNC_PROTO(void, log_output_window, void)
 GUI_FUNC_PROTO(void, clear_output_window, void)
 
-#endif  /* FC__CHATLINE_G_H */
+#endif /* FC__CHATLINE_G_H */

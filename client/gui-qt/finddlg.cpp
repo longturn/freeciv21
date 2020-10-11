@@ -18,11 +18,8 @@
 // gui-qt
 #include "finddlg.h"
 
-/**********************************************************************//**
-  Popup a dialog to ask for a city to find.
-  Not yet implemented.
-**************************************************************************/
-void popup_find_dialog(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Popup a dialog to ask for a city to find.
+   Not yet implemented.
+ **************************************************************************/
+void popup_find_dialog(void) { /* PORTME */ }

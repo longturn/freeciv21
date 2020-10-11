@@ -14,9 +14,9 @@
 #include <fc_config.h>
 #endif
 
-#include <unistd.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <unistd.h>
 
 /* utility */
 #include "log.h"
@@ -39,16 +39,16 @@
   - Theme implementation is gui specific and most themes can not be shared
     between different guis.
   Theme is recognized by its name.
-  
-  Theme is stored in a directory called like the theme. The directory contains
-  some data files. Each gui defines its own format in the
+
+  Theme is stored in a directory called like the theme. The directory
+contains some data files. Each gui defines its own format in the
   get_useable_themes_in_directory() function.
 ****************************************************************************/
 
 /* A directory containing a list of usable themes */
 struct theme_directory {
   /* Path on the filesystem */
-  char *path; 
+  char *path;
   /* Array of theme names */
   char **themes;
   /* Themes array length */
@@ -59,34 +59,33 @@ struct theme_directory {
 static int num_directories;
 struct theme_directory *directories;
 
-/************************************************************************//**
-  Initialized themes data
-****************************************************************************/
+/************************************************************************/ /**
+   Initialized themes data
+ ****************************************************************************/
 void init_themes(void)
 {
   int i;
-    
+
   /* get GUI-specific theme directories */
   char **gui_directories =
       get_gui_specific_themes_directories(&num_directories);
-  
-  directories = 
-      static_cast<theme_directory*>(fc_malloc(sizeof(struct theme_directory) * num_directories));
-          
+
+  directories = static_cast<theme_directory *>(
+      fc_malloc(sizeof(struct theme_directory) * num_directories));
+
   for (i = 0; i < num_directories; i++) {
     directories[i].path = gui_directories[i];
-    
+
     /* get useable themes in this directory */
-    directories[i].themes =
-	get_useable_themes_in_directory(directories[i].path,
-					&(directories[i].num_themes));
+    directories[i].themes = get_useable_themes_in_directory(
+        directories[i].path, &(directories[i].num_themes));
   }
   free(gui_directories);
 }
 
-/************************************************************************//**
-  Return a static string vector of useable theme names.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a static string vector of useable theme names.
+ ****************************************************************************/
 const struct strvec *get_themes_list(const struct option *poption)
 {
   static struct strvec *themes_list = NULL;
@@ -98,8 +97,8 @@ const struct strvec *get_themes_list(const struct option *poption)
     for (i = 0; i < num_directories; i++) {
       for (j = 0; j < directories[i].num_themes; j++) {
         for (k = 0; k < strvec_size(themes_list); k++) {
-          if (strcmp(strvec_get(themes_list, k),
-                     directories[i].themes[j]) == 0) {
+          if (strcmp(strvec_get(themes_list, k), directories[i].themes[j])
+              == 0) {
             break;
           }
         }
@@ -113,10 +112,10 @@ const struct strvec *get_themes_list(const struct option *poption)
   return themes_list;
 }
 
-/************************************************************************//**
-  Loads a theme with the given name. First matching directory will be used.
-  If there's no such theme the function returns FALSE.
-****************************************************************************/
+/************************************************************************/ /**
+   Loads a theme with the given name. First matching directory will be used.
+   If there's no such theme the function returns FALSE.
+ ****************************************************************************/
 bool load_theme(const char *theme_name)
 {
   int i, j;
@@ -132,9 +131,9 @@ bool load_theme(const char *theme_name)
   return FALSE;
 }
 
-/************************************************************************//**
-  Wrapper for load_theme. It's is used by local options dialog
-****************************************************************************/
+/************************************************************************/ /**
+   Wrapper for load_theme. It's is used by local options dialog
+ ****************************************************************************/
 void theme_reread_callback(struct option *poption)
 {
   const char *theme_name = option_str_get(poption);

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -37,18 +37,17 @@ QString cut_helptext(QString text);
 /****************************************************************************
   Dialog for client/server options
 ****************************************************************************/
-class option_dialog : public qfc_dialog
-{
+class option_dialog : public qfc_dialog {
   Q_OBJECT
-  QVBoxLayout * main_layout;
+  QVBoxLayout *main_layout;
   QTabWidget *tab_widget;
   QDialogButtonBox *button_box;
-  QList <QString> categories;
-  QMap <QString, QWidget *> widget_map;
+  QList<QString> categories;
+  QMap<QString, QWidget *> widget_map;
 
 public:
-   option_dialog(const QString &name, const option_set *options,
-                 QWidget *parent = 0);
+  option_dialog(const QString &name, const option_set *options,
+                QWidget *parent = 0);
   ~option_dialog();
   void fill(const struct option_set *poptset);
   void add_option(struct option *poption);
@@ -56,6 +55,7 @@ public:
   void option_dialog_reset(struct option *poption);
   void full_refresh();
   void apply_options();
+
 private:
   const option_set *curr_options;
   void set_bool(struct option *poption, bool value);
@@ -72,7 +72,7 @@ private:
   QByteArray get_button_font(struct option *poption);
   QByteArray get_string(struct option *poption);
   int get_enum(struct option *poption);
-  struct option* get_color_option();
+  struct option *get_color_option();
   unsigned get_bitwise(struct option *poption);
   void full_reset();
 private slots:

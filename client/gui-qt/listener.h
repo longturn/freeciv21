@@ -100,9 +100,7 @@
 
   @warning Implementation is not thread-safe.
 ***************************************************************************/
-template<class _type_>
-class listener
-{
+template <class _type_> class listener {
 public:
   // The type a given specialization supports.
   typedef _type_ type_t;
@@ -118,35 +116,31 @@ protected:
   void listen();
 
 public:
-  template<class _member_fct_>
-  static void invoke(_member_fct_ function);
+  template <class _member_fct_> static void invoke(_member_fct_ function);
 
-  template<class _member_fct_, class _arg1_t_>
+  template <class _member_fct_, class _arg1_t_>
   static void invoke(_member_fct_ function, _arg1_t_ arg);
 
-  template<class _member_fct_, class _arg1_t_, class _arg2_t_>
+  template <class _member_fct_, class _arg1_t_, class _arg2_t_>
   static void invoke(_member_fct_ function, _arg1_t_ arg1, _arg2_t_ arg2);
 };
 
 /***************************************************************************
   Macro to declare the static data needed by listener<> classes
 ***************************************************************************/
-#define FC_CPP_DECLARE_LISTENER(_type_) \
-  template<> \
+#define FC_CPP_DECLARE_LISTENER(_type_)                                     \
+  template <>                                                               \
   std::set<_type_ *> listener<_type_>::instances = std::set<_type_ *>();
 
 /***************************************************************************
   Constructor
 ***************************************************************************/
-template<class _type_>
-listener<_type_>::listener()
-{}
+template <class _type_> listener<_type_>::listener() {}
 
 /***************************************************************************
   Starts listening to events
 ***************************************************************************/
-template<class _type_>
-void listener<_type_>::listen()
+template <class _type_> void listener<_type_>::listen()
 {
   // If you get an error here, your listener likely doesn't inherit from the
   // listener<> correctly. See the class documentation.
@@ -156,8 +150,7 @@ void listener<_type_>::listen()
 /***************************************************************************
   Destructor
 ***************************************************************************/
-template<class _type_>
-listener<_type_>::~listener()
+template <class _type_> listener<_type_>::~listener()
 {
   instances.erase(reinterpret_cast<type_t *>(this));
 }
@@ -170,13 +163,13 @@ listener<_type_>::~listener()
 
   @param function The member function to call
 ***************************************************************************/
-template<class _type_>
-template<class _member_fct_>
+template <class _type_>
+template <class _member_fct_>
 void listener<_type_>::invoke(_member_fct_ function)
 {
   typename std::set<type_t *>::iterator it = instances.begin();
   typename std::set<type_t *>::iterator end = instances.end();
-  for ( ; it != end; ++it) {
+  for (; it != end; ++it) {
     ((*it)->*function)();
   }
 }
@@ -190,13 +183,13 @@ void listener<_type_>::invoke(_member_fct_ function)
   @param function The member function to call
   @param arg      The argument to call the function with
 ***************************************************************************/
-template<class _type_>
-template<class _member_fct_, class _arg1_t_>
+template <class _type_>
+template <class _member_fct_, class _arg1_t_>
 void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg)
 {
   typename std::set<type_t *>::iterator it = instances.begin();
   typename std::set<type_t *>::iterator end = instances.end();
-  for ( ; it != end; ++it) {
+  for (; it != end; ++it) {
     ((*it)->*function)(arg);
   }
 }
@@ -211,14 +204,14 @@ void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg)
   @param arg1     The first argument to pass to the function
   @param arg2     The second argument to pass to the function
 ***************************************************************************/
-template<class _type_>
-template<class _member_fct_, class _arg1_t_, class _arg2_t_>
-void listener<_type_>::invoke(_member_fct_ function,
-                              _arg1_t_ arg1, _arg2_t_ arg2)
+template <class _type_>
+template <class _member_fct_, class _arg1_t_, class _arg2_t_>
+void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg1,
+                              _arg2_t_ arg2)
 {
   typename std::set<type_t *>::iterator it = instances.begin();
   typename std::set<type_t *>::iterator end = instances.end();
-  for ( ; it != end; ++it) {
+  for (; it != end; ++it) {
     ((*it)->*function)(arg1, arg2);
   }
 }

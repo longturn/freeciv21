@@ -23,4 +23,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SRVDEFS_H */
+#endif /* FC__SRVDEFS_H */

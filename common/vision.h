@@ -74,12 +74,14 @@ extern "C" {
 /* Invariants: V_MAIN vision ranges must always be more than V_INVIS
  * ranges. */
 
-#define vision_layer_iterate(v) {                                           \
-  int iv;                                                      \
-  for (iv = 0; iv < V_COUNT; iv++) {                                        \
+#define vision_layer_iterate(v)                                             \
+  {                                                                         \
+    int iv;                                                                 \
+    for (iv = 0; iv < V_COUNT; iv++) {                                      \
       enum vision_layer v = (enum vision_layer) iv;
-#define vision_layer_iterate_end }}
-
+#define vision_layer_iterate_end                                            \
+  }                                                                         \
+  }
 
 typedef short int v_radius_t[V_COUNT];
 
@@ -94,13 +96,16 @@ struct vision {
 };
 
 /* Initialize a vision radius array. */
-#define V_RADIUS(main_sq, invis_sq, subs_sq) { (short)(main_sq), (short)(invis_sq), (short)(subs_sq) }
+#define V_RADIUS(main_sq, invis_sq, subs_sq)                                \
+  {                                                                         \
+    (short) (main_sq), (short) (invis_sq), (short) (subs_sq)                \
+  }
 
-#define ASSERT_VISION(v)						\
- do {									\
-   fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_INVIS]);	\
-   fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_SUBSURFACE]);   \
- } while (FALSE);
+#define ASSERT_VISION(v)                                                    \
+  do {                                                                      \
+    fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_INVIS]);           \
+    fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_SUBSURFACE]);      \
+  } while (FALSE);
 
 struct vision *vision_new(struct player *pplayer, struct tile *ptile);
 void vision_free(struct vision *vision);
@@ -115,8 +120,8 @@ struct vision_site {
   struct tile *location; /* Cannot be NULL */
   struct player *owner;  /* May be NULL, always check! */
 
-  int identity;          /* city > IDENTITY_NUMBER_ZERO */
-  citizens size;         /* city size (0 <= size <= MAX_CITY_SIZE) */
+  int identity;  /* city > IDENTITY_NUMBER_ZERO */
+  citizens size; /* city size (0 <= size <= MAX_CITY_SIZE) */
 
   bool occupied;
   bool walls;
@@ -144,4 +149,4 @@ void vision_site_size_set(struct vision_site *psite, citizens size);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__VISION_H */
+#endif /* FC__VISION_H */

@@ -27,20 +27,17 @@
 
 struct player;
 
-struct texai_msgs
-{
+struct texai_msgs {
   fc_thread_cond thr_cond;
   fc_mutex mutex;
   struct texaimsg_list *msglist;
 };
 
-struct texai_reqs
-{
+struct texai_reqs {
   struct texaireq_list *reqlist;
 };
 
-struct texai_plr
-{
+struct texai_plr {
   struct ai_plr defai; /* Keep this first so default ai finds it */
   struct unit_list *units;
 };
@@ -56,7 +53,7 @@ void texai_whole_map_copy(void);
 void texai_map_free(void);
 void texai_player_alloc(struct ai_type *ait, struct player *pplayer);
 void texai_player_free(struct ai_type *ait, struct player *pplayer);
-void texai_control_gained(struct ai_type *ait,struct player *pplayer);
+void texai_control_gained(struct ai_type *ait, struct player *pplayer);
 void texai_control_lost(struct ai_type *ait, struct player *pplayer);
 void texai_refresh(struct ai_type *ait, struct player *pplayer);
 
@@ -64,10 +61,10 @@ void texai_msg_to_thr(struct texai_msg *msg);
 
 void texai_req_from_thr(struct texai_req *req);
 
-static inline struct texai_plr *texai_player_data(struct ai_type *ait,
-                                                  const struct player *pplayer)
+static inline struct texai_plr *
+texai_player_data(struct ai_type *ait, const struct player *pplayer)
 {
-  return (struct texai_plr *)player_ai_data(pplayer, ait);
+  return (struct texai_plr *) player_ai_data(pplayer, ait);
 }
 
 struct unit_list *texai_player_units(struct player *pplayer);

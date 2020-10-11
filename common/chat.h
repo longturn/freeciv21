@@ -33,4 +33,4 @@ extern "C" {
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CHAT_H */
+#endif /* FC__CHAT_H */

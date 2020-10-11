@@ -29,4 +29,4 @@ void citizens_print(const struct city *pcity);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CITIZENSHAND_H */
+#endif /* FC__CITIZENSHAND_H */

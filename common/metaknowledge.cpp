@@ -23,10 +23,10 @@
 #include "tile.h"
 #include "traderoutes.h"
 
-/**********************************************************************//**
-  Returns TRUE iff the target_tile it self and all tiles cardinally
-  adjacent to it are seen by pow_player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the target_tile it self and all tiles cardinally
+   adjacent to it are seen by pow_player.
+ **************************************************************************/
 static bool is_tile_seen_cadj(const struct player *pow_player,
                               const struct tile *target_tile)
 {
@@ -36,20 +36,22 @@ static bool is_tile_seen_cadj(const struct player *pow_player,
   }
 
   /* A cardinally adjacent tile is unseen. */
-  cardinal_adjc_iterate(&(wld.map), target_tile, ptile) {
+  cardinal_adjc_iterate(&(wld.map), target_tile, ptile)
+  {
     if (!tile_is_seen(ptile, pow_player)) {
       return FALSE;
     }
-  } cardinal_adjc_iterate_end;
+  }
+  cardinal_adjc_iterate_end;
 
   /* They are all seen. */
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns TRUE iff the target_tile it self and all tiles adjacent to it
-  are seen by pow_player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the target_tile it self and all tiles adjacent to it
+   are seen by pow_player.
+ **************************************************************************/
 static bool is_tile_seen_adj(const struct player *pow_player,
                              const struct tile *target_tile)
 {
@@ -59,19 +61,21 @@ static bool is_tile_seen_adj(const struct player *pow_player,
   }
 
   /* An adjacent tile is unseen. */
-  adjc_iterate(&(wld.map), target_tile, ptile) {
+  adjc_iterate(&(wld.map), target_tile, ptile)
+  {
     if (!tile_is_seen(ptile, pow_player)) {
       return FALSE;
     }
-  } adjc_iterate_end;
+  }
+  adjc_iterate_end;
 
   /* They are all seen. */
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns TRUE iff all tiles of a city are seen by pow_player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff all tiles of a city are seen by pow_player.
+ **************************************************************************/
 static bool is_tile_seen_city(const struct player *pow_player,
                               const struct city *target_city)
 {
@@ -82,20 +86,22 @@ static bool is_tile_seen_city(const struct player *pow_player,
 
   /* A tile of the city is unseen */
   city_tile_iterate(city_map_radius_sq_get(target_city),
-                    city_tile(target_city), ptile) {
+                    city_tile(target_city), ptile)
+  {
     if (!tile_is_seen(ptile, pow_player)) {
       return FALSE;
     }
-  } city_tile_iterate_end;
+  }
+  city_tile_iterate_end;
 
   /* They are all seen. */
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns TRUE iff all the tiles of a city and all the tiles of its trade
-  partners are seen by pow_player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff all the tiles of a city and all the tiles of its trade
+   partners are seen by pow_player.
+ **************************************************************************/
 static bool is_tile_seen_traderoute(const struct player *pow_player,
                                     const struct city *target_city)
 {
@@ -110,20 +116,22 @@ static bool is_tile_seen_traderoute(const struct player *pow_player,
   }
 
   /* A tile of a trade parter is unseen */
-  trade_partners_iterate(target_city, trade_partner) {
+  trade_partners_iterate(target_city, trade_partner)
+  {
     if (!is_tile_seen_city(pow_player, trade_partner)) {
       return FALSE;
     }
-  } trade_partners_iterate_end;
+  }
+  trade_partners_iterate_end;
 
   /* They are all seen. */
   return TRUE;
 }
 
-/**********************************************************************//**
-  Returns TRUE iff pplayer can see all the symmetric diplomatic
-  relationships of tplayer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff pplayer can see all the symmetric diplomatic
+   relationships of tplayer.
+ **************************************************************************/
 static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
                                             const struct player *tplayer)
 {
@@ -145,32 +153,26 @@ static bool can_plr_see_all_sym_diplrels_of(const struct player *pplayer,
   return FALSE;
 }
 
-/**********************************************************************//**
-  Is an evaluation of the requirement accurate when pow_player evaluates
-  it?
+/**********************************************************************/ /**
+   Is an evaluation of the requirement accurate when pow_player evaluates
+   it?
 
-  TODO: Move the data to a data file. That will
-        - let non programmers help complete it and/or fix what is wrong
-        - let clients not written in C use the data
-**************************************************************************/
-static bool is_req_knowable(const struct player *pow_player,
-                            const struct player *target_player,
-                            const struct player *other_player,
-                            const struct city *target_city,
-                            const struct impr_type *target_building,
-                            const struct tile *target_tile,
-                            const struct unit *target_unit,
-                            const struct output_type *target_output,
-                            const struct specialist *target_specialist,
-                            const struct requirement *req,
-                            const enum   req_problem_type prob_type)
+   TODO: Move the data to a data file. That will
+         - let non programmers help complete it and/or fix what is wrong
+         - let clients not written in C use the data
+ **************************************************************************/
+static bool is_req_knowable(
+    const struct player *pow_player, const struct player *target_player,
+    const struct player *other_player, const struct city *target_city,
+    const struct impr_type *target_building, const struct tile *target_tile,
+    const struct unit *target_unit, const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct requirement *req, const enum req_problem_type prob_type)
 {
   fc_assert_ret_val_msg(NULL != pow_player, false, "No point of view");
 
-  if (req->source.kind == VUT_UTFLAG
-      || req->source.kind == VUT_UTYPE
-      || req->source.kind == VUT_UCLASS
-      || req->source.kind == VUT_UCFLAG
+  if (req->source.kind == VUT_UTFLAG || req->source.kind == VUT_UTYPE
+      || req->source.kind == VUT_UCLASS || req->source.kind == VUT_UCFLAG
       || req->source.kind == VUT_MINVETERAN
       || req->source.kind == VUT_MINHP) {
     switch (req->range) {
@@ -197,7 +199,8 @@ static bool is_req_knowable(const struct player *pow_player,
   }
 
   if (req->source.kind == VUT_UNITSTATE) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE, "Wrong range");
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+                          "Wrong range");
 
     if (target_unit == NULL) {
       /* The unit may exist but not be passed when the problem type is
@@ -227,7 +230,8 @@ static bool is_req_knowable(const struct player *pow_player,
   }
 
   if (req->source.kind == VUT_MINMOVES) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE, "Wrong range");
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+                          "Wrong range");
 
     if (target_unit == NULL) {
       /* The unit may exist but not be passed when the problem type is
@@ -255,8 +259,8 @@ static bool is_req_knowable(const struct player *pow_player,
   }
 
   if (req->source.kind == VUT_ACTIVITY) {
-    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL,
-                          FALSE, "Wrong range");
+    fc_assert_ret_val_msg(req->range == REQ_RANGE_LOCAL, FALSE,
+                          "Wrong range");
 
     if (target_unit == NULL) {
       /* The unit may exist but not be passed when the problem type is
@@ -278,15 +282,13 @@ static bool is_req_knowable(const struct player *pow_player,
   if (req->source.kind == VUT_DIPLREL) {
     switch (req->range) {
     case REQ_RANGE_LOCAL:
-      if (other_player == NULL
-          || target_player == NULL) {
+      if (other_player == NULL || target_player == NULL) {
         /* The two players may exist but not be passed when the problem
          * type is RPT_POSSIBLE. */
         return prob_type == RPT_CERTAIN;
       }
 
-      if (pow_player == target_player
-          || pow_player == other_player)  {
+      if (pow_player == target_player || pow_player == other_player) {
         return TRUE;
       }
 
@@ -373,12 +375,14 @@ static bool is_req_knowable(const struct player *pow_player,
       }
 
       /* The player knows its city even if he can't see it */
-      cardinal_adjc_iterate(&(wld.map), target_tile, ptile) {
+      cardinal_adjc_iterate(&(wld.map), target_tile, ptile)
+      {
         pcity = tile_city(ptile);
         if (pcity && city_owner(pcity) == pow_player) {
           return TRUE;
         }
-      } cardinal_adjc_iterate_end;
+      }
+      cardinal_adjc_iterate_end;
 
       /* Unknown */
       return FALSE;
@@ -389,12 +393,14 @@ static bool is_req_knowable(const struct player *pow_player,
       }
 
       /* The player knows its city even if he can't see it */
-      adjc_iterate(&(wld.map), target_tile, ptile) {
+      adjc_iterate(&(wld.map), target_tile, ptile)
+      {
         pcity = tile_city(ptile);
         if (pcity && city_owner(pcity) == pow_player) {
           return TRUE;
         }
-      } adjc_iterate_end;
+      }
+      adjc_iterate_end;
 
       /* Unknown */
       return FALSE;
@@ -476,8 +482,7 @@ static bool is_req_knowable(const struct player *pow_player,
   if (req->source.kind == VUT_NATION
       || req->source.kind == VUT_NATIONGROUP) {
     if (!target_player
-        && (req->range == REQ_RANGE_PLAYER
-            || req->range == REQ_RANGE_TEAM
+        && (req->range == REQ_RANGE_PLAYER || req->range == REQ_RANGE_TEAM
             || req->range == REQ_RANGE_ALLIANCE)) {
       /* The player (that can have a nationality or be alllied to someone
        * with the nationality) may exist but not be passed when the problem
@@ -527,22 +532,26 @@ static bool is_req_knowable(const struct player *pow_player,
       if (!can_player_see_hypotetic_units_at(pow_player, target_tile)) {
         return FALSE;
       }
-      cardinal_adjc_iterate(&(wld.map), target_tile, adjc_tile) {
+      cardinal_adjc_iterate(&(wld.map), target_tile, adjc_tile)
+      {
         if (!can_player_see_hypotetic_units_at(pow_player, adjc_tile)) {
           return FALSE;
         }
-      } cardinal_adjc_iterate_end;
+      }
+      cardinal_adjc_iterate_end;
 
       return TRUE;
     case REQ_RANGE_ADJACENT:
       if (!can_player_see_hypotetic_units_at(pow_player, target_tile)) {
         return FALSE;
       }
-      adjc_iterate(&(wld.map), target_tile, adjc_tile) {
+      adjc_iterate(&(wld.map), target_tile, adjc_tile)
+      {
         if (!can_player_see_hypotetic_units_at(pow_player, adjc_tile)) {
           return FALSE;
         }
-      } adjc_iterate_end;
+      }
+      adjc_iterate_end;
 
       return TRUE;
     case REQ_RANGE_CONTINENT:
@@ -558,11 +567,9 @@ static bool is_req_knowable(const struct player *pow_player,
     }
   }
 
-  if (req->source.kind == VUT_TERRAIN
-      || req->source.kind == VUT_TERRFLAG
+  if (req->source.kind == VUT_TERRAIN || req->source.kind == VUT_TERRFLAG
       || req->source.kind == VUT_TERRAINCLASS
-      || req->source.kind == VUT_EXTRA
-      || req->source.kind == VUT_EXTRAFLAG
+      || req->source.kind == VUT_EXTRA || req->source.kind == VUT_EXTRAFLAG
       || req->source.kind == VUT_BASEFLAG
       || req->source.kind == VUT_BASEFLAG) {
     if (target_tile == NULL) {
@@ -605,8 +612,7 @@ static bool is_req_knowable(const struct player *pow_player,
     }
   }
 
-  if (req->source.kind == VUT_ACTION
-      || req->source.kind == VUT_OTYPE) {
+  if (req->source.kind == VUT_ACTION || req->source.kind == VUT_OTYPE) {
     /* This requirement type is intended to specify the situation. */
     return TRUE;
   }
@@ -620,30 +626,24 @@ static bool is_req_knowable(const struct player *pow_player,
   return FALSE;
 }
 
-/**********************************************************************//**
-  Evaluate a single requirement given pow_player's knowledge.
+/**********************************************************************/ /**
+   Evaluate a single requirement given pow_player's knowledge.
 
-  Note: Assumed to use pow_player's data.
-**************************************************************************/
-enum fc_tristate
-mke_eval_req(const struct player *pow_player,
-             const struct player *target_player,
-             const struct player *other_player,
-             const struct city *target_city,
-             const struct impr_type *target_building,
-             const struct tile *target_tile,
-             const struct unit *target_unit,
-             const struct output_type *target_output,
-             const struct specialist *target_specialist,
-             const struct requirement *req,
-             const enum   req_problem_type prob_type)
+   Note: Assumed to use pow_player's data.
+ **************************************************************************/
+enum fc_tristate mke_eval_req(
+    const struct player *pow_player, const struct player *target_player,
+    const struct player *other_player, const struct city *target_city,
+    const struct impr_type *target_building, const struct tile *target_tile,
+    const struct unit *target_unit, const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct requirement *req, const enum req_problem_type prob_type)
 {
   const struct unit_type *target_unittype;
 
-  if (!is_req_knowable(pow_player, target_player, other_player,
-                       target_city, target_building, target_tile,
-                       target_unit, target_output,
-                       target_specialist, req, prob_type)) {
+  if (!is_req_knowable(pow_player, target_player, other_player, target_city,
+                       target_building, target_tile, target_unit,
+                       target_output, target_specialist, req, prob_type)) {
     return TRI_MAYBE;
   }
 
@@ -654,57 +654,56 @@ mke_eval_req(const struct player *pow_player,
   }
 
   if (is_req_active(target_player, other_player, target_city,
-                    target_building, target_tile, target_unit, target_unittype,
-                    target_output, target_specialist, NULL, req, prob_type)) {
+                    target_building, target_tile, target_unit,
+                    target_unittype, target_output, target_specialist, NULL,
+                    req, prob_type)) {
     return TRI_YES;
   } else {
     return TRI_NO;
   }
 }
 
-/**********************************************************************//**
-  Evaluate a requirement vector given pow_player's knowledge.
+/**********************************************************************/ /**
+   Evaluate a requirement vector given pow_player's knowledge.
 
-  Note: Assumed to use pow_player's data.
-**************************************************************************/
-enum fc_tristate
-mke_eval_reqs(const struct player *pow_player,
-              const struct player *target_player,
-              const struct player *other_player,
-              const struct city *target_city,
-              const struct impr_type *target_building,
-              const struct tile *target_tile,
-              const struct unit *target_unit,
-              const struct output_type *target_output,
-              const struct specialist *target_specialist,
-              const struct requirement_vector *reqs,
-              const enum   req_problem_type prob_type)
+   Note: Assumed to use pow_player's data.
+ **************************************************************************/
+enum fc_tristate mke_eval_reqs(
+    const struct player *pow_player, const struct player *target_player,
+    const struct player *other_player, const struct city *target_city,
+    const struct impr_type *target_building, const struct tile *target_tile,
+    const struct unit *target_unit, const struct output_type *target_output,
+    const struct specialist *target_specialist,
+    const struct requirement_vector *reqs,
+    const enum req_problem_type prob_type)
 {
   enum fc_tristate current;
   enum fc_tristate result;
 
   result = TRI_YES;
-  requirement_vector_iterate(reqs, preq) {
-    current = mke_eval_req(pow_player, target_player, other_player,
-                           target_city, target_building, target_tile,
-                           target_unit, target_output,
-                           target_specialist, preq, prob_type);
+  requirement_vector_iterate(reqs, preq)
+  {
+    current =
+        mke_eval_req(pow_player, target_player, other_player, target_city,
+                     target_building, target_tile, target_unit,
+                     target_output, target_specialist, preq, prob_type);
     if (current == TRI_NO) {
       return TRI_NO;
     } else if (current == TRI_MAYBE) {
       result = TRI_MAYBE;
     }
-  } requirement_vector_iterate_end;
+  }
+  requirement_vector_iterate_end;
 
   return result;
 }
 
-/**********************************************************************//**
-  Can pow_player see the techs of target player?
-**************************************************************************/
+/**********************************************************************/ /**
+   Can pow_player see the techs of target player?
+ **************************************************************************/
 bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player)
 {
   return pow_player == target_player
-      || player_has_embassy(pow_player, target_player);
+         || player_has_embassy(pow_player, target_player);
 }

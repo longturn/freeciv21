@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -47,18 +47,17 @@ void update_nationset_combo();
 void popup_races_dialog(struct player *pplayer);
 void restart_notify_dialogs();
 
-
-class qdef_act
-{
+class qdef_act {
   Q_DISABLE_COPY(qdef_act);
 
 private:
   explicit qdef_act();
-  static qdef_act* m_instance;
+  static qdef_act *m_instance;
   action_id vs_city;
   action_id vs_unit;
+
 public:
-  static qdef_act* action();
+  static qdef_act *action();
   static void drop();
   void vs_city_set(int i);
   void vs_unit_set(int i);
@@ -69,18 +68,19 @@ public:
 /***************************************************************************
   Dialog with themed titlebar
 ***************************************************************************/
-class qfc_dialog : public QDialog
-{
+class qfc_dialog : public QDialog {
   Q_OBJECT
 public:
   qfc_dialog(QWidget *parent);
+
 private:
   int titlebar_height;
   QPoint point;
   bool moving_now;
   QPixmap close_pix;
+
 protected:
-  void paintEvent(QPaintEvent* event);
+  void paintEvent(QPaintEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
   void mousePressEvent(QMouseEvent *event);
   void mouseReleaseEvent(QMouseEvent *event);
@@ -89,10 +89,10 @@ protected:
 /***************************************************************************
   Nonmodal message box for disbanding units
 ***************************************************************************/
-class disband_box : public hud_message_box
-{
+class disband_box : public hud_message_box {
   Q_OBJECT
   struct unit_list *cpunits;
+
 public:
   explicit disband_box(struct unit_list *punits, QWidget *parent = 0);
   ~disband_box();
@@ -103,13 +103,13 @@ private slots:
 /***************************************************************************
  Dialog for goto popup
 ***************************************************************************/
-class notify_goto : public QMessageBox
-{
+class notify_goto : public QMessageBox {
   Q_OBJECT
   QPushButton *goto_but;
   QPushButton *inspect_but;
   QPushButton *close_but;
   struct tile *gtile;
+
 public:
   notify_goto(const char *headline, const char *lines,
               const struct text_tag_list *tags, struct tile *ptile,
@@ -123,12 +123,11 @@ private slots:
 /***************************************************************************
  Dialog for selecting nation, style and leader leader
 ***************************************************************************/
-class races_dialog:public qfc_dialog
-{
+class races_dialog : public qfc_dialog {
   Q_OBJECT
   QGridLayout *main_layout;
   QTableWidget *nation_tabs;
-  QList<QWidget*> *nations_tabs_list;
+  QList<QWidget *> *nations_tabs_list;
   QTableWidget *selected_nation_tabs;
   QComboBox *leader_name;
   QComboBox *qnation_set;
@@ -168,22 +167,23 @@ private:
  Widget around map view to display informations like demographics report,
  top 5 cities, traveler's report.
 ***************************************************************************/
-class notify_dialog:public fcwidget
-{
+class notify_dialog : public fcwidget {
   Q_OBJECT
 public:
-  notify_dialog(const char *caption, const char *headline,
-                const char *lines, QWidget *parent = 0);
+  notify_dialog(const char *caption, const char *headline, const char *lines,
+                QWidget *parent = 0);
   virtual void update_menu();
   ~notify_dialog();
   void restart();
+
 protected:
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
   void mouseReleaseEvent(QMouseEvent *event);
+
 private:
   void paintEvent(QPaintEvent *paint_event);
-  void calc_size(int &x, int&y);
+  void calc_size(int &x, int &y);
   close_widget *cw;
   QLabel *label;
   QVBoxLayout *layout;
@@ -197,18 +197,18 @@ private:
 /***************************************************************************
  Transparent widget for selecting units
 ***************************************************************************/
-class units_select: public fcwidget
-{
+class units_select : public fcwidget {
   Q_OBJECT
   QPixmap *pix;
-  QPixmap *h_pix; /** pixmap for highlighting */
-  QSize item_size; /** size of each pixmap of unit */
-  QList<unit*> unit_list; /** storing units only for drawing, for rest units
+  QPixmap *h_pix;          /** pixmap for highlighting */
+  QSize item_size;         /** size of each pixmap of unit */
+  QList<unit *> unit_list; /** storing units only for drawing, for rest units
                             * iterate utile->units */
   QFont ufont;
   QFont info_font;
   int row_count;
   close_widget *cw;
+
 public:
   units_select(struct tile *ptile, QWidget *parent);
   ~units_select();
@@ -216,6 +216,7 @@ public:
   void update_units();
   void create_pixmap();
   tile *utile;
+
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event);
@@ -226,6 +227,7 @@ protected:
   void closeEvent(QCloseEvent *event);
 private slots:
   void update_img();
+
 private:
   bool more;
   int show_line;
@@ -236,11 +238,11 @@ private:
 /**************************************************************************
   A QPushButton that includes data like function to call and parmeters
 **************************************************************************/
-class Choice_dialog_button: public QPushButton
-{
+class Choice_dialog_button : public QPushButton {
   Q_OBJECT
   pfcn_void func;
   QVariant data1, data2;
+
 public:
   Choice_dialog_button(const QString title, pfcn_void func_in,
                        QVariant data1_in, QVariant data2_in);
@@ -254,8 +256,7 @@ public:
 /***************************************************************************
   Simple choice dialog, allowing choosing one of set actions
 ***************************************************************************/
-class choice_dialog: public QWidget
-{
+class choice_dialog : public QWidget {
   Q_OBJECT
   QPushButton *target_unit_button;
   QVBoxLayout *layout;
@@ -265,10 +266,10 @@ class choice_dialog: public QWidget
   QList<Choice_dialog_button *> action_button_map;
   void (*run_on_close)(int);
   void switch_target();
+
 public:
   choice_dialog(const QString title, const QString text,
-                QWidget *parent = NULL,
-                void (*run_on_close_in)(int) = NULL);
+                QWidget *parent = NULL, void (*run_on_close_in)(int) = NULL);
   ~choice_dialog();
   void set_layout();
   void add_item(QString title, pfcn_void func, QVariant data1,
@@ -281,7 +282,7 @@ public:
   int unit_id;
   int target_id[ATK_COUNT];
   int sub_target_id[ASTK_COUNT];
-  struct unit* targeted_unit;
+  struct unit *targeted_unit;
   void update_dialog(const struct act_prob *act_probs);
 public slots:
   void execute_action(const int action);

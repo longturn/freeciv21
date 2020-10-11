@@ -56,10 +56,12 @@ bool is_unit_choice_type(enum choice_type type);
 #ifdef ADV_CHOICE_TRACK
 void adv_choice_copy(struct adv_choice *dest, struct adv_choice *src);
 void adv_choice_set_use(struct adv_choice *choice, const char *use);
-void adv_choice_log_info(struct adv_choice *choice, const char *loc1, const char *loc2);
+void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
+                         const char *loc2);
 const char *adv_choice_get_use(const struct adv_choice *choice);
-#else  /* ADV_CHOICE_TRACK */
-static inline void adv_choice_copy(struct adv_choice *dest, struct adv_choice *src)
+#else /* ADV_CHOICE_TRACK */
+static inline void adv_choice_copy(struct adv_choice *dest,
+                                   struct adv_choice *src)
 {
   if (dest != src) {
     *dest = *src;
@@ -75,19 +77,19 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
 
 #ifdef FREECIV_NDEBUG
 #define ADV_CHOICE_ASSERT(c) /* Do nothing. */
-#else  /* FREECIV_NDEBUG */
-#define ADV_CHOICE_ASSERT(c)                                             \
-  do {                                                                   \
-    if ((c).want > 0) {                                                  \
-      fc_assert((c).type > CT_NONE && (c).type < CT_LAST);               \
-      if (!is_unit_choice_type((c).type)) {                              \
-        int _iindex = improvement_index((c).value.building);             \
-        fc_assert(_iindex >= 0 && _iindex < improvement_count());        \
-      } else {                                                           \
-        int _uindex = utype_index((c).value.utype);                      \
-        fc_assert(_uindex >= 0 && _uindex < utype_count());              \
-      }                                                                  \
-    }                                                                    \
+#else                        /* FREECIV_NDEBUG */
+#define ADV_CHOICE_ASSERT(c)                                                \
+  do {                                                                      \
+    if ((c).want > 0) {                                                     \
+      fc_assert((c).type > CT_NONE && (c).type < CT_LAST);                  \
+      if (!is_unit_choice_type((c).type)) {                                 \
+        int _iindex = improvement_index((c).value.building);                \
+        fc_assert(_iindex >= 0 && _iindex < improvement_count());           \
+      } else {                                                              \
+        int _uindex = utype_index((c).value.utype);                         \
+        fc_assert(_uindex >= 0 && _uindex < utype_count());                 \
+      }                                                                     \
+    }                                                                       \
   } while (FALSE);
 #endif /* FREECIV_NDEBUG */
 

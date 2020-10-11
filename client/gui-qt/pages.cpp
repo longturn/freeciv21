@@ -51,8 +51,8 @@
 #include "voteinfo_bar.h"
 
 extern "C" {
-#include "repodlgs_g.h"
 #include "cityrep_g.h"
+#include "repodlgs_g.h"
 const char *science_dialog_text(void);
 const char *get_bulb_tooltip(void);
 const char *get_global_warming_tooltip(void);
@@ -78,65 +78,63 @@ static struct terrain *char2terrain(char ch);
 static void cycle_enemy_units();
 int last_center_enemy = 0;
 
-/**********************************************************************//**
-  Helper function for drawing map of savegames. Converts stored map char in
-  savefile to proper terrain.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for drawing map of savegames. Converts stored map char in
+   savefile to proper terrain.
+ **************************************************************************/
 static struct terrain *char2terrain(char ch)
 {
   if (ch == TERRAIN_UNKNOWN_IDENTIFIER) {
     return T_UNKNOWN;
   }
-  terrain_type_iterate(pterrain) {
+  terrain_type_iterate(pterrain)
+  {
     if (pterrain->identifier_load == ch) {
       return pterrain;
     }
-  } terrain_type_iterate_end;
+  }
+  terrain_type_iterate_end;
   return nullptr;
 }
 
-
-/**********************************************************************//**
-  Sets the "page" that the client should show.  See also pages_g.h.
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets the "page" that the client should show.  See also pages_g.h.
+ **************************************************************************/
 void qtg_real_set_client_page(enum client_pages page)
 {
   gui()->switch_page(page);
 }
 
-/**********************************************************************//**
-  Set the list of available rulesets.  The default ruleset should be
-  "default", and if the user changes this then set_ruleset() should be
-  called.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set the list of available rulesets.  The default ruleset should be
+   "default", and if the user changes this then set_ruleset() should be
+   called.
+ **************************************************************************/
 void qtg_set_rulesets(int num_rulesets, char **rulesets)
 {
   gui()->pr_options->set_rulesets(num_rulesets, rulesets);
 }
 
-/**********************************************************************//**
-  Returns current client page
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns current client page
+ **************************************************************************/
 enum client_pages qtg_get_current_client_page()
 {
   return gui()->current_page();
 }
 
-/**********************************************************************//**
-  Update the start page.
-**************************************************************************/
-void update_start_page(void)
-{
-  gui()->update_start_page();
-}
+/**********************************************************************/ /**
+   Update the start page.
+ **************************************************************************/
+void update_start_page(void) { gui()->update_start_page(); }
 
-/**********************************************************************//**
-  Creates buttons and layouts for start page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for start page.
+ **************************************************************************/
 void fc_client::create_main_page(void)
 {
   QPixmap main_graphics(tileset_main_intro_filename(tileset));
-  QLabel* free_main_pic = new QLabel;
+  QLabel *free_main_pic = new QLabel;
   QPainter painter(&main_graphics);
   QStringList buttons_names;
   int buttons_nr;
@@ -158,37 +156,35 @@ void fc_client::create_main_page(void)
 
   if (rev_ver == NULL) {
     /* TRANS: "version 2.6.0, Qt client" */
-    fc_snprintf(msgbuf, sizeof(msgbuf), _("%s%s, Qt client"),
-                word_version(), VERSION_STRING);
+    fc_snprintf(msgbuf, sizeof(msgbuf), _("%s%s, Qt client"), word_version(),
+                VERSION_STRING);
   } else {
-    fc_snprintf(msgbuf, sizeof(msgbuf), "%s%s",
-                word_version(), VERSION_STRING);
-    painter.drawText(10,
-                     main_graphics.height() - fm.descent() - fm.height() * 2,
-                     msgbuf);
+    fc_snprintf(msgbuf, sizeof(msgbuf), "%s%s", word_version(),
+                VERSION_STRING);
+    painter.drawText(
+        10, main_graphics.height() - fm.descent() - fm.height() * 2, msgbuf);
 
     /* TRANS: "commit: [modified] <git commit id>" */
     fc_snprintf(msgbuf, sizeof(msgbuf), _("commit: %s"), rev_ver);
-    painter.drawText(10,
-                     main_graphics.height() - fm.descent() - fm.height(),
+    painter.drawText(10, main_graphics.height() - fm.descent() - fm.height(),
                      msgbuf);
 
     strncpy(msgbuf, _("Qt client"), sizeof(msgbuf) - 1);
   }
 
-  painter.drawText(main_graphics.width() - fm.horizontalAdvance (msgbuf)
-                   -10, main_graphics.height() - fm.descent(), msgbuf);
+  painter.drawText(main_graphics.width() - fm.horizontalAdvance(msgbuf) - 10,
+                   main_graphics.height() - fm.descent(), msgbuf);
   free_main_pic->setPixmap(main_graphics);
-  pages_layout[PAGE_MAIN]->addWidget(free_main_pic,
-                                     row++, 0, 1, 2, Qt::AlignCenter);
+  pages_layout[PAGE_MAIN]->addWidget(free_main_pic, row++, 0, 1, 2,
+                                     Qt::AlignCenter);
 
 #if IS_BETA_VERSION
   warn_color.setColor(QPalette::WindowText, Qt::red);
   beta_label->setPalette(warn_color);
   beta_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Maximum);
   beta_label->setAlignment(Qt::AlignCenter);
-  pages_layout[PAGE_MAIN]->addWidget(beta_label,
-                                     row++, 0, 1, 2, Qt::AlignHCenter);
+  pages_layout[PAGE_MAIN]->addWidget(beta_label, row++, 0, 1, 2,
+                                     Qt::AlignHCenter);
 #endif
 
   buttons_names << _("Start new game") << _("Start scenario game")
@@ -203,33 +199,33 @@ void fc_client::create_main_page(void)
     switch (iter) {
     case 0:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 1, 0);
-      connect(button, &QAbstractButton::clicked, this, &fc_client::start_new_game);
+      connect(button, &QAbstractButton::clicked, this,
+              &fc_client::start_new_game);
       break;
     case 1:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 2, 0);
-      QObject::connect(button, &QPushButton::clicked, [this]() {
-        switch_page(PAGE_SCENARIO);
-      });
+      QObject::connect(button, &QPushButton::clicked,
+                       [this]() { switch_page(PAGE_SCENARIO); });
       break;
     case 2:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 3, 0);
-      QObject::connect(button, &QPushButton::clicked, [this]() {
-        switch_page(PAGE_LOAD);
-      });
+      QObject::connect(button, &QPushButton::clicked,
+                       [this]() { switch_page(PAGE_LOAD); });
       break;
     case 3:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 1, 1);
-      QObject::connect(button, &QPushButton::clicked, [this]() {
-        switch_page(PAGE_NETWORK);
-      });
+      QObject::connect(button, &QPushButton::clicked,
+                       [this]() { switch_page(PAGE_NETWORK); });
       break;
     case 4:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 2, 1);
-      connect(button, &QAbstractButton::clicked, this, &fc_client::popup_client_options);
+      connect(button, &QAbstractButton::clicked, this,
+              &fc_client::popup_client_options);
       break;
     case 5:
       pages_layout[PAGE_MAIN]->addWidget(button, row + 3, 1);
-      QObject::connect(button, &QAbstractButton::clicked, this, &fc_client::quit);
+      QObject::connect(button, &QAbstractButton::clicked, this,
+                       &fc_client::quit);
       break;
     default:
       break;
@@ -237,9 +233,9 @@ void fc_client::create_main_page(void)
   }
 }
 
-/**********************************************************************//**
-  Update network page connection state.
-**************************************************************************/
+/**********************************************************************/ /**
+   Update network page connection state.
+ **************************************************************************/
 void fc_client::set_connection_state(enum connection_state state)
 {
   switch (state) {
@@ -264,7 +260,6 @@ void fc_client::set_connection_state(enum connection_state state)
     connect_confirm_password_edit->setDisabled(true);
     connect_password_edit->setFocus(Qt::OtherFocusReason);
 
-
     break;
   case WAITING_TYPE:
     set_status_bar("");
@@ -274,9 +269,9 @@ void fc_client::set_connection_state(enum connection_state state)
   connection_status = state;
 }
 
-/**********************************************************************//**
-  Creates buttons and layouts for network page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for network page.
+ **************************************************************************/
 void fc_client::create_network_page(void)
 {
   QHeaderView *header;
@@ -369,8 +364,8 @@ void fc_client::create_network_page(void)
   header->setStretchLastSection(true);
 
   QStringList label_names;
-  label_names << _("Connect") << _("Port") << _("Login")
-              << _("Password") << _("Confirm Password");
+  label_names << _("Connect") << _("Port") << _("Login") << _("Password")
+              << _("Confirm Password");
 
   for (int i = 0; i < label_names.count(); i++) {
     connect_msg = new QLabel;
@@ -391,20 +386,20 @@ void fc_client::create_network_page(void)
   page_network_grid_layout->addWidget(network_button, 5, 0);
 
   network_button = new QPushButton(_("Cancel"));
-  QObject::connect(network_button, &QPushButton::clicked, [this]() {
-    switch_page(PAGE_MAIN);
-  });
+  QObject::connect(network_button, &QPushButton::clicked,
+                   [this]() { switch_page(PAGE_MAIN); });
   page_network_grid_layout->addWidget(network_button, 5, 2, 1, 1);
 
   network_button = new QPushButton(_("Connect"));
   page_network_grid_layout->addWidget(network_button, 5, 5, 1, 1);
-  connect(network_button, &QAbstractButton::clicked, this, &fc_client::slot_connect);
-  connect(connect_login_edit, &QLineEdit::returnPressed,
-          this, &fc_client::slot_connect);
-  connect(connect_password_edit, &QLineEdit::returnPressed,
-          this, &fc_client::slot_connect);
-  connect(connect_confirm_password_edit, &QLineEdit::returnPressed,
-          this, &fc_client::slot_connect);
+  connect(network_button, &QAbstractButton::clicked, this,
+          &fc_client::slot_connect);
+  connect(connect_login_edit, &QLineEdit::returnPressed, this,
+          &fc_client::slot_connect);
+  connect(connect_password_edit, &QLineEdit::returnPressed, this,
+          &fc_client::slot_connect);
+  connect(connect_confirm_password_edit, &QLineEdit::returnPressed, this,
+          &fc_client::slot_connect);
 
   connect_lan->setLayout(page_network_lan_layout);
   connect_metaserver->setLayout(page_network_wan_layout);
@@ -419,12 +414,11 @@ void fc_client::create_network_page(void)
   page_network_grid_layout->setColumnStretch(3, 4);
   pages_layout[PAGE_NETWORK]->addLayout(page_network_layout, 1, 1);
   pages_layout[PAGE_NETWORK]->addLayout(page_network_grid_layout, 2, 1);
-
 }
 
-/**********************************************************************//**
-  Sets application status bar for given time in miliseconds
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets application status bar for given time in miliseconds
+ **************************************************************************/
 void fc_client::set_status_bar(QString message, int timeout)
 {
   if (status_bar_label->text().isEmpty()) {
@@ -438,9 +432,9 @@ void fc_client::set_status_bar(QString message, int timeout)
   }
 }
 
-/**********************************************************************//**
-  Clears status bar or shows next message in queue if exists
-**************************************************************************/
+/**********************************************************************/ /**
+   Clears status bar or shows next message in queue if exists
+ **************************************************************************/
 void fc_client::clear_status_bar()
 {
   QString str;
@@ -454,9 +448,9 @@ void fc_client::clear_status_bar()
   }
 }
 
-/**********************************************************************//**
-  Creates page LOADING, showing label with Loading text
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates page LOADING, showing label with Loading text
+ **************************************************************************/
 void fc_client::create_loading_page()
 {
   QLabel *label = new QLabel(_("Loading..."));
@@ -466,9 +460,9 @@ void fc_client::create_loading_page()
                                          Qt::AlignHCenter);
 }
 
-/**********************************************************************//**
-  Creates buttons and layouts for load page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for load page.
+ **************************************************************************/
 void fc_client::create_load_page()
 {
   pages_layout[PAGE_LOAD] = new QGridLayout;
@@ -486,7 +480,7 @@ void fc_client::create_load_page()
   sav << _("Choose Saved Game to Load") << _("Date");
   load_pix = new QLabel;
   load_pix->setProperty("themed_border", true);
-  load_pix->setFixedSize(0 ,0);
+  load_pix->setFixedSize(0, 0);
   load_save_text = new QLabel;
   load_save_text->setTextFormat(Qt::RichText);
   load_save_text->setWordWrap(true);
@@ -514,7 +508,7 @@ void fc_client::create_load_page()
   connect(saves_load->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &fc_client::slot_selection_changed);
-  connect(show_preview, &QCheckBox::stateChanged, this, 
+  connect(show_preview, &QCheckBox::stateChanged, this,
           &fc_client::state_preview);
   pages_layout[PAGE_LOAD]->addWidget(wdg, 1, 0);
   pages_layout[PAGE_LOAD]->addWidget(load_save_text, 2, 0, 1, 2);
@@ -528,26 +522,25 @@ void fc_client::create_load_page()
 
   but = new QPushButton;
   but->setText(_("Cancel"));
-  but->setIcon(QApplication::style()->standardIcon(
-                                      QStyle::SP_DialogCancelButton));
+  but->setIcon(
+      QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton));
   connect(but, &QAbstractButton::clicked, this, &fc_client::slot_disconnect);
   pages_layout[PAGE_LOAD]->addWidget(but, 3, 2);
 
   but = new QPushButton;
   but->setText(_("Load"));
-  but->setIcon(QApplication::style()->standardIcon(
-                                      QStyle::SP_DialogOkButton));
+  but->setIcon(
+      QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
   connect(but, &QAbstractButton::clicked, this, &fc_client::start_from_save);
   pages_layout[PAGE_LOAD]->addWidget(but, 3, 3);
   pages_layout[PAGE_LOAD]->setColumnStretch(3, 10);
   pages_layout[PAGE_LOAD]->setColumnStretch(2, 10);
   pages_layout[PAGE_LOAD]->setColumnStretch(0, 10);
-
 }
 
-/**********************************************************************//**
-  Creates buttons and layouts for scenario page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for scenario page.
+ **************************************************************************/
 void fc_client::create_scenario_page()
 {
   QPushButton *but;
@@ -590,13 +583,14 @@ void fc_client::create_scenario_page()
   but = new QPushButton;
   but->setText(_("Browse..."));
   but->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
-  connect(but, &QAbstractButton::clicked, this, &fc_client::browse_scenarios);
+  connect(but, &QAbstractButton::clicked, this,
+          &fc_client::browse_scenarios);
   pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 0);
 
   but = new QPushButton;
   but->setText(_("Cancel"));
-  but->setIcon(QApplication::style()->standardIcon(
-                                        QStyle::SP_DialogCancelButton));
+  but->setIcon(
+      QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton));
   connect(but, &QAbstractButton::clicked, this, &fc_client::slot_disconnect);
   pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 3);
 
@@ -606,15 +600,15 @@ void fc_client::create_scenario_page()
   pages_layout[PAGE_SCENARIO]->setRowStretch(1, 5);
   but = new QPushButton;
   but->setText(_("Load Scenario"));
-  but->setIcon(QApplication::style()->standardIcon(
-                                        QStyle::SP_DialogOkButton));
+  but->setIcon(
+      QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
   connect(but, &QAbstractButton::clicked, this, &fc_client::start_scenario);
   pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 4);
 }
 
-/**********************************************************************//**
-  Creates buttons and layouts for start page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for start page.
+ **************************************************************************/
 void fc_client::create_start_page()
 {
   QPushButton *but;
@@ -651,7 +645,7 @@ void fc_client::create_start_page()
   start_players_tree->setRootIsDecorated(false);
 
   connect(start_players_tree,
-          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SIGNAL(customContextMenuRequested(const QPoint &)),
           SLOT(start_page_menu(QPoint)));
 
   up_layout->addWidget(start_players_tree, 0, 0, 3, 6);
@@ -659,7 +653,8 @@ void fc_client::create_start_page()
   but = new QPushButton;
   but->setText(_("Disconnect"));
   but->setIcon(style()->standardPixmap(QStyle::SP_DialogCancelButton));
-  QObject::connect(but, &QAbstractButton::clicked, this, &fc_client::slot_disconnect);
+  QObject::connect(but, &QAbstractButton::clicked, this,
+                   &fc_client::slot_disconnect);
   down_layout->addWidget(but, 5, 4);
   nation_button = new QPushButton;
   nation_button->setText(_("Pick Nation"));
@@ -696,9 +691,9 @@ void fc_client::create_start_page()
   pages_layout[PAGE_START]->addWidget(splitter);
 }
 
-/**********************************************************************//**
-  Creates buttons and layouts for game page.
-**************************************************************************/
+/**********************************************************************/ /**
+   Creates buttons and layouts for game page.
+ **************************************************************************/
 void fc_client::create_game_page()
 {
   QGridLayout *game_layout;
@@ -715,27 +710,26 @@ void fc_client::create_game_page()
   sw_map = new fc_sidewidget(fc_icons::instance()->get_pixmap("view"),
                              Q_("?noun:View"), "MAP", side_show_map);
   sw_tax = new fc_sidewidget(nullptr, nullptr, "", side_rates_wdg, SW_TAX);
-  sw_indicators = new fc_sidewidget(nullptr, nullptr, "", side_show_map,
-                                    SW_INDICATORS);
+  sw_indicators =
+      new fc_sidewidget(nullptr, nullptr, "", side_show_map, SW_INDICATORS);
   sw_indicators->set_right_click(side_indicators_menu);
   sw_cunit = new fc_sidewidget(fc_icons::instance()->get_pixmap("units"),
-                               _("Units"), "",
-                               toggle_units_report);
-  sw_cities = new fc_sidewidget(fc_icons::instance()->get_pixmap("cities"),
-                                _("Cities"), "CTS",
-                                city_report_dialog_popup);
+                               _("Units"), "", toggle_units_report);
+  sw_cities =
+      new fc_sidewidget(fc_icons::instance()->get_pixmap("cities"),
+                        _("Cities"), "CTS", city_report_dialog_popup);
   sw_cities->set_wheel_up(center_next_enemy_city);
   sw_cities->set_wheel_down(center_next_player_city);
   sw_diplo = new fc_sidewidget(fc_icons::instance()->get_pixmap("nations"),
                                _("Nations"), "PLR", popup_players_dialog);
   sw_diplo->set_wheel_up(center_next_player_capital);
   sw_diplo->set_wheel_down(key_center_capital);
-  sw_science = new fc_sidewidget(fc_icons::instance()->get_pixmap("research"),
-                                 _("Research"), "SCI",
-                                 side_left_click_science);
-  sw_economy = new fc_sidewidget(fc_icons::instance()->get_pixmap("economy"),
-                                 _("Economy"), "ECO",
-                                 economy_report_dialog_popup);
+  sw_science =
+      new fc_sidewidget(fc_icons::instance()->get_pixmap("research"),
+                        _("Research"), "SCI", side_left_click_science);
+  sw_economy =
+      new fc_sidewidget(fc_icons::instance()->get_pixmap("economy"),
+                        _("Economy"), "ECO", economy_report_dialog_popup);
   sw_endturn = new fc_sidewidget(fc_icons::instance()->get_pixmap("endturn"),
                                  _("Turn Done"), "", side_finish_turn);
   sw_cunit->set_right_click(side_center_unit);
@@ -769,7 +763,7 @@ void fc_client::create_game_page()
   game_layout->addWidget(mapview_wdg, 1, 0);
   game_main_widget->setLayout(game_layout);
   game_tab_widget = new fc_game_tab_widget;
-  game_tab_widget->setMinimumSize(600,400);
+  game_tab_widget->setMinimumSize(600, 400);
   game_tab_widget->setContentsMargins(0, 0, 0, 0);
   add_game_tab(game_main_widget);
   if (gui_options.gui_qt_sidebar_left) {
@@ -782,9 +776,9 @@ void fc_client::create_game_page()
   pages_layout[PAGE_GAME]->setSpacing(0);
 }
 
-/**********************************************************************//**
-  Inserts tab widget to game view page
-**************************************************************************/
+/**********************************************************************/ /**
+   Inserts tab widget to game view page
+ **************************************************************************/
 int fc_client::add_game_tab(QWidget *widget)
 {
   int i;
@@ -794,33 +788,32 @@ int fc_client::add_game_tab(QWidget *widget)
   return i;
 }
 
-/**********************************************************************//**
-  Removes given tab widget from game page
-**************************************************************************/
+/**********************************************************************/ /**
+   Removes given tab widget from game page
+ **************************************************************************/
 void fc_client::rm_game_tab(int index)
 {
   game_tab_widget->removeWidget(game_tab_widget->widget(index));
 }
 
-/**********************************************************************//**
-  Browse saves directory
-**************************************************************************/
+/**********************************************************************/ /**
+   Browse saves directory
+ **************************************************************************/
 void fc_client::browse_saves(void)
 {
   QString str;
   str = QString(_("Save Files"))
         + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
-  current_file = QFileDialog::getOpenFileName(gui()->central_wdg,
-                                              _("Open Save File"),
-                                              QDir::homePath(), str);
+  current_file = QFileDialog::getOpenFileName(
+      gui()->central_wdg, _("Open Save File"), QDir::homePath(), str);
   if (!current_file.isEmpty()) {
     start_from_save();
   }
 }
 
-/**********************************************************************//**
-  State of preview has been changed
-**************************************************************************/
+/**********************************************************************/ /**
+   State of preview has been changed
+ **************************************************************************/
 void fc_client::state_preview(int new_state)
 {
   QItemSelection slctn;
@@ -832,34 +825,33 @@ void fc_client::state_preview(int new_state)
   }
   slctn = saves_load->selectionModel()->selection();
   saves_load->selectionModel()->clearSelection();
-  saves_load->selectionModel()->select(slctn, QItemSelectionModel::Rows
-                                       | QItemSelectionModel::SelectCurrent);
+  saves_load->selectionModel()->select(
+      slctn, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
 }
 
-/**********************************************************************//**
-  Browse scenarios directory
-**************************************************************************/
+/**********************************************************************/ /**
+   Browse scenarios directory
+ **************************************************************************/
 void fc_client::browse_scenarios(void)
 {
   QString str;
 
   str = QString(_("Scenarios Files"))
         + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
-  current_file = QFileDialog::getOpenFileName(gui()->central_wdg,
-                                              _("Open Scenario File"),
-                                              QDir::homePath(), str);
+  current_file = QFileDialog::getOpenFileName(
+      gui()->central_wdg, _("Open Scenario File"), QDir::homePath(), str);
   if (!current_file.isEmpty()) {
     start_scenario();
   }
 }
 
-/**********************************************************************//**
-  Updates list of servers in network page in proper QTableViews
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates list of servers in network page in proper QTableViews
+ **************************************************************************/
 void fc_client::update_server_list(enum server_scan_type sstype,
                                    const struct server_list *list)
 {
-  QTableWidget* sel = NULL;
+  QTableWidget *sel = NULL;
   QString host, portstr;
   int port;
   int row;
@@ -890,7 +882,8 @@ void fc_client::update_server_list(enum server_scan_type sstype,
   old_row_count = sel->rowCount();
   sel->clearContents();
   row = 0;
-  server_list_iterate(list, pserver) {
+  server_list_iterate(list, pserver)
+  {
     char buf[20];
     int tmp;
     QString tstring;
@@ -943,19 +936,19 @@ void fc_client::update_server_list(enum server_scan_type sstype,
     }
 
     row++;
-  } server_list_iterate_end;
+  }
+  server_list_iterate_end;
 
   /* Remove unneeded rows, if there are any */
   while (old_row_count - row > 0) {
     sel->removeRow(old_row_count - 1);
     old_row_count--;
   }
-
 }
 
-/**********************************************************************//**
-  Callback function for when there's an error in the server scan.
-**************************************************************************/
+/**********************************************************************/ /**
+   Callback function for when there's an error in the server scan.
+ **************************************************************************/
 void server_scan_error(struct server_scan *scan, const char *message)
 {
   qtg_version_message(message);
@@ -965,10 +958,9 @@ void server_scan_error(struct server_scan *scan, const char *message)
    * do not do anything here to cause double free or raze condition. */
 }
 
-
-/**********************************************************************//**
-  Free the server scans.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free the server scans.
+ **************************************************************************/
 void fc_client::destroy_server_scans(void)
 {
   if (meta_scan) {
@@ -996,9 +988,9 @@ void fc_client::destroy_server_scans(void)
   }
 }
 
-/**********************************************************************//**
-  Stop and restart the metaserver and lan server scans.
-**************************************************************************/
+/**********************************************************************/ /**
+   Stop and restart the metaserver and lan server scans.
+ **************************************************************************/
 void fc_client::update_network_lists(void)
 {
   destroy_server_scans();
@@ -1010,14 +1002,14 @@ void fc_client::update_network_lists(void)
 
   meta_scan_timer = new QTimer(this);
   meta_scan = server_scan_begin(SERVER_SCAN_GLOBAL, server_scan_error);
-  connect(meta_scan_timer, &QTimer::timeout, this, &fc_client::slot_meta_scan);
+  connect(meta_scan_timer, &QTimer::timeout, this,
+          &fc_client::slot_meta_scan);
   meta_scan_timer->start(800);
-
 }
 
-/**********************************************************************//**
-  This function updates the list of servers every so often.
-**************************************************************************/
+/**********************************************************************/ /**
+   This function updates the list of servers every so often.
+ **************************************************************************/
 bool fc_client::check_server_scan(server_scan *scan_data)
 {
   struct server_scan *scan = scan_data;
@@ -1049,9 +1041,9 @@ bool fc_client::check_server_scan(server_scan *scan_data)
   return true;
 }
 
-/**********************************************************************//**
-  Executes lan scan network
-**************************************************************************/
+/**********************************************************************/ /**
+   Executes lan scan network
+ **************************************************************************/
 void fc_client::slot_lan_scan()
 {
   if (lan_scan_timer == NULL) {
@@ -1060,9 +1052,9 @@ void fc_client::slot_lan_scan()
   check_server_scan(lan_scan);
 }
 
-/**********************************************************************//**
-  Executes metaserver scan network
-**************************************************************************/
+/**********************************************************************/ /**
+   Executes metaserver scan network
+ **************************************************************************/
 void fc_client::slot_meta_scan()
 {
   if (meta_scan_timer == NULL) {
@@ -1071,9 +1063,9 @@ void fc_client::slot_meta_scan()
   check_server_scan(meta_scan);
 }
 
-/**********************************************************************//**
-  spawn a server, if there isn't one, using the default settings.
-**************************************************************************/
+/**********************************************************************/ /**
+   spawn a server, if there isn't one, using the default settings.
+ **************************************************************************/
 void fc_client::start_new_game()
 {
   if (is_server_running() || client_start_server()) {
@@ -1081,9 +1073,9 @@ void fc_client::start_new_game()
   }
 }
 
-/**********************************************************************//**
-  Starts game from chosen scenario - chosen_file (save or scenario)
-**************************************************************************/
+/**********************************************************************/ /**
+   Starts game from chosen scenario - chosen_file (save or scenario)
+ **************************************************************************/
 void fc_client::start_scenario()
 {
   if (!is_server_running()) {
@@ -1099,9 +1091,9 @@ void fc_client::start_scenario()
   }
 }
 
-/**********************************************************************//**
-  Starts game from chosen save - chosen_file (save or scenario)
-**************************************************************************/
+/**********************************************************************/ /**
+   Starts game from chosen save - chosen_file (save or scenario)
+ **************************************************************************/
 void fc_client::start_from_save()
 {
   if (!is_server_running()) {
@@ -1117,9 +1109,9 @@ void fc_client::start_from_save()
   }
 }
 
-/**********************************************************************//**
-  Selection chnaged in some tableview on some page
-**************************************************************************/
+/**********************************************************************/ /**
+   Selection chnaged in some tableview on some page
+ **************************************************************************/
 void fc_client::slot_selection_changed(const QItemSelection &selected,
                                        const QItemSelection &deselected)
 {
@@ -1199,7 +1191,7 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
         info_widget->setItem(k, col, item);
       }
     }
-  break;
+    break;
   case PAGE_SCENARIO:
     index = indexes.at(0);
     qvar = index.data(Qt::UserRole);
@@ -1220,8 +1212,7 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
       break;
     }
     fn_bytes = current_file.toLocal8Bit();
-    if ((sf = secfile_load_section(fn_bytes.data(),
-                                   "game", TRUE))) {
+    if ((sf = secfile_load_section(fn_bytes.data(), "game", TRUE))) {
       const char *sname;
       bool sbool;
       int integer;
@@ -1236,8 +1227,7 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
         final_str = QString("<b>") + _("Turn") + ":</b> "
                     + QString::number(integer).toHtmlEscaped() + "<br>";
       }
-      if ((sf = secfile_load_section(fn_bytes.data(),
-                                     "players", TRUE))) {
+      if ((sf = secfile_load_section(fn_bytes.data(), "players", TRUE))) {
         integer = secfile_lookup_int_default(sf, -1, "players.nplayers");
         if (integer >= 0) {
           final_str = final_str + "<b>" + _("Players") + ":</b>" + " "
@@ -1248,13 +1238,12 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
       for (int i = 0; i < num_players; i++) {
         pl_str = QString("player") + QString::number(i);
         pl_bytes = pl_str.toLocal8Bit();
-        if ((sf = secfile_load_section(fn_bytes.data(),
-                                       pl_bytes.data(), true))) {
-          if (!(sbool = secfile_lookup_bool_default(sf, true,
-                                       "player%d.unassigned_user",
-                                       i))) {
-              curr_player = i;
-              break;
+        if ((sf = secfile_load_section(fn_bytes.data(), pl_bytes.data(),
+                                       true))) {
+          if (!(sbool = secfile_lookup_bool_default(
+                    sf, true, "player%d.unassigned_user", i))) {
+            curr_player = i;
+            break;
           }
         }
       }
@@ -1266,8 +1255,8 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
 
       /* Information about human player */
       pl_bytes = pl_str.toLocal8Bit();
-      if ((sf = secfile_load_section(fn_bytes.data(),
-                                     pl_bytes.data(), true))) {
+      if ((sf = secfile_load_section(fn_bytes.data(), pl_bytes.data(),
+                                     true))) {
         sname = secfile_lookup_str_default(sf, nullptr, "player%d.nation",
                                            curr_player);
         if (sname) {
@@ -1286,17 +1275,16 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
           final_str = final_str + "<b>" + _("Units") + ":</b> "
                       + QString::number(integer).toHtmlEscaped() + "<br>";
         }
-        integer = secfile_lookup_int_default(sf, -1, "player%d.gold",
-                                             curr_player);
+        integer =
+            secfile_lookup_int_default(sf, -1, "player%d.gold", curr_player);
         if (integer >= 0) {
           final_str = final_str + "<b>" + _("Gold") + ":</b> "
                       + QString::number(integer).toHtmlEscaped() + "<br>";
         }
         nat_x = 0;
         for (nat_y = 0; nat_y > -1; nat_y++) {
-          const char *line = secfile_lookup_str_default(sf, nullptr,
-                                                        "player%d.map_t%04d",
-                                                        curr_player, nat_y);
+          const char *line = secfile_lookup_str_default(
+              sf, nullptr, "player%d.map_t%04d", curr_player, nat_y);
           if (line == nullptr) {
             break;
           }
@@ -1305,19 +1293,18 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
         }
 
         /* Reset terrain information */
-        terrain_type_iterate(pterr) {
-          pterr->identifier_load = '\0';
-        } terrain_type_iterate_end;
+        terrain_type_iterate(pterr) { pterr->identifier_load = '\0'; }
+        terrain_type_iterate_end;
 
         /* Load possible terrains and their identifiers (chars) */
-        if ((sf = secfile_load_section(fn_bytes.data(),
-                                       "savefile", true)))
-          while ((terr_name = secfile_lookup_str_default(sf, NULL,
-                                 "savefile.terrident%d.name", ii)) != NULL) {
+        if ((sf = secfile_load_section(fn_bytes.data(), "savefile", true)))
+          while ((terr_name = secfile_lookup_str_default(
+                      sf, NULL, "savefile.terrident%d.name", ii))
+                 != NULL) {
             struct terrain *pterr = terrain_by_rule_name(terr_name);
             if (pterr != NULL) {
-              const char *iptr = secfile_lookup_str_default(sf, NULL,
-                                      "savefile.terrident%d.identifier", ii);
+              const char *iptr = secfile_lookup_str_default(
+                  sf, NULL, "savefile.terrident%d.identifier", ii);
               pterr->identifier_load = *iptr;
             }
             ii++;
@@ -1326,7 +1313,7 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
         /* Create image */
         QImage img(nat_x, nat_y, QImage::Format_ARGB32_Premultiplied);
         img.fill(Qt::black);
-        for (int a = 0 ; a < nat_x; a++) {
+        for (int a = 0; a < nat_x; a++) {
           for (int b = 0; b < nat_y; b++) {
             struct terrain *tr;
             struct rgbcolor *rgb;
@@ -1346,11 +1333,9 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
         }
         load_pix->setFixedSize(load_pix->pixmap()->width(),
                                load_pix->pixmap()->height());
-        if ((sf = secfile_load_section(fn_bytes.data(),
-                                       "research", TRUE))) {
-          sname = secfile_lookup_str_default(sf, nullptr,
-                                             "research.r%d.now_name",
-                                             curr_player);
+        if ((sf = secfile_load_section(fn_bytes.data(), "research", TRUE))) {
+          sname = secfile_lookup_str_default(
+              sf, nullptr, "research.r%d.now_name", curr_player);
           if (sname) {
             final_str = final_str + "<b>" + _("Researching") + ":</b> "
                         + QString(sname).toHtmlEscaped();
@@ -1363,12 +1348,11 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
   default:
     break;
   }
-
 }
 
-/**********************************************************************//**
-  Updates saves to load and updates in tableview = saves_load
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates saves to load and updates in tableview = saves_load
+ **************************************************************************/
 void fc_client::update_load_page(void)
 {
   struct fileinfo_list *files;
@@ -1379,7 +1363,8 @@ void fc_client::update_load_page(void)
   saves_load->clearContents();
   saves_load->setRowCount(0);
   show_preview->setChecked(gui_options.gui_qt_show_preview);
-  fileinfo_list_iterate(files, pfile) {
+  fileinfo_list_iterate(files, pfile)
+  {
     QTableWidgetItem *item;
     QDateTime dt;
 
@@ -1393,13 +1378,14 @@ void fc_client::update_load_page(void)
     item->setText(dt.toString(Qt::TextDate));
     saves_load->setItem(row, 1, item);
     row++;
-  } fileinfo_list_iterate_end;
+  }
+  fileinfo_list_iterate_end;
   fileinfo_list_destroy(files);
 }
 
-/**********************************************************************//**
-  Gets scenarios list and updates it in TableWidget = scenarios_load
-**************************************************************************/
+/**********************************************************************/ /**
+   Gets scenarios list and updates it in TableWidget = scenarios_load
+ **************************************************************************/
 void fc_client::update_scenarios_page(void)
 {
   struct fileinfo_list *files;
@@ -1411,7 +1397,8 @@ void fc_client::update_scenarios_page(void)
   scenarios_view->setText("");
 
   files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
-  fileinfo_list_iterate(files, pfile) {
+  fileinfo_list_iterate(files, pfile)
+  {
     struct section_file *sf;
 
     if ((sf = secfile_load_section(pfile->fullname, "scenario", TRUE))
@@ -1432,12 +1419,12 @@ void fc_client::update_scenarios_page(void)
          * multiply by 100. */
         fcver *= 100;
       }
-      fcver -= (fcver % 10000); /* Patch level does not affect compatibility */
+      fcver -=
+          (fcver % 10000); /* Patch level does not affect compatibility */
       sname = secfile_lookup_str_default(sf, NULL, "scenario.name");
-      sdescription = secfile_lookup_str_default(sf, NULL,
-                     "scenario.description");
-      sauthors = secfile_lookup_str_default(sf, NULL,
-                                            "scenario.authors");
+      sdescription =
+          secfile_lookup_str_default(sf, NULL, "scenario.description");
+      sauthors = secfile_lookup_str_default(sf, NULL, "scenario.authors");
       if (fcver <= current_ver) {
         QString version;
         bool add_item = true;
@@ -1492,12 +1479,15 @@ void fc_client::update_scenarios_page(void)
           st = "";
         }
         sl << "<b>"
-           + QString(sname && strlen(sname) ? Q_(sname) : pfile->name)
-             .toHtmlEscaped()
-           + "</b>"
+                  + QString(sname && strlen(sname) ? Q_(sname) : pfile->name)
+                        .toHtmlEscaped()
+                  + "</b>"
            << QString(pfile->fullname).toHtmlEscaped()
            << QString(NULL != sdescription && '\0' != sdescription[0]
-                      ? Q_(sdescription) : "").toHtmlEscaped() + st + format
+                          ? Q_(sdescription)
+                          : "")
+                      .toHtmlEscaped()
+                  + st + format
            << QString::number(fcver).toHtmlEscaped();
         sl.replaceInStrings("\n", "<br>");
         item->setData(Qt::UserRole, sl);
@@ -1510,17 +1500,17 @@ void fc_client::update_scenarios_page(void)
       }
       secfile_destroy(sf);
     }
-  } fileinfo_list_iterate_end;
+  }
+  fileinfo_list_iterate_end;
   fileinfo_list_destroy(files);
   scenarios_load->sortItems(0);
   scenarios_load->update();
 }
 
-
-/**********************************************************************//**
-  Configure the dialog depending on what type of authentication request the
-  server is making.
-**************************************************************************/
+/**********************************************************************/ /**
+   Configure the dialog depending on what type of authentication request the
+   server is making.
+ **************************************************************************/
 void fc_client::handle_authentication_req(enum authentication_type type,
                                           const char *message)
 {
@@ -1554,14 +1544,14 @@ void fc_client::handle_authentication_req(enum authentication_type type,
   log_error("Unsupported authentication type %d: %s.", type, message);
 }
 
-/**********************************************************************//**
-  If on the network page, switch page to the login page (with new server
-  and port). if on the login page, send connect and/or authentication
-  requests to the server.
-**************************************************************************/
+/**********************************************************************/ /**
+   If on the network page, switch page to the login page (with new server
+   and port). if on the login page, send connect and/or authentication
+   requests to the server.
+ **************************************************************************/
 void fc_client::slot_connect()
 {
-  char errbuf [512];
+  char errbuf[512];
   struct packet_authentication_reply reply;
   QByteArray ba_bytes;
 
@@ -1573,8 +1563,9 @@ void fc_client::slot_connect()
     sz_strlcpy(server_host, ba_bytes.data());
     server_port = connect_port_edit->text().toInt();
 
-    if (connect_to_server(user_name, server_host, server_port,
-                          errbuf, sizeof(errbuf)) != -1) {
+    if (connect_to_server(user_name, server_host, server_port, errbuf,
+                          sizeof(errbuf))
+        != -1) {
     } else {
       set_status_bar(QString::fromUtf8(errbuf));
       output_window_append(ftc_client, errbuf);
@@ -1585,8 +1576,7 @@ void fc_client::slot_connect()
     ba_bytes = connect_password_edit->text().toLatin1();
     sz_strlcpy(password, ba_bytes.data());
     ba_bytes = connect_confirm_password_edit->text().toLatin1();
-    sz_strlcpy(reply.password,
-               ba_bytes.data());
+    sz_strlcpy(reply.password, ba_bytes.data());
 
     if (strncmp(reply.password, password, MAX_LEN_NAME) == 0) {
       password[0] = '\0';
@@ -1600,8 +1590,7 @@ void fc_client::slot_connect()
     return;
   case ENTER_PASSWORD_TYPE:
     ba_bytes = connect_password_edit->text().toLatin1();
-    sz_strlcpy(reply.password,
-               ba_bytes.data());
+    sz_strlcpy(reply.password, ba_bytes.data());
     send_packet_authentication_reply(&client.conn, &reply);
     set_connection_state(WAITING_TYPE);
     return;
@@ -1612,10 +1601,10 @@ void fc_client::slot_connect()
   log_error("Unsupported connection status: %d", connection_status);
 }
 
-/**********************************************************************//**
-  Updates start page (start page = client connected to server, but game not
-  started)
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates start page (start page = client connected to server, but game not
+   started)
+ **************************************************************************/
 void fc_client::update_start_page()
 {
   int conn_num, i;
@@ -1627,8 +1616,8 @@ void fc_client::update_start_page()
   struct sprite *psprite;
   QTreeWidgetItem *item;
   QTreeWidgetItem *item_r;
-  QList <QTreeWidgetItem*> items;
-  QList <QTreeWidgetItem*> recursed_items;
+  QList<QTreeWidgetItem *> items;
+  QList<QTreeWidgetItem *> recursed_items;
   QTreeWidgetItem *player_item;
   QTreeWidgetItem *global_item;
   QTreeWidgetItem *detach_item;
@@ -1647,25 +1636,27 @@ void fc_client::update_start_page()
   player_item->setData(0, Qt::UserRole, qvar2);
 
   i = 0;
-  players_iterate(pplayer) {
-    i++;
-  } players_iterate_end;
+  players_iterate(pplayer) { i++; }
+  players_iterate_end;
   gui()->pr_options->set_aifill(i);
   /**
    * Inserts playing players, observing custom players, and AI)
    */
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     host = "";
     if (!player_has_flag(pplayer, PLRF_SCENARIO_RESERVED)) {
       conn_id = -1;
-      conn_list_iterate(pplayer->connections, pconn) {
+      conn_list_iterate(pplayer->connections, pconn)
+      {
         if (pconn->playing == pplayer && !pconn->observer) {
           conn_id = pconn->id;
           host = pconn->addr;
           break;
         }
-      } conn_list_iterate_end;
+      }
+      conn_list_iterate_end;
       if (is_barbarian(pplayer)) {
         continue;
       }
@@ -1701,8 +1692,10 @@ void fc_client::update_start_page()
           str = pplayer->username;
 
           if (is_ai(pplayer)) {
-            str = str + " <" + (ai_level_translated_name(pplayer->ai_common.skill_level))
-              + ">";
+            str =
+                str + " <"
+                + (ai_level_translated_name(pplayer->ai_common.skill_level))
+                + ">";
             item->setIcon(col, fc_icons::instance()->get_icon("ai"));
           } else {
             item->setIcon(col, fc_icons::instance()->get_icon("human"));
@@ -1737,7 +1730,7 @@ void fc_client::update_start_page()
             break;
           }
           pixmap = new QPixmap(
-                     start_players_tree->header()->sectionSizeHint(col), 16);
+              start_players_tree->header()->sectionSizeHint(col), 16);
           pixmap->fill(Qt::transparent);
           p.begin(pixmap);
           p.fillRect(pixmap->width() / 2 - 8, 0, 16, 16, Qt::black);
@@ -1765,7 +1758,8 @@ void fc_client::update_start_page()
        * find any custom observers
        */
       recursed_items.clear();
-      conn_list_iterate(pplayer->connections, pconn) {
+      conn_list_iterate(pplayer->connections, pconn)
+      {
         if (pconn->id == conn_id) {
           continue;
         }
@@ -1775,10 +1769,12 @@ void fc_client::update_start_page()
         item_r->setText(7, pconn->addr);
         recursed_items.append(item_r);
         item->addChildren(recursed_items);
-      } conn_list_iterate_end;
+      }
+      conn_list_iterate_end;
       items.append(item);
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   player_item->addChildren(items);
   start_players_tree->insertTopLevelItem(0, player_item);
@@ -1792,7 +1788,8 @@ void fc_client::update_start_page()
   qvar2 = 0;
   global_item->setData(0, Qt::UserRole, qvar2);
 
-  conn_list_iterate(game.est_connections, pconn) {
+  conn_list_iterate(game.est_connections, pconn)
+  {
     if (NULL != pconn->playing || !pconn->observer) {
       continue;
     }
@@ -1813,21 +1810,23 @@ void fc_client::update_start_page()
       }
       items.append(item);
     }
-  } conn_list_iterate_end;
+  }
+  conn_list_iterate_end;
 
   global_item->addChildren(items);
   start_players_tree->insertTopLevelItem(1, global_item);
   items.clear();
 
   /**
-  * Insert detached
-  */
+   * Insert detached
+   */
   detach_item = new QTreeWidgetItem();
   detach_item->setText(0, _("Detached"));
   qvar2 = 0;
   detach_item->setData(0, Qt::UserRole, qvar2);
 
-  conn_list_iterate(game.all_connections, pconn) {
+  conn_list_iterate(game.all_connections, pconn)
+  {
     if (NULL != pconn->playing || pconn->observer) {
       continue;
     }
@@ -1835,18 +1834,20 @@ void fc_client::update_start_page()
     item->setText(0, pconn->username);
     item->setText(7, pconn->addr);
     items.append(item);
-  } conn_list_iterate_end;
+  }
+  conn_list_iterate_end;
 
   detach_item->addChildren(items);
   start_players_tree->insertTopLevelItem(2, detach_item);
-  start_players_tree->header()->setSectionResizeMode(QHeaderView::ResizeToContents);
+  start_players_tree->header()->setSectionResizeMode(
+      QHeaderView::ResizeToContents);
   start_players_tree->expandAll();
   update_buttons();
 }
 
-/**********************************************************************//**
-  Updates observe button in case user started observing manually
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates observe button in case user started observing manually
+ **************************************************************************/
 void fc_client::update_buttons()
 {
   bool sensitive;
@@ -1867,11 +1868,13 @@ void fc_client::update_buttons()
     } else {
       int num_unready = 0;
 
-      players_iterate(pplayer) {
+      players_iterate(pplayer)
+      {
         if (is_human(pplayer) && !pplayer->is_ready) {
           num_unready++;
         }
-      } players_iterate_end;
+      }
+      players_iterate_end;
 
       if (num_unready > 1) {
         text = _("Ready");
@@ -1885,14 +1888,16 @@ void fc_client::update_buttons()
     text = _("Start");
     if (can_client_access_hack() && client.conn.observer) {
       sensitive = true;
-      players_iterate(plr) {
+      players_iterate(plr)
+      {
         if (is_human(plr)) {
           /* There's human controlled player(s) in game, so it's their
            * job to start the game. */
           sensitive = false;
           break;
         }
-      } players_iterate_end;
+      }
+      players_iterate_end;
     } else {
       sensitive = false;
     }
@@ -1911,9 +1916,9 @@ void fc_client::update_buttons()
   gui()->pr_options->update_ai_level();
 }
 
-/**********************************************************************//**
-  Context menu on some player, arg Qpoint specifies some pixel on screen
-**************************************************************************/
+/**********************************************************************/ /**
+   Context menu on some player, arg Qpoint specifies some pixel on screen
+ **************************************************************************/
 void fc_client::start_page_menu(QPoint pos)
 {
   QAction *action;
@@ -1949,10 +1954,11 @@ void fc_client::start_page_menu(QPoint pos)
     return;
   }
   if (qvar == 1) {
-    selected_player = (player *) qvar2.value < void *>();
+    selected_player = (player *) qvar2.value<void *>();
   }
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (selected_player && selected_player == pplayer) {
       splayer = QString(pplayer->name);
       sp = "\"" + splayer + "\"";
@@ -1960,36 +1966,32 @@ void fc_client::start_page_menu(QPoint pos)
         str = QString(_("Observe"));
         action = new QAction(str, start_players_tree);
         str = "/observe " + sp;
-        QObject::connect(action, &QAction::triggered, [this,str]() {
-          send_fake_chat_message(str);
-        });
+        QObject::connect(action, &QAction::triggered,
+                         [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
 
         if (ALLOW_CTRL <= client.conn.access_level) {
           str = QString(_("Remove player"));
           action = new QAction(str, start_players_tree);
           str = "/remove " + sp;
-          QObject::connect(action, &QAction::triggered, [this,str]() {
-            send_fake_chat_message(str);
-          });
+          QObject::connect(action, &QAction::triggered,
+                           [this, str]() { send_fake_chat_message(str); });
           menu->addAction(action);
         }
         str = QString(_("Take this player"));
         action = new QAction(str, start_players_tree);
         str = "/take " + sp;
-        QObject::connect(action, &QAction::triggered, [this,str]() {
-          send_fake_chat_message(str);
-        });
+        QObject::connect(action, &QAction::triggered,
+                         [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
       }
 
       if (can_conn_edit_players_nation(&client.conn, pplayer)) {
         str = QString(_("Pick nation"));
         action = new QAction(str, start_players_tree);
-        str = "PICK:" + QString(player_name(pplayer));  /* PICK is a key */
-        QObject::connect(action, &QAction::triggered, [this,str]() {
-          send_fake_chat_message(str);
-        });
+        str = "PICK:" + QString(player_name(pplayer)); /* PICK is a key */
+        QObject::connect(action, &QAction::triggered,
+                         [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
       }
 
@@ -2002,12 +2004,13 @@ void fc_client::start_page_menu(QPoint pos)
           menu->addMenu(submenu_AI);
 
           for (level = 0; level < AI_LEVEL_COUNT; level++) {
-            if (is_settable_ai_level(static_cast < ai_level > (level))) {
-              level_name = ai_level_translated_name(static_cast < ai_level > (level));
-              level_cmd = ai_level_cmd(static_cast < ai_level > (level));
+            if (is_settable_ai_level(static_cast<ai_level>(level))) {
+              level_name =
+                  ai_level_translated_name(static_cast<ai_level>(level));
+              level_cmd = ai_level_cmd(static_cast<ai_level>(level));
               action = new QAction(QString(level_name), start_players_tree);
               str = "/" + QString(level_cmd) + " " + sp;
-              QObject::connect(action, &QAction::triggered, [this,str]() {
+              QObject::connect(action, &QAction::triggered, [this, str]() {
                 send_fake_chat_message(str);
               });
               submenu_AI->addAction(action);
@@ -2017,16 +2020,17 @@ void fc_client::start_page_menu(QPoint pos)
       }
 
       /**
-      * Put to Team X submenu
-      */
+       * Put to Team X submenu
+       */
       if (pplayer && game.info.is_new_game) {
         menu->addMenu(submenu_team);
         submenu_team->setTitle(_("Put on team"));
         menu->addMenu(submenu_team);
-        count = pplayer->team ?
-            player_list_size(team_members(pplayer->team)) : 0;
+        count = pplayer->team ? player_list_size(team_members(pplayer->team))
+                              : 0;
         need_empty_team = (count != 1);
-        team_slots_iterate(tslot) {
+        team_slots_iterate(tslot)
+        {
           if (!team_slot_is_used(tslot)) {
             if (!need_empty_team) {
               continue;
@@ -2036,42 +2040,38 @@ void fc_client::start_page_menu(QPoint pos)
           str = team_slot_name_translation(tslot);
           action = new QAction(str, start_players_tree);
           str = "/team" + sp + " \"" + QString(team_slot_rule_name(tslot))
-              + "\"";
-          QObject::connect(action, &QAction::triggered, [this,str]() {
-            send_fake_chat_message(str);
-          });
+                + "\"";
+          QObject::connect(action, &QAction::triggered,
+                           [this, str]() { send_fake_chat_message(str); });
           submenu_team->addAction(action);
-        } team_slots_iterate_end;
+        }
+        team_slots_iterate_end;
       }
 
       if (ALLOW_CTRL <= client.conn.access_level && NULL != pplayer) {
         str = QString(_("Aitoggle player"));
         action = new QAction(str, start_players_tree);
         str = "/aitoggle " + sp;
-        QObject::connect(action, &QAction::triggered, [this,str]() {
-          send_fake_chat_message(str);
-        });
+        QObject::connect(action, &QAction::triggered,
+                         [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
       }
 
       menu->popup(global_pos);
       return;
     }
-  } players_iterate_end;
-
+  }
+  players_iterate_end;
 }
 
-/**********************************************************************//**
-  Calls dialg selecting nations
-**************************************************************************/
-void fc_client::slot_pick_nation()
-{
-  popup_races_dialog(client_player());
-}
+/**********************************************************************/ /**
+   Calls dialg selecting nations
+ **************************************************************************/
+void fc_client::slot_pick_nation() { popup_races_dialog(client_player()); }
 
-/**********************************************************************//**
-  Reloads sidebar icons (useful on theme change)
-**************************************************************************/
+/**********************************************************************/ /**
+   Reloads sidebar icons (useful on theme change)
+ **************************************************************************/
 void fc_client::reload_sidebar_icons()
 {
   sw_map->set_pixmap(fc_icons::instance()->get_pixmap("view"));
@@ -2084,9 +2084,9 @@ void fc_client::reload_sidebar_icons()
   sidebar_wdg->resize_me(game_tab_widget->height(), true);
 }
 
-/**********************************************************************//**
-  Updates sidebar tooltips
-**************************************************************************/
+/**********************************************************************/ /**
+   Updates sidebar tooltips
+ **************************************************************************/
 void fc_client::update_sidebar_tooltips()
 {
   QString str;
@@ -2113,23 +2113,23 @@ void fc_client::update_sidebar_tooltips()
     str = str + '\n' + get_info_label_text(false);
     sw_map->set_tooltip(str);
     str = QString(_("Tax: %1% Science: %2% Luxury: %3%\n"))
-          .arg(client.conn.playing->economic.tax)
-          .arg(client.conn.playing->economic.luxury)
-          .arg(client.conn.playing->economic.science);
+              .arg(client.conn.playing->economic.tax)
+              .arg(client.conn.playing->economic.luxury)
+              .arg(client.conn.playing->economic.science);
 
-    str += QString(_("%1 - max rate: %2%")).
-           arg(government_name_for_player(client.conn.playing),
-               QString::number(max));
+    str += QString(_("%1 - max rate: %2%"))
+               .arg(government_name_for_player(client.conn.playing),
+                    QString::number(max));
 
     get_economy_report_units_data(unit_entries, &entries_used, &unit_total);
-    get_economy_report_data(building_entries, &entries_used,
-                            &building_total, &tax);
-    fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"),
-                tax, building_total + unit_total);
+    get_economy_report_data(building_entries, &entries_used, &building_total,
+                            &tax);
+    fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"), tax,
+                building_total + unit_total);
     sw_economy->set_tooltip(buf);
     if (player_primary_capital(client_player())) {
-      sw_cities->set_tooltip(text_happiness_cities(
-                                     player_primary_capital(client_player())));
+      sw_cities->set_tooltip(
+          text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
     sw_tax->set_tooltip("");
@@ -2140,9 +2140,9 @@ void fc_client::update_sidebar_tooltips()
   sw_indicators->set_tooltip(QString(get_info_label_text_popup()));
 }
 
-/**********************************************************************//**
-  Centers next enemy city on view
-**************************************************************************/
+/**********************************************************************/ /**
+   Centers next enemy city on view
+ **************************************************************************/
 void center_next_enemy_city()
 {
   bool center_next = false;
@@ -2150,9 +2150,11 @@ void center_next_enemy_city()
   int first_id;
   struct tile *ptile = nullptr;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (pplayer != client_player()) {
-      city_list_iterate(pplayer->cities, pcity) {
+      city_list_iterate(pplayer->cities, pcity)
+      {
         if (!first_tile) {
           first_tile = true;
           ptile = pcity->tile;
@@ -2166,9 +2168,11 @@ void center_next_enemy_city()
         if (pcity->id == last_center_enemy_city) {
           center_next = true;
         }
-      } city_list_iterate_end;
+      }
+      city_list_iterate_end;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (ptile != nullptr) {
     center_tile_mapcanvas(ptile);
@@ -2176,9 +2180,9 @@ void center_next_enemy_city()
   }
 }
 
-/**********************************************************************//**
-  Centers next player city on view
-**************************************************************************/
+/**********************************************************************/ /**
+   Centers next player city on view
+ **************************************************************************/
 void center_next_player_city()
 {
   bool center_next = false;
@@ -2186,9 +2190,11 @@ void center_next_player_city()
   int first_id;
   struct tile *ptile = nullptr;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (pplayer == client_player()) {
-      city_list_iterate(pplayer->cities, pcity) {
+      city_list_iterate(pplayer->cities, pcity)
+      {
         if (!first_tile) {
           first_tile = true;
           ptile = pcity->tile;
@@ -2202,9 +2208,11 @@ void center_next_player_city()
         if (pcity->id == last_center_player_city) {
           center_next = true;
         }
-      } city_list_iterate_end;
+      }
+      city_list_iterate_end;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (ptile != nullptr) {
     center_tile_mapcanvas(ptile);
@@ -2212,9 +2220,9 @@ void center_next_player_city()
   }
 }
 
-/**********************************************************************//**
-  Centers next enemy capital
-**************************************************************************/
+/**********************************************************************/ /**
+   Centers next enemy capital
+ **************************************************************************/
 void center_next_player_capital()
 {
   struct city *capital;
@@ -2223,40 +2231,41 @@ void center_next_player_capital()
   int first_id;
   struct tile *ptile = nullptr;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (pplayer != client_player()) {
       capital = player_primary_capital(pplayer);
       if (capital == nullptr) {
         continue;
       }
-        if (!first_tile) {
-          first_tile = true;
-          ptile = capital->tile;
-          first_id = capital->id;
-        }
-        if ((last_center_player_city == 0) || center_next) {
-          last_center_player_city = capital->id;
-          center_tile_mapcanvas(capital->tile);
-          put_cross_overlay_tile(capital->tile);
-          return;
-        }
-        if (capital->id == last_center_player_city) {
-          center_next = true;
-        }
+      if (!first_tile) {
+        first_tile = true;
+        ptile = capital->tile;
+        first_id = capital->id;
+      }
+      if ((last_center_player_city == 0) || center_next) {
+        last_center_player_city = capital->id;
+        center_tile_mapcanvas(capital->tile);
+        put_cross_overlay_tile(capital->tile);
+        return;
+      }
+      if (capital->id == last_center_player_city) {
+        center_next = true;
+      }
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (ptile != nullptr) {
     center_tile_mapcanvas(ptile);
     put_cross_overlay_tile(ptile);
     last_center_player_city = first_id;
   }
-
 }
 
-/**********************************************************************//**
-  Update position
-**************************************************************************/
+/**********************************************************************/ /**
+   Update position
+ **************************************************************************/
 void fc_client::update_sidebar_position()
 {
   pages_layout[PAGE_GAME]->removeWidget(gui()->sidebar_wdg);
@@ -2267,9 +2276,9 @@ void fc_client::update_sidebar_position()
   }
 }
 
-/**********************************************************************//**
-  Center on next enemy unit
-**************************************************************************/
+/**********************************************************************/ /**
+   Center on next enemy unit
+ **************************************************************************/
 void cycle_enemy_units()
 {
   bool center_next = false;
@@ -2277,9 +2286,11 @@ void cycle_enemy_units()
   int first_id;
   struct tile *ptile = nullptr;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (pplayer != client_player()) {
-      unit_list_iterate(pplayer->units, punit) {
+      unit_list_iterate(pplayer->units, punit)
+      {
         if (!first_tile) {
           first_tile = true;
           ptile = punit->tile;
@@ -2293,9 +2304,11 @@ void cycle_enemy_units()
         if (punit->id == last_center_enemy) {
           center_next = true;
         }
-      } unit_list_iterate_end;
+      }
+      unit_list_iterate_end;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   if (ptile != nullptr) {
     center_tile_mapcanvas(ptile);

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2002 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,20 +13,21 @@
 #ifndef FC__AIGUARD_H
 #define FC__AIGUARD_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #include "fc_types.h"
 
 #ifndef FREECIV_NDEBUG
 #define CHECK_GUARD(ait, guard) aiguard_check_guard(ait, guard)
 #define CHECK_CHARGE_UNIT(ait, charge) aiguard_check_charge_unit(ait, charge)
-#else  /* FREECIV_NDEBUG */
-#define CHECK_GUARD(ait, guard) (void)0
-#define CHECK_CHARGE_UNIT(ait, charge) (void)0
+#else /* FREECIV_NDEBUG */
+#define CHECK_GUARD(ait, guard) (void) 0
+#define CHECK_CHARGE_UNIT(ait, charge) (void) 0
 #endif /* FREECIV_NDEBUG */
 
 void aiguard_check_guard(struct ai_type *ait, const struct unit *guard);
-void aiguard_check_charge_unit(struct ai_type *ait, const struct unit *charge);
+void aiguard_check_charge_unit(struct ai_type *ait,
+                               const struct unit *charge);
 void aiguard_clear_charge(struct ai_type *ait, struct unit *guard);
 void aiguard_clear_guard(struct ai_type *ait, struct unit *charge);
 void aiguard_assign_guard_unit(struct ai_type *ait, struct unit *charge,
@@ -42,4 +43,4 @@ struct unit *aiguard_charge_unit(struct ai_type *ait, struct unit *guard);
 struct city *aiguard_charge_city(struct ai_type *ait, struct unit *guard);
 void aiguard_update_charge(struct ai_type *ait, struct unit *guard);
 
-#endif	/* FC__AIGUARD_H */
+#endif /* FC__AIGUARD_H */

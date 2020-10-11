@@ -27,7 +27,8 @@ struct player *server_create_player(int player_id, const char *ai_tname,
                                     struct rgbcolor *prgbcolor,
                                     bool allow_ai_type_fallbacking);
 const struct rgbcolor *player_preferred_color(struct player *pplayer);
-bool player_color_changeable(const struct player *pplayer, const char **reason);
+bool player_color_changeable(const struct player *pplayer,
+                             const char **reason);
 void assign_player_colors(void);
 void server_player_set_color(struct player *pplayer,
                              const struct rgbcolor *prgbcolor);
@@ -49,12 +50,11 @@ void server_player_set_name(struct player *pplayer, const char *name);
 bool server_player_set_name_full(const struct connection *caller,
                                  struct player *pplayer,
                                  const struct nation_type *pnation,
-                                 const char *name,
-                                 char *error_buf, size_t error_buf_len);
+                                 const char *name, char *error_buf,
+                                 size_t error_buf_len);
 
 struct nation_type *pick_a_nation(const struct nation_list *choices,
-                                  bool ignore_conflicts,
-                                  bool needs_startpos,
+                                  bool ignore_conflicts, bool needs_startpos,
                                   enum barbarian_type barb_type);
 bool nation_is_in_current_set(const struct nation_type *pnation);
 bool client_can_pick_nation(const struct nation_type *nation);
@@ -64,17 +64,19 @@ void fit_nationset_to_players(void);
 
 /* Iterate over nations in the currently selected set.
  * Does not filter on playability or anything else. */
-#define allowed_nations_iterate(pnation)                            \
-  nations_iterate(pnation) {                                        \
+#define allowed_nations_iterate(pnation)                                    \
+  nations_iterate(pnation)                                                  \
+  {                                                                         \
     if (nation_is_in_current_set(pnation)) {
 
-#define allowed_nations_iterate_end                                 \
-    }                                                               \
-  } nations_iterate_end
+#define allowed_nations_iterate_end                                         \
+  }                                                                         \
+  }                                                                         \
+  nations_iterate_end
 
 void check_player_max_rates(struct player *pplayer);
 void make_contact(struct player *pplayer1, struct player *pplayer2,
-		  struct tile *ptile);
+                  struct tile *ptile);
 void maybe_make_contact(struct tile *ptile, struct player *pplayer);
 void enter_war(struct player *pplayer, struct player *pplayer2);
 void player_update_last_war_action(struct player *pplayer);
@@ -93,52 +95,59 @@ void set_shuffled_players(int *shuffled_players);
 struct player *shuffled_player(int i);
 void reset_all_start_commands(bool plrchange);
 
-#define shuffled_players_iterate(NAME_pplayer)\
-do {\
-  int MY_i;\
-  struct player *NAME_pplayer;\
-  log_debug("shuffled_players_iterate @ %s line %d",\
-            __FILE__, __FC_LINE__);\
-  for (MY_i = 0; MY_i < player_slot_count(); MY_i++) {\
-    NAME_pplayer = shuffled_player(MY_i);\
-    if (NAME_pplayer != NULL) {\
+#define shuffled_players_iterate(NAME_pplayer)                              \
+  do {                                                                      \
+    int MY_i;                                                               \
+    struct player *NAME_pplayer;                                            \
+    log_debug("shuffled_players_iterate @ %s line %d", __FILE__,            \
+              __FC_LINE__);                                                 \
+    for (MY_i = 0; MY_i < player_slot_count(); MY_i++) {                    \
+      NAME_pplayer = shuffled_player(MY_i);                                 \
+      if (NAME_pplayer != NULL) {
 
-#define shuffled_players_iterate_end\
-    }\
-  }\
-} while (FALSE)
+#define shuffled_players_iterate_end                                        \
+  }                                                                         \
+  }                                                                         \
+  }                                                                         \
+  while (FALSE)
 
-#define phase_players_iterate(pplayer)\
-do {\
-  shuffled_players_iterate(pplayer) {\
-    if (is_player_phase(pplayer, game.info.phase)) {
+#define phase_players_iterate(pplayer)                                      \
+  do {                                                                      \
+    shuffled_players_iterate(pplayer)                                       \
+    {                                                                       \
+      if (is_player_phase(pplayer, game.info.phase)) {
 
-#define phase_players_iterate_end\
-    }\
-  } shuffled_players_iterate_end;\
-} while (FALSE);
+#define phase_players_iterate_end                                           \
+  }                                                                         \
+  }                                                                         \
+  shuffled_players_iterate_end;                                             \
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
-#define alive_phase_players_iterate(pplayer) \
-do { \
-  phase_players_iterate(pplayer) { \
-    if (pplayer->is_alive) {
+#define alive_phase_players_iterate(pplayer)                                \
+  do {                                                                      \
+    phase_players_iterate(pplayer)                                          \
+    {                                                                       \
+      if (pplayer->is_alive) {
 
-#define alive_phase_players_iterate_end \
-    } \
-  } phase_players_iterate_end \
-} while (FALSE);
+#define alive_phase_players_iterate_end                                     \
+  }                                                                         \
+  }                                                                         \
+  phase_players_iterate_end                                                 \
+  }                                                                         \
+  while (FALSE)                                                             \
+    ;
 
 bool civil_war_possible(struct player *pplayer, bool conquering_city,
                         bool honour_server_option);
 bool civil_war_triggered(struct player *pplayer);
 struct player *civil_war(struct player *pplayer);
 
-void update_players_after_alliance_breakup(struct player *pplayer,
-                                           struct player *pplayer2,
-                                           const struct unit_list
-                                               *pplayer_seen_units,
-                                           const struct unit_list
-                                               *pplayer2_seen_units);
+void update_players_after_alliance_breakup(
+    struct player *pplayer, struct player *pplayer2,
+    const struct unit_list *pplayer_seen_units,
+    const struct unit_list *pplayer2_seen_units);
 
 /* Player counts, total player_count() is in common/player.c */
 int barbarian_count(void);
@@ -168,4 +177,4 @@ void player_set_to_ai_mode(struct player *pplayer,
                            enum ai_level skill_level);
 void player_set_under_human_control(struct player *pplayer);
 
-#endif  /* FC__PLRHAND_H */
+#endif /* FC__PLRHAND_H */

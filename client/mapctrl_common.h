@@ -19,13 +19,13 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
-#include "map.h"                /* enum direction8 */
+#include "map.h" /* enum direction8 */
 
 /* client */
-#include "control.h"            /* quickselect_type */
+#include "control.h" /* quickselect_type */
 
 extern bool rbutton_down;
 extern bool rectangle_active;
@@ -60,7 +60,7 @@ bool get_turn_done_button_state(void);
 bool can_end_turn(void);
 void scroll_mapview(enum direction8 gui_dir);
 void action_button_pressed(int canvas_x, int canvas_y,
-                enum quickselect_type qtype);
+                           enum quickselect_type qtype);
 void wakeup_button_pressed(int canvas_x, int canvas_y);
 void adjust_workers_button_pressed(int canvas_x, int canvas_y);
 void recenter_button_pressed(int canvas_x, int canvas_y);

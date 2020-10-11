@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,8 +30,7 @@ class QLineEdit;
 class QProgressBar;
 class QTableWidget;
 
-class mpgui_main : public QMainWindow
-{
+class mpgui_main : public QMainWindow {
   Q_OBJECT
 
 public:
@@ -46,40 +45,38 @@ protected:
   void closeEvent(QCloseEvent *event);
 };
 
-class mpgui : public QObject
-{
+class mpgui : public QObject {
   Q_OBJECT
 
-  public:
-    void setup(QWidget *central, struct fcmp_params *fcmp);
-    void display_msg_thr(const char *msg);
-    void progress_thr(int downloaded, int max);
-    void setup_list(const char *name, const char *URL,
-                    const char *version, const char *license,
-                    enum modpack_type type, const char *subtype,
-                    const char *notes);
-    void refresh_list_versions_thr();
+public:
+  void setup(QWidget *central, struct fcmp_params *fcmp);
+  void display_msg_thr(const char *msg);
+  void progress_thr(int downloaded, int max);
+  void setup_list(const char *name, const char *URL, const char *version,
+                  const char *license, enum modpack_type type,
+                  const char *subtype, const char *notes);
+  void refresh_list_versions_thr();
 
-  signals:
-    void display_msg_thr_signal(QString msg);
-    void progress_thr_signal(int downloaded, int max);
-    void refresh_list_versions_thr_signal();
+signals:
+  void display_msg_thr_signal(QString msg);
+  void progress_thr_signal(int downloaded, int max);
+  void refresh_list_versions_thr_signal();
 
-  public slots:
-    void display_msg(QString msg);
-    void progress(int downloaded, int max);
-    void refresh_list_versions();
+public slots:
+  void display_msg(QString msg);
+  void progress(int downloaded, int max);
+  void refresh_list_versions();
 
-  private slots:
-    void URL_given();
-    void row_selected(int, int);
-    void row_download(const QModelIndex &);
+private slots:
+  void URL_given();
+  void row_selected(int, int);
+  void row_download(const QModelIndex &);
 
-  private:
-    QLineEdit *URLedit;
-    QLabel *msg_dspl;
-    QProgressBar *bar;
-    QTableWidget *mplist_table;
+private:
+  QLineEdit *URLedit;
+  QLabel *msg_dspl;
+  QProgressBar *bar;
+  QTableWidget *mplist_table;
 };
 
 #endif // FC__MPGUI_QT_H

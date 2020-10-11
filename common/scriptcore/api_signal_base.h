@@ -31,7 +31,8 @@ bool api_signal_defined(lua_State *L, const char *signal_name,
                         const char *callback_name);
 
 const char *api_signal_callback_by_index(lua_State *L,
-                                         const char *signal_name, int sindex);
+                                         const char *signal_name,
+                                         int sindex);
 
 const char *api_signal_by_index(lua_State *L, int sindex);
 

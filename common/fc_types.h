@@ -32,22 +32,22 @@ extern "C" {
 #define MAX_NUM_PLAYER_SLOTS 512 /* Used in the network protocol. */
                                  /* Must be divisable by 32 or iterations
                                   * in savegame2.c needs to be changed */
-#define MAX_NUM_BARBARIANS   12  /* 3, but slots reserved for future use. */
-#define MAX_NUM_PLAYERS      MAX_NUM_PLAYER_SLOTS - MAX_NUM_BARBARIANS
+#define MAX_NUM_BARBARIANS 12    /* 3, but slots reserved for future use. */
+#define MAX_NUM_PLAYERS MAX_NUM_PLAYER_SLOTS - MAX_NUM_BARBARIANS
 /* Used in the network protocol. */
 #define MAX_NUM_CONNECTIONS (2 * (MAX_NUM_PLAYER_SLOTS))
 /* e.g. unit_types. Used in the network protocol. */
-#define MAX_NUM_ITEMS   200
-#define MAX_NUM_ADVANCES  250 /* Used in the network protocol. */
-#define MAX_NUM_UNITS     250 /* Used in the network protocol. */
-#define MAX_NUM_BUILDINGS 200 /* Used in the network protocol. */
-#define MAX_NUM_TECH_LIST 10 /* Used in the network protocol. */
-#define MAX_NUM_UNIT_LIST 10 /* Used in the network protocol. */
+#define MAX_NUM_ITEMS 200
+#define MAX_NUM_ADVANCES 250     /* Used in the network protocol. */
+#define MAX_NUM_UNITS 250        /* Used in the network protocol. */
+#define MAX_NUM_BUILDINGS 200    /* Used in the network protocol. */
+#define MAX_NUM_TECH_LIST 10     /* Used in the network protocol. */
+#define MAX_NUM_UNIT_LIST 10     /* Used in the network protocol. */
 #define MAX_NUM_BUILDING_LIST 10 /* Used in the network protocol. */
 #define MAX_LEN_VET_SHORT_NAME 8
 /* Used in the network protocol. See diplomat_success_vs_defender() */
 #define MAX_VET_LEVELS 20
-#define MAX_EXTRA_TYPES 128 /* Used in the network protocol. */
+#define MAX_EXTRA_TYPES 128            /* Used in the network protocol. */
 #define MAX_BASE_TYPES MAX_EXTRA_TYPES /* Used in the network protocol. */
 #define MAX_ROAD_TYPES MAX_EXTRA_TYPES /* Used in the network protocol. */
 #define MAX_GOODS_TYPES 25
@@ -56,28 +56,30 @@ extern "C" {
 #define MAX_NUM_ACTION_AUTO_PERFORMERS 4
 #define MAX_NUM_MULTIPLIERS 15
 #define MAX_NUM_LEADERS MAX_NUM_ITEMS /* Used in the network protocol. */
-#define MAX_NUM_NATION_SETS 32 /* Used in the network protocol.
-                                * RULESET_NATION_SETS packet may become too big
-                                * if increased */
+#define MAX_NUM_NATION_SETS                                                        \
+  32                              /* Used in the network protocol.                 \
+                                   * RULESET_NATION_SETS packet may become too big \
+                                   * if increased */
 #define MAX_NUM_NATION_GROUPS 128 /* Used in the network protocol. */
 /* Used in the network protocol -- nation count is a UINT16 */
 #define MAX_NUM_NATIONS MAX_UINT16
 #define MAX_NUM_STARTPOS_NATIONS 1024 /* Used in the network protocol. */
 #define MAX_CALENDAR_FRAGMENTS 52     /* Used in the network protocol. */
-#define MAX_NUM_TECH_CLASSES   16     /* Used in the network protocol. */
+#define MAX_NUM_TECH_CLASSES 16       /* Used in the network protocol. */
 
 /* Changing these will probably break network compatability. */
-#define MAX_LEN_NAME       48
-#define MAX_LEN_CITYNAME   80
-#define MAX_LEN_MAP_LABEL  64
+#define MAX_LEN_NAME 48
+#define MAX_LEN_CITYNAME 80
+#define MAX_LEN_MAP_LABEL 64
 #define MAX_LEN_DEMOGRAPHY 16
 #define MAX_LEN_ALLOW_TAKE 16
 #define MAX_LEN_GAME_IDENTIFIER 33
 #define MAX_GRANARY_INIS 24
-#define MAX_LEN_STARTUNIT (20+1)
-#define MAX_LEN_ENUM     64
+#define MAX_LEN_STARTUNIT (20 + 1)
+#define MAX_LEN_ENUM 64
 
-/* Line breaks after this number of characters; be carefull and use only 70 */
+/* Line breaks after this number of characters; be carefull and use only 70
+ */
 #define LINE_BREAK 70
 
 /* symbol to flag missing numbers for better debugging */
@@ -90,12 +92,18 @@ BV_DEFINE(bv_player, MAX_NUM_PLAYER_SLOTS);
 
 /* Changing this breaks network compatibility. */
 enum output_type_id {
-  O_FOOD, O_SHIELD, O_TRADE, O_GOLD, O_LUXURY, O_SCIENCE, O_LAST
+  O_FOOD,
+  O_SHIELD,
+  O_TRADE,
+  O_GOLD,
+  O_LUXURY,
+  O_SCIENCE,
+  O_LAST
 };
 
 /* Changing this enum will break savegame and network compatability. */
-/* When changing this, also update list of valid requirement "Activity" values in
- * doc/README.effects. */
+/* When changing this, also update list of valid requirement "Activity"
+ * values in doc/README.effects. */
 #define SPECENUM_NAME unit_activity
 #define SPECENUM_VALUE0 ACTIVITY_IDLE
 #define SPECENUM_VALUE0NAME N_("Idle")
@@ -322,12 +330,11 @@ struct unit;
 struct achievement;
 struct action;
 
-
 /* Changing these will break network compatibility. */
 #define SP_MAX 20
 #define MAX_NUM_REQS 20
 
-#define MAX_NUM_RULESETS 63 /* Used in the network protocol. */
+#define MAX_NUM_RULESETS 63        /* Used in the network protocol. */
 #define MAX_RULESET_NAME_LENGTH 64 /* Used in the network protocol. */
 #define RULESET_SUFFIX ".serv"
 
@@ -367,7 +374,7 @@ typedef int Unit_Class_id;
 #define SPECENUM_VALUE6NAME "South"
 #define SPECENUM_VALUE7 DIR8_SOUTHEAST
 #define SPECENUM_VALUE7NAME "Southeast"
-#define SPECENUM_INVALID ((enum direction8) (DIR8_SOUTHEAST + 1))
+#define SPECENUM_INVALID ((enum direction8)(DIR8_SOUTHEAST + 1))
 #include "specenum_gen.h"
 
 /* No direction. Understood as the origin tile that a direction would have
@@ -502,7 +509,7 @@ typedef int Unit_Class_id;
 #define SPECENUM_VALUE2NAME N_("ISO")
 #define SPECENUM_VALUE3 TF_HEX
 #define SPECENUM_VALUE3NAME N_("Hex")
-#define TOPO_FLAG_BITS  4
+#define TOPO_FLAG_BITS 4
 #include "specenum_gen.h"
 
 /* Used in the network protocol. */
@@ -515,7 +522,7 @@ typedef int Unit_Class_id;
 #define SPECENUM_VALUE2NAME "Improvement"
 #define SPECENUM_VALUE3 IG_SPECIAL
 #define SPECENUM_VALUE3NAME "Special"
-#define SPECENUM_COUNT  IG_COUNT
+#define SPECENUM_COUNT IG_COUNT
 #include "specenum_gen.h"
 
 /* A server setting + its value. */
@@ -530,8 +537,7 @@ enum req_problem_type {
   RPT_CERTAIN   /* We want to know if it is certain that effect is active  */
 };
 
-#define REVERSED_RPT(x) \
-  (x == RPT_CERTAIN ? RPT_POSSIBLE : RPT_CERTAIN)
+#define REVERSED_RPT(x) (x == RPT_CERTAIN ? RPT_POSSIBLE : RPT_CERTAIN)
 
 /* Originally in requirements.h, bumped up and revised to unify with
  * city_production and worklists.  Functions remain in requirements.c
@@ -562,17 +568,17 @@ typedef union {
   int minyear;
   int mincalfrag;
   Output_type_id outputtype;
-  int terrainclass;			/* enum terrain_class */
-  int terrainalter;                     /* enum terrain_alteration */
-  int unitclassflag;			/* enum unit_class_flag_id */
-  int unitflag;				/* enum unit_flag_id */
-  int terrainflag;                      /* enum terrain_flag_id */
-  int techflag;                         /* enum tech_flag_id */
-  int baseflag;                         /* enum base_flag_id */
-  int roadflag;                         /* enum road_flag_id */
+  int terrainclass;  /* enum terrain_class */
+  int terrainalter;  /* enum terrain_alteration */
+  int unitclassflag; /* enum unit_class_flag_id */
+  int unitflag;      /* enum unit_flag_id */
+  int terrainflag;   /* enum terrain_flag_id */
+  int techflag;      /* enum tech_flag_id */
+  int baseflag;      /* enum base_flag_id */
+  int roadflag;      /* enum road_flag_id */
   int extraflag;
-  int diplrel;                          /* enum diplstate_type or
-                                           enum diplrel_other */
+  int diplrel; /* enum diplstate_type or
+                  enum diplrel_other */
   enum ustate_prop unit_state;
   enum unit_activity activity;
   enum impr_genus_id impr_genus;
@@ -694,7 +700,7 @@ typedef union {
 /* Used in the network protocol. */
 struct universal {
   universals_u value;
-  enum universals_n kind;		/* formerly .type and .is_unit */
+  enum universals_n kind; /* formerly .type and .is_unit */
 };
 
 /* Used in the network protocol. */
@@ -735,7 +741,7 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_NAME airlifting_style
 #define SPECENUM_BITWISE
 /* Like classical Freeciv.  One unit per turn. */
-#define SPECENUM_ZERO   AIRLIFTING_CLASSICAL
+#define SPECENUM_ZERO AIRLIFTING_CLASSICAL
 /* Allow airlifting from allied cities. */
 #define SPECENUM_VALUE0 AIRLIFTING_ALLIED_SRC
 /* Allow airlifting to allied cities. */
@@ -758,16 +764,16 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME persistent_ready
-#define SPECENUM_VALUE0  PERSISTENTR_DISABLED
+#define SPECENUM_VALUE0 PERSISTENTR_DISABLED
 #define SPECENUM_VALUE0NAME "Disabled"
-#define SPECENUM_VALUE1  PERSISTENTR_CONNECTED
+#define SPECENUM_VALUE1 PERSISTENTR_CONNECTED
 #define SPECENUM_VALUE1NAME "Connected"
 #include "specenum_gen.h"
 
 #define SPECENUM_NAME reveal_map
 #define SPECENUM_BITWISE
 /* Reveal only the area around the first units at the beginning. */
-#define SPECENUM_ZERO   REVEAL_MAP_NONE
+#define SPECENUM_ZERO REVEAL_MAP_NONE
 /* Reveal the (fogged) map at the beginning of the game. */
 #define SPECENUM_VALUE0 REVEAL_MAP_START
 /* Reveal (and unfog) the map for dead players. */
@@ -778,7 +784,7 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 #define SPECENUM_NAME gameloss_style
 #define SPECENUM_BITWISE
 /* Like classical Freeciv. No special effects. */
-#define SPECENUM_ZERO   GAMELOSS_STYLE_CLASSICAL
+#define SPECENUM_ZERO GAMELOSS_STYLE_CLASSICAL
 /* Remaining cities are taken by barbarians. */
 #define SPECENUM_VALUE0 GAMELOSS_STYLE_BARB
 #define SPECENUM_VALUE0NAME "Barbarians"
@@ -825,7 +831,7 @@ BV_DEFINE(bv_startpos_nations, MAX_NUM_STARTPOS_NATIONS);
 /* Phase mode change has changed meaning of the phase numbers */
 #define PHASE_INVALIDATED -1
 /* Phase was never known */
-#define PHASE_UNKNOWN     -2
+#define PHASE_UNKNOWN -2
 
 /* Used in the network protocol. */
 enum borders_mode {
@@ -835,10 +841,7 @@ enum borders_mode {
   BORDERS_EXPAND
 };
 
-enum trait_dist_mode {
-  TDM_FIXED = 0,
-  TDM_EVEN
-};
+enum trait_dist_mode { TDM_FIXED = 0, TDM_EVEN };
 
 /* Used in the network protocol. */
 enum diplomacy_mode {
@@ -858,7 +861,7 @@ enum diplomacy_mode {
 #define SPECENUM_VALUE2 SST_STRING
 #define SPECENUM_VALUE3 SST_ENUM
 #define SPECENUM_VALUE4 SST_BITWISE
-#define SPECENUM_COUNT  SST_COUNT
+#define SPECENUM_COUNT SST_COUNT
 #include "specenum_gen.h"
 
 /* Mark server setting id's. */
@@ -904,10 +907,10 @@ typedef int server_setting_id;
 #define SPECENUM_BITVECTOR bv_causes
 #include "specenum_gen.h"
 #define EC_NONE EC_COUNT
-#define EC_SPECIAL ((enum extra_cause) (EC_NONE + 1))
-#define EC_DEFENSIVE ((enum extra_cause) (EC_NONE + 2))
-#define EC_NATURAL_DEFENSIVE ((enum extra_cause) (EC_NONE + 3))
-#define EC_LAST ((enum extra_cause) (EC_NONE + 4))
+#define EC_SPECIAL ((enum extra_cause)(EC_NONE + 1))
+#define EC_DEFENSIVE ((enum extra_cause)(EC_NONE + 2))
+#define EC_NATURAL_DEFENSIVE ((enum extra_cause)(EC_NONE + 3))
+#define EC_LAST ((enum extra_cause)(EC_NONE + 4))
 
 /* struct extra_type reserve 16 bits (0-15) for these. */
 FC_STATIC_ASSERT(EC_COUNT < 16, extra_causes_over_limit);
@@ -1032,11 +1035,7 @@ struct act_prob {
   int max;
 };
 
-enum test_result {
-  TR_SUCCESS,
-  TR_OTHER_FAILURE,
-  TR_ALREADY_SOLD
-};
+enum test_result { TR_SUCCESS, TR_OTHER_FAILURE, TR_ALREADY_SOLD };
 
 /* Road type compatibility with old specials based roads.
  * Used in the network protocol. */
@@ -1046,7 +1045,7 @@ enum road_compat { ROCO_ROAD, ROCO_RAILROAD, ROCO_RIVER, ROCO_NONE };
  * Maximum number of trade routes a city can have in any situation.
  * Changing this changes network protocol.
  */
-#define MAX_TRADE_ROUTES        5
+#define MAX_TRADE_ROUTES 5
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME goods_selection_method
@@ -1056,18 +1055,9 @@ enum road_compat { ROCO_ROAD, ROCO_RAILROAD, ROCO_RIVER, ROCO_NONE };
 #define SPECENUM_VALUE1NAME "Arrival"
 #include "specenum_gen.h"
 
-enum victory_condition_type
-{
-  VC_SPACERACE = 0,
-  VC_ALLIED,
-  VC_CULTURE
-};
+enum victory_condition_type { VC_SPACERACE = 0, VC_ALLIED, VC_CULTURE };
 
-enum environment_upset_type
-{
-  EUT_GLOBAL_WARMING = 0,
-  EUT_NUCLEAR_WINTER
-};
+enum environment_upset_type { EUT_GLOBAL_WARMING = 0, EUT_NUCLEAR_WINTER };
 
 enum revolen_type {
   REVOLEN_FIXED = 0,
@@ -1076,11 +1066,7 @@ enum revolen_type {
   REVOLEN_RANDQUICK
 };
 
-enum happyborders_type {
-  HB_DISABLED = 0,
-  HB_NATIONAL,
-  HB_ALLIANCE
-};
+enum happyborders_type { HB_DISABLED = 0, HB_NATIONAL, HB_ALLIANCE };
 
 /* Used in network protocol. */
 enum spaceship_place_type {
@@ -1144,7 +1130,11 @@ enum spaceship_place_type {
 typedef float adv_want;
 #define ADV_WANT_PRINTF "%f"
 
-enum setting_default_level { SETDEF_INTERNAL, SETDEF_RULESET, SETDEF_CHANGED };
+enum setting_default_level {
+  SETDEF_INTERNAL,
+  SETDEF_RULESET,
+  SETDEF_CHANGED
+};
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME capital_type

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2001 - R. Falke
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #include "fc_types.h"
 
@@ -33,18 +33,16 @@ extern "C" {
 
 #define MAX_AGENT_NAME_LEN 10
 
-enum callback_type {
-  CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST
-};
+enum callback_type { CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST };
 
 struct agent {
   char name[MAX_AGENT_NAME_LEN];
   int level;
 
-  void (*turn_start_notify) (void);
-  void (*city_callbacks[CB_LAST]) (int);
-  void (*unit_callbacks[CB_LAST]) (int);
-  void (*tile_callbacks[CB_LAST]) (struct tile *ptile);
+  void (*turn_start_notify)(void);
+  void (*city_callbacks[CB_LAST])(int);
+  void (*unit_callbacks[CB_LAST])(int);
+  void (*tile_callbacks[CB_LAST])(struct tile *ptile);
 };
 
 void agents_init(void);
@@ -78,11 +76,11 @@ void agents_tile_remove(struct tile *ptile);
 
 /* called from agents */
 void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
-				    struct city *pcity);
+                                    struct city *pcity);
 void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,
-				    struct unit *punit);
+                                    struct unit *punit);
 void wait_for_requests(const char *agent_name, int first_request_id,
-		       int last_request_id);
+                       int last_request_id);
 
 #ifdef __cplusplus
 }

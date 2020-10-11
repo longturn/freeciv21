@@ -38,7 +38,7 @@
 #endif
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
-#endif 
+#endif
 #ifdef HAVE_SYS_IOCTL_H
 #include <sys/ioctl.h>
 #endif
@@ -46,7 +46,7 @@
 #include <sys/signal.h>
 #endif
 #ifdef FREECIV_MSWINDOWS
-#include <windows.h>	/* GetTempPath */
+#include <windows.h> /* GetTempPath */
 #endif
 
 /* utility */
@@ -65,46 +65,47 @@
 #ifdef HAVE_GETADDRINFO
 #ifdef AI_NUMERICSERV
 #define FC_AI_NUMERICSERV AI_NUMERICSERV
-#else  /* AI_NUMERICSERV */
+#else /* AI_NUMERICSERV */
 #define FC_AI_NUMERICSERV 0
 #endif /* AI_NUMERICSERV */
 #endif /* HAVE_GETADDRINFO */
 
 #ifdef FREECIV_HAVE_WINSOCK
-/*********************************************************************//**
-  Set errno variable on Winsock error
-*************************************************************************/
+/*********************************************************************/ /**
+   Set errno variable on Winsock error
+ *************************************************************************/
 static void set_socket_errno(void)
 {
   int err = WSAGetLastError();
 
   switch (err) {
-    /* these have mappings to symbolic errno names in netintf.h */ 
-    case WSAEINTR:
-    case WSAEWOULDBLOCK:
-    case WSAECONNRESET:
-    case WSAECONNREFUSED:
-    case WSAETIMEDOUT:
-    case WSAECONNABORTED:
-      errno = err;
-      return;
-    default:
-      bugreport_request("Missing errno mapping for Winsock error #%d.", err);
- 
-      errno = 0;
+  /* these have mappings to symbolic errno names in netintf.h */
+  case WSAEINTR:
+  case WSAEWOULDBLOCK:
+  case WSAECONNRESET:
+  case WSAECONNREFUSED:
+  case WSAETIMEDOUT:
+  case WSAECONNABORTED:
+    errno = err;
+    return;
+  default:
+    bugreport_request("Missing errno mapping for Winsock error #%d.", err);
+
+    errno = 0;
   }
 }
 #endif /* FREECIV_HAVE_WINSOCK */
 
-/*********************************************************************//**
-  Connect a socket to an address
-*************************************************************************/
-int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen)
+/*********************************************************************/ /**
+   Connect a socket to an address
+ *************************************************************************/
+int fc_connect(int sockfd, const struct sockaddr *serv_addr,
+               socklen_t addrlen)
 {
   int result;
-  
+
   result = connect(sockfd, serv_addr, addrlen);
-  
+
 #ifdef FREECIV_HAVE_WINSOCK
   if (result == -1) {
     set_socket_errno();
@@ -114,9 +115,9 @@ int fc_connect(int sockfd, const struct sockaddr *serv_addr, socklen_t addrlen)
   return result;
 }
 
-/*********************************************************************//**
-  Wait for a number of sockets to change status
-*************************************************************************/
+/*********************************************************************/ /**
+   Wait for a number of sockets to change status
+ *************************************************************************/
 int fc_select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
               fc_timeval *timeout)
 {
@@ -133,13 +134,13 @@ int fc_select(int n, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,
   return result;
 }
 
-/*********************************************************************//**
-  Read from a socket.
-*************************************************************************/
+/*********************************************************************/ /**
+   Read from a socket.
+ *************************************************************************/
 int fc_readsocket(int sock, void *buf, size_t size)
 {
   int result;
-  
+
 #ifdef FREECIV_HAVE_WINSOCK
   result = recv(sock, buf, size, 0);
   if (result == -1) {
@@ -152,32 +153,32 @@ int fc_readsocket(int sock, void *buf, size_t size)
   return result;
 }
 
-/*********************************************************************//**
-  Write to a socket.
-*************************************************************************/
+/*********************************************************************/ /**
+   Write to a socket.
+ *************************************************************************/
 int fc_writesocket(int sock, const void *buf, size_t size)
 {
   int result;
-        
+
 #ifdef FREECIV_HAVE_WINSOCK
   result = send(sock, buf, size, 0);
   if (result == -1) {
     set_socket_errno();
   }
-#else  /* FREECIV_HAVE_WINSOCK */
-#  ifdef MSG_NOSIGNAL
+#else /* FREECIV_HAVE_WINSOCK */
+#ifdef MSG_NOSIGNAL
   result = send(sock, buf, size, MSG_NOSIGNAL);
-#  else  /* MSG_NOSIGNAL */
+#else  /* MSG_NOSIGNAL */
   result = write(sock, buf, size);
-#  endif /* MSG_NOSIGNAL */
+#endif /* MSG_NOSIGNAL */
 #endif /* FREECIV_HAVE_WINSOCK */
 
   return result;
 }
 
-/*********************************************************************//**
-  Close a socket.
-*************************************************************************/
+/*********************************************************************/ /**
+   Close a socket.
+ *************************************************************************/
 void fc_closesocket(int sock)
 {
 #ifdef FREECIV_HAVE_WINSOCK
@@ -187,9 +188,9 @@ void fc_closesocket(int sock)
 #endif
 }
 
-/*********************************************************************//**
-  Initialize network stuff.
-*************************************************************************/
+/*********************************************************************/ /**
+   Initialize network stuff.
+ *************************************************************************/
 void fc_init_network(void)
 {
 #ifdef FREECIV_HAVE_WINSOCK
@@ -206,9 +207,9 @@ void fc_init_network(void)
 #endif
 }
 
-/*********************************************************************//**
-  Shutdown network stuff.
-*************************************************************************/
+/*********************************************************************/ /**
+   Shutdown network stuff.
+ *************************************************************************/
 void fc_shutdown_network(void)
 {
 #ifdef FREECIV_HAVE_WINSOCK
@@ -216,9 +217,9 @@ void fc_shutdown_network(void)
 #endif
 }
 
-/*********************************************************************//**
-  Set socket to non-blocking.
-*************************************************************************/
+/*********************************************************************/ /**
+   Set socket to non-blocking.
+ *************************************************************************/
 void fc_nonblock(int sockfd)
 {
 #ifdef NONBLOCKING_SOCKETS
@@ -230,7 +231,7 @@ void fc_nonblock(int sockfd)
 #endif /* __LP64__ */
 
   ioctlsocket(sockfd, FIONBIO, &b);
-#else  /* FREECIV_HAVE_WINSOCK */
+#else /* FREECIV_HAVE_WINSOCK */
 #ifdef HAVE_FCNTL
   int f_set;
 
@@ -243,11 +244,11 @@ void fc_nonblock(int sockfd)
   if (fcntl(sockfd, F_SETFL, f_set) == -1) {
     log_error("fcntl F_SETFL failed: %s", fc_strerror(fc_get_errno()));
   }
-#else  /* HAVE_FCNTL */
+#else /* HAVE_FCNTL */
 #ifdef HAVE_IOCTL
-  long value=1;
+  long value = 1;
 
-  if (ioctl(sockfd, FIONBIO, (char*)&value) == -1) {
+  if (ioctl(sockfd, FIONBIO, (char *) &value) == -1) {
     log_error("ioctl failed: %s", fc_strerror(fc_get_errno()));
   }
 #endif /* HAVE_IOCTL */
@@ -258,23 +259,23 @@ void fc_nonblock(int sockfd)
 #endif /* NONBLOCKING_SOCKETS */
 }
 
-/*********************************************************************//**
-  Write information about sockaddr to debug log.
-*************************************************************************/
+/*********************************************************************/ /**
+   Write information about sockaddr to debug log.
+ *************************************************************************/
 void sockaddr_debug(union fc_sockaddr *addr, enum log_level lvl)
 {
 #ifdef FREECIV_IPV6_SUPPORT
   char buf[INET6_ADDRSTRLEN] = "Unknown";
 
-  if (addr->saddr.sa_family == AF_INET6) { 
+  if (addr->saddr.sa_family == AF_INET6) {
     inet_ntop(AF_INET6, &addr->saddr_in6.sin6_addr, buf, INET6_ADDRSTRLEN);
-    log_base(lvl, "Host: %s, Port: %d (IPv6)",
-             buf, ntohs(addr->saddr_in6.sin6_port));
+    log_base(lvl, "Host: %s, Port: %d (IPv6)", buf,
+             ntohs(addr->saddr_in6.sin6_port));
     return;
   } else if (addr->saddr.sa_family == AF_INET) {
     inet_ntop(AF_INET, &addr->saddr_in4.sin_addr, buf, INET_ADDRSTRLEN);
-    log_base(lvl, "Host: %s, Port: %d (IPv4)",
-             buf, ntohs(addr->saddr_in4.sin_port));
+    log_base(lvl, "Host: %s, Port: %d (IPv4)", buf,
+             ntohs(addr->saddr_in4.sin_port));
     return;
   }
 #else  /* IPv6 support */
@@ -283,8 +284,8 @@ void sockaddr_debug(union fc_sockaddr *addr, enum log_level lvl)
 
     buf = inet_ntoa(addr->saddr_in4.sin_addr);
 
-    log_base(lvl, "Host: %s, Port: %d",
-             buf, ntohs(addr->saddr_in4.sin_port));
+    log_base(lvl, "Host: %s, Port: %d", buf,
+             ntohs(addr->saddr_in4.sin_port));
 
     return;
   }
@@ -293,10 +294,10 @@ void sockaddr_debug(union fc_sockaddr *addr, enum log_level lvl)
   log_error("Unsupported address family in sockaddr_debug()");
 }
 
-/*********************************************************************//**
-  Gets size of address to fc_sockaddr. IPv6/IPv4 must be selected before
-  calling this.
-*************************************************************************/
+/*********************************************************************/ /**
+   Gets size of address to fc_sockaddr. IPv6/IPv4 must be selected before
+   calling this.
+ *************************************************************************/
 int sockaddr_size(union fc_sockaddr *addr)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -307,7 +308,7 @@ int sockaddr_size(union fc_sockaddr *addr)
     return sizeof(addr->saddr_in6);
   } else
 #endif /* FREECIV_IPV6_SUPPORT */
-  if (addr->saddr.sa_family == AF_INET) {
+      if (addr->saddr.sa_family == AF_INET) {
     return sizeof(addr->saddr_in4);
   } else {
     fc_assert(FALSE);
@@ -319,9 +320,9 @@ int sockaddr_size(union fc_sockaddr *addr)
 #endif /* FREECIV_MSWINDOWS */
 }
 
-/*********************************************************************//**
-  Returns wether address is IPv6 address.
-*************************************************************************/
+/*********************************************************************/ /**
+   Returns wether address is IPv6 address.
+ *************************************************************************/
 bool sockaddr_ipv6(union fc_sockaddr *addr)
 {
 #ifdef FREECIV_IPV6_SUPPORT
@@ -334,12 +335,12 @@ bool sockaddr_ipv6(union fc_sockaddr *addr)
 }
 
 #ifdef HAVE_GETADDRINFO
-/*********************************************************************//**
-  Look up the service at hostname:port using getaddrinfo().
-*************************************************************************/
-static struct fc_sockaddr_list *net_lookup_getaddrinfo(const char *name,
-                                                       int port,
-                                                       enum fc_addr_family family)
+/*********************************************************************/ /**
+   Look up the service at hostname:port using getaddrinfo().
+ *************************************************************************/
+static struct fc_sockaddr_list *
+net_lookup_getaddrinfo(const char *name, int port,
+                       enum fc_addr_family family)
 {
   struct addrinfo hints;
   struct addrinfo *res;
@@ -350,23 +351,23 @@ static struct fc_sockaddr_list *net_lookup_getaddrinfo(const char *name,
       fc_sockaddr_list_new_full((fc_sockaddr_list_free_fn_t) free);
 
   switch (family) {
-    case FC_ADDR_IPV4:
-      gafam = AF_INET;
-      break;
-    case FC_ADDR_IPV6:
-      gafam = AF_INET6;
-      break;
-    case FC_ADDR_ANY:
+  case FC_ADDR_IPV4:
+    gafam = AF_INET;
+    break;
+  case FC_ADDR_IPV6:
+    gafam = AF_INET6;
+    break;
+  case FC_ADDR_ANY:
 #ifndef FREECIV_IPV6_SUPPORT
-      gafam = AF_INET;
+    gafam = AF_INET;
 #else
-      gafam = AF_UNSPEC;
+    gafam = AF_UNSPEC;
 #endif
-      break;
-    default:
-      fc_assert(FALSE);
+    break;
+  default:
+    fc_assert(FALSE);
 
-      return addrs;
+    return addrs;
   }
 
   /* Convert port to string for getaddrinfo() */
@@ -400,9 +401,9 @@ static struct fc_sockaddr_list *net_lookup_getaddrinfo(const char *name,
 }
 #endif /* HAVE_GETADDRINFO */
 
-/*********************************************************************//**
-  Look up the service at hostname:port.
-*************************************************************************/
+/*********************************************************************/ /**
+   Look up the service at hostname:port.
+ *************************************************************************/
 struct fc_sockaddr_list *net_lookup_service(const char *name, int port,
                                             enum fc_addr_family family)
 {
@@ -410,7 +411,7 @@ struct fc_sockaddr_list *net_lookup_service(const char *name, int port,
    * necessarily */
 #ifdef HAVE_GETADDRINFO
   return net_lookup_getaddrinfo(name, port, family);
-#else  /* HAVE_GETADDRINFO */
+#else /* HAVE_GETADDRINFO */
 
   struct sockaddr_in *sock4;
   struct hostent *hp;
@@ -450,14 +451,13 @@ struct fc_sockaddr_list *net_lookup_service(const char *name, int port,
   return addrs;
 
 #endif /* !HAVE_GETADDRINFO */
-
 }
 
-/*********************************************************************//**
-  Convert internet IPv4 host address to binary form and store it to inp.
-  Return FALSE on failure if possible, i.e., FALSE is guarantee that it
-  failed but TRUE is not guarantee that it succeeded.
-*************************************************************************/
+/*********************************************************************/ /**
+   Convert internet IPv4 host address to binary form and store it to inp.
+   Return FALSE on failure if possible, i.e., FALSE is guarantee that it
+   failed but TRUE is not guarantee that it succeeded.
+ *************************************************************************/
 bool fc_inet_aton(const char *cp, struct in_addr *inp, bool addr_none_ok)
 {
 #ifdef FREECIV_IPV6_SUPPORT
@@ -465,7 +465,7 @@ bool fc_inet_aton(const char *cp, struct in_addr *inp, bool addr_none_ok)
   if (!inet_pton(AF_INET, cp, &inp->s_addr)) {
     return FALSE;
   }
-#else  /* IPv6 Support */
+#else /* IPv6 Support */
 #ifdef HAVE_INET_ATON
   if (!inet_aton(cp, inp)) {
     return FALSE;
@@ -481,10 +481,10 @@ bool fc_inet_aton(const char *cp, struct in_addr *inp, bool addr_none_ok)
   return TRUE;
 }
 
-/*********************************************************************//**
-  Writes buf to socket and returns the response in an fz_FILE.
-  Use only on blocking sockets.
-*************************************************************************/
+/*********************************************************************/ /**
+   Writes buf to socket and returns the response in an fz_FILE.
+   Use only on blocking sockets.
+ *************************************************************************/
 fz_FILE *fc_querysocket(int sock, void *buf, size_t size)
 {
   FILE *fp;
@@ -498,7 +498,7 @@ fz_FILE *fc_querysocket(int sock, void *buf, size_t size)
 
   /* we don't use fc_closesocket on sock here since when fp is closed
    * sock will also be closed. fdopen doesn't dup the socket descriptor. */
-#else  /* HAVE_FDOPEN */
+#else /* HAVE_FDOPEN */
   {
     char tmp[4096];
     int n;
@@ -514,7 +514,7 @@ fz_FILE *fc_querysocket(int sock, void *buf, size_t size)
 
       fp = fc_fopen(filename, "w+b");
     }
-#else  /* FREECIV_MSWINDOWS */
+#else /* FREECIV_MSWINDOWS */
 
     fp = tmpfile();
 
@@ -542,12 +542,12 @@ fz_FILE *fc_querysocket(int sock, void *buf, size_t size)
   return fz_from_stream(fp);
 }
 
-/*********************************************************************//**
-  Finds the next (lowest) free port.
-*************************************************************************/ 
+/*********************************************************************/ /**
+   Finds the next (lowest) free port.
+ *************************************************************************/
 int find_next_free_port(int starting_port, int highest_port,
-                        enum fc_addr_family family,
-                        char *net_interface, bool not_avail_ok)
+                        enum fc_addr_family family, char *net_interface,
+                        bool not_avail_ok)
 {
   int port;
   int s;
@@ -559,22 +559,22 @@ int find_next_free_port(int starting_port, int highest_port,
 #endif
 
   switch (family) {
-   case FC_ADDR_IPV4:
-     gafamily = AF_INET;
-     break;
+  case FC_ADDR_IPV4:
+    gafamily = AF_INET;
+    break;
 #ifdef FREECIV_IPV6_SUPPORT
-   case FC_ADDR_IPV6:
-     gafamily = AF_INET6;
-     break;
+  case FC_ADDR_IPV6:
+    gafamily = AF_INET6;
+    break;
 #endif /* FREECIV_IPV6_SUPPORT */
-   case FC_ADDR_ANY:
-     gafamily = AF_UNSPEC;
-     break;
-   default:
-     fc_assert(FALSE);
-     log_error("Port from unsupported address family requested!");
+  case FC_ADDR_ANY:
+    gafamily = AF_UNSPEC;
+    break;
+  default:
+    fc_assert(FALSE);
+    log_error("Port from unsupported address family requested!");
 
-     return -1;
+    return -1;
   }
 
   for (port = starting_port; !found && highest_port > port; port++) {
@@ -619,7 +619,7 @@ int find_next_free_port(int starting_port, int highest_port,
         found = TRUE;
       }
     }
-#else /* HAVE_GETADDRINFO */
+#else  /* HAVE_GETADDRINFO */
     union fc_sockaddr tmp;
     struct sockaddr_in *sock4;
 
@@ -640,8 +640,9 @@ int find_next_free_port(int starting_port, int highest_port,
           return -1;
         }
         if (hp->h_addrtype != AF_INET) {
-          log_error("Requested IPv4 address for %s, got something else! (%d)",
-                    net_interface, hp->h_addrtype);
+          log_error(
+              "Requested IPv4 address for %s, got something else! (%d)",
+              net_interface, hp->h_addrtype);
 
           return -1;
         }
@@ -661,8 +662,8 @@ int find_next_free_port(int starting_port, int highest_port,
   }
 
   if (!found) {
-    log_error("None of the ports %d - %d is available.",
-              starting_port, highest_port);
+    log_error("None of the ports %d - %d is available.", starting_port,
+              highest_port);
 
     return -1;
   }

@@ -26,4 +26,4 @@ enum mood_type player_mood(struct player *pplayer);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__MOOD_H */
+#endif /* FC__MOOD_H */

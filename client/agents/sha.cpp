@@ -29,7 +29,6 @@
 
 #include "sha.h"
 
-
 /**************************************************************************
   This is the simple historian agent.
   It just saves the last states of all tiles and units.
@@ -41,22 +40,22 @@
 static struct tile *previous_tiles = NULL;
 static struct unit_list *previous_units;
 
-/**********************************************************************//**
-  Tile changed callback
-**************************************************************************/
+/**********************************************************************/ /**
+   Tile changed callback
+ **************************************************************************/
 static void sha_tile_update(struct tile *ptile)
 {
-  log_debug("sha got tile: %d ~= (%d, %d)",
-            tile_index(ptile), TILE_XY(ptile));
+  log_debug("sha got tile: %d ~= (%d, %d)", tile_index(ptile),
+            TILE_XY(ptile));
 
 #if 0
   previous_tiles[tile_index(ptile)] = *ptile;
 #endif
 }
 
-/**********************************************************************//**
-  Unit changed callback
-**************************************************************************/
+/**********************************************************************/ /**
+   Unit changed callback
+ **************************************************************************/
 static void sha_unit_change(int id)
 {
   struct unit *punit = game_unit_by_number(id);
@@ -68,13 +67,14 @@ static void sha_unit_change(int id)
   *pold_unit = *punit;
 }
 
-/**********************************************************************//**
-  New unit callback
-**************************************************************************/
+/**********************************************************************/ /**
+   New unit callback
+ **************************************************************************/
 static void sha_unit_new(int id)
 {
   struct unit *punit = game_unit_by_number(id);
-  struct unit *pold_unit = unit_virtual_create(unit_owner(punit), NULL, 0, 0);
+  struct unit *pold_unit =
+      unit_virtual_create(unit_owner(punit), NULL, 0, 0);
 
   log_debug("sha got unit: %d", id);
 
@@ -82,12 +82,13 @@ static void sha_unit_new(int id)
   unit_list_prepend(previous_units, pold_unit);
 }
 
-/**********************************************************************//**
-  Unit removed callback
-**************************************************************************/
+/**********************************************************************/ /**
+   Unit removed callback
+ **************************************************************************/
 static void sha_unit_remove(int id)
 {
-  struct unit *pold_unit = unit_list_find(previous_units, id);;
+  struct unit *pold_unit = unit_list_find(previous_units, id);
+  ;
 
   log_debug("sha got unit: %d", id);
 
@@ -98,14 +99,15 @@ static void sha_unit_remove(int id)
   free(pold_unit);
 }
 
-/**********************************************************************//**
-  Initialize simple historian agent
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize simple historian agent
+ **************************************************************************/
 void simple_historian_init(void)
 {
   struct agent self;
 
-  previous_tiles = static_cast<tile*>(fc_malloc(MAP_INDEX_SIZE * sizeof(*previous_tiles)));
+  previous_tiles = static_cast<tile *>(
+      fc_malloc(MAP_INDEX_SIZE * sizeof(*previous_tiles)));
   memset(previous_tiles, 0, MAP_INDEX_SIZE * sizeof(*previous_tiles));
 
   previous_units = unit_list_new();
@@ -124,29 +126,26 @@ void simple_historian_init(void)
   register_agent(&self);
 }
 
-/**********************************************************************//**
-  Free resources allocated for simple historian agent.
-**************************************************************************/
-void simple_historian_done(void)
-{
-  unit_list_destroy(previous_units);
-}
+/**********************************************************************/ /**
+   Free resources allocated for simple historian agent.
+ **************************************************************************/
+void simple_historian_done(void) { unit_list_destroy(previous_units); }
 
 /**************************************************************************
   Public interface
 **************************************************************************/
 
-/**********************************************************************//**
-  Return pointer to tile as it was last reported to us.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return pointer to tile as it was last reported to us.
+ **************************************************************************/
 struct tile *sha_tile_recall(struct tile *ptile)
 {
   return &previous_tiles[tile_index(ptile)];
 }
 
-/**********************************************************************//**
-  Report pointer to unit as it was last reported to us.
-**************************************************************************/
+/**********************************************************************/ /**
+   Report pointer to unit as it was last reported to us.
+ **************************************************************************/
 struct unit *sha_unit_recall(int id)
 {
   return unit_list_find(previous_units, id);

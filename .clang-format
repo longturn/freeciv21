@@ -1,0 +1,5 @@
+IndentWidth: 2
+BreakBeforeBinaryOperators: NonAssignment
+BreakBeforeBraces: WebKit
+ColumnLimit: 77
+SpaceAfterCStyleCast: true

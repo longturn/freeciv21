@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,27 +36,27 @@ extern "C" {
 
 #ifdef FREECIV_C11_THR
 
-#define fc_thread      thrd_t
-#define fc_mutex       mtx_t
+#define fc_thread thrd_t
+#define fc_mutex mtx_t
 #define fc_thread_cond cnd_t
 
 #elif defined(FREECIV_HAVE_PTHREAD)
 
 #include <pthread.h>
 
-#define fc_thread      pthread_t
-#define fc_mutex       pthread_mutex_t
+#define fc_thread pthread_t
+#define fc_mutex pthread_mutex_t
 #define fc_thread_cond pthread_cond_t
 
-#elif defined (FREECIV_HAVE_WINTHREADS)
+#elif defined(FREECIV_HAVE_WINTHREADS)
 
 #include <windows.h>
-#define fc_thread      HANDLE *
-#define fc_mutex       HANDLE *
+#define fc_thread HANDLE *
+#define fc_mutex HANDLE *
 
 #ifndef FREECIV_HAVE_THREAD_COND
 #define fc_thread_cond char
-#else  /* FREECIV_HAVE_THREAD_COND */
+#else /* FREECIV_HAVE_THREAD_COND */
 #warning FREECIV_HAVE_THREAD_COND defined but we have no real Windows implementation
 #endif /* FREECIV_HAVE_THREAD_COND */
 
@@ -66,7 +66,8 @@ extern "C" {
 
 #endif /* FREECIV_HAVE_PTHREAD */
 
-int fc_thread_start(fc_thread *thread, void (*function) (void *arg), void *arg);
+int fc_thread_start(fc_thread *thread, void (*function)(void *arg),
+                    void *arg);
 void fc_thread_wait(fc_thread *thread);
 
 void fc_init_mutex(fc_mutex *mutex);

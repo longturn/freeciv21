@@ -49,4 +49,4 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__HEIGHT__MAP_H */
+#endif /* FC__HEIGHT__MAP_H */

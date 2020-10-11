@@ -18,11 +18,11 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* common */
-#include "fc_types.h"
-#include "featured_text.h"      /* struct ft_color */
 #include "events.h"
-#include "unittype.h"
+#include "fc_types.h"
+#include "featured_text.h" /* struct ft_color */
 #include "unitlist.h"
+#include "unittype.h"
 
 struct Clause;
 struct nation_type;
@@ -34,15 +34,14 @@ void client_remove_player(int plrno);
 void client_remove_city(struct city *pcity);
 void client_remove_unit(struct unit *punit);
 
-void client_change_all(struct universal *from,
-                       struct universal *to);
+void client_change_all(struct universal *from, struct universal *to);
 
 const char *get_embassy_status(const struct player *me,
-				const struct player *them);
+                               const struct player *them);
 const char *get_vision_status(const struct player *me,
-				const struct player *them);
+                              const struct player *them);
 void client_diplomacy_clause_string(char *buf, int bufsiz,
-				    struct Clause *pclause);
+                                    struct Clause *pclause);
 
 void global_warming_scaled(int *chance, int *rate, int max);
 void nuclear_winter_scaled(int *chance, int *rate, int max);
@@ -54,7 +53,7 @@ struct sprite *client_government_sprite(void);
 
 void center_on_something(void);
 
-/* 
+/*
  * A compound id (cid) can hold all objects a city can build:
  * improvements (with wonders) and units. This is achieved by
  * seperation the value set: a cid < B_LAST denotes a improvement
@@ -86,8 +85,8 @@ typedef bool (*TestCityFunc)(const struct city *, const struct universal *);
 
 #define MAX_NUM_PRODUCTION_TARGETS (U_LAST + B_LAST)
 void name_and_sort_items(struct universal *targets, int num_items,
-                         struct item *items,
-                         bool show_cost, struct city *pcity);
+                         struct item *items, bool show_cost,
+                         struct city *pcity);
 int collect_production_targets(struct universal *targets,
                                struct city **selected_cities,
                                int num_selected_cities, bool append_units,
@@ -102,14 +101,14 @@ int collect_already_built_targets(struct universal *targets,
                                   struct city *pcity);
 
 /* the number of units in city */
-int num_present_units_in_city(struct city* pcity);
-int num_supported_units_in_city(struct city* pcity);	
+int num_present_units_in_city(struct city *pcity);
+int num_supported_units_in_city(struct city *pcity);
 
 void handle_event(const char *featured_text, struct tile *ptile,
                   enum event_type event, int turn, int phase, int conn_id);
 void create_event(struct tile *ptile, enum event_type event,
                   const struct ft_color color, const char *format, ...)
-                  fc__attribute((__format__ (__printf__, 4, 5)));
+    fc__attribute((__format__(__printf__, 4, 5)));
 
 struct city *get_nearest_city(const struct unit *punit, int *sq_dist);
 
@@ -122,11 +121,13 @@ bool can_units_do_connect(struct unit_list *punits,
 
 void client_unit_init_act_prob_cache(struct unit *punit);
 
-enum unit_bg_color_type { UNIT_BG_HP_LOSS,
-                          UNIT_BG_LAND,
-                          UNIT_BG_SEA,
-                          UNIT_BG_AMPHIBIOUS,
-                          UNIT_BG_FLYING };
+enum unit_bg_color_type {
+  UNIT_BG_HP_LOSS,
+  UNIT_BG_LAND,
+  UNIT_BG_SEA,
+  UNIT_BG_AMPHIBIOUS,
+  UNIT_BG_FLYING
+};
 
 enum unit_bg_color_type unit_color_type(const struct unit_type *punittype);
 
@@ -150,4 +151,4 @@ enum ai_level server_ai_level(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CLIMISC_H */
+#endif /* FC__CLIMISC_H */

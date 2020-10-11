@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include <time.h>	/* time_t */
+#include <time.h> /* time_t */
 
 #ifdef FREECIV_HAVE_SYS_TYPES_H
 #include <sys/types.h>
@@ -28,11 +28,11 @@ extern "C" {
 
 #ifdef FREECIV_JSON_CONNECTION
 #include <jansson.h>
-#endif  /* FREECIV_JSON_CONNECTION */
+#endif /* FREECIV_JSON_CONNECTION */
 
 #ifndef FREECIV_JSON_CONNECTION
 #define USE_COMPRESSION
-#endif  /* FREECIV_JSON_CONNECTION */
+#endif /* FREECIV_JSON_CONNECTION */
 
 /**************************************************************************
   The connection struct and related stuff.
@@ -40,8 +40,8 @@ extern "C" {
 ***************************************************************************/
 
 /* utility */
-#include "shared.h"             /* MAX_LEN_ADDR */
-#include "support.h"            /* bool type */
+#include "shared.h"  /* MAX_LEN_ADDR */
+#include "support.h" /* bool type */
 #include "timing.h"
 
 /* common */
@@ -53,12 +53,13 @@ struct packet_handlers;
 struct timer_list;
 
 /* Used in the network protocol. */
-#define MAX_LEN_PACKET   4096
-#define MAX_LEN_CAPSTR    512
-#define MAX_LEN_PASSWORD  512 /* do not change this under any circumstances */
-#define MAX_LEN_CONTENT  (MAX_LEN_PACKET - 20)
+#define MAX_LEN_PACKET 4096
+#define MAX_LEN_CAPSTR 512
+#define MAX_LEN_PASSWORD 512 /* do not change this under any circumstances  \
+                              */
+#define MAX_LEN_CONTENT (MAX_LEN_PACKET - 20)
 
-#define MAX_LEN_BUFFER   (MAX_LEN_PACKET * 128)
+#define MAX_LEN_BUFFER (MAX_LEN_PACKET * 128)
 
 /****************************************************************************
   Command access levels for client-side use; at present, they are only
@@ -110,9 +111,9 @@ struct connection;
 #define SPECLIST_TYPE struct connection
 #include "speclist.h"
 
-#define conn_list_iterate(connlist, pconn) \
-    TYPED_LIST_ITERATE(struct connection, connlist, pconn)
-#define conn_list_iterate_end  LIST_ITERATE_END
+#define conn_list_iterate(connlist, pconn)                                  \
+  TYPED_LIST_ITERATE(struct connection, connlist, pconn)
+#define conn_list_iterate_end LIST_ITERATE_END
 
 /***********************************************************
   This is a buffer where the data is first collected,
@@ -126,8 +127,8 @@ struct socket_packet_buffer {
 };
 
 struct packet_header {
-  unsigned int length : 4;      /* Actually 'enum data_type' */
-  unsigned int type : 4;        /* Actually 'enum data_type' */
+  unsigned int length : 4; /* Actually 'enum data_type' */
+  unsigned int type : 4;   /* Actually 'enum data_type' */
 };
 
 #define SPECVEC_TAG byte
@@ -139,10 +140,10 @@ struct packet_header {
   at the other end of a network connection.
 ***********************************************************/
 struct connection {
-  int id;			/* used for server/client communication */
+  int id; /* used for server/client communication */
   int sock;
   bool used;
-  bool established;		/* have negotiated initial packets */
+  bool established; /* have negotiated initial packets */
   struct packet_header packet_header;
   char *closing_reason;
 
@@ -165,17 +166,17 @@ struct connection {
 
   double ping_time;
 
-  struct conn_list *self;     /* list with this connection as single element */
+  struct conn_list *self; /* list with this connection as single element */
   char username[MAX_LEN_NAME];
   char addr[MAX_LEN_ADDR];
 
-  /* 
+  /*
    * "capability" gives the capability string of the executable (be it
    * a client or server) at the other end of the connection.
    */
   char capability[MAX_LEN_CAPSTR];
 
-  /* 
+  /*
    * "access_level" stores the current access level of the client
    * corresponding to this connection.
    */
@@ -183,8 +184,8 @@ struct connection {
 
   enum gui_type client_gui;
 
-  void (*notify_of_writable_data) (struct connection * pc,
-                                   bool data_available_and_socket_full);
+  void (*notify_of_writable_data)(struct connection *pc,
+                                  bool data_available_and_socket_full);
 
   union {
     struct {
@@ -194,7 +195,8 @@ struct connection {
       /* Increases for every received PACKET_PROCESSING_FINISHED packet. */
       int last_processed_request_id_seen;
 
-      /* Holds the id of the request which caused this packet. Can be zero. */
+      /* Holds the id of the request which caused this packet. Can be zero.
+       */
       int request_id_of_currently_handled_packet;
     } client;
 
@@ -213,7 +215,7 @@ struct connection {
       int auth_tries;
 
       /* the time that the server will respond after receiving an auth reply.
-       * this is used to throttle the connection. Also used to reject a 
+       * this is used to throttle the connection. Also used to reject a
        * connection if we've waited too long for a password. */
       time_t auth_settime;
 
@@ -250,17 +252,16 @@ struct connection {
    * argument should really be a "enum packet_type". However due
    * circular dependency this is impossible.
    */
-  void (*incoming_packet_notify) (struct connection * pc,
-				  int packet_type, int size);
+  void (*incoming_packet_notify)(struct connection *pc, int packet_type,
+                                 int size);
 
   /*
    * Called before a packet is sent. The packet_type argument should
    * really be a "enum packet_type". However due circular dependency
    * this is impossible.
    */
-  void (*outgoing_packet_notify) (struct connection * pc,
-				  int packet_type, int size,
-				  int request_id);
+  void (*outgoing_packet_notify)(struct connection *pc, int packet_type,
+                                 int size, int request_id);
   struct {
     struct genhash **sent;
     struct genhash **received;
@@ -279,8 +280,7 @@ struct connection {
   } statistics;
 };
 
-
-typedef void (*conn_close_fn_t) (struct connection *pconn);
+typedef void (*conn_close_fn_t)(struct connection *pconn);
 void connections_set_close_callback(conn_close_fn_t func);
 void connection_close(struct connection *pconn, const char *reason);
 
@@ -328,14 +328,13 @@ int get_next_request_id(int old_request_id);
 
 extern const char blank_addr_str[];
 
-
 /* Connection patterns. */
 struct conn_pattern;
 
 #define SPECLIST_TAG conn_pattern
 #define SPECLIST_TYPE struct conn_pattern
 #include "speclist.h"
-#define conn_pattern_list_iterate(plist, ppatern) \
+#define conn_pattern_list_iterate(plist, ppatern)                           \
   TYPED_LIST_ITERATE(struct conn_pattern, plist, ppatern)
 #define conn_pattern_list_iterate_end LIST_ITERATE_END
 
@@ -357,8 +356,8 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
 bool conn_pattern_list_match(const struct conn_pattern_list *plist,
                              const struct connection *pconn);
 
-size_t conn_pattern_to_string(const struct conn_pattern *ppattern,
-                              char *buf, size_t buf_len);
+size_t conn_pattern_to_string(const struct conn_pattern *ppattern, char *buf,
+                              size_t buf_len);
 struct conn_pattern *conn_pattern_from_string(const char *pattern,
                                               enum conn_pattern_type prefer,
                                               char *error_buf,
@@ -370,4 +369,4 @@ bool conn_is_valid(const struct connection *pconn);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CONNECTION_H */
+#endif /* FC__CONNECTION_H */

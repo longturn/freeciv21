@@ -45,9 +45,9 @@
 
 #include "tab_misc.h"
 
-/**********************************************************************//**
-  Setup tab_misc object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup tab_misc object
+ **************************************************************************/
 tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
 {
   QGridLayout *main_layout = new QGridLayout(this);
@@ -83,7 +83,8 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   savedir->setText("ruledit-tmp");
   savedir->setFocus();
   main_layout->addWidget(savedir, row++, 1);
-  save_ver_label = new QLabel(QString::fromUtf8(R__("Version suffix to directory name")));
+  save_ver_label =
+      new QLabel(QString::fromUtf8(R__("Version suffix to directory name")));
   save_ver_label->setParent(this);
   main_layout->addWidget(save_ver_label, row, 0);
   savedir_version = new QRadioButton(this);
@@ -91,8 +92,10 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   save_button = new QPushButton(QString::fromUtf8(R__("Save now")), this);
   connect(save_button, SIGNAL(pressed()), this, SLOT(save_now()));
   main_layout->addWidget(save_button, row++, 1);
-  always_active_effects = new QPushButton(QString::fromUtf8(R__("Always active Effects")), this);
-  connect(always_active_effects, SIGNAL(pressed()), this, SLOT(edit_aae_effects()));
+  always_active_effects =
+      new QPushButton(QString::fromUtf8(R__("Always active Effects")), this);
+  connect(always_active_effects, SIGNAL(pressed()), this,
+          SLOT(edit_aae_effects()));
   main_layout->addWidget(always_active_effects, row++, 1);
   all_effects = new QPushButton(QString::fromUtf8(R__("All Effects")), this);
   connect(all_effects, SIGNAL(pressed()), this, SLOT(edit_all_effects()));
@@ -177,7 +180,8 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   stats->horizontalHeader()->setVisible(false);
   stats->setEditTriggers(QAbstractItemView::NoEditTriggers);
   main_layout->addWidget(stats, row++, 0, 1, 2);
-  refresh_button = new QPushButton(QString::fromUtf8(R__("Refresh Stats")), this);
+  refresh_button =
+      new QPushButton(QString::fromUtf8(R__("Refresh Stats")), this);
   connect(refresh_button, SIGNAL(pressed()), this, SLOT(refresh_stats()));
   main_layout->addWidget(refresh_button, row++, 0, 1, 2);
 
@@ -190,9 +194,9 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void tab_misc::refresh()
 {
   name->setText(game.control.name);
@@ -200,9 +204,9 @@ void tab_misc::refresh()
   refresh_stats();
 }
 
-/**********************************************************************//**
-  User entered savedir
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered savedir
+ **************************************************************************/
 void tab_misc::save_now()
 {
   char nameUTF8[MAX_LEN_NAME];
@@ -241,15 +245,14 @@ void tab_misc::save_now()
   }
 
   ba_bytes = full_dir.toUtf8();
-  save_ruleset(ba_bytes.data(), nameUTF8,
-               &(ui->data));
+  save_ruleset(ba_bytes.data(), nameUTF8, &(ui->data));
 
   ui->display_msg(R__("Ruleset saved"));
 }
 
-/**********************************************************************//**
-  Recalculate stats
-**************************************************************************/
+/**********************************************************************/ /**
+   Recalculate stats
+ **************************************************************************/
 void tab_misc::refresh_stats()
 {
   int row = 0;
@@ -258,80 +261,73 @@ void tab_misc::refresh_stats()
   int road_count;
 
   count = 0;
-  terrain_re_active_iterate(pterr) {
-    count++;
-  } terrain_re_active_iterate_end;
+  terrain_re_active_iterate(pterr) { count++; }
+  terrain_re_active_iterate_end;
   stats->item(row++, 1)->setText(QString::number(count));
 
-  stats->item(row++, 1)->setText(QString::number(game.control.num_resource_types));
+  stats->item(row++, 1)->setText(
+      QString::number(game.control.num_resource_types));
 
   count = 0;
-  tech_class_re_active_iterate(ptclass) {
-    count++;
-  } tech_class_re_active_iterate_end;
-  stats->item(row++, 1)->setText(QString::number(count));
-
-  count = 0;
-  advance_re_active_iterate(padv) {
-    count++;
-  } advance_re_active_iterate_end;
+  tech_class_re_active_iterate(ptclass) { count++; }
+  tech_class_re_active_iterate_end;
   stats->item(row++, 1)->setText(QString::number(count));
 
   count = 0;
-  unit_class_re_active_iterate(pclass) {
-    count++;
-  } unit_class_re_active_iterate_end;
+  advance_re_active_iterate(padv) { count++; }
+  advance_re_active_iterate_end;
   stats->item(row++, 1)->setText(QString::number(count));
 
   count = 0;
-  unit_type_re_active_iterate(ptype) {
-    count++;
-  } unit_type_re_active_iterate_end;
+  unit_class_re_active_iterate(pclass) { count++; }
+  unit_class_re_active_iterate_end;
+  stats->item(row++, 1)->setText(QString::number(count));
+
+  count = 0;
+  unit_type_re_active_iterate(ptype) { count++; }
+  unit_type_re_active_iterate_end;
   stats->item(row++, 1)->setText(QString::number(count));
 
   // Second column
   row = 0;
   count = 0;
-  improvement_re_active_iterate(pimpr) {
-    count++;
-  } improvement_re_active_iterate_end;
+  improvement_re_active_iterate(pimpr) { count++; }
+  improvement_re_active_iterate_end;
   stats->item(row++, 4)->setText(QString::number(count));
 
   stats->item(row++, 4)->setText(QString::number(game.control.nation_count));
 
   count = 0;
-  styles_re_active_iterate(pstyle) {
-    count++;
-  } styles_re_active_iterate_end;
+  styles_re_active_iterate(pstyle) { count++; }
+  styles_re_active_iterate_end;
   stats->item(row++, 4)->setText(QString::number(count));
 
   count = 0;
-  specialist_type_re_active_iterate(pspe) {
-    count++;
-  } specialist_type_re_active_iterate_end;
+  specialist_type_re_active_iterate(pspe) { count++; }
+  specialist_type_re_active_iterate_end;
   stats->item(row++, 4)->setText(QString::number(count));
 
   count = 0;
-  governments_re_active_iterate(pgov) {
-    count++;
-  } governments_re_active_iterate_end;
+  governments_re_active_iterate(pgov) { count++; }
+  governments_re_active_iterate_end;
   stats->item(row++, 4)->setText(QString::number(count));
 
-  stats->item(row++, 4)->setText(QString::number(game.control.num_disaster_types));
+  stats->item(row++, 4)->setText(
+      QString::number(game.control.num_disaster_types));
 
   // Third column
   row = 0;
 
   count = 0;
-  achievements_re_active_iterate(pach) {
-    count++;
-  } achievements_re_active_iterate_end;
+  achievements_re_active_iterate(pach) { count++; }
+  achievements_re_active_iterate_end;
   stats->item(row++, 7)->setText(QString::number(count));
 
   count = 0;
   base_count = 0;
   road_count = 0;
-  extra_type_re_active_iterate(pextra) {
+  extra_type_re_active_iterate(pextra)
+  {
     count++;
     if (is_extra_caused_by(pextra, EC_BASE)) {
       base_count++;
@@ -339,40 +335,39 @@ void tab_misc::refresh_stats()
     if (is_extra_caused_by(pextra, EC_ROAD)) {
       road_count++;
     }
-  } extra_type_re_active_iterate_end;
+  }
+  extra_type_re_active_iterate_end;
   stats->item(row++, 7)->setText(QString::number(count));
   stats->item(row++, 7)->setText(QString::number(base_count));
   stats->item(row++, 7)->setText(QString::number(road_count));
 
   count = 0;
-  goods_type_re_active_iterate(pg) {
-    count++;
-  } goods_type_re_active_iterate_end;
+  goods_type_re_active_iterate(pg) { count++; }
+  goods_type_re_active_iterate_end;
   stats->item(row++, 7)->setText(QString::number(count));
 
   count = 0;
-  multipliers_re_active_iterate(pmul) {
-    count++;
-  } multipliers_re_active_iterate_end;
+  multipliers_re_active_iterate(pmul) { count++; }
+  multipliers_re_active_iterate_end;
   stats->item(row++, 7)->setText(QString::number(count));
 
   stats->resizeColumnsToContents();
 }
 
-/**********************************************************************//**
-  User wants to edit always active effects
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit always active effects
+ **************************************************************************/
 void tab_misc::edit_aae_effects()
 {
-  ui->open_effect_edit(QString::fromUtf8(R__("Always active")),
-                       nullptr, EFMC_NONE);
+  ui->open_effect_edit(QString::fromUtf8(R__("Always active")), nullptr,
+                       EFMC_NONE);
 }
 
-/**********************************************************************//**
-  User wants to edit effects from full list
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit effects from full list
+ **************************************************************************/
 void tab_misc::edit_all_effects()
 {
-  ui->open_effect_edit(QString::fromUtf8(R__("All effects")),
-                       nullptr, EFMC_ALL);
+  ui->open_effect_edit(QString::fromUtf8(R__("All effects")), nullptr,
+                       EFMC_ALL);
 }

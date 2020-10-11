@@ -50,8 +50,8 @@ struct road_type;
 #define SPECLIST_TYPE struct road_type
 #include "speclist.h"
 
-#define road_type_list_iterate(roadlist, proad) \
-    TYPED_LIST_ITERATE(struct road_type, roadlist, proad)
+#define road_type_list_iterate(roadlist, proad)                             \
+  TYPED_LIST_ITERATE(struct road_type, roadlist, proad)
 #define road_type_list_iterate_end LIST_ITERATE_END
 
 struct extra_type;
@@ -71,8 +71,9 @@ struct road_type {
   bv_roads integrates;
   bv_road_flags flags;
 
-  /* Same information as in integrates, but iterating through this list is much
-   * faster than through all road types to check for compatible roads. */
+  /* Same information as in integrates, but iterating through this list is
+   * much faster than through all road types to check for compatible roads.
+   */
   struct extra_type_list *integrators;
 
   struct extra_type *self;
@@ -90,7 +91,8 @@ struct extra_type *road_extra_get(const struct road_type *proad);
 enum road_compat road_compat_special(const struct road_type *proad);
 struct road_type *road_by_compat_special(enum road_compat compat);
 
-int count_road_near_tile(const struct tile *ptile, const struct road_type *proad);
+int count_road_near_tile(const struct tile *ptile,
+                         const struct road_type *proad);
 int count_river_near_tile(const struct tile *ptile,
                           const struct extra_type *priver);
 int count_river_type_tile_card(const struct tile *ptile,
@@ -107,13 +109,13 @@ bool is_road_flag_card_near(const struct tile *ptile,
 bool is_road_flag_near_tile(const struct tile *ptile,
                             enum road_flag_id flag);
 
-bool road_can_be_built(const struct road_type *proad, const struct tile *ptile);
-bool can_build_road(struct road_type *proad,
-		    const struct unit *punit,
-		    const struct tile *ptile);
+bool road_can_be_built(const struct road_type *proad,
+                       const struct tile *ptile);
+bool can_build_road(struct road_type *proad, const struct unit *punit,
+                    const struct tile *ptile);
 bool player_can_build_road(const struct road_type *proad,
-			   const struct player *pplayer,
-			   const struct tile *ptile);
+                           const struct player *pplayer,
+                           const struct tile *ptile);
 
 bool is_native_tile_to_road(const struct road_type *proad,
                             const struct tile *ptile);
@@ -131,22 +133,22 @@ void road_type_init(struct extra_type *pextra, int idx);
 void road_integrators_cache_init(void);
 void road_types_free(void);
 
-#define road_deps_iterate(_reqs, _dep)                                 \
-{                                                                      \
-  requirement_vector_iterate(_reqs, preq) {                            \
-    if (preq->source.kind == VUT_EXTRA                                 \
-        && preq->present                                               \
-        && is_extra_caused_by(preq->source.value.extra, EC_ROAD)) {    \
-      struct road_type *_dep = extra_road_get(preq->source.value.extra);
+#define road_deps_iterate(_reqs, _dep)                                      \
+  {                                                                         \
+    requirement_vector_iterate(_reqs, preq)                                 \
+    {                                                                       \
+      if (preq->source.kind == VUT_EXTRA && preq->present                   \
+          && is_extra_caused_by(preq->source.value.extra, EC_ROAD)) {       \
+        struct road_type *_dep = extra_road_get(preq->source.value.extra);
 
-
-#define road_deps_iterate_end                           \
-    }                                                   \
-  } requirement_vector_iterate_end;                     \
-}
+#define road_deps_iterate_end                                               \
+  }                                                                         \
+  }                                                                         \
+  requirement_vector_iterate_end;                                           \
+  }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__ROAD_H */
+#endif /* FC__ROAD_H */

@@ -30,9 +30,9 @@
 
 #include "music.h"
 
-/**********************************************************************//**
-  Start music suitable for current game situation
-**************************************************************************/
+/**********************************************************************/ /**
+   Start music suitable for current game situation
+ **************************************************************************/
 void start_style_music(void)
 {
   if (client_state() != C_S_RUNNING) {
@@ -76,17 +76,14 @@ void start_style_music(void)
   }
 }
 
-/**********************************************************************//**
-  Stop style music completely.
-**************************************************************************/
-void stop_style_music(void)
-{
-  audio_stop_usage();
-}
+/**********************************************************************/ /**
+   Stop style music completely.
+ **************************************************************************/
+void stop_style_music(void) { audio_stop_usage(); }
 
-/**********************************************************************//**
-  Start menu music.
-**************************************************************************/
+/**********************************************************************/ /**
+   Start menu music.
+ **************************************************************************/
 void start_menu_music(const char *const tag, char *const alt_tag)
 {
   if (gui_options.sound_enable_menu_music) {
@@ -94,17 +91,14 @@ void start_menu_music(const char *const tag, char *const alt_tag)
   }
 }
 
-/**********************************************************************//**
-  Stop menu music completely.
-**************************************************************************/
-void stop_menu_music(void)
-{
-  audio_stop_usage();
-}
+/**********************************************************************/ /**
+   Stop menu music completely.
+ **************************************************************************/
+void stop_menu_music(void) { audio_stop_usage(); }
 
-/**********************************************************************//**
-  Play single track before continuing normal style music
-**************************************************************************/
+/**********************************************************************/ /**
+   Play single track before continuing normal style music
+ **************************************************************************/
 void play_single_track(const char *const tag)
 {
   if (client_state() != C_S_RUNNING) {
@@ -115,9 +109,9 @@ void play_single_track(const char *const tag)
   audio_play_track(tag, NULL);
 }
 
-/**********************************************************************//**
-  Musicset changed in options.
-**************************************************************************/
+/**********************************************************************/ /**
+   Musicset changed in options.
+ **************************************************************************/
 void musicspec_reread_callback(struct option *poption)
 {
   const char *musicset_name = option_str_get(poption);

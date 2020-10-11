@@ -17,11 +17,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
-
 /* common/aicore */
 #include "path_finding.h"
 
-/* 
+/*
  * Use to create 'amphibious' paths. An amphibious path starts on a sea tile,
  * perhaps goes over some other sea tiles, then perhaps goes over some land
  * tiles. This is suitable for a land unit riding on a ferry.
@@ -32,8 +31,7 @@ extern "C" {
  * Give the 'combined' field to pf_create_map to create a map
  * for finding the path.
  */
-struct pft_amphibious
-{
+struct pft_amphibious {
   /* The caller must initialize these. */
   struct pf_parameter land, sea;
 
@@ -41,7 +39,6 @@ struct pft_amphibious
   int land_scale, sea_scale;
   struct pf_parameter combined;
 };
-
 
 void pft_fill_unit_parameter(struct pf_parameter *parameter,
                              const struct unit *punit);

@@ -40,9 +40,9 @@
 
 #include "tab_multiplier.h"
 
-/**********************************************************************//**
-  Setup tab_multiplier object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup tab_multiplier object
+ **************************************************************************/
 tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -57,7 +57,8 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
 
   mpr_list = new QListWidget(this);
 
-  connect(mpr_list, SIGNAL(itemSelectionChanged()), this, SLOT(select_multiplier()));
+  connect(mpr_list, SIGNAL(itemSelectionChanged()), this,
+          SLOT(select_multiplier()));
   main_layout->addWidget(mpr_list);
 
   mpr_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -73,7 +74,8 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this, SLOT(same_name_toggle(bool)));
+  connect(same_name, SIGNAL(toggled(bool)), this,
+          SLOT(same_name_toggle(bool)));
   name = new QLineEdit(this);
   name->setText("None");
   connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
@@ -81,16 +83,19 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   mpr_layout->addWidget(same_name, 1, 1);
   mpr_layout->addWidget(name, 1, 2);
 
-  reqs_button = new QPushButton(QString::fromUtf8(R__("Requirements")), this);
+  reqs_button =
+      new QPushButton(QString::fromUtf8(R__("Requirements")), this);
   connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
   mpr_layout->addWidget(reqs_button, 2, 2);
 
-  add_button = new QPushButton(QString::fromUtf8(R__("Add Multiplier")), this);
+  add_button =
+      new QPushButton(QString::fromUtf8(R__("Add Multiplier")), this);
   connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
   mpr_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
-  delete_button = new QPushButton(QString::fromUtf8(R__("Remove this Multiplier")), this);
+  delete_button = new QPushButton(
+      QString::fromUtf8(R__("Remove this Multiplier")), this);
   connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
   mpr_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
@@ -102,26 +107,28 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void tab_multiplier::refresh()
 {
   mpr_list->clear();
 
-  multipliers_iterate(pmul) {
+  multipliers_iterate(pmul)
+  {
     if (!pmul->ruledit_disabled) {
       QListWidgetItem *item =
-        new QListWidgetItem(QString::fromUtf8(multiplier_rule_name(pmul)));
+          new QListWidgetItem(QString::fromUtf8(multiplier_rule_name(pmul)));
 
       mpr_list->insertItem(multiplier_index(pmul), item);
     }
-  } multipliers_iterate_end;
+  }
+  multipliers_iterate_end;
 }
 
-/**********************************************************************//**
-  Update info of the multiplier
-**************************************************************************/
+/**********************************************************************/ /**
+   Update info of the multiplier
+ **************************************************************************/
 void tab_multiplier::update_multiplier_info(struct multiplier *pmul)
 {
   selected = pmul;
@@ -147,9 +154,9 @@ void tab_multiplier::update_multiplier_info(struct multiplier *pmul)
   }
 }
 
-/**********************************************************************//**
-  User selected multiplier from the list.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected multiplier from the list.
+ **************************************************************************/
 void tab_multiplier::select_multiplier()
 {
   QList<QListWidgetItem *> select_list = mpr_list->selectedItems();
@@ -162,24 +169,27 @@ void tab_multiplier::select_multiplier()
   }
 }
 
-/**********************************************************************//**
-  User entered name for the multiplier
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered name for the multiplier
+ **************************************************************************/
 void tab_multiplier::name_given()
 {
   if (selected != nullptr) {
     QByteArray name_bytes;
     QByteArray rname_bytes;
 
-    multipliers_iterate(pmul) {
+    multipliers_iterate(pmul)
+    {
       if (pmul != selected && !pmul->ruledit_disabled) {
         rname_bytes = rname->text().toUtf8();
         if (!strcmp(multiplier_rule_name(pmul), rname_bytes.data())) {
-          ui->display_msg(R__("A multiplier with that rule name already exists!"));
+          ui->display_msg(
+              R__("A multiplier with that rule name already exists!"));
           return;
         }
       }
-    } multipliers_iterate_end;
+    }
+    multipliers_iterate_end;
 
     if (same_name->isChecked()) {
       name->setText(rname->text());
@@ -187,23 +197,22 @@ void tab_multiplier::name_given()
 
     name_bytes = name->text().toUtf8();
     rname_bytes = rname->text().toUtf8();
-    names_set(&(selected->name), 0,
-              name_bytes.data(),
-              rname_bytes.data());
+    names_set(&(selected->name), 0, name_bytes.data(), rname_bytes.data());
     refresh();
   }
 }
 
-/**********************************************************************//**
-  User requested multiplier deletion
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested multiplier deletion
+ **************************************************************************/
 void tab_multiplier::delete_now()
 {
   if (selected != 0) {
     requirers_dlg *requirers;
 
     requirers = ui->create_requirers(multiplier_rule_name(selected));
-    if (is_multiplier_needed(selected, &ruledit_qt_display_requirers, requirers)) {
+    if (is_multiplier_needed(selected, &ruledit_qt_display_requirers,
+                             requirers)) {
       return;
     }
 
@@ -214,9 +223,9 @@ void tab_multiplier::delete_now()
   }
 }
 
-/**********************************************************************//**
-  Initialize new multiplier for use.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize new multiplier for use.
+ **************************************************************************/
 bool tab_multiplier::initialize_new_multiplier(struct multiplier *pmul)
 {
   if (multiplier_by_rule_name("New Multiplier") != nullptr) {
@@ -228,15 +237,16 @@ bool tab_multiplier::initialize_new_multiplier(struct multiplier *pmul)
   return true;
 }
 
-/**********************************************************************//**
-  User requested new multiplier
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested new multiplier
+ **************************************************************************/
 void tab_multiplier::add_now()
 {
   struct multiplier *new_multiplier;
 
   // Try to reuse freed multiplier slot
-  multipliers_iterate(pmul) {
+  multipliers_iterate(pmul)
+  {
     if (pmul->ruledit_disabled) {
       if (initialize_new_multiplier(pmul)) {
         pmul->ruledit_disabled = false;
@@ -245,7 +255,8 @@ void tab_multiplier::add_now()
       }
       return;
     }
-  } multipliers_iterate_end;
+  }
+  multipliers_iterate_end;
 
   // Try to add completely new multiplier
   if (game.control.num_multipliers >= MAX_NUM_MULTIPLIERS) {
@@ -265,9 +276,9 @@ void tab_multiplier::add_now()
   }
 }
 
-/**********************************************************************//**
-  Toggled whether rule_name and name should be kept identical
-**************************************************************************/
+/**********************************************************************/ /**
+   Toggled whether rule_name and name should be kept identical
+ **************************************************************************/
 void tab_multiplier::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -276,14 +287,15 @@ void tab_multiplier::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************//**
-  User wants to edit reqs
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit reqs
+ **************************************************************************/
 void tab_multiplier::edit_reqs()
 {
   if (selected != nullptr) {
-    req_edit *redit = new req_edit(ui, QString::fromUtf8(multiplier_rule_name(selected)),
-                                   &selected->reqs);
+    req_edit *redit =
+        new req_edit(ui, QString::fromUtf8(multiplier_rule_name(selected)),
+                     &selected->reqs);
 
     redit->show();
   }

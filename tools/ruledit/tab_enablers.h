@@ -34,38 +34,37 @@ class QToolButton;
 
 class ruledit_gui;
 
-class tab_enabler : public QWidget
-{
+class tab_enabler : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_enabler(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_enabler(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_enabler_info(struct action_enabler *enabler);
-    bool initialize_new_enabler(struct action_enabler *enabler);
+private:
+  ruledit_gui *ui;
+  void update_enabler_info(struct action_enabler *enabler);
+  bool initialize_new_enabler(struct action_enabler *enabler);
 
-    QToolButton *type_button;
-    QMenu *type_menu;
-    QPushButton *act_reqs_button;
-    QPushButton *tgt_reqs_button;
-    QPushButton *delete_button;
-    QPushButton *repair_button;
-    QListWidget *enabler_list;
+  QToolButton *type_button;
+  QMenu *type_menu;
+  QPushButton *act_reqs_button;
+  QPushButton *tgt_reqs_button;
+  QPushButton *delete_button;
+  QPushButton *repair_button;
+  QListWidget *enabler_list;
 
-    struct action_enabler *selected;
+  struct action_enabler *selected;
 
-  private slots:
-    void select_enabler();
-    void add_now();
-    void repair_now();
-    void incoming_rec_vec_change(const requirement_vector *vec);
-    void delete_now();
-    void edit_type(QAction *action);
-    void edit_target_reqs();
-    void edit_actor_reqs();
+private slots:
+  void select_enabler();
+  void add_now();
+  void repair_now();
+  void incoming_rec_vec_change(const requirement_vector *vec);
+  void delete_now();
+  void edit_type(QAction *action);
+  void edit_target_reqs();
+  void edit_actor_reqs();
 };
 
 #endif // FC__TAB_ENABLERS_H

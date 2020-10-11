@@ -49,44 +49,44 @@
 #ifdef PF_DEBUG
 /* The mode we use the pf_map. Used for cast converion checks. */
 enum pf_mode {
-  PF_NORMAL = 1,        /* Usual goto */
-  PF_DANGER,            /* Goto with dangerous positions */
-  PF_FUEL               /* Goto for fueled units */
+  PF_NORMAL = 1, /* Usual goto */
+  PF_DANGER,     /* Goto with dangerous positions */
+  PF_FUEL        /* Goto for fueled units */
 };
 #endif /* PF_DEBUG */
 
 enum pf_node_status {
-  NS_UNINIT = 0,        /* memory is calloced, hence zero means
-                         * uninitialised. */
-  NS_INIT,              /* node initialized, but we didn't search a route
-                         * yet. */
-  NS_NEW,               /* the optimal route isn't found yet. */
-  NS_WAITING,           /* the optimal route is found, considering waiting.
-                         * Only used for pf_danger_map and pf_fuel_map, it
-                         * means we are waiting on a safe place for full
-                         * moves before crossing a dangerous area. */
-  NS_PROCESSED          /* the optimal route is found. */
+  NS_UNINIT = 0, /* memory is calloced, hence zero means
+                  * uninitialised. */
+  NS_INIT,       /* node initialized, but we didn't search a route
+                  * yet. */
+  NS_NEW,        /* the optimal route isn't found yet. */
+  NS_WAITING,    /* the optimal route is found, considering waiting.
+                  * Only used for pf_danger_map and pf_fuel_map, it
+                  * means we are waiting on a safe place for full
+                  * moves before crossing a dangerous area. */
+  NS_PROCESSED   /* the optimal route is found. */
 };
 
 enum pf_zoc_type {
-  ZOC_MINE = 0,         /* My ZoC. */
-  ZOC_ALLIED,           /* Allied ZoC. */
-  ZOC_NO                /* No ZoC. */
+  ZOC_MINE = 0, /* My ZoC. */
+  ZOC_ALLIED,   /* Allied ZoC. */
+  ZOC_NO        /* No ZoC. */
 };
 
 /* Abstract base class for pf_normal_map, pf_danger_map, and pf_fuel_map. */
 struct pf_map {
 #ifdef PF_DEBUG
-  enum pf_mode mode;    /* The mode of the map, for conversion checking. */
-#endif /* PF_DEBUG */
+  enum pf_mode mode; /* The mode of the map, for conversion checking. */
+#endif               /* PF_DEBUG */
 
   /* "Virtual" function table. */
-  void (*destroy) (struct pf_map *pfm); /* Destructor. */
-  int (*get_move_cost) (struct pf_map *pfm, struct tile *ptile);
-  struct pf_path * (*get_path) (struct pf_map *pfm, struct tile *ptile);
-  bool (*get_position) (struct pf_map *pfm, struct tile *ptile,
-                        struct pf_position *pos);
-  bool (*iterate) (struct pf_map *pfm);
+  void (*destroy)(struct pf_map *pfm); /* Destructor. */
+  int (*get_move_cost)(struct pf_map *pfm, struct tile *ptile);
+  struct pf_path *(*get_path)(struct pf_map *pfm, struct tile *ptile);
+  bool (*get_position)(struct pf_map *pfm, struct tile *ptile,
+                       struct pf_position *pos);
+  bool (*iterate)(struct pf_map *pfm);
 
   /* Private data. */
   struct tile *tile;          /* The current position (aka iterator). */
@@ -98,38 +98,38 @@ struct pf_map {
 
 /* ========================== Common functions =========================== */
 
-/************************************************************************//**
-  Return the number of "moves" started with.
+/************************************************************************/ /**
+   Return the number of "moves" started with.
 
-  This is different from the moves_left_initially because of fuel. For
-  units with fuel > 1 all moves on the same tank of fuel are considered to
-  be one turn. Thus the rest of the PF code doesn't actually know that the
-  unit has fuel, it just thinks it has that many more MP.
-****************************************************************************/
+   This is different from the moves_left_initially because of fuel. For
+   units with fuel > 1 all moves on the same tank of fuel are considered to
+   be one turn. Thus the rest of the PF code doesn't actually know that the
+   unit has fuel, it just thinks it has that many more MP.
+ ****************************************************************************/
 static inline int pf_moves_left_initially(const struct pf_parameter *param)
 {
   return (param->moves_left_initially
           + (param->fuel_left_initially - 1) * param->move_rate);
 }
 
-/************************************************************************//**
-  Return the "move rate".
+/************************************************************************/ /**
+   Return the "move rate".
 
-  This is different from the parameter's move_rate because of fuel. For
-  units with fuel > 1 all moves on the same tank of fuel are considered
-  to be one turn. Thus the rest of the PF code doesn't actually know that
-  the unit has fuel, it just thinks it has that many more MP.
-****************************************************************************/
+   This is different from the parameter's move_rate because of fuel. For
+   units with fuel > 1 all moves on the same tank of fuel are considered
+   to be one turn. Thus the rest of the PF code doesn't actually know that
+   the unit has fuel, it just thinks it has that many more MP.
+ ****************************************************************************/
 static inline int pf_move_rate(const struct pf_parameter *param)
 {
   return param->move_rate * param->fuel;
 }
 
-/************************************************************************//**
-  Number of turns required to reach node. See comment in the body of
-  pf_normal_map_new(), pf_danger_map_new(), and pf_fuel_map_new() functions
-  about the usage of moves_left_initially().
-****************************************************************************/
+/************************************************************************/ /**
+   Number of turns required to reach node. See comment in the body of
+   pf_normal_map_new(), pf_danger_map_new(), and pf_fuel_map_new() functions
+   about the usage of moves_left_initially().
+ ****************************************************************************/
 static inline int pf_turns(const struct pf_parameter *param, int cost)
 {
   /* Negative cost can happen when a unit initially has more MP than its
@@ -149,9 +149,9 @@ static inline int pf_turns(const struct pf_parameter *param, int cost)
   }
 }
 
-/************************************************************************//**
-  Moves left after node is reached.
-****************************************************************************/
+/************************************************************************/ /**
+   Moves left after node is reached.
+ ****************************************************************************/
 static inline int pf_moves_left(const struct pf_parameter *param, int cost)
 {
   int move_rate = pf_move_rate(param);
@@ -166,21 +166,21 @@ static inline int pf_moves_left(const struct pf_parameter *param, int cost)
   }
 }
 
-/************************************************************************//**
-  Obtain cost-of-path from pure cost and extra cost
-****************************************************************************/
-static inline int pf_total_CC(const struct pf_parameter *param,
-                              int cost, int extra)
+/************************************************************************/ /**
+   Obtain cost-of-path from pure cost and extra cost
+ ****************************************************************************/
+static inline int pf_total_CC(const struct pf_parameter *param, int cost,
+                              int extra)
 {
   return PF_TURN_FACTOR * cost + extra * pf_move_rate(param);
 }
 
-/************************************************************************//**
-  Take a position previously filled out (as by fill_position) and "finalize"
-  it by reversing all fuel multipliers.
+/************************************************************************/ /**
+   Take a position previously filled out (as by fill_position) and "finalize"
+   it by reversing all fuel multipliers.
 
-  See pf_moves_left_initially() and pf_move_rate().
-****************************************************************************/
+   See pf_moves_left_initially() and pf_move_rate().
+ ****************************************************************************/
 static inline void pf_finalize_position(const struct pf_parameter *param,
                                         struct pf_position *pos)
 {
@@ -196,7 +196,6 @@ pf_path_new_to_start_tile(const struct pf_parameter *param);
 static void pf_position_fill_start_tile(struct pf_position *pos,
                                         const struct pf_parameter *param);
 
-
 /* ================ Specific pf_normal_* mode structures ================= */
 
 /* Normal path-finding maps are used for most of units with standard rules.
@@ -204,14 +203,14 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
 
 /* Node definition. Note we try to have the smallest data as possible. */
 struct pf_normal_node {
-  signed short cost;    /* total_MC. 'cost' may be negative, see comment in
-                         * pf_turns(). */
-  unsigned extra_cost;  /* total_EC. Can be huge, (higher than 'cost'). */
+  signed short cost;   /* total_MC. 'cost' may be negative, see comment in
+                        * pf_turns(). */
+  unsigned extra_cost; /* total_EC. Can be huge, (higher than 'cost'). */
   unsigned dir_to_here : 4; /* Direction from which we came. It's
                              * an 'enum direction8' including
                              * possibility of direction8_invalid (so we need
                              * 4 bits) */
-  unsigned status : 3;  /* 'enum pf_node_status' really. */
+  unsigned status : 3;      /* 'enum pf_node_status' really. */
 
   /* Cached values */
   unsigned move_scope : 3;      /* 'enum pf_move_scope really. */
@@ -224,22 +223,22 @@ struct pf_normal_node {
 
 /* Derived structure of struct pf_map. */
 struct pf_normal_map {
-  struct pf_map base_map;   /* Base structure, must be the first! */
+  struct pf_map base_map; /* Base structure, must be the first! */
 
-  struct map_index_pq *queue; /* Queue of nodes we have reached but not
-                               * processed yet (NS_NEW), sorted by their
-                               * total_CC. */
+  struct map_index_pq *queue;     /* Queue of nodes we have reached but not
+                                   * processed yet (NS_NEW), sorted by their
+                                   * total_CC. */
   struct pf_normal_node *lattice; /* Lattice of nodes. */
 };
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_normal_map *
-pf_normal_map_check(struct pf_map *pfm, const char *file, 
-                    const char *function, int line)
+static inline struct pf_normal_map *pf_normal_map_check(struct pf_map *pfm,
+                                                        const char *file,
+                                                        const char *function,
+                                                        int line)
 {
-  fc_assert_full(file, function, line,
-                 NULL != pfm && PF_NORMAL == pfm->mode,
+  fc_assert_full(file, function, line, NULL != pfm && PF_NORMAL == pfm->mode,
                  return NULL, "Wrong pf_map to pf_normal_map conversion.");
   return (struct pf_normal_map *) pfm;
 }
@@ -251,11 +250,11 @@ pf_normal_map_check(struct pf_map *pfm, const char *file,
 
 /* ================  Specific pf_normal_* mode functions ================= */
 
-/************************************************************************//**
-  Calculates cached values of the target node. Set the node status to
-  NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
-  enter node (in this case, most of the cached values are not set).
-****************************************************************************/
+/************************************************************************/ /**
+   Calculates cached values of the target node. Set the node status to
+   NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
+   enter node (in this case, most of the cached values are not set).
+ ****************************************************************************/
 static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
                                        struct pf_normal_node *node,
                                        struct tile *ptile,
@@ -337,8 +336,7 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
     /* Test the possibility to move from/to 'ptile'. */
     node->move_scope = params->get_move_scope(ptile, &can_disembark,
                                               previous_scope, params);
-    if (PF_MS_NONE == node->move_scope
-        && PF_ACTION_NONE == node->action
+    if (PF_MS_NONE == node->move_scope && PF_ACTION_NONE == node->action
         && params->ignore_none_scopes) {
       /* Maybe overwrite node behavior. */
       if (params->start_tile != ptile) {
@@ -347,8 +345,7 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
       } else if (TB_NORMAL == node->behavior) {
         node->behavior = TB_IGNORE;
       }
-    } else if (PF_MS_TRANSPORT == node->move_scope
-               && !can_disembark
+    } else if (PF_MS_TRANSPORT == node->move_scope && !can_disembark
                && (params->start_tile != ptile
                    || NULL == params->transported_by_initially)) {
       /* Overwrite node behavior. */
@@ -357,12 +354,11 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
 
     /* ZOC_MINE means can move unrestricted from/into it, ZOC_ALLIED means
      * can move unrestricted into it, but not necessarily from it. */
-    if (NULL != params->get_zoc
-        && NULL == tile_city(ptile)
+    if (NULL != params->get_zoc && NULL == tile_city(ptile)
         && !terrain_has_flag(tile_terrain(ptile), TER_NO_ZOC)
         && !params->get_zoc(params->owner, ptile, params->map)) {
-      node->zoc_number = (0 < unit_list_size(ptile->units)
-                          ? ZOC_ALLIED : ZOC_NO);
+      node->zoc_number =
+          (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
 #ifdef ZERO_VARIABLES_FOR_SEARCHING
     } else {
       /* Nodes are allocated by fc_calloc(), so should be already set to
@@ -392,10 +388,10 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
   return TRUE;
 }
 
-/************************************************************************//**
-  Fill in the position which must be discovered already. A helper
-  for pf_normal_map_position(). This also "finalizes" the position.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill in the position which must be discovered already. A helper
+   for pf_normal_map_position(). This also "finalizes" the position.
+ ****************************************************************************/
 static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
                                         struct tile *ptile,
                                         struct pf_position *pos)
@@ -411,8 +407,8 @@ static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
 
   pos->tile = ptile;
   pos->total_EC = node->extra_cost;
-  pos->total_MC = (node->cost - pf_move_rate(params)
-                   + pf_moves_left_initially(params));
+  pos->total_MC =
+      (node->cost - pf_move_rate(params) + pf_moves_left_initially(params));
   pos->turn = pf_turns(params, node->cost);
   pos->moves_left = pf_moves_left(params, node->cost);
 #ifdef PF_DEBUG
@@ -421,17 +417,18 @@ static void pf_normal_map_fill_position(const struct pf_normal_map *pfnm,
 #endif /* PF_DEBUG */
   pos->fuel_left = 1;
   pos->dir_to_here = direction8(node->dir_to_here);
-  pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
+  pos->dir_to_next_pos =
+      direction8_invalid(); /* This field does not apply. */
 
   if (node->cost > 0) {
     pf_finalize_position(params, pos);
   }
 }
 
-/************************************************************************//**
-  Read off the path to the node dest_tile, which must already be discovered.
-  A helper for pf_normal_map_path functions.
-****************************************************************************/
+/************************************************************************/ /**
+   Read off the path to the node dest_tile, which must already be discovered.
+   A helper for pf_normal_map_path functions.
+ ****************************************************************************/
 static struct pf_path *
 pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
                              struct tile *dest_tile)
@@ -454,7 +451,7 @@ pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
 
   /* 1: Count the number of steps to get here.
    * To do it, backtrack until we hit the starting point */
-  for (i = 0; ; i++) {
+  for (i = 0;; i++) {
     if (ptile == params->start_tile) {
       /* Ah-ha, reached the starting point! */
       break;
@@ -489,9 +486,9 @@ pf_normal_map_construct_path(const struct pf_normal_map *pfnm,
   return path;
 }
 
-/************************************************************************//**
-  Adjust MC to reflect the move_rate.
-****************************************************************************/
+/************************************************************************/ /**
+   Adjust MC to reflect the move_rate.
+ ****************************************************************************/
 static int pf_normal_map_adjust_cost(int cost, int moves_left)
 {
   fc_assert_ret_val(cost >= 0, PF_IMPOSSIBLE_MC);
@@ -499,23 +496,23 @@ static int pf_normal_map_adjust_cost(int cost, int moves_left)
   return MIN(cost, moves_left);
 }
 
-/************************************************************************//**
-  Bare-bones PF iterator. All Freeciv rules logic is hidden in 'get_costs'
-  callback (compare to pf_normal_map_iterate function). This function is
-  called when the pf_map was created with a 'get_cost' callback.
+/************************************************************************/ /**
+   Bare-bones PF iterator. All Freeciv rules logic is hidden in 'get_costs'
+   callback (compare to pf_normal_map_iterate function). This function is
+   called when the pf_map was created with a 'get_cost' callback.
 
-  Plan: 1. Process previous position.
-        2. Get new nearest position and return it.
+   Plan: 1. Process previous position.
+         2. Get new nearest position and return it.
 
-  During the iteration, the node status will be changed:
-  A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
-  (NS_INIT not used here)
-  B. NS_NEW: We have reached this node, but we are not sure it was the best
-     path.
-  (NS_WAITING not used here)
-  C. NS_PROCESSED: Now, we are sure we have the best path. Then, we won't
-     do anything more with this node.
-****************************************************************************/
+   During the iteration, the node status will be changed:
+   A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
+   (NS_INIT not used here)
+   B. NS_NEW: We have reached this node, but we are not sure it was the best
+      path.
+   (NS_WAITING not used here)
+   C. NS_PROCESSED: Now, we are sure we have the best path. Then, we won't
+      do anything more with this node.
+ ****************************************************************************/
 static bool pf_jumbo_map_iterate(struct pf_map *pfm)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
@@ -530,7 +527,8 @@ static bool pf_jumbo_map_iterate(struct pf_map *pfm)
    * (the data of the tile for the pf_map), and index (the index of the
    * position in the Freeciv map). */
 
-  adjc_dir_iterate(params->map, tile, tile1, dir) {
+  adjc_dir_iterate(params->map, tile, tile1, dir)
+  {
     /* Calculate the cost of every adjacent position and set them in the
      * priority queue for next call to pf_jumbo_map_iterate(). */
     int tindex1 = tile_index(tile1);
@@ -557,9 +555,9 @@ static bool pf_jumbo_map_iterate(struct pf_map *pfm)
 
     /* User-supplied callback 'get_costs' takes care of everything (ZOC,
      * known, costs etc). See explanations in "path_finding.h". */
-    priority = params->get_costs(tile, dir, tile1, node->cost,
-                                 node->extra_cost, &cost1,
-                                 &extra_cost1, params);
+    priority =
+        params->get_costs(tile, dir, tile1, node->cost, node->extra_cost,
+                          &cost1, &extra_cost1, params);
     if (priority >= 0) {
       /* We found a better route to 'tile1', record it (the costs are
        * recorded already). Node status step A. to B. */
@@ -573,7 +571,8 @@ static bool pf_jumbo_map_iterate(struct pf_map *pfm)
       node1->status = NS_NEW;
       node1->dir_to_here = dir;
     }
-  } adjc_dir_iterate_end;
+  }
+  adjc_dir_iterate_end;
 
   /* Get the next node (the index with the highest priority). */
   if (!map_index_pq_remove(pfnm->queue, &tindex)) {
@@ -592,22 +591,22 @@ static bool pf_jumbo_map_iterate(struct pf_map *pfm)
   return TRUE;
 }
 
-/************************************************************************//**
-  Primary method for iterative path-finding.
+/************************************************************************/ /**
+   Primary method for iterative path-finding.
 
-  Plan: 1. Process previous position.
-        2. Get new nearest position and return it.
+   Plan: 1. Process previous position.
+         2. Get new nearest position and return it.
 
-  During the iteration, the node status will be changed:
-  A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
-  B. NS_INIT: We have initialized the cached values, however, we failed to
-     reach this node.
-  C. NS_NEW: We have reached this node, but we are not sure it was the best
-     path.
-  (NS_WAITING not used here)
-  D. NS_PROCESSED: Now, we are sure we have the best path. Then, we won't
-     do anything more with this node.
-****************************************************************************/
+   During the iteration, the node status will be changed:
+   A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
+   B. NS_INIT: We have initialized the cached values, however, we failed to
+      reach this node.
+   C. NS_NEW: We have reached this node, but we are not sure it was the best
+      path.
+   (NS_WAITING not used here)
+   D. NS_PROCESSED: Now, we are sure we have the best path. Then, we won't
+      do anything more with this node.
+ ****************************************************************************/
 static bool pf_normal_map_iterate(struct pf_map *pfm)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
@@ -619,8 +618,7 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
   pf_move_scope scope = pf_move_scope(node->move_scope);
 
   /* There is no exit from DONT_LEAVE tiles! */
-  if (node->behavior != TB_DONT_LEAVE
-      && scope != PF_MS_NONE
+  if (node->behavior != TB_DONT_LEAVE && scope != PF_MS_NONE
       && (params->move_rate > 0 || node->cost < 0)) {
     /* Processing Stage */
 
@@ -628,7 +626,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
      * (the data of the tile for the pf_map), and index (the index of the
      * position in the Freeciv map). */
 
-    adjc_dir_iterate(params->map, tile, tile1, dir) {
+    adjc_dir_iterate(params->map, tile, tile1, dir)
+    {
       /* Calculate the cost of every adjacent position and set them in the
        * priority queue for next call to pf_normal_map_iterate(). */
       int tindex1 = tile_index(tile1);
@@ -664,9 +663,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
       /* Evaluate the cost of the move. */
       if (PF_ACTION_NONE != node1->action) {
         if (NULL != params->is_action_possible
-            && !params->is_action_possible(tile, scope, tile1,
-                                           pf_action(node1->action),
-                                           params)) {
+            && !params->is_action_possible(
+                tile, scope, tile1, pf_action(node1->action), params)) {
           continue;
         }
         /* action move cost depends on action and unit type. */
@@ -689,8 +687,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
       if (cost == PF_IMPOSSIBLE_MC) {
         continue;
       }
-      cost = pf_normal_map_adjust_cost(cost,
-                                       pf_moves_left(params, node->cost));
+      cost =
+          pf_normal_map_adjust_cost(cost, pf_moves_left(params, node->cost));
       if (cost == PF_IMPOSSIBLE_MC) {
         continue;
       }
@@ -716,8 +714,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
         node1->dir_to_here = dir;
         /* As we prefer lower costs, let's reverse the cost of the path. */
         map_index_pq_insert(pfnm->queue, tindex1, -cost_of_path);
-      } else if (cost_of_path < pf_total_CC(params, node1->cost,
-                                            node1->extra_cost)) {
+      } else if (cost_of_path
+                 < pf_total_CC(params, node1->cost, node1->extra_cost)) {
         /* We found a better route to 'tile1'. Let's register 'tindex1' to
          * the priority queue. Node status step B. to C. */
         node1->status = NS_NEW;
@@ -727,7 +725,8 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
         /* As we prefer lower costs, let's reverse the cost of the path. */
         map_index_pq_replace(pfnm->queue, tindex1, -cost_of_path);
       }
-    } adjc_dir_iterate_end;
+    }
+    adjc_dir_iterate_end;
   }
 
   /* Get the next node (the index with the highest priority). */
@@ -747,9 +746,9 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
   return TRUE;
 }
 
-/************************************************************************//**
-  Iterate the map until 'ptile' is reached.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterate the map until 'ptile' is reached.
+ ****************************************************************************/
 static inline bool pf_normal_map_iterate_until(struct pf_normal_map *pfnm,
                                                struct tile *ptile)
 {
@@ -781,11 +780,11 @@ static inline bool pf_normal_map_iterate_until(struct pf_normal_map *pfnm,
   return TRUE;
 }
 
-/************************************************************************//**
-  Return the move cost at ptile. If ptile has not been reached
-  yet, iterate the map until we reach it or run out of map. This function
-  returns PF_IMPOSSIBLE_MC on unreachable positions.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the move cost at ptile. If ptile has not been reached
+   yet, iterate the map until we reach it or run out of map. This function
+   returns PF_IMPOSSIBLE_MC on unreachable positions.
+ ****************************************************************************/
 static int pf_normal_map_move_cost(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
@@ -801,10 +800,10 @@ static int pf_normal_map_move_cost(struct pf_map *pfm, struct tile *ptile)
   }
 }
 
-/************************************************************************//**
-  Return the path to ptile. If ptile has not been reached yet, iterate the
-  map until we reach it or run out of map.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the path to ptile. If ptile has not been reached yet, iterate the
+   map until we reach it or run out of map.
+ ****************************************************************************/
 static struct pf_path *pf_normal_map_path(struct pf_map *pfm,
                                           struct tile *ptile)
 {
@@ -819,11 +818,11 @@ static struct pf_path *pf_normal_map_path(struct pf_map *pfm,
   }
 }
 
-/************************************************************************//**
-  Get info about position at ptile and put it in pos. If ptile has not been
-  reached yet, iterate the map until we reach it. Should _always_ check the
-  return value, forthe position might be unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get info about position at ptile and put it in pos. If ptile has not been
+   reached yet, iterate the map until we reach it. Should _always_ check the
+   return value, forthe position might be unreachable.
+ ****************************************************************************/
 static bool pf_normal_map_position(struct pf_map *pfm, struct tile *ptile,
                                    struct pf_position *pos)
 {
@@ -840,9 +839,9 @@ static bool pf_normal_map_position(struct pf_map *pfm, struct tile *ptile,
   }
 }
 
-/************************************************************************//**
-  'pf_normal_map' destructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_normal_map' destructor.
+ ****************************************************************************/
 static void pf_normal_map_destroy(struct pf_map *pfm)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
@@ -852,9 +851,9 @@ static void pf_normal_map_destroy(struct pf_map *pfm)
   free(pfnm);
 }
 
-/************************************************************************//**
-  'pf_normal_map' constructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_normal_map' constructor.
+ ****************************************************************************/
 static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
 {
   struct pf_normal_map *pfnm;
@@ -872,7 +871,7 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
 
   /* Allocate the map. */
   pfnm->lattice = static_cast<pf_normal_node *>(
-    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_normal_node)));
+      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_normal_node)));
   pfnm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
   if (NULL == parameter->get_costs) {
@@ -902,8 +901,9 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   if (NULL == params->get_costs) {
     if (!pf_normal_node_init(pfnm, node, params->start_tile, PF_MS_NONE)) {
       /* Always fails. */
-      fc_assert(TRUE == pf_normal_node_init(pfnm, node, params->start_tile,
-                                            PF_MS_NONE));
+      fc_assert(TRUE
+                == pf_normal_node_init(pfnm, node, params->start_tile,
+                                       PF_MS_NONE));
     }
 
     if (NULL != params->transported_by_initially) {
@@ -936,7 +936,6 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   return PF_MAP(pfnm);
 }
 
-
 /* ================ Specific pf_danger_* mode structures ================= */
 
 /* Danger path-finding maps are used for units which can cross some areas
@@ -946,14 +945,14 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
 
 /* Node definition. Note we try to have the smallest data as possible. */
 struct pf_danger_node {
-  signed short cost;    /* total_MC. 'cost' may be negative, see comment in
-                         * pf_turns(). */
-  unsigned extra_cost;  /* total_EC. Can be huge, (higher than 'cost'). */
+  signed short cost;   /* total_MC. 'cost' may be negative, see comment in
+                        * pf_turns(). */
+  unsigned extra_cost; /* total_EC. Can be huge, (higher than 'cost'). */
   unsigned dir_to_here : 4; /* Direction from which we came. It's
                              * an 'enum direction8' including
                              * possibility of direction8_invalid (so we need
                              * 4 bits) */
-  unsigned status : 3;  /* 'enum pf_node_status' really. */
+  unsigned status : 3;      /* 'enum pf_node_status' really. */
 
   /* Cached values */
   unsigned move_scope : 3;      /* 'enum pf_move_scope really. */
@@ -968,31 +967,31 @@ struct pf_danger_node {
   /* Segment leading across the danger area back to the nearest safe node:
    * need to remeber costs and stuff. */
   struct pf_danger_pos {
-    signed short cost;          /* See comment above. */
-    unsigned extra_cost;        /* See comment above. */
-    signed dir_to_here : 4;     /* See comment above. */
-  } *danger_segment;
+    signed short cost;      /* See comment above. */
+    unsigned extra_cost;    /* See comment above. */
+    signed dir_to_here : 4; /* See comment above. */
+  } * danger_segment;
 };
 
 /* Derived structure of struct pf_map. */
 struct pf_danger_map {
-  struct pf_map base_map;       /* Base structure, must be the first! */
+  struct pf_map base_map; /* Base structure, must be the first! */
 
-  struct map_index_pq *queue;   /* Queue of nodes we have reached but not
-                                 * processed yet (NS_NEW and NS_WAITING),
-                                 * sorted by their total_CC. */
+  struct map_index_pq *queue; /* Queue of nodes we have reached but not
+                               * processed yet (NS_NEW and NS_WAITING),
+                               * sorted by their total_CC. */
   struct map_index_pq *danger_queue; /* Dangerous positions. */
-  struct pf_danger_node *lattice; /* Lattice of nodes. */
+  struct pf_danger_node *lattice;    /* Lattice of nodes. */
 };
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_danger_map *
-pf_danger_map_check(struct pf_map *pfm, const char *file,
-                    const char *function, int line)
+static inline struct pf_danger_map *pf_danger_map_check(struct pf_map *pfm,
+                                                        const char *file,
+                                                        const char *function,
+                                                        int line)
 {
-  fc_assert_full(file, function, line,
-                 NULL != pfm && PF_DANGER == pfm->mode,
+  fc_assert_full(file, function, line, NULL != pfm && PF_DANGER == pfm->mode,
                  return NULL, "Wrong pf_map to pf_danger_map conversion.");
   return (struct pf_danger_map *) pfm;
 }
@@ -1004,11 +1003,11 @@ pf_danger_map_check(struct pf_map *pfm, const char *file,
 
 /* ===============  Specific pf_danger_* mode functions ================== */
 
-/************************************************************************//**
-  Calculates cached values of the target node. Set the node status to
-  NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
-  enter node (in this case, most of the cached values are not set).
-****************************************************************************/
+/************************************************************************/ /**
+   Calculates cached values of the target node. Set the node status to
+   NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
+   enter node (in this case, most of the cached values are not set).
+ ****************************************************************************/
 static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
                                        struct pf_danger_node *node,
                                        struct tile *ptile,
@@ -1090,8 +1089,7 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
     /* Test the possibility to move from/to 'ptile'. */
     node->move_scope = params->get_move_scope(ptile, &can_disembark,
                                               previous_scope, params);
-    if (PF_MS_NONE == node->move_scope
-        && PF_ACTION_NONE == node->action
+    if (PF_MS_NONE == node->move_scope && PF_ACTION_NONE == node->action
         && params->ignore_none_scopes) {
       /* Maybe overwrite node behavior. */
       if (params->start_tile != ptile) {
@@ -1100,8 +1098,7 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
       } else if (TB_NORMAL == node->behavior) {
         node->behavior = TB_IGNORE;
       }
-    } else if (PF_MS_TRANSPORT == node->move_scope
-               && !can_disembark
+    } else if (PF_MS_TRANSPORT == node->move_scope && !can_disembark
                && (params->start_tile != ptile
                    || NULL == params->transported_by_initially)) {
       /* Overwrite node behavior. */
@@ -1110,12 +1107,11 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
 
     /* ZOC_MINE means can move unrestricted from/into it, ZOC_ALLIED means
      * can move unrestricted into it, but not necessarily from it. */
-    if (NULL != params->get_zoc
-        && NULL == tile_city(ptile)
+    if (NULL != params->get_zoc && NULL == tile_city(ptile)
         && !terrain_has_flag(tile_terrain(ptile), TER_NO_ZOC)
         && !params->get_zoc(params->owner, ptile, params->map)) {
-      node->zoc_number = (0 < unit_list_size(ptile->units)
-                          ? ZOC_ALLIED : ZOC_NO);
+      node->zoc_number =
+          (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
 #ifdef ZERO_VARIABLES_FOR_SEARCHING
     } else {
       /* Nodes are allocated by fc_calloc(), so should be already set to
@@ -1149,15 +1145,15 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
 #endif
 
   node->is_dangerous =
-    params->is_pos_dangerous(ptile, node_known_type, params);
+      params->is_pos_dangerous(ptile, node_known_type, params);
 
   return TRUE;
 }
 
-/************************************************************************//**
-  Fill in the position which must be discovered already. A helper
-  for pf_danger_map_position(). This also "finalizes" the position.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill in the position which must be discovered already. A helper
+   for pf_danger_map_position(). This also "finalizes" the position.
+ ****************************************************************************/
 static void pf_danger_map_fill_position(const struct pf_danger_map *pfdm,
                                         struct tile *ptile,
                                         struct pf_position *pos)
@@ -1168,14 +1164,14 @@ static void pf_danger_map_fill_position(const struct pf_danger_map *pfdm,
 
 #ifdef PF_DEBUG
   fc_assert_ret_msg(NS_PROCESSED == node->status
-                    || NS_WAITING == node->status,
+                        || NS_WAITING == node->status,
                     "Unreached destination (%d, %d).", TILE_XY(ptile));
 #endif /* PF_DEBUG */
 
   pos->tile = ptile;
   pos->total_EC = node->extra_cost;
-  pos->total_MC = (node->cost - pf_move_rate(params)
-                   + pf_moves_left_initially(params));
+  pos->total_MC =
+      (node->cost - pf_move_rate(params) + pf_moves_left_initially(params));
   pos->turn = pf_turns(params, node->cost);
   pos->moves_left = pf_moves_left(params, node->cost);
 #ifdef PF_DEBUG
@@ -1184,18 +1180,19 @@ static void pf_danger_map_fill_position(const struct pf_danger_map *pfdm,
 #endif /* PF_DEBUG */
   pos->fuel_left = 1;
   pos->dir_to_here = direction8(node->dir_to_here);
-  pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
+  pos->dir_to_next_pos =
+      direction8_invalid(); /* This field does not apply. */
 
   if (node->cost > 0) {
     pf_finalize_position(params, pos);
   }
 }
 
-/************************************************************************//**
-  This function returns the fills the cost needed for a position, to get
-  full moves at the next turn. This would be called only when the status is
-  NS_WAITING.
-****************************************************************************/
+/************************************************************************/ /**
+   This function returns the fills the cost needed for a position, to get
+   full moves at the next turn. This would be called only when the status is
+   NS_WAITING.
+ ****************************************************************************/
 static inline int
 pf_danger_map_fill_cost_for_full_moves(const struct pf_parameter *param,
                                        int cost)
@@ -1209,10 +1206,10 @@ pf_danger_map_fill_cost_for_full_moves(const struct pf_parameter *param,
   }
 }
 
-/************************************************************************//**
-  Read off the path to the node 'ptile', but with dangers.
-  NB: will only find paths to safe tiles!
-****************************************************************************/
+/************************************************************************/ /**
+   Read off the path to the node 'ptile', but with dangers.
+   NB: will only find paths to safe tiles!
+ ****************************************************************************/
 static struct pf_path *
 pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
                              struct tile *ptile)
@@ -1229,10 +1226,9 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
   int i;
 
 #ifdef PF_DEBUG
-  fc_assert_ret_val_msg(NS_PROCESSED == node->status
-                        || NS_WAITING == node->status, NULL,
-                        "Unreached destination (%d, %d).",
-                        TILE_XY(ptile));
+  fc_assert_ret_val_msg(
+      NS_PROCESSED == node->status || NS_WAITING == node->status, NULL,
+      "Unreached destination (%d, %d).", TILE_XY(ptile));
 #endif /* PF_DEBUG */
 
   /* First iterate to find path length. */
@@ -1283,16 +1279,16 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
         pos = path->positions + i;
         pos->tile = iter_tile;
         pos->total_EC = node->extra_cost;
-        pos->turn = pf_turns(params,
-            pf_danger_map_fill_cost_for_full_moves(params, node->cost));
+        pos->turn = pf_turns(params, pf_danger_map_fill_cost_for_full_moves(
+                                         params, node->cost));
         pos->moves_left = params->move_rate;
         pos->fuel_left = params->fuel;
         pos->total_MC = ((pos->turn - 1) * params->move_rate
                          + params->moves_left_initially);
         pos->dir_to_next_pos = dir_next;
         pf_finalize_position(params, pos);
-        /* Set old_waited so that we record direction8_invalid() as a direction at
-         * the step we were going to wait. */
+        /* Set old_waited so that we record direction8_invalid() as a
+         * direction at the step we were going to wait. */
         old_waited = TRUE;
         i--;
       }
@@ -1319,8 +1315,8 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
     fc_assert(params->fuel_left_initially == 1);
 #endif /* PF_DEBUG */
     pos->fuel_left = 1;
-    pos->total_MC -= (pf_move_rate(params)
-                      - pf_moves_left_initially(params));
+    pos->total_MC -=
+        (pf_move_rate(params) - pf_moves_left_initially(params));
     pos->dir_to_next_pos = (old_waited ? direction8_invalid() : dir_next);
     if (node->cost > 0) {
       pf_finalize_position(params, pos);
@@ -1356,24 +1352,24 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
   return NULL;
 }
 
-/************************************************************************//**
-  Creating path segment going back from node1 to a safe tile. We need to
-  remember the whole segment because any node can be crossed by many danger
-  segments.
+/************************************************************************/ /**
+   Creating path segment going back from node1 to a safe tile. We need to
+   remember the whole segment because any node can be crossed by many danger
+   segments.
 
-  Example: be A, B, C and D points safe positions, E a dangerous one.
-    A B
-     E 
-    C D
-  We have found dangerous path from A to D, and later one from C to B:
-    A B             A B
-     \               / 
-    C D             C D
-  If we didn't save the segment from A to D when a new segment passing by E
-  is found, then finding the path from A to D will produce an error. (The
-  path is always done in reverse order.) D->dir_to_here will point to E,
-  which is correct, but E->dir_to_here will point to C.
-****************************************************************************/
+   Example: be A, B, C and D points safe positions, E a dangerous one.
+     A B
+      E
+     C D
+   We have found dangerous path from A to D, and later one from C to B:
+     A B             A B
+      \               /
+     C D             C D
+   If we didn't save the segment from A to D when a new segment passing by E
+   is found, then finding the path from A to D will produce an error. (The
+   path is always done in reverse order.) D->dir_to_here will point to E,
+   which is correct, but E->dir_to_here will point to C.
+ ****************************************************************************/
 static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
                                          struct pf_danger_node *node1)
 {
@@ -1422,16 +1418,17 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 
 #ifdef PF_DEBUG
   /* Make sure we reached a safe node or the start point */
-  fc_assert_ret(!node->is_dangerous || !direction8_is_valid(node->dir_to_here));
+  fc_assert_ret(!node->is_dangerous
+                || !direction8_is_valid(node->dir_to_here));
 #endif
 }
 
-/************************************************************************//**
-  Adjust cost taking into account possibility of making the move.
-****************************************************************************/
+/************************************************************************/ /**
+   Adjust cost taking into account possibility of making the move.
+ ****************************************************************************/
 static inline int
-pf_danger_map_adjust_cost(const struct pf_parameter *params,
-                          int cost, bool to_danger, int moves_left)
+pf_danger_map_adjust_cost(const struct pf_parameter *params, int cost,
+                          bool to_danger, int moves_left)
 {
   if (cost == PF_IMPOSSIBLE_MC) {
     return PF_IMPOSSIBLE_MC;
@@ -1447,44 +1444,44 @@ pf_danger_map_adjust_cost(const struct pf_parameter *params,
   }
 }
 
-/************************************************************************//**
-  Primary method for iterative path-finding in presence of danger
-  Notes:
-  1. Whenever the path-finding stumbles upon a dangerous location, it goes
-     into a sub-Dijkstra which processes _only_ dangerous locations, by
-     means of a separate queue. When this sub-Dijkstra reaches a safe
-     location, it records the segment of the path going across the dangerous
-     tiles. Hence danger_segment is an extended (and reversed) version of
-     the dir_to_here field (see comment for pf_danger_map_create_segment()).
-     It can be re-recorded multiple times as we find shorter and shorter
-     routes.
-  2. Waiting is realised by inserting the (safe) tile back into the queue
-     with a lower priority P. This tile might pop back sooner than P,
-     because there might be several copies of it in the queue already. But
-     that does not seem to present any problems.
-  3. For some purposes, NS_WAITING is just another flavour of NS_PROCESSED,
-     since the path to a NS_WAITING tile has already been found.
-  4. This algorithm cannot guarantee the best safe segments across dangerous
-     region. However it will find a safe segment if there is one. To
-     gurantee the best (in terms of total_CC) safe segments across danger,
-     supply 'get_EC' which returns small extra on dangerous tiles.
+/************************************************************************/ /**
+   Primary method for iterative path-finding in presence of danger
+   Notes:
+   1. Whenever the path-finding stumbles upon a dangerous location, it goes
+      into a sub-Dijkstra which processes _only_ dangerous locations, by
+      means of a separate queue. When this sub-Dijkstra reaches a safe
+      location, it records the segment of the path going across the dangerous
+      tiles. Hence danger_segment is an extended (and reversed) version of
+      the dir_to_here field (see comment for pf_danger_map_create_segment()).
+      It can be re-recorded multiple times as we find shorter and shorter
+      routes.
+   2. Waiting is realised by inserting the (safe) tile back into the queue
+      with a lower priority P. This tile might pop back sooner than P,
+      because there might be several copies of it in the queue already. But
+      that does not seem to present any problems.
+   3. For some purposes, NS_WAITING is just another flavour of NS_PROCESSED,
+      since the path to a NS_WAITING tile has already been found.
+   4. This algorithm cannot guarantee the best safe segments across dangerous
+      region. However it will find a safe segment if there is one. To
+      gurantee the best (in terms of total_CC) safe segments across danger,
+      supply 'get_EC' which returns small extra on dangerous tiles.
 
-  During the iteration, the node status will be changed:
-  A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
-  B. NS_INIT: We have initialized the cached values, however, we failed to
-     reach this node.
-  C. NS_NEW: We have reached this node, but we are not sure it was the best
-     path. Dangerous tiles never get upper status.
-  D. NS_PROCESSED: Now, we are sure we have the best path.
-  E. NS_WAITING: The safe node (never the dangerous ones) is re-inserted in
-     the priority queue, as explained above (2.). We need to consider if
-     waiting for full moves open or not new possibilities for moving accross
-     dangerous areas.
-  F. NS_PROCESSED: When finished to consider waiting at the node, revert the
-     status to NS_PROCESSED.
-  In points D., E., and F., the best path to the node can be considered as
-  found (only safe nodes).
-****************************************************************************/
+   During the iteration, the node status will be changed:
+   A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
+   B. NS_INIT: We have initialized the cached values, however, we failed to
+      reach this node.
+   C. NS_NEW: We have reached this node, but we are not sure it was the best
+      path. Dangerous tiles never get upper status.
+   D. NS_PROCESSED: Now, we are sure we have the best path.
+   E. NS_WAITING: The safe node (never the dangerous ones) is re-inserted in
+      the priority queue, as explained above (2.). We need to consider if
+      waiting for full moves open or not new possibilities for moving accross
+      dangerous areas.
+   F. NS_PROCESSED: When finished to consider waiting at the node, revert the
+      status to NS_PROCESSED.
+   In points D., E., and F., the best path to the node can be considered as
+   found (only safe nodes).
+ ****************************************************************************/
 static bool pf_danger_map_iterate(struct pf_map *pfm)
 {
   struct pf_danger_map *const pfdm = PF_DANGER_MAP(pfm);
@@ -1515,8 +1512,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
 
   for (;;) {
     /* There is no exit from DONT_LEAVE tiles! */
-    if (node->behavior != TB_DONT_LEAVE
-        && scope != PF_MS_NONE
+    if (node->behavior != TB_DONT_LEAVE && scope != PF_MS_NONE
         && (params->move_rate > 0 || node->cost < 0)) {
       /* Cost at tile but taking into account waiting. */
       int loc_cost;
@@ -1524,11 +1520,12 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
         loc_cost = node->cost;
       } else {
         /* We have waited, so we have full moves. */
-        loc_cost = pf_danger_map_fill_cost_for_full_moves(params,
-                                                          node->cost);
+        loc_cost =
+            pf_danger_map_fill_cost_for_full_moves(params, node->cost);
       }
 
-      adjc_dir_iterate(params->map, tile, tile1, dir) {
+      adjc_dir_iterate(params->map, tile, tile1, dir)
+      {
         /* Calculate the cost of every adjacent position and set them in
          * the priority queues for next call to pf_danger_map_iterate(). */
         int tindex1 = tile_index(tile1);
@@ -1565,9 +1562,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
         /* Evaluate the cost of the move. */
         if (PF_ACTION_NONE != node1->action) {
           if (NULL != params->is_action_possible
-              && !params->is_action_possible(tile, scope, tile1,
-                                             pf_action(node1->action),
-                                             params)) {
+              && !params->is_action_possible(
+                  tile, scope, tile1, pf_action(node1->action), params)) {
             continue;
           }
           /* action move cost depends on action and unit type. */
@@ -1585,8 +1581,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
           cost = params->utype->unknown_move_cost;
         } else {
           cost = params->get_MC(tile, scope, tile1,
-                                pf_move_scope(node1->move_scope),
-                                params);
+                                pf_move_scope(node1->move_scope), params);
         }
         if (cost == PF_IMPOSSIBLE_MC) {
           continue;
@@ -1613,8 +1608,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
           int cost_of_path = pf_total_CC(params, cost, extra);
 
           if (NS_INIT == node1->status
-              || (cost_of_path < pf_total_CC(params, node1->cost,
-                                             node1->extra_cost))) {
+              || (cost_of_path
+                  < pf_total_CC(params, node1->cost, node1->extra_cost))) {
             /* We are reaching this node for the first time, or we found a
              * better route to 'tile1'. Let's register 'tindex1' to the
              * priority queue. Node status step B. to C. */
@@ -1664,9 +1659,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
           } else if ((pf_moves_left(params, cost)
                       > pf_moves_left(params, node1->cost))
                      || (node1->status == NS_PROCESSED
-                         && (pf_total_CC(params, cost, extra)
-                             < pf_total_CC(params, node1->cost,
-                                           node1->extra_cost)))) {
+                         && (pf_total_CC(params, cost, extra) < pf_total_CC(
+                                 params, node1->cost, node1->extra_cost)))) {
             /* case 2 or 3. */
             node1->extra_cost = extra;
             node1->cost = cost;
@@ -1677,7 +1671,8 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
             map_index_pq_replace(pfdm->danger_queue, tindex1, -cost);
           }
         }
-      } adjc_dir_iterate_end;
+      }
+      adjc_dir_iterate_end;
     }
 
     if (NS_WAITING == node->status) {
@@ -1749,9 +1744,9 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
   return FALSE;
 }
 
-/************************************************************************//**
-  Iterate the map until 'ptile' is reached.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterate the map until 'ptile' is reached.
+ ****************************************************************************/
 static inline bool pf_danger_map_iterate_until(struct pf_danger_map *pfdm,
                                                struct tile *ptile)
 {
@@ -1783,11 +1778,11 @@ static inline bool pf_danger_map_iterate_until(struct pf_danger_map *pfdm,
   return TRUE;
 }
 
-/************************************************************************//**
-  Return the move cost at ptile. If ptile has not been reached yet, iterate
-  the map until we reach it or run out of map. This function returns
-  PF_IMPOSSIBLE_MC on unreachable positions.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the move cost at ptile. If ptile has not been reached yet, iterate
+   the map until we reach it or run out of map. This function returns
+   PF_IMPOSSIBLE_MC on unreachable positions.
+ ****************************************************************************/
 static int pf_danger_map_move_cost(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_danger_map *pfdm = PF_DANGER_MAP(pfm);
@@ -1803,10 +1798,10 @@ static int pf_danger_map_move_cost(struct pf_map *pfm, struct tile *ptile)
   }
 }
 
-/************************************************************************//**
-  Return the path to ptile. If ptile has not been reached yet, iterate the
-  map until we reach it or run out of map.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the path to ptile. If ptile has not been reached yet, iterate the
+   map until we reach it or run out of map.
+ ****************************************************************************/
 static struct pf_path *pf_danger_map_path(struct pf_map *pfm,
                                           struct tile *ptile)
 {
@@ -1821,11 +1816,11 @@ static struct pf_path *pf_danger_map_path(struct pf_map *pfm,
   }
 }
 
-/************************************************************************//**
-  Get info about position at ptile and put it in pos . If ptile has not been
-  reached yet, iterate the map until we reach it. Should _always_ check the
-  return value, for the position might be unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get info about position at ptile and put it in pos . If ptile has not been
+   reached yet, iterate the map until we reach it. Should _always_ check the
+   return value, for the position might be unreachable.
+ ****************************************************************************/
 static bool pf_danger_map_position(struct pf_map *pfm, struct tile *ptile,
                                    struct pf_position *pos)
 {
@@ -1842,9 +1837,9 @@ static bool pf_danger_map_position(struct pf_map *pfm, struct tile *ptile,
   }
 }
 
-/************************************************************************//**
-  'pf_danger_map' destructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_danger_map' destructor.
+ ****************************************************************************/
 static void pf_danger_map_destroy(struct pf_map *pfm)
 {
   struct pf_danger_map *pfdm = PF_DANGER_MAP(pfm);
@@ -1863,9 +1858,9 @@ static void pf_danger_map_destroy(struct pf_map *pfm)
   free(pfdm);
 }
 
-/************************************************************************//**
-  'pf_danger_map' constructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_danger_map' constructor.
+ ****************************************************************************/
 static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
 {
   struct pf_danger_map *pfdm;
@@ -1883,7 +1878,7 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
 
   /* Allocate the map. */
   pfdm->lattice = static_cast<pf_danger_node *>(
-    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_danger_node)));
+      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_danger_node)));
   pfdm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pfdm->danger_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -1910,8 +1905,9 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
   node = pfdm->lattice + tile_index(params->start_tile);
   if (!pf_danger_node_init(pfdm, node, params->start_tile, PF_MS_NONE)) {
     /* Always fails. */
-    fc_assert(TRUE == pf_danger_node_init(pfdm, node, params->start_tile,
-                                          PF_MS_NONE));
+    fc_assert(
+        TRUE
+        == pf_danger_node_init(pfdm, node, params->start_tile, PF_MS_NONE));
   }
 
   /* NB: do not handle params->transported_by_initially because we want to
@@ -1933,7 +1929,6 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
   return PF_MAP(pfdm);
 }
 
-
 /* ================= Specific pf_fuel_* mode structures ================== */
 
 /* Fuel path-finding maps are used for units which need to refuel. Usually
@@ -1947,15 +1942,15 @@ struct pf_fuel_pos;
 
 /* Node definition. Note we try to have the smallest data as possible. */
 struct pf_fuel_node {
-  signed short cost;    /* total_MC. 'cost' may be negative, see comment in
-                         * pf_turns(). */
-  unsigned extra_cost;  /* total_EC. Can be huge, (higher than 'cost'). */
+  signed short cost;   /* total_MC. 'cost' may be negative, see comment in
+                        * pf_turns(). */
+  unsigned extra_cost; /* total_EC. Can be huge, (higher than 'cost'). */
   unsigned moves_left : 12; /* Moves left at this position. */
   unsigned dir_to_here : 4; /* Direction from which we came. It's
                              * an 'enum direction8' including
                              * possibility of direction8_invalid (so we need
                              * 4 bits) */
-  unsigned status : 3;  /* 'enum pf_node_status' really. */
+  unsigned status : 3;      /* 'enum pf_node_status' really. */
 
   /* Cached values */
   unsigned move_scope : 3;      /* 'enum pf_move_scope really. */
@@ -1993,28 +1988,28 @@ struct pf_fuel_pos {
 
 /* Derived structure of struct pf_map. */
 struct pf_fuel_map {
-  struct pf_map base_map;       /* Base structure, must be the first! */
+  struct pf_map base_map; /* Base structure, must be the first! */
 
-  struct map_index_pq *queue;   /* Queue of nodes we have reached but not
-                                 * processed yet (NS_NEW), sorted by their
-                                 * total_CC */
+  struct map_index_pq *queue; /* Queue of nodes we have reached but not
+                               * processed yet (NS_NEW), sorted by their
+                               * total_CC */
   struct map_index_pq *waited_queue; /* Queue of nodes to reach farer
                                       * positions after having refueled. */
-  struct pf_fuel_node *lattice; /* Lattice of nodes */
+  struct pf_fuel_node *lattice;      /* Lattice of nodes */
 };
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_fuel_map *
-pf_fuel_map_check(struct pf_map *pfm, const char *file,
-                  const char *function, int line)
+static inline struct pf_fuel_map *pf_fuel_map_check(struct pf_map *pfm,
+                                                    const char *file,
+                                                    const char *function,
+                                                    int line)
 {
-  fc_assert_full(file, function, line,
-                 NULL != pfm && PF_FUEL == pfm->mode,
+  fc_assert_full(file, function, line, NULL != pfm && PF_FUEL == pfm->mode,
                  return NULL, "Wrong pf_map to pf_fuel_map conversion.");
   return (struct pf_fuel_map *) pfm;
 }
-#define PF_FUEL_MAP(pfm) \
+#define PF_FUEL_MAP(pfm)                                                    \
   pf_fuel_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
 #else
 #define PF_FUEL_MAP(pfm) ((struct pf_fuel_map *) (pfm))
@@ -2022,28 +2017,28 @@ pf_fuel_map_check(struct pf_map *pfm, const char *file,
 
 /* =================  Specific pf_fuel_* mode functions ================== */
 
-/************************************************************************//**
-  Obtain cost-of-path from pure cost, extra cost and safety.
-****************************************************************************/
+/************************************************************************/ /**
+   Obtain cost-of-path from pure cost, extra cost and safety.
+ ****************************************************************************/
 static inline int pf_fuel_total_CC(const struct pf_parameter *param,
                                    int cost, int extra, int safety)
 {
   return pf_total_CC(param, cost, extra) - safety;
 }
 
-/************************************************************************//**
-  Obtain cost-of-path for constant extra cost (used for node after waited).
-****************************************************************************/
+/************************************************************************/ /**
+   Obtain cost-of-path for constant extra cost (used for node after waited).
+ ****************************************************************************/
 static inline int pf_fuel_waited_total_CC(int cost, int safety)
 {
   return PF_TURN_FACTOR * (cost + 1) - safety - 1;
 }
 
-/************************************************************************//**
-  Calculates cached values of the target node. Set the node status to
-  NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
-  enter node (in this case, most of the cached values are not set).
-****************************************************************************/
+/************************************************************************/ /**
+   Calculates cached values of the target node. Set the node status to
+   NS_INIT to avoid recalculating all values. Returns FALSE if we cannot
+   enter node (in this case, most of the cached values are not set).
+ ****************************************************************************/
 static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
                                      struct pf_fuel_node *node,
                                      struct tile *ptile,
@@ -2098,9 +2093,9 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
 
     /* Test the possibility to perform an action. */
     if (NULL != params->get_action
-        && PF_ACTION_NONE != (action =
-                              params->get_action(ptile, node_known_type,
-                                                 params))) {
+        && PF_ACTION_NONE
+               != (action =
+                       params->get_action(ptile, node_known_type, params))) {
       if (PF_ACTION_IMPOSSIBLE == action) {
         /* Maybe overwrite node behavior. */
         if (params->start_tile != ptile) {
@@ -2125,7 +2120,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
       node->action = PF_ACTION_NONE;
 #endif
       node->moves_left_req =
-        params->get_moves_left_req(ptile, node_known_type, params);
+          params->get_moves_left_req(ptile, node_known_type, params);
       if (PF_IMPOSSIBLE_MC == node->moves_left_req) {
         /* Overwrite node behavior. */
         if (params->start_tile == ptile) {
@@ -2140,8 +2135,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
     /* Test the possibility to move from/to 'ptile'. */
     node->move_scope = params->get_move_scope(ptile, &can_disembark,
                                               previous_scope, params);
-    if (PF_MS_NONE == node->move_scope
-        && PF_ACTION_NONE == node->action
+    if (PF_MS_NONE == node->move_scope && PF_ACTION_NONE == node->action
         && params->ignore_none_scopes) {
       /* Maybe overwrite node behavior. */
       if (params->start_tile != ptile) {
@@ -2150,8 +2144,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
       } else if (TB_NORMAL == node->behavior) {
         node->behavior = TB_IGNORE;
       }
-    } else if (PF_MS_TRANSPORT == node->move_scope
-               && !can_disembark
+    } else if (PF_MS_TRANSPORT == node->move_scope && !can_disembark
                && (params->start_tile != ptile
                    || NULL == params->transported_by_initially)) {
       /* Overwrite node behavior. */
@@ -2160,12 +2153,11 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
 
     /* ZOC_MINE means can move unrestricted from/into it, ZOC_ALLIED means
      * can move unrestricted into it, but not necessarily from it. */
-    if (NULL != params->get_zoc
-        && NULL == tile_city(ptile)
+    if (NULL != params->get_zoc && NULL == tile_city(ptile)
         && !terrain_has_flag(tile_terrain(ptile), TER_NO_ZOC)
         && !params->get_zoc(params->owner, ptile, params->map)) {
-      node->zoc_number = (0 < unit_list_size(ptile->units)
-                          ? ZOC_ALLIED : ZOC_NO);
+      node->zoc_number =
+          (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
 #ifdef ZERO_VARIABLES_FOR_SEARCHING
     } else {
       /* Nodes are allocated by fc_calloc(), so should be already set to
@@ -2175,7 +2167,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
     }
   } else {
     node->moves_left_req =
-      params->get_moves_left_req(ptile, node_known_type, params);
+        params->get_moves_left_req(ptile, node_known_type, params);
     if (PF_IMPOSSIBLE_MC == node->moves_left_req) {
       /* Overwrite node behavior. */
       if (params->start_tile == ptile) {
@@ -2213,9 +2205,9 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
   return TRUE;
 }
 
-/************************************************************************//**
-  Returns whether this node is dangerous or not.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns whether this node is dangerous or not.
+ ****************************************************************************/
 static inline bool pf_fuel_node_dangerous(const struct pf_fuel_node *node)
 {
   return (NULL == node->pos
@@ -2223,10 +2215,10 @@ static inline bool pf_fuel_node_dangerous(const struct pf_fuel_node *node)
               && PF_ACTION_NONE == node->action));
 }
 
-/************************************************************************//**
-  Forget how we went to position. Maybe destroy the position, and previous
-  ones.
-****************************************************************************/
+/************************************************************************/ /**
+   Forget how we went to position. Maybe destroy the position, and previous
+   ones.
+ ****************************************************************************/
 static inline struct pf_fuel_pos *pf_fuel_pos_ref(struct pf_fuel_pos *pos)
 {
 #ifdef PF_DEBUG
@@ -2238,10 +2230,10 @@ static inline struct pf_fuel_pos *pf_fuel_pos_ref(struct pf_fuel_pos *pos)
   return pos;
 }
 
-/************************************************************************//**
-  Forget how we went to position. Maybe destroy the position, and previous
-  ones.
-****************************************************************************/
+/************************************************************************/ /**
+   Forget how we went to position. Maybe destroy the position, and previous
+   ones.
+ ****************************************************************************/
 static inline void pf_fuel_pos_unref(struct pf_fuel_pos *pos)
 {
   while (NULL != pos && 0 == --pos->ref_count) {
@@ -2252,10 +2244,10 @@ static inline void pf_fuel_pos_unref(struct pf_fuel_pos *pos)
   }
 }
 
-/************************************************************************//**
-  Replace the position (unreferences it). Instead of destroying, re-use the
-  memory, else return a newly allocated position.
-****************************************************************************/
+/************************************************************************/ /**
+   Replace the position (unreferences it). Instead of destroying, re-use the
+   memory, else return a newly allocated position.
+ ****************************************************************************/
 static inline struct pf_fuel_pos *
 pf_fuel_pos_replace(struct pf_fuel_pos *pos, const struct pf_fuel_node *node)
 {
@@ -2281,13 +2273,13 @@ pf_fuel_pos_replace(struct pf_fuel_pos *pos, const struct pf_fuel_node *node)
   return pos;
 }
 
-/************************************************************************//**
-  Finalize the fuel position.
-****************************************************************************/
+/************************************************************************/ /**
+   Finalize the fuel position.
+ ****************************************************************************/
 static inline void
 pf_fuel_finalize_position_base(const struct pf_parameter *param,
-                               struct pf_position *pos,
-                               int cost, int moves_left)
+                               struct pf_position *pos, int cost,
+                               int moves_left)
 {
   int move_rate = param->move_rate;
 
@@ -2304,28 +2296,26 @@ pf_fuel_finalize_position_base(const struct pf_parameter *param,
   }
 }
 
-/************************************************************************//**
-  Finalize the fuel position. If we have a fuel segment, then use it.
-****************************************************************************/
-static inline void
-pf_fuel_finalize_position(struct pf_position *pos,
-                          const struct pf_parameter *params,
-                          const struct pf_fuel_node *node,
-                          const struct pf_fuel_pos *head)
+/************************************************************************/ /**
+   Finalize the fuel position. If we have a fuel segment, then use it.
+ ****************************************************************************/
+static inline void pf_fuel_finalize_position(
+    struct pf_position *pos, const struct pf_parameter *params,
+    const struct pf_fuel_node *node, const struct pf_fuel_pos *head)
 {
   if (head) {
-    pf_fuel_finalize_position_base(params, pos,
-                                   head->cost, head->moves_left);
+    pf_fuel_finalize_position_base(params, pos, head->cost,
+                                   head->moves_left);
   } else {
-    pf_fuel_finalize_position_base(params, pos,
-                                   node->cost, node->moves_left);
+    pf_fuel_finalize_position_base(params, pos, node->cost,
+                                   node->moves_left);
   }
 }
 
-/************************************************************************//**
-  Fill in the position which must be discovered already. A helper
-  for pf_fuel_map_position(). This also "finalizes" the position.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill in the position which must be discovered already. A helper
+   for pf_fuel_map_position(). This also "finalizes" the position.
+ ****************************************************************************/
 static void pf_fuel_map_fill_position(const struct pf_fuel_map *pffm,
                                       struct tile *ptile,
                                       struct pf_position *pos)
@@ -2336,24 +2326,25 @@ static void pf_fuel_map_fill_position(const struct pf_fuel_map *pffm,
   const struct pf_parameter *params = pf_map_parameter(PF_MAP(pffm));
 
 #ifdef PF_DEBUG
-  fc_assert_ret_msg(NULL != head,
-                    "Unreached destination (%d, %d).", TILE_XY(ptile));
+  fc_assert_ret_msg(NULL != head, "Unreached destination (%d, %d).",
+                    TILE_XY(ptile));
 #endif /* PF_DEBUG */
 
   pos->tile = ptile;
   pos->total_EC = head->extra_cost;
-  pos->total_MC = (head->cost - pf_move_rate(params)
-                   + pf_moves_left_initially(params));
+  pos->total_MC =
+      (head->cost - pf_move_rate(params) + pf_moves_left_initially(params));
   pos->dir_to_here = direction8(head->dir_to_here);
-  pos->dir_to_next_pos = direction8_invalid();   /* This field does not apply. */
+  pos->dir_to_next_pos =
+      direction8_invalid(); /* This field does not apply. */
   pf_fuel_finalize_position(pos, params, node, head);
 }
 
-/************************************************************************//**
-  This function returns the fill cost needed for a position, to get full
-  moves at the next turn. This would be called only when the status is
-  NS_WAITING.
-****************************************************************************/
+/************************************************************************/ /**
+   This function returns the fill cost needed for a position, to get full
+   moves at the next turn. This would be called only when the status is
+   NS_WAITING.
+ ****************************************************************************/
 static inline int
 pf_fuel_map_fill_cost_for_full_moves(const struct pf_parameter *param,
                                      int cost, int moves_left)
@@ -2364,9 +2355,9 @@ pf_fuel_map_fill_cost_for_full_moves(const struct pf_parameter *param,
   return cost + moves_left % param->move_rate;
 }
 
-/************************************************************************//**
-  Read off the path to the node 'ptile', but with fuel danger.
-****************************************************************************/
+/************************************************************************/ /**
+   Read off the path to the node 'ptile', but with fuel danger.
+ ****************************************************************************/
 static struct pf_path *
 pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
                            struct tile *ptile)
@@ -2383,8 +2374,7 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
 
 #ifdef PF_DEBUG
   fc_assert_ret_val_msg(NULL != segment, NULL,
-                        "Unreached destination (%d, %d).",
-                        TILE_XY(ptile));
+                        "Unreached destination (%d, %d).", TILE_XY(ptile));
 #endif /* PF_DEBUG */
 
   /* First iterate to find path length. */
@@ -2404,8 +2394,8 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
     }
 
     /* Step backward. */
-    iter_tile = mapstep(params->map, iter_tile,
-                        DIR_REVERSE(segment->dir_to_here));
+    iter_tile =
+        mapstep(params->map, iter_tile, DIR_REVERSE(segment->dir_to_here));
     node = pffm->lattice + tile_index(iter_tile);
     segment = segment->prev;
 #ifdef PF_DEBUG
@@ -2458,8 +2448,8 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
     /* 2: Fill the current position. */
     pos = path->positions + i;
     pos->tile = iter_tile;
-    pos->total_MC = (pf_moves_left_initially(params)
-                     - pf_move_rate(params) + segment->cost);
+    pos->total_MC = (pf_moves_left_initially(params) - pf_move_rate(params)
+                     + segment->cost);
     pos->total_EC = segment->extra_cost;
     pos->dir_to_next_pos = dir_next;
     pf_fuel_finalize_position(pos, params, node, segment);
@@ -2487,23 +2477,23 @@ pf_fuel_map_construct_path(const struct pf_fuel_map *pffm,
   return NULL;
 }
 
-/************************************************************************//**
-  Creating path segment going back from node1 to a safe tile. We need to
-  remember the whole segment because any node can be crossed by many fuel
-  segments.
+/************************************************************************/ /**
+   Creating path segment going back from node1 to a safe tile. We need to
+   remember the whole segment because any node can be crossed by many fuel
+   segments.
 
-  Example: be A, a refuel point, B and C not. We start the path from B and
-  have only (3 * SINGLE_MOVE) moves lefts:
-    A B C
-  B cannot move to C because we would have only (1 * SINGLE_MOVE) move left
-  reaching it, and the refuel point is too far. So C->moves_left_req =
-  (4 * SINGLE_MOVE).
-  The path would be to return to A, wait the end of turn to get full moves,
-  and go to C. In a single line: B A B C. So, the point B would be reached
-  twice. but, it needs to stores different data for B->cost, B->extra_cost,
-  B->moves_left, and B->dir_to_here. That's why we need to record every
-  path to unsafe nodes (not for refuel points).
-****************************************************************************/
+   Example: be A, a refuel point, B and C not. We start the path from B and
+   have only (3 * SINGLE_MOVE) moves lefts:
+     A B C
+   B cannot move to C because we would have only (1 * SINGLE_MOVE) move left
+   reaching it, and the refuel point is too far. So C->moves_left_req =
+   (4 * SINGLE_MOVE).
+   The path would be to return to A, wait the end of turn to get full moves,
+   and go to C. In a single line: B A B C. So, the point B would be reached
+   twice. but, it needs to stores different data for B->cost, B->extra_cost,
+   B->moves_left, and B->dir_to_here. That's why we need to record every
+   path to unsafe nodes (not for refuel points).
+ ****************************************************************************/
 static inline void pf_fuel_map_create_segment(struct pf_fuel_map *pffm,
                                               struct tile *ptile,
                                               struct pf_fuel_node *node)
@@ -2514,15 +2504,14 @@ static inline void pf_fuel_map_create_segment(struct pf_fuel_map *pffm,
   pos = pf_fuel_pos_replace(node->pos, node);
   node->pos = pos;
 
-   /* Iterate until we reach any built segment. */
+  /* Iterate until we reach any built segment. */
   do {
     next = pos;
     ptile = mapstep(params->map, ptile, DIR_REVERSE(node->dir_to_here));
     node = pffm->lattice + tile_index(ptile);
     pos = node->pos;
     if (NULL != pos) {
-      if (pos->cost == node->cost
-          && pos->dir_to_here == node->dir_to_here
+      if (pos->cost == node->cost && pos->dir_to_here == node->dir_to_here
           && pos->extra_cost == node->extra_cost
           && pos->moves_left == node->moves_left) {
         /* Reached an usable segment. */
@@ -2538,9 +2527,9 @@ static inline void pf_fuel_map_create_segment(struct pf_fuel_map *pffm,
            && direction8_is_valid(direction8(node->dir_to_here)));
 }
 
-/************************************************************************//**
-  Adjust cost for move_rate and fuel usage.
-****************************************************************************/
+/************************************************************************/ /**
+   Adjust cost for move_rate and fuel usage.
+ ****************************************************************************/
 static inline int pf_fuel_map_adjust_cost(int cost, int moves_left,
                                           int move_rate)
 {
@@ -2557,12 +2546,12 @@ static inline int pf_fuel_map_adjust_cost(int cost, int moves_left,
   }
 }
 
-/************************************************************************//**
-  This function returns whether a unit with or without fuel can attack.
+/************************************************************************/ /**
+   This function returns whether a unit with or without fuel can attack.
 
-  moves_left: moves left before the attack.
-  moves_left_req: required moves left to hold on the tile after attacking.
-****************************************************************************/
+   moves_left: moves left before the attack.
+   moves_left_req: required moves left to hold on the tile after attacking.
+ ****************************************************************************/
 static inline bool
 pf_fuel_map_attack_is_possible(const struct pf_parameter *param,
                                int moves_left, int moves_left_req)
@@ -2588,41 +2577,41 @@ pf_fuel_map_attack_is_possible(const struct pf_parameter *param,
   }
 }
 
-/************************************************************************//**
-  Primary method for iterative path-finding for fuel units.
-  Notes:
-  1. We process nodes in the main queue, like for normal maps. Because we
-     process in a different queue common tiles (!= refuel points), we needed
-     to register every path to any tile from a refuel point or the start tile
-     (see comment for pf_fuel_map_create_segment()).
-  2. Waiting is realised by inserting the refuel point back into the main
-     queue with a lower priority P. Because this tile might pop back sooner
-     than P, because there might be several copies of it in the queue already,
-     we *must* delete all these copies, to preserve the priority of the
-     process.
-  3. For some purposes, NS_WAITING is just another flavour of NS_PROCESSED,
-     since the path to a NS_WAITING tile has already been found.
-  4. This algorithm cannot guarantee the best safe segments across dangerous
-     region. However it will find a safe segment if there is one. To
-     gurantee the best (in terms of total_CC) safe segments across danger,
-     supply 'get_EC' which returns small extra on dangerous tiles.
+/************************************************************************/ /**
+   Primary method for iterative path-finding for fuel units.
+   Notes:
+   1. We process nodes in the main queue, like for normal maps. Because we
+      process in a different queue common tiles (!= refuel points), we needed
+      to register every path to any tile from a refuel point or the start
+ tile (see comment for pf_fuel_map_create_segment()).
+   2. Waiting is realised by inserting the refuel point back into the main
+      queue with a lower priority P. Because this tile might pop back sooner
+      than P, because there might be several copies of it in the queue
+ already, we *must* delete all these copies, to preserve the priority of the
+      process.
+   3. For some purposes, NS_WAITING is just another flavour of NS_PROCESSED,
+      since the path to a NS_WAITING tile has already been found.
+   4. This algorithm cannot guarantee the best safe segments across dangerous
+      region. However it will find a safe segment if there is one. To
+      gurantee the best (in terms of total_CC) safe segments across danger,
+      supply 'get_EC' which returns small extra on dangerous tiles.
 
-  During the iteration, the node status will be changed:
-  A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
-  B. NS_INIT: We have initialized the cached values, however, we failed to
-     reach this node.
-  C. NS_NEW: We have reached this node, but we are not sure it was the best
-     path.
-  D. NS_PROCESSED: Now, we are sure we have the best path. Not refuel node
-     can even be processed.
-  E. NS_WAITING: The refuel node is re-inserted in the priority queue, as
-     explained above (2.). We need to consider if waiting for full moves
-     open or not new possibilities for moving.
-  F. NS_PROCESSED: When finished to consider waiting at the node, revert the
-     status to NS_PROCESSED.
-  In points D., E., and F., the best path to the node can be considered as
-  found.
-****************************************************************************/
+   During the iteration, the node status will be changed:
+   A. NS_UNINIT: The node is not initialized, we didn't reach it at all.
+   B. NS_INIT: We have initialized the cached values, however, we failed to
+      reach this node.
+   C. NS_NEW: We have reached this node, but we are not sure it was the best
+      path.
+   D. NS_PROCESSED: Now, we are sure we have the best path. Not refuel node
+      can even be processed.
+   E. NS_WAITING: The refuel node is re-inserted in the priority queue, as
+      explained above (2.). We need to consider if waiting for full moves
+      open or not new possibilities for moving.
+   F. NS_PROCESSED: When finished to consider waiting at the node, revert the
+      status to NS_PROCESSED.
+   In points D., E., and F., the best path to the node can be considered as
+   found.
+ ****************************************************************************/
 static bool pf_fuel_map_iterate(struct pf_map *pfm)
 {
   struct pf_fuel_map *const pffm = PF_FUEL_MAP(pfm);
@@ -2655,14 +2644,12 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
 
   for (;;) {
     /* There is no exit from DONT_LEAVE tiles! */
-    if (node->behavior != TB_DONT_LEAVE
-        && scope != PF_MS_NONE
+    if (node->behavior != TB_DONT_LEAVE && scope != PF_MS_NONE
         && (params->move_rate > 0 || node->cost < 0)) {
       int loc_cost = node->cost;
       int loc_moves_left = node->moves_left;
 
-      if (0 == node->moves_left_req
-          && 0 < params->move_rate
+      if (0 == node->moves_left_req && 0 < params->move_rate
           && 0 == loc_moves_left % params->move_rate
           && loc_cost >= params->moves_left_initially) {
         /* We have implicitly refueled at the end of the turn. Update also
@@ -2671,7 +2658,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
         node->moves_left = loc_moves_left;
       }
 
-      adjc_dir_iterate(params->map, tile, tile1, dir) {
+      adjc_dir_iterate(params->map, tile, tile1, dir)
+      {
         /* Calculate the cost of every adjacent position and set them in
          * the priority queues for next call to pf_fuel_map_iterate(). */
         int tindex1 = tile_index(tile1);
@@ -2713,9 +2701,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
           /* Evaluate the cost of the move. */
           if (PF_ACTION_NONE != node1->action) {
             if (NULL != params->is_action_possible
-                && !params->is_action_possible(tile, scope, tile1,
-                                               pf_action(node1->action),
-                                               params)) {
+                && !params->is_action_possible(
+                    tile, scope, tile1, pf_action(node1->action), params)) {
               node1->cost_to_here[dir] = PF_IMPOSSIBLE_MC + 2;
               continue;
             }
@@ -2734,8 +2721,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
             cost = params->utype->unknown_move_cost;
           } else {
             cost = params->get_MC(tile, scope, tile1,
-                                  pf_move_scope(node1->move_scope),
-                                  params);
+                                  pf_move_scope(node1->move_scope), params);
           }
 
           if (cost == FC_INFINITY) {
@@ -2759,8 +2745,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
           cost -= 2;
         }
 
-        cost = pf_fuel_map_adjust_cost(cost, loc_moves_left,
-                                       params->move_rate);
+        cost =
+            pf_fuel_map_adjust_cost(cost, loc_moves_left, params->move_rate);
 
         moves_left = loc_moves_left - cost;
         if (moves_left < node1->moves_left_req
@@ -2813,7 +2799,8 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
          * direct way, not taking in account waiting. */
 
         if (NS_INIT == node1->status
-            || (node1->status == NS_NEW && cost_of_path < old_cost_of_path)) {
+            || (node1->status == NS_NEW
+                && cost_of_path < old_cost_of_path)) {
           /* We are reaching this node for the first time, or we found a
            * better route to 'tile1', or we would have more moves lefts
            * at previous position. Let's register 'tindex1' to the
@@ -2838,20 +2825,19 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
               map_index_pq_replace(pffm->queue, tindex1, -cost_of_path);
             }
           }
-          continue;     /* adjc_dir_iterate() */
+          continue; /* adjc_dir_iterate() */
         }
 
         /* Step 2: We test if this route could open better routes for other
          * tiles, if we waited somewhere. */
 
-        if (!waited
-            || NS_NEW == node1->status
+        if (!waited || NS_NEW == node1->status
             || 0 == node1->moves_left_req) {
           /* Stops there if:
            * 1. we didn't wait to get there ;
            * 2. we didn't process yet the node ;
            * 3. this is a refuel point. */
-          continue;     /* adjc_dir_iterate() */
+          continue; /* adjc_dir_iterate() */
         }
 
 #ifdef PF_DEBUG
@@ -2870,10 +2856,11 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
           node1->moves_left = moves_left;
           node1->dir_to_here = dir;
           map_index_pq_insert(pffm->waited_queue, tindex1,
-                              -pf_fuel_waited_total_CC(cost,
-                                  moves_left - node1->moves_left_req));
+                              -pf_fuel_waited_total_CC(
+                                  cost, moves_left - node1->moves_left_req));
         }
-      } adjc_dir_iterate_end;
+      }
+      adjc_dir_iterate_end;
     }
 
     if (NS_WAITING == node->status) {
@@ -2882,8 +2869,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
       fc_assert(0 == node->moves_left_req);
 #endif
       node->status = NS_PROCESSED;
-    } else if (0 == node->moves_left_req
-               && PF_ACTION_NONE == node->action
+    } else if (0 == node->moves_left_req && PF_ACTION_NONE == node->action
                && node->moves_left < pf_move_rate(params)
 #ifdef PF_DEBUG
                && (fc_assert(0 < params->move_rate), 0 < params->move_rate)
@@ -2896,9 +2882,9 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
       node->cost = pf_fuel_map_fill_cost_for_full_moves(params, node->cost,
                                                         node->moves_left);
       node->moves_left = pf_move_rate(params);
-      map_index_pq_insert(pffm->queue, tindex,
-                          -pf_fuel_waited_total_CC(node->cost,
-                                                   node->moves_left));
+      map_index_pq_insert(
+          pffm->queue, tindex,
+          -pf_fuel_waited_total_CC(node->cost, node->moves_left));
     }
 
     /* Get the next node (the index with the highest priority). First try
@@ -2969,9 +2955,9 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
   return FALSE;
 }
 
-/************************************************************************//**
-  Iterate the map until 'ptile' is reached.
-****************************************************************************/
+/************************************************************************/ /**
+   Iterate the map until 'ptile' is reached.
+ ****************************************************************************/
 static inline bool pf_fuel_map_iterate_until(struct pf_fuel_map *pffm,
                                              struct tile *ptile)
 {
@@ -3002,11 +2988,11 @@ static inline bool pf_fuel_map_iterate_until(struct pf_fuel_map *pffm,
   return TRUE;
 }
 
-/************************************************************************//**
-  Return the move cost at ptile. If 'ptile' has not been reached yet,
-  iterate the map until we reach it or run out of map. This function
-  returns PF_IMPOSSIBLE_MC on unreachable positions.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the move cost at ptile. If 'ptile' has not been reached yet,
+   iterate the map until we reach it or run out of map. This function
+   returns PF_IMPOSSIBLE_MC on unreachable positions.
+ ****************************************************************************/
 static int pf_fuel_map_move_cost(struct pf_map *pfm, struct tile *ptile)
 {
   struct pf_fuel_map *pffm = PF_FUEL_MAP(pfm);
@@ -3016,18 +3002,17 @@ static int pf_fuel_map_move_cost(struct pf_map *pfm, struct tile *ptile)
   } else if (pf_fuel_map_iterate_until(pffm, ptile)) {
     const struct pf_fuel_node *node = pffm->lattice + tile_index(ptile);
 
-    return (node->segment->cost
-            - pf_move_rate(pf_map_parameter(pfm))
+    return (node->segment->cost - pf_move_rate(pf_map_parameter(pfm))
             + pf_moves_left_initially(pf_map_parameter(pfm)));
   } else {
     return PF_IMPOSSIBLE_MC;
   }
 }
 
-/************************************************************************//**
-  Return the path to ptile. If 'ptile' has not been reached yet, iterate
-  the map until we reach it or run out of map.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the path to ptile. If 'ptile' has not been reached yet, iterate
+   the map until we reach it or run out of map.
+ ****************************************************************************/
 static struct pf_path *pf_fuel_map_path(struct pf_map *pfm,
                                         struct tile *ptile)
 {
@@ -3042,11 +3027,11 @@ static struct pf_path *pf_fuel_map_path(struct pf_map *pfm,
   }
 }
 
-/************************************************************************//**
-  Get info about position at ptile and put it in pos. If 'ptile' has not
-  been reached yet, iterate the map until we reach it. Should _always_
-  check the return value, forthe position might be unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get info about position at ptile and put it in pos. If 'ptile' has not
+   been reached yet, iterate the map until we reach it. Should _always_
+   check the return value, forthe position might be unreachable.
+ ****************************************************************************/
 static bool pf_fuel_map_position(struct pf_map *pfm, struct tile *ptile,
                                  struct pf_position *pos)
 {
@@ -3063,9 +3048,9 @@ static bool pf_fuel_map_position(struct pf_map *pfm, struct tile *ptile,
   }
 }
 
-/************************************************************************//**
-  'pf_fuel_map' destructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_fuel_map' destructor.
+ ****************************************************************************/
 static void pf_fuel_map_destroy(struct pf_map *pfm)
 {
   struct pf_fuel_map *pffm = PF_FUEL_MAP(pfm);
@@ -3083,9 +3068,9 @@ static void pf_fuel_map_destroy(struct pf_map *pfm)
   free(pffm);
 }
 
-/************************************************************************//**
-  'pf_fuel_map' constructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_fuel_map' constructor.
+ ****************************************************************************/
 static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
 {
   struct pf_fuel_map *pffm;
@@ -3103,7 +3088,7 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
 
   /* Allocate the map. */
   pffm->lattice = static_cast<pf_fuel_node *>(
-    fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_fuel_node)));
+      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_fuel_node)));
   pffm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pffm->waited_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -3130,8 +3115,9 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   node = pffm->lattice + tile_index(params->start_tile);
   if (!pf_fuel_node_init(pffm, node, params->start_tile, PF_MS_NONE)) {
     /* Always fails. */
-    fc_assert(TRUE == pf_fuel_node_init(pffm, node, params->start_tile,
-                                        PF_MS_NONE));
+    fc_assert(
+        TRUE
+        == pf_fuel_node_init(pffm, node, params->start_tile, PF_MS_NONE));
   }
 
   /* NB: do not handle params->transported_by_initially because we want to
@@ -3154,14 +3140,12 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   return PF_MAP(pffm);
 }
 
-
-
 /* ====================== pf_map public functions ======================= */
 
-/************************************************************************//**
-  Factory function to create a new map according to the parameter.
-  Does not do any iterations.
-****************************************************************************/
+/************************************************************************/ /**
+   Factory function to create a new map according to the parameter.
+   Does not do any iterations.
+ ****************************************************************************/
 struct pf_map *pf_map_new(const struct pf_parameter *parameter)
 {
   if (parameter->is_pos_dangerous) {
@@ -3183,9 +3167,9 @@ struct pf_map *pf_map_new(const struct pf_parameter *parameter)
   return pf_normal_map_new(parameter);
 }
 
-/************************************************************************//**
-  After usage the map must be destroyed.
-****************************************************************************/
+/************************************************************************/ /**
+   After usage the map must be destroyed.
+ ****************************************************************************/
 void pf_map_destroy(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3194,11 +3178,11 @@ void pf_map_destroy(struct pf_map *pfm)
   pfm->destroy(pfm);
 }
 
-/************************************************************************//**
-  Tries to find the minimal move cost to reach ptile. Returns
-  PF_IMPOSSIBLE_MC if not reachable. If ptile has not been reached yet,
-  iterate the map until we reach it or run out of map.
-****************************************************************************/
+/************************************************************************/ /**
+   Tries to find the minimal move cost to reach ptile. Returns
+   PF_IMPOSSIBLE_MC if not reachable. If ptile has not been reached yet,
+   iterate the map until we reach it or run out of map.
+ ****************************************************************************/
 int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile)
 {
 #ifdef PF_DEBUG
@@ -3208,13 +3192,13 @@ int pf_map_move_cost(struct pf_map *pfm, struct tile *ptile)
   return pfm->get_move_cost(pfm, ptile);
 }
 
-/************************************************************************//**
-  Tries to find the best path in the given map to the position ptile.
-  If NULL is returned no path could be found. The pf_path_last_position()
-  of such path would be the same (almost) as the result of the call to 
-  pf_map_position(). If ptile has not been reached yet, iterate the map
-  until we reach it or run out of map.
-****************************************************************************/
+/************************************************************************/ /**
+   Tries to find the best path in the given map to the position ptile.
+   If NULL is returned no path could be found. The pf_path_last_position()
+   of such path would be the same (almost) as the result of the call to
+   pf_map_position(). If ptile has not been reached yet, iterate the map
+   until we reach it or run out of map.
+ ****************************************************************************/
 struct pf_path *pf_map_path(struct pf_map *pfm, struct tile *ptile)
 {
 #ifdef PF_DEBUG
@@ -3240,11 +3224,11 @@ struct pf_path *pf_map_path(struct pf_map *pfm, struct tile *ptile)
 #endif
 }
 
-/************************************************************************//**
-  Get info about position at ptile and put it in pos. If ptile has not been
-  reached yet, iterate the map until we reach it. Should _always_ check the
-  return value, forthe position might be unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get info about position at ptile and put it in pos. If ptile has not been
+   reached yet, iterate the map until we reach it. Should _always_ check the
+   return value, forthe position might be unreachable.
+ ****************************************************************************/
 bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
                      struct pf_position *pos)
 {
@@ -3255,17 +3239,17 @@ bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
   return pfm->get_position(pfm, ptile, pos);
 }
 
-/************************************************************************//**
-  Iterates the path-finding algorithm one step further, to the next nearest
-  position. This full info on this position and the best path to it can be
-  obtained using pf_map_iter_move_cost(), pf_map_iter_path(), and
-  pf_map_iter_position() correspondingly. Returns FALSE if no further
-  positions are available in this map.
+/************************************************************************/ /**
+   Iterates the path-finding algorithm one step further, to the next nearest
+   position. This full info on this position and the best path to it can be
+   obtained using pf_map_iter_move_cost(), pf_map_iter_path(), and
+   pf_map_iter_position() correspondingly. Returns FALSE if no further
+   positions are available in this map.
 
-  NB: If pf_map_move_cost(pfm, ptile), pf_map_path(pfm, ptile), or
-  pf_map_position(pfm, ptile) has been called before the call to
-  pf_map_iterate(), the iteration will resume from 'ptile'.
-****************************************************************************/
+   NB: If pf_map_move_cost(pfm, ptile), pf_map_path(pfm, ptile), or
+   pf_map_position(pfm, ptile) has been called before the call to
+   pf_map_iterate(), the iteration will resume from 'ptile'.
+ ****************************************************************************/
 bool pf_map_iterate(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3287,9 +3271,9 @@ bool pf_map_iterate(struct pf_map *pfm)
   return TRUE;
 }
 
-/************************************************************************//**
-  Return the current tile.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the current tile.
+ ****************************************************************************/
 struct tile *pf_map_iter(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3298,10 +3282,10 @@ struct tile *pf_map_iter(struct pf_map *pfm)
   return pfm->tile;
 }
 
-/************************************************************************//**
-  Return the move cost at the current position. This is equivalent to
-  pf_map_move_cost(pfm, pf_map_iter(pfm)).
-****************************************************************************/
+/************************************************************************/ /**
+   Return the move cost at the current position. This is equivalent to
+   pf_map_move_cost(pfm, pf_map_iter(pfm)).
+ ****************************************************************************/
 int pf_map_iter_move_cost(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3311,10 +3295,10 @@ int pf_map_iter_move_cost(struct pf_map *pfm)
   return pfm->get_move_cost(pfm, pfm->tile);
 }
 
-/************************************************************************//**
-  Return the path to our current position.This is equivalent to
-  pf_map_path(pfm, pf_map_iter(pfm)).
-****************************************************************************/
+/************************************************************************/ /**
+   Return the path to our current position.This is equivalent to
+   pf_map_path(pfm, pf_map_iter(pfm)).
+ ****************************************************************************/
 struct pf_path *pf_map_iter_path(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3324,10 +3308,10 @@ struct pf_path *pf_map_iter_path(struct pf_map *pfm)
   return pfm->get_path(pfm, pfm->tile);
 }
 
-/************************************************************************//**
-  Read all info about the current position into pos. This is equivalent to
-  pf_map_position(pfm, pf_map_iter(pfm), &pos).
-****************************************************************************/
+/************************************************************************/ /**
+   Read all info about the current position into pos. This is equivalent to
+   pf_map_position(pfm, pf_map_iter(pfm), &pos).
+ ****************************************************************************/
 void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos)
 {
 #ifdef PF_DEBUG
@@ -3340,9 +3324,9 @@ void pf_map_iter_position(struct pf_map *pfm, struct pf_position *pos)
   }
 }
 
-/************************************************************************//**
-  Return the pf_parameter for given pf_map.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the pf_parameter for given pf_map.
+ ****************************************************************************/
 const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
@@ -3351,12 +3335,11 @@ const struct pf_parameter *pf_map_parameter(const struct pf_map *pfm)
   return &pfm->params;
 }
 
-
 /* ====================== pf_path public functions ======================= */
 
-/************************************************************************//**
-  Fill the position for the start tile of a parameter.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill the position for the start tile of a parameter.
+ ****************************************************************************/
 static void pf_position_fill_start_tile(struct pf_position *pos,
                                         const struct pf_parameter *param)
 {
@@ -3370,9 +3353,9 @@ static void pf_position_fill_start_tile(struct pf_position *pos,
   pos->dir_to_here = direction8_invalid();
 }
 
-/************************************************************************//**
-  Create a path to the start tile of a parameter.
-****************************************************************************/
+/************************************************************************/ /**
+   Create a path to the start tile of a parameter.
+ ****************************************************************************/
 static struct pf_path *
 pf_path_new_to_start_tile(const struct pf_parameter *param)
 {
@@ -3385,10 +3368,10 @@ pf_path_new_to_start_tile(const struct pf_parameter *param)
   return path;
 }
 
-/************************************************************************//**
-  After use, a path must be destroyed. Note this function accept NULL as
-  argument.
-****************************************************************************/
+/************************************************************************/ /**
+   After use, a path must be destroyed. Note this function accept NULL as
+   argument.
+ ****************************************************************************/
 void pf_path_destroy(struct pf_path *path)
 {
   if (NULL != path) {
@@ -3397,13 +3380,13 @@ void pf_path_destroy(struct pf_path *path)
   }
 }
 
-/************************************************************************//**
-  Concatenate two paths together. The additional segment 'src_path'
-  should start where the initial segment 'dest_path' stops. The
-  overlapping position is removed.
+/************************************************************************/ /**
+   Concatenate two paths together. The additional segment 'src_path'
+   should start where the initial segment 'dest_path' stops. The
+   overlapping position is removed.
 
-  If 'dest_path' == NULL, we just copy the src_path and nothing else.
-****************************************************************************/
+   If 'dest_path' == NULL, we just copy the src_path and nothing else.
+ ****************************************************************************/
 struct pf_path *pf_path_concat(struct pf_path *dest_path,
                                const struct pf_path *src_path)
 {
@@ -3435,8 +3418,8 @@ struct pf_path *pf_path_concat(struct pf_path *dest_path,
 
   dest_path->length = dest_end + src_path->length;
   dest_path->positions = static_cast<pf_position *>(
-    fc_realloc(dest_path->positions,
-               sizeof(*dest_path->positions) * dest_path->length));
+      fc_realloc(dest_path->positions,
+                 sizeof(*dest_path->positions) * dest_path->length));
   /* Be careful to include the first position of src_path, it contains
    * the direction (it is undefined in the last position of dest_path) */
   memcpy(dest_path->positions + dest_end, src_path->positions,
@@ -3445,13 +3428,13 @@ struct pf_path *pf_path_concat(struct pf_path *dest_path,
   return dest_path;
 }
 
-/************************************************************************//**
-  Remove the part of a path leading up to a given tile.
-  If given tile is on the path more than once then the first occurrence
-  will be the one used.
-  If tile is not on the path at all, returns FALSE and path is not changed
-  at all.
-****************************************************************************/
+/************************************************************************/ /**
+   Remove the part of a path leading up to a given tile.
+   If given tile is on the path more than once then the first occurrence
+   will be the one used.
+   If tile is not on the path at all, returns FALSE and path is not changed
+   at all.
+ ****************************************************************************/
 bool pf_path_advance(struct pf_path *path, struct tile *ptile)
 {
   int i;
@@ -3473,13 +3456,13 @@ bool pf_path_advance(struct pf_path *path, struct tile *ptile)
   return TRUE;
 }
 
-/************************************************************************//**
-  Remove the part of a path following a given tile.
-  If given tile is on the path more than once then the last occurrence
-  will be the one used.
-  If tile is not on the path at all, returns FALSE and path is not changed
-  at all.
-****************************************************************************/
+/************************************************************************/ /**
+   Remove the part of a path following a given tile.
+   If given tile is on the path more than once then the last occurrence
+   will be the one used.
+   If tile is not on the path at all, returns FALSE and path is not changed
+   at all.
+ ****************************************************************************/
 bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
 {
   int i;
@@ -3505,18 +3488,18 @@ bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
   return TRUE;
 }
 
-/************************************************************************//**
-  Get the last position of the path.
-****************************************************************************/
+/************************************************************************/ /**
+   Get the last position of the path.
+ ****************************************************************************/
 const struct pf_position *pf_path_last_position(const struct pf_path *path)
 {
   return path->positions + (path->length - 1);
 }
 
-/************************************************************************//**
-  Debug a path. This function shouldn't be called directly, see
-  pf_path_print() defined in "path_finding.h".
-****************************************************************************/
+/************************************************************************/ /**
+   Debug a path. This function shouldn't be called directly, see
+   pf_path_print() defined in "path_finding.h".
+ ****************************************************************************/
 void pf_path_print_real(const struct pf_path *path, enum log_level level,
                         const char *file, const char *function, int line)
 {
@@ -3525,8 +3508,8 @@ void pf_path_print_real(const struct pf_path *path, enum log_level level,
 
   if (path) {
     do_log(file, function, line, TRUE, level,
-           "PF: path (at %p) consists of %d positions:",
-           (void *) path, path->length);
+           "PF: path (at %p) consists of %d positions:", (void *) path,
+           path->length);
   } else {
     do_log(file, function, line, TRUE, level, "PF: path is NULL");
     return;
@@ -3536,11 +3519,10 @@ void pf_path_print_real(const struct pf_path *path, enum log_level level,
     do_log(file, function, line, FALSE, level,
            "PF:   %2d/%2d: (%2d,%2d) dir=%-2s cost=%2d (%2d, %d) EC=%d",
            i + 1, path->length, TILE_XY(pos->tile),
-           dir_get_name(pos->dir_to_next_pos), pos->total_MC,
-           pos->turn, pos->moves_left, pos->total_EC);
+           dir_get_name(pos->dir_to_next_pos), pos->total_MC, pos->turn,
+           pos->moves_left, pos->total_EC);
   }
 }
-
 
 /* ===================== pf_reverse_map functions ======================== */
 
@@ -3565,22 +3547,22 @@ static void pf_reverse_map_destroy_param(struct pf_parameter *param);
 
 /* The reverse map structure. */
 struct pf_reverse_map {
-  struct tile *target_tile;     /* Where we want to go. */
-  int max_turns;                /* The maximum of turns. */
-  struct pf_parameter template_params; /* Keep a parameter ready for usage. */
-  struct pf_pos_hash *hash;     /* A hash where pf_position are stored. */
+  struct tile *target_tile; /* Where we want to go. */
+  int max_turns;            /* The maximum of turns. */
+  struct pf_parameter
+      template_params;      /* Keep a parameter ready for usage. */
+  struct pf_pos_hash *hash; /* A hash where pf_position are stored. */
 };
 
 /* Here goes all unit type flags which affect the move rules handled by
  * the reverse map. */
 static const enum unit_type_flag_id signifiant_flags[] = {
-  UTYF_IGTER, UTYF_CIVILIAN, UTYF_COAST_STRICT
-};
+    UTYF_IGTER, UTYF_CIVILIAN, UTYF_COAST_STRICT};
 static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
-/************************************************************************//**
-  Hash function for pf_parameter key.
-****************************************************************************/
+/************************************************************************/ /**
+   Hash function for pf_parameter key.
+ ****************************************************************************/
 static genhash_val_t pf_pos_hash_val(const struct pf_parameter *parameter)
 {
   genhash_val_t result = 0;
@@ -3603,9 +3585,9 @@ static genhash_val_t pf_pos_hash_val(const struct pf_parameter *parameter)
   return result;
 }
 
-/************************************************************************//**
-  Comparison function for pf_parameter hash key.
-****************************************************************************/
+/************************************************************************/ /**
+   Comparison function for pf_parameter hash key.
+ ****************************************************************************/
 static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
                             const struct pf_parameter *parameter2)
 {
@@ -3645,26 +3627,26 @@ static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
   return TRUE;
 }
 
-/************************************************************************//**
-  Destroy the position if not NULL.
-****************************************************************************/
+/************************************************************************/ /**
+   Destroy the position if not NULL.
+ ****************************************************************************/
 static void pf_reverse_map_destroy_pos(struct pf_position *pos)
 {
   free(pos);
 }
 
-/************************************************************************//**
-  Destroy the parameter.
-****************************************************************************/
+/************************************************************************/ /**
+   Destroy the parameter.
+ ****************************************************************************/
 static void pf_reverse_map_destroy_param(struct pf_parameter *param)
 {
   free(param);
 }
 
-/************************************************************************//**
-  'pf_reverse_map' constructor. If 'max_turns' is positive, then it won't
-  try to iterate the maps beyond this number of turns.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_reverse_map' constructor. If 'max_turns' is positive, then it won't
+   try to iterate the maps beyond this number of turns.
+ ****************************************************************************/
 struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
                                           struct tile *target_tile,
                                           int max_turns, bool omniscient,
@@ -3688,22 +3670,22 @@ struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
   return pfrm;
 }
 
-/************************************************************************//**
-  'pf_reverse_map' constructor for city. If 'max_turns' is positive, then
-  it won't try to iterate the maps beyond this number of turns.
-****************************************************************************/
-struct pf_reverse_map *pf_reverse_map_new_for_city(const struct city *pcity,
-                                                   const struct player *attacker,
-                                                   int max_turns, bool omniscient,
-                                                   const struct civ_map *map)
+/************************************************************************/ /**
+   'pf_reverse_map' constructor for city. If 'max_turns' is positive, then
+   it won't try to iterate the maps beyond this number of turns.
+ ****************************************************************************/
+struct pf_reverse_map *
+pf_reverse_map_new_for_city(const struct city *pcity,
+                            const struct player *attacker, int max_turns,
+                            bool omniscient, const struct civ_map *map)
 {
-  return pf_reverse_map_new(attacker, city_tile(pcity), max_turns, omniscient,
-                            map);
+  return pf_reverse_map_new(attacker, city_tile(pcity), max_turns,
+                            omniscient, map);
 }
 
-/************************************************************************//**
-  'pf_reverse_map' destructor.
-****************************************************************************/
+/************************************************************************/ /**
+   'pf_reverse_map' destructor.
+ ****************************************************************************/
 void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
 {
   fc_assert_ret(NULL != pfrm);
@@ -3712,10 +3694,10 @@ void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
   free(pfrm);
 }
 
-/************************************************************************//**
-  Returns the map for the unit type. Creates it if needed. Returns NULL if
-  'target_tile' is unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the map for the unit type. Creates it if needed. Returns NULL if
+   'target_tile' is unreachable.
+ ****************************************************************************/
 static const struct pf_position *
 pf_reverse_map_pos(struct pf_reverse_map *pfrm,
                    const struct pf_parameter *param)
@@ -3777,10 +3759,10 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
   return NULL;
 }
 
-/************************************************************************//**
-  Returns the position for the unit. Creates it if needed. Returns NULL if
-  'target_tile' is unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the position for the unit. Creates it if needed. Returns NULL if
+   'target_tile' is unreachable.
+ ****************************************************************************/
 static inline const struct pf_position *
 pf_reverse_map_unit_pos(struct pf_reverse_map *pfrm,
                         const struct unit *punit)
@@ -3798,10 +3780,10 @@ pf_reverse_map_unit_pos(struct pf_reverse_map *pfrm,
   return pf_reverse_map_pos(pfrm, param);
 }
 
-/************************************************************************//**
-  Returns the position for the unit type. Creates it if needed. Returns NULL
-  if 'target_tile' is unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the position for the unit type. Creates it if needed. Returns NULL
+   if 'target_tile' is unreachable.
+ ****************************************************************************/
 static inline const struct pf_position *
 pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
                          const struct unit_type *punittype,
@@ -3809,8 +3791,8 @@ pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
 {
   struct pf_parameter *param = &pfrm->template_params;
   const struct player *pplayer = param->owner;
-  int veteran_level = get_unittype_bonus(pplayer, ptile, punittype,
-                                         EFT_VETERAN_BUILD);
+  int veteran_level =
+      get_unittype_bonus(pplayer, ptile, punittype, EFT_VETERAN_BUILD);
 
   if (veteran_level >= utype_veteran_levels(punittype)) {
     veteran_level = utype_veteran_levels(punittype) - 1;
@@ -3825,24 +3807,24 @@ pf_reverse_map_utype_pos(struct pf_reverse_map *pfrm,
   return pf_reverse_map_pos(pfrm, param);
 }
 
-/************************************************************************//**
-  Get the move costs that a unit type needs to reach the start tile. Returns
-  PF_IMPOSSIBLE_MC if the tile is unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get the move costs that a unit type needs to reach the start tile. Returns
+   PF_IMPOSSIBLE_MC if the tile is unreachable.
+ ****************************************************************************/
 int pf_reverse_map_utype_move_cost(struct pf_reverse_map *pfrm,
                                    const struct unit_type *punittype,
                                    struct tile *ptile)
 {
-  const struct pf_position *pos = pf_reverse_map_utype_pos(pfrm, punittype,
-                                                           ptile);
+  const struct pf_position *pos =
+      pf_reverse_map_utype_pos(pfrm, punittype, ptile);
 
   return (pos != NULL ? pos->total_MC : PF_IMPOSSIBLE_MC);
 }
 
-/************************************************************************//**
-  Get the move costs that a unit needs to reach the start tile. Returns
-  PF_IMPOSSIBLE_MC if the tile is unreachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Get the move costs that a unit needs to reach the start tile. Returns
+   PF_IMPOSSIBLE_MC if the tile is unreachable.
+ ****************************************************************************/
 int pf_reverse_map_unit_move_cost(struct pf_reverse_map *pfrm,
                                   const struct unit *punit)
 {
@@ -3851,16 +3833,16 @@ int pf_reverse_map_unit_move_cost(struct pf_reverse_map *pfrm,
   return (pos != NULL ? pos->total_MC : PF_IMPOSSIBLE_MC);
 }
 
-/************************************************************************//**
-  Fill the position. Return TRUE if the tile is reachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill the position. Return TRUE if the tile is reachable.
+ ****************************************************************************/
 bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
                                    const struct unit_type *punittype,
                                    struct tile *ptile,
                                    struct pf_position *pos)
 {
-  const struct pf_position *mypos = pf_reverse_map_utype_pos(pfrm, punittype,
-                                                             ptile);
+  const struct pf_position *mypos =
+      pf_reverse_map_utype_pos(pfrm, punittype, ptile);
 
   if (mypos != NULL) {
     *pos = *mypos;
@@ -3870,9 +3852,9 @@ bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
   }
 }
 
-/************************************************************************//**
-  Fill the position. Return TRUE if the tile is reachable.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill the position. Return TRUE if the tile is reachable.
+ ****************************************************************************/
 bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
                                   const struct unit *punit,
                                   struct pf_position *pos)

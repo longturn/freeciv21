@@ -27,34 +27,33 @@ class QRadioButton;
 
 class ruledit_gui;
 
-class tab_good : public QWidget
-{
+class tab_good : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_good(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_good(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_good_info(struct goods_type *pgood);
-    bool initialize_new_good(struct goods_type *pgood);
+private:
+  ruledit_gui *ui;
+  void update_good_info(struct goods_type *pgood);
+  bool initialize_new_good(struct goods_type *pgood);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QListWidget *good_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QListWidget *good_list;
+  QRadioButton *same_name;
 
-    struct goods_type *selected;
+  struct goods_type *selected;
 
-  private slots:
-    void name_given();
-    void select_good();
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_reqs();
-    void edit_effects();
+private slots:
+  void name_given();
+  void select_good();
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_reqs();
+  void edit_effects();
 };
 
 #endif // FC__TAB_GOOD_H

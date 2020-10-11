@@ -27,8 +27,8 @@ extern "C" {
 
 struct ai_data;
 
-/* 
- * Change these and remake to watch logs from a specific 
+/*
+ * Change these and remake to watch logs from a specific
  * part of the AI code.
  */
 #define LOGLEVEL_BODYGUARD LOG_DEBUG
@@ -76,45 +76,44 @@ enum ai_timer {
   AIT_LAST
 };
 
-enum ai_timer_activity  {
-  TIMER_START, TIMER_STOP
-};
+enum ai_timer_activity { TIMER_START, TIMER_STOP };
 
 void real_city_log(const char *file, const char *function, int line,
                    enum log_level level, bool notify,
                    const struct city *pcity, const char *msg, ...)
-                   fc__attribute((__format__ (__printf__, 7, 8)));
+    fc__attribute((__format__(__printf__, 7, 8)));
 #define CITY_LOG(loglevel, pcity, msg, ...)                                 \
-{                                                                           \
-  bool notify = pcity->server.debug;                                        \
-  enum log_level level = (notify ? LOG_AI_TEST                              \
-                          : MIN(loglevel, LOGLEVEL_CITY));                  \
-  if (log_do_output_for_level(level)) {                                     \
-    real_city_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,       \
-                  pcity, msg, ## __VA_ARGS__);                              \
-  }                                                                         \
-}
+  {                                                                         \
+    bool notify = pcity->server.debug;                                      \
+    enum log_level level =                                                  \
+        (notify ? LOG_AI_TEST : MIN(loglevel, LOGLEVEL_CITY));              \
+    if (log_do_output_for_level(level)) {                                   \
+      real_city_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,     \
+                    pcity, msg, ##__VA_ARGS__);                             \
+    }                                                                       \
+  }
 
 void real_unit_log(const char *file, const char *function, int line,
-                   enum log_level level,  bool notify,
+                   enum log_level level, bool notify,
                    const struct unit *punit, const char *msg, ...)
-                   fc__attribute((__format__ (__printf__, 7, 8)));
+    fc__attribute((__format__(__printf__, 7, 8)));
 #define UNIT_LOG(loglevel, punit, msg, ...)                                 \
-{                                                                           \
-  bool notify = punit->server.debug;                                        \
-  enum log_level level;                                                     \
-  if (notify || (tile_city(unit_tile(punit))                                \
-                 && tile_city(unit_tile(punit))->server.debug)) {           \
-    level = LOG_AI_TEST;                                                    \
-    notify = TRUE;                                                          \
-  } else {                                                                  \
-    level = loglevel;                                                       \
-  }                                                                         \
-  if (log_do_output_for_level(level)) {                                     \
-    real_unit_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,       \
-                  punit, msg, ## __VA_ARGS__);                              \
-  }                                                                         \
-}
+  {                                                                         \
+    bool notify = punit->server.debug;                                      \
+    enum log_level level;                                                   \
+    if (notify                                                              \
+        || (tile_city(unit_tile(punit))                                     \
+            && tile_city(unit_tile(punit))->server.debug)) {                \
+      level = LOG_AI_TEST;                                                  \
+      notify = TRUE;                                                        \
+    } else {                                                                \
+      level = loglevel;                                                     \
+    }                                                                       \
+    if (log_do_output_for_level(level)) {                                   \
+      real_unit_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,     \
+                    punit, msg, ##__VA_ARGS__);                             \
+    }                                                                       \
+  }
 
 void timing_log_init(void);
 void timing_log_free(void);
@@ -125,7 +124,7 @@ void timing_results_real(void);
 #ifdef FREECIV_DEBUG
 #define TIMING_LOG(timer, activity) timing_log_real(timer, activity)
 #define TIMING_RESULTS() timing_results_real()
-#else  /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
 #define TIMING_LOG(timer, activity)
 #define TIMING_RESULTS()
 #endif /* FREECIV_DEBUG */
@@ -134,4 +133,4 @@ void timing_results_real(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SRV_LOG_H */
+#endif /* FC__SRV_LOG_H */

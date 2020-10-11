@@ -20,8 +20,8 @@
 #include <string.h>
 
 /* utility */
-#include "shared.h"		/* TRUE, FALSE */
-#include "support.h"		/* fc_is* */
+#include "shared.h"  /* TRUE, FALSE */
+#include "support.h" /* fc_is* */
 
 #include "capability.h"
 
@@ -38,11 +38,11 @@
     }                                                                       \
   }
 
-/***********************************************************************//**
-  This routine returns true if the capability in cap appears
-  in the capability list in capstr.  The capabilities in capstr
-  are allowed to start with a "+", but the capability in cap must not.
-***************************************************************************/
+/***********************************************************************/ /**
+   This routine returns true if the capability in cap appears
+   in the capability list in capstr.  The capabilities in capstr
+   are allowed to start with a "+", but the capability in cap must not.
+ ***************************************************************************/
 static bool fc_has_capability(const char *cap, const char *capstr,
                               const size_t cap_len)
 {
@@ -71,18 +71,18 @@ static bool fc_has_capability(const char *cap, const char *capstr,
   }
 }
 
-/***********************************************************************//**
-  Wrapper for fc_has_capability() for NULL terminated strings.
-***************************************************************************/
+/***********************************************************************/ /**
+   Wrapper for fc_has_capability() for NULL terminated strings.
+ ***************************************************************************/
 bool has_capability(const char *cap, const char *capstr)
 {
   return fc_has_capability(cap, capstr, strlen(cap));
 }
 
-/***********************************************************************//**
-  This routine returns true if all the mandatory capabilities in
-  us appear in them.
-***************************************************************************/
+/***********************************************************************/ /**
+   This routine returns true if all the mandatory capabilities in
+   us appear in them.
+ ***************************************************************************/
 bool has_capabilities(const char *us, const char *them)
 {
   const char *next;
@@ -90,13 +90,13 @@ bool has_capabilities(const char *us, const char *them)
   for (;;) {
     GET_TOKEN(us, next);
 
-    if (*us == '+' && !fc_has_capability(us+1, them, next-(us+1))) {
+    if (*us == '+' && !fc_has_capability(us + 1, them, next - (us + 1))) {
       return FALSE;
     }
     if (*next == '\0') {
       return TRUE;
     }
 
-    us = next+1;
+    us = next + 1;
   }
 }

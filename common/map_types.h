@@ -50,11 +50,11 @@ enum map_generator {
 };
 
 enum map_startpos {
-  MAPSTARTPOS_DEFAULT = 0,      /* Generator's choice. */
-  MAPSTARTPOS_SINGLE,           /* One player per continent. */
-  MAPSTARTPOS_2or3,             /* Two on three players per continent. */
-  MAPSTARTPOS_ALL,              /* All players on a single continent. */
-  MAPSTARTPOS_VARIABLE,         /* Depending on size of continents. */
+  MAPSTARTPOS_DEFAULT = 0, /* Generator's choice. */
+  MAPSTARTPOS_SINGLE,      /* One player per continent. */
+  MAPSTARTPOS_2or3,        /* Two on three players per continent. */
+  MAPSTARTPOS_ALL,         /* All players on a single continent. */
+  MAPSTARTPOS_VARIABLE,    /* Depending on size of continents. */
 };
 
 #define SPECENUM_NAME team_placement
@@ -73,20 +73,21 @@ struct civ_map {
   int num_iterate_outwards_indices;
   int xsize, ysize; /* native dimensions */
   int num_continents;
-  int num_oceans;               /* not updated at the client */
+  int num_oceans; /* not updated at the client */
   struct tile *tiles;
   struct startpos_hash *startpos_table;
 
   union {
     struct {
       enum mapsize_type mapsize; /* how the map size is defined */
-      int size; /* used to calculate [xy]size */
+      int size;                  /* used to calculate [xy]size */
       int tilesperplayer; /* tiles per player; used to calculate size */
       int seed_setting;
       int seed;
       int riches;
       int huts;
-      int huts_absolute; /* For compatibility conversion from pre-2.6 savegames */
+      int huts_absolute; /* For compatibility conversion from pre-2.6
+                            savegames */
       int animals;
       int landpercent;
       enum map_generator generator;
@@ -99,7 +100,7 @@ struct civ_map {
       int temperature;
       int wetness;
       int steepness;
-      bool ocean_resources;         /* Resources in the middle of the ocean */
+      bool ocean_resources; /* Resources in the middle of the ocean */
       bool have_huts;
       bool have_resources;
       enum team_placement team_placement;
@@ -113,4 +114,4 @@ struct civ_map {
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__MAP_H */
+#endif /* FC__MAP_H */

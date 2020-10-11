@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #define FC__MAPCTRL_G_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
@@ -32,4 +32,4 @@ GUI_FUNC_PROTO(void, set_turn_done_button_state, bool state)
 GUI_FUNC_PROTO(void, create_line_at_mouse_pos, void)
 GUI_FUNC_PROTO(void, update_rect_at_mouse_pos, void)
 
-#endif  /* FC__MAPCTRL_G_H */
+#endif /* FC__MAPCTRL_G_H */

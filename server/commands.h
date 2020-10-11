@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996-2004 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 #ifndef FC__COMMANDS_H
 #define FC__COMMANDS_H
 
-#include "connection.h"         /* enum cmdlevel */
+#include "connection.h" /* enum cmdlevel */
 
 #ifdef __cplusplus
 extern "C" {
@@ -22,7 +22,7 @@ extern "C" {
 
 enum cmd_echo {
   CMD_ECHO_NONE = 0,
-  CMD_ECHO_ADMINS,      /* i.e. all with 'admin' access and above. */
+  CMD_ECHO_ADMINS, /* i.e. all with 'admin' access and above. */
   CMD_ECHO_ALL,
 };
 
@@ -49,7 +49,7 @@ enum command_id {
   CMD_WALL,
   CMD_CONNECTMSG,
   CMD_VOTE,
-  
+
   /* mostly non-harmful: */
   CMD_DEBUG,
   CMD_SET,
@@ -106,9 +106,9 @@ enum command_id {
   CMD_SRVID,
 
   /* pseudo-commands: */
-  CMD_NUM,		/* the number of commands - for iterations */
-  CMD_UNRECOGNIZED,	/* used as a possible iteration result */
-  CMD_AMBIGUOUS		/* used as a possible iteration result */
+  CMD_NUM,          /* the number of commands - for iterations */
+  CMD_UNRECOGNIZED, /* used as a possible iteration result */
+  CMD_AMBIGUOUS     /* used as a possible iteration result */
 };
 
 const struct command *command_by_number(int i);
@@ -128,4 +128,4 @@ int command_vote_percent(const struct command *pcommand);
 }
 #endif
 
-#endif				/* FC__COMMANDS_H */
+#endif /* FC__COMMANDS_H */

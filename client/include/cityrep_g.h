@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,7 +13,7 @@
 #ifndef FC__CITYREP_G_H
 #define FC__CITYREP_G_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #include "fc_types.h"
 
@@ -31,4 +31,4 @@ GUI_FUNC_PROTO(void, toggle_city_hilite, struct city *pcity, bool on_off)
 void city_report_dialog_update_city(struct city *pcity);
 void city_report_dialog_update(void);
 
-#endif  /* FC__CITYREP_G_H */
+#endif /* FC__CITYREP_G_H */

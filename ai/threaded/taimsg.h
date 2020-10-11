@@ -29,15 +29,13 @@
 #define SPECENUM_VALUE1NAME "TurnDone"
 #include "specenum_gen.h"
 
-struct tai_msg
-{
+struct tai_msg {
   enum taimsgtype type;
   struct player *plr;
   void *data;
 };
 
-struct tai_req
-{
+struct tai_req {
   enum taireqtype type;
   struct player *plr;
   void *data;
@@ -51,10 +49,8 @@ struct tai_req
 #define SPECLIST_TYPE struct tai_req
 #include "speclist.h"
 
-void tai_send_msg(enum taimsgtype type, struct player *pplayer,
-                  void *data);
-void tai_send_req(enum taireqtype type, struct player *pplayer,
-                  void *data);
+void tai_send_msg(enum taimsgtype type, struct player *pplayer, void *data);
+void tai_send_req(enum taireqtype type, struct player *pplayer, void *data);
 
 void tai_first_activities(struct ai_type *ait, struct player *pplayer);
 void tai_phase_finished(struct ai_type *ait, struct player *pplayer);

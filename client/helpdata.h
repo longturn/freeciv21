@@ -17,12 +17,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include <stddef.h>		/* size_t */
+#include <stddef.h> /* size_t */
 
 /* common */
-#include "improvement.h" 	/* Impr_type_id */
+#include "improvement.h" /* Impr_type_id */
 
-#include "helpdlg_g.h"		/* enum help_page_type */
+#include "helpdlg_g.h" /* enum help_page_type */
 
 struct help_item {
   char *topic, *text;
@@ -37,14 +37,14 @@ void free_help_texts(void);
 
 int num_help_items(void);
 const struct help_item *get_help_item(int pos);
-const struct help_item *get_help_item_spec(const char *name,
-                                           enum help_page_type htype,
-                                           int *pos);
+const struct help_item *
+get_help_item_spec(const char *name, enum help_page_type htype, int *pos);
 void help_iter_start(void);
 const struct help_item *help_iter_next(void);
 
 char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
-                        const char *user_text, const struct impr_type *pimprove);
+                        const char *user_text,
+                        const struct impr_type *pimprove);
 char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                     const char *user_text, const struct unit_type *utype);
 void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
@@ -69,14 +69,17 @@ const char *helptext_extra_for_terrain_str(struct extra_type *pextra,
                                            struct terrain *pterrain,
                                            enum unit_activity act);
 
-#define help_items_iterate(pitem) {       \
-        const struct help_item *pitem;    \
-        help_iter_start();                \
-        while ((pitem = help_iter_next())) {   
-#define help_items_iterate_end }}
+#define help_items_iterate(pitem)                                           \
+  {                                                                         \
+    const struct help_item *pitem;                                          \
+    help_iter_start();                                                      \
+    while ((pitem = help_iter_next())) {
+#define help_items_iterate_end                                              \
+  }                                                                         \
+  }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__HELPDATA_H */
+#endif /* FC__HELPDATA_H */

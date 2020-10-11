@@ -24,9 +24,9 @@
 
 static struct sprite *intro_gfx_sprite = NULL;
 
-/************************************************************************//**
-  Return whether the client supports given view type.
-****************************************************************************/
+/************************************************************************/ /**
+   Return whether the client supports given view type.
+ ****************************************************************************/
 bool qtg_is_view_supported(enum ts_type type)
 {
   switch (type) {
@@ -40,16 +40,14 @@ bool qtg_is_view_supported(enum ts_type type)
   return false;
 }
 
-/************************************************************************//**
-  Loading tileset of the specified type
-****************************************************************************/
-void qtg_tileset_type_set(enum ts_type type)
-{
-}
+/************************************************************************/ /**
+   Loading tileset of the specified type
+ ****************************************************************************/
+void qtg_tileset_type_set(enum ts_type type) {}
 
-/************************************************************************//**
-  Frees the introductory sprites.
-****************************************************************************/
+/************************************************************************/ /**
+   Frees the introductory sprites.
+ ****************************************************************************/
 void qtg_free_intro_radar_sprites()
 {
   if (intro_gfx_sprite) {

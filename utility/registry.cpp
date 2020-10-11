@@ -24,9 +24,9 @@
 
 #include "registry.h"
 
-/*********************************************************************//**
-  Initialize registry module
-*************************************************************************/
+/*********************************************************************/ /**
+   Initialize registry module
+ *************************************************************************/
 void registry_module_init(void)
 {
 #ifdef FREECIV_HAVE_XML_REGISTRY
@@ -34,9 +34,9 @@ void registry_module_init(void)
 #endif /* FREECIV_HAVE_XML_REGISTRY */
 }
 
-/*********************************************************************//**
-  Closes registry module
-*************************************************************************/
+/*********************************************************************/ /**
+   Closes registry module
+ *************************************************************************/
 void registry_module_close(void)
 {
 #ifdef FREECIV_HAVE_XML_REGISTRY
@@ -44,9 +44,9 @@ void registry_module_close(void)
 #endif /* FREECIV_HAVE_XML_REGISTRY */
 }
 
-/*********************************************************************//**
-  Create a section file from a file.  Returns NULL on error.
-*************************************************************************/
+/*********************************************************************/ /**
+   Create a section file from a file.  Returns NULL on error.
+ *************************************************************************/
 struct section_file *secfile_load(const char *filename,
                                   bool allow_duplicates)
 {

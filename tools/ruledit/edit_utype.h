@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,22 +25,20 @@ class QToolButton;
 
 class ruledit_gui;
 
-class edit_utype : public QDialog
-{
+class edit_utype : public QDialog {
   Q_OBJECT
 
-  public:
-    explicit edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in);
-    void refresh();
+public:
+  explicit edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    struct unit_type *utype;
-    QToolButton *req_button;
+private:
+  ruledit_gui *ui;
+  struct unit_type *utype;
+  QToolButton *req_button;
 
-  private slots:
-    void req_menu(QAction *action);
+private slots:
+  void req_menu(QAction *action);
 };
-
 
 #endif // FC__EDIT_UTYPE_H

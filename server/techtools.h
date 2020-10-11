@@ -30,8 +30,8 @@ void send_research_info(const struct research *presearch,
                         const struct conn_list *dest);
 
 void script_tech_learned(struct research *presearch,
-                         struct player *originating_plr, struct advance *tech,
-                         const char *reason);
+                         struct player *originating_plr,
+                         struct advance *tech, const char *reason);
 void found_new_tech(struct research *presearch, Tech_type_id tech_found,
                     bool was_discovery, bool saving_bulbs);
 void update_bulbs(struct player *pplayer, int bulbs, bool check_tech);
@@ -40,7 +40,7 @@ void choose_tech(struct research *presearch, Tech_type_id tech);
 void choose_random_tech(struct research *presearch);
 void choose_tech_goal(struct research *presearch, Tech_type_id tech);
 Tech_type_id steal_a_tech(struct player *pplayer, struct player *target,
-                Tech_type_id preferred);
+                          Tech_type_id preferred);
 
 Tech_type_id pick_free_tech(struct research *presearch);
 void give_immediate_free_tech(struct research *presearch, Tech_type_id tech);
@@ -53,4 +53,4 @@ bool tech_transfer(struct player *plr_recv, struct player *plr_donor,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__TECHTOOLS_H */
+#endif /* FC__TECHTOOLS_H */

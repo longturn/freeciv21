@@ -27,20 +27,17 @@
 
 struct player;
 
-struct tai_msgs
-{
+struct tai_msgs {
   fc_thread_cond thr_cond;
   fc_mutex mutex;
   struct taimsg_list *msglist;
 };
 
-struct tai_reqs
-{
+struct tai_reqs {
   struct taireq_list *reqlist;
 };
 
-struct tai_plr
-{
+struct tai_plr {
   struct ai_plr defai; /* Keep this first so default ai finds it */
 };
 
@@ -50,7 +47,7 @@ bool tai_thread_running(void);
 
 void tai_player_alloc(struct ai_type *ait, struct player *pplayer);
 void tai_player_free(struct ai_type *ait, struct player *pplayer);
-void tai_control_gained(struct ai_type *ait,struct player *pplayer);
+void tai_control_gained(struct ai_type *ait, struct player *pplayer);
 void tai_control_lost(struct ai_type *ait, struct player *pplayer);
 void tai_refresh(struct ai_type *ait, struct player *pplayer);
 
@@ -61,7 +58,7 @@ void tai_req_from_thr(struct tai_req *req);
 static inline struct tai_plr *tai_player_data(struct ai_type *ait,
                                               const struct player *pplayer)
 {
-  return (struct tai_plr *)player_ai_data(pplayer, ait);
+  return (struct tai_plr *) player_ai_data(pplayer, ait);
 }
 
 #endif /* FC__TAIPLAYER_H */

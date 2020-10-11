@@ -27,33 +27,32 @@ class QRadioButton;
 
 class ruledit_gui;
 
-class tab_terrains : public QWidget
-{
+class tab_terrains : public QWidget {
   Q_OBJECT
 
-  public:
-    explicit tab_terrains(ruledit_gui *ui_in);
-    void refresh();
+public:
+  explicit tab_terrains(ruledit_gui *ui_in);
+  void refresh();
 
-  private:
-    ruledit_gui *ui;
-    void update_terrain_info(struct terrain *pterr);
-    bool initialize_new_terrain(struct terrain *pterr);
+private:
+  ruledit_gui *ui;
+  void update_terrain_info(struct terrain *pterr);
+  bool initialize_new_terrain(struct terrain *pterr);
 
-    QLineEdit *name;
-    QLineEdit *rname;
-    QListWidget *terrain_list;
-    QRadioButton *same_name;
+  QLineEdit *name;
+  QLineEdit *rname;
+  QListWidget *terrain_list;
+  QRadioButton *same_name;
 
-    struct terrain *selected;
+  struct terrain *selected;
 
-  private slots:
-    void name_given();
-    void select_terrain();
-    void add_now();
-    void delete_now();
-    void same_name_toggle(bool checked);
-    void edit_effects();
+private slots:
+  void name_given();
+  void select_terrain();
+  void add_now();
+  void delete_now();
+  void same_name_toggle(bool checked);
+  void edit_effects();
 };
 
 #endif // FC__TAB_TERRAINS_H

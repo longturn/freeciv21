@@ -26,17 +26,14 @@
 
 #include "luaconsole.h"
 
-/*************************************************************************//**
-  Popup the lua console inside the main-window, and optionally raise it.
-*****************************************************************************/
-void luaconsole_dialog_popup(bool raise)
-{
-  /* PORTME */
-}
+/*************************************************************************/ /**
+   Popup the lua console inside the main-window, and optionally raise it.
+ *****************************************************************************/
+void luaconsole_dialog_popup(bool raise) { /* PORTME */ }
 
-/*************************************************************************//**
-  Return TRUE iff the lua console is open.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return TRUE iff the lua console is open.
+ *****************************************************************************/
 bool luaconsole_dialog_is_open(void)
 {
   /* PORTME */
@@ -44,18 +41,15 @@ bool luaconsole_dialog_is_open(void)
   return FALSE;
 }
 
-/*************************************************************************//**
-  Update the lua console.
-*****************************************************************************/
-void real_luaconsole_dialog_update(void)
-{
-  /* PORTME */
-}
+/*************************************************************************/ /**
+   Update the lua console.
+ *****************************************************************************/
+void real_luaconsole_dialog_update(void) { /* PORTME */ }
 
-/*************************************************************************//**
-  Appends the string to the chat output window.  The string should be
-  inserted on its own line, although it will have no newline.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Appends the string to the chat output window.  The string should be
+   inserted on its own line, although it will have no newline.
+ *****************************************************************************/
 void real_luaconsole_append(const char *astring,
                             const struct text_tag_list *tags)
 {

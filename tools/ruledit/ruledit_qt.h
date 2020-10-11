@@ -16,9 +16,9 @@
 
 // Qt
 #include <QApplication>
+#include <QLabel>
 #include <QMainWindow>
 #include <QObject>
-#include <QLabel>
 #include <QTabWidget>
 
 // ruledit
@@ -44,8 +44,7 @@ class req_edit;
 class req_vec_fix;
 class req_vec_fix_item;
 
-class ruledit_main : public QMainWindow
-{
+class ruledit_main : public QMainWindow {
   Q_OBJECT
 
 public:
@@ -65,7 +64,7 @@ protected:
 #define SPECLIST_TYPE class req_edit
 #include "speclist.h"
 
-#define req_edit_list_iterate(reqeditlist, preqedit) \
+#define req_edit_list_iterate(reqeditlist, preqedit)                        \
   TYPED_LIST_ITERATE(class req_edit, reqeditlist, preqedit)
 #define req_edit_list_iterate_end LIST_ITERATE_END
 
@@ -74,7 +73,7 @@ protected:
 #define SPECLIST_TYPE class effect_edit
 #include "speclist.h"
 
-#define effect_edit_list_iterate(effecteditlist, peffectedit) \
+#define effect_edit_list_iterate(effecteditlist, peffectedit)               \
   TYPED_LIST_ITERATE(class effect_edit, effecteditlist, peffectedit)
 #define effect_edit_list_iterate_end LIST_ITERATE_END
 
@@ -83,67 +82,66 @@ protected:
 #define SPECLIST_TYPE class req_vec_fix
 #include "speclist.h"
 
-#define req_vec_fix_list_iterate(reqvecfixlist, preqvecfix)               \
+#define req_vec_fix_list_iterate(reqvecfixlist, preqvecfix)                 \
   TYPED_LIST_ITERATE(class req_vec_fix, reqvecfixlist, preqvecfix)
 #define req_vec_fix_list_iterate_end LIST_ITERATE_END
 
-class ruledit_gui : public QObject
-{
+class ruledit_gui : public QObject {
   Q_OBJECT
 
-  public:
-    void setup(QWidget *central_in);
-    void display_msg(const char *msg);
-    requirers_dlg *create_requirers(const char *title);
-    void show_required(requirers_dlg *requirers, const char *msg);
-    void flush_widgets();
+public:
+  void setup(QWidget *central_in);
+  void display_msg(const char *msg);
+  requirers_dlg *create_requirers(const char *title);
+  void show_required(requirers_dlg *requirers, const char *msg);
+  void flush_widgets();
 
-    void open_req_edit(QString target, struct requirement_vector *preqs);
-    void unregister_req_edit(class req_edit *redit);
+  void open_req_edit(QString target, struct requirement_vector *preqs);
+  void unregister_req_edit(class req_edit *redit);
 
-    void open_req_vec_fix(req_vec_fix_item *item_info);
-    void unregister_req_vec_fix(req_vec_fix *fixer);
+  void open_req_vec_fix(req_vec_fix_item *item_info);
+  void unregister_req_vec_fix(req_vec_fix *fixer);
 
-    void open_effect_edit(QString target, struct universal *uni,
-                          enum effect_filter_main_class efmc);
-    void unregister_effect_edit(class effect_edit *e_edit);
-    void refresh_effect_edits();
+  void open_effect_edit(QString target, struct universal *uni,
+                        enum effect_filter_main_class efmc);
+  void unregister_effect_edit(class effect_edit *e_edit);
+  void refresh_effect_edits();
 
-    struct rule_data data;
+  struct rule_data data;
 
 signals:
-  /********************************************************************//**
-    A requirement vector may have been changed.
-    @param vec the requirement vector that was changed.
-  ************************************************************************/
+  /********************************************************************/ /**
+     A requirement vector may have been changed.
+     @param vec the requirement vector that was changed.
+   ************************************************************************/
   void rec_vec_may_have_changed(const requirement_vector *vec);
 
-  private:
-    QLabel *msg_dspl;
-    QTabWidget *stack;
-    QLineEdit *ruleset_select;
-    QWidget *central;
-    QStackedLayout *main_layout;
+private:
+  QLabel *msg_dspl;
+  QTabWidget *stack;
+  QLineEdit *ruleset_select;
+  QWidget *central;
+  QStackedLayout *main_layout;
 
-    tab_building *bldg;
-    tab_misc *misc;
-    tab_tech *tech;
-    tab_unit *unit;
-    tab_good *good;
-    tab_gov *gov;
-    tab_enabler *enablers;
-    tab_extras *extras;
-    tab_multiplier *multipliers;
-    tab_terrains *terrains;
-    tab_nation *nation;
+  tab_building *bldg;
+  tab_misc *misc;
+  tab_tech *tech;
+  tab_unit *unit;
+  tab_good *good;
+  tab_gov *gov;
+  tab_enabler *enablers;
+  tab_extras *extras;
+  tab_multiplier *multipliers;
+  tab_terrains *terrains;
+  tab_nation *nation;
 
-    struct req_edit_list *req_edits;
-    struct req_vec_fix_list *req_vec_fixers;
-    struct effect_edit_list *effect_edits;
+  struct req_edit_list *req_edits;
+  struct req_vec_fix_list *req_vec_fixers;
+  struct effect_edit_list *effect_edits;
 
-  private slots:
-    void launch_now();
-    void incoming_rec_vec_change(const requirement_vector *vec);
+private slots:
+  void launch_now();
+  void incoming_rec_vec_change(const requirement_vector *vec);
 };
 
 int ruledit_qt_run(int argc, char **argv);

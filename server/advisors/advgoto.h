@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -20,10 +20,9 @@
  * WAGs: how hard to avoid tall stacks of units.
  * Pass as fearfulness values to adv_avoid_risks.
  */
-#define NORMAL_STACKING_FEARFULNESS ((double)PF_TURN_FACTOR / 36.0)
+#define NORMAL_STACKING_FEARFULNESS ((double) PF_TURN_FACTOR / 36.0)
 
-struct adv_risk_cost
-{
+struct adv_risk_cost {
   double base_value;
   double fearfulness;
   double enemy_zoc_cost;
@@ -39,8 +38,7 @@ int adv_could_unit_move_to_tile(struct unit *punit, struct tile *dst_tile);
 bool adv_danger_at(struct unit *punit, struct tile *ptile);
 
 void adv_avoid_risks(struct pf_parameter *parameter,
-                     struct adv_risk_cost *risk_cost,
-                     struct unit *punit,
+                     struct adv_risk_cost *risk_cost, struct unit *punit,
                      const double fearfulness);
 
 int adv_unittype_att_rating(const struct unit_type *punittype, int veteran,
@@ -49,4 +47,4 @@ int adv_unit_att_rating(const struct unit *punit);
 int adv_unit_def_rating_basic(const struct unit *punit);
 int adv_unit_def_rating_basic_squared(const struct unit *punit);
 
-#endif   /* FC__ADVGOTO_H */
+#endif /* FC__ADVGOTO_H */

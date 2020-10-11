@@ -16,17 +16,17 @@
 #endif
 
 /* client */
-#include "climisc.h"      /* for write_chatline_content */
+#include "climisc.h" /* for write_chatline_content */
 
 /* gui main header */
 #include "gui_stub.h"
 
 #include "chatline.h"
 
-/**********************************************************************//**
-  Appends the string to the chat output window.  The string should be
-  inserted on its own line, although it will have no newline.
-**************************************************************************/
+/**********************************************************************/ /**
+   Appends the string to the chat output window.  The string should be
+   inserted on its own line, although it will have no newline.
+ **************************************************************************/
 void gui_real_output_window_append(const char *astring,
                                    const struct text_tag_list *tags,
                                    int conn_id)
@@ -34,19 +34,19 @@ void gui_real_output_window_append(const char *astring,
   /* PORTME */
 }
 
-/**********************************************************************//**
-  Get the text of the output window, and call write_chatline_content() to
-  log it.
-**************************************************************************/
+/**********************************************************************/ /**
+   Get the text of the output window, and call write_chatline_content() to
+   log it.
+ **************************************************************************/
 void log_output_window(void)
 {
   /* PORTME */
   write_chatline_content(NULL);
 }
 
-/**********************************************************************//**
-  Clear all text from the output window.
-**************************************************************************/
+/**********************************************************************/ /**
+   Clear all text from the output window.
+ **************************************************************************/
 void clear_output_window(void)
 {
   /* PORTME */
@@ -55,9 +55,9 @@ void clear_output_window(void)
 #endif
 }
 
-/**********************************************************************//**
-  Got version message from metaserver thread.
-**************************************************************************/
+/**********************************************************************/ /**
+   Got version message from metaserver thread.
+ **************************************************************************/
 void gui_version_message(const char *vertext)
 {
   output_window_append(ftc_client, vertext);

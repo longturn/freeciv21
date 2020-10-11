@@ -30,11 +30,11 @@
 
 #include "worklist.h"
 
-/************************************************************************//**
-  Initialize a worklist to be empty.
-  For elements, only really need to set [0], but initialize the
-  rest to avoid junk values in savefile.
-****************************************************************************/
+/************************************************************************/ /**
+   Initialize a worklist to be empty.
+   For elements, only really need to set [0], but initialize the
+   rest to avoid junk values in savefile.
+ ****************************************************************************/
 void worklist_init(struct worklist *pwl)
 {
   int i;
@@ -44,47 +44,47 @@ void worklist_init(struct worklist *pwl)
   for (i = 0; i < MAX_LEN_WORKLIST; i++) {
     /* just setting the entry to zero: */
     pwl->entries[i].kind = VUT_NONE;
-    /* all the union pointers should be in the same place: */ 
+    /* all the union pointers should be in the same place: */
     pwl->entries[i].value.building = NULL;
   }
 }
 
-/************************************************************************//**
-  Returns the number of entries in the worklist.  The returned value can
-  also be used as the next available worklist index (assuming that
-  len < MAX_LEN_WORKLIST).
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the number of entries in the worklist.  The returned value can
+   also be used as the next available worklist index (assuming that
+   len < MAX_LEN_WORKLIST).
+ ****************************************************************************/
 int worklist_length(const struct worklist *pwl)
 {
   fc_assert_ret_val(pwl->length >= 0 && pwl->length <= MAX_LEN_WORKLIST, -1);
   return pwl->length;
 }
 
-/************************************************************************//**
-  Returns whether worklist has no elements.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns whether worklist has no elements.
+ ****************************************************************************/
 bool worklist_is_empty(const struct worklist *pwl)
 {
   return !pwl || pwl->length == 0;
 }
 
-/************************************************************************//**
-  Fill in the id and is_unit values for the head of the worklist
-  if the worklist is non-empty.  Return 1 iff id and is_unit
-  are valid.
-****************************************************************************/
+/************************************************************************/ /**
+   Fill in the id and is_unit values for the head of the worklist
+   if the worklist is non-empty.  Return 1 iff id and is_unit
+   are valid.
+ ****************************************************************************/
 bool worklist_peek(const struct worklist *pwl, struct universal *prod)
 {
   return worklist_peek_ith(pwl, prod, 0);
 }
 
-/************************************************************************//**
-  Fill in the id and is_unit values for the ith element in the
-  worklist. If the worklist has fewer than idx elements,
-  return FALSE.
-****************************************************************************/
-bool worklist_peek_ith(const struct worklist *pwl,
-		       struct universal *prod, int idx)
+/************************************************************************/ /**
+   Fill in the id and is_unit values for the ith element in the
+   worklist. If the worklist has fewer than idx elements,
+   return FALSE.
+ ****************************************************************************/
+bool worklist_peek_ith(const struct worklist *pwl, struct universal *prod,
+                       int idx)
 {
   /* Out of possible bounds. */
   if (idx < 0 || pwl->length <= idx) {
@@ -98,17 +98,14 @@ bool worklist_peek_ith(const struct worklist *pwl,
   return TRUE;
 }
 
-/************************************************************************//**
-  Remove first element from worklist.
-****************************************************************************/
-void worklist_advance(struct worklist *pwl)
-{
-  worklist_remove(pwl, 0);
-}  
+/************************************************************************/ /**
+   Remove first element from worklist.
+ ****************************************************************************/
+void worklist_advance(struct worklist *pwl) { worklist_remove(pwl, 0); }
 
-/************************************************************************//**
-  Copy contents from worklist src to worklist dst.
-****************************************************************************/
+/************************************************************************/ /**
+   Copy contents from worklist src to worklist dst.
+ ****************************************************************************/
 void worklist_copy(struct worklist *dst, const struct worklist *src)
 {
   dst->length = src->length;
@@ -116,9 +113,9 @@ void worklist_copy(struct worklist *dst, const struct worklist *src)
   memcpy(dst->entries, src->entries, sizeof(struct universal) * src->length);
 }
 
-/************************************************************************//**
-  Remove element from position idx.
-****************************************************************************/
+/************************************************************************/ /**
+   Remove element from position idx.
+ ****************************************************************************/
 void worklist_remove(struct worklist *pwl, int idx)
 {
   int i;
@@ -134,16 +131,16 @@ void worklist_remove(struct worklist *pwl, int idx)
   }
   /* just setting the entry to zero: */
   pwl->entries[pwl->length - 1].kind = VUT_NONE;
-  /* all the union pointers should be in the same place: */ 
+  /* all the union pointers should be in the same place: */
   pwl->entries[pwl->length - 1].value.building = NULL;
   pwl->length--;
 }
 
-/************************************************************************//**
-  Adds the id to the next available slot in the worklist.  'id' is the ID of
-  the unit/building to be produced; is_unit specifies whether it's a unit or
-  a building.  Returns TRUE if successful.
-****************************************************************************/
+/************************************************************************/ /**
+   Adds the id to the next available slot in the worklist.  'id' is the ID of
+   the unit/building to be produced; is_unit specifies whether it's a unit or
+   a building.  Returns TRUE if successful.
+ ****************************************************************************/
 bool worklist_append(struct worklist *pwl, const struct universal *prod)
 {
   int next_index = worklist_length(pwl);
@@ -158,12 +155,12 @@ bool worklist_append(struct worklist *pwl, const struct universal *prod)
   return TRUE;
 }
 
-/************************************************************************//**
-  Inserts the production at the location idx in the worklist, thus moving
-  all subsequent entries down.  'id' specifies the unit/building to
-  be produced; is_unit tells whether it's a unit or building.  Returns TRUE
-  if successful.
-****************************************************************************/
+/************************************************************************/ /**
+   Inserts the production at the location idx in the worklist, thus moving
+   all subsequent entries down.  'id' specifies the unit/building to
+   be produced; is_unit tells whether it's a unit or building.  Returns TRUE
+   if successful.
+ ****************************************************************************/
 bool worklist_insert(struct worklist *pwl, const struct universal *prod,
                      int idx)
 {
@@ -186,9 +183,9 @@ bool worklist_insert(struct worklist *pwl, const struct universal *prod,
   return TRUE;
 }
 
-/************************************************************************//**
-  Return TRUE iff the two worklists are equal.
-****************************************************************************/
+/************************************************************************/ /**
+   Return TRUE iff the two worklists are equal.
+ ****************************************************************************/
 bool are_worklists_equal(const struct worklist *wlist1,
                          const struct worklist *wlist2)
 {

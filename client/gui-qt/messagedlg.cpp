@@ -15,14 +15,13 @@
 #include <fc_config.h>
 #endif
 
-
 // Qt
 #include <QApplication>
 #include <QGridLayout>
+#include <QHeaderView>
 #include <QLabel>
 #include <QPushButton>
 #include <QTableWidget>
-#include <QHeaderView>
 
 // client
 #include "options.h"
@@ -32,9 +31,9 @@
 #include "messagedlg.h"
 
 extern QApplication *qapp;
-/**********************************************************************//**
-  Message widget constructor
-**************************************************************************/
+/**********************************************************************/ /**
+   Message widget constructor
+ **************************************************************************/
 message_dlg::message_dlg()
 {
   int index;
@@ -55,19 +54,20 @@ message_dlg::message_dlg()
   msgtab->setHorizontalHeaderLabels(slist);
   msgtab->setProperty("showGrid", "false");
   msgtab->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  msgtab->horizontalHeader()->resizeSections(QHeaderView::
-                                             ResizeToContents);
+  msgtab->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
   msgtab->verticalHeader()->setVisible(false);
   msgtab->setSelectionMode(QAbstractItemView::NoSelection);
   msgtab->setSelectionBehavior(QAbstractItemView::SelectColumns);
 
-  but1 = new QPushButton(style()->standardIcon(
-                         QStyle::SP_DialogCancelButton), _("Cancel"));
-  connect(but1, &QAbstractButton::clicked, this, &message_dlg::cancel_changes);
+  but1 = new QPushButton(
+      style()->standardIcon(QStyle::SP_DialogCancelButton), _("Cancel"));
+  connect(but1, &QAbstractButton::clicked, this,
+          &message_dlg::cancel_changes);
   layout->addWidget(but1, 1, 1, 1, 1);
   but2 = new QPushButton(style()->standardIcon(QStyle::SP_DialogOkButton),
                          _("Ok"));
-  connect(but2, &QAbstractButton::clicked, this, &message_dlg::apply_changes);
+  connect(but2, &QAbstractButton::clicked, this,
+          &message_dlg::apply_changes);
   layout->addWidget(but2, 1, 2, 1, 1, Qt::AlignRight);
   layout->addWidget(empty1, 0, 0, 1, 1);
   layout->addWidget(msgtab, 0, 1, 1, 2);
@@ -91,17 +91,14 @@ message_dlg::message_dlg()
   but2->setFixedWidth(len / 3);
 }
 
-/**********************************************************************//**
-  Message widget destructor
-**************************************************************************/
-message_dlg::~message_dlg()
-{
-  gui()->remove_repo_dlg("MSD");
-}
+/**********************************************************************/ /**
+   Message widget destructor
+ **************************************************************************/
+message_dlg::~message_dlg() { gui()->remove_repo_dlg("MSD"); }
 
-/**********************************************************************//**
-  Fills column in table
-**************************************************************************/
+/**********************************************************************/ /**
+   Fills column in table
+ **************************************************************************/
 void message_dlg::fill_data()
 {
   int i, j;
@@ -109,15 +106,16 @@ void message_dlg::fill_data()
   i = 0;
   msgtab->setRowCount(0);
 
-  sorted_event_iterate(ev) {
-    item =  new QTableWidgetItem;
+  sorted_event_iterate(ev)
+  {
+    item = new QTableWidgetItem;
     item->setText(get_event_message_text(ev));
     msgtab->insertRow(i);
     msgtab->setItem(i, 0, item);
     for (j = 0; j < NUM_MW; j++) {
       bool checked;
-      item =  new QTableWidgetItem;
-      checked =  messages_where[ev] & (1 << j);
+      item = new QTableWidgetItem;
+      checked = messages_where[ev] & (1 << j);
       if (checked) {
         item->setCheckState(Qt::Checked);
       } else {
@@ -126,14 +124,14 @@ void message_dlg::fill_data()
       msgtab->setItem(i, j + 1, item);
     }
     i++;
-  } sorted_event_iterate_end;
+  }
+  sorted_event_iterate_end;
   msgtab->resizeColumnsToContents();
-
 }
 
-/**********************************************************************//**
-  Apply changes and closes widget
-**************************************************************************/
+/**********************************************************************/ /**
+   Apply changes and closes widget
+ **************************************************************************/
 void message_dlg::apply_changes()
 {
   int i, j;
@@ -144,11 +142,12 @@ void message_dlg::apply_changes()
     messages_where[i] = 0;
   }
   i = 0;
-  sorted_event_iterate(ev) {
+  sorted_event_iterate(ev)
+  {
     for (j = 0; j < NUM_MW; j++) {
       bool checked;
       item = msgtab->item(i, j + 1);
-      checked =  messages_where[ev] & (1 << j);
+      checked = messages_where[ev] & (1 << j);
       state = item->checkState();
       if ((state == Qt::Checked && !checked)
           || (state == Qt::Unchecked && checked)) {
@@ -156,21 +155,19 @@ void message_dlg::apply_changes()
       }
     }
     i++;
-  } sorted_event_iterate_end;
+  }
+  sorted_event_iterate_end;
   close();
 }
 
-/**********************************************************************//**
-  Closes widget
-**************************************************************************/
-void message_dlg::cancel_changes()
-{
-  close();
-}
+/**********************************************************************/ /**
+   Closes widget
+ **************************************************************************/
+void message_dlg::cancel_changes() { close(); }
 
-/**********************************************************************//**
-  Popup a window to let the user edit their message options.
-**************************************************************************/
+/**********************************************************************/ /**
+   Popup a window to let the user edit their message options.
+ **************************************************************************/
 void popup_messageopt_dialog(void)
 {
   message_dlg *mdlg;

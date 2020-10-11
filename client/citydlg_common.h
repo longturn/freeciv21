@@ -18,10 +18,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include <stddef.h>		/* size_t */
+#include <stddef.h> /* size_t */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "city.h"
@@ -38,12 +38,11 @@ bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
                         int city_y, int city_radius_sq);
 bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
                         int canvas_x, int canvas_y);
-void city_dialog_redraw_map(struct city *pcity,
-                            struct canvas *pcanvas);
+void city_dialog_redraw_map(struct city *pcity, struct canvas *pcanvas);
 
 char *city_production_cost_str(const struct city *pcity);
-void get_city_dialog_production(struct city *pcity,
-                                char *buffer, size_t buffer_len);
+void get_city_dialog_production(struct city *pcity, char *buffer,
+                                size_t buffer_len);
 void get_city_dialog_production_full(char *buffer, size_t buffer_len,
                                      struct universal *target,
                                      struct city *pcity);
@@ -52,19 +51,19 @@ void get_city_dialog_production_row(char *buf[], size_t column_size,
                                     struct city *pcity);
 
 void get_city_dialog_output_text(const struct city *pcity,
-                                 Output_type_id otype,
-                                 char *buffer, size_t bufsz);
-void get_city_dialog_pollution_text(const struct city *pcity,
-                                    char *buf, size_t bufsz);
-void get_city_dialog_culture_text(const struct city *pcity,
-                                  char *buf, size_t bufsz);
-void get_city_dialog_illness_text(const struct city *pcity,
-                                  char *buf, size_t bufsz);
-void get_city_dialog_airlift_text(const struct city *pcity,
-                                  char *buf, size_t bufsz);
+                                 Output_type_id otype, char *buffer,
+                                 size_t bufsz);
+void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
+                                    size_t bufsz);
+void get_city_dialog_culture_text(const struct city *pcity, char *buf,
+                                  size_t bufsz);
+void get_city_dialog_illness_text(const struct city *pcity, char *buf,
+                                  size_t bufsz);
+void get_city_dialog_airlift_text(const struct city *pcity, char *buf,
+                                  size_t bufsz);
 
-void get_city_dialog_airlift_value(const struct city *pcity,
-                                   char *buf, size_t bufsz);
+void get_city_dialog_airlift_value(const struct city *pcity, char *buf,
+                                   size_t bufsz);
 
 int get_city_citizen_types(struct city *pcity, enum citizen_feeling index,
                            enum citizen_category *categories);

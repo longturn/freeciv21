@@ -63,4 +63,4 @@ void free_libfreeciv(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__FC_INTERFACE_H */
+#endif /* FC__FC_INTERFACE_H */

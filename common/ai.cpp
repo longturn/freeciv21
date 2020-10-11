@@ -19,7 +19,7 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h"                /* fc_assert */
+#include "log.h" /* fc_assert */
 #include "mem.h"
 #include "timing.h"
 
@@ -43,9 +43,9 @@ static struct ai_timer *ai_timer_player_get(const struct player *pplayer);
 static struct ai_timer *aitimers = NULL;
 static struct ai_timer *aitimer_plrs = NULL;
 
-/*************************************************************************//**
-  Allocate memory for Start the timer for the AI of a player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Allocate memory for Start the timer for the AI of a player.
+ *****************************************************************************/
 void ai_timer_init(void)
 {
   int i;
@@ -69,12 +69,12 @@ void ai_timer_init(void)
   }
 }
 
-/*************************************************************************//**
-  Free resources allocated for the AI timers.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Free resources allocated for the AI timers.
+ *****************************************************************************/
 void ai_timer_free(void)
 {
-  int i,j;
+  int i, j;
   struct ai_timer *aitimer;
 
   for (i = 0; i < FREECIV_AI_MOD_LAST; i++) {
@@ -105,9 +105,9 @@ void ai_timer_free(void)
   aitimer_plrs = NULL;
 }
 
-/*************************************************************************//**
-  Get the timer for the AI.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Get the timer for the AI.
+ *****************************************************************************/
 static struct ai_timer *ai_timer_get(const struct ai_type *ai)
 {
   struct ai_timer *aitimer;
@@ -125,9 +125,9 @@ static struct ai_timer *ai_timer_get(const struct ai_type *ai)
   return aitimer;
 }
 
-/*************************************************************************//**
-  Get the timer for the AI of a player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Get the timer for the AI of a player.
+ *****************************************************************************/
 static struct ai_timer *ai_timer_player_get(const struct player *pplayer)
 {
   struct ai_timer *aitimer;
@@ -137,8 +137,9 @@ static struct ai_timer *ai_timer_player_get(const struct player *pplayer)
 
   fc_assert_ret_val(aitimer_plrs != NULL, NULL);
 
-  aitimer = aitimer_plrs + (player_index(pplayer) * FREECIV_AI_MOD_LAST
-                            + ai_type_number(pplayer->ai));
+  aitimer = aitimer_plrs
+            + (player_index(pplayer) * FREECIV_AI_MOD_LAST
+               + ai_type_number(pplayer->ai));
 
   if (!aitimer->timer) {
     aitimer->timer = timer_new(TIMER_CPU, TIMER_DEBUG);
@@ -147,9 +148,9 @@ static struct ai_timer *ai_timer_player_get(const struct player *pplayer)
   return aitimer;
 }
 
-/*************************************************************************//**
-  Start the timer for the AI.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Start the timer for the AI.
+ *****************************************************************************/
 void ai_timer_start(const struct ai_type *ai)
 {
   struct ai_timer *aitimer = ai_timer_get(ai);
@@ -168,9 +169,9 @@ void ai_timer_start(const struct ai_type *ai)
   aitimer->count++;
 }
 
-/*************************************************************************//**
-  Stop the timer for the AI.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Stop the timer for the AI.
+ *****************************************************************************/
 void ai_timer_stop(const struct ai_type *ai)
 {
   struct ai_timer *aitimer = ai_timer_get(ai);
@@ -194,9 +195,9 @@ void ai_timer_stop(const struct ai_type *ai)
   }
 }
 
-/*************************************************************************//**
-  Start the timer for the AI of a player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Start the timer for the AI of a player.
+ *****************************************************************************/
 void ai_timer_player_start(const struct player *pplayer)
 {
   struct ai_timer *aitimer = ai_timer_player_get(pplayer);
@@ -217,9 +218,9 @@ void ai_timer_player_start(const struct player *pplayer)
   aitimer->count++;
 }
 
-/*************************************************************************//**
-  Stop the timer for the AI of a player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Stop the timer for the AI of a player.
+ *****************************************************************************/
 void ai_timer_player_stop(const struct player *pplayer)
 {
   struct ai_timer *aitimer = ai_timer_player_get(pplayer);
@@ -247,9 +248,9 @@ void ai_timer_player_stop(const struct player *pplayer)
 }
 #endif /* DEBUG_AITIMERS */
 
-/*************************************************************************//**
-  Returns ai_type of given id.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Returns ai_type of given id.
+ *****************************************************************************/
 struct ai_type *get_ai_type(int id)
 {
   fc_assert(id >= 0 && id < FREECIV_AI_MOD_LAST);
@@ -257,17 +258,14 @@ struct ai_type *get_ai_type(int id)
   return &ai_types[id];
 }
 
-/*************************************************************************//**
-  Initializes AI structure.
-*****************************************************************************/
-void init_ai(struct ai_type *ai)
-{
-  memset(ai, 0, sizeof(*ai));
-}
+/*************************************************************************/ /**
+   Initializes AI structure.
+ *****************************************************************************/
+void init_ai(struct ai_type *ai) { memset(ai, 0, sizeof(*ai)); }
 
-/*************************************************************************//**
-  Returns id of the given ai_type.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Returns id of the given ai_type.
+ *****************************************************************************/
 int ai_type_number(const struct ai_type *ai)
 {
   int ainbr = ai - ai_types;
@@ -277,28 +275,29 @@ int ai_type_number(const struct ai_type *ai)
   return ainbr;
 }
 
-/*************************************************************************//**
-  Find ai type with given name.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Find ai type with given name.
+ *****************************************************************************/
 struct ai_type *ai_type_by_name(const char *search)
 {
-  ai_type_iterate(ai) {
+  ai_type_iterate(ai)
+  {
     if (!fc_strcasecmp(ai_name(ai), search)) {
       return ai;
     }
-  } ai_type_iterate_end;
+  }
+  ai_type_iterate_end;
 
   return NULL;
 }
 
-/*************************************************************************//**
-  Return next free ai_type
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return next free ai_type
+ *****************************************************************************/
 struct ai_type *ai_type_alloc(void)
 {
   if (ai_type_count >= FREECIV_AI_MOD_LAST) {
-    log_error(_("Too many AI modules. Max is %d."),
-              FREECIV_AI_MOD_LAST);
+    log_error(_("Too many AI modules. Max is %d."), FREECIV_AI_MOD_LAST);
 
     return NULL;
   }
@@ -306,36 +305,30 @@ struct ai_type *ai_type_alloc(void)
   return get_ai_type(ai_type_count++);
 }
 
-/*************************************************************************//**
-  Free latest ai_type
-*****************************************************************************/
-void ai_type_dealloc(void)
-{
-  ai_type_count--;
-}
+/*************************************************************************/ /**
+   Free latest ai_type
+ *****************************************************************************/
+void ai_type_dealloc(void) { ai_type_count--; }
 
-/*************************************************************************//**
-  Return number of ai types
-*****************************************************************************/
-int ai_type_get_count(void)
-{
-  return ai_type_count;
-}
+/*************************************************************************/ /**
+   Return number of ai types
+ *****************************************************************************/
+int ai_type_get_count(void) { return ai_type_count; }
 
-/*************************************************************************//**
-  Return the name of the ai type.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the name of the ai type.
+ *****************************************************************************/
 const char *ai_name(const struct ai_type *ai)
 {
   fc_assert_ret_val(ai, NULL);
   return ai->name;
 }
 
-/*************************************************************************//**
-  Return usable ai type name, if possible. This is either the name
-  given as parameter or some fallback name for it. NULL is returned if
-  no name matches.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return usable ai type name, if possible. This is either the name
+   given as parameter or some fallback name for it. NULL is returned if
+   no name matches.
+ *****************************************************************************/
 const char *ai_type_name_or_fallback(const char *orig_name)
 {
   if (orig_name == NULL) {

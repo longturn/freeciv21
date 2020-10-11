@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -50,7 +50,8 @@ struct disaster_type {
   struct requirement_vector reqs;
 
   /* Final probability for each city each turn is
-   * this frequency * game.info.disasters frequency setting / DISASTER_BASE_RARITY */
+   * this frequency * game.info.disasters frequency setting /
+   * DISASTER_BASE_RARITY */
   int frequency;
 
   bv_disaster_effects effects;
@@ -76,17 +77,18 @@ bool disaster_has_effect(const struct disaster_type *pdis,
 bool can_disaster_happen(const struct disaster_type *pdis,
                          const struct city *pcity);
 
-#define disaster_type_iterate(_p)                                \
-{                                                                \
-  int _i_;                                                       \
-  for (_i_ = 0; _i_ < game.control.num_disaster_types ; _i_++) { \
-    struct disaster_type *_p = disaster_by_number(_i_);
+#define disaster_type_iterate(_p)                                           \
+  {                                                                         \
+    int _i_;                                                                \
+    for (_i_ = 0; _i_ < game.control.num_disaster_types; _i_++) {           \
+      struct disaster_type *_p = disaster_by_number(_i_);
 
-#define disaster_type_iterate_end                       \
-  }}
+#define disaster_type_iterate_end                                           \
+  }                                                                         \
+  }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__DISASTER_H */
+#endif /* FC__DISASTER_H */

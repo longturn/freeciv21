@@ -25,10 +25,9 @@ extern "C" {
 #include "name_translation.h"
 #include "requirements.h"
 
+struct strvec; /* Actually defined in "utility/string_vector.h". */
 
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
-
-struct ruler_title;     /* Opaque type. */
+struct ruler_title; /* Opaque type. */
 
 /* 'struct ruler_title_hash' and related functions. */
 #define SPECHASH_TAG ruler_title
@@ -66,7 +65,6 @@ struct government {
   } ai;
 };
 
-
 /* General government accessor functions. */
 Government_type_id government_count(void);
 Government_type_id government_index(const struct government *pgovern);
@@ -86,11 +84,9 @@ const char *government_name_for_player(const struct player *pplayer);
 /* Ruler titles. */
 const struct ruler_title_hash *
 government_ruler_titles(const struct government *pgovern);
-struct ruler_title *
-government_ruler_title_new(struct government *pgovern,
-                           const struct nation_type *pnation,
-                           const char *ruler_male_title,
-                           const char *ruler_female_title);
+struct ruler_title *government_ruler_title_new(
+    struct government *pgovern, const struct nation_type *pnation,
+    const char *ruler_male_title, const char *ruler_female_title);
 
 const struct nation_type *
 ruler_title_nation(const struct ruler_title *pruler_title);
@@ -99,8 +95,8 @@ ruler_title_male_untranslated_name(const struct ruler_title *pruler_title);
 const char *
 ruler_title_female_untranslated_name(const struct ruler_title *pruler_title);
 
-const char *ruler_title_for_player(const struct player *pplayer,
-                                   char *buf, size_t buf_len);
+const char *ruler_title_for_player(const struct player *pplayer, char *buf,
+                                   size_t buf_len);
 
 /* Ancillary routines */
 bool can_change_to_government(struct player *pplayer,
@@ -116,23 +112,23 @@ struct iterator *government_iter_init(struct government_iter *it);
 
 /* Iterate over government types. */
 #define governments_iterate(NAME_pgov)                                      \
-  generic_iterate(struct government_iter, struct government *,              \
-                  NAME_pgov, government_iter_sizeof, government_iter_init)
+  generic_iterate(struct government_iter, struct government *, NAME_pgov,   \
+                  government_iter_sizeof, government_iter_init)
 #define governments_iterate_end generic_iterate_end
 
-#define governments_re_active_iterate(_p)                               \
-  governments_iterate(_p) {                                             \
+#define governments_re_active_iterate(_p)                                   \
+  governments_iterate(_p)                                                   \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define governments_re_active_iterate_end                               \
-    }                                                                   \
-  } governments_iterate_end;
+#define governments_re_active_iterate_end                                   \
+  }                                                                         \
+  }                                                                         \
+  governments_iterate_end;
 
 bool untargeted_revolution_allowed(void);
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-
-
-#endif  /* FC__GOVERNMENT_H */
+#endif /* FC__GOVERNMENT_H */

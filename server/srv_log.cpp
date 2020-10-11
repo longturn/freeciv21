@@ -45,10 +45,10 @@ static int recursion[AIT_LAST];
 
 /* General AI logging functions */
 
-/**********************************************************************//**
-  Log city messages, they will appear like this
-    2: Polish Romenna(5,35) [s1 d106 u11 g1] must have Archers ...
-**************************************************************************/
+/**********************************************************************/ /**
+   Log city messages, they will appear like this
+     2: Polish Romenna(5,35) [s1 d106 u11 g1] must have Archers ...
+ **************************************************************************/
 void real_city_log(const char *file, const char *function, int line,
                    enum log_level level, bool notify,
                    const struct city *pcity, const char *msg, ...)
@@ -58,13 +58,12 @@ void real_city_log(const char *file, const char *function, int line,
   va_list ap;
   char aibuf[500] = "\0";
 
-  CALL_PLR_AI_FUNC(log_fragment_city, city_owner(pcity), aibuf, sizeof(aibuf), pcity);
+  CALL_PLR_AI_FUNC(log_fragment_city, city_owner(pcity), aibuf,
+                   sizeof(aibuf), pcity);
 
   fc_snprintf(buffer, sizeof(buffer), "%s %s(%d,%d) (s%d) {%s} ",
-              nation_rule_name(nation_of_city(pcity)),
-              city_name_get(pcity),
-              TILE_XY(pcity->tile), city_size_get(pcity),
-              aibuf);
+              nation_rule_name(nation_of_city(pcity)), city_name_get(pcity),
+              TILE_XY(pcity->tile), city_size_get(pcity), aibuf);
 
   va_start(ap, msg);
   fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
@@ -77,14 +76,14 @@ void real_city_log(const char *file, const char *function, int line,
   do_log(file, function, line, FALSE, level, "%s", buffer);
 }
 
-/**********************************************************************//**
-  Log unit messages, they will appear like this
-    2: Polish Archers[139] (5,35)->(0,0){0,0} stays to defend city
-  where [] is unit id, ()->() are coordinates present and goto, and
-  {,} contains bodyguard and ferryboat ids.
-**************************************************************************/
+/**********************************************************************/ /**
+   Log unit messages, they will appear like this
+     2: Polish Archers[139] (5,35)->(0,0){0,0} stays to defend city
+   where [] is unit id, ()->() are coordinates present and goto, and
+   {,} contains bodyguard and ferryboat ids.
+ **************************************************************************/
 void real_unit_log(const char *file, const char *function, int line,
-                   enum log_level level,  bool notify,
+                   enum log_level level, bool notify,
                    const struct unit *punit, const char *msg, ...)
 {
   char buffer[500];
@@ -93,7 +92,8 @@ void real_unit_log(const char *file, const char *function, int line,
   int gx, gy;
   char aibuf[500] = "\0";
 
-  CALL_PLR_AI_FUNC(log_fragment_unit, unit_owner(punit), aibuf, sizeof(aibuf), punit);
+  CALL_PLR_AI_FUNC(log_fragment_unit, unit_owner(punit), aibuf,
+                   sizeof(aibuf), punit);
 
   if (punit->goto_tile) {
     index_to_map_pos(&gx, &gy, tile_index(punit->goto_tile));
@@ -101,14 +101,10 @@ void real_unit_log(const char *file, const char *function, int line,
     gx = gy = -1;
   }
 
-  fc_snprintf(buffer, sizeof(buffer),
-              "%s %s(%d) %s (%d,%d)->(%d,%d){%s} ",
-              nation_rule_name(nation_of_unit(punit)),
-              unit_rule_name(punit),
-              punit->id,
-              get_activity_text(punit->activity),
-              TILE_XY(unit_tile(punit)),
-              gx, gy, aibuf);
+  fc_snprintf(buffer, sizeof(buffer), "%s %s(%d) %s (%d,%d)->(%d,%d){%s} ",
+              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+              punit->id, get_activity_text(punit->activity),
+              TILE_XY(unit_tile(punit)), gx, gy, aibuf);
 
   va_start(ap, msg);
   fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
@@ -121,10 +117,10 @@ void real_unit_log(const char *file, const char *function, int line,
   do_log(file, function, line, FALSE, level, "%s", buffer);
 }
 
-/**********************************************************************//**
-  Measure the time between the calls.  Used to see where in the AI too
-  much CPU is being used.
-**************************************************************************/
+/**********************************************************************/ /**
+   Measure the time between the calls.  Used to see where in the AI too
+   much CPU is being used.
+ **************************************************************************/
 void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity)
 {
   static int turn = -1;
@@ -150,9 +146,9 @@ void timing_log_real(enum ai_timer timer, enum ai_timer_activity activity)
   }
 }
 
-/**********************************************************************//**
-  Print results
-**************************************************************************/
+/**********************************************************************/ /**
+   Print results
+ **************************************************************************/
 void timing_results_real(void)
 {
   char buf[200];
@@ -168,12 +164,12 @@ void timing_results_real(void)
 
   log_test("  --- AI timing results ---");
 
-#else  /* LOG_TIMERS */
+#else /* LOG_TIMERS */
 
-#define AILOG_OUT(text, which)                                          \
-  fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text, \
-              timer_read_seconds(aitimer[which][0]),                    \
-              timer_read_seconds(aitimer[which][1]));                   \
+#define AILOG_OUT(text, which)                                              \
+  fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text,     \
+              timer_read_seconds(aitimer[which][0]),                        \
+              timer_read_seconds(aitimer[which][1]));                       \
   notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
 
 #endif /* LOG_TIMERS */
@@ -211,9 +207,9 @@ void timing_results_real(void)
   AILOG_OUT("Tech", AIT_TECH);
 }
 
-/**********************************************************************//**
-  Initialize AI timing system
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize AI timing system
+ **************************************************************************/
 void timing_log_init(void)
 {
   int i;
@@ -225,9 +221,9 @@ void timing_log_init(void)
   }
 }
 
-/**********************************************************************//**
-  Free AI timing system resources
-**************************************************************************/
+/**********************************************************************/ /**
+   Free AI timing system resources
+ **************************************************************************/
 void timing_log_free(void)
 {
   int i;

@@ -56,8 +56,8 @@ void api_edit_change_gold(lua_State *L, Player *pplayer, int amount);
 Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
                                     Tech_Type *ptech, int cost, bool notify,
                                     const char *reason);
-bool api_edit_trait_mod_set(lua_State *L, Player *pplayer,
-                            const char *tname, const int mod);
+bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
+                            const int mod);
 
 void api_edit_create_owned_extra(lua_State *L, Tile *ptile, const char *name,
                                  struct player *pplayer);
@@ -72,7 +72,6 @@ void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label);
 void api_edit_climate_change(lua_State *L, enum climate_change_type type,
                              int effect);
 Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability);
-
 
 void api_edit_player_victory(lua_State *L, Player *pplayer);
 bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile,

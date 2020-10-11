@@ -30,18 +30,18 @@
 #include "spaceship.h"
 
 /* server */
-#include "plrhand.h"
 #include "notify.h"
+#include "plrhand.h"
 #include "srv_main.h"
 
 #include "spacerace.h"
 
-/**********************************************************************//**
-  Calculate and fill in the derived quantities about the spaceship.
-  Data reverse engineered from Civ1. --dwp
-  This could be in common, but its better for the client to take
-  the values the server calculates, in case things change.
-**************************************************************************/
+/**********************************************************************/ /**
+   Calculate and fill in the derived quantities about the spaceship.
+   Data reverse engineered from Civ1. --dwp
+   This could be in common, but its better for the client to take
+   the values the server calculates, in case things change.
+ **************************************************************************/
 void spaceship_calc_derived(struct player_spaceship *ship)
 {
   int i;
@@ -55,16 +55,16 @@ void spaceship_calc_derived(struct player_spaceship *ship)
   fc_assert_ret(ship->structurals <= NUM_SS_STRUCTURALS);
   fc_assert_ret(ship->components <= NUM_SS_COMPONENTS);
   fc_assert_ret(ship->modules <= NUM_SS_MODULES);
-  
+
   ship->mass = 0;
-  ship->support_rate = ship->energy_rate =
-    ship->success_rate = ship->travel_time = 0.0;
+  ship->support_rate = ship->energy_rate = ship->success_rate =
+      ship->travel_time = 0.0;
 
   for (i = 0; i < NUM_SS_STRUCTURALS; i++) {
     if (BV_ISSET(ship->structure, i)) {
       ship->mass += (i < 6) ? 200 : 100;
       /* s0 to s3 are heavier; actually in Civ1 its a bit stranger
-	 than this, but not worth figuring out --dwp */
+         than this, but not worth figuring out --dwp */
     }
   }
   for (i = 0; i < ship->fuel; i++) {
@@ -94,7 +94,7 @@ void spaceship_calc_derived(struct player_spaceship *ship)
   }
 
   ship->mass += 1600 * (habitation + life_support)
-    + 400 * (solar_panels + propulsion + fuel);
+                + 400 * (solar_panels + propulsion + fuel);
 
   ship->population = habitation * 10000;
 
@@ -102,11 +102,12 @@ void spaceship_calc_derived(struct player_spaceship *ship)
     ship->support_rate = life_support / (double) habitation;
   }
   if (life_support + habitation > 0) {
-    ship->energy_rate = 2.0 * solar_panels / (double)(life_support+habitation);
+    ship->energy_rate =
+        2.0 * solar_panels / (double) (life_support + habitation);
   }
-  if (fuel>0 && propulsion>0) {
+  if (fuel > 0 && propulsion > 0) {
     ship->success_rate =
-	MIN(ship->support_rate, 1.0) * MIN(ship->energy_rate, 1.0);
+        MIN(ship->support_rate, 1.0) * MIN(ship->energy_rate, 1.0);
   }
 
   /* The Success% can be less by up to a few % in some cases
@@ -115,27 +116,27 @@ void spaceship_calc_derived(struct player_spaceship *ship)
      Actually, the Civ1 manual suggests travel time is relevant. --dwp
   */
 
-  ship->travel_time = ship->mass * game.server.spaceship_travel_time
-    / 100 / (200.0 * MIN(propulsion,fuel) + 20.0);
-
+  ship->travel_time = ship->mass * game.server.spaceship_travel_time / 100
+                      / (200.0 * MIN(propulsion, fuel) + 20.0);
 }
 
-/**********************************************************************//**
-  Send details of src's spaceship (or spaceships of all players
-  if src is NULL) to specified destinations.  If dest is NULL then
-  game.est_connections is used.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send details of src's spaceship (or spaceships of all players
+   if src is NULL) to specified destinations.  If dest is NULL then
+   game.est_connections is used.
+ **************************************************************************/
 void send_spaceship_info(struct player *src, struct conn_list *dest)
 {
   if (!dest) {
     dest = game.est_connections;
   }
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (!src || pplayer == src) {
       struct packet_spaceship_info info;
       struct player_spaceship *ship = &pplayer->spaceship;
-	  
+
       info.player_num = player_number(pplayer);
       info.sship_state = ship->state;
       info.structurals = ship->structurals;
@@ -154,15 +155,16 @@ void send_spaceship_info(struct player *src, struct conn_list *dest)
       info.success_rate = ship->success_rate;
       info.travel_time = ship->travel_time;
       info.structure = ship->structure;
-	  
+
       lsend_packet_spaceship_info(dest, &info);
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 }
 
-/**********************************************************************//**
-  Handle spaceship launch request.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle spaceship launch request.
+ **************************************************************************/
 void handle_spaceship_launch(struct player *pplayer)
 {
   struct player_spaceship *ship = &pplayer->spaceship;
@@ -179,8 +181,7 @@ void handle_spaceship_launch(struct player *pplayer)
                   _("Your spaceship is already launched!"));
     return;
   }
-  if (ship->state != SSHIP_STARTED
-      || ship->success_rate == 0.0) {
+  if (ship->state != SSHIP_STARTED || ship->success_rate == 0.0) {
     notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
                   _("Your spaceship can't be launched yet!"));
     return;
@@ -193,29 +194,28 @@ void handle_spaceship_launch(struct player *pplayer)
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
                 _("The %s have launched a spaceship!  "
                   "It is estimated to arrive at Alpha Centauri in %s."),
-                nation_plural_for_player(pplayer),
-                textyear(arrival));
+                nation_plural_for_player(pplayer), textyear(arrival));
 
   send_spaceship_info(pplayer, NULL);
 }
 
-/**********************************************************************//**
-  Handle spaceship part placement request
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle spaceship part placement request
+ **************************************************************************/
 void handle_spaceship_place(struct player *pplayer,
                             enum spaceship_place_type type, int num)
 {
   (void) do_spaceship_place(pplayer, ACT_REQ_PLAYER, type, num);
 }
 
-/**********************************************************************//**
-  Place a spaceship part
-**************************************************************************/
+/**********************************************************************/ /**
+   Place a spaceship part
+ **************************************************************************/
 bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         enum spaceship_place_type type, int num)
 {
   struct player_spaceship *ship = &pplayer->spaceship;
-  
+
   if (ship->state == SSHIP_NONE) {
     if (from == ACT_REQ_PLAYER) {
       notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
@@ -276,7 +276,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
       return FALSE;
     }
-    if (num > NUM_SS_COMPONENTS/2) {
+    if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
         notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has"
@@ -305,7 +305,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
 
       return FALSE;
     }
-    if (num > NUM_SS_COMPONENTS/2) {
+    if (num > NUM_SS_COMPONENTS / 2) {
       if (from == ACT_REQ_PLAYER) {
         notify_player(pplayer, NULL, E_SPACESHIP, ftc_server,
                       _("Your spaceship already has the"
@@ -408,14 +408,14 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     return TRUE;
   }
 
-  log_error("Received unknown spaceship place type %d from %s",
-            type, player_name(pplayer));
+  log_error("Received unknown spaceship place type %d from %s", type,
+            player_name(pplayer));
   return FALSE;
 }
 
-/**********************************************************************//**
-  Handle spaceship arrival.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle spaceship arrival.
+ **************************************************************************/
 void spaceship_arrived(struct player *pplayer)
 {
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
@@ -424,9 +424,9 @@ void spaceship_arrived(struct player *pplayer)
   pplayer->spaceship.state = SSHIP_ARRIVED;
 }
 
-/**********************************************************************//**
-  Handle spaceship loss.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle spaceship loss.
+ **************************************************************************/
 void spaceship_lost(struct player *pplayer)
 {
   notify_player(NULL, NULL, E_SPACESHIP, ftc_server,
@@ -437,11 +437,11 @@ void spaceship_lost(struct player *pplayer)
   send_spaceship_info(pplayer, NULL);
 }
 
-/**********************************************************************//**
-  Return arrival year of player's spaceship (fractional, as one spaceship
-  may arrive before another in a given year).
-  Only meaningful if spaceship has been launched.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return arrival year of player's spaceship (fractional, as one spaceship
+   may arrive before another in a given year).
+   Only meaningful if spaceship has been launched.
+ **************************************************************************/
 double spaceship_arrival(const struct player *pplayer)
 {
   const struct player_spaceship *ship = &pplayer->spaceship;
@@ -449,24 +449,26 @@ double spaceship_arrival(const struct player *pplayer)
   return ship->launch_year + ship->travel_time;
 }
 
-/**********************************************************************//**
-  Rank launched player spaceships in order of arrival.
-  'result' is an array big enough to hold all the players.
-  Returns number of launched spaceships, having filled the start of
-  'result' with that many players in order of predicted arrival.
-  Uses shuffled player order in case of a tie.
-**************************************************************************/
+/**********************************************************************/ /**
+   Rank launched player spaceships in order of arrival.
+   'result' is an array big enough to hold all the players.
+   Returns number of launched spaceships, having filled the start of
+   'result' with that many players in order of predicted arrival.
+   Uses shuffled player order in case of a tie.
+ **************************************************************************/
 int rank_spaceship_arrival(struct player **result)
 {
   int n = 0, i;
 
-  shuffled_players_iterate(pplayer) {
+  shuffled_players_iterate(pplayer)
+  {
     struct player_spaceship *ship = &pplayer->spaceship;
-    
+
     if (ship->state == SSHIP_LAUNCHED) {
       result[n++] = pplayer;
     }
-  } shuffled_players_iterate_end;
+  }
+  shuffled_players_iterate_end;
 
   /* An insertion sort will do; n is probably small, and we need a
    * stable sort to preserve the shuffled order for tie-breaking, so can't
@@ -475,11 +477,11 @@ int rank_spaceship_arrival(struct player **result)
     int j;
     for (j = i;
          j > 0
-         && spaceship_arrival(result[j-1]) > spaceship_arrival(result[j]);
+         && spaceship_arrival(result[j - 1]) > spaceship_arrival(result[j]);
          j--) {
       struct player *tmp = result[j];
-      result[j] = result[j-1];
-      result[j-1] = tmp;
+      result[j] = result[j - 1];
+      result[j - 1] = tmp;
     }
   }
 

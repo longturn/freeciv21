@@ -20,12 +20,15 @@ extern "C" {
 typedef void (*requirers_cb)(const char *msg, void *data);
 
 bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data);
-bool is_building_needed(struct impr_type *pimpr, requirers_cb cb, void *data);
+bool is_building_needed(struct impr_type *pimpr, requirers_cb cb,
+                        void *data);
 bool is_utype_needed(struct unit_type *ptype, requirers_cb cb, void *data);
 bool is_good_needed(struct goods_type *pgood, requirers_cb cb, void *data);
-bool is_government_needed(struct government *pgov, requirers_cb cb, void *data);
+bool is_government_needed(struct government *pgov, requirers_cb cb,
+                          void *data);
 bool is_extra_needed(struct extra_type *pextra, requirers_cb cb, void *data);
-bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb, void *data);
+bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb,
+                          void *data);
 bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data);
 
 #ifdef __cplusplus

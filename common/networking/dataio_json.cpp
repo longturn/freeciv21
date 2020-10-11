@@ -64,9 +64,9 @@ static bool dio_get_bool8_json_internal(json_t *json_packet,
                                         const struct plocation *location,
                                         bool *dest);
 
-/**********************************************************************//**
-  Returns a CURL easy handle for name encoding and decoding
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns a CURL easy handle for name encoding and decoding
+ **************************************************************************/
 static CURL *get_curl(void)
 {
   static CURL *curl_easy_handle = NULL;
@@ -85,9 +85,9 @@ static void plocation_write_data(json_t *item,
                                  const struct plocation *location,
                                  json_t *data);
 
-/**********************************************************************//**
-  Helper for plocation_write_data(). Use it in stead of this.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper for plocation_write_data(). Use it in stead of this.
+ **************************************************************************/
 static void plocation_write_field(json_t *item,
                                   const struct plocation *location,
                                   json_t *data)
@@ -100,9 +100,9 @@ static void plocation_write_field(json_t *item,
   }
 }
 
-/**********************************************************************//**
-  Helper for plocation_write_data(). Use it in stead of this.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper for plocation_write_data(). Use it in stead of this.
+ **************************************************************************/
 static void plocation_write_elem(json_t *item,
                                  const struct plocation *location,
                                  json_t *data)
@@ -115,10 +115,10 @@ static void plocation_write_elem(json_t *item,
   }
 }
 
-/**********************************************************************//**
-  Write the specified JSON data to the given location in the provided
-  JSON item.
-**************************************************************************/
+/**********************************************************************/ /**
+   Write the specified JSON data to the given location in the provided
+   JSON item.
+ **************************************************************************/
 static void plocation_write_data(json_t *item,
                                  const struct plocation *location,
                                  json_t *data)
@@ -139,9 +139,9 @@ static void plocation_write_data(json_t *item,
 static json_t *plocation_read_data(json_t *item,
                                    const struct plocation *location);
 
-/**********************************************************************//**
-  Helper for plocation_read_data(). Use it in stead of this.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper for plocation_read_data(). Use it in stead of this.
+ **************************************************************************/
 static json_t *plocation_read_field(json_t *item,
                                     const struct plocation *location)
 {
@@ -153,9 +153,9 @@ static json_t *plocation_read_field(json_t *item,
   }
 }
 
-/**********************************************************************//**
-  Helper for plocation_read_data(). Use it in stead of this.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper for plocation_read_data(). Use it in stead of this.
+ **************************************************************************/
 static json_t *plocation_read_elem(json_t *item,
                                    const struct plocation *location)
 {
@@ -167,9 +167,9 @@ static json_t *plocation_read_elem(json_t *item,
   }
 }
 
-/**********************************************************************//**
-  Read JSON data from the given location in the provided JSON item.
-**************************************************************************/
+/**********************************************************************/ /**
+   Read JSON data from the given location in the provided JSON item.
+ **************************************************************************/
 static json_t *plocation_read_data(json_t *item,
                                    const struct plocation *location)
 {
@@ -184,12 +184,11 @@ static json_t *plocation_read_data(json_t *item,
   }
 }
 
-/**********************************************************************//**
-  Insert 8 bit value with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert 8 bit value with json.
+ **************************************************************************/
 void dio_put_uint8_json(struct json_data_out *dout,
-                        const struct plocation *location,
-                        int value)
+                        const struct plocation *location, int value)
 {
   if (dout->json) {
     plocation_write_data(dout->json, location, json_integer(value));
@@ -198,12 +197,11 @@ void dio_put_uint8_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert 8 bit value with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert 8 bit value with json.
+ **************************************************************************/
 void dio_put_sint8_json(struct json_data_out *dout,
-                        const struct plocation *location,
-                        int value)
+                        const struct plocation *location, int value)
 {
   if (dout->json) {
     plocation_write_data(dout->json, location, json_integer(value));
@@ -212,9 +210,9 @@ void dio_put_sint8_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert value using 32 bits. May overflow.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert value using 32 bits. May overflow.
+ **************************************************************************/
 void dio_put_uint16_json(struct json_data_out *dout,
                          const struct plocation *location, int value)
 {
@@ -225,9 +223,9 @@ void dio_put_uint16_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert value using 32 bits. May overflow.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert value using 32 bits. May overflow.
+ **************************************************************************/
 void dio_put_sint16_json(struct json_data_out *dout,
                          const struct plocation *location, int value)
 {
@@ -238,9 +236,9 @@ void dio_put_sint16_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert the given cm_parameter struct
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert the given cm_parameter struct
+ **************************************************************************/
 void dio_put_cm_parameter_json(struct json_data_out *dout,
                                struct plocation *location,
                                const struct cm_parameter *param)
@@ -254,8 +252,7 @@ void dio_put_cm_parameter_json(struct json_data_out *dout,
     for (i = 0; i < O_LAST; i++) {
       json_array_append_new(min_surplus,
                             json_integer(param->minimal_surplus[i]));
-      json_array_append_new(factor,
-                            json_integer(param->factor[i]));
+      json_array_append_new(factor, json_integer(param->factor[i]));
     }
 
     json_object_set_new(obj, "minimal_surplus", min_surplus);
@@ -275,9 +272,9 @@ void dio_put_cm_parameter_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert the given unit_order struct
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert the given unit_order struct
+ **************************************************************************/
 void dio_put_unit_order_json(struct json_data_out *dout,
                              struct plocation *location,
                              const struct unit_order *order)
@@ -296,9 +293,9 @@ void dio_put_unit_order_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert worklist information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert worklist information.
+ **************************************************************************/
 void dio_put_worklist_json(struct json_data_out *dout,
                            struct plocation *location,
                            const struct worklist *pwl)
@@ -331,9 +328,9 @@ void dio_put_worklist_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Receive uint8 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive uint8 value to dest with json.
+ **************************************************************************/
 static bool dio_get_uint8_json_internal(json_t *json_packet,
                                         const struct plocation *location,
                                         int *dest)
@@ -341,22 +338,24 @@ static bool dio_get_uint8_json_internal(json_t *json_packet,
   json_t *pint = plocation_read_data(json_packet, location);
 
   if (!pint) {
-    log_error("ERROR: Unable to get uint8 from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get uint8 from location: %s",
+              plocation_name(location));
     return FALSE;
   }
   *dest = json_integer_value(pint);
 
   if (!dest) {
-    log_error("ERROR: Unable to get unit8 from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get unit8 from location: %s",
+              plocation_name(location));
     return FALSE;
   }
 
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive uint8 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive uint8 value to dest with json.
+ **************************************************************************/
 bool dio_get_uint8_json(struct connection *pc, struct data_in *din,
                         const struct plocation *location, int *dest)
 {
@@ -367,9 +366,9 @@ bool dio_get_uint8_json(struct connection *pc, struct data_in *din,
   }
 }
 
-/**********************************************************************//**
-  Receive uint16 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive uint16 value to dest with json.
+ **************************************************************************/
 bool dio_get_uint16_json(struct connection *pc, struct data_in *din,
                          const struct plocation *location, int *dest)
 {
@@ -377,13 +376,15 @@ bool dio_get_uint16_json(struct connection *pc, struct data_in *din,
     json_t *pint = plocation_read_data(pc->json_packet, location);
 
     if (!pint) {
-      log_error("ERROR: Unable to get uint16 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get uint16 from location: %s",
+                plocation_name(location));
       return FALSE;
-    } 
+    }
     *dest = json_integer_value(pint);
 
     if (!dest) {
-      log_error("ERROR: Unable to get unit16 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get unit16 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
   } else {
@@ -393,9 +394,9 @@ bool dio_get_uint16_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive uint32 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive uint32 value to dest with json.
+ **************************************************************************/
 static bool dio_get_uint32_json_internal(json_t *json_packet,
                                          const struct plocation *location,
                                          int *dest)
@@ -403,22 +404,24 @@ static bool dio_get_uint32_json_internal(json_t *json_packet,
   json_t *pint = plocation_read_data(json_packet, location);
 
   if (!pint) {
-    log_error("ERROR: Unable to get uint32 from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get uint32 from location: %s",
+              plocation_name(location));
     return FALSE;
   }
   *dest = json_integer_value(pint);
 
   if (!dest) {
-    log_error("ERROR: Unable to get unit32 from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get unit32 from location: %s",
+              plocation_name(location));
     return FALSE;
   }
 
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive uint32 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive uint32 value to dest with json.
+ **************************************************************************/
 bool dio_get_uint32_json(struct connection *pc, struct data_in *din,
                          const struct plocation *location, int *dest)
 {
@@ -429,9 +432,9 @@ bool dio_get_uint32_json(struct connection *pc, struct data_in *din,
   }
 }
 
-/**********************************************************************//**
-  Receive sint32 value to dest with json.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive sint32 value to dest with json.
+ **************************************************************************/
 bool dio_get_sint32_json(struct connection *pc, struct data_in *din,
                          const struct plocation *location, int *dest)
 {
@@ -442,9 +445,9 @@ bool dio_get_sint32_json(struct connection *pc, struct data_in *din,
   }
 }
 
-/**********************************************************************//**
-  Retrieve a cm_parameter
-**************************************************************************/
+/**********************************************************************/ /**
+   Retrieve a cm_parameter
+ **************************************************************************/
 bool dio_get_cm_parameter_json(struct connection *pc, struct data_in *din,
                                struct plocation *location,
                                struct cm_parameter *param)
@@ -523,9 +526,9 @@ bool dio_get_cm_parameter_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Retrieve an unit_order
-**************************************************************************/
+/**********************************************************************/ /**
+   Retrieve an unit_order
+ **************************************************************************/
 bool dio_get_unit_order_json(struct connection *pc, struct data_in *din,
                              struct plocation *location,
                              struct unit_order *order)
@@ -597,12 +600,11 @@ bool dio_get_unit_order_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive worklist information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive worklist information.
+ **************************************************************************/
 bool dio_get_worklist_json(struct connection *pc, struct data_in *din,
-                           struct plocation *location,
-                           struct worklist *pwl)
+                           struct plocation *location, struct worklist *pwl)
 {
   if (pc->json_mode) {
     int i, length;
@@ -649,7 +651,8 @@ bool dio_get_worklist_json(struct connection *pc, struct data_in *din,
       }
 
       /*
-       * FIXME: the value returned by universal_by_number() should be checked!
+       * FIXME: the value returned by universal_by_number() should be
+       * checked!
        */
       univ = universal_by_number(kind, value);
       worklist_append(pwl, &univ);
@@ -664,12 +667,12 @@ bool dio_get_worklist_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive vector of 8 bit values, terminated by stop_value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive vector of 8 bit values, terminated by stop_value.
+ **************************************************************************/
 bool dio_get_uint8_vec8_json(struct connection *pc, struct data_in *din,
-                             const struct plocation *location,
-                             int **values, int stop_value)
+                             const struct plocation *location, int **values,
+                             int stop_value)
 {
   if (pc->json_mode) {
     /* TODO: implement */
@@ -681,12 +684,11 @@ bool dio_get_uint8_vec8_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive vector of uint16 values.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive vector of uint16 values.
+ **************************************************************************/
 bool dio_get_uint16_vec8_json(struct connection *pc, struct data_in *din,
-                              const struct plocation *location,
-                              int **values,
+                              const struct plocation *location, int **values,
                               int stop_value)
 {
   if (pc->json_mode) {
@@ -699,9 +701,9 @@ bool dio_get_uint16_vec8_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Read a single requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Read a single requirement.
+ **************************************************************************/
 bool dio_get_requirement_json(struct connection *pc, struct data_in *din,
                               const struct plocation *location,
                               struct requirement *preq)
@@ -716,7 +718,8 @@ bool dio_get_requirement_json(struct connection *pc, struct data_in *din,
     json_t *requirement = plocation_read_data(pc->json_packet, location);
 
     if (!requirement) {
-      log_error("ERROR: Unable to get requirement from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get requirement from location: %s",
+                plocation_name(location));
       return FALSE;
     }
 
@@ -774,10 +777,11 @@ bool dio_get_requirement_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  De-serialize an action probability.
-**************************************************************************/
-bool dio_get_action_probability_json(struct connection *pc, struct data_in *din,
+/**********************************************************************/ /**
+   De-serialize an action probability.
+ **************************************************************************/
+bool dio_get_action_probability_json(struct connection *pc,
+                                     struct data_in *din,
                                      const struct plocation *location,
                                      struct act_prob *prob)
 {
@@ -785,7 +789,8 @@ bool dio_get_action_probability_json(struct connection *pc, struct data_in *din,
     struct plocation *ap_field;
 
     /* Find the action probability object. */
-    json_t *action_probability = plocation_read_data(pc->json_packet, location);
+    json_t *action_probability =
+        plocation_read_data(pc->json_packet, location);
 
     if (!action_probability) {
       log_error("ERROR: Unable to get action probability from location: %s",
@@ -796,7 +801,8 @@ bool dio_get_action_probability_json(struct connection *pc, struct data_in *din,
     /* Find the action probability object fields and translate their
      * values. */
     ap_field = plocation_field_new("min");
-    if (!dio_get_uint8_json_internal(action_probability, ap_field, &prob->min)) {
+    if (!dio_get_uint8_json_internal(action_probability, ap_field,
+                                     &prob->min)) {
       log_error("ERROR: Unable to get part of action probability "
                 "from location: %s",
                 plocation_name(location));
@@ -804,7 +810,8 @@ bool dio_get_action_probability_json(struct connection *pc, struct data_in *din,
     }
 
     ap_field->name = "max";
-    if (!dio_get_uint8_json_internal(action_probability, ap_field, &prob->max)) {
+    if (!dio_get_uint8_json_internal(action_probability, ap_field,
+                                     &prob->max)) {
       log_error("ERROR: Unable to get part of action probability "
                 "from location: %s",
                 plocation_name(location));
@@ -819,9 +826,9 @@ bool dio_get_action_probability_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Create an empty field array.
-**************************************************************************/
+/**********************************************************************/ /**
+   Create an empty field array.
+ **************************************************************************/
 void dio_put_farray_json(struct json_data_out *dout,
                          const struct plocation *location, int size)
 {
@@ -841,9 +848,9 @@ void dio_put_farray_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert uint32 value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert uint32 value.
+ **************************************************************************/
 void dio_put_uint32_json(struct json_data_out *dout,
                          const struct plocation *location, int value)
 {
@@ -854,9 +861,9 @@ void dio_put_uint32_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert sint32 value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert sint32 value.
+ **************************************************************************/
 void dio_put_sint32_json(struct json_data_out *dout,
                          const struct plocation *location, int value)
 {
@@ -867,38 +874,40 @@ void dio_put_sint32_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert bool value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert bool value.
+ **************************************************************************/
 void dio_put_bool8_json(struct json_data_out *dout,
                         const struct plocation *location, bool value)
 {
   if (dout->json) {
-    plocation_write_data(dout->json, location, value ? json_true() : json_false());
+    plocation_write_data(dout->json, location,
+                         value ? json_true() : json_false());
   } else {
     dio_put_bool8_raw(&dout->raw, value);
   }
 }
 
-/**********************************************************************//**
-  Insert bool value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert bool value.
+ **************************************************************************/
 void dio_put_bool32_json(struct json_data_out *dout,
                          const struct plocation *location, bool value)
 {
   if (dout->json) {
-    plocation_write_data(dout->json, location, value ? json_true() : json_false());
+    plocation_write_data(dout->json, location,
+                         value ? json_true() : json_false());
   } else {
     dio_put_bool32_raw(&dout->raw, value);
   }
 }
 
-/**********************************************************************//**
-  Insert unsigned floating point value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert unsigned floating point value.
+ **************************************************************************/
 void dio_put_ufloat_json(struct json_data_out *dout,
-                         const struct plocation *location,
-                         float value, int float_factor)
+                         const struct plocation *location, float value,
+                         int float_factor)
 {
   if (dout->json) {
     plocation_write_data(dout->json, location, json_real(value));
@@ -907,12 +916,12 @@ void dio_put_ufloat_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert signed floating point value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert signed floating point value.
+ **************************************************************************/
 void dio_put_sfloat_json(struct json_data_out *dout,
-                         const struct plocation *location,
-                         float value, int float_factor)
+                         const struct plocation *location, float value,
+                         int float_factor)
 {
   if (dout->json) {
     plocation_write_data(dout->json, location, json_real(value));
@@ -921,12 +930,12 @@ void dio_put_sfloat_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert vector of uint8 values, terminated by stop_value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert vector of uint8 values, terminated by stop_value.
+ **************************************************************************/
 void dio_put_uint8_vec8_json(struct json_data_out *dout,
-                             const struct plocation *location,
-                             int *values, int stop_value)
+                             const struct plocation *location, int *values,
+                             int stop_value)
 {
   if (dout->json) {
     /* TODO: implement. */
@@ -936,9 +945,9 @@ void dio_put_uint8_vec8_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert vector of uint16 values, terminated by stop_value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert vector of uint16 values, terminated by stop_value.
+ **************************************************************************/
 void dio_put_uint16_vec8_json(struct json_data_out *dout,
                               const struct plocation *location, int *values,
                               int stop_value)
@@ -951,12 +960,11 @@ void dio_put_uint16_vec8_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Send block of memory as byte array.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send block of memory as byte array.
+ **************************************************************************/
 void dio_put_memory_json(struct json_data_out *dout,
-                         struct plocation *location,
-                         const void *value,
+                         struct plocation *location, const void *value,
                          size_t size)
 {
   if (dout->json) {
@@ -969,8 +977,7 @@ void dio_put_memory_json(struct json_data_out *dout,
     for (i = 0; i < size; i++) {
       location->sub_location->number = i;
 
-      dio_put_uint8_json(dout, location,
-                         ((unsigned char *)value)[i]);
+      dio_put_uint8_json(dout, location, ((unsigned char *) value)[i]);
     }
 
     FC_FREE(location->sub_location);
@@ -979,12 +986,11 @@ void dio_put_memory_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert NULL-terminated string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert NULL-terminated string.
+ **************************************************************************/
 void dio_put_string_json(struct json_data_out *dout,
-                         const struct plocation *location,
-                         const char *value)
+                         const struct plocation *location, const char *value)
 {
   if (dout->json) {
     plocation_write_data(dout->json, location, json_string(value));
@@ -993,9 +999,9 @@ void dio_put_string_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Encode and write the specified string to the specified location.
-**************************************************************************/
+/**********************************************************************/ /**
+   Encode and write the specified string to the specified location.
+ **************************************************************************/
 void dio_put_estring_json(struct json_data_out *dout,
                           const struct plocation *location,
                           const char *value)
@@ -1016,9 +1022,9 @@ void dio_put_estring_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Insert a single requirement.
-**************************************************************************/
+/**********************************************************************/ /**
+   Insert a single requirement.
+ **************************************************************************/
 void dio_put_requirement_json(struct json_data_out *dout,
                               const struct plocation *location,
                               const struct requirement *preq)
@@ -1051,9 +1057,9 @@ void dio_put_requirement_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Serialize an action probability.
-**************************************************************************/
+/**********************************************************************/ /**
+   Serialize an action probability.
+ **************************************************************************/
 void dio_put_action_probability_json(struct json_data_out *dout,
                                      const struct plocation *location,
                                      const struct act_prob *prob)
@@ -1074,9 +1080,9 @@ void dio_put_action_probability_json(struct json_data_out *dout,
   }
 }
 
-/**********************************************************************//**
-  Receive bool value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive bool value.
+ **************************************************************************/
 static bool dio_get_bool8_json_internal(json_t *json_packet,
                                         const struct plocation *location,
                                         bool *dest)
@@ -1084,22 +1090,24 @@ static bool dio_get_bool8_json_internal(json_t *json_packet,
   json_t *pbool = plocation_read_data(json_packet, location);
 
   if (!pbool) {
-    log_error("ERROR: Unable to get bool8 from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get bool8 from location: %s",
+              plocation_name(location));
     return FALSE;
-  } 
+  }
   *dest = json_is_true(pbool);
 
   if (!dest) {
-    log_error("ERROR: Unable to get bool from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get bool from location: %s",
+              plocation_name(location));
     return FALSE;
   }
 
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive bool value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive bool value.
+ **************************************************************************/
 bool dio_get_bool8_json(struct connection *pc, struct data_in *din,
                         const struct plocation *location, bool *dest)
 {
@@ -1110,9 +1118,9 @@ bool dio_get_bool8_json(struct connection *pc, struct data_in *din,
   }
 }
 
-/**********************************************************************//**
-  Receive bool value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive bool value.
+ **************************************************************************/
 bool dio_get_bool32_json(struct connection *pc, struct data_in *din,
                          const struct plocation *location, bool *dest)
 {
@@ -1120,13 +1128,15 @@ bool dio_get_bool32_json(struct connection *pc, struct data_in *din,
     json_t *pbool = plocation_read_data(pc->json_packet, location);
 
     if (!pbool) {
-      log_error("ERROR: Unable to get bool32 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get bool32 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
     *dest = json_is_true(pbool);
 
     if (!dest) {
-      log_error("ERROR: Unable to get bool32 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get bool32 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
   } else {
@@ -1136,18 +1146,19 @@ bool dio_get_bool32_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive unsigned floating point value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive unsigned floating point value.
+ **************************************************************************/
 bool dio_get_ufloat_json(struct connection *pc, struct data_in *din,
-                         const struct plocation *location,
-                         float *dest, int float_factor)
+                         const struct plocation *location, float *dest,
+                         int float_factor)
 {
   if (pc->json_mode) {
     json_t *preal = plocation_read_data(pc->json_packet, location);
 
     if (!preal) {
-      log_error("ERROR: Unable to get real from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get real from location: %s",
+                plocation_name(location));
       return FALSE;
     }
     *dest = json_real_value(preal);
@@ -1158,18 +1169,19 @@ bool dio_get_ufloat_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive signed floating point value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive signed floating point value.
+ **************************************************************************/
 bool dio_get_sfloat_json(struct connection *pc, struct data_in *din,
-                         const struct plocation *location,
-                         float *dest, int float_factor)
+                         const struct plocation *location, float *dest,
+                         int float_factor)
 {
   if (pc->json_mode) {
     json_t *preal = plocation_read_data(pc->json_packet, location);
 
     if (!preal) {
-      log_error("ERROR: Unable to get real from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get real from location: %s",
+                plocation_name(location));
       return FALSE;
     }
     *dest = json_real_value(preal);
@@ -1180,9 +1192,9 @@ bool dio_get_sfloat_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive signed 8 bit value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive signed 8 bit value.
+ **************************************************************************/
 bool dio_get_sint8_json(struct connection *pc, struct data_in *din,
                         const struct plocation *location, int *dest)
 {
@@ -1190,13 +1202,15 @@ bool dio_get_sint8_json(struct connection *pc, struct data_in *din,
     json_t *pint = plocation_read_data(pc->json_packet, location);
 
     if (!pint) {
-      log_error("ERROR: Unable to get sint8 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get sint8 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
     *dest = json_integer_value(pint);
 
     if (!dest) {
-      log_error("ERROR: Unable to get sint8 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get sint8 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
   } else {
@@ -1206,9 +1220,9 @@ bool dio_get_sint8_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive signed 16 bit value.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive signed 16 bit value.
+ **************************************************************************/
 bool dio_get_sint16_json(struct connection *pc, struct data_in *din,
                          const struct plocation *location, int *dest)
 {
@@ -1216,13 +1230,15 @@ bool dio_get_sint16_json(struct connection *pc, struct data_in *din,
     json_t *pint = plocation_read_data(pc->json_packet, location);
 
     if (!pint) {
-      log_error("ERROR: Unable to get sint16 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get sint16 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
     *dest = json_integer_value(pint);
 
     if (!dest) {
-      log_error("ERROR: Unable to get sint16 from location: %s", plocation_name(location));
+      log_error("ERROR: Unable to get sint16 from location: %s",
+                plocation_name(location));
       return FALSE;
     }
   } else {
@@ -1232,12 +1248,12 @@ bool dio_get_sint16_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive block of memory as byte array.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive block of memory as byte array.
+ **************************************************************************/
 bool dio_get_memory_json(struct connection *pc, struct data_in *din,
-                         struct plocation *location,
-                         void *dest, size_t dest_size)
+                         struct plocation *location, void *dest,
+                         size_t dest_size)
 {
   if (pc->json_mode) {
     int i;
@@ -1253,7 +1269,7 @@ bool dio_get_memory_json(struct connection *pc, struct data_in *din,
         free(location->sub_location);
         return FALSE;
       }
-      ((unsigned char *)dest)[i] = val;
+      ((unsigned char *) dest)[i] = val;
     }
 
     FC_FREE(location->sub_location);
@@ -1264,9 +1280,9 @@ bool dio_get_memory_json(struct connection *pc, struct data_in *din,
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive at max max_dest_size bytes long NULL-terminated string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive at max max_dest_size bytes long NULL-terminated string.
+ **************************************************************************/
 static bool dio_get_string_json_internal(json_t *json_packet,
                                          const struct plocation *location,
                                          char *dest, size_t max_dest_size)
@@ -1275,44 +1291,47 @@ static bool dio_get_string_json_internal(json_t *json_packet,
   const char *result_str;
 
   if (!pstring) {
-    log_error("ERROR: Unable to get string from location: %s", plocation_name(location));
+    log_error("ERROR: Unable to get string from location: %s",
+              plocation_name(location));
     return FALSE;
   }
 
   result_str = json_string_value(pstring);
 
   if (dest
-      && !dataio_get_conv_callback(dest, max_dest_size, result_str, strlen(result_str))) {
-    log_error("ERROR: Unable to get string from location: %s", plocation_name(location));
+      && !dataio_get_conv_callback(dest, max_dest_size, result_str,
+                                   strlen(result_str))) {
+    log_error("ERROR: Unable to get string from location: %s",
+              plocation_name(location));
     return FALSE;
   }
 
   return TRUE;
 }
 
-/**********************************************************************//**
-  Receive at max max_dest_size bytes long NULL-terminated string.
-**************************************************************************/
+/**********************************************************************/ /**
+   Receive at max max_dest_size bytes long NULL-terminated string.
+ **************************************************************************/
 bool dio_get_string_json(struct connection *pc, struct data_in *din,
-                         const struct plocation *location,
-                         char *dest, size_t max_dest_size)
+                         const struct plocation *location, char *dest,
+                         size_t max_dest_size)
 {
   if (pc->json_mode) {
-    return dio_get_string_json_internal(pc->json_packet, location,
-                                        dest, max_dest_size);
+    return dio_get_string_json_internal(pc->json_packet, location, dest,
+                                        max_dest_size);
   } else {
     return dio_get_string_raw(din, dest, max_dest_size);
   }
 }
 
-/**********************************************************************//**
-  Read and decode the string in the specified location.
+/**********************************************************************/ /**
+   Read and decode the string in the specified location.
 
-  max_dest_size applies to both the encoded and to the decoded string.
-**************************************************************************/
+   max_dest_size applies to both the encoded and to the decoded string.
+ **************************************************************************/
 bool dio_get_estring_json(struct connection *pc, struct data_in *din,
-                          const struct plocation *location,
-                          char *dest, size_t max_dest_size)
+                          const struct plocation *location, char *dest,
+                          size_t max_dest_size)
 {
   if (pc->json_mode) {
     char *escaped_value;

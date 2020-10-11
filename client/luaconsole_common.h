@@ -19,18 +19,17 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 struct ft_color;
 struct text_tag_list;
 
 void luaconsole_append(const struct ft_color color,
                        const char *featured_text);
-void luaconsole_vprintf(const struct ft_color color,
-                        const char *format, va_list args);
-void luaconsole_printf(const struct ft_color color,
-                       const char *format, ...)
-                       fc__attribute((__format__ (__printf__, 2, 3)));
+void luaconsole_vprintf(const struct ft_color color, const char *format,
+                        va_list args);
+void luaconsole_printf(const struct ft_color color, const char *format, ...)
+    fc__attribute((__format__(__printf__, 2, 3)));
 void luaconsole_event(const char *plain_text,
                       const struct text_tag_list *tags);
 void luaconsole_welcome_message(void);

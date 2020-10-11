@@ -39,9 +39,9 @@
 
 #include "tab_tech.h"
 
-/**********************************************************************//**
-  Setup tab_tech object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup tab_tech object
+ **************************************************************************/
 tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
 {
   QVBoxLayout *main_layout = new QVBoxLayout(this);
@@ -56,7 +56,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
 
   tech_list = new QListWidget(this);
 
-  connect(tech_list, SIGNAL(itemSelectionChanged()), this, SLOT(select_tech()));
+  connect(tech_list, SIGNAL(itemSelectionChanged()), this,
+          SLOT(select_tech()));
   main_layout->addWidget(tech_list);
 
   tech_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -72,7 +73,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this, SLOT(same_name_toggle(bool)));
+  connect(same_name, SIGNAL(toggled(bool)), this,
+          SLOT(same_name_toggle(bool)));
   name = new QLineEdit(this);
   name->setText("None");
   connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
@@ -116,7 +118,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   tech_layout->addWidget(add_button, 6, 0);
   show_experimental(add_button);
 
-  delete_button = new QPushButton(QString::fromUtf8(R__("Remove this tech")), this);
+  delete_button =
+      new QPushButton(QString::fromUtf8(R__("Remove this tech")), this);
   connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
   tech_layout->addWidget(delete_button, 6, 2);
   show_experimental(delete_button);
@@ -129,29 +132,31 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   setLayout(main_layout);
 }
 
-/**********************************************************************//**
-  Refresh the information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh the information.
+ **************************************************************************/
 void tab_tech::refresh()
 {
   tech_list->clear();
 
-  advance_iterate(A_FIRST, padv) {
+  advance_iterate(A_FIRST, padv)
+  {
     if (padv->require[AR_ONE] != A_NEVER) {
       QListWidgetItem *item = new QListWidgetItem(advance_rule_name(padv));
 
       tech_list->insertItem(advance_index(padv), item);
     }
-  } advance_iterate_end;
+  }
+  advance_iterate_end;
 
   techs_to_menu(req1);
   techs_to_menu(req2);
   techs_to_menu(root_req);
 }
 
-/**********************************************************************//**
-  Build tech req button
-**************************************************************************/
+/**********************************************************************/ /**
+   Build tech req button
+ **************************************************************************/
 QMenu *tab_tech::prepare_req_button(QToolButton *button, enum tech_req rn)
 {
   QMenu *menu = new QMenu();
@@ -161,13 +166,16 @@ QMenu *tab_tech::prepare_req_button(QToolButton *button, enum tech_req rn)
 
   switch (rn) {
   case AR_ONE:
-    connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(req1_menu(QAction *)));
+    connect(menu, SIGNAL(triggered(QAction *)), this,
+            SLOT(req1_menu(QAction *)));
     break;
   case AR_TWO:
-    connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(req2_menu(QAction *)));
+    connect(menu, SIGNAL(triggered(QAction *)), this,
+            SLOT(req2_menu(QAction *)));
     break;
   case AR_ROOT:
-    connect(menu, SIGNAL(triggered(QAction *)), this, SLOT(root_req_menu(QAction *)));
+    connect(menu, SIGNAL(triggered(QAction *)), this,
+            SLOT(root_req_menu(QAction *)));
     break;
   case AR_SIZE:
     fc_assert(rn != AR_SIZE);
@@ -179,21 +187,20 @@ QMenu *tab_tech::prepare_req_button(QToolButton *button, enum tech_req rn)
   return menu;
 }
 
-/**********************************************************************//**
-  Fill menu with all possible tech values
-**************************************************************************/
+/**********************************************************************/ /**
+   Fill menu with all possible tech values
+ **************************************************************************/
 void tab_tech::techs_to_menu(QMenu *fill_menu)
 {
   fill_menu->clear();
 
-  advance_iterate(A_NONE, padv) {
-    fill_menu->addAction(tech_name(padv));
-  } advance_iterate_end;
+  advance_iterate(A_NONE, padv) { fill_menu->addAction(tech_name(padv)); }
+  advance_iterate_end;
 }
 
-/**********************************************************************//**
-  Display name of the tech
-**************************************************************************/
+/**********************************************************************/ /**
+   Display name of the tech
+ **************************************************************************/
 QString tab_tech::tech_name(struct advance *padv)
 {
   if (padv == A_NEVER) {
@@ -203,9 +210,9 @@ QString tab_tech::tech_name(struct advance *padv)
   return QString::fromUtf8(advance_rule_name(padv));
 }
 
-/**********************************************************************//**
-  Update info of the tech
-**************************************************************************/
+/**********************************************************************/ /**
+   Update info of the tech
+ **************************************************************************/
 void tab_tech::update_tech_info(struct advance *adv)
 {
   selected = adv;
@@ -239,9 +246,9 @@ void tab_tech::update_tech_info(struct advance *adv)
   }
 }
 
-/**********************************************************************//**
-  User selected tech from the list.
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected tech from the list.
+ **************************************************************************/
 void tab_tech::select_tech()
 {
   QList<QListWidgetItem *> select_list = tech_list->selectedItems();
@@ -254,9 +261,9 @@ void tab_tech::select_tech()
   }
 }
 
-/**********************************************************************//**
-  Req1 of the current tech selected.
-**************************************************************************/
+/**********************************************************************/ /**
+   Req1 of the current tech selected.
+ **************************************************************************/
 void tab_tech::req1_jump()
 {
   if (selected != 0 && advance_number(selected->require[AR_ONE]) != A_NONE) {
@@ -264,9 +271,9 @@ void tab_tech::req1_jump()
   }
 }
 
-/**********************************************************************//**
-  Req2 of the current tech selected.
-**************************************************************************/
+/**********************************************************************/ /**
+   Req2 of the current tech selected.
+ **************************************************************************/
 void tab_tech::req2_jump()
 {
   if (selected != 0 && advance_number(selected->require[AR_TWO]) != A_NONE) {
@@ -274,19 +281,20 @@ void tab_tech::req2_jump()
   }
 }
 
-/**********************************************************************//**
-  Root req of the current tech selected.
-**************************************************************************/
+/**********************************************************************/ /**
+   Root req of the current tech selected.
+ **************************************************************************/
 void tab_tech::root_req_jump()
 {
-  if (selected != 0 && advance_number(selected->require[AR_ROOT]) != A_NONE) {
+  if (selected != 0
+      && advance_number(selected->require[AR_ROOT]) != A_NONE) {
     update_tech_info(selected->require[AR_ROOT]);
   }
 }
 
-/**********************************************************************//**
-  User selected tech to be req1
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected tech to be req1
+ **************************************************************************/
 void tab_tech::req1_menu(QAction *action)
 {
   struct advance *padv;
@@ -302,9 +310,9 @@ void tab_tech::req1_menu(QAction *action)
   }
 }
 
-/**********************************************************************//**
-  User selected tech to be req2
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected tech to be req2
+ **************************************************************************/
 void tab_tech::req2_menu(QAction *action)
 {
   struct advance *padv;
@@ -320,9 +328,9 @@ void tab_tech::req2_menu(QAction *action)
   }
 }
 
-/**********************************************************************//**
-  User selected tech to be root_req
-**************************************************************************/
+/**********************************************************************/ /**
+   User selected tech to be root_req
+ **************************************************************************/
 void tab_tech::root_req_menu(QAction *action)
 {
   struct advance *padv;
@@ -338,25 +346,26 @@ void tab_tech::root_req_menu(QAction *action)
   }
 }
 
-/**********************************************************************//**
-  User entered name for tech
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered name for tech
+ **************************************************************************/
 void tab_tech::name_given()
 {
   if (selected != nullptr) {
     QByteArray name_bytes;
     QByteArray rname_bytes;
 
-    advance_iterate(A_FIRST, padv) {
-      if (padv != selected
-          && padv->require[AR_ONE] != A_NEVER) {
+    advance_iterate(A_FIRST, padv)
+    {
+      if (padv != selected && padv->require[AR_ONE] != A_NEVER) {
         rname_bytes = rname->text().toUtf8();
         if (!strcmp(advance_rule_name(padv), rname_bytes.data())) {
           ui->display_msg(R__("A tech with that rule name already exists!"));
           return;
         }
       }
-    } advance_iterate_end;
+    }
+    advance_iterate_end;
 
     if (same_name->isChecked()) {
       name->setText(rname->text());
@@ -364,16 +373,14 @@ void tab_tech::name_given()
 
     name_bytes = name->text().toUtf8();
     rname_bytes = rname->text().toUtf8();
-    names_set(&(selected->name), 0,
-              name_bytes.data(),
-              rname_bytes.data());
+    names_set(&(selected->name), 0, name_bytes.data(), rname_bytes.data());
     refresh();
   }
 }
 
-/**********************************************************************//**
-  User requested tech deletion 
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested tech deletion
+ **************************************************************************/
 void tab_tech::delete_now()
 {
   if (selected != 0) {
@@ -391,9 +398,9 @@ void tab_tech::delete_now()
   }
 }
 
-/**********************************************************************//**
-  Initialize new tech for use.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize new tech for use.
+ **************************************************************************/
 bool tab_tech::initialize_new_tech(struct advance *padv)
 {
   struct advance *none = advance_by_number(A_NONE);
@@ -410,15 +417,16 @@ bool tab_tech::initialize_new_tech(struct advance *padv)
   return true;
 }
 
-/**********************************************************************//**
-  User requested new tech
-**************************************************************************/
+/**********************************************************************/ /**
+   User requested new tech
+ **************************************************************************/
 void tab_tech::add_now()
 {
   struct advance *new_adv;
 
   // Try to reuse freed tech slot
-  advance_iterate(A_FIRST, padv) {
+  advance_iterate(A_FIRST, padv)
+  {
     if (padv->require[AR_ONE] == A_NEVER) {
       if (initialize_new_tech(padv)) {
         update_tech_info(padv);
@@ -426,7 +434,8 @@ void tab_tech::add_now()
       }
       return;
     }
-  } advance_iterate_end;
+  }
+  advance_iterate_end;
 
   // Try to add completely new tech
   if (game.control.num_tech_types >= A_LAST) {
@@ -445,9 +454,9 @@ void tab_tech::add_now()
   }
 }
 
-/**********************************************************************//**
-  Toggled whether rule_name and name should be kept identical
-**************************************************************************/
+/**********************************************************************/ /**
+   Toggled whether rule_name and name should be kept identical
+ **************************************************************************/
 void tab_tech::same_name_toggle(bool checked)
 {
   name->setEnabled(!checked);
@@ -456,9 +465,9 @@ void tab_tech::same_name_toggle(bool checked)
   }
 }
 
-/**********************************************************************//**
-  User wants to edit effects
-**************************************************************************/
+/**********************************************************************/ /**
+   User wants to edit effects
+ **************************************************************************/
 void tab_tech::edit_effects()
 {
   if (selected != nullptr) {

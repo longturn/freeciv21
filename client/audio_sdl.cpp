@@ -20,7 +20,7 @@
 #ifdef SDL2_PLAIN_INCLUDE
 #include <SDL.h>
 #include <SDL_mixer.h>
-#else  /* SDL2_PLAIN_INCLUDE */
+#else /* SDL2_PLAIN_INCLUDE */
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #endif /* SDL2_PLAIN_INCLUDE */
@@ -52,9 +52,9 @@ static Mix_Music *mus = NULL;
 static struct sample samples[MIX_CHANNELS];
 static double sdl_audio_volume;
 
-/**********************************************************************//**
-  Set the volume.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set the volume.
+ **************************************************************************/
 static void sdl_audio_set_volume(double volume)
 {
   Mix_VolumeMusic(volume * MIX_MAX_VOLUME);
@@ -62,17 +62,14 @@ static void sdl_audio_set_volume(double volume)
   sdl_audio_volume = volume;
 }
 
-/**********************************************************************//**
-  Get the volume.
-**************************************************************************/
-static double sdl_audio_get_volume(void)
-{
-  return sdl_audio_volume;
-}
+/**********************************************************************/ /**
+   Get the volume.
+ **************************************************************************/
+static double sdl_audio_get_volume(void) { return sdl_audio_volume; }
 
-/**********************************************************************//**
-  Play sound
-**************************************************************************/
+/**********************************************************************/ /**
+   Play sound
+ **************************************************************************/
 static bool sdl_audio_play(const char *const tag, const char *const fullpath,
                            bool repeat, audio_finished_callback cb)
 {
@@ -95,13 +92,14 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     }
 
     if (cb == NULL) {
-      Mix_PlayMusic(mus, -1);	/* -1 means loop forever */
+      Mix_PlayMusic(mus, -1); /* -1 means loop forever */
     } else {
       Mix_PlayMusic(mus, 0);
       Mix_HookMusicFinished(cb);
     }
     log_verbose("Playing file \"%s\" on music channel", fullpath);
-    /* in case we did a sdl_audio_stop() recently; add volume controls later */
+    /* in case we did a sdl_audio_stop() recently; add volume controls later
+     */
     Mix_VolumeMusic(sdl_audio_volume * MIX_MAX_VOLUME);
 
   } else {
@@ -113,7 +111,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
         Mix_PlayChannel(-1, samples[j].wave, 0);
         return TRUE;
       }
-    }                           /* guess not */
+    } /* guess not */
 
     /* load wave */
     wave = Mix_LoadWAV(fullpath);
@@ -139,25 +137,24 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     /* remember for cacheing */
     samples[i].wave = wave;
     samples[i].tag = tag;
-
   }
   return TRUE;
 }
 
-/**********************************************************************//**
-  Stop music
-**************************************************************************/
+/**********************************************************************/ /**
+   Stop music
+ **************************************************************************/
 static void sdl_audio_stop(void)
 {
   /* fade out over 2 sec */
   Mix_FadeOutMusic(2000);
 }
 
-/**********************************************************************//**
-  Wait for audio to die on all channels.
-  WARNING: If a channel is looping, it will NEVER exit! Always call
-  music_stop() first!
-**************************************************************************/
+/**********************************************************************/ /**
+   Wait for audio to die on all channels.
+   WARNING: If a channel is looping, it will NEVER exit! Always call
+   music_stop() first!
+ **************************************************************************/
 static void sdl_audio_wait(void)
 {
   while (Mix_Playing(-1) != 0) {
@@ -165,12 +162,12 @@ static void sdl_audio_wait(void)
   }
 }
 
-/**********************************************************************//**
-  Quit SDL.  If the video is still in use (by gui-sdl), just quit the
-  subsystem.
+/**********************************************************************/ /**
+   Quit SDL.  If the video is still in use (by gui-sdl), just quit the
+   subsystem.
 
-  This will need to be changed if SDL is used elsewhere.
-**************************************************************************/
+   This will need to be changed if SDL is used elsewhere.
+ **************************************************************************/
 static void quit_sdl_audio(void)
 {
   if (SDL_WasInit(SDL_INIT_VIDEO)) {
@@ -180,12 +177,12 @@ static void quit_sdl_audio(void)
   }
 }
 
-/**********************************************************************//**
-  Init SDL.  If the video is already in use (by gui-sdl), just init the
-  subsystem.
+/**********************************************************************/ /**
+   Init SDL.  If the video is already in use (by gui-sdl), just init the
+   subsystem.
 
-  This will need to be changed if SDL is used elsewhere.
-**************************************************************************/
+   This will need to be changed if SDL is used elsewhere.
+ **************************************************************************/
 static int init_sdl_audio(void)
 {
   if (SDL_WasInit(SDL_INIT_VIDEO)) {
@@ -195,9 +192,9 @@ static int init_sdl_audio(void)
   }
 }
 
-/**********************************************************************//**
-  Clean up.
-**************************************************************************/
+/**********************************************************************/ /**
+   Clean up.
+ **************************************************************************/
 static void sdl_audio_shutdown(void)
 {
   int i;
@@ -218,9 +215,9 @@ static void sdl_audio_shutdown(void)
   quit_sdl_audio();
 }
 
-/**********************************************************************//**
-  Initialize.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize.
+ **************************************************************************/
 static bool sdl_audio_init(void)
 {
   /* Initialize variables */
@@ -233,7 +230,8 @@ static bool sdl_audio_init(void)
     return FALSE;
   }
 
-  if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size) < 0) {
+  if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size)
+      < 0) {
     log_error("Error calling Mix_OpenAudio");
     /* try something else */
     quit_sdl_audio();
@@ -249,10 +247,10 @@ static bool sdl_audio_init(void)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Initialize. Note that this function is called very early at the
-  client startup. So for example logging isn't available.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize. Note that this function is called very early at the
+   client startup. So for example logging isn't available.
+ **************************************************************************/
 void audio_sdl_init(void)
 {
   struct audio_plugin self;

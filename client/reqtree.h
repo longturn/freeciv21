@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2005-2007 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -39,17 +39,14 @@ struct reqtree;
 struct reqtree *create_reqtree(struct player *pplayer, bool show_all);
 void destroy_reqtree(struct reqtree *tree);
 
-void get_reqtree_dimensions(struct reqtree *tree,
-			    int *width, int *height);
+void get_reqtree_dimensions(struct reqtree *tree, int *width, int *height);
 
-void draw_reqtree(struct reqtree *tree,
-		  struct canvas *pcanvas,
-		  int canvas_x, int canvas_y,
-		  int tt_x, int tt_y, int w, int h);
+void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
+                  int canvas_y, int tt_x, int tt_y, int w, int h);
 
 Tech_type_id get_tech_on_reqtree(struct reqtree *tree, int x, int y);
-bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech,
-			  int *x, int *y, int *w, int *h);
+bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
+                          int *y, int *w, int *h);
 
 #ifdef __cplusplus
 }

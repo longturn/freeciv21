@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -51,7 +51,7 @@ bool is_valid_goto_draw_line(struct tile *dest_tile);
 
 void request_orders_cleared(struct unit *punit);
 void send_goto_path(struct unit *punit, struct pf_path *path,
-		    struct unit_order *last_order);
+                    struct unit_order *last_order);
 void send_rally_path(struct city *pcity, struct unit *punit,
                      struct pf_path *path, struct unit_order *final_order);
 bool send_goto_tile(struct unit *punit, struct tile *ptile);
@@ -59,8 +59,7 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile);
 bool send_attack_tile(struct unit *punit, struct tile *ptile);
 void send_patrol_route(void);
 void send_goto_route(void);
-void send_connect_route(enum unit_activity activity,
-                        struct extra_type *tgt);
+void send_connect_route(enum unit_activity activity, struct extra_type *tgt);
 
 struct pf_path *path_to_nearest_allied_city(struct unit *punit);
 struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile);

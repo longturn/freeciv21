@@ -23,7 +23,7 @@
 #include "connectdlg_g.h"
 
 /* client */
-#include "chatline_common.h"	/* for append_output_window */
+#include "chatline_common.h" /* for append_output_window */
 #include "client_main.h"
 #include "packhand_gen.h"
 
@@ -31,11 +31,10 @@
 #include "connectdlg.h"
 #include "fc_client.h"
 
-
-/**********************************************************************//**
-  Close and destroy the dialog. But only if we don't have a local
-  server running (that we started).
-**************************************************************************/
+/**********************************************************************/ /**
+   Close and destroy the dialog. But only if we don't have a local
+   server running (that we started).
+ **************************************************************************/
 void qtg_close_connection_dialog()
 {
   if (gui()->current_page() != PAGE_NETWORK) {
@@ -43,22 +42,22 @@ void qtg_close_connection_dialog()
   }
 }
 
-/**********************************************************************//**
-  Configure the dialog depending on what type of authentication request the
-  server is making.
-**************************************************************************/
+/**********************************************************************/ /**
+   Configure the dialog depending on what type of authentication request the
+   server is making.
+ **************************************************************************/
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
   gui()->handle_authentication_req(type, message);
 }
 
-/**********************************************************************//**
-  Provide a packet handler for packet_game_load.
+/**********************************************************************/ /**
+   Provide a packet handler for packet_game_load.
 
-  This regenerates the player information from a loaded game on the
-  server.
-**************************************************************************/
+   This regenerates the player information from a loaded game on the
+   server.
+ **************************************************************************/
 void handle_game_load(bool load_successful, const char *filename)
 {
   if (load_successful) {
@@ -71,10 +70,7 @@ void handle_game_load(bool load_successful, const char *filename)
   }
 }
 
-/**********************************************************************//**
-  Provide an interface for connecting to a Freeciv server.
-**************************************************************************/
-void qtg_server_connect()
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Provide an interface for connecting to a Freeciv server.
+ **************************************************************************/
+void qtg_server_connect() { /* PORTME */ }

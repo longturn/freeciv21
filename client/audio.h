@@ -17,26 +17,26 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
-#define MAX_AUDIO_NAME_LEN		20
-#define MAX_AUDIO_DESCR_LEN		200
+#define MAX_AUDIO_NAME_LEN 20
+#define MAX_AUDIO_DESCR_LEN 200
 
-#define MAX_ALT_AUDIO_FILES             5
+#define MAX_ALT_AUDIO_FILES 5
 
 typedef void (*audio_finished_callback)(void);
 
 struct audio_plugin {
   char name[MAX_AUDIO_NAME_LEN];
   char descr[MAX_AUDIO_DESCR_LEN];
-  bool (*init) (void);
-  void (*shutdown) (void);
-  void (*stop) (void);
-  void (*wait) (void);
-  double (*get_volume) (void);
-  void (*set_volume) (double volume);
-  bool (*play) (const char *const tag, const char *const path, bool repeat,
-                audio_finished_callback cb);
+  bool (*init)(void);
+  void (*shutdown)(void);
+  void (*stop)(void);
+  void (*wait)(void);
+  double (*get_volume)(void);
+  void (*set_volume)(double volume);
+  bool (*play)(const char *const tag, const char *const path, bool repeat,
+               audio_finished_callback cb);
 };
 
 enum music_usage { MU_SINGLE, MU_MENU, MU_INGAME };

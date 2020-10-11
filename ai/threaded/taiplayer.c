@@ -39,8 +39,7 @@
  * of received messages. Lower is more critical;
  * TAI_ABORT_EXIT means that whole thread should exit,
  * TAI_ABORT_NONE means that we can continue what we were doing */
-enum tai_abort_msg_class
-{
+enum tai_abort_msg_class {
   TAI_ABORT_EXIT,
   TAI_ABORT_PHASE_END,
   TAI_ABORT_NONE
@@ -48,8 +47,7 @@ enum tai_abort_msg_class
 
 static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait);
 
-struct tai_thr
-{
+struct tai_thr {
   int num_players;
   struct tai_msgs msgs_to;
   struct tai_reqs reqs_from;
@@ -57,9 +55,9 @@ struct tai_thr
   fc_thread ait;
 } thrai;
 
-/**********************************************************************//**
-  Initialize ai thread.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize ai thread.
+ **************************************************************************/
 void tai_init_threading(void)
 {
   thrai.thread_running = FALSE;
@@ -67,9 +65,9 @@ void tai_init_threading(void)
   thrai.num_players = 0;
 }
 
-/**********************************************************************//**
-  This is main function of ai thread.
-**************************************************************************/
+/**********************************************************************/ /**
+   This is main function of ai thread.
+ **************************************************************************/
 static void tai_thread_start(void *arg)
 {
   bool finished = FALSE;
@@ -91,12 +89,12 @@ static void tai_thread_start(void *arg)
   log_debug("AI thread exiting");
 }
 
-/**********************************************************************//**
-  Handle messages from message queue.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle messages from message queue.
+ **************************************************************************/
 static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
 {
-  enum tai_abort_msg_class ret_abort= TAI_ABORT_NONE;
+  enum tai_abort_msg_class ret_abort = TAI_ABORT_NONE;
 
   taimsg_list_allocate_mutex(thrai.msgs_to.msglist);
   while (taimsg_list_size(thrai.msgs_to.msglist) > 0) {
@@ -117,7 +115,8 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
 
       /* Use _safe iterate in case the main thread
        * destroyes cities while we are iterating through these. */
-      city_list_iterate_safe(msg->plr->cities, pcity) {
+      city_list_iterate_safe(msg->plr->cities, pcity)
+      {
         tai_city_worker_requests_create(ait, msg->plr, pcity);
 
         /* Release mutex for a second in case main thread
@@ -130,7 +129,8 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
         if (new_abort < TAI_ABORT_NONE) {
           break;
         }
-      } city_list_iterate_safe_end;
+      }
+      city_list_iterate_safe_end;
       fc_release_mutex(&game.server.mutexes.city_list);
 
       tai_send_req(TAI_REQ_TURN_DONE, msg->plr, NULL);
@@ -161,9 +161,9 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
   return ret_abort;
 }
 
-/**********************************************************************//**
-  Initialize player for use with threaded AI.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize player for use with threaded AI.
+ **************************************************************************/
 void tai_player_alloc(struct ai_type *ait, struct player *pplayer)
 {
   struct tai_plr *player_data = fc_calloc(1, sizeof(struct tai_plr));
@@ -174,9 +174,9 @@ void tai_player_alloc(struct ai_type *ait, struct player *pplayer)
   dai_data_init(ait, pplayer);
 }
 
-/**********************************************************************//**
-  Free player from use with threaded AI.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free player from use with threaded AI.
+ **************************************************************************/
 void tai_player_free(struct ai_type *ait, struct player *pplayer)
 {
   struct tai_plr *player_data = player_ai_data(pplayer, ait);
@@ -190,35 +190,37 @@ void tai_player_free(struct ai_type *ait, struct player *pplayer)
   }
 }
 
-/**********************************************************************//**
-  We actually control the player
-**************************************************************************/
+/**********************************************************************/ /**
+   We actually control the player
+ **************************************************************************/
 void tai_control_gained(struct ai_type *ait, struct player *pplayer)
 {
   thrai.num_players++;
 
-  log_debug("%s now under threaded AI (%d)", pplayer->name, thrai.num_players);
+  log_debug("%s now under threaded AI (%d)", pplayer->name,
+            thrai.num_players);
 
   if (!thrai.thread_running) {
     thrai.msgs_to.msglist = taimsg_list_new();
     thrai.reqs_from.reqlist = taireq_list_new();
 
     thrai.thread_running = TRUE;
- 
+
     fc_thread_cond_init(&thrai.msgs_to.thr_cond);
     fc_init_mutex(&thrai.msgs_to.mutex);
     fc_thread_start(&thrai.ait, tai_thread_start, ait);
   }
 }
 
-/**********************************************************************//**
-  We no longer control the player
-**************************************************************************/
+/**********************************************************************/ /**
+   We no longer control the player
+ **************************************************************************/
 void tai_control_lost(struct ai_type *ait, struct player *pplayer)
 {
   thrai.num_players--;
 
-  log_debug("%s no longer under threaded AI (%d)", pplayer->name, thrai.num_players);
+  log_debug("%s no longer under threaded AI (%d)", pplayer->name,
+            thrai.num_players);
 
   if (thrai.num_players <= 0) {
     tai_send_msg(TAI_MSG_THR_EXIT, pplayer, NULL);
@@ -233,44 +235,44 @@ void tai_control_lost(struct ai_type *ait, struct player *pplayer)
   }
 }
 
-/**********************************************************************//**
-  Check for messages sent by player thread
-**************************************************************************/
+/**********************************************************************/ /**
+   Check for messages sent by player thread
+ **************************************************************************/
 void tai_refresh(struct ai_type *ait, struct player *pplayer)
 {
   if (thrai.thread_running) {
     taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
     while (taireq_list_size(thrai.reqs_from.reqlist) > 0) {
-       struct tai_req *req;
+      struct tai_req *req;
 
-       req = taireq_list_get(thrai.reqs_from.reqlist, 0);
-       taireq_list_remove(thrai.reqs_from.reqlist, req);
+      req = taireq_list_get(thrai.reqs_from.reqlist, 0);
+      taireq_list_remove(thrai.reqs_from.reqlist, req);
 
-       taireq_list_release_mutex(thrai.reqs_from.reqlist);
+      taireq_list_release_mutex(thrai.reqs_from.reqlist);
 
-       log_debug("Plr thr sent %s", taireqtype_name(req->type));
+      log_debug("Plr thr sent %s", taireqtype_name(req->type));
 
-       switch (req->type) {
-       case TAI_REQ_WORKER_TASK:
-         tai_req_worker_task_rcv(req);
-         break;
-       case TAI_REQ_TURN_DONE:
-         req->plr->ai_phase_done = TRUE;
-         break;
-       }
+      switch (req->type) {
+      case TAI_REQ_WORKER_TASK:
+        tai_req_worker_task_rcv(req);
+        break;
+      case TAI_REQ_TURN_DONE:
+        req->plr->ai_phase_done = TRUE;
+        break;
+      }
 
-       FC_FREE(req);
+      FC_FREE(req);
 
-       taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
-     }
+      taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
+    }
     taireq_list_release_mutex(thrai.reqs_from.reqlist);
   }
 }
 
-/**********************************************************************//**
-  Send message to thread. Be sure that thread is running so that messages
-  are not just piling up to the list without anybody reading them.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send message to thread. Be sure that thread is running so that messages
+   are not just piling up to the list without anybody reading them.
+ **************************************************************************/
 void tai_msg_to_thr(struct tai_msg *msg)
 {
   fc_allocate_mutex(&thrai.msgs_to.mutex);
@@ -279,9 +281,9 @@ void tai_msg_to_thr(struct tai_msg *msg)
   fc_release_mutex(&thrai.msgs_to.mutex);
 }
 
-/**********************************************************************//**
-  Thread sends message.
-**************************************************************************/
+/**********************************************************************/ /**
+   Thread sends message.
+ **************************************************************************/
 void tai_req_from_thr(struct tai_req *req)
 {
   taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
@@ -289,10 +291,7 @@ void tai_req_from_thr(struct tai_req *req)
   taireq_list_release_mutex(thrai.reqs_from.reqlist);
 }
 
-/**********************************************************************//**
-  Return whether player thread is running
-**************************************************************************/
-bool tai_thread_running(void)
-{
-  return thrai.thread_running;
-}
+/**********************************************************************/ /**
+   Return whether player thread is running
+ **************************************************************************/
+bool tai_thread_running(void) { return thrai.thread_running; }

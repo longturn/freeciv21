@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996-2005 - Freeciv Development Team
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -13,23 +13,23 @@
 #ifndef FC__SPRITE_G_H
 #define FC__SPRITE_G_H
 
-#include "support.h"
 #include "gui_proto_constructor.h"
+#include "support.h"
 
-struct sprite;			/* opaque type, real type is gui-dep */
+struct sprite; /* opaque type, real type is gui-dep */
 struct color;
 
 GUI_FUNC_PROTO(const char **, gfx_fileextensions, void)
 
 GUI_FUNC_PROTO(struct sprite *, load_gfxfile, const char *filename)
-GUI_FUNC_PROTO(struct sprite *, crop_sprite, struct sprite *source,
-               int x, int y, int width, int height,
-               struct sprite *mask, int mask_offset_x, int mask_offset_y,
-               float scale, bool smooth)
+GUI_FUNC_PROTO(struct sprite *, crop_sprite, struct sprite *source, int x,
+               int y, int width, int height, struct sprite *mask,
+               int mask_offset_x, int mask_offset_y, float scale,
+               bool smooth)
 GUI_FUNC_PROTO(struct sprite *, create_sprite, int width, int height,
                struct color *pcolor)
 GUI_FUNC_PROTO(void, get_sprite_dimensions, struct sprite *sprite,
                int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, struct sprite *s)
 
-#endif  /* FC__SPRITE_G_H */
+#endif /* FC__SPRITE_G_H */

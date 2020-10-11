@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,4 +17,4 @@
 
 GUI_FUNC_PROTO(void, update_worklist_report_dialog, void)
 
-#endif  /* FC__WLDLG_G_H */
+#endif /* FC__WLDLG_G_H */

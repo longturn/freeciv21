@@ -26,9 +26,9 @@
 
 #include "citizens.h"
 
-/*************************************************************************//**
-  Initialise citizens data.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Initialise citizens data.
+ *****************************************************************************/
 void citizens_init(struct city *pcity)
 {
   fc_assert_ret(pcity);
@@ -52,9 +52,9 @@ void citizens_init(struct city *pcity)
   }
 }
 
-/*************************************************************************//**
-  Free citizens data.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Free citizens data.
+ *****************************************************************************/
 void citizens_free(struct city *pcity)
 {
   fc_assert_ret(pcity);
@@ -65,12 +65,12 @@ void citizens_free(struct city *pcity)
   }
 }
 
-/*************************************************************************//**
-  Get the number of citizens with the given nationality.
+/*************************************************************************/ /**
+   Get the number of citizens with the given nationality.
 
-  The player_slot has to be used as the client does not has the exact
-  knowledge about the players at certain points (especially at connecting).
-*****************************************************************************/
+   The player_slot has to be used as the client does not has the exact
+   knowledge about the players at certain points (especially at connecting).
+ *****************************************************************************/
 citizens citizens_nation_get(const struct city *pcity,
                              const struct player_slot *pslot)
 {
@@ -85,22 +85,23 @@ citizens citizens_nation_get(const struct city *pcity,
   return *(pcity->nationality + player_slot_index(pslot));
 }
 
-/*************************************************************************//**
-  Get the number of foreign citizens.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Get the number of foreign citizens.
+ *****************************************************************************/
 citizens citizens_nation_foreign(const struct city *pcity)
 {
   return citizens_count(pcity)
          - citizens_nation_get(pcity, city_owner(pcity)->slot);
 }
 
-/*************************************************************************//**
-  Add a (positive or negative) value to the citizens of the given nationality.
-  As citizens is an unsigned value use int for the parameter 'add'.
+/*************************************************************************/ /**
+   Add a (positive or negative) value to the citizens of the given
+ nationality. As citizens is an unsigned value use int for the parameter
+ 'add'.
 
-  The player_slot has to be used as the client does not has the exact
-  knowledge about the players at certain points (especially at connecting).
-*****************************************************************************/
+   The player_slot has to be used as the client does not has the exact
+   knowledge about the players at certain points (especially at connecting).
+ *****************************************************************************/
 void citizens_nation_add(struct city *pcity, const struct player_slot *pslot,
                          int add)
 {
@@ -120,28 +121,28 @@ void citizens_nation_add(struct city *pcity, const struct player_slot *pslot,
   citizens_nation_set(pcity, pslot, nationality + add);
 }
 
-/*************************************************************************//**
-  Convert a (positive or negative) value to the citizens from one nation to
-  another. As citizens is an unsigned value use int for the parameter 'move'.
+/*************************************************************************/ /**
+   Convert a (positive or negative) value to the citizens from one nation to
+   another. As citizens is an unsigned value use int for the parameter
+ 'move'.
 
-  The player_slot has to be used as the client does not has the exact
-  knowledge about the players at certain points (especially at connecting).
-*****************************************************************************/
+   The player_slot has to be used as the client does not has the exact
+   knowledge about the players at certain points (especially at connecting).
+ *****************************************************************************/
 void citizens_nation_move(struct city *pcity,
                           const struct player_slot *pslot_from,
-                          const struct player_slot *pslot_to,
-                          int move)
+                          const struct player_slot *pslot_to, int move)
 {
   citizens_nation_add(pcity, pslot_from, -move);
   citizens_nation_add(pcity, pslot_to, move);
 }
 
-/*************************************************************************//**
-  Set the number of citizens with the given nationality.
+/*************************************************************************/ /**
+   Set the number of citizens with the given nationality.
 
-  The player_slot has to be used as the client does not has the exact
-  knowledge about the players at certain points (especially at connecting).
-*****************************************************************************/
+   The player_slot has to be used as the client does not has the exact
+   knowledge about the players at certain points (especially at connecting).
+ *****************************************************************************/
 void citizens_nation_set(struct city *pcity, const struct player_slot *pslot,
                          citizens count)
 {
@@ -156,9 +157,9 @@ void citizens_nation_set(struct city *pcity, const struct player_slot *pslot,
   *(pcity->nationality + player_slot_index(pslot)) = count;
 }
 
-/*************************************************************************//**
-  Return the number of citizens in a city.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return the number of citizens in a city.
+ *****************************************************************************/
 citizens citizens_count(const struct city *pcity)
 {
   /* Use int here to check for an possible overflow at the end. */
@@ -168,7 +169,8 @@ citizens citizens_count(const struct city *pcity)
     return city_size_get(pcity);
   }
 
-  citizens_iterate(pcity, pslot, nationality) {
+  citizens_iterate(pcity, pslot, nationality)
+  {
     /* If the citizens of a nation is greater than 0 there should be a player
      * for this nation. This test should only be done on the server as the
      * client does not has the knowledge about all players all the time. */
@@ -176,28 +178,31 @@ citizens citizens_count(const struct city *pcity)
                       city_size_get(pcity));
 
     count += nationality;
-  } citizens_iterate_end;
+  }
+  citizens_iterate_end;
 
   fc_assert_ret_val(count >= 0 && count <= MAX_CITY_SIZE,
                     city_size_get(pcity));
 
-  return (citizens)count;
+  return (citizens) count;
 }
 
-/*************************************************************************//**
-  Return random citizen from city.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return random citizen from city.
+ *****************************************************************************/
 struct player_slot *citizens_random(const struct city *pcity)
 {
   int total = citizens_count(pcity);
   int chocen = fc_rand(total);
 
-  citizens_iterate(pcity, pslot, nationality) {
+  citizens_iterate(pcity, pslot, nationality)
+  {
     chocen -= nationality;
     if (chocen <= 0) {
       return pslot;
     }
-  } citizens_iterate_end;
+  }
+  citizens_iterate_end;
 
   fc_assert(FALSE);
 

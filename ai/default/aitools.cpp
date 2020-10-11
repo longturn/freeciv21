@@ -70,45 +70,45 @@
 
 #include "aitools.h"
 
-/**********************************************************************//**
-  Return the (untranslated) rule name of the ai_unit_task.
-  You don't have to free the return pointer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the (untranslated) rule name of the ai_unit_task.
+   You don't have to free the return pointer.
+ **************************************************************************/
 const char *dai_unit_task_rule_name(const enum ai_unit_task task)
 {
   switch (task) {
-   case AIUNIT_NONE:
-     return "None";
-   case AIUNIT_AUTO_SETTLER:
-     return "Auto settler";
-   case AIUNIT_BUILD_CITY:
-     return "Build city";
-   case AIUNIT_DEFEND_HOME:
-     return "Defend home";
-   case AIUNIT_ATTACK:
-     return "Attack";
-   case AIUNIT_ESCORT:
-     return "Escort";
-   case AIUNIT_EXPLORE:
-     return "Explore";
-   case AIUNIT_RECOVER:
-     return "Recover";
-   case AIUNIT_HUNTER:
-     return "Hunter";
-   case AIUNIT_TRADE:
-     return "Trade";
-   case AIUNIT_WONDER:
-     return "Wonder";
+  case AIUNIT_NONE:
+    return "None";
+  case AIUNIT_AUTO_SETTLER:
+    return "Auto settler";
+  case AIUNIT_BUILD_CITY:
+    return "Build city";
+  case AIUNIT_DEFEND_HOME:
+    return "Defend home";
+  case AIUNIT_ATTACK:
+    return "Attack";
+  case AIUNIT_ESCORT:
+    return "Escort";
+  case AIUNIT_EXPLORE:
+    return "Explore";
+  case AIUNIT_RECOVER:
+    return "Recover";
+  case AIUNIT_HUNTER:
+    return "Hunter";
+  case AIUNIT_TRADE:
+    return "Trade";
+  case AIUNIT_WONDER:
+    return "Wonder";
   }
   /* no default, ensure all types handled somehow */
   log_error("Unsupported ai_unit_task %d.", task);
   return NULL;
 }
 
-/**********************************************************************//**
-  Return the (untranslated) rule name of the adv_choice.
-  You don't have to free the return pointer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the (untranslated) rule name of the adv_choice.
+   You don't have to free the return pointer.
+ **************************************************************************/
 const char *dai_choice_rule_name(const struct adv_choice *choice)
 {
   switch (choice->type) {
@@ -128,16 +128,16 @@ const char *dai_choice_rule_name(const struct adv_choice *choice)
   return NULL;
 }
 
-/**********************************************************************//**
-  Amortize a want modified by the shields (build_cost) we risk losing.
-  We add the build time of the unit(s) we risk to amortize delay.  The
-  build time is calculated as the build cost divided by the production
-  output of the unit's homecity or the city where we want to produce
-  the unit. If the city has less than average shield output, we
-  instead use the average, to encourage long-term thinking.
-**************************************************************************/
-int military_amortize(struct player *pplayer, struct city *pcity,
-                      int value, int delay, int build_cost)
+/**********************************************************************/ /**
+   Amortize a want modified by the shields (build_cost) we risk losing.
+   We add the build time of the unit(s) we risk to amortize delay.  The
+   build time is calculated as the build cost divided by the production
+   output of the unit's homecity or the city where we want to produce
+   the unit. If the city has less than average shield output, we
+   instead use the average, to encourage long-term thinking.
+ **************************************************************************/
+int military_amortize(struct player *pplayer, struct city *pcity, int value,
+                      int delay, int build_cost)
 {
   struct adv_data *ai = adv_data_get(pplayer, NULL);
   int city_output = (pcity ? pcity->surplus[O_SHIELD] : 1);
@@ -151,18 +151,18 @@ int military_amortize(struct player *pplayer, struct city *pcity,
   return amortize(value, delay + build_time);
 }
 
-/**********************************************************************//**
-  There are some signs that a player might be dangerous: We are at
-  war with him, he has done lots of ignoble things to us, he is an
-  ally of one of our enemies (a ticking bomb to be sure), he is
-  our war target, we don't like him, diplomatic state is neutral
-  or we have case fire.
-  This function is used for example to check if pplayer can leave
-  his city undefended when aplayer's units are near it.
-**************************************************************************/
+/**********************************************************************/ /**
+   There are some signs that a player might be dangerous: We are at
+   war with him, he has done lots of ignoble things to us, he is an
+   ally of one of our enemies (a ticking bomb to be sure), he is
+   our war target, we don't like him, diplomatic state is neutral
+   or we have case fire.
+   This function is used for example to check if pplayer can leave
+   his city undefended when aplayer's units are near it.
+ **************************************************************************/
 void dai_consider_plr_dangerous(struct ai_type *ait, struct player *plr1,
                                 struct player *plr2,
-				enum override_bool *result)
+                                enum override_bool *result)
 {
   struct ai_dip_intel *adip;
 
@@ -174,13 +174,13 @@ void dai_consider_plr_dangerous(struct ai_type *ait, struct player *plr1,
   }
 }
 
-/**********************************************************************//**
-  A helper function for ai_gothere.  Estimates the dangers we will
-  be facing at our destination and tries to find/request a bodyguard if
-  needed.
-**************************************************************************/
-static bool dai_gothere_bodyguard(struct ai_type *ait,
-                                  struct unit *punit, struct tile *dest_tile)
+/**********************************************************************/ /**
+   A helper function for ai_gothere.  Estimates the dangers we will
+   be facing at our destination and tries to find/request a bodyguard if
+   needed.
+ **************************************************************************/
+static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
+                                  struct tile *dest_tile)
 {
   struct player *pplayer = unit_owner(punit);
   unsigned int danger = 0;
@@ -196,11 +196,13 @@ static bool dai_gothere_bodyguard(struct ai_type *ait,
   }
 
   /* Estimate enemy attack power. */
-  unit_list_iterate(dest_tile->units, aunit) {
+  unit_list_iterate(dest_tile->units, aunit)
+  {
     if (POTENTIALLY_HOSTILE_PLAYER(ait, pplayer, unit_owner(aunit))) {
       danger += adv_unit_att_rating(aunit);
     }
-  } unit_list_iterate_end;
+  }
+  unit_list_iterate_end;
   dcity = tile_city(dest_tile);
   if (dcity && POTENTIALLY_HOSTILE_PLAYER(ait, pplayer, city_owner(dcity))) {
     /* Assume enemy will build another defender, add it's attack strength */
@@ -208,8 +210,7 @@ static bool dai_gothere_bodyguard(struct ai_type *ait,
 
     if (d_type) {
       /* Enemy really can build something */
-      danger +=
-        adv_unittype_att_rating(
+      danger += adv_unittype_att_rating(
           d_type, city_production_unit_veteran_level(dcity, d_type),
           SINGLE_MOVE, d_type->hp);
     }
@@ -233,8 +234,8 @@ static bool dai_gothere_bodyguard(struct ai_type *ait,
                   * POWER_FACTOR * vlevel->power_fact / 100);
 
     if (danger >= my_def) {
-      UNIT_LOG(LOGLEVEL_BODYGUARD, punit, 
-               "want bodyguard @(%d, %d) danger=%d, my_def=%d", 
+      UNIT_LOG(LOGLEVEL_BODYGUARD, punit,
+               "want bodyguard @(%d, %d) danger=%d, my_def=%d",
                TILE_XY(dest_tile), danger, my_def);
       aiguard_request_guard(ait, punit);
       bg_needed = TRUE;
@@ -252,15 +253,15 @@ static bool dai_gothere_bodyguard(struct ai_type *ait,
 }
 
 #define LOGLEVEL_GOTHERE LOG_DEBUG
-/**********************************************************************//**
-  This is ferry-enabled goto.  Should not normally be used for non-ferried
-  units (i.e. planes or ships), use dai_unit_goto instead.
+/**********************************************************************/ /**
+   This is ferry-enabled goto.  Should not normally be used for non-ferried
+   units (i.e. planes or ships), use dai_unit_goto instead.
 
-  Return values: TRUE if got to or next to our destination, FALSE otherwise.
+   Return values: TRUE if got to or next to our destination, FALSE otherwise.
 
-  TODO: A big one is rendezvous points.  When this is implemented, we won't
-  have to be at the coast to ask for a boat to come to us.
-**************************************************************************/
+   TODO: A big one is rendezvous points.  When this is implemented, we won't
+   have to be at the coast to ask for a boat to come to us.
+ **************************************************************************/
 bool dai_gothere(struct ai_type *ait, struct player *pplayer,
                  struct unit *punit, struct tile *dest_tile)
 {
@@ -276,20 +277,19 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
   /* FIXME: If bodyguard is _really_ necessary, don't go anywhere */
   bg_needed = dai_gothere_bodyguard(ait, punit, dest_tile);
 
-  if (unit_transported(punit)
-      || !goto_is_sane(punit, dest_tile)) {
+  if (unit_transported(punit) || !goto_is_sane(punit, dest_tile)) {
     /* Must go by boat, call an aiferryboat function */
-    if (!aiferry_gobyboat(ait, pplayer, punit, dest_tile,
-                          bg_needed)) {
+    if (!aiferry_gobyboat(ait, pplayer, punit, dest_tile, bg_needed)) {
       return FALSE;
     }
   }
 
-  /* Go where we should be going if we can, and are at our destination 
+  /* Go where we should be going if we can, and are at our destination
    * if we are on a ferry */
   if (goto_is_sane(punit, dest_tile) && punit->moves_left > 0) {
     punit->goto_tile = dest_tile;
-    UNIT_LOG(LOGLEVEL_GOTHERE, punit, "Walking to (%d,%d)", TILE_XY(dest_tile));
+    UNIT_LOG(LOGLEVEL_GOTHERE, punit, "Walking to (%d,%d)",
+             TILE_XY(dest_tile));
     if (!dai_unit_goto(ait, punit, dest_tile)) {
       /* died */
       return FALSE;
@@ -305,7 +305,7 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
     /* We probably just landed, release our boat */
     aiferry_clear_boat(ait, punit);
   }
-  
+
   /* Dead unit shouldn't reach this point */
   CHECK_UNIT(punit);
 
@@ -313,11 +313,11 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
           || is_tiles_adjacent(unit_tile(punit), dest_tile));
 }
 
-/**********************************************************************//**
-  Returns the destination for a unit moving towards a given final destination.
-  That is, it gives a suitable way-point, if necessary.
-  For example, aircraft need these way-points to refuel.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the destination for a unit moving towards a given final
+ destination. That is, it gives a suitable way-point, if necessary. For
+ example, aircraft need these way-points to refuel.
+ **************************************************************************/
 struct tile *immediate_destination(struct unit *punit,
                                    struct tile *dest_tile)
 {
@@ -355,9 +355,7 @@ struct tile *immediate_destination(struct unit *punit,
     log_verbose("Did not find an air-route for "
                 "%s %s[%d] (%d,%d)->(%d,%d)",
                 nation_rule_name(nation_of_unit(punit)),
-                unit_rule_name(punit),
-                punit->id,
-                TILE_XY(unit_tile(punit)),
+                unit_rule_name(punit), punit->id, TILE_XY(unit_tile(punit)),
                 TILE_XY(dest_tile));
     /* Prevent take off */
     return unit_tile(punit);
@@ -367,31 +365,31 @@ struct tile *immediate_destination(struct unit *punit,
   return dest_tile;
 }
 
-/**********************************************************************//**
-  Log the cost of travelling a path.
-**************************************************************************/
-void dai_log_path(struct unit *punit,
-                  struct pf_path *path, struct pf_parameter *parameter)
+/**********************************************************************/ /**
+   Log the cost of travelling a path.
+ **************************************************************************/
+void dai_log_path(struct unit *punit, struct pf_path *path,
+                  struct pf_parameter *parameter)
 {
   const struct pf_position *last = pf_path_last_position(path);
   const int cc = PF_TURN_FACTOR * last->total_MC
                  + parameter->move_rate * last->total_EC;
-  const int tc = cc / (PF_TURN_FACTOR *parameter->move_rate); 
+  const int tc = cc / (PF_TURN_FACTOR * parameter->move_rate);
 
   UNIT_LOG(LOG_DEBUG, punit, "path L=%d T=%d(%d) MC=%d EC=%d CC=%d",
-	   path->length - 1, last->turn, tc,
-	   last->total_MC, last->total_EC, cc);
+           path->length - 1, last->turn, tc, last->total_MC, last->total_EC,
+           cc);
 }
 
-/**********************************************************************//**
-  Go to specified destination, subject to given PF constraints,
-  but do not disturb existing role or activity
-  and do not clear the role's destination. Return FALSE iff we died.
+/**********************************************************************/ /**
+   Go to specified destination, subject to given PF constraints,
+   but do not disturb existing role or activity
+   and do not clear the role's destination. Return FALSE iff we died.
 
-  parameter: the PF constraints on the computed path. The unit will move
-  as far along the computed path is it can; the movement code will impose
-  all the real constraints (ZoC, etc).
-**************************************************************************/
+   parameter: the PF constraints on the computed path. The unit will move
+   as far along the computed path is it can; the movement code will impose
+   all the real constraints (ZoC, etc).
+ **************************************************************************/
 bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
                                struct tile *ptile,
                                struct pf_parameter *parameter)
@@ -444,11 +442,11 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
   return alive;
 }
 
-/**********************************************************************//**
-  Use pathfinding to determine whether a GOTO is possible, considering all
-  aspects of the unit being moved and the terrain under consideration.
-  Don't bother with pathfinding if the unit is already there.
-**************************************************************************/
+/**********************************************************************/ /**
+   Use pathfinding to determine whether a GOTO is possible, considering all
+   aspects of the unit being moved and the terrain under consideration.
+   Don't bother with pathfinding if the unit is already there.
+ **************************************************************************/
 bool goto_is_sane(struct unit *punit, struct tile *ptile)
 {
   bool can_get_there = FALSE;
@@ -476,26 +474,25 @@ bool goto_is_sane(struct unit *punit, struct tile *ptile)
  * WAG
  */
 #define LONG_TIME 4
-/**********************************************************************//**
-  Set up the constraints on a path for an AI unit.
+/**********************************************************************/ /**
+   Set up the constraints on a path for an AI unit.
 
-  parameter:
-     constraints (output)
-  risk_cost:
-     auxiliary data used by the constraints (output)
-  ptile:
-     the destination of the unit.
-     For ferries, the destination may be a coastal land tile,
-     in which case the ferry should stop on an adjacent tile.
-**************************************************************************/
+   parameter:
+      constraints (output)
+   risk_cost:
+      auxiliary data used by the constraints (output)
+   ptile:
+      the destination of the unit.
+      For ferries, the destination may be a coastal land tile,
+      in which case the ferry should stop on an adjacent tile.
+ **************************************************************************/
 void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
-                         struct adv_risk_cost *risk_cost,
-                         struct unit *punit, struct tile *ptile)
+                         struct adv_risk_cost *risk_cost, struct unit *punit,
+                         struct tile *ptile)
 {
-  const bool long_path = LONG_TIME < (map_distance(unit_tile(punit),
-                                                   unit_tile(punit))
-                                      * SINGLE_MOVE
-                                      / unit_type_get(punit)->move_rate);
+  const bool long_path =
+      LONG_TIME < (map_distance(unit_tile(punit), unit_tile(punit))
+                   * SINGLE_MOVE / unit_type_get(punit)->move_rate);
   const bool barbarian = is_barbarian(unit_owner(punit));
   bool is_ferry;
   struct unit_ai *unit_data = def_ai_unit_data(punit, ait);
@@ -506,8 +503,7 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
   fc_assert(is_ai(pplayer));
 
   /* If a unit is hunting, don't expect it to be a ferry. */
-  is_ferry = (unit_data->task != AIUNIT_HUNTER
-              && dai_is_ferry(punit, ait));
+  is_ferry = (unit_data->task != AIUNIT_HUNTER && dai_is_ferry(punit, ait));
 
   if (is_ferry) {
     /* The destination may be a coastal land tile,
@@ -518,7 +514,7 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
                                            ACTRES_ATTACK)
              && (unit_data->task == AIUNIT_DEFEND_HOME
                  || unit_data->task == AIUNIT_ATTACK
-                 || unit_data->task ==  AIUNIT_ESCORT
+                 || unit_data->task == AIUNIT_ESCORT
                  || unit_data->task == AIUNIT_HUNTER)) {
     /* Use attack movement for defenders and escorts so they can
      * make defensive attacks */
@@ -535,7 +531,8 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
    */
   if (!uclass_has_flag(unit_class_get(punit), UCF_UNREACHABLE)
       && !barbarian) {
-    adv_avoid_risks(parameter, risk_cost, punit, NORMAL_STACKING_FEARFULNESS);
+    adv_avoid_risks(parameter, risk_cost, punit,
+                    NORMAL_STACKING_FEARFULNESS);
   }
 
   /* Should we absolutely forbid ending a turn on a dangerous tile?
@@ -619,11 +616,12 @@ void dai_fill_unit_param(struct ai_type *ait, struct pf_parameter *parameter,
   }
 }
 
-/**********************************************************************//**
-  Go to specified destination but do not disturb existing role or activity
-  and do not clear the role's destination. Return FALSE iff we died.
-**************************************************************************/
-bool dai_unit_goto(struct ai_type *ait, struct unit *punit, struct tile *ptile)
+/**********************************************************************/ /**
+   Go to specified destination but do not disturb existing role or activity
+   and do not clear the role's destination. Return FALSE iff we died.
+ **************************************************************************/
+bool dai_unit_goto(struct ai_type *ait, struct unit *punit,
+                   struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct adv_risk_cost risk_cost;
@@ -634,33 +632,33 @@ bool dai_unit_goto(struct ai_type *ait, struct unit *punit, struct tile *ptile)
   return dai_unit_goto_constrained(ait, punit, ptile, &parameter);
 }
 
-/**********************************************************************//**
-  Adviser task for unit has been changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   Adviser task for unit has been changed.
+ **************************************************************************/
 void dai_unit_new_adv_task(struct ai_type *ait, struct unit *punit,
                            enum adv_unit_task task, struct tile *ptile)
 {
   /* Keep ai_unit_task in sync with adv task */
   switch (task) {
-   case AUT_AUTO_SETTLER:
-     dai_unit_new_task(ait, punit, AIUNIT_AUTO_SETTLER, ptile);
-     break;
-   case AUT_BUILD_CITY:
-     dai_unit_new_task(ait, punit, AIUNIT_BUILD_CITY, ptile);
-     break;
-   case AUT_NONE:
-     dai_unit_new_task(ait, punit, AIUNIT_NONE, ptile);
-     break;
+  case AUT_AUTO_SETTLER:
+    dai_unit_new_task(ait, punit, AIUNIT_AUTO_SETTLER, ptile);
+    break;
+  case AUT_BUILD_CITY:
+    dai_unit_new_task(ait, punit, AIUNIT_BUILD_CITY, ptile);
+    break;
+  case AUT_NONE:
+    dai_unit_new_task(ait, punit, AIUNIT_NONE, ptile);
+    break;
   }
 }
 
-/**********************************************************************//**
-  Ensure unit sanity by telling charge that we won't bodyguard it anymore,
-  tell bodyguard it can roam free if our job is done, add and remove city
-  spot reservation, and set destination. If we set a unit to hunter, also
-  reserve its target, and try to load it with cruise missiles or nukes
-  to bring along.
-**************************************************************************/
+/**********************************************************************/ /**
+   Ensure unit sanity by telling charge that we won't bodyguard it anymore,
+   tell bodyguard it can roam free if our job is done, add and remove city
+   spot reservation, and set destination. If we set a unit to hunter, also
+   reserve its target, and try to load it with cruise missiles or nukes
+   to bring along.
+ **************************************************************************/
 void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
                        enum ai_unit_task task, struct tile *ptile)
 {
@@ -705,8 +703,9 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
     if (target) {
       BV_CLR(def_ai_unit_data(target, ait)->hunted,
              player_index(unit_owner(punit)));
-      UNIT_LOG(LOGLEVEL_HUNT, target, "no longer hunted (new task %d, old %d)",
-               task, unit_data->task);
+      UNIT_LOG(LOGLEVEL_HUNT, target,
+               "no longer hunted (new task %d, old %d)", task,
+               unit_data->task);
     }
   }
 
@@ -735,11 +734,13 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
     struct unit *target = game_unit_by_number(unit_data->target);
 
     fc_assert_ret(target != NULL);
-    BV_SET(def_ai_unit_data(target, ait)->hunted, player_index(unit_owner(punit)));
+    BV_SET(def_ai_unit_data(target, ait)->hunted,
+           player_index(unit_owner(punit)));
     UNIT_LOG(LOGLEVEL_HUNT, target, "is being hunted");
 
     /* Grab missiles lying around and bring them along */
-    unit_list_iterate(unit_tile(punit)->units, missile) {
+    unit_list_iterate(unit_tile(punit)->units, missile)
+    {
       if (unit_owner(missile) == unit_owner(punit)
           && def_ai_unit_data(missile, ait)->task != AIUNIT_ESCORT
           && !unit_transported(missile)
@@ -751,28 +752,29 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
         dai_unit_new_task(ait, missile, AIUNIT_ESCORT, unit_tile(target));
         unit_transport_load_send(missile, punit);
       }
-    } unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
   }
 
   /* Map ai tasks to advisor tasks. For most ai tasks there is
      no advisor, so AUT_NONE is set. */
   switch (unit_data->task) {
-   case AIUNIT_AUTO_SETTLER:
-     punit->server.adv->task = AUT_AUTO_SETTLER;
-     break;
-   case AIUNIT_BUILD_CITY:
-     punit->server.adv->task = AUT_BUILD_CITY;
-     break;
-   default:
-     punit->server.adv->task = AUT_NONE;
-     break;
+  case AIUNIT_AUTO_SETTLER:
+    punit->server.adv->task = AUT_AUTO_SETTLER;
+    break;
+  case AIUNIT_BUILD_CITY:
+    punit->server.adv->task = AUT_BUILD_CITY;
+    break;
+  default:
+    punit->server.adv->task = AUT_NONE;
+    break;
   }
 }
 
-/**********************************************************************//**
-  Try to make pcity our new homecity. Fails if we can't upkeep it. Assumes
-  success from server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Try to make pcity our new homecity. Fails if we can't upkeep it. Assumes
+   success from server.
+ **************************************************************************/
 bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
 {
   CHECK_UNIT(punit);
@@ -783,27 +785,28 @@ bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
      * so it would be stupid to give it one. There can also be good reasons
      * why it doesn't have a homecity. */
     /* However, until we can do something more useful with them, we
-       will assign explorers to a city so that they can be disbanded for 
+       will assign explorers to a city so that they can be disbanded for
        the greater good -- Per */
     return FALSE;
   }
   if (pcity->surplus[O_SHIELD] >= unit_type_get(punit)->upkeep[O_SHIELD]
       && pcity->surplus[O_FOOD] >= unit_type_get(punit)->upkeep[O_FOOD]) {
-    unit_do_action(unit_owner(punit), punit->id, pcity->id,
-                   0, "", ACTION_HOME_CITY);
+    unit_do_action(unit_owner(punit), punit->id, pcity->id, 0, "",
+                   ACTION_HOME_CITY);
     return TRUE;
   }
   return FALSE;
 }
 
-/**********************************************************************//**
-  Move a bodyguard along with another unit. We assume that unit has already
-  been moved to ptile which is a valid, safe tile, and that our
-  bodyguard has not. This is an ai_unit_* auxiliary function, do not use
-  elsewhere.
-**************************************************************************/
+/**********************************************************************/ /**
+   Move a bodyguard along with another unit. We assume that unit has already
+   been moved to ptile which is a valid, safe tile, and that our
+   bodyguard has not. This is an ai_unit_* auxiliary function, do not use
+   elsewhere.
+ **************************************************************************/
 static void dai_unit_bodyguard_move(struct ai_type *ait,
-                                    struct unit *bodyguard, struct tile *ptile)
+                                    struct unit *bodyguard,
+                                    struct tile *ptile)
 {
   struct unit *punit;
   struct player *pplayer;
@@ -831,10 +834,11 @@ static void dai_unit_bodyguard_move(struct ai_type *ait,
   (void) dai_unit_move(ait, bodyguard, ptile);
 }
 
-/**********************************************************************//**
-  Move and attack with an ai unit. We do not wait for server reply.
-**************************************************************************/
-bool dai_unit_attack(struct ai_type *ait, struct unit *punit, struct tile *ptile)
+/**********************************************************************/ /**
+   Move and attack with an ai unit. We do not wait for server reply.
+ **************************************************************************/
+bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
+                     struct tile *ptile)
 {
   struct unit *ptrans;
   struct unit *bodyguard = aiguard_guard_of(ait, punit);
@@ -850,84 +854,81 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit, struct tile *ptile
   /* FIXME: try the next action if the unit tried to do an illegal action.
    * That would allow the AI to stop using the omniscient
    * is_action_enabled_unit_on_*() functions. */
-  if (is_action_enabled_unit_on_units(ACTION_CAPTURE_UNITS,
-                                      punit, ptile)) {
+  if (is_action_enabled_unit_on_units(ACTION_CAPTURE_UNITS, punit, ptile)) {
     /* Choose capture. */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_CAPTURE_UNITS);
-  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_CAPTURE_UNITS);
+  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD, punit, ptile)) {
     /* Choose "Bombard". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_BOMBARD);
-  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD2,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_BOMBARD);
+  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD2, punit,
+                                             ptile)) {
     /* Choose "Bombard 2". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_BOMBARD2);
-  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD3,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_BOMBARD2);
+  } else if (is_action_enabled_unit_on_units(ACTION_BOMBARD3, punit,
+                                             ptile)) {
     /* Choose "Bombard 3". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_BOMBARD3);
-  } else if (is_action_enabled_unit_on_units(ACTION_NUKE_UNITS,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_BOMBARD3);
+  } else if (is_action_enabled_unit_on_units(ACTION_NUKE_UNITS, punit,
+                                             ptile)) {
     /* Choose "Nuke Units". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_NUKE_UNITS);
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_NUKE_UNITS);
   } else if ((tcity = tile_city(ptile))
-             && is_action_enabled_unit_on_city(ACTION_NUKE_CITY,
-                                               punit, tcity)) {
+             && is_action_enabled_unit_on_city(ACTION_NUKE_CITY, punit,
+                                               tcity)) {
     /* Choose "Nuke City". */
-    unit_do_action(unit_owner(punit), punit->id, tcity->id,
-                   0, "", ACTION_NUKE_CITY);
-  } else if (is_action_enabled_unit_on_units(ACTION_ATTACK,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tcity->id, 0, "",
+                   ACTION_NUKE_CITY);
+  } else if (is_action_enabled_unit_on_units(ACTION_ATTACK, punit, ptile)) {
     /* Choose regular attack. */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_ATTACK);
-  } else if (is_action_enabled_unit_on_units(ACTION_SUICIDE_ATTACK,
-                                             punit, ptile)) {
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_ATTACK);
+  } else if (is_action_enabled_unit_on_units(ACTION_SUICIDE_ATTACK, punit,
+                                             ptile)) {
     /* Choose suicide attack (explode missile). */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_SUICIDE_ATTACK);
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_SUICIDE_ATTACK);
   } else if ((tcity = tile_city(ptile))
-             && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY,
-                                               punit, tcity)) {
+             && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY, punit,
+                                               tcity)) {
     /* Choose "Conquer City". */
-    unit_do_action(unit_owner(punit), punit->id, tcity->id,
-                   0, "", ACTION_CONQUER_CITY);
+    unit_do_action(unit_owner(punit), punit->id, tcity->id, 0, "",
+                   ACTION_CONQUER_CITY);
   } else if ((tcity = tile_city(ptile))
-             && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY2,
-                                               punit, tcity)) {
+             && is_action_enabled_unit_on_city(ACTION_CONQUER_CITY2, punit,
+                                               tcity)) {
     /* Choose "Conquer City 2". */
-    unit_do_action(unit_owner(punit), punit->id, tcity->id,
-                   0, "", ACTION_CONQUER_CITY2);
+    unit_do_action(unit_owner(punit), punit->id, tcity->id, 0, "",
+                   ACTION_CONQUER_CITY2);
   } else if (!can_unit_survive_at_tile(&(wld.map), punit, ptile)
              && ((ptrans = transporter_for_unit_at(punit, ptile)))
              && is_action_enabled_unit_on_unit(ACTION_TRANSPORT_EMBARK,
                                                punit, ptrans)) {
     /* "Transport Embark". */
-    unit_do_action(unit_owner(punit), punit->id, ptrans->id,
-                   0, "", ACTION_TRANSPORT_EMBARK);
+    unit_do_action(unit_owner(punit), punit->id, ptrans->id, 0, "",
+                   ACTION_TRANSPORT_EMBARK);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
                                             punit, ptile, NULL)) {
     /* "Transport Disembark". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_TRANSPORT_DISEMBARK1);
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_TRANSPORT_DISEMBARK1);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK2,
                                             punit, ptile, NULL)) {
     /* "Transport Disembark 2". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", ACTION_TRANSPORT_DISEMBARK2);
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   ACTION_TRANSPORT_DISEMBARK2);
   } else {
     /* Other move. */
     (void) unit_move_handling(punit, ptile, FALSE, TRUE);
   }
   alive = (game_unit_by_number(sanity) != NULL);
 
-  if (alive && same_pos(ptile, unit_tile(punit))
-      && bodyguard != NULL  && def_ai_unit_data(bodyguard, ait)->charge == punit->id) {
+  if (alive && same_pos(ptile, unit_tile(punit)) && bodyguard != NULL
+      && def_ai_unit_data(bodyguard, ait)->charge == punit->id) {
     dai_unit_bodyguard_move(ait, bodyguard, ptile);
     /* Clumsy bodyguard might trigger an auto-attack */
     alive = (game_unit_by_number(sanity) != NULL);
@@ -936,11 +937,12 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit, struct tile *ptile
   return alive;
 }
 
-/**********************************************************************//**
-  Ai unit moving function called from AI interface.
-**************************************************************************/
+/**********************************************************************/ /**
+   Ai unit moving function called from AI interface.
+ **************************************************************************/
 void dai_unit_move_or_attack(struct ai_type *ait, struct unit *punit,
-                             struct tile *ptile, struct pf_path *path, int step)
+                             struct tile *ptile, struct pf_path *path,
+                             int step)
 {
   if (step == path->length - 1) {
     (void) dai_unit_attack(ait, punit, ptile);
@@ -949,15 +951,16 @@ void dai_unit_move_or_attack(struct ai_type *ait, struct unit *punit,
   }
 }
 
-/**********************************************************************//**
-  Move a unit. Do not attack. Do not leave bodyguard.
-  For AI units.
+/**********************************************************************/ /**
+   Move a unit. Do not attack. Do not leave bodyguard.
+   For AI units.
 
-  This function returns only when we have a reply from the server and
-  we can tell the calling function what happened to the move request.
-  (Right now it is not a big problem, since we call the server directly.)
-**************************************************************************/
-bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
+   This function returns only when we have a reply from the server and
+   we can tell the calling function what happened to the move request.
+   (Right now it is not a big problem, since we call the server directly.)
+ **************************************************************************/
+bool dai_unit_move(struct ai_type *ait, struct unit *punit,
+                   struct tile *ptile)
 {
   struct action *paction;
   struct unit *bodyguard;
@@ -988,11 +991,11 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
   }
 
   /* don't leave bodyguard behind */
-  if (is_plr_ai
-      && (bodyguard = aiguard_guard_of(ait, punit))
+  if (is_plr_ai && (bodyguard = aiguard_guard_of(ait, punit))
       && same_pos(unit_tile(punit), unit_tile(bodyguard))
       && bodyguard->moves_left == 0) {
-    UNIT_LOG(LOGLEVEL_BODYGUARD, punit, "does not want to leave "
+    UNIT_LOG(LOGLEVEL_BODYGUARD, punit,
+             "does not want to leave "
              "its bodyguard");
     return FALSE;
   }
@@ -1000,8 +1003,8 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
   /* Select move kind. */
   if (!can_unit_survive_at_tile(&(wld.map), punit, ptile)
       && ((ptrans = transporter_for_unit_at(punit, ptile)))
-      && is_action_enabled_unit_on_unit(ACTION_TRANSPORT_EMBARK,
-                                        punit, ptrans)) {
+      && is_action_enabled_unit_on_unit(ACTION_TRANSPORT_EMBARK, punit,
+                                        ptrans)) {
     /* "Transport Embark". */
     paction = action_by_number(ACTION_TRANSPORT_EMBARK);
   } else if (is_action_enabled_unit_on_tile(ACTION_TRANSPORT_DISEMBARK1,
@@ -1028,8 +1031,8 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
 
       /* Ugly hack to understand the OnNativeTile unit state requirements
        * used in the Action_Success_Actor_Move_Cost effect. */
-      fc_assert(utype_is_moved_to_tgt_by_action(paction,
-                                                unit_type_get(punit)));
+      fc_assert(
+          utype_is_moved_to_tgt_by_action(paction, unit_type_get(punit)));
       from_tile = unit_tile(punit);
       punit->tile = ptile;
 
@@ -1038,12 +1041,10 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
       punit->tile = from_tile;
     }
 
-    if (punit->moves_left <= mcost
-        && unit_move_rate(punit) > mcost
+    if (punit->moves_left <= mcost && unit_move_rate(punit) > mcost
         && adv_danger_at(punit, ptile)
         && !adv_danger_at(punit, unit_tile(punit))) {
-      UNIT_LOG(LOG_DEBUG, punit,
-               "ending move early to stay out of trouble");
+      UNIT_LOG(LOG_DEBUG, punit, "ending move early to stay out of trouble");
       return FALSE;
     }
   }
@@ -1053,15 +1054,14 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
   /* Move */
   if (paction && ptrans
       && action_has_result(paction, ACTRES_TRANSPORT_EMBARK)) {
-      /* "Transport Embark". */
-      unit_do_action(unit_owner(punit), punit->id, ptrans->id,
-                     0, "", action_number(paction));
-    } else if (paction
-               && (action_has_result(paction,
-                                     ACTRES_TRANSPORT_DISEMBARK))) {
+    /* "Transport Embark". */
+    unit_do_action(unit_owner(punit), punit->id, ptrans->id, 0, "",
+                   action_number(paction));
+  } else if (paction
+             && (action_has_result(paction, ACTRES_TRANSPORT_DISEMBARK))) {
     /* "Transport Disembark" or "Transport Disembark 2". */
-    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile),
-                   0, "", action_number(paction));
+    unit_do_action(unit_owner(punit), punit->id, tile_index(ptile), 0, "",
+                   action_number(paction));
   } else {
     /* Other move. */
     (void) unit_move_handling(punit, ptile, FALSE, TRUE);
@@ -1080,10 +1080,10 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit, struct tile *ptile)
   return FALSE;
 }
 
-/**********************************************************************//**
-  Calculate the value of the target unit including the other units which
-  will die in a successful attack
-**************************************************************************/
+/**********************************************************************/ /**
+   Calculate the value of the target unit including the other units which
+   will die in a successful attack
+ **************************************************************************/
 int stack_cost(struct unit *pattacker, struct unit *pdefender)
 {
   struct tile *ptile = unit_tile(pdefender);
@@ -1091,12 +1091,16 @@ int stack_cost(struct unit *pattacker, struct unit *pdefender)
 
   if (is_stack_vulnerable(ptile)) {
     /* lotsa people die */
-    unit_list_iterate(ptile->units, aunit) {
-      if (unit_attack_unit_at_tile_result(pattacker, aunit, ptile) == ATT_OK) {
+    unit_list_iterate(ptile->units, aunit)
+    {
+      if (unit_attack_unit_at_tile_result(pattacker, aunit, ptile)
+          == ATT_OK) {
         victim_cost += unit_build_shield_cost_base(aunit);
       }
-    } unit_list_iterate_end;
-  } else if (unit_attack_unit_at_tile_result(pattacker, pdefender, ptile) == ATT_OK) {
+    }
+    unit_list_iterate_end;
+  } else if (unit_attack_unit_at_tile_result(pattacker, pdefender, ptile)
+             == ATT_OK) {
     /* Only one unit dies if attack is successful */
     victim_cost = unit_build_shield_cost_base(pdefender);
   }
@@ -1104,9 +1108,9 @@ int stack_cost(struct unit *pattacker, struct unit *pdefender)
   return victim_cost;
 }
 
-/**********************************************************************//**
-  Change government, pretty fast...
-**************************************************************************/
+/**********************************************************************/ /**
+   Change government, pretty fast...
+ **************************************************************************/
 void dai_government_change(struct player *pplayer, struct government *gov)
 {
   if (gov == government_of_player(pplayer)) {
@@ -1115,17 +1119,19 @@ void dai_government_change(struct player *pplayer, struct government *gov)
 
   handle_player_change_government(pplayer, government_number(gov));
 
-  city_list_iterate(pplayer->cities, pcity) {
+  city_list_iterate(pplayer->cities, pcity)
+  {
     auto_arrange_workers(pcity); /* update cities */
-  } city_list_iterate_end;
+  }
+  city_list_iterate_end;
 }
 
-/**********************************************************************//**
-  Credits the AI wants to have in reserves. We need some gold to bribe
-  and incite cities.
+/**********************************************************************/ /**
+   Credits the AI wants to have in reserves. We need some gold to bribe
+   and incite cities.
 
-  "I still don't trust this function" -- Syela
-**************************************************************************/
+   "I still don't trust this function" -- Syela
+ **************************************************************************/
 int dai_gold_reserve(struct player *pplayer)
 {
   int i = total_player_citizens(pplayer) * 2;
@@ -1133,24 +1139,25 @@ int dai_gold_reserve(struct player *pplayer)
   return MAX(pplayer->ai_common.maxbuycost, i);
 }
 
-/**********************************************************************//**
-  Adjust want for choice to 'value' percent
-**************************************************************************/
+/**********************************************************************/ /**
+   Adjust want for choice to 'value' percent
+ **************************************************************************/
 void adjust_choice(int value, struct adv_choice *choice)
 {
-  choice->want = (choice->want *value)/100;
+  choice->want = (choice->want * value) / 100;
 }
 
-/**********************************************************************//**
-  Calls dai_wants_role_unit to choose the best unit with the given role and
-  set tech wants.  Sets choice->value.utype when we can build something.
-**************************************************************************/
+/**********************************************************************/ /**
+   Calls dai_wants_role_unit to choose the best unit with the given role and
+   set tech wants.  Sets choice->value.utype when we can build something.
+ **************************************************************************/
 bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
                           struct city *pcity, struct adv_choice *choice,
                           enum choice_type type, int role, int want,
                           bool need_boat)
 {
-  struct unit_type *iunit = dai_wants_role_unit(ait, pplayer, pcity, role, want);
+  struct unit_type *iunit =
+      dai_wants_role_unit(ait, pplayer, pcity, role, want);
 
   if (iunit != NULL) {
     choice->type = type;
@@ -1165,9 +1172,9 @@ bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
   return FALSE;
 }
 
-/**********************************************************************//**
-  Consider overriding building target selected by common advisor code.
-**************************************************************************/
+/**********************************************************************/ /**
+   Consider overriding building target selected by common advisor code.
+ **************************************************************************/
 void dai_build_adv_override(struct ai_type *ait, struct city *pcity,
                             struct adv_choice *choice)
 {
@@ -1182,16 +1189,19 @@ void dai_build_adv_override(struct ai_type *ait, struct city *pcity,
     chosen = choice->value.building;
   }
 
-  improvement_iterate(pimprove) {
+  improvement_iterate(pimprove)
+  {
     /* Advisor code did not consider wonders, let's do it here */
     if (is_wonder(pimprove)) {
-      if (pcity->server.adv->building_want[improvement_index(pimprove)] > want
+      if (pcity->server.adv->building_want[improvement_index(pimprove)]
+              > want
           && can_city_build_improvement_now(pcity, pimprove)) {
         want = pcity->server.adv->building_want[improvement_index(pimprove)];
         chosen = pimprove;
       }
     }
-  } improvement_iterate_end;
+  }
+  improvement_iterate_end;
 
   choice->want = want;
   choice->value.building = chosen;
@@ -1200,20 +1210,19 @@ void dai_build_adv_override(struct ai_type *ait, struct city *pcity,
     choice->type = CT_BUILDING; /* In case advisor had not chosen anything */
 
     CITY_LOG(LOG_DEBUG, pcity, "ai wants most to build %s at %d",
-             improvement_rule_name(chosen),
-             want);
+             improvement_rule_name(chosen), want);
   }
 }
 
-/**********************************************************************//**
-  "The following evaluates the unhappiness caused by military units
-  in the field (or aggressive) at a city when at Republic or
-  Democracy.
+/**********************************************************************/ /**
+   "The following evaluates the unhappiness caused by military units
+   in the field (or aggressive) at a city when at Republic or
+   Democracy.
 
-  Now generalised somewhat for government rulesets, though I'm not
-  sure whether it is fully general for all possible parameters/
-  combinations." --dwp
-**************************************************************************/
+   Now generalised somewhat for government rulesets, though I'm not
+   sure whether it is fully general for all possible parameters/
+   combinations." --dwp
+ **************************************************************************/
 bool dai_assess_military_unhappiness(struct city *pcity)
 {
   int free_unhappy = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL);
@@ -1224,14 +1233,16 @@ bool dai_assess_military_unhappiness(struct city *pcity)
     return FALSE;
   }
 
-  unit_list_iterate(pcity->units_supported, punit) {
+  unit_list_iterate(pcity->units_supported, punit)
+  {
     int happy_cost = city_unit_unhappiness(punit, &free_unhappy);
 
     if (happy_cost > 0) {
       unhap += happy_cost;
     }
-  } unit_list_iterate_end;
- 
+  }
+  unit_list_iterate_end;
+
   if (unhap < 0) {
     unhap = 0;
   }

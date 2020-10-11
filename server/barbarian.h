@@ -15,7 +15,7 @@
 #define FC__BARBARIAN_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
@@ -24,12 +24,12 @@
 extern "C" {
 #endif /* __cplusplus */
 
-#define MIN_UNREST_DIST   5
-#define MAX_UNREST_DIST   8
+#define MIN_UNREST_DIST 5
+#define MAX_UNREST_DIST 8
 
-#define UPRISE_CIV_SIZE  10
+#define UPRISE_CIV_SIZE 10
 
-#define MAP_FACTOR     2000  /* adjust this to get a good uprising frequency */
+#define MAP_FACTOR 2000 /* adjust this to get a good uprising frequency */
 
 #define BARBARIAN_MIN_LIFESPAN 5
 
@@ -44,4 +44,4 @@ struct player *create_barbarian_player(enum barbarian_type type);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__BARBARIAN_H */
+#endif /* FC__BARBARIAN_H */

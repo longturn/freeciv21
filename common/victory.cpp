@@ -20,9 +20,9 @@
 
 #include "victory.h"
 
-/************************************************************************//**
-  Whether victory condition is enabled
-****************************************************************************/
+/************************************************************************/ /**
+   Whether victory condition is enabled
+ ****************************************************************************/
 bool victory_enabled(enum victory_condition_type victory)
 {
   return (game.info.victory_conditions & (1 << victory));

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -30,4 +30,4 @@ GUI_FUNC_PROTO(bool, city_dialog_is_open, struct city *pcity)
 void popup_city_dialog(struct city *pcity);
 void refresh_city_dialog(struct city *pcity);
 
-#endif  /* FC__CITYDLG_G_H */
+#endif /* FC__CITYDLG_G_H */

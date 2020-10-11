@@ -38,21 +38,20 @@ void side_show_map(bool nothing);
 /***************************************************************************
   Class representing single widget(icon) on sidebar
 ***************************************************************************/
-class fc_sidewidget : public QWidget
-{
+class fc_sidewidget : public QWidget {
   Q_OBJECT
 public:
-   fc_sidewidget(QPixmap *pix, QString label, QString pg ,pfcn_bool func,
-                 int type = SW_STD);
+  fc_sidewidget(QPixmap *pix, QString label, QString pg, pfcn_bool func,
+                int type = SW_STD);
   ~fc_sidewidget();
   int get_priority();
-  QPixmap* get_pixmap();
+  QPixmap *get_pixmap();
   void paint(QPainter *painter, QPaintEvent *event);
   void resize_pixmap(int width, int height);
   void set_custom_labels(QString l);
   void set_label(QString str);
   void set_left_click(pfcn_bool func);
-  void set_pixmap(QPixmap* pm);
+  void set_pixmap(QPixmap *pm);
   void set_right_click(pfcn func);
   void set_tooltip(QString tooltip);
   void set_wheel_down(pfcn func);
@@ -67,13 +66,15 @@ public:
 public slots:
   void sblink();
   void some_slot();
+
 protected:
-  void contextMenuEvent(QContextMenuEvent  *event);
+  void contextMenuEvent(QContextMenuEvent *event);
   void enterEvent(QEvent *event);
   void leaveEvent(QEvent *event);
   void mousePressEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *event);
   void wheelEvent(QWheelEvent *event);
+
 private:
   void paint();
   bool hover;
@@ -91,12 +92,10 @@ private:
   QTimer *timer;
 };
 
-
 /***************************************************************************
   Freeciv sidebar
 ***************************************************************************/
-class fc_sidebar : public QWidget
-{
+class fc_sidebar : public QWidget {
   Q_OBJECT
 public:
   fc_sidebar();
@@ -104,13 +103,13 @@ public:
   void add_widget(fc_sidewidget *fsw);
   void paint(QPainter *painter, QPaintEvent *event);
   void resize_me(int height, bool force = false);
-  QList<fc_sidewidget*> objects;
+  QList<fc_sidewidget *> objects;
+
 protected:
   void paintEvent(QPaintEvent *event);
+
 private:
   QVBoxLayout *layout;
 };
 
-
 #endif /* FC__SIDEBAR_H */
-

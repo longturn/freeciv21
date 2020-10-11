@@ -21,10 +21,8 @@ extern "C" {
 /* common */
 #include "fc_types.h"
 
-
 /* Special value to signal the absence of a server setting. */
 #define SERVER_SETTING_NONE ((server_setting_id) -1)
-
 
 /* Pure server settings. */
 server_setting_id server_setting_by_name(const char *name);
@@ -37,7 +35,6 @@ const char *server_setting_name_get(server_setting_id id);
 bool server_setting_value_bool_get(server_setting_id id);
 int server_setting_value_int_get(server_setting_id id);
 unsigned int server_setting_value_bitwise_get(server_setting_id id);
-
 
 /* Special value to signal the absence of a server setting + its value. */
 #define SSETV_NONE SERVER_SETTING_NONE

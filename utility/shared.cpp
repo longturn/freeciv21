@@ -45,9 +45,9 @@
 #include <unistd.h>
 #endif
 #ifdef FREECIV_MSWINDOWS
-#include <windows.h>
-#include <lmcons.h>	/* UNLEN */
+#include <lmcons.h> /* UNLEN */
 #include <shlobj.h>
+#include <windows.h>
 #ifdef HAVE_DIRECT_H
 #include <direct.h>
 #endif /* HAVE_DIRECT_H */
@@ -66,20 +66,19 @@
 
 /* If no default data path is defined use the default default one */
 #ifndef DEFAULT_DATA_PATH
-#define DEFAULT_DATA_PATH "." PATH_SEPARATOR \
-                          "data" PATH_SEPARATOR \
-                          FREECIV_STORAGE_DIR DIR_SEPARATOR DATASUBDIR
+#define DEFAULT_DATA_PATH                                                   \
+  "." PATH_SEPARATOR                                                        \
+  "data" PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR DATASUBDIR
 #endif
 #ifndef DEFAULT_SAVE_PATH
-#define DEFAULT_SAVE_PATH "." PATH_SEPARATOR \
-                          FREECIV_STORAGE_DIR DIR_SEPARATOR "saves"
+#define DEFAULT_SAVE_PATH                                                   \
+  "." PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR "saves"
 #endif
 #ifndef DEFAULT_SCENARIO_PATH
-#define DEFAULT_SCENARIO_PATH                          \
-  "." PATH_SEPARATOR                                   \
-  "data" DIR_SEPARATOR "scenarios" PATH_SEPARATOR                      \
-  FREECIV_STORAGE_DIR DATASUBDIR DIR_SEPARATOR "scenarios" PATH_SEPARATOR \
-  FREECIV_STORAGE_DIR DIR_SEPARATOR "scenarios"
+#define DEFAULT_SCENARIO_PATH                                               \
+  "." PATH_SEPARATOR "data" DIR_SEPARATOR                                   \
+  "scenarios" PATH_SEPARATOR FREECIV_STORAGE_DIR DATASUBDIR DIR_SEPARATOR   \
+  "scenarios" PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR "scenarios"
 #endif /* DEFAULT_SCENARIO_PATH */
 
 /* environment */
@@ -101,7 +100,7 @@ static char *grouping_sep = NULL;
 /* As well as base64 functions, this string is used for checking for
  * 'safe' filenames, so should not contain / \ . */
 static const char base64url[] =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 static struct strvec *data_dir_names = NULL;
 static struct strvec *save_dir_names = NULL;
@@ -118,9 +117,9 @@ static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
 
 static char *expand_dir(char *tok_in, bool ok_to_free);
 
-/************************************************************************//**
-  An AND function for fc_tristate.
-****************************************************************************/
+/************************************************************************/ /**
+   An AND function for fc_tristate.
+ ****************************************************************************/
 enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two)
 {
   if (TRI_NO == one || TRI_NO == two) {
@@ -134,15 +133,16 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two)
   return TRI_YES;
 }
 
-/************************************************************************//**
-  Returns a statically allocated string containing a nicely-formatted
-  version of the given number according to the user's locale.  (Only
-  works for numbers >= zero.)  The number is given in scientific notation
-  as mantissa * 10^exponent.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns a statically allocated string containing a nicely-formatted
+   version of the given number according to the user's locale.  (Only
+   works for numbers >= zero.)  The number is given in scientific notation
+   as mantissa * 10^exponent.
+ ****************************************************************************/
 const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
 {
-  static char buf[64]; /* Note that we'll be filling this in right to left. */
+  static char
+      buf[64]; /* Note that we'll be filling this in right to left. */
   char *grp = grouping;
   char *ptr;
   unsigned int cnt = 0;
@@ -190,18 +190,19 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
 
     cnt++;
     if (mantissa != 0 && cnt == *grp) {
-      /* Reached count of digits in group: insert separator and reset count. */
+      /* Reached count of digits in group: insert separator and reset count.
+       */
       cnt = 0;
       if (*grp == CHAR_MAX) {
-	/* This test is unlikely to be necessary since we would need at
-	   least 421-bit ints to break the 127 digit barrier, but why not. */
-	break;
+        /* This test is unlikely to be necessary since we would need at
+           least 421-bit ints to break the 127 digit barrier, but why not. */
+        break;
       }
       ptr -= seplen;
       fc_assert_ret_val(ptr >= buf, NULL);
       memcpy(ptr, sep, seplen);
       if (*(grp + 1) != 0) {
-	/* Zero means to repeat the present group-size indefinitely. */
+        /* Zero means to repeat the present group-size indefinitely. */
         grp++;
       }
     }
@@ -210,29 +211,28 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
   return ptr;
 }
 
-
-/************************************************************************//**
-  Return a prettily formatted string containing the given number.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a prettily formatted string containing the given number.
+ ****************************************************************************/
 const char *int_to_text(unsigned int number)
 {
   return big_int_to_text(number, 0);
 }
 
-/************************************************************************//**
-  Check whether or not the given char is a valid ascii character.  The
-  character can be in any charset so long as it is a superset of ascii.
-****************************************************************************/
+/************************************************************************/ /**
+   Check whether or not the given char is a valid ascii character.  The
+   character can be in any charset so long as it is a superset of ascii.
+ ****************************************************************************/
 static bool is_ascii(char ch)
 {
   /* this works with both signed and unsigned char's. */
   return ch >= ' ' && ch <= '~';
 }
 
-/************************************************************************//**
-  Check if the name is safe security-wise.  This is intended to be used to
-  make sure an untrusted filename is safe to be used.
-****************************************************************************/
+/************************************************************************/ /**
+   Check if the name is safe security-wise.  This is intended to be used to
+   make sure an untrusted filename is safe to be used.
+ ****************************************************************************/
 bool is_safe_filename(const char *name)
 {
   int i = 0;
@@ -257,12 +257,12 @@ bool is_safe_filename(const char *name)
   return TRUE;
 }
 
-/************************************************************************//**
-  This is used in sundry places to make sure that names of cities,
-  players etc. do not contain yucky characters of various sorts.
-  Returns TRUE iff the name is acceptable.
-  FIXME:  Not internationalised.
-****************************************************************************/
+/************************************************************************/ /**
+   This is used in sundry places to make sure that names of cities,
+   players etc. do not contain yucky characters of various sorts.
+   Returns TRUE iff the name is acceptable.
+   FIXME:  Not internationalised.
+ ****************************************************************************/
 bool is_ascii_name(const char *name)
 {
   const char illegal_chars[] = {'|', '%', '"', ',', '*', '<', '>', '\0'};
@@ -286,7 +286,7 @@ bool is_ascii_name(const char *name)
     }
     for (j = 0; illegal_chars[j]; j++) {
       if (name[i] == illegal_chars[j]) {
-	return FALSE;
+        return FALSE;
       }
     }
   }
@@ -295,9 +295,9 @@ bool is_ascii_name(const char *name)
   return TRUE;
 }
 
-/************************************************************************//**
-  Check for valid base64url.
-****************************************************************************/
+/************************************************************************/ /**
+   Check for valid base64url.
+ ****************************************************************************/
 bool is_base64url(const char *s)
 {
   size_t i = 0;
@@ -315,10 +315,10 @@ bool is_base64url(const char *s)
   return TRUE;
 }
 
-/************************************************************************//**
-  generate a random string meeting criteria such as is_ascii_name(),
-  is_base64url(), and is_safe_filename().
-****************************************************************************/
+/************************************************************************/ /**
+   generate a random string meeting criteria such as is_ascii_name(),
+   is_base64url(), and is_safe_filename().
+ ****************************************************************************/
 void randomize_base64url_string(char *s, size_t n)
 {
   size_t i = 0;
@@ -334,40 +334,40 @@ void randomize_base64url_string(char *s, size_t n)
   s[i] = '\0';
 }
 
-/************************************************************************//**
-  Compares two strings, in the collating order of the current locale,
-  given pointers to the two strings (i.e., given "char *"s).
-  Case-sensitive.  Designed to be called from qsort().
-****************************************************************************/
+/************************************************************************/ /**
+   Compares two strings, in the collating order of the current locale,
+   given pointers to the two strings (i.e., given "char *"s).
+   Case-sensitive.  Designed to be called from qsort().
+ ****************************************************************************/
 int compare_strings(const void *first, const void *second)
 {
   return fc_strcoll((const char *) first, (const char *) second);
 }
 
-/************************************************************************//**
-  Compares two strings, in the collating order of the current locale,
-  given pointers to the two string pointers (i.e., given "char **"s).
-  Case-sensitive.  Designed to be called from qsort().
-****************************************************************************/
+/************************************************************************/ /**
+   Compares two strings, in the collating order of the current locale,
+   given pointers to the two string pointers (i.e., given "char **"s).
+   Case-sensitive.  Designed to be called from qsort().
+ ****************************************************************************/
 int compare_strings_ptrs(const void *first, const void *second)
 {
   return fc_strcoll(*((const char **) first), *((const char **) second));
 }
 
-/************************************************************************//**
-  Compares two strings, in the collating order of the current locale,
-  given pointers to the two string pointers.  Case-sensitive.
-  Designed to be called from strvec_sort().
-****************************************************************************/
+/************************************************************************/ /**
+   Compares two strings, in the collating order of the current locale,
+   given pointers to the two string pointers.  Case-sensitive.
+   Designed to be called from strvec_sort().
+ ****************************************************************************/
 int compare_strings_strvec(const char *const *first,
                            const char *const *second)
 {
   return fc_strcoll(*first, *second);
 }
 
-/************************************************************************//**
-  Returns 's' incremented to first non-space character.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns 's' incremented to first non-space character.
+ ****************************************************************************/
 char *skip_leading_spaces(char *s)
 {
   fc_assert_ret_val(NULL != s, NULL);
@@ -379,10 +379,10 @@ char *skip_leading_spaces(char *s)
   return s;
 }
 
-/************************************************************************//**
-  Removes leading spaces in string pointed to by 's'.
-  Note 's' must point to writeable memory!
-****************************************************************************/
+/************************************************************************/ /**
+   Removes leading spaces in string pointed to by 's'.
+   Note 's' must point to writeable memory!
+ ****************************************************************************/
 void remove_leading_spaces(char *s)
 {
   char *t;
@@ -397,10 +397,10 @@ void remove_leading_spaces(char *s)
   }
 }
 
-/************************************************************************//**
-  Terminates string pointed to by 's' to remove traling spaces;
-  Note 's' must point to writeable memory!
-****************************************************************************/
+/************************************************************************/ /**
+   Terminates string pointed to by 's' to remove traling spaces;
+   Note 's' must point to writeable memory!
+ ****************************************************************************/
 void remove_trailing_spaces(char *s)
 {
   char *t;
@@ -409,57 +409,57 @@ void remove_trailing_spaces(char *s)
   fc_assert_ret(NULL != s);
   len = strlen(s);
   if (len > 0) {
-    t = s + len -1;
+    t = s + len - 1;
     while (fc_isspace(*t)) {
       *t = '\0';
       if (t == s) {
-	break;
+        break;
       }
       t--;
     }
   }
 }
 
-/************************************************************************//**
-  Removes leading and trailing spaces in string pointed to by 's'.
-  Note 's' must point to writeable memory!
-****************************************************************************/
+/************************************************************************/ /**
+   Removes leading and trailing spaces in string pointed to by 's'.
+   Note 's' must point to writeable memory!
+ ****************************************************************************/
 void remove_leading_trailing_spaces(char *s)
 {
   remove_leading_spaces(s);
   remove_trailing_spaces(s);
 }
 
-/************************************************************************//**
-  As remove_trailing_spaces(), for specified char.
-****************************************************************************/
+/************************************************************************/ /**
+   As remove_trailing_spaces(), for specified char.
+ ****************************************************************************/
 static void remove_trailing_char(char *s, char trailing)
 {
   char *t;
 
   fc_assert_ret(NULL != s);
 
-  t = s + strlen(s) -1;
-  while (t>=s && (*t) == trailing) {
+  t = s + strlen(s) - 1;
+  while (t >= s && (*t) == trailing) {
     *t = '\0';
     t--;
   }
 }
 
-/************************************************************************//**
-  Returns pointer to '\0' at end of string 'str', and decrements
-  *nleft by the length of 'str'.  This is intended to be useful to
-  allow strcat-ing without traversing the whole string each time,
-  while still keeping track of the buffer length.
-  Eg:
-     char buf[128];
-     int n = sizeof(buf);
-     char *p = buf;
+/************************************************************************/ /**
+   Returns pointer to '\0' at end of string 'str', and decrements
+   *nleft by the length of 'str'.  This is intended to be useful to
+   allow strcat-ing without traversing the whole string each time,
+   while still keeping track of the buffer length.
+   Eg:
+      char buf[128];
+      int n = sizeof(buf);
+      char *p = buf;
 
-     fc_snprintf(p, n, "foo%p", p);
-     p = end_of_strn(p, &n);
-     fc_strlcpy(p, "yyy", n);
-****************************************************************************/
+      fc_snprintf(p, n, "foo%p", p);
+      p = end_of_strn(p, &n);
+      fc_strlcpy(p, "yyy", n);
+ ****************************************************************************/
 char *end_of_strn(char *str, int *nleft)
 {
   int len = strlen(str);
@@ -468,20 +468,20 @@ char *end_of_strn(char *str, int *nleft)
   return str + len;
 }
 
-/************************************************************************//**
-  Check the length of the given string.  If the string is too long,
-  log errmsg, which should be a string in printf-format taking up to
-  two arguments: the string and the length.
-****************************************************************************/
+/************************************************************************/ /**
+   Check the length of the given string.  If the string is too long,
+   log errmsg, which should be a string in printf-format taking up to
+   two arguments: the string and the length.
+ ****************************************************************************/
 bool check_strlen(const char *str, size_t len, const char *errmsg)
 {
   fc_assert_ret_val_msg(strlen(str) < len, TRUE, errmsg, str, len);
   return FALSE;
 }
 
-/************************************************************************//**
-  Call check_strlen() on str and then strlcpy() it into buffer.
-****************************************************************************/
+/************************************************************************/ /**
+   Call check_strlen() on str and then strlcpy() it into buffer.
+ ****************************************************************************/
 size_t loud_strlcpy(char *buffer, const char *str, size_t len,
                     const char *errmsg)
 {
@@ -489,10 +489,10 @@ size_t loud_strlcpy(char *buffer, const char *str, size_t len,
   return fc_strlcpy(buffer, str, len);
 }
 
-/************************************************************************//**
-  Convert 'str' to it's int reprentation if possible. 'pint' can be NULL,
-  then it will only test 'str' only contains an integer number.
-****************************************************************************/
+/************************************************************************/ /**
+   Convert 'str' to it's int reprentation if possible. 'pint' can be NULL,
+   then it will only test 'str' only contains an integer number.
+ ****************************************************************************/
 bool str_to_int(const char *str, int *pint)
 {
   const char *start;
@@ -522,10 +522,10 @@ bool str_to_int(const char *str, int *pint)
   return ('\0' == *str && (NULL == pint || 1 == sscanf(start, "%d", pint)));
 }
 
-/************************************************************************//**
-  Convert 'str' to it's unsigned int reprentation if possible. 'pint' can be NULL,
-  then it will only test 'str' only contains an unsigned integer number.
-****************************************************************************/
+/************************************************************************/ /**
+   Convert 'str' to it's unsigned int reprentation if possible. 'pint' can be
+ NULL, then it will only test 'str' only contains an unsigned integer number.
+ ****************************************************************************/
 bool str_to_uint(const char *str, unsigned int *pint)
 {
   const char *start;
@@ -555,10 +555,10 @@ bool str_to_uint(const char *str, unsigned int *pint)
   return ('\0' == *str && (NULL == pint || 1 == sscanf(start, "%u", pint)));
 }
 
-/************************************************************************//**
-  Convert 'str' to it's float reprentation if possible. 'pfloat' can be NULL,
-  then it will only test 'str' only contains a floating point number.
-****************************************************************************/
+/************************************************************************/ /**
+   Convert 'str' to it's float reprentation if possible. 'pfloat' can be
+ NULL, then it will only test 'str' only contains a floating point number.
+ ****************************************************************************/
 bool str_to_float(const char *str, float *pfloat)
 {
   bool dot;
@@ -603,17 +603,17 @@ bool str_to_float(const char *str, float *pfloat)
           && (NULL == pfloat || 1 == sscanf(start, "%f", pfloat)));
 }
 
-/************************************************************************//**
-  Returns string which gives users home dir, as specified by $HOME.
-  Gets value once, and then caches result.
-  If $HOME is not set, give a log message and returns NULL.
-  Note the caller should not mess with the returned string.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns string which gives users home dir, as specified by $HOME.
+   Gets value once, and then caches result.
+   If $HOME is not set, give a log message and returns NULL.
+   Note the caller should not mess with the returned string.
+ ****************************************************************************/
 char *user_home_dir(void)
 {
 #ifdef AMIGA
   return "PROGDIR:";
-#else  /* AMIGA */
+#else /* AMIGA */
 
   if (home_dir_user == NULL) {
     char *env = getenv("HOME");
@@ -635,9 +635,9 @@ char *user_home_dir(void)
 #endif /* AMIGA */
 }
 
-/************************************************************************//**
-  Free user home directory information
-****************************************************************************/
+/************************************************************************/ /**
+   Free user home directory information
+ ****************************************************************************/
 void free_user_home_dir(void)
 {
   if (home_dir_user != NULL) {
@@ -646,16 +646,16 @@ void free_user_home_dir(void)
   }
 }
 
-/************************************************************************//**
-  Returns string which gives freeciv storage dir.
-  Gets value once, and then caches result.
-  Note the caller should not mess with the returned string.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns string which gives freeciv storage dir.
+   Gets value once, and then caches result.
+   Note the caller should not mess with the returned string.
+ ****************************************************************************/
 char *freeciv_storage_dir(void)
 {
   if (storage_dir_freeciv == NULL) {
     storage_dir_freeciv =
-      static_cast<char *>(fc_malloc(strlen(FREECIV_STORAGE_DIR) + 1));
+        static_cast<char *>(fc_malloc(strlen(FREECIV_STORAGE_DIR) + 1));
 
     strcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
@@ -667,9 +667,9 @@ char *freeciv_storage_dir(void)
   return storage_dir_freeciv;
 }
 
-/************************************************************************//**
-  Free freeciv storage directory information
-****************************************************************************/
+/************************************************************************/ /**
+   Free freeciv storage directory information
+ ****************************************************************************/
 void free_freeciv_storage_dir(void)
 {
   if (storage_dir_freeciv != NULL) {
@@ -678,13 +678,13 @@ void free_freeciv_storage_dir(void)
   }
 }
 
-/************************************************************************//**
-  Returns string which gives user's username, as specified by $USER or
-  as given in password file for this user's uid, or a made up name if
-  we can't get either of the above.
-  Gets value once, and then caches result.
-  Note the caller should not mess with returned string.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns string which gives user's username, as specified by $USER or
+   as given in password file for this user's uid, or a made up name if
+   we can't get either of the above.
+   Gets value once, and then caches result.
+   Note the caller should not mess with returned string.
+ ****************************************************************************/
 char *user_username(char *buf, size_t bufsz)
 {
   /* This function uses a number of different methods to try to find a
@@ -748,16 +748,16 @@ char *user_username(char *buf, size_t bufsz)
   return buf;
 }
 
-/************************************************************************//**
-  Return tok_in directory name with "~/" expanded as user home directory.
-  The function might return tok_in, or a new string. In either case caller
-  should free() the returned string eventually. Also, tok_in should be
-  something expand_dir() can free itself if it decides to return newly
-  created string (so caller can always free() just the returned string, not
-  to care if it's same as tok_in or not). If ok_to_free is FALSE,
-  expand_dir() never frees original but can still return either it or a
-  newly allocated string.
-****************************************************************************/
+/************************************************************************/ /**
+   Return tok_in directory name with "~/" expanded as user home directory.
+   The function might return tok_in, or a new string. In either case caller
+   should free() the returned string eventually. Also, tok_in should be
+   something expand_dir() can free itself if it decides to return newly
+   created string (so caller can always free() just the returned string, not
+   to care if it's same as tok_in or not). If ok_to_free is FALSE,
+   expand_dir() never frees original but can still return either it or a
+   newly allocated string.
+ ****************************************************************************/
 static char *expand_dir(char *tok_in, bool ok_to_free)
 {
   int i; /* strlen(tok), or -1 as flag */
@@ -775,8 +775,9 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
   if (tok[0] == '~') {
     if (i > 1 && tok[1] != DIR_SEPARATOR_CHAR) {
       log_error("For \"%s\" in path cannot expand '~'"
-                " except as '~" DIR_SEPARATOR "'; ignoring", tok);
-      i = 0;  /* skip this one */
+                " except as '~" DIR_SEPARATOR "'; ignoring",
+                tok);
+      i = 0; /* skip this one */
     } else {
       char *home = user_home_dir();
 
@@ -784,13 +785,13 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
         log_verbose("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
-        int len = strlen(home) + i;   /* +1 -1 */
+        int len = strlen(home) + i; /* +1 -1 */
 
         allocated = static_cast<char *>(fc_malloc(len));
         ret = &allocated;
 
         fc_snprintf(allocated, len, "%s%s", home, tok + 1);
-        i = -1;       /* flag to free tok below */
+        i = -1; /* flag to free tok below */
       }
     }
   }
@@ -807,17 +808,17 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
   return *ret;
 }
 
-/************************************************************************//**
-  Returns a list of directory paths, in the order in which they should
-  be searched.  Base function for get_data_dirs(), get_save_dirs(),
-  get_scenario_dirs()
-****************************************************************************/
+/************************************************************************/ /**
+   Returns a list of directory paths, in the order in which they should
+   be searched.  Base function for get_data_dirs(), get_save_dirs(),
+   get_scenario_dirs()
+ ****************************************************************************/
 static struct strvec *base_get_dirs(const char *dir_list)
 {
   struct strvec *dirs = strvec_new();
   char *path, *tok;
 
-  path = fc_strdup(dir_list);   /* something we can strtok */
+  path = fc_strdup(dir_list); /* something we can strtok */
   tok = strtok(path, PATH_SEPARATOR);
   do {
     char *dir = expand_dir(tok, FALSE);
@@ -836,9 +837,9 @@ static struct strvec *base_get_dirs(const char *dir_list)
   return dirs;
 }
 
-/************************************************************************//**
-  Free data dir name vectors.
-****************************************************************************/
+/************************************************************************/ /**
+   Free data dir name vectors.
+ ****************************************************************************/
 void free_data_dir_names(void)
 {
   if (data_dir_names != NULL) {
@@ -855,17 +856,17 @@ void free_data_dir_names(void)
   }
 }
 
-/************************************************************************//**
-  Returns a list of data directory paths, in the order in which they should
-  be searched.  These paths are specified internally or may be set as the
-  environment variable $FREECIV_DATA PATH (a separated list of directories,
-  where the separator itself is specified internally, platform-dependent).
-  '~' at the start of a component (provided followed by '/' or '\0') is
-  expanded as $HOME.
+/************************************************************************/ /**
+   Returns a list of data directory paths, in the order in which they should
+   be searched.  These paths are specified internally or may be set as the
+   environment variable $FREECIV_DATA PATH (a separated list of directories,
+   where the separator itself is specified internally, platform-dependent).
+   '~' at the start of a component (provided followed by '/' or '\0') is
+   expanded as $HOME.
 
-  The returned pointer is static and shouldn't be modified, nor destroyed
-  by the user caller.
-****************************************************************************/
+   The returned pointer is static and shouldn't be modified, nor destroyed
+   by the user caller.
+ ****************************************************************************/
 const struct strvec *get_data_dirs(void)
 {
   /* The first time this function is called it will search and
@@ -877,31 +878,34 @@ const struct strvec *get_data_dirs(void)
     if ((path = getenv(FREECIV_DATA_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_DATA_PATH> configuration error */
       log_error(_("\"%s\" is set but empty; using default \"%s\" "
-                 "data directories instead."),
+                  "data directories instead."),
                 FREECIV_DATA_PATH, DEFAULT_DATA_PATH);
       path = NULL;
     }
     data_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_DATA_PATH);
-    strvec_remove_duplicate(data_dir_names, strcmp); /* Don't set a path both. */
-    strvec_iterate(data_dir_names, dirname) {
+    strvec_remove_duplicate(data_dir_names,
+                            strcmp); /* Don't set a path both. */
+    strvec_iterate(data_dir_names, dirname)
+    {
       log_verbose("Data path component: %s", dirname);
-    } strvec_iterate_end;
+    }
+    strvec_iterate_end;
   }
 
   return data_dir_names;
 }
 
-/************************************************************************//**
-  Returns a list of save directory paths, in the order in which they should
-  be searched.  These paths are specified internally or may be set as the
-  environment variable $FREECIV_SAVE_PATH (a separated list of directories,
-  where the separator itself is specified internally, platform-dependent).
-  '~' at the start of a component (provided followed by '/' or '\0') is
-  expanded as $HOME.
+/************************************************************************/ /**
+   Returns a list of save directory paths, in the order in which they should
+   be searched.  These paths are specified internally or may be set as the
+   environment variable $FREECIV_SAVE_PATH (a separated list of directories,
+   where the separator itself is specified internally, platform-dependent).
+   '~' at the start of a component (provided followed by '/' or '\0') is
+   expanded as $HOME.
 
-  The returned pointer is static and shouldn't be modified, nor destroyed
-  by the user caller.
-****************************************************************************/
+   The returned pointer is static and shouldn't be modified, nor destroyed
+   by the user caller.
+ ****************************************************************************/
 const struct strvec *get_save_dirs(void)
 {
   /* The first time this function is called it will search and
@@ -918,27 +922,30 @@ const struct strvec *get_save_dirs(void)
       path = NULL;
     }
     save_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_SAVE_PATH);
-    strvec_remove_duplicate(save_dir_names, strcmp); /* Don't set a path both. */
-    strvec_iterate(save_dir_names, dirname) {
+    strvec_remove_duplicate(save_dir_names,
+                            strcmp); /* Don't set a path both. */
+    strvec_iterate(save_dir_names, dirname)
+    {
       log_verbose("Save path component: %s", dirname);
-    } strvec_iterate_end;
+    }
+    strvec_iterate_end;
   }
 
   return save_dir_names;
 }
 
-/************************************************************************//**
-  Returns a list of scenario directory paths, in the order in which they
-  should be searched.  These paths are specified internally or may be set
-  as the environment variable $FREECIV_SCENARIO_PATH (a separated list of
-  directories, where the separator itself is specified internally,
-  platform-dependent).
-  '~' at the start of a component (provided followed
-  by '/' or '\0') is expanded as $HOME.
+/************************************************************************/ /**
+   Returns a list of scenario directory paths, in the order in which they
+   should be searched.  These paths are specified internally or may be set
+   as the environment variable $FREECIV_SCENARIO_PATH (a separated list of
+   directories, where the separator itself is specified internally,
+   platform-dependent).
+   '~' at the start of a component (provided followed
+   by '/' or '\0') is expanded as $HOME.
 
-  The returned pointer is static and shouldn't be modified, nor destroyed
-  by the user caller.
-****************************************************************************/
+   The returned pointer is static and shouldn't be modified, nor destroyed
+   by the user caller.
+ ****************************************************************************/
 const struct strvec *get_scenario_dirs(void)
 {
   /* The first time this function is called it will search and
@@ -949,31 +956,35 @@ const struct strvec *get_scenario_dirs(void)
 
     if ((path = getenv(FREECIV_SCENARIO_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_SCENARIO_PATH> configuration error */
-      log_error( _("\"%s\" is set but empty; using default \"%s\" "
-                   "scenario directories instead."),
-                 FREECIV_SCENARIO_PATH, DEFAULT_SCENARIO_PATH);
+      log_error(_("\"%s\" is set but empty; using default \"%s\" "
+                  "scenario directories instead."),
+                FREECIV_SCENARIO_PATH, DEFAULT_SCENARIO_PATH);
       path = NULL;
     }
-    scenario_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_SCENARIO_PATH);
-    strvec_remove_duplicate(scenario_dir_names, strcmp);      /* Don't set a path both. */
-    strvec_iterate(scenario_dir_names, dirname) {
+    scenario_dir_names =
+        base_get_dirs(NULL != path ? path : DEFAULT_SCENARIO_PATH);
+    strvec_remove_duplicate(scenario_dir_names,
+                            strcmp); /* Don't set a path both. */
+    strvec_iterate(scenario_dir_names, dirname)
+    {
       log_verbose("Scenario path component: %s", dirname);
-    } strvec_iterate_end;
+    }
+    strvec_iterate_end;
   }
 
   return scenario_dir_names;
 }
 
-/************************************************************************//**
-  Returns a string vector storing the filenames in the data directories
-  matching the given suffix.
+/************************************************************************/ /**
+   Returns a string vector storing the filenames in the data directories
+   matching the given suffix.
 
-  The list is allocated when the function is called; it should either
-  be stored permanently or destroyed (with strvec_destroy()).
+   The list is allocated when the function is called; it should either
+   be stored permanently or destroyed (with strvec_destroy()).
 
-  The suffixes are removed from the filenames before the list is
-  returned.
-****************************************************************************/
+   The suffixes are removed from the filenames before the list is
+   returned.
+ ****************************************************************************/
 struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
 {
   struct strvec *files = strvec_new();
@@ -986,7 +997,8 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
   }
 
   /* First assemble a full list of names. */
-  strvec_iterate(dirs, dirname) {
+  strvec_iterate(dirs, dirname)
+  {
     DIR *dir;
     struct dirent *entry;
 
@@ -994,12 +1006,11 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
     dir = fc_opendir(dirname);
     if (!dir) {
       if (errno == ENOENT) {
-        log_verbose("Skipping non-existing data directory %s.",
-                    dirname);
+        log_verbose("Skipping non-existing data directory %s.", dirname);
       } else {
         /* TRANS: "...: <externally translated error string>."*/
-        log_error(_("Could not read data directory %s: %s."),
-                  dirname, fc_strerror(fc_get_errno()));
+        log_error(_("Could not read data directory %s: %s."), dirname,
+                  fc_strerror(fc_get_errno()));
       }
       continue;
     }
@@ -1023,7 +1034,8 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
     }
 
     closedir(dir);
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
 
   /* Sort the list and remove duplications. */
   strvec_remove_duplicate(files, strcmp);
@@ -1032,22 +1044,22 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
   return files;
 }
 
-/************************************************************************//**
-  Returns a filename to access the specified file from a
-  directory by searching all specified directories for the file.
+/************************************************************************/ /**
+   Returns a filename to access the specified file from a
+   directory by searching all specified directories for the file.
 
-  If the specified 'filename' is NULL, the returned string contains
-  the effective path.  (But this should probably only be used for
-  debug output.)
+   If the specified 'filename' is NULL, the returned string contains
+   the effective path.  (But this should probably only be used for
+   debug output.)
 
-  Returns NULL if the specified filename cannot be found in any of the
-  data directories.  (A file is considered "found" if it can be
-  read-opened.)  The returned pointer points to static memory, so this
-  function can only supply one filename at a time.  Don't free that
-  pointer.
+   Returns NULL if the specified filename cannot be found in any of the
+   data directories.  (A file is considered "found" if it can be
+   read-opened.)  The returned pointer points to static memory, so this
+   function can only supply one filename at a time.  Don't free that
+   pointer.
 
-  TODO: Make this re-entrant
-****************************************************************************/
+   TODO: Make this re-entrant
+ ****************************************************************************/
 const char *fileinfoname(const struct strvec *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
@@ -1065,14 +1077,16 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
     bool first = TRUE;
 
     astr_clear(&realfile);
-    strvec_iterate(dirs, dirname) {
+    strvec_iterate(dirs, dirname)
+    {
       if (first) {
         astr_add(&realfile, "%s%s", PATH_SEPARATOR, dirname);
         first = FALSE;
       } else {
         astr_add(&realfile, "%s", dirname);
       }
-    } strvec_iterate_end;
+    }
+    strvec_iterate_end;
 
     return astr_str(&realfile);
   }
@@ -1088,31 +1102,30 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
   fnbuf[i] = '\0';
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
-  strvec_iterate(dirs, dirname) {
-    struct stat buf;    /* see if we can open the file or directory */
+  strvec_iterate(dirs, dirname)
+  {
+    struct stat buf; /* see if we can open the file or directory */
 
     astr_set(&realfile, "%s" DIR_SEPARATOR "%s", dirname, fnbuf);
     if (fc_stat(astr_str(&realfile), &buf) == 0) {
       return astr_str(&realfile);
     }
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
 
   log_verbose("Could not find readable file \"%s\" in data path.", filename);
 
   return NULL;
 }
 
-/************************************************************************//**
-  Free resources allocated for fileinfoname service
-****************************************************************************/
-void free_fileinfo_data(void)
-{
-  astr_free(&realfile);
-}
+/************************************************************************/ /**
+   Free resources allocated for fileinfoname service
+ ****************************************************************************/
+void free_fileinfo_data(void) { astr_free(&realfile); }
 
-/************************************************************************//**
-  Destroys the file info structure.
-****************************************************************************/
+/************************************************************************/ /**
+   Destroys the file info structure.
+ ****************************************************************************/
 static void fileinfo_destroy(struct fileinfo *pfile)
 {
   free(pfile->name);
@@ -1120,9 +1133,9 @@ static void fileinfo_destroy(struct fileinfo *pfile)
   free(pfile);
 }
 
-/************************************************************************//**
-  Compare modification times.
-****************************************************************************/
+/************************************************************************/ /**
+   Compare modification times.
+ ****************************************************************************/
 static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
                                    const struct fileinfo *const *ppb)
 {
@@ -1132,32 +1145,32 @@ static int compare_file_mtime_ptrs(const struct fileinfo *const *ppa,
   return ((a < b) ? 1 : (a > b) ? -1 : 0);
 }
 
-/************************************************************************//**
-  Compare names.
-****************************************************************************/
+/************************************************************************/ /**
+   Compare names.
+ ****************************************************************************/
 static int compare_file_name_ptrs(const struct fileinfo *const *ppa,
                                   const struct fileinfo *const *ppb)
 {
   return fc_strcoll((*ppa)->name, (*ppb)->name);
 }
 
-/************************************************************************//**
-  Compare names.
-****************************************************************************/
+/************************************************************************/ /**
+   Compare names.
+ ****************************************************************************/
 static bool compare_fileinfo_name(const struct fileinfo *pa,
                                   const struct fileinfo *pb)
 {
   return 0 == fc_strcoll(pa->name, pb->name);
 }
 
-/************************************************************************//**
-  Search for filenames with the "infix" substring in the "subpath"
-  subdirectory of the data path.
-  "nodups" removes duplicate names.
-  The returned list will be sorted by name first and modification time
-  second.  Returned "name"s will be truncated starting at the "infix"
-  substring.  The returned list must be freed with fileinfo_list_destroy().
-****************************************************************************/
+/************************************************************************/ /**
+   Search for filenames with the "infix" substring in the "subpath"
+   subdirectory of the data path.
+   "nodups" removes duplicate names.
+   The returned list will be sorted by name first and modification time
+   second.  Returned "name"s will be truncated starting at the "infix"
+   substring.  The returned list must be freed with fileinfo_list_destroy().
+ ****************************************************************************/
 struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
                                          const char *infix, bool nodups)
 {
@@ -1170,7 +1183,8 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
   res = fileinfo_list_new_full(fileinfo_destroy);
 
   /* First assemble a full list of names. */
-  strvec_iterate(dirs, dirname) {
+  strvec_iterate(dirs, dirname)
+  {
     DIR *dir;
     struct dirent *entry;
 
@@ -1193,7 +1207,8 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
         size_t len = strlen(dirname) + strlen(filename) + 2;
 
         fullname = static_cast<char *>(fc_malloc(len));
-        fc_snprintf(fullname, len, "%s" DIR_SEPARATOR "%s", dirname, filename);
+        fc_snprintf(fullname, len, "%s" DIR_SEPARATOR "%s", dirname,
+                    filename);
 
         if (fc_stat(fullname, &buf) == 0) {
           fileinfo *file = new fileinfo;
@@ -1216,7 +1231,8 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
     }
 
     closedir(dir);
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
 
   /* Sort the list by name. */
   fileinfo_list_sort(res, compare_file_name_ptrs);
@@ -1231,9 +1247,9 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
   return res;
 }
 
-/************************************************************************//**
-  Language environmental variable (with emulation).
-****************************************************************************/
+/************************************************************************/ /**
+   Language environmental variable (with emulation).
+ ****************************************************************************/
 char *setup_langname(void)
 {
   char *langname = NULL;
@@ -1245,104 +1261,104 @@ char *setup_langname(void)
   /* set LANG by hand if it is not set */
   if (!langname) {
     switch (PRIMARYLANGID(GetUserDefaultLangID())) {
-      case LANG_ARABIC:
-        langname = "ar";
+    case LANG_ARABIC:
+      langname = "ar";
+      break;
+    case LANG_CATALAN:
+      langname = "ca";
+      break;
+    case LANG_CZECH:
+      langname = "cs";
+      break;
+    case LANG_DANISH:
+      langname = "da";
+      break;
+    case LANG_GERMAN:
+      langname = "de";
+      break;
+    case LANG_GREEK:
+      langname = "el";
+      break;
+    case LANG_ENGLISH:
+      switch (SUBLANGID(GetUserDefaultLangID())) {
+      case SUBLANG_ENGLISH_UK:
+        langname = "en_GB";
         break;
-      case LANG_CATALAN:
-        langname = "ca";
+      default:
+        langname = "en";
         break;
-      case LANG_CZECH:
-        langname = "cs";
+      }
+      break;
+    case LANG_SPANISH:
+      langname = "es";
+      break;
+    case LANG_ESTONIAN:
+      langname = "et";
+      break;
+    case LANG_FARSI:
+      langname = "fa";
+      break;
+    case LANG_FINNISH:
+      langname = "fi";
+      break;
+    case LANG_FRENCH:
+      langname = "fr";
+      break;
+    case LANG_HEBREW:
+      langname = "he";
+      break;
+    case LANG_HUNGARIAN:
+      langname = "hu";
+      break;
+    case LANG_ITALIAN:
+      langname = "it";
+      break;
+    case LANG_JAPANESE:
+      langname = "ja";
+      break;
+    case LANG_KOREAN:
+      langname = "ko";
+      break;
+    case LANG_LITHUANIAN:
+      langname = "lt";
+      break;
+    case LANG_DUTCH:
+      langname = "nl";
+      break;
+    case LANG_NORWEGIAN:
+      langname = "nb";
+      break;
+    case LANG_POLISH:
+      langname = "pl";
+      break;
+    case LANG_PORTUGUESE:
+      switch (SUBLANGID(GetUserDefaultLangID())) {
+      case SUBLANG_PORTUGUESE_BRAZILIAN:
+        langname = "pt_BR";
         break;
-      case LANG_DANISH:
-        langname = "da";
+      default:
+        langname = "pt";
         break;
-      case LANG_GERMAN:
-        langname = "de";
-        break;
-      case LANG_GREEK:
-        langname = "el";
-        break;
-      case LANG_ENGLISH:
-        switch (SUBLANGID(GetUserDefaultLangID())) {
-          case SUBLANG_ENGLISH_UK:
-            langname = "en_GB";
-            break;
-          default:
-            langname = "en";
-            break;
-        }
-        break;
-      case LANG_SPANISH:
-        langname = "es";
-        break;
-      case LANG_ESTONIAN:
-        langname = "et";
-        break;
-      case LANG_FARSI:
-        langname = "fa";
-        break;
-      case LANG_FINNISH:
-        langname = "fi";
-        break;
-      case LANG_FRENCH:
-        langname = "fr";
-        break;
-      case LANG_HEBREW:
-        langname = "he";
-        break;
-      case LANG_HUNGARIAN:
-        langname = "hu";
-        break;
-      case LANG_ITALIAN:
-        langname = "it";
-        break;
-      case LANG_JAPANESE:
-        langname = "ja";
-        break;
-      case LANG_KOREAN:
-        langname = "ko";
-        break;
-      case LANG_LITHUANIAN:
-        langname = "lt";
-        break;
-      case LANG_DUTCH:
-        langname = "nl";
-        break;
-      case LANG_NORWEGIAN:
-        langname = "nb";
-        break;
-      case LANG_POLISH:
-        langname = "pl";
-        break;
-      case LANG_PORTUGUESE:
-        switch (SUBLANGID(GetUserDefaultLangID())) {
-          case SUBLANG_PORTUGUESE_BRAZILIAN:
-            langname = "pt_BR";
-            break;
-          default:
-            langname = "pt";
-            break;
-        }
-        break;
-      case LANG_ROMANIAN:
-        langname = "ro";
-        break;
-      case LANG_RUSSIAN:
-        langname = "ru";
-        break;
-      case LANG_SWEDISH:
-        langname = "sv";
-        break;
-      case LANG_TURKISH:
-        langname = "tr";
-        break;
-      case LANG_UKRAINIAN:
-        langname = "uk";
-        break;
-      case LANG_CHINESE:
-        langname = "zh_CN";
-        break;
+      }
+      break;
+    case LANG_ROMANIAN:
+      langname = "ro";
+      break;
+    case LANG_RUSSIAN:
+      langname = "ru";
+      break;
+    case LANG_SWEDISH:
+      langname = "sv";
+      break;
+    case LANG_TURKISH:
+      langname = "tr";
+      break;
+    case LANG_UKRAINIAN:
+      langname = "uk";
+      break;
+    case LANG_CHINESE:
+      langname = "zh_CN";
+      break;
     }
 
     if (langname != NULL) {
@@ -1359,12 +1375,12 @@ char *setup_langname(void)
 }
 
 #ifdef FREECIV_ENABLE_NLS
-/************************************************************************//**
-  Update autocap behavior to match current language.
-****************************************************************************/
+/************************************************************************/ /**
+   Update autocap behavior to match current language.
+ ****************************************************************************/
 static void autocap_update(void)
 {
-  const char *autocap_opt_in[] = { "fi", NULL };
+  const char *autocap_opt_in[] = {"fi", NULL};
   int i;
   bool ac_enabled = FALSE;
 
@@ -1384,9 +1400,9 @@ static void autocap_update(void)
 }
 #endif /* FREECIV_ENABLE_NLS */
 
-/************************************************************************//**
-  Switch to specified LANG
-****************************************************************************/
+/************************************************************************/ /**
+   Switch to specified LANG
+ ****************************************************************************/
 void switch_lang(const char *lang)
 {
 #ifdef FREECIV_ENABLE_NLS
@@ -1412,10 +1428,10 @@ void switch_lang(const char *lang)
 #endif /* FREECIV_ENABLE_NLS */
 }
 
-/************************************************************************//**
-  Setup for Native Language Support, if configured to use it.
-  (Call this only once, or it may leak memory.)
-****************************************************************************/
+/************************************************************************/ /**
+   Setup for Native Language Support, if configured to use it.
+   (Call this only once, or it may leak memory.)
+ ****************************************************************************/
 void init_nls(void)
 {
   /*
@@ -1429,7 +1445,7 @@ void init_nls(void)
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+#endif              /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1439,8 +1455,8 @@ void init_nls(void)
      This is intended to cater to the common case where:
        1) The user is from North America. ;-)
        2) The user has not set the proper environment variables.
-	  (Most applications are (unfortunately) US-centric
-	  by default, so why bother?)
+          (Most applications are (unfortunately) US-centric
+          by default, so why bother?)
      This would result in the "C" locale being used, with grouping ""
      and thousands_sep "", where we really want "\3" and ",". */
 
@@ -1455,8 +1471,9 @@ void init_nls(void)
     } else {
       size_t len;
       for (len = 0;
-	   lc->grouping[len] != '\0' && lc->grouping[len] != CHAR_MAX; len++) {
-	/* nothing */
+           lc->grouping[len] != '\0' && lc->grouping[len] != CHAR_MAX;
+           len++) {
+        /* nothing */
       }
       len++;
       free(grouping);
@@ -1472,9 +1489,9 @@ void init_nls(void)
 #endif /* ENABLE_NLS */
 }
 
-/************************************************************************//**
-  Free memory allocated by Native Language Support
-****************************************************************************/
+/************************************************************************/ /**
+   Free memory allocated by Native Language Support
+ ****************************************************************************/
 void free_nls(void)
 {
   free(grouping);
@@ -1483,15 +1500,15 @@ void free_nls(void)
   grouping_sep = NULL;
 }
 
-/************************************************************************//**
-  If we have root privileges, die with an error.
-  (Eg, for security reasons.)
-  Param argv0 should be argv[0] or similar; fallback is
-  used instead if argv0 is NULL.
-  But don't die on systems where the user is always root...
-  (a general test for this would be better).
-  Doesn't use log_*() because gets called before logging is setup.
-****************************************************************************/
+/************************************************************************/ /**
+   If we have root privileges, die with an error.
+   (Eg, for security reasons.)
+   Param argv0 should be argv[0] or similar; fallback is
+   used instead if argv0 is NULL.
+   But don't die on systems where the user is always root...
+   (a general test for this would be better).
+   Doesn't use log_*() because gets called before logging is setup.
+ ****************************************************************************/
 void dont_run_as_root(const char *argv0, const char *fallback)
 {
 #if (defined(ALWAYS_ROOT) || defined(__EMX__) || defined(__BEOS__))
@@ -1499,71 +1516,61 @@ void dont_run_as_root(const char *argv0, const char *fallback)
 #else
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
-	       _("%s: Fatal error: you're trying to run me as superuser!\n"),
-	       (argv0 ? argv0 : fallback ? fallback : "freeciv"));
+               _("%s: Fatal error: you're trying to run me as superuser!\n"),
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
 #endif /* ALWAYS_ROOT */
 }
 
-/************************************************************************//**
-  Return a description string of the result.
-  In English, form of description is suitable to substitute in, eg:
-     prefix is <description>
-  (N.B.: The description is always in English, but they have all been marked
-   for translation.  If you want a localized version, use _() on the return.)
-****************************************************************************/
+/************************************************************************/ /**
+   Return a description string of the result.
+   In English, form of description is suitable to substitute in, eg:
+      prefix is <description>
+   (N.B.: The description is always in English, but they have all been marked
+    for translation.  If you want a localized version, use _() on the
+ return.)
+ ****************************************************************************/
 const char *m_pre_description(enum m_pre_result result)
 {
-  static const char * const descriptions[] = {
-    N_("exact match"),
-    N_("only match"),
-    N_("ambiguous"),
-    N_("empty"),
-    N_("too long"),
-    N_("non-match")
-  };
+  static const char *const descriptions[] = {
+      N_("exact match"), N_("only match"), N_("ambiguous"),
+      N_("empty"),       N_("too long"),   N_("non-match")};
   fc_assert_ret_val(result >= 0 && result < ARRAY_SIZE(descriptions), NULL);
   return descriptions[result];
 }
 
-/************************************************************************//**
-  See match_prefix_full().
-****************************************************************************/
+/************************************************************************/ /**
+   See match_prefix_full().
+ ****************************************************************************/
 enum m_pre_result match_prefix(m_pre_accessor_fn_t accessor_fn,
-                               size_t n_names,
-                               size_t max_len_name,
+                               size_t n_names, size_t max_len_name,
                                m_pre_strncmp_fn_t cmp_fn,
-                               m_strlen_fn_t len_fn,
-                               const char *prefix,
+                               m_strlen_fn_t len_fn, const char *prefix,
                                int *ind_result)
 {
   return match_prefix_full(accessor_fn, n_names, max_len_name, cmp_fn,
                            len_fn, prefix, ind_result, NULL, 0, NULL);
 }
 
-/************************************************************************//**
-  Given n names, with maximum length max_len_name, accessed by
-  accessor_fn(0) to accessor_fn(n-1), look for matching prefix
-  according to given comparison function.
-  Returns type of match or fail, and for return <= M_PRE_AMBIGUOUS
-  sets *ind_result with matching index (or for ambiguous, first match).
-  If max_len_name == 0, treat as no maximum.
-  If the int array 'matches' is non-NULL, up to 'max_matches' ambiguous
-  matching names indices will be inserted into it. If 'pnum_matches' is
-  non-NULL, it will be set to the number of indices inserted into 'matches'.
-****************************************************************************/
+/************************************************************************/ /**
+   Given n names, with maximum length max_len_name, accessed by
+   accessor_fn(0) to accessor_fn(n-1), look for matching prefix
+   according to given comparison function.
+   Returns type of match or fail, and for return <= M_PRE_AMBIGUOUS
+   sets *ind_result with matching index (or for ambiguous, first match).
+   If max_len_name == 0, treat as no maximum.
+   If the int array 'matches' is non-NULL, up to 'max_matches' ambiguous
+   matching names indices will be inserted into it. If 'pnum_matches' is
+   non-NULL, it will be set to the number of indices inserted into 'matches'.
+ ****************************************************************************/
 enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
-                                    size_t n_names,
-                                    size_t max_len_name,
+                                    size_t n_names, size_t max_len_name,
                                     m_pre_strncmp_fn_t cmp_fn,
-                                    m_strlen_fn_t len_fn,
-                                    const char *prefix,
-                                    int *ind_result,
-                                    int *matches,
-                                    int max_matches,
-                                    int *pnum_matches)
+                                    m_strlen_fn_t len_fn, const char *prefix,
+                                    int *ind_result, int *matches,
+                                    int max_matches, int *pnum_matches)
 {
   int i, len, nmatches;
 
@@ -1589,7 +1596,7 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
         return M_PRE_EXACT;
       }
       if (nmatches == 0) {
-        *ind_result = i;	/* first match */
+        *ind_result = i; /* first match */
       }
       if (matches != NULL && nmatches < max_matches) {
         matches[nmatches] = i;
@@ -1610,11 +1617,11 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
   }
 }
 
-/************************************************************************//**
-  Returns string which gives the multicast group IP address for finding
-  servers on the LAN, as specified by $FREECIV_MULTICAST_GROUP.
-  Gets value once, and then caches result.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns string which gives the multicast group IP address for finding
+   servers on the LAN, as specified by $FREECIV_MULTICAST_GROUP.
+   Gets value once, and then caches result.
+ ****************************************************************************/
 char *get_multicast_group(bool ipv6_preferred)
 {
   static const char *default_multicast_group_ipv4 = "225.1.1.1";
@@ -1643,9 +1650,9 @@ char *get_multicast_group(bool ipv6_preferred)
   return mc_group;
 }
 
-/************************************************************************//**
-  Free multicast group resources
-****************************************************************************/
+/************************************************************************/ /**
+   Free multicast group resources
+ ****************************************************************************/
 void free_multicast_group(void)
 {
   if (mc_group != NULL) {
@@ -1654,30 +1661,31 @@ void free_multicast_group(void)
   }
 }
 
-/************************************************************************//**
-  Interpret ~/ in filename as home dir
-  New path is returned in buf of size buf_size
+/************************************************************************/ /**
+   Interpret ~/ in filename as home dir
+   New path is returned in buf of size buf_size
 
-  This may fail if the path is too long.  It is better to use
-  interpret_tilde_alloc.
-****************************************************************************/
+   This may fail if the path is too long.  It is better to use
+   interpret_tilde_alloc.
+ ****************************************************************************/
 void interpret_tilde(char *buf, size_t buf_size, const char *filename)
 {
   if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
-    fc_snprintf(buf, buf_size, "%s" DIR_SEPARATOR "%s", user_home_dir(), filename + 2);
+    fc_snprintf(buf, buf_size, "%s" DIR_SEPARATOR "%s", user_home_dir(),
+                filename + 2);
   } else if (filename[0] == '~' && filename[1] == '\0') {
     strncpy(buf, user_home_dir(), buf_size);
-  } else  {
+  } else {
     strncpy(buf, filename, buf_size);
   }
 }
 
-/************************************************************************//**
-  Interpret ~/ in filename as home dir
+/************************************************************************/ /**
+   Interpret ~/ in filename as home dir
 
-  The new path is returned in buf, as a newly allocated buffer.  The new
-  path will always be allocated and written, even if there is no ~ present.
-****************************************************************************/
+   The new path is returned in buf, as a newly allocated buffer.  The new
+   path will always be allocated and written, even if there is no ~ present.
+ ****************************************************************************/
 char *interpret_tilde_alloc(const char *filename)
 {
   if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
@@ -1692,15 +1700,15 @@ char *interpret_tilde_alloc(const char *filename)
     return buf;
   } else if (filename[0] == '~' && filename[1] == '\0') {
     return fc_strdup(user_home_dir());
-  } else  {
+  } else {
     return fc_strdup(filename);
   }
 }
 
-/************************************************************************//**
-  Return a pointer to the start of the file basename in filepath.
-  If the string contains no dir separator, it is returned itself.
-****************************************************************************/
+/************************************************************************/ /**
+   Return a pointer to the start of the file basename in filepath.
+   If the string contains no dir separator, it is returned itself.
+ ****************************************************************************/
 char *skip_to_basename(char *filepath)
 {
   int j;
@@ -1708,16 +1716,16 @@ char *skip_to_basename(char *filepath)
 
   for (j = strlen(filepath); j >= 0; j--) {
     if (filepath[j] == DIR_SEPARATOR_CHAR) {
-      return &filepath[j+1];
+      return &filepath[j + 1];
     }
   }
   return filepath;
 }
 
-/************************************************************************//**
-  If the directory "pathname" does not exist, recursively create all
-  directories until it does.
-****************************************************************************/
+/************************************************************************/ /**
+   If the directory "pathname" does not exist, recursively create all
+   directories until it does.
+ ****************************************************************************/
 bool make_dir(const char *pathname)
 {
   char *dir;
@@ -1734,8 +1742,8 @@ bool make_dir(const char *pathname)
 
 #ifdef FREECIV_MSWINDOWS
 #ifdef HAVE__MKDIR
-    /* Prefer _mkdir() in Windows even if mkdir() would seem to be available -
-     * chances are that it's wrong kind of mkdir().
+    /* Prefer _mkdir() in Windows even if mkdir() would seem to be available
+     * - chances are that it's wrong kind of mkdir().
      * TODO: Make a configure check for mkdir() that also makes sure that it
      *       takes two parameters, and prefer such proper mkdir() here. */
     {
@@ -1761,9 +1769,9 @@ bool make_dir(const char *pathname)
   return TRUE;
 }
 
-/************************************************************************//**
-  Returns TRUE if the filename's path is absolute.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE if the filename's path is absolute.
+ ****************************************************************************/
 bool path_is_absolute(const char *filename)
 {
   if (!filename) {
@@ -1783,26 +1791,26 @@ bool path_is_absolute(const char *filename)
   return FALSE;
 }
 
-/************************************************************************//**
-  Scan in a word or set of words from start to but not including
-  any of the given delimiters. The buf pointer will point past delimiter,
-  or be set to NULL if there is nothing there. Removes excess white
-  space.
+/************************************************************************/ /**
+   Scan in a word or set of words from start to but not including
+   any of the given delimiters. The buf pointer will point past delimiter,
+   or be set to NULL if there is nothing there. Removes excess white
+   space.
 
-  This function should be safe, and dest will contain "\0" and
-  *buf == NULL on failure. We always fail gently.
+   This function should be safe, and dest will contain "\0" and
+   *buf == NULL on failure. We always fail gently.
 
-  Due to the way the scanning is performed, looking for a space
-  will give you the first word even if it comes before multiple
-  spaces.
+   Due to the way the scanning is performed, looking for a space
+   will give you the first word even if it comes before multiple
+   spaces.
 
-  Returns delimiter found.
+   Returns delimiter found.
 
-  Pass in NULL for dest and -1 for size to just skip ahead.  Note that if
-  nothing is found, dest will contain the whole string, minus leading and
-  trailing whitespace.  You can scan for "" to conveniently grab the
-  remainder of a string.
-****************************************************************************/
+   Pass in NULL for dest and -1 for size to just skip ahead.  Note that if
+   nothing is found, dest will contain the whole string, minus leading and
+   trailing whitespace.  You can scan for "" to conveniently grab the
+   remainder of a string.
+ ****************************************************************************/
 char scanin(char **buf, char *delimiters, char *dest, int size)
 {
   char *ptr, found = '?';
@@ -1816,8 +1824,8 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
   }
 
   if (dest) {
-    strncpy(dest, *buf, size-1);
-    dest[size-1] = '\0';
+    strncpy(dest, *buf, size - 1);
+    dest[size - 1] = '\0';
     remove_leading_trailing_spaces(dest);
     ptr = strpbrk(dest, delimiters);
   } else {
@@ -1844,10 +1852,10 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
   return found;
 }
 
-/************************************************************************//**
-  Convenience function to nicely format a time_t seconds value in to a
-  string with hours, minutes, etc.
-****************************************************************************/
+/************************************************************************/ /**
+   Convenience function to nicely format a time_t seconds value in to a
+   string with hours, minutes, etc.
+ ****************************************************************************/
 void format_time_duration(time_t t, char *buf, int maxlen)
 {
   int seconds, minutes, hours, days;
@@ -1869,28 +1877,26 @@ void format_time_duration(time_t t, char *buf, int maxlen)
     space = TRUE;
   }
   if (hours > 0) {
-    cat_snprintf(buf, maxlen, "%s%d %s",
-                 space ? " " : "", hours, PL_("hour", "hours", hours));
+    cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", hours,
+                 PL_("hour", "hours", hours));
     space = TRUE;
   }
   if (minutes > 0) {
-    cat_snprintf(buf, maxlen, "%s%d %s",
-                 space ? " " : "",
-                 minutes, PL_("minute", "minutes", minutes));
+    cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", minutes,
+                 PL_("minute", "minutes", minutes));
     space = TRUE;
   }
   if (seconds > 0) {
-    cat_snprintf(buf, maxlen, "%s%d %s",
-                 space ? " " : "",
-                 seconds, PL_("second", "seconds", seconds));
+    cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", seconds,
+                 PL_("second", "seconds", seconds));
   }
 }
 
-/************************************************************************//**
-  Randomize the elements of an array using the Fisher-Yates shuffle.
+/************************************************************************/ /**
+   Randomize the elements of an array using the Fisher-Yates shuffle.
 
-  see: http://benpfaff.org/writings/clc/shuffle.html
-****************************************************************************/
+   see: http://benpfaff.org/writings/clc/shuffle.html
+ ****************************************************************************/
 void array_shuffle(int *array, int n)
 {
   if (n > 1 && array != NULL) {
@@ -1904,11 +1910,11 @@ void array_shuffle(int *array, int n)
   }
 }
 
-/************************************************************************//**
-  Test an asterisk in the pattern against test. Returns TRUE if test fit the
-  pattern. May be recursive, as it calls wildcard_fit_string() itself (if
-  many asterisks).
-****************************************************************************/
+/************************************************************************/ /**
+   Test an asterisk in the pattern against test. Returns TRUE if test fit the
+   pattern. May be recursive, as it calls wildcard_fit_string() itself (if
+   many asterisks).
+ ****************************************************************************/
 static bool wildcard_asterisk_fit(const char *pattern, const char *test)
 {
   char jump_to;
@@ -1965,10 +1971,10 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
   return FALSE;
 }
 
-/************************************************************************//**
-  Test a range in the pattern against test. Returns TRUE if **test fit the
-  first range in *pattern.
-****************************************************************************/
+/************************************************************************/ /**
+   Test a range in the pattern against test. Returns TRUE if **test fit the
+   first range in *pattern.
+ ****************************************************************************/
 static bool wildcard_range_fit(const char **pattern, const char **test)
 {
   const char *start = (*pattern + 1);
@@ -2024,17 +2030,17 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   return negation;
 }
 
-/************************************************************************//**
-  Returns TRUE if test fit the pattern. The pattern can contain special
-  characters:
-  * '*': to specify a substitute for any zero or more characters.
-  * '?': to specify a substitute for any one character.
-  * '[...]': to specify a range of characters:
-    * '!': at the begenning of the range means that the matching result
-      will be inverted
-    * 'A-Z': means any character between 'A' and 'Z'.
-    * 'agr': means 'a', 'g' or 'r'.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE if test fit the pattern. The pattern can contain special
+   characters:
+   * '*': to specify a substitute for any zero or more characters.
+   * '?': to specify a substitute for any one character.
+   * '[...]': to specify a range of characters:
+     * '!': at the begenning of the range means that the matching result
+       will be inverted
+     * 'A-Z': means any character between 'A' and 'Z'.
+     * 'agr': means 'a', 'g' or 'r'.
+ ****************************************************************************/
 bool wildcard_fit_string(const char *pattern, const char *test)
 {
   while (TRUE) {
@@ -2070,20 +2076,20 @@ bool wildcard_fit_string(const char *pattern, const char *test)
   return FALSE;
 }
 
-/************************************************************************//**
-  Print a string with a custom format. sequences is a pointer to an array of
-  sequences, probably defined with CF_*_SEQ(). sequences_num is the number of
-  the sequences, or -1 in the case the array is terminated with CF_END.
+/************************************************************************/ /**
+   Print a string with a custom format. sequences is a pointer to an array of
+   sequences, probably defined with CF_*_SEQ(). sequences_num is the number
+ of the sequences, or -1 in the case the array is terminated with CF_END.
 
-  Example:
-  static const struct cf_sequence sequences[] = {
-    CF_INT_SEQ('y', 2010)
-  };
-  char buf[256];
+   Example:
+   static const struct cf_sequence sequences[] = {
+     CF_INT_SEQ('y', 2010)
+   };
+   char buf[256];
 
-  fc_vsnprintcf(buf, sizeof(buf), "%y %+06y", sequences, 1);
-  // This will print "2010 +02010" into buf.
-****************************************************************************/
+   fc_vsnprintcf(buf, sizeof(buf), "%y %+06y", sequences, 1);
+   // This will print "2010 +02010" into buf.
+ ****************************************************************************/
 int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
                   const struct cf_sequence *sequences, size_t sequences_num)
 {
@@ -2220,18 +2226,18 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
   return b - buf;
 }
 
-/************************************************************************//**
-  Print a string with a custom format. The additional arguments are a suite
-  of cf_*_seq() finished by cf_end(). This return the number of printed
-  characters (excluding the last '\0') or -1 if the buffer is full.
+/************************************************************************/ /**
+   Print a string with a custom format. The additional arguments are a suite
+   of cf_*_seq() finished by cf_end(). This return the number of printed
+   characters (excluding the last '\0') or -1 if the buffer is full.
 
-  Example:
-  char buf[256];
+   Example:
+   char buf[256];
 
-  fc_snprintcf(buf, sizeof(buf), "%y %+06y",
-               cf_int_seq('y', 2010), cf_end());
-  // This will print "2010 +02010" into buf.
-****************************************************************************/
+   fc_snprintcf(buf, sizeof(buf), "%y %+06y",
+                cf_int_seq('y', 2010), cf_end());
+   // This will print "2010 +02010" into buf.
+ ****************************************************************************/
 int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
 {
   struct cf_sequence sequences[16];
@@ -2262,17 +2268,16 @@ int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
   return fc_vsnprintcf(buf, buf_len, format, sequences, sequences_num);
 }
 
-/************************************************************************//**
-  Extract the sequences of a format. Returns the number of extracted
-  escapes.
-****************************************************************************/
+/************************************************************************/ /**
+   Extract the sequences of a format. Returns the number of extracted
+   escapes.
+ ****************************************************************************/
 static size_t extract_escapes(const char *format, char *escapes,
                               size_t max_escapes)
 {
-  static const char format_escapes[] = {
-    '*', 'd', 'i', 'o', 'u', 'x', 'X', 'e', 'E', 'f',
-    'F', 'g', 'G', 'a', 'A', 'c', 's', 'p', 'n', '\0'
-  };
+  static const char format_escapes[] = {'*', 'd', 'i', 'o', 'u', 'x', 'X',
+                                        'e', 'E', 'f', 'F', 'g', 'G', 'a',
+                                        'A', 'c', 's', 'p', 'n', '\0'};
   bool reordered = FALSE;
   size_t num = 0;
   int idx = 0;
@@ -2297,8 +2302,7 @@ static size_t extract_escapes(const char *format, char *escapes,
       }
     }
 
-    while ('\0' != *format
-           && NULL == strchr(format_escapes, *format)) {
+    while ('\0' != *format && NULL == strchr(format_escapes, *format)) {
       format++;
     }
     escapes[idx] = *format;
@@ -2320,19 +2324,19 @@ static size_t extract_escapes(const char *format, char *escapes,
   return num;
 }
 
-/************************************************************************//**
-  Returns TRUE iff both formats are compatible (if 'format1' can be used
-  instead 'format2' and reciprocally).
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE iff both formats are compatible (if 'format1' can be used
+   instead 'format2' and reciprocally).
+ ****************************************************************************/
 bool formats_match(const char *format1, const char *format2)
 {
   char format1_escapes[256], format2_escapes[256];
-  size_t format1_escapes_num = extract_escapes(format1, format1_escapes,
-                                               sizeof(format1_escapes));
-  size_t format2_escapes_num = extract_escapes(format2, format2_escapes,
-                                               sizeof(format2_escapes));
+  size_t format1_escapes_num =
+      extract_escapes(format1, format1_escapes, sizeof(format1_escapes));
+  size_t format2_escapes_num =
+      extract_escapes(format2, format2_escapes, sizeof(format2_escapes));
 
-  return (format1_escapes_num == format2_escapes_num
-          && 0 == memcmp(format1_escapes, format2_escapes,
-                         format1_escapes_num));
+  return (
+      format1_escapes_num == format2_escapes_num
+      && 0 == memcmp(format1_escapes, format2_escapes, format1_escapes_num));
 }

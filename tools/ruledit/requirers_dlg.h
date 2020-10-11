@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -24,23 +24,21 @@
 
 class ruledit_gui;
 
-class requirers_dlg : public QDialog
-{
+class requirers_dlg : public QDialog {
   Q_OBJECT
 
-  public:
-    explicit requirers_dlg(ruledit_gui *ui_in);
-    void clear(const char *title);
-    void add(const char *msg);
+public:
+  explicit requirers_dlg(ruledit_gui *ui_in);
+  void clear(const char *title);
+  void add(const char *msg);
 
-  private:
-    ruledit_gui *ui;
+private:
+  ruledit_gui *ui;
 
-    QTextEdit *area;
+  QTextEdit *area;
 
-  private slots:
-    void close_now();
+private slots:
+  void close_now();
 };
-
 
 #endif // FC__REQUIRERS_DIALOG_H

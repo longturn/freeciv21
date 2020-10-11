@@ -15,22 +15,18 @@
 
 #include "freeciv_config.h"
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-#define DEFAULT_META_SERVER_NO_SEND  TRUE
-#define DEFAULT_META_SERVER_ADDR     FREECIV_META_URL
-#define METASERVER_REFRESH_INTERVAL   (3*60)
-#define METASERVER_MIN_UPDATE_INTERVAL 7   /* not too short, not too long */
+#define DEFAULT_META_SERVER_NO_SEND TRUE
+#define DEFAULT_META_SERVER_ADDR FREECIV_META_URL
+#define METASERVER_REFRESH_INTERVAL (3 * 60)
+#define METASERVER_MIN_UPDATE_INTERVAL 7 /* not too short, not too long */
 
-enum meta_flag {
-  META_INFO,
-  META_REFRESH,
-  META_GOODBYE
-};
+enum meta_flag { META_INFO, META_REFRESH, META_GOODBYE };
 
 const char *default_meta_patches_string(void);
 const char *default_meta_message_string(void);

@@ -13,21 +13,22 @@
 #ifndef FC__MODINST_H
 #define FC__MODINST_H
 
-struct fcmp_params
-{
+struct fcmp_params {
   const char *list_url;
   const char *inst_prefix;
   const char *autoinstall;
 };
 
-#if IS_DEVEL_VERSION && ! IS_FREEZE_VERSION
+#if IS_DEVEL_VERSION && !IS_FREEZE_VERSION
 #ifndef MODPACK_LIST_URL
-#define MODPACK_LIST_URL "http://files.freeciv.org/modinst/" DATASUBDIR "/modpack.list"
+#define MODPACK_LIST_URL                                                    \
+  "http://files.freeciv.org/modinst/" DATASUBDIR "/modpack.list"
 #endif
 #define DEFAULT_URL_START "http://files.freeciv.org/modinst/" DATASUBDIR "/"
-#else  /* IS_DEVEL_VERSION */
+#else /* IS_DEVEL_VERSION */
 #ifndef MODPACK_LIST_URL
-#define MODPACK_LIST_URL  "http://modpack.freeciv.org/" DATASUBDIR "/modpack.list"
+#define MODPACK_LIST_URL                                                    \
+  "http://modpack.freeciv.org/" DATASUBDIR "/modpack.list"
 #endif
 #define DEFAULT_URL_START "http://modpack.freeciv.org/" DATASUBDIR "/"
 #endif /* IS_DEVEL_VERSION */

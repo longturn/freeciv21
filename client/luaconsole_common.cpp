@@ -31,12 +31,10 @@
 /* client */
 #include "luaconsole_common.h"
 
-
-
-/*************************************************************************//**
-  Add a line of text to the output ("chatline") window, like puts() would
-  do it in the console.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a line of text to the output ("chatline") window, like puts() would
+   do it in the console.
+ *****************************************************************************/
 void luaconsole_append(const struct ft_color color,
                        const char *featured_text)
 {
@@ -44,13 +42,13 @@ void luaconsole_append(const struct ft_color color,
   struct text_tag_list *tags;
 
   /* Separate the text and the tags. */
-  featured_text_to_plain_text(featured_text, plain_text,
-                              sizeof(plain_text), &tags, TRUE);
+  featured_text_to_plain_text(featured_text, plain_text, sizeof(plain_text),
+                              &tags, TRUE);
 
   if (ft_color_requested(color)) {
     /* A color is requested. */
-    struct text_tag *ptag = text_tag_new(TTT_COLOR, 0, FT_OFFSET_UNSET,
-                                         color);
+    struct text_tag *ptag =
+        text_tag_new(TTT_COLOR, 0, FT_OFFSET_UNSET, color);
 
     if (ptag) {
       /* Prepends to the list, to avoid to overwrite inside colors. */
@@ -66,12 +64,12 @@ void luaconsole_append(const struct ft_color color,
   text_tag_list_destroy(tags);
 }
 
-/*************************************************************************//**
-  Add a line of text to the output ("chatline") window.  The text is
-  constructed in printf style.
-*****************************************************************************/
-void luaconsole_vprintf(const struct ft_color color,
-                        const char *format, va_list args)
+/*************************************************************************/ /**
+   Add a line of text to the output ("chatline") window.  The text is
+   constructed in printf style.
+ *****************************************************************************/
+void luaconsole_vprintf(const struct ft_color color, const char *format,
+                        va_list args)
 {
   char featured_text[MAX_LEN_MSG];
 
@@ -79,13 +77,11 @@ void luaconsole_vprintf(const struct ft_color color,
   luaconsole_append(color, featured_text);
 }
 
-
-/*************************************************************************//**
-  Add a line of text to the output ("chatline") window.  The text is
-  constructed in printf style.
-*****************************************************************************/
-void luaconsole_printf(const struct ft_color color,
-                       const char *format, ...)
+/*************************************************************************/ /**
+   Add a line of text to the output ("chatline") window.  The text is
+   constructed in printf style.
+ *****************************************************************************/
+void luaconsole_printf(const struct ft_color color, const char *format, ...)
 {
   va_list args;
 
@@ -94,18 +90,18 @@ void luaconsole_printf(const struct ft_color color,
   va_end(args);
 }
 
-/*************************************************************************//**
-  Add a line of text to the output ("chatline") window from server event.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Add a line of text to the output ("chatline") window from server event.
+ *****************************************************************************/
 void luaconsole_event(const char *plain_text,
                       const struct text_tag_list *tags)
 {
   real_luaconsole_append(plain_text, tags);
 }
 
-/*************************************************************************//**
-  Standard welcome message.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Standard welcome message.
+ *****************************************************************************/
 void luaconsole_welcome_message(void)
 {
   luaconsole_append(ftc_any, _("This is the Client Lua Console."));

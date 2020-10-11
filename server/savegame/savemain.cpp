@@ -37,9 +37,9 @@
 
 static fc_thread *save_thread = NULL;
 
-/************************************************************************//**
-  Main entry point for loading a game.
-****************************************************************************/
+/************************************************************************/ /**
+   Main entry point for loading a game.
+ ****************************************************************************/
 void savegame_load(struct section_file *sfile)
 {
   const char *savefile_options;
@@ -71,54 +71,62 @@ void savegame_load(struct section_file *sfile)
     return;
   }
 
-  players_iterate(pplayer) {
-    unit_list_iterate(pplayer->units, punit) {
+  players_iterate(pplayer)
+  {
+    unit_list_iterate(pplayer->units, punit)
+    {
       CALL_FUNC_EACH_AI(unit_created, punit);
       CALL_PLR_AI_FUNC(unit_got, pplayer, punit);
-    } unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
 
-    city_list_iterate(pplayer->cities, pcity) {
+    city_list_iterate(pplayer->cities, pcity)
+    {
       CALL_FUNC_EACH_AI(city_created, pcity);
       CALL_PLR_AI_FUNC(city_got, pplayer, pplayer, pcity);
-    } city_list_iterate_end;
-  } players_iterate_end;
+    }
+    city_list_iterate_end;
+  }
+  players_iterate_end;
 
 #ifdef DEBUG_TIMERS
   timer_stop(loadtimer);
-  log_debug("Loading secfile in %.3f seconds.", timer_read_seconds(loadtimer));
+  log_debug("Loading secfile in %.3f seconds.",
+            timer_read_seconds(loadtimer));
   timer_destroy(loadtimer);
 #endif /* DEBUG_TIMERS */
 }
 
-/************************************************************************//**
-  Main entry point for saving a game.
-****************************************************************************/
+/************************************************************************/ /**
+   Main entry point for saving a game.
+ ****************************************************************************/
 void savegame_save(struct section_file *sfile, const char *save_reason,
                    bool scenario)
 {
   savegame3_save(sfile, save_reason, scenario);
 }
 
-struct save_thread_data
-{
+struct save_thread_data {
   struct section_file *sfile;
   char filepath[600];
   int save_compress_level;
   enum fz_method save_compress_type;
 };
 
-/************************************************************************//**
-  Run game saving thread.
-****************************************************************************/
+/************************************************************************/ /**
+   Run game saving thread.
+ ****************************************************************************/
 static void save_thread_run(void *arg)
 {
-  struct save_thread_data *stdata = (struct save_thread_data *)arg;
-  
-  if (!secfile_save(stdata->sfile, stdata->filepath, stdata->save_compress_level,
+  struct save_thread_data *stdata = (struct save_thread_data *) arg;
+
+  if (!secfile_save(stdata->sfile, stdata->filepath,
+                    stdata->save_compress_level,
                     stdata->save_compress_type)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
     log_error("Game saving failed: %s", secfile_error());
-    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, _("Failed saving game."));
+    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning,
+                _("Failed saving game."));
   } else {
     con_write(C_OK, _("Game saved as %s"), stdata->filepath);
   }
@@ -127,10 +135,10 @@ static void save_thread_run(void *arg)
   free(arg);
 }
 
-/************************************************************************//**
-  Unconditionally save the game, with specified filename.
-  Always prints a message: either save ok, or failed.
-****************************************************************************/
+/************************************************************************/ /**
+   Unconditionally save the game, with specified filename.
+   Always prints a message: either save ok, or failed.
+ ****************************************************************************/
 void save_game(const char *orig_filename, const char *save_reason,
                bool scenario)
 {
@@ -138,7 +146,7 @@ void save_game(const char *orig_filename, const char *save_reason,
   struct timer *timer_cpu, *timer_user;
   struct save_thread_data *stdata;
 
-  stdata = static_cast<save_thread_data*>(fc_malloc(sizeof(*stdata)));
+  stdata = static_cast<save_thread_data *>(fc_malloc(sizeof(*stdata)));
 
   stdata->save_compress_type = game.server.save_compress_type;
   stdata->save_compress_level = game.server.save_compress_level;
@@ -163,15 +171,15 @@ void save_game(const char *orig_filename, const char *save_reason,
       filename[0] = '\0';
     } else {
       char *end_dot;
-      char *strip_extensions[] = { ".sav", ".gz", ".bz2", ".xz", NULL };
+      char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
       bool stripped = TRUE;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
-	int i;
+        int i;
 
         stripped = FALSE;
 
-	for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
+        for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
           if (!strcmp(end_dot, strip_extensions[i])) {
             *end_dot = '\0';
             stripped = TRUE;
@@ -184,8 +192,9 @@ void save_game(const char *orig_filename, const char *save_reason,
   /* If orig_filename is NULL or empty, use a generated default name. */
   if (filename[0] == '\0') {
     /* manual save */
-    generate_save_name(game.server.save_name, filename,
-                       sizeof(stdata->filepath) + stdata->filepath - filename, "manual");
+    generate_save_name(
+        game.server.save_name, filename,
+        sizeof(stdata->filepath) + stdata->filepath - filename, "manual");
   }
 
   timer_cpu = timer_new(TIMER_CPU, TIMER_ACTIVE);
@@ -221,7 +230,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       break;
 #endif
 #ifdef FREECIV_HAVE_LIBLZMA
-   case FZ_XZ:
+    case FZ_XZ:
       /* Append ".xz" to filename. */
       sz_strlcat(stdata->filepath, ".xz");
       break;
@@ -269,7 +278,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       save_thread = NULL;
     }
   } else if (game.server.threaded_save) {
-    save_thread = static_cast<pthread_t*>(fc_malloc(sizeof(save_thread)));
+    save_thread = static_cast<pthread_t *>(fc_malloc(sizeof(save_thread)));
   }
 
   if (save_thread != NULL) {
@@ -287,9 +296,9 @@ void save_game(const char *orig_filename, const char *save_reason,
   timer_destroy(timer_user);
 }
 
-/************************************************************************//**
-  Close saving system.
-****************************************************************************/
+/************************************************************************/ /**
+   Close saving system.
+ ****************************************************************************/
 void save_system_close(void)
 {
   if (save_thread != NULL) {
@@ -298,4 +307,3 @@ void save_system_close(void)
     save_thread = NULL;
   }
 }
-

@@ -57,4 +57,3 @@ bool script_server_call(const char *func_name, ...);
 #endif /* __cplusplus */
 
 #endif /* FC__SCRIPT_SERVER_H */
-

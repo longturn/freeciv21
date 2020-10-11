@@ -25,14 +25,13 @@
 /* ruledit */
 #include "ruledit_qt.h"
 
-
 #include "req_vec_fix.h"
 
-/**********************************************************************//**
-  Mark a ruleset item in a list as having a problem.
-  @param item the ruleset item's representation in the list.
-  @param problem_level how serious the problem, if it exists at all, is.
-**************************************************************************/
+/**********************************************************************/ /**
+   Mark a ruleset item in a list as having a problem.
+   @param item the ruleset item's representation in the list.
+   @param problem_level how serious the problem, if it exists at all, is.
+ **************************************************************************/
 void mark_item(QListWidgetItem *item,
                enum req_vec_problem_seriousness problem_level)
 {
@@ -50,14 +49,14 @@ void mark_item(QListWidgetItem *item,
   }
 }
 
-/**********************************************************************//**
-  Set up the display and solution choice of the specified problem.
-  @param problem the problem to choose a solution for.
-  @param item_info ruleset entity item specific helpers
-**************************************************************************/
+/**********************************************************************/ /**
+   Set up the display and solution choice of the specified problem.
+   @param problem the problem to choose a solution for.
+   @param item_info ruleset entity item specific helpers
+ **************************************************************************/
 req_vec_fix_problem::req_vec_fix_problem(
-    const struct req_vec_problem *problem,
-    req_vec_fix_item *item_info) : QWidget()
+    const struct req_vec_problem *problem, req_vec_fix_item *item_info)
+    : QWidget()
 {
   int i;
   QLabel *description;
@@ -89,8 +88,8 @@ req_vec_fix_problem::req_vec_fix_problem(
     fc_snprintf(buf, sizeof(buf),
                 /* TRANS: Trying to fix a requirement vector problem but
                  * don't know how to solve it. */
-                R__("Don't know how to fix %s: %s"),
-                item_info->name(), problem->description);
+                R__("Don't know how to fix %s: %s"), item_info->name(),
+                problem->description);
 
     description->setText(buf);
     this->setLayout(layout_main);
@@ -106,9 +105,8 @@ req_vec_fix_problem::req_vec_fix_problem(
   /* Display each solution */
   solutions = new QButtonGroup(this);
   for (i = 0; i < problem->num_suggested_solutions; i++) {
-    QRadioButton *solution = new QRadioButton(
-        req_vec_change_translation(&problem->suggested_solutions[i],
-        item_info->vector_namer()));
+    QRadioButton *solution = new QRadioButton(req_vec_change_translation(
+        &problem->suggested_solutions[i], item_info->vector_namer()));
 
     solutions->addButton(solution, i);
     solution->setChecked(i == 0);
@@ -124,24 +122,24 @@ req_vec_fix_problem::req_vec_fix_problem(
   this->setLayout(layout_main);
 }
 
-/**********************************************************************//**
-  The user selected one of the suggested solutions to the requirement
-  vector problem.
-**************************************************************************/
+/**********************************************************************/ /**
+   The user selected one of the suggested solutions to the requirement
+   vector problem.
+ **************************************************************************/
 void req_vec_fix_problem::accept_solution()
 {
   emit solution_accepted(solutions->checkedId());
 }
 
-/**********************************************************************//**
-  Set up a widget for displaying and fixing requirement vector problems
-  for a specific ruleset entity item.
-  @param ui_in ruledit instance this is for.
-  @param item_info ruleset entity item specific helpers. req_vec_fix's
-                   destructor calls close() on it.
-**************************************************************************/
-req_vec_fix::req_vec_fix(ruledit_gui *ui_in,
-                         req_vec_fix_item *item_info) : QWidget()
+/**********************************************************************/ /**
+   Set up a widget for displaying and fixing requirement vector problems
+   for a specific ruleset entity item.
+   @param ui_in ruledit instance this is for.
+   @param item_info ruleset entity item specific helpers. req_vec_fix's
+                    destructor calls close() on it.
+ **************************************************************************/
+req_vec_fix::req_vec_fix(ruledit_gui *ui_in, req_vec_fix_item *item_info)
+    : QWidget()
 {
   QVBoxLayout *layout_main = new QVBoxLayout();
   QHBoxLayout *layout_buttons = new QHBoxLayout();
@@ -183,8 +181,8 @@ req_vec_fix::req_vec_fix(ruledit_gui *ui_in,
                                 " to the ruleset item. You can then fix the"
                                 " current issue by hand and come back here"
                                 " to find the next issue."));
-  connect(apply_changes, SIGNAL(pressed()),
-          this, SLOT(accept_applied_solutions()));
+  connect(apply_changes, SIGNAL(pressed()), this,
+          SLOT(accept_applied_solutions()));
   layout_buttons->addWidget(apply_changes);
 
   close = new QPushButton(R__("Close"));
@@ -196,9 +194,9 @@ req_vec_fix::req_vec_fix(ruledit_gui *ui_in,
   this->setLayout(layout_main);
 }
 
-/**********************************************************************//**
-  Destructor for req_vec_fix.
-**************************************************************************/
+/**********************************************************************/ /**
+   Destructor for req_vec_fix.
+ **************************************************************************/
 req_vec_fix::~req_vec_fix()
 {
   if (current_problem != nullptr) {
@@ -210,19 +208,18 @@ req_vec_fix::~req_vec_fix()
   this->ui->unregister_req_vec_fix(this);
 }
 
-/**********************************************************************//**
-  Returns the item this dialog is trying to fix.
-  @return the item this dialog is trying to fix.
-**************************************************************************/
-const void *req_vec_fix::item() {
-  return this->item_info->item();
-}
+/**********************************************************************/ /**
+   Returns the item this dialog is trying to fix.
+   @return the item this dialog is trying to fix.
+ **************************************************************************/
+const void *req_vec_fix::item() { return this->item_info->item(); }
 
-/**********************************************************************//**
-  Find the next requirement vector problem and its suggested solutions.
-  @return true iff a new problem was found.
-**************************************************************************/
-bool req_vec_fix::refresh() {
+/**********************************************************************/ /**
+   Find the next requirement vector problem and its suggested solutions.
+   @return true iff a new problem was found.
+ **************************************************************************/
+bool req_vec_fix::refresh()
+{
   if (current_problem != nullptr) {
     /* The old problem is hopefully solved. If it isn't it will probably be
      * returned again. */
@@ -237,10 +234,10 @@ bool req_vec_fix::refresh() {
     current_problem_viewer->hide();
     current_problem_viewer->deleteLater();
   }
-  current_problem_viewer = new req_vec_fix_problem(current_problem,
-                                                   item_info);
-  connect(current_problem_viewer, SIGNAL(solution_accepted(int)),
-          this, SLOT(apply_solution(int)));
+  current_problem_viewer =
+      new req_vec_fix_problem(current_problem, item_info);
+  connect(current_problem_viewer, SIGNAL(solution_accepted(int)), this,
+          SLOT(apply_solution(int)));
   current_problem_area->addWidget(current_problem_viewer);
   current_problem_area->setCurrentWidget(current_problem_viewer);
 
@@ -254,10 +251,10 @@ bool req_vec_fix::refresh() {
   return current_problem != nullptr;
 }
 
-/**********************************************************************//**
-  Apply the selected solution to the current requirement vector problem.
-  @param selected_solution the selected solution
-**************************************************************************/
+/**********************************************************************/ /**
+   Apply the selected solution to the current requirement vector problem.
+   @param selected_solution the selected solution
+ **************************************************************************/
 void req_vec_fix::apply_solution(int selected_solution)
 {
   const struct req_vec_change *solution;
@@ -276,11 +273,11 @@ void req_vec_fix::apply_solution(int selected_solution)
     box->setWindowTitle(R__("Unable to apply solution"));
 
     box->setText(
-          /* TRANS: requirement vector fix failed to apply */
-          QString(R__("Failed to apply solution %1 for %2 to %3."))
-                 .arg(req_vec_change_translation(solution,
-                                                 item_info->vector_namer()),
-                      current_problem->description, item_info->name()));
+        /* TRANS: requirement vector fix failed to apply */
+        QString(R__("Failed to apply solution %1 for %2 to %3."))
+            .arg(req_vec_change_translation(solution,
+                                            item_info->vector_namer()),
+                 current_problem->description, item_info->name()));
     box->setStandardButtons(QMessageBox::Ok);
     box->exec();
   } else {
@@ -291,9 +288,9 @@ void req_vec_fix::apply_solution(int selected_solution)
   this->refresh();
 }
 
-/**********************************************************************//**
-  Do all the accepted solutions for real.
-**************************************************************************/
+/**********************************************************************/ /**
+   Do all the accepted solutions for real.
+ **************************************************************************/
 void req_vec_fix::accept_applied_solutions()
 {
   int i;
@@ -307,14 +304,14 @@ void req_vec_fix::accept_applied_solutions()
   this->refresh();
 
   for (i = 0; i < item_info->num_vectors(); i++) {
-    emit rec_vec_may_have_changed(item_info->vector_getter()
-                                  (item_info->item(), i));
+    emit rec_vec_may_have_changed(
+        item_info->vector_getter()(item_info->item(), i));
   }
 }
 
-/**********************************************************************//**
-  Undo all accepted solutions.
-**************************************************************************/
+/**********************************************************************/ /**
+   Undo all accepted solutions.
+ **************************************************************************/
 void req_vec_fix::reject_applied_solutions()
 {
   this->item_info->undo_accepted_changes();
@@ -326,10 +323,10 @@ void req_vec_fix::reject_applied_solutions()
   this->refresh();
 }
 
-/**********************************************************************//**
-  A requirement vector may have been changed.
-  @param vec the requirement vector that may have been changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   A requirement vector may have been changed.
+   @param vec the requirement vector that may have been changed.
+ **************************************************************************/
 void req_vec_fix::incoming_rec_vec_change(const requirement_vector *vec)
 {
   if (this->item_info->vector_in_item(vec)) {

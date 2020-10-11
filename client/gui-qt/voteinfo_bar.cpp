@@ -27,9 +27,9 @@
 
 #include "voteinfo_bar.h"
 
-/***********************************************************************//**
-  Constructor for pregamevote
-***************************************************************************/
+/***********************************************************************/ /**
+   Constructor for pregamevote
+ ***************************************************************************/
 pregamevote::pregamevote(QWidget *parent)
 {
   setParent(parent);
@@ -59,13 +59,13 @@ pregamevote::pregamevote(QWidget *parent)
   setLayout(layout);
   connect(vote_yes, &QAbstractButton::clicked, this, &pregamevote::v_yes);
   connect(vote_no, &QAbstractButton::clicked, this, &pregamevote::v_no);
-  connect(vote_abstain, &QAbstractButton::clicked, this, &pregamevote::v_abstain);
-
+  connect(vote_abstain, &QAbstractButton::clicked, this,
+          &pregamevote::v_abstain);
 }
 
-/***********************************************************************//**
-  Slot vote abstain
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot vote abstain
+ ***************************************************************************/
 void pregamevote::v_abstain()
 {
   struct voteinfo *vi;
@@ -77,9 +77,9 @@ void pregamevote::v_abstain()
   voteinfo_do_vote(vi->vote_no, CVT_ABSTAIN);
 }
 
-/***********************************************************************//**
-  Slot vote no
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot vote no
+ ***************************************************************************/
 void pregamevote::v_no()
 {
   struct voteinfo *vi;
@@ -91,9 +91,9 @@ void pregamevote::v_no()
   voteinfo_do_vote(vi->vote_no, CVT_NO);
 }
 
-/***********************************************************************//**
-  Slot vote yes
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot vote yes
+ ***************************************************************************/
 void pregamevote::v_yes()
 {
   struct voteinfo *vi;
@@ -105,9 +105,9 @@ void pregamevote::v_yes()
   voteinfo_do_vote(vi->vote_no, CVT_YES);
 }
 
-/***********************************************************************//**
-  Updates text on vote
-***************************************************************************/
+/***********************************************************************/ /**
+   Updates text on vote
+ ***************************************************************************/
 void pregamevote::update_vote()
 {
   int vote_count, index;
@@ -135,25 +135,25 @@ void pregamevote::update_vote()
   }
   if (status[0] != '\0') {
     fc_snprintf(buf, sizeof(buf),
-                "<b><p style=\"background-color: %s\"> %s</p></b> ",
-                color, status);
+                "<b><p style=\"background-color: %s\"> %s</p></b> ", color,
+                status);
     sz_strlcpy(status, buf);
   } else {
     buf[0] = '\0';
   }
-  if (vi != NULL)  {
+  if (vi != NULL) {
     lab_yes->setText(QString::number(vi->yes));
     lab_no->setText(QString::number(vi->no));
     lab_abstain->setText(QString::number(vi->abstain));
     if (buf[0] != '\0') {
       label_text->setText(buf);
     } else {
-      label_text->setText(QString(_("<b>%1 called a vote for:</b>")).
-                          arg(QString(vi->user).toHtmlEscaped()));
+      label_text->setText(QString(_("<b>%1 called a vote for:</b>"))
+                              .arg(QString(vi->user).toHtmlEscaped()));
     }
     label_vote_text->setText(QString("</b><p style=\"color:"
                                      " red\"> %1</p></b>")
-        .arg(QString(vi->desc).toHtmlEscaped()));
+                                 .arg(QString(vi->desc).toHtmlEscaped()));
     voters->setText(QString(" /%1").arg(vi->num_voters));
   } else {
     label_text->setText("");
@@ -172,16 +172,14 @@ void pregamevote::update_vote()
   update();
 }
 
-/***********************************************************************//**
-  Destructor for pregamevote
-***************************************************************************/
-pregamevote::~pregamevote()
-{
-}
+/***********************************************************************/ /**
+   Destructor for pregamevote
+ ***************************************************************************/
+pregamevote::~pregamevote() {}
 
-/***********************************************************************//**
-  pregamevote class used for displaying vote bar in PAGE START
-***************************************************************************/
+/***********************************************************************/ /**
+   pregamevote class used for displaying vote bar in PAGE START
+ ***************************************************************************/
 xvote::xvote(QWidget *parent) : pregamevote(parent)
 {
   QPalette palette;
@@ -197,9 +195,9 @@ xvote::xvote(QWidget *parent) : pregamevote(parent)
   voters->setPalette(palette);
 }
 
-/***********************************************************************//**
-  Paints frames for xvote
-***************************************************************************/
+/***********************************************************************/ /**
+   Paints frames for xvote
+ ***************************************************************************/
 void xvote::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->setBrush(QColor(90, 90, 192, 185));
@@ -208,9 +206,9 @@ void xvote::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(5, 5, width() - 10, height() - 10);
 }
 
-/***********************************************************************//**
-  Paint event for xvote
-***************************************************************************/
+/***********************************************************************/ /**
+   Paint event for xvote
+ ***************************************************************************/
 void xvote::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -220,10 +218,10 @@ void xvote::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************//**
-  Refresh all vote related GUI widgets. Called by the voteinfo module when
-  the client receives new vote information from the server.
-***************************************************************************/
+/***********************************************************************/ /**
+   Refresh all vote related GUI widgets. Called by the voteinfo module when
+   the client receives new vote information from the server.
+ ***************************************************************************/
 void voteinfo_gui_update(void)
 {
   if (gui()->current_page() == PAGE_START) {

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -21,21 +21,21 @@ extern "C" {
 
 /* Utility */
 #include "log.h"
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 typedef uint32_t RANDOM_TYPE;
 
 typedef struct {
   RANDOM_TYPE v[56];
   int j, k, x;
-  bool is_init;			/* initially 0 for static storage */
+  bool is_init; /* initially 0 for static storage */
 } RANDOM_STATE;
 
-#define fc_rand(_size) \
+#define fc_rand(_size)                                                      \
   fc_rand_debug((_size), "fc_rand", __FC_LINE__, __FILE__)
 
-RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as,
-                          int line, const char *file);
+RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
+                          const char *file);
 
 void fc_srand(RANDOM_TYPE seed);
 
@@ -48,15 +48,15 @@ void test_random1(int n);
 
 /*===*/
 
-#define fc_randomly(_seed, _size) \
+#define fc_randomly(_seed, _size)                                           \
   fc_randomly_debug((_seed), (_size), "fc_randomly", __FC_LINE__, __FILE__)
 
 RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
-                              const char *called_as,
-                              int line, const char *file);
+                              const char *called_as, int line,
+                              const char *file);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__RAND_H */
+#endif /* FC__RAND_H */

@@ -58,14 +58,14 @@ void dbv_debug(struct dbv *pdbv);
 #define MAX_DBV_LENGTH (4 * 1024 * 1024)
 
 /* Static bitvectors. */
-#define _BV_BYTES(bits)        ((((bits) - 1) / 8) + 1)
-#define _BV_BYTE_INDEX(bits)   ((bits) / 8)
-#define _BV_BITMASK(bit)       (1u << ((bit) & 0x7))
+#define _BV_BYTES(bits) ((((bits) -1) / 8) + 1)
+#define _BV_BYTE_INDEX(bits) ((bits) / 8)
+#define _BV_BITMASK(bit) (1u << ((bit) &0x7))
 #ifdef FREECIV_DEBUG
-#  define _BV_ASSERT(bv, bit)  fc_assert((bit) >= 0                         \
-                                         && (bit) < (signed int) sizeof((bv).vec) * 8)
+#define _BV_ASSERT(bv, bit)                                                 \
+  fc_assert((bit) >= 0 && (bit) < (signed int) sizeof((bv).vec) * 8)
 #else
-#  define _BV_ASSERT(bv, bit)  (void)0
+#define _BV_ASSERT(bv, bit) (void) 0
 #endif
 #define BV_ISSET(bv, bit)                                                   \
   (_BV_ASSERT(bv, bit),                                                     \
@@ -82,11 +82,15 @@ void dbv_debug(struct dbv *pdbv);
   } while (FALSE)
 #define BV_SET_VAL(bv, bit, val)                                            \
   do {                                                                      \
-    if (val) { BV_SET(bv, bit); } else { BV_CLR(bv, bit); }                 \
+    if (val) {                                                              \
+      BV_SET(bv, bit);                                                      \
+    } else {                                                                \
+      BV_CLR(bv, bit);                                                      \
+    }                                                                       \
   } while (FALSE);
 #define BV_CLR_ALL(bv)                                                      \
   do {                                                                      \
-     memset((bv).vec, 0, sizeof((bv).vec));                                 \
+    memset((bv).vec, 0, sizeof((bv).vec));                                  \
   } while (FALSE)
 #define BV_SET_ALL(bv)                                                      \
   do {                                                                      \
@@ -106,26 +110,26 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
   bv_are_equal((vec1).vec, (vec2).vec, sizeof((vec1).vec),                  \
                sizeof((vec2).vec))
 
-void bv_set_all_from(unsigned char *vec_to,
-                     const unsigned char *vec_from,
+void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from);
-#define BV_SET_ALL_FROM(vec_to, vec_from)                                 \
-  bv_set_all_from((vec_to).vec, (vec_from).vec,                           \
-                  sizeof((vec_to).vec), sizeof((vec_from).vec))
+#define BV_SET_ALL_FROM(vec_to, vec_from)                                   \
+  bv_set_all_from((vec_to).vec, (vec_from).vec, sizeof((vec_to).vec),       \
+                  sizeof((vec_from).vec))
 
-void bv_clr_all_from(unsigned char *vec_to,
-                     const unsigned char *vec_from,
+void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from);
-#define BV_CLR_ALL_FROM(vec_to, vec_from)                                 \
-  bv_clr_all_from((vec_to).vec, (vec_from).vec,                           \
-                  sizeof((vec_to).vec), sizeof((vec_from).vec))
+#define BV_CLR_ALL_FROM(vec_to, vec_from)                                   \
+  bv_clr_all_from((vec_to).vec, (vec_from).vec, sizeof((vec_to).vec),       \
+                  sizeof((vec_from).vec))
 
 /* Used to make a BV typedef. Such types are usually called "bv_foo". */
 #define BV_DEFINE(name, bits)                                               \
-  typedef struct { unsigned char vec[_BV_BYTES(bits)]; } name
+  typedef struct {                                                          \
+    unsigned char vec[_BV_BYTES(bits)];                                     \
+  } name
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__BITVECTOR_H */
+#endif /* FC__BITVECTOR_H */

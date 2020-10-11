@@ -41,9 +41,9 @@
 // ruledit
 #include "conversion_log.h"
 #include "effect_edit.h"
-#include "requirers_dlg.h"
 #include "req_edit.h"
 #include "req_vec_fix.h"
+#include "requirers_dlg.h"
 #include "ruledit.h"
 #include "tab_building.h"
 #include "tab_enablers.h"
@@ -63,9 +63,9 @@ static ruledit_gui *gui;
 static QApplication *qapp;
 static conversion_log *convlog;
 
-/**********************************************************************//**
-  Run ruledit-qt gui.
-**************************************************************************/
+/**********************************************************************/ /**
+   Run ruledit-qt gui.
+ **************************************************************************/
 int ruledit_qt_run(int argc, char **argv)
 {
   ruledit_main *main_window;
@@ -89,19 +89,19 @@ int ruledit_qt_run(int argc, char **argv)
   return ret;
 }
 
-/**********************************************************************//**
-  Display requirer list.
-**************************************************************************/
+/**********************************************************************/ /**
+   Display requirer list.
+ **************************************************************************/
 void ruledit_qt_display_requirers(const char *msg, void *data)
 {
-  requirers_dlg *requirers = (requirers_dlg *)data;
+  requirers_dlg *requirers = (requirers_dlg *) data;
 
   gui->show_required(requirers, msg);
 }
 
-/**********************************************************************//**
-  Setup GUI object
-**************************************************************************/
+/**********************************************************************/ /**
+   Setup GUI object
+ **************************************************************************/
 void ruledit_gui::setup(QWidget *central_in)
 {
   QVBoxLayout *full_layout = new QVBoxLayout();
@@ -123,7 +123,8 @@ void ruledit_gui::setup(QWidget *central_in)
   rev_ver = fc_git_revision();
 
   if (rev_ver == NULL) {
-    fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(), VERSION_STRING);
+    fc_snprintf(verbuf, sizeof(verbuf), "%s%s", word_version(),
+                VERSION_STRING);
   } else {
     fc_snprintf(verbuf, sizeof(verbuf), _("%s%s\ncommit: %s"),
                 word_version(), VERSION_STRING, rev_ver);
@@ -136,7 +137,8 @@ void ruledit_gui::setup(QWidget *central_in)
   version_label->setAlignment(Qt::AlignHCenter);
   version_label->setParent(central);
   preload_layout->addWidget(version_label);
-  rs_label = new QLabel(QString::fromUtf8(R__("Give ruleset to use as starting point.")));
+  rs_label = new QLabel(
+      QString::fromUtf8(R__("Give ruleset to use as starting point.")));
   rs_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
   preload_layout->addWidget(rs_label);
   ruleset_select = new QLineEdit(central);
@@ -145,8 +147,7 @@ void ruledit_gui::setup(QWidget *central_in)
   } else {
     ruleset_select->setText(GAME_DEFAULT_RULESETDIR);
   }
-  connect(ruleset_select, SIGNAL(returnPressed()),
-          this, SLOT(launch_now()));
+  connect(ruleset_select, SIGNAL(returnPressed()), this, SLOT(launch_now()));
   preload_layout->addWidget(ruleset_select);
   ruleset_accept = new QPushButton(QString::fromUtf8(R__("Start editing")));
   connect(ruleset_accept, SIGNAL(pressed()), this, SLOT(launch_now()));
@@ -187,7 +188,8 @@ void ruledit_gui::setup(QWidget *central_in)
 
   full_layout->addLayout(main_layout);
 
-  msg_dspl = new QLabel(QString::fromUtf8(R__("Welcome to freeciv-ruledit")));
+  msg_dspl =
+      new QLabel(QString::fromUtf8(R__("Welcome to freeciv-ruledit")));
   msg_dspl->setParent(central);
 
   msg_dspl->setAlignment(Qt::AlignHCenter);
@@ -201,17 +203,14 @@ void ruledit_gui::setup(QWidget *central_in)
   effect_edits = effect_edit_list_new();
 }
 
-/**********************************************************************//**
-  Ruleset conversion log callback
-**************************************************************************/
-static void conversion_log_cb(const char *msg)
-{
-  convlog->add(msg);
-}
+/**********************************************************************/ /**
+   Ruleset conversion log callback
+ **************************************************************************/
+static void conversion_log_cb(const char *msg) { convlog->add(msg); }
 
-/**********************************************************************//**
-  User entered savedir
-**************************************************************************/
+/**********************************************************************/ /**
+   User entered savedir
+ **************************************************************************/
 void ruledit_gui::launch_now()
 {
   QByteArray rn_bytes;
@@ -221,7 +220,8 @@ void ruledit_gui::launch_now()
   rn_bytes = ruleset_select->text().toUtf8();
   sz_strlcpy(game.server.rulesetdir, rn_bytes.data());
 
-  if (load_rulesets(NULL, NULL, TRUE, conversion_log_cb, FALSE, TRUE, TRUE)) {
+  if (load_rulesets(NULL, NULL, TRUE, conversion_log_cb, FALSE, TRUE,
+                    TRUE)) {
     display_msg(R__("Ruleset loaded"));
 
     /* Make freeable copy */
@@ -248,26 +248,26 @@ void ruledit_gui::launch_now()
   }
 }
 
-/**********************************************************************//**
-  A requirement vector may have been changed.
-  @param vec the requirement vector that may have been changed.
-**************************************************************************/
+/**********************************************************************/ /**
+   A requirement vector may have been changed.
+   @param vec the requirement vector that may have been changed.
+ **************************************************************************/
 void ruledit_gui::incoming_rec_vec_change(const requirement_vector *vec)
 {
   emit rec_vec_may_have_changed(vec);
 }
 
-/**********************************************************************//**
-  Display status message
-**************************************************************************/
+/**********************************************************************/ /**
+   Display status message
+ **************************************************************************/
 void ruledit_gui::display_msg(const char *msg)
 {
   msg_dspl->setText(QString::fromUtf8(msg));
 }
 
-/**********************************************************************//**
-  Create requirers dlg.
-**************************************************************************/
+/**********************************************************************/ /**
+   Create requirers dlg.
+ **************************************************************************/
 requirers_dlg *ruledit_gui::create_requirers(const char *title)
 {
   requirers_dlg *requirers;
@@ -279,9 +279,9 @@ requirers_dlg *ruledit_gui::create_requirers(const char *title)
   return requirers;
 }
 
-/**********************************************************************//**
-  Add entry to requirers dlg.
-**************************************************************************/
+/**********************************************************************/ /**
+   Add entry to requirers dlg.
+ **************************************************************************/
 void ruledit_gui::show_required(requirers_dlg *requirers, const char *msg)
 {
   requirers->add(msg);
@@ -290,62 +290,64 @@ void ruledit_gui::show_required(requirers_dlg *requirers, const char *msg)
   requirers->show();
 }
 
-/**********************************************************************//**
-  Flush information from widgets to stores where it can be saved from.
-**************************************************************************/
-void ruledit_gui::flush_widgets()
-{
-  nation->flush_widgets();
-}
+/**********************************************************************/ /**
+   Flush information from widgets to stores where it can be saved from.
+ **************************************************************************/
+void ruledit_gui::flush_widgets() { nation->flush_widgets(); }
 
-/**********************************************************************//**
-  Open req_edit dialog
-**************************************************************************/
-void ruledit_gui::open_req_edit(QString target, struct requirement_vector *preqs)
+/**********************************************************************/ /**
+   Open req_edit dialog
+ **************************************************************************/
+void ruledit_gui::open_req_edit(QString target,
+                                struct requirement_vector *preqs)
 {
   req_edit *redit;
 
-  req_edit_list_iterate(req_edits, old_edit) {
+  req_edit_list_iterate(req_edits, old_edit)
+  {
     if (old_edit->req_vector == preqs) {
       // Already open
       return;
     }
-  } req_edit_list_iterate_end;
+  }
+  req_edit_list_iterate_end;
 
   redit = new req_edit(this, target, preqs);
 
   redit->show();
 
   connect(redit,
-          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
-          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)), this,
+          SLOT(incoming_rec_vec_change(const requirement_vector *)));
 
   req_edit_list_append(req_edits, redit);
 }
 
-/**********************************************************************//**
-  Unregisted closed req_edit dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Unregisted closed req_edit dialog
+ **************************************************************************/
 void ruledit_gui::unregister_req_edit(class req_edit *redit)
 {
   req_edit_list_remove(req_edits, redit);
 }
 
-/**********************************************************************//**
-  Open req_vec_fix dialog.
-**************************************************************************/
+/**********************************************************************/ /**
+   Open req_vec_fix dialog.
+ **************************************************************************/
 void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
 {
   req_vec_fix *fixer;
 
-  req_vec_fix_list_iterate(req_vec_fixers, old_fixer) {
+  req_vec_fix_list_iterate(req_vec_fixers, old_fixer)
+  {
     if (old_fixer->item() == item_info->item()) {
       item_info->close();
 
       /* Already open */
       return;
     }
-  } req_vec_fix_list_iterate_end;
+  }
+  req_vec_fix_list_iterate_end;
 
   fixer = new req_vec_fix(this, item_info);
 
@@ -353,29 +355,30 @@ void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
   fixer->show();
 
   connect(fixer,
-          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
-          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)), this,
+          SLOT(incoming_rec_vec_change(const requirement_vector *)));
 
   req_vec_fix_list_append(req_vec_fixers, fixer);
 }
 
-/**********************************************************************//**
-  Unregister closed req_vec_fix dialog.
-**************************************************************************/
+/**********************************************************************/ /**
+   Unregister closed req_vec_fix dialog.
+ **************************************************************************/
 void ruledit_gui::unregister_req_vec_fix(req_vec_fix *fixer)
 {
   req_vec_fix_list_remove(req_vec_fixers, fixer);
 }
 
-/**********************************************************************//**
-  Open effect_edit dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Open effect_edit dialog
+ **************************************************************************/
 void ruledit_gui::open_effect_edit(QString target, struct universal *uni,
                                    enum effect_filter_main_class efmc)
 {
   effect_edit *e_edit;
 
-  effect_edit_list_iterate(effect_edits, old_edit) {
+  effect_edit_list_iterate(effect_edits, old_edit)
+  {
     struct universal *old = old_edit->filter_get();
 
     if (uni != nullptr) {
@@ -387,7 +390,8 @@ void ruledit_gui::open_effect_edit(QString target, struct universal *uni,
       // Already open
       return;
     }
-  } effect_edit_list_iterate_end;
+  }
+  effect_edit_list_iterate_end;
 
   e_edit = new effect_edit(this, target, uni, efmc);
 
@@ -396,28 +400,28 @@ void ruledit_gui::open_effect_edit(QString target, struct universal *uni,
   effect_edit_list_append(effect_edits, e_edit);
 }
 
-/**********************************************************************//**
-  Unregisted closed effect_edit dialog
-**************************************************************************/
+/**********************************************************************/ /**
+   Unregisted closed effect_edit dialog
+ **************************************************************************/
 void ruledit_gui::unregister_effect_edit(class effect_edit *e_edit)
 {
   effect_edit_list_remove(effect_edits, e_edit);
 }
 
-/**********************************************************************//**
-  Refresh all effect edit dialogs
-**************************************************************************/
+/**********************************************************************/ /**
+   Refresh all effect edit dialogs
+ **************************************************************************/
 void ruledit_gui::refresh_effect_edits()
 {
-  effect_edit_list_iterate(effect_edits, e_edit) {
-    e_edit->refresh();
-  } effect_edit_list_iterate_end;
+  effect_edit_list_iterate(effect_edits, e_edit) { e_edit->refresh(); }
+  effect_edit_list_iterate_end;
 }
 
-/**********************************************************************//**
-  Main window constructor
-**************************************************************************/
-ruledit_main::ruledit_main(QApplication *qapp_in, QWidget *central_in) : QMainWindow()
+/**********************************************************************/ /**
+   Main window constructor
+ **************************************************************************/
+ruledit_main::ruledit_main(QApplication *qapp_in, QWidget *central_in)
+    : QMainWindow()
 {
   const QString title = QString::fromUtf8(R__("Freeciv Ruleset Editor"));
 
@@ -427,9 +431,9 @@ ruledit_main::ruledit_main(QApplication *qapp_in, QWidget *central_in) : QMainWi
   setWindowTitle(title);
 }
 
-/**********************************************************************//**
-  Open dialog to confirm that user wants to quit ruledit.
-**************************************************************************/
+/**********************************************************************/ /**
+   Open dialog to confirm that user wants to quit ruledit.
+ **************************************************************************/
 void ruledit_main::popup_quit_dialog()
 {
   QMessageBox ask(central);
@@ -452,9 +456,9 @@ void ruledit_main::popup_quit_dialog()
   }
 }
 
-/**********************************************************************//**
-  User clicked windows close button.
-**************************************************************************/
+/**********************************************************************/ /**
+   User clicked windows close button.
+ **************************************************************************/
 void ruledit_main::closeEvent(QCloseEvent *cevent)
 {
   // Handle quit via confirmation dialog.

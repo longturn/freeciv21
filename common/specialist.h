@@ -62,32 +62,34 @@ const char *specialist_abbreviation_translation(const struct specialist *sp);
 const char *specialists_abbreviation_string(void);
 const char *specialists_string(const citizens *specialist_list);
 
-int get_specialist_output(const struct city *pcity,
-                          Specialist_type_id sp, Output_type_id otype);
+int get_specialist_output(const struct city *pcity, Specialist_type_id sp,
+                          Output_type_id otype);
 
 /* Initialization and iteration */
 void specialists_init(void);
 void specialists_free(void);
 
 /* usually an index to arrays */
-#define specialist_type_iterate(sp)					    \
-{									    \
-  Specialist_type_id sp;						    \
+#define specialist_type_iterate(sp)                                         \
+  {                                                                         \
+    Specialist_type_id sp;                                                  \
                                                                             \
-  for (sp = 0; sp < specialist_count(); sp++) {
+    for (sp = 0; sp < specialist_count(); sp++) {
 
 #define specialist_type_iterate_end                                         \
   }                                                                         \
-}
+  }
 
 #define specialist_type_re_active_iterate(_p)                               \
-  specialist_type_iterate(_p##_) {                                          \
+  specialist_type_iterate(_p##_)                                            \
+  {                                                                         \
     struct specialist *_p = specialist_by_number(_p##_);                    \
     if (!_p->ruledit_disabled) {
 
 #define specialist_type_re_active_iterate_end                               \
-    }                                                                       \
-  } specialist_type_iterate_end;
+  }                                                                         \
+  }                                                                         \
+  specialist_type_iterate_end;
 
 #ifdef __cplusplus
 }

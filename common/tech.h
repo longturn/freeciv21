@@ -26,7 +26,7 @@ extern "C" {
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
+struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /*
   [kept for amusement and posterity]
@@ -36,8 +36,8 @@ typedef int Tech_type_id;
   use Tech_type_id very widely, and don't use (-1) flag values. (?)
 */
 /* [more accurately]
- * Unlike most other indices, the Tech_type_id is widely used, because it 
- * so frequently passed to packet and scripting.  The client menu routines 
+ * Unlike most other indices, the Tech_type_id is widely used, because it
+ * so frequently passed to packet and scripting.  The client menu routines
  * sometimes add and substract these numbers.
  */
 #define A_NONE 0
@@ -71,7 +71,8 @@ typedef int Tech_type_id;
 */
 
 /* Changing these breaks network compatibility. */
-/* If a new flag is added techtools.c:research_tech_lost() should be checked */
+/* If a new flag is added techtools.c:research_tech_lost() should be checked
+ */
 #define SPECENUM_NAME tech_flag_id
 /* player gets extra tech if rearched first */
 #define SPECENUM_VALUE0 TF_BONUS_TECH
@@ -84,7 +85,7 @@ typedef int Tech_type_id;
 /* Player can build air units */
 #define SPECENUM_VALUE2 TF_BUILD_AIRBORNE
 #define SPECENUM_VALUE2NAME N_("Build_Airborne")
-/* Player can claim ocean tiles non-adjacent to border source */ 
+/* Player can claim ocean tiles non-adjacent to border source */
 #define SPECENUM_VALUE3 TF_CLAIM_OCEAN
 #define SPECENUM_VALUE3NAME N_("Claim_Ocean")
 /* Player can claim ocean tiles non-adjacent to border source as long
@@ -107,12 +108,7 @@ typedef int Tech_type_id;
 
 #define MAX_NUM_USER_TECH_FLAGS (TECH_USER_LAST - TECH_USER_1 + 1)
 
-enum tech_req {
-  AR_ONE = 0,
-  AR_TWO = 1,
-  AR_ROOT = 2,
-  AR_SIZE
-};
+enum tech_req { AR_ONE = 0, AR_TWO = 1, AR_ROOT = 2, AR_SIZE };
 
 struct tech_class {
   int idx;
@@ -124,8 +120,8 @@ struct tech_class {
 struct advance {
   Tech_type_id item_number;
   struct name_translation name;
-  char graphic_str[MAX_LEN_NAME];	/* which named sprite to use */
-  char graphic_alt[MAX_LEN_NAME];	/* alternate icon name */
+  char graphic_str[MAX_LEN_NAME]; /* which named sprite to use */
+  char graphic_alt[MAX_LEN_NAME]; /* alternate icon name */
   struct tech_class *tclass;
 
   struct advance *require[AR_SIZE];
@@ -138,8 +134,8 @@ struct advance {
   bv_tech_flags flags;
   struct strvec *helptext;
 
-  /* 
-   * Message displayed to the first player to get a bonus tech 
+  /*
+   * Message displayed to the first player to get a bonus tech
    */
   char *bonus_message;
 
@@ -148,7 +144,7 @@ struct advance {
    * be right if game.info.tech_cost_style is TECH_COST_CIV1CIV2. */
   double cost;
 
-  /* 
+  /*
    * Number of requirements this technology has _including_
    * itself. Precalculated at server then send to client.
    */
@@ -180,27 +176,30 @@ const char *tech_class_name_translation(const struct tech_class *ptclass);
 const char *tech_class_rule_name(const struct tech_class *ptclass);
 struct tech_class *tech_class_by_rule_name(const char *name);
 
-#define tech_class_iterate(_p)                                \
-{                                                             \
-  int _i_##_p;                                                \
-  for (_i_##_p = 0; _i_##_p < game.control.num_tech_classes; _i_##_p++) {  \
-    struct tech_class *_p = tech_class_by_number(_i_##_p);
+#define tech_class_iterate(_p)                                              \
+  {                                                                         \
+    int _i_##_p;                                                            \
+    for (_i_##_p = 0; _i_##_p < game.control.num_tech_classes; _i_##_p++) { \
+      struct tech_class *_p = tech_class_by_number(_i_##_p);
 
-#define tech_class_iterate_end                    \
-  }                                               \
-}
+#define tech_class_iterate_end                                              \
+  }                                                                         \
+  }
 
-#define tech_class_re_active_iterate(_p)                               \
-  tech_class_iterate(_p) {                                             \
+#define tech_class_re_active_iterate(_p)                                    \
+  tech_class_iterate(_p)                                                    \
+  {                                                                         \
     if (!_p->ruledit_disabled) {
 
-#define tech_class_re_active_iterate_end                               \
-    }                                                                  \
-  } tech_class_iterate_end;
+#define tech_class_re_active_iterate_end                                    \
+  }                                                                         \
+  }                                                                         \
+  tech_class_iterate_end;
 
 void user_tech_flags_init(void);
 void user_tech_flags_free(void);
-void set_user_tech_flag_name(enum tech_flag_id id, const char *name, const char *helptxt);
+void set_user_tech_flag_name(enum tech_flag_id id, const char *name,
+                             const char *helptxt);
 const char *tech_flag_helptxt(enum tech_flag_id id);
 
 /* General advance/technology flag accessor routines */
@@ -208,9 +207,9 @@ bool advance_has_flag(Tech_type_id tech, enum tech_flag_id flag);
 
 /* Ancillary routines */
 Tech_type_id advance_required(const Tech_type_id tech,
-			      enum tech_req require);
+                              enum tech_req require);
 struct advance *advance_requires(const struct advance *padvance,
-				 enum tech_req require);
+                                 enum tech_req require);
 
 bool techs_have_fixed_costs(void);
 
@@ -226,36 +225,37 @@ void techs_precalc_data(void);
 
 /* This iterates over almost all technologies.  It includes non-existent
  * technologies, but not A_FUTURE. */
-#define advance_index_iterate(_start, _index)				\
-{									\
-  Tech_type_id _index = (_start);					\
-  for (; _index < advance_count(); _index++) {
+#define advance_index_iterate(_start, _index)                               \
+  {                                                                         \
+    Tech_type_id _index = (_start);                                         \
+    for (; _index < advance_count(); _index++) {
 
-#define advance_index_iterate_end					\
-  }									\
-}
+#define advance_index_iterate_end                                           \
+  }                                                                         \
+  }
 
 const struct advance *advance_array_last(void);
 
-#define advance_iterate(_start, _p)					\
-{									\
-  struct advance *_p = advance_by_number(_start);			\
-  if (NULL != _p) {							\
-    for (; _p <= advance_array_last(); _p++) {
+#define advance_iterate(_start, _p)                                         \
+  {                                                                         \
+    struct advance *_p = advance_by_number(_start);                         \
+    if (NULL != _p) {                                                       \
+      for (; _p <= advance_array_last(); _p++) {
 
-#define advance_iterate_end						\
-    }									\
-  }									\
-}
+#define advance_iterate_end                                                 \
+  }                                                                         \
+  }                                                                         \
+  }
 
-#define advance_re_active_iterate(_p)                                    \
-  advance_iterate(A_FIRST, _p) {                                         \
+#define advance_re_active_iterate(_p)                                       \
+  advance_iterate(A_FIRST, _p)                                              \
+  {                                                                         \
     if (_p->require[AR_ONE] != A_NEVER) {
 
-#define advance_re_active_iterate_end                                   \
-    }                                                                   \
-  } advance_iterate_end;
-
+#define advance_re_active_iterate_end                                       \
+  }                                                                         \
+  }                                                                         \
+  advance_iterate_end;
 
 /* Advance requirements iterator.
  * Iterates over 'goal' and all its requirements (including root_reqs),
@@ -268,8 +268,8 @@ struct iterator *advance_req_iter_init(struct advance_req_iter *it,
 
 #define advance_req_iterate(_goal, _padvance)                               \
   generic_iterate(struct advance_req_iter, const struct advance *,          \
-                  _padvance, advance_req_iter_sizeof, advance_req_iter_init,\
-                  _goal)
+                  _padvance, advance_req_iter_sizeof,                       \
+                  advance_req_iter_init, _goal)
 #define advance_req_iterate_end generic_iterate_end
 
 /* Iterates over all the root requirements of 'goal'.
@@ -284,12 +284,11 @@ struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
 #define advance_root_req_iterate(_goal, _padvance)                          \
   generic_iterate(struct advance_root_req_iter, const struct advance *,     \
                   _padvance, advance_root_req_iter_sizeof,                  \
-                  advance_root_req_iter_init,                               \
-                  _goal)
+                  advance_root_req_iter_init, _goal)
 #define advance_root_req_iterate_end generic_iterate_end
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__TECH_H */
+#endif /* FC__TECH_H */

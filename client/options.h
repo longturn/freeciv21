@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -18,12 +18,12 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "events.h"
-#include "fc_types.h"           /* enum gui_type */
-#include "featured_text.h"      /* struct ft_color */
+#include "fc_types.h"      /* enum gui_type */
+#include "featured_text.h" /* struct ft_color */
 #include "mapimg.h"
 
 #define DEFAULT_METASERVER_OPTION "default"
@@ -33,8 +33,10 @@ struct video_mode {
   int height;
 };
 
-#define VIDEO_MODE(ARG_width, ARG_height)       \
-    { ARG_width, ARG_height }
+#define VIDEO_MODE(ARG_width, ARG_height)                                   \
+  {                                                                         \
+    ARG_width, ARG_height                                                   \
+  }
 
 /****************************************************************************
   Constructor.
@@ -76,7 +78,7 @@ enum overview_layers {
 struct overview {
   /* The following fields are controlled by mapview_common.c. */
   double map_x0, map_y0; /* Origin of the overview, in natural coords. */
-  int width, height;		/* Size in pixels. */
+  int width, height;     /* Size in pixels. */
 
   /* Holds the map, unwrapped. */
   struct canvas *map;
@@ -88,11 +90,10 @@ struct overview {
   bool layers[OLAYER_COUNT];
 };
 
-struct client_options
-{
+struct client_options {
   char default_user_name[512];
   char default_server_host[512];
-  int  default_server_port;
+  int default_server_port;
   bool use_prev_server;
   bool heartbeat_enabled;
   char default_metaserver[512];
@@ -106,12 +107,14 @@ struct client_options
 
   bool save_options_on_exit;
 
-/** Migrations **/
+  /** Migrations **/
   bool first_boot; /* There was no earlier options saved.
                     * This affects some migrations, but not all. */
-  char default_tileset_name[512]; /* pre-2.6 had just this one tileset name */
-  char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for ... */
-  char default_tileset_iso_name[512];      /* ...overhead and iso topologies. */
+  char
+      default_tileset_name[512]; /* pre-2.6 had just this one tileset name */
+  char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
+                                              ... */
+  char default_tileset_iso_name[512]; /* ...overhead and iso topologies. */
   bool gui_gtk3_migrated_from_gtk2;
   bool gui_gtk3_22_migrated_from_gtk3;
   bool gui_gtk4_migrated_from_gtk3_22;
@@ -122,7 +125,7 @@ struct client_options
 
   bool migrate_fullscreen;
 
-/** Local Options: **/
+  /** Local Options: **/
 
   bool solid_color_behind_units;
   bool sound_bell_at_new_turn;
@@ -197,7 +200,7 @@ struct client_options
   bool reqtree_show_icons;
   bool reqtree_curved_lines;
 
-/* options for map images */
+  /* options for map images */
   char mapimg_format[64];
   int mapimg_zoom;
   bool mapimg_layer[MAPIMG_LAYER_COUNT];
@@ -206,7 +209,7 @@ struct client_options
   bool zoom_set;
   float zoom_default_level;
 
- /* These are still kept just so users can migrate them to gtk3-client */
+  /* These are still kept just so users can migrate them to gtk3-client */
 #define FC_GTK2_DEFAULT_THEME_NAME "Freeciv"
   char gui_gtk2_default_theme_name[512];
   bool gui_gtk2_map_scrollbars;
@@ -293,7 +296,7 @@ struct client_options
   bool gui_gtk3_22_chatline_autocompletion;
   int gui_gtk3_22_citydlg_xsize;
   int gui_gtk3_22_citydlg_ysize;
-  int  gui_gtk3_22_popup_tech_help;
+  int gui_gtk3_22_popup_tech_help;
   int gui_gtk3_22_governor_range_min;
   int gui_gtk3_22_governor_range_max;
   char gui_gtk3_22_font_city_label[512];
@@ -329,7 +332,7 @@ struct client_options
   bool gui_gtk4_chatline_autocompletion;
   int gui_gtk4_citydlg_xsize;
   int gui_gtk4_citydlg_ysize;
-  int  gui_gtk4_popup_tech_help;
+  int gui_gtk4_popup_tech_help;
   int gui_gtk4_governor_range_min;
   int gui_gtk4_governor_range_max;
   char gui_gtk4_font_city_label[512];
@@ -346,8 +349,8 @@ struct client_options
   char gui_gtk4_font_city_productions[512];
   char gui_gtk4_font_reqtree_text[512];
 
-/* gui-sdl client specific options.
- * These are still kept just so users can migrate them to sdl2-client */
+  /* gui-sdl client specific options.
+   * These are still kept just so users can migrate them to sdl2-client */
   bool gui_sdl_fullscreen;
   struct video_mode gui_sdl_screen;
   bool gui_sdl_do_cursor_animation;
@@ -398,11 +401,11 @@ extern struct client_options gui_options;
 #define SPECENUM_VALUE7 OT_VIDEO_MODE
 #include "specenum_gen.h"
 
+struct option;     /* Opaque type. */
+struct option_set; /* Opaque type. */
 
-struct option;                  /* Opaque type. */
-struct option_set;              /* Opaque type. */
-
-typedef void (*option_save_log_callback)(enum log_level lvl, const char *msg, ...);
+typedef void (*option_save_log_callback)(enum log_level lvl, const char *msg,
+                                         ...);
 
 /* Main functions. */
 void options_init(void);
@@ -411,7 +414,6 @@ void server_options_init(void);
 void server_options_free(void);
 void options_load(void);
 void options_save(option_save_log_callback log_cb);
-
 
 /* Option sets. */
 extern const struct option_set *client_optset;
@@ -428,7 +430,6 @@ int optset_category_number(const struct option_set *poptset);
 const char *optset_category_name(const struct option_set *poptset,
                                  int category);
 
-
 /* Common option functions. */
 const struct option_set *option_optset(const struct option *poption);
 int option_number(const struct option *poption);
@@ -444,7 +445,7 @@ struct option *option_next(const struct option *poption);
 
 bool option_reset(struct option *poption);
 void option_set_changed_callback(struct option *poption,
-                                 void (*callback) (struct option *));
+                                 void (*callback)(struct option *));
 void option_changed(struct option *poption);
 
 /* Option gui functions. */
@@ -506,16 +507,14 @@ struct video_mode option_video_mode_get(const struct option *poption);
 struct video_mode option_video_mode_def(const struct option *poption);
 bool option_video_mode_set(struct option *poption, struct video_mode mode);
 
-
 #define options_iterate(poptset, poption)                                   \
-{                                                                           \
-  struct option *poption = optset_option_first(poptset);                    \
-  for (; NULL != poption; poption = option_next(poption))                {  \
+  {                                                                         \
+    struct option *poption = optset_option_first(poptset);                  \
+    for (; NULL != poption; poption = option_next(poption)) {
 
 #define options_iterate_end                                                 \
   }                                                                         \
-}
-
+  }
 
 /** Desired settable options. **/
 void desired_settable_options_update(void);
@@ -523,93 +522,91 @@ void desired_settable_option_update(const char *op_name,
                                     const char *op_value,
                                     bool allow_replace);
 
-
 /** Dialog report options. **/
 void options_dialogs_update(void);
 void options_dialogs_set(void);
-
 
 /** Message Options: **/
 
 /* for specifying which event messages go where: */
 #define NUM_MW 3
-#define MW_OUTPUT    1		/* add to the output window */
-#define MW_MESSAGES  2		/* add to the messages window */
-#define MW_POPUP     4		/* popup an individual window */
+#define MW_OUTPUT 1   /* add to the output window */
+#define MW_MESSAGES 2 /* add to the messages window */
+#define MW_POPUP 4    /* popup an individual window */
 
-extern int messages_where[];	/* OR-ed MW_ values [E_COUNT] */
-
+extern int messages_where[]; /* OR-ed MW_ values [E_COUNT] */
 
 /** Client options **/
 
-#define GUI_DEFAULT_CHAT_LOGFILE        "freeciv-chat.log"
+#define GUI_DEFAULT_CHAT_LOGFILE "freeciv-chat.log"
 
 /* gui-gtk2: [xy]size of the city dialog */
-#define GUI_GTK2_CITYDLG_DEFAULT_XSIZE  770
-#define GUI_GTK2_CITYDLG_MIN_XSIZE      256
-#define GUI_GTK2_CITYDLG_MAX_XSIZE      4096
+#define GUI_GTK2_CITYDLG_DEFAULT_XSIZE 770
+#define GUI_GTK2_CITYDLG_MIN_XSIZE 256
+#define GUI_GTK2_CITYDLG_MAX_XSIZE 4096
 
-#define GUI_GTK2_CITYDLG_DEFAULT_YSIZE  512
-#define GUI_GTK2_CITYDLG_MIN_YSIZE      128
-#define GUI_GTK2_CITYDLG_MAX_YSIZE      4096
+#define GUI_GTK2_CITYDLG_DEFAULT_YSIZE 512
+#define GUI_GTK2_CITYDLG_MIN_YSIZE 128
+#define GUI_GTK2_CITYDLG_MAX_YSIZE 4096
 
-#define GUI_GTK_OVERVIEW_MIN_XSIZE      160
-#define GUI_GTK_OVERVIEW_MIN_YSIZE      100
+#define GUI_GTK_OVERVIEW_MIN_XSIZE 160
+#define GUI_GTK_OVERVIEW_MIN_YSIZE 100
 
 /* gui-gtk3: [xy]size of the city dialog */
-#define GUI_GTK3_CITYDLG_DEFAULT_XSIZE  770
-#define GUI_GTK3_CITYDLG_MIN_XSIZE      256
-#define GUI_GTK3_CITYDLG_MAX_XSIZE      4096
+#define GUI_GTK3_CITYDLG_DEFAULT_XSIZE 770
+#define GUI_GTK3_CITYDLG_MIN_XSIZE 256
+#define GUI_GTK3_CITYDLG_MAX_XSIZE 4096
 
-#define GUI_GTK3_CITYDLG_DEFAULT_YSIZE  512
-#define GUI_GTK3_CITYDLG_MIN_YSIZE      128
-#define GUI_GTK3_CITYDLG_MAX_YSIZE      4096
+#define GUI_GTK3_CITYDLG_DEFAULT_YSIZE 512
+#define GUI_GTK3_CITYDLG_MIN_YSIZE 128
+#define GUI_GTK3_CITYDLG_MAX_YSIZE 4096
 
-#define GUI_GTK3_GOV_RANGE_MIN_DEFAULT  -20
-#define GUI_GTK3_GOV_RANGE_MIN_MIN      -100
-#define GUI_GTK3_GOV_RANGE_MIN_MAX      0
+#define GUI_GTK3_GOV_RANGE_MIN_DEFAULT -20
+#define GUI_GTK3_GOV_RANGE_MIN_MIN -100
+#define GUI_GTK3_GOV_RANGE_MIN_MAX 0
 
-#define GUI_GTK3_GOV_RANGE_MAX_DEFAULT  20
-#define GUI_GTK3_GOV_RANGE_MAX_MIN      0
-#define GUI_GTK3_GOV_RANGE_MAX_MAX      100
+#define GUI_GTK3_GOV_RANGE_MAX_DEFAULT 20
+#define GUI_GTK3_GOV_RANGE_MAX_MIN 0
+#define GUI_GTK3_GOV_RANGE_MAX_MAX 100
 
 /* gui-gtk3.22: [xy]size of the city dialog */
-#define GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE  770
-#define GUI_GTK3_22_CITYDLG_MIN_XSIZE      256
-#define GUI_GTK3_22_CITYDLG_MAX_XSIZE      4096
+#define GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE 770
+#define GUI_GTK3_22_CITYDLG_MIN_XSIZE 256
+#define GUI_GTK3_22_CITYDLG_MAX_XSIZE 4096
 
-#define GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE  512
-#define GUI_GTK3_22_CITYDLG_MIN_YSIZE      128
-#define GUI_GTK3_22_CITYDLG_MAX_YSIZE      4096
+#define GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE 512
+#define GUI_GTK3_22_CITYDLG_MIN_YSIZE 128
+#define GUI_GTK3_22_CITYDLG_MAX_YSIZE 4096
 
-#define GUI_GTK3_22_GOV_RANGE_MIN_DEFAULT  -20
-#define GUI_GTK3_22_GOV_RANGE_MIN_MIN      -100
-#define GUI_GTK3_22_GOV_RANGE_MIN_MAX      0
+#define GUI_GTK3_22_GOV_RANGE_MIN_DEFAULT -20
+#define GUI_GTK3_22_GOV_RANGE_MIN_MIN -100
+#define GUI_GTK3_22_GOV_RANGE_MIN_MAX 0
 
-#define GUI_GTK3_22_GOV_RANGE_MAX_DEFAULT  20
-#define GUI_GTK3_22_GOV_RANGE_MAX_MIN      0
-#define GUI_GTK3_22_GOV_RANGE_MAX_MAX      100
+#define GUI_GTK3_22_GOV_RANGE_MAX_DEFAULT 20
+#define GUI_GTK3_22_GOV_RANGE_MAX_MIN 0
+#define GUI_GTK3_22_GOV_RANGE_MAX_MAX 100
 
 /* gui-gtk3x: [xy]size of the city dialog */
-#define GUI_GTK4_CITYDLG_DEFAULT_XSIZE  770
-#define GUI_GTK4_CITYDLG_MIN_XSIZE      256
-#define GUI_GTK4_CITYDLG_MAX_XSIZE      4096
+#define GUI_GTK4_CITYDLG_DEFAULT_XSIZE 770
+#define GUI_GTK4_CITYDLG_MIN_XSIZE 256
+#define GUI_GTK4_CITYDLG_MAX_XSIZE 4096
 
-#define GUI_GTK4_CITYDLG_DEFAULT_YSIZE  512
-#define GUI_GTK4_CITYDLG_MIN_YSIZE      128
-#define GUI_GTK4_CITYDLG_MAX_YSIZE      4096
+#define GUI_GTK4_CITYDLG_DEFAULT_YSIZE 512
+#define GUI_GTK4_CITYDLG_MIN_YSIZE 128
+#define GUI_GTK4_CITYDLG_MAX_YSIZE 4096
 
-#define GUI_GTK4_GOV_RANGE_MIN_DEFAULT  -20
-#define GUI_GTK4_GOV_RANGE_MIN_MIN      -100
-#define GUI_GTK4_GOV_RANGE_MIN_MAX      0
+#define GUI_GTK4_GOV_RANGE_MIN_DEFAULT -20
+#define GUI_GTK4_GOV_RANGE_MIN_MIN -100
+#define GUI_GTK4_GOV_RANGE_MIN_MAX 0
 
-#define GUI_GTK4_GOV_RANGE_MAX_DEFAULT  20
-#define GUI_GTK4_GOV_RANGE_MAX_MIN      0
-#define GUI_GTK4_GOV_RANGE_MAX_MAX      100
+#define GUI_GTK4_GOV_RANGE_MAX_DEFAULT 20
+#define GUI_GTK4_GOV_RANGE_MAX_MIN 0
+#define GUI_GTK4_GOV_RANGE_MAX_MAX 100
 
-#define GUI_DEFAULT_MAPIMG_FILENAME     "freeciv"
+#define GUI_DEFAULT_MAPIMG_FILENAME "freeciv"
 
-bool video_mode_to_string(char *buf, size_t buf_len, struct video_mode *mode);
+bool video_mode_to_string(char *buf, size_t buf_len,
+                          struct video_mode *mode);
 bool string_to_video_mode(const char *buf, struct video_mode *mode);
 
 struct tileset;
@@ -622,4 +619,4 @@ void fill_topo_ts_default(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__OPTIONS_H */
+#endif /* FC__OPTIONS_H */

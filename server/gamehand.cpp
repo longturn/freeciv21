@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include <stdio.h> /* for remove() */ 
+#include <stdio.h> /* for remove() */
 
 /* utility */
 #include "capability.h"
@@ -58,8 +58,8 @@
 #define SPECLIST_TYPE struct startpos
 #include "speclist.h"
 #define startpos_list_iterate(list, plink, psp)                             \
-  TYPED_LIST_BOTH_ITERATE(struct startpos_list_link, struct startpos,       \
-                          list, plink, psp)
+  TYPED_LIST_BOTH_ITERATE(struct startpos_list_link, struct startpos, list, \
+                          plink, psp)
 #define startpos_list_iterate_end LIST_BOTH_ITERATE_END
 
 struct team_placement_config {
@@ -79,9 +79,9 @@ struct team_placement_state {
 #define SPECPQ_PRIORITY_TYPE long
 #include "specpq.h"
 
-/************************************************************************//**
-  Get role_id for given role character
-****************************************************************************/
+/************************************************************************/ /**
+   Get role_id for given role character
+ ****************************************************************************/
 enum unit_role_id crole_to_role_id(char crole)
 {
   switch (crole) {
@@ -105,14 +105,14 @@ enum unit_role_id crole_to_role_id(char crole)
     return L_START_ATTACK_FAST;
   case 'A':
     return L_START_ATTACK_STRONG;
-  default: 
+  default:
     return unit_role_id(0);
   }
 }
 
-/************************************************************************//**
-  Get unit_type for given role character
-****************************************************************************/
+/************************************************************************/ /**
+   Get unit_type for given role character
+ ****************************************************************************/
 struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
 {
   struct unit_type *utype = NULL;
@@ -136,11 +136,11 @@ struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
   return utype;
 }
 
-/************************************************************************//**
-  Place a starting unit for the player. Returns tile where unit was really
-  placed. By default the ptype is used and crole does not matter, but if
-  former is NULL, crole will be used instead.
-****************************************************************************/
+/************************************************************************/ /**
+   Place a starting unit for the player. Returns tile where unit was really
+   placed. By default the ptype is used and crole does not matter, but if
+   former is NULL, crole will be used instead.
+ ****************************************************************************/
 static struct tile *place_starting_unit(struct tile *starttile,
                                         struct player *pplayer,
                                         struct unit_type *ptype, char crole)
@@ -156,14 +156,16 @@ static struct tile *place_starting_unit(struct tile *starttile,
   }
 
   if (utype != NULL) {
-    iterate_outward(&(wld.map), starttile,
-                    wld.map.xsize + wld.map.ysize, itertile) {
+    iterate_outward(&(wld.map), starttile, wld.map.xsize + wld.map.ysize,
+                    itertile)
+    {
       if (!is_non_allied_unit_tile(itertile, pplayer)
           && is_native_tile(utype, itertile)) {
         ptile = itertile;
         break;
       }
-    } iterate_outward_end;
+    }
+    iterate_outward_end;
   }
 
   if (ptile == NULL) {
@@ -173,17 +175,19 @@ static struct tile *place_starting_unit(struct tile *starttile,
 
   fc_assert_ret_val(!is_non_allied_unit_tile(ptile, pplayer), NULL);
 
-  /* For scenarios or dispersion, huts may coincide with player starts (in 
+  /* For scenarios or dispersion, huts may coincide with player starts (in
    * other cases, huts are avoided as start positions).  Remove any such hut,
    * and make sure to tell the client, since we may have already sent this
    * tile (with the hut) earlier: */
   /* FIXME: don't remove under a HUT_NOTHING unit */
-  extra_type_by_rmcause_iterate(ERM_ENTER, pextra) {
+  extra_type_by_rmcause_iterate(ERM_ENTER, pextra)
+  {
     if (tile_has_extra(ptile, pextra)) {
       tile_extra_rm_apply(ptile, pextra);
       hut_present = TRUE;
     }
-  } extra_type_by_rmcause_iterate_end;
+  }
+  extra_type_by_rmcause_iterate_end;
 
   if (hut_present) {
     update_tile_knowledge(ptile);
@@ -202,9 +206,9 @@ static struct tile *place_starting_unit(struct tile *starttile,
   return NULL;
 }
 
-/************************************************************************//**
-  Find a valid position not far from our starting position.
-****************************************************************************/
+/************************************************************************/ /**
+   Find a valid position not far from our starting position.
+ ****************************************************************************/
 static struct tile *find_dispersed_position(struct player *pplayer,
                                             struct tile *pcenter)
 {
@@ -215,12 +219,12 @@ static struct tile *find_dispersed_position(struct player *pplayer,
     index_to_map_pos(&x, &y, tile_index(pcenter));
     x += fc_rand(2 * game.server.dispersion + 1) - game.server.dispersion;
     y += fc_rand(2 * game.server.dispersion + 1) - game.server.dispersion;
-  } while (!((ptile = map_pos_to_tile(&(wld.map), x, y))
-             && tile_continent(pcenter) == tile_continent(ptile)
-             && !is_ocean_tile(ptile)
-             && real_map_distance(pcenter, ptile) < game.server.dispersion
-                + 1
-             && !is_non_allied_unit_tile(ptile, pplayer)));
+  } while (
+      !((ptile = map_pos_to_tile(&(wld.map), x, y))
+        && tile_continent(pcenter) == tile_continent(ptile)
+        && !is_ocean_tile(ptile)
+        && real_map_distance(pcenter, ptile) < game.server.dispersion + 1
+        && !is_non_allied_unit_tile(ptile, pplayer)));
 
   return ptile;
 }
@@ -229,22 +233,22 @@ static struct tile *find_dispersed_position(struct player *pplayer,
  * setting set to 'CLOSEST'. */
 #define team_placement_closest sq_map_distance
 
-/************************************************************************//**
-  Calculate the distance between tiles, according to the 'teamplacement'
-  setting set to 'CONTINENT'.
-****************************************************************************/
+/************************************************************************/ /**
+   Calculate the distance between tiles, according to the 'teamplacement'
+   setting set to 'CONTINENT'.
+ ****************************************************************************/
 static int team_placement_continent(const struct tile *ptile1,
                                     const struct tile *ptile2)
 {
   return (ptile1->continent == ptile2->continent
-          ? sq_map_distance(ptile1, ptile2)
-          : sq_map_distance(ptile1, ptile2) + MAP_INDEX_SIZE);
+              ? sq_map_distance(ptile1, ptile2)
+              : sq_map_distance(ptile1, ptile2) + MAP_INDEX_SIZE);
 }
 
-/************************************************************************//**
-  Calculate the distance between tiles, according to the 'teamplacement'
-  setting set to 'HORIZONTAL'.
-****************************************************************************/
+/************************************************************************/ /**
+   Calculate the distance between tiles, according to the 'teamplacement'
+   setting set to 'HORIZONTAL'.
+ ****************************************************************************/
 static int team_placement_horizontal(const struct tile *ptile1,
                                      const struct tile *ptile2)
 {
@@ -255,10 +259,10 @@ static int team_placement_horizontal(const struct tile *ptile1,
   return abs(MAP_IS_ISOMETRIC ? dx + dy : dy);
 }
 
-/************************************************************************//**
-  Calculate the distance between tiles, according to the 'teamplacement'
-  setting set to 'VERTICAL'.
-****************************************************************************/
+/************************************************************************/ /**
+   Calculate the distance between tiles, according to the 'teamplacement'
+   setting set to 'VERTICAL'.
+ ****************************************************************************/
 static int team_placement_vertical(const struct tile *ptile1,
                                    const struct tile *ptile2)
 {
@@ -269,24 +273,24 @@ static int team_placement_vertical(const struct tile *ptile1,
   return abs(MAP_IS_ISOMETRIC ? dx - dy : dy);
 }
 
-/************************************************************************//**
-  Destroys a team_placement_state structure.
-****************************************************************************/
+/************************************************************************/ /**
+   Destroys a team_placement_state structure.
+ ****************************************************************************/
 static void team_placement_state_destroy(struct team_placement_state *pstate)
 {
   free(pstate->startpos);
   free(pstate);
 }
 
-/************************************************************************//**
-  Find the best team placement, according to the 'team_placement' setting.
-****************************************************************************/
+/************************************************************************/ /**
+   Find the best team placement, according to the 'team_placement' setting.
+ ****************************************************************************/
 static void do_team_placement(const struct team_placement_config *pconfig,
                               struct team_placement_state *pbest_state,
                               int iter_max)
 {
-  const size_t state_array_size = (sizeof(*pbest_state->startpos)
-                                   * pconfig->total_startpos_num);
+  const size_t state_array_size =
+      (sizeof(*pbest_state->startpos) * pconfig->total_startpos_num);
   struct team_placement_pq *pqueue =
       team_placement_pq_new(pconfig->total_startpos_num * 4);
   int (*distance)(const struct tile *, const struct tile *) = NULL;
@@ -332,8 +336,9 @@ static void do_team_placement(const struct team_placement_config *pconfig,
       ptile1 = pconfig->startpos[i];
       base_delta_calculated = FALSE;
       for (j = i + 1; j < (i >= pconfig->flexible_startpos_num
-                           ? pconfig->usable_startpos_num
-                           : pconfig->flexible_startpos_num); j++) {
+                               ? pconfig->usable_startpos_num
+                               : pconfig->flexible_startpos_num);
+           j++) {
         t2 = pstate->startpos[j];
         if (t2 == -1) {
           /* Not assigned yet. */
@@ -409,7 +414,8 @@ static void do_team_placement(const struct team_placement_config *pconfig,
     team_placement_state_destroy(pstate);
     if (iter++ >= iter_max) {
       log_normal(_("Didn't find optimal solution for team placement "
-                   "in %d iterations."), iter);
+                   "in %d iterations."),
+                 iter);
       break;
     }
 
@@ -418,9 +424,9 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   team_placement_pq_destroy_full(pqueue, team_placement_state_destroy);
 }
 
-/************************************************************************//**
-  Initialize a new game: place the players' units onto the map, etc.
-****************************************************************************/
+/************************************************************************/ /**
+   Initialize a new game: place the players' units onto the map, etc.
+ ****************************************************************************/
 void init_new_game(void)
 {
   struct startpos_list *impossible_list, *targeted_list, *flexible_list;
@@ -433,10 +439,10 @@ void init_new_game(void)
                              sizeof(server.game_identifier));
 
   /* Assign players to starting positions on the map.
-   * (In scenarios with restrictions on which nations can use which predefined
-   * start positions, this process tries to satisfy those restrictions, but
-   * does not guarantee to. Even if there is a solution to the matching
-   * problem, this algorithm may not find it.) */
+   * (In scenarios with restrictions on which nations can use which
+   * predefined start positions, this process tries to satisfy those
+   * restrictions, but does not guarantee to. Even if there is a solution to
+   * the matching problem, this algorithm may not find it.) */
 
   fc_assert(player_count() <= map_startpos_count());
 
@@ -447,16 +453,19 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  map_startpos_iterate(psp) {
+  map_startpos_iterate(psp)
+  {
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {
       startpos_list_append(targeted_list, psp);
     }
-  } map_startpos_iterate_end;
+  }
+  map_startpos_iterate_end;
 
   fc_assert(startpos_list_size(targeted_list)
-            + startpos_list_size(flexible_list) == map_startpos_count());
+                + startpos_list_size(flexible_list)
+            == map_startpos_count());
 
   memset(player_startpos, 0, sizeof(player_startpos));
   log_verbose("Placing players at start positions.");
@@ -473,7 +482,8 @@ void init_new_game(void)
       bool removed = FALSE;
 
       /* Assign first players which can pick only one start position. */
-      players_iterate(pplayer) {
+      players_iterate(pplayer)
+      {
         if (NULL != player_startpos[player_index(pplayer)]) {
           /* Already assigned. */
           continue;
@@ -481,7 +491,8 @@ void init_new_game(void)
 
         pnation = nation_of_player(pplayer);
         choice = NULL;
-        startpos_list_iterate(targeted_list, plink, psp) {
+        startpos_list_iterate(targeted_list, plink, psp)
+        {
           if (startpos_nation_allowed(psp, pnation)) {
             if (NULL != choice) {
               choice = NULL;
@@ -490,7 +501,8 @@ void init_new_game(void)
               choice = plink;
             }
           }
-        } startpos_list_iterate_end;
+        }
+        startpos_list_iterate_end;
 
         if (NULL != choice) {
           /* Assign this start position to this player and remove
@@ -502,11 +514,13 @@ void init_new_game(void)
           startpos_list_erase(targeted_list, choice);
           players_to_place--;
           removed = TRUE;
-          log_verbose("Start position (%d, %d) exactly matches player %s (%s).",
-                      TILE_XY(ptile), player_name(pplayer),
-                      nation_rule_name(pnation));
+          log_verbose(
+              "Start position (%d, %d) exactly matches player %s (%s).",
+              TILE_XY(ptile), player_name(pplayer),
+              nation_rule_name(pnation));
         }
-      } players_iterate_end;
+      }
+      players_iterate_end;
 
       if (!removed) {
         /* Didn't find any 1:1 matches. For the next restricted start
@@ -518,7 +532,8 @@ void init_new_game(void)
         int i = 0;
 
         startpos_list_pop_back(targeted_list); /* Detach 'psp'. */
-        players_iterate(pplayer) {
+        players_iterate(pplayer)
+        {
           if (NULL != player_startpos[player_index(pplayer)]) {
             /* Already assigned. */
             continue;
@@ -528,7 +543,8 @@ void init_new_game(void)
           if (startpos_nation_allowed(psp, pnation) && 0 == fc_rand(++i)) {
             rand_plr = pplayer;
           }
-        } players_iterate_end;
+        }
+        players_iterate_end;
 
         if (NULL != rand_plr) {
           player_startpos[player_index(rand_plr)] = ptile;
@@ -558,7 +574,8 @@ void init_new_game(void)
     int team_placement_players_to_place = 0;
     int real_team_count = 0;
 
-    teams_iterate(pteam) {
+    teams_iterate(pteam)
+    {
       members = team_members(pteam);
       fc_assert(0 < player_list_size(members));
       real_team_count++;
@@ -566,12 +583,15 @@ void init_new_game(void)
         /* Single player teams, doesn't count for team placement. */
         continue;
       }
-      player_list_iterate(members, pplayer) {
+      player_list_iterate(members, pplayer)
+      {
         if (player_startpos[player_index(pplayer)] == NULL) {
           team_placement_players_to_place++;
         }
-      } player_list_iterate_end;
-    } teams_iterate_end;
+      }
+      player_list_iterate_end;
+    }
+    teams_iterate_end;
 
     if (real_team_count > 1 && team_placement_players_to_place > 0) {
       /* We really can do something to improve team placement. */
@@ -589,18 +609,22 @@ void init_new_game(void)
       if (config.flexible_startpos_num < team_placement_players_to_place) {
         config.usable_startpos_num += startpos_list_size(impossible_list);
       }
-      config.total_startpos_num = (config.usable_startpos_num
-                                   + player_count() - players_to_place);
+      config.total_startpos_num =
+          (config.usable_startpos_num + player_count() - players_to_place);
       config.startpos = new tile *[config.total_startpos_num];
       i = 0;
-      startpos_list_iterate(flexible_list, plink, psp) {
+      startpos_list_iterate(flexible_list, plink, psp)
+      {
         config.startpos[i++] = startpos_tile(psp);
-      } startpos_list_iterate_end;
+      }
+      startpos_list_iterate_end;
       fc_assert(i == config.flexible_startpos_num);
       if (i < config.usable_startpos_num) {
-        startpos_list_iterate(impossible_list, plink, psp) {
+        startpos_list_iterate(impossible_list, plink, psp)
+        {
           config.startpos[i++] = startpos_tile(psp);
-        } startpos_list_iterate_end;
+        }
+        startpos_list_iterate_end;
       }
       fc_assert(i == config.usable_startpos_num);
       while (i < config.total_startpos_num) {
@@ -613,14 +637,16 @@ void init_new_game(void)
       state.score = 0;
       i = 0;
       j = config.usable_startpos_num;
-      teams_iterate(pteam) {
+      teams_iterate(pteam)
+      {
         members = team_members(pteam);
         if (player_list_size(members) <= 1) {
           /* Single player teams, doesn't count for team placement. */
           continue;
         }
         t = team_number(pteam);
-        player_list_iterate(members, pplayer) {
+        player_list_iterate(members, pplayer)
+        {
           struct tile *ptile = player_startpos[player_index(pplayer)];
 
           if (ptile == NULL) {
@@ -630,8 +656,10 @@ void init_new_game(void)
             config.startpos[j] = ptile;
             j++;
           }
-        } player_list_iterate_end;
-      } teams_iterate_end;
+        }
+        player_list_iterate_end;
+      }
+      teams_iterate_end;
       while (i < config.usable_startpos_num) {
         state.startpos[i++] = -1;
       }
@@ -653,15 +681,16 @@ void init_new_game(void)
           int candidate_num = 0;
 
           log_verbose("Start position (%d, %d) assigned to team %d (%s)",
-                      TILE_XY(config.startpos[i]),
-                      t, team_rule_name(pteam));
+                      TILE_XY(config.startpos[i]), t, team_rule_name(pteam));
 
-          player_list_iterate(team_members(pteam), member) {
+          player_list_iterate(team_members(pteam), member)
+          {
             if (player_startpos[player_index(member)] == NULL
                 && fc_rand(++candidate_num) == 0) {
               candidate_index = player_index(member);
             }
-          } player_list_iterate_end;
+          }
+          player_list_iterate_end;
           fc_assert(candidate_index >= 0);
           player_startpos[candidate_index] = config.startpos[i];
           team_placement_players_to_place--;
@@ -674,22 +703,26 @@ void init_new_game(void)
       if (players_to_place > 0) {
         /* We need to remove used startpos from the lists. */
         i = 0;
-        startpos_list_iterate(flexible_list, plink, psp) {
+        startpos_list_iterate(flexible_list, plink, psp)
+        {
           fc_assert(config.startpos[i] == startpos_tile(psp));
           if (state.startpos[i] != -1) {
             startpos_list_erase(flexible_list, plink);
           }
           i++;
-        } startpos_list_iterate_end;
+        }
+        startpos_list_iterate_end;
         fc_assert(i == config.flexible_startpos_num);
         if (i < config.usable_startpos_num) {
-          startpos_list_iterate(impossible_list, plink, psp) {
+          startpos_list_iterate(impossible_list, plink, psp)
+          {
             fc_assert(config.startpos[i] == startpos_tile(psp));
             if (state.startpos[i] != -1) {
               startpos_list_erase(impossible_list, plink);
             }
             i++;
-          } startpos_list_iterate_end;
+          }
+          startpos_list_iterate_end;
         }
         fc_assert(i == config.usable_startpos_num);
       }
@@ -705,7 +738,8 @@ void init_new_game(void)
     log_verbose("Assigning unrestricted start positions.");
 
     startpos_list_shuffle(flexible_list); /* Randomize. */
-    players_iterate(pplayer) {
+    players_iterate(pplayer)
+    {
       if (NULL != player_startpos[player_index(pplayer)]) {
         /* Already assigned. */
         continue;
@@ -716,12 +750,14 @@ void init_new_game(void)
       players_to_place--;
       startpos_list_pop_front(flexible_list);
       log_verbose("Start position (%d, %d) assigned randomly "
-                  "to player %s (%s).", TILE_XY(ptile), player_name(pplayer),
+                  "to player %s (%s).",
+                  TILE_XY(ptile), player_name(pplayer),
                   nation_rule_name(nation_of_player(pplayer)));
       if (0 == startpos_list_size(flexible_list)) {
         break;
       }
-    } players_iterate_end;
+    }
+    players_iterate_end;
   }
 
   if (0 < players_to_place && 0 < startpos_list_size(impossible_list)) {
@@ -732,10 +768,12 @@ void init_new_game(void)
 
     struct tile *ptile;
 
-    log_verbose("Ignoring nation restrictions on remaining start positions.");
+    log_verbose(
+        "Ignoring nation restrictions on remaining start positions.");
 
     startpos_list_shuffle(impossible_list); /* Randomize. */
-    players_iterate(pplayer) {
+    players_iterate(pplayer)
+    {
       if (NULL != player_startpos[player_index(pplayer)]) {
         /* Already assigned. */
         continue;
@@ -746,12 +784,14 @@ void init_new_game(void)
       players_to_place--;
       startpos_list_pop_front(impossible_list);
       log_verbose("Start position (%d, %d) assigned to mismatched "
-                  "player %s (%s).", TILE_XY(ptile), player_name(pplayer),
+                  "player %s (%s).",
+                  TILE_XY(ptile), player_name(pplayer),
                   nation_rule_name(nation_of_player(pplayer)));
       if (0 == startpos_list_size(impossible_list)) {
         break;
       }
-    } players_iterate_end;
+    }
+    players_iterate_end;
   }
 
   fc_assert(0 == players_to_place);
@@ -763,7 +803,8 @@ void init_new_game(void)
   sulen = strlen(game.server.start_units);
 
   /* Loop over all players, creating their initial units... */
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     struct tile *ptile;
 
     /* We have to initialise the advisor and ai here as we could make contact
@@ -784,7 +825,8 @@ void init_new_game(void)
     if (sulen > 0) {
       /* Place the first unit. */
       if (place_starting_unit(ptile, pplayer, NULL,
-                              game.server.start_units[0]) != NULL) {
+                              game.server.start_units[0])
+          != NULL) {
         placed_units[player_index(pplayer)] = 1;
       } else {
         placed_units[player_index(pplayer)] = 0;
@@ -792,10 +834,12 @@ void init_new_game(void)
     } else {
       placed_units[player_index(pplayer)] = 0;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   /* Place all other units. */
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     int i;
     struct tile *const ptile = player_startpos[player_index(pplayer)];
     struct nation_type *nation = nation_of_player(pplayer);
@@ -808,7 +852,8 @@ void init_new_game(void)
 
       /* Create the unit of an appropriate type. */
       if (place_starting_unit(rand_tile, pplayer, NULL,
-                              game.server.start_units[i]) != NULL) {
+                              game.server.start_units[i])
+          != NULL) {
         placed_units[player_index(pplayer)]++;
       }
     }
@@ -818,36 +863,40 @@ void init_new_game(void)
     while (NULL != nation->init_units[i] && MAX_NUM_UNIT_LIST > i) {
       struct tile *rand_tile = find_dispersed_position(pplayer, ptile);
 
-      if (place_starting_unit(rand_tile, pplayer,
-                              nation->init_units[i], '\0') != NULL) {
+      if (place_starting_unit(rand_tile, pplayer, nation->init_units[i],
+                              '\0')
+          != NULL) {
         placed_units[player_index(pplayer)]++;
       }
       i++;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     /* Close the active phase for advisor and ai for all players; it was
      * opened in the first loop above. */
     adv_data_phase_done(pplayer);
     CALL_PLR_AI_FUNC(phase_finished, pplayer, pplayer);
 
-    fc_assert_msg(game.server.start_city || 0 < placed_units[player_index(pplayer)],
+    fc_assert_msg(game.server.start_city
+                      || 0 < placed_units[player_index(pplayer)],
                   _("No units placed for %s!"), player_name(pplayer));
-  } players_iterate_end;
+  }
+  players_iterate_end;
 }
 
-/************************************************************************//**
-  Tell clients the year, and also update turn_done and nturns_idle fields
-  for all players.
-****************************************************************************/
+/************************************************************************/ /**
+   Tell clients the year, and also update turn_done and nturns_idle fields
+   for all players.
+ ****************************************************************************/
 void send_year_to_clients(void)
 {
   struct packet_new_year apacket;
 
-  players_iterate(pplayer) {
-    pplayer->nturns_idle++;
-  } players_iterate_end;
+  players_iterate(pplayer) { pplayer->nturns_idle++; }
+  players_iterate_end;
 
   apacket.year = game.info.year;
   apacket.fragments = game.info.fragment_count;
@@ -859,14 +908,14 @@ void send_year_to_clients(void)
               _("Year: %s"), calendar_text());
 }
 
-/************************************************************************//**
-  Send game_info packet; some server options and various stuff...
-  dest == NULL means game.est_connections
+/************************************************************************/ /**
+   Send game_info packet; some server options and various stuff...
+   dest == NULL means game.est_connections
 
-  It may be sent at any time. It MUST be sent before any player info, 
-  as it contains the number of players.  To avoid inconsistency, it
-  SHOULD be sent after rulesets and any other server settings.
-****************************************************************************/
+   It may be sent at any time. It MUST be sent before any player info,
+   as it contains the number of players.  To avoid inconsistency, it
+   SHOULD be sent after rulesets and any other server settings.
+ ****************************************************************************/
 void send_game_info(struct conn_list *dest)
 {
   struct packet_timeout_info tinfo;
@@ -887,15 +936,17 @@ void send_game_info(struct conn_list *dest)
      * but the server's timer is only ever reset at the start of a phase
      * (and game.tinfo.seconds_to_phasedone is relative to this).
      * Account for the difference. */
-    tinfo.seconds_to_phasedone = game.tinfo.seconds_to_phasedone
-      - timer_read_seconds(game.server.phase_timer)
-      - game.server.additional_phase_seconds;
+    tinfo.seconds_to_phasedone =
+        game.tinfo.seconds_to_phasedone
+        - timer_read_seconds(game.server.phase_timer)
+        - game.server.additional_phase_seconds;
   } else {
     /* unused but at least initialized */
     tinfo.seconds_to_phasedone = -1.0;
   }
 
-  conn_list_iterate(dest, pconn) {
+  conn_list_iterate(dest, pconn)
+  {
     /* Timeout info is separate from other packets since it has to
      * be sent always (it's not 'is-info') while the others are 'is-info'
      * Calendar info has been split from Game info packet to make packet
@@ -907,44 +958,48 @@ void send_game_info(struct conn_list *dest)
   conn_list_iterate_end;
 }
 
-/************************************************************************//**
-  Send current scenario info. dest NULL causes send to everyone
-****************************************************************************/
+/************************************************************************/ /**
+   Send current scenario info. dest NULL causes send to everyone
+ ****************************************************************************/
 void send_scenario_info(struct conn_list *dest)
 {
   if (!dest) {
     dest = game.est_connections;
   }
 
-  conn_list_iterate(dest, pconn) {
+  conn_list_iterate(dest, pconn)
+  {
     send_packet_scenario_info(pconn, &(game.scenario));
-  } conn_list_iterate_end;
+  }
+  conn_list_iterate_end;
 }
 
-/************************************************************************//**
-  Send description of the current scenario. dest NULL causes send to everyone
-****************************************************************************/
+/************************************************************************/ /**
+   Send description of the current scenario. dest NULL causes send to
+ everyone
+ ****************************************************************************/
 void send_scenario_description(struct conn_list *dest)
 {
   if (!dest) {
     dest = game.est_connections;
   }
 
-  conn_list_iterate(dest, pconn) {
+  conn_list_iterate(dest, pconn)
+  {
     send_packet_scenario_description(pconn, &(game.scenario_desc));
-  } conn_list_iterate_end;
+  }
+  conn_list_iterate_end;
 }
 
-/************************************************************************//**
-  adjusts game.info.timeout based on various server options
+/************************************************************************/ /**
+   adjusts game.info.timeout based on various server options
 
-  timeoutint: adjust game.info.timeout every timeoutint turns
-  timeoutinc: adjust game.info.timeout by adding timeoutinc to it.
-  timeoutintinc: every time we adjust game.info.timeout, we add timeoutintinc
-                 to timeoutint.
-  timeoutincmult: every time we adjust game.info.timeout, we multiply timeoutinc
-                  by timeoutincmult
-****************************************************************************/
+   timeoutint: adjust game.info.timeout every timeoutint turns
+   timeoutinc: adjust game.info.timeout by adding timeoutinc to it.
+   timeoutintinc: every time we adjust game.info.timeout, we add
+ timeoutintinc to timeoutint. timeoutincmult: every time we adjust
+ game.info.timeout, we multiply timeoutinc by timeoutincmult
+ ****************************************************************************/
 int update_timeout(void)
 {
   /* if there's no timer or we're doing autogame, do nothing */
@@ -988,50 +1043,48 @@ int update_timeout(void)
   return game.info.timeout;
 }
 
-/************************************************************************//**
-  adjusts game.seconds_to_turn_done when enemy moves a unit, we see it and
-  the remaining timeout is smaller than the timeoutaddenemymove option.
+/************************************************************************/ /**
+   adjusts game.seconds_to_turn_done when enemy moves a unit, we see it and
+   the remaining timeout is smaller than the timeoutaddenemymove option.
 
-  It's possible to use a similar function to do that per-player.  In
-  theory there should be a separate timeout for each player and the
-  added time should only go onto the victim's timer.
-****************************************************************************/
+   It's possible to use a similar function to do that per-player.  In
+   theory there should be a separate timeout for each player and the
+   added time should only go onto the victim's timer.
+ ****************************************************************************/
 void increase_timeout_because_unit_moved(void)
 {
   if (current_turn_timeout() > 0 && game.server.timeoutaddenemymove > 0) {
     double maxsec = (timer_read_seconds(game.server.phase_timer)
-		     + (double) game.server.timeoutaddenemymove);
+                     + (double) game.server.timeoutaddenemymove);
 
     if (maxsec > game.tinfo.seconds_to_phasedone) {
       game.tinfo.seconds_to_phasedone = maxsec;
       send_game_info(NULL);
-    }	
+    }
   }
 }
 
-/************************************************************************//**
-  Generate challenge filename for this connection, cannot fail.
-****************************************************************************/
-static void gen_challenge_filename(struct connection *pc)
-{
-}
+/************************************************************************/ /**
+   Generate challenge filename for this connection, cannot fail.
+ ****************************************************************************/
+static void gen_challenge_filename(struct connection *pc) {}
 
-/************************************************************************//**
-  Get challenge filename for this connection.
-****************************************************************************/
+/************************************************************************/ /**
+   Get challenge filename for this connection.
+ ****************************************************************************/
 static const char *get_challenge_filename(struct connection *pc)
 {
   static char filename[MAX_LEN_PATH];
 
-  fc_snprintf(filename, sizeof(filename), "%s_%d_%d",
-      CHALLENGE_ROOT, srvarg.port, pc->id);
+  fc_snprintf(filename, sizeof(filename), "%s_%d_%d", CHALLENGE_ROOT,
+              srvarg.port, pc->id);
 
   return filename;
 }
 
-/************************************************************************//**
-  Get challenge full filename for this connection.
-****************************************************************************/
+/************************************************************************/ /**
+   Get challenge full filename for this connection.
+ ****************************************************************************/
 static const char *get_challenge_fullname(struct connection *pc)
 {
   static char fullname[MAX_LEN_PATH];
@@ -1048,25 +1101,26 @@ static const char *get_challenge_fullname(struct connection *pc)
     return NULL;
   }
 
-  fc_snprintf(fullname, sizeof(fullname), "%s" DIR_SEPARATOR "%s", sdir, cname);
+  fc_snprintf(fullname, sizeof(fullname), "%s" DIR_SEPARATOR "%s", sdir,
+              cname);
 
   return fullname;
 }
 
-/************************************************************************//**
-  Find a file that we can write too, and return it's name.
-****************************************************************************/
+/************************************************************************/ /**
+   Find a file that we can write too, and return it's name.
+ ****************************************************************************/
 const char *new_challenge_filename(struct connection *pc)
 {
   gen_challenge_filename(pc);
   return get_challenge_filename(pc);
 }
 
-/************************************************************************//**
-  Call this on a connection with HACK access to send it a set of ruleset
-  choices.  Probably this should be called immediately when granting
-  HACK access to a connection.
-****************************************************************************/
+/************************************************************************/ /**
+   Call this on a connection with HACK access to send it a set of ruleset
+   choices.  Probably this should be called immediately when granting
+   HACK access to a connection.
+ ****************************************************************************/
 static void send_ruleset_choices(struct connection *pc)
 {
   struct strvec *ruleset_choices;
@@ -1075,19 +1129,23 @@ static void send_ruleset_choices(struct connection *pc)
 
   ruleset_choices = get_init_script_choices();
 
-  strvec_iterate(ruleset_choices, s) {
+  strvec_iterate(ruleset_choices, s)
+  {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
       log_verbose("Can't send more than %d ruleset names to client, "
-                  "skipping some", MAX_NUM_RULESETS);
+                  "skipping some",
+                  MAX_NUM_RULESETS);
       break;
     }
     if (fc_strlcpy(packet.rulesets[i], s, maxlen) < maxlen) {
       i++;
     } else {
-      log_verbose("Ruleset name '%s' too long to send to client, skipped", s);
+      log_verbose("Ruleset name '%s' too long to send to client, skipped",
+                  s);
     }
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
   packet.ruleset_count = i;
 
   send_packet_ruleset_choices(pc, &packet);
@@ -1095,13 +1153,12 @@ static void send_ruleset_choices(struct connection *pc)
   strvec_destroy(ruleset_choices);
 }
 
-/************************************************************************//**
-  Opens a file specified by the packet and compares the packet values with
-  the file values. Sends an answer to the client once it's done.
-****************************************************************************/
-void handle_single_want_hack_req(struct connection *pc,
-                                 const struct packet_single_want_hack_req *
-                                 packet)
+/************************************************************************/ /**
+   Opens a file specified by the packet and compares the packet values with
+   the file values. Sends an answer to the client once it's done.
+ ****************************************************************************/
+void handle_single_want_hack_req(
+    struct connection *pc, const struct packet_single_want_hack_req *packet)
 {
   struct section_file *secfile;
   const char *token = NULL;

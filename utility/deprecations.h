@@ -31,24 +31,24 @@ bool are_deprecation_warnings_enabled(void);
 
 void do_log_deprecation(const char *format, ...);
 
-#define log_deprecation(message, ...) \
-  do { \
-    if (are_deprecation_warnings_enabled()) { \
-      do_log_deprecation(message, ## __VA_ARGS__); \
-    } \
+#define log_deprecation(message, ...)                                       \
+  do {                                                                      \
+    if (are_deprecation_warnings_enabled()) {                               \
+      do_log_deprecation(message, ##__VA_ARGS__);                           \
+    }                                                                       \
   } while (FALSE);
 
-#define log_deprecation_alt(altlvl, message, ...) \
-  do { \
-    if (are_deprecation_warnings_enabled()) { \
-      do_log_deprecation(message, ## __VA_ARGS__); \
-    } else { \
-      log_base(altlvl, message, ## __VA_ARGS__); \
-    } \
+#define log_deprecation_alt(altlvl, message, ...)                           \
+  do {                                                                      \
+    if (are_deprecation_warnings_enabled()) {                               \
+      do_log_deprecation(message, ##__VA_ARGS__);                           \
+    } else {                                                                \
+      log_base(altlvl, message, ##__VA_ARGS__);                             \
+    }                                                                       \
   } while (FALSE);
 
-#define log_deprecation_always(message, ...) \
-  do_log_deprecation(message, ## __VA_ARGS__);
+#define log_deprecation_always(message, ...)                                \
+  do_log_deprecation(message, ##__VA_ARGS__);
 
 #ifdef __cplusplus
 }

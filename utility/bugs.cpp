@@ -25,17 +25,17 @@
 
 #include "bugs.h"
 
-/********************************************************************//**
-  Print request for bugreport
-************************************************************************/
+/********************************************************************/ /**
+   Print request for bugreport
+ ************************************************************************/
 void bugreport_request(const char *reason_format, ...)
 {
   va_list args;
   char buf[1024];
 
   va_start(args, reason_format);
-  vdo_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, LOG_ERROR,
-          buf, sizeof(buf), reason_format, args);
+  vdo_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, LOG_ERROR, buf,
+          sizeof(buf), reason_format, args);
   va_end(args);
 
   /* TRANS: No full stop after the URL, could cause confusion. */

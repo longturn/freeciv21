@@ -35,22 +35,16 @@
 #include "modinst.h"
 
 struct fcmp_params fcmp = {
-  .list_url = MODPACK_LIST_URL,
-  .inst_prefix = NULL,
-  .autoinstall = NULL
-};
+    .list_url = MODPACK_LIST_URL, .inst_prefix = NULL, .autoinstall = NULL};
 
-/**********************************************************************//**
-  Progress indications from downloader
-**************************************************************************/
-static void msg_callback(const char *msg)
-{
-  log_normal("%s", msg);
-}
+/**********************************************************************/ /**
+   Progress indications from downloader
+ **************************************************************************/
+static void msg_callback(const char *msg) { log_normal("%s", msg); }
 
-/**********************************************************************//**
-  Build main modpack list view
-**************************************************************************/
+/**********************************************************************/ /**
+   Build main modpack list view
+ **************************************************************************/
 static void setup_modpack_list(const char *name, const char *URL,
                                const char *version, const char *license,
                                enum modpack_type type, const char *subtype,
@@ -91,9 +85,9 @@ static void setup_modpack_list(const char *name, const char *URL,
   }
 }
 
-/**********************************************************************//**
-  Entry point of the freeciv-modpack program
-**************************************************************************/
+/**********************************************************************/ /**
+   Entry point of the freeciv-modpack program
+ **************************************************************************/
 int main(int argc, char *argv[])
 {
   int ui_options;
@@ -108,8 +102,8 @@ int main(int argc, char *argv[])
 
     for (i = 1; i <= ui_options; i++) {
       if (is_option("--help", argv[i])) {
-        fc_fprintf(stderr,
-                   _("This modpack installer does not support any specific options\n\n"));
+        fc_fprintf(stderr, _("This modpack installer does not support any "
+                             "specific options\n\n"));
 
         /* TRANS: No full stop after the URL, could cause confusion. */
         fc_fprintf(stderr, _("Report bugs at %s\n"), BUG_URL);

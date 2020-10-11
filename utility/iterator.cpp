@@ -20,34 +20,25 @@
 
 #include "iterator.h"
 
-/*******************************************************************//**
-  'next' function implementation for an "invalid" iterator.
-***********************************************************************/
-static void invalid_iter_next(struct iterator *it)
-{
-  /* Do nothing. */
-}
+/*******************************************************************/ /**
+   'next' function implementation for an "invalid" iterator.
+ ***********************************************************************/
+static void invalid_iter_next(struct iterator *it) { /* Do nothing. */ }
 
-/*******************************************************************//**
-  'get' function implementation for an "invalid" iterator.
-***********************************************************************/
-static void *invalid_iter_get(const struct iterator *it)
-{
-  return NULL;
-}
+/*******************************************************************/ /**
+   'get' function implementation for an "invalid" iterator.
+ ***********************************************************************/
+static void *invalid_iter_get(const struct iterator *it) { return NULL; }
 
-/*******************************************************************//**
-  'valid' function implementation for an "invalid" iterator.
-***********************************************************************/
-static bool invalid_iter_valid(const struct iterator *it)
-{
-  return FALSE;
-}
+/*******************************************************************/ /**
+   'valid' function implementation for an "invalid" iterator.
+ ***********************************************************************/
+static bool invalid_iter_valid(const struct iterator *it) { return FALSE; }
 
-/*******************************************************************//**
-  Initializes the iterator vtable so that generic_iterate assumes that
-  the iterator is invalid.
-***********************************************************************/
+/*******************************************************************/ /**
+   Initializes the iterator vtable so that generic_iterate assumes that
+   the iterator is invalid.
+ ***********************************************************************/
 struct iterator *invalid_iter_init(struct iterator *it)
 {
   it->next = invalid_iter_next;

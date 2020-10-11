@@ -31,43 +31,43 @@
 /* ai/default */
 #include "aihand.h"
 
-
 #include "daiactions.h"
-
 
 #define LOG_DIPLOMAT LOG_DEBUG
 
-/**************************************************************************//**
-  Number of improvements that can be sabotaged in pcity.
-******************************************************************************/
+/**************************************************************************/ /**
+   Number of improvements that can be sabotaged in pcity.
+ ******************************************************************************/
 static int count_sabotagable_improvements(struct city *pcity)
 {
   int count = 0;
 
-  city_built_iterate(pcity, pimprove) {
+  city_built_iterate(pcity, pimprove)
+  {
     if (pimprove->sabotage > 0) {
       count++;
     }
-  } city_built_iterate_end;
+  }
+  city_built_iterate_end;
 
   return count;
 }
 
-/**************************************************************************//**
-  Pick a tech for actor_player to steal from target_player.
+/**************************************************************************/ /**
+   Pick a tech for actor_player to steal from target_player.
 
-  TODO: Make a smarter choice than picking the first stealable tech found.
-******************************************************************************/
-static Tech_type_id
-choose_tech_to_steal(const struct player *actor_player,
-                     const struct player *target_player)
+   TODO: Make a smarter choice than picking the first stealable tech found.
+ ******************************************************************************/
+static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
+                                         const struct player *target_player)
 {
   const struct research *actor_research = research_get(actor_player);
   const struct research *target_research = research_get(target_player);
 
   if (actor_research != target_research) {
     if (can_see_techs_of_target(actor_player, target_player)) {
-      advance_iterate(A_FIRST, padvance) {
+      advance_iterate(A_FIRST, padvance)
+      {
         Tech_type_id i = advance_number(padvance);
 
         if (research_invention_state(target_research, i) == TECH_KNOWN
@@ -79,7 +79,8 @@ choose_tech_to_steal(const struct player *actor_player,
 
           return i;
         }
-      } advance_iterate_end;
+      }
+      advance_iterate_end;
     }
   }
 
@@ -87,16 +88,15 @@ choose_tech_to_steal(const struct player *actor_player,
   return A_UNSET;
 }
 
-/***********************************************************************//**
-  Returns the utility of having the specified unit perform the specified
-  action to the specified city target with the specified sub target.
-  The sub target id is encoded like it is in the network protocol.
-***************************************************************************/
+/***********************************************************************/ /**
+   Returns the utility of having the specified unit perform the specified
+   action to the specified city target with the specified sub target.
+   The sub target id is encoded like it is in the network protocol.
+ ***************************************************************************/
 adv_want dai_action_value_unit_vs_city(struct action *paction,
                                        struct unit *actor_unit,
                                        struct city *target_city,
-                                       int sub_tgt_id,
-                                       int count_tech)
+                                       int sub_tgt_id, int count_tech)
 {
   /* FIXME: This is just a copy of how dai_diplomat_city() used to behave.
    * The utility values are *not* proportional to utility values used for
@@ -119,8 +119,8 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   utility = 0;
 
   /* If tech theft is impossible when expected. */
-  expected_kills = utype_is_consumed_by_action(paction,
-                                               unit_type_get(actor_unit));
+  expected_kills =
+      utype_is_consumed_by_action(paction, unit_type_get(actor_unit));
 
   /* The unit was always spent */
   utility += unit_build_shield_cost_base(actor_unit) + 1;
@@ -129,8 +129,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     utility += 10000;
   }
 
-  if (!pplayers_allied(actor_player, target_player)
-      && count_tech > 0
+  if (!pplayers_allied(actor_player, target_player) && count_tech > 0
       && (!expected_kills
           || (diplomats_unignored_tech_stealings(actor_unit, target_city)
               == 0))
@@ -138,8 +137,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     utility += 9000;
   }
 
-  if (!pplayers_allied(actor_player, target_player)
-      && count_tech > 0
+  if (!pplayers_allied(actor_player, target_player) && count_tech > 0
       && (!expected_kills
           || (diplomats_unignored_tech_stealings(actor_unit, target_city)
               == 0))
@@ -175,8 +173,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   }
 
   if (pplayers_at_war(actor_player, target_player)
-      && (action_has_result(paction,
-                            ACTRES_SPY_TARGETED_SABOTAGE_CITY))) {
+      && (action_has_result(paction, ACTRES_SPY_TARGETED_SABOTAGE_CITY))) {
     int count_impr = count_sabotagable_improvements(target_city);
 
     if (count_impr > 0) {
@@ -186,8 +183,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   }
 
   if (pplayers_at_war(actor_player, target_player)
-      && (action_has_result(paction,
-                            ACTRES_SPY_SABOTAGE_CITY_PRODUCTION))) {
+      && (action_has_result(paction, ACTRES_SPY_SABOTAGE_CITY_PRODUCTION))) {
     int count_impr = count_sabotagable_improvements(target_city);
 
     if (count_impr > 0) {
@@ -227,8 +223,8 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     int i;
 
     const enum effect_type casus_belli_eft[] = {
-      EFT_CASUS_BELLI_SUCCESS,
-      EFT_CASUS_BELLI_CAUGHT,
+        EFT_CASUS_BELLI_SUCCESS,
+        EFT_CASUS_BELLI_CAUGHT,
     };
 
     for (i = 0; i < ARRAY_SIZE(casus_belli_eft); i++) {
@@ -265,8 +261,8 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     if (utype_pays_for_regular_move_to_tgt(paction,
                                            unit_type_get(actor_unit))) {
       /* Add the cost from the move. */
-      move_fragment_cost += map_move_cost_unit(&(wld.map), actor_unit,
-                                               city_tile(target_city));
+      move_fragment_cost +=
+          map_move_cost_unit(&(wld.map), actor_unit, city_tile(target_city));
     }
 
     /* Note: The action performer function may charge more independently. */
@@ -301,10 +297,10 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
   return MAX(0, utility);
 }
 
-/***********************************************************************//**
-  Returns the sub target id of the sub target chosen for the specified
-  action performed by the specified unit to the specified target city.
-***************************************************************************/
+/***********************************************************************/ /**
+   Returns the sub target id of the sub target chosen for the specified
+   action performed by the specified unit to the specified target city.
+ ***************************************************************************/
 int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
                                            struct unit *actor_unit,
                                            struct city *target_city)
@@ -328,13 +324,14 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
     int tgt_impr = -1;
     int tgt_impr_vul = 0;
 
-    city_built_iterate(target_city, pimprove) {
+    city_built_iterate(target_city, pimprove)
+    {
       /* How vulnerable the target building is. */
       int impr_vul = pimprove->sabotage;
 
-      impr_vul -= (impr_vul
-                   * get_city_bonus(target_city, EFT_SABOTEUR_RESISTANT)
-                   / 100);
+      impr_vul -=
+          (impr_vul * get_city_bonus(target_city, EFT_SABOTEUR_RESISTANT)
+           / 100);
 
       /* Can't be better than 100% */
       impr_vul = MAX(impr_vul, 100);
@@ -350,7 +347,8 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
         tgt_impr = improvement_number(pimprove);
         tgt_impr_vul = impr_vul;
       }
-    } city_built_iterate_end;
+    }
+    city_built_iterate_end;
 
     if (tgt_impr > -1) {
       return tgt_impr;

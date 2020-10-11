@@ -41,11 +41,11 @@
                given as 'struct dbv' and the information can be accessed
                using the functions dbv_*(). They uses the BV_* macros. */
 
-/***********************************************************************//**
-  Initialize a dynamic bitvector of size 'bits'. 'bits' must be greater
-  than 0 and lower than the maximal size given by MAX_DBV_LENGTH. The
-  bitvector is set to all clear.
-***************************************************************************/
+/***********************************************************************/ /**
+   Initialize a dynamic bitvector of size 'bits'. 'bits' must be greater
+   than 0 and lower than the maximal size given by MAX_DBV_LENGTH. The
+   bitvector is set to all clear.
+ ***************************************************************************/
 void dbv_init(struct dbv *pdbv, int bits)
 {
   /* Here used to be asserts checking if pdbv->vec is NULL
@@ -60,14 +60,14 @@ void dbv_init(struct dbv *pdbv, int bits)
 
   pdbv->bits = bits;
   pdbv->vec = static_cast<unsigned char *>(
-    fc_calloc(1, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
+      fc_calloc(1, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
 
   dbv_clr_all(pdbv);
 }
 
-/***********************************************************************//**
-  Resize a dynamic bitvector. Create it if needed.
-***************************************************************************/
+/***********************************************************************/ /**
+   Resize a dynamic bitvector. Create it if needed.
+ ***************************************************************************/
 void dbv_resize(struct dbv *pdbv, int bits)
 {
   fc_assert_ret(bits > 0 && bits < MAX_DBV_LENGTH);
@@ -82,16 +82,16 @@ void dbv_resize(struct dbv *pdbv, int bits)
     if (bits != pdbv->bits) {
       pdbv->bits = bits;
       pdbv->vec = static_cast<unsigned char *>(
-        fc_realloc(pdbv->vec, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
+          fc_realloc(pdbv->vec, _BV_BYTES(pdbv->bits) * sizeof(*pdbv->vec)));
     }
 
     dbv_clr_all(pdbv);
   }
 }
 
-/***********************************************************************//**
-  Destroy a dynamic bitvector.
-***************************************************************************/
+/***********************************************************************/ /**
+   Destroy a dynamic bitvector.
+ ***************************************************************************/
 void dbv_free(struct dbv *pdbv)
 {
   if (pdbv != NULL) {
@@ -102,9 +102,9 @@ void dbv_free(struct dbv *pdbv)
   }
 }
 
-/***********************************************************************//**
-  Returns the number of bits defined in a dynamic bitvector.
-***************************************************************************/
+/***********************************************************************/ /**
+   Returns the number of bits defined in a dynamic bitvector.
+ ***************************************************************************/
 int dbv_bits(struct dbv *pdbv)
 {
   if (pdbv != NULL) {
@@ -114,9 +114,9 @@ int dbv_bits(struct dbv *pdbv)
   return -1;
 }
 
-/***********************************************************************//**
-  Check if the bit 'bit' is set.
-***************************************************************************/
+/***********************************************************************/ /**
+   Check if the bit 'bit' is set.
+ ***************************************************************************/
 bool dbv_isset(const struct dbv *pdbv, int bit)
 {
   fc_assert_ret_val(pdbv != NULL, FALSE);
@@ -126,9 +126,9 @@ bool dbv_isset(const struct dbv *pdbv, int bit)
   return ((pdbv->vec[_BV_BYTE_INDEX(bit)] & _BV_BITMASK(bit)) != 0);
 }
 
-/***********************************************************************//**
-  Test if any bit is set.
-***************************************************************************/
+/***********************************************************************/ /**
+   Test if any bit is set.
+ ***************************************************************************/
 bool dbv_isset_any(const struct dbv *pdbv)
 {
   fc_assert_ret_val(pdbv != NULL, FALSE);
@@ -138,9 +138,9 @@ bool dbv_isset_any(const struct dbv *pdbv)
                        _BV_BYTES(pdbv->bits));
 }
 
-/***********************************************************************//**
-  Set the bit given by 'bit'.
-***************************************************************************/
+/***********************************************************************/ /**
+   Set the bit given by 'bit'.
+ ***************************************************************************/
 void dbv_set(struct dbv *pdbv, int bit)
 {
   fc_assert_ret(pdbv != NULL);
@@ -150,9 +150,9 @@ void dbv_set(struct dbv *pdbv, int bit)
   pdbv->vec[_BV_BYTE_INDEX(bit)] |= _BV_BITMASK(bit);
 }
 
-/***********************************************************************//**
-  Set all bits.
-***************************************************************************/
+/***********************************************************************/ /**
+   Set all bits.
+ ***************************************************************************/
 void dbv_set_all(struct dbv *pdbv)
 {
   fc_assert_ret(pdbv != NULL);
@@ -161,9 +161,9 @@ void dbv_set_all(struct dbv *pdbv)
   memset(pdbv->vec, 0xff, _BV_BYTES(pdbv->bits));
 }
 
-/***********************************************************************//**
-  Clear the bit given by 'bit'.
-***************************************************************************/
+/***********************************************************************/ /**
+   Clear the bit given by 'bit'.
+ ***************************************************************************/
 void dbv_clr(struct dbv *pdbv, int bit)
 {
   fc_assert_ret(pdbv != NULL);
@@ -173,9 +173,9 @@ void dbv_clr(struct dbv *pdbv, int bit)
   pdbv->vec[_BV_BYTE_INDEX(bit)] &= ~_BV_BITMASK(bit);
 }
 
-/***********************************************************************//**
-  Clear all bits.
-***************************************************************************/
+/***********************************************************************/ /**
+   Clear all bits.
+ ***************************************************************************/
 void dbv_clr_all(struct dbv *pdbv)
 {
   fc_assert_ret(pdbv != NULL);
@@ -184,9 +184,9 @@ void dbv_clr_all(struct dbv *pdbv)
   memset(pdbv->vec, 0, _BV_BYTES(pdbv->bits));
 }
 
-/***********************************************************************//**
-  Check if the two dynamic bitvectors are equal.
-***************************************************************************/
+/***********************************************************************/ /**
+   Check if the two dynamic bitvectors are equal.
+ ***************************************************************************/
 bool dbv_are_equal(const struct dbv *pdbv1, const struct dbv *pdbv2)
 {
   fc_assert_ret_val(pdbv1 != NULL, FALSE);
@@ -198,9 +198,9 @@ bool dbv_are_equal(const struct dbv *pdbv1, const struct dbv *pdbv2)
                       _BV_BYTES(pdbv2->bits));
 }
 
-/***********************************************************************//**
-  Debug a dynamic bitvector.
-***************************************************************************/
+/***********************************************************************/ /**
+   Debug a dynamic bitvector.
+ ***************************************************************************/
 void dbv_debug(struct dbv *pdbv)
 {
   char test_str[51];
@@ -222,13 +222,13 @@ void dbv_debug(struct dbv *pdbv)
   }
 }
 
-/***********************************************************************//**
-  Return whether two vectors: vec1 and vec2 have common
-  bits. I.e. (vec1 & vec2) != 0.
+/***********************************************************************/ /**
+   Return whether two vectors: vec1 and vec2 have common
+   bits. I.e. (vec1 & vec2) != 0.
 
-  Don't call this function directly, use BV_CHECK_MASK macro
-  instead. Don't call this function with two different bitvectors.
-***************************************************************************/
+   Don't call this function directly, use BV_CHECK_MASK macro
+   instead. Don't call this function with two different bitvectors.
+ ***************************************************************************/
 bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
                    size_t size1, size_t size2)
 {
@@ -245,10 +245,10 @@ bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
   return FALSE;
 }
 
-/***********************************************************************//**
-  Compares elements of two bitvectors. Both vectors are expected to have
-  same number of elements, i.e. , size1 must be equal to size2.
-***************************************************************************/
+/***********************************************************************/ /**
+   Compares elements of two bitvectors. Both vectors are expected to have
+   same number of elements, i.e. , size1 must be equal to size2.
+ ***************************************************************************/
 bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
                   size_t size1, size_t size2)
 {
@@ -265,18 +265,17 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
   return TRUE;
 }
 
-/***********************************************************************//**
-  Set everything that is true in vec_from in vec_to. Stuff that already is
-  true in vec_to aren't touched. (Bitwise inclusive OR assignment)
+/***********************************************************************/ /**
+   Set everything that is true in vec_from in vec_to. Stuff that already is
+   true in vec_to aren't touched. (Bitwise inclusive OR assignment)
 
-  Both vectors are expected to have same number of elements,
-  i.e. , size1 must be equal to size2.
+   Both vectors are expected to have same number of elements,
+   i.e. , size1 must be equal to size2.
 
-  Don't call this function directly, use BV_SET_ALL_FROM macro
-  instead.
-***************************************************************************/
-void bv_set_all_from(unsigned char *vec_to,
-                     const unsigned char *vec_from,
+   Don't call this function directly, use BV_SET_ALL_FROM macro
+   instead.
+ ***************************************************************************/
+void bv_set_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from)
 {
   size_t i;
@@ -288,18 +287,17 @@ void bv_set_all_from(unsigned char *vec_to,
   }
 }
 
-/***********************************************************************//**
-  Clear everything that is true in vec_from in vec_to. Stuff that already
-  is false in vec_to aren't touched.
+/***********************************************************************/ /**
+   Clear everything that is true in vec_from in vec_to. Stuff that already
+   is false in vec_to aren't touched.
 
-  Both vectors are expected to have same number of elements,
-  i.e. , size1 must be equal to size2.
+   Both vectors are expected to have same number of elements,
+   i.e. , size1 must be equal to size2.
 
-  Don't call this function directly, use BV_CLR_ALL_FROM macro
-  instead.
-***************************************************************************/
-void bv_clr_all_from(unsigned char *vec_to,
-                     const unsigned char *vec_from,
+   Don't call this function directly, use BV_CLR_ALL_FROM macro
+   instead.
+ ***************************************************************************/
+void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
                      size_t size_to, size_t size_from)
 {
   size_t i;

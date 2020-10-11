@@ -39,9 +39,9 @@ extern QString current_theme;
 static QString def_app_style;
 static QString stylestring;
 
-/*************************************************************************//**
-  Loads a qt theme directory/theme_name
-*****************************************************************************/
+/*************************************************************************/ /**
+   Loads a qt theme directory/theme_name
+ *****************************************************************************/
 void qtg_gui_load_theme(const char *directory, const char *theme_name)
 {
   QString name;
@@ -94,54 +94,57 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   if (gui()) {
     gui()->reload_sidebar_icons();
   }
-  pal.setBrush(QPalette::Link, QColor(92,170,229));
-  pal.setBrush(QPalette::LinkVisited, QColor(54,150,229));
+  pal.setBrush(QPalette::Link, QColor(92, 170, 229));
+  pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
   QApplication::setPalette(pal);
 }
 
-/*************************************************************************//**
-  Clears a theme (sets default system theme)
-*****************************************************************************/
+/*************************************************************************/ /**
+   Clears a theme (sets default system theme)
+ *****************************************************************************/
 void qtg_gui_clear_theme()
 {
   if (!load_theme(FC_QT_DEFAULT_THEME_NAME)) {
     /* TRANS: No full stop after the URL, could cause confusion. */
     log_fatal(_("No Qt-client theme was found. For instructions on how to "
-                "get one, please visit %s"), WIKI_URL);
+                "get one, please visit %s"),
+              WIKI_URL);
     exit(EXIT_FAILURE);
   }
 }
 
-/*************************************************************************//**
-  Each gui has its own themes directories.
+/*************************************************************************/ /**
+   Each gui has its own themes directories.
 
-  Returns an array containing these strings and sets array size in count.
-  The caller is responsible for freeing the array and the paths.
-*****************************************************************************/
+   Returns an array containing these strings and sets array size in count.
+   The caller is responsible for freeing the array and the paths.
+ *****************************************************************************/
 char **qtg_get_gui_specific_themes_directories(int *count)
 {
   const struct strvec *data_dirs = get_data_dirs();
-  char **directories = (char **)fc_malloc(strvec_size(data_dirs)
-                                          * sizeof(char *));
+  char **directories =
+      (char **) fc_malloc(strvec_size(data_dirs) * sizeof(char *));
   int i = 0;
 
   *count = strvec_size(data_dirs);
-  strvec_iterate(data_dirs, data_dir) {
+  strvec_iterate(data_dirs, data_dir)
+  {
     char buf[strlen(data_dir) + strlen("/themes/gui-qt") + 1];
 
     fc_snprintf(buf, sizeof(buf), "%s/themes/gui-qt", data_dir);
 
     directories[i++] = fc_strdup(buf);
-  } strvec_iterate_end;
+  }
+  strvec_iterate_end;
 
   return directories;
 }
 
-/*************************************************************************//**
-  Return an array of names of usable themes in the given directory.
-  Array size is stored in count.
-  The caller is responsible for freeing the array and the names
-*****************************************************************************/
+/*************************************************************************/ /**
+   Return an array of names of usable themes in the given directory.
+   Array size is stored in count.
+   The caller is responsible for freeing the array and the names
+ *****************************************************************************/
 char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
 {
   QStringList sl, theme_list;
@@ -158,9 +161,9 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   sl << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
   name = QString(directory);
 
-  foreach(str, sl) {
-    f.setFileName(name + DIR_SEPARATOR + str
-                  + DIR_SEPARATOR + "resource.qss");
+  foreach (str, sl) {
+    f.setFileName(name + DIR_SEPARATOR + str + DIR_SEPARATOR
+                  + "resource.qss");
     if (!f.exists()) {
       continue;
     }

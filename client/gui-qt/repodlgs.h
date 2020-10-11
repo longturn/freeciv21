@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -45,7 +45,7 @@ class QScrollArea;
 class QTableWidget;
 class QTableWidgetItem;
 
-class unittype_item: public QFrame {
+class unittype_item : public QFrame {
 
   Q_OBJECT
 
@@ -78,7 +78,7 @@ protected:
   void wheelEvent(QWheelEvent *event);
 };
 
-class units_reports: public fcwidget {
+class units_reports : public fcwidget {
 
   Q_DISABLE_COPY(units_reports);
   Q_OBJECT
@@ -118,8 +118,7 @@ struct qlist_item {
   Helper item for research diagram, about drawn rectangles and what
   tech/unit/improvement they point to.
 ****************************************************************************/
-class req_tooltip_help
-{
+class req_tooltip_help {
 public:
   req_tooltip_help();
   QRect rect;
@@ -131,8 +130,7 @@ public:
 /****************************************************************************
   Custom widget representing research diagram in science_report
 ****************************************************************************/
-class research_diagram: public QWidget
-{
+class research_diagram : public QWidget {
   Q_OBJECT
 
 public:
@@ -143,6 +141,7 @@ public:
   QSize size();
 private slots:
   void show_tooltip();
+
 private:
   void mousePressEvent(QMouseEvent *event);
   void mouseMoveEvent(QMouseEvent *event);
@@ -153,11 +152,10 @@ private:
   bool timer_active;
   int width;
   int height;
-  QList<req_tooltip_help*> tt_help;
+  QList<req_tooltip_help *> tt_help;
   QPoint tooltip_pos;
   QString tooltip_text;
   QRect tooltip_rect;
-  
 };
 
 /****************************************************************************
@@ -165,8 +163,7 @@ private:
   Uses string "SCI" to mark it as opened
   You can check it using if (gui()->is_repo_dlg_open("SCI"))
 ****************************************************************************/
-class science_report: public QWidget
-{
+class science_report : public QWidget {
   Q_OBJECT
 
   QComboBox *goal_combo;
@@ -197,12 +194,10 @@ private slots:
   void goal_tech_changed(int index);
 };
 
-
 /****************************************************************************
   Tab widget to display economy report (F5)
 ****************************************************************************/
-class eco_report: public QWidget
-{
+class eco_report : public QWidget {
   Q_OBJECT
   QPushButton *disband_button;
   QPushButton *sell_button;
@@ -227,15 +222,13 @@ private slots:
   void disband_units();
   void sell_buildings();
   void sell_redundant();
-  void selection_changed(const QItemSelection &sl,
-                         const QItemSelection &ds);
+  void selection_changed(const QItemSelection &sl, const QItemSelection &ds);
 };
 
 /****************************************************************************
   Tab widget to display economy report (F5)
 ****************************************************************************/
-class endgame_report: public QWidget
-{
+class endgame_report : public QWidget {
   Q_OBJECT
   QTableWidget *end_widget;
 
@@ -248,9 +241,7 @@ public:
 private:
   int index;
   int players;
-
 };
-
 
 bool comp_less_than(const qlist_item &q1, const qlist_item &q2);
 void popdown_economy_report();

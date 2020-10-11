@@ -91,18 +91,17 @@ enum shortcut_id {
   SC_GOJOINCITY = 59
 };
 
-
 /**************************************************************************
   Base shortcut struct
 **************************************************************************/
-struct fc_shortcut
-{
+struct fc_shortcut {
   shortcut_id id;
   int key;
   Qt::MouseButton mouse;
   Qt::KeyboardModifiers mod;
   QString str;
-  bool operator==(const fc_shortcut& a) const {
+  bool operator==(const fc_shortcut &a) const
+  {
     return ((key == a.key) && (mouse == a.mouse) && (mod == a.mod));
   }
 };
@@ -110,20 +109,20 @@ struct fc_shortcut
 /**************************************************************************
   Class with static members holding all shortcuts
 **************************************************************************/
-class fc_shortcuts
-{
+class fc_shortcuts {
   Q_DISABLE_COPY(fc_shortcuts);
   fc_shortcuts();
-  static fc_shortcuts* m_instance;
+  static fc_shortcuts *m_instance;
 
 public:
   ~fc_shortcuts();
-  static fc_shortcuts* sc();
+  static fc_shortcuts *sc();
   static void drop();
-  static QMap<shortcut_id, fc_shortcut*> hash;
+  static QMap<shortcut_id, fc_shortcut *> hash;
+
 public:
   static void init_default(bool read);
-  fc_shortcut* get_shortcut(shortcut_id id);
+  fc_shortcut *get_shortcut(shortcut_id id);
   shortcut_id get_id(fc_shortcut *sc);
   void set_shortcut(fc_shortcut *sc);
   QString get_desc(shortcut_id id);
@@ -132,13 +131,13 @@ public:
 /**************************************************************************
   Widget for picking shortcuts
 **************************************************************************/
-class line_edit : public QLineEdit
-{
+class line_edit : public QLineEdit {
   Q_OBJECT
 public:
   line_edit();
   fc_shortcut shc;
-  protected:
+
+protected:
   void mousePressEvent(QMouseEvent *event);
   void keyReleaseEvent(QKeyEvent *event);
 };
@@ -146,14 +145,15 @@ public:
 /**************************************************************************
   Popup for picking shortcuts
 **************************************************************************/
-class fc_shortcut_popup : public QDialog
-{
+class fc_shortcut_popup : public QDialog {
 public:
   fc_shortcut_popup(QWidget *parent);
   void run(fc_shortcut *s);
   fc_shortcut *sc;
+
 protected:
- void closeEvent(QCloseEvent*);
+  void closeEvent(QCloseEvent *);
+
 private:
   bool check_if_exist();
   line_edit edit;
@@ -162,10 +162,10 @@ private:
 /**************************************************************************
   QPushButton holding shortcut
 **************************************************************************/
-class fc_sc_button : public QPushButton
-{
+class fc_sc_button : public QPushButton {
   Q_OBJECT
   QString err_message;
+
 public:
   fc_sc_button();
   fc_sc_button(fc_shortcut *s);
@@ -179,24 +179,22 @@ private slots:
 /**************************************************************************
   Shortcut dialog
 **************************************************************************/
-class fc_shortcuts_dialog : public  QDialog
-{
+class fc_shortcuts_dialog : public QDialog {
   Q_OBJECT
   QVBoxLayout *main_layout;
   QVBoxLayout *scroll_layout;
   QDialogButtonBox *button_box;
-  QMap<shortcut_id, fc_shortcut*> *hashcopy;
+  QMap<shortcut_id, fc_shortcut *> *hashcopy;
   void add_option(fc_shortcut *sc);
   void init();
   void refresh();
+
 public:
   fc_shortcuts_dialog(QWidget *parent = 0);
-virtual ~fc_shortcuts_dialog();
+  virtual ~fc_shortcuts_dialog();
 private slots:
   void apply_option(int response);
   void edit_shortcut();
 };
-
-
 
 #endif /* FC__SHORTCUSDLG_H */

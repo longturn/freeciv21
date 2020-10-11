@@ -18,7 +18,7 @@
 #include "fc_prehdrs.h"
 
 #ifdef FREECIV_MSWINDOWS
-#include <windows.h>	/* LoadLibrary() */
+#include <windows.h> /* LoadLibrary() */
 #endif
 
 #include <math.h>
@@ -33,8 +33,8 @@
 #include "capstr.h"
 #include "dataio.h"
 #include "deprecations.h"
-#include "fcbacktrace.h"
 #include "fc_cmdline.h"
+#include "fcbacktrace.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -84,38 +84,37 @@
 #include "cityrepdata.h"
 #include "climisc.h"
 #include "clinet.h"
-#include "connectdlg_common.h"  /* client_kill_server() */
-#include "control.h" 
+#include "connectdlg_common.h" /* client_kill_server() */
+#include "control.h"
 #include "editor.h"
 #include "global_worklist.h"
-#include "helpdata.h"           /* boot_help_texts() */
+#include "helpdata.h" /* boot_help_texts() */
 #include "mapview_common.h"
 #include "music.h"
 #include "options.h"
 #include "overview_common.h"
 #include "packhand.h"
-#include "tilespec.h"
 #include "themes_common.h"
+#include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
 #include "zoom.h"
 
 /* client/agents */
 #include "agents.h"
-#include "cma_core.h"           /* kludge */
+#include "cma_core.h" /* kludge */
 
 /* client/luascript */
 #include "script_client.h"
 
 #include "client_main.h"
 
-
 static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
                                                 bool knowledge);
-static struct terrain
-  *mapimg_client_tile_terrain(const struct tile *ptile,
-                              const struct player *pplayer, bool knowledge);
+static struct terrain *
+mapimg_client_tile_terrain(const struct tile *ptile,
+                           const struct player *pplayer, bool knowledge);
 static struct player *mapimg_client_tile_owner(const struct tile *ptile,
                                                const struct player *pplayer,
                                                bool knowledge);
@@ -141,8 +140,9 @@ char server_host[512] = "\0";
 char user_name[512] = "\0";
 char password[MAX_LEN_PASSWORD] = "\0";
 char metaserver[512] = "\0";
-int  server_port = -1;
-bool auto_connect = FALSE; /* TRUE = skip "Connect to Freeciv Server" dialog */
+int server_port = -1;
+bool auto_connect =
+    FALSE;               /* TRUE = skip "Connect to Freeciv Server" dialog */
 bool auto_spawn = FALSE; /* TRUE = skip main menu, start local server */
 enum announce_type announce;
 
@@ -164,10 +164,10 @@ bool hackless = FALSE;
 
 static bool client_quitting = FALSE;
 
-/**********************************************************************//**
-  Convert a text string from the internal to the data encoding, when it
-  is written to the network.
-**************************************************************************/
+/**********************************************************************/ /**
+   Convert a text string from the internal to the data encoding, when it
+   is written to the network.
+ **************************************************************************/
 static char *put_conv(const char *src, size_t *length)
 {
   char *out = internal_to_data_string_malloc(src);
@@ -181,13 +181,12 @@ static char *put_conv(const char *src, size_t *length)
   }
 }
 
-/**********************************************************************//**
-  Convert a text string from the data to the internal encoding when it is
-  first read from the network.  Returns FALSE if the destination isn't
-  large enough or the source was bad.
-**************************************************************************/
-static bool get_conv(char *dst, size_t ndst,
-		     const char *src, size_t nsrc)
+/**********************************************************************/ /**
+   Convert a text string from the data to the internal encoding when it is
+   first read from the network.  Returns FALSE if the destination isn't
+   large enough or the source was bad.
+ **************************************************************************/
+static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 {
   char *out = data_to_internal_string_malloc(src);
   bool ret = TRUE;
@@ -211,27 +210,24 @@ static bool get_conv(char *dst, size_t ndst,
   return ret;
 }
 
-/**********************************************************************//**
-  Set up charsets for the client.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set up charsets for the client.
+ **************************************************************************/
 static void charsets_init(void)
 {
   dio_set_put_conv_callback(put_conv);
   dio_set_get_conv_callback(get_conv);
 }
 
-/**********************************************************************//**
-  This is called at program exit in any emergency. This is registered
-  as at_quick_exit() callback, so no destructor kind of actions here
-**************************************************************************/
-static void emergency_exit(void)
-{
-  client_kill_server(TRUE);
-}
+/**********************************************************************/ /**
+   This is called at program exit in any emergency. This is registered
+   as at_quick_exit() callback, so no destructor kind of actions here
+ **************************************************************************/
+static void emergency_exit(void) { client_kill_server(TRUE); }
 
-/**********************************************************************//**
-  This is called at program exit.
-**************************************************************************/
+/**********************************************************************/ /**
+   This is called at program exit.
+ **************************************************************************/
 static void at_exit(void)
 {
   emergency_exit();
@@ -241,9 +237,9 @@ static void at_exit(void)
   fc_destroy_ow_mutex();
 }
 
-/**********************************************************************//**
-  Called only by set_client_state() below.
-**************************************************************************/
+/**********************************************************************/ /**
+   Called only by set_client_state() below.
+ **************************************************************************/
 static void client_game_init(void)
 {
   client.conn.playing = NULL;
@@ -264,9 +260,9 @@ static void client_game_init(void)
   animations_init();
 }
 
-/**********************************************************************//**
-  Called by set_client_state() and client_exit() below.
-**************************************************************************/
+/**********************************************************************/ /**
+   Called by set_client_state() and client_exit() below.
+ **************************************************************************/
 static void client_game_free(void)
 {
   editgui_popdown_all();
@@ -293,10 +289,10 @@ static void client_game_free(void)
   client.conn.observer = FALSE;
 }
 
-/**********************************************************************//**
-  Called only by set_client_state() below.  Just free what is needed to
-  change view (player target).
-**************************************************************************/
+/**********************************************************************/ /**
+   Called only by set_client_state() below.  Just free what is needed to
+   change view (player target).
+ **************************************************************************/
 static void client_game_reset(void)
 {
   editgui_popdown_all();
@@ -316,9 +312,9 @@ static void client_game_reset(void)
   link_marks_init();
 }
 
-/**********************************************************************//**
-  Entry point for common client code.
-**************************************************************************/
+/**********************************************************************/ /**
+   Entry point for common client code.
+ **************************************************************************/
 int client_main(int argc, char *argv[])
 {
   int i;
@@ -331,13 +327,13 @@ int client_main(int argc, char *argv[])
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-# ifndef FREECIV_NDEBUG
+#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
-#  ifdef FREECIV_DEBUG
+#ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
-#  endif /* FREECIV_DEBUG */
+#endif /* FREECIV_DEBUG */
   }
-# endif /* FREECIV_NDEBUG */
+#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   i_am_client(); /* Tell to libfreeciv that we are client */
@@ -379,84 +375,90 @@ int client_main(int argc, char *argv[])
       struct cmdhelp *help = cmdhelp_new(argv[0]);
 
       cmdhelp_add(help, "A",
-                  /* TRANS: "Announce" is exactly what user must type, do not translate. */
+                  /* TRANS: "Announce" is exactly what user must type, do not
+                     translate. */
                   _("Announce PROTO"),
                   _("Announce game in LAN using protocol PROTO "
                     "(IPv4/IPv6/none)"));
-      cmdhelp_add(help, "a", "autoconnect",
-                  _("Skip connect dialog"));
+      cmdhelp_add(help, "a", "autoconnect", _("Skip connect dialog"));
 #ifdef FREECIV_DEBUG
       cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
+                  /* TRANS: "debug" is exactly what user must type, do not
+                     translate. */
                   _("debug LEVEL"),
                   _("Set debug log level (one of f,e,w,n,v,d, or "
                     "d:file1,min,max:...)"));
 #else  /* FREECIV_DEBUG */
       cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
-                  _("debug LEVEL"),
-                  _("Set debug log level (%d to %d)"),
+                  /* TRANS: "debug" is exactly what user must type, do not
+                     translate. */
+                  _("debug LEVEL"), _("Set debug log level (%d to %d)"),
                   LOG_FATAL, LOG_VERBOSE);
 #endif /* FREECIV_DEBUG */
 #ifndef FREECIV_NDEBUG
       cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not translate. */
+                  /* TRANS: "Fatal" is exactly what user must type, do not
+                     translate. */
                   _("Fatal [SIGNAL]"),
                   _("Raise a signal on failed assertion"));
 #endif /* FREECIV_NDEBUG */
       cmdhelp_add(help, "f",
-                  /* TRANS: "file" is exactly what user must type, do not translate. */
-                  _("file FILE"),
-                  _("Load saved game FILE"));
-      cmdhelp_add(help, "h", "help",
-                  _("Print a summary of the options"));
+                  /* TRANS: "file" is exactly what user must type, do not
+                     translate. */
+                  _("file FILE"), _("Load saved game FILE"));
+      cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
 #ifdef FREECIV_DEBUG
-      cmdhelp_add(help, "H", "Hackless",
-                  _("Do not request hack access to local, but not spawned, server"));
+      cmdhelp_add(
+          help, "H", "Hackless",
+          _("Do not request hack access to local, but not spawned, server"));
 #endif /* FREECIV_DEBUG */
       cmdhelp_add(help, "l",
-                  /* TRANS: "log" is exactly what user must type, do not translate. */
+                  /* TRANS: "log" is exactly what user must type, do not
+                     translate. */
                   _("log FILE"),
                   _("Use FILE as logfile (spawned server also uses this)"));
       cmdhelp_add(help, "M",
-                  /* TRANS: "Meta" is exactly what user must type, do not translate. */
-                  _("Meta HOST"),
-                  _("Connect to the metaserver at HOST"));
+                  /* TRANS: "Meta" is exactly what user must type, do not
+                     translate. */
+                  _("Meta HOST"), _("Connect to the metaserver at HOST"));
       cmdhelp_add(help, "n",
-                  /* TRANS: "name" is exactly what user must type, do not translate. */
-                  _("name NAME"),
-                  _("Use NAME as username on server"));
+                  /* TRANS: "name" is exactly what user must type, do not
+                     translate. */
+                  _("name NAME"), _("Use NAME as username on server"));
       cmdhelp_add(help, "p",
-                  /* TRANS: "port" is exactly what user must type, do not translate. */
+                  /* TRANS: "port" is exactly what user must type, do not
+                     translate. */
                   _("port PORT"),
                   _("Connect to server port PORT (usually with -a)"));
       cmdhelp_add(help, "P",
-                  /* TRANS: "Plugin" is exactly what user must type, do not translate. */
-                  _("Plugin PLUGIN"),
-                  _("Use PLUGIN for sound output %s"),
+                  /* TRANS: "Plugin" is exactly what user must type, do not
+                     translate. */
+                  _("Plugin PLUGIN"), _("Use PLUGIN for sound output %s"),
                   audio_get_all_plugin_names());
       cmdhelp_add(help, "r",
-                  /* TRANS: "read" is exactly what user must type, do not translate. */
+                  /* TRANS: "read" is exactly what user must type, do not
+                     translate. */
                   _("read FILE"),
                   _("Read startup script FILE (for spawned server only)"));
       cmdhelp_add(help, "s",
-                  /* TRANS: "server" is exactly what user must type, do not translate. */
+                  /* TRANS: "server" is exactly what user must type, do not
+                     translate. */
                   _("server HOST"),
                   _("Connect to the server at HOST (usually with -a)"));
       cmdhelp_add(help, "S",
-                  /* TRANS: "Sound" is exactly what user must type, do not translate. */
-                  _("Sound FILE"),
-                  _("Read sound tags from FILE"));
+                  /* TRANS: "Sound" is exactly what user must type, do not
+                     translate. */
+                  _("Sound FILE"), _("Read sound tags from FILE"));
       cmdhelp_add(help, "m",
-                  /* TRANS: "music" is exactly what user must type, do not translate. */
-                  _("music FILE"),
-                  _("Read music tags from FILE"));
+                  /* TRANS: "music" is exactly what user must type, do not
+                     translate. */
+                  _("music FILE"), _("Read music tags from FILE"));
       cmdhelp_add(help, "t",
-                  /* TRANS: "tiles" is exactly what user must type, do not translate. */
+                  /* TRANS: "tiles" is exactly what user must type, do not
+                     translate. */
                   _("tiles FILE"),
                   _("Use data file FILE.tilespec for tiles"));
-      cmdhelp_add(help, "v", "version",
-                  _("Print the version number"));
+      cmdhelp_add(help, "v", "version", _("Print the version number"));
       cmdhelp_add(help, "w", "warnings",
                   _("Warn about deprecated modpack constructs"));
 
@@ -488,27 +490,35 @@ int client_main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
 #endif /* FREECIV_NDEBUG */
-    } else  if ((option = get_option_malloc("--read", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--read", argv, &i, argc, TRUE))) {
       scriptfile = option;
-    } else if ((option = get_option_malloc("--file", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--file", argv, &i, argc, TRUE))) {
       savefile = option;
       auto_spawn = TRUE;
-    } else if ((option = get_option_malloc("--name", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--name", argv, &i, argc, FALSE))) {
       sz_strlcpy(user_name, option);
       free(option);
-    } else if ((option = get_option_malloc("--Meta", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--Meta", argv, &i, argc, FALSE))) {
       sz_strlcpy(metaserver, option);
       free(option);
-    } else if ((option = get_option_malloc("--Sound", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--Sound", argv, &i, argc, FALSE))) {
       sz_strlcpy(sound_set_name, option);
       free(option);
-    } else if ((option = get_option_malloc("--music", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--music", argv, &i, argc, FALSE))) {
       sz_strlcpy(music_set_name, option);
       free(option);
-    } else if ((option = get_option_malloc("--Plugin", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--Plugin", argv, &i, argc, FALSE))) {
       sz_strlcpy(sound_plugin_name, option);
       free(option);
-    } else if ((option = get_option_malloc("--port", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--port", argv, &i, argc, FALSE))) {
       if (!str_to_int(option, &server_port)) {
         fc_fprintf(stderr,
                    _("Invalid port \"%s\" specified with --port option.\n"),
@@ -517,24 +527,29 @@ int client_main(int argc, char *argv[])
         exit(EXIT_FAILURE);
       }
       free(option);
-    } else if ((option = get_option_malloc("--server", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--server", argv, &i, argc, FALSE))) {
       sz_strlcpy(server_host, option);
       free(option);
     } else if (is_option("--autoconnect", argv[i])) {
       auto_connect = TRUE;
-    } else if ((option = get_option_malloc("--debug", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--debug", argv, &i, argc, FALSE))) {
       if (!log_parse_level_str(option, &loglevel)) {
         fc_fprintf(stderr,
                    _("Invalid debug level \"%s\" specified with --debug "
-                     "option.\n"), option);
+                     "option.\n"),
+                   option);
         fc_fprintf(stderr, _("Try using --help.\n"));
         exit(EXIT_FAILURE);
       }
       free(option);
-    } else if ((option = get_option_malloc("--tiles", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--tiles", argv, &i, argc, FALSE))) {
       sz_strlcpy(forced_tileset_name, option);
       free(option);
-    } else if ((option = get_option_malloc("--Announce", argv, &i, argc, FALSE))) {
+    } else if ((option = get_option_malloc("--Announce", argv, &i, argc,
+                                           FALSE))) {
       if (!strcasecmp(option, "ipv4")) {
         announce = ANNOUNCE_IPV4;
       } else if (!strcasecmp(option, "none")) {
@@ -578,7 +593,7 @@ int client_main(int argc, char *argv[])
 
   /* after log_init: */
 
-  (void)user_username(gui_options.default_user_name, MAX_LEN_NAME);
+  (void) user_username(gui_options.default_user_name, MAX_LEN_NAME);
   if (!is_valid_username(gui_options.default_user_name)) {
     char buf[sizeof(gui_options.default_user_name)];
 
@@ -587,8 +602,8 @@ int client_main(int argc, char *argv[])
       sz_strlcpy(gui_options.default_user_name, buf);
     } else {
       fc_snprintf(gui_options.default_user_name,
-                  sizeof(gui_options.default_user_name),
-                  "player%d", fc_rand(10000));
+                  sizeof(gui_options.default_user_name), "player%d",
+                  fc_rand(10000));
     }
   }
 
@@ -604,7 +619,7 @@ int client_main(int argc, char *argv[])
 
   fc_init_ow_mutex();
 
-  /* register exit handler */ 
+  /* register exit handler */
   atexit(at_exit);
   fc_at_quick_exit(emergency_exit);
 
@@ -624,7 +639,7 @@ int client_main(int argc, char *argv[])
     sz_strlcpy(music_set_name, gui_options.default_music_set_name);
   }
   if (sound_plugin_name[0] == '\0') {
-    sz_strlcpy(sound_plugin_name, gui_options.default_sound_plugin_name); 
+    sz_strlcpy(sound_plugin_name, gui_options.default_sound_plugin_name);
   }
   if (server_host[0] == '\0') {
     sz_strlcpy(server_host, gui_options.default_server_host);
@@ -632,7 +647,7 @@ int client_main(int argc, char *argv[])
     sz_strlcpy(gui_options.default_server_host, server_host);
   }
   if (user_name[0] == '\0') {
-    sz_strlcpy(user_name, gui_options.default_user_name); 
+    sz_strlcpy(user_name, gui_options.default_user_name);
   }
   if (metaserver[0] == '\0') {
     /* FIXME: Find a cleaner way to achieve this. */
@@ -646,7 +661,9 @@ int client_main(int argc, char *argv[])
       log_normal(_("Default metaserver has been set to value \"%s\"."),
                  DEFAULT_METASERVER_OPTION);
     }
-    if (0 == strcmp(gui_options.default_metaserver, DEFAULT_METASERVER_OPTION)) {
+    if (0
+        == strcmp(gui_options.default_metaserver,
+                  DEFAULT_METASERVER_OPTION)) {
       sz_strlcpy(metaserver, FREECIV_META_URL);
     } else {
       sz_strlcpy(metaserver, gui_options.default_metaserver);
@@ -691,9 +708,9 @@ int client_main(int argc, char *argv[])
   return EXIT_SUCCESS;
 }
 
-/**********************************************************************//**
-  Write messages from option saving to the log.
-**************************************************************************/
+/**********************************************************************/ /**
+   Write messages from option saving to the log.
+ **************************************************************************/
 static void log_option_save_msg(enum log_level lvl, const char *msg, ...)
 {
   va_list args;
@@ -703,10 +720,10 @@ static void log_option_save_msg(enum log_level lvl, const char *msg, ...)
   va_end(args);
 }
 
-/**********************************************************************//**
-  Main client execution stop function. This calls ui_exit() and not the
-  other way around.
-**************************************************************************/
+/**********************************************************************/ /**
+   Main client execution stop function. This calls ui_exit() and not the
+   other way around.
+ **************************************************************************/
 void client_exit(void)
 {
   if (client_state() >= C_S_PREPARING) {
@@ -749,21 +766,17 @@ void client_exit(void)
   exit(EXIT_SUCCESS);
 }
 
-
-/**********************************************************************//**
-  Handle packet received from server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Handle packet received from server.
+ **************************************************************************/
 void client_packet_input(void *packet, int type)
 {
-  if (!client.conn.established
-      && PACKET_CONN_PING != type
+  if (!client.conn.established && PACKET_CONN_PING != type
       && PACKET_PROCESSING_STARTED != type
       && PACKET_PROCESSING_FINISHED != type
       && PACKET_SERVER_JOIN_REPLY != type
-      && PACKET_AUTHENTICATION_REQ != type
-      && PACKET_SERVER_SHUTDOWN != type
-      && PACKET_CONNECT_MSG != type
-      && PACKET_EARLY_CHAT_MSG != type
+      && PACKET_AUTHENTICATION_REQ != type && PACKET_SERVER_SHUTDOWN != type
+      && PACKET_CONNECT_MSG != type && PACKET_EARLY_CHAT_MSG != type
       && PACKET_SERVER_INFO != type) {
     log_error("Received packet %s (%d) before establishing connection!",
               packet_name(static_cast<packet_type>(type)), type);
@@ -774,21 +787,17 @@ void client_packet_input(void *packet, int type)
   }
 }
 
-/**********************************************************************//**
-  Handle user ending his/her turn.
-**************************************************************************/
-void user_ended_turn(void)
-{
-  send_turn_done();
-}
+/**********************************************************************/ /**
+   Handle user ending his/her turn.
+ **************************************************************************/
+void user_ended_turn(void) { send_turn_done(); }
 
-/**********************************************************************//**
-  Send information about player having finished his/her turn to server.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send information about player having finished his/her turn to server.
+ **************************************************************************/
 void send_turn_done(void)
 {
-  log_debug("send_turn_done() can_end_turn=%d",
-            can_end_turn());
+  log_debug("send_turn_done() can_end_turn=%d", can_end_turn());
 
   if (!can_end_turn()) {
     /*
@@ -812,17 +821,17 @@ void send_turn_done(void)
   update_turn_done_button_state();
 }
 
-/**********************************************************************//**
-  Send request for some report to server
-**************************************************************************/
+/**********************************************************************/ /**
+   Send request for some report to server
+ **************************************************************************/
 void send_report_request(enum report_type type)
 {
   dsend_packet_report_req(&client.conn, type);
 }
 
-/**********************************************************************//**
-  Change client state.
-**************************************************************************/
+/**********************************************************************/ /**
+   Change client state.
+ **************************************************************************/
 void set_client_state(enum client_states newstate)
 {
   enum client_states oldstate = civclient_state;
@@ -840,10 +849,10 @@ void set_client_state(enum client_states newstate)
   if (auto_connect && newstate == C_S_DISCONNECTED) {
     if (oldstate == C_S_DISCONNECTED) {
       log_fatal(_("There was an error while auto connecting; aborting."));
-        exit(EXIT_FAILURE);
+      exit(EXIT_FAILURE);
     } else {
       start_autoconnecting_to_server();
-      auto_connect = FALSE;     /* Don't try this again. */
+      auto_connect = FALSE; /* Don't try this again. */
     }
   }
 
@@ -920,7 +929,7 @@ void set_client_state(enum client_states newstate)
   case C_S_RUNNING:
     if (oldstate == C_S_PREPARING) {
       popdown_races_dialog();
-      stop_menu_music();     /* stop intro sound loop. */
+      stop_menu_music(); /* stop intro sound loop. */
     }
 
     init_city_report_game_data();
@@ -930,7 +939,7 @@ void set_client_state(enum client_states newstate)
       research_update(research_get(pplayer));
     }
     role_unit_precalcs();
-    boot_help_texts();   /* reboot with player */
+    boot_help_texts(); /* reboot with player */
     global_worklists_build();
     can_slide = FALSE;
     unit_focus_update();
@@ -945,7 +954,7 @@ void set_client_state(enum client_states newstate)
 
     refresh_overview_canvas();
 
-    update_info_label();        /* get initial population right */
+    update_info_label(); /* get initial population right */
     unit_focus_update();
     update_unit_info_label(get_units_in_focus());
 
@@ -959,11 +968,13 @@ void set_client_state(enum client_states newstate)
     if (C_S_RUNNING == oldstate) {
       /* Extra kludge for end-game handling of the CMA. */
       if (pplayer && pplayer->cities) {
-        city_list_iterate(pplayer->cities, pcity) {
+        city_list_iterate(pplayer->cities, pcity)
+        {
           if (cma_is_city_under_agent(pcity, NULL)) {
             cma_release_city(pcity);
           }
-        } city_list_iterate_end;
+        }
+        city_list_iterate_end;
       }
       popdown_all_city_dialogs();
       close_all_diplomacy_dialogs();
@@ -977,7 +988,7 @@ void set_client_state(enum client_states newstate)
         research_update(research_get(pplayer));
       }
       role_unit_precalcs();
-      boot_help_texts();            /* reboot */
+      boot_help_texts(); /* reboot */
       global_worklists_build();
       unit_focus_set(NULL);
       set_client_page(PAGE_GAME);
@@ -1003,21 +1014,17 @@ void set_client_state(enum client_states newstate)
   set_server_busy(FALSE);
 }
 
-/**********************************************************************//**
-  Return current client state.
-**************************************************************************/
-enum client_states client_state(void)
-{
-  return civclient_state;
-}
+/**********************************************************************/ /**
+   Return current client state.
+ **************************************************************************/
+enum client_states client_state(void) { return civclient_state; }
 
-/**********************************************************************//**
-  Remove pconn from all connection lists in client, then free it.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove pconn from all connection lists in client, then free it.
+ **************************************************************************/
 void client_remove_cli_conn(struct connection *pconn)
 {
-  fc_assert_msg(pconn != NULL,
-                "Trying to remove a non existing connection");
+  fc_assert_msg(pconn != NULL, "Trying to remove a non existing connection");
 
   if (NULL != pconn->playing) {
     conn_list_remove(pconn->playing->connections, pconn);
@@ -1028,14 +1035,13 @@ void client_remove_cli_conn(struct connection *pconn)
   free(pconn);
 }
 
-/**********************************************************************//**
-  Remove (and free) all connections from all connection lists in client.
-  Assumes game.all_connections is properly maintained with all connections.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove (and free) all connections from all connection lists in client.
+   Assumes game.all_connections is properly maintained with all connections.
+ **************************************************************************/
 void client_remove_all_cli_conn(void)
 {
-  fc_assert_msg(game.all_connections != NULL,
-                "Connection list missing");
+  fc_assert_msg(game.all_connections != NULL, "Connection list missing");
 
   while (conn_list_size(game.all_connections) > 0) {
     struct connection *pconn = conn_list_get(game.all_connections, 0);
@@ -1043,26 +1049,25 @@ void client_remove_all_cli_conn(void)
   }
 }
 
-/**********************************************************************//**
-  Send attribute block.
-**************************************************************************/
+/**********************************************************************/ /**
+   Send attribute block.
+ **************************************************************************/
 void send_attribute_block_request(void)
 {
   send_packet_player_attribute_block(&client.conn);
 }
 
-/**********************************************************************//**
-  Wait until server has responsed to given request id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Wait until server has responsed to given request id.
+ **************************************************************************/
 void wait_till_request_got_processed(int request_id)
 {
-  input_from_server_till_request_got_processed(client.conn.sock,
-					       request_id);
+  input_from_server_till_request_got_processed(client.conn.sock, request_id);
 }
 
-/**********************************************************************//**
-  Returns whether client is observer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns whether client is observer.
+ **************************************************************************/
 bool client_is_observer(void)
 {
   return client.conn.established && client.conn.observer;
@@ -1084,12 +1089,12 @@ static bool waiting_turn_change = FALSE;
 static int seconds_shown_to_turndone;
 static int seconds_shown_to_new_turn;
 
-/**********************************************************************//**
-  Reset the number of seconds to turndone from an "authentic" source.
+/**********************************************************************/ /**
+   Reset the number of seconds to turndone from an "authentic" source.
 
-  The seconds are taken as a double even though most callers will just
-  know an integer value.
-**************************************************************************/
+   The seconds are taken as a double even though most callers will just
+   know an integer value.
+ **************************************************************************/
 void set_seconds_to_turndone(double seconds)
 {
   if (current_turn_timeout() > 0) {
@@ -1103,17 +1108,14 @@ void set_seconds_to_turndone(double seconds)
   }
 }
 
-/**********************************************************************//**
-  Are we in turn-change wait state?
-**************************************************************************/
-bool is_waiting_turn_change(void)
-{
-  return waiting_turn_change;
-}
+/**********************************************************************/ /**
+   Are we in turn-change wait state?
+ **************************************************************************/
+bool is_waiting_turn_change(void) { return waiting_turn_change; }
 
-/**********************************************************************//**
-  Start waiting of the server turn change activities.
-**************************************************************************/
+/**********************************************************************/ /**
+   Start waiting of the server turn change activities.
+ **************************************************************************/
 void start_turn_change_wait(void)
 {
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
@@ -1123,19 +1125,19 @@ void start_turn_change_wait(void)
   waiting_turn_change = TRUE;
 }
 
-/**********************************************************************//**
-  Server is responsive again
-**************************************************************************/
+/**********************************************************************/ /**
+   Server is responsive again
+ **************************************************************************/
 void stop_turn_change_wait(void)
 {
   waiting_turn_change = FALSE;
   update_timeout_label();
 }
 
-/**********************************************************************//**
-  Return the number of seconds until turn-done. Don't call this unless
-  current_turn_timeout() != 0.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the number of seconds until turn-done. Don't call this unless
+   current_turn_timeout() != 0.
+ **************************************************************************/
 int get_seconds_to_turndone(void)
 {
   if (current_turn_timeout() > 0) {
@@ -1146,20 +1148,17 @@ int get_seconds_to_turndone(void)
   }
 }
 
-/**********************************************************************//**
-  Return the number of seconds until turn-done.  Don't call this unless
-  current_turn_timeout() != 0.
-**************************************************************************/
-int get_seconds_to_new_turn(void)
-{
-  return seconds_shown_to_new_turn;
-}
+/**********************************************************************/ /**
+   Return the number of seconds until turn-done.  Don't call this unless
+   current_turn_timeout() != 0.
+ **************************************************************************/
+int get_seconds_to_new_turn(void) { return seconds_shown_to_new_turn; }
 
-/**********************************************************************//**
-  This function should be called at least once per second.  It does various
-  updates (idle animations and timeout updates).  It returns the number of
-  seconds until it should be called again.
-**************************************************************************/
+/**********************************************************************/ /**
+   This function should be called at least once per second.  It does various
+   updates (idle animations and timeout updates).  It returns the number of
+   seconds until it should be called again.
+ **************************************************************************/
 double real_timer_callback(void)
 {
   double time_until_next_call = 1.0;
@@ -1192,7 +1191,8 @@ double real_timer_callback(void)
   /* It is possible to have current_turn_timeout() > 0 but !turndone_timer,
    * in the first moments after the timeout is set. */
   if (current_turn_timeout() > 0 && turndone_timer) {
-    double seconds = seconds_to_turndone - timer_read_seconds(turndone_timer);
+    double seconds =
+        seconds_to_turndone - timer_read_seconds(turndone_timer);
     int iseconds = ceil(seconds) + 0.1; /* Turn should end right on 0. */
 
     if (iseconds < seconds_shown_to_turndone) {
@@ -1200,11 +1200,12 @@ double real_timer_callback(void)
       update_timeout_label();
     }
 
-    time_until_next_call = MIN(time_until_next_call,
-			       seconds - floor(seconds) + 0.001);
+    time_until_next_call =
+        MIN(time_until_next_call, seconds - floor(seconds) + 0.001);
   }
   if (waiting_turn_change) {
-    double seconds = game.tinfo.last_turn_change_time - timer_read_seconds(between_turns);
+    double seconds =
+        game.tinfo.last_turn_change_time - timer_read_seconds(between_turns);
     int iseconds = ceil(seconds) + 0.1; /* Turn should end right on 0. */
 
     if (iseconds < game.tinfo.last_turn_change_time) {
@@ -1228,64 +1229,61 @@ double real_timer_callback(void)
   return MAX(time_until_next_call, 0.05);
 }
 
-/**********************************************************************//**
-  Returns TRUE iff the client can control player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the client can control player.
+ **************************************************************************/
 bool can_client_control(void)
 {
-  return (NULL != client.conn.playing
-          && !client_is_observer());
+  return (NULL != client.conn.playing && !client_is_observer());
 }
 
-/**********************************************************************//**
-  Returns TRUE iff the client can issue orders (such as giving unit
-  commands).  This function should be called each time before allowing the
-  user to give an order.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the client can issue orders (such as giving unit
+   commands).  This function should be called each time before allowing the
+   user to give an order.
+ **************************************************************************/
 bool can_client_issue_orders(void)
 {
-  return (can_client_control()
-	  && C_S_RUNNING == client_state());
+  return (can_client_control() && C_S_RUNNING == client_state());
 }
 
-/**********************************************************************//**
-  Returns TRUE iff the client can do diplomatic meetings with another
-  given player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the client can do diplomatic meetings with another
+   given player.
+ **************************************************************************/
 bool can_meet_with_player(const struct player *pplayer)
 {
   return (can_client_issue_orders()
-	  /* && NULL != client.conn.playing (above) */
-	  && could_meet_with_player(client.conn.playing, pplayer));
+          /* && NULL != client.conn.playing (above) */
+          && could_meet_with_player(client.conn.playing, pplayer));
 }
 
-/**********************************************************************//**
-  Returns TRUE iff the client can get intelligence from another
-  given player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns TRUE iff the client can get intelligence from another
+   given player.
+ **************************************************************************/
 bool can_intel_with_player(const struct player *pplayer)
 {
   return (client_is_observer()
-	  || (NULL != client.conn.playing
-	      && could_intel_with_player(client.conn.playing, pplayer)));
+          || (NULL != client.conn.playing
+              && could_intel_with_player(client.conn.playing, pplayer)));
 }
 
-/**********************************************************************//**
-  Return TRUE if the client can change the view; i.e. if the mapview is
-  active.  This function should be called each time before allowing the
-  user to do mapview actions.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return TRUE if the client can change the view; i.e. if the mapview is
+   active.  This function should be called each time before allowing the
+   user to do mapview actions.
+ **************************************************************************/
 bool can_client_change_view(void)
 {
   return ((NULL != client.conn.playing || client_is_observer())
-	  && (C_S_RUNNING == client_state()
-	      || C_S_OVER == client_state()));
+          && (C_S_RUNNING == client_state() || C_S_OVER == client_state()));
 }
 
-/**********************************************************************//**
-  Sets if server is considered busy. Currently it is considered busy
-  between turns.
-**************************************************************************/
+/**********************************************************************/ /**
+   Sets if server is considered busy. Currently it is considered busy
+   between turns.
+ **************************************************************************/
 void set_server_busy(bool busy)
 {
   if (busy != server_busy) {
@@ -1297,25 +1295,22 @@ void set_server_busy(bool busy)
   }
 }
 
-/**********************************************************************//**
-  Returns if server is considered busy at the moment
-**************************************************************************/
-bool is_server_busy(void)
-{
-  return server_busy;
-}
+/**********************************************************************/ /**
+   Returns if server is considered busy at the moment
+ **************************************************************************/
+bool is_server_busy(void) { return server_busy; }
 
-/**********************************************************************//**
-  Returns whether client is global observer
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns whether client is global observer
+ **************************************************************************/
 bool client_is_global_observer(void)
 {
   return client.conn.playing == NULL && client.conn.observer == TRUE;
 }
 
-/**********************************************************************//**
-  Returns number of player attached to client.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns number of player attached to client.
+ **************************************************************************/
 int client_player_number(void)
 {
   if (client.conn.playing == NULL) {
@@ -1324,26 +1319,20 @@ int client_player_number(void)
   return player_number(client.conn.playing);
 }
 
-/**********************************************************************//**
-  Either controlling or observing.
-**************************************************************************/
-bool client_has_player(void)
-{
-  return client.conn.playing != NULL;
-}
+/**********************************************************************/ /**
+   Either controlling or observing.
+ **************************************************************************/
+bool client_has_player(void) { return client.conn.playing != NULL; }
 
-/**********************************************************************//**
-  Either controlling or observing.
-**************************************************************************/
-struct player *client_player(void)
-{
-  return client.conn.playing;
-}
+/**********************************************************************/ /**
+   Either controlling or observing.
+ **************************************************************************/
+struct player *client_player(void) { return client.conn.playing; }
 
-/**********************************************************************//**
-  Return the vision of the player on a tile. Client version of
-  ./server/maphand/map_is_known_and_seen().
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the vision of the player on a tile. Client version of
+   ./server/maphand/map_is_known_and_seen().
+ **************************************************************************/
 bool client_map_is_known_and_seen(const struct tile *ptile,
                                   const struct player *pplayer,
                                   enum vision_layer vlayer)
@@ -1351,9 +1340,9 @@ bool client_map_is_known_and_seen(const struct tile *ptile,
   return dbv_isset(&pplayer->client.tile_vision[vlayer], tile_index(ptile));
 }
 
-/**********************************************************************//**
-  Returns the id of the city the player believes exists at 'ptile'.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the id of the city the player believes exists at 'ptile'.
+ **************************************************************************/
 static int client_plr_tile_city_id_get(const struct tile *ptile,
                                        const struct player *pplayer)
 {
@@ -1365,9 +1354,9 @@ static int client_plr_tile_city_id_get(const struct tile *ptile,
   return pcity ? pcity->id : IDENTITY_NUMBER_ZERO;
 }
 
-/**********************************************************************//**
-  Returns the id of the server setting with the specified name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the id of the server setting with the specified name.
+ **************************************************************************/
 static server_setting_id client_ss_by_name(const char *name)
 {
   struct option *pset = optset_option_by_name(server_optset, name);
@@ -1380,9 +1369,9 @@ static server_setting_id client_ss_by_name(const char *name)
   }
 }
 
-/**********************************************************************//**
-  Returns the name of the server setting with the specified id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the name of the server setting with the specified id.
+ **************************************************************************/
 static const char *client_ss_name_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1395,9 +1384,9 @@ static const char *client_ss_name_get(server_setting_id id)
   }
 }
 
-/**********************************************************************//**
-  Returns the type of the server setting with the specified id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the type of the server setting with the specified id.
+ **************************************************************************/
 static enum sset_type client_ss_type_get(server_setting_id id)
 {
   enum option_type opt_type;
@@ -1411,8 +1400,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   opt_type = option_type(pset);
 
   /* The option type isn't client only. */
-  fc_assert_ret_val_msg((opt_type != OT_FONT
-                         && opt_type != OT_COLOR
+  fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR
                          && opt_type != OT_VIDEO_MODE),
                         sset_type_invalid(),
                         "%s is a client option type but not a server "
@@ -1420,27 +1408,27 @@ static enum sset_type client_ss_type_get(server_setting_id id)
                         option_type_name(option_type(pset)));
 
   /* The option type is valid. */
-  fc_assert_ret_val(sset_type_is_valid((enum sset_type)opt_type),
+  fc_assert_ret_val(sset_type_is_valid((enum sset_type) opt_type),
                     sset_type_invalid());
 
   /* Each server setting type value equals the client option type value with
    * the same meaning. */
-  FC_STATIC_ASSERT((enum sset_type)OT_BOOLEAN == SST_BOOL
-                   && (enum sset_type)OT_INTEGER == SST_INT
-                   && (enum sset_type)OT_STRING == SST_STRING
-                   && (enum sset_type)OT_ENUM == SST_ENUM
-                   && (enum sset_type)OT_BITWISE == SST_BITWISE
-                   && SST_COUNT == (enum sset_type)5,
+  FC_STATIC_ASSERT((enum sset_type) OT_BOOLEAN == SST_BOOL
+                       && (enum sset_type) OT_INTEGER == SST_INT
+                       && (enum sset_type) OT_STRING == SST_STRING
+                       && (enum sset_type) OT_ENUM == SST_ENUM
+                       && (enum sset_type) OT_BITWISE == SST_BITWISE
+                       && SST_COUNT == (enum sset_type) 5,
                    server_setting_type_not_equal_to_client_option_type);
 
   /* Exploit the fact that each server setting type value corresponds to the
    * client option type value with the same meaning. */
-  return (enum sset_type)opt_type;
+  return (enum sset_type) opt_type;
 }
 
-/**********************************************************************//**
-  Returns the value of the boolean server setting with the specified id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the value of the boolean server setting with the specified id.
+ **************************************************************************/
 static bool client_ss_val_bool_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1453,9 +1441,9 @@ static bool client_ss_val_bool_get(server_setting_id id)
   }
 }
 
-/**********************************************************************//**
-  Returns the value of the integer server setting with the specified id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the value of the integer server setting with the specified id.
+ **************************************************************************/
 static int client_ss_val_int_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1468,9 +1456,9 @@ static int client_ss_val_int_get(server_setting_id id)
   }
 }
 
-/**********************************************************************//**
-  Returns the value of the bitwise server setting with the specified id.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the value of the bitwise server setting with the specified id.
+ **************************************************************************/
 static unsigned int client_ss_val_bitwise_get(server_setting_id id)
 {
   struct option *pset = optset_option_by_number(server_optset, id);
@@ -1483,9 +1471,9 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
   }
 }
 
-/**********************************************************************//**
-  Initialize client specific functions.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize client specific functions.
+ **************************************************************************/
 static void fc_interface_init_client(void)
 {
   struct functions *funcs = fc_interface_funcs();
@@ -1507,9 +1495,9 @@ static void fc_interface_init_client(void)
   fc_interface_init();
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - tile knowledge.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - tile knowledge.
+ **************************************************************************/
 static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
                                                 bool knowledge)
@@ -1521,19 +1509,19 @@ static enum known_type mapimg_client_tile_known(const struct tile *ptile,
   return tile_get_known(ptile, pplayer);
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - tile terrain.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - tile terrain.
+ **************************************************************************/
 static struct terrain *
-  mapimg_client_tile_terrain(const struct tile *ptile,
-                             const struct player *pplayer, bool knowledge)
+mapimg_client_tile_terrain(const struct tile *ptile,
+                           const struct player *pplayer, bool knowledge)
 {
   return tile_terrain(ptile);
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - tile owner.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - tile owner.
+ **************************************************************************/
 static struct player *mapimg_client_tile_owner(const struct tile *ptile,
                                                const struct player *pplayer,
                                                bool knowledge)
@@ -1541,9 +1529,9 @@ static struct player *mapimg_client_tile_owner(const struct tile *ptile,
   return tile_owner(ptile);
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - city owner.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - city owner.
+ **************************************************************************/
 static struct player *mapimg_client_tile_city(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
@@ -1557,9 +1545,9 @@ static struct player *mapimg_client_tile_city(const struct tile *ptile,
   return city_owner(tile_city(ptile));
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - unit owner.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - unit owner.
+ **************************************************************************/
 static struct player *mapimg_client_tile_unit(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
@@ -1573,18 +1561,15 @@ static struct player *mapimg_client_tile_unit(const struct tile *ptile,
   return unit_owner(unit_list_get(ptile->units, 0));
 }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - number of player colors.
-**************************************************************************/
-static int mapimg_client_plrcolor_count(void)
-{
-  return player_count();
-}
+/**********************************************************************/ /**
+   Helper function for the mapimg module - number of player colors.
+ **************************************************************************/
+static int mapimg_client_plrcolor_count(void) { return player_count(); }
 
-/**********************************************************************//**
-  Helper function for the mapimg module - one player color. For the client
-  only the colors of the defined players are shown.
-**************************************************************************/
+/**********************************************************************/ /**
+   Helper function for the mapimg module - one player color. For the client
+   only the colors of the defined players are shown.
+ **************************************************************************/
 static struct rgbcolor *mapimg_client_plrcolor_get(int i)
 {
   int count = 0;
@@ -1593,28 +1578,24 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i)
     return NULL;
   }
 
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (count == i) {
       return pplayer->rgb;
     }
     count++;
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   return NULL;
 }
 
-/**********************************************************************//**
-  Is the client marked as one going down?
-**************************************************************************/
-bool is_client_quitting(void)
-{
-  return client_quitting;
-}
+/**********************************************************************/ /**
+   Is the client marked as one going down?
+ **************************************************************************/
+bool is_client_quitting(void) { return client_quitting; }
 
-/**********************************************************************//**
-  Mark client as one going to quit as soon as possible,
-**************************************************************************/
-void start_quitting(void)
-{
-  client_quitting = TRUE;
-}
+/**********************************************************************/ /**
+   Mark client as one going to quit as soon as possible,
+ **************************************************************************/
+void start_quitting(void) { client_quitting = TRUE; }

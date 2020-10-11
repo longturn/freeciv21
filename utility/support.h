@@ -28,7 +28,7 @@ extern "C" {
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <stdlib.h>		/* size_t */
+#include <stdlib.h> /* size_t */
 #include <sys/stat.h>
 
 #ifdef FREECIV_HAVE_SYS_TYPES_H
@@ -59,7 +59,7 @@ extern "C" {
 #undef false
 #undef __bool_true_false_are_defined
 #define bool unsigned int
-#define true  1
+#define true 1
 #define false 0
 #define __bool_true_false_are_defined 1
 #endif /* ! FREECIV_HAVE_STDBOOL_H */
@@ -84,7 +84,7 @@ extern "C" {
  * --dwp
  */
 #if defined(__GNUC__)
-#define fc__attribute(x)  __attribute__(x)
+#define fc__attribute(x) __attribute__(x)
 #else
 #define fc__attribute(x)
 #endif
@@ -92,7 +92,7 @@ extern "C" {
 /* __attribute__((warn_unused_result)) requires at least gcc 3.4 */
 #if defined(__GNUC__)
 #if (__GNUC__ > 3) || (__GNUC__ == 3 && __GNUC_MINOR__ >= 4)
-#define fc__warn_unused_result  __attribute__((warn_unused_result))
+#define fc__warn_unused_result __attribute__((warn_unused_result))
 #endif
 #endif
 #ifndef fc__warn_unused_result
@@ -142,24 +142,25 @@ void fc_usleep(unsigned long usec);
 bool fc_strrep(char *str, size_t len, const char *search,
                const char *replace);
 char *fc_strrep_resize(char *str, size_t *len, const char *search,
-                       const char *replace)
-                       fc__warn_unused_result;
+                       const char *replace) fc__warn_unused_result;
 
 size_t fc_strlcpy(char *dest, const char *src, size_t n);
 size_t fc_strlcat(char *dest, const char *src, size_t n);
 
 /* convenience macros for use when dest is a char ARRAY: */
-#define sz_strlcpy(dest,src) ((void) fc_strlcpy((dest), (src), sizeof(dest)))
-#define sz_strlcat(dest,src) ((void) fc_strlcat((dest), (src), sizeof(dest)))
+#define sz_strlcpy(dest, src)                                               \
+  ((void) fc_strlcpy((dest), (src), sizeof(dest)))
+#define sz_strlcat(dest, src)                                               \
+  ((void) fc_strlcat((dest), (src), sizeof(dest)))
 
 int fc_snprintf(char *str, size_t n, const char *format, ...)
-     fc__attribute((__format__ (__printf__, 3, 4)))
-     fc__attribute((nonnull (1, 3)));
-int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap )
-     fc__attribute((nonnull (1, 3)));
+    fc__attribute((__format__(__printf__, 3, 4)))
+        fc__attribute((nonnull(1, 3)));
+int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
+    fc__attribute((nonnull(1, 3)));
 int cat_snprintf(char *str, size_t n, const char *format, ...)
-     fc__attribute((__format__ (__printf__, 3, 4)))
-     fc__attribute((nonnull (1, 3)));
+    fc__attribute((__format__(__printf__, 3, 4)))
+        fc__attribute((nonnull(1, 3)));
 
 int fc_gethostname(char *buf, size_t len);
 
@@ -186,7 +187,7 @@ const char *fc_basename(const char *path);
 
 static inline bool is_bigendian(void)
 {
-#ifdef WORDS_BIGENDIAN 
+#ifdef WORDS_BIGENDIAN
   return TRUE;
 #else  /* WORDS_BIGENDIAN */
   return FALSE;
@@ -194,8 +195,8 @@ static inline bool is_bigendian(void)
 }
 
 void make_escapes(const char *str, char *buf, size_t buf_len);
-void remove_escapes(const char *str, bool full_escapes,
-                    char *buf, size_t buf_len);
+void remove_escapes(const char *str, bool full_escapes, char *buf,
+                    size_t buf_len);
 
 int fc_at_quick_exit(void (*func)(void));
 
@@ -203,4 +204,4 @@ int fc_at_quick_exit(void (*func)(void));
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SUPPORT_H */
+#endif /* FC__SUPPORT_H */

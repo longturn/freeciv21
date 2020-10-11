@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -29,9 +29,9 @@ struct connection;
 #define SPECLIST_TYPE struct Treaty
 #include "speclist.h"
 
-#define treaty_list_iterate(list, p) \
-    TYPED_LIST_ITERATE(struct Treaty, list, p)
-#define treaty_list_iterate_end  LIST_ITERATE_END
+#define treaty_list_iterate(list, p)                                        \
+  TYPED_LIST_ITERATE(struct Treaty, list, p)
+#define treaty_list_iterate_end LIST_ITERATE_END
 
 void establish_embassy(struct player *pplayer, struct player *aplayer);
 
@@ -51,4 +51,4 @@ struct treaty_list *get_all_treaties(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__DIPLHAND_H */
+#endif /* FC__DIPLHAND_H */

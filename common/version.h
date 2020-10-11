@@ -22,10 +22,11 @@ extern "C" {
 #endif
 
 /* This is only used in version.c, and only if IS_BETA_VERSION is true.
- * The month[] array is defined in version.c (index: 1 == Jan, 2 == Feb, ...).
+ * The month[] array is defined in version.c (index: 1 == Jan, 2 == Feb,
+ * ...).
  */
 #ifndef NEXT_RELEASE_MONTH
-#define NEXT_RELEASE_MONTH	(month[FREECIV_RELEASE_MONTH])
+#define NEXT_RELEASE_MONTH (month[FREECIV_RELEASE_MONTH])
 #endif
 
 /* version informational strings */
@@ -44,4 +45,4 @@ const char *beta_message(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__VERSION_H */
+#endif /* FC__VERSION_H */

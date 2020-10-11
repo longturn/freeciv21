@@ -27,21 +27,24 @@ extern "C" {
 
 /* Don't allow other modules to access directly to the fields. */
 #define vernacular _private_vernacular_
-#define rulename   _private_rulename_
+#define rulename _private_rulename_
 #define translated _private_translated_
 
 /* Ruleset strings (such as names) are kept in their original vernacular
  * as well as being translated to the current locale. */
 struct name_translation {
-  const char *translated;               /* String doesn't need freeing. */
-  char vernacular[MAX_LEN_NAME];        /* Original string,
-                                         * used for comparisons. */
-  char rulename[MAX_LEN_NAME];          /* Name used in savefiles etc.
-                                           Often the same as 'vernacular'. */
+  const char *translated;        /* String doesn't need freeing. */
+  char vernacular[MAX_LEN_NAME]; /* Original string,
+                                  * used for comparisons. */
+  char rulename[MAX_LEN_NAME];   /* Name used in savefiles etc.
+                                    Often the same as 'vernacular'. */
 };
 
 /* Inititalization macro. */
-#define NAME_INIT { NULL, "\0", "\0" }
+#define NAME_INIT                                                           \
+  {                                                                         \
+    NULL, "\0", "\0"                                                        \
+  }
 
 /****************************************************************************
   Initializes a name translation structure.
@@ -58,8 +61,7 @@ static inline void name_init(struct name_translation *ptrans)
   qualifier).
 ****************************************************************************/
 static inline void names_set(struct name_translation *ptrans,
-                             const char *domain,
-                             const char *vernacular_name,
+                             const char *domain, const char *vernacular_name,
                              const char *rule_name)
 {
   static const char name_too_long[] = "Name \"%s\" too long; truncating.";
@@ -74,7 +76,8 @@ static inline void names_set(struct name_translation *ptrans,
     if (domain == NULL) {
       ptrans->translated = Q_(ptrans->vernacular);
     } else {
-      ptrans->translated = skip_intl_qualifier_prefix(DG_(domain, ptrans->vernacular));
+      ptrans->translated =
+          skip_intl_qualifier_prefix(DG_(domain, ptrans->vernacular));
     }
   } else {
     ptrans->translated = ptrans->vernacular;
@@ -86,8 +89,7 @@ static inline void names_set(struct name_translation *ptrans,
   Assumes the rule name should be based on the vernacular.
 ****************************************************************************/
 static inline void name_set(struct name_translation *ptrans,
-                            const char *domain,
-                            const char *vernacular_name)
+                            const char *domain, const char *vernacular_name)
 {
   names_set(ptrans, domain, vernacular_name, NULL);
 }
@@ -101,7 +103,7 @@ static inline void name_set(struct name_translation *ptrans,
   Qn_() on it.
 ****************************************************************************/
 static inline const char *
-    untranslated_name(const struct name_translation *ptrans)
+untranslated_name(const struct name_translation *ptrans)
 {
   return ptrans->vernacular;
 }
@@ -109,7 +111,8 @@ static inline const char *
 /****************************************************************************
   Return the rule name of the name translation structure.
 ****************************************************************************/
-static inline const char *rule_name_get(const struct name_translation *ptrans)
+static inline const char *
+rule_name_get(const struct name_translation *ptrans)
 {
   return ptrans->rulename;
 }
@@ -118,7 +121,7 @@ static inline const char *rule_name_get(const struct name_translation *ptrans)
   Return the translated name of the name translation structure.
 ****************************************************************************/
 static inline const char *
-    name_translation_get(const struct name_translation *ptrans)
+name_translation_get(const struct name_translation *ptrans)
 {
   return ptrans->translated;
 }

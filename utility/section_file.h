@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,8 +14,8 @@
 #define FC__SECTION_FILE_H
 
 /* This header contains internals of section_file that its users should
- * not care about. This header should be included by soruce files implementing
- * registry itself. */
+ * not care about. This header should be included by soruce files
+ * implementing registry itself. */
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,13 +28,13 @@ extern "C" {
 struct section {
   struct section_file *secfile; /* Parent structure. */
   enum entry_special_type special;
-  char *name;                   /* Name of the section. */
-  struct entry_list *entries;   /* The list of the children. */
+  char *name;                 /* Name of the section. */
+  struct entry_list *entries; /* The list of the children. */
 };
 
 /* The section file struct itself. */
 struct section_file {
-  char *name;                           /* Can be NULL. */
+  char *name; /* Can be NULL. */
   size_t num_entries;
   /* num_includes should be size_t, but as there's no truly portable
    * printf format for size_t and we need to construct string containing
@@ -51,14 +51,13 @@ struct section_file {
 };
 
 void secfile_log(const struct section_file *secfile,
-                 const struct section *psection,
-                 const char *file, const char *function, int line,
-                 const char *format, ...)
-  fc__attribute((__format__(__printf__, 6, 7)));
+                 const struct section *psection, const char *file,
+                 const char *function, int line, const char *format, ...)
+    fc__attribute((__format__(__printf__, 6, 7)));
 
 #define SECFILE_LOG(secfile, psection, format, ...)                         \
   secfile_log(secfile, psection, __FILE__, __FUNCTION__, __FC_LINE__,       \
-              format, ## __VA_ARGS__)
+              format, ##__VA_ARGS__)
 #define SECFILE_RETURN_IF_FAIL(secfile, psection, condition)                \
   if (!(condition)) {                                                       \
     SECFILE_LOG(secfile, psection, "Assertion '%s' failed.", #condition);   \
@@ -87,4 +86,4 @@ bool entry_from_token(struct section *psection, const char *name,
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__SECTION_FILE_H */
+#endif /* FC__SECTION_FILE_H */

@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -27,8 +27,7 @@ class QPushButton;
 /***************************************************************************
   pregamevote class used for displaying vote bar in PAGE START
 ***************************************************************************/
-class pregamevote : public QWidget
-{
+class pregamevote : public QWidget {
   Q_OBJECT
 public:
   explicit pregamevote(QWidget *parent = NULL);
@@ -53,14 +52,14 @@ public slots:
 /***************************************************************************
   xvote class used for displaying vote bar in PAGE GAME
 ***************************************************************************/
-class xvote : public pregamevote
-{
+class xvote : public pregamevote {
   Q_OBJECT
 public:
   xvote(QWidget *parent);
+
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event);
 };
 
-#endif  /* FC__VOTEBAR_H */
+#endif /* FC__VOTEBAR_H */

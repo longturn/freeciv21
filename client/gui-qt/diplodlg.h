@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,8 +46,7 @@ class QTableWidgetItem;
 /****************************************************************************
   Diplomacy tab for one nation
 ****************************************************************************/
-class diplo_wdg: public QWidget
-{
+class diplo_wdg : public QWidget {
   Q_OBJECT
   QGridLayout *layout;
   QLabel *plr1_accept;
@@ -89,6 +88,7 @@ private slots:
 
 protected:
   void closeEvent(QCloseEvent *event);
+
 private:
   int player1;
   int player2;
@@ -102,8 +102,7 @@ private:
 /****************************************************************************
   Diplomacy dialog containing many diplo_wdg
 ****************************************************************************/
-class diplo_dlg: public QTabWidget
-{
+class diplo_dlg : public QTabWidget {
   Q_OBJECT
   QMap<int, diplo_wdg *> treaty_list;
 

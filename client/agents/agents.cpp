@@ -37,23 +37,21 @@
 
 #include "agents.h"
 
-#define log_request_ids(...)            /* log_test(__VA_ARGS__) */
-#define log_todo_lists(...)             /* log_test(__VA_ARGS__) */
-#define log_meta_callback(...)          log_debug(__VA_ARGS__)
-#define log_debug_freeze(...)           /* log_test(__VA_ARGS__) */
+#define log_request_ids(...) /* log_test(__VA_ARGS__) */
+#define log_todo_lists(...)  /* log_test(__VA_ARGS__) */
+#define log_meta_callback(...) log_debug(__VA_ARGS__)
+#define log_debug_freeze(...) /* log_test(__VA_ARGS__) */
 
-#define MAX_AGENTS			10
+#define MAX_AGENTS 10
 
-  struct my_agent {
-    struct agent agent;
-    int first_outstanding_request_id, last_outstanding_request_id;
-    struct {
-      struct timer *network_wall_timer;
-      int wait_at_network, wait_at_network_requests;
-    } stats;
-  };
-
-
+struct my_agent {
+  struct agent agent;
+  int first_outstanding_request_id, last_outstanding_request_id;
+  struct {
+    struct timer *network_wall_timer;
+    int wait_at_network, wait_at_network_requests;
+  } stats;
+};
 
 enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY, OCT_TILE };
 
@@ -68,14 +66,14 @@ struct call {
 #define SPECLIST_TYPE struct call
 #include "speclist.h"
 
-#define call_list_iterate(calllist, pcall) \
-    TYPED_LIST_ITERATE(struct call, calllist, pcall)
-#define call_list_iterate_end  LIST_ITERATE_END
+#define call_list_iterate(calllist, pcall)                                  \
+  TYPED_LIST_ITERATE(struct call, calllist, pcall)
+#define call_list_iterate_end LIST_ITERATE_END
 
-#define call_list_both_iterate(calllist, plink, pcall) \
-    TYPED_LIST_BOTH_ITERATE(struct call_list_link, struct call, \
-                            calllist, plink, pcall)
-#define call_list_both_iterate_end  LIST_BOTH_ITERATE_END
+#define call_list_both_iterate(calllist, plink, pcall)                      \
+  TYPED_LIST_BOTH_ITERATE(struct call_list_link, struct call, calllist,     \
+                          plink, pcall)
+#define call_list_both_iterate_end LIST_BOTH_ITERATE_END
 
 /*
  * Main data structure. Contains all registered agents and all
@@ -91,9 +89,9 @@ static bool initialized = FALSE;
 static int frozen_level;
 static bool currently_running = FALSE;
 
-/************************************************************************//**
-  Return TRUE iff the two agent calls are equal.
-****************************************************************************/
+/************************************************************************/ /**
+   Return TRUE iff the two agent calls are equal.
+ ****************************************************************************/
 static bool calls_are_equal(const struct call *pcall1,
                             const struct call *pcall2)
 {
@@ -118,13 +116,12 @@ static bool calls_are_equal(const struct call *pcall1,
   return FALSE;
 }
 
-/************************************************************************//**
-  If the call described by the given arguments isn't contained in
-  agents.calls list, add the call to this list.
-  Maintains the list in a sorted order.
-****************************************************************************/
-static void enqueue_call(enum oct type,
-                         enum callback_type cb_type,
+/************************************************************************/ /**
+   If the call described by the given arguments isn't contained in
+   agents.calls list, add the call to this list.
+   Maintains the list in a sorted order.
+ ****************************************************************************/
+static void enqueue_call(enum oct type, enum callback_type cb_type,
                          struct my_agent *agent, ...)
 {
   va_list ap;
@@ -154,7 +151,7 @@ static void enqueue_call(enum oct type,
   }
   va_end(ap);
 
-  pcall2 = static_cast<call*>(fc_malloc(sizeof(struct call)));
+  pcall2 = static_cast<call *>(fc_malloc(sizeof(struct call)));
 
   pcall2->agent = agent;
   pcall2->type = type;
@@ -163,7 +160,8 @@ static void enqueue_call(enum oct type,
 
   /* Ensure list is sorted so that calls to agents with lower levels
    * come first, since that's how we'll want to pop them */
-  call_list_both_iterate(agents.calls, plink, pcall) {
+  call_list_both_iterate(agents.calls, plink, pcall)
+  {
     if (calls_are_equal(pcall, pcall2)) {
       /* Already got one like this, discard duplicate. */
       free(pcall2);
@@ -178,7 +176,8 @@ static void enqueue_call(enum oct type,
       added = TRUE;
       break;
     }
-  } call_list_both_iterate_end;
+  }
+  call_list_both_iterate_end;
 
   if (!added) {
     call_list_append(agents.calls, pcall2);
@@ -190,10 +189,10 @@ static void enqueue_call(enum oct type,
   update_turn_done_button_state();
 }
 
-/************************************************************************//**
-  Return an outstanding call. The call is removed from the agents.calls
-  list. Returns NULL if there no more outstanding calls.
-****************************************************************************/
+/************************************************************************/ /**
+   Return an outstanding call. The call is removed from the agents.calls
+   list. Returns NULL if there no more outstanding calls.
+ ****************************************************************************/
 static struct call *remove_and_return_a_call(void)
 {
   struct call *result;
@@ -209,9 +208,9 @@ static struct call *remove_and_return_a_call(void)
   return result;
 }
 
-/************************************************************************//**
-  Calls an callback of an agent as described in the given call.
-****************************************************************************/
+/************************************************************************/ /**
+   Calls an callback of an agent as described in the given call.
+ ****************************************************************************/
 static void execute_call(const struct call *call)
 {
   switch (call->type) {
@@ -219,23 +218,23 @@ static void execute_call(const struct call *call)
     call->agent->agent.turn_start_notify();
     break;
   case OCT_UNIT:
-    call->agent->agent.unit_callbacks[call->cb_type] (call->arg);
+    call->agent->agent.unit_callbacks[call->cb_type](call->arg);
     break;
   case OCT_CITY:
-    call->agent->agent.city_callbacks[call->cb_type] (call->arg);
+    call->agent->agent.city_callbacks[call->cb_type](call->arg);
     break;
   case OCT_TILE:
-    call->agent->agent.tile_callbacks[call->cb_type]
-      (index_to_tile(&(wld.map), call->arg));
+    call->agent->agent.tile_callbacks[call->cb_type](
+        index_to_tile(&(wld.map), call->arg));
     break;
   }
 }
 
-/************************************************************************//**
-  Execute all outstanding calls. This method will do nothing if the
-  dispatching is frozen (frozen_level > 0). Also call_handle_methods
-  will ensure that only one instance is running at any given time.
-****************************************************************************/
+/************************************************************************/ /**
+   Execute all outstanding calls. This method will do nothing if the
+   dispatching is frozen (frozen_level > 0). Also call_handle_methods
+   will ensure that only one instance is running at any given time.
+ ****************************************************************************/
 static void call_handle_methods(void)
 {
   if (currently_running) {
@@ -267,9 +266,9 @@ static void call_handle_methods(void)
   update_turn_done_button_state();
 }
 
-/************************************************************************//**
-  Increase the frozen_level by one.
-****************************************************************************/
+/************************************************************************/ /**
+   Increase the frozen_level by one.
+ ****************************************************************************/
 static void freeze(void)
 {
   if (!initialized) {
@@ -280,10 +279,10 @@ static void freeze(void)
   frozen_level++;
 }
 
-/************************************************************************//**
-  Decrease the frozen_level by one. If the dispatching is not frozen
-  anymore (frozen_level == 0) all outstanding calls are executed.
-****************************************************************************/
+/************************************************************************/ /**
+   Decrease the frozen_level by one. If the dispatching is not frozen
+   anymore (frozen_level == 0) all outstanding calls are executed.
+ ****************************************************************************/
 static void thaw(void)
 {
   log_debug_freeze("A: thaw() current level=%d", frozen_level);
@@ -294,9 +293,9 @@ static void thaw(void)
   }
 }
 
-/************************************************************************//**
-  Helper.
-****************************************************************************/
+/************************************************************************/ /**
+   Helper.
+ ****************************************************************************/
 static struct my_agent *agent_by_name(const char *agent_name)
 {
   int i;
@@ -309,18 +308,18 @@ static struct my_agent *agent_by_name(const char *agent_name)
   return NULL;
 }
 
-/************************************************************************//**
-  Returns TRUE iff currently handled packet was caused by the given
-  agent.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE iff currently handled packet was caused by the given
+   agent.
+ ****************************************************************************/
 static bool is_outstanding_request(struct my_agent *agent)
 {
   if (agent->first_outstanding_request_id != 0
       && client.conn.client.request_id_of_currently_handled_packet != 0
-      && agent->first_outstanding_request_id <=
-      client.conn.client.request_id_of_currently_handled_packet
-      && agent->last_outstanding_request_id >=
-      client.conn.client.request_id_of_currently_handled_packet) {
+      && agent->first_outstanding_request_id
+             <= client.conn.client.request_id_of_currently_handled_packet
+      && agent->last_outstanding_request_id
+             >= client.conn.client.request_id_of_currently_handled_packet) {
     log_debug("A:%s: ignoring packet; outstanding [%d..%d] got=%d",
               agent->agent.name, agent->first_outstanding_request_id,
               agent->last_outstanding_request_id,
@@ -330,9 +329,9 @@ static bool is_outstanding_request(struct my_agent *agent)
   return FALSE;
 }
 
-/************************************************************************//**
-  Called once per client startup.
-****************************************************************************/
+/************************************************************************/ /**
+   Called once per client startup.
+ ****************************************************************************/
 void agents_init(void)
 {
   agents.entries_used = 0;
@@ -344,15 +343,15 @@ void agents_init(void)
   /*simple_historian_init();*/
 }
 
-/************************************************************************//**
-  Free resources allocated for agents framework
-****************************************************************************/
+/************************************************************************/ /**
+   Free resources allocated for agents framework
+ ****************************************************************************/
 void agents_free(void)
 {
   int i;
 
   /* FIXME: doing this will wipe out any presets on disconnect.
-   * a proper solution should be to split up the client_free functions 
+   * a proper solution should be to split up the client_free functions
    * for a simple disconnect and a client quit. for right now, we just
    * let the OS free the memory on exit instead of doing it ourselves. */
   /* cmafec_free(); */
@@ -376,9 +375,9 @@ void agents_free(void)
   call_list_destroy(agents.calls);
 }
 
-/************************************************************************//**
-  Registers an agent.
-****************************************************************************/
+/************************************************************************/ /**
+   Registers an agent.
+ ****************************************************************************/
 void register_agent(const struct agent *agent)
 {
   struct my_agent *priv_agent = &agents.entries[agents.entries_used];
@@ -398,88 +397,82 @@ void register_agent(const struct agent *agent)
   agents.entries_used++;
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_disconnect(void)
 {
   log_meta_callback("agents_disconnect()");
   initialized = FALSE;
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_processing_started(void)
 {
   log_meta_callback("agents_processing_started()");
   freeze();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_processing_finished(void)
 {
   log_meta_callback("agents_processing_finished()");
   thaw();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_freeze_hint(void)
 {
   log_meta_callback("agents_freeze_hint()");
   freeze();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_thaw_hint(void)
 {
   log_meta_callback("agents_thaw_hint()");
   thaw();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
-void agents_game_joined(void)
-{
-  log_meta_callback("agents_game_joined()");
-}
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
+void agents_game_joined(void) { log_meta_callback("agents_game_joined()"); }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_game_start(void)
 {
   log_meta_callback("agents_game_start()");
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
 void agents_before_new_turn(void)
 {
   log_meta_callback("agents_before_new_turn()");
 }
 
-/************************************************************************//**
-  Called from client/packhand.c.
-****************************************************************************/
-void agents_start_turn(void)
-{
-  log_meta_callback("agents_start_turn()");
-}
+/************************************************************************/ /**
+   Called from client/packhand.c.
+ ****************************************************************************/
+void agents_start_turn(void) { log_meta_callback("agents_start_turn()"); }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_new_turn(void)
 {
   int i;
@@ -500,14 +493,14 @@ void agents_new_turn(void)
    */
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. A call is created and added to the
-  list of outstanding calls if an agent wants to be informed about this
-  event and the change wasn't caused by the agent. We then try (this
-  may not be successful in every case since we can be frozen or another
-  call_handle_methods may be running higher up on the stack) to execute
-  all outstanding calls.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. A call is created and added to the
+   list of outstanding calls if an agent wants to be informed about this
+   event and the change wasn't caused by the agent. We then try (this
+   may not be successful in every case since we can be frozen or another
+   call_handle_methods may be running higher up on the stack) to execute
+   all outstanding calls.
+ ****************************************************************************/
 void agents_unit_changed(struct unit *punit)
 {
   int i;
@@ -529,10 +522,10 @@ void agents_unit_changed(struct unit *punit)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_unit_new(struct unit *punit)
 {
   int i;
@@ -555,10 +548,10 @@ void agents_unit_new(struct unit *punit)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_unit_remove(struct unit *punit)
 {
   int i;
@@ -581,17 +574,16 @@ void agents_unit_remove(struct unit *punit)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_city_changed(struct city *pcity)
 {
   int i;
 
-  log_debug("A: agents_city_changed(city %d=\"%s\") owner=%s",
-            pcity->id, city_name_get(pcity),
-            nation_rule_name(nation_of_city(pcity)));
+  log_debug("A: agents_city_changed(city %d=\"%s\") owner=%s", pcity->id,
+            city_name_get(pcity), nation_rule_name(nation_of_city(pcity)));
 
   for (i = 0; i < agents.entries_used; i++) {
     struct my_agent *agent = &agents.entries[i];
@@ -607,10 +599,10 @@ void agents_city_changed(struct city *pcity)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_city_new(struct city *pcity)
 {
   int i;
@@ -633,10 +625,10 @@ void agents_city_new(struct city *pcity)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_city_remove(struct city *pcity)
 {
   int i;
@@ -659,11 +651,11 @@ void agents_city_remove(struct city *pcity)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-  Tiles got removed because of FOW.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+   Tiles got removed because of FOW.
+ ****************************************************************************/
 void agents_tile_remove(struct tile *ptile)
 {
   int i;
@@ -684,10 +676,10 @@ void agents_tile_remove(struct tile *ptile)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_tile_changed(struct tile *ptile)
 {
   int i;
@@ -708,10 +700,10 @@ void agents_tile_changed(struct tile *ptile)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from client/packhand.c. See agents_unit_changed() for a generic
-  documentation.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from client/packhand.c. See agents_unit_changed() for a generic
+   documentation.
+ ****************************************************************************/
 void agents_tile_new(struct tile *ptile)
 {
   int i;
@@ -732,17 +724,17 @@ void agents_tile_new(struct tile *ptile)
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Called from an agent. This function will return until the last
-  request has been processed by the server.
-****************************************************************************/
+/************************************************************************/ /**
+   Called from an agent. This function will return until the last
+   request has been processed by the server.
+ ****************************************************************************/
 void wait_for_requests(const char *agent_name, int first_request_id,
                        int last_request_id)
 {
   struct my_agent *agent = agent_by_name(agent_name);
 
-  log_request_ids("A:%s: wait_for_request(ids=[%d..%d])",
-                  agent->agent.name, first_request_id, last_request_id);
+  log_request_ids("A:%s: wait_for_request(ids=[%d..%d])", agent->agent.name,
+                  first_request_id, last_request_id);
 
   fc_assert_ret(first_request_id != 0 && last_request_id != 0
                 && first_request_id <= last_request_id);
@@ -763,17 +755,16 @@ void wait_for_requests(const char *agent_name, int first_request_id,
 
   agent->first_outstanding_request_id = 0;
 
-  log_debug("A:%s: waited %fs in total for network; "
-            "requests=%d; waited %d times",
-            agent->agent.name,
-            timer_read_seconds(agent->stats.network_wall_timer),
-            agent->stats.wait_at_network_requests,
-            agent->stats.wait_at_network);
+  log_debug(
+      "A:%s: waited %fs in total for network; "
+      "requests=%d; waited %d times",
+      agent->agent.name, timer_read_seconds(agent->stats.network_wall_timer),
+      agent->stats.wait_at_network_requests, agent->stats.wait_at_network);
 }
 
-/************************************************************************//**
-  Adds a specific call for the given agent.
-****************************************************************************/
+/************************************************************************/ /**
+   Adds a specific call for the given agent.
+ ****************************************************************************/
 void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,
                                     struct unit *punit)
 {
@@ -784,9 +775,9 @@ void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Adds a specific call for the given agent.
-****************************************************************************/
+/************************************************************************/ /**
+   Adds a specific call for the given agent.
+ ****************************************************************************/
 void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
                                     struct city *pcity)
 {
@@ -797,9 +788,9 @@ void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
   call_handle_methods();
 }
 
-/************************************************************************//**
-  Returns TRUE iff some agent is currently busy.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE iff some agent is currently busy.
+ ****************************************************************************/
 bool agents_busy(void)
 {
   int i;

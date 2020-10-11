@@ -32,73 +32,77 @@
 
 struct government *governments = NULL;
 
-/**********************************************************************//**
-  Returns the government that has the given (translated) name.
-  Returns NULL if none match.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the government that has the given (translated) name.
+   Returns NULL if none match.
+ **************************************************************************/
 struct government *government_by_translated_name(const char *name)
 {
-  governments_iterate(gov) {
+  governments_iterate(gov)
+  {
     if (0 == strcmp(government_name_translation(gov), name)) {
       return gov;
     }
-  } governments_iterate_end;
+  }
+  governments_iterate_end;
 
   return NULL;
 }
 
-/**********************************************************************//**
-  Returns the government that has the given (untranslated) rule name.
-  Returns NULL if none match.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns the government that has the given (untranslated) rule name.
+   Returns NULL if none match.
+ **************************************************************************/
 struct government *government_by_rule_name(const char *name)
 {
   const char *qname = Qn_(name);
 
-  governments_iterate(gov) {
+  governments_iterate(gov)
+  {
     if (0 == fc_strcasecmp(government_rule_name(gov), qname)) {
       return gov;
     }
-  } governments_iterate_end;
+  }
+  governments_iterate_end;
 
   return NULL;
 }
 
-/**********************************************************************//**
-  Return the number of governments.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the number of governments.
+ **************************************************************************/
 Government_type_id government_count(void)
 {
   return game.control.government_count;
 }
 
-/**********************************************************************//**
-  Return the government index.
+/**********************************************************************/ /**
+   Return the government index.
 
-  Currently same as government_number(), paired with government_count()
-  indicates use as an array index.
-**************************************************************************/
+   Currently same as government_number(), paired with government_count()
+   indicates use as an array index.
+ **************************************************************************/
 Government_type_id government_index(const struct government *pgovern)
 {
   fc_assert_ret_val(NULL != pgovern, -1);
   return pgovern - governments;
 }
 
-/**********************************************************************//**
-  Return the government index.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the government index.
+ **************************************************************************/
 Government_type_id government_number(const struct government *pgovern)
 {
   fc_assert_ret_val(NULL != pgovern, -1);
   return pgovern->item_number;
 }
 
-/**********************************************************************//**
-  Return the government with the given index.
+/**********************************************************************/ /**
+   Return the government with the given index.
 
-  This function returns NULL for an out-of-range index (some callers
-  rely on this).
-**************************************************************************/
+   This function returns NULL for an out-of-range index (some callers
+   rely on this).
+ **************************************************************************/
 struct government *government_by_number(const Government_type_id gov)
 {
   if (gov < 0 || gov >= game.control.government_count) {
@@ -107,38 +111,38 @@ struct government *government_by_number(const Government_type_id gov)
   return &governments[gov];
 }
 
-/**********************************************************************//**
-  Return the government of a player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the government of a player.
+ **************************************************************************/
 struct government *government_of_player(const struct player *pplayer)
 {
   fc_assert_ret_val(NULL != pplayer, NULL);
   return pplayer->government;
 }
 
-/**********************************************************************//**
-  Return the government of the player who owns the city.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the government of the player who owns the city.
+ **************************************************************************/
 struct government *government_of_city(const struct city *pcity)
 {
   fc_assert_ret_val(NULL != pcity, NULL);
   return government_of_player(city_owner(pcity));
 }
 
-/**********************************************************************//**
-  Return the (untranslated) rule name of the government.
-  You don't have to free the return pointer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the (untranslated) rule name of the government.
+   You don't have to free the return pointer.
+ **************************************************************************/
 const char *government_rule_name(const struct government *pgovern)
 {
   fc_assert_ret_val(NULL != pgovern, NULL);
   return rule_name_get(&pgovern->name);
 }
 
-/**********************************************************************//**
-  Return the (translated) name of the given government. 
-  You don't have to free the return pointer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the (translated) name of the given government.
+   You don't have to free the return pointer.
+ **************************************************************************/
 const char *government_name_translation(const struct government *pgovern)
 {
   fc_assert_ret_val(NULL != pgovern, NULL);
@@ -146,22 +150,22 @@ const char *government_name_translation(const struct government *pgovern)
   return name_translation_get(&pgovern->name);
 }
 
-/**********************************************************************//**
-  Return the (translated) name of the given government of a player. 
-  You don't have to free the return pointer.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the (translated) name of the given government of a player.
+   You don't have to free the return pointer.
+ **************************************************************************/
 const char *government_name_for_player(const struct player *pplayer)
 {
   return government_name_translation(government_of_player(pplayer));
 }
 
-/**********************************************************************//**
-  Can change to government if appropriate tech exists, and one of:
-   - no required tech (required is A_NONE)
-   - player has required tech
-   - we have an appropriate wonder
-  Returns FALSE if pplayer is NULL (used for observers).
-**************************************************************************/
+/**********************************************************************/ /**
+   Can change to government if appropriate tech exists, and one of:
+    - no required tech (required is A_NONE)
+    - player has required tech
+    - we have an appropriate wonder
+   Returns FALSE if pplayer is NULL (used for observers).
+ **************************************************************************/
 bool can_change_to_government(struct player *pplayer,
                               const struct government *gov)
 {
@@ -176,10 +180,9 @@ bool can_change_to_government(struct player *pplayer,
     return TRUE;
   }
 
-  return are_reqs_active(pplayer, NULL, NULL, NULL, NULL, NULL, NULL,
-                         NULL, NULL, NULL, &gov->reqs, RPT_CERTAIN);
+  return are_reqs_active(pplayer, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+                         NULL, NULL, &gov->reqs, RPT_CERTAIN);
 }
-
 
 /**************************************************************************
   Ruler titles.
@@ -190,26 +193,26 @@ struct ruler_title {
   struct name_translation female;
 };
 
-/**********************************************************************//**
-  Hash function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Hash function.
+ **************************************************************************/
 static genhash_val_t nation_hash_val(const struct nation_type *pnation)
 {
   return NULL != pnation ? nation_number(pnation) : nation_count();
 }
 
-/**********************************************************************//**
-  Hash function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Hash function.
+ **************************************************************************/
 static bool nation_hash_comp(const struct nation_type *pnation1,
                              const struct nation_type *pnation2)
 {
   return pnation1 == pnation2;
 }
 
-/**********************************************************************//**
-  Create a new ruler title.
-**************************************************************************/
+/**********************************************************************/ /**
+   Create a new ruler title.
+ **************************************************************************/
 static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
                                            const char *domain,
                                            const char *ruler_male_title,
@@ -224,17 +227,17 @@ static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
   return pruler_title;
 }
 
-/**********************************************************************//**
-  Free a ruler title.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free a ruler title.
+ **************************************************************************/
 static void ruler_title_destroy(struct ruler_title *pruler_title)
 {
   free(pruler_title);
 }
 
-/**********************************************************************//**
-  Return TRUE if the ruler title is valid.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return TRUE if the ruler title is valid.
+ **************************************************************************/
 static bool ruler_title_check(const struct ruler_title *pruler_title)
 {
   bool ret = TRUE;
@@ -306,9 +309,9 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
   return ret;
 }
 
-/**********************************************************************//**
-  Returns all ruler titles for a government type.
-**************************************************************************/
+/**********************************************************************/ /**
+   Returns all ruler titles for a government type.
+ **************************************************************************/
 const struct ruler_title_hash *
 government_ruler_titles(const struct government *pgovern)
 {
@@ -316,15 +319,13 @@ government_ruler_titles(const struct government *pgovern)
   return pgovern->ruler_titles;
 }
 
-/**********************************************************************//**
-  Add a new ruler title for the nation. Pass NULL for pnation for defining
-  the default title.
-**************************************************************************/
-struct ruler_title *
-government_ruler_title_new(struct government *pgovern,
-                           const struct nation_type *pnation,
-                           const char *ruler_male_title,
-                           const char *ruler_female_title)
+/**********************************************************************/ /**
+   Add a new ruler title for the nation. Pass NULL for pnation for defining
+   the default title.
+ **************************************************************************/
+struct ruler_title *government_ruler_title_new(
+    struct government *pgovern, const struct nation_type *pnation,
+    const char *ruler_male_title, const char *ruler_female_title)
 {
   const char *domain = NULL;
   struct ruler_title *pruler_title;
@@ -333,15 +334,15 @@ government_ruler_title_new(struct government *pgovern,
     domain = pnation->translation_domain;
   }
   pruler_title =
-    ruler_title_new(pnation, domain, ruler_male_title, ruler_female_title);
+      ruler_title_new(pnation, domain, ruler_male_title, ruler_female_title);
 
   if (!ruler_title_check(pruler_title)) {
     ruler_title_destroy(pruler_title);
     return NULL;
   }
 
-  if (ruler_title_hash_replace(pgovern->ruler_titles,
-                               pnation, pruler_title)) {
+  if (ruler_title_hash_replace(pgovern->ruler_titles, pnation,
+                               pruler_title)) {
     if (NULL != pnation) {
       log_error("Ruler title for government \"%s\" (nb %d) and "
                 "nation \"%s\" (nb %d) was set twice.",
@@ -349,46 +350,46 @@ government_ruler_title_new(struct government *pgovern,
                 nation_rule_name(pnation), nation_number(pnation));
     } else {
       log_error("Default ruler title for government \"%s\" (nb %d) "
-                "was set twice.", government_rule_name(pgovern),
-                government_number(pgovern));
+                "was set twice.",
+                government_rule_name(pgovern), government_number(pgovern));
     }
   }
 
   return pruler_title;
 }
 
-/**********************************************************************//**
-  Return the nation of the rule title. Returns NULL if this is default.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the nation of the rule title. Returns NULL if this is default.
+ **************************************************************************/
 const struct nation_type *
 ruler_title_nation(const struct ruler_title *pruler_title)
 {
   return pruler_title->pnation;
 }
 
-/**********************************************************************//**
-  Return the male rule title name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the male rule title name.
+ **************************************************************************/
 const char *
 ruler_title_male_untranslated_name(const struct ruler_title *pruler_title)
 {
   return untranslated_name(&pruler_title->male);
 }
 
-/**********************************************************************//**
-  Return the female rule title name.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return the female rule title name.
+ **************************************************************************/
 const char *
 ruler_title_female_untranslated_name(const struct ruler_title *pruler_title)
 {
   return untranslated_name(&pruler_title->female);
 }
 
-/**********************************************************************//**
-  Return the ruler title of the player (translated).
-**************************************************************************/
-const char *ruler_title_for_player(const struct player *pplayer,
-                                   char *buf, size_t buf_len)
+/**********************************************************************/ /**
+   Return the ruler title of the player (translated).
+ **************************************************************************/
+const char *ruler_title_for_player(const struct player *pplayer, char *buf,
+                                   size_t buf_len)
 {
   const struct government *pgovern = government_of_player(pplayer);
   const struct nation_type *pnation = nation_of_player(pplayer);
@@ -398,11 +399,10 @@ const char *ruler_title_for_player(const struct player *pplayer,
   fc_assert_ret_val(0 < buf_len, NULL);
 
   /* Try specific nation rule title. */
-  if (!ruler_title_hash_lookup(pgovern->ruler_titles,
-                               pnation, &pruler_title)
+  if (!ruler_title_hash_lookup(pgovern->ruler_titles, pnation, &pruler_title)
       /* Try default rule title. */
-      && !ruler_title_hash_lookup(pgovern->ruler_titles,
-                                  NULL, &pruler_title)) {
+      && !ruler_title_hash_lookup(pgovern->ruler_titles, NULL,
+                                  &pruler_title)) {
     log_error("Missing title for government \"%s\" (nb %d) "
               "nation \"%s\" (nb %d).",
               government_rule_name(pgovern), government_number(pgovern),
@@ -415,14 +415,13 @@ const char *ruler_title_for_player(const struct player *pplayer,
   } else {
     fc_snprintf(buf, buf_len,
                 name_translation_get(pplayer->is_male
-                                     ? &pruler_title->male
-                                     : &pruler_title->female),
+                                         ? &pruler_title->male
+                                         : &pruler_title->female),
                 player_name(pplayer));
   }
 
   return buf;
 }
-
 
 /**************************************************************************
   Government iterator.
@@ -433,42 +432,42 @@ struct government_iter {
 };
 #define GOVERNMENT_ITER(p) ((struct government_iter *) (p))
 
-/**********************************************************************//**
-  Implementation of iterator 'sizeof' function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Implementation of iterator 'sizeof' function.
+ **************************************************************************/
 size_t government_iter_sizeof(void)
 {
   return sizeof(struct government_iter);
 }
 
-/**********************************************************************//**
-  Implementation of iterator 'next' function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Implementation of iterator 'next' function.
+ **************************************************************************/
 static void government_iter_next(struct iterator *iter)
 {
   GOVERNMENT_ITER(iter)->p++;
 }
 
-/**********************************************************************//**
-  Implementation of iterator 'get' function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Implementation of iterator 'get' function.
+ **************************************************************************/
 static void *government_iter_get(const struct iterator *iter)
 {
   return GOVERNMENT_ITER(iter)->p;
 }
 
-/**********************************************************************//**
-  Implementation of iterator 'valid' function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Implementation of iterator 'valid' function.
+ **************************************************************************/
 static bool government_iter_valid(const struct iterator *iter)
 {
   struct government_iter *it = GOVERNMENT_ITER(iter);
   return it->p < it->end;
 }
 
-/**********************************************************************//**
-  Implementation of iterator 'init' function.
-**************************************************************************/
+/**********************************************************************/ /**
+   Implementation of iterator 'init' function.
+ **************************************************************************/
 struct iterator *government_iter_init(struct government_iter *it)
 {
   it->vtable.next = government_iter_next;
@@ -479,25 +478,25 @@ struct iterator *government_iter_init(struct government_iter *it)
   return ITERATOR(it);
 }
 
-/**********************************************************************//**
-  Allocate resources associated with the given government.
-**************************************************************************/
+/**********************************************************************/ /**
+   Allocate resources associated with the given government.
+ **************************************************************************/
 static inline void government_init(struct government *pgovern)
 {
   memset(pgovern, 0, sizeof(*pgovern));
 
   pgovern->item_number = pgovern - governments;
   pgovern->ruler_titles =
-      ruler_title_hash_new_full(nation_hash_val, nation_hash_comp,
-                                NULL, NULL, NULL, ruler_title_destroy);
+      ruler_title_hash_new_full(nation_hash_val, nation_hash_comp, NULL,
+                                NULL, NULL, ruler_title_destroy);
   requirement_vector_init(&pgovern->reqs);
   pgovern->changed_to_times = 0;
   pgovern->ruledit_disabled = FALSE;
 }
 
-/**********************************************************************//**
-  De-allocate resources associated with the given government.
-**************************************************************************/
+/**********************************************************************/ /**
+   De-allocate resources associated with the given government.
+ **************************************************************************/
 static inline void government_free(struct government *pgovern)
 {
   ruler_title_hash_destroy(pgovern->ruler_titles);
@@ -511,9 +510,9 @@ static inline void government_free(struct government *pgovern)
   requirement_vector_free(&pgovern->reqs);
 }
 
-/**********************************************************************//**
-  Allocate the governments.
-**************************************************************************/
+/**********************************************************************/ /**
+   Allocate the governments.
+ **************************************************************************/
 void governments_alloc(int num)
 {
   int i;
@@ -527,9 +526,9 @@ void governments_alloc(int num)
   }
 }
 
-/**********************************************************************//**
-  De-allocate the currently allocated governments.
-**************************************************************************/
+/**********************************************************************/ /**
+   De-allocate the currently allocated governments.
+ **************************************************************************/
 void governments_free(void)
 {
   int i;
@@ -547,10 +546,10 @@ void governments_free(void)
   game.control.government_count = 0;
 }
 
-/**********************************************************************//**
-  Is it possible to start a revolution without specifying the target
-  government in the current game?
-**************************************************************************/
+/**********************************************************************/ /**
+   Is it possible to start a revolution without specifying the target
+   government in the current game?
+ **************************************************************************/
 bool untargeted_revolution_allowed(void)
 {
   if (game.info.revolentype == REVOLEN_QUICKENING

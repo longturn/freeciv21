@@ -32,10 +32,10 @@ extern int OVERVIEW_TILE_SIZE;
 #define OVERVIEW_TILE_WIDTH ((MAP_IS_ISOMETRIC ? 2 : 1) * OVERVIEW_TILE_SIZE)
 #define OVERVIEW_TILE_HEIGHT OVERVIEW_TILE_SIZE
 
-void map_to_overview_pos(int *overview_x, int *overview_y,
-			 int map_x, int map_y);
-void overview_to_map_pos(int *map_x, int *map_y,
-			 int overview_x, int overview_y);
+void map_to_overview_pos(int *overview_x, int *overview_y, int map_x,
+                         int map_y);
+void overview_to_map_pos(int *map_x, int *map_y, int overview_x,
+                         int overview_y);
 
 void refresh_overview_canvas(void);
 void refresh_overview_from_canvas(void);

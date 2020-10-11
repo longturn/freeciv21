@@ -38,12 +38,11 @@ class QPushButton;
 
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color);
-template<> std::set<chat_listener *> listener<chat_listener>::instances;
+template <> std::set<chat_listener *> listener<chat_listener>::instances;
 /***************************************************************************
   Listener for chat. See listener<> for information about how to use it
 ***************************************************************************/
-class chat_listener : public listener<chat_listener>
-{
+class chat_listener : public listener<chat_listener> {
   // History is shared among all instances...
   static QStringList history;
   // ...but each has its own position.
@@ -77,8 +76,7 @@ public:
 /***************************************************************************
   Chat input widget
 ***************************************************************************/
-class chat_input : public QLineEdit, private chat_listener
-{
+class chat_input : public QLineEdit, private chat_listener {
   Q_OBJECT
 
 private slots:
@@ -95,24 +93,24 @@ public:
 /***************************************************************************
   Text browser with mouse double click signal
 ***************************************************************************/
-class text_browser_dblclck : public QTextBrowser
-{
+class text_browser_dblclck : public QTextBrowser {
   Q_OBJECT
 public:
-  explicit text_browser_dblclck(QWidget *parent = NULL): QTextBrowser(parent) {}
+  explicit text_browser_dblclck(QWidget *parent = NULL)
+      : QTextBrowser(parent)
+  {
+  }
 signals:
   void dbl_clicked();
+
 protected:
-  void mouseDoubleClickEvent(QMouseEvent *event) {
-    emit dbl_clicked();
-  }
+  void mouseDoubleClickEvent(QMouseEvent *event) { emit dbl_clicked(); }
 };
 
 /***************************************************************************
   Class for chat widget
 ***************************************************************************/
-class chatwdg : public QWidget, private chat_listener
-{
+class chatwdg : public QWidget, private chat_listener {
   Q_OBJECT
 public:
   chatwdg(QWidget *parent);
@@ -128,10 +126,12 @@ private slots:
   void rm_links();
   void anchor_clicked(const QUrl &link);
   void toggle_size();
+
 protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event);
   bool eventFilter(QObject *obj, QEvent *event);
+
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags);
@@ -139,15 +139,14 @@ private:
   text_browser_dblclck *chat_output;
   QPushButton *remove_links;
   QCheckBox *cb;
-
 };
 
-class version_message_event : public QEvent
-{
+class version_message_event : public QEvent {
   QString message;
+
 public:
   explicit version_message_event(const QString &msg);
   QString get_message() const { return message; }
 };
 
-#endif                        /* FC__CHATLINE_H */
+#endif /* FC__CHATLINE_H */

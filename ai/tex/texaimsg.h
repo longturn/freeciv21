@@ -51,15 +51,13 @@
 #define SPECENUM_VALUE2NAME "BuildChoice"
 #include "specenum_gen.h"
 
-struct texai_msg
-{
+struct texai_msg {
   enum texaimsgtype type;
   struct player *plr;
   void *data;
 };
 
-struct texai_req
-{
+struct texai_req {
   enum texaireqtype type;
   struct player *plr;
   void *data;

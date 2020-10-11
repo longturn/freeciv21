@@ -30,4 +30,4 @@ DIR *fc_opendir(const char *dir_to_open);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__DIRENT_H */
+#endif /* FC__DIRENT_H */

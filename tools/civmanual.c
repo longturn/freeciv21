@@ -67,8 +67,8 @@
 #include "plrhand.h"
 #include "report.h"
 #include "ruleset.h"
-#include "settings.h"
 #include "sernet.h"
+#include "settings.h"
 #include "srv_main.h"
 #include "stdinhand.h"
 
@@ -104,89 +104,86 @@ struct tag_types {
 };
 
 struct tag_types html_tags = {
-  /* file extension */
-  "html",
+    /* file extension */
+    "html",
 
-  /* header */
-  "<html><head><link rel=\"stylesheet\" type=\"text/css\" "
-  "href=\"manual.css\"/><meta http-equiv=\"Content-Type\" "
-  "content=\"text/html; charset=UTF-8\"/></head><body>\n\n",
+    /* header */
+    "<html><head><link rel=\"stylesheet\" type=\"text/css\" "
+    "href=\"manual.css\"/><meta http-equiv=\"Content-Type\" "
+    "content=\"text/html; charset=UTF-8\"/></head><body>\n\n",
 
-  /* title begin */
-  "<h1>",
+    /* title begin */
+    "<h1>",
 
-  /* title end */
-  "</h1>",
+    /* title end */
+    "</h1>",
 
-  /* section title begin */
-  "<h3 class='section'>",
+    /* section title begin */
+    "<h3 class='section'>",
 
-  /* section title end */
-  "</h3>",
+    /* section title end */
+    "</h3>",
 
-  /* image begin */
-  "<img src=\"",
+    /* image begin */
+    "<img src=\"",
 
-  /* image end */
-  ".png\">",
+    /* image end */
+    ".png\">",
 
-  /* item begin */
-  "<div class='item' id='%s%d'>\n",
+    /* item begin */
+    "<div class='item' id='%s%d'>\n",
 
-  /* item end */
-  "</div>\n",
+    /* item end */
+    "</div>\n",
 
-  /* subitem begin */
-  "<pre class='%s'>",
+    /* subitem begin */
+    "<pre class='%s'>",
 
-  /* subitem end */
-  "</pre>\n",
+    /* subitem end */
+    "</pre>\n",
 
-  /* tail */
-  "</body></html>"
-};
+    /* tail */
+    "</body></html>"};
 
 struct tag_types wiki_tags = {
-  /* file extension */
-  "mediawiki",
+    /* file extension */
+    "mediawiki",
 
-  /* header */
-  " ",
+    /* header */
+    " ",
 
-  /* title begin */
-  "=",
+    /* title begin */
+    "=",
 
-  /* title end */
-  "=",
+    /* title end */
+    "=",
 
-  /* section title begin */
-  "===",
+    /* section title begin */
+    "===",
 
-  /* section title end */
-  "===",
+    /* section title end */
+    "===",
 
-  /* image begin */
-  "[[Image:",
+    /* image begin */
+    "[[Image:",
 
-  /* image end */
-  ".png]]",
+    /* image end */
+    ".png]]",
 
-  /* item begin */
-  "----\n<!-- %s %d -->\n",
+    /* item begin */
+    "----\n<!-- %s %d -->\n",
 
-  /* item end */
-  "\n",
+    /* item end */
+    "\n",
 
-  /* subitem begin */
-  "<!-- %s -->\n",
+    /* subitem begin */
+    "<!-- %s -->\n",
 
-  /* subitem end */
-  "\n",
+    /* subitem end */
+    "\n",
 
-  /* tail */
-  " "
-};
-
+    /* tail */
+    " "};
 
 void insert_client_build_info(char *outbuf, size_t outlen);
 
@@ -195,9 +192,9 @@ const char *client_string = "freeciv-manual";
 
 static char *ruleset = NULL;
 
-/**********************************************************************//**
-  Replace html special characters ('&', '<' and '>').
-**************************************************************************/
+/**********************************************************************/ /**
+   Replace html special characters ('&', '<' and '>').
+ **************************************************************************/
 static char *html_special_chars(char *str, size_t *len)
 {
   char *buf;
@@ -209,72 +206,50 @@ static char *html_special_chars(char *str, size_t *len)
   return buf;
 }
 
-
 /*******************************************
   Useless stubs for compiling client code.
 */
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-void popup_help_dialog_string(const char *item)
-{
-  /* Empty stub. */
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+void popup_help_dialog_string(const char *item) { /* Empty stub. */ }
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-void popdown_help_dialog(void)
-{
-  /* Empty stub. */
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+void popdown_help_dialog(void) { /* Empty stub. */ }
 
 struct tileset *tileset;
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-const char *tileset_name_get(struct tileset *t)
-{
-  return NULL;
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+const char *tileset_name_get(struct tileset *t) { return NULL; }
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-const char *tileset_version(struct tileset *t)
-{
-  return NULL;
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+const char *tileset_version(struct tileset *t) { return NULL; }
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-const char *tileset_summary(struct tileset *t)
-{
-  return NULL;
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+const char *tileset_summary(struct tileset *t) { return NULL; }
 
-/**********************************************************************//**
-  Client stub
-**************************************************************************/
-const char *tileset_description(struct tileset *t)
-{
-  return NULL;
-}
+/**********************************************************************/ /**
+   Client stub
+ **************************************************************************/
+const char *tileset_description(struct tileset *t) { return NULL; }
 
-/**********************************************************************//**
-  Mostly a client stub.
-**************************************************************************/
-enum client_states client_state(void)
-{
-  return C_S_INITIAL;
-}
+/**********************************************************************/ /**
+   Mostly a client stub.
+ **************************************************************************/
+enum client_states client_state(void) { return C_S_INITIAL; }
 
-/**********************************************************************//**
-  Mostly a client stub.
-**************************************************************************/
+/**********************************************************************/ /**
+   Mostly a client stub.
+ **************************************************************************/
 bool client_nation_is_in_current_set(const struct nation_type *pnation)
 {
   /* Currently, there is no way to select a nation set for freeciv-manual.
@@ -282,9 +257,9 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Write a server manual, then quit.
-**************************************************************************/
+/**********************************************************************/ /**
+   Write a server manual, then quit.
+ **************************************************************************/
 static bool manual_command(struct tag_types *tag_info)
 {
   FILE *doc;
@@ -324,9 +299,11 @@ static bool manual_command(struct tag_types *tag_info)
     switch (manuals) {
     case MANUAL_SETTINGS:
       /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
-      fprintf(doc, _("%sFreeciv %s server options (%s)%s\n\n"), tag_info->title_begin,
-              VERSION_STRING, game.control.name, tag_info->title_end);
-      settings_iterate(SSET_ALL, pset) {
+      fprintf(doc, _("%sFreeciv %s server options (%s)%s\n\n"),
+              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_end);
+      settings_iterate(SSET_ALL, pset)
+      {
         char buf[256];
         const char *sethelp;
 
@@ -363,34 +340,30 @@ static bool manual_command(struct tag_types *tag_info)
         switch (setting_type(pset)) {
         case SST_INT:
           fprintf(doc, "\n<p class=\"bounds\">%s %d, %s %s, %s %d</p>\n",
-                  _("Minimum:"), setting_int_min(pset),
-                  _("Default:"), buf,
+                  _("Minimum:"), setting_int_min(pset), _("Default:"), buf,
                   _("Maximum:"), setting_int_max(pset));
           break;
-        case SST_ENUM:
-          {
-            const char *value;
+        case SST_ENUM: {
+          const char *value;
 
-            fprintf(doc, "\n<p class=\"bounds\">%s</p>",
-                    _("Possible values:"));
-            for (i = 0; (value = setting_enum_val(pset, i, FALSE)); i++) {
-              fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>",
-                      value, setting_enum_val(pset, i, TRUE));
-            }
+          fprintf(doc, "\n<p class=\"bounds\">%s</p>",
+                  _("Possible values:"));
+          for (i = 0; (value = setting_enum_val(pset, i, FALSE)); i++) {
+            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
+                    setting_enum_val(pset, i, TRUE));
           }
-          break;
-        case SST_BITWISE:
-          {
-            const char *value;
+        } break;
+        case SST_BITWISE: {
+          const char *value;
 
-            fprintf(doc, "\n<p class=\"bounds\">%s</p>",
-                    _("Possible values (option can take any number of these):"));
-            for (i = 0; (value = setting_bitwise_bit(pset, i, FALSE)); i++) {
-              fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>",
-                      value, setting_bitwise_bit(pset, i, TRUE));
-            }
+          fprintf(
+              doc, "\n<p class=\"bounds\">%s</p>",
+              _("Possible values (option can take any number of these):"));
+          for (i = 0; (value = setting_bitwise_bit(pset, i, FALSE)); i++) {
+            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
+                    setting_bitwise_bit(pset, i, TRUE));
           }
-          break;
+        } break;
         case SST_BOOL:
         case SST_STRING:
           break;
@@ -399,8 +372,8 @@ static bool manual_command(struct tag_types *tag_info)
           break;
         }
         if (SST_INT != setting_type(pset)) {
-          fprintf(doc, "\n<p class=\"bounds\">%s %s</p>\n",
-                  _("Default:"), buf);
+          fprintf(doc, "\n<p class=\"bounds\">%s %s</p>\n", _("Default:"),
+                  buf);
         }
         if (setting_non_default(pset)) {
           fprintf(doc, _("\n<p class=\"changed\">Value set to %s</p>\n"),
@@ -408,13 +381,14 @@ static bool manual_command(struct tag_types *tag_info)
         }
 
         fprintf(doc, "%s", tag_info->item_end);
-      } settings_iterate_end;
+      }
+      settings_iterate_end;
       break;
 
     case MANUAL_COMMANDS:
       /* TRANS: markup ... Freeciv version ... markup */
-      fprintf(doc, _("%sFreeciv %s server commands%s\n\n"), tag_info->title_begin,
-              VERSION_STRING, tag_info->title_end);
+      fprintf(doc, _("%sFreeciv %s server commands%s\n\n"),
+              tag_info->title_begin, VERSION_STRING, tag_info->title_end);
       for (i = 0; i < CMD_NUM; i++) {
         const struct command *cmd = command_by_number(i);
 
@@ -454,31 +428,37 @@ static bool manual_command(struct tag_types *tag_info)
 
     case MANUAL_TERRAIN:
       /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
-      fprintf(doc, _("%sFreeciv %s terrain help (%s)%s\n\n"), tag_info->title_begin,
-              VERSION_STRING, game.control.name, tag_info->title_end);
-      fprintf(doc, "<table><tr bgcolor=#9bc3d1><th colspan=2>%s</th>", _("Terrain"));
+      fprintf(doc, _("%sFreeciv %s terrain help (%s)%s\n\n"),
+              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_end);
+      fprintf(doc, "<table><tr bgcolor=#9bc3d1><th colspan=2>%s</th>",
+              _("Terrain"));
       fprintf(doc, "<th>F/P/T</th><th>%s</th>", _("Resources"));
       fprintf(doc, "<th>%s<br/>%s</th>", _("Move cost"), _("Defense bonus"));
       fprintf(doc, "<th>%s<br/>%s<br/>%s<br/>%s<br/>%s<br/>%s<br/>(%s)</th>",
-              _("Irrigation"), _("Cultivate"), _("Mining"), _("Plant"), _("Transform"),
+              _("Irrigation"), _("Cultivate"), _("Mining"), _("Plant"),
+              _("Transform"),
               /* xgettext:no-c-format */
               _("% of Road bonus"), _("turns"));
-      fprintf(doc, "<th>%s<br/>%s</th>",
-              _("Clean pollution"), _("Clean fallout"));
+      fprintf(doc, "<th>%s<br/>%s</th>", _("Clean pollution"),
+              _("Clean fallout"));
       ri = 0;
       if (game.control.num_road_types > 0) {
         fprintf(doc, "<th>");
       }
-      extra_type_by_cause_iterate(EC_ROAD, pextra) {
+      extra_type_by_cause_iterate(EC_ROAD, pextra)
+      {
         if (++ri < game.control.num_road_types) {
           fprintf(doc, "%s<br/>", extra_name_translation(pextra));
         } else {
           /* Last one */
           fprintf(doc, "%s</th>", extra_name_translation(pextra));
         }
-      } extra_type_by_cause_iterate_end;
+      }
+      extra_type_by_cause_iterate_end;
       fprintf(doc, "</tr>\n\n");
-      terrain_type_iterate(pterrain) {
+      terrain_type_iterate(pterrain)
+      {
         struct extra_type **r;
 
         if (0 == strlen(terrain_rule_name(pterrain))) {
@@ -486,19 +466,19 @@ static bool manual_command(struct tag_types *tag_info)
           continue;
         }
 
-        fprintf(doc, "<tr><td>%s%s%s</td><td>%s</td>",
-                tag_info->image_begin, pterrain->graphic_str, tag_info->image_end,
+        fprintf(doc, "<tr><td>%s%s%s</td><td>%s</td>", tag_info->image_begin,
+                pterrain->graphic_str, tag_info->image_end,
                 terrain_name_translation(pterrain));
-        fprintf(doc, "<td>%d/%d/%d</td>\n",
-                pterrain->output[O_FOOD], pterrain->output[O_SHIELD],
-                pterrain->output[O_TRADE]);
+        fprintf(doc, "<td>%d/%d/%d</td>\n", pterrain->output[O_FOOD],
+                pterrain->output[O_SHIELD], pterrain->output[O_TRADE]);
 
         fprintf(doc, "<td><table width=\"100%%\">\n");
         for (r = pterrain->resources; *r; r++) {
-          fprintf(doc, "<tr><td>%s%s%s</td><td>%s</td>"
+          fprintf(doc,
+                  "<tr><td>%s%s%s</td><td>%s</td>"
                   "<td align=\"right\">%d/%d/%d</td></tr>\n",
-                  tag_info->image_begin, (*r)->graphic_str, tag_info->image_end,
-                  extra_name_translation(*r),
+                  tag_info->image_begin, (*r)->graphic_str,
+                  tag_info->image_end, extra_name_translation(*r),
                   (*r)->data.resource->output[O_FOOD],
                   (*r)->data.resource->output[O_SHIELD],
                   (*r)->data.resource->output[O_TRADE]);
@@ -510,7 +490,8 @@ static bool manual_command(struct tag_types *tag_info)
 
         fprintf(doc, "<td><table width=\"100%%\">\n");
         if (pterrain->irrigation_time != 0) {
-          fprintf(doc, "<tr><td>+%d F</td><td align=\"right\">(%d)</td></tr>\n",
+          fprintf(doc,
+                  "<tr><td>+%d F</td><td align=\"right\">(%d)</td></tr>\n",
                   pterrain->irrigation_food_incr, pterrain->irrigation_time);
         } else {
           fprintf(doc, "<tr><td>%s</td></tr>\n", _("impossible"));
@@ -524,7 +505,8 @@ static bool manual_command(struct tag_types *tag_info)
           fprintf(doc, "<tr><td>%s</td></tr>\n", _("impossible"));
         }
         if (pterrain->mining_time != 0) {
-          fprintf(doc, "<tr><td>+%d P</td><td align=\"right\">(%d)</td></tr>\n",
+          fprintf(doc,
+                  "<tr><td>+%d P</td><td align=\"right\">(%d)</td></tr>\n",
                   pterrain->mining_shield_incr, pterrain->mining_time);
         } else {
           fprintf(doc, "<tr><td>%s</td></tr>\n", _("impossible"));
@@ -551,23 +533,29 @@ static bool manual_command(struct tag_types *tag_info)
                 pterrain->road_output_incr_pct[O_TRADE]);
 
         fprintf(doc, "<td align=\"center\">%d / %d</td>",
-                pterrain->clean_pollution_time, pterrain->clean_fallout_time);
+                pterrain->clean_pollution_time,
+                pterrain->clean_fallout_time);
 
         ri = 0;
         if (game.control.num_road_types > 0) {
           fprintf(doc, "<td>");
         }
-        extra_type_by_cause_iterate(EC_ROAD, pextra) {
+        extra_type_by_cause_iterate(EC_ROAD, pextra)
+        {
           if (++ri < game.control.num_road_types) {
-            fprintf(doc, "%d / ", terrain_extra_build_time(pterrain, ACTIVITY_GEN_ROAD,
-                                                           pextra));
+            fprintf(doc, "%d / ",
+                    terrain_extra_build_time(pterrain, ACTIVITY_GEN_ROAD,
+                                             pextra));
           } else {
-            fprintf(doc, "%d</td>", terrain_extra_build_time(pterrain, ACTIVITY_GEN_ROAD,
-                                                             pextra));
+            fprintf(doc, "%d</td>",
+                    terrain_extra_build_time(pterrain, ACTIVITY_GEN_ROAD,
+                                             pextra));
           }
-        } extra_type_by_cause_iterate_end;
+        }
+        extra_type_by_cause_iterate_end;
         fprintf(doc, "</tr>\n\n");
-      } terrain_type_iterate_end;
+      }
+      terrain_type_iterate_end;
 
       fprintf(doc, "</table>\n");
 
@@ -577,20 +565,24 @@ static bool manual_command(struct tag_types *tag_info)
     case MANUAL_WONDERS:
       if (manuals == MANUAL_BUILDINGS) {
         /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
-        fprintf(doc, _("%sFreeciv %s buildings help (%s)%s\n\n"), tag_info->title_begin,
-                VERSION_STRING, game.control.name, tag_info->title_end);
+        fprintf(doc, _("%sFreeciv %s buildings help (%s)%s\n\n"),
+                tag_info->title_begin, VERSION_STRING, game.control.name,
+                tag_info->title_end);
       } else {
         /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
-        fprintf(doc, _("%sFreeciv %s wonders help (%s)%s\n\n"), tag_info->title_begin,
-                VERSION_STRING, game.control.name, tag_info->title_end);
+        fprintf(doc, _("%sFreeciv %s wonders help (%s)%s\n\n"),
+                tag_info->title_begin, VERSION_STRING, game.control.name,
+                tag_info->title_end);
       }
 
-      fprintf(doc, "<table>\n<tr bgcolor=#9bc3d1><th colspan=2>%s</th>"
-                   "<th>%s<br/>%s</th><th>%s<br/>%s</th><th>%s</th></tr>\n\n",
-              _("Name"), _("Cost"), _("Upkeep"),
-              _("Requirement"), _("Obsolete by"), _("More info"));
+      fprintf(doc,
+              "<table>\n<tr bgcolor=#9bc3d1><th colspan=2>%s</th>"
+              "<th>%s<br/>%s</th><th>%s<br/>%s</th><th>%s</th></tr>\n\n",
+              _("Name"), _("Cost"), _("Upkeep"), _("Requirement"),
+              _("Obsolete by"), _("More info"));
 
-      improvement_iterate(pimprove) {
+      improvement_iterate(pimprove)
+      {
         char buf[64000];
         struct advance *obs_tech = NULL;
 
@@ -601,38 +593,42 @@ static bool manual_command(struct tag_types *tag_info)
 
         helptext_building(buf, sizeof(buf), NULL, NULL, pimprove);
 
-        fprintf(doc, "<tr><td>%s%s%s</td><td>%s</td>\n"
-                     "<td align=\"center\"><b>%d</b><br/>%d</td>\n<td>",
-                tag_info->image_begin, pimprove->graphic_str, tag_info->image_end,
-                improvement_name_translation(pimprove),
-                pimprove->build_cost,
-                pimprove->upkeep);
+        fprintf(doc,
+                "<tr><td>%s%s%s</td><td>%s</td>\n"
+                "<td align=\"center\"><b>%d</b><br/>%d</td>\n<td>",
+                tag_info->image_begin, pimprove->graphic_str,
+                tag_info->image_end, improvement_name_translation(pimprove),
+                pimprove->build_cost, pimprove->upkeep);
 
-        requirement_vector_iterate(&pimprove->reqs, req) {
+        requirement_vector_iterate(&pimprove->reqs, req)
+        {
           char text[512], text2[512];
-          fc_snprintf(text2, sizeof(text2),
-                      /* TRANS: improvement requires a feature to be absent. */
-                      req->present ? "%s" : _("no %s"),
-                      VUT_NONE != req->source.kind
-                      ? universal_name_translation(&req->source,
-                                                   text, sizeof(text))
-                      : Q_("?req:None"));
+          fc_snprintf(
+              text2, sizeof(text2),
+              /* TRANS: improvement requires a feature to be absent. */
+              req->present ? "%s" : _("no %s"),
+              VUT_NONE != req->source.kind ? universal_name_translation(
+                  &req->source, text, sizeof(text))
+                                           : Q_("?req:None"));
           fprintf(doc, "%s<br/>", text2);
-        } requirement_vector_iterate_end;
+        }
+        requirement_vector_iterate_end;
 
-        requirement_vector_iterate(&pimprove->obsolete_by, pobs) {
+        requirement_vector_iterate(&pimprove->obsolete_by, pobs)
+        {
           if (pobs->source.kind == VUT_ADVANCE) {
             obs_tech = pobs->source.value.advance;
             break;
           }
-        } requirement_vector_iterate_end;
+        }
+        requirement_vector_iterate_end;
 
         fprintf(doc, "<em>%s</em></td>\n",
-                obs_tech != NULL
-                ? advance_name_translation(obs_tech)
-                : Q_("?tech:None"));
+                obs_tech != NULL ? advance_name_translation(obs_tech)
+                                 : Q_("?tech:None"));
         fprintf(doc, "<td>%s</td>\n</tr>\n\n", buf);
-      } improvement_iterate_end;
+      }
+      improvement_iterate_end;
       fprintf(doc, "</table>");
       break;
 
@@ -641,9 +637,11 @@ static bool manual_command(struct tag_types *tag_info)
        * manual pages. */
       /* FIXME: this doesn't resemble the wiki manual at all. */
       /* TRANS: markup ... Freeciv version ... ruleset name ... markup */
-      fprintf(doc, _("%sFreeciv %s governments help (%s)%s\n\n"), tag_info->title_begin,
-              VERSION_STRING, game.control.name, tag_info->title_end);
-      governments_iterate(pgov) {
+      fprintf(doc, _("%sFreeciv %s governments help (%s)%s\n\n"),
+              tag_info->title_begin, VERSION_STRING, game.control.name,
+              tag_info->title_end);
+      governments_iterate(pgov)
+      {
         char buf[64000];
         fprintf(doc, tag_info->item_begin, "gov", pgov->item_number);
         fprintf(doc, "%s%s%s\n\n", tag_info->sect_title_begin,
@@ -653,7 +651,8 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s\n\n", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
-      } governments_iterate_end;
+      }
+      governments_iterate_end;
       break;
 
     case MANUAL_UNITS:
@@ -664,7 +663,8 @@ static bool manual_command(struct tag_types *tag_info)
       fprintf(doc, _("%sFreeciv %s unit types help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
-      unit_type_iterate(putype) {
+      unit_type_iterate(putype)
+      {
         char buf[64000];
 
         fprintf(doc, tag_info->item_begin, "utype", putype->item_number);
@@ -672,14 +672,12 @@ static bool manual_command(struct tag_types *tag_info)
                 utype_name_translation(putype), tag_info->sect_title_end);
         fprintf(doc, tag_info->subitem_begin, "cost");
         fprintf(doc,
-                PL_("Cost: %d shield",
-                    "Cost: %d shields",
+                PL_("Cost: %d shield", "Cost: %d shields",
                     utype_build_shield_cost_base(putype)),
                 utype_build_shield_cost_base(putype));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "upkeep");
-        fprintf(doc, _("Upkeep: %s"),
-                helptext_unit_upkeep_str(putype));
+        fprintf(doc, _("Upkeep: %s"), helptext_unit_upkeep_str(putype));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "moves");
         fprintf(doc, _("Moves: %s"),
@@ -687,36 +685,33 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "vision");
         fprintf(doc, _("Vision: %d"),
-                (int)sqrt((double)putype->vision_radius_sq));
+                (int) sqrt((double) putype->vision_radius_sq));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "attack");
-        fprintf(doc, _("Attack: %d"),
-                putype->attack_strength);
+        fprintf(doc, _("Attack: %d"), putype->attack_strength);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "defense");
-        fprintf(doc, _("Defense: %d"),
-                putype->defense_strength);
+        fprintf(doc, _("Defense: %d"), putype->defense_strength);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "firepower");
-        fprintf(doc, _("Firepower: %d"),
-                putype->firepower);
+        fprintf(doc, _("Firepower: %d"), putype->firepower);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "hitpoints");
-        fprintf(doc, _("Hitpoints: %d"),
-                putype->hp);
+        fprintf(doc, _("Hitpoints: %d"), putype->hp);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "obsolete");
         fprintf(doc, _("Obsolete by: %s"),
-                U_NOT_OBSOLETED == putype->obsoleted_by ?
-                  Q_("?utype:None") :
-                  utype_name_translation(putype->obsoleted_by));
+                U_NOT_OBSOLETED == putype->obsoleted_by
+                    ? Q_("?utype:None")
+                    : utype_name_translation(putype->obsoleted_by));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "helptext");
         helptext_unit(buf, sizeof(buf), NULL, "", putype);
         fprintf(doc, "%s", buf);
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, "%s", tag_info->item_end);
-      } unit_type_iterate_end;
+      }
+      unit_type_iterate_end;
       break;
 
     case MANUAL_TECHS:
@@ -725,7 +720,8 @@ static bool manual_command(struct tag_types *tag_info)
       fprintf(doc, _("%sFreeciv %s tech help (%s)%s\n\n"),
               tag_info->title_begin, VERSION_STRING, game.control.name,
               tag_info->title_end);
-      advance_iterate(A_FIRST, ptech) {
+      advance_iterate(A_FIRST, ptech)
+      {
         if (valid_advance(ptech)) {
           char buf[64000];
 
@@ -740,7 +736,8 @@ static bool manual_command(struct tag_types *tag_info)
 
           fprintf(doc, "%s", tag_info->item_end);
         }
-      } advance_iterate_end;
+      }
+      advance_iterate_end;
       break;
 
     case MANUAL_COUNT:
@@ -756,9 +753,9 @@ static bool manual_command(struct tag_types *tag_info)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Entry point of whole freeciv-manual program
-**************************************************************************/
+/**********************************************************************/ /**
+   Entry point of whole freeciv-manual program
+ **************************************************************************/
 int main(int argc, char **argv)
 {
   int inx;
@@ -790,7 +787,8 @@ int main(int argc, char **argv)
       break;
     } else if (is_option("--version", argv[inx])) {
       showvers = TRUE;
-    } else if ((option = get_option_malloc("--log", argv, &inx, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--log", argv, &inx, argc, TRUE))) {
       srvarg.log_filename = option;
     } else if (is_option("--wiki", argv[inx])) {
       tag_info = &wiki_tags;
@@ -807,7 +805,8 @@ int main(int argc, char **argv)
         showhelp = TRUE;
       }
 #endif /* FREECIV_NDEBUG */
-    } else if ((option = get_option_malloc("--debug", argv, &inx, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--debug", argv, &inx, argc, FALSE))) {
       if (!log_parse_level_str(option, &srvarg.loglevel)) {
         showhelp = TRUE;
         break;
@@ -853,37 +852,36 @@ int main(int argc, char **argv)
 
 #ifdef FREECIV_DEBUG
     cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
+                /* TRANS: "debug" is exactly what user must type, do not
+                   translate. */
                 _("debug NUM"),
                 _("Set debug log level (one of f,e,w,n,v,d, "
                   "or d:file1,min,max:...)"));
 #else  /* FREECIV_DEBUG */
     cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
-                _("debug NUM"),
-                _("Set debug log level (%d to %d)"),
+                /* TRANS: "debug" is exactly what user must type, do not
+                   translate. */
+                _("debug NUM"), _("Set debug log level (%d to %d)"),
                 LOG_FATAL, LOG_VERBOSE);
 #endif /* FREECIV_DEBUG */
 #ifndef FREECIV_NDEBUG
     cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not translate. */
+                /* TRANS: "Fatal" is exactly what user must type, do not
+                   translate. */
                 _("Fatal [SIGNAL]"),
                 _("Raise a signal on failed assertion"));
 #endif /* FREECIV_NDEBUG */
-    cmdhelp_add(help, "h", "help",
-                _("Print a summary of the options"));
-    cmdhelp_add(help, "l",
-                  /* TRANS: "log" is exactly what user must type, do not translate. */
-                _("log FILE"),
-                _("Use FILE as logfile"));
+    cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
+    cmdhelp_add(
+        help, "l",
+        /* TRANS: "log" is exactly what user must type, do not translate. */
+        _("log FILE"), _("Use FILE as logfile"));
     cmdhelp_add(help, "r",
-                  /* TRANS: "ruleset" is exactly what user must type, do not translate. */
-                _("ruleset RULESET"),
-                _("Make manual for RULESET"));
-    cmdhelp_add(help, "v", "version",
-                _("Print the version number"));
-    cmdhelp_add(help, "w", "wiki",
-                _("Write manual in wiki format"));
+                /* TRANS: "ruleset" is exactly what user must type, do not
+                   translate. */
+                _("ruleset RULESET"), _("Make manual for RULESET"));
+    cmdhelp_add(help, "v", "version", _("Print the version number"));
+    cmdhelp_add(help, "w", "wiki", _("Write manual in wiki format"));
 
     /* The function below prints a header and footer for the options.
      * Furthermore, the options are sorted. */
@@ -906,9 +904,9 @@ int main(int argc, char **argv)
   return retval;
 }
 
-/**********************************************************************//**
-  Empty function required by helpdata
-**************************************************************************/
+/**********************************************************************/ /**
+   Empty function required by helpdata
+ **************************************************************************/
 void insert_client_build_info(char *outbuf, size_t outlen)
 {
   /* Nothing here */

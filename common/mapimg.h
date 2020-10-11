@@ -66,39 +66,33 @@ extern "C" {
 
 /* map image layers */
 #define SPECENUM_NAME mapimg_layer
-#define SPECENUM_VALUE0     MAPIMG_LAYER_AREA
+#define SPECENUM_VALUE0 MAPIMG_LAYER_AREA
 #define SPECENUM_VALUE0NAME "a"
-#define SPECENUM_VALUE1     MAPIMG_LAYER_BORDERS
+#define SPECENUM_VALUE1 MAPIMG_LAYER_BORDERS
 #define SPECENUM_VALUE1NAME "b"
-#define SPECENUM_VALUE2     MAPIMG_LAYER_CITIES
+#define SPECENUM_VALUE2 MAPIMG_LAYER_CITIES
 #define SPECENUM_VALUE2NAME "c"
-#define SPECENUM_VALUE3     MAPIMG_LAYER_FOGOFWAR
+#define SPECENUM_VALUE3 MAPIMG_LAYER_FOGOFWAR
 #define SPECENUM_VALUE3NAME "f"
-#define SPECENUM_VALUE4     MAPIMG_LAYER_KNOWLEDGE
+#define SPECENUM_VALUE4 MAPIMG_LAYER_KNOWLEDGE
 #define SPECENUM_VALUE4NAME "k"
-#define SPECENUM_VALUE5     MAPIMG_LAYER_TERRAIN
+#define SPECENUM_VALUE5 MAPIMG_LAYER_TERRAIN
 #define SPECENUM_VALUE5NAME "t"
-#define SPECENUM_VALUE6     MAPIMG_LAYER_UNITS
+#define SPECENUM_VALUE6 MAPIMG_LAYER_UNITS
 #define SPECENUM_VALUE6NAME "u"
 /* used a possible dummy value */
-#define SPECENUM_COUNT      MAPIMG_LAYER_COUNT
-#define SPECENUM_COUNTNAME  "-"
+#define SPECENUM_COUNT MAPIMG_LAYER_COUNT
+#define SPECENUM_COUNTNAME "-"
 #include "specenum_gen.h"
 /* If you change this enum, the default values for the client have to be
  * adapted (see options.c). */
 
-typedef enum known_type
-  (*mapimg_tile_known_func)(const struct tile *ptile,
-                            const struct player *pplayer,
-                            bool knowledge);
-typedef struct terrain
-  *(*mapimg_tile_terrain_func)(const struct tile *ptile,
-                               const struct player *pplayer,
-                               bool knowledge);
-typedef struct player
-  *(*mapimg_tile_player_func)(const struct tile *ptile,
-                              const struct player *pplayer,
-                              bool knowledge);
+typedef enum known_type (*mapimg_tile_known_func)(
+    const struct tile *ptile, const struct player *pplayer, bool knowledge);
+typedef struct terrain *(*mapimg_tile_terrain_func)(
+    const struct tile *ptile, const struct player *pplayer, bool knowledge);
+typedef struct player *(*mapimg_tile_player_func)(
+    const struct tile *ptile, const struct player *pplayer, bool knowledge);
 
 typedef int (*mapimg_plrcolor_count_func)(void);
 typedef struct rgbcolor *(*mapimg_plrcolor_get_func)(int);

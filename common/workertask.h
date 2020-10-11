@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -17,8 +17,7 @@
 extern "C" {
 #endif /* __cplusplus */
 
-struct worker_task
-{
+struct worker_task {
   struct tile *ptile;
   enum unit_activity act;
   struct extra_type *tgt;
@@ -30,7 +29,7 @@ struct worker_task
 #define SPECLIST_TYPE struct worker_task
 #include "speclist.h"
 
-#define worker_task_list_iterate(tasklist, ptask) \
+#define worker_task_list_iterate(tasklist, ptask)                           \
   TYPED_LIST_ITERATE(struct worker_task, tasklist, ptask)
 #define worker_task_list_iterate_end LIST_ITERATE_END
 
@@ -40,4 +39,4 @@ void worker_task_init(struct worker_task *ptask);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__WORKERTASK_H */
+#endif /* FC__WORKERTASK_H */

@@ -14,7 +14,7 @@
 #define FC__TEMPERATURE_MAP_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #ifdef __cplusplus
 extern "C" {
@@ -27,10 +27,10 @@ extern "C" {
  */
 typedef int temperature_type;
 
-#define  TT_FROZEN    1
-#define  TT_COLD      2
-#define  TT_TEMPERATE 4
-#define  TT_TROPICAL  8
+#define TT_FROZEN 1
+#define TT_COLD 2
+#define TT_TEMPERATE 4
+#define TT_TROPICAL 8
 
 #define TT_NFROZEN (TT_COLD | TT_TEMPERATE | TT_TROPICAL)
 #define TT_ALL (TT_FROZEN | TT_NFROZEN)
@@ -47,4 +47,4 @@ void create_tmap(bool real);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__TEMPERATURE_MAP_H */
+#endif /* FC__TEMPERATURE_MAP_H */

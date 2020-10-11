@@ -19,7 +19,6 @@
 #include <QApplication>
 #include <QCheckBox>
 #include <QHBoxLayout>
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QPainter>
@@ -41,9 +40,9 @@
 #include "qtg_cxxside.h"
 #include "sprite.h"
 
-/***********************************************************************//**
-  Constructor for goto_dialog
-***************************************************************************/
+/***********************************************************************/ /**
+   Constructor for goto_dialog
+ ***************************************************************************/
 goto_dialog::goto_dialog(QWidget *parent)
 {
   QStringList headers_lst;
@@ -76,7 +75,7 @@ goto_dialog::goto_dialog(QWidget *parent)
   goto_tab->setHorizontalHeaderLabels(headers_lst);
   goto_tab->setSortingEnabled(true);
   goto_tab->horizontalHeader()->setSectionResizeMode(
-                                             QHeaderView::ResizeToContents);
+      QHeaderView::ResizeToContents);
 
   layout->addWidget(goto_tab, 0, 0, 4, 4);
   layout->addItem(hb, 4, 0, 1, 2);
@@ -85,25 +84,28 @@ goto_dialog::goto_dialog(QWidget *parent)
   layout->addWidget(close_but, 5, 3, 1, 1);
 
   setFixedWidth(goto_tab->horizontalHeader()->width());
-  connect(close_but, &QAbstractButton::clicked, this, &goto_dialog::close_dlg);
-  connect(goto_city, &QAbstractButton::clicked, this, &goto_dialog::go_to_city);
-  connect(airlift_city, &QAbstractButton::clicked, this, &goto_dialog::airlift_to);
-  connect(show_all, &QCheckBox::stateChanged,
-          this, &goto_dialog::checkbox_changed);
-  connect(goto_tab->selectionModel(),
-          SIGNAL(selectionChanged(const QItemSelection &,
-                                  const QItemSelection &)),
-          SLOT(item_selected(const QItemSelection &,
-                             const QItemSelection &)));
+  connect(close_but, &QAbstractButton::clicked, this,
+          &goto_dialog::close_dlg);
+  connect(goto_city, &QAbstractButton::clicked, this,
+          &goto_dialog::go_to_city);
+  connect(airlift_city, &QAbstractButton::clicked, this,
+          &goto_dialog::airlift_to);
+  connect(show_all, &QCheckBox::stateChanged, this,
+          &goto_dialog::checkbox_changed);
+  connect(
+      goto_tab->selectionModel(),
+      SIGNAL(
+          selectionChanged(const QItemSelection &, const QItemSelection &)),
+      SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
 
   setLayout(layout);
   original_tile = NULL;
   setFocus();
 }
 
-/***********************************************************************//**
-  Sets variables which must be destroyed later
-***************************************************************************/
+/***********************************************************************/ /**
+   Sets variables which must be destroyed later
+ ***************************************************************************/
 void goto_dialog::init()
 {
   if (original_tile) {
@@ -112,9 +114,9 @@ void goto_dialog::init()
   original_tile = tile_virtual_new(get_center_tile_mapcanvas());
 }
 
-/***********************************************************************//**
-  Destructor for goto dialog
-***************************************************************************/
+/***********************************************************************/ /**
+   Destructor for goto dialog
+ ***************************************************************************/
 goto_dialog::~goto_dialog()
 {
   if (original_tile) {
@@ -122,17 +124,14 @@ goto_dialog::~goto_dialog()
   }
 }
 
-/***********************************************************************//**
-  Slot for checkbox 'all nations'
-***************************************************************************/
-void goto_dialog::checkbox_changed(int state)
-{
-  update_dlg();
-}
+/***********************************************************************/ /**
+   Slot for checkbox 'all nations'
+ ***************************************************************************/
+void goto_dialog::checkbox_changed(int state) { update_dlg(); }
 
-/***********************************************************************//**
-  User has chosen some city on table
-***************************************************************************/
+/***********************************************************************/ /**
+   User has chosen some city on table
+ ***************************************************************************/
 void goto_dialog::item_selected(const QItemSelection &sl,
                                 const QItemSelection &ds)
 {
@@ -154,32 +153,33 @@ void goto_dialog::item_selected(const QItemSelection &sl,
   dest = game_city_by_number(city_id);
   center_tile_mapcanvas(city_tile(dest));
   can_airlift = false;
-  unit_list_iterate(get_units_in_focus(), punit) {
+  unit_list_iterate(get_units_in_focus(), punit)
+  {
     if (unit_can_airlift_to(punit, dest)) {
       can_airlift = true;
       break;
     }
-  } unit_list_iterate_end;
+  }
+  unit_list_iterate_end;
 
   if (can_airlift) {
     airlift_city->setEnabled(true);
   } else {
     airlift_city->setDisabled(true);
   }
-
 }
 
-/***********************************************************************//**
-  Sorts dialog by default column (0)
-***************************************************************************/
+/***********************************************************************/ /**
+   Sorts dialog by default column (0)
+ ***************************************************************************/
 void goto_dialog::sort_def()
 {
   goto_tab->sortByColumn(0, Qt::AscendingOrder);
 }
 
-/***********************************************************************//**
-  Shows and moves widget
-***************************************************************************/
+/***********************************************************************/ /**
+   Shows and moves widget
+ ***************************************************************************/
 void goto_dialog::show_me()
 {
   QPoint p, final_p;
@@ -197,18 +197,17 @@ void goto_dialog::show_me()
   show();
 }
 
-/***********************************************************************//**
-  Updates table in widget
-***************************************************************************/
+/***********************************************************************/ /**
+   Updates table in widget
+ ***************************************************************************/
 void goto_dialog::update_dlg()
 {
   goto_tab->clearContents();
   goto_tab->setRowCount(0);
   goto_tab->setSortingEnabled(false);
   if (show_all->isChecked()) {
-    players_iterate(pplayer) {
-      fill_tab(pplayer);
-    } players_iterate_end;
+    players_iterate(pplayer) { fill_tab(pplayer); }
+    players_iterate_end;
   } else {
     fill_tab(client_player());
   }
@@ -218,9 +217,9 @@ void goto_dialog::update_dlg()
   goto_tab->horizontalHeader()->setStretchLastSection(true);
 }
 
-/***********************************************************************//**
-  Helper for function for filling table
-***************************************************************************/
+/***********************************************************************/ /**
+   Helper for function for filling table
+ ***************************************************************************/
 void goto_dialog::fill_tab(player *pplayer)
 {
   int i;
@@ -235,10 +234,10 @@ void goto_dialog::fill_tab(player *pplayer)
   QPixmap pix_scaled;
   QTableWidgetItem *item;
 
-
   h = fm.height() + 6;
   i = goto_tab->rowCount();
-  city_list_iterate(pplayer->cities, pcity) {
+  city_list_iterate(pplayer->cities, pcity)
+  {
     goto_tab->insertRow(i);
     for (int j = 0; j < 3; j++) {
       item = new QTableWidgetItem;
@@ -270,12 +269,13 @@ void goto_dialog::fill_tab(player *pplayer)
       goto_tab->setItem(i, j, item);
     }
     i++;
-  } city_list_iterate_end;
+  }
+  city_list_iterate_end;
 }
 
-/***********************************************************************//**
-  Slot for airlifting unit
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot for airlifting unit
+ ***************************************************************************/
 void goto_dialog::airlift_to()
 {
   struct city *pdest;
@@ -283,20 +283,22 @@ void goto_dialog::airlift_to()
   if (goto_tab->currentRow() == -1) {
     return;
   }
-  pdest = game_city_by_number(goto_tab->item(goto_tab->currentRow(),
-                                             0)->data(Qt::UserRole).toInt());
+  pdest = game_city_by_number(
+      goto_tab->item(goto_tab->currentRow(), 0)->data(Qt::UserRole).toInt());
   if (pdest) {
-    unit_list_iterate(get_units_in_focus(), punit) {
+    unit_list_iterate(get_units_in_focus(), punit)
+    {
       if (unit_can_airlift_to(punit, pdest)) {
         request_unit_airlift(punit, pdest);
       }
-    } unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
   }
 }
 
-/***********************************************************************//**
-  Slot for goto for city
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot for goto for city
+ ***************************************************************************/
 void goto_dialog::go_to_city()
 {
   struct city *pdest;
@@ -305,27 +307,29 @@ void goto_dialog::go_to_city()
     return;
   }
 
-  pdest = game_city_by_number(goto_tab->item(goto_tab->currentRow(),
-                                             0)->data(Qt::UserRole).toInt());
+  pdest = game_city_by_number(
+      goto_tab->item(goto_tab->currentRow(), 0)->data(Qt::UserRole).toInt());
   if (pdest) {
-    unit_list_iterate(get_units_in_focus(), punit) {
+    unit_list_iterate(get_units_in_focus(), punit)
+    {
       send_goto_tile(punit, pdest->tile);
-    } unit_list_iterate_end;
+    }
+    unit_list_iterate_end;
   }
 }
 
-/***********************************************************************//**
-  Slot for hiding dialog
-***************************************************************************/
+/***********************************************************************/ /**
+   Slot for hiding dialog
+ ***************************************************************************/
 void goto_dialog::close_dlg()
 {
   center_tile_mapcanvas(original_tile);
   hide();
 }
 
-/***********************************************************************//**
-  Paints rectangles for goto_dialog
-***************************************************************************/
+/***********************************************************************/ /**
+   Paints rectangles for goto_dialog
+ ***************************************************************************/
 void goto_dialog::paint(QPainter *painter, QPaintEvent *event)
 {
   painter->setBrush(QColor(0, 0, 30, 85));
@@ -334,9 +338,9 @@ void goto_dialog::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(5, 5, width() - 10, height() - 10);
 }
 
-/***********************************************************************//**
-  Paint event for goto_dialog
-***************************************************************************/
+/***********************************************************************/ /**
+   Paint event for goto_dialog
+ ***************************************************************************/
 void goto_dialog::paintEvent(QPaintEvent *event)
 {
   QPainter painter;
@@ -346,9 +350,9 @@ void goto_dialog::paintEvent(QPaintEvent *event)
   painter.end();
 }
 
-/***********************************************************************//*
-  Popup a dialog to have the focus unit goto to a city.
-**************************************************************************/
+/***********************************************************************/ /*
+   Popup a dialog to have the focus unit goto to a city.
+ **************************************************************************/
 void popup_goto_dialog(void)
 {
   if (C_S_RUNNING != client_state()) {

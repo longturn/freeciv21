@@ -22,44 +22,29 @@
 
 #include "cityrep.h"
 
-/**********************************************************************//**
-  Display the city report dialog.  Optionally raise it.
-**************************************************************************/
-void city_report_dialog_popup(bool raise)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Display the city report dialog.  Optionally raise it.
+ **************************************************************************/
+void city_report_dialog_popup(bool raise) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update (refresh) the entire city report dialog.
-**************************************************************************/
-void real_city_report_dialog_update(void *unused)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update (refresh) the entire city report dialog.
+ **************************************************************************/
+void real_city_report_dialog_update(void *unused) { /* PORTME */ }
 
-/**********************************************************************//**
-  Update the information for a single city in the city report.
-**************************************************************************/
-void real_city_report_update_city(struct city *pcity)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Update the information for a single city in the city report.
+ **************************************************************************/
+void real_city_report_update_city(struct city *pcity) { /* PORTME */ }
 
-/**********************************************************************//**
-  After a selection rectangle is defined, make the cities that
-  are hilited on the canvas exclusively hilited in the
-  City List window.
-**************************************************************************/
-void hilite_cities_from_canvas(void)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   After a selection rectangle is defined, make the cities that
+   are hilited on the canvas exclusively hilited in the
+   City List window.
+ **************************************************************************/
+void hilite_cities_from_canvas(void) { /* PORTME */ }
 
-/**********************************************************************//**
-  Toggle a city's hilited status.
-**************************************************************************/
-void toggle_city_hilite(struct city *pcity, bool on_off)
-{
-  /* PORTME */
-}
+/**********************************************************************/ /**
+   Toggle a city's hilited status.
+ **************************************************************************/
+void toggle_city_hilite(struct city *pcity, bool on_off) { /* PORTME */ }

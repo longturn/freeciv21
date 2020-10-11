@@ -66,14 +66,14 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h"                /* fc_assert */
+#include "log.h" /* fc_assert */
 #include "mem.h"
-#include "support.h"            /* fc_vsnprintf, fc_strlcat */
+#include "support.h" /* fc_vsnprintf, fc_strlcat */
 
 #include "astring.h"
 
-#define str     _private_str_
-#define n       _private_n_
+#define str _private_str_
+#define n _private_n_
 #define n_alloc _private_n_alloc_
 
 static const struct astring zero_astr = ASTRING_INIT;
@@ -84,10 +84,9 @@ static inline char *astr_buffer_get(size_t *alloc);
 static inline char *astr_buffer_grow(size_t *alloc);
 static void astr_buffer_free(void);
 
-
-/************************************************************************//**
-  Returns the astring buffer. Create it if necessary.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the astring buffer. Create it if necessary.
+ ****************************************************************************/
 static inline char *astr_buffer_get(size_t *alloc)
 {
   if (!astr_buffer) {
@@ -100,38 +99,33 @@ static inline char *astr_buffer_get(size_t *alloc)
   return astr_buffer;
 }
 
-/************************************************************************//**
-  Grow the astring buffer.
-****************************************************************************/
+/************************************************************************/ /**
+   Grow the astring buffer.
+ ****************************************************************************/
 static inline char *astr_buffer_grow(size_t *alloc)
 {
   astr_buffer_alloc *= 2;
-  astr_buffer = static_cast<char *>(fc_realloc(astr_buffer, astr_buffer_alloc));
+  astr_buffer =
+      static_cast<char *>(fc_realloc(astr_buffer, astr_buffer_alloc));
 
   *alloc = astr_buffer_alloc;
   return astr_buffer;
 }
 
-/************************************************************************//**
-  Free the astring buffer.
-****************************************************************************/
-static void astr_buffer_free(void)
-{
-  free(astr_buffer);
-}
+/************************************************************************/ /**
+   Free the astring buffer.
+ ****************************************************************************/
+static void astr_buffer_free(void) { free(astr_buffer); }
 
-/************************************************************************//**
-  Initialize the struct.
-****************************************************************************/
-void astr_init(struct astring *astr)
-{
-  *astr = zero_astr;
-}
+/************************************************************************/ /**
+   Initialize the struct.
+ ****************************************************************************/
+void astr_init(struct astring *astr) { *astr = zero_astr; }
 
-/************************************************************************//**
-  Free the memory associated with astr, and return astr to same
-  state as after astr_init.
-****************************************************************************/
+/************************************************************************/ /**
+   Free the memory associated with astr, and return astr to same
+   state as after astr_init.
+ ****************************************************************************/
 void astr_free(struct astring *astr)
 {
   if (astr->n_alloc > 0) {
@@ -141,11 +135,11 @@ void astr_free(struct astring *astr)
   *astr = zero_astr;
 }
 
-/************************************************************************//**
-  Return the raw string to the caller, and return astr to same state as
-  after astr_init().
-  Freeing the string's storage becomes the caller's responsibility.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the raw string to the caller, and return astr to same state as
+   after astr_init().
+   Freeing the string's storage becomes the caller's responsibility.
+ ****************************************************************************/
 char *astr_to_str(struct astring *astr)
 {
   char *str = astr->str;
@@ -153,13 +147,13 @@ char *astr_to_str(struct astring *astr)
   return str;
 }
 
-/************************************************************************//**
-  Check that astr has enough size to hold n, and realloc to a bigger
-  size if necessary.  Here n must be big enough to include the trailing
-  ascii-null if required.  The requested n is stored in astr->n.
-  The actual amount allocated may be larger than n, and is stored
-  in astr->n_alloc.
-****************************************************************************/
+/************************************************************************/ /**
+   Check that astr has enough size to hold n, and realloc to a bigger
+   size if necessary.  Here n must be big enough to include the trailing
+   ascii-null if required.  The requested n is stored in astr->n.
+   The actual amount allocated may be larger than n, and is stored
+   in astr->n_alloc.
+ ****************************************************************************/
 void astr_reserve(struct astring *astr, size_t n)
 {
   unsigned int n1;
@@ -181,9 +175,9 @@ void astr_reserve(struct astring *astr, size_t n)
   }
 }
 
-/************************************************************************//**
-  Sets the content to the empty string.
-****************************************************************************/
+/************************************************************************/ /**
+   Sets the content to the empty string.
+ ****************************************************************************/
 void astr_clear(struct astring *astr)
 {
   if (astr->n == 0) {
@@ -194,9 +188,9 @@ void astr_clear(struct astring *astr)
   astr->str[0] = '\0';
 }
 
-/************************************************************************//**
-  Helper: add the text to the specified place in the string.
-****************************************************************************/
+/************************************************************************/ /**
+   Helper: add the text to the specified place in the string.
+ ****************************************************************************/
 static inline void astr_vadd_at(struct astring *astr, size_t at,
                                 const char *format, va_list ap)
 {
@@ -219,9 +213,9 @@ static inline void astr_vadd_at(struct astring *astr, size_t at,
   fc_strlcpy(astr->str + at, buffer, astr->n_alloc - at);
 }
 
-/************************************************************************//**
-  Set the text to the string.
-****************************************************************************/
+/************************************************************************/ /**
+   Set the text to the string.
+ ****************************************************************************/
 void astr_set(struct astring *astr, const char *format, ...)
 {
   va_list args;
@@ -231,17 +225,17 @@ void astr_set(struct astring *astr, const char *format, ...)
   va_end(args);
 }
 
-/************************************************************************//**
-  Add the text to the string (varargs version).
-****************************************************************************/
+/************************************************************************/ /**
+   Add the text to the string (varargs version).
+ ****************************************************************************/
 void astr_vadd(struct astring *astr, const char *format, va_list ap)
 {
   astr_vadd_at(astr, astr_len(astr), format, ap);
 }
 
-/************************************************************************//**
-  Add the text to the string.
-****************************************************************************/
+/************************************************************************/ /**
+   Add the text to the string.
+ ****************************************************************************/
 void astr_add(struct astring *astr, const char *format, ...)
 {
   va_list args;
@@ -251,9 +245,9 @@ void astr_add(struct astring *astr, const char *format, ...)
   va_end(args);
 }
 
-/************************************************************************//**
-  Add the text to the string in a new line.
-****************************************************************************/
+/************************************************************************/ /**
+   Add the text to the string in a new line.
+ ****************************************************************************/
 void astr_add_line(struct astring *astr, const char *format, ...)
 {
   size_t len = astr_len(astr);
@@ -269,21 +263,21 @@ void astr_add_line(struct astring *astr, const char *format, ...)
   va_end(args);
 }
 
-/************************************************************************//**
-  Replace the spaces by line breaks when the line lenght is over the desired
-  one.
-****************************************************************************/
+/************************************************************************/ /**
+   Replace the spaces by line breaks when the line lenght is over the desired
+   one.
+ ****************************************************************************/
 void astr_break_lines(struct astring *astr, size_t desired_len)
 {
   fc_break_lines(astr->str, desired_len);
 }
 
-/************************************************************************//**
-  Build a localized string with the given items. Items will be
-  "or"-separated.
+/************************************************************************/ /**
+   Build a localized string with the given items. Items will be
+   "or"-separated.
 
-  See also astr_build_and_list(), strvec_to_or_list().
-****************************************************************************/
+   See also astr_build_and_list(), strvec_to_or_list().
+ ****************************************************************************/
 const char *astr_build_or_list(struct astring *astr,
                                const char *const *items, size_t number)
 {
@@ -316,12 +310,12 @@ const char *astr_build_or_list(struct astring *astr,
   return astr->str;
 }
 
-/************************************************************************//**
-  Build a localized string with the given items. Items will be
-  "and"-separated.
+/************************************************************************/ /**
+   Build a localized string with the given items. Items will be
+   "and"-separated.
 
-  See also astr_build_or_list(), strvec_to_and_list().
-****************************************************************************/
+   See also astr_build_or_list(), strvec_to_and_list().
+ ****************************************************************************/
 const char *astr_build_and_list(struct astring *astr,
                                 const char *const *items, size_t number)
 {
@@ -354,9 +348,9 @@ const char *astr_build_and_list(struct astring *astr,
   return astr->str;
 }
 
-/************************************************************************//**
-  Copy one astring in another.
-****************************************************************************/
+/************************************************************************/ /**
+   Copy one astring in another.
+ ****************************************************************************/
 void astr_copy(struct astring *dest, const struct astring *src)
 {
   if (astr_empty(src)) {

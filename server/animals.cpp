@@ -1,5 +1,5 @@
 /***********************************************************************
- Freeciv - Copyright (C) 1996 - 2004 The Freeciv Project Team 
+ Freeciv - Copyright (C) 1996 - 2004 The Freeciv Project Team
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation; either version 2, or (at your option)
@@ -39,39 +39,43 @@
 
 #include "animals.h"
 
-/************************************************************************//**
-  Return suitable animal type for the terrain
-****************************************************************************/
+/************************************************************************/ /**
+   Return suitable animal type for the terrain
+ ****************************************************************************/
 static const struct unit_type *animal_for_terrain(struct terrain *pterr)
 {
   return pterr->animal;
 }
 
-/************************************************************************//**
-  Try to add one animal to the map.
-****************************************************************************/
+/************************************************************************/ /**
+   Try to add one animal to the map.
+ ****************************************************************************/
 static void place_animal(struct player *plr)
 {
   struct tile *ptile = rand_map_pos(&(wld.map));
   const struct unit_type *ptype;
 
-  extra_type_by_rmcause_iterate(ERM_ENTER, pextra) {
+  extra_type_by_rmcause_iterate(ERM_ENTER, pextra)
+  {
     if (tile_has_extra(ptile, pextra)) {
       /* Animals should not displace huts */
       /* FIXME: might HUT_NOTHING animals appear here? */
       return;
     }
-  } extra_type_by_rmcause_iterate_end;
+  }
+  extra_type_by_rmcause_iterate_end;
 
   if (unit_list_size(ptile->units) > 0 || tile_city(ptile)) {
     return;
   }
-  adjc_iterate(&(wld.map), ptile, padj) {
+  adjc_iterate(&(wld.map), ptile, padj)
+  {
     if (unit_list_size(padj->units) > 0 || tile_city(padj)) {
       /* No animals next to start units or start city */
       return;
     }
-  } adjc_iterate_end;
+  }
+  adjc_iterate_end;
 
   ptype = animal_for_terrain(tile_terrain(ptile));
 
@@ -86,9 +90,9 @@ static void place_animal(struct player *plr)
   }
 }
 
-/************************************************************************//**
-  Create animal kingdom player and his units.
-****************************************************************************/
+/************************************************************************/ /**
+   Create animal kingdom player and his units.
+ ****************************************************************************/
 void create_animals(void)
 {
   struct nation_type *anination;
@@ -136,12 +140,14 @@ void create_animals(void)
   give_initial_techs(presearch, 0);
 
   /* Ensure that we are at war with everyone else */
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     if (pplayer != plr) {
       player_diplstate_get(pplayer, plr)->type = DS_WAR;
       player_diplstate_get(plr, pplayer)->type = DS_WAR;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   CALL_PLR_AI_FUNC(gained_control, plr, plr);
 
@@ -150,7 +156,9 @@ void create_animals(void)
    * about invalid team. */
   send_research_info(presearch, NULL);
 
-  for (i = 0; i < wld.map.xsize * wld.map.ysize * wld.map.server.animals / 1000; i++) {
+  for (i = 0;
+       i < wld.map.xsize * wld.map.ysize * wld.map.server.animals / 1000;
+       i++) {
     place_animal(plr);
   }
 }

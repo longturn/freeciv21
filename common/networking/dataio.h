@@ -18,4 +18,4 @@
  * #include of the dataio_json.h at correct spot. */
 #include "dataio_raw.h"
 
-#endif  /* FC__DATAIO_H */
+#endif /* FC__DATAIO_H */

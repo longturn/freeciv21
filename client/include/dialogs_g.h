@@ -14,14 +14,14 @@
 #define FC__DIALOGS_G_H
 
 /* utility */
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 /* common */
 #include "actions.h"
 #include "fc_types.h"
-#include "featured_text.h"      /* struct text_tag_list */
-#include "nation.h"		/* Nation_type_id */
-#include "terrain.h"		/* enum tile_special_type */
+#include "featured_text.h" /* struct text_tag_list */
+#include "nation.h"        /* Nation_type_id */
+#include "terrain.h"       /* enum tile_special_type */
 #include "unitlist.h"
 
 /* client */
@@ -30,12 +30,12 @@
 struct packet_nations_selected_info;
 
 GUI_FUNC_PROTO(void, popup_notify_goto_dialog, const char *headline,
-               const char *lines,
-               const struct text_tag_list *tags,
+               const char *lines, const struct text_tag_list *tags,
                struct tile *ptile)
 GUI_FUNC_PROTO(void, popup_notify_dialog, const char *caption,
                const char *headline, const char *lines)
-GUI_FUNC_PROTO(void, popup_connect_msg, const char *headline, const char *message)
+GUI_FUNC_PROTO(void, popup_connect_msg, const char *headline,
+               const char *message)
 
 GUI_FUNC_PROTO(void, popup_races_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, popdown_races_dialog, void)
@@ -72,7 +72,8 @@ GUI_FUNC_PROTO(void, popup_bribe_dialog, struct unit *actor,
                struct unit *punit, int cost, const struct action *paction)
 GUI_FUNC_PROTO(void, popup_sabotage_dialog, struct unit *actor,
                struct city *pcity, const struct action *paction)
-GUI_FUNC_PROTO(void, popup_pillage_dialog, struct unit *punit, bv_extras extras)
+GUI_FUNC_PROTO(void, popup_pillage_dialog, struct unit *punit,
+               bv_extras extras)
 GUI_FUNC_PROTO(void, popup_upgrade_dialog, struct unit_list *punits)
 GUI_FUNC_PROTO(void, popup_disband_dialog, struct unit_list *punits)
 GUI_FUNC_PROTO(void, popup_tileset_suggestion_dialog, void)
@@ -85,8 +86,9 @@ GUI_FUNC_PROTO(bool, handmade_scenario_warning, void)
 
 GUI_FUNC_PROTO(void, popdown_all_game_dialogs, void)
 
-GUI_FUNC_PROTO(bool, request_transport, struct unit *pcargo, struct tile *ptile)
+GUI_FUNC_PROTO(bool, request_transport, struct unit *pcargo,
+               struct tile *ptile)
 
 GUI_FUNC_PROTO(void, update_infra_dialog, void)
 
-#endif  /* FC__DIALOGS_G_H */
+#endif /* FC__DIALOGS_G_H */

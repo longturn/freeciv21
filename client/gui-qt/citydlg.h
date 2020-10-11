@@ -50,8 +50,8 @@ class QVBoxLayout;
 #include "canvas.h"
 
 // gui-qt
-#include "fonts.h"
 #include "dialogs.h"
+#include "fonts.h"
 
 // Qt
 #include <QProgressBar>
@@ -67,22 +67,19 @@ QString get_tooltip_improvement(const impr_type *building,
 QString get_tooltip_unit(const struct unit_type *utype, bool ext = false);
 QString bold(QString text);
 
-class fc_tooltip : public QObject
-{
+class fc_tooltip : public QObject {
   Q_OBJECT
 public:
-  explicit fc_tooltip(QObject *parent = NULL): QObject(parent) {}
+  explicit fc_tooltip(QObject *parent = NULL) : QObject(parent) {}
 
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
 };
 
-
 /****************************************************************************
   Custom progressbar with animated progress and right click event
 ****************************************************************************/
-class progress_bar: public QProgressBar
-{
+class progress_bar : public QProgressBar {
   Q_OBJECT
   QElapsedTimer m_timer;
 signals:
@@ -91,9 +88,7 @@ signals:
 public:
   progress_bar(QWidget *parent);
   ~progress_bar();
-  void mousePressEvent(QMouseEvent *event) {
-    emit clicked();
-  }
+  void mousePressEvent(QMouseEvent *event) { emit clicked(); }
   void set_pixmap(struct universal *target);
   void set_pixmap(int n);
 
@@ -101,6 +96,7 @@ protected:
   void paintEvent(QPaintEvent *event);
   void timerEvent(QTimerEvent *event);
   void resizeEvent(QResizeEvent *event);
+
 private:
   void create_region();
   int m_animate_step;
@@ -112,8 +108,7 @@ private:
 /****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
-class unit_item: public QLabel
-{
+class unit_item : public QLabel {
   Q_OBJECT
   QAction *disband_action;
   QAction *change_home;
@@ -128,7 +123,8 @@ class unit_item: public QLabel
   QMenu *unit_menu;
 
 public:
-  unit_item(QWidget *parent ,struct unit *punit, bool supp = false, int happy_cost = 0);
+  unit_item(QWidget *parent, struct unit *punit, bool supp = false,
+            int happy_cost = 0);
   ~unit_item();
   void init_pix();
 
@@ -162,8 +158,7 @@ protected:
 /****************************************************************************
   Shows list of units ( as labels - unit_info )
 ****************************************************************************/
-class unit_info: public QFrame
-{
+class unit_info : public QFrame {
 
   Q_OBJECT
 
@@ -179,20 +174,20 @@ public:
 
 private:
   bool supports;
+
 protected:
   void wheelEvent(QWheelEvent *event);
 };
 
-
 /****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
-class impr_item: public QLabel
-{
+class impr_item : public QLabel {
   Q_OBJECT
 
 public:
-  impr_item(QWidget *parent, const struct impr_type *building, struct city *pcity);
+  impr_item(QWidget *parent, const struct impr_type *building,
+            struct city *pcity);
   ~impr_item();
   void init_pix();
 
@@ -208,12 +203,10 @@ protected:
   void enterEvent(QEvent *event);
 };
 
-
 /****************************************************************************
   Shows list of improvemrnts
 ****************************************************************************/
-class impr_info: public QFrame
-{
+class impr_info : public QFrame {
   Q_OBJECT
 public:
   impr_info(QWidget *parent);
@@ -224,6 +217,7 @@ public:
   void clear_layout();
   QHBoxLayout *layout;
   QList<impr_item *> impr_list;
+
 protected:
   void wheelEvent(QWheelEvent *event);
 };
@@ -231,8 +225,7 @@ protected:
 /****************************************************************************
   Class used for showing tiles and workers view in city dialog
 ****************************************************************************/
-class city_map: public QWidget
-{
+class city_map : public QWidget {
 
   Q_OBJECT
   canvas *view;
@@ -243,6 +236,7 @@ public:
   city_map(QWidget *parent);
   ~city_map();
   void set_pixmap(struct city *pcity, float z);
+
 private:
   void mousePressEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *event);
@@ -255,6 +249,7 @@ private:
   int cutted_height;
   int delta_x;
   int delta_y;
+
 protected:
   QSize sizeHint() const;
   QSize minimumSizeHint() const;
@@ -265,8 +260,7 @@ private slots:
 /****************************************************************************
   Item delegate for production popup
 ****************************************************************************/
-class city_production_delegate: public QItemDelegate
-{
+class city_production_delegate : public QItemDelegate {
   Q_OBJECT
 
 public:
@@ -290,16 +284,13 @@ protected:
 /****************************************************************************
   Single item in production popup
 ****************************************************************************/
-class production_item: public QObject
-{
+class production_item : public QObject {
   Q_OBJECT
 
 public:
   production_item(struct universal *ptarget, QObject *parent);
   ~production_item();
-  inline int columnCount() const {
-    return 1;
-  }
+  inline int columnCount() const { return 1; }
   QVariant data() const;
   bool setData();
 
@@ -310,19 +301,20 @@ private:
 /***************************************************************************
   City production model
 ***************************************************************************/
-class city_production_model : public QAbstractListModel
-{
+class city_production_model : public QAbstractListModel {
   Q_OBJECT
 
 public:
-  city_production_model(struct city *pcity, bool f, bool su, bool sw, bool sb,
-                        QObject *parent = 0);
+  city_production_model(struct city *pcity, bool f, bool su, bool sw,
+                        bool sb, QObject *parent = 0);
   ~city_production_model();
-  inline int rowCount(const QModelIndex &index = QModelIndex()) const {
+  inline int rowCount(const QModelIndex &index = QModelIndex()) const
+  {
     Q_UNUSED(index);
     return (qCeil(static_cast<float>(city_target_list.size()) / 3));
   }
-  int columnCount(const QModelIndex &parent = QModelIndex()) const {
+  int columnCount(const QModelIndex &parent = QModelIndex()) const
+  {
     Q_UNUSED(parent);
     return 3;
   }
@@ -345,8 +337,7 @@ private:
 /****************************************************************************
   Class for popup avaialable production
 ****************************************************************************/
-class production_widget: public QTableView
-{
+class production_widget : public QTableView {
   Q_OBJECT
 
   city_production_model *list_model;
@@ -374,13 +365,11 @@ private:
   fc_tooltip *fc_tt;
 };
 
-
 /****************************************************************************
   city_label is used only for showing citizens icons
   and was created to catch mouse events
 ****************************************************************************/
-class city_label: public QLabel
-{
+class city_label : public QLabel {
   Q_OBJECT
 
 public:
@@ -398,8 +387,7 @@ protected:
 /****************************************************************************
   City dialog
 ****************************************************************************/
-class city_dialog: public qfc_dialog
-{
+class city_dialog : public qfc_dialog {
 
   Q_OBJECT
 
@@ -515,6 +503,7 @@ private slots:
   void city_rename();
   void zoom_in();
   void zoom_out();
+
 protected:
   void showEvent(QShowEvent *event);
   void hideEvent(QHideEvent *event);
@@ -525,4 +514,4 @@ protected:
 void destroy_city_dialog();
 void city_font_update();
 
-#endif                          /* FC__CITYDLG_H */
+#endif /* FC__CITYDLG_H */

@@ -51,15 +51,14 @@ void draw_calculated_trade_routes(QPainter *painter);
   Struct used for idle callback to execute some callbacks later
 **************************************************************************/
 struct call_me_back {
-  void (*callback) (void *data);
+  void (*callback)(void *data);
   void *data;
 };
 
 /**************************************************************************
   Class to handle idle callbacks
 **************************************************************************/
-class mr_idle : public QObject
-{
+class mr_idle : public QObject {
   Q_OBJECT
 public:
   mr_idle();
@@ -68,26 +67,27 @@ public:
   void add_callback(call_me_back *cb);
 private slots:
   void idling();
+
 private:
-  QQueue<call_me_back*> callback_list;
+  QQueue<call_me_back *> callback_list;
   QTimer timer;
 };
 
 /**************************************************************************
   QWidget used for displaying map
 **************************************************************************/
-class map_view : public QWidget
-{
+class map_view : public QWidget {
   Q_OBJECT
   void shortcut_pressed(int key);
   void shortcut_released(Qt::MouseButton mb);
+
 public:
   map_view();
   void paint(QPainter *painter, QPaintEvent *event);
-  void find_place(int pos_x, int pos_y, int &w, int &h, int wdth, int hght, 
+  void find_place(int pos_x, int pos_y, int &w, int &h, int wdth, int hght,
                   int recursive_nr);
-  void resume_searching(int pos_x,int pos_y,int &w, int &h,
-                        int wdtht, int hght, int recursive_nr);
+  void resume_searching(int pos_x, int pos_y, int &w, int &h, int wdtht,
+                        int hght, int recursive_nr);
   void update_cursor(enum cursor_type);
   bool menu_click;
 
@@ -101,28 +101,30 @@ protected:
   void leaveEvent(QEvent *event);
 private slots:
   void timer_event();
+
 private:
   void update_font(const QString &name, const QFont &font);
 
   bool stored_autocenter;
   int cursor_frame;
   int cursor;
-
 };
 
 /**************************************************************************
   Information label about clicked tile
 **************************************************************************/
-class info_tile: public QLabel
-{
+class info_tile : public QLabel {
   Q_OBJECT
   QFont info_font;
+
 public:
   info_tile(struct tile *ptile, QWidget *parent = 0);
   struct tile *itile;
+
 protected:
   void paintEvent(QPaintEvent *event);
   void paint(QPainter *painter, QPaintEvent *event);
+
 private:
   QStringList str_list;
   void calc_size();
@@ -132,34 +134,33 @@ private:
 /**************************************************************************
   Widget allowing resizing other widgets
 **************************************************************************/
-class resize_widget : public QLabel
-{
+class resize_widget : public QLabel {
   Q_OBJECT
 public:
-  resize_widget(QWidget* parent);
+  resize_widget(QWidget *parent);
   void put_to_corner();
 
 protected:
   void mouseMoveEvent(QMouseEvent *event);
   void mousePressEvent(QMouseEvent *event);
+
 private:
   QPoint point;
 };
 
-
 /**************************************************************************
   Widget allowing moving other widgets
 **************************************************************************/
-class move_widget : public QLabel
-{
+class move_widget : public QLabel {
   Q_OBJECT
 public:
-  move_widget(QWidget* parent);
+  move_widget(QWidget *parent);
   void put_to_corner();
 
 protected:
   void mouseMoveEvent(QMouseEvent *event);
   void mousePressEvent(QMouseEvent *event);
+
 private:
   QPoint point;
 };
@@ -168,8 +169,7 @@ private:
   Abstract class for widgets wanting to do custom action
   when closing widgets is called (eg. update menu)
 **************************************************************************/
-class fcwidget : public QFrame
-{
+class fcwidget : public QFrame {
   Q_OBJECT
 public:
   virtual void update_menu() = 0;
@@ -179,12 +179,12 @@ public:
 /**************************************************************************
   Widget allowing closing other widgets
 **************************************************************************/
-class close_widget : public QLabel
-{
+class close_widget : public QLabel {
   Q_OBJECT
 public:
   close_widget(QWidget *parent);
   void put_to_corner();
+
 protected:
   void mousePressEvent(QMouseEvent *event);
   void notify_parent();
@@ -193,8 +193,7 @@ protected:
 /**************************************************************************
   Thread helper for drawing minimap
 **************************************************************************/
-class minimap_thread : public QThread
-{
+class minimap_thread : public QThread {
   Q_OBJECT
 public:
   minimap_thread(QObject *parent = 0);
@@ -203,6 +202,7 @@ public:
 
 signals:
   void rendered_image(const QImage &image);
+
 protected:
   void run() Q_DECL_OVERRIDE;
 
@@ -215,8 +215,7 @@ private:
 /**************************************************************************
   QLabel used for displaying overview (minimap)
 **************************************************************************/
-class minimap_view: public fcwidget
-{
+class minimap_view : public fcwidget {
   Q_OBJECT
 public:
   minimap_view(QWidget *parent);
@@ -255,11 +254,10 @@ private:
   resize_widget *rw;
 };
 
-
 void mapview_freeze(void);
 void mapview_thaw(void);
 bool mapview_is_frozen(void);
-void pixmap_put_overlay_tile(int canvas_x, int  canvas_y,
+void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
                              struct sprite *ssprite);
 
 #endif /* FC__MAPVIEW_H */

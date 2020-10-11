@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,14 +14,14 @@
 #ifndef FC__CITYTURN_H
 #define FC__CITYTURN_H
 
-#include "support.h"            /* bool type */
+#include "support.h" /* bool type */
 
 #include "fc_types.h"
 
 struct conn_list;
 struct cm_result;
 
-bool city_refresh(struct city *pcity);          /* call if city has changed */
+bool city_refresh(struct city *pcity); /* call if city has changed */
 void city_refresh_for_player(struct player *pplayer); /* tax/govt changed */
 
 void city_refresh_queue_add(struct city *pcity);
@@ -54,4 +54,4 @@ void check_disasters(void);
 
 void city_style_refresh(struct city *pcity);
 
-#endif  /* FC__CITYTURN_H */
+#endif /* FC__CITYTURN_H */

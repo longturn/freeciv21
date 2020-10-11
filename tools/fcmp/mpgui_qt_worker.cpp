@@ -36,17 +36,17 @@
 
 #include "mpgui_qt_worker.h"
 
-/**********************************************************************//**
-  Run download thread
-**************************************************************************/
+/**********************************************************************/ /**
+   Run download thread
+ **************************************************************************/
 void mpqt_worker::run()
 {
   const char *errmsg;
   QByteArray url_bytes;
 
   url_bytes = URL.toUtf8();
-  errmsg = download_modpack(url_bytes.data(),
-                            fcmp, msg_callback, pb_callback);
+  errmsg =
+      download_modpack(url_bytes.data(), fcmp, msg_callback, pb_callback);
 
   if (errmsg != nullptr) {
     msg_callback(errmsg);
@@ -57,9 +57,9 @@ void mpqt_worker::run()
   gui->refresh_list_versions_thr();
 }
 
-/**********************************************************************//**
-  Start thread to download and install given modpack.
-**************************************************************************/
+/**********************************************************************/ /**
+   Start thread to download and install given modpack.
+ **************************************************************************/
 void mpqt_worker::download(QString URL_in, class mpgui *gui_in,
                            struct fcmp_params *fcmp_in,
                            dl_msg_callback msg_callback_in,

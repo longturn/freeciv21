@@ -22,17 +22,17 @@
 /* client */
 #include "client_main.h"
 #include "climap.h"
-#include "tilespec.h"           /* tileset_is_isometric(tileset) */
+#include "tilespec.h" /* tileset_is_isometric(tileset) */
 
-/**********************************************************************//**
-  A tile's "known" field is used by the server to store whether _each_
-  player knows the tile.  Client-side, it's used as an enum known_type
-  to track whether the tile is known/fogged/unknown.
+/**********************************************************************/ /**
+   A tile's "known" field is used by the server to store whether _each_
+   player knows the tile.  Client-side, it's used as an enum known_type
+   to track whether the tile is known/fogged/unknown.
 
-  Judicious use of this function also makes things very convenient for
-  civworld, since it uses both client and server-style storage; since it
-  uses the stock tilespec.c file, this function serves as a wrapper.
-**************************************************************************/
+   Judicious use of this function also makes things very convenient for
+   civworld, since it uses both client and server-style storage; since it
+   uses the stock tilespec.c file, this function serves as a wrapper.
+ **************************************************************************/
 enum known_type client_tile_get_known(const struct tile *ptile)
 {
   if (NULL == client.conn.playing) {
@@ -45,17 +45,17 @@ enum known_type client_tile_get_known(const struct tile *ptile)
   return tile_get_known(ptile, client.conn.playing);
 }
 
-/**********************************************************************//**
-  Convert the given GUI direction into a map direction.
+/**********************************************************************/ /**
+   Convert the given GUI direction into a map direction.
 
-  GUI directions correspond to the current viewing interface, so that
-  DIR8_NORTH is up on the mapview.  map directions correspond to the
-  underlying map tiles, so that DIR8_NORTH means moving with a vector of
-  (0,-1).  Neither necessarily corresponds to "north" on the underlying
-  world (once iso-maps are possible).
+   GUI directions correspond to the current viewing interface, so that
+   DIR8_NORTH is up on the mapview.  map directions correspond to the
+   underlying map tiles, so that DIR8_NORTH means moving with a vector of
+   (0,-1).  Neither necessarily corresponds to "north" on the underlying
+   world (once iso-maps are possible).
 
-  See also map_to_gui_dir().
-**************************************************************************/
+   See also map_to_gui_dir().
+ **************************************************************************/
 enum direction8 gui_to_map_dir(enum direction8 gui_dir)
 {
   if (tileset_is_isometric(tileset)) {
@@ -65,11 +65,11 @@ enum direction8 gui_to_map_dir(enum direction8 gui_dir)
   }
 }
 
-/**********************************************************************//**
-  Convert the given GUI direction into a map direction.
+/**********************************************************************/ /**
+   Convert the given GUI direction into a map direction.
 
-  See also gui_to_map_dir().
-**************************************************************************/
+   See also gui_to_map_dir().
+ **************************************************************************/
 enum direction8 map_to_gui_dir(enum direction8 map_dir)
 {
   if (tileset_is_isometric(tileset)) {
@@ -79,11 +79,11 @@ enum direction8 map_to_gui_dir(enum direction8 map_dir)
   }
 }
 
-/**********************************************************************//**
-  Client variant of city_tile().  This include the case of this could a
-  ghost city (see client/packhand.c).  In a such case, the returned tile
-  is an approximative position of the city on the map.
-**************************************************************************/
+/**********************************************************************/ /**
+   Client variant of city_tile().  This include the case of this could a
+   ghost city (see client/packhand.c).  In a such case, the returned tile
+   is an approximative position of the city on the map.
+ **************************************************************************/
 struct tile *client_city_tile(const struct city *pcity)
 {
   int dx, dy;
@@ -99,7 +99,8 @@ struct tile *client_city_tile(const struct city *pcity)
     return city_tile(pcity);
   }
 
-  whole_map_iterate(&(wld.map), ptile) {
+  whole_map_iterate(&(wld.map), ptile)
+  {
     int tile_x, tile_y;
 
     index_to_map_pos(&tile_x, &tile_y, tile_index(ptile));
@@ -110,12 +111,13 @@ struct tile *client_city_tile(const struct city *pcity)
         num = 1;
       } else {
         num++;
-        base_map_distance_vector(&dx, &dy, (int)x, (int)y, tile_x, tile_y);
+        base_map_distance_vector(&dx, &dy, (int) x, (int) y, tile_x, tile_y);
         x += (double) dx / num;
         y += (double) dy / num;
       }
     }
-  } whole_map_iterate_end;
+  }
+  whole_map_iterate_end;
 
   if (0 < num) {
     return map_pos_to_tile(&(wld.map), (int) x, (int) y);
@@ -124,12 +126,12 @@ struct tile *client_city_tile(const struct city *pcity)
   }
 }
 
-/**********************************************************************//**
-  Returns TRUE when a tile is available to be worked, or the city itself
-  is currently working the tile (and can continue).
+/**********************************************************************/ /**
+   Returns TRUE when a tile is available to be worked, or the city itself
+   is currently working the tile (and can continue).
 
-  See also city_can_work_tile() (common/city.[ch]).
-**************************************************************************/
+   See also city_can_work_tile() (common/city.[ch]).
+ **************************************************************************/
 bool client_city_can_work_tile(const struct city *pcity,
                                const struct tile *ptile)
 {

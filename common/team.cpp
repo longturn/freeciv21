@@ -30,10 +30,10 @@
 
 struct team_slot {
   struct team *team;
-  char *defined_name;                   /* Defined by the ruleset. */
-  char *rule_name;                      /* Usable untranslated name. */
+  char *defined_name; /* Defined by the ruleset. */
+  char *rule_name;    /* Usable untranslated name. */
 #ifdef FREECIV_ENABLE_NLS
-  char *name_translation;               /* Translated name. */
+  char *name_translation; /* Translated name. */
 #endif
 };
 
@@ -47,16 +47,16 @@ static struct {
   int used_slots;
 } team_slots;
 
-/************************************************************************//**
-  Initialise all team slots.
-****************************************************************************/
+/************************************************************************/ /**
+   Initialise all team slots.
+ ****************************************************************************/
 void team_slots_init(void)
 {
   int i;
 
   /* Init team slots and names. */
   team_slots.slots = static_cast<team_slot *>(
-    fc_calloc(team_slot_count(), sizeof(*team_slots.slots)));
+      fc_calloc(team_slot_count(), sizeof(*team_slots.slots)));
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < team_slot_count(); i++) {
@@ -72,20 +72,18 @@ void team_slots_init(void)
   team_slots.used_slots = 0;
 }
 
-/************************************************************************//**
-  Returns TRUE if the team slots have been initialized.
-****************************************************************************/
-bool team_slots_initialised(void)
-{
-  return (team_slots.slots != NULL);
-}
+/************************************************************************/ /**
+   Returns TRUE if the team slots have been initialized.
+ ****************************************************************************/
+bool team_slots_initialised(void) { return (team_slots.slots != NULL); }
 
-/************************************************************************//**
-  Remove all team slots.
-****************************************************************************/
+/************************************************************************/ /**
+   Remove all team slots.
+ ****************************************************************************/
 void team_slots_free(void)
 {
-  team_slots_iterate(tslot) {
+  team_slots_iterate(tslot)
+  {
     if (NULL != tslot->team) {
       team_destroy(tslot->team);
     }
@@ -100,42 +98,36 @@ void team_slots_free(void)
       free(tslot->name_translation);
     }
 #endif /* FREECIV_ENABLE_NLS */
-  } team_slots_iterate_end;
+  }
+  team_slots_iterate_end;
   free(team_slots.slots);
   team_slots.slots = NULL;
 
   team_slots.used_slots = 0;
 }
 
-/************************************************************************//**
-  Returns the total number of team slots (including used slots).
-****************************************************************************/
-int team_slot_count(void)
-{
-  return (MAX_NUM_TEAM_SLOTS);
-}
+/************************************************************************/ /**
+   Returns the total number of team slots (including used slots).
+ ****************************************************************************/
+int team_slot_count(void) { return (MAX_NUM_TEAM_SLOTS); }
 
-/************************************************************************//**
-  Returns the first team slot.
-****************************************************************************/
-struct team_slot *team_slot_first(void)
-{
-  return team_slots.slots;
-}
+/************************************************************************/ /**
+   Returns the first team slot.
+ ****************************************************************************/
+struct team_slot *team_slot_first(void) { return team_slots.slots; }
 
-/************************************************************************//**
-  Returns the next team slot.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the next team slot.
+ ****************************************************************************/
 struct team_slot *team_slot_next(struct team_slot *tslot)
 {
   tslot++;
   return (tslot < team_slots.slots + team_slot_count() ? tslot : NULL);
 }
 
-
-/************************************************************************//**
-  Returns the index of the team slots.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the index of the team slots.
+ ****************************************************************************/
 int team_slot_index(const struct team_slot *tslot)
 {
   fc_assert_ret_val(team_slots_initialised(), -1);
@@ -144,10 +136,10 @@ int team_slot_index(const struct team_slot *tslot)
   return tslot - team_slots.slots;
 }
 
-/************************************************************************//**
-  Returns the team corresponding to the slot. If the slot is not used, it
-  will return NULL. See also team_slot_is_used().
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the team corresponding to the slot. If the slot is not used, it
+   will return NULL. See also team_slot_is_used().
+ ****************************************************************************/
 struct team *team_slot_get_team(const struct team_slot *tslot)
 {
   fc_assert_ret_val(team_slots_initialised(), NULL);
@@ -156,10 +148,10 @@ struct team *team_slot_get_team(const struct team_slot *tslot)
   return tslot->team;
 }
 
-/************************************************************************//**
-  Returns TRUE is this slot is "used" i.e. corresponds to a
-  valid, initialized team that exists in the game.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns TRUE is this slot is "used" i.e. corresponds to a
+   valid, initialized team that exists in the game.
+ ****************************************************************************/
 bool team_slot_is_used(const struct team_slot *tslot)
 {
   /* No team slot available, if the game is not initialised. */
@@ -170,9 +162,9 @@ bool team_slot_is_used(const struct team_slot *tslot)
   return NULL != tslot->team;
 }
 
-/************************************************************************//**
-  Return the possibly unused and uninitialized team slot.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the possibly unused and uninitialized team slot.
+ ****************************************************************************/
 struct team_slot *team_slot_by_number(int team_id)
 {
   if (!team_slots_initialised()
@@ -183,28 +175,30 @@ struct team_slot *team_slot_by_number(int team_id)
   return team_slots.slots + team_id;
 }
 
-/************************************************************************//**
-  Does a linear search for a (defined) team name. Returns NULL when none
-  match.
-****************************************************************************/
+/************************************************************************/ /**
+   Does a linear search for a (defined) team name. Returns NULL when none
+   match.
+ ****************************************************************************/
 struct team_slot *team_slot_by_rule_name(const char *team_name)
 {
   fc_assert_ret_val(team_name != NULL, NULL);
 
-  team_slots_iterate(tslot) {
+  team_slots_iterate(tslot)
+  {
     const char *tname = team_slot_rule_name(tslot);
 
     if (NULL != tname && 0 == fc_strcasecmp(tname, team_name)) {
       return tslot;
     }
-  } team_slots_iterate_end;
+  }
+  team_slots_iterate_end;
 
   return NULL;
 }
 
-/************************************************************************//**
-  Creates a default name for this team slot.
-****************************************************************************/
+/************************************************************************/ /**
+   Creates a default name for this team slot.
+ ****************************************************************************/
 static inline void team_slot_create_default_name(struct team_slot *tslot)
 {
   char buf[MAX_LEN_NAME];
@@ -227,10 +221,10 @@ static inline void team_slot_create_default_name(struct team_slot *tslot)
               team_slot_index(tslot), tslot->rule_name);
 }
 
-/************************************************************************//**
-  Returns the name (untranslated) of the slot. Creates a default one if it
-  doesn't exist currently.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the name (untranslated) of the slot. Creates a default one if it
+   doesn't exist currently.
+ ****************************************************************************/
 const char *team_slot_rule_name(const struct team_slot *tslot)
 {
   fc_assert_ret_val(team_slots_initialised(), NULL);
@@ -238,8 +232,8 @@ const char *team_slot_rule_name(const struct team_slot *tslot)
 
   if (NULL == tslot->rule_name) {
     /* Get the team slot as changeable (not _const_) struct. */
-    struct team_slot *changeable
-      = team_slot_by_number(team_slot_index(tslot));
+    struct team_slot *changeable =
+        team_slot_by_number(team_slot_index(tslot));
     team_slot_create_default_name(changeable);
     return changeable->rule_name;
   }
@@ -247,10 +241,10 @@ const char *team_slot_rule_name(const struct team_slot *tslot)
   return tslot->rule_name;
 }
 
-/************************************************************************//**
-  Returns the name (translated) of the slot. Creates a default one if it
-  doesn't exist currently.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the name (translated) of the slot. Creates a default one if it
+   doesn't exist currently.
+ ****************************************************************************/
 const char *team_slot_name_translation(const struct team_slot *tslot)
 {
 #ifdef FREECIV_ENABLE_NLS
@@ -259,8 +253,8 @@ const char *team_slot_name_translation(const struct team_slot *tslot)
 
   if (NULL == tslot->name_translation) {
     /* Get the team slot as changeable (not _const_) struct. */
-    struct team_slot *changeable
-      = team_slot_by_number(team_slot_index(tslot));
+    struct team_slot *changeable =
+        team_slot_by_number(team_slot_index(tslot));
     team_slot_create_default_name(changeable);
     return changeable->name_translation;
   }
@@ -271,10 +265,10 @@ const char *team_slot_name_translation(const struct team_slot *tslot)
 #endif /* FREECIV_ENABLE_NLS */
 }
 
-/************************************************************************//**
-  Returns the name defined in the ruleset for this slot. It may return NULL
-  if the ruleset didn't defined a such name.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the name defined in the ruleset for this slot. It may return NULL
+   if the ruleset didn't defined a such name.
+ ****************************************************************************/
 const char *team_slot_defined_name(const struct team_slot *tslot)
 {
   fc_assert_ret_val(team_slots_initialised(), NULL);
@@ -283,9 +277,9 @@ const char *team_slot_defined_name(const struct team_slot *tslot)
   return tslot->defined_name;
 }
 
-/************************************************************************//**
-  Set the name defined in the ruleset for this slot.
-****************************************************************************/
+/************************************************************************/ /**
+   Set the name defined in the ruleset for this slot.
+ ****************************************************************************/
 void team_slot_set_defined_name(struct team_slot *tslot,
                                 const char *team_name)
 {
@@ -311,10 +305,10 @@ void team_slot_set_defined_name(struct team_slot *tslot,
 #endif /* FREECIV_ENABLE_NLS */
 }
 
-/************************************************************************//**
-  Creates a new team for the slot. If slot is NULL, it will lookup to a
-  free slot. If the slot already used, then just return the team.
-****************************************************************************/
+/************************************************************************/ /**
+   Creates a new team for the slot. If slot is NULL, it will lookup to a
+   free slot. If the slot already used, then just return the team.
+ ****************************************************************************/
 struct team *team_new(struct team_slot *tslot)
 {
   struct team *pteam;
@@ -322,12 +316,14 @@ struct team *team_new(struct team_slot *tslot)
   fc_assert_ret_val(team_slots_initialised(), NULL);
 
   if (NULL == tslot) {
-    team_slots_iterate(aslot) {
+    team_slots_iterate(aslot)
+    {
       if (!team_slot_is_used(aslot)) {
         tslot = aslot;
         break;
       }
-    } team_slots_iterate_end;
+    }
+    team_slots_iterate_end;
 
     fc_assert_ret_val(NULL != tslot, NULL);
   } else if (NULL != tslot->team) {
@@ -349,9 +345,9 @@ struct team *team_new(struct team_slot *tslot)
   return pteam;
 }
 
-/************************************************************************//**
-  Destroys a team.
-****************************************************************************/
+/************************************************************************/ /**
+   Destroys a team.
+ ****************************************************************************/
 void team_destroy(struct team *pteam)
 {
   struct team_slot *tslot;
@@ -369,34 +365,28 @@ void team_destroy(struct team *pteam)
   team_slots.used_slots--;
 }
 
-/************************************************************************//**
-  Return the current number of teams.
-****************************************************************************/
-int team_count(void)
-{
-  return team_slots.used_slots;
-}
+/************************************************************************/ /**
+   Return the current number of teams.
+ ****************************************************************************/
+int team_count(void) { return team_slots.used_slots; }
 
-/************************************************************************//**
-  Return the team index.
-****************************************************************************/
-int team_index(const struct team *pteam)
-{
-  return team_number(pteam);
-}
+/************************************************************************/ /**
+   Return the team index.
+ ****************************************************************************/
+int team_index(const struct team *pteam) { return team_number(pteam); }
 
-/************************************************************************//**
-  Return the team index/number/id.
-****************************************************************************/
+/************************************************************************/ /**
+   Return the team index/number/id.
+ ****************************************************************************/
 int team_number(const struct team *pteam)
 {
   fc_assert_ret_val(NULL != pteam, -1);
   return team_slot_index(pteam->slot);
 }
 
-/************************************************************************//**
-  Return struct team pointer for the given team index.
-****************************************************************************/
+/************************************************************************/ /**
+   Return struct team pointer for the given team index.
+ ****************************************************************************/
 struct team *team_by_number(const int team_id)
 {
   const struct team_slot *tslot = team_slot_by_number(team_id);
@@ -404,9 +394,9 @@ struct team *team_by_number(const int team_id)
   return (NULL != tslot ? team_slot_get_team(tslot) : NULL);
 }
 
-/************************************************************************//**
-  Returns the name (untranslated) of the team.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the name (untranslated) of the team.
+ ****************************************************************************/
 const char *team_rule_name(const struct team *pteam)
 {
   fc_assert_ret_val(NULL != pteam, NULL);
@@ -414,9 +404,9 @@ const char *team_rule_name(const struct team *pteam)
   return team_slot_rule_name(pteam->slot);
 }
 
-/************************************************************************//**
-  Returns the name (translated) of the team.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the name (translated) of the team.
+ ****************************************************************************/
 const char *team_name_translation(const struct team *pteam)
 {
   fc_assert_ret_val(NULL != pteam, NULL);
@@ -424,11 +414,11 @@ const char *team_name_translation(const struct team *pteam)
   return team_slot_name_translation(pteam->slot);
 }
 
-/************************************************************************//**
-  Set in 'buf' the name of the team 'pteam' in a format like
-  "team <team_name>". To avoid to see "team Team 0", it only prints the
-  the team number when the name of this team is not defined in the ruleset.
-****************************************************************************/
+/************************************************************************/ /**
+   Set in 'buf' the name of the team 'pteam' in a format like
+   "team <team_name>". To avoid to see "team Team 0", it only prints the
+   the team number when the name of this team is not defined in the ruleset.
+ ****************************************************************************/
 int team_pretty_name(const struct team *pteam, char *buf, size_t buf_len)
 {
   if (NULL != pteam) {
@@ -446,9 +436,9 @@ int team_pretty_name(const struct team *pteam, char *buf, size_t buf_len)
   return -1;
 }
 
-/************************************************************************//**
-  Returns the member list of the team.
-****************************************************************************/
+/************************************************************************/ /**
+   Returns the member list of the team.
+ ****************************************************************************/
 const struct player_list *team_members(const struct team *pteam)
 {
   fc_assert_ret_val(NULL != pteam, NULL);
@@ -456,10 +446,10 @@ const struct player_list *team_members(const struct team *pteam)
   return pteam->plrlist;
 }
 
-/************************************************************************//**
-  Set a player to a team.  Removes the previous team affiliation if
-  necessary.
-****************************************************************************/
+/************************************************************************/ /**
+   Set a player to a team.  Removes the previous team affiliation if
+   necessary.
+ ****************************************************************************/
 void team_add_player(struct player *pplayer, struct team *pteam)
 {
   fc_assert_ret(pplayer != NULL);
@@ -486,13 +476,13 @@ void team_add_player(struct player *pplayer, struct team *pteam)
   player_list_append(pteam->plrlist, pplayer);
 }
 
-/************************************************************************//**
-  Remove the player from the team.  This should only be called when deleting
-  a player; since every player must always be on a team.
+/************************************************************************/ /**
+   Remove the player from the team.  This should only be called when deleting
+   a player; since every player must always be on a team.
 
-  Note in some very rare cases a player may not be on a team.  It's safe
-  to call this function anyway.
-****************************************************************************/
+   Note in some very rare cases a player may not be on a team.  It's safe
+   to call this function anyway.
+ ****************************************************************************/
 void team_remove_player(struct player *pplayer)
 {
   struct team *pteam;

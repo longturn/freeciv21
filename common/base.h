@@ -24,7 +24,7 @@ extern "C" {
 #include "fc_types.h"
 #include "requirements.h"
 
-struct strvec;          /* Actually defined in "utility/string_vector.h". */
+struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME base_gui_type
@@ -63,7 +63,7 @@ struct base_type {
   struct extra_type *self;
 };
 
-#define BASE_NONE       -1
+#define BASE_NONE -1
 
 /* General base accessor functions. */
 Base_type_id base_count(void);
@@ -101,21 +101,22 @@ bool territory_claiming_base(const struct base_type *pbase);
 void base_type_init(struct extra_type *pextra, int idx);
 void base_types_free(void);
 
-#define base_deps_iterate(_reqs, _dep)                                 \
-{                                                                      \
-  requirement_vector_iterate(_reqs, preq) {                            \
-    if (preq->source.kind == VUT_EXTRA                                 \
-        && preq->present                                               \
-        && is_extra_caused_by(preq->source.value.extra, EC_BASE)) {    \
-      struct base_type *_dep = extra_base_get(preq->source.value.extra);
+#define base_deps_iterate(_reqs, _dep)                                      \
+  {                                                                         \
+    requirement_vector_iterate(_reqs, preq)                                 \
+    {                                                                       \
+      if (preq->source.kind == VUT_EXTRA && preq->present                   \
+          && is_extra_caused_by(preq->source.value.extra, EC_BASE)) {       \
+        struct base_type *_dep = extra_base_get(preq->source.value.extra);
 
-#define base_deps_iterate_end                                           \
-    }                                                                   \
-  } requirement_vector_iterate_end;                                     \
-}
+#define base_deps_iterate_end                                               \
+  }                                                                         \
+  }                                                                         \
+  requirement_vector_iterate_end;                                           \
+  }
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__BASE_H */
+#endif /* FC__BASE_H */

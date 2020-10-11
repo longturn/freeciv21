@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 2005 - The Freeciv Project
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -46,7 +46,8 @@ struct team_slot *team_slot_by_rule_name(const char *team_name);
 const char *team_slot_rule_name(const struct team_slot *tslot);
 const char *team_slot_name_translation(const struct team_slot *tslot);
 const char *team_slot_defined_name(const struct team_slot *tslot);
-void team_slot_set_defined_name(struct team_slot *tslot, const char *team_name);
+void team_slot_set_defined_name(struct team_slot *tslot,
+                                const char *team_name);
 
 /* Team accessor functions. */
 struct team *team_new(struct team_slot *tslot);
@@ -71,17 +72,19 @@ void team_remove_player(struct player *pplayer);
     struct team_slot *_tslot = team_slot_first();                           \
     for (; NULL != _tslot; _tslot = team_slot_next(_tslot)) {
 #define team_slots_iterate_end                                              \
-    }                                                                       \
+  }                                                                         \
   }
 
 /* iterate over all teams, which are used at the moment */
 #define teams_iterate(_pteam)                                               \
-  team_slots_iterate(_tslot) {                                              \
+  team_slots_iterate(_tslot)                                                \
+  {                                                                         \
     struct team *_pteam = team_slot_get_team(_tslot);                       \
     if (_pteam != NULL) {
 #define teams_iterate_end                                                   \
-    }                                                                       \
-  } team_slots_iterate_end;
+  }                                                                         \
+  }                                                                         \
+  team_slots_iterate_end;
 
 #ifdef __cplusplus
 }

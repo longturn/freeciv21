@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -25,11 +25,11 @@ struct connection;
 struct conn_list;
 
 void really_handle_city_sell(struct player *pplayer, struct city *pcity,
-			     struct impr_type *pimprove);
+                             struct impr_type *pimprove);
 void really_handle_city_buy(struct player *pplayer, struct city *pcity);
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CITYHAND_H */
+#endif /* FC__CITYHAND_H */

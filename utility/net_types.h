@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -36,30 +36,22 @@ extern "C" {
 #undef EADDRNOTAVAIL
 #undef ETIMEDOUT
 #undef ECONNABORTED
-#define EINTR         WSAEINTR
-#define EINPROGRESS   WSAEWOULDBLOCK
-#define EWOULDBLOCK   WSAEWOULDBLOCK
-#define ECONNRESET    WSAECONNRESET
-#define ECONNREFUSED  WSAECONNREFUSED
+#define EINTR WSAEINTR
+#define EINPROGRESS WSAEWOULDBLOCK
+#define EWOULDBLOCK WSAEWOULDBLOCK
+#define ECONNRESET WSAECONNRESET
+#define ECONNREFUSED WSAECONNREFUSED
 #define EADDRNOTAVAIL WSAEADDRNOTAVAIL
-#define ETIMEDOUT     WSAETIMEDOUT
-#define ECONNABORTED  WSAECONNABORTED
+#define ETIMEDOUT WSAETIMEDOUT
+#define ECONNABORTED WSAECONNABORTED
 #endif /* FREECIV_HAVE_WINSOCK */
 
 /* Which protocol will be used for LAN announcements */
-enum announce_type {
-  ANNOUNCE_NONE,
-  ANNOUNCE_IPV4,
-  ANNOUNCE_IPV6
-};
+enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 #define ANNOUNCE_DEFAULT ANNOUNCE_IPV4
 
-enum fc_addr_family {
-  FC_ADDR_IPV4,
-  FC_ADDR_IPV6,
-  FC_ADDR_ANY
-};
+enum fc_addr_family { FC_ADDR_IPV4, FC_ADDR_IPV6, FC_ADDR_ANY };
 
 void fc_init_network(void);
 void fc_shutdown_network(void);
@@ -68,4 +60,4 @@ void fc_shutdown_network(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__NET_TYPES_H */
+#endif /* FC__NET_TYPES_H */

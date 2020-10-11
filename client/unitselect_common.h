@@ -31,10 +31,9 @@ struct usdata {
 #define SPECHASH_IDATA_TYPE struct usdata *
 #include "spechash.h"
 
-#define usdata_hash_data_iterate(phash, data)                                \
+#define usdata_hash_data_iterate(phash, data)                               \
   TYPED_HASH_DATA_ITERATE(struct usdata *, phash, data)
-#define usdata_hash_data_iterate_end                                         \
-  HASH_DATA_ITERATE_END
+#define usdata_hash_data_iterate_end HASH_DATA_ITERATE_END
 
 struct usdata_hash *usdlg_data_new(const struct tile *ptile);
 void usdlg_data_destroy(struct usdata_hash *ushash);

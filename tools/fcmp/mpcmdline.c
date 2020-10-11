@@ -32,16 +32,16 @@
 
 extern struct fcmp_params fcmp;
 
-/**********************************************************************//**
-  Parse commandline parameters. Modified argv[] so it contains only
-  ui-specific options afterwards. Number of those ui-specific options is
-  returned.
-  Currently this is implemented in a way that it never fails. Either it
-  returns with success or exit()s. Implementation can be changed so that
-  this returns with value -1 in case program should be shut down instead
-  of exiting itself. Callers are prepared for such implementation.
-  This call initialises the log system.
-**************************************************************************/
+/**********************************************************************/ /**
+   Parse commandline parameters. Modified argv[] so it contains only
+   ui-specific options afterwards. Number of those ui-specific options is
+   returned.
+   Currently this is implemented in a way that it never fails. Either it
+   returns with success or exit()s. Implementation can be changed so that
+   this returns with value -1 in case program should be shut down instead
+   of exiting itself. Callers are prepared for such implementation.
+   This call initialises the log system.
+ **************************************************************************/
 int fcmp_parse_cmdline(int argc, char *argv[])
 {
   int i = 1;
@@ -57,52 +57,58 @@ int fcmp_parse_cmdline(int argc, char *argv[])
     } else if (is_option("--help", argv[i])) {
       struct cmdhelp *help = cmdhelp_new(argv[0]);
 
-      cmdhelp_add(help, "h", "help",
-                  _("Print a summary of the options"));
+      cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
       cmdhelp_add(help, "L",
-                  /* TRANS: "List" is exactly what user must type, do not translate. */
-                  _("List URL"),
-                  _("Load modpack list from given URL"));
+                  /* TRANS: "List" is exactly what user must type, do not
+                     translate. */
+                  _("List URL"), _("Load modpack list from given URL"));
       cmdhelp_add(help, "p",
-                  /* TRANS: "prefix" is exactly what user must type, do not translate. */
+                  /* TRANS: "prefix" is exactly what user must type, do not
+                     translate. */
                   _("prefix DIR"),
                   _("Install modpacks to given directory hierarchy"));
       cmdhelp_add(help, "i",
-                  /* TRANS: "install" is exactly what user must type, do not translate. */
+                  /* TRANS: "install" is exactly what user must type, do not
+                     translate. */
                   _("install URL"),
                   _("Automatically install modpack from a given URL"));
 #ifdef FREECIV_DEBUG
       cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
+                  /* TRANS: "debug" is exactly what user must type, do not
+                     translate. */
                   _("debug NUM"),
                   _("Set debug log level (one of f,e,w,n,v,d, or "
                     "d:file1,min,max:...)"));
 #else  /* FREECIV_DEBUG */
       cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not translate. */
-                  _("debug NUM"),
-                  _("Set debug log level (%d to %d)"),
+                  /* TRANS: "debug" is exactly what user must type, do not
+                     translate. */
+                  _("debug NUM"), _("Set debug log level (%d to %d)"),
                   LOG_FATAL, LOG_VERBOSE);
 #endif /* FREECIV_DEBUG */
-      cmdhelp_add(help, "v", "version",
-                  _("Print the version number"));
+      cmdhelp_add(help, "v", "version", _("Print the version number"));
       /* The function below prints a header and footer for the options.
        * Furthermore, the options are sorted. */
       cmdhelp_display(help, TRUE, TRUE, TRUE);
       cmdhelp_destroy(help);
 
       exit(EXIT_SUCCESS);
-    } else if ((option = get_option_malloc("--List", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--List", argv, &i, argc, TRUE))) {
       fcmp.list_url = option;
-    } else if ((option = get_option_malloc("--prefix", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--prefix", argv, &i, argc, TRUE))) {
       fcmp.inst_prefix = option;
-    } else if ((option = get_option_malloc("--install", argv, &i, argc, TRUE))) {
+    } else if ((option =
+                    get_option_malloc("--install", argv, &i, argc, TRUE))) {
       fcmp.autoinstall = option;
-    } else if ((option = get_option_malloc("--debug", argv, &i, argc, FALSE))) {
+    } else if ((option =
+                    get_option_malloc("--debug", argv, &i, argc, FALSE))) {
       if (!log_parse_level_str(option, &loglevel)) {
         fc_fprintf(stderr,
                    _("Invalid debug level \"%s\" specified with --debug "
-                     "option.\n"), option);
+                     "option.\n"),
+                   option);
         fc_fprintf(stderr, _("Try using --help.\n"));
         exit(EXIT_FAILURE);
       }

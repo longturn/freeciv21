@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
  Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -14,15 +14,15 @@
 #define FC__CONSOLE_H
 
 /* utility */
-#include "support.h"            /* bool type and fc__attribute */
+#include "support.h" /* bool type and fc__attribute */
 
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
 
-#define MAX_LEN_CONSOLE_LINE 1024  /* closing '\0' included */
+#define MAX_LEN_CONSOLE_LINE 1024 /* closing '\0' included */
 
-/* 
+/*
  * A note on "rfc-style":
  *
  * This style of server output, started with the /rfcstyle server
@@ -37,22 +37,22 @@ extern "C" {
  */
 
 enum rfc_status {
-  C_IGNORE = -1,                /* never print RFC-style number prefix */
-  C_COMMENT = 0,                /* for human eyes only */
-  C_VERSION = 1,                /* version info */
-  C_DEBUG = 2,                  /* debug info */
-  C_LOG_BASE = 10,              /* 10, 11, 12 depending on log level */
-  C_OK = 100,                   /* success of requested operation */
-  C_CONNECTION = 101,           /* new client */
-  C_DISCONNECTED = 102,         /* client gone */
-  C_REJECTED = 103,             /* client rejected */
-  C_FAIL = 200,                 /* failure of requested operation */
-  C_METAERROR = 201,            /* failure of meta server */
-  C_SYNTAX = 300,               /* syntax error or value out of range */
-  C_BOUNCE = 301,               /* option no longer available */
-  C_GENFAIL = 400,              /* failure not caused by a requested operation */
-  C_WARNING = 500,              /* something may be wrong */
-  C_READY = 999                 /* waiting for input */
+  C_IGNORE = -1,        /* never print RFC-style number prefix */
+  C_COMMENT = 0,        /* for human eyes only */
+  C_VERSION = 1,        /* version info */
+  C_DEBUG = 2,          /* debug info */
+  C_LOG_BASE = 10,      /* 10, 11, 12 depending on log level */
+  C_OK = 100,           /* success of requested operation */
+  C_CONNECTION = 101,   /* new client */
+  C_DISCONNECTED = 102, /* client gone */
+  C_REJECTED = 103,     /* client rejected */
+  C_FAIL = 200,         /* failure of requested operation */
+  C_METAERROR = 201,    /* failure of meta server */
+  C_SYNTAX = 300,       /* syntax error or value out of range */
+  C_BOUNCE = 301,       /* option no longer available */
+  C_GENFAIL = 400,      /* failure not caused by a requested operation */
+  C_WARNING = 500,      /* something may be wrong */
+  C_READY = 999         /* waiting for input */
 };
 
 /* initialize logging via console */
@@ -62,12 +62,12 @@ void con_log_close(void);
 
 /* write to console and add line-break, and show prompt if required. */
 void con_write(enum rfc_status rfc_status, const char *message, ...)
-     fc__attribute((__format__ (__printf__, 2, 3)));
+    fc__attribute((__format__(__printf__, 2, 3)));
 
 /* write to console and add line-break, and show prompt if required.
    ie, same as con_write, but without the format string stuff. */
 void con_puts(enum rfc_status rfc_status, const char *str);
-     
+
 /* ensure timely update */
 void con_flush(void);
 
@@ -96,4 +96,4 @@ bool con_get_style(void);
 }
 #endif /* __cplusplus */
 
-#endif  /* FC__CONSOLE_H */
+#endif /* FC__CONSOLE_H */

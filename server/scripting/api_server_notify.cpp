@@ -27,32 +27,33 @@
 
 #include "api_server_notify.h"
 
-
-/*************************************************************************//**
-  Notify players which have embassies with pplayer with the given message.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Notify players which have embassies with pplayer with the given message.
+ *****************************************************************************/
 void api_notify_embassies_msg(lua_State *L, Player *pplayer, Tile *ptile,
                               int event, const char *message)
 {
   LUASCRIPT_CHECK_STATE(L);
 
-  notify_embassies(pplayer, ptile, static_cast<event_type>(event), ftc_any, "%s", message);
+  notify_embassies(pplayer, ptile, static_cast<event_type>(event), ftc_any,
+                   "%s", message);
 }
 
-/*************************************************************************//**
-  Notify pplayer of a complex event.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Notify pplayer of a complex event.
+ *****************************************************************************/
 void api_notify_event_msg(lua_State *L, Player *pplayer, Tile *ptile,
                           int event, const char *message)
 {
   LUASCRIPT_CHECK_STATE(L);
 
-  notify_player(pplayer, ptile, static_cast<event_type>(event), ftc_any, "%s", message);
+  notify_player(pplayer, ptile, static_cast<event_type>(event), ftc_any,
+                "%s", message);
 }
 
-/*************************************************************************//**
-  Notify players sharing research with the player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Notify players sharing research with the player.
+ *****************************************************************************/
 void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
                              int event, const char *message)
 {
@@ -62,13 +63,13 @@ void api_notify_research_msg(lua_State *L, Player *pplayer, bool include_plr,
 
   pres = research_get(pplayer);
 
-  notify_research(pres, include_plr ? NULL : pplayer, static_cast<event_type>(event),
-                  ftc_any, "%s", message);
+  notify_research(pres, include_plr ? NULL : pplayer,
+                  static_cast<event_type>(event), ftc_any, "%s", message);
 }
 
-/*************************************************************************//**
-  Notify players sharing research with the player.
-*****************************************************************************/
+/*************************************************************************/ /**
+   Notify players sharing research with the player.
+ *****************************************************************************/
 void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
                                        int event, const char *message)
 {
@@ -78,5 +79,6 @@ void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
 
   pres = research_get(pplayer);
 
-  notify_research_embassies(pres, NULL, static_cast<event_type>(event), ftc_any, "%s", message);
+  notify_research_embassies(pres, NULL, static_cast<event_type>(event),
+                            ftc_any, "%s", message);
 }

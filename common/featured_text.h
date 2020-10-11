@@ -18,7 +18,7 @@ extern "C" {
 #endif /* __cplusplus */
 
 /* utility */
-#include "support.h"            /* bool type. */
+#include "support.h" /* bool type. */
 
 /* common */
 #include "fc_types.h"
@@ -69,7 +69,7 @@ extern "C" {
  * Full name sequence: [strike] ... [/strike]
  * Abbreviation sequence: [s] ... [/s]
  * Text tag type: TTT_STRIKE
- * 
+ *
  * - Underline.
  * Full name sequence: [underline] ... [/underline]
  * Abbreviation sequence: [u] ... [/u]
@@ -104,16 +104,16 @@ typedef int ft_offset_t;
 #define FT_OFFSET_UNSET ((ft_offset_t) -1)
 
 /* Opaque type. */
-struct text_tag;               
+struct text_tag;
 
 /* Define struct text_tag_list. */
 #define SPECLIST_TAG text_tag
 #define SPECLIST_TYPE struct text_tag
-#include "speclist.h"           
+#include "speclist.h"
 
-#define text_tag_list_iterate(tags, ptag) \
+#define text_tag_list_iterate(tags, ptag)                                   \
   TYPED_LIST_ITERATE(struct text_tag, tags, ptag)
-#define text_tag_list_iterate_end  LIST_ITERATE_END
+#define text_tag_list_iterate_end LIST_ITERATE_END
 
 /* The different text_tag types.
  * Chaning the order doesn't break the network compatiblity. */
@@ -137,14 +137,17 @@ enum text_link_type {
 };
 
 /* Default maximal link size */
-#define MAX_LEN_LINK    128
+#define MAX_LEN_LINK 128
 
 /* Simplification for colors. */
 struct ft_color {
   const char *foreground;
   const char *background;
 };
-#define FT_COLOR(fg, bg) { fg, bg }
+#define FT_COLOR(fg, bg)                                                    \
+  {                                                                         \
+    fg, bg                                                                  \
+  }
 /**************************************************************************
   Constructor.
 **************************************************************************/
@@ -174,7 +177,7 @@ extern const struct ft_color ftc_server;
 extern const struct ft_color ftc_client;
 extern const struct ft_color ftc_editor;
 extern const struct ft_color ftc_command;
-extern       struct ft_color ftc_changed;
+extern struct ft_color ftc_changed;
 extern const struct ft_color ftc_server_prompt;
 extern const struct ft_color ftc_player_lost;
 extern const struct ft_color ftc_game_start;
@@ -204,25 +207,21 @@ size_t featured_text_to_plain_text(const char *featured_text,
                                    char *plain_text, size_t plain_text_len,
                                    struct text_tag_list **tags,
                                    bool replace_link_text);
-size_t featured_text_apply_tag(const char *text_source,
-                               char *featured_text, size_t featured_text_len,
+size_t featured_text_apply_tag(const char *text_source, char *featured_text,
+                               size_t featured_text_len,
                                enum text_tag_type tag_type,
                                ft_offset_t start_offset,
-                               ft_offset_t stop_offset,
-                               ...);
+                               ft_offset_t stop_offset, ...);
 
 /* Text tag list functions. NB: Overwrite the ones defined in speclist.h. */
-#define text_tag_list_new() \
-  text_tag_list_new_full(text_tag_destroy)
-#define text_tag_list_copy(tags) \
+#define text_tag_list_new() text_tag_list_new_full(text_tag_destroy)
+#define text_tag_list_copy(tags)                                            \
   text_tag_list_copy_full(tags, text_tag_copy, text_tag_destroy)
-
 
 /* Text tag functions. */
 struct text_tag *text_tag_new(enum text_tag_type tag_type,
                               ft_offset_t start_offset,
-                              ft_offset_t stop_offset,
-                              ...);
+                              ft_offset_t stop_offset, ...);
 struct text_tag *text_tag_copy(const struct text_tag *ptag);
 void text_tag_destroy(struct text_tag *ptag);
 

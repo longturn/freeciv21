@@ -27,9 +27,9 @@
 #include "cm.h"
 
 /* common */
-#include "ai.h"
 #include "achievements.h"
 #include "actions.h"
+#include "ai.h"
 #include "city.h"
 #include "connection.h"
 #include "disaster.h"
@@ -61,83 +61,72 @@ bool am_i_server = FALSE;
 
 static void game_defaults(bool keep_ruleset_value);
 
-/**********************************************************************//**
-  Is program type server?
-**************************************************************************/
-bool is_server(void)
-{
-  return am_i_server;
-}
+/**********************************************************************/ /**
+   Is program type server?
+ **************************************************************************/
+bool is_server(void) { return am_i_server; }
 
-/**********************************************************************//**
-  Set program type to server.
-**************************************************************************/
-void i_am_server(void)
-{
-  am_i_server = TRUE;
-}
+/**********************************************************************/ /**
+   Set program type to server.
+ **************************************************************************/
+void i_am_server(void) { am_i_server = TRUE; }
 
-/**********************************************************************//**
-  Set program type to client.
-**************************************************************************/
-void i_am_client(void)
-{
-  am_i_server = FALSE;
-}
+/**********************************************************************/ /**
+   Set program type to client.
+ **************************************************************************/
+void i_am_client(void) { am_i_server = FALSE; }
 
-/**********************************************************************//**
-  Count the # of thousand citizen in a civilisation.
-**************************************************************************/
+/**********************************************************************/ /**
+   Count the # of thousand citizen in a civilisation.
+ **************************************************************************/
 int civ_population(const struct player *pplayer)
 {
-  int ppl=0;
-  city_list_iterate(pplayer->cities, pcity)
-    ppl+=city_population(pcity);
+  int ppl = 0;
+  city_list_iterate(pplayer->cities, pcity) ppl += city_population(pcity);
   city_list_iterate_end;
   return ppl;
 }
 
-
-/**********************************************************************//**
-  Find city with given name from any player.
-**************************************************************************/
+/**********************************************************************/ /**
+   Find city with given name from any player.
+ **************************************************************************/
 struct city *game_city_by_name(const char *name)
 {
-  players_iterate(pplayer) {
+  players_iterate(pplayer)
+  {
     struct city *pcity = city_list_find_name(pplayer->cities, name);
 
     if (pcity) {
       return pcity;
     }
-  } players_iterate_end;
+  }
+  players_iterate_end;
 
   return NULL;
 }
 
-
-/**********************************************************************//**
-  Often used function to get a city pointer from a city ID.
-  City may be any city in the game.  This now always uses fast idex
-  method, instead of looking through all cities of all players.
-**************************************************************************/
+/**********************************************************************/ /**
+   Often used function to get a city pointer from a city ID.
+   City may be any city in the game.  This now always uses fast idex
+   method, instead of looking through all cities of all players.
+ **************************************************************************/
 struct city *game_city_by_number(int id)
 {
   return idex_lookup_city(&wld, id);
 }
 
-
-/**********************************************************************//**
-  Find unit out of all units in game: now uses fast idex method,
-  instead of looking through all units of all players.
-**************************************************************************/
+/**********************************************************************/ /**
+   Find unit out of all units in game: now uses fast idex method,
+   instead of looking through all units of all players.
+ **************************************************************************/
 struct unit *game_unit_by_number(int id)
 {
   return idex_lookup_unit(&wld, id);
 }
 
-/**********************************************************************//**
-  In the server call wipe_unit(), and never this function directly.
-**************************************************************************/
+/**********************************************************************/ /**
+   In the server call wipe_unit(), and never this function directly.
+ **************************************************************************/
 void game_remove_unit(struct world *gworld, struct unit *punit)
 {
   struct city *pcity;
@@ -154,27 +143,19 @@ void game_remove_unit(struct world *gworld, struct unit *punit)
 
     log_debug("game_remove_unit()"
               " at (%d,%d) unit %d, %s %s home (%d,%d) city %d, %s %s",
-              TILE_XY(unit_tile(punit)),
-              punit->id, 
-              nation_rule_name(nation_of_unit(punit)),
-              unit_rule_name(punit),
-              TILE_XY(pcity->tile),
-              punit->homecity,
-              nation_rule_name(nation_of_city(pcity)),
-              city_name_get(pcity));
+              TILE_XY(unit_tile(punit)), punit->id,
+              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+              TILE_XY(pcity->tile), punit->homecity,
+              nation_rule_name(nation_of_city(pcity)), city_name_get(pcity));
   } else if (IDENTITY_NUMBER_ZERO == punit->homecity) {
     log_debug("game_remove_unit() at (%d,%d) unit %d, %s %s home %d",
-              TILE_XY(unit_tile(punit)),
-              punit->id, 
-              nation_rule_name(nation_of_unit(punit)),
-              unit_rule_name(punit),
+              TILE_XY(unit_tile(punit)), punit->id,
+              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               punit->homecity);
   } else {
     log_error("game_remove_unit() at (%d,%d) unit %d, %s %s home %d invalid",
-              TILE_XY(unit_tile(punit)),
-              punit->id, 
-              nation_rule_name(nation_of_unit(punit)),
-              unit_rule_name(punit),
+              TILE_XY(unit_tile(punit)), punit->id,
+              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               punit->homecity);
   }
 
@@ -189,9 +170,9 @@ void game_remove_unit(struct world *gworld, struct unit *punit)
   unit_virtual_destroy(punit);
 }
 
-/**********************************************************************//**
-  Remove city from game.
-**************************************************************************/
+/**********************************************************************/ /**
+   Remove city from game.
+ **************************************************************************/
 void game_remove_city(struct world *gworld, struct city *pcity)
 {
   struct tile *pcenter = city_tile(pcity);
@@ -203,74 +184,74 @@ void game_remove_city(struct world *gworld, struct city *pcity)
   }
 
   if (NULL == pcenter) {
-    log_debug("game_remove_city() virtual city %d, %s",
-              pcity->id,
+    log_debug("game_remove_city() virtual city %d, %s", pcity->id,
               city_name_get(pcity));
   } else {
     log_debug("game_remove_city() at (%d,%d) city %d, %s %s",
-              TILE_XY(pcenter),
-              pcity->id,
+              TILE_XY(pcenter), pcity->id,
               nation_rule_name(nation_of_player(powner)),
               city_name_get(pcity));
 
-    city_tile_iterate(city_map_radius_sq_get(pcity), pcenter, ptile) {
+    city_tile_iterate(city_map_radius_sq_get(pcity), pcenter, ptile)
+    {
       if (tile_worked(ptile) == pcity) {
         tile_set_worked(ptile, NULL);
       }
-    } city_tile_iterate_end;
+    }
+    city_tile_iterate_end;
   }
 
   idex_unregister_city(gworld, pcity);
   destroy_city_virtual(pcity);
 }
 
-/**********************************************************************//**
-  Set default game values.
-**************************************************************************/
+/**********************************************************************/ /**
+   Set default game values.
+ **************************************************************************/
 static void game_defaults(bool keep_ruleset_value)
 {
   int i;
 
   /* The control packet. */
-  game.control.government_count        = 0;
-  game.control.nation_count            = 0;
-  game.control.num_base_types          = 0;
-  game.control.num_road_types          = 0;
-  game.control.num_resource_types      = 0;
-  game.control.num_impr_types          = 0;
-  game.control.num_specialist_types    = 0;
-  game.control.num_tech_types          = 0;
-  game.control.num_unit_classes        = 0;
-  game.control.num_unit_types          = 0;
-  game.control.num_disaster_types      = 0;
-  game.control.num_achievement_types   = 0;
-  game.control.num_styles              = 0;
-  game.control.num_music_styles        = 0;
-  game.control.preferred_tileset[0]    = '\0';
-  game.control.preferred_soundset[0]   = '\0';
-  game.control.preferred_musicset[0]   = '\0';
-  game.control.styles_count            = 0;
-  game.control.terrain_count           = 0;
+  game.control.government_count = 0;
+  game.control.nation_count = 0;
+  game.control.num_base_types = 0;
+  game.control.num_road_types = 0;
+  game.control.num_resource_types = 0;
+  game.control.num_impr_types = 0;
+  game.control.num_specialist_types = 0;
+  game.control.num_tech_types = 0;
+  game.control.num_unit_classes = 0;
+  game.control.num_unit_types = 0;
+  game.control.num_disaster_types = 0;
+  game.control.num_achievement_types = 0;
+  game.control.num_styles = 0;
+  game.control.num_music_styles = 0;
+  game.control.preferred_tileset[0] = '\0';
+  game.control.preferred_soundset[0] = '\0';
+  game.control.preferred_musicset[0] = '\0';
+  game.control.styles_count = 0;
+  game.control.terrain_count = 0;
 
-  game.ruleset_summary       = NULL;
-  game.ruleset_description   = NULL;
-  game.ruleset_capabilities  = NULL;
+  game.ruleset_summary = NULL;
+  game.ruleset_description = NULL;
+  game.ruleset_capabilities = NULL;
 
   /* The info packet. */
-  game.info.aifill           = GAME_DEFAULT_AIFILL;
+  game.info.aifill = GAME_DEFAULT_AIFILL;
   game.info.airlifting_style = GAME_DEFAULT_AIRLIFTINGSTYLE;
-  game.info.angrycitizen     = GAME_DEFAULT_ANGRYCITIZEN;
-  game.info.borders          = GAME_DEFAULT_BORDERS;
+  game.info.angrycitizen = GAME_DEFAULT_ANGRYCITIZEN;
+  game.info.borders = GAME_DEFAULT_BORDERS;
   game.calendar.calendar_skip_0 = FALSE;
   game.info.caravan_bonus_style = GAME_DEFAULT_CARAVAN_BONUS_STYLE;
-  game.info.celebratesize    = GAME_DEFAULT_CELEBRATESIZE;
-  game.info.citymindist      = GAME_DEFAULT_CITYMINDIST;
-  game.info.cooling          = 0;
-  game.info.coolinglevel     = 0; /* set later */
-  game.info.diplomacy        = GAME_DEFAULT_DIPLOMACY;
-  game.info.fogofwar         = GAME_DEFAULT_FOGOFWAR;
-  game.info.foodbox          = GAME_DEFAULT_FOODBOX;
-  game.info.fulltradesize    = GAME_DEFAULT_FULLTRADESIZE;
+  game.info.celebratesize = GAME_DEFAULT_CELEBRATESIZE;
+  game.info.citymindist = GAME_DEFAULT_CITYMINDIST;
+  game.info.cooling = 0;
+  game.info.coolinglevel = 0; /* set later */
+  game.info.diplomacy = GAME_DEFAULT_DIPLOMACY;
+  game.info.fogofwar = GAME_DEFAULT_FOGOFWAR;
+  game.info.foodbox = GAME_DEFAULT_FOODBOX;
+  game.info.fulltradesize = GAME_DEFAULT_FULLTRADESIZE;
   game.info.global_advance_count = 0;
   for (i = 0; i < A_LAST; i++) {
     /* game.num_tech_types = 0 here */
@@ -280,43 +261,43 @@ static void game_defaults(bool keep_ruleset_value)
     /* game.num_impr_types = 0 here */
     game.info.great_wonder_owners[i] = WONDER_NOT_OWNED;
   }
-  game.info.globalwarming    = 0;
-  game.info.global_warming   = GAME_DEFAULT_GLOBAL_WARMING;
-  game.info.gold             = GAME_DEFAULT_GOLD;
-  game.info.infrapoints      = GAME_DEFAULT_INFRA;
-  game.info.revolentype      = GAME_DEFAULT_REVOLENTYPE;
+  game.info.globalwarming = 0;
+  game.info.global_warming = GAME_DEFAULT_GLOBAL_WARMING;
+  game.info.gold = GAME_DEFAULT_GOLD;
+  game.info.infrapoints = GAME_DEFAULT_INFRA;
+  game.info.revolentype = GAME_DEFAULT_REVOLENTYPE;
   game.info.default_government_id = G_LAST;
   game.info.government_during_revolution_id = G_LAST;
-  game.info.happyborders     = GAME_DEFAULT_HAPPYBORDERS;
-  game.info.heating          = 0;
-  game.info.is_edit_mode     = FALSE;
-  game.info.is_new_game      = TRUE;
-  game.info.killstack        = GAME_DEFAULT_KILLSTACK;
-  game.info.killcitizen      = GAME_DEFAULT_KILLCITIZEN;
+  game.info.happyborders = GAME_DEFAULT_HAPPYBORDERS;
+  game.info.heating = 0;
+  game.info.is_edit_mode = FALSE;
+  game.info.is_new_game = TRUE;
+  game.info.killstack = GAME_DEFAULT_KILLSTACK;
+  game.info.killcitizen = GAME_DEFAULT_KILLCITIZEN;
   game.calendar.negative_year_label[0] = '\0';
-  game.info.notradesize      = GAME_DEFAULT_NOTRADESIZE;
-  game.info.nuclearwinter    = 0;
-  game.info.nuclear_winter   = GAME_DEFAULT_NUCLEAR_WINTER;
+  game.info.notradesize = GAME_DEFAULT_NOTRADESIZE;
+  game.info.nuclearwinter = 0;
+  game.info.nuclear_winter = GAME_DEFAULT_NUCLEAR_WINTER;
   game.calendar.positive_year_label[0] = '\0';
-  game.info.rapturedelay     = GAME_DEFAULT_RAPTUREDELAY;
-  game.info.disasters        = GAME_DEFAULT_DISASTERS;
-  game.info.restrictinfra    = GAME_DEFAULT_RESTRICTINFRA;
-  game.info.sciencebox       = GAME_DEFAULT_SCIENCEBOX;
-  game.info.shieldbox        = GAME_DEFAULT_SHIELDBOX;
-  game.info.skill_level      = GAME_DEFAULT_SKILL_LEVEL;
+  game.info.rapturedelay = GAME_DEFAULT_RAPTUREDELAY;
+  game.info.disasters = GAME_DEFAULT_DISASTERS;
+  game.info.restrictinfra = GAME_DEFAULT_RESTRICTINFRA;
+  game.info.sciencebox = GAME_DEFAULT_SCIENCEBOX;
+  game.info.shieldbox = GAME_DEFAULT_SHIELDBOX;
+  game.info.skill_level = GAME_DEFAULT_SKILL_LEVEL;
   game.info.victory_conditions = GAME_DEFAULT_VICTORY_CONDITIONS;
   game.info.team_pooled_research = GAME_DEFAULT_TEAM_POOLED_RESEARCH;
-  game.info.tech             = GAME_DEFAULT_TECHLEVEL;
-  game.info.timeout          = GAME_DEFAULT_TIMEOUT;
-  game.info.trademindist     = GAME_DEFAULT_TRADEMINDIST;
+  game.info.tech = GAME_DEFAULT_TECHLEVEL;
+  game.info.timeout = GAME_DEFAULT_TIMEOUT;
+  game.info.trademindist = GAME_DEFAULT_TRADEMINDIST;
   game.info.trade_revenue_style = GAME_DEFAULT_TRADE_REVENUE_STYLE;
-  game.info.trading_city     = GAME_DEFAULT_TRADING_CITY;
-  game.info.trading_gold     = GAME_DEFAULT_TRADING_GOLD;
-  game.info.trading_tech     = GAME_DEFAULT_TRADING_TECH;
-  game.info.turn             = 0;
-  game.info.warminglevel     = 0; /* set later */
-  game.info.year_0_hack      = FALSE;
-  game.info.year             = GAME_START_YEAR;
+  game.info.trading_city = GAME_DEFAULT_TRADING_CITY;
+  game.info.trading_gold = GAME_DEFAULT_TRADING_GOLD;
+  game.info.trading_tech = GAME_DEFAULT_TRADING_TECH;
+  game.info.turn = 0;
+  game.info.warminglevel = 0; /* set later */
+  game.info.year_0_hack = FALSE;
+  game.info.year = GAME_START_YEAR;
 
   /* The scenario packets. */
   game.scenario.is_scenario = FALSE;
@@ -344,64 +325,67 @@ static void game_defaults(bool keep_ruleset_value)
     /* All settings only used by the server (./server/ and ./ai/ */
     sz_strlcpy(game.server.allow_take, GAME_DEFAULT_ALLOW_TAKE);
     game.server.allowed_city_names = GAME_DEFAULT_ALLOWED_CITY_NAMES;
-    game.server.aqueductloss      = GAME_DEFAULT_AQUEDUCTLOSS;
-    game.server.auto_ai_toggle    = GAME_DEFAULT_AUTO_AI_TOGGLE;
-    game.server.autoattack        = GAME_DEFAULT_AUTOATTACK;
-    game.server.barbarianrate     = GAME_DEFAULT_BARBARIANRATE;
-    game.server.civilwarsize      = GAME_DEFAULT_CIVILWARSIZE;
-    game.server.connectmsg[0]     = '\0';
-    game.server.conquercost       = GAME_DEFAULT_CONQUERCOST;
-    game.server.contactturns      = GAME_DEFAULT_CONTACTTURNS;
+    game.server.aqueductloss = GAME_DEFAULT_AQUEDUCTLOSS;
+    game.server.auto_ai_toggle = GAME_DEFAULT_AUTO_AI_TOGGLE;
+    game.server.autoattack = GAME_DEFAULT_AUTOATTACK;
+    game.server.barbarianrate = GAME_DEFAULT_BARBARIANRATE;
+    game.server.civilwarsize = GAME_DEFAULT_CIVILWARSIZE;
+    game.server.connectmsg[0] = '\0';
+    game.server.conquercost = GAME_DEFAULT_CONQUERCOST;
+    game.server.contactturns = GAME_DEFAULT_CONTACTTURNS;
     for (i = 0; i < DEBUG_LAST; i++) {
       game.server.debug[i] = FALSE;
     }
     sz_strlcpy(game.server.demography, GAME_DEFAULT_DEMOGRAPHY);
-    game.server.diplchance        = GAME_DEFAULT_DIPLCHANCE;
-    game.server.diplbulbcost      = GAME_DEFAULT_DIPLBULBCOST;
-    game.server.diplgoldcost      = GAME_DEFAULT_DIPLGOLDCOST;
-    game.server.incite_gold_loss_chance = GAME_DEFAULT_INCITE_GOLD_LOSS_CHANCE;
-    game.server.incite_gold_capt_chance = GAME_DEFAULT_INCITE_GOLD_CAPT_CHANCE;
-    game.server.dispersion        = GAME_DEFAULT_DISPERSION;
-    game.server.endspaceship      = GAME_DEFAULT_END_SPACESHIP;
-    game.server.end_turn          = GAME_DEFAULT_END_TURN;
-    game.server.event_cache.chat  = GAME_DEFAULT_EVENT_CACHE_CHAT;
-    game.server.event_cache.info  = GAME_DEFAULT_EVENT_CACHE_INFO;
+    game.server.diplchance = GAME_DEFAULT_DIPLCHANCE;
+    game.server.diplbulbcost = GAME_DEFAULT_DIPLBULBCOST;
+    game.server.diplgoldcost = GAME_DEFAULT_DIPLGOLDCOST;
+    game.server.incite_gold_loss_chance =
+        GAME_DEFAULT_INCITE_GOLD_LOSS_CHANCE;
+    game.server.incite_gold_capt_chance =
+        GAME_DEFAULT_INCITE_GOLD_CAPT_CHANCE;
+    game.server.dispersion = GAME_DEFAULT_DISPERSION;
+    game.server.endspaceship = GAME_DEFAULT_END_SPACESHIP;
+    game.server.end_turn = GAME_DEFAULT_END_TURN;
+    game.server.event_cache.chat = GAME_DEFAULT_EVENT_CACHE_CHAT;
+    game.server.event_cache.info = GAME_DEFAULT_EVENT_CACHE_INFO;
     game.server.event_cache.max_size = GAME_DEFAULT_EVENT_CACHE_MAX_SIZE;
     game.server.event_cache.turns = GAME_DEFAULT_EVENT_CACHE_TURNS;
-    game.server.foggedborders     = GAME_DEFAULT_FOGGEDBORDERS;
-    game.server.fogofwar_old      = game.info.fogofwar;
+    game.server.foggedborders = GAME_DEFAULT_FOGGEDBORDERS;
+    game.server.fogofwar_old = game.info.fogofwar;
     game.server.last_updated_year = FALSE;
-    game.server.freecost          = GAME_DEFAULT_FREECOST;
+    game.server.freecost = GAME_DEFAULT_FREECOST;
     game.server.global_warming_percent = GAME_DEFAULT_GLOBAL_WARMING_PERCENT;
-    game.server.homecaughtunits   = GAME_DEFAULT_HOMECAUGHTUNITS;
-    game.server.kick_time         = GAME_DEFAULT_KICK_TIME;
-    game.server.killunhomed       = GAME_DEFAULT_KILLUNHOMED;
+    game.server.homecaughtunits = GAME_DEFAULT_HOMECAUGHTUNITS;
+    game.server.kick_time = GAME_DEFAULT_KICK_TIME;
+    game.server.killunhomed = GAME_DEFAULT_KILLUNHOMED;
     game.server.maxconnectionsperhost = GAME_DEFAULT_MAXCONNECTIONSPERHOST;
-    game.server.last_ping         = 0;
-    game.server.max_players       = GAME_DEFAULT_MAX_PLAYERS;
+    game.server.last_ping = 0;
+    game.server.max_players = GAME_DEFAULT_MAX_PLAYERS;
     game.server.meta_info.user_message[0] = '\0';
-    /* Do not clear meta_info.type here as it's already set to correct value */
-    game.server.mgr_distance      = GAME_DEFAULT_MGR_DISTANCE;
-    game.server.mgr_foodneeded    = GAME_DEFAULT_MGR_FOODNEEDED;
-    game.server.mgr_nationchance  = GAME_DEFAULT_MGR_NATIONCHANCE;
-    game.server.mgr_turninterval  = GAME_DEFAULT_MGR_TURNINTERVAL;
-    game.server.mgr_worldchance   = GAME_DEFAULT_MGR_WORLDCHANCE;
-    game.server.multiresearch     = GAME_DEFAULT_MULTIRESEARCH;
-    game.server.migration         = GAME_DEFAULT_MIGRATION;
-    game.server.trait_dist        = GAME_DEFAULT_TRAIT_DIST_MODE;
-    game.server.min_players       = GAME_DEFAULT_MIN_PLAYERS;
+    /* Do not clear meta_info.type here as it's already set to correct value
+     */
+    game.server.mgr_distance = GAME_DEFAULT_MGR_DISTANCE;
+    game.server.mgr_foodneeded = GAME_DEFAULT_MGR_FOODNEEDED;
+    game.server.mgr_nationchance = GAME_DEFAULT_MGR_NATIONCHANCE;
+    game.server.mgr_turninterval = GAME_DEFAULT_MGR_TURNINTERVAL;
+    game.server.mgr_worldchance = GAME_DEFAULT_MGR_WORLDCHANCE;
+    game.server.multiresearch = GAME_DEFAULT_MULTIRESEARCH;
+    game.server.migration = GAME_DEFAULT_MIGRATION;
+    game.server.trait_dist = GAME_DEFAULT_TRAIT_DIST_MODE;
+    game.server.min_players = GAME_DEFAULT_MIN_PLAYERS;
     game.server.natural_city_names = GAME_DEFAULT_NATURALCITYNAMES;
     game.server.nuclear_winter_percent = GAME_DEFAULT_NUCLEAR_WINTER_PERCENT;
-    game.server.plrcolormode      = GAME_DEFAULT_PLRCOLORMODE;
-    game.server.netwait           = GAME_DEFAULT_NETWAIT;
-    game.server.occupychance      = GAME_DEFAULT_OCCUPYCHANCE;
-    game.server.onsetbarbarian    = GAME_DEFAULT_ONSETBARBARIAN;
+    game.server.plrcolormode = GAME_DEFAULT_PLRCOLORMODE;
+    game.server.netwait = GAME_DEFAULT_NETWAIT;
+    game.server.occupychance = GAME_DEFAULT_OCCUPYCHANCE;
+    game.server.onsetbarbarian = GAME_DEFAULT_ONSETBARBARIAN;
     game.server.additional_phase_seconds = 0;
     game.server.phase_mode_stored = GAME_DEFAULT_PHASE_MODE;
-    game.server.pingtime          = GAME_DEFAULT_PINGTIME;
-    game.server.pingtimeout       = GAME_DEFAULT_PINGTIMEOUT;
-    game.server.razechance        = GAME_DEFAULT_RAZECHANCE;
-    game.server.revealmap         = GAME_DEFAULT_REVEALMAP;
+    game.server.pingtime = GAME_DEFAULT_PINGTIME;
+    game.server.pingtimeout = GAME_DEFAULT_PINGTIMEOUT;
+    game.server.razechance = GAME_DEFAULT_RAZECHANCE;
+    game.server.revealmap = GAME_DEFAULT_REVEALMAP;
     game.server.revolution_length = GAME_DEFAULT_REVOLUTION_LENGTH;
     if (!keep_ruleset_value) {
       sz_strlcpy(game.server.rulesetdir, GAME_DEFAULT_RULESETDIR);
@@ -409,41 +393,41 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.save_compress_level = GAME_DEFAULT_COMPRESS_LEVEL;
     game.server.save_compress_type = GAME_DEFAULT_COMPRESS_TYPE;
     sz_strlcpy(game.server.save_name, GAME_DEFAULT_SAVE_NAME);
-    game.server.save_nturns       = GAME_DEFAULT_SAVETURNS;
+    game.server.save_nturns = GAME_DEFAULT_SAVETURNS;
     game.server.save_options.save_known = TRUE;
     game.server.save_options.save_private_map = TRUE;
     game.server.save_options.save_starts = TRUE;
-    game.server.savepalace        = GAME_DEFAULT_SAVEPALACE;
-    game.server.scorelog          = GAME_DEFAULT_SCORELOG;
-    game.server.scoreloglevel     = GAME_DEFAULT_SCORELOGLEVEL;
-    game.server.scoreturn         = GAME_DEFAULT_SCORETURN - 1;
-    game.server.seed              = GAME_DEFAULT_SEED;
+    game.server.savepalace = GAME_DEFAULT_SAVEPALACE;
+    game.server.scorelog = GAME_DEFAULT_SCORELOG;
+    game.server.scoreloglevel = GAME_DEFAULT_SCORELOGLEVEL;
+    game.server.scoreturn = GAME_DEFAULT_SCORETURN - 1;
+    game.server.seed = GAME_DEFAULT_SEED;
     sz_strlcpy(game.server.start_units, GAME_DEFAULT_START_UNITS);
     game.server.spaceship_travel_time = GAME_DEFAULT_SPACESHIP_TRAVEL_TIME;
-    game.server.start_year        = GAME_START_YEAR;
-    game.server.tcptimeout        = GAME_DEFAULT_TCPTIMEOUT;
-    game.server.techlost_donor    = GAME_DEFAULT_TECHLOST_DONOR;
-    game.server.techlost_recv     = GAME_DEFAULT_TECHLOST_RECV;
-    game.server.techpenalty       = GAME_DEFAULT_TECHPENALTY;
+    game.server.start_year = GAME_START_YEAR;
+    game.server.tcptimeout = GAME_DEFAULT_TCPTIMEOUT;
+    game.server.techlost_donor = GAME_DEFAULT_TECHLOST_DONOR;
+    game.server.techlost_recv = GAME_DEFAULT_TECHLOST_RECV;
+    game.server.techpenalty = GAME_DEFAULT_TECHPENALTY;
     game.server.timeoutaddenemymove = GAME_DEFAULT_TIMEOUTADDEMOVE;
-    game.server.timeoutcounter    = GAME_DEFAULT_TIMEOUTCOUNTER;
-    game.server.timeoutinc        = GAME_DEFAULT_TIMEOUTINC;
-    game.server.timeoutincmult    = GAME_DEFAULT_TIMEOUTINCMULT;
-    game.server.timeoutint        = GAME_DEFAULT_TIMEOUTINT;
-    game.server.timeoutintinc     = GAME_DEFAULT_TIMEOUTINTINC;
-    game.server.turnblock         = GAME_DEFAULT_TURNBLOCK;
-    game.server.unitwaittime      = GAME_DEFAULT_UNITWAITTIME;
-    game.server.plr_colors        = NULL;
+    game.server.timeoutcounter = GAME_DEFAULT_TIMEOUTCOUNTER;
+    game.server.timeoutinc = GAME_DEFAULT_TIMEOUTINC;
+    game.server.timeoutincmult = GAME_DEFAULT_TIMEOUTINCMULT;
+    game.server.timeoutint = GAME_DEFAULT_TIMEOUTINT;
+    game.server.timeoutintinc = GAME_DEFAULT_TIMEOUTINTINC;
+    game.server.turnblock = GAME_DEFAULT_TURNBLOCK;
+    game.server.unitwaittime = GAME_DEFAULT_UNITWAITTIME;
+    game.server.plr_colors = NULL;
   } else {
     /* Client side takes care of itself in client_main() */
   }
 }
 
-/**********************************************************************//**
-  Initialise all game settings.
+/**********************************************************************/ /**
+   Initialise all game settings.
 
-  The variables are listed in alphabetical order.
-**************************************************************************/
+   The variables are listed in alphabetical order.
+ **************************************************************************/
 void game_init(bool keep_ruleset_value)
 {
   game_defaults(keep_ruleset_value);
@@ -457,10 +441,10 @@ void game_init(bool keep_ruleset_value)
   universal_found_functions_init();
 }
 
-/**********************************************************************//**
-  Initialize map-specific parts of the game structure.  Maybe these should
-  be moved into the map structure?
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize map-specific parts of the game structure.  Maybe these should
+   be moved into the map structure?
+ **************************************************************************/
 void game_map_init(void)
 {
   /* FIXME: it's not clear where these values should be initialized.  It
@@ -471,9 +455,9 @@ void game_map_init(void)
   game.info.coolinglevel = (map_num_tiles() + 499) / 500;
 }
 
-/**********************************************************************//**
-  Frees all memory of the game.
-**************************************************************************/
+/**********************************************************************/ /**
+   Frees all memory of the game.
+ **************************************************************************/
 void game_free(void)
 {
   player_slots_free();
@@ -486,10 +470,10 @@ void game_free(void)
   cm_free();
 }
 
-/**********************************************************************//**
-  Do all changes to change view, and not full
-  game_free()/game_init().
-**************************************************************************/
+/**********************************************************************/ /**
+   Do all changes to change view, and not full
+   game_free()/game_init().
+ **************************************************************************/
 void game_reset(void)
 {
   if (is_server()) {
@@ -497,9 +481,8 @@ void game_reset(void)
     game_init(FALSE);
   } else {
     /* Reset the players infos. */
-    players_iterate(pplayer) {
-      player_clear(pplayer, FALSE);
-    } players_iterate_end;
+    players_iterate(pplayer) { player_clear(pplayer, FALSE); }
+    players_iterate_end;
 
     main_map_free();
     free_city_map_index();
@@ -511,9 +494,9 @@ void game_reset(void)
   }
 }
 
-/**********************************************************************//**
-  Initialize the objects which will read from a ruleset.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize the objects which will read from a ruleset.
+ **************************************************************************/
 void game_ruleset_init(void)
 {
   nation_sets_groups_init();
@@ -556,9 +539,9 @@ void game_ruleset_init(void)
   }
 }
 
-/**********************************************************************//**
-  Frees all memory which in objects which are read from a ruleset.
-**************************************************************************/
+/**********************************************************************/ /**
+   Frees all memory which in objects which are read from a ruleset.
+ **************************************************************************/
 void game_ruleset_free(void)
 {
   int i;
@@ -567,9 +550,8 @@ void game_ruleset_free(void)
 
   /* Clear main structures which can points to the ruleset dependent
    * structures. */
-  players_iterate(pplayer) {
-    player_ruleset_close(pplayer);
-  } players_iterate_end;
+  players_iterate(pplayer) { player_ruleset_close(pplayer); }
+  players_iterate_end;
   game.government_during_revolution = NULL;
 
   specialists_free();
@@ -675,14 +657,17 @@ void game_ruleset_free(void)
   }
 }
 
-/**********************************************************************//**
-  Initialize wonder information.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize wonder information.
+ **************************************************************************/
 void initialize_globals(void)
 {
-  players_iterate(pplayer) {
-    city_list_iterate(pplayer->cities, pcity) {
-      city_built_iterate(pcity, pimprove) {
+  players_iterate(pplayer)
+  {
+    city_list_iterate(pplayer->cities, pcity)
+    {
+      city_built_iterate(pcity, pimprove)
+      {
         if (is_wonder(pimprove)) {
           if (is_great_wonder(pimprove)) {
             game.info.great_wonder_owners[improvement_index(pimprove)] =
@@ -690,18 +675,21 @@ void initialize_globals(void)
           }
           pplayer->wonders[improvement_index(pimprove)] = pcity->id;
         }
-      } city_built_iterate_end;
-    } city_list_iterate_end;
-  } players_iterate_end;
+      }
+      city_built_iterate_end;
+    }
+    city_list_iterate_end;
+  }
+  players_iterate_end;
 }
 
-/**********************************************************************//**
-  Return TRUE if it is this player's phase.
-  NB: The meaning of the 'phase' argument must match its use in the
-  function begin_turn() in server/srv_main.c.
-  NB: The phase mode PMT_TEAMS_ALTERNATE assumes that every player is
-  on a team, i.e. that pplayer->team is never NULL.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return TRUE if it is this player's phase.
+   NB: The meaning of the 'phase' argument must match its use in the
+   function begin_turn() in server/srv_main.c.
+   NB: The phase mode PMT_TEAMS_ALTERNATE assumes that every player is
+   on a team, i.e. that pplayer->team is never NULL.
+ **************************************************************************/
 bool is_player_phase(const struct player *pplayer, int phase)
 {
   switch (game.info.phase_mode) {
@@ -724,11 +712,11 @@ bool is_player_phase(const struct player *pplayer, int phase)
   return TRUE;
 }
 
-/**********************************************************************//**
-  Return a prettily formatted string containing the population text.  The
-  population is passed in as the number of citizens, in unit
-  (tens/hundreds/thousands...) defined in cities.ruleset.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return a prettily formatted string containing the population text.  The
+   population is passed in as the number of citizens, in unit
+   (tens/hundreds/thousands...) defined in cities.ruleset.
+ **************************************************************************/
 const char *population_to_text(int thousand_citizen)
 {
   /* big_int_to_text can't handle negative values, and in any case we'd
@@ -737,9 +725,9 @@ const char *population_to_text(int thousand_citizen)
   return big_int_to_text(thousand_citizen, game.info.pop_report_zeroes - 1);
 }
 
-/**********************************************************************//**
-  Return a string containing the save year.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return a string containing the save year.
+ **************************************************************************/
 static char *year_suffix(void)
 {
   static char buf[MAX_LEN_NAME];
@@ -767,34 +755,34 @@ static char *year_suffix(void)
   return buf;
 }
 
-/**********************************************************************//**
-  Generate a default save file name and place it in the provided buffer.
-  Within the name the following custom formats are allowed:
+/**********************************************************************/ /**
+   Generate a default save file name and place it in the provided buffer.
+   Within the name the following custom formats are allowed:
 
-    %R = <reason>
-    %S = <suffix>
-    %T = <game.info.turn>
-    %Y = <game.info.year>
+     %R = <reason>
+     %S = <suffix>
+     %T = <game.info.turn>
+     %Y = <game.info.year>
 
-  Examples:
-    'freeciv-T%04T-Y%+04Y-%R' => 'freeciv-T0099-Y-0050-manual'
-                              => 'freeciv-T0100-Y00001-auto'
+   Examples:
+     'freeciv-T%04T-Y%+04Y-%R' => 'freeciv-T0099-Y-0050-manual'
+                               => 'freeciv-T0100-Y00001-auto'
 
-  Returns the number of characters written, or the number of characters
-  that would have been written if truncation occurs.
+   Returns the number of characters written, or the number of characters
+   that would have been written if truncation occurs.
 
-  NB: If you change the format definition, be sure to update the above
-      function comment and the help text for the 'savename' setting.
-**************************************************************************/
+   NB: If you change the format definition, be sure to update the above
+       function comment and the help text for the 'savename' setting.
+ **************************************************************************/
 int generate_save_name(const char *format, char *buf, int buflen,
                        const char *reason)
 {
   struct cf_sequence sequences[5] = {
-    cf_str_seq('R', (reason == NULL) ? "auto" : reason),
-    cf_str_seq('S', year_suffix()),
-    { cf_type(0) }, { cf_type(0) },
-    cf_end()
-  };
+      cf_str_seq('R', (reason == NULL) ? "auto" : reason),
+      cf_str_seq('S', year_suffix()),
+      {cf_type(0)},
+      {cf_type(0)},
+      cf_end()};
 
   cf_int_seq('T', game.info.turn, &sequences[2]);
   cf_int_seq('Y', game.info.year, &sequences[3]);
@@ -806,8 +794,7 @@ int generate_save_name(const char *format, char *buf, int buflen,
      * printf information. */
     char savename[512];
 
-    fc_snprintf(savename, sizeof(savename), "%s-T%%04T-Y%%05Y-%%R",
-                format);
+    fc_snprintf(savename, sizeof(savename), "%s-T%%04T-Y%%05Y-%%R", format);
     fc_vsnprintcf(buf, buflen, savename, sequences, -1);
   }
 
@@ -816,18 +803,18 @@ int generate_save_name(const char *format, char *buf, int buflen,
   return strlen(buf);
 }
 
-/**********************************************************************//**
-  Initialize user flag.
-**************************************************************************/
+/**********************************************************************/ /**
+   Initialize user flag.
+ **************************************************************************/
 void user_flag_init(struct user_flag *flag)
 {
   flag->name = NULL;
   flag->helptxt = NULL;
 }
 
-/**********************************************************************//**
-  Free user flag.
-**************************************************************************/
+/**********************************************************************/ /**
+   Free user flag.
+ **************************************************************************/
 void user_flag_free(struct user_flag *flag)
 {
   if (flag->name != NULL) {
@@ -840,9 +827,9 @@ void user_flag_free(struct user_flag *flag)
   }
 }
 
-/**********************************************************************//**
-  Return timeout value for the current turn.
-**************************************************************************/
+/**********************************************************************/ /**
+   Return timeout value for the current turn.
+ **************************************************************************/
 int current_turn_timeout(void)
 {
   if (game.info.turn == 1 && game.info.first_timeout != -1) {

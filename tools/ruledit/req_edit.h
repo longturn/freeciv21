@@ -28,59 +28,58 @@
 
 class ruledit_gui;
 
-class req_edit : public QDialog
-{
+class req_edit : public QDialog {
   Q_OBJECT
 
-  public:
-    explicit req_edit(ruledit_gui *ui_in, QString target,
-                      struct requirement_vector *preqs);
-    void refresh();
-    void add(const char *msg);
+public:
+  explicit req_edit(ruledit_gui *ui_in, QString target,
+                    struct requirement_vector *preqs);
+  void refresh();
+  void add(const char *msg);
 
-    struct requirement_vector *req_vector;
+  struct requirement_vector *req_vector;
 
 signals:
-  /********************************************************************//**
-    A requirement vector may have been changed.
-    @param vec the requirement vector that was changed.
-  ************************************************************************/
+  /********************************************************************/ /**
+     A requirement vector may have been changed.
+     @param vec the requirement vector that was changed.
+   ************************************************************************/
   void rec_vec_may_have_changed(const requirement_vector *vec);
 
-  private:
-    ruledit_gui *ui;
+private:
+  ruledit_gui *ui;
 
-    QListWidget *req_list;
+  QListWidget *req_list;
 
-    struct requirement *selected;
-    struct requirement selected_values;
-    void clear_selected();
-    void update_selected();
+  struct requirement *selected;
+  struct requirement selected_values;
+  void clear_selected();
+  void update_selected();
 
-    QToolButton *edit_type_button;
-    QToolButton *edit_value_enum_button;
-    QMenu *edit_value_enum_menu;
-    QLineEdit *edit_value_nbr_field;
-    QToolButton *edit_range_button;
-    QToolButton *edit_present_button;
+  QToolButton *edit_type_button;
+  QToolButton *edit_value_enum_button;
+  QMenu *edit_value_enum_menu;
+  QLineEdit *edit_value_nbr_field;
+  QToolButton *edit_range_button;
+  QToolButton *edit_present_button;
 
-  private slots:
-    void select_req();
-    void fill_active();
-    void add_now();
-    void delete_now();
-    void close_now();
+private slots:
+  void select_req();
+  void fill_active();
+  void add_now();
+  void delete_now();
+  void close_now();
 
-    void req_type_menu(QAction *action);
-    void req_range_menu(QAction *action);
-    void req_present_menu(QAction *action);
-    void univ_value_enum_menu(QAction *action);
-    void univ_value_edit();
+  void req_type_menu(QAction *action);
+  void req_range_menu(QAction *action);
+  void req_present_menu(QAction *action);
+  void univ_value_enum_menu(QAction *action);
+  void univ_value_edit();
 
-    void incoming_rec_vec_change(const requirement_vector *vec);
+  void incoming_rec_vec_change(const requirement_vector *vec);
 
-  protected:
-    void closeEvent(QCloseEvent *event);
+protected:
+  void closeEvent(QCloseEvent *event);
 };
 
 #endif // FC__REQ_EDIT_H
