@@ -1077,8 +1077,7 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
   bool new_extras;
   const int units_num = unit_list_size(pcenter->units);
   bv_player *could_see_unit = (units_num > 0
-                               ? fc_malloc(sizeof(*could_see_unit)
-                                           * units_num)
+                               ? new bv_player[units_num]
                                : NULL);
   int i;
 
@@ -1191,7 +1190,7 @@ bool transfer_city(struct player *ptaker, struct city *pcity,
     i++;
   } unit_list_iterate_end;
   fc_assert(i == units_num);
-  free(could_see_unit);
+  delete[] could_see_unit;
   could_see_unit = NULL;
 
   transfer_city_units(ptaker, pgiver, old_city_units,
@@ -2450,7 +2449,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
 
   i = 0;
   trade_routes_iterate(pcity, proute) {
-    struct packet_traderoute_info *tri_packet = fc_malloc(sizeof(struct packet_traderoute_info));
+    auto tri_packet = new packet_traderoute_info;
 
     tri_packet->city = pcity->id;
     tri_packet->index = i;
@@ -3158,7 +3157,7 @@ void city_landlocked_sell_coastal_improvements(struct tile *ptile)
 void city_refresh_vision(struct city *pcity)
 {
   v_radius_t vision_radius_sq =
-      V_RADIUS(get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ), 2, 2);
+      V_RADIUS((short) get_city_bonus(pcity, EFT_CITY_VISION_RADIUS_SQ), 2, 2);
 
   vision_change_sight(pcity->server.vision, vision_radius_sq);
   ASSERT_VISION(pcity->server.vision);
