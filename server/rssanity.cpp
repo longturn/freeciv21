@@ -731,7 +731,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         continue;
       }
 
-      preq = advance_requires(padvance, i);
+      preq = advance_requires(padvance, tech_req(i));
 
       if (A_NEVER == preq) {
         continue;
@@ -1044,7 +1044,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     }
 
     for (bfi = 0; bfi < BF_COUNT; bfi++) {
-      if (!base_flag_is_retired(bfi)) {
+      if (!base_flag_is_retired(base_flag_id(bfi))) {
         /* Still valid. */
         continue;
       }
@@ -1053,7 +1053,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         ruleset_error(LOG_ERROR,
                       "Base %s uses the retired base flag %s!",
                       extra_name_translation(pextra),
-                      base_flag_id_name(bfi));
+                      base_flag_id_name(base_flag_id(bfi)));
       }
     }
   } extra_type_by_cause_iterate_end;
