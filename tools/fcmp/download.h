@@ -13,7 +13,7 @@
 #ifndef FC__MODPACK_DOWNLOAD_H
 #define FC__MODPACK_DOWNLOAD_H
 
-
+#include <functional>
 
 /* modinst */
 #include "modinst.h"
@@ -25,22 +25,22 @@
 
 #define FCMP_CONTROLD ".control"
 
-typedef void (*dl_msg_callback)(const char *msg);
-typedef void (*dl_pb_callback)(int downloaded, int max);
+using dl_msg_callback = std::function<void(const char *msg)>;
+using dl_pb_callback = std::function<void(int downloaded, int max)>;
 
 const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
-                             dl_msg_callback mcb, dl_pb_callback pbcb);
+                             const dl_msg_callback& mcb, const dl_pb_callback& pbcb);
 
-typedef void (*modpack_list_setup_cb)(const char *name, const char *URL,
+using modpack_list_setup_cb = std::function<void(const char *name, const char *URL,
                                       const char *version,
                                       const char *license,
                                       enum modpack_type type,
                                       const char *subtype,
-                                      const char *notes);
+                                      const char *notes)>;
 
 const char *download_modpack_list(const struct fcmp_params *fcmp,
-                                  modpack_list_setup_cb cb,
-                                  dl_msg_callback mcb);
+                                  const modpack_list_setup_cb& cb,
+                                  const dl_msg_callback& mcb);
 
 
 

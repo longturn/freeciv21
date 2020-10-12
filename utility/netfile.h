@@ -23,13 +23,13 @@ struct netfile_write_cb_data {
   int size;
 };
 
-typedef void (*nf_errmsg)(const char *msg, void *data);
+typedef void (*nf_errmsg)(const char *msg, const void *data);
 
 struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
-                                              void *data);
+                                              const void *data);
 
 bool netfile_download_file(const char *URL, const char *filename,
-                           nf_errmsg cb, void *data);
+                           nf_errmsg cb, const void *data);
 
 struct netfile_post *netfile_start_post(void);
 void netfile_add_form_str(struct netfile_post *post, const char *name,

@@ -38,7 +38,7 @@ struct netfile_post {
 };
 
 typedef size_t (*netfile_write_cb)(char *ptr, size_t size, size_t nmemb,
-                                   void *userdata);
+                                   const void *userdata);
 
 static char error_buf_curl[CURL_ERROR_SIZE];
 
@@ -70,7 +70,7 @@ static CURL *netfile_init_handle(void)
    Curl write callback to store received file to memory.
  ***********************************************************************/
 static size_t netfile_memwrite_cb(char *ptr, size_t size, size_t nmemb,
-                                  void *userdata)
+                                  const void *userdata)
 {
   struct netfile_write_cb_data *data =
       (struct netfile_write_cb_data *) userdata;
@@ -92,7 +92,7 @@ static size_t netfile_memwrite_cb(char *ptr, size_t size, size_t nmemb,
 static bool
 netfile_download_file_core(const char *URL, FILE *fp,
                            struct netfile_write_cb_data *mem_data,
-                           nf_errmsg cb, void *data)
+                           nf_errmsg cb, const void *data)
 {
   CURLcode curlret;
   struct curl_slist *headers = NULL;
@@ -143,7 +143,7 @@ netfile_download_file_core(const char *URL, FILE *fp,
    Fetch section file from net
  ***********************************************************************/
 struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
-                                              void *data)
+                                              const void *data)
 {
   bool success;
   struct section_file *out = NULL;
@@ -165,7 +165,7 @@ struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
    Fetch file from given URL and save as given filename.
  ***********************************************************************/
 bool netfile_download_file(const char *URL, const char *filename,
-                           nf_errmsg cb, void *data)
+                           nf_errmsg cb, const void *data)
 {
   bool success;
   FILE *fp;
@@ -235,7 +235,7 @@ void netfile_close_post(struct netfile_post *post)
    function does not get used as we don't want reply to stdout
  ***********************************************************************/
 static size_t dummy_write(void *buffer, size_t size, size_t nmemb,
-                          void *userp)
+                          const void *userp)
 {
   return size * nmemb;
 }

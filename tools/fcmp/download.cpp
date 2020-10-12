@@ -44,19 +44,19 @@
 
 static const char *download_modpack_recursive(const char *URL,
                                               const struct fcmp_params *fcmp,
-                                              dl_msg_callback mcb,
-                                              dl_pb_callback pbcb,
+                                              const dl_msg_callback &mcb,
+                                              const dl_pb_callback &pbcb,
                                               int recursion);
 
 /**********************************************************************/ /**
    Message callback called by netfile module when downloading files.
  **************************************************************************/
-static void nf_cb(const char *msg, void *data)
+static void nf_cb(const char *msg, const void *data)
 {
-  dl_msg_callback mcb = (dl_msg_callback) data;
+  auto mcb = static_cast<const dl_msg_callback *>(data);
 
   if (mcb != NULL) {
-    mcb(msg);
+    (*mcb)(msg);
   }
 }
 
@@ -64,7 +64,8 @@ static void nf_cb(const char *msg, void *data)
    Download modpack from a given URL
  **************************************************************************/
 const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
-                             dl_msg_callback mcb, dl_pb_callback pbcb)
+                             const dl_msg_callback &mcb,
+                             const dl_pb_callback &pbcb)
 {
   return download_modpack_recursive(URL, fcmp, mcb, pbcb, 0);
 }
@@ -74,8 +75,8 @@ const char *download_modpack(const char *URL, const struct fcmp_params *fcmp,
  **************************************************************************/
 static const char *download_modpack_recursive(const char *URL,
                                               const struct fcmp_params *fcmp,
-                                              dl_msg_callback mcb,
-                                              dl_pb_callback pbcb,
+                                              const dl_msg_callback &mcb,
+                                              const dl_pb_callback &pbcb,
                                               int recursion)
 {
   char local_dir[2048];
@@ -130,7 +131,7 @@ static const char *download_modpack_recursive(const char *URL,
     mcb(buf);
   }
 
-  control = netfile_get_section_file(URL, nf_cb, mcb);
+  control = netfile_get_section_file(URL, nf_cb, &mcb);
 
   if (control == NULL) {
     return _("Failed to get and parse modpack control file");
@@ -356,7 +357,7 @@ static const char *download_modpack_recursive(const char *URL,
 
       fc_snprintf(fileURL, sizeof(fileURL), "%s/%s", baseURL, src_name);
       log_debug("Download \"%s\" as \"%s\".", fileURL, local_name);
-      if (!netfile_download_file(fileURL, local_name, nf_cb, mcb)) {
+      if (!netfile_download_file(fileURL, local_name, nf_cb, &mcb)) {
         if (mcb != NULL) {
           char buf[2048];
 
@@ -395,8 +396,8 @@ static const char *download_modpack_recursive(const char *URL,
    Download modpack list
  **************************************************************************/
 const char *download_modpack_list(const struct fcmp_params *fcmp,
-                                  modpack_list_setup_cb cb,
-                                  dl_msg_callback mcb)
+                                  const modpack_list_setup_cb &cb,
+                                  const dl_msg_callback &mcb)
 {
   struct section_file *list_file;
   const char *list_capstr;
@@ -405,7 +406,7 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
   const char *mp_name;
   int start_idx;
 
-  list_file = netfile_get_section_file(fcmp->list_url, nf_cb, mcb);
+  list_file = netfile_get_section_file(fcmp->list_url, &nf_cb, &mcb);
 
   if (list_file == NULL) {
     return _("Cannot fetch and parse modpack list");
