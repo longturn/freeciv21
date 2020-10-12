@@ -264,7 +264,6 @@ static bool manual_command(struct tag_types *tag_info)
 {
   FILE *doc;
   char filename[40];
-  enum manuals manuals;
   struct connection my_conn;
 
   /* Default client access. */
@@ -279,7 +278,8 @@ static bool manual_command(struct tag_types *tag_info)
     return FALSE;
   }
 
-  for (manuals = 0; manuals < MANUAL_COUNT; manuals++) {
+  for (int imanuals = 0; imanuals < MANUAL_COUNT; imanuals++) {
+    enum manuals manuals = static_cast<enum manuals>(imanuals);
     int i;
     int ri;
 
