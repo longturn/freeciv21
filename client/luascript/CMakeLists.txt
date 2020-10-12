@@ -1,7 +1,7 @@
 tolua_generate(
   INPUT tolua_client.pkg
   HEADER tolua_client_gen.h
-  SOURCE tolua_client_gen.c
+  SOURCE tolua_client_gen.cpp
   PACKAGE_NAME client
 )
 
@@ -11,7 +11,7 @@ add_library(
   api_client_base.cpp
   script_client.cpp
   # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_client_gen.h
 )
 

@@ -123,9 +123,7 @@
  * should be included _once_, inside a .h file which _is_ itself protected
  * against multiple inclusions. */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "genlist.h"
 
@@ -744,6 +742,4 @@ static inline SPECLIST_LINK *
 /* This is after #endif FC__SPECLIST_H on purpose.
    extern "C" portion begins well before latter part of the header
    is guarded against multiple inclusions. */
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+

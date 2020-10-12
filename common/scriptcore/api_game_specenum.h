@@ -13,16 +13,12 @@
 #ifndef FC__API_GAME_SPECENUM_H
 #define FC__API_GAME_SPECENUM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct lua_State;
 
 int api_specenum_open(lua_State *L);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_GAME_SPECENUM_H */

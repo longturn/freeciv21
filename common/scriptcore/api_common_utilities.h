@@ -14,9 +14,7 @@
 #ifndef FC__API_COMMON_UTILITIES_H
 #define FC__API_COMMON_UTILITIES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -38,8 +36,6 @@ void api_utilities_deprecation_warning(lua_State *L, char *method,
                                        char *replacement,
                                        char *deprecated_since);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_COMMON_UTILITIES_H */

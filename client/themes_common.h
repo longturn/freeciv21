@@ -13,9 +13,7 @@
 #ifndef FC__THEMES_COMMON_H
 #define FC__THEMES_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* client */
 #include "options.h"
@@ -26,8 +24,6 @@ const struct strvec *get_themes_list(const struct option *poption);
 bool load_theme(const char *theme_name);
 void theme_reread_callback(struct option *option);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__THEMES_COMMON_H */

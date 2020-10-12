@@ -14,9 +14,7 @@
 #ifndef FC__NAME_TRANSLATION_H
 #define FC__NAME_TRANSLATION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "fcintl.h"
@@ -131,8 +129,6 @@ name_translation_get(const struct name_translation *ptrans)
 #undef rulename
 #undef translated
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__NAME_TRANSLATION_H */

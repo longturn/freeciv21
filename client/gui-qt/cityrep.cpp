@@ -20,6 +20,9 @@
 #include <QHeaderView>
 #include <QVBoxLayout>
 
+// utility
+#include "fcintl.h"
+
 // client
 #include "client_main.h"
 

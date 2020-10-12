@@ -13,9 +13,7 @@
 #ifndef FC__VOTEBAR_H
 #define FC__VOTEBAR_H
 
-extern "C" {
 #include "voteinfo_bar_g.h"
-}
 
 // Qt
 #include <QWidget>

@@ -14,9 +14,7 @@
 #ifndef FC__CM_H
 #define FC__CM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /*
  * The purpose of this module is to manage the citizens of a city. The
@@ -101,8 +99,6 @@ int cm_result_workers(const struct cm_result *result);
 void cm_result_from_main_map(struct cm_result *result,
                              const struct city *pcity);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CM_H */

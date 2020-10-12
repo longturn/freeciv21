@@ -14,9 +14,7 @@
 #ifndef FC__OPTIONDLG_H
 #define FC__OPTIONDLG_H
 
-extern "C" {
 #include "optiondlg_g.h"
-}
 
 // Qt
 #include <QDialog>

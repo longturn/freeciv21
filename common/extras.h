@@ -13,9 +13,7 @@
 #ifndef FC__EXTRAS_H
 #define FC__EXTRAS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "base.h"
@@ -355,8 +353,6 @@ bool player_knows_extra_exist(const struct player *pplayer,
   requirement_vector_iterate_end;                                           \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__EXTRAS_H */

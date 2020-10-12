@@ -17,9 +17,7 @@
  * Behaviour generally can't be changed at whim because client and
  * server are assumed to agree on these details. */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* Special characters in chatlines. */
 
@@ -29,8 +27,6 @@ extern "C" {
 #define CHAT_ALLIES_PREFIX '.'
 #define CHAT_DIRECT_PREFIX ':'
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CHAT_H */

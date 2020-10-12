@@ -22,9 +22,7 @@
 #include <fc_config.h>
 #endif
 
-extern "C" {
 #include "mapview_g.h"
-}
 
 // gui-qt
 #include "fonts.h"

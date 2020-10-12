@@ -14,8 +14,6 @@
 #ifndef FC__WLDLG_H
 #define FC__WLDLG_H
 
-extern "C" {
 #include "wldlg_g.h"
-}
 
 #endif /* FC__WLDLG_H */

@@ -20,9 +20,7 @@
 /* server */
 #include "fcdb.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* fcdb script functions. */
 bool script_fcdb_init(const char *fcdb_luafile);
@@ -31,8 +29,6 @@ void script_fcdb_free(void);
 
 bool script_fcdb_do_string(struct connection *caller, const char *str);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SCRIPT_FCDB_H */

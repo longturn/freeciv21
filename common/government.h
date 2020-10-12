@@ -13,9 +13,7 @@
 #ifndef FC__GOVERNMENT_H
 #define FC__GOVERNMENT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "shared.h"
@@ -127,8 +125,6 @@ struct iterator *government_iter_init(struct government_iter *it);
   governments_iterate_end;
 
 bool untargeted_revolution_allowed(void);
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__GOVERNMENT_H */

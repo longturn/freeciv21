@@ -2,14 +2,14 @@
 add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
   COMMAND
     ${PYTHON_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
     "" # common/packets_gen.h
     "" # common/packets_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
     "" # server/hand_gen.h
     "" # server/hand_gen.c
   VERBATIM
@@ -21,7 +21,7 @@ add_custom_command(
 add_library(
   client_gen
   STATIC
-  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/packhand_gen.h
 )
 
@@ -85,7 +85,7 @@ target_link_libraries(client PUBLIC luascript)
 if(FREECIV_ENABLE_CLIENT)
   add_subdirectory(gui-qt)
   add_executable(freeciv-qt packhand.cpp) # packhand.c depends on gui-qt
-  target_link_libraries(freeciv-qt client)
+  target_link_libraries(freeciv-qt client )
   target_link_libraries(freeciv-qt gui-qt)
   install(TARGETS freeciv-qt)
 endif()

@@ -16,9 +16,7 @@
 /* utility */
 #include "support.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct section_file;
 
@@ -31,8 +29,6 @@ void save_game(const char *orig_filename, const char *save_reason,
 
 void save_system_close(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SAVEMAIN_H */

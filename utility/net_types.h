@@ -19,9 +19,7 @@
 #ifndef FC__NET_TYPES_H
 #define FC__NET_TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* gen_headers */
 #include "freeciv_config.h"
@@ -56,8 +54,6 @@ enum fc_addr_family { FC_ADDR_IPV4, FC_ADDR_IPV6, FC_ADDR_ANY };
 void fc_init_network(void);
 void fc_shutdown_network(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__NET_TYPES_H */

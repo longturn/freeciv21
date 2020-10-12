@@ -13,9 +13,7 @@
 #ifndef FC__TECH_H
 #define FC__TECH_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -287,8 +285,6 @@ struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
                   advance_root_req_iter_init, _goal)
 #define advance_root_req_iterate_end generic_iterate_end
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TECH_H */

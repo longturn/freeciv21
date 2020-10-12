@@ -14,9 +14,7 @@
 #ifndef FC__SERVERS_H
 #define FC__SERVERS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "fcthread.h"
@@ -25,7 +23,7 @@ extern "C" {
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
 
-struct players {
+struct str_players {
   char *name;
   char *type;
   char *host;
@@ -40,7 +38,7 @@ struct server {
   char *state;
   char *topic;
   char *message;
-  players *players;
+  str_players *players;
   int nplayers;
   int humans;
 };
@@ -83,8 +81,6 @@ enum server_scan_status server_scan_poll(struct server_scan *scan);
 struct srv_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SERVERS_H */

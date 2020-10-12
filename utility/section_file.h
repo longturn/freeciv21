@@ -17,9 +17,7 @@
  * not care about. This header should be included by soruce files
  * implementing registry itself. */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -82,8 +80,6 @@ void secfile_log(const struct section_file *secfile,
 bool entry_from_token(struct section *psection, const char *name,
                       const char *tok);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SECTION_FILE_H */

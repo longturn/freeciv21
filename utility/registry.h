@@ -13,9 +13,7 @@
 #ifndef FC__REGISTRY_H
 #define FC__REGISTRY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "shared.h"
 
@@ -37,8 +35,6 @@ const char *section_name(const struct section *psection);
 
 #include "registry_ini.h"
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__REGISTRY_H */

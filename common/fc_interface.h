@@ -13,9 +13,7 @@
 #ifndef FC__FC_INTERFACE_H
 #define FC__FC_INTERFACE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -59,8 +57,6 @@ struct functions *fc_interface_funcs(void);
 void fc_interface_init(void);
 void free_libfreeciv(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__FC_INTERFACE_H */

@@ -57,9 +57,8 @@
 #include "hudwidget.h"
 #include "qtg_cxxside.h"
 
-extern "C" {
-void real_science_report_dialog_update(void *);
-}
+extern "C" void real_science_report_dialog_update(void *);
+
 extern void restart_notify_dialogs();
 extern void city_font_update();
 

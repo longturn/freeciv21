@@ -14,14 +14,10 @@
 #ifndef FC__BUGS_H
 #define FC__BUGS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void bugreport_request(const char *reason_format, ...);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__BUGS_H */

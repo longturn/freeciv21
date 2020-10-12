@@ -18,9 +18,7 @@
 #include "actions.h"
 #include "fc_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 adv_want dai_action_value_unit_vs_city(struct action *paction,
                                        struct unit *actor_unit,
@@ -31,8 +29,6 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
                                            struct unit *actor_unit,
                                            struct city *target_city);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_DAI_ACTIONS_H */

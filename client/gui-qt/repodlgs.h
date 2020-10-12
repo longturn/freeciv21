@@ -18,9 +18,7 @@
 #include <fc_config.h>
 #endif
 
-extern "C" {
 #include "repodlgs_g.h"
-}
 
 // client
 #include "climisc.h"

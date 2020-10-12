@@ -18,9 +18,7 @@
 #include <fc_config.h>
 #endif
 
-extern "C" {
 #include "spaceshipdlg_g.h"
-}
 
 /* client */
 #include "text.h"

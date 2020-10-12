@@ -18,9 +18,7 @@
 #ifndef FC__TILESPEC_H
 #define FC__TILESPEC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "log.h" /* enum log_level */
@@ -422,8 +420,6 @@ const char *tileset_description(struct tileset *t);
 char *tileset_what_ruleset(struct tileset *t);
 int tileset_topo_index(struct tileset *t);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TILESPEC_H */

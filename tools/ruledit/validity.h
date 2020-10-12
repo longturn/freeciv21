@@ -13,9 +13,7 @@
 #ifndef FC__VALIDITY_H
 #define FC__VALIDITY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 typedef void (*requirers_cb)(const char *msg, void *data);
 
@@ -31,8 +29,6 @@ bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb,
                           void *data);
 bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__VALIDITY_H */

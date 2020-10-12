@@ -36,6 +36,7 @@
 #include <QWidgetAction>
 
 // utility
+#include "fcintl.h"
 #include "support.h"
 
 // common

@@ -13,9 +13,7 @@
 #ifndef FC__DIPTREATY_H
 #define FC__DIPTREATY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "requirements.h"
@@ -100,8 +98,6 @@ struct clause_info *clause_info_get(enum clause_type type);
 bool clause_enabled(enum clause_type type, struct player *from,
                     struct player *to);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DIPTREATY_H */

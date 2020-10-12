@@ -14,9 +14,7 @@
 #ifndef FC__NETINTF_H
 #define FC__NETINTF_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <freeciv_config.h>
 
@@ -111,8 +109,6 @@ void sockaddr_debug(union fc_sockaddr *addr, enum log_level lvl);
 int sockaddr_size(union fc_sockaddr *addr);
 bool sockaddr_ipv6(union fc_sockaddr *addr);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__NETINTF_H */

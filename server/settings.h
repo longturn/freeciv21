@@ -14,9 +14,7 @@
 #ifndef FC__SETTINGS_H
 #define FC__SETTINGS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "shared.h"
@@ -213,8 +211,6 @@ void send_server_setting_control(struct connection *pconn);
 void setting_changed(struct setting *pset);
 enum setting_default_level setting_get_setdef(const struct setting *pset);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SETTINGS_H */

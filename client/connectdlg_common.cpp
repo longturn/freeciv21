@@ -57,8 +57,7 @@
 #include "client_main.h"
 #include "climisc.h"
 #include "clinet.h" /* connect_to_server() */
-#include "packhand_gen.h"
-
+#include "packhand_gen.h" 
 #include "chatline_common.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"

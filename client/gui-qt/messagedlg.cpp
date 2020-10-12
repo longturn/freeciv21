@@ -23,6 +23,9 @@
 #include <QPushButton>
 #include <QTableWidget>
 
+// utility
+#include "log.h"
+
 // client
 #include "options.h"
 

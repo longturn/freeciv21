@@ -13,17 +13,13 @@
 #ifndef FC__MOOD_H
 #define FC__MOOD_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* How many turns after latest combat war mood lasts */
 #define WAR_MOOD_LASTS 10
 
 enum mood_type player_mood(struct player *pplayer);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MOOD_H */

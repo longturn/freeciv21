@@ -30,11 +30,13 @@
 
 // common
 #include "chat.h"
+#include "chatline_common.h"
 
 // client
 #include "audio.h"
 #include "climap.h"
 #include "climisc.h" /* for write_chatline_content */
+#include "colors_common.h"
 #include "connectdlg_common.h"
 #include "control.h"
 #include "game.h"

@@ -13,9 +13,7 @@
 #ifndef FC__RULESAVE_H
 #define FC__RULESAVE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct rule_data {
   char *nationlist;
@@ -25,8 +23,6 @@ struct rule_data {
 bool save_ruleset(const char *path, const char *name,
                   struct rule_data *data);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__RULESAVE_H */

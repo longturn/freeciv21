@@ -14,9 +14,7 @@
 #ifndef FC__SCRIPT_CLIENT_H
 #define FC__SCRIPT_CLIENT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -45,8 +43,6 @@ void script_client_signal_connect(const char *signal_name,
 void script_client_signal_emit(const char *signal_name, ...);
 const char *script_client_signal_list(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SCRIPT_CLIENT_H */

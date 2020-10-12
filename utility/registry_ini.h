@@ -13,9 +13,7 @@
 #ifndef FC__REGISTRY_INI_H
 #define FC__REGISTRY_INI_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "ioz.h"
@@ -573,8 +571,6 @@ bool entry_str_escaped(const struct entry *pentry);
 bool entry_str_set_escaped(struct entry *pentry, bool escaped);
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__REGISTRY_INI_H */

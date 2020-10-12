@@ -1,13 +1,13 @@
 tolua_generate(
   INPUT tolua_fcdb.pkg
   HEADER tolua_fcdb_gen.h
-  SOURCE tolua_fcdb_gen.c
+  SOURCE tolua_fcdb_gen.cpp
   PACKAGE_NAME fcdb
 )
 tolua_generate(
   INPUT tolua_server.pkg
   HEADER tolua_server_gen.h
-  SOURCE tolua_server_gen.c
+  SOURCE tolua_server_gen.cpp
   PACKAGE_NAME server
 )
 
@@ -24,9 +24,9 @@ add_library(
   script_fcdb.cpp
   script_server.cpp
   # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_fcdb_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_server_gen.h
 )
 

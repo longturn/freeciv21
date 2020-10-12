@@ -13,9 +13,7 @@
 #ifndef FC__PAGES_H
 #define FC__PAGES_H
 
-extern "C" {
 #include "pages_g.h"
-}
 
 // gui-qt
 #include "qtg_cxxside.h"

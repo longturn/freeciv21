@@ -13,9 +13,7 @@
 #ifndef FC__RGBCOLOR_H
 #define FC__RGBCOLOR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "shared.h"
@@ -83,8 +81,6 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex);
 
 int rgbcolor_brightness_score(struct rgbcolor *prgbcolor);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__RGBCOLOR_H */

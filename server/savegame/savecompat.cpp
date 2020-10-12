@@ -17,6 +17,7 @@
 
 /* utility */
 #include "capability.h"
+#include "fcintl.h"
 #include "log.h"
 
 /* common */

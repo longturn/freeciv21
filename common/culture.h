@@ -13,9 +13,7 @@
 #ifndef FC__CULTURE_H
 #define FC__CULTURE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct city;
 struct player;
@@ -26,8 +24,6 @@ int city_history_gain(const struct city *pcity);
 int player_culture(const struct player *plr);
 int nation_history_gain(const struct player *pplayer);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CULTURE_H */

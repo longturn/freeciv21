@@ -14,9 +14,7 @@
 #ifndef FC__DEPRECATIONS_H
 #define FC__DEPRECATIONS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "log.h"
@@ -50,8 +48,6 @@ void do_log_deprecation(const char *format, ...);
 #define log_deprecation_always(message, ...)                                \
   do_log_deprecation(message, ##__VA_ARGS__);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DEPRECATIONS_H */

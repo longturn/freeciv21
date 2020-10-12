@@ -13,9 +13,7 @@
 #ifndef FC__VISION_H
 #define FC__VISION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -145,8 +143,6 @@ void vision_site_update_from_city(struct vision_site *psite,
 citizens vision_site_size_get(const struct vision_site *psite);
 void vision_site_size_set(struct vision_site *psite, citizens size);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__VISION_H */

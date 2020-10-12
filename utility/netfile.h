@@ -14,9 +14,7 @@
 #ifndef FC__NETFILE_H
 #define FC__NETFILE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct netfile_post;
 
@@ -45,8 +43,6 @@ bool netfile_send_post(const char *URL, struct netfile_post *post,
                        struct netfile_write_cb_data *mem_data,
                        const char *addr);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__NETFILE_H */

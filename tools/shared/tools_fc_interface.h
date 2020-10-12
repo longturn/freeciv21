@@ -14,14 +14,10 @@
 #ifndef FC_TOOLS_FC_INTERFACE_H
 #define FC_TOOLS_FC_INTERFACE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void fc_interface_init_tool(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_TOOLS_FC_INTERFACE_H */

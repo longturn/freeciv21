@@ -13,14 +13,10 @@
 #ifndef FC__ANIMALS_H
 #define FC__ANIMALS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void create_animals(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ANIMALS_H */

@@ -2,7 +2,7 @@
 add_custom_command(
   OUTPUT
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
   COMMAND
     ${PYTHON_EXECUTABLE}
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
@@ -11,7 +11,7 @@ add_custom_command(
     "" # client/packhand_gen.h
     "" # client/packhand_gen.c
     ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.h
-    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+    ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
   VERBATIM
   DEPENDS
     ${CMAKE_SOURCE_DIR}/common/generate_packets.py
@@ -26,7 +26,7 @@ add_library(
   handchat.cpp
   infrapts.cpp
   # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/hand_gen.cpp
 )
 
 target_include_directories(server_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

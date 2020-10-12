@@ -13,9 +13,7 @@
 #ifndef FC__IMPROVEMENT_H
 #define FC__IMPROVEMENT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* City Improvements, including Wonders.  (Alternatively "Buildings".) */
 
@@ -223,8 +221,6 @@ const struct impr_type *improvement_array_last(void);
   }                                                                         \
   improvement_iterate_end;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__IMPROVEMENT_H */

@@ -17,9 +17,7 @@
 /* common */
 #include "requirements.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 enum fc_tristate mke_eval_req(
     const struct player *pow_player, const struct player *target_player,
@@ -41,8 +39,6 @@ enum fc_tristate mke_eval_reqs(
 bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_META_KNOWLEDGE_H */

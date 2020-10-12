@@ -13,9 +13,7 @@
 #ifndef FC__PLAYER_H
 #define FC__PLAYER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -577,8 +575,6 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
   return FALSE;
 }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PLAYER_H */

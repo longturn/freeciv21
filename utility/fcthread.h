@@ -14,9 +14,7 @@
 #ifndef FC__THREAD_H
 #define FC__THREAD_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* gen_headers */
 #include "freeciv_config.h"
@@ -82,8 +80,6 @@ void fc_thread_cond_signal(fc_thread_cond *cond);
 
 bool has_thread_cond_impl(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__THREAD_H */

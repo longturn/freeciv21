@@ -13,9 +13,7 @@
 #ifndef FC__CONTROL_H
 #define FC__CONTROL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "actions.h"
@@ -275,8 +273,6 @@ void cancel_city(struct tile *ptile);
 
 extern int num_units_below;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CONTROL_H */

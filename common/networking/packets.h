@@ -13,9 +13,7 @@
 #ifndef FC__PACKETS_H
 #define FC__PACKETS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct connection;
 struct data_in;
@@ -214,8 +212,6 @@ bool packet_check(struct data_in *din, struct connection *pc);
     strvec = NULL;                                                          \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PACKETS_H */

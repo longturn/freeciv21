@@ -14,9 +14,7 @@
 #ifndef FC__API_GAME_METHODS_H
 #define FC__API_GAME_METHODS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -182,8 +180,6 @@ City *api_methods_city_list_link_data(lua_State *L, City_List_Link *link);
 City_List_Link *api_methods_city_list_next_link(lua_State *L,
                                                 City_List_Link *link);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_GAME_METHODS_H */

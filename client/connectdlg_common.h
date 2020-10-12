@@ -13,9 +13,7 @@ Freeciv - Copyright (C) 2003 - The Freeciv Project
 #ifndef FC__CONNECTDLG_COMMON_H
 #define FC__CONNECTDLG_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool */
@@ -31,8 +29,6 @@ void send_save_game(const char *filename);
 
 void set_ruleset(const char *ruleset);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CONNECTDLG_COMMON_H */

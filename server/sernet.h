@@ -13,9 +13,7 @@
 #ifndef FC__SERNET_H
 #define FC__SERNET_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct connection;
 
@@ -42,8 +40,6 @@ int server_make_connection(int new_sock, const char *client_addr,
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SERNET_H */

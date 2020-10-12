@@ -18,9 +18,7 @@
 #include <fc_config.h>
 #endif
 
-extern "C" {
 #include "plrdlg_g.h"
-}
 
 // common
 #include "colors.h"

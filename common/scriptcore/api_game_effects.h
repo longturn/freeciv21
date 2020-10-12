@@ -14,9 +14,7 @@
 #ifndef FC__API_GAME_EFFECTS_H
 #define FC__API_GAME_EFFECTS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -29,8 +27,6 @@ int api_effects_player_bonus(lua_State *L, Player *pplayer,
 int api_effects_city_bonus(lua_State *L, City *pcity,
                            const char *effect_type);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* API_GAME_EFFECTS */

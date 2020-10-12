@@ -23,6 +23,9 @@
 #include <QPainter>
 #include <QStyleFactory>
 
+// client
+#include "messagewin_common.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "messagewin.h"

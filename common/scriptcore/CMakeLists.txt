@@ -1,25 +1,25 @@
 tolua_generate(
   INPUT tolua_common_a.pkg
   HEADER tolua_common_a_gen.h
-  SOURCE tolua_common_a_gen.c
+  SOURCE tolua_common_a_gen.cpp
   PACKAGE_NAME common_a
 )
 tolua_generate(
   INPUT tolua_common_z.pkg
   HEADER tolua_common_z_gen.h
-  SOURCE tolua_common_z_gen.c
+  SOURCE tolua_common_z_gen.cpp
   PACKAGE_NAME common_z
 )
 tolua_generate(
   INPUT tolua_game.pkg
   HEADER tolua_game_gen.h
-  SOURCE tolua_game_gen.c
+  SOURCE tolua_game_gen.cpp
   PACKAGE_NAME game
 )
 tolua_generate(
   INPUT tolua_signal.pkg
   HEADER tolua_signal_gen.h
-  SOURCE tolua_signal_gen.c
+  SOURCE tolua_signal_gen.cpp
   PACKAGE_NAME signal
 )
 
@@ -37,13 +37,13 @@ add_library(
   luascript_func.cpp
   luascript_signal.cpp
   # Generated
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_a_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_z_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_z_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_common_z_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_game_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_game_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_game_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/tolua_signal_gen.c
+  ${CMAKE_CURRENT_BINARY_DIR}/tolua_signal_gen.cpp
   ${CMAKE_CURRENT_BINARY_DIR}/tolua_signal_gen.h
 )
 

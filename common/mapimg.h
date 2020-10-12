@@ -52,9 +52,7 @@
 #ifndef FC__MAPIMG_H
 #define FC__MAPIMG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -126,8 +124,6 @@ struct mapdef *mapimg_isvalid(int id);
 const struct strvec *mapimg_get_format_list(void);
 const char *mapimg_get_format_default(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAPIMG_H */

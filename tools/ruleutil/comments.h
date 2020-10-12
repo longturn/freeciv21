@@ -13,9 +13,7 @@
 #ifndef FC__COMMENTS_H
 #define FC__COMMENTS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define COMMENTS_FILE_NAME "comments-3.1.txt"
 
@@ -52,8 +50,6 @@ void comment_nationgroups(struct section_file *sfile);
 void comment_nations(struct section_file *sfile);
 void comment_clauses(struct section_file *sfile);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__COMMENTS_H */

@@ -13,9 +13,7 @@
 #ifndef FC__STRING_VECTOR_H
 #define FC__STRING_VECTOR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type. */
@@ -68,8 +66,6 @@ const char *strvec_to_and_list(const struct strvec *psv,
   }                                                                         \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__STRING_VECTOR_H */

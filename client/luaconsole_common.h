@@ -14,9 +14,7 @@
 #ifndef FC__LUACONSOLE_COMMON_H
 #define FC__LUACONSOLE_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type */
@@ -34,8 +32,6 @@ void luaconsole_event(const char *plain_text,
                       const struct text_tag_list *tags);
 void luaconsole_welcome_message(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LUACONSOLE_COMMON_H */

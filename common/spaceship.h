@@ -13,9 +13,7 @@
 #ifndef FC__SPACESHIP_H
 #define FC__SPACESHIP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -141,8 +139,6 @@ bool next_spaceship_component(struct player *pplayer,
                               struct player_spaceship *ship,
                               struct spaceship_component *fill);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SPACESHIP_H */

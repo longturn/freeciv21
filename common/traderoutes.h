@@ -13,9 +13,7 @@
 #ifndef FC__TRADEROUTES_H
 #define FC__TRADEROUTES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "support.h" /* bool */
 
@@ -234,8 +232,6 @@ bool city_receives_goods(const struct city *pcity,
   }                                                                         \
   goods_type_iterate_end;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TRADEROUTES_H */

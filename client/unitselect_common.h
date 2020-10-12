@@ -13,9 +13,7 @@
 #ifndef FC__UNITSELECT_COMMON_H
 #define FC__UNITSELECT_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct unit_type;
 struct unit_list;
@@ -38,8 +36,6 @@ struct usdata {
 struct usdata_hash *usdlg_data_new(const struct tile *ptile);
 void usdlg_data_destroy(struct usdata_hash *ushash);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__UNITSELECT_COMMON_H */

@@ -24,14 +24,19 @@
 // common
 #include "control.h"
 #include "goto.h"
+#include "map.h"
 
 // client
+#include "citydlg_common.h"
 #include "client_main.h"
 #include "climap.h"
 #include "control.h"
+#include "mapctrl_common.h"
 #include "mapctrl.h"
+#include "mapview_common.h"
 #include "themes_common.h"
 #include "tile.h"
+#include "tilespec.h"
 #include "unit.h"
 
 // gui-qt
@@ -43,7 +48,6 @@
 extern void side_disable_endturn(bool do_restore);
 extern void qload_lua_script();
 extern void qreload_lua_script();
-extern "C" int city_buy_production(struct city *pcity);
 
 /**********************************************************************/ /**
    Popup a dialog to ask for the name of a new city.  The given string

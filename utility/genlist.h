@@ -13,9 +13,7 @@
 #ifndef FC__GENLIST_H
 #define FC__GENLIST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /****************************************************************************
   MODULE: genlist
@@ -159,8 +157,6 @@ genlist_link_next(const struct genlist_link *plink)
   return plink->next;
 }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__GENLIST_H */

@@ -13,9 +13,7 @@
 #ifndef FC__MPDB_H
 #define FC__MPDB_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -48,8 +46,6 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version);
 const char *mpdb_installed_version(const char *name, enum modpack_type type);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MPDB_H */

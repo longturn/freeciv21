@@ -13,14 +13,10 @@
 #ifndef FC__MPCMDLINE_H
 #define FC__MPCMDLINE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 int fcmp_parse_cmdline(int argc, char *argv[]);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MPCMDLINE_H */

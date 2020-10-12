@@ -18,9 +18,7 @@
 #include <fc_config.h>
 #endif
 
-extern "C" {
 #include "chatline_g.h"
-}
 
 // Qt
 #include <QEvent>

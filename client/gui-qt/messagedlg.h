@@ -13,9 +13,7 @@
 #ifndef FC__MESSAGEDLG_H
 #define FC__MESSAGEDLG_H
 
-extern "C" {
 #include "messagedlg_g.h"
-}
 
 // Qt
 #include <QWidget>

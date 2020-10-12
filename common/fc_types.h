@@ -14,9 +14,7 @@
 #ifndef FC__FC_TYPES_H
 #define FC__FC_TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -1146,8 +1144,6 @@ enum setting_default_level {
 #define SPECENUM_VALUE2NAME "Primary"
 #include "specenum_gen.h"
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__FC_TYPES_H */

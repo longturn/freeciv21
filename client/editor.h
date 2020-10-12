@@ -14,9 +14,7 @@
 #ifndef FC__TOOLS_H
 #define FC__TOOLS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "fc_types.h"
 
@@ -191,8 +189,6 @@ int edit_buffer_get_status_string(const struct edit_buffer *ebuf, char *buf,
   }                                                                         \
   while (FALSE)
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TOOLS_H */

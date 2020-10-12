@@ -13,16 +13,12 @@
 #ifndef FC__CLASSICAI_H
 #define FC__CLASSICAI_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct ai_type;
 
 bool fc_ai_classic_setup(struct ai_type *ai);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CLASSICAI_H */

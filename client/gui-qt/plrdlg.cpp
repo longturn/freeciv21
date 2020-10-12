@@ -26,6 +26,9 @@
 #include <QSplitter>
 #include <QVBoxLayout>
 
+// utility
+#include "fcintl.h"
+
 // gui-qt
 #include "fc_client.h"
 #include "plrdlg.h"

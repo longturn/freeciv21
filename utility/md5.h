@@ -13,9 +13,7 @@
 #ifndef FC__MD5_H
 #define FC__MD5_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define MD5_BITS 128
 #define MD5_HEX_BYTES (MD5_BITS / 4)
@@ -26,8 +24,6 @@ extern "C" {
 void create_md5sum(const unsigned char *input, int len,
                    char output[MD5_HEX_BYTES + 1]);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MD5_H */

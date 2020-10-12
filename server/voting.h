@@ -15,9 +15,7 @@
 
 #include "support.h" /* bool type */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 enum vote_condition_flags {
   VCF_NONE = 0,
@@ -95,8 +93,6 @@ void send_running_votes(struct connection *pconn, bool only_team_votes);
 void send_remove_team_votes(struct connection *pconn);
 void send_updated_vote_totals(struct conn_list *dest);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__VOTING_H */

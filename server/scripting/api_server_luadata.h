@@ -14,16 +14,12 @@
 #ifndef FC__API_SERVER_LUADATA_H
 #define FC__API_SERVER_LUADATA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct lua_State;
 
 const char *api_luadata_get_str(lua_State *L, const char *field);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* API_SERVER_LUADATA_H */

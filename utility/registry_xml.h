@@ -13,9 +13,7 @@
 #ifndef FC__REGISTRY_XML_H
 #define FC__REGISTRY_XML_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #ifdef FREECIV_HAVE_XML_REGISTRY
 
@@ -25,8 +23,6 @@ struct section_file *xmlfile_load(xmlDoc *sec_doc, const char *filename);
 
 #endif /* FREECIV_HAVE_XML_REGISTRY */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__REGISTRY_XML_H */

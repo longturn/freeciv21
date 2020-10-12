@@ -13,9 +13,7 @@
 #ifndef FC__FRACTURE_MAP_H
 #define FC__FRACTURE_MAP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /*
  * Height map information
@@ -35,8 +33,6 @@ void make_fracture_map(void);
 void make_fracture_relief(void);
 #define MG_UNUSED mapgen_terrain_property_invalid()
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__FRACTURE__MAP_H */

@@ -13,9 +13,7 @@
 #ifndef FC__EFFECTS_H
 #define FC__EFFECTS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type */
@@ -439,8 +437,6 @@ struct effect_list *get_effects(enum effect_type effect_type);
 typedef bool (*iec_cb)(struct effect *, void *data);
 bool iterate_effect_cache(iec_cb cb, void *data);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__EFFECTS_H */

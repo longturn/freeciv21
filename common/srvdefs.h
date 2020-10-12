@@ -13,14 +13,10 @@
 #ifndef FC__SRVDEFS_H
 #define FC__SRVDEFS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define TOKEN_DELIMITERS " \t\n,"
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SRVDEFS_H */

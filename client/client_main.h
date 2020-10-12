@@ -13,9 +13,7 @@
 #ifndef FC__CLIENT_MAIN_H
 #define FC__CLIENT_MAIN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "fc_types.h"
 
@@ -127,8 +125,6 @@ void start_quitting(void);
 extern const char *const gui_character_encoding;
 extern const bool gui_use_transliteration;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CLIENT_MAIN_H */

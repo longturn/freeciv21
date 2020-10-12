@@ -23,6 +23,8 @@
 
 /* utility */
 #include "mem.h"
+#include "shared.h"
+#include "string_vector.h"
 
 /* client */
 #include "themes_common.h"

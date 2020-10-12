@@ -13,9 +13,7 @@
 #ifndef FC__UNIT_H
 #define FC__UNIT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -455,8 +453,6 @@ struct iterator *cargo_iter_init(struct cargo_iter *iter,
                   cargo_iter_sizeof, cargo_iter_init, _ptrans)
 #define unit_cargo_iterate_end generic_iterate_end
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__UNIT_H */

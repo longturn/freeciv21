@@ -13,9 +13,7 @@
 #ifndef FC__CONNECTION_H
 #define FC__CONNECTION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <time.h> /* time_t */
 
@@ -365,8 +363,6 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
 
 bool conn_is_valid(const struct connection *pconn);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CONNECTION_H */

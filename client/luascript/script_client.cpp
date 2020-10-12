@@ -19,13 +19,14 @@
 #include <stdlib.h>
 #include <time.h>
 
+extern "C" {
 /* dependencies/lua */
 #include "lua.h"
 #include "lualib.h"
 
 /* dependencies/tolua */
 #include "tolua.h"
-
+}
 /* utility */
 #include "log.h"
 
@@ -36,20 +37,16 @@
 #include "api_game_specenum.h"
 #include "luascript.h"
 
-extern "C" {
 #include "tolua_common_a_gen.h"
 #include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
-} // extern "C"
 
 /* client */
 #include "luaconsole_common.h"
 
 /* client/luascript */
-extern "C" {
 #include "tolua_client_gen.h"
-} // extern "C"
 
 #include "script_client.h"
 

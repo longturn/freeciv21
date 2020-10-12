@@ -13,9 +13,7 @@
 #ifndef FC__LOG_H
 #define FC__LOG_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -225,8 +223,6 @@ void fc_assert_fail(const char *file, const char *function, int line,
   enum { static_assert_##tag = 1 / (!!(cond)) }
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LOG_H */

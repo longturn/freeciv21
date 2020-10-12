@@ -190,7 +190,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
 
     if (pserver->nplayers > 0) {
       // sveinung ? moved players out of server
-      pserver->players = static_cast<players *>(
+      pserver->players = static_cast<str_players *>(
           fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
     } else {
       pserver->players = NULL;

@@ -13,9 +13,7 @@
 #ifndef FC__DATAIO_JSON_H
 #define FC__DATAIO_JSON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <jansson.h>
 
@@ -173,8 +171,6 @@ void dio_put_uint16_vec8_json(struct json_data_out *dout,
 
 #define DIO_PUT(f, d, l, ...) dio_put_##f##_json(d, l, ##__VA_ARGS__)
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DATAIO_JSON_H */

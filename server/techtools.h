@@ -16,9 +16,7 @@
 #include "player.h"
 #include "tech.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct research;
 
@@ -49,8 +47,6 @@ void give_initial_techs(struct research *presearch, int num_random_techs);
 bool tech_transfer(struct player *plr_recv, struct player *plr_donor,
                    Tech_type_id tech);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TECHTOOLS_H */

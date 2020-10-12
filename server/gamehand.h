@@ -13,9 +13,7 @@
 #ifndef FC__GAMEHAND_H
 #define FC__GAMEHAND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct section_file;
 struct connection;
@@ -36,8 +34,6 @@ void increase_timeout_because_unit_moved(void);
 
 const char *new_challenge_filename(struct connection *pc);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__GAMEHAND_H */
