@@ -14,9 +14,6 @@
 #ifndef FC__MULTIPLIERS_H
 #define FC__MULTIPLIERS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
 /* utility */
 #include "bitvector.h"
@@ -78,8 +75,5 @@ bool multiplier_can_be_changed(struct multiplier *pmul,
   }                                                                         \
   multipliers_iterate_end;
 
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* FC__MULTIPLIERS_H */

@@ -34,9 +34,7 @@
 // gui-qt
 #include "dialogs.h"
 
-extern "C" {
 #include "ratesdlg_g.h"
-}
 
 class QMouseEvent;
 class QPaintEvent;

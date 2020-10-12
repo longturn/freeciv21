@@ -14,9 +14,7 @@
 #ifndef FC__SPRITE_H
 #define FC__SPRITE_H
 
-extern "C" {
 #include "sprite_g.h"
-}
 
 #include <QPixmap>
 

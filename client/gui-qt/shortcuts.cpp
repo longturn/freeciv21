@@ -34,7 +34,7 @@
 #include "fc_client.h"
 #include "shortcuts.h"
 
-extern "C" void real_menus_init();
+extern void real_menus_init();
 
 static QHash<int, const char *> key_map;
 static QString button_name(Qt::MouseButton bt);

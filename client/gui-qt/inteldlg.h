@@ -13,8 +13,6 @@
 #ifndef FC__INTELDLG_H
 #define FC__INTELDLG_H
 
-extern "C" {
 #include "inteldlg_g.h"
-}
 
 #endif /* FC__INTELDLG_H */

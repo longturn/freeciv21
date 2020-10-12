@@ -14,8 +14,6 @@
 #ifndef FC__MAPCTRL_H
 #define FC__MAPCTRL_H
 
-extern "C" {
 #include "mapctrl_g.h"
-}
 
 #endif /* FC__MAPCTRL_H */

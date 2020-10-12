@@ -25,9 +25,7 @@
 // gui-qt
 #include "dialogs.h"
 
-extern "C" {
 #include "helpdlg_g.h"
-}
 
 // Forward declarations
 struct canvas;

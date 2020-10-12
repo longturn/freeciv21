@@ -14,9 +14,7 @@
 #ifndef FC__CANVAS_H
 #define FC__CANVAS_H
 
-extern "C" {
 #include "canvas_g.h"
-}
 
 // Qt
 #include <QPixmap>

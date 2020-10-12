@@ -14,9 +14,7 @@
 #ifndef FC__MENU_H
 #define FC__MENU_H
 
-extern "C" {
 #include "menu_g.h"
-}
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>

@@ -55,9 +55,7 @@
 
 fc_icons *fc_icons::m_instance = 0;
 fc_font *fc_font::m_instance = 0;
-extern "C" {
-void real_science_report_dialog_update(void *);
-}
+extern "C" void real_science_report_dialog_update(void *);
 extern void write_shortcuts();
 
 QString current_theme;

@@ -22,9 +22,7 @@
 #include <QMap>
 #include <QTabWidget>
 
-extern "C" {
 #include "diplodlg_g.h"
-}
 
 // common
 #include "research.h"
