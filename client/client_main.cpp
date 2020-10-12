@@ -109,6 +109,8 @@
 
 #include "client_main.h"
 
+#include "packhand_gen.h"
+
 static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
                                                 bool knowledge);

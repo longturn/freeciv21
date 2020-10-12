@@ -34,9 +34,7 @@
 #include "connectdlg_common.h" /* is_server_running() */
 #include "control.h"
 #include "options.h"
-extern "C" { 
 #include "packhand_gen.h" 
-}
 
 #include "repodlgs_common.h"
 

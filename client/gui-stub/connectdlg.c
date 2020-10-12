@@ -31,9 +31,7 @@
 #include "chatline_common.h" /* for append_output_window */
 #include "client_main.h"
 #include "connectdlg.h"
-extern "C" { 
 #include "packhand_gen.h" 
-}
 
 /**********************************************************************/ /**
    Close and destroy the dialog. But only if we don't have a local

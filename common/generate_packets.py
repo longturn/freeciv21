@@ -2121,6 +2121,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
             if p.no_handle: continue
             a=p.name[len("packet_"):]
             # python doesn't need comments :D
+            c='((const struct %s *)packet)->'%p.name
             d = '(static_cast<const struct {0}*>(packet))'.format(p.name)
             b=[]
             for x in p.fields:
@@ -2179,6 +2180,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
             if p.no_handle: continue
             a=p.name[len("packet_"):]
             c='((const struct %s *)packet)->'%p.name
+            d = '(static_cast<const struct {0}*>(packet))'.format(p.name)
             b=[]
             for x in p.fields:
                 y="%s%s"%(c,x.name)
@@ -2190,7 +2192,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
                 b="\n      "+b
 
             if p.handle_via_packet:
-                args="packet"
+                args=d
             else:
                 args=b
 
