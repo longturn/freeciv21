@@ -417,8 +417,8 @@ static bool save_buildings_ruleset(const char *filename, const char *name)
 
       set_count = 0;
       for (flagi = 0; flagi < IF_COUNT; flagi++) {
-        if (improvement_has_flag(pb, flagi)) {
-          flag_names[set_count++] = impr_flag_id_name(flagi);
+        if (improvement_has_flag(pb, impr_flag_id(flagi))) {
+          flag_names[set_count++] = impr_flag_id_name(impr_flag_id(flagi));
         }
       }
 
@@ -530,7 +530,7 @@ static bool save_action_auto_uflag_block(
     if (req->source.kind == VUT_UTFLAG) {
       fc_assert(!req->present);
 
-      protecor_flag[i++] = req->source.value.unitflag;
+      protecor_flag[i++] = unit_type_flag_id(req->source.value.unitflag);
     } else if (unexpected_req(req)) {
       log_error("Can't handle action auto performer requirement %s",
                 req_to_fstring(req));
@@ -570,7 +570,7 @@ static bool save_action_auto_actions(struct section_file *sfile,
   i = 0;
   for (i = 0; i < NUM_ACTIONS && auto_perf->alternatives[i] != ACTION_NONE;
        i++) {
-    unit_acts[i] = auto_perf->alternatives[i];
+    unit_acts[i] = gen_action(auto_perf->alternatives[i]);
   }
 
   ret = secfile_insert_enum_vec(sfile, &unit_acts, i, gen_action, "%s",
@@ -891,7 +891,6 @@ static bool save_game_ruleset(const char *filename, const char *name)
                          * currently it's 3 (bits 0,1, and 2) so there's
                          * plenty of safety margin here. */
   const char *tnames[game.server.ruledit.named_teams];
-  enum trade_route_type trt;
   int i;
   enum gen_action quiet_actions[MAX_NUM_ACTIONS];
   bool locks;
@@ -1148,7 +1147,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   action_iterate(act)
   {
     if (action_by_number(act)->quiet) {
-      quiet_actions[i] = act;
+      quiet_actions[i] = gen_action(act);
       i++;
     }
   }
@@ -1336,7 +1335,8 @@ static bool save_game_ruleset(const char *filename, const char *name)
   achievements_iterate_end;
 
   set_count = 0;
-  for (trt = 0; trt < TRT_LAST; trt++) {
+  for (int itrt = 0; itrt < TRT_LAST; itrt++) {
+    trade_route_type trt = trade_route_type(itrt);
     struct trade_route_settings *set = trade_route_settings_by_type(trt);
     const char *cancelling =
         traderoute_cancelling_type_name(set->cancelling);
@@ -1376,8 +1376,8 @@ static bool save_game_ruleset(const char *filename, const char *name)
 
     set_count = 0;
     for (flagi = 0; flagi < GF_COUNT; flagi++) {
-      if (goods_has_flag(pgood, flagi)) {
-        flag_names[set_count++] = goods_flag_id_name(flagi);
+      if (goods_has_flag(pgood, goods_flag_id(flagi))) {
+        flag_names[set_count++] = goods_flag_id_name(goods_flag_id(flagi));
       }
     }
 
@@ -1394,7 +1394,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
 
   sect_idx = 0;
   for (i = 0; i < CLAUSE_COUNT; i++) {
-    struct clause_info *info = clause_info_get(i);
+    struct clause_info *info = clause_info_get(clause_type(i));
 
     if (info->enabled) {
       char path[512];
@@ -1727,9 +1727,10 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
   {
     bool list_started = FALSE;
 
-    city_str[set_count] = fc_malloc(
-        strlen(nation_city_name(pncity)) + strlen(" (!river") + strlen(")")
-        + MAX_NUM_TERRAINS * (strlen(", ") + MAX_LEN_NAME));
+    city_str[set_count] =
+        new char[strlen(nation_city_name(pncity)) + strlen(" (!river")
+                 + strlen(")")
+                 + MAX_NUM_TERRAINS * (strlen(", ") + MAX_LEN_NAME)];
 
     strcpy(city_str[set_count], nation_city_name(pncity));
     switch (nation_city_river_preference(pncity)) {
@@ -1814,8 +1815,8 @@ static bool save_nations_ruleset(const char *filename, const char *name,
   }
   if (game.server.ruledit.embedded_nations != NULL) {
     int i;
-    const char **tmp = fc_malloc(game.server.ruledit.embedded_nations_count
-                                 * sizeof(char *));
+    const char **tmp =
+        new const char *[game.server.ruledit.embedded_nations_count];
 
     /* Dance around the secfile_insert_str_vec() parameter type (requires
      * extra const) resrictions */
@@ -1941,8 +1942,9 @@ static bool save_techs_ruleset(const char *filename, const char *name)
   }
 
   for (i = 0; i < MAX_NUM_USER_TECH_FLAGS; i++) {
-    const char *flagname = tech_flag_id_name_cb(i + TECH_USER_1);
-    const char *helptxt = tech_flag_helptxt(i + TECH_USER_1);
+    const char *flagname =
+        tech_flag_id_name_cb(tech_flag_id(i + TECH_USER_1));
+    const char *helptxt = tech_flag_helptxt(tech_flag_id(i + TECH_USER_1));
 
     if (flagname != NULL) {
       secfile_insert_str(sfile, flagname, "control.flags%d.name", i);
@@ -2008,8 +2010,8 @@ static bool save_techs_ruleset(const char *filename, const char *name)
 
       set_count = 0;
       for (flagi = 0; flagi < TF_COUNT; flagi++) {
-        if (advance_has_flag(advance_index(pa), flagi)) {
-          flag_names[set_count++] = tech_flag_id_name(flagi);
+        if (advance_has_flag(advance_index(pa), tech_flag_id(flagi))) {
+          flag_names[set_count++] = tech_flag_id_name(tech_flag_id(flagi));
         }
       }
 
@@ -2043,8 +2045,10 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
   }
 
   for (i = 0; i < MAX_NUM_USER_TER_FLAGS; i++) {
-    const char *flagname = terrain_flag_id_name_cb(i + TER_USER_1);
-    const char *helptxt = terrain_flag_helptxt(i + TER_USER_1);
+    const char *flagname =
+        terrain_flag_id_name_cb(terrain_flag_id(i + TER_USER_1));
+    const char *helptxt =
+        terrain_flag_helptxt(terrain_flag_id(i + TER_USER_1));
 
     if (flagname != NULL) {
       secfile_insert_str(sfile, flagname, "control.flags%d.name", i);
@@ -2057,8 +2061,10 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
   }
 
   for (i = 0; i < MAX_NUM_USER_EXTRA_FLAGS; i++) {
-    const char *flagname = extra_flag_id_name_cb(i + EF_USER_FLAG_1);
-    const char *helptxt = extra_flag_helptxt(i + EF_USER_FLAG_1);
+    const char *flagname =
+        extra_flag_id_name_cb(extra_flag_id(i + EF_USER_FLAG_1));
+    const char *helptxt =
+        extra_flag_helptxt(extra_flag_id(i + EF_USER_FLAG_1));
 
     if (flagname != NULL) {
       secfile_insert_str(sfile, flagname, "control.extra_flags%d.name", i);
@@ -2228,7 +2234,8 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
     set_count = 0;
     for (flagi = 0; flagi < TER_USER_LAST; flagi++) {
       if (terrain_has_flag(pterr, flagi)) {
-        flag_names[set_count++] = terrain_flag_id_name(flagi);
+        flag_names[set_count++] =
+            terrain_flag_id_name(terrain_flag_id(flagi));
       }
     }
 
@@ -2327,7 +2334,7 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
     set_count = 0;
     for (causei = 0; causei < EC_COUNT; causei++) {
       if (is_extra_caused_by(pextra, causei)) {
-        cause_names[set_count++] = extra_cause_name(causei);
+        cause_names[set_count++] = extra_cause_name(extra_cause(causei));
       }
     }
 
@@ -2338,8 +2345,8 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
 
     set_count = 0;
     for (causei = 0; causei < ERM_COUNT; causei++) {
-      if (is_extra_removed_by(pextra, causei)) {
-        cause_names[set_count++] = extra_rmcause_name(causei);
+      if (is_extra_removed_by(pextra, extra_rmcause(causei))) {
+        cause_names[set_count++] = extra_rmcause_name(extra_rmcause(causei));
       }
     }
 
@@ -2434,8 +2441,8 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
 
     set_count = 0;
     for (flagi = 0; flagi < EF_COUNT; flagi++) {
-      if (extra_has_flag(pextra, flagi)) {
-        flag_names[set_count++] = extra_flag_id_name(flagi);
+      if (extra_has_flag(pextra, extra_flag_id(flagi))) {
+        flag_names[set_count++] = extra_flag_id_name(extra_flag_id(flagi));
       }
     }
 
@@ -2526,8 +2533,8 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
 
       set_count = 0;
       for (flagi = 0; flagi < BF_COUNT; flagi++) {
-        if (base_has_flag(pbase, flagi)) {
-          flag_names[set_count++] = base_flag_id_name(flagi);
+        if (base_has_flag(pbase, base_flag_id(flagi))) {
+          flag_names[set_count++] = base_flag_id_name(base_flag_id(flagi));
         }
       }
 
@@ -2597,8 +2604,8 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
 
       set_count = 0;
       for (flagi = 0; flagi < RF_COUNT; flagi++) {
-        if (road_has_flag(proad, flagi)) {
-          flag_names[set_count++] = road_flag_id_name(flagi);
+        if (road_has_flag(proad, road_flag_id(flagi))) {
+          flag_names[set_count++] = road_flag_id_name(road_flag_id(flagi));
         }
       }
 
@@ -2701,8 +2708,10 @@ static bool save_units_ruleset(const char *filename, const char *name)
   }
 
   for (i = 0; i < MAX_NUM_USER_UNIT_FLAGS; i++) {
-    const char *flagname = unit_type_flag_id_name_cb(i + UTYF_USER_FLAG_1);
-    const char *helptxt = unit_type_flag_helptxt(i + UTYF_USER_FLAG_1);
+    const char *flagname =
+        unit_type_flag_id_name_cb(unit_type_flag_id(i + UTYF_USER_FLAG_1));
+    const char *helptxt =
+        unit_type_flag_helptxt(unit_type_flag_id(i + UTYF_USER_FLAG_1));
 
     if (flagname != NULL) {
       secfile_insert_str(sfile, flagname, "control.flags%d.name", i);
@@ -2715,8 +2724,10 @@ static bool save_units_ruleset(const char *filename, const char *name)
   }
 
   for (i = 0; i < MAX_NUM_USER_UCLASS_FLAGS; i++) {
-    const char *flagname = unit_class_flag_id_name_cb(i + UCF_USER_FLAG_1);
-    const char *helptxt = unit_class_flag_helptxt(i + UCF_USER_FLAG_1);
+    const char *flagname =
+        unit_class_flag_id_name_cb(unit_class_flag_id(i + UCF_USER_FLAG_1));
+    const char *helptxt =
+        unit_class_flag_helptxt(unit_class_flag_id(i + UCF_USER_FLAG_1));
 
     if (flagname != NULL) {
       secfile_insert_str(sfile, flagname, "control.class_flags%d.name", i);
@@ -2736,7 +2747,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
   unit_class_re_active_iterate(puc)
   {
     char path[512];
-    char *hut_str = NULL;
+    const char *hut_str = NULL;
     const char *flag_names[UCF_COUNT];
     int flagi;
     int set_count;
@@ -2770,8 +2781,9 @@ static bool save_units_ruleset(const char *filename, const char *name)
 
     set_count = 0;
     for (flagi = 0; flagi < UCF_COUNT; flagi++) {
-      if (uclass_has_flag(puc, flagi)) {
-        flag_names[set_count++] = unit_class_flag_id_name(flagi);
+      if (uclass_has_flag(puc, unit_class_flag_id(flagi))) {
+        flag_names[set_count++] =
+            unit_class_flag_id_name(unit_class_flag_id(flagi));
       }
     }
 
@@ -2931,7 +2943,8 @@ static bool save_units_ruleset(const char *filename, const char *name)
       set_count = 0;
       for (flagi = 0; flagi <= UTYF_LAST_USER_FLAG; flagi++) {
         if (utype_has_flag(put, flagi)) {
-          flag_names[set_count++] = unit_type_flag_id_name(flagi);
+          flag_names[set_count++] =
+              unit_type_flag_id_name(unit_type_flag_id(flagi));
         }
       }
 
@@ -2943,7 +2956,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
       set_count = 0;
       for (flagi = L_FIRST; flagi < L_LAST; flagi++) {
         if (utype_has_role(put, flagi)) {
-          flag_names[set_count++] = unit_role_id_name(flagi);
+          flag_names[set_count++] = unit_role_id_name(unit_role_id(flagi));
         }
       }
 

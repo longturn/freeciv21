@@ -72,7 +72,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
                    const char *path, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 void rgbcolor_save(struct section_file *file,
-                   const struct rgbcolor *prgbcolor, char *path, ...)
+                   const struct rgbcolor *prgbcolor, const char *path, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
 bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,

@@ -120,7 +120,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
    <colorpath>.blue).
  ****************************************************************************/
 void rgbcolor_save(struct section_file *file,
-                   const struct rgbcolor *prgbcolor, char *path, ...)
+                   const struct rgbcolor *prgbcolor, const char *path, ...)
 {
   char colorpath[256];
   va_list args;

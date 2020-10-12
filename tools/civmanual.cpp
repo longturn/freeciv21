@@ -213,12 +213,16 @@ static char *html_special_chars(char *str, size_t *len)
 /**********************************************************************/ /**
    Client stub
  **************************************************************************/
-void popup_help_dialog_string(const char *item) { /* Empty stub. */ }
+void popup_help_dialog_string(const char *item)
+{ /* Empty stub. */
+}
 
 /**********************************************************************/ /**
    Client stub
  **************************************************************************/
-void popdown_help_dialog(void) { /* Empty stub. */ }
+void popdown_help_dialog(void)
+{ /* Empty stub. */
+}
 
 struct tileset *tileset;
 
