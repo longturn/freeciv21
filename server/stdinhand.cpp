@@ -35,8 +35,8 @@
 #include "rand.h"
 #include "registry.h"
 #include "section_file.h"
-#include "support.h" /* fc__attribute, bool type, etc. */
 #include "string_vector.h"
+#include "support.h" /* fc__attribute, bool type, etc. */
 #include "timing.h"
 
 /* common */
@@ -249,7 +249,9 @@ void stdinhand_init(void)
    Update stuff every turn that is related to this code module. Run this
    on turn end.
  **************************************************************************/
-void stdinhand_turn(void) { /* Nothing at the moment. */ }
+void stdinhand_turn(void)
+{ /* Nothing at the moment. */
+}
 
 /**********************************************************************/ /**
    Deinitialize stuff related to this code module.

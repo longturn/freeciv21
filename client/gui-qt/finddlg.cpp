@@ -22,4 +22,6 @@
    Popup a dialog to ask for a city to find.
    Not yet implemented.
  **************************************************************************/
-void popup_find_dialog(void) { /* PORTME */ }
+void popup_find_dialog(void)
+{ /* PORTME */
+}

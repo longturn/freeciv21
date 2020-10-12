@@ -59,7 +59,6 @@
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-
 int last_center_capital = 0;
 int last_center_player_city = 0;
 int last_center_enemy_city = 0;

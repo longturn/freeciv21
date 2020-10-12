@@ -262,7 +262,9 @@ void qtg_remove_net_input() { gui()->remove_server_source(); }
    the icon for the active unit. Or idx in [0..num_units_below-1] for
    secondary (inactive) units on the same tile.
  **************************************************************************/
-void qtg_set_unit_icon(int idx, struct unit *punit) { /* PORTME */ }
+void qtg_set_unit_icon(int idx, struct unit *punit)
+{ /* PORTME */
+}
 
 /**********************************************************************/ /**
    Most clients use an arrow (e.g., sprites.right_arrow) to indicate when
@@ -271,7 +273,9 @@ void qtg_set_unit_icon(int idx, struct unit *punit) { /* PORTME */ }
 
    Is disabled by default.
  **************************************************************************/
-void qtg_set_unit_icons_more_arrow(bool onoff) { /* PORTME */ }
+void qtg_set_unit_icons_more_arrow(bool onoff)
+{ /* PORTME */
+}
 
 /**********************************************************************/ /**
    Called when the set of units in focus (get_units_in_focus()) changes.
@@ -461,7 +465,9 @@ enum gui_type qtg_get_gui_type() { return GUI_QT; }
 /**********************************************************************/ /**
    Called when the tileset is changed to reset the unit pixmap table.
  **************************************************************************/
-void reset_unit_table(void) { /* FIXME */ }
+void reset_unit_table(void)
+{ /* FIXME */
+}
 
 /**********************************************************************/ /**
    Open dialog to confirm that user wants to quit client.

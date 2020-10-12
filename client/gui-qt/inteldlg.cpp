@@ -22,15 +22,21 @@
 /**********************************************************************/ /**
    Close an intelligence dialog for the given player.
  **************************************************************************/
-void close_intel_dialog(struct player *p) { /* PORTME */ }
+void close_intel_dialog(struct player *p)
+{ /* PORTME */
+}
 
 /**********************************************************************/ /**
    Popup an intelligence dialog for the given player.
  **************************************************************************/
-void popup_intel_dialog(struct player *p) { /* PORTME */ }
+void popup_intel_dialog(struct player *p)
+{ /* PORTME */
+}
 
 /**********************************************************************/ /**
    Update the intelligence dialog for the given player.  This is called by
    the core client code when that player's information changes.
  **************************************************************************/
-void update_intel_dialog(struct player *p) { /* PORTME */ }
+void update_intel_dialog(struct player *p)
+{ /* PORTME */
+}

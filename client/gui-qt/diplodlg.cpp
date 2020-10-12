@@ -42,7 +42,6 @@
 #include "fc_client.h"
 #include "sidebar.h"
 
-
 typedef advance *p_advance;
 typedef city *p_city;
 extern QApplication *qapp;

@@ -1341,9 +1341,13 @@ void popdown_city_report()
    are hilited on the canvas exclusively hilited in the
    City List window.
  ***************************************************************************/
-void hilite_cities_from_canvas(void) { /* PORTME */ }
+void hilite_cities_from_canvas(void)
+{ /* PORTME */
+}
 
 /***********************************************************************/ /**
    Toggle a city's hilited status.
  ***************************************************************************/
-void toggle_city_hilite(struct city *pcity, bool on_off) { /* PORTME */ }
+void toggle_city_hilite(struct city *pcity, bool on_off)
+{ /* PORTME */
+}

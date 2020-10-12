@@ -54,13 +54,13 @@
 #include "support.h"
 
 /* client */
+#include "chatline_common.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "clinet.h" /* connect_to_server() */
-#include "packhand_gen.h" 
-#include "chatline_common.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
+#include "packhand_gen.h"
 #include "tilespec.h"
 
 #define WAIT_BETWEEN_TRIES 100000 /* usecs */

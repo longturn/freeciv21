@@ -31,8 +31,8 @@
 #include "client_main.h"
 #include "climap.h"
 #include "control.h"
-#include "mapctrl_common.h"
 #include "mapctrl.h"
+#include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "themes_common.h"
 #include "tile.h"
@@ -104,7 +104,9 @@ void create_line_at_mouse_pos(void)
    The Area Selection rectangle. Called by center_tile_mapcanvas() and
    when the mouse pointer moves.
  **************************************************************************/
-void update_rect_at_mouse_pos(void) { /* PLS DONT PORT IT */ }
+void update_rect_at_mouse_pos(void)
+{ /* PLS DONT PORT IT */
+}
 
 /**********************************************************************/ /**
    Keyboard handler for map_view

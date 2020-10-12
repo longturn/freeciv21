@@ -1853,182 +1853,181 @@ static struct setting settings[] = {
                                                                        "the "
                                                                        "plan"
                                                                        "et"),
-                                                                    N_(
-                                                                        "Sma"
-                                                                        "ll "
-                                                                        "val"
-                                                                        "ues"
-                                                                        " wi"
-                                                                        "ll "
-                                                                        "giv"
-                                                                        "e "
-                                                                        "a "
-                                                                        "col"
-                                                                        "d "
-                                                                        "map"
-                                                                        ", "
-                                                                        "whi"
-                                                                        "le "
-                                                                        "lar"
-                                                                        "ger"
-                                                                        " va"
-                                                                        "lue"
-                                                                        "s "
-                                                                        "wil"
-                                                                        "l "
-                                                                        "giv"
-                                                                        "e "
-                                                                        "a "
-                                                                        "hot"
-                                                                        "ter"
-                                                                        " ma"
-                                                                        "p."
-                                                                        "\n"
-                                                                        "\n"
-                                                                        "100"
-                                                                        " me"
-                                                                        "ans"
-                                                                        " a "
-                                                                        "ver"
-                                                                        "y "
-                                                                        "dry"
-                                                                        " an"
-                                                                        "d "
-                                                                        "hot"
-                                                                        " pl"
-                                                                        "ane"
-                                                                        "t "
-                                                                        "wit"
-                                                                        "h "
-                                                                        "no "
-                                                                        "pol"
-                                                                        "ar "
-                                                                        "arc"
-                                                                        "tic"
-                                                                        " "
-                                                                        "zon"
-                                                                        "es,"
-                                                                        " on"
-                                                                        "ly "
-                                                                        "tro"
-                                                                        "pic"
-                                                                        "al "
-                                                                        "and"
-                                                                        " dr"
-                                                                        "y "
-                                                                        "zon"
-                                                                        "es."
-                                                                        "\n"
-                                                                        " 70"
-                                                                        " me"
-                                                                        "ans"
-                                                                        " a "
-                                                                        "hot"
-                                                                        " pl"
-                                                                        "ane"
-                                                                        "t "
-                                                                        "wit"
-                                                                        "h "
-                                                                        "lit"
-                                                                        "tle"
-                                                                        " po"
-                                                                        "lar"
-                                                                        " ic"
-                                                                        "e."
-                                                                        "\n"
-                                                                        " 50"
-                                                                        " me"
-                                                                        "ans"
-                                                                        " a "
-                                                                        "tem"
-                                                                        "per"
-                                                                        "ate"
-                                                                        " pl"
-                                                                        "ane"
-                                                                        "t "
-                                                                        "wit"
-                                                                        "h "
-                                                                        "nor"
-                                                                        "mal"
-                                                                        " po"
-                                                                        "lar"
-                                                                        ", "
-                                                                        "col"
-                                                                        "d, "
-                                                                        "tem"
-                                                                        "per"
-                                                                        "ate"
-                                                                        ", "
-                                                                        "and"
-                                                                        " tr"
-                                                                        "opi"
-                                                                        "cal"
-                                                                        " zo"
-                                                                        "nes"
-                                                                        "; "
-                                                                        "a "
-                                                                        "des"
-                                                                        "ert"
-                                                                        " zo"
-                                                                        "ne "
-                                                                        "ove"
-                                                                        "rla"
-                                                                        "ps "
-                                                                        "tro"
-                                                                        "pic"
-                                                                        "al "
-                                                                        "and"
-                                                                        " te"
-                                                                        "mpe"
-                                                                        "rat"
-                                                                        "e "
-                                                                        "zon"
-                                                                        "es."
-                                                                        "\n"
-                                                                        " 30"
-                                                                        " me"
-                                                                        "ans"
-                                                                        " a "
-                                                                        "col"
-                                                                        "d "
-                                                                        "pla"
-                                                                        "net"
-                                                                        " wi"
-                                                                        "th "
-                                                                        "sma"
-                                                                        "ll "
-                                                                        "tro"
-                                                                        "pic"
-                                                                        "al "
-                                                                        "zon"
-                                                                        "es."
-                                                                        "\n"
-                                                                        "  "
-                                                                        "0 "
-                                                                        "mea"
-                                                                        "ns "
-                                                                        "a "
-                                                                        "ver"
-                                                                        "y "
-                                                                        "col"
-                                                                        "d "
-                                                                        "pla"
-                                                                        "net"
-                                                                        " wi"
-                                                                        "th "
-                                                                        "lar"
-                                                                        "ge "
-                                                                        "pol"
-                                                                        "ar "
-                                                                        "zon"
-                                                                        "es "
-                                                                        "and"
-                                                                        " no"
-                                                                        " "
-                                                                        "tro"
-                                                                        "pic"
-                                                                        "s"
-                                                                        "."),
+                                                                    N_("Sma"
+                                                                       "ll "
+                                                                       "val"
+                                                                       "ues"
+                                                                       " wi"
+                                                                       "ll "
+                                                                       "giv"
+                                                                       "e "
+                                                                       "a "
+                                                                       "col"
+                                                                       "d "
+                                                                       "map"
+                                                                       ", "
+                                                                       "whi"
+                                                                       "le "
+                                                                       "lar"
+                                                                       "ger"
+                                                                       " va"
+                                                                       "lue"
+                                                                       "s "
+                                                                       "wil"
+                                                                       "l "
+                                                                       "giv"
+                                                                       "e "
+                                                                       "a "
+                                                                       "hot"
+                                                                       "ter"
+                                                                       " ma"
+                                                                       "p."
+                                                                       "\n"
+                                                                       "\n"
+                                                                       "100"
+                                                                       " me"
+                                                                       "ans"
+                                                                       " a "
+                                                                       "ver"
+                                                                       "y "
+                                                                       "dry"
+                                                                       " an"
+                                                                       "d "
+                                                                       "hot"
+                                                                       " pl"
+                                                                       "ane"
+                                                                       "t "
+                                                                       "wit"
+                                                                       "h "
+                                                                       "no "
+                                                                       "pol"
+                                                                       "ar "
+                                                                       "arc"
+                                                                       "tic"
+                                                                       " "
+                                                                       "zon"
+                                                                       "es,"
+                                                                       " on"
+                                                                       "ly "
+                                                                       "tro"
+                                                                       "pic"
+                                                                       "al "
+                                                                       "and"
+                                                                       " dr"
+                                                                       "y "
+                                                                       "zon"
+                                                                       "es."
+                                                                       "\n"
+                                                                       " 70"
+                                                                       " me"
+                                                                       "ans"
+                                                                       " a "
+                                                                       "hot"
+                                                                       " pl"
+                                                                       "ane"
+                                                                       "t "
+                                                                       "wit"
+                                                                       "h "
+                                                                       "lit"
+                                                                       "tle"
+                                                                       " po"
+                                                                       "lar"
+                                                                       " ic"
+                                                                       "e."
+                                                                       "\n"
+                                                                       " 50"
+                                                                       " me"
+                                                                       "ans"
+                                                                       " a "
+                                                                       "tem"
+                                                                       "per"
+                                                                       "ate"
+                                                                       " pl"
+                                                                       "ane"
+                                                                       "t "
+                                                                       "wit"
+                                                                       "h "
+                                                                       "nor"
+                                                                       "mal"
+                                                                       " po"
+                                                                       "lar"
+                                                                       ", "
+                                                                       "col"
+                                                                       "d, "
+                                                                       "tem"
+                                                                       "per"
+                                                                       "ate"
+                                                                       ", "
+                                                                       "and"
+                                                                       " tr"
+                                                                       "opi"
+                                                                       "cal"
+                                                                       " zo"
+                                                                       "nes"
+                                                                       "; "
+                                                                       "a "
+                                                                       "des"
+                                                                       "ert"
+                                                                       " zo"
+                                                                       "ne "
+                                                                       "ove"
+                                                                       "rla"
+                                                                       "ps "
+                                                                       "tro"
+                                                                       "pic"
+                                                                       "al "
+                                                                       "and"
+                                                                       " te"
+                                                                       "mpe"
+                                                                       "rat"
+                                                                       "e "
+                                                                       "zon"
+                                                                       "es."
+                                                                       "\n"
+                                                                       " 30"
+                                                                       " me"
+                                                                       "ans"
+                                                                       " a "
+                                                                       "col"
+                                                                       "d "
+                                                                       "pla"
+                                                                       "net"
+                                                                       " wi"
+                                                                       "th "
+                                                                       "sma"
+                                                                       "ll "
+                                                                       "tro"
+                                                                       "pic"
+                                                                       "al "
+                                                                       "zon"
+                                                                       "es."
+                                                                       "\n"
+                                                                       "  "
+                                                                       "0 "
+                                                                       "mea"
+                                                                       "ns "
+                                                                       "a "
+                                                                       "ver"
+                                                                       "y "
+                                                                       "col"
+                                                                       "d "
+                                                                       "pla"
+                                                                       "net"
+                                                                       " wi"
+                                                                       "th "
+                                                                       "lar"
+                                                                       "ge "
+                                                                       "pol"
+                                                                       "ar "
+                                                                       "zon"
+                                                                       "es "
+                                                                       "and"
+                                                                       " no"
+                                                                       " "
+                                                                       "tro"
+                                                                       "pic"
+                                                                       "s"
+                                                                       "."),
                                                                     NULL,
                                                                     NULL,
                                                                     NULL,
@@ -2740,33 +2739,33 @@ static struct setting settings[] = {
                                                                     GAME_MAX_INCITE_GOLD_LOSS_CHANCE,
                                                                     GAME_DEFAULT_INCITE_GOLD_LOSS_CHANCE)
 
-                                                                    GEN_INT(
-                                                                        "inc"
-                                                                        "ite"
-                                                                        "_go"
-                                                                        "ld_"
-                                                                        "cap"
-                                                                        "t_"
-                                                                        "cha"
-                                                                        "nc"
-                                                                        "e",
-                                                                        game.server
-                                                                            .incite_gold_capt_chance,
-                                                                        SSET_RULES, SSET_SCIENCE,
-                                                                        SSET_RARE,
-                                                                        ALLOW_NONE,
-                                                                        ALLOW_BASIC,
-                                                                        N_("Probability of gold capture during inciting revolt"),
-                                                                        N_("When unit trying to incite revolt is eliminated and lose its "
-                                                                           "gold, there is chance that this gold would be captured by "
-                                                                           "city defender. Transfer tax would be applied, though. "
-                                                                           "This setting is irrevelant, if incite_gold_loss_chance is zero."),
-                                                                        NULL,
-                                                                        NULL,
-                                                                        NULL,
-                                                                        GAME_MIN_INCITE_GOLD_CAPT_CHANCE,
-                                                                        GAME_MAX_INCITE_GOLD_CAPT_CHANCE,
-                                                                        GAME_DEFAULT_INCITE_GOLD_CAPT_CHANCE)
+                                                                    GEN_INT("inc"
+                                                                            "ite"
+                                                                            "_go"
+                                                                            "ld_"
+                                                                            "cap"
+                                                                            "t_"
+                                                                            "cha"
+                                                                            "nc"
+                                                                            "e",
+                                                                            game.server
+                                                                                .incite_gold_capt_chance,
+                                                                            SSET_RULES,
+                                                                            SSET_SCIENCE,
+                                                                            SSET_RARE,
+                                                                            ALLOW_NONE,
+                                                                            ALLOW_BASIC,
+                                                                            N_("Probability of gold capture during inciting revolt"),
+                                                                            N_("When unit trying to incite revolt is eliminated and lose its "
+                                                                               "gold, there is chance that this gold would be captured by "
+                                                                               "city defender. Transfer tax would be applied, though. "
+                                                                               "This setting is irrevelant, if incite_gold_loss_chance is zero."),
+                                                                            NULL,
+                                                                            NULL,
+                                                                            NULL,
+                                                                            GAME_MIN_INCITE_GOLD_CAPT_CHANCE,
+                                                                            GAME_MAX_INCITE_GOLD_CAPT_CHANCE,
+                                                                            GAME_DEFAULT_INCITE_GOLD_CAPT_CHANCE)
 
                                                                         GEN_INT(
                                                                             "conquercost",
@@ -2840,7 +2839,10 @@ static struct setting settings[] = {
                                                                                         "techlossrestore",
                                                                                         game.server
                                                                                             .techloss_restore,
-                                                                                        SSET_RULES, SSET_SCIENCE, SSET_RARE, ALLOW_NONE, ALLOW_BASIC,
+                                                                                        SSET_RULES, SSET_SCIENCE,
+                                                                                        SSET_RARE,
+                                                                                        ALLOW_NONE,
+                                                                                        ALLOW_BASIC,
                                                                                         N_("Research points restored after losing a tech"),
                                                                                         N_("When you lose a technology due to a negative research balance "
                                                                                            "(see 'techlossforgiveness'), this percentage of its research "
@@ -2875,26 +2877,24 @@ static struct setting settings[] = {
                                                                                             GAME_MAX_FOODBOX,
                                                                                             GAME_DEFAULT_FOODBOX)
 
-                                                                                            GEN_INT("aqueductloss",
-                                                                                                    game.server
-                                                                                                        .aqueductloss,
-                                                                                                    SSET_RULES,
-                                                                                                    SSET_ECONOMICS,
-                                                                                                    SSET_RARE,
-                                                                                                    ALLOW_NONE,
-                                                                                                    ALLOW_BASIC,
-                                                                                                    N_("Percentage food lost when city can't grow"),
-                                                                                                    N_("If a city would expand, but it can't because it lacks some "
-                                                                                                       "prerequisite (traditionally an Aqueduct or Sewer System), "
-                                                                                                       "this is the base percentage of its foodbox that is lost "
-                                                                                                       "each turn; the penalty may be reduced by buildings or other "
-                                                                                                       "circumstances, depending on the ruleset."),
-                                                                                                    NULL,
-                                                                                                    NULL,
-                                                                                                    NULL,
-                                                                                                    GAME_MIN_AQUEDUCTLOSS,
-                                                                                                    GAME_MAX_AQUEDUCTLOSS,
-                                                                                                    GAME_DEFAULT_AQUEDUCTLOSS)
+                                                                                            GEN_INT(
+                                                                                                "aqueductloss",
+                                                                                                game.server
+                                                                                                    .aqueductloss,
+                                                                                                SSET_RULES,
+                                                                                                SSET_ECONOMICS,
+                                                                                                SSET_RARE,
+                                                                                                ALLOW_NONE,
+                                                                                                ALLOW_BASIC,
+                                                                                                N_("Percentage food lost when city can't grow"),
+                                                                                                N_("If a city would expand, but it can't because it lacks some "
+                                                                                                   "prerequisite (traditionally an Aqueduct or Sewer System), "
+                                                                                                   "this is the base percentage of its foodbox that is lost "
+                                                                                                   "each turn; the penalty may be reduced by buildings or other "
+                                                                                                   "circumstances, depending on the ruleset."),
+                                                                                                NULL, NULL, NULL, GAME_MIN_AQUEDUCTLOSS,
+                                                                                                GAME_MAX_AQUEDUCTLOSS,
+                                                                                                GAME_DEFAULT_AQUEDUCTLOSS)
 
                                                                                                 GEN_INT(
                                                                                                     "shieldbox",
@@ -3425,75 +3425,75 @@ static struct setting settings[] = {
                                                                                             diplomacy_name,
                                                                                             GAME_DEFAULT_DIPLOMACY)
 
-                                                                                            GEN_ENUM("citynames",
-                                                                                                     game.server
-                                                                                                         .allowed_city_names,
-                                                                                                     SSET_RULES,
-                                                                                                     SSET_SOCIOLOGY,
-                                                                                                     SSET_RARE,
-                                                                                                     ALLOW_NONE,
-                                                                                                     ALLOW_BASIC,
-                                                                                                     N_("Allowed city names"),
-                                                                                                     /* TRANS: The strings between double quotes are also translated
-                                                                                                      * separately (they must match!). The strings between parentheses
-                                                                                                      * and in uppercase must not be translated. */
-                                                                                                     N_("- \"No restrictions\" (NO_RESTRICTIONS): players can have "
-                                                                                                        "multiple cities with the same names.\n"
-                                                                                                        "- \"Unique to a player\" (PLAYER_UNIQUE): one player can't "
-                                                                                                        "have multiple cities with the same name.\n"
-                                                                                                        "- \"Globally unique\" (GLOBAL_UNIQUE): all cities in a game "
-                                                                                                        "have to have different names.\n"
-                                                                                                        "- \"No city name stealing\" (NO_STEALING): like "
-                                                                                                        "\"Globally unique\", but a player isn't allowed to use a "
-                                                                                                        "default city name of another nation unless it is a default "
-                                                                                                        "for their nation also."),
-                                                                                                     NULL,
-                                                                                                     NULL,
-                                                                                                     NULL,
-                                                                                                     citynames_name,
-                                                                                                     GAME_DEFAULT_ALLOWED_CITY_NAMES)
+                                                                                            GEN_ENUM(
+                                                                                                "citynames",
+                                                                                                game.server
+                                                                                                    .allowed_city_names,
+                                                                                                SSET_RULES, SSET_SOCIOLOGY, SSET_RARE,
+                                                                                                ALLOW_NONE,
+                                                                                                ALLOW_BASIC,
+                                                                                                N_("Allowed city names"),
+                                                                                                /* TRANS: The strings between double quotes are also translated
+                                                                                                 * separately (they must match!). The strings between parentheses
+                                                                                                 * and in uppercase must not be translated. */
+                                                                                                N_("- \"No restrictions\" (NO_RESTRICTIONS): players can have "
+                                                                                                   "multiple cities with the same names.\n"
+                                                                                                   "- \"Unique to a player\" (PLAYER_UNIQUE): one player can't "
+                                                                                                   "have multiple cities with the same name.\n"
+                                                                                                   "- \"Globally unique\" (GLOBAL_UNIQUE): all cities in a game "
+                                                                                                   "have to have different names.\n"
+                                                                                                   "- \"No city name stealing\" (NO_STEALING): like "
+                                                                                                   "\"Globally unique\", but a player isn't allowed to use a "
+                                                                                                   "default city name of another nation unless it is a default "
+                                                                                                   "for their nation also."),
+                                                                                                NULL,
+                                                                                                NULL,
+                                                                                                NULL,
+                                                                                                citynames_name,
+                                                                                                GAME_DEFAULT_ALLOWED_CITY_NAMES)
 
-                                                                                                GEN_ENUM("plrcolormode",
-                                                                                                         game.server
-                                                                                                             .plrcolormode,
-                                                                                                         SSET_RULES,
-                                                                                                         SSET_INTERNAL,
-                                                                                                         SSET_RARE,
-                                                                                                         ALLOW_NONE,
-                                                                                                         ALLOW_BASIC,
-                                                                                                         N_("How to pick player colors"),
-                                                                                                         /* TRANS: The strings between double quotes are also translated
-                                                                                                          * separately (they must match!). The strings between single quotes
-                                                                                                          * are setting names and shouldn't be translated. The strings
-                                                                                                          * between parentheses and in uppercase must not be translated. */
-                                                                                                         N_("This setting determines how player colors are chosen. Player "
-                                                                                                            "colors are used in the Nations report, for national borders on "
-                                                                                                            "the map, and so on.\n"
-                                                                                                            "- \"Per-player, in order\" (PLR_ORDER): colors are assigned to "
-                                                                                                            "individual players in order from a list defined by the "
-                                                                                                            "ruleset.\n"
-                                                                                                            "- \"Per-player, random\" (PLR_RANDOM): colors are assigned "
-                                                                                                            "to individual players randomly from the set defined by the "
-                                                                                                            "ruleset.\n"
-                                                                                                            "- \"Set manually\" (PLR_SET): colors can be set with the "
-                                                                                                            "'playercolor' command before the game starts; these are not "
-                                                                                                            "restricted to the ruleset colors. Any players for which no "
-                                                                                                            "color is set when the game starts get a random color from the "
-                                                                                                            "ruleset.\n"
-                                                                                                            "- \"Per-team, in order\" (TEAM_ORDER): colors are assigned to "
-                                                                                                            "teams from the list in the ruleset. Every player on the same "
-                                                                                                            "team gets the same color.\n"
-                                                                                                            "- \"Per-nation, in order\" (NATION_ORDER): if the ruleset "
-                                                                                                            "defines a color for a player's nation, the player takes that "
-                                                                                                            "color. Any players whose nations don't have associated colors "
-                                                                                                            "get a random color from the list in the ruleset.\n"
-                                                                                                            "Regardless of this setting, individual player colors can be "
-                                                                                                            "changed after the game starts with the 'playercolor' command."),
-                                                                                                         NULL,
-                                                                                                         plrcol_validate,
-                                                                                                         plrcol_action,
-                                                                                                         plrcol_name,
-                                                                                                         GAME_DEFAULT_PLRCOLORMODE)
+                                                                                                GEN_ENUM(
+                                                                                                    "plrcolormode",
+                                                                                                    game.server
+                                                                                                        .plrcolormode,
+                                                                                                    SSET_RULES,
+                                                                                                    SSET_INTERNAL,
+                                                                                                    SSET_RARE,
+                                                                                                    ALLOW_NONE,
+                                                                                                    ALLOW_BASIC,
+                                                                                                    N_("How to pick player colors"),
+                                                                                                    /* TRANS: The strings between double quotes are also translated
+                                                                                                     * separately (they must match!). The strings between single quotes
+                                                                                                     * are setting names and shouldn't be translated. The strings
+                                                                                                     * between parentheses and in uppercase must not be translated. */
+                                                                                                    N_("This setting determines how player colors are chosen. Player "
+                                                                                                       "colors are used in the Nations report, for national borders on "
+                                                                                                       "the map, and so on.\n"
+                                                                                                       "- \"Per-player, in order\" (PLR_ORDER): colors are assigned to "
+                                                                                                       "individual players in order from a list defined by the "
+                                                                                                       "ruleset.\n"
+                                                                                                       "- \"Per-player, random\" (PLR_RANDOM): colors are assigned "
+                                                                                                       "to individual players randomly from the set defined by the "
+                                                                                                       "ruleset.\n"
+                                                                                                       "- \"Set manually\" (PLR_SET): colors can be set with the "
+                                                                                                       "'playercolor' command before the game starts; these are not "
+                                                                                                       "restricted to the ruleset colors. Any players for which no "
+                                                                                                       "color is set when the game starts get a random color from the "
+                                                                                                       "ruleset.\n"
+                                                                                                       "- \"Per-team, in order\" (TEAM_ORDER): colors are assigned to "
+                                                                                                       "teams from the list in the ruleset. Every player on the same "
+                                                                                                       "team gets the same color.\n"
+                                                                                                       "- \"Per-nation, in order\" (NATION_ORDER): if the ruleset "
+                                                                                                       "defines a color for a player's nation, the player takes that "
+                                                                                                       "color. Any players whose nations don't have associated colors "
+                                                                                                       "get a random color from the list in the ruleset.\n"
+                                                                                                       "Regardless of this setting, individual player colors can be "
+                                                                                                       "changed after the game starts with the 'playercolor' command."),
+                                                                                                    NULL,
+                                                                                                    plrcol_validate,
+                                                                                                    plrcol_action,
+                                                                                                    plrcol_name,
+                                                                                                    GAME_DEFAULT_PLRCOLORMODE)
 
     /* Flexible rules: these can be changed after the game has started.
      *
@@ -4032,60 +4032,60 @@ static struct setting settings[] = {
                                                                             NULL,
                                                                             GAME_DEFAULT_NATURALCITYNAMES)
 
-                                                                            GEN_BOOL("migration",
-                                                                                     game.server
-                                                                                         .migration,
-                                                                                     SSET_RULES_FLEXIBLE,
-                                                                                     SSET_SOCIOLOGY,
-                                                                                     SSET_RARE,
-                                                                                     ALLOW_NONE,
-                                                                                     ALLOW_BASIC,
-                                                                                     N_("Whether to enable citizen migration"),
-                                                                                     /* TRANS: The strings between single quotes are setting names
-                                                                                      * and should not be translated. */
-                                                                                     N_("This is the master setting that controls whether citizen "
-                                                                                        "migration is active in the game. If enabled, citizens may "
-                                                                                        "automatically move from less desirable cities to more "
-                                                                                        "desirable ones. The \"desirability\" of a given city is "
-                                                                                        "calculated from a number of factors. In general larger "
-                                                                                        "cities with more income and improvements will be preferred. "
-                                                                                        "Citizens will never migrate out of the capital, or cause "
-                                                                                        "a wonder to be lost by disbanding a city. A number of other "
-                                                                                        "settings control how migration behaves:\n"
-                                                                                        "  'mgr_turninterval' - How often citizens try to migrate.\n"
-                                                                                        "  'mgr_foodneeded'   - Whether destination food is checked.\n"
-                                                                                        "  'mgr_distance'     - How far citizens will migrate.\n"
-                                                                                        "  'mgr_worldchance'  - Chance for inter-nation migration.\n"
-                                                                                        "  'mgr_nationchance' - Chance for intra-nation migration."),
-                                                                                     NULL,
-                                                                                     NULL,
-                                                                                     GAME_DEFAULT_MIGRATION)
+                                                                            GEN_BOOL(
+                                                                                "migration",
+                                                                                game.server
+                                                                                    .migration,
+                                                                                SSET_RULES_FLEXIBLE,
+                                                                                SSET_SOCIOLOGY,
+                                                                                SSET_RARE,
+                                                                                ALLOW_NONE,
+                                                                                ALLOW_BASIC,
+                                                                                N_("Whether to enable citizen migration"),
+                                                                                /* TRANS: The strings between single quotes are setting names
+                                                                                 * and should not be translated. */
+                                                                                N_("This is the master setting that controls whether citizen "
+                                                                                   "migration is active in the game. If enabled, citizens may "
+                                                                                   "automatically move from less desirable cities to more "
+                                                                                   "desirable ones. The \"desirability\" of a given city is "
+                                                                                   "calculated from a number of factors. In general larger "
+                                                                                   "cities with more income and improvements will be preferred. "
+                                                                                   "Citizens will never migrate out of the capital, or cause "
+                                                                                   "a wonder to be lost by disbanding a city. A number of other "
+                                                                                   "settings control how migration behaves:\n"
+                                                                                   "  'mgr_turninterval' - How often citizens try to migrate.\n"
+                                                                                   "  'mgr_foodneeded'   - Whether destination food is checked.\n"
+                                                                                   "  'mgr_distance'     - How far citizens will migrate.\n"
+                                                                                   "  'mgr_worldchance'  - Chance for inter-nation migration.\n"
+                                                                                   "  'mgr_nationchance' - Chance for intra-nation migration."),
+                                                                                NULL,
+                                                                                NULL,
+                                                                                GAME_DEFAULT_MIGRATION)
 
-                                                                                GEN_INT(
-                                                                                    "mgr_turninterval",
-                                                                                    game.server
-                                                                                        .mgr_turninterval,
-                                                                                    SSET_RULES_FLEXIBLE,
-                                                                                    SSET_SOCIOLOGY,
-                                                                                    SSET_RARE,
-                                                                                    ALLOW_NONE,
-                                                                                    ALLOW_BASIC,
-                                                                                    N_("Number of turns between migrations from a city"),
-                                                                                    /* TRANS: Do not translate 'migration' setting name. */
-                                                                                    N_("This setting controls the number of turns between migration "
-                                                                                       "checks for a given city. The interval is calculated from "
-                                                                                       "the founding turn of the city. So for example if this "
-                                                                                       "setting is 5, citizens will look for a suitable migration "
-                                                                                       "destination every five turns from the founding of their "
-                                                                                       "current city. Migration will never occur the same turn "
-                                                                                       "that a city is built. This setting has no effect unless "
-                                                                                       "migration is enabled by the 'migration' setting."),
-                                                                                    NULL,
-                                                                                    NULL,
-                                                                                    NULL,
-                                                                                    GAME_MIN_MGR_TURNINTERVAL,
-                                                                                    GAME_MAX_MGR_TURNINTERVAL,
-                                                                                    GAME_DEFAULT_MGR_TURNINTERVAL)
+                                                                                GEN_INT("mgr_turninterval",
+                                                                                        game.server
+                                                                                            .mgr_turninterval,
+                                                                                        SSET_RULES_FLEXIBLE,
+                                                                                        SSET_SOCIOLOGY,
+                                                                                        SSET_RARE,
+                                                                                        ALLOW_NONE,
+                                                                                        ALLOW_BASIC,
+                                                                                        N_("Number of turns between migrations from a city"),
+                                                                                        /* TRANS: Do not translate 'migration' setting name. */
+                                                                                        N_("This setting controls the number of turns between migration "
+                                                                                           "checks for a given city. The interval is calculated from "
+                                                                                           "the founding turn of the city. So for example if this "
+                                                                                           "setting is 5, citizens will look for a suitable migration "
+                                                                                           "destination every five turns from the founding of their "
+                                                                                           "current city. Migration will never occur the same turn "
+                                                                                           "that a city is built. This setting has no effect unless "
+                                                                                           "migration is enabled by the 'migration' setting."),
+                                                                                        NULL,
+                                                                                        NULL,
+                                                                                        NULL,
+                                                                                        GAME_MIN_MGR_TURNINTERVAL,
+                                                                                        GAME_MAX_MGR_TURNINTERVAL,
+                                                                                        GAME_DEFAULT_MGR_TURNINTERVAL)
 
                                                                                     GEN_BOOL(
                                                                                         "mgr_foodneeded",
@@ -4109,7 +4109,12 @@ static struct setting settings[] = {
                                                                                         GEN_INT("mgr_distance",
                                                                                                 game.server
                                                                                                     .mgr_distance,
-                                                                                                SSET_RULES_FLEXIBLE, SSET_SOCIOLOGY, SSET_RARE, ALLOW_NONE, ALLOW_BASIC, N_("Maximum distance citizens may migrate"),
+                                                                                                SSET_RULES_FLEXIBLE,
+                                                                                                SSET_SOCIOLOGY,
+                                                                                                SSET_RARE,
+                                                                                                ALLOW_NONE,
+                                                                                                ALLOW_BASIC,
+                                                                                                N_("Maximum distance citizens may migrate"),
                                                                                                 /* TRANS: Do not translate 'migration' setting name. */
                                                                                                 N_("This setting controls how far citizens may look for a "
                                                                                                    "suitable migration destination when deciding which city "
@@ -4152,29 +4157,28 @@ static struct setting settings[] = {
                                                                                                 GAME_MAX_MGR_NATIONCHANCE,
                                                                                                 GAME_DEFAULT_MGR_NATIONCHANCE)
 
-                                                                                                GEN_INT(
-                                                                                                    "mgr_worldchance",
-                                                                                                    game.server
-                                                                                                        .mgr_worldchance,
-                                                                                                    SSET_RULES_FLEXIBLE,
-                                                                                                    SSET_SOCIOLOGY,
-                                                                                                    SSET_RARE,
-                                                                                                    ALLOW_NONE,
-                                                                                                    ALLOW_BASIC,
-                                                                                                    N_("Percent probability for migration between foreign cities"),
-                                                                                                    /* TRANS: Do not translate 'migration' setting name. */
-                                                                                                    N_("This setting controls how likely it is for migration "
-                                                                                                       "to occur between cities owned by different players. "
-                                                                                                       "Zero indicates migration will never occur, 100 means "
-                                                                                                       "that citizens will always migrate if they find a suitable "
-                                                                                                       "destination. This setting has no effect if migration is "
-                                                                                                       "not enabled by the 'migration' setting."),
-                                                                                                    NULL,
-                                                                                                    NULL,
-                                                                                                    NULL,
-                                                                                                    GAME_MIN_MGR_WORLDCHANCE,
-                                                                                                    GAME_MAX_MGR_WORLDCHANCE,
-                                                                                                    GAME_DEFAULT_MGR_WORLDCHANCE)
+                                                                                                GEN_INT("mgr_worldchance",
+                                                                                                        game.server
+                                                                                                            .mgr_worldchance,
+                                                                                                        SSET_RULES_FLEXIBLE,
+                                                                                                        SSET_SOCIOLOGY,
+                                                                                                        SSET_RARE,
+                                                                                                        ALLOW_NONE,
+                                                                                                        ALLOW_BASIC,
+                                                                                                        N_("Percent probability for migration between foreign cities"),
+                                                                                                        /* TRANS: Do not translate 'migration' setting name. */
+                                                                                                        N_("This setting controls how likely it is for migration "
+                                                                                                           "to occur between cities owned by different players. "
+                                                                                                           "Zero indicates migration will never occur, 100 means "
+                                                                                                           "that citizens will always migrate if they find a suitable "
+                                                                                                           "destination. This setting has no effect if migration is "
+                                                                                                           "not enabled by the 'migration' setting."),
+                                                                                                        NULL,
+                                                                                                        NULL,
+                                                                                                        NULL,
+                                                                                                        GAME_MIN_MGR_WORLDCHANCE,
+                                                                                                        GAME_MAX_MGR_WORLDCHANCE,
+                                                                                                        GAME_DEFAULT_MGR_WORLDCHANCE)
 
     /* Meta options: these don't affect the internal rules of the game, but
      * do affect players.  Also options which only produce extra server
@@ -6749,7 +6753,9 @@ void settings_reset(void)
    Update stuff every turn that is related to this code module. Run this
    on turn end.
  ****************************************************************************/
-void settings_turn(void) { /* Nothing at the moment. */ }
+void settings_turn(void)
+{ /* Nothing at the moment. */
+}
 
 /************************************************************************/ /**
    Deinitialize stuff related to this code module.

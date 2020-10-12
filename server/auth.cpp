@@ -48,8 +48,9 @@
 
 #define GUEST_NAME "guest"
 
-#define MIN_PASSWORD_LEN 6  /* minimum length of password */
-#define MIN_PASSWORD_CAPS 0 /* minimum number of capital letters required   \
+#define MIN_PASSWORD_LEN 6 /* minimum length of password */
+#define MIN_PASSWORD_CAPS                                                   \
+  0                         /* minimum number of capital letters required   \
                              */
 #define MIN_PASSWORD_NUMS 0 /* minimum number of numbers required */
 

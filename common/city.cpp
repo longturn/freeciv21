@@ -27,7 +27,6 @@
 #include "support.h"
 
 /* common */
-#include "requirements.h"
 #include "ai.h"
 #include "citizens.h"
 #include "effects.h"
@@ -37,6 +36,7 @@
 #include "map.h"
 #include "movement.h"
 #include "packets.h"
+#include "requirements.h"
 #include "specialist.h"
 #include "traderoutes.h"
 #include "unit.h"

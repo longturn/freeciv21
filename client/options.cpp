@@ -58,7 +58,7 @@
 #include "mapview_common.h"
 #include "music.h"
 #include "overview_common.h"
-#include "packhand_gen.h" 
+#include "packhand_gen.h"
 #include "plrdlg_common.h"
 #include "repodlgs_common.h"
 #include "servers.h"
@@ -369,9 +369,9 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
     TRUE,                              //.gui_qt_show_titlebar =
-    // sveinung
-    //.gui_qt_wakeup_text =
-    //"Wake up %1",
+                                       // sveinung
+                                       //.gui_qt_wakeup_text =
+                                       //"Wake up %1",
 };
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage

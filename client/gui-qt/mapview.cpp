@@ -1171,7 +1171,9 @@ void update_map_canvas_scrollbars(void) { gui()->mapview_wdg->update(); }
 /**********************************************************************/ /**
    Update the size of the sliders on the scrollbars.
  **************************************************************************/
-void update_map_canvas_scrollbars_size(void) { /* PORTME */ }
+void update_map_canvas_scrollbars_size(void)
+{ /* PORTME */
+}
 
 /**********************************************************************/ /**
    Update (refresh) all city descriptions on the mapview.
@@ -1267,7 +1269,9 @@ void overview_size_changed(void)
 /**********************************************************************/ /**
    Sets the position of the overview scroll window based on mapview position.
  **************************************************************************/
-void update_overview_scroll_window_pos(int x, int y) { /* TODO: PORTME. */ }
+void update_overview_scroll_window_pos(int x, int y)
+{ /* TODO: PORTME. */
+}
 
 /**********************************************************************/ /**
    Return whether the map should be drawn or not.

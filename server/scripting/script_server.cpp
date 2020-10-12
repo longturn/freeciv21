@@ -213,12 +213,16 @@ void script_server_remove_exported_object(void *object)
 /***********************************************************************/ /**
    Initialize the game script variables.
  ***************************************************************************/
-static void script_server_vars_init(void) { /* nothing */ }
+static void script_server_vars_init(void)
+{ /* nothing */
+}
 
 /***********************************************************************/ /**
    Free the game script variables.
  ***************************************************************************/
-static void script_server_vars_free(void) { /* nothing */ }
+static void script_server_vars_free(void)
+{ /* nothing */
+}
 
 /***********************************************************************/ /**
    Load the game script variables in file.

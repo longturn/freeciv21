@@ -21,4 +21,6 @@
 /**********************************************************************/ /**
    If the worklist report is open, force its contents to be updated.
  **************************************************************************/
-void update_worklist_report_dialog(void) { /* PORTME */ }
+void update_worklist_report_dialog(void)
+{ /* PORTME */
+}

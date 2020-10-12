@@ -23,7 +23,9 @@
 /*******************************************************************/ /**
    'next' function implementation for an "invalid" iterator.
  ***********************************************************************/
-static void invalid_iter_next(struct iterator *it) { /* Do nothing. */ }
+static void invalid_iter_next(struct iterator *it)
+{ /* Do nothing. */
+}
 
 /*******************************************************************/ /**
    'get' function implementation for an "invalid" iterator.

@@ -346,7 +346,9 @@ void messagewdg::resizeEvent(QResizeEvent *event) { msg_update(); }
    Display the message dialog.  Optionally raise it.
    Typically triggered by F10.
  ***************************************************************************/
-void meswin_dialog_popup(bool raise) { /* PORTME */ }
+void meswin_dialog_popup(bool raise)
+{ /* PORTME */
+}
 
 /***********************************************************************/ /**
    Return whether the message dialog is open.

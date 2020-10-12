@@ -31,7 +31,6 @@ extern "C" {
 /* common */
 #include "events.h"
 
-
 #include "api_game_specenum.h"
 
 #define API_SPECENUM_INDEX_NAME(type) api_specenum_##type##_index

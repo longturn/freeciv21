@@ -15,7 +15,7 @@
 #include <fc_config.h>
 #endif
 
-// utility 
+// utility
 #include "fcintl.h"
 
 /* common */

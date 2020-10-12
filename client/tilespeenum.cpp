@@ -311,7 +311,7 @@ struct named_sprites {
         struct sprite
             /* for extrastyles ESTYLE_ROAD_ALL_SEPARATE and
                ESTYLE_ROAD_PARITY_COMBINED */
-                *isolated,
+            *isolated,
             *corner[8]; /* Indexed by direction; only non-cardinal dirs used.
                          */
         union {
