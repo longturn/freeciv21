@@ -25,7 +25,9 @@
 /* client */
 #include "chatline_common.h" /* for append_output_window */
 #include "client_main.h"
-#include "packhand_gen.h"
+extern "C" { 
+#include "packhand_gen.h" 
+}
 
 // gui-qt
 #include "connectdlg.h"

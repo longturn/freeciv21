@@ -13,9 +13,7 @@
 #ifndef FC__TERRAIN_H
 #define FC__TERRAIN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -366,8 +364,6 @@ const struct terrain *terrain_array_last(void);
   }                                                                         \
   terrain_type_iterate_end;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TERRAIN_H */

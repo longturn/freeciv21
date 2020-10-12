@@ -13,9 +13,7 @@
 #ifndef FC__CARAVAN_H
 #define FC__CARAVAN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "log.h" /* enum log_level */
@@ -153,8 +151,6 @@ void caravan_optimize_allpairs(const struct unit *caravan,
                                struct caravan_result *result,
                                bool omniscient);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CARAVAN_H */

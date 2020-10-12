@@ -13,9 +13,7 @@
 #ifndef FC__RULESET_H
 #define FC__RULESET_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define RULESET_CAPABILITIES_BASE "+Freeciv-ruleset-Devel-2017.Jan.02"
 #ifdef FREECIV_WEB
@@ -92,8 +90,6 @@ char *get_parser_buffer(void);
 #define RS_DEFAULT_EXTRA_APPEARANCE 15
 #define RS_DEFAULT_EXTRA_DISAPPEARANCE 15
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__RULESET_H */

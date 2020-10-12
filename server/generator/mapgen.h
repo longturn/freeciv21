@@ -15,14 +15,10 @@
 
 #include "support.h" /* bool type */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAPGEN_H */

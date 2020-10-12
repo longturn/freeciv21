@@ -14,9 +14,7 @@
 #ifndef FC__QTG_CSIDE_H
 #define FC__QTG_CSIDE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -148,8 +146,6 @@ struct gui_funcs {
 
 struct gui_funcs *get_gui_funcs(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__QTG_CSIDE_H */

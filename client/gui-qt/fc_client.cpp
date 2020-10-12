@@ -36,11 +36,14 @@
 #include <QTextCodec>
 #include <QTextEdit>
 
+// utility
+#include "fcintl.h"
 // common
 #include "game.h"
 
 // client
 #include "connectdlg_common.h"
+#include "mapctrl_common.h"
 
 // gui-qt
 #include "fc_client.h"
@@ -53,7 +56,6 @@
 fc_icons *fc_icons::m_instance = 0;
 fc_font *fc_font::m_instance = 0;
 extern "C" {
-bool get_turn_done_button_state();
 void real_science_report_dialog_update(void *);
 }
 extern void write_shortcuts();

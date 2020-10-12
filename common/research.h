@@ -13,9 +13,7 @@
 #ifndef FC__RESEARCH_H
 #define FC__RESEARCH_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "iterator.h"
@@ -170,8 +168,6 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
                   _presearch)
 #define research_players_iterate_end generic_iterate_end
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__RESEARCH_H */

@@ -13,9 +13,7 @@
 #ifndef FC__WORKERTASK_H
 #define FC__WORKERTASK_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct worker_task {
   struct tile *ptile;
@@ -35,8 +33,6 @@ struct worker_task {
 
 void worker_task_init(struct worker_task *ptask);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__WORKERTASK_H */

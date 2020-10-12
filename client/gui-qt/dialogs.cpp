@@ -34,6 +34,7 @@
 
 // utility
 #include "astring.h"
+#include "fcintl.h"
 
 // common
 #include "actions.h"
@@ -51,6 +52,7 @@
 #include "client_main.h"
 #include "control.h"
 #include "helpdata.h"
+#include "mapview_common.h"
 #include "packhand.h"
 #include "text.h"
 #include "tilespec.h"

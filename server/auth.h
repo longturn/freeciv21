@@ -15,9 +15,7 @@
 
 #include "shared.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct connection;
 
@@ -32,8 +30,6 @@ const char *auth_get_password(struct connection *pconn);
 bool auth_set_salt(struct connection *pconn, int salt);
 int auth_get_salt(struct connection *pconn);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__AUTH_H */

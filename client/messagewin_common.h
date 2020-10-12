@@ -14,9 +14,7 @@
 #ifndef FC__MESSAGEWIN_COMMON_H
 #define FC__MESSAGEWIN_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type */
@@ -52,8 +50,6 @@ void meswin_popup_city(int message_index);
 void meswin_goto(int message_index);
 void meswin_double_click(int message_index);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MESSAGEWIN_COMMON_H */

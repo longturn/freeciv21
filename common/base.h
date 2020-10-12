@@ -13,9 +13,7 @@
 #ifndef FC__BASE_H
 #define FC__BASE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -115,8 +113,6 @@ void base_types_free(void);
   requirement_vector_iterate_end;                                           \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__BASE_H */

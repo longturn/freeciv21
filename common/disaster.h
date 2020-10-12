@@ -13,9 +13,7 @@
 #ifndef FC__DISASTER_H
 #define FC__DISASTER_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "name_translation.h"
@@ -87,8 +85,6 @@ bool can_disaster_happen(const struct disaster_type *pdis,
   }                                                                         \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DISASTER_H */

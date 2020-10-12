@@ -34,13 +34,16 @@
 
 // client
 #include "climisc.h"
+#include "colors_common.h"
 #include "mapctrl_common.h"
+#include "mapview_common.h"
 #include "menu.h" // gov_menu
 #include "movement.h"
 #include "overview_common.h"
 #include "repodlgs.h"
 #include "sprite.h"
 #include "text.h"
+#include "tilespec.h"
 
 // gui-qt
 #include "colors.h"

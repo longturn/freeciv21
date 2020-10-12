@@ -13,9 +13,7 @@
 #ifndef FC__ACHIEVEMENTS_H
 #define FC__ACHIEVEMENTS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -82,8 +80,6 @@ bool achievement_claimed(const struct achievement *pach);
 
 int get_literacy(const struct player *pplayer);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ACHIEVEMENTS_H */

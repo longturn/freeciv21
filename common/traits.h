@@ -13,9 +13,7 @@
 #ifndef FC__TRAITS_H
 #define FC__TRAITS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define SPECENUM_NAME trait
 #define SPECENUM_VALUE0 TRAIT_EXPANSIONIST
@@ -44,8 +42,6 @@ struct trait_limits {
   int fixed;
 };
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TRAITS_H */

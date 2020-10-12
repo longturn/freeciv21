@@ -13,9 +13,7 @@
 #ifndef FC__GOTO_H
 #define FC__GOTO_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct pf_path;
 struct tile;
@@ -64,8 +62,6 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt);
 struct pf_path *path_to_nearest_allied_city(struct unit *punit);
 struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__GOTO_H */

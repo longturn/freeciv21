@@ -39,7 +39,9 @@
 #include "unitlist.h"
 
 // client
+#include "calendar.h"
 #include "client_main.h"
+#include "goto.h"
 #include "text.h"
 
 // gui-qt
@@ -48,10 +50,6 @@
 #include "hudwidget.h"
 #include "sprite.h"
 
-extern "C" {
-const char *calendar_text(void);
-bool goto_is_active(void);
-}
 static QString popup_terrain_info(struct tile *ptile);
 
 /************************************************************************/ /**

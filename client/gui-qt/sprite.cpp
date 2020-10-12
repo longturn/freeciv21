@@ -19,6 +19,9 @@
 #include <QImageReader>
 #include <QPainter>
 
+// utility
+#include "log.h"
+
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"

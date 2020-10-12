@@ -19,9 +19,7 @@
 
 #include "hand_gen.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 bool unit_activity_handling(struct unit *punit,
                             enum unit_activity new_activity);
@@ -57,7 +55,5 @@ enum ane_kind action_not_enabled_reason(struct unit *punit, action_id act_id,
 bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
                                 enum server_side_agent agent);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 #endif /* FC__UNITHAND_H */

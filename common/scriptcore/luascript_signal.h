@@ -13,9 +13,7 @@
 #ifndef FC__LUASCRIPT_SIGNAL_H
 #define FC__LUASCRIPT_SIGNAL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -46,8 +44,6 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LUASCRIPT_SIGNAL_H */

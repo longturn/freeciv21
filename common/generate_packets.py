@@ -1894,9 +1894,7 @@ def main():
             output_h=fc_open(output_h_name)
 
         output_h.write('''
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "actions.h"
@@ -1921,9 +1919,7 @@ extern "C" {
 void delta_stats_report(void);
 void delta_stats_reset(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 ''')
         output_h.close()
 
@@ -2026,9 +2022,7 @@ static int stats_total_sent;
 #include "fc_types.h"
 #include "packets.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct connection;
 
@@ -2059,9 +2053,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                         f.write('void handle_%s(struct player *pplayer%s);\n'%(a,b))
         f.write('''
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
                 
 #endif /* FC__HAND_GEN_H */
 ''')
@@ -2073,9 +2065,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 #ifndef FC__PACKHAND_GEN_H
 #define FC__PACKHAND_GEN_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "shared.h"
@@ -2102,9 +2092,7 @@ bool client_handle_packet(enum packet_type type, const void *packet);
             else:
                 f.write('void handle_%s(%s);\n'%(a,b))
         f.write('''
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PACKHAND_GEN_H */
 ''')
@@ -2178,7 +2166,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 /* common */
 #include "packets.h"
 
-#include "packhand_gen.h"
+#include "packhand_gen.h" 
 
 bool client_handle_packet(enum packet_type type, const void *packet)
 {

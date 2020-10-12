@@ -13,16 +13,12 @@
 #ifndef FC__CAPSTR_H
 #define FC__CAPSTR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 extern const char *const our_capability;
 
 void init_our_capability(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CAPSTR_H */

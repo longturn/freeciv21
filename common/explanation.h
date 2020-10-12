@@ -14,9 +14,7 @@
 #ifndef FC_EXPLANATION_H
 #define FC_EXPLANATION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* A category of reasons why an action isn't enabled. */
 enum ane_kind {
@@ -98,8 +96,6 @@ enum ane_kind {
   ANEK_UNKNOWN,
 };
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_EXPLANATION_H */

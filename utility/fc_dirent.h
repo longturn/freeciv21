@@ -14,9 +14,7 @@
 #ifndef FC__DIRENT_H
 #define FC__DIRENT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <freeciv_config.h>
 
@@ -26,8 +24,6 @@ extern "C" {
 
 DIR *fc_opendir(const char *dir_to_open);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DIRENT_H */

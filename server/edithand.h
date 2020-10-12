@@ -13,9 +13,7 @@
 #ifndef FC__EDITHAND_H
 #define FC__EDITHAND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct conn_list;
 
@@ -24,8 +22,6 @@ void edithand_free(void);
 
 void edithand_send_initial_packets(struct conn_list *dest);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__EDITHAND_H */

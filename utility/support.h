@@ -14,9 +14,7 @@
 #ifndef FC__SUPPORT_H
 #define FC__SUPPORT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /***********************************************************************
   Replacements for functions which are not available on all platforms.
@@ -200,8 +198,6 @@ void remove_escapes(const char *str, bool full_escapes, char *buf,
 
 int fc_at_quick_exit(void (*func)(void));
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SUPPORT_H */

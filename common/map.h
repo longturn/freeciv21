@@ -13,9 +13,7 @@
 #ifndef FC__MAP_H
 #define FC__MAP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <math.h> /* sqrt */
 
@@ -715,8 +713,6 @@ static inline bool is_border_tile(const struct tile *ptile, int dist)
 enum direction8 rand_direction(void);
 enum direction8 opposite_direction(enum direction8 dir);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAP_H */

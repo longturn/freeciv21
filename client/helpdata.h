@@ -13,9 +13,7 @@
 #ifndef FC__HELPDATA_H
 #define FC__HELPDATA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <stddef.h> /* size_t */
 
@@ -78,8 +76,6 @@ const char *helptext_extra_for_terrain_str(struct extra_type *pextra,
   }                                                                         \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__HELPDATA_H */

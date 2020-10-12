@@ -13,9 +13,7 @@
 #ifndef FC__UNITTYPE_H
 #define FC__UNITTYPE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -872,8 +870,6 @@ const struct unit_class *unit_class_array_last(void);
   TYPED_LIST_ITERATE(struct unit_type, utype_list, ptype)
 #define unit_type_list_iterate_end LIST_ITERATE_END
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__UNITTYPE_H */

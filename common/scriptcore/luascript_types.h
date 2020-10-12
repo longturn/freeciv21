@@ -13,9 +13,7 @@
 #ifndef FC__LUASCRIPT_TYPES_H
 #define FC__LUASCRIPT_TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "genlist.h"
@@ -107,8 +105,6 @@ typedef const struct city_list_link City_List_Link;
 #define SPECENUM_VALUE17NAME "Action"
 #include "specenum_gen.h"
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LUASCRIPT_TYPES_H */

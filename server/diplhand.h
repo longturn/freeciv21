@@ -17,9 +17,7 @@
 
 #include "hand_gen.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct Treaty;
 struct packet_diplomacy_info;
@@ -47,8 +45,6 @@ void reject_all_treaties(struct player *pplayer);
 
 struct treaty_list *get_all_treaties(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DIPLHAND_H */

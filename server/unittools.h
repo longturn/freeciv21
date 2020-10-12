@@ -18,9 +18,7 @@
 #include "packets.h" /* enum unit_info_use */
 #include "unitlist.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define SPECENUM_NAME unit_loss_reason
 #define SPECENUM_VALUE0 ULR_KILLED
@@ -180,8 +178,6 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders);
 struct unit_order *create_unit_orders(int length,
                                       const struct unit_order *orders);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__UNITTOOLS_H */

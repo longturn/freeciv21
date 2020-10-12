@@ -13,9 +13,7 @@
 #ifndef FC__CITYMAP_H
 #define FC__CITYMAP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type */
@@ -32,8 +30,6 @@ bool citymap_is_reserved(struct tile *ptile);
 
 void citymap_free(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CITYMAP_H */

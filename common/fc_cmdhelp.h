@@ -13,9 +13,7 @@
 #ifndef FC__FC_CMDHELP_H
 #define FC__FC_CMDHELP_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct cmdhelp;
 
@@ -27,8 +25,6 @@ void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
 void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
                      bool report_bugs);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__FC_CMDHELP_H */

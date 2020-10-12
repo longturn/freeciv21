@@ -14,9 +14,7 @@
 #ifndef FC__COLORS_COMMON_H
 #define FC__COLORS_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "registry.h"
@@ -137,8 +135,6 @@ struct color *color_best_contrast(struct color *subject,
                                   struct color **candidates,
                                   int ncandidates);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__COLORS_COMMON_H */

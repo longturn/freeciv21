@@ -13,9 +13,7 @@
 #ifndef FC__CMDLINE_H
 #define FC__CMDLINE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -29,8 +27,6 @@ void free_tokens(char **tokens, size_t ntokens);
 
 void cmdline_option_values_free(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CMDLINE_H */

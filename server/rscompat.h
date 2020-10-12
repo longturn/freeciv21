@@ -13,9 +13,7 @@
 #ifndef FC__RSCOMPAT_H
 #define FC__RSCOMPAT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -79,8 +77,6 @@ void rscompat_extra_adjust_3_1(struct rscompat_info *compat,
 bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
                                      bool slow_invasions);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__RSCOMPAT_H */

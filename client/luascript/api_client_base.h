@@ -14,9 +14,7 @@
 #ifndef FC__API_CLIENT_BASE_H
 #define FC__API_CLIENT_BASE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -25,8 +23,6 @@ struct lua_State;
 
 void api_client_chat_base(lua_State *L, const char *msg);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_CLIENT_BASE_H */

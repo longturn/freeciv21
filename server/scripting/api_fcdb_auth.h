@@ -17,9 +17,7 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct lua_State;
 
@@ -27,8 +25,6 @@ const char *api_auth_get_username(lua_State *L, Connection *pconn);
 
 const char *api_auth_get_ipaddr(lua_State *L, Connection *pconn);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_FCDB_AUTH_H */

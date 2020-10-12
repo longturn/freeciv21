@@ -13,9 +13,7 @@
 #ifndef FC__MAP_TYPES_H
 #define FC__MAP_TYPES_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -110,8 +108,6 @@ struct civ_map {
   };
 };
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAP_H */

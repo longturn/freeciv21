@@ -13,9 +13,7 @@
 #ifndef FC__MAPGEN_UTILS_H
 #define FC__MAPGEN_UTILS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 typedef void (*tile_knowledge_cb)(struct tile *ptile);
 
@@ -124,8 +122,6 @@ bool placed_map_is_initialized(void);
 void set_all_ocean_tiles_placed(void);
 void set_placed_near_pos(struct tile *ptile, int dist);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAPGEN_UTILS_H */

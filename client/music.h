@@ -13,9 +13,7 @@
 #ifndef FC__MUSIC_H
 #define FC__MUSIC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void start_style_music(void);
 void stop_style_music(void);
@@ -25,8 +23,6 @@ void play_single_track(const char *const tag);
 
 void musicspec_reread_callback(struct option *poption);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MUSIC_H */

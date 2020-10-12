@@ -13,9 +13,7 @@
 #ifndef FC__NATION_H
 #define FC__NATION_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "iterator.h"
@@ -332,8 +330,6 @@ struct iterator *nation_iter_init(struct nation_iter *it);
                   nation_iter_sizeof, nation_iter_init)
 #define nations_iterate_end generic_iterate_end
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__NATION_H */

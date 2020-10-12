@@ -13,9 +13,7 @@
 #ifndef FC__PREHDRS_H
 #define FC__PREHDRS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* gen_headers */
 #include "freeciv_config.h"
@@ -33,8 +31,6 @@ extern "C" {
 #endif /* FREECIV_HAVE_WINSOCK2 */
 #endif /* FREECIV_HAVE_WINSOCK */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PREHDRS_H */

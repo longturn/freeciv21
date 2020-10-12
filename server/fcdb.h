@@ -15,16 +15,12 @@
 
 #include "shared.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 bool fcdb_init(const char *conf_file);
 const char *fcdb_option_get(const char *type);
 void fcdb_free(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__FCDB_H */

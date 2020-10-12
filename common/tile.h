@@ -14,9 +14,7 @@
 #ifndef FC__TILE_H
 #define FC__TILE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -193,8 +191,6 @@ bool tile_set_label(struct tile *ptile, const char *label);
 
 bool tile_is_placing(const struct tile *ptile);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TILE_H */

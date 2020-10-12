@@ -13,9 +13,7 @@
 #ifndef FC__ROAD_H
 #define FC__ROAD_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* Used in the network protocol. */
 #define SPECENUM_NAME road_flag_id
@@ -147,8 +145,6 @@ void road_types_free(void);
   requirement_vector_iterate_end;                                           \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ROAD_H */

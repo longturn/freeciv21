@@ -16,9 +16,7 @@
 #ifndef FC__TIMING_H
 #define FC__TIMING_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "support.h" /* bool type */
 
@@ -83,8 +81,6 @@ double timer_read_seconds(struct timer *t);
 
 void timer_usleep_since_start(struct timer *t, long usec);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TIMER_H */

@@ -31,6 +31,9 @@
 #include <QToolTip>
 #include <QtMath>
 
+// utility
+#include "fcintl.h"
+
 // common
 #include "control.h"
 #include "government.h"

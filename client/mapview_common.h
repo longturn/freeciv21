@@ -14,9 +14,7 @@
 #ifndef FC__MAPVIEW_COMMON_H
 #define FC__MAPVIEW_COMMON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h" /* bool type */
@@ -364,8 +362,6 @@ void animations_free(void);
 void set_frame_by_frame_animation(void);
 void update_animation(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MAPVIEW_COMMON_H */

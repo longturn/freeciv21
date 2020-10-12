@@ -145,9 +145,7 @@ def make_documentation(file):
 
 def make_macros(file):
     file.write('''
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* Utility */
 #include "fcintl.h"     /* translation */
@@ -635,9 +633,7 @@ def main():
     make_undef(output)
 
     output.write('''
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 ''')
 
     output.close()

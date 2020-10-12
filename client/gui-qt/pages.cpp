@@ -31,13 +31,22 @@
 #include <QTextEdit>
 #include <QTreeWidget>
 
+// utility
+#include "fcintl.h"
+
 // common
 #include "game.h"
 #include "version.h"
 
+#include "cityrep_g.h"
+#include "repodlgs_g.h"
 // client
 #include "client_main.h"
+#include "colors_common.h"
 #include "connectdlg_common.h"
+#include "mapview_common.h"
+#include "text.h"
+#include "tilespec.h"
 
 // gui-qt
 #include "colors.h"
@@ -50,18 +59,6 @@
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-extern "C" {
-#include "cityrep_g.h"
-#include "repodlgs_g.h"
-const char *science_dialog_text(void);
-const char *get_bulb_tooltip(void);
-const char *get_global_warming_tooltip(void);
-const char *get_nuclear_winter_tooltip(void);
-const char *get_government_tooltip(void);
-const char *get_info_label_text_popup(void);
-const char *get_info_label_text(bool);
-const char *text_happiness_cities(const struct city *pcity);
-}
 
 int last_center_capital = 0;
 int last_center_player_city = 0;

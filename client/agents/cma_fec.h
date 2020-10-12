@@ -14,9 +14,7 @@
 #ifndef FC__CMAFEC_H
 #define FC__CMAFEC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* client/agents */
 #include "cma_core.h"
@@ -48,8 +46,6 @@ int cmafec_preset_num(void);
 
 void create_default_cma_presets(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CMAFEC_H */

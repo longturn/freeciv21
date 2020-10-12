@@ -13,9 +13,7 @@
 #ifndef FC__PACKETS_JSON_H
 #define FC__PACKETS_JSON_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <jansson.h>
 
@@ -120,8 +118,6 @@ void *get_packet_from_connection_json(struct connection *pc,
     strvec = NULL;                                                          \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PACKETS_JSON_H */

@@ -25,12 +25,16 @@
 #include <QVBoxLayout>
 
 // utility
+#include "fcintl.h"
 #include "string_vector.h"
 
 // common
+#include "chatline_common.h"
+#include "featured_text.h"
 #include "game.h"
 #include "goto.h"
 #include "government.h"
+#include "map.h"
 #include "name_translation.h"
 #include "road.h"
 #include "unit.h"
@@ -39,6 +43,8 @@
 #include "connectdlg_common.h"
 #include "control.h"
 #include "helpdata.h"
+#include "mapview_common.h"
+#include "tilespec.h"
 
 // gui-qt
 #include "chatline.h"

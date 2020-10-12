@@ -13,9 +13,7 @@
 #ifndef FC__LUASCRIPT_H
 #define FC__LUASCRIPT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* dependencies/tolua */
 #include "tolua.h"
@@ -149,8 +147,6 @@ const Direction *luascript_dir(enum direction8);
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LUASCRIPT_H */

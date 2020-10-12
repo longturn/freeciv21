@@ -19,9 +19,7 @@
 /* server */
 #include "srv_main.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct section_file;
 struct extra_type;
@@ -208,8 +206,6 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road);
 int sg_order_to_action(int order, struct unit *act_unit,
                        struct tile *tgt_tile);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SAVECOMPAT_H */

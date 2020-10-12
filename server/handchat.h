@@ -13,16 +13,12 @@
 #ifndef FC__HANDCHAT_H
 #define FC__HANDCHAT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct connection;
 
 void handle_chat_msg_req(struct connection *pc, const char *message);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__HANDCHAT_H */

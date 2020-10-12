@@ -14,9 +14,7 @@
 #ifndef FC_SERVER_SETTINGS_H
 #define FC_SERVER_SETTINGS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -50,8 +48,6 @@ const char *ssetv_human_readable(ssetv val, bool present);
 
 bool ssetv_setting_has_value(ssetv val);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_SERVER_SETTINGS_H */

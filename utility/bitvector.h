@@ -13,9 +13,7 @@
 #ifndef FC__BITVECTOR_H
 #define FC__BITVECTOR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
@@ -128,8 +126,6 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
     unsigned char vec[_BV_BYTES(bits)];                                     \
   } name
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__BITVECTOR_H */

@@ -16,9 +16,7 @@
 /* utility */
 #include "support.h" /* bool type */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /*
  *  temperature_map[] stores the temperature of each tile
@@ -43,8 +41,6 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt);
 void destroy_tmap(void);
 void create_tmap(bool real);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__TEMPERATURE_MAP_H */

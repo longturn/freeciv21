@@ -13,9 +13,7 @@
 #ifndef FC__AI_H
 #define FC__AI_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h" /* MAX_LEN_NAME */
@@ -408,8 +406,6 @@ void ai_timer_player_stop(const struct player *pplayer);
     ai_type_iterate_end;                                                    \
   } while (FALSE)
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__AI_H */

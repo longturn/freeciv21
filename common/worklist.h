@@ -13,9 +13,7 @@
 #ifndef FC__WORKLIST_H
 #define FC__WORKLIST_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "registry.h"
 
@@ -60,8 +58,6 @@ bool are_worklists_equal(const struct worklist *wlist1,
   }                                                                         \
   }
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__WORKLIST_H */

@@ -31,6 +31,7 @@
 #include "log.h"
 #include "mem.h"
 #include "registry.h"
+#include "requirements.h"
 #include "string_vector.h"
 #include "support.h"
 

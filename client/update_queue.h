@@ -13,9 +13,7 @@
 #ifndef FC__UPDATE_QUEUE_H
 #define FC__UPDATE_QUEUE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 typedef void (*uq_callback_t)(void *data);
 typedef void (*uq_free_fn_t)(void *data);
@@ -57,8 +55,6 @@ void update_queue_connect_processing_finished_full(
 
 bool update_queue_is_switching_page(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__UPDATE_QUEUE_H */

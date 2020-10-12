@@ -20,9 +20,7 @@
 #include "tile.h"
 #include "unit.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void action_consequence_caught(const struct action *paction,
                                struct player *offender,
@@ -87,8 +85,6 @@ bool action_failed_dice_roll(const struct player *act_player,
                              const struct player *tgt_player,
                              const struct action *paction);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ACTIONTOOLS_H */

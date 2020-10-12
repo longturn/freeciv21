@@ -13,9 +13,7 @@
 #ifndef FC__WORLD_OBJECT_H
 #define FC__WORLD_OBJECT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "map_types.h"
@@ -38,8 +36,6 @@ struct world {
   struct unit_hash *units;
 };
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__WORLD_OBJECT_H */

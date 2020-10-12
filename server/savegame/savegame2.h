@@ -13,16 +13,12 @@
 #ifndef FC__SAVEGAME2_H
 #define FC__SAVEGAME2_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct section_file;
 
 void savegame2_load(struct section_file *sfile);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__SAVEGAME2_H */

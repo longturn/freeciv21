@@ -22,9 +22,7 @@
 #include "commands.h"
 #include "console.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void stdinhand_init(void);
 void stdinhand_turn(void);
@@ -70,8 +68,6 @@ void set_running_game_access_level(void);
 char **freeciv_completion(const char *text, int start, int end);
 #endif
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__STDINHAND_H */

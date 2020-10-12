@@ -36,6 +36,7 @@
 #include "registry.h"
 #include "section_file.h"
 #include "support.h" /* fc__attribute, bool type, etc. */
+#include "string_vector.h"
 #include "timing.h"
 
 /* common */

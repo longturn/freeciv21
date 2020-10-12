@@ -25,7 +25,12 @@
 #include <QVBoxLayout>
 
 // common
+#include "effects.h"
 #include "multipliers.h"
+#include "packets.h"
+
+// client
+#include "tilespec.h"
 
 // gui-qt
 #include "dialogs.h"

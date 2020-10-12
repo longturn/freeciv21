@@ -14,9 +14,7 @@
 #ifndef FC__STYLE_H
 #define FC__STYLE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct nation_style {
   int id;
@@ -87,8 +85,6 @@ int basic_city_style_for_style(struct nation_style *pstyle);
 
 int city_style(struct city *pcity);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__STYLE_H */

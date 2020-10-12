@@ -13,9 +13,7 @@
 #ifndef FC__CLIMISC_H
 #define FC__CLIMISC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "events.h"
@@ -147,8 +145,6 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation);
 
 enum ai_level server_ai_level(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CLIMISC_H */

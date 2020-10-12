@@ -13,9 +13,7 @@
 #ifndef FC__LUASCRIPT_FUNC_H
 #define FC__LUASCRIPT_FUNC_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "support.h"
@@ -39,8 +37,6 @@ bool luascript_func_call(struct fc_lua *fcl, const char *func_name, ...);
 
 bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__LUASCRIPT_FUNC_H */

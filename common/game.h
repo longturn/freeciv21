@@ -13,9 +13,7 @@
 #ifndef FC__GAME_H
 #define FC__GAME_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <time.h> /* time_t */
 
@@ -859,8 +857,6 @@ extern struct world wld;
 
 #define RS_ACTION_NO_MAX_DISTANCE "unlimited"
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__GAME_H */

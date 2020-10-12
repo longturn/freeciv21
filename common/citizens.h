@@ -13,9 +13,7 @@
 #ifndef FC__CITIZENS_H
 #define FC__CITIZENS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "shared.h" /* bool */
@@ -66,8 +64,6 @@ struct player_slot *citizens_random(const struct city *pcity);
   }                                                                         \
   citizens_iterate_end;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CITIZENS_H */

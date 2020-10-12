@@ -13,9 +13,7 @@
 #ifndef FC__DATAIO_RAW_H
 #define FC__DATAIO_RAW_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "bitvector.h"
@@ -221,8 +219,6 @@ void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
 
 #endif /* FREECIV_JSON_CONNECTION */
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__DATAIO_RAW_H */

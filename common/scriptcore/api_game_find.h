@@ -14,9 +14,7 @@
 #ifndef FC__API_GAME_FIND_H
 #define FC__API_GAME_FIND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* dependencies/lua */
 #include "lua.h"
@@ -58,8 +56,6 @@ Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig);
 
 Nonexistent *api_find_nonexistent(lua_State *L);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* API_GAME_FIND */

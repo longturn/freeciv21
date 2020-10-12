@@ -13,9 +13,7 @@
 #ifndef FC__CITIZENSHAND_H
 #define FC__CITIZENSHAND_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct city;
 
@@ -25,8 +23,6 @@ void citizens_convert_conquest(struct city *pcity);
 
 void citizens_print(const struct city *pcity);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CITIZENSHAND_H */

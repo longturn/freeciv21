@@ -13,9 +13,7 @@
 #ifndef FC__ZOOM_H
 #define FC__ZOOM_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 void zoom_set(float new_zoom);
 void zoom_1_0(void);
@@ -32,8 +30,6 @@ bool zoom_update(double time_until_next_call);
 extern bool zoom_enabled;
 extern float map_zoom;
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ZOOM_H */

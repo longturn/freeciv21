@@ -13,9 +13,7 @@
 #ifndef FC__CITYREPDATA_H
 #define FC__CITYREPDATA_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "support.h" /* bool type */
 
@@ -70,8 +68,6 @@ int cityrepfield_compare(const char *field1, const char *field2);
 bool can_city_sell_universal(const struct city *pcity,
                              const struct universal *target);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__CITYREPDATA_H */

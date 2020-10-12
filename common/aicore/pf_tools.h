@@ -13,9 +13,7 @@
 #ifndef FC__PF_TOOLS_H
 #define FC__PF_TOOLS_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common/aicore */
 #include "path_finding.h"
@@ -72,8 +70,6 @@ enum tile_behavior no_intermediate_fights(const struct tile *ptile,
                                           enum known_type known,
                                           const struct pf_parameter *param);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__PF_TOOLS_H */

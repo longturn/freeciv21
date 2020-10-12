@@ -48,9 +48,7 @@
  * should be included _once_, inside a .h file which _is_ itself protected
  * against multiple inclusions. */
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* utility */
 #include "mem.h"
@@ -293,6 +291,4 @@ static inline bool SPECPQ_FOO(_pq_priority)(const SPECPQ_PQ *_pq,
 #undef SPECPQ_CELL_
 #undef SPECPQ_FOO
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+

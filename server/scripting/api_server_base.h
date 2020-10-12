@@ -17,9 +17,7 @@
 /* common/scriptcore */
 #include "luascript_types.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 struct lua_State;
 
@@ -34,8 +32,6 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name);
 
 bool api_play_music(lua_State *L, Player *pplayer, const char *tag);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__API_SERVER_BASE_H */

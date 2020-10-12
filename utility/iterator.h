@@ -13,9 +13,7 @@
 #ifndef FC__ITERATOR_H
 #define FC__ITERATOR_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "support.h" /* bool */
 
@@ -101,8 +99,6 @@ static inline bool iterator_valid(const struct iterator *it)
 ***************************************************************************/
 struct iterator *invalid_iter_init(struct iterator *it);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ITERATOR_H */

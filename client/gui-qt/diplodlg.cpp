@@ -26,12 +26,15 @@
 #include <QPushButton>
 #include <QSpinBox>
 
+// utility
+#include "fcintl.h"
 // common
 #include "government.h"
 #include "player.h"
 
 // client
 #include "client_main.h"
+#include "colors_common.h"
 
 // gui-qt
 #include "colors.h"
@@ -39,10 +42,6 @@
 #include "fc_client.h"
 #include "sidebar.h"
 
-extern "C" {
-int client_player_number(void);
-struct player *player_by_number(const int player_id);
-}
 
 typedef advance *p_advance;
 typedef city *p_city;

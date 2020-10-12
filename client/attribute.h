@@ -13,9 +13,7 @@
 #ifndef FC__ATTRIBUTE_H
 #define FC__ATTRIBUTE_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include <stddef.h> /* size_t */
 
@@ -89,8 +87,6 @@ void attr_tile_set(enum attr_tile what, int x, int y, size_t data_length,
 size_t attr_tile_get(enum attr_tile what, int x, int y,
                      size_t max_data_length, void *data);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__ATTRIBUTE_H */

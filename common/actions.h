@@ -19,9 +19,7 @@
 #include "metaknowledge.h"
 #include "requirements.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #define SPECENUM_NAME action_actor_kind
 #define SPECENUM_VALUE0 AAK_UNIT
@@ -793,8 +791,6 @@ void action_list_add_all_by_result(action_id *act_list, int *position,
 const struct action_auto_perf *action_auto_perf_by_number(const int num);
 struct action_auto_perf *action_auto_perf_slot_number(const int num);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC_ACTIONS_H */

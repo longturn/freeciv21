@@ -13,9 +13,7 @@
 #ifndef FC__COMBAT_H
 #define FC__COMBAT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 /* common */
 #include "fc_types.h"
@@ -93,8 +91,6 @@ int combat_bonus_against(const struct combat_bonus_list *list,
                          const struct unit_type *enemy,
                          enum combat_bonus_type type);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__COMBAT_H */

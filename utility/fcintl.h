@@ -13,9 +13,6 @@
 #ifndef FC__FCINTL_H
 #define FC__FCINTL_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
 
 #include "freeciv_config.h"
 
@@ -83,8 +80,5 @@ bool is_capitalization_enabled(void);
 
 const char *get_locale_dir(void);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
 
 #endif /* FC__FCINTL_H */

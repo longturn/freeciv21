@@ -13,9 +13,7 @@
 #ifndef FC__MOVEMENT_H
 #define FC__MOVEMENT_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
+
 
 #include "fc_types.h"
 #include "map.h"
@@ -127,8 +125,6 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                                   const char *none, bool align);
 const char *move_points_text(int mp, bool reduce);
 
-#ifdef __cplusplus
-}
-#endif /* __cplusplus */
+
 
 #endif /* FC__MOVEMENT_H */
