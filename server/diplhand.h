@@ -18,7 +18,6 @@
 #include "hand_gen.h"
 
 
-
 struct Treaty;
 struct packet_diplomacy_info;
 struct connection;

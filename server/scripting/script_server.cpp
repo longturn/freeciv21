@@ -20,19 +20,19 @@
 #include <time.h>
 
 /* dependencies/lua */
+extern "C" {
 #include "lua.h"
 #include "lualib.h"
 
 /* dependencies/tolua */
 #include "tolua.h"
-
+}
 /* utility */
 #include "astring.h"
 #include "log.h"
 #include "mem.h"
 #include "registry.h"
 
-extern "C" {
 /* common/scriptcore */
 #include "api_game_specenum.h"
 #include "luascript.h"
@@ -42,15 +42,12 @@ extern "C" {
 #include "tolua_common_z_gen.h"
 #include "tolua_game_gen.h"
 #include "tolua_signal_gen.h"
-}
 /* server */
 #include "console.h"
 #include "stdinhand.h"
 
 /* server/scripting */
-extern "C" {
 #include "tolua_server_gen.h"
-}
 
 #include "script_server.h"
 

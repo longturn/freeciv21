@@ -22,8 +22,6 @@
 
 #include "hand_gen.h"
 
-
-
 struct section_file;
 struct conn_list;
 

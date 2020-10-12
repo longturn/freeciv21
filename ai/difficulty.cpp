@@ -18,6 +18,7 @@
 /* utility */
 #include "astring.h"
 #include "bitvector.h"
+#include "fcintl.h"
 #include "rand.h"
 
 /* common */

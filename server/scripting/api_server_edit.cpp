@@ -16,6 +16,7 @@
 #endif
 
 /* utility */
+#include "fcintl.h"
 #include "rand.h"
 
 /* common */

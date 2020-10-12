@@ -17,8 +17,6 @@
 
 #include "hand_gen.h"
 
-
-
 struct connection;
 struct conn_list;
 

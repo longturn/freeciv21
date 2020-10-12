@@ -2120,7 +2120,8 @@ bool server_handle_packet(enum packet_type type, const void *packet,
             if "cs" not in p.dirs: continue
             if p.no_handle: continue
             a=p.name[len("packet_"):]
-            c='((const struct %s *)packet)->'%p.name
+            # python doesn't need comments :D
+            d = '(static_cast<const struct {0}*>(packet))'.format(p.name)
             b=[]
             for x in p.fields:
                 y="%s%s"%(c,x.name)
@@ -2133,9 +2134,10 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 
             if p.handle_via_packet:
                 if p.handle_per_conn:
-                    args="pconn, packet"
+                    #args="pconn, packet"
+                    args ="pconn, " + d
                 else:
-                    args="pplayer, packet"
+                    args="pplayer," + d
 
             else:
                 if p.handle_per_conn:
