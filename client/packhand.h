@@ -20,9 +20,7 @@
 #include "events.h" /* enum event_type */
 #include "map.h"
 
-extern "C" { 
 #include "packhand_gen.h" 
-}
 
 void packhand_free(void);
 
