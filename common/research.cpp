@@ -15,6 +15,7 @@
 #endif
 
 /* utility */
+#include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
 #include "shared.h"

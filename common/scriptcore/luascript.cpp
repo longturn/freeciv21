@@ -27,6 +27,7 @@ extern "C" {
 
 /* utility */
 #include "astring.h"
+#include "fcintl.h"
 #include "log.h"
 #include "registry.h"
 

@@ -20,6 +20,7 @@
 
 /* utility */
 #include "astring.h"
+#include "fcintl.h"
 
 /* common */
 #include "actions.h"

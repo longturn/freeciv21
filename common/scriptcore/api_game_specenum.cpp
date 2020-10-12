@@ -24,11 +24,13 @@ extern "C" {
 #include "lualib.h"
 }
 
+/* utility */
+#include "log.h"
+#include "support.h"
+
 /* common */
 #include "events.h"
 
-/* utility */
-#include "support.h"
 
 #include "api_game_specenum.h"
 

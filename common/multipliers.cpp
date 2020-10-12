@@ -15,6 +15,10 @@
 #include <fc_config.h>
 #endif
 
+// utility
+#include "fcintl.h"
+#include "string_vector.h"
+
 /* common */
 #include "game.h"
 

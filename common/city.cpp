@@ -27,6 +27,7 @@
 #include "support.h"
 
 /* common */
+#include "requirements.h"
 #include "ai.h"
 #include "citizens.h"
 #include "effects.h"
