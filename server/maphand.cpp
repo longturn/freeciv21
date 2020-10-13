@@ -1225,7 +1225,6 @@ void player_map_free(struct player *pplayer)
   free(pplayer->server.private_map);
   pplayer->server.private_map = NULL;
   pplayer->tile_known->clear();
-  delete pplayer->tile_known;
 }
 
 /**********************************************************************/ /**

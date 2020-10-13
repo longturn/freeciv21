@@ -716,6 +716,7 @@ void player_destroy(struct player *pplayer)
   pslot = pplayer->slot;
   fc_assert(pslot->player == pplayer);
 
+  delete pplayer->tile_known;
   if (!is_server()) {
     vision_layer_iterate(v) {
       pplayer->client.tile_vision[v]->clear();
