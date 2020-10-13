@@ -10,8 +10,8 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-
 #include <vector>
+#include <QBitArray>
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -221,7 +221,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
       bool this_is_known = FALSE;
 
       if (is_server()) {
-        if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
+        if (pplayer->tile_known->at(tile_index(ptile))) {
           this_is_known = TRUE;
         }
       } else {
@@ -315,7 +315,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
       bool this_is_known = FALSE;
 
       if (is_server()) {
-        if (dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
+        if (pplayer->tile_known->at(tile_index(ptile))) {
           this_is_known = TRUE;
         }
       } else {

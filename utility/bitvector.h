@@ -13,8 +13,6 @@
 #ifndef FC__BITVECTOR_H
 #define FC__BITVECTOR_H
 
-
-
 #include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
 
@@ -25,35 +23,6 @@
 /* Yields TRUE iff the bit bit_no is set in val. */
 #define TEST_BIT(val, bit_no)                                               \
   (((val) & (1u << (bit_no))) == (1u << (bit_no)))
-
-/* Dynamic bitvectors */
-struct dbv {
-  int bits;
-  unsigned char *vec;
-};
-
-void dbv_init(struct dbv *pdbv, int bits);
-void dbv_resize(struct dbv *pdbv, int bits);
-void dbv_free(struct dbv *pdbv);
-
-int dbv_bits(struct dbv *pdbv);
-
-bool dbv_isset(const struct dbv *pdbv, int bit);
-bool dbv_isset_any(const struct dbv *pdbv);
-
-void dbv_set(struct dbv *pdbv, int bit);
-void dbv_set_all(struct dbv *pdbv);
-
-void dbv_clr(struct dbv *pdbv, int bit);
-void dbv_clr_all(struct dbv *pdbv);
-
-bool dbv_are_equal(const struct dbv *pdbv1, const struct dbv *pdbv2);
-
-void dbv_debug(struct dbv *pdbv);
-
-/* Maximal size of a dynamic bitvector.
-   Use a large value to be on the safe side (4Mbits = 512kbytes). */
-#define MAX_DBV_LENGTH (4 * 1024 * 1024)
 
 /* Static bitvectors. */
 #define _BV_BYTES(bits) ((((bits) -1) / 8) + 1)
@@ -125,7 +94,6 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
   typedef struct {                                                          \
     unsigned char vec[_BV_BYTES(bits)];                                     \
   } name
-
 
 
 #endif /* FC__BITVECTOR_H */

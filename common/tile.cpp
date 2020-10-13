@@ -411,7 +411,7 @@ void tile_set_continent(struct tile *ptile, Continent_id val)
 enum known_type tile_get_known(const struct tile *ptile,
                                const struct player *pplayer)
 {
-  if (!dbv_isset(&pplayer->tile_known, tile_index(ptile))) {
+  if (!pplayer->tile_known->at(tile_index(ptile))) {
     return TILE_UNKNOWN;
   } else if (!fc_funcs->player_tile_vision_get(ptile, pplayer, V_MAIN)) {
     return TILE_KNOWN_UNSEEN;

@@ -1339,7 +1339,7 @@ bool client_map_is_known_and_seen(const struct tile *ptile,
                                   const struct player *pplayer,
                                   enum vision_layer vlayer)
 {
-  return dbv_isset(&pplayer->client.tile_vision[vlayer], tile_index(ptile));
+  return pplayer->client.tile_vision[vlayer]->at(tile_index(ptile));
 }
 
 /**********************************************************************/ /**

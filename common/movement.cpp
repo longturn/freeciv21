@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
+
 /* utility */
 #include "bitvector.h"
 #include "fcintl.h"
@@ -202,16 +204,15 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
                           const struct tile *ptile,
                           const struct tile *pexclude)
 {
-  struct dbv tile_processed;
   struct tile_list *process_queue = tile_list_new();
   bool found = FALSE;
 
-  dbv_init(&tile_processed, map_num_tiles());
+  QBitArray tile_processed(map_num_tiles());
   for (;;) {
-    dbv_set(&tile_processed, tile_index(ptile));
+    tile_processed.setBit(tile_index(ptile));
     adjc_iterate(&(wld.map), ptile, piter)
     {
-      if (dbv_isset(&tile_processed, tile_index(piter))) {
+      if (tile_processed.at(tile_index(piter))) {
         continue;
       } else if (piter != pexclude
                  && is_native_to_class(punitclass, tile_terrain(piter),
@@ -221,7 +222,7 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
       } else if (piter != pexclude && NULL != tile_city(piter)) {
         tile_list_append(process_queue, piter);
       } else {
-        dbv_set(&tile_processed, tile_index(piter));
+        tile_processed.setBit(tile_index(piter));
       }
     }
     adjc_iterate_end;
@@ -234,7 +235,6 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
     }
   }
 
-  dbv_free(&tile_processed);
   tile_list_destroy(process_queue);
   return found;
 }

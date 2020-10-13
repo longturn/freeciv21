@@ -13,7 +13,7 @@
 #ifndef FC__PLAYER_H
 #define FC__PLAYER_H
 
-
+#include <QBitArray>
 
 /* utility */
 #include "bitvector.h"
@@ -294,7 +294,7 @@ struct player {
   struct attribute_block_s attribute_block;
   struct attribute_block_s attribute_block_buffer;
 
-  struct dbv tile_known;
+  QBitArray *tile_known;
 
   struct rgbcolor *rgb;
 
@@ -350,8 +350,7 @@ struct player {
 
       /* Corresponds to the result of
          (player:server:private_map[tile_index]:seen_count[vlayer] != 0). */
-      struct dbv tile_vision[V_COUNT];
-
+      QBitArray *tile_vision[V_COUNT];
       enum mood_type mood;
 
       int tech_upkeep;

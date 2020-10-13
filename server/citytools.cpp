@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -1680,7 +1682,7 @@ void remove_city(struct city *pcity)
   bool had_great_wonders = FALSE;
   const citizens old_content_citizens = player_content_citizens(powner);
   const citizens old_angry_citizens = player_angry_citizens(powner);
-  struct dbv tile_processed;
+  QBitArray tile_processed;
   struct tile_list *process_queue;
   const char *ctl = city_tile_link(pcity);
 
@@ -1766,24 +1768,23 @@ void remove_city(struct city *pcity)
   unit_list_iterate_safe_end;
 
   process_queue = tile_list_new();
-  dbv_init(&tile_processed, map_num_tiles());
+  tile_processed.resize(map_num_tiles());
   for (tile_list_append(process_queue, pcenter);
        tile_list_size(process_queue) > 0;) {
     struct tile *ptile = tile_list_front(process_queue);
     tile_list_pop_front(process_queue);
-    dbv_set(&tile_processed, tile_index(ptile));
+    tile_processed.setBit(tile_index(ptile));
     adjc_iterate(&(wld.map), ptile, piter)
     {
       struct city *other_city;
-
-      if (dbv_isset(&tile_processed, tile_index(piter))) {
+      if (tile_processed.at(tile_index(piter))) {
         continue;
       }
       other_city = tile_city(piter);
       if (other_city != NULL) {
         /* Adjacent tile has a city that may have been part of same channel
          */
-        dbv_set(&tile_processed, tile_index(piter));
+        tile_processed.setBit(tile_index(piter));
         tile_list_append(process_queue, piter);
         unit_list_iterate_safe(piter->units, punit)
         {
@@ -1803,13 +1804,12 @@ void remove_city(struct city *pcity)
         }
         unit_list_iterate_safe_end;
       } else {
-        dbv_set(&tile_processed, tile_index(piter));
+        tile_processed.setBit(tile_index(piter));
       }
     }
     adjc_iterate_end;
   }
 
-  dbv_free(&tile_processed);
   tile_list_destroy(process_queue);
 
   if (!city_exist(id)) {

@@ -1369,8 +1369,7 @@ void client_player_init(struct player *pplayer)
 {
   vision_layer_iterate(v)
   {
-    pplayer->client.tile_vision[v].vec = NULL;
-    pplayer->client.tile_vision[v].bits = 0;
+    pplayer->client.tile_vision[v] = new QBitArray();
   }
   vision_layer_iterate_end;
 }
@@ -1395,11 +1394,11 @@ void client_player_maps_reset(void)
 
     vision_layer_iterate(v)
     {
-      dbv_resize(&pplayer->client.tile_vision[v], new_size);
+      pplayer->client.tile_vision[v]->resize(new_size);
     }
     vision_layer_iterate_end;
 
-    dbv_resize(&pplayer->tile_known, new_size);
+    pplayer->tile_known->resize(new_size);
   }
   players_iterate_end;
 }
