@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <string.h>
 
 /* utility */
@@ -3057,26 +3058,24 @@ void handle_tile_info(const struct packet_tile_info *packet)
   }
 
   if (NULL != client.conn.playing) {
-    dbv_clr(&client.conn.playing->tile_known, tile_index(ptile));
+    client.conn.playing->tile_known->setBit(tile_index(ptile), false);
     vision_layer_iterate(v)
     {
-      dbv_clr(&client.conn.playing->client.tile_vision[v],
-              tile_index(ptile));
+      client.conn.playing->client.tile_vision[v]->setBit(tile_index(ptile), false);
     }
     vision_layer_iterate_end;
 
     switch (packet->known) {
     case TILE_KNOWN_SEEN:
-      dbv_set(&client.conn.playing->tile_known, tile_index(ptile));
+      client.conn.playing->tile_known->setBit(tile_index(ptile));
       vision_layer_iterate(v)
       {
-        dbv_set(&client.conn.playing->client.tile_vision[v],
-                tile_index(ptile));
+        client.conn.playing->client.tile_vision[v]->setBit(tile_index(ptile));
       }
       vision_layer_iterate_end;
       break;
     case TILE_KNOWN_UNSEEN:
-      dbv_set(&client.conn.playing->tile_known, tile_index(ptile));
+      client.conn.playing->tile_known->setBit(tile_index(ptile));
       break;
     case TILE_UNKNOWN:
       break;

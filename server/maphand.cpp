@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
+
 /* utility */
 #include "bitvector.h"
 #include "fcintl.h"
@@ -898,7 +900,7 @@ void map_show_all(struct player *pplayer)
  **************************************************************************/
 bool map_is_known(const struct tile *ptile, const struct player *pplayer)
 {
-  return dbv_isset(&pplayer->tile_known, tile_index(ptile));
+  return pplayer->tile_known->at(tile_index(ptile));
 }
 
 /**********************************************************************/ /**
@@ -1154,7 +1156,7 @@ void change_playertile_site(struct player_tile *ptile,
  **************************************************************************/
 void map_set_known(struct tile *ptile, struct player *pplayer)
 {
-  dbv_set(&pplayer->tile_known, tile_index(ptile));
+  pplayer->tile_known->setBit(tile_index(ptile));
 }
 
 /**********************************************************************/ /**
@@ -1162,7 +1164,7 @@ void map_set_known(struct tile *ptile, struct player *pplayer)
  **************************************************************************/
 void map_clear_known(struct tile *ptile, struct player *pplayer)
 {
-  dbv_clr(&pplayer->tile_known, tile_index(ptile));
+  pplayer->tile_known->setBit(tile_index(ptile), false);
 }
 
 /**********************************************************************/ /**
@@ -1205,7 +1207,7 @@ void player_map_init(struct player *pplayer)
   whole_map_iterate(&(wld.map), ptile) { player_tile_init(ptile, pplayer); }
   whole_map_iterate_end;
 
-  dbv_init(&pplayer->tile_known, MAP_INDEX_SIZE);
+  pplayer->tile_known->resize(MAP_INDEX_SIZE);
 }
 
 /**********************************************************************/ /**
@@ -1222,8 +1224,7 @@ void player_map_free(struct player *pplayer)
 
   free(pplayer->server.private_map);
   pplayer->server.private_map = NULL;
-
-  dbv_free(&pplayer->tile_known);
+  pplayer->tile_known->clear();
 }
 
 /**********************************************************************/ /**
@@ -1278,7 +1279,7 @@ void remove_player_from_maps(struct player *pplayer)
     players_iterate_end;
 
     /* Clear removed player's knowledge */
-    if (pplayer->tile_known.vec) {
+    if (pplayer->tile_known->size()) {
       map_clear_known(ptile, pplayer);
     }
 

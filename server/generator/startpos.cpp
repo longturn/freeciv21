@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <math.h> /* sqrt, HUGE_VAL */
 
 /* utility */
@@ -144,9 +145,7 @@ static bool check_native_area(const struct unit_type *utype,
   struct tile_list *tlist = tile_list_new();
   struct tile *central =
       tile_virtual_new(ptile); /* Non-const virtual tile */
-  struct dbv handled;
-
-  dbv_init(&handled, MAP_INDEX_SIZE);
+  QBitArray handled(MAP_INDEX_SIZE);
 
   tile_list_append(tlist, central);
 
@@ -157,10 +156,10 @@ static bool check_native_area(const struct unit_type *utype,
       {
         int idx = tile_index(ptile3);
 
-        if (!dbv_isset(&handled, idx) && is_native_tile(utype, ptile3)) {
+        if (!handled.at(idx) && is_native_tile(utype, ptile3)) {
           tiles++;
           tile_list_append(tlist, ptile3);
-          dbv_set(&handled, idx);
+          handled.setBit(idx);
           if (tiles >= min_area) {
             /* Break out when we already know that area is sufficient. */
             break;
@@ -180,9 +179,6 @@ static bool check_native_area(const struct unit_type *utype,
   }
 
   tile_list_destroy(tlist);
-
-  dbv_free(&handled);
-
   tile_virtual_destroy(central);
 
   return tiles >= min_area;

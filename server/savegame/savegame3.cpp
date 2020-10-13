@@ -3313,7 +3313,7 @@ static void sg_load_map_known(struct loaddata *loading)
       }
     }
 
-    players_iterate(pplayer) { dbv_clr_all(&pplayer->tile_known); }
+    players_iterate(pplayer) { pplayer->tile_known->fill(false); }
     players_iterate_end;
 
     /* HACK: we read the known data from hex into 32-bit integers, and

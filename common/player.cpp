@@ -475,6 +475,7 @@ struct player *player_new(struct player_slot *pslot)
   pplayer->slot = pslot;
   pslot->player = pplayer;
 
+
   pplayer->diplstates = static_cast<const player_diplstate **>(
       fc_calloc(player_slot_count(), sizeof(*pplayer->diplstates)));
   player_slots_iterate(dslot)
@@ -592,15 +593,13 @@ static void player_defaults(struct player *pplayer)
   pplayer->attribute_block_buffer.data = NULL;
   pplayer->attribute_block_buffer.length = 0;
 
-  pplayer->tile_known.vec = NULL;
-  pplayer->tile_known.bits = 0;
-
   pplayer->rgb = NULL;
 
   memset(pplayer->multipliers, 0, sizeof(pplayer->multipliers));
   memset(pplayer->multipliers_target, 0,
          sizeof(pplayer->multipliers_target));
 
+  pplayer->tile_known = new QBitArray();
   /* pplayer->server is initialised in
       ./server/plrhand.c:server_player_init()
      and pplayer->client in
@@ -717,6 +716,14 @@ void player_destroy(struct player *pplayer)
   pslot = pplayer->slot;
   fc_assert(pslot->player == pplayer);
 
+  delete pplayer->tile_known;
+  if (!is_server()) {
+    vision_layer_iterate(v) {
+      pplayer->client.tile_vision[v]->clear();
+      delete pplayer->client.tile_vision[v];
+    }
+    vision_layer_iterate_end;
+  }
   /* Remove all that is game-dependent in the player structure. */
   player_clear(pplayer, TRUE);
 
@@ -743,13 +750,6 @@ void player_destroy(struct player *pplayer)
   /* Clear player color. */
   if (pplayer->rgb) {
     rgbcolor_destroy(pplayer->rgb);
-  }
-
-  dbv_free(&pplayer->tile_known);
-
-  if (!is_server()) {
-    vision_layer_iterate(v) { dbv_free(&pplayer->client.tile_vision[v]); }
-    vision_layer_iterate_end;
   }
 
   free(pplayer);

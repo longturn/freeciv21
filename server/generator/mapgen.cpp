@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -110,8 +111,8 @@ static bool make_island(int islemass, int starters,
    tiles as blocked to prevent a river from falling into itself, and for
    storing rivers temporarly. */
 struct river_map {
-  struct dbv blocked;
-  struct dbv ok;
+  QBitArray blocked;
+  QBitArray ok;
 };
 
 static int river_test_blocked(struct river_map *privermap,
@@ -555,14 +556,14 @@ static void make_terrains(void)
 static int river_test_blocked(struct river_map *privermap,
                               struct tile *ptile, struct extra_type *priver)
 {
-  if (dbv_isset(&privermap->blocked, tile_index(ptile))) {
+  if (privermap->blocked.at(tile_index(ptile))) {
     return 1;
   }
 
   /* any un-blocked? */
   cardinal_adjc_iterate(&(wld.map), ptile, ptile1)
   {
-    if (!dbv_isset(&privermap->blocked, tile_index(ptile1))) {
+    if (!privermap->blocked.at(tile_index(ptile1))) {
       return 0;
     }
   }
@@ -673,11 +674,11 @@ static void river_blockmark(struct river_map *privermap, struct tile *ptile)
 {
   log_debug("Blockmarking (%d, %d) and adjacent tiles.", TILE_XY(ptile));
 
-  dbv_set(&privermap->blocked, tile_index(ptile));
+  privermap->blocked.setBit(tile_index(ptile));
 
   cardinal_adjc_iterate(&(wld.map), ptile, ptile1)
   {
-    dbv_set(&privermap->blocked, tile_index(ptile1));
+    privermap->blocked.setBit(tile_index(ptile1));
   }
   cardinal_adjc_iterate_end;
 }
@@ -804,7 +805,7 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
 
   while (TRUE) {
     /* Mark the current tile as river. */
-    dbv_set(&privermap->ok, tile_index(ptile));
+    privermap->ok.setBit(tile_index(ptile))
     log_debug("The tile at (%d, %d) has been marked as river in river_map.",
               TILE_XY(ptile));
 
@@ -950,8 +951,8 @@ static void make_rivers(void)
   create_placed_map(); /* needed bu rand_map_characteristic */
   set_all_ocean_tiles_placed();
 
-  dbv_init(&rivermap.blocked, MAP_INDEX_SIZE);
-  dbv_init(&rivermap.ok, MAP_INDEX_SIZE);
+  rivermap.blocked.resize(MAP_INDEX_SIZE);
+  rivermap.ok.resize(MAP_INDEX_SIZE);
 
   /* The main loop in this function. */
   while (current_riverlength < desirable_riverlength
@@ -1002,8 +1003,8 @@ static void make_rivers(void)
             || iteration_counter >= RIVERS_MAXTRIES / 10 * 9)) {
 
       /* Reset river map before making a new river. */
-      dbv_clr_all(&rivermap.blocked);
-      dbv_clr_all(&rivermap.ok);
+      rivermap.blocked.fill(false);
+      rivermap.ok.fill(false);
 
       road_river = river_types[fc_rand(river_type_count)];
 
@@ -1013,7 +1014,7 @@ static void make_rivers(void)
           whole_map_iterate(&(wld.map), rtile)
           {
             if (tile_has_extra(rtile, oriver)) {
-              dbv_set(&rivermap.blocked, tile_index(rtile));
+              rivermap.blocked.setBit(tile_index(rtile));
             }
           }
           whole_map_iterate_end;
@@ -1029,7 +1030,7 @@ static void make_rivers(void)
       if (make_river(&rivermap, ptile, road_river)) {
         whole_map_iterate(&(wld.map), ptile1)
         {
-          if (dbv_isset(&rivermap.ok, tile_index(ptile1))) {
+          if (rivermap.ok.at(tile_index(ptile1))) {
             struct terrain *river_terrain = tile_terrain(ptile1);
 
             if (!terrain_has_flag(river_terrain, TER_CAN_HAVE_RIVER)) {
@@ -1058,8 +1059,6 @@ static void make_rivers(void)
               current_riverlength, desirable_riverlength, iteration_counter);
   } /* end while; */
 
-  dbv_free(&rivermap.blocked);
-  dbv_free(&rivermap.ok);
 
   destroy_placed_map();
 }
