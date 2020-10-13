@@ -57,10 +57,7 @@ struct global_worklist {
   union {
     struct {
       int length;
-      struct uni_name {
-        char *kind;
-        char *name;
-      } entries[MAX_LEN_WORKLIST];
+      uni_name entries[MAX_LEN_WORKLIST];
     } unbuilt;
     struct worklist worklist;
   };
@@ -114,8 +111,7 @@ void global_worklists_build(void)
       for (i = 0; i < pgwl->unbuilt.length; i++) {
         struct universal source;
 
-        // sveinung
-        // puni_name = pgwl->unbuilt.entries + i;
+        puni_name = pgwl->unbuilt.entries + i;
         puni_name->kind = pgwl->unbuilt.entries[i].kind;
         puni_name->name = pgwl->unbuilt.entries[i].name;
         source = universal_by_rule_name(puni_name->kind, puni_name->name);
@@ -136,8 +132,7 @@ void global_worklists_build(void)
 
       /* Now the worklist is built, change status. */
       for (i = 0; i < pgwl->unbuilt.length; i++) {
-        // sveinung
-        // puni_name = pgwl->unbuilt.entries + i;
+        puni_name = pgwl->unbuilt.entries + i;
         puni_name->kind = pgwl->unbuilt.entries[i].kind;
         puni_name->name = pgwl->unbuilt.entries[i].name;
         free(puni_name->kind);
