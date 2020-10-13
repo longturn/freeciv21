@@ -23,8 +23,8 @@ add_executable(
   tab_good.cpp
   tab_multiplier.cpp
   tab_terrains.cpp
-  univ_value.c
-  validity.c
+  univ_value.cpp
+  validity.cpp
 )
 
 target_link_libraries(freeciv-ruledit server)

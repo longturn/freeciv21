@@ -320,7 +320,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_AI_LEVEL:
     for (i = 0; i < AI_LEVEL_COUNT; i++) {
-      cb(ai_level_name(i), univ->value.ai_level == i, data);
+      cb(ai_level_name(ai_level(i)), univ->value.ai_level == i, data);
     }
     break;
   case VUT_SPECIALIST:
@@ -332,57 +332,68 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_TERRAINCLASS:
     for (i = 0; i < TC_COUNT; i++) {
-      cb(terrain_class_name(i), univ->value.terrainclass == i, data);
+      cb(terrain_class_name(terrain_class(i)), univ->value.terrainclass == i,
+         data);
     }
     break;
   case VUT_UTFLAG:
     for (i = 0; i < UTYF_LAST_USER_FLAG; i++) {
-      cb(unit_type_flag_id_name(i), univ->value.unitflag == i, data);
+      cb(unit_type_flag_id_name(unit_type_flag_id(i)),
+         univ->value.unitflag == i, data);
     }
     break;
   case VUT_UCFLAG:
     for (i = 0; i < UCF_COUNT; i++) {
-      cb(unit_class_flag_id_name(i), univ->value.unitclassflag == i, data);
+      cb(unit_class_flag_id_name(unit_class_flag_id(i)),
+         univ->value.unitclassflag == i, data);
     }
     break;
   case VUT_TERRFLAG:
     for (i = 0; i < TER_USER_LAST; i++) {
-      cb(terrain_flag_id_name(i), univ->value.terrainflag == i, data);
+      cb(terrain_flag_id_name(terrain_flag_id(i)),
+         univ->value.terrainflag == i, data);
     }
     break;
   case VUT_BASEFLAG:
     for (i = 0; i < BF_COUNT; i++) {
-      cb(base_flag_id_name(i), univ->value.baseflag == i, data);
+      cb(base_flag_id_name(base_flag_id(i)), univ->value.baseflag == i,
+         data);
     }
     break;
   case VUT_ROADFLAG:
     for (i = 0; i < RF_COUNT; i++) {
-      cb(road_flag_id_name(i), univ->value.roadflag == i, data);
+      cb(road_flag_id_name(road_flag_id(i)), univ->value.roadflag == i,
+         data);
     }
     break;
   case VUT_TECHFLAG:
     for (i = 0; i < TF_COUNT; i++) {
-      cb(tech_flag_id_name(i), univ->value.techflag == i, data);
+      cb(tech_flag_id_name(tech_flag_id(i)), univ->value.techflag == i,
+         data);
     }
     break;
   case VUT_EXTRAFLAG:
     for (i = 0; i < EF_COUNT; i++) {
-      cb(extra_flag_id_name(i), univ->value.extraflag == i, data);
+      cb(extra_flag_id_name(extra_flag_id(i)), univ->value.extraflag == i,
+         data);
     }
     break;
   case VUT_TERRAINALTER:
     for (i = 0; i < TA_COUNT; i++) {
-      cb(terrain_alteration_name(i), univ->value.terrainalter == i, data);
+      cb(terrain_alteration_name(terrain_alteration(i)),
+         univ->value.terrainalter == i, data);
     }
     break;
   case VUT_CITYTILE:
     for (i = 0; i < CITYT_LAST; i++) {
-      cb(citytile_type_name(i), univ->value.citytile == i, data);
+      cb(citytile_type_name(citytile_type(i)), univ->value.citytile == i,
+         data);
     }
     break;
   case VUT_CITYSTATUS:
     for (i = 0; i < CITYS_LAST; i++) {
-      cb(citystatus_type_name(i), univ->value.citystatus == i, data);
+      cb(citystatus_type_name(citystatus_type(i)),
+         univ->value.citystatus == i, data);
     }
     break;
   case VUT_ACHIEVEMENT:
@@ -394,15 +405,18 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_DIPLREL:
     for (i = 0; i < DS_LAST; i++) {
-      cb(diplstate_type_name(i), univ->value.diplrel == i, data);
+      cb(diplstate_type_name(diplstate_type(i)), univ->value.diplrel == i,
+         data);
     }
     for (; i < DRO_LAST; i++) {
-      cb(diplrel_other_name(i), univ->value.diplrel == i, data);
+      cb(diplrel_other_name(diplrel_other(i)), univ->value.diplrel == i,
+         data);
     }
     break;
   case VUT_UNITSTATE:
     for (i = 0; i < USP_COUNT; i++) {
-      cb(ustate_prop_name(i), univ->value.unit_state == i, data);
+      cb(ustate_prop_name(ustate_prop(i)), univ->value.unit_state == i,
+         data);
     }
     break;
   case VUT_ACTIVITY:
@@ -422,7 +436,8 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_TOPO:
     for (i = 0; i < TOPO_FLAG_BITS; i++) {
-      cb(topo_flag_name(1 << i), univ->value.topo_property == 1 << i, data);
+      cb(topo_flag_name(topo_flag(1 << i)),
+         univ->value.topo_property == 1 << i, data);
     }
     break;
   case VUT_SERVERSETTING:
@@ -438,7 +453,8 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
     break;
   case VUT_IMPR_GENUS:
     for (i = 0; i < IG_COUNT; i++) {
-      cb(impr_genus_id_name(i), univ->value.impr_genus == i, data);
+      cb(impr_genus_id_name(impr_genus_id(i)), univ->value.impr_genus == i,
+         data);
     }
     break;
   case VUT_ACTION:
