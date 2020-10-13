@@ -10,6 +10,9 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
+
+#include <algorithm>
+
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
@@ -37,7 +40,7 @@ struct strvec {
 static void string_free(char *string)
 {
   if (string) {
-    free(string);
+    delete[] string;
   }
 }
 
@@ -71,7 +74,7 @@ struct strvec *strvec_new(void)
 void strvec_destroy(struct strvec *psv)
 {
   strvec_clear(psv);
-  free(psv);
+  delete psv;
 }
 
 /**********************************************************************/ /**
@@ -86,12 +89,13 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     return;
   } else if (!psv->vec) {
     /* Initial reserve */
-    psv->vec = static_cast<char **>(fc_calloc(reserve, sizeof(char *)));
+    psv->vec = new char *[reserve]{};
   } else if (reserve > psv->size) {
     /* Expand the vector. */
-    psv->vec =
-        static_cast<char **>(fc_realloc(psv->vec, reserve * sizeof(char *)));
-    memset(psv->vec + psv->size, 0, (reserve - psv->size) * sizeof(char *));
+    auto expanded = new char *[reserve]{};
+    std::move(psv->vec, psv->vec + psv->size, expanded);
+    delete[] psv->vec;
+    psv->vec = expanded;
   } else {
     /* Shrink the vector: free the extra strings. */
     size_t i;
@@ -99,8 +103,10 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     for (i = psv->size - 1; i >= reserve; i--) {
       string_free(psv->vec[i]);
     }
-    psv->vec =
-        static_cast<char **>(fc_realloc(psv->vec, reserve * sizeof(char *)));
+    auto shrunk = new char *[reserve]{};
+    std::move(psv->vec, psv->vec + reserve, shrunk);
+    delete[] psv->vec;
+    psv->vec = shrunk;
   }
   psv->size = reserve;
 }
@@ -171,7 +177,7 @@ void strvec_clear(struct strvec *psv)
   for (i = 0, p = psv->vec; i < psv->size; i++, p++) {
     string_free(*p);
   }
-  free(psv->vec);
+  delete[] psv->vec;
   psv->vec = NULL;
   psv->size = 0;
 }

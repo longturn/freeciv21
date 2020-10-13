@@ -268,7 +268,7 @@ static void inf_close_partial(struct inputfile *inf)
     log_error("Error closing %s", inf_filename(inf));
   }
   if (inf->filename) {
-    free(inf->filename);
+    delete[] inf->filename;
   }
   inf->filename = NULL;
   astr_free(&inf->cur_line);
@@ -297,7 +297,7 @@ void inf_close(struct inputfile *inf)
     inf_close(inf->included_from);
   }
   inf_close_partial(inf);
-  free(inf);
+  delete inf;
   log_debug("inputfile: closed ok");
 }
 
@@ -524,7 +524,7 @@ static bool read_a_line(struct inputfile *inf)
       inf_close_partial(inf);
       *inf = *inc; /* so the user pointer in still valid
                     * (and inf pointers in calling functions) */
-      free(inc);
+      delete inc;
       return read_a_line(inf);
     }
     return FALSE;

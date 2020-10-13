@@ -348,7 +348,7 @@ net_lookup_getaddrinfo(const char *name, int port,
   char servname[8];
   int gafam;
   struct fc_sockaddr_list *addrs =
-      fc_sockaddr_list_new_full((fc_sockaddr_list_free_fn_t) free);
+      fc_sockaddr_list_new_full((fc_sockaddr_list_free_fn_t) [](auto x){delete x;});
 
   switch (family) {
   case FC_ADDR_IPV4:

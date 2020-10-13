@@ -121,8 +121,8 @@ static struct signal_callback *signal_callback_new(const char *name)
  *****************************************************************************/
 static void signal_callback_destroy(struct signal_callback *pcallback)
 {
-  free(pcallback->name);
-  free(pcallback);
+  delete[] pcallback->name;
+  delete pcallback;
 }
 
 /*************************************************************************/ /**
@@ -150,10 +150,10 @@ static void signal_destroy(struct signal *psignal)
     free(psignal->arg_types);
   }
   if (psignal->depr_msg) {
-    free(psignal->depr_msg);
+    delete[] psignal->depr_msg;
   }
   signal_callback_list_destroy(psignal->callbacks);
-  free(psignal);
+  delete psignal;
 }
 
 /*************************************************************************/ /**
@@ -363,7 +363,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
    Callback for freeing memory where luascript_signal_name_list has signal
    name.
  *****************************************************************************/
-static void sn_free(char *name) { FC_FREE(name); }
+static void sn_free(char *name) { delete[] name; }
 
 /*************************************************************************/ /**
    Initialize script signals and callbacks.

@@ -116,11 +116,11 @@ static const char name_too_long[] = "Name \"%s\" too long; truncating.";
 #define MAX_SECTION_LABEL 64
 #define section_strlcpy(dst, src)                                           \
   (void) loud_strlcpy(dst, src, MAX_SECTION_LABEL, name_too_long)
-static char *resource_sections = NULL;
-static char *terrain_sections = NULL;
-static char *extra_sections = NULL;
-static char *base_sections = NULL;
-static char *road_sections = NULL;
+static char (*resource_sections)[MAX_SECTION_LABEL] = NULL;
+static char (*terrain_sections)[MAX_SECTION_LABEL] = NULL;
+static char (*extra_sections)[MAX_SECTION_LABEL] = NULL;
+static char (*base_sections)[MAX_SECTION_LABEL] = NULL;
+static char (*road_sections)[MAX_SECTION_LABEL] = NULL;
 
 static struct requirement_vector reqs_list;
 
@@ -639,7 +639,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
   if (nval == 0) {
     /* 'No vector' is considered same as empty vector */
     if (slist != NULL) {
-      free(slist);
+      delete[] slist;
     }
     return TRUE;
   }
@@ -649,7 +649,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
                   filename, prefix, entry, (int) nval, MAX_NUM_UNIT_LIST);
     ok = FALSE;
   } else if (nval == 1 && strcmp(slist[0], "") == 0) {
-    free(slist);
+    delete[] slist;
     return TRUE;
   }
   if (ok) {
@@ -668,7 +668,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
                 sval, utype_number(punittype));
     }
   }
-  free(slist);
+  delete[] slist;
 
   return ok;
 }
@@ -705,7 +705,8 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
 
   if (ok) {
     if (nval == 1 && strcmp(slist[0], "") == 0) {
-      FC_FREE(slist);
+      delete[] slist;
+      slist = nullptr;
       return TRUE;
     }
     for (i = 0; i < nval && ok; i++) {
@@ -763,7 +764,8 @@ static bool lookup_building_list(struct section_file *file,
     ok = FALSE;
   } else if (nval == 0 || (nval == 1 && strcmp(slist[0], "") == 0)) {
     if (slist != NULL) {
-      FC_FREE(slist);
+      delete[] slist;
+      slist = nullptr;
     }
     return TRUE;
   }
@@ -782,7 +784,7 @@ static bool lookup_building_list(struct section_file *file,
       log_debug("%s.%s,%d %s %d", prefix, entry, i, sval, output[i]);
     }
   }
-  free(slist);
+  delete[] slist;
 
   return ok;
 }
@@ -877,7 +879,7 @@ static struct strvec *lookup_strvec(struct section_file *file,
     struct strvec *dest = strvec_new();
 
     strvec_store(dest, vec, dim);
-    free(vec);
+    delete[] vec;
     return dest;
   }
   return NULL;
@@ -910,7 +912,7 @@ static bool lookup_terrain(struct section_file *file, const char *entry,
                            struct terrain **result)
 {
   const int j = terrain_index(pthis);
-  const char *jsection = &terrain_sections[j * MAX_SECTION_LABEL];
+  const char *jsection = terrain_sections[j];
   const char *name = secfile_lookup_str(file, "%s.%s", jsection, entry);
   struct terrain *pterr;
 
@@ -1347,7 +1349,7 @@ static bool load_ruleset_techs(struct section_file *file,
         BV_SET(a->flags, ival);
       }
     }
-    free(slist);
+    delete[] slist;
 
     if (!ok) {
       break;
@@ -1722,19 +1724,19 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
   }
 
   if (vlist_name) {
-    free(vlist_name);
+    delete[] vlist_name;
   }
   if (vlist_power) {
-    free(vlist_power);
+    delete[] vlist_power;
   }
   if (vlist_raise) {
-    free(vlist_raise);
+    delete[] vlist_raise;
   }
   if (vlist_wraise) {
-    free(vlist_wraise);
+    delete[] vlist_wraise;
   }
   if (vlist_move) {
-    free(vlist_move);
+    delete[] vlist_move;
   }
 
   return ret;
@@ -1836,7 +1838,7 @@ static bool load_ruleset_units(struct section_file *file,
           BV_SET(uc->flags, ival);
         }
       }
-      free(slist);
+      delete[] slist;
 
       uc->helptext = lookup_strvec(file, sec_name, "helptext");
 
@@ -2062,7 +2064,7 @@ static bool load_ruleset_units(struct section_file *file,
 
         BV_SET(u->cargo, uclass_index(uclass));
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2084,7 +2086,7 @@ static bool load_ruleset_units(struct section_file *file,
 
         BV_SET(u->targets, uclass_index(uclass));
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2106,7 +2108,7 @@ static bool load_ruleset_units(struct section_file *file,
 
         BV_SET(u->embarks, uclass_index(uclass));
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2128,7 +2130,7 @@ static bool load_ruleset_units(struct section_file *file,
 
         BV_SET(u->disembarks, uclass_index(uclass));
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2226,7 +2228,7 @@ static bool load_ruleset_units(struct section_file *file,
           fc_assert(utype_has_flag(u, ival));
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2262,7 +2264,7 @@ static bool load_ruleset_units(struct section_file *file,
         }
         fc_assert(utype_has_role(u, ival));
       }
-      free(slist);
+      delete[] slist;
     }
     unit_type_iterate_end;
   }
@@ -2417,7 +2419,7 @@ static bool load_ruleset_buildings(struct section_file *file,
           BV_SET(b->flags, ival);
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -2576,10 +2578,9 @@ static bool load_terrain_names(struct section_file *file,
 
     /* avoid re-reading files */
     if (terrain_sections) {
-      free(terrain_sections);
+      delete[] terrain_sections;
     }
-    terrain_sections =
-        static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
+    terrain_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     terrain_type_iterate(pterrain)
     {
@@ -2591,8 +2592,7 @@ static bool load_terrain_names(struct section_file *file,
         break;
       }
 
-      section_strlcpy(&terrain_sections[terri * MAX_SECTION_LABEL],
-                      sec_name);
+      section_strlcpy(terrain_sections[terri], sec_name);
     }
     terrain_type_iterate_end;
   }
@@ -2618,9 +2618,9 @@ static bool load_terrain_names(struct section_file *file,
     game.control.num_extra_types = nval;
 
     if (extra_sections) {
-      free(extra_sections);
+      delete[] extra_sections;
     }
-    extra_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
+    extra_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     if (ok) {
       for (idx = 0; idx < nval; idx++) {
@@ -2631,7 +2631,7 @@ static bool load_terrain_names(struct section_file *file,
           ok = FALSE;
           break;
         }
-        section_strlcpy(&extra_sections[idx * MAX_SECTION_LABEL], sec_name);
+        section_strlcpy(extra_sections[idx], sec_name);
       }
     }
   }
@@ -2657,9 +2657,9 @@ static bool load_terrain_names(struct section_file *file,
     int idx;
 
     if (base_sections) {
-      free(base_sections);
+      delete[] base_sections;
     }
-    base_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
+    base_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use base_type_iterate() before bases are added to
      * EC_BASE caused_by list. Have to get them by extra_type_by_rule_name()
@@ -2673,7 +2673,7 @@ static bool load_terrain_names(struct section_file *file,
 
         if (pextra != NULL) {
           base_type_init(pextra, idx);
-          section_strlcpy(&base_sections[idx * MAX_SECTION_LABEL], sec_name);
+          section_strlcpy(base_sections[idx], sec_name);
         } else {
           ruleset_error(
               LOG_ERROR,
@@ -2712,9 +2712,9 @@ static bool load_terrain_names(struct section_file *file,
     int idx;
 
     if (road_sections) {
-      free(road_sections);
+      delete[] road_sections;
     }
-    road_sections = static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
+    road_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use extra_type_by_cause_iterate(EC_ROAD) before roads are added
      * to EC_ROAD caused_by list. Have to get them by
@@ -2728,7 +2728,7 @@ static bool load_terrain_names(struct section_file *file,
 
         if (pextra != NULL) {
           road_type_init(pextra, idx);
-          section_strlcpy(&road_sections[idx * MAX_SECTION_LABEL], sec_name);
+          section_strlcpy(road_sections[idx], sec_name);
         } else {
           ruleset_error(
               LOG_ERROR,
@@ -2768,10 +2768,9 @@ static bool load_terrain_names(struct section_file *file,
     int idx;
 
     if (resource_sections) {
-      free(resource_sections);
+      delete[] resource_sections;
     }
-    resource_sections =
-        static_cast<char *>(fc_calloc(nval, MAX_SECTION_LABEL));
+    resource_sections = new char[nval][MAX_SECTION_LABEL]{};
 
     /* Cannot use resource_type_iterate() before resource are added to
      * EC_RESOURCE caused_by list. Have to get them by
@@ -2789,8 +2788,7 @@ static bool load_terrain_names(struct section_file *file,
 
         if (pextra != NULL) {
           resource_type_init(pextra);
-          section_strlcpy(&resource_sections[idx * MAX_SECTION_LABEL],
-                          sec_name);
+          section_strlcpy(resource_sections[idx], sec_name);
         } else {
           ruleset_error(
               LOG_ERROR,
@@ -2883,7 +2881,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     {
       const char **slist;
       const int i = terrain_index(pterrain);
-      const char *tsection = &terrain_sections[i * MAX_SECTION_LABEL];
+      const char *tsection = terrain_sections[i];
       const char *cstr;
 
       sz_strlcpy(pterrain->graphic_str,
@@ -2911,7 +2909,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         if (pterrain->identifier == terrain_by_number(j)->identifier) {
           ruleset_error(
               LOG_ERROR, "\"%s\" [%s] has the same identifier as [%s].",
-              filename, tsection, &terrain_sections[j * MAX_SECTION_LABEL]);
+              filename, tsection, terrain_sections[j]);
           ok = FALSE;
           break;
         }
@@ -2957,7 +2955,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
       pterrain->resources[nval] = NULL;
-      free(res);
+      delete[] res;
       res = NULL;
 
       if (!ok) {
@@ -3099,7 +3097,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           BV_SET(pterrain->flags, flag);
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -3132,7 +3130,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           BV_SET(pterrain->native_to, uclass_index(uclass));
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -3163,8 +3161,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     {
       if (!compat->compat_mode || compat->ver_terrain >= 10
           || pextra->category != ECAT_RESOURCE) {
-        const char *section =
-            &extra_sections[extra_index(pextra) * MAX_SECTION_LABEL];
+        const char *section = extra_sections[extra_index(pextra)];
         const char **slist;
         struct requirement_vector *reqs;
         const char *catname;
@@ -3223,7 +3220,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           extra_to_caused_by_list(pextra, EC_SPECIAL);
         }
 
-        free(slist);
+        delete[] slist;
 
         slist = secfile_lookup_str_vec(file, &nval, "%s.rmcauses", section);
         pextra->rmcauses = 0;
@@ -3243,7 +3240,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
 
-        free(slist);
+        delete[] slist;
 
         sz_strlcpy(pextra->activity_gfx,
                    secfile_lookup_str_default(file, "-", "%s.activity_gfx",
@@ -3369,7 +3366,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             BV_SET(pextra->native_to, uclass_index(uclass));
           }
         }
-        free(slist);
+        delete[] slist;
 
         if (!ok) {
           break;
@@ -3392,7 +3389,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             BV_SET(pextra->flags, flag);
           }
         }
-        free(slist);
+        delete[] slist;
 
         if (!ok) {
           break;
@@ -3416,7 +3413,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
 
-        free(slist);
+        delete[] slist;
 
         if (!ok) {
           break;
@@ -3439,7 +3436,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             BV_SET(pextra->hidden_by, extra_index(top));
           }
         }
-        free(slist);
+        delete[] slist;
 
         if (!ok) {
           break;
@@ -3463,7 +3460,7 @@ static bool load_ruleset_terrain(struct section_file *file,
             BV_SET(pextra->bridged_over, extra_index(top));
           }
         }
-        free(slist);
+        delete[] slist;
 
         if (!ok) {
           break;
@@ -3497,7 +3494,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     extra_type_by_cause_iterate(EC_RESOURCE, presource)
     {
       char identifier[MAX_LEN_NAME];
-      const char *rsection = &resource_sections[i * MAX_SECTION_LABEL];
+      const char *rsection = resource_sections[i];
 
       if (!presource->data.resource) {
         ruleset_error(LOG_ERROR,
@@ -3545,7 +3542,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     extra_type_by_cause_iterate_end;
 
     for (j = 0; ok && j < game.control.num_resource_types; j++) {
-      const char *section = &resource_sections[j * MAX_SECTION_LABEL];
+      const char *section = resource_sections[j];
       const char *extra_name = secfile_lookup_str(file, "%s.extra", section);
       struct extra_type *pextra = extra_type_by_rule_name(extra_name);
 
@@ -3604,7 +3601,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         ok = FALSE;
         break;
       }
-      section = &base_sections[base_number(pbase) * MAX_SECTION_LABEL];
+      section = base_sections[base_number(pbase)];
 
       gui_str = secfile_lookup_str(file, "%s.gui_type", section);
       pbase->gui_type = base_gui_type_by_name(gui_str, fc_strcasecmp);
@@ -3649,7 +3646,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         }
       }
 
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -3677,7 +3674,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     extra_type_by_cause_iterate_end;
 
     for (j = 0; ok && j < game.control.num_base_types; j++) {
-      const char *section = &base_sections[j * MAX_SECTION_LABEL];
+      const char *section = base_sections[j];
       const char *extra_name = secfile_lookup_str(file, "%s.extra", section);
       struct extra_type *pextra = extra_type_by_rule_name(extra_name);
 
@@ -3699,8 +3696,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         struct road_type *proad = extra_road_get(pextra);
-        const char *section =
-            &road_sections[road_number(proad) * MAX_SECTION_LABEL];
+        const char *section = road_sections[road_number(proad)];
         const char **slist;
 
         slist = secfile_lookup_str_vec(file, &nval, "%s.flags", section);
@@ -3730,7 +3726,7 @@ static bool load_ruleset_terrain(struct section_file *file,
         ok = FALSE;
         break;
       }
-      section = &road_sections[road_number(proad) * MAX_SECTION_LABEL];
+      section = road_sections[road_number(proad)];
 
       reqs = lookup_req_list(file, compat, section, "first_reqs",
                              extra_rule_name(pextra));
@@ -3830,7 +3826,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           BV_SET(proad->integrates, road_number(top));
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -3867,7 +3863,7 @@ static bool load_ruleset_terrain(struct section_file *file,
           }
         }
       }
-      free(slist);
+      delete[] slist;
 
       if (!ok) {
         break;
@@ -3876,7 +3872,7 @@ static bool load_ruleset_terrain(struct section_file *file,
     extra_type_by_cause_iterate_end;
 
     for (j = 0; ok && j < game.control.num_road_types; j++) {
-      const char *section = &road_sections[j * MAX_SECTION_LABEL];
+      const char *section = road_sections[j];
       const char *extra_name = secfile_lookup_str(file, "%s.extra", section);
       struct extra_type *pextra = extra_type_by_rule_name(extra_name);
 
@@ -4582,7 +4578,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
   }
 
   if (NULL != cities) {
-    free(cities);
+    delete[] cities;
   }
 
   return ok;
@@ -4624,7 +4620,7 @@ static bool load_ruleset_nations(struct section_file *file,
       game.server.ruledit.embedded_nations[j] = fc_strdup(vec[j]);
     }
 
-    free(vec);
+    delete[] vec;
   }
 
   game.default_government = NULL;
@@ -4669,7 +4665,7 @@ static bool load_ruleset_nations(struct section_file *file,
         game.server.ruledit.allowed_govs[j] = fc_strdup(vec[j]);
       }
 
-      free(vec);
+      delete[] vec;
     }
 
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.at_count,
@@ -4685,7 +4681,7 @@ static bool load_ruleset_nations(struct section_file *file,
         game.server.ruledit.allowed_terrains[j] = fc_strdup(vec[j]);
       }
 
-      free(vec);
+      delete[] vec;
     }
 
     vec = secfile_lookup_str_vec(file, &game.server.ruledit.as_count,
@@ -4701,7 +4697,7 @@ static bool load_ruleset_nations(struct section_file *file,
         game.server.ruledit.allowed_styles[j] = fc_strdup(vec[j]);
       }
 
-      free(vec);
+      delete[] vec;
     }
 
     sval = secfile_lookup_str_default(file, NULL,
@@ -4853,7 +4849,7 @@ static bool load_ruleset_nations(struct section_file *file,
         }
       }
       if (NULL != vec) {
-        free(vec);
+        delete[] vec;
       }
       if (nation_set_list_size(pnation->sets) < 1) {
         ruleset_error(LOG_ERROR,
@@ -4886,7 +4882,7 @@ static bool load_ruleset_nations(struct section_file *file,
         }
       }
       if (NULL != vec) {
-        free(vec);
+        delete[] vec;
       }
       if (!ok) {
         break;
@@ -5158,7 +5154,7 @@ static bool load_ruleset_nations(struct section_file *file,
         }
       }
       if (NULL != vec) {
-        free(vec);
+        delete[] vec;
       }
       if (!ok) {
         break;
@@ -5494,7 +5490,7 @@ static bool load_action_auto_uflag_block(struct section_file *file,
                                                 protecor_flag[i]));
     }
 
-    free(protecor_flag);
+    delete[] protecor_flag;
   }
 
   return TRUE;
@@ -5530,7 +5526,7 @@ static bool load_action_auto_actions(struct section_file *file,
       auto_perf->alternatives[i] = unit_acts[i];
     }
 
-    free(unit_acts);
+    delete[] unit_acts;
   }
 
   return TRUE;
@@ -6206,7 +6202,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
             gameloss_style(game.info.gameloss_style | style);
       }
     }
-    free(slist);
+    delete[] slist;
   }
 
   if (ok) {
@@ -6304,7 +6300,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         game.info.granary_food_ini[gi] = food_ini[gi];
       }
     }
-    free(food_ini);
+    delete[] food_ini;
   }
 
   if (ok) {
@@ -6627,7 +6623,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
           action_by_number(quiet_actions[j])->quiet = TRUE;
         }
 
-        free(quiet_actions);
+        delete[] quiet_actions;
       }
     }
 
@@ -6901,7 +6897,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     for (i = 0; i < teams; i++) {
       team_slot_set_defined_name(team_slot_by_number(i), svec[i]);
     }
-    free(svec);
+    delete[] svec;
 
     sec = secfile_sections_by_name_prefix(file, DISASTER_SECTION_PREFIX);
     nval = (NULL != sec ? section_list_size(sec) : 0);
@@ -6966,7 +6962,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
       }
 
-      free(svec);
+      delete[] svec;
 
       if (!ok) {
         break;
@@ -7142,7 +7138,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
           BV_SET(pgood->flags, flag);
         }
       }
-      free(slist);
+      delete[] slist;
 
       pgood->helptext = lookup_strvec(file, sec_name, "helptext");
     }
@@ -8658,11 +8654,11 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   game_ruleset_init();
 
   if (script_buffer != NULL) {
-    FC_FREE(script_buffer);
+    delete[] script_buffer;
     script_buffer = NULL;
   }
   if (parser_buffer != NULL) {
-    FC_FREE(parser_buffer);
+    delete[] parser_buffer;
     parser_buffer = NULL;
   }
 
@@ -8775,23 +8771,23 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   nullcheck_secfile_destroy(gamefile);
 
   if (extra_sections) {
-    free(extra_sections);
+    delete[] extra_sections;
     extra_sections = NULL;
   }
   if (base_sections) {
-    free(base_sections);
+    delete[] base_sections;
     base_sections = NULL;
   }
   if (road_sections) {
-    free(road_sections);
+    delete[] road_sections;
     road_sections = NULL;
   }
   if (resource_sections) {
-    free(resource_sections);
+    delete[] resource_sections;
     resource_sections = NULL;
   }
   if (terrain_sections) {
-    free(terrain_sections);
+    delete[] terrain_sections;
     terrain_sections = NULL;
   }
 

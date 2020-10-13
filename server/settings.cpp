@@ -6264,8 +6264,7 @@ static void setting_game_set(struct setting *pset, bool init)
 
   case SST_STRING:
     if (init) {
-      pset->string.game_value = static_cast<char *>(fc_calloc(
-          1, pset->string.value_size * sizeof(pset->string.game_value)));
+      pset->string.game_value = new char[pset->string.value_size]{};
     }
     fc_strlcpy(pset->string.game_value, pset->string.value,
                pset->string.value_size);
@@ -6291,7 +6290,8 @@ static void setting_game_set(struct setting *pset, bool init)
 static void setting_game_free(struct setting *pset)
 {
   if (setting_type(pset) == SST_STRING) {
-    FC_FREE(pset->string.game_value);
+    delete[] pset->string.game_value;
+    pset->string.game_value = nullptr;
   }
 }
 

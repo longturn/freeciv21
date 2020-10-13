@@ -301,12 +301,10 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   adv->num_continents = wld.map.num_continents;
   adv->num_oceans = wld.map.num_oceans;
-  adv->threats.continent =
-      static_cast<bool *>(fc_calloc(adv->num_continents + 1, sizeof(bool)));
+  adv->threats.continent = new bool[adv->num_continents + 1]{};
   adv->threats.invasions = FALSE;
   adv->threats.nuclear = 0; /* none */
-  adv->threats.ocean =
-      static_cast<bool *>(fc_calloc(adv->num_oceans + 1, sizeof(bool)));
+  adv->threats.ocean = new bool[adv->num_oceans + 1]{};
   adv->threats.igwall = FALSE;
 
   players_iterate(aplayer)
@@ -423,10 +421,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   adv->explore.land_done = TRUE;
   adv->explore.sea_done = TRUE;
-  adv->explore.continent =
-      static_cast<bool *>(fc_calloc(adv->num_continents + 1, sizeof(bool)));
-  adv->explore.ocean =
-      static_cast<bool *>(fc_calloc(adv->num_oceans + 1, sizeof(bool)));
+  adv->explore.continent = new bool[adv->num_continents + 1]{};
+  adv->explore.ocean = new bool[adv->num_oceans + 1]{};
 
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -463,10 +459,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   /*** Statistics ***/
 
-  adv->stats.cities =
-      static_cast<int *>(fc_calloc(adv->num_continents + 1, sizeof(int)));
-  adv->stats.ocean_cities =
-      static_cast<int *>(fc_calloc(adv->num_oceans + 1, sizeof(int)));
+  adv->stats.cities = new int[adv->num_continents + 1]{};
+  adv->stats.ocean_cities = new int[adv->num_oceans + 1]{};
   adv->stats.average_production = 0;
   city_list_iterate(pplayer->cities, pcity)
   {
@@ -724,15 +718,13 @@ void adv_data_init(struct player *pplayer)
   struct adv_data *adv;
 
   if (pplayer->server.adv == NULL) {
-    pplayer->server.adv =
-        static_cast<adv_data *>(fc_calloc(1, sizeof(*pplayer->server.adv)));
+    pplayer->server.adv = new adv_data{};
   }
   adv = pplayer->server.adv;
 
   adv->government_want = NULL;
 
-  adv->dipl.adv_dipl_slots = static_cast<adv_dipl **>(
-      fc_calloc(player_slot_count(), sizeof(*adv->dipl.adv_dipl_slots)));
+  adv->dipl.adv_dipl_slots = new adv_dipl *[player_slot_count()]{};
   player_slots_iterate(pslot)
   {
     struct adv_dipl **dip_slot =
@@ -763,11 +755,7 @@ void adv_data_default(struct player *pplayer)
   fc_assert_ret(adv != NULL);
 
   adv->govt_reeval = 0;
-  adv->government_want = static_cast<adv_want *>(
-      fc_realloc(adv->government_want,
-                 (government_count() + 1) * sizeof(*adv->government_want)));
-  memset(adv->government_want, 0,
-         (government_count() + 1) * sizeof(*adv->government_want));
+  adv->government_want = new adv_want[government_count() + 1]{};
 
   adv->wonder_city = 0;
 
@@ -788,7 +776,7 @@ void adv_data_close(struct player *pplayer)
   adv_data_phase_done(pplayer);
 
   if (adv->government_want != NULL) {
-    free(adv->government_want);
+    delete[] adv->government_want;
   }
 
   if (adv->dipl.adv_dipl_slots != NULL) {
@@ -800,11 +788,11 @@ void adv_data_close(struct player *pplayer)
       }
     }
     players_iterate_end;
-    FC_FREE(adv->dipl.adv_dipl_slots);
+    delete[] adv->dipl.adv_dipl_slots;
   }
 
   if (adv != NULL) {
-    free(adv);
+    delete adv;
   }
 
   pplayer->server.adv = NULL;
@@ -819,7 +807,7 @@ static void adv_dipl_new(const struct player *plr1,
   struct adv_dipl **dip_slot =
       plr1->server.adv->dipl.adv_dipl_slots + player_index(plr2);
 
-  *dip_slot = static_cast<adv_dipl *>(fc_calloc(1, sizeof(struct adv_dipl)));
+  *dip_slot = new adv_dipl{};
 }
 
 /**********************************************************************/ /**

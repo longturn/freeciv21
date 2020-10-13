@@ -496,7 +496,7 @@ static bool event_cache_status = FALSE;
  **************************************************************************/
 static void event_cache_data_free(struct event_cache_data *data)
 {
-  free(data);
+  delete data;
 }
 
 /**********************************************************************/ /**

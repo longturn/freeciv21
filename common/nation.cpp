@@ -253,8 +253,8 @@ struct nation_leader *nation_leader_new(struct nation_type *pnation,
  ****************************************************************************/
 static void nation_leader_destroy(struct nation_leader *pleader)
 {
-  free(pleader->name);
-  free(pleader);
+  delete[] pleader->name;
+  delete pleader;
 }
 
 /************************************************************************/ /**
@@ -348,8 +348,7 @@ struct nation_city *nation_city_new(struct nation_type *pnation,
   fc_assert_ret_val(is_server(), NULL);
 
   fc_assert(0 == NCP_NONE);
-  pncity = static_cast<nation_city *>(
-      fc_calloc(1, sizeof(*pncity))); // Set NCP_NONE.
+  pncity = new nation_city{}; // Set NCP_NONE.
   pncity->name = fc_strdup(name);
 
   nation_city_list_append(pnation->server.default_cities, pncity);
@@ -361,8 +360,8 @@ struct nation_city *nation_city_new(struct nation_type *pnation,
  ****************************************************************************/
 static void nation_city_destroy(struct nation_city *pncity)
 {
-  free(pncity->name);
-  free(pncity);
+  delete[] pncity->name;
+  delete pncity;
 }
 
 /************************************************************************/ /**
@@ -578,8 +577,7 @@ static void nation_init(struct nation_type *pnation)
     pnation->server.parent_nations = nation_list_new();
     pnation->server.conflicts_with = nation_list_new();
     /* server.rgb starts out NULL */
-    pnation->server.traits = static_cast<trait_limits *>(
-        fc_calloc(TRAIT_COUNT, sizeof(*pnation->server.traits)));
+    pnation->server.traits = new trait_limits[TRAIT_COUNT];
   }
 }
 
@@ -588,8 +586,8 @@ static void nation_init(struct nation_type *pnation)
  ****************************************************************************/
 static void nation_free(struct nation_type *pnation)
 {
-  free(pnation->legend);
-  FC_FREE(pnation->translation_domain);
+  delete[] pnation->legend;
+  delete[] pnation->translation_domain;
   nation_leader_list_destroy(pnation->leaders);
   nation_set_list_destroy(pnation->sets);
   nation_group_list_destroy(pnation->groups);
@@ -600,7 +598,7 @@ static void nation_free(struct nation_type *pnation)
     nation_list_destroy(pnation->server.parent_nations);
     nation_list_destroy(pnation->server.conflicts_with);
     rgbcolor_destroy(pnation->server.rgb);
-    FC_FREE(pnation->server.traits);
+    delete[] pnation->server.traits;
   }
 
   memset(pnation, 0, sizeof(*pnation));

@@ -6348,7 +6348,7 @@ static void show_help_intro(struct connection *caller,
 
   fc_break_lines(help, LINE_BREAK);
   cmd_reply(help_cmd, caller, C_COMMENT, "%s", help);
-  FC_FREE(help);
+  delete[] help;
 }
 
 /**********************************************************************/ /**
@@ -6389,7 +6389,7 @@ static void show_help_command(struct connection *caller,
       fc_break_lines(help, LINE_BREAK);
       cmd_reply(help_cmd, caller, C_COMMENT, _("Description:"));
       cmd_reply_prefix(help_cmd, caller, C_COMMENT, "  ", "  %s", help);
-      FC_FREE(help);
+      delete[] help;
     }
   }
 }

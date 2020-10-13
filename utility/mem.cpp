@@ -146,10 +146,9 @@ void *fc_real_calloc(size_t nelem, size_t elsize, const char *called_as,
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file)
 {
-  char *dest = static_cast<char *>(
-      fc_real_malloc(strlen(str) + 1, called_as, line, file));
+  char *dest = new char[strlen(str) + 1];
 
-  /* no need to check whether dest is non-NULL! */
+  // no need to check whether dest is non-NULL (raises std::bad_alloc)
   strcpy(dest, str);
   return dest;
 }

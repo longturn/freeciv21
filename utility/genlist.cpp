@@ -110,7 +110,7 @@ static void genlist_link_destroy(struct genlist *pgenlist,
   if (NULL != pgenlist->free_data_func) {
     pgenlist->free_data_func(plink->dataptr);
   }
-  free(plink);
+  delete plink;
 }
 
 /************************************************************************/ /**
@@ -260,12 +260,12 @@ void genlist_clear(struct genlist *pgenlist)
       do {
         plink2 = plink->next;
         free_data_func(plink->dataptr);
-        free(plink);
+        delete plink;
       } while (NULL != (plink = plink2));
     } else {
       do {
         plink2 = plink->next;
-        free(plink);
+        delete plink;
       } while (NULL != (plink = plink2));
     }
   }

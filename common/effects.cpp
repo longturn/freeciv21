@@ -255,7 +255,7 @@ void ruleset_cache_free(void)
     effect_list_iterate(tracker_list, peffect)
     {
       requirement_vector_free(&peffect->reqs);
-      free(peffect);
+      delete peffect;
     }
     effect_list_iterate_end;
     effect_list_destroy(tracker_list);

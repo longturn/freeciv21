@@ -13,7 +13,7 @@
 #ifndef FC__VERSION_H
 #define FC__VERSION_H
 
-
+#include <QString>
 
 #if !defined(FC__FREECIV_CONFIG_H) && !defined(FC_CONFIG_H)
 #error Files including versions.h should also include freeciv_config.h directly

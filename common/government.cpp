@@ -232,7 +232,7 @@ static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
  **************************************************************************/
 static void ruler_title_destroy(struct ruler_title *pruler_title)
 {
-  free(pruler_title);
+  delete pruler_title;
 }
 
 /**********************************************************************/ /**

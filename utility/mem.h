@@ -35,7 +35,7 @@
 
 #define FC_FREE(ptr)                                                        \
   do {                                                                      \
-    free(ptr);                                                              \
+    delete (ptr);                                                           \
     (ptr) = NULL;                                                           \
   } while (FALSE)
 

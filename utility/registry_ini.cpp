@@ -1846,53 +1846,6 @@ bool secfile_lookup_bool_default(const struct section_file *secfile,
 }
 
 /**********************************************************************/ /**
-   Lookup a boolean vector in the secfile.  Returns NULL on error.  This
-   vector is not owned by the registry module, and should be free by the
-   user.
- **************************************************************************/
-bool *secfile_lookup_bool_vec(const struct section_file *secfile,
-                              size_t *dim, const char *path, ...)
-{
-  char fullpath[MAX_LEN_SECPATH];
-  size_t i = 0;
-  bool *vec;
-  va_list args;
-
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, NULL);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != dim, NULL);
-
-  va_start(args, path);
-  fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
-  va_end(args);
-
-  /* Check size. */
-  while (NULL != secfile_entry_lookup(secfile, "%s,%d", fullpath, (int) i)) {
-    i++;
-  }
-  *dim = i;
-
-  if (0 == i) {
-    /* Doesn't exist. */
-    SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return NULL;
-  }
-
-  vec = static_cast<bool *>(fc_malloc(i * sizeof(bool)));
-  for (i = 0; i < *dim; i++) {
-    if (!secfile_lookup_bool(secfile, vec + i, "%s,%d", fullpath, (int) i)) {
-      SECFILE_LOG(secfile, NULL,
-                  "An error occurred when looking up to \"%s,%d\" entry.",
-                  fullpath, (int) i);
-      free(vec);
-      *dim = 0;
-      return NULL;
-    }
-  }
-
-  return vec;
-}
-
-/**********************************************************************/ /**
    Lookup a integer value in the secfile.  Returns TRUE on success.
  **************************************************************************/
 bool secfile_lookup_int(const struct section_file *secfile, int *ival,
@@ -2024,13 +1977,13 @@ int *secfile_lookup_int_vec(const struct section_file *secfile, size_t *dim,
     return NULL;
   }
 
-  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
+  vec = new int[i];
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_int(secfile, vec + i, "%s,%d", fullpath, (int) i)) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
-      free(vec);
+      delete[] vec;
       *dim = 0;
       return NULL;
     }
@@ -2184,14 +2137,14 @@ const char **secfile_lookup_str_vec(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = static_cast<const char **>(fc_malloc(i * sizeof(const char *)));
+  vec = new const char *[i];
   for (i = 0; i < *dim; i++) {
     if (!(vec[i] =
               secfile_lookup_str(secfile, "%s,%d", fullpath, (int) i))) {
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
-      free(vec);
+      delete[] vec;
       *dim = 0;
       return NULL;
     }
@@ -2316,7 +2269,7 @@ int *secfile_lookup_plain_enum_vec_full(
     return NULL;
   }
 
-  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
+  vec = new int[i];
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_plain_enum_full(secfile, vec + i, is_valid_fn,
                                         by_name_fn, "%s,%d", fullpath,
@@ -2872,8 +2825,8 @@ void section_destroy(struct section *psection)
   }
 
   entry_list_destroy(psection->entries);
-  free(psection->name);
-  free(psection);
+  delete[] psection->name;
+  delete psection;
 }
 
 /**********************************************************************/ /**
@@ -3179,7 +3132,7 @@ void entry_destroy(struct entry *pentry)
 
   case ENTRY_STR:
   case ENTRY_FILEREFERENCE:
-    free(pentry->string.value);
+    delete[] pentry->string.value;
     break;
 
   case ENTRY_ILLEGAL:
@@ -3188,11 +3141,11 @@ void entry_destroy(struct entry *pentry)
   }
 
   /* Common free. */
-  free(pentry->name);
+  delete[] pentry->name;
   if (NULL != pentry->comment) {
-    free(pentry->comment);
+    delete[] pentry->comment;
   }
-  free(pentry);
+  delete pentry;
 }
 
 /**********************************************************************/ /**

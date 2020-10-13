@@ -64,10 +64,10 @@ void achievements_free(void)
 
   for (i = 0; i < ARRAY_SIZE(achievements); i++) {
     if (achievements[i].first_msg != NULL) {
-      FC_FREE(achievements[i].first_msg);
+      delete[] achievements[i].first_msg;
     }
     if (achievements[i].cons_msg != NULL) {
-      FC_FREE(achievements[i].cons_msg);
+      delete[] achievements[i].cons_msg;
     }
   }
 }

@@ -253,7 +253,7 @@ void close_connections_and_socket(void)
   for (i = 0; i < listen_count; i++) {
     fc_closesocket(listen_socks[i]);
   }
-  FC_FREE(listen_socks);
+  delete[] listen_socks;
 
   if (srvarg.announce != ANNOUNCE_NONE) {
     fc_closesocket(socklan);
@@ -263,7 +263,7 @@ void close_connections_and_socket(void)
   if (history_file) {
     write_history(history_file);
     history_truncate_file(history_file, HISTORY_LENGTH);
-    free(history_file);
+    delete[] history_file;
     history_file = NULL;
     clear_history();
   }
@@ -528,7 +528,7 @@ enum server_events server_sniff_all_input(void)
               read_history(history_file);
             }
           }
-          FC_FREE(fc_dir);
+          delete[] fc_dir;
         }
       }
 
@@ -1130,8 +1130,7 @@ int server_open_socket(void)
   on = 1;
 
   /* Loop to create sockets, bind, listen. */
-  listen_socks =
-      static_cast<int *>(fc_calloc(name_count, sizeof(listen_socks[0])));
+  listen_socks = new int[name_count]{};
   listen_count = 0;
 
   fc_sockaddr_list_iterate(list, paddr)

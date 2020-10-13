@@ -106,10 +106,10 @@ void secfile_destroy(struct section_file *secfile)
   section_list_destroy(secfile->sections);
 
   if (NULL != secfile->name) {
-    free(secfile->name);
+    delete[] secfile->name;
   }
 
-  free(secfile);
+  delete secfile;
 }
 
 /**********************************************************************/ /**

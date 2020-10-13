@@ -13,7 +13,7 @@
 #ifndef FC__REGISTRY_INI_H
 #define FC__REGISTRY_INI_H
 
-
+#include <vector>
 
 /* utility */
 #include "ioz.h"
@@ -365,10 +365,6 @@ bool secfile_lookup_bool(const struct section_file *secfile, bool *bval,
 bool secfile_lookup_bool_default(const struct section_file *secfile,
                                  bool def, const char *path,
                                  ...) fc__warn_unused_result
-    fc__attribute((__format__(__printf__, 3, 4)));
-bool *secfile_lookup_bool_vec(const struct section_file *secfile,
-                              size_t *dim, const char *path,
-                              ...) fc__warn_unused_result
     fc__attribute((__format__(__printf__, 3, 4)));
 
 bool secfile_lookup_int(const struct section_file *secfile, int *ival,

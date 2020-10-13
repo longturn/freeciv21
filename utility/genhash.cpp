@@ -141,7 +141,7 @@ void genhash_str_free_func(char *vkey)
 #ifdef FREECIV_DEBUG
   fc_assert_ret(NULL != vkey);
 #endif
-  free(vkey);
+  delete[] vkey;
 }
 
 /************************************************************************/ /**
@@ -478,7 +478,7 @@ static inline void genhash_slot_free(struct genhash *pgenhash,
     pgenhash->data_free_func(entry->data);
   }
   *slot = entry->next;
-  free(entry);
+  delete entry;
 }
 
 /************************************************************************/ /**

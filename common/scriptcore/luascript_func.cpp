@@ -84,7 +84,7 @@ static void func_destroy(struct luascript_func *pfunc)
     free(pfunc->arg_types);
     free(pfunc->return_types);
   }
-  free(pfunc);
+  delete pfunc;
 }
 
 /*************************************************************************/ /**

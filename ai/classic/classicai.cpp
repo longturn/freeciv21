@@ -67,7 +67,7 @@ static void cai_module_close(void)
 {
   struct ai_type *deftype = classic_ai_get_self();
 
-  FC_FREE(deftype->pprivate);
+  delete static_cast<dai_private_data *>(deftype->pprivate);
 }
 
 /**********************************************************************/ /**
@@ -589,8 +589,7 @@ bool fc_ai_classic_setup(struct ai_type *ai)
 
   strncpy(ai->name, "classic", sizeof(ai->name));
 
-  pprivate = static_cast<dai_private_data *>(
-      fc_malloc(sizeof(struct dai_private_data)));
+  pprivate = new dai_private_data;
   pprivate->contemplace_workers = TRUE;
   ai->pprivate = pprivate;
 

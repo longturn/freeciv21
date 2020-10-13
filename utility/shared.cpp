@@ -641,7 +641,7 @@ char *user_home_dir(void)
 void free_user_home_dir(void)
 {
   if (home_dir_user != NULL) {
-    free(home_dir_user);
+    delete[] home_dir_user;
     home_dir_user = NULL;
   }
 }
@@ -654,8 +654,7 @@ void free_user_home_dir(void)
 char *freeciv_storage_dir(void)
 {
   if (storage_dir_freeciv == NULL) {
-    storage_dir_freeciv =
-        static_cast<char *>(fc_malloc(strlen(FREECIV_STORAGE_DIR) + 1));
+    storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
 
     strcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
@@ -673,7 +672,7 @@ char *freeciv_storage_dir(void)
 void free_freeciv_storage_dir(void)
 {
   if (storage_dir_freeciv != NULL) {
-    free(storage_dir_freeciv);
+    delete[] storage_dir_freeciv;
     storage_dir_freeciv = NULL;
   }
 }
@@ -787,7 +786,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
       } else {
         int len = strlen(home) + i; /* +1 -1 */
 
-        allocated = static_cast<char *>(fc_malloc(len));
+        allocated = new char[len];
         ret = &allocated;
 
         fc_snprintf(allocated, len, "%s%s", home, tok + 1);
@@ -800,7 +799,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
     /* We could check whether the directory exists and
      * is readable etc?  Don't currently. */
     if (i == -1 && ok_to_free) {
-      free(tok);
+      delete[] tok;
       tok = NULL;
     }
   }
@@ -826,14 +825,14 @@ static struct strvec *base_get_dirs(const char *dir_list)
     if (dir != NULL) {
       strvec_append(dirs, dir);
       if (dir != tok) {
-        free(dir);
+        delete[] dir;
       }
     }
 
     tok = strtok(NULL, PATH_SEPARATOR);
   } while (tok);
 
-  free(path);
+  delete[] path;
   return dirs;
 }
 
@@ -1029,7 +1028,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
         match[len - suffix_len] = '\0';
 
         strvec_append(files, match);
-        free(match);
+        delete[] match;
       }
     }
 
@@ -1128,9 +1127,9 @@ void free_fileinfo_data(void) { astr_free(&realfile); }
  ****************************************************************************/
 static void fileinfo_destroy(struct fileinfo *pfile)
 {
-  free(pfile->name);
-  free(pfile->fullname);
-  free(pfile);
+  delete[] pfile->name;
+  delete[] pfile->fullname;
+  delete pfile;
 }
 
 /************************************************************************/ /**
@@ -1222,11 +1221,11 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
 
           fileinfo_list_append(res, file);
         } else {
-          free(fullname);
-          free(filename);
+          delete[] fullname;
+          delete[] filename;
         }
       } else {
-        free(filename);
+        delete[] filename;
       }
     }
 
@@ -1476,11 +1475,11 @@ void init_nls(void)
         /* nothing */
       }
       len++;
-      free(grouping);
-      grouping = fc_malloc(len);
+      delete[] grouping;
+      grouping = new char[len];
       memcpy(grouping, lc->grouping, len);
     }
-    free(grouping_sep);
+    delete[] grouping_sep;
     grouping_sep = fc_strdup(lc->thousands_sep);
   }
 
@@ -1494,9 +1493,9 @@ void init_nls(void)
  ****************************************************************************/
 void free_nls(void)
 {
-  free(grouping);
+  delete[] grouping;
   grouping = NULL;
-  free(grouping_sep);
+  delete[] grouping_sep;
   grouping_sep = NULL;
 }
 
@@ -1656,7 +1655,7 @@ char *get_multicast_group(bool ipv6_preferred)
 void free_multicast_group(void)
 {
   if (mc_group != NULL) {
-    free(mc_group);
+    delete[] mc_group;
     mc_group = NULL;
   }
 }
@@ -1750,7 +1749,7 @@ bool make_dir(const char *pathname)
       char *path_in_local_encoding = internal_to_local_string_malloc(path);
 
       _mkdir(path_in_local_encoding);
-      free(path_in_local_encoding);
+      delete[] path_in_local_encoding;
     }
 #else  /* HAVE__MKDIR */
     mkdir(path, 0755);
@@ -1765,7 +1764,7 @@ bool make_dir(const char *pathname)
     }
   } while (dir);
 
-  free(path);
+  delete[] path;
   return TRUE;
 }
 

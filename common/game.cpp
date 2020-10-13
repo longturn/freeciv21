@@ -596,41 +596,41 @@ void game_ruleset_free(void)
       secfile_destroy(game.server.luadata);
     }
     if (game.server.ruledit.description_file != NULL) {
-      free(game.server.ruledit.description_file);
+      delete[] game.server.ruledit.description_file;
       game.server.ruledit.description_file = NULL;
     }
     if (game.server.ruledit.nationlist != NULL) {
-      free(game.server.ruledit.nationlist);
+      delete[] game.server.ruledit.nationlist;
       game.server.ruledit.nationlist = NULL;
     }
     if (game.server.ruledit.embedded_nations != NULL) {
       for (i = 0; i < game.server.ruledit.embedded_nations_count; i++) {
-        free(game.server.ruledit.embedded_nations[i]);
+        delete[] game.server.ruledit.embedded_nations[i];
       }
-      free(game.server.ruledit.embedded_nations);
+      delete[] game.server.ruledit.embedded_nations;
       game.server.ruledit.embedded_nations = NULL;
       game.server.ruledit.embedded_nations_count = 0;
       if (game.server.ruledit.allowed_govs != NULL) {
         for (i = 0; i < game.server.ruledit.ag_count; i++) {
-          free(game.server.ruledit.nc_agovs[i]);
+          delete[] game.server.ruledit.nc_agovs[i];
         }
-        free(game.server.ruledit.allowed_govs);
+        delete[] game.server.ruledit.allowed_govs;
         game.server.ruledit.allowed_govs = NULL;
         game.server.ruledit.nc_agovs = NULL;
       }
       if (game.server.ruledit.allowed_terrains != NULL) {
         for (i = 0; i < game.server.ruledit.at_count; i++) {
-          free(game.server.ruledit.nc_aterrs[i]);
+          delete[] game.server.ruledit.nc_aterrs[i];
         }
-        free(game.server.ruledit.allowed_terrains);
+        delete[] game.server.ruledit.allowed_terrains;
         game.server.ruledit.allowed_terrains = NULL;
         game.server.ruledit.nc_aterrs = NULL;
       }
       if (game.server.ruledit.allowed_styles != NULL) {
         for (i = 0; i < game.server.ruledit.as_count; i++) {
-          free(game.server.ruledit.nc_astyles[i]);
+          delete[] game.server.ruledit.nc_astyles[i];
         }
-        free(game.server.ruledit.allowed_styles);
+        delete[] game.server.ruledit.allowed_styles;
         game.server.ruledit.allowed_styles = NULL;
         game.server.ruledit.nc_astyles = NULL;
       }
@@ -642,17 +642,17 @@ void game_ruleset_free(void)
   }
 
   if (game.ruleset_summary != NULL) {
-    free(game.ruleset_summary);
+    delete[] game.ruleset_summary;
     game.ruleset_summary = NULL;
   }
 
   if (game.ruleset_description != NULL) {
-    free(game.ruleset_description);
+    delete[] game.ruleset_description;
     game.ruleset_description = NULL;
   }
 
   if (game.ruleset_capabilities != NULL) {
-    free(game.ruleset_capabilities);
+    delete[] game.ruleset_capabilities;
     game.ruleset_capabilities = NULL;
   }
 }
@@ -818,11 +818,11 @@ void user_flag_init(struct user_flag *flag)
 void user_flag_free(struct user_flag *flag)
 {
   if (flag->name != NULL) {
-    FC_FREE(flag->name);
+    delete[] flag->name;
     flag->name = NULL;
   }
   if (flag->helptxt != NULL) {
-    FC_FREE(flag->helptxt);
+    delete[] flag->helptxt;
     flag->helptxt = NULL;
   }
 }

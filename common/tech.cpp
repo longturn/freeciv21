@@ -491,7 +491,7 @@ static void tech_free(Tech_type_id tech)
   }
 
   if (p->bonus_message) {
-    free(p->bonus_message);
+    delete[] p->bonus_message;
     p->bonus_message = NULL;
   }
 }
