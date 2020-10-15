@@ -79,6 +79,9 @@ target_include_directories(utility PRIVATE ${CURL_INCLUDE_DIRS})
 target_link_libraries(utility PUBLIC Threads::Threads)
 target_link_libraries(utility PRIVATE ${CURL_LIBRARIES})
 target_link_libraries(utility PRIVATE ICU::uc)
+if (WIN32 OR MSYS OR MINGW)
+  target_link_libraries(utility PRIVATE ws2_32 wsock32)
+endif()
 
 # config.h is required, but this definition is still required for it to be used.
 target_compile_definitions(utility PUBLIC HAVE_CONFIG_H)

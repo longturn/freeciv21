@@ -124,52 +124,54 @@ endif()
 
 
 # Networking library
-# TODO Windows support
-check_include_file("sys/socket.h" HAVE_SYS_SOCKET_H)
-if(HAVE_SYS_SOCKET_H)
-  # Use socket.h if supported
-  check_include_file("sys/socket.h" FREECIV_HAVE_SYS_SOCKET_H)
-  check_c_source_compiles("
-    #include <sys/socket.h>
-    socklen_t *x;
-    void main() {}"
-    FREECIV_HAVE_SOCKLEN_T)
-
-  require_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
-  require_include_file("netdb.h" HAVE_NETDB_H)
-  require_include_file("netinet/in.h" HAVE_NETINET_IN_H)
-  require_include_file("netinet/in.h" FREECIV_HAVE_NETINET_IN_H)
-  require_include_file("sys/select.h" HAVE_SYS_SELECT_H)
-  require_include_file("sys/select.h" FREECIV_HAVE_SYS_SELECT_H)
-  
-  # IPv6 functions of POSIX-2001, not strictly required
-  check_function_exists(inet_pton HAVE_INET_PTON)
-  check_function_exists(inet_ntop HAVE_INET_NTOP)
-  check_c_source_compiles("
-    #include <sys/socket.h>
-    void main()
-    {
-      socket(AF_INET6, SOCK_STREAM, 0);
-    }"
-    HAVE_AF_INET6)
-  if(HAVE_INET_PTON AND HAVE_INET_NTOP AND HAVE_AF_INET6)
-    set(FREECIV_IPV6_SUPPORT TRUE)
-  else()
-    set(FREECIV_IPV6_SUPPORT FALSE)
-  endif()
-
-  check_function_exists(fcntl HAVE_FCNTL)
-  check_include_file("fcntl.h" HAVE_FCNTL_H)
-  check_function_exists(ioctl HAVE_IOCTL)
-  check_include_file("sys/ioctl.h" HAVE_SYS_IOCTL_H)
-  if((HAVE_FCNTL AND HAVE_FCNTL_H) OR (HAVE_IOCTL AND HAVE_SYS_IOCTL_H))
-    set(NONBLOCKING_SOCKETS TRUE)
-  else()
-    message(FATAL_ERROR "Non-blocking sockets are not available")
-  endif()
+if (WIN32 OR MINGW OR MSYS)
+  set(FREECIV_MSWINDOWS TRUE)
+  set(FREECIV_HAVE_WINSOCK TRUE)
+  set(FREECIV_HAVE_WINSOCK2 TRUE)
+  set(FREECIV_HAVE_WS2TCPIP_H TRUE)
 else()
-  if(WIN32)
-    set(CMAKE_EXTRA_INCLUDE_FILES "winsock.h;ws2tcpip.h")
+  check_include_file("sys/socket.h" HAVE_SYS_SOCKET_H)
+  if (HAVE_SYS_SOCKET_H)
+    # Use socket.h if supported
+    check_include_file("sys/socket.h" FREECIV_HAVE_SYS_SOCKET_H)
+    check_c_source_compiles("
+      #include <sys/socket.h>
+      socklen_t *x;
+      void main() {}"
+      FREECIV_HAVE_SOCKLEN_T)
+
+    require_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
+    require_include_file("netdb.h" HAVE_NETDB_H)
+    require_include_file("netinet/in.h" HAVE_NETINET_IN_H)
+    require_include_file("netinet/in.h" FREECIV_HAVE_NETINET_IN_H)
+    require_include_file("sys/select.h" HAVE_SYS_SELECT_H)
+    require_include_file("sys/select.h" FREECIV_HAVE_SYS_SELECT_H)
+
+    # IPv6 functions of POSIX-2001, not strictly required
+    check_function_exists(inet_pton HAVE_INET_PTON)
+    check_function_exists(inet_ntop HAVE_INET_NTOP)
+    check_c_source_compiles("
+      #include <sys/socket.h>
+      void main()
+      {
+        socket(AF_INET6, SOCK_STREAM, 0);
+      }"
+      HAVE_AF_INET6)
+    if(HAVE_INET_PTON AND HAVE_INET_NTOP AND HAVE_AF_INET6)
+      set(FREECIV_IPV6_SUPPORT TRUE)
+    else()
+      set(FREECIV_IPV6_SUPPORT FALSE)
+    endif()
+
+    check_function_exists(fcntl HAVE_FCNTL)
+    check_include_file("fcntl.h" HAVE_FCNTL_H)
+    check_function_exists(ioctl HAVE_IOCTL)
+    check_include_file("sys/ioctl.h" HAVE_SYS_IOCTL_H)
+    if((HAVE_FCNTL AND HAVE_FCNTL_H) OR (HAVE_IOCTL AND HAVE_SYS_IOCTL_H))
+      set(NONBLOCKING_SOCKETS TRUE)
+    else()
+      message(FATAL_ERROR "Non-blocking sockets are not available")
+    endif()
   else()
     message(FATAL_ERROR "Could not find a supported networking library")
   endif()

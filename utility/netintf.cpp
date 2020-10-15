@@ -142,7 +142,7 @@ int fc_readsocket(int sock, void *buf, size_t size)
   int result;
 
 #ifdef FREECIV_HAVE_WINSOCK
-  result = recv(sock, buf, size, 0);
+  result = recv(sock, static_cast<char *>(buf), size, 0);
   if (result == -1) {
     set_socket_errno();
   }
@@ -161,7 +161,7 @@ int fc_writesocket(int sock, const void *buf, size_t size)
   int result;
 
 #ifdef FREECIV_HAVE_WINSOCK
-  result = send(sock, buf, size, 0);
+  result = send(sock, static_cast<const char *>(buf), size, 0);
   if (result == -1) {
     set_socket_errno();
   }

@@ -300,7 +300,7 @@ static const char *download_modpack_recursive(const char *URL,
     }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
-    dest_name_copy = fc_malloc(strlen(dest_name) + 1);
+    dest_name_copy = new char[strlen(dest_name) + 1];
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
     for (i = 0; dest_name[i] != '\0'; i++) {

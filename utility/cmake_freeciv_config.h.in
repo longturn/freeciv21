@@ -108,7 +108,7 @@
 #cmakedefine FREECIV_DELTA_PROTOCOL
 
 /* Windows build */
-#cmakedefine FREECIV_MSWINDOWS
+#cmakedefine FREECIV_MSWINDOWS 1
 
 /* uses some winsock version */
 #cmakedefine FREECIV_HAVE_WINSOCK

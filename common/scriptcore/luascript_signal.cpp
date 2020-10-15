@@ -130,7 +130,7 @@ static void signal_callback_destroy(struct signal_callback *pcallback)
  *****************************************************************************/
 static struct signal *signal_new(int nargs, enum api_types *parg_types)
 {
-  auto psignal = new signal;
+  auto psignal = new struct signal;
 
   psignal->nargs = nargs;
   psignal->arg_types = parg_types;
