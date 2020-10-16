@@ -14,10 +14,6 @@
 #ifndef FC__NETFILE_H
 #define FC__NETFILE_H
 
-
-
-struct netfile_post;
-
 struct netfile_write_cb_data {
   char *mem;
   int size;
@@ -30,19 +26,5 @@ struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
 
 bool netfile_download_file(const char *URL, const char *filename,
                            nf_errmsg cb, const void *data);
-
-struct netfile_post *netfile_start_post(void);
-void netfile_add_form_str(struct netfile_post *post, const char *name,
-                          const char *val);
-void netfile_add_form_int(struct netfile_post *post, const char *name,
-                          const int val);
-void netfile_close_post(struct netfile_post *post);
-
-bool netfile_send_post(const char *URL, struct netfile_post *post,
-                       FILE *reply_fp,
-                       struct netfile_write_cb_data *mem_data,
-                       const char *addr);
-
-
 
 #endif /* FC__NETFILE_H */

@@ -52,6 +52,9 @@
 #include <lzma.h>
 #endif
 
+// Qt
+#include <QByteArray>
+
 /* utility */
 #include "log.h"
 #include "mem.h"
@@ -115,10 +118,8 @@ static void xz_action(fz_FILE *fp, lzma_action action);
 #endif /* FREECIV_HAVE_LIBLZMA */
 
 struct mem_fzFILE {
-  bool control;
-  char *buffer;
+  QByteArray buffer;
   int pos;
-  int size;
 };
 
 struct fz_FILE_s {
@@ -175,16 +176,14 @@ static inline bool fz_method_is_valid(enum fz_method method)
    If control is TRUE, caller gives up control of the buffer
    so ioz will free it when fz_FILE closed.
  ****************************************************************************/
-fz_FILE *fz_from_memory(char *buffer, int size, bool control)
+fz_FILE *fz_from_memory(const QByteArray &buffer)
 {
-  fz_FILE *fp;
-
-  fp = (fz_FILE *) fc_malloc(sizeof(*fp));
-  fp->memory = TRUE;
-  fp->u.mem.control = control;
-  fp->u.mem.buffer = buffer;
+  // We have to use malloc() because of the union
+  fz_FILE *fp = (fz_FILE *) fc_malloc(sizeof(*fp));
+  fp->memory = true;
+  // Since we have to malloc(), initialize by hand using placement new
+  new (&fp->u.mem.buffer) QByteArray(buffer);
   fp->u.mem.pos = 0;
-  fp->u.mem.size = size;
 
   return fp;
 }
@@ -469,10 +468,10 @@ int fz_fclose(fz_FILE *fp)
   fc_assert_ret_val(NULL != fp, 1);
 
   if (fp->memory) {
-    if (fp->u.mem.control) {
-      FC_FREE(fp->u.mem.buffer);
-    }
-    FC_FREE(fp);
+    // Delete the QByteArray by hand because free() won't do it for us
+    fp->u.mem.buffer.~QByteArray();
+    // Free the data
+    free(fp);
 
     return 0;
   }
@@ -534,9 +533,9 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
     int i, j;
 
     for (i = fp->u.mem.pos, j = 0;
-         i < fp->u.mem.size && j < size - 1 /* Space for '\0' */
+         i < fp->u.mem.buffer.size() && j < size - 1 /* Space for '\0' */
          && fp->u.mem.buffer[i] != '\n'
-         && (fp->u.mem.buffer[i] != '\r' || fp->u.mem.size == i + 1
+         && (fp->u.mem.buffer[i] != '\r' || fp->u.mem.buffer.size() == i + 1
              || fp->u.mem.buffer[i + 1] != '\n');
          i++) {
       buffer[j++] = fp->u.mem.buffer[i];
@@ -544,11 +543,12 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
 
     if (j < size - 2) {
       /* Space for both newline and terminating '\0' */
-      if (i + 1 < fp->u.mem.size && fp->u.mem.buffer[i] == '\r'
+      if (i + 1 < fp->u.mem.buffer.size() && fp->u.mem.buffer[i] == '\r'
           && fp->u.mem.buffer[i + 1] == '\n') {
         i += 2;
         buffer[j++] = '\n';
-      } else if (i < fp->u.mem.size && fp->u.mem.buffer[i] == '\n') {
+      } else if (i < fp->u.mem.buffer.size()
+                 && fp->u.mem.buffer[i] == '\n') {
         i++;
         buffer[j++] = '\n';
       }

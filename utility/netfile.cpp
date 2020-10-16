@@ -23,6 +23,9 @@
 #include <windows.h>
 #endif
 
+// Qt
+#include <QByteArray>
+
 /* utility */
 #include "fcintl.h"
 #include "ioz.h"
@@ -31,14 +34,6 @@
 #include "registry.h"
 
 #include "netfile.h"
-
-struct netfile_post {
-  struct curl_httppost *first;
-  struct curl_httppost *last;
-};
-
-typedef size_t (*netfile_write_cb)(char *ptr, size_t size, size_t nmemb,
-                                   const void *userdata);
 
 static char error_buf_curl[CURL_ERROR_SIZE];
 
@@ -153,7 +148,7 @@ struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
   success = netfile_download_file_core(URL, NULL, &mem_data, cb, data);
 
   if (success) {
-    file = fz_from_memory(mem_data.mem, mem_data.size, TRUE);
+    file = fz_from_memory(QByteArray(mem_data.mem, mem_data.size));
 
     out = secfile_from_stream(file, TRUE);
   }
@@ -188,108 +183,6 @@ bool netfile_download_file(const char *URL, const char *filename,
   fclose(fp);
 
   return success;
-}
-
-/*******************************************************************/ /**
-   Allocate netfile_post
- ***********************************************************************/
-struct netfile_post *netfile_start_post(void)
-{
-  return static_cast<netfile_post *>(
-      fc_calloc(1, sizeof(struct netfile_post)));
-}
-
-/*******************************************************************/ /**
-   Add one entry to netfile post form
- ***********************************************************************/
-void netfile_add_form_str(struct netfile_post *post, const char *name,
-                          const char *val)
-{
-  curl_formadd(&post->first, &post->last, CURLFORM_COPYNAME, name,
-               CURLFORM_COPYCONTENTS, val, CURLFORM_END);
-}
-
-/*******************************************************************/ /**
-   Add one integer entry to netfile post form
- ***********************************************************************/
-void netfile_add_form_int(struct netfile_post *post, const char *name,
-                          const int val)
-{
-  char buf[50];
-
-  fc_snprintf(buf, sizeof(buf), "%d", val);
-  netfile_add_form_str(post, name, buf);
-}
-
-/*******************************************************************/ /**
-   Free netfile_post resources
- ***********************************************************************/
-void netfile_close_post(struct netfile_post *post)
-{
-  curl_formfree(post->first);
-  FC_FREE(post);
-}
-
-/*******************************************************************/ /**
-   Dummy write callback used only to make sure curl's default write
-   function does not get used as we don't want reply to stdout
- ***********************************************************************/
-static size_t dummy_write(void *buffer, size_t size, size_t nmemb,
-                          const void *userp)
-{
-  return size * nmemb;
-}
-
-/*******************************************************************/ /**
-   Send HTTP POST
- ***********************************************************************/
-bool netfile_send_post(const char *URL, struct netfile_post *post,
-                       FILE *reply_fp,
-                       struct netfile_write_cb_data *mem_data,
-                       const char *addr)
-{
-  CURLcode curlret;
-  long http_resp;
-  struct curl_slist *headers = NULL;
-  static CURL *handle;
-
-  handle = netfile_init_handle();
-
-  headers =
-      curl_slist_append(headers, "User-Agent: Freeciv/" VERSION_STRING);
-
-  curl_easy_setopt(handle, CURLOPT_URL, URL);
-  curl_easy_setopt(handle, CURLOPT_HTTPPOST, post->first);
-  if (mem_data != NULL) {
-    mem_data->mem = NULL;
-    mem_data->size = 0;
-    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, netfile_memwrite_cb);
-    curl_easy_setopt(handle, CURLOPT_WRITEDATA, mem_data);
-  } else if (reply_fp == NULL) {
-    curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION, dummy_write);
-  } else {
-    curl_easy_setopt(handle, CURLOPT_WRITEDATA, reply_fp);
-  }
-  if (addr != NULL) {
-    curl_easy_setopt(handle, CURLOPT_INTERFACE, addr);
-  }
-  curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
-
-  curlret = curl_easy_perform(handle);
-
-  curl_slist_free_all(headers);
-
-  if (curlret != CURLE_OK) {
-    return FALSE;
-  }
-
-  curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &http_resp);
-
-  if (http_resp != 200) {
-    return FALSE;
-  }
-
-  return TRUE;
 }
 
 #endif /* __EMSCRIPTEN__ */

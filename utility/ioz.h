@@ -14,8 +14,6 @@
 #ifndef FC__IOZ_H
 #define FC__IOZ_H
 
-
-
 /**********************************************************************
   An IO layer to support transparent compression/uncompression.
   (Currently only "required" functionality is supported.)
@@ -26,6 +24,9 @@
 #include <freeciv_config.h>
 
 #include "shared.h" /* fc__attribute */
+
+// Forward declarations
+class QByteArray;
 
 struct fz_FILE_s; /* opaque */
 typedef struct fz_FILE_s fz_FILE;
@@ -47,7 +48,7 @@ enum fz_method {
 fz_FILE *fz_from_file(const char *filename, const char *in_mode,
                       enum fz_method method, int compress_level);
 fz_FILE *fz_from_stream(FILE *stream);
-fz_FILE *fz_from_memory(char *buffer, int size, bool control);
+fz_FILE *fz_from_memory(const QByteArray &buffer);
 int fz_fclose(fz_FILE *fp);
 char *fz_fgets(char *buffer, int size, fz_FILE *fp);
 int fz_fprintf(fz_FILE *fp, const char *format, ...)
@@ -55,7 +56,5 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
 
 int fz_ferror(fz_FILE *fp);
 const char *fz_strerror(fz_FILE *fp);
-
-
 
 #endif /* FC__IOZ_H */

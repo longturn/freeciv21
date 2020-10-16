@@ -51,6 +51,16 @@
 #include <unistd.h>
 #endif
 
+// Qt
+#include <QByteArray>
+#include <QEventLoop>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QUrlQuery>
+#include <QtDebug>
+
 /* dependencies */
 #include "cvercmp.h"
 
@@ -59,7 +69,6 @@
 #include "fcthread.h"
 #include "log.h"
 #include "mem.h"
-#include "netfile.h"
 #include "netintf.h"
 #include "rand.h" /* fc_rand() */
 #include "registry.h"
@@ -95,7 +104,7 @@ struct server_scan {
     fc_mutex mutex;
 
     const char *urlpath;
-    struct netfile_write_cb_data mem;
+    QByteArray mem;
   } meta;
 };
 
@@ -233,7 +242,7 @@ static bool meta_read_response(struct server_scan *scan)
   char str[4096];
   struct server_list *srvrs;
 
-  f = fz_from_memory(scan->meta.mem.mem, scan->meta.mem.size, TRUE);
+  f = fz_from_memory(scan->meta.mem);
   if (NULL == f) {
     fc_snprintf(str, sizeof(str),
                 _("Failed to read the metaserver data from %s."),
@@ -249,8 +258,8 @@ static bool meta_read_response(struct server_scan *scan)
   scan->srvrs.servers = srvrs;
   fc_release_mutex(&scan->srvrs.mutex);
 
-  /* 'f' (hence 'meta.mem.mem') was closed in parse_metaserver_data(). */
-  scan->meta.mem.mem = NULL;
+  /* 'f' (hence 'meta.mem') was closed in parse_metaserver_data(). */
+  scan->meta.mem.clear();
 
   if (NULL == srvrs) {
     fc_snprintf(str, sizeof(str),
@@ -298,18 +307,47 @@ static void metaserver_scan(void *arg)
  **************************************************************************/
 static bool begin_metaserver_scan(struct server_scan *scan)
 {
-  struct netfile_post *post;
-  bool retval = TRUE;
+  // Create a network manager
+  auto manager = new QNetworkAccessManager;
 
-  post = netfile_start_post();
-  netfile_add_form_str(post, "client_cap", our_capability);
+  // Post the request
+  QUrlQuery post;
+  post.addQueryItem(QLatin1String("client_cap"),
+                    QString::fromUtf8(our_capability));
 
-  if (!netfile_send_post(metaserver, post, NULL, &scan->meta.mem, NULL)) {
-    scan->error_func(scan, _("Error connecting to metaserver"));
-    retval = FALSE;
-  }
+  QNetworkRequest request(QUrl(QString::fromUtf8(metaserver)));
+  request.setHeader(QNetworkRequest::UserAgentHeader,
+                    QLatin1String("Freeciv/" VERSION_STRING));
+  request.setHeader(QNetworkRequest::ContentTypeHeader,
+                    QLatin1String("application/x-www-form-urlencoded"));
+  auto reply =
+      manager->post(request, post.toString(QUrl::FullyEncoded).toUtf8());
 
-  netfile_close_post(post);
+  // Read from the reply
+  bool retval = true;
+  QEventLoop loop; // Need an event loop for QNetworkReply to work
+
+  QObject::connect(reply, &QNetworkReply::finished, [&] {
+    if (reply->error() == QNetworkReply::NoError) {
+      scan->meta.mem = reply->readAll();
+    } else {
+      // Error
+      scan->error_func(scan, _("Error connecting to metaserver"));
+      qCritical(_("Error message: %s"),
+                qUtf8Printable(reply->errorString()));
+
+      scan->meta.mem.clear();
+      retval = false;
+    }
+
+    // Clean up
+    reply->deleteLater();
+    manager->deleteLater();
+
+    loop.quit();
+  });
+
+  loop.exec();
 
   return retval;
 }
@@ -716,7 +754,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   struct server_scan *scan;
   bool ok = FALSE;
 
-  scan = static_cast<server_scan *>(fc_calloc(1, sizeof(*scan)));
+  scan = new server_scan;
   scan->type = type;
   scan->error_func = error_func;
   scan->sock = -1;
@@ -849,11 +887,6 @@ void server_scan_finish(struct server_scan *scan)
       delete_server_list(scan->srvrs.servers);
       scan->srvrs.servers = NULL;
       fc_release_mutex(&scan->srvrs.mutex);
-    }
-
-    if (scan->meta.mem.mem) {
-      FC_FREE(scan->meta.mem.mem);
-      scan->meta.mem.mem = NULL;
     }
   } else {
     if (scan->sock >= 0) {
