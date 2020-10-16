@@ -745,7 +745,7 @@ hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
 void write_shortcuts()
 {
   fc_shortcut *sc;
-  QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::hash;
+  QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::sc()->hash;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               "freeciv-qt-client");
   s.beginWriteArray("Shortcuts");
