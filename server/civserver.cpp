@@ -38,6 +38,9 @@
 #include <windows.h>
 #endif
 
+// Qt
+#include <QCoreApplication>
+
 /* utility */
 #include "deprecations.h"
 #include "fc_cmdline.h"
@@ -182,6 +185,8 @@ int main(int argc, char *argv[])
   }
 #endif /* SIGPIPE */
 #endif /* USE_INTERRUPT_HANDLERS */
+
+  QCoreApplication app(argc, argv);
 
   /* initialize server */
   srv_init();

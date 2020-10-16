@@ -38,6 +38,9 @@ set(FREECIV_HAVE_STDINT_H TRUE)
 # Required to generate the network protocol implementation
 find_package(PythonInterp 3 REQUIRED)
 
+# Required as the main networking and utility library
+find_package(Qt5 5.10 COMPONENTS Core Network REQUIRED)
+
 # Required for utility
 find_package(Threads REQUIRED)
 if (CMAKE_USE_PTHREADS_INIT)

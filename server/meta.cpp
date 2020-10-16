@@ -23,6 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Qt
+#include <QEventLoop>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QUrl>
+#include <QUrlQuery>
+
 #ifdef HAVE_NETINET_IN_H
 #include <netinet/in.h>
 #endif
@@ -44,7 +52,6 @@
 #include "fcthread.h"
 #include "log.h"
 #include "mem.h"
-#include "netfile.h"
 #include "netintf.h"
 #include "support.h"
 #include "timing.h"
@@ -208,7 +215,7 @@ static void metaserver_failed(void)
 /*********************************************************************/ /**
    Insert a setting in the metaserver message. Return TRUE if it succeded.
  *************************************************************************/
-static inline bool meta_insert_setting(struct netfile_post *post,
+static inline bool meta_insert_setting(QUrlQuery *query,
                                        const char *set_name)
 {
   const struct setting *pset = setting_by_name(set_name);
@@ -216,10 +223,12 @@ static inline bool meta_insert_setting(struct netfile_post *post,
 
   fc_assert_ret_val_msg(NULL != pset, FALSE, "Setting \"%s\" not found!",
                         set_name);
-  netfile_add_form_str(post, "vn[]", setting_name(pset));
-  netfile_add_form_str(post, "vv[]",
-                       setting_value_name(pset, FALSE, buf, sizeof(buf)));
-  return TRUE;
+  query->addQueryItem(QLatin1String("vn[]"),
+                      QString::fromUtf8(setting_name(pset)));
+  query->addQueryItem(
+      QLatin1String("vv[]"),
+      QString::fromUtf8(setting_value_name(pset, false, buf, sizeof(buf))));
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -227,21 +236,40 @@ static inline bool meta_insert_setting(struct netfile_post *post,
  *************************************************************************/
 static void send_metaserver_post(void *arg)
 {
-  struct netfile_post *post = (struct netfile_post *) arg;
-  char *addr;
+  // Create a network manager
+  auto manager = new QNetworkAccessManager;
 
-  if (srvarg.bind_meta_addr != NULL) {
-    addr = srvarg.bind_meta_addr;
-  } else {
-    addr = srvarg.bind_addr;
-  }
+  // Post the request
+  auto post = static_cast<QUrlQuery *>(arg);
+  auto addr = (srvarg.bind_meta_addr != nullptr ? srvarg.bind_meta_addr
+                                                : srvarg.bind_addr);
 
-  if (!netfile_send_post(srvarg.metaserver_addr, post, NULL, NULL, addr)) {
-    con_puts(C_METAERROR, _("Error connecting to metaserver"));
-    metaserver_failed();
-  }
+  QNetworkRequest request(QUrl(QString::fromUtf8(srvarg.metaserver_addr)));
+  request.setHeader(QNetworkRequest::UserAgentHeader,
+                    QLatin1String("Freeciv/" VERSION_STRING));
+  request.setHeader(QNetworkRequest::ContentTypeHeader,
+                    QLatin1String("application/x-www-form-urlencoded"));
+  auto reply =
+      manager->post(request, post->toString(QUrl::FullyEncoded).toUtf8());
 
-  netfile_close_post(post);
+  // Wait for the reply
+  QEventLoop loop;
+
+  QObject::connect(reply, &QNetworkReply::finished, [&] {
+    if (reply->error() != QNetworkReply::NoError) {
+      con_puts(C_METAERROR, _("Error connecting to metaserver"));
+      qCritical(_("Error message: %s"),
+                qUtf8Printable(reply->errorString()));
+      metaserver_failed();
+    }
+
+    // Clean up
+    reply->deleteLater();
+    manager->deleteLater();
+    loop.exit();
+  });
+
+  loop.exec();
 }
 
 /*********************************************************************/ /**
@@ -254,7 +282,6 @@ static bool send_to_metaserver(enum meta_flag flag)
   char host[512];
   char state[20];
   char rs[256];
-  struct netfile_post *post;
 
   switch (server_state()) {
   case S_S_INITIAL:
@@ -282,32 +309,36 @@ static bool send_to_metaserver(enum meta_flag flag)
     sz_strlcpy(rs, game.control.name);
   }
 
-  /* Freed in metaserver thread function send_metaserver_post() */
-  post = netfile_start_post();
+  QUrlQuery *post = new QUrlQuery;
 
-  netfile_add_form_str(post, "host", host);
-  netfile_add_form_int(post, "port", srvarg.port);
-  netfile_add_form_str(post, "state", state);
-  netfile_add_form_str(post, "ruleset", rs);
+  post->addQueryItem(QLatin1String("host"), QString::fromUtf8(host));
+  post->addQueryItem(QLatin1String("port"), QString("%1").arg(srvarg.port));
+  post->addQueryItem(QLatin1String("state"), QString::fromUtf8(state));
+  post->addQueryItem(QLatin1String("ruleset"), QString::fromUtf8(rs));
 
   if (flag == META_GOODBYE) {
-    netfile_add_form_int(post, "bye", 1);
+    post->addQueryItem(QLatin1String("bye"), QLatin1String("1"));
   } else {
     const char *srvtype = get_meta_type_string();
 
     if (srvtype != NULL) {
-      netfile_add_form_str(post, "type", srvtype);
+      post->addQueryItem(QLatin1String("type"), QString::fromUtf8(srvtype));
     }
-    netfile_add_form_str(post, "version", VERSION_STRING);
-    netfile_add_form_str(post, "patches", get_meta_patches_string());
-    netfile_add_form_str(post, "capability", our_capability);
+    post->addQueryItem(QLatin1String("version"),
+                       QLatin1String(VERSION_STRING));
+    post->addQueryItem(QLatin1String("patches"),
+                       QString::fromUtf8(get_meta_patches_string()));
+    post->addQueryItem(QLatin1String("capability"),
+                       QString::fromUtf8(our_capability));
 
-    netfile_add_form_str(post, "serverid", srvarg.serverid);
-    netfile_add_form_str(post, "message", get_meta_message_string());
+    post->addQueryItem(QLatin1String("serverid"),
+                       QString::fromUtf8(srvarg.serverid));
+    post->addQueryItem(QLatin1String("message"),
+                       QString::fromUtf8(get_meta_message_string()));
 
     /* NOTE: send info for ALL players or none at all. */
     if (normal_player_count() == 0) {
-      netfile_add_form_int(post, "dropplrs", 1);
+      post->addQueryItem(QLatin1String("dropplrs"), QLatin1String("1"));
     } else {
       players = 0; /* a counter for players_available */
       humans = 0;
@@ -315,33 +346,38 @@ static bool send_to_metaserver(enum meta_flag flag)
       players_iterate(plr)
       {
         bool is_player_available = TRUE;
-        char type[15];
         struct connection *pconn = conn_by_user(plr->username);
 
+        QLatin1String type;
         if (!plr->is_alive) {
-          sz_strlcpy(type, "Dead");
+          type = QLatin1String("Dead");
         } else if (is_barbarian(plr)) {
-          sz_strlcpy(type, "Barbarian");
+          type = QLatin1String("Barbarian");
         } else if (is_ai(plr)) {
-          sz_strlcpy(type, "A.I.");
+          type = QLatin1String("A.I.");
         } else if (is_human(plr)) {
-          sz_strlcpy(type, "Human");
+          type = QLatin1String("Human");
         } else {
-          sz_strlcpy(type, "-");
+          type = QLatin1String("-");
         }
 
-        netfile_add_form_str(post, "plu[]", plr->username);
-        netfile_add_form_str(post, "plt[]", type);
-        netfile_add_form_str(post, "pll[]", player_name(plr));
-        netfile_add_form_str(post, "pln[]",
-                             plr->nation != NO_NATION_SELECTED
-                                 ? nation_plural_for_player(plr)
-                                 : "none");
-        netfile_add_form_str(post, "plf[]",
-                             plr->nation != NO_NATION_SELECTED
-                                 ? nation_of_player(plr)->flag_graphic_str
-                                 : "none");
-        netfile_add_form_str(post, "plh[]", pconn ? pconn->addr : "");
+        post->addQueryItem(QLatin1String("plu[]"),
+                           QString::fromUtf8(plr->username));
+        post->addQueryItem(QLatin1String("plt[]"), type);
+        post->addQueryItem(QLatin1String("pll[]"),
+                           QString::fromUtf8(player_name(plr)));
+        post->addQueryItem(
+            QLatin1String("pln[]"),
+            QString::fromUtf8(plr->nation != NO_NATION_SELECTED
+                                  ? nation_plural_for_player(plr)
+                                  : "none"));
+        post->addQueryItem(
+            QLatin1String("plf[]"),
+            QString::fromUtf8(plr->nation != NO_NATION_SELECTED
+                                  ? nation_of_player(plr)->flag_graphic_str
+                                  : "none"));
+        post->addQueryItem(QLatin1String("plh[]"),
+                           QString::fromUtf8(pconn ? pconn->addr : ""));
 
         /* is this player available to take?
          * TODO: there's some duplication here with
@@ -375,8 +411,9 @@ static bool send_to_metaserver(enum meta_flag flag)
       players_iterate_end;
 
       /* send the number of available players. */
-      netfile_add_form_int(post, "available", players);
-      netfile_add_form_int(post, "humans", humans);
+      post->addQueryItem(QLatin1String("available"),
+                         QString("%1").arg(players));
+      post->addQueryItem(QLatin1String("humans"), QString("%1").arg(humans));
     }
 
     /* Send some variables: should be listed in inverted order? */
@@ -406,14 +443,17 @@ static bool send_to_metaserver(enum meta_flag flag)
     }
 
     /* Turn and year. */
-    netfile_add_form_str(post, "vn[]", "turn");
-    netfile_add_form_int(post, "vv[]", game.info.turn);
-    netfile_add_form_str(post, "vn[]", "year");
+    post->addQueryItem(QLatin1String("vn[]"), QLatin1String("turn"));
+    post->addQueryItem(QLatin1String("vv[]"),
+                       QString("%1").arg(game.info.turn));
+    post->addQueryItem(QLatin1String("vn[]"), QLatin1String("year"));
 
     if (server_state() != S_S_INITIAL) {
-      netfile_add_form_int(post, "vv[]", game.info.year);
+      post->addQueryItem(QLatin1String("vv[]"),
+                         QString("%1").arg(game.info.year));
     } else {
-      netfile_add_form_str(post, "vv[]", "Calendar not set up");
+      post->addQueryItem(QLatin1String("vv[]"),
+                         QLatin1String("Calendar not set up"));
     }
   }
 
