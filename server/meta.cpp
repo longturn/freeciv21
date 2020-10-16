@@ -269,6 +269,7 @@ static void send_metaserver_post(void *arg)
     loop.exit();
   });
 
+  delete post;
   loop.exec();
 }
 
