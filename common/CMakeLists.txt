@@ -93,13 +93,6 @@ add_library(
 )
 target_include_directories(common PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-set_property(
-  SOURCE
-  actions.cpp
-  improvement.cpp
-  unittype.cpp
-  APPEND PROPERTY COMPILE_FLAGS -fpermissive)
-
 add_subdirectory(aicore)
 add_subdirectory(networking)
 add_subdirectory(scriptcore)
