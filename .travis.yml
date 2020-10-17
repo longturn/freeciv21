@@ -2,9 +2,23 @@ language: c++
 
 jobs:
   include:
-  - name: "ubuntu"
+  - name: "ubuntu-gcc"
     dist: focal
     compiler: gcc
+    addons:
+      apt:
+        packages:
+        - cmake
+        - ninja-build
+        - python3
+        - gettext
+        - libcurl4-openssl-dev
+        - libicu-dev
+        - qt5-default
+        - libsqlite3-dev
+  - name: "ubuntu-clang"
+    dist: focal
+    compiler: clang
     addons:
       apt:
         packages:
