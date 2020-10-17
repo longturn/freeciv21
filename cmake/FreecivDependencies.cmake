@@ -26,6 +26,8 @@ endmacro()
 # Language support
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
 # Provided by any C99 compiler, no need to check them
 set(HAVE_SIGNAL_H TRUE)
