@@ -50,7 +50,7 @@ class mpgui : public QObject {
 
 public:
   void setup(QWidget *central, struct fcmp_params *fcmp);
-  void display_msg_thr(const char *msg);
+  void display_msg_thr(const QString &msg);
   void progress_thr(int downloaded, int max);
   void setup_list(const char *name, const char *URL, const char *version,
                   const char *license, enum modpack_type type,
@@ -63,7 +63,7 @@ signals:
   void refresh_list_versions_thr_signal();
 
 public slots:
-  void display_msg(QString msg);
+  void display_msg(const QString &msg);
   void progress(int downloaded, int max);
   void refresh_list_versions();
 

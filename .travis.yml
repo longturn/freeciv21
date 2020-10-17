@@ -12,7 +12,6 @@ jobs:
         - ninja-build
         - python3
         - gettext
-        - libcurl4-openssl-dev
         - libicu-dev
         - qt5-default
         - libsqlite3-dev
@@ -26,7 +25,6 @@ jobs:
         - ninja-build
         - python3
         - gettext
-        - libcurl4-openssl-dev
         - libicu-dev
         - qt5-default
         - libsqlite3-dev
@@ -45,7 +43,6 @@ jobs:
           - ninja
           - python3
           - gettext
-          - curl
           - icu4c
           - qt
           - readline

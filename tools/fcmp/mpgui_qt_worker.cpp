@@ -41,35 +41,32 @@
  **************************************************************************/
 void mpqt_worker::run()
 {
-  const char *errmsg;
-  QByteArray url_bytes;
-
-  url_bytes = URL.toUtf8();
-  errmsg =
-      download_modpack(url_bytes.data(), fcmp, msg_callback, pb_callback);
+  auto url_bytes = m_url.toEncoded();
+  const char *errmsg = download_modpack(url_bytes.data(), m_fcmp,
+                                        m_msg_callback, m_pb_callback);
 
   if (errmsg != nullptr) {
-    msg_callback(errmsg);
+    m_msg_callback(errmsg);
   } else {
-    msg_callback(_("Ready"));
+    m_msg_callback(_("Ready"));
   }
 
-  gui->refresh_list_versions_thr();
+  m_gui->refresh_list_versions_thr();
 }
 
 /**********************************************************************/ /**
    Start thread to download and install given modpack.
  **************************************************************************/
-void mpqt_worker::download(QString URL_in, class mpgui *gui_in,
-                           struct fcmp_params *fcmp_in,
-                           dl_msg_callback msg_callback_in,
-                           dl_pb_callback pb_callback_in)
+void mpqt_worker::download(const QUrl &url, class mpgui *gui,
+                           struct fcmp_params *fcmp,
+                           const dl_msg_callback &msg_callback,
+                           const dl_pb_callback &pb_callback)
 {
-  URL = URL_in;
-  gui = gui_in;
-  fcmp = fcmp_in;
-  msg_callback = msg_callback_in;
-  pb_callback = pb_callback_in;
+  m_url = url;
+  m_gui = gui;
+  m_fcmp = fcmp;
+  m_msg_callback = msg_callback;
+  m_pb_callback = pb_callback;
 
   start();
 }

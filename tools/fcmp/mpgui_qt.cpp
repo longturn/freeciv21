@@ -71,11 +71,11 @@ static void setup_modpack_list(const char *name, const char *URL,
                                const char *version, const char *license,
                                enum modpack_type type, const char *subtype,
                                const char *notes);
-static void msg_callback(const char *msg);
-static void msg_callback_thr(const char *msg);
+static void msg_callback(const QString &msg);
+static void msg_callback_thr(const QString &msg);
 static void progress_callback_thr(int downloaded, int max);
 
-static void gui_download_modpack(QString URL);
+static void gui_download_modpack(const QString &url);
 
 /**********************************************************************/ /**
    Entry point for whole freeciv-mp-qt program.
@@ -158,12 +158,15 @@ int main(int argc, char **argv)
 /**********************************************************************/ /**
    Progress indications from downloader
  **************************************************************************/
-static void msg_callback(const char *msg) { gui->display_msg(msg); }
+static void msg_callback(const QString &msg) { gui->display_msg(msg); }
 
 /**********************************************************************/ /**
    Progress indications from downloader thread
  **************************************************************************/
-static void msg_callback_thr(const char *msg) { gui->display_msg_thr(msg); }
+static void msg_callback_thr(const QString &msg)
+{
+  gui->display_msg_thr(msg);
+}
 
 /**********************************************************************/ /**
    Progress indications from downloader
@@ -270,7 +273,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
 /**********************************************************************/ /**
    Display status message
  **************************************************************************/
-void mpgui::display_msg(QString msg)
+void mpgui::display_msg(const QString &msg)
 {
   QByteArray msg_bytes = msg.toLocal8Bit();
 
@@ -281,9 +284,9 @@ void mpgui::display_msg(QString msg)
 /**********************************************************************/ /**
    Display status message from another thread
  **************************************************************************/
-void mpgui::display_msg_thr(const char *msg)
+void mpgui::display_msg_thr(const QString &msg)
 {
-  emit display_msg_thr_signal(QString::fromUtf8(msg));
+  emit display_msg_thr_signal(msg);
 }
 
 /**********************************************************************/ /**
@@ -306,7 +309,7 @@ void mpgui::progress_thr(int downloaded, int max)
 /**********************************************************************/ /**
    Download modpack from given URL
  **************************************************************************/
-static void gui_download_modpack(QString URL)
+static void gui_download_modpack(const QString &URL)
 {
   if (worker != nullptr) {
     if (worker->isRunning()) {
@@ -317,7 +320,8 @@ static void gui_download_modpack(QString URL)
     worker = new mpqt_worker;
   }
 
-  worker->download(URL, gui, &fcmp, msg_callback_thr, progress_callback_thr);
+  worker->download(QUrl::fromUserInput(URL), gui, &fcmp, msg_callback_thr,
+                   progress_callback_thr);
 }
 
 /**********************************************************************/ /**
