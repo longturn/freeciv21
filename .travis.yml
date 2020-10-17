@@ -19,6 +19,8 @@ jobs:
   - name: "os_x"
     os: osx
     osx_image: xcode11.3
+    env:
+      - Qt5_DIR=/usr/local/opt/qt5/lib/cmake
     addons:
       homebrew:
         packages:
