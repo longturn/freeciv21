@@ -301,8 +301,6 @@ install(
   macedonian.ruleset
   macedon.ruleset
   majapahit.ruleset
-  Makefile.am
-  Makefile.am.sh
   malagasy.ruleset
   malawian.ruleset
   malaysian.ruleset
