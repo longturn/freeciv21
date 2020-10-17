@@ -1,128 +1,43 @@
 sudo: required
 
-language: c
+language: c++
 
-python:
-  - "3.7"
+compiler:
+  - clang
+  - gcc
 
 jobs:
   include:
-  - name: "normal"
+  - name: "ubuntu"
     dist: focal
     compiler: gcc
     addons:
       apt:
         packages:
+        - cmake
+        - ninja
+        - python3
         - gettext
-        - libgtk-3-dev
         - libcurl4-openssl-dev
-        - libtool
-        - automake
-        - autoconf
-        - autotools-dev
-        - language-pack-en
-        - python3.7
-        - liblzma-dev
         - libicu-dev
-        - libsqlite3-dev
         - qt5-default
-        - libsdl2-mixer-dev
-        - libsdl2-gfx-dev
-        - libsdl2-image-dev
-        - libsdl2-ttf-dev
-        - libmysqlclient-dev
-  - name: "dist"
-    dist: focal
-    addons:
-      apt:
-        packages:
-        - libtolua-dev
-        - gettext
-        - libtool
-        - automake
-        - autoconf
-        - autotools-dev
-        - python3.7
-        - liblzma-dev
-        - libicu-dev
         - libsqlite3-dev
-  - name: "meson"
-    dist: focal
-    compiler: gcc
-    addons:
-      apt:
-        packages:
-        - meson
-        - libtolua-dev
-        - gettext
-        - libgtk-3-dev
-        - libcurl4-openssl-dev
-        - libtool
-        - automake
-        - autoconf
-        - autotools-dev
-        - language-pack-en
-        - python3.7
-        - liblzma-dev
-        - libicu-dev
-        - libsqlite3-dev
-        - qt5-default
-        - libsdl2-mixer-dev
-        - libsdl2-gfx-dev
-        - libsdl2-image-dev
-        - libsdl2-ttf-dev
-        - libmysqlclient-dev
-  - name: "clang_debug"
-    dist: focal
-    compiler: clang
-    addons:
-      apt:
-        sources:
-        - sourceline: 'ppa:kvilhaugsvik/backports'
-        packages:
-        - clang
-        - libtolua-dev
-        - liblua5.4-dev
-        - gettext
-        - libgtk-3-dev
-        - libcurl4-openssl-dev
-        - libtool
-        - automake
-        - autoconf
-        - autotools-dev
-        - language-pack-en
-        - python3.7
-        - liblzma-dev
-        - libicu-dev
-        - libsqlite3-dev
-        - qt5-default
-        - libsdl2-mixer-dev
-        - libsdl2-gfx-dev
-        - libsdl2-image-dev
-        - libsdl2-ttf-dev
-        - libmysqlclient-dev
   - name: "os_x"
     os: osx
     osx_image: xcode11.3
     addons:
       homebrew:
         packages:
-          - autoconf
-          - automake
+          - cmake
+          - ninja
+          - python3
           - gettext
-          - libtool
-          - pkg-config
-          - atk
-          - freetype
-          - gettext
-          - glib
-          - gtk+3
+          - curl
           - icu4c
-          - pango
-          - sdl2_gfx
-          - sdl2_image
-          - sdl2_mixer
-          - sdl2_ttf
           - qt
+          - sqlite
 
-script: "sudo bash ./scripts/travis-build.sh ${TRAVIS_JOB_NAME}"
+script:
+  - DESTDIR=install cmake . -B build -G Ninja
+  - cmake --build build
+  - cmake --build build --target install
