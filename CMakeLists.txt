@@ -36,7 +36,6 @@ add_subdirectory(tools)
 # Always install the documentation
 install(
   FILES
-  ABOUT-NLS
   AUTHORS
   ChangeLog
   COPYING
