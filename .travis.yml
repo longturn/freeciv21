@@ -1,5 +1,3 @@
-sudo: required
-
 language: c++
 
 jobs:
@@ -34,6 +32,6 @@ jobs:
           - sqlite
 
 script:
-  - DESTDIR=install cmake . -B build -G Ninja
+  - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/install
   - cmake --build build
   - cmake --build build --target install
