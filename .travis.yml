@@ -2,10 +2,6 @@ sudo: required
 
 language: c++
 
-compiler:
-  - clang
-  - gcc
-
 jobs:
   include:
   - name: "ubuntu"
@@ -15,7 +11,7 @@ jobs:
       apt:
         packages:
         - cmake
-        - ninja
+        - ninja-build
         - python3
         - gettext
         - libcurl4-openssl-dev
