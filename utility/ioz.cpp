@@ -449,8 +449,11 @@ fz_FILE *fz_from_stream(FILE *stream)
     return NULL;
   }
 
-  return new fz_FILE{
-      .method = FZ_PLAIN, .memory = false, .u = {.plain = stream}};
+  fz_FILE *fp = (fz_FILE *) fc_malloc(sizeof(*fp));
+  fp->method = FZ_PLAIN;
+  fp->memory = false;
+  fp->u.plain = stream;
+  return fp;
 }
 
 /************************************************************************/ /**
