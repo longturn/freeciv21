@@ -613,7 +613,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
 void packet_header_init(struct packet_header *packet_header)
 {
   packet_header->length = DIOT_UINT16;
-  packet_header->type = DIOT_UINT8;
+  packet_header->type = DIOT_UINT16;
 }
 
 /**********************************************************************/ /**
@@ -624,7 +624,7 @@ static inline void packet_header_set(struct packet_header *packet_header)
 {
   /* Ensure we have values initialized in packet_header_init(). */
   fc_assert(packet_header->length == DIOT_UINT16);
-  fc_assert(packet_header->type == DIOT_UINT8);
+  fc_assert(packet_header->type == DIOT_UINT16);
 
   packet_header->length = DIOT_UINT16;
   packet_header->type = DIOT_UINT16;
