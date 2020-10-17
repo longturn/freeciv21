@@ -76,7 +76,7 @@ target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 target_include_directories(utility PRIVATE ${CURL_INCLUDE_DIRS})
 
-target_link_libraries(utility PUBLIC Qt::Core)
+target_link_libraries(utility PUBLIC Qt5::Core)
 target_link_libraries(utility PUBLIC Threads::Threads)
 target_link_libraries(utility PRIVATE ${CURL_LIBRARIES})
 target_link_libraries(utility PRIVATE ICU::uc)
