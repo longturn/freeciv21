@@ -23,6 +23,7 @@ jobs:
       - ICU_ROOT=/usr/local/opt/icu4c
       - Intl_ROOT=/usr/local/opt/gettext
       - Qt5_DIR=/usr/local/opt/qt5/lib/cmake
+      - Readline_ROOT=/usr/local/opt/readline
     addons:
       homebrew:
         packages:
@@ -33,6 +34,7 @@ jobs:
           - curl
           - icu4c
           - qt
+          - readline
           - sqlite
 
 script:
