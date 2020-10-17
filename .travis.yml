@@ -20,6 +20,7 @@ jobs:
     os: osx
     osx_image: xcode11.3
     env:
+      - ICU_ROOT=/usr/local/opt/icu4c
       - Qt5_DIR=/usr/local/opt/qt5/lib/cmake
     addons:
       homebrew:
