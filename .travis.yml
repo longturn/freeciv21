@@ -38,6 +38,6 @@ jobs:
           - sqlite
 
 script:
-  - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/install
+  - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build
   - cmake --build build --target install
