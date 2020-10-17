@@ -26,6 +26,10 @@
 #include <errno.h>
 #include <unistd.h>
 
+// Qt
+#include <QString>
+#include <QUrl>
+
 /* dependencies */
 #include "cvercmp.h"
 
@@ -47,18 +51,6 @@ static const char *download_modpack_recursive(const char *URL,
                                               const dl_msg_callback &mcb,
                                               const dl_pb_callback &pbcb,
                                               int recursion);
-
-/**********************************************************************/ /**
-   Message callback called by netfile module when downloading files.
- **************************************************************************/
-static void nf_cb(const char *msg, const void *data)
-{
-  auto mcb = static_cast<const dl_msg_callback *>(data);
-
-  if (mcb != NULL) {
-    (*mcb)(msg);
-  }
-}
 
 /**********************************************************************/ /**
    Download modpack from a given URL
@@ -128,10 +120,11 @@ static const char *download_modpack_recursive(const char *URL,
     /* TRANS: %s is a filename with suffix '.modpack' */
     fc_snprintf(buf, sizeof(buf), _("Downloading \"%s\" control file."),
                 URL + start_idx);
-    mcb(buf);
+    mcb(QString::fromUtf8(buf));
   }
 
-  control = netfile_get_section_file(URL, nf_cb, &mcb);
+  control = netfile_get_section_file(
+      QUrl::fromUserInput(QString::fromUtf8(URL)), mcb);
 
   if (control == NULL) {
     return _("Failed to get and parse modpack control file");
@@ -357,7 +350,9 @@ static const char *download_modpack_recursive(const char *URL,
 
       fc_snprintf(fileURL, sizeof(fileURL), "%s/%s", baseURL, src_name);
       log_debug("Download \"%s\" as \"%s\".", fileURL, local_name);
-      if (!netfile_download_file(fileURL, local_name, nf_cb, &mcb)) {
+      if (!netfile_download_file(
+              QUrl::fromUserInput(QString::fromUtf8(fileURL)), local_name,
+              mcb)) {
         if (mcb != NULL) {
           char buf[2048];
 
@@ -406,7 +401,8 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
   const char *mp_name;
   int start_idx;
 
-  list_file = netfile_get_section_file(fcmp->list_url, &nf_cb, &mcb);
+  list_file = netfile_get_section_file(
+      QUrl::fromUserInput(QString::fromUtf8(fcmp->list_url)), mcb);
 
   if (list_file == NULL) {
     return _("Cannot fetch and parse modpack list");

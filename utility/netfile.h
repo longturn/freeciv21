@@ -14,17 +14,19 @@
 #ifndef FC__NETFILE_H
 #define FC__NETFILE_H
 
-struct netfile_write_cb_data {
-  char *mem;
-  int size;
-};
+#include <functional>
 
-typedef void (*nf_errmsg)(const char *msg, const void *data);
+// Forward declarations
+class QString;
+class QUrl;
 
-struct section_file *netfile_get_section_file(const char *URL, nf_errmsg cb,
-                                              const void *data);
+struct section_file;
 
-bool netfile_download_file(const char *URL, const char *filename,
-                           nf_errmsg cb, const void *data);
+using nf_errmsg = std::function<void(const QString &message)>;
+
+section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb);
+
+bool netfile_download_file(const QUrl &url, const char *filename,
+                           const nf_errmsg &cb);
 
 #endif /* FC__NETFILE_H */

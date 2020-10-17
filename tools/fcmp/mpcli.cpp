@@ -17,6 +17,10 @@
 
 #include <stdlib.h>
 
+// Qt
+#include <QCoreApplication>
+#include <QString>
+
 /* utility */
 #include "fc_cmdline.h"
 #include "fciconv.h"
@@ -40,7 +44,10 @@ struct fcmp_params fcmp = {
 /**********************************************************************/ /**
    Progress indications from downloader
  **************************************************************************/
-static void msg_callback(const char *msg) { log_normal("%s", msg); }
+static void msg_callback(const QString &msg)
+{
+  log_normal("%s", msg.toLocal8Bit().data());
+}
 
 /**********************************************************************/ /**
    Build main modpack list view
@@ -90,6 +97,8 @@ static void setup_modpack_list(const char *name, const char *URL,
  **************************************************************************/
 int main(int argc, char *argv[])
 {
+  QCoreApplication app(argc, argv);
+
   int ui_options;
 
   fcmp_init();

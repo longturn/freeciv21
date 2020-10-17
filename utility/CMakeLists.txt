@@ -54,6 +54,7 @@ add_library(
   log.cpp
   mem.cpp
   netintf.cpp
+  netfile.cpp
   rand.cpp
   registry.cpp
   registry_ini.cpp
@@ -68,17 +69,12 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
-if (HAVE_CURL)
-  target_sources(utility PRIVATE netfile.cpp)
-endif()
 
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(utility PRIVATE ${CURL_INCLUDE_DIRS})
 
-target_link_libraries(utility PUBLIC Qt5::Core)
+target_link_libraries(utility PUBLIC Qt5::Core Qt5::Network)
 target_link_libraries(utility PUBLIC Threads::Threads)
-target_link_libraries(utility PRIVATE ${CURL_LIBRARIES})
 target_link_libraries(utility PRIVATE ICU::uc)
 if (WIN32 OR MSYS OR MINGW)
   target_link_libraries(utility PRIVATE ws2_32 wsock32)
