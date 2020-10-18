@@ -3163,7 +3163,6 @@ void unqueue_mapview_updates(bool write_to_screen)
 
   if (write_to_screen) {
     flush_dirty();
-    flush_dirty_overview();
   }
 }
 
