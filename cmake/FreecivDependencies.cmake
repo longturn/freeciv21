@@ -96,7 +96,6 @@ find_package(ZLIB REQUIRED)
 set(HAVE_GETTIMEOFDAY_H TRUE)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
-  require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
   require_include_file("libgen.h" HAVE_LIBGEN_H)
   require_include_file("pwd.h" HAVE_PWD_H)
   require_include_file("sys/time.h" HAVE_SYS_TIME_H)
@@ -115,7 +114,7 @@ if(UNIX)
   check_type_size(ip_mreqn SIZEOF_IP_MREQN)
   unset(CMAKE_EXTRA_INCLUDE_FILES)
 endif()
-
+require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
 # Some systems don't have a well-defined root user
 if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)
