@@ -3301,9 +3301,9 @@ static enum fc_tristate is_action_possible(
     }
 
     {
-      int slots = unit_type_get(actor_unit)->city_slots;
+      int nslots = unit_type_get(actor_unit)->city_slots;
 
-      if (slots > 0 && city_unit_slots_available(target_city) < slots) {
+      if (nslots > 0 && city_unit_slots_available(target_city) < nslots) {
         return TRI_NO;
       }
     }

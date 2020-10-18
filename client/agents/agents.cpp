@@ -57,7 +57,7 @@ enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY, OCT_TILE };
 
 struct call {
   struct my_agent *agent;
-  oct type;
+  enum oct type;
   enum callback_type cb_type;
   int arg;
 };
