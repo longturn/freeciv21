@@ -14,8 +14,6 @@
 #ifndef FC__SUPPORT_H
 #define FC__SUPPORT_H
 
-
-
 /***********************************************************************
   Replacements for functions which are not available on all platforms.
   Where the functions are available natively, these are just wrappers.
@@ -115,9 +113,6 @@ int fc_strcasecmp(const char *str0, const char *str1);
 int fc_strncasecmp(const char *str0, const char *str1, size_t n);
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n);
 
-void fc_strAPI_init(void);
-void fc_strAPI_free(void);
-
 size_t effectivestrlenquote(const char *str);
 
 char *fc_strcasestr(const char *haystack, const char *needle);
@@ -197,7 +192,5 @@ void remove_escapes(const char *str, bool full_escapes, char *buf,
                     size_t buf_len);
 
 int fc_at_quick_exit(void (*func)(void));
-
-
 
 #endif /* FC__SUPPORT_H */
