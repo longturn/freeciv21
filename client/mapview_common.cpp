@@ -462,7 +462,7 @@ void refresh_tile_mapcanvas(struct tile *ptile, bool full_refresh,
     queue_mapview_tile_update(ptile, TILE_UPDATE_TILE_SINGLE);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(TRUE, TRUE);
   }
 }
 
@@ -480,7 +480,7 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
     queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(TRUE, full_refresh);
   }
 }
 
@@ -500,7 +500,7 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
     queue_mapview_tile_update(ptile, TILE_UPDATE_UNIT);
   }
   if (write_to_screen) {
-    unqueue_mapview_updates(TRUE);
+    unqueue_mapview_updates(TRUE, full_refresh);
   }
 }
 
@@ -987,7 +987,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
       anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
       timer_start(anim_timer);
 
-      unqueue_mapview_updates(TRUE);
+      unqueue_mapview_updates(TRUE, TRUE);
 
       do {
         double mytime;
@@ -1516,7 +1516,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
      * we update everything to the store, but don't write this to screen.
      * Then add the nuke graphic to the store.  Finally flush everything to
      * the screen and wait 1 second. */
-    unqueue_mapview_updates(FALSE);
+    unqueue_mapview_updates(FALSE, FALSE);
 
     canvas_put_sprite_full(mapview.store, canvas_x, canvas_y, mysprite);
     dirty_rect(canvas_x, canvas_y, width, height);
@@ -2540,7 +2540,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   punit0->hp = MAX(punit0->hp, hp0);
   punit1->hp = MAX(punit1->hp, hp1);
 
-  unqueue_mapview_updates(TRUE);
+  unqueue_mapview_updates(TRUE, TRUE);
 
   if (frame_by_frame_animation) {
     struct animation *anim =
@@ -2602,7 +2602,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
         refresh_unit_mapcanvas(punit1, unit_tile(punit1), FALSE, FALSE);
       }
 
-      unqueue_mapview_updates(TRUE);
+      unqueue_mapview_updates(TRUE, FALSE);
       gui_flush();
 
       timer_usleep_since_start(anim_timer,
@@ -2614,7 +2614,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
                               unit_tile(losing_unit))) {
       refresh_unit_mapcanvas(losing_unit, unit_tile(losing_unit), FALSE,
                              FALSE);
-      unqueue_mapview_updates(FALSE);
+      unqueue_mapview_updates(FALSE, FALSE);
       canvas_copy(mapview.tmp_store, mapview.store, canvas_x, canvas_y,
                   canvas_x, canvas_y, tileset_tile_width(tileset) * map_zoom,
                   tileset_tile_height(tileset) * map_zoom);
@@ -2704,7 +2704,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     }
 
     /* Bring the backing store up to date, but don't flush. */
-    unqueue_mapview_updates(FALSE);
+    unqueue_mapview_updates(FALSE, TRUE);
 
     tuw = tileset_unit_width(tileset) * map_zoom;
     tuh = tileset_unit_height(tileset) * map_zoom;
@@ -2986,7 +2986,7 @@ struct tile_list *tile_updates[TILE_UPDATE_COUNT];
 static void queue_callback(void *data)
 {
   callback_queued = FALSE;
-  unqueue_mapview_updates(TRUE);
+  unqueue_mapview_updates(TRUE, FALSE);
 }
 
 /************************************************************************/ /**
@@ -3049,7 +3049,7 @@ void queue_mapview_tile_update(struct tile *ptile,
 /************************************************************************/ /**
    See comment for queue_mapview_update().
  ****************************************************************************/
-void unqueue_mapview_updates(bool write_to_screen)
+void unqueue_mapview_updates(bool write_to_screen, bool overview_refresh)
 {
   /* Calculate the area covered by each update type.  The area array gives
    * the offset from the tile origin as well as the width and height of the
@@ -3163,7 +3163,9 @@ void unqueue_mapview_updates(bool write_to_screen)
 
   if (write_to_screen) {
     flush_dirty();
-    flush_dirty_overview();
+  }
+  if (overview_refresh) {
+      flush_dirty_overview();
   }
 }
 
@@ -3651,7 +3653,7 @@ bool map_canvas_resized(int width, int height)
       /* Do not draw to the screen here as that could cause problems
        * when we are only initially setting up the view and some widgets
        * are not yet ready. */
-      unqueue_mapview_updates(FALSE);
+      unqueue_mapview_updates(FALSE, TRUE);
       redrawn = TRUE;
     }
 
