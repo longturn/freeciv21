@@ -56,7 +56,6 @@ set(FREECIV_C11_THR FALSE)
 set(FREECIV_HAVE_TINYCTHR FALSE)
 
 # Required for utility
-find_package(ICU COMPONENTS uc REQUIRED)
 find_package(Iconv)
 if(Iconv_FOUND)
   set(HAVE_ICONV TRUE) # For compiler macro

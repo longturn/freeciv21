@@ -95,8 +95,9 @@
 #include <zlib.h>
 #endif
 
-/* ICU */
-#include "unicode/ustring.h"
+// Qt
+#include <QString>
+#include <QtDebug>
 
 /* utility */
 #include "fciconv.h"
@@ -107,121 +108,14 @@
 
 #include "support.h"
 
-static int icu_buffer_uchars = 0;
-static UChar *icu_buffer1 = NULL;
-static UChar *icu_buffer2 = NULL;
-fc_mutex icu_buffer_mutex;
-
-/************************************************************************/ /**
-   Initial allocation of string comparison buffers.
- ****************************************************************************/
-static void icu_buffers_initial(void)
-{
-  if (icu_buffer1 == NULL) {
-    icu_buffer_uchars = 1024;
-    icu_buffer1 = static_cast<UChar *>(
-        fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar)));
-    icu_buffer2 = static_cast<UChar *>(
-        fc_malloc((icu_buffer_uchars + 1) * sizeof(UChar)));
-
-    /* Make sure there's zero after the buffer published with
-     * cmp_buffer_uchars */
-    icu_buffer1[icu_buffer_uchars] = 0;
-    icu_buffer2[icu_buffer_uchars] = 0;
-  }
-}
-
-/************************************************************************/ /**
-   Make string comparison buffers bigger
- ****************************************************************************/
-static void icu_buffers_increase(void)
-{
-  icu_buffer_uchars *= 1.5;
-  icu_buffer1 = static_cast<UChar *>(
-      fc_realloc(icu_buffer1, (icu_buffer_uchars + 1) * sizeof(UChar)));
-  icu_buffer2 = static_cast<UChar *>(
-      fc_realloc(icu_buffer2, (icu_buffer_uchars + 1) * sizeof(UChar)));
-
-  /* Make sure there's zero after the buffer published with cmp_buffer_uchars
-   */
-  icu_buffer1[icu_buffer_uchars] = 0;
-  icu_buffer2[icu_buffer_uchars] = 0;
-}
-
-/************************************************************************/ /**
-   Initialize string handling API
- ****************************************************************************/
-void fc_strAPI_init(void)
-{
-  if (icu_buffer_uchars == 0) {
-    fc_init_mutex(&icu_buffer_mutex);
-    icu_buffers_initial();
-  }
-}
-
-/************************************************************************/ /**
-   Free string handling API resources
- ****************************************************************************/
-void fc_strAPI_free(void)
-{
-  if (icu_buffer1 != NULL) {
-    free(icu_buffer1);
-    icu_buffer1 = NULL;
-    free(icu_buffer2);
-    icu_buffer2 = NULL;
-    icu_buffer_uchars = 0;
-  }
-  fc_destroy_mutex(&icu_buffer_mutex);
-}
-
 /************************************************************************/ /**
    Compare strings like strcmp(), but ignoring case.
  ****************************************************************************/
 int fc_strcasecmp(const char *str0, const char *str1)
 {
-  UErrorCode err_code = U_ZERO_ERROR;
-  int len0;
-  int len1;
-  bool enough_mem = FALSE;
-  int ret;
-
-  if (str0 == NULL) {
-    return -1;
-  }
-  if (str1 == NULL) {
-    return 1;
-  }
-
-  if (icu_buffer_uchars == 0) {
-    fc_strAPI_init();
-  }
-
-  fc_allocate_mutex(&icu_buffer_mutex);
-
-  while (!enough_mem) {
-    UErrorCode err_code0 = U_ZERO_ERROR;
-    UErrorCode err_code1 = U_ZERO_ERROR;
-
-    u_strFromUTF8Lenient(icu_buffer1, icu_buffer_uchars, &len0, str0, -1,
-                         &err_code0);
-    u_strFromUTF8Lenient(icu_buffer2, icu_buffer_uchars, &len1, str1, -1,
-                         &err_code1);
-
-    /* No need to handle U_STRING_NOT_TERMINATED_WARNING here as there's '0'
-     * after the buffers we were using */
-    if (err_code0 == U_BUFFER_OVERFLOW_ERROR
-        || err_code1 == U_BUFFER_OVERFLOW_ERROR) {
-      icu_buffers_increase();
-    } else {
-      enough_mem = TRUE;
-    }
-  }
-
-  ret = u_strCaseCompare(icu_buffer1, -1, icu_buffer2, -1, 0, &err_code);
-
-  fc_release_mutex(&icu_buffer_mutex);
-
-  return ret;
+  auto left = QString::fromUtf8(str0);
+  auto right = QString::fromUtf8(str1);
+  return left.compare(right, Qt::CaseInsensitive);
 }
 
 /************************************************************************/ /**
@@ -230,56 +124,9 @@ int fc_strcasecmp(const char *str0, const char *str1)
  ****************************************************************************/
 int fc_strncasecmp(const char *str0, const char *str1, size_t n)
 {
-  UErrorCode err_code = U_ZERO_ERROR;
-  int len0;
-  int len1;
-  bool enough_mem = FALSE;
-  int ret;
-
-  if (str0 == NULL) {
-    return -1;
-  }
-  if (str1 == NULL) {
-    return 1;
-  }
-
-  if (icu_buffer_uchars == 0) {
-    fc_strAPI_init();
-  }
-
-  fc_allocate_mutex(&icu_buffer_mutex);
-
-  while (!enough_mem) {
-    UErrorCode err_code0 = U_ZERO_ERROR;
-    UErrorCode err_code1 = U_ZERO_ERROR;
-
-    u_strFromUTF8Lenient(icu_buffer1, icu_buffer_uchars, &len0, str0, -1,
-                         &err_code0);
-    u_strFromUTF8Lenient(icu_buffer2, icu_buffer_uchars, &len1, str1, -1,
-                         &err_code1);
-
-    /* No need to handle U_STRING_NOT_TERMINATED_WARNING here as there's '0'
-     * after the buffers we were using */
-    if (err_code0 == U_BUFFER_OVERFLOW_ERROR
-        || err_code1 == U_BUFFER_OVERFLOW_ERROR) {
-      icu_buffers_increase();
-    } else {
-      enough_mem = TRUE;
-    }
-  }
-
-  if (len0 > n) {
-    len0 = n;
-  }
-  if (len1 > n) {
-    len1 = n;
-  }
-
-  ret = u_strCaseCompare(icu_buffer1, len0, icu_buffer2, len1, 0, &err_code);
-
-  fc_release_mutex(&icu_buffer_mutex);
-
-  return ret;
+  auto left = QString::fromUtf8(str0);
+  auto right = QString::fromUtf8(str1);
+  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
 /************************************************************************/ /**
@@ -754,41 +601,32 @@ bool fc_strrep(char *str, size_t len, const char *search,
  ****************************************************************************/
 size_t fc_strlcpy(char *dest, const char *src, size_t n)
 {
-  bool enough_mem = FALSE;
-  int slen;
-  int dlen;
-  UErrorCode err_code = U_ZERO_ERROR;
-
   fc_assert_ret_val(NULL != dest, -1);
   fc_assert_ret_val(NULL != src, -1);
   fc_assert_ret_val(0 < n, -1);
 
-  if (icu_buffer_uchars == 0) {
-    fc_strAPI_init();
+  auto source = QString::fromUtf8(src);
+
+  // Strategy: cut the string after n-1 code points, and encode. If the
+  // encoded version is too long to copy to the output buffer, remove the
+  // last character and repeat.
+  size_t cut_at = n - 1;
+  QByteArray encoded;
+  do {
+    encoded = source.leftRef(cut_at--).toUtf8();
+  } while (cut_at > 0 && encoded.size() + 1 > n);
+
+  if (cut_at == 0) {
+    // Can't put anything in the buffer except the \0
+    // Perhaps there's a character with diacritics taking many bytes at the
+    // beginning, or the size of the buffer is just 1.
+    *dest = '\0';
+    return 1;
+  } else {
+    // Can put something
+    memcpy(dest, encoded.data(), encoded.size() + 1);
+    return encoded.size() + 1;
   }
-
-  fc_allocate_mutex(&icu_buffer_mutex);
-
-  while (!enough_mem) {
-    u_strFromUTF8(icu_buffer1, icu_buffer_uchars, &slen, src, -1, &err_code);
-
-    /* No need to handle U_STRING_NOT_TERMINATED_WARNING here as there's '0'
-     * after the buffers we were using */
-    if (err_code == U_BUFFER_OVERFLOW_ERROR) {
-      icu_buffers_increase();
-      err_code = U_ZERO_ERROR;
-    } else {
-      enough_mem = TRUE;
-    }
-  }
-
-  u_strToUTF8(dest, n - 1, &dlen, icu_buffer1, slen, &err_code);
-
-  fc_release_mutex(&icu_buffer_mutex);
-
-  dest[n - 1] = '\0';
-
-  return dlen;
 }
 
 /************************************************************************/ /**

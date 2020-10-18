@@ -75,7 +75,6 @@ target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(utility PUBLIC Qt5::Core Qt5::Network)
 target_link_libraries(utility PUBLIC Threads::Threads)
-target_link_libraries(utility PRIVATE ICU::uc)
 if (WIN32 OR MSYS OR MINGW)
   target_link_libraries(utility PRIVATE ws2_32 wsock32)
 endif()
