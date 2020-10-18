@@ -45,6 +45,7 @@
 #include <unistd.h>
 #endif
 #ifdef FREECIV_MSWINDOWS
+#define ALWAYS_ROOT
 #include <lmcons.h> /* UNLEN */
 #include <shlobj.h>
 #include <windows.h>
@@ -1752,10 +1753,8 @@ bool make_dir(const char *pathname)
       delete[] path_in_local_encoding;
     }
 #else  /* HAVE__MKDIR */
-    mkdir(path, 0755);
+    mkdir(path);
 #endif /* HAVE__MKDIR */
-#else  /* FREECIV_MSWINDOWS */
-    mkdir(path, 0755);
 #endif /* FREECIV_MSWINDOWS */
 
     if (dir) {
