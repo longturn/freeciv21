@@ -32,6 +32,9 @@
 #include <unistd.h>
 #endif
 
+// Qt
+#include <QTcpSocket>
+
 /* utility */
 #include "fcintl.h"
 #include "genhash.h"
@@ -93,6 +96,10 @@ void connection_close(struct connection *pconn, const char *reason)
     /* NB: we don't overwrite the original reason. */
     pconn->closing_reason = fc_strdup(reason);
   }
+  if (pconn->sock != nullptr) {
+    pconn->sock->deleteLater();
+    pconn->sock = nullptr;
+  }
 
   (*conn_close_callback)(pconn);
 }
@@ -126,7 +133,7 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
      >0  :  number of bytes read
      =0  :  non-blocking sockets only; no data read, would block
  **************************************************************************/
-int read_socket_data(int sock, struct socket_packet_buffer *buffer)
+int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
 {
   int didget;
 
@@ -136,8 +143,8 @@ int read_socket_data(int sock, struct socket_packet_buffer *buffer)
   }
 
   log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
-  didget = fc_readsocket(sock, (char *) (buffer->data + buffer->ndata),
-                         buffer->nsize - buffer->ndata);
+  didget = sock->read((char *) (buffer->data + buffer->ndata),
+                      buffer->nsize - buffer->ndata);
 
   if (didget > 0) {
     buffer->ndata += didget;
@@ -147,13 +154,6 @@ int read_socket_data(int sock, struct socket_packet_buffer *buffer)
     log_debug("EOF on socket read");
     return -2;
   }
-
-#ifdef NONBLOCKING_SOCKETS
-  else if (errno == EWOULDBLOCK || errno == EAGAIN) {
-    log_debug("EGAIN on socket read");
-    return 0;
-  }
-#endif /* NONBLOCKING_SOCKETS */
 
   return -1;
 }
@@ -171,48 +171,19 @@ static int write_socket_data(struct connection *pc,
   }
 
   for (start = 0; buf->ndata - start > limit;) {
-    fd_set writefs, exceptfs;
-    fc_timeval tv;
-
-    FC_FD_ZERO(&writefs);
-    FC_FD_ZERO(&exceptfs);
-    FD_SET(pc->sock, &writefs);
-    FD_SET(pc->sock, &exceptfs);
-
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-
-    if (fc_select(pc->sock + 1, NULL, &writefs, &exceptfs, &tv) <= 0) {
-      if (errno != EINTR) {
-        break;
-      } else {
-        /* EINTR can happen sometimes, especially when compiling with -pg.
-         * Generally we just want to run select again. */
-        continue;
-      }
-    }
-
-    if (FD_ISSET(pc->sock, &exceptfs)) {
+    if (!pc->sock->isOpen()) {
       connection_close(pc, _("network exception"));
       return -1;
     }
 
-    if (FD_ISSET(pc->sock, &writefs)) {
-      nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
-      log_debug("trying to write %d limit=%d", nblock, limit);
-      if ((nput = fc_writesocket(pc->sock, (const char *) buf->data + start,
-                                 nblock))
-          == -1) {
-#ifdef NONBLOCKING_SOCKETS
-        if (errno == EWOULDBLOCK || errno == EAGAIN) {
-          break;
-        }
-#endif /* NONBLOCKING_SOCKETS */
-        connection_close(pc, _("lagging connection"));
-        return -1;
-      }
-      start += nput;
+    nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
+    log_debug("trying to write %d limit=%d", nblock, limit);
+    if ((nput = pc->sock->write((const char *) buf->data + start, nblock))
+        == -1) {
+      connection_close(pc, pc->sock->errorString().toUtf8().data());
+      return -1;
     }
+    start += nput;
   }
 
   if (start > 0) {
@@ -627,7 +598,8 @@ void connection_common_close(struct connection *pconn)
   if (!pconn->used) {
     log_error("WARNING: Trying to close already closed connection");
   } else {
-    fc_closesocket(pconn->sock);
+    pconn->sock->deleteLater();
+    pconn->sock = nullptr;
     pconn->used = FALSE;
     pconn->established = FALSE;
     if (NULL != pconn->closing_reason) {

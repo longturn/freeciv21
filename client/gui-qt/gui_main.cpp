@@ -242,14 +242,14 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  **************************************************************************/
-void qtg_add_net_input(int sock) { gui()->add_server_source(sock); }
+void qtg_add_net_input(QTcpSocket *sock) { gui()->add_server_source(sock); }
 
 /**********************************************************************/ /**
    Stop waiting for any server network data.  See add_net_input().
 
    This function is called if the client disconnects from the server.
  **************************************************************************/
-void qtg_remove_net_input() { gui()->remove_server_source(); }
+void qtg_remove_net_input() {}
 
 /**********************************************************************/ /**
    Set one of the unit icons (specified by idx) in the information area
