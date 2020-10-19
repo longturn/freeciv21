@@ -135,9 +135,12 @@ static int try_to_connect(const char *hostname, int port,
   // Connect
   client.conn.sock = new QTcpSocket;
 
-  QObject::connect(client.conn.sock, &QAbstractSocket::errorOccurred, [] {
-    qFatal("TODO better error reporting"); // TODO
-  });
+  QObject::connect(client.conn.sock,
+                   QOverload<QAbstractSocket::SocketError>::of(
+                       &QAbstractSocket::error),
+                   [] {
+                     qFatal("TODO better error reporting"); // TODO
+                   });
 
   client.conn.sock->connectToHost(QString::fromUtf8(hostname), port);
 
