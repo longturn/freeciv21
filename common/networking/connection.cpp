@@ -15,23 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
-#include <errno.h>
-#include <string.h>
-#include <time.h>
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H
-/* For some platforms this must be below sys/types.h. */
-#include <sys/select.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 // Qt
 #include <QTcpSocket>
 
@@ -40,7 +23,6 @@
 #include "genhash.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "support.h" /* fc_str(n)casecmp */
 
 /* common */
