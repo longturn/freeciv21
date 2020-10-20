@@ -14,14 +14,35 @@
 #ifndef FC__SERVERS_H
 #define FC__SERVERS_H
 
-
-
+#include <QUdpSocket>
+#include <QObject>
 /* utility */
 #include "fcthread.h"
 
 #define SERVER_LAN_PORT 4555
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
+
+enum server_scan_status {
+  SCAN_STATUS_ERROR = 0,
+  SCAN_STATUS_WAITING,
+  SCAN_STATUS_PARTIAL,
+  SCAN_STATUS_DONE,
+  SCAN_STATUS_ABORT
+};
+
+class fcUdpScan : public QUdpSocket {
+public:
+  static void drop();
+  static fcUdpScan *i();
+  virtual ~fcUdpScan(){};
+  bool begin_scan(struct server_scan *scan);
+  enum server_scan_status get_server_list(struct server_scan *scan);
+private:
+  fcUdpScan(QObject *parent = 0);
+  static fcUdpScan *m_instance;
+};
+
 
 struct str_players {
   char *name;
@@ -51,6 +72,8 @@ struct server {
   TYPED_LIST_ITERATE(struct server, serverlist, pserver)
 #define server_list_iterate_end LIST_ITERATE_END
 
+
+
 struct server_scan;
 
 struct srv_list {
@@ -70,13 +93,6 @@ typedef void (*ServerScanErrorFunc)(struct server_scan *scan,
 struct server_scan *server_scan_begin(enum server_scan_type type,
                                       ServerScanErrorFunc error_func);
 enum server_scan_type server_scan_get_type(const struct server_scan *scan);
-enum server_scan_status {
-  SCAN_STATUS_ERROR = 0,
-  SCAN_STATUS_WAITING,
-  SCAN_STATUS_PARTIAL,
-  SCAN_STATUS_DONE,
-  SCAN_STATUS_ABORT
-};
 enum server_scan_status server_scan_poll(struct server_scan *scan);
 struct srv_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);

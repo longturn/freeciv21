@@ -15,42 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
-#include <errno.h>
-#include <stdlib.h>
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
-#ifdef HAVE_NETDB_H
-#include <netdb.h>
-#endif
-#ifdef HAVE_PWD_H
-#include <pwd.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef HAVE_SYS_UIO_H
-#include <sys/uio.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-
 // Qt
 #include <QByteArray>
 #include <QEventLoop>
@@ -60,7 +24,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QtDebug>
-
+#include <QNetworkDatagram>
 /* dependencies */
 #include "cvercmp.h"
 
@@ -108,10 +72,180 @@ struct server_scan {
   } meta;
 };
 
+fcUdpScan *fcUdpScan::m_instance = 0;
 extern enum announce_type announce;
 
 static bool begin_metaserver_scan(struct server_scan *scan);
 static void delete_server_list(struct server_list *server_list);
+
+fcUdpScan::fcUdpScan(QObject *parent) : QUdpSocket(parent) {}
+
+/**************************************************************************
+  returns fcUdpScan instance, use it to initizalize fcUdpScan
+  or for calling methods
+**************************************************************************/
+fcUdpScan *fcUdpScan::i()
+{
+  if (!m_instance) {
+    m_instance = new fcUdpScan;
+  }
+  return m_instance;
+}
+
+/**************************************************************************
+  deletes fcUdpScan
+**************************************************************************/
+void fcUdpScan::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = 0;
+  }
+}
+
+/**********************************************************************/ /**
+   Broadcast an UDP package to all servers on LAN, requesting information
+   about the server. The packet is send to all Freeciv servers in the same
+   multicast group as the client.
+ **************************************************************************/
+bool fcUdpScan::begin_scan(struct server_scan *scan)
+{
+  struct raw_data_out dout;
+  char buffer[MAX_LEN_PACKET];
+  const char *group;
+  size_t size;
+
+  if (announce == ANNOUNCE_NONE) {
+    /* Succeeded in doing nothing */
+    return TRUE;
+  }
+  group = get_multicast_group(announce == ANNOUNCE_IPV6);
+
+  if (!bind(QHostAddress::AnyIPv4, SERVER_LAN_PORT + 1,
+                        QAbstractSocket::ReuseAddressHint)) {
+    char errstr[2048];
+
+    fc_snprintf(errstr, sizeof(errstr),
+                _("Binding socket to listen LAN announcements failed:\n%s"),
+                fc_strerror(fc_get_errno()));
+    scan->error_func(scan, errstr);
+    return FALSE;
+  }
+
+  if(!joinMulticastGroup(QHostAddress(group))) {
+      char errstr[2048];
+
+      fc_snprintf(errstr, sizeof(errstr),
+          _("Adding membership for LAN announcement group failed:\n%s"),
+          fc_strerror(fc_get_errno()));
+      scan->error_func(scan, errstr);
+    }
+
+  dio_output_init(&dout, buffer, sizeof(buffer));
+  dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
+  size = dio_output_used(&dout);
+  fcUdpScan::i()->writeDatagram(QByteArray(buffer, size),
+                                QHostAddress::AnyIPv4, SERVER_LAN_PORT);
+
+  fc_allocate_mutex(&scan->srvrs.mutex);
+  scan->srvrs.servers = server_list_new();
+  fc_release_mutex(&scan->srvrs.mutex);
+
+  return TRUE;
+}
+
+/**********************************************************************/ /**
+   Listens for UDP packets broadcasted from a server that responded
+   to the request-packet sent from the client.
+ **************************************************************************/
+enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
+{
+  char *msgbuf;
+  int type;
+  struct data_in din;
+  char servername[512];
+  char portstr[256];
+  int port;
+  char version[256];
+  char status[256];
+  char players[256];
+  char humans[256];
+  char message[1024];
+  bool found_new = FALSE;
+
+  while (true) {
+    struct server *pserver;
+    QNetworkDatagram datagram;
+    bool duplicate = FALSE;
+
+    if (!fcUdpScan::i()->hasPendingDatagrams()) {
+      break;
+    }
+    datagram = fcUdpScan::i()->receiveDatagram();
+    msgbuf = datagram.data().data();
+    dio_input_init(&din, msgbuf, datagram.data().size());
+
+    dio_get_uint8_raw(&din, &type);
+    if (type != SERVER_LAN_VERSION) {
+      continue;
+    }
+    dio_get_string_raw(&din, servername, sizeof(servername));
+    dio_get_string_raw(&din, portstr, sizeof(portstr));
+    port = atoi(portstr);
+    dio_get_string_raw(&din, version, sizeof(version));
+    dio_get_string_raw(&din, status, sizeof(status));
+    dio_get_string_raw(&din, players, sizeof(players));
+    dio_get_string_raw(&din, humans, sizeof(humans));
+    dio_get_string_raw(&din, message, sizeof(message));
+
+    if (!fc_strcasecmp("none", servername)) {
+      bool nameinfo = FALSE;
+
+      const char *dst = NULL;
+      struct hostent *from;
+      const char *host = NULL;
+      sz_strlcpy(servername, datagram.senderAddress().toString().toLocal8Bit());
+    }
+
+    /* UDP can send duplicate or delayed packets. */
+    fc_allocate_mutex(&scan->srvrs.mutex);
+    server_list_iterate(scan->srvrs.servers, aserver)
+    {
+      if (0 == fc_strcasecmp(aserver->host, servername)
+          && aserver->port == port) {
+        duplicate = TRUE;
+        break;
+      }
+    }
+    server_list_iterate_end;
+
+    if (duplicate) {
+      fc_release_mutex(&scan->srvrs.mutex);
+      continue;
+    }
+
+    log_debug("Received a valid announcement from a server on the LAN.");
+
+    pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
+    pserver->host = fc_strdup(servername);
+    pserver->port = port;
+    pserver->version = fc_strdup(version);
+    pserver->state = fc_strdup(status);
+    pserver->nplayers = atoi(players);
+    pserver->humans = atoi(humans);
+    pserver->message = fc_strdup(message);
+    pserver->players = NULL;
+    found_new = TRUE;
+
+    server_list_prepend(scan->srvrs.servers, pserver);
+    fc_release_mutex(&scan->srvrs.mutex);
+  }
+
+  if (found_new) {
+    return SCAN_STATUS_PARTIAL;
+  }
+  return SCAN_STATUS_WAITING;
+}
 
 /**********************************************************************/ /**
    The server sends a stream in a registry 'ini' type format.
@@ -198,7 +332,6 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
     pserver->humans = n;
 
     if (pserver->nplayers > 0) {
-      // sveinung ? moved players out of server
       pserver->players = static_cast<str_players *>(
           fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
     } else {
@@ -391,352 +524,6 @@ static void delete_server_list(struct server_list *server_list)
 }
 
 /**********************************************************************/ /**
-   Broadcast an UDP package to all servers on LAN, requesting information
-   about the server. The packet is send to all Freeciv servers in the same
-   multicast group as the client.
- **************************************************************************/
-static bool begin_lanserver_scan(struct server_scan *scan)
-{
-  union fc_sockaddr addr;
-  struct raw_data_out dout;
-  int send_sock, opt = 1;
-#ifndef FREECIV_HAVE_WINSOCK
-  unsigned char buffer[MAX_LEN_PACKET];
-#else  /* FREECIV_HAVE_WINSOCK */
-  char buffer[MAX_LEN_PACKET];
-#endif /* FREECIV_HAVE_WINSOCK */
-#ifdef HAVE_IP_MREQN
-  struct ip_mreqn mreq4;
-#else
-  struct ip_mreq mreq4;
-#endif
-  const char *group;
-  size_t size;
-  int family;
-
-#ifdef FREECIV_IPV6_SUPPORT
-  struct ipv6_mreq mreq6;
-#endif
-
-#ifndef FREECIV_HAVE_WINSOCK
-  unsigned char ttl;
-#endif
-
-  if (announce == ANNOUNCE_NONE) {
-    /* Succeeded in doing nothing */
-    return TRUE;
-  }
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (announce == ANNOUNCE_IPV6) {
-    family = AF_INET6;
-  } else
-#endif /* IPv6 support */
-  {
-    family = AF_INET;
-  }
-
-  /* Set the UDP Multicast group IP address. */
-  group = get_multicast_group(announce == ANNOUNCE_IPV6);
-
-  /* Create a socket for listening for server packets. */
-  if ((scan->sock = socket(family, SOCK_DGRAM, 0)) < 0) {
-    char errstr[2048];
-
-    fc_snprintf(errstr, sizeof(errstr),
-                _("Opening socket to listen LAN announcements failed:\n%s"),
-                fc_strerror(fc_get_errno()));
-    scan->error_func(scan, errstr);
-
-    return FALSE;
-  }
-
-  fc_nonblock(scan->sock);
-
-  if (setsockopt(scan->sock, SOL_SOCKET, SO_REUSEADDR, (char *) &opt,
-                 sizeof(opt))
-      == -1) {
-    log_error("SO_REUSEADDR failed: %s", fc_strerror(fc_get_errno()));
-  }
-
-  memset(&addr, 0, sizeof(addr));
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (family == AF_INET6) {
-    addr.saddr.sa_family = AF_INET6;
-    addr.saddr_in6.sin6_port = htons(SERVER_LAN_PORT + 1);
-    addr.saddr_in6.sin6_addr = in6addr_any;
-  } else
-#endif /* IPv6 support */
-      if (family == AF_INET) {
-    addr.saddr.sa_family = AF_INET;
-    addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT + 1);
-    addr.saddr_in4.sin_addr.s_addr = htonl(INADDR_ANY);
-  } else {
-    /* This is not only error situation worth assert() This
-     * is error situation that has check (with assert) against
-     * earlier already. */
-    fc_assert(FALSE);
-
-    return FALSE;
-  }
-
-  if (bind(scan->sock, &addr.saddr, sockaddr_size(&addr)) < 0) {
-    char errstr[2048];
-
-    fc_snprintf(errstr, sizeof(errstr),
-                _("Binding socket to listen LAN announcements failed:\n%s"),
-                fc_strerror(fc_get_errno()));
-    scan->error_func(scan, errstr);
-
-    return FALSE;
-  }
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (family == AF_INET6) {
-    inet_pton(AF_INET6, group, &mreq6.ipv6mr_multiaddr.s6_addr);
-    mreq6.ipv6mr_interface = 0; /* TODO: Interface selection */
-
-    if (setsockopt(scan->sock, IPPROTO_IPV6, FC_IPV6_ADD_MEMBERSHIP,
-                   (const char *) &mreq6, sizeof(mreq6))
-        < 0) {
-      char errstr[2048];
-
-      fc_snprintf(
-          errstr, sizeof(errstr),
-          _("Adding membership for IPv6 LAN announcement group failed:\n%s"),
-          fc_strerror(fc_get_errno()));
-      scan->error_func(scan, errstr);
-    }
-  } else
-#endif /* IPv6 support */
-  {
-    fc_inet_aton(group, &mreq4.imr_multiaddr, FALSE);
-#ifdef HAVE_IP_MREQN
-    mreq4.imr_address.s_addr = htonl(INADDR_ANY);
-    mreq4.imr_ifindex = 0;
-#else
-    mreq4.imr_interface.s_addr = htonl(INADDR_ANY);
-#endif
-
-    if (setsockopt(scan->sock, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-                   (const char *) &mreq4, sizeof(mreq4))
-        < 0) {
-      char errstr[2048];
-
-      fc_snprintf(
-          errstr, sizeof(errstr),
-          _("Adding membership for IPv4 LAN announcement group failed:\n%s"),
-          fc_strerror(fc_get_errno()));
-      scan->error_func(scan, errstr);
-
-      return FALSE;
-    }
-  }
-
-  /* Create a socket for broadcasting to servers. */
-  if ((send_sock = socket(family, SOCK_DGRAM, 0)) < 0) {
-    log_error("socket failed: %s", fc_strerror(fc_get_errno()));
-    return FALSE;
-  }
-
-  memset(&addr, 0, sizeof(addr));
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (family == AF_INET6) {
-    addr.saddr.sa_family = AF_INET6;
-    inet_pton(AF_INET6, group, &addr.saddr_in6.sin6_addr);
-    addr.saddr_in6.sin6_port = htons(SERVER_LAN_PORT);
-  } else
-#endif /* IPv6 Support */
-      if (family == AF_INET) {
-    fc_inet_aton(group, &addr.saddr_in4.sin_addr, FALSE);
-    addr.saddr.sa_family = AF_INET;
-    addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT);
-  } else {
-    fc_assert(FALSE);
-
-    log_error("Unsupported address family in begin_lanserver_scan()");
-
-    return FALSE;
-  }
-
-/* this setsockopt call fails on Windows 98, so we stick with the default
- * value of 1 on Windows, which should be fine in most cases */
-#ifndef FREECIV_HAVE_WINSOCK
-  /* Set the Time-to-Live field for the packet  */
-  ttl = SERVER_LAN_TTL;
-  if (setsockopt(send_sock, IPPROTO_IP, IP_MULTICAST_TTL,
-                 (const char *) &ttl, sizeof(ttl))) {
-    log_error("setsockopt failed: %s", fc_strerror(fc_get_errno()));
-    return FALSE;
-  }
-#endif /* FREECIV_HAVE_WINSOCK */
-
-  if (setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, (const char *) &opt,
-                 sizeof(opt))) {
-    log_error("setsockopt failed: %s", fc_strerror(fc_get_errno()));
-    return FALSE;
-  }
-
-  dio_output_init(&dout, buffer, sizeof(buffer));
-  dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
-  size = dio_output_used(&dout);
-
-  if (sendto(send_sock, buffer, size, 0, &addr.saddr, sockaddr_size(&addr))
-      < 0) {
-    /* This can happen when there's no network connection - it should
-     * give an in-game message. */
-    log_error("lanserver scan sendto failed: %s",
-              fc_strerror(fc_get_errno()));
-    return FALSE;
-  } else {
-    log_debug("Sending request for server announcement on LAN.");
-  }
-
-  fc_closesocket(send_sock);
-
-  fc_allocate_mutex(&scan->srvrs.mutex);
-  scan->srvrs.servers = server_list_new();
-  fc_release_mutex(&scan->srvrs.mutex);
-
-  return TRUE;
-}
-
-/**********************************************************************/ /**
-   Listens for UDP packets broadcasted from a server that responded
-   to the request-packet sent from the client.
- **************************************************************************/
-static enum server_scan_status get_lan_server_list(struct server_scan *scan)
-{
-  socklen_t fromlen;
-  union fc_sockaddr fromend;
-  char msgbuf[128];
-  int type;
-  struct data_in din;
-  char servername[512];
-  char portstr[256];
-  int port;
-  char version[256];
-  char status[256];
-  char players[256];
-  char humans[256];
-  char message[1024];
-  bool found_new = FALSE;
-
-  while (TRUE) {
-    struct server *pserver;
-    bool duplicate = FALSE;
-
-    dio_input_init(&din, msgbuf, sizeof(msgbuf));
-    fromlen = sizeof(fromend);
-
-    /* Try to receive a packet from a server.  No select loop is needed;
-     * we just keep on reading until recvfrom returns -1. */
-    if (recvfrom(scan->sock, msgbuf, sizeof(msgbuf), 0, &fromend.saddr,
-                 &fromlen)
-        < 0) {
-      break;
-    }
-
-    dio_get_uint8_raw(&din, &type);
-    if (type != SERVER_LAN_VERSION) {
-      continue;
-    }
-    dio_get_string_raw(&din, servername, sizeof(servername));
-    dio_get_string_raw(&din, portstr, sizeof(portstr));
-    port = atoi(portstr);
-    dio_get_string_raw(&din, version, sizeof(version));
-    dio_get_string_raw(&din, status, sizeof(status));
-    dio_get_string_raw(&din, players, sizeof(players));
-    dio_get_string_raw(&din, humans, sizeof(humans));
-    dio_get_string_raw(&din, message, sizeof(message));
-
-    if (!fc_strcasecmp("none", servername)) {
-      bool nameinfo = FALSE;
-#ifdef FREECIV_IPV6_SUPPORT
-      char dst[INET6_ADDRSTRLEN];
-      char host[NI_MAXHOST], service[NI_MAXSERV];
-
-      if (!getnameinfo(&fromend.saddr, fromlen, host, NI_MAXHOST, service,
-                       NI_MAXSERV, NI_NUMERICSERV)) {
-        nameinfo = TRUE;
-      }
-      if (!nameinfo) {
-        if (fromend.saddr.sa_family == AF_INET6) {
-          inet_ntop(AF_INET6, &fromend.saddr_in6.sin6_addr, dst,
-                    sizeof(dst));
-        } else if (fromend.saddr.sa_family == AF_INET) {
-          inet_ntop(AF_INET, &fromend.saddr_in4.sin_addr, dst, sizeof(dst));
-          ;
-        } else {
-          fc_assert(FALSE);
-
-          log_error("Unsupported address family in get_lan_server_list()");
-
-          fc_snprintf(dst, sizeof(dst), "Unknown");
-        }
-      }
-#else  /* IPv6 support */
-      const char *dst = NULL;
-      struct hostent *from;
-      const char *host = NULL;
-
-      from = gethostbyaddr((char *) &fromend.saddr_in4.sin_addr,
-                           sizeof(fromend.saddr_in4.sin_addr), AF_INET);
-      if (from) {
-        host = from->h_name;
-        nameinfo = TRUE;
-      }
-      if (!nameinfo) {
-        dst = inet_ntoa(fromend.saddr_in4.sin_addr);
-      }
-#endif /* IPv6 support */
-
-      sz_strlcpy(servername, nameinfo ? host : dst);
-    }
-
-    /* UDP can send duplicate or delayed packets. */
-    fc_allocate_mutex(&scan->srvrs.mutex);
-    server_list_iterate(scan->srvrs.servers, aserver)
-    {
-      if (0 == fc_strcasecmp(aserver->host, servername)
-          && aserver->port == port) {
-        duplicate = TRUE;
-        break;
-      }
-    }
-    server_list_iterate_end;
-
-    if (duplicate) {
-      fc_release_mutex(&scan->srvrs.mutex);
-      continue;
-    }
-
-    log_debug("Received a valid announcement from a server on the LAN.");
-
-    pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
-    pserver->host = fc_strdup(servername);
-    pserver->port = port;
-    pserver->version = fc_strdup(version);
-    pserver->state = fc_strdup(status);
-    pserver->nplayers = atoi(players);
-    pserver->humans = atoi(humans);
-    pserver->message = fc_strdup(message);
-    pserver->players = NULL;
-    found_new = TRUE;
-
-    server_list_prepend(scan->srvrs.servers, pserver);
-    fc_release_mutex(&scan->srvrs.mutex);
-  }
-
-  if (found_new) {
-    return SCAN_STATUS_PARTIAL;
-  }
-  return SCAN_STATUS_WAITING;
-}
-
-/**********************************************************************/ /**
    Creates a new server scan and returns it, or NULL if impossible.
 
    Depending on 'type' the scan will look for either local or internet
@@ -774,7 +561,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
     }
   } break;
   case SERVER_SCAN_LOCAL:
-    ok = begin_lanserver_scan(scan);
+    ok = fcUdpScan::i()->begin_scan(scan);
     break;
   default:
     break;
@@ -832,7 +619,7 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
     return status;
   } break;
   case SERVER_SCAN_LOCAL:
-    return get_lan_server_list(scan);
+    return fcUdpScan::i()->get_server_list(scan);
     break;
   default:
     break;
@@ -889,11 +676,7 @@ void server_scan_finish(struct server_scan *scan)
       fc_release_mutex(&scan->srvrs.mutex);
     }
   } else {
-    if (scan->sock >= 0) {
-      fc_closesocket(scan->sock);
-      scan->sock = -1;
-    }
-
+    fcUdpScan::i()->drop();
     if (scan->srvrs.servers) {
       delete_server_list(scan->srvrs.servers);
       scan->srvrs.servers = NULL;
