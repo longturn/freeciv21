@@ -1266,14 +1266,15 @@ void city_map::mousePressEvent(QMouseEvent *event)
 void city_map::context_menu(QPoint point)
 {
   int canvas_x, canvas_y, city_x, city_y;
-  QAction *con_irrig_tf = nullptr;
+  QAction *con_clear = nullptr;
+  QAction *con_fallout = nullptr;
   QAction *con_irrig = nullptr;
-  QAction *con_mine_tf = nullptr;
+  QAction *con_irrig_tf = nullptr;
   QAction *con_mine = nullptr;
+  QAction *con_mine_tf = nullptr;
+  QAction *con_pollution = nullptr;
   QAction *con_road = nullptr;
   QAction *con_trfrm = nullptr;
-  QAction *con_pollution = nullptr;
-  QAction *con_fallout = nullptr;
   QMenu *con_menu;
   QWidgetAction *wid_act;
   struct terrain *pterr;
@@ -1380,8 +1381,11 @@ void city_map::context_menu(QPoint point)
     } else if (act == con_fallout) {
       task.activity = ACTIVITY_FALLOUT;
       target = TRUE;
+    } else if (act == con_clear) {
+      task.activity = ACTIVITY_LAST;
+    } else {
+      return;
     }
-
     task.want = 100;
 
     if (target) {
