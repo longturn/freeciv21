@@ -390,6 +390,7 @@ protected:
 class city_dialog : public qfc_dialog {
 
   Q_OBJECT
+  Q_DISABLE_COPY(city_dialog);
 
   bool happines_shown;
   QHBoxLayout *single_page_layout;
@@ -448,7 +449,8 @@ class city_dialog : public qfc_dialog {
   QSlider *slider_tab[2 * O_LAST + 2];
 
 public:
-  city_dialog(QWidget *parent = 0);
+  static city_dialog* instance();
+  static void drop();
   ~city_dialog();
   void setup_ui(struct city *qcity);
   void refresh();
@@ -457,6 +459,8 @@ public:
   float zoom;
 
 private:
+  city_dialog(QWidget *parent = 0);
+  static city_dialog* m_instance;
   int current_building;
   void update_title();
   void update_building();

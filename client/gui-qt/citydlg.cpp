@@ -68,11 +68,7 @@
 #include "hudwidget.h"
 
 extern QApplication *qapp;
-static bool city_dlg_created = false; /** defines if dialog for city has been
-                                       * already created. It's created only
-                                       * once per client
-                                       */
-static city_dialog *city_dlg;
+city_dialog* city_dialog::m_instance = 0;
 extern QString split_text(QString text, bool cut);
 extern QString cut_helptext(QString text);
 
@@ -545,7 +541,7 @@ void impr_info::update_buildings()
   }
 
   if (impr_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(city_dlg->scroll_height
+    parentWidget()->parentWidget()->setFixedHeight(city_dialog::instance()->scroll_height
                                                    + h + 6);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
@@ -590,7 +586,7 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
   }
 
   if (event->button() == Qt::LeftButton) {
-    ask = new hud_message_box(city_dlg);
+    ask = new hud_message_box(city_dialog::instance());
     if (test_player_sell_building_now(client.conn.playing, pcity, impr)
         != TR_SUCCESS) {
       return;
@@ -1069,7 +1065,7 @@ void unit_info::update_units()
     h = tileset_unit_width(get_tileset()) + 6;
   }
   if (unit_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(city_dlg->scroll_height
+    parentWidget()->parentWidget()->setFixedHeight(city_dialog::instance()->scroll_height
                                                    + h);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
@@ -1970,7 +1966,6 @@ city_dialog::city_dialog(QWidget *parent) : qfc_dialog(parent)
 
   installEventFilter(this);
 
-  ::city_dlg_created = true;
 }
 
 /************************************************************************/ /**
@@ -2140,7 +2135,6 @@ city_dialog::~city_dialog()
   current_units->clear_layout();
   supported_units->clear_layout();
   removeEventFilter(this);
-  ::city_dlg_created = false;
 }
 
 /************************************************************************/ /**
@@ -2522,7 +2516,7 @@ void city_dialog::cma_remove()
     return;
   }
 
-  ask = new hud_message_box(city_dlg);
+  ask = new hud_message_box(city_dialog::instance());
   ask->set_text_title(_("Remove this preset?"), cmafec_preset_get_descr(i));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
   ask->setDefaultButton(QMessageBox::Cancel);
@@ -3057,6 +3051,28 @@ void city_dialog::setup_ui(struct city *qcity)
   production_combo_p->blockSignals(false);
 }
 
+/****************************************************************************
+  Returns instance of city_dialog
+****************************************************************************/
+city_dialog *city_dialog::instance()
+{
+  if (!m_instance) {
+    m_instance = new city_dialog(gui()->mapview_wdg);
+  }
+  return m_instance;
+}
+
+/****************************************************************************
+  Deletes city_dialog instance
+****************************************************************************/
+void city_dialog::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = 0;
+  }
+}
+
 /************************************************************************/ /**
    Removes selected item from city worklist
  ****************************************************************************/
@@ -3264,7 +3280,7 @@ void city_dialog::buy()
     return;
   }
 
-  ask = new hud_message_box(city_dlg);
+  ask = new hud_message_box(city_dialog::instance());
   fc_snprintf(buf2, ARRAY_SIZE(buf2),
               PL_("Treasury contains %d gold.", "Treasury contains %d gold.",
                   client_player()->economic.gold),
@@ -3602,14 +3618,10 @@ void city_dialog::update_title()
  ****************************************************************************/
 void qtg_real_city_dialog_popup(struct city *pcity)
 {
-  if (!::city_dlg_created) {
-    ::city_dlg = new city_dialog(gui()->mapview_wdg);
-  }
-
-  city_dlg->setup_ui(pcity);
-  city_dlg->show();
-  city_dlg->activateWindow();
-  city_dlg->raise();
+  city_dialog::instance()->setup_ui(pcity);
+  city_dialog::instance()->show();
+  city_dialog::instance()->activateWindow();
+  city_dialog::instance()->raise();
 }
 
 /************************************************************************/ /**
@@ -3617,12 +3629,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
  ****************************************************************************/
 void destroy_city_dialog()
 {
-  if (!::city_dlg_created) {
-    return;
-  }
-
-  city_dlg->close();
-  ::city_dlg_created = false;
+  city_dialog::instance()->drop();
 }
 
 /************************************************************************/ /**
@@ -3630,11 +3637,8 @@ void destroy_city_dialog()
  ****************************************************************************/
 void qtg_popdown_city_dialog(struct city *pcity)
 {
-  if (!::city_dlg_created) {
-    return;
-  }
+  city_dialog::instance()->hide();
 
-  destroy_city_dialog();
 }
 
 /************************************************************************/ /**
@@ -3647,12 +3651,8 @@ void qtg_popdown_all_city_dialogs() { destroy_city_dialog(); }
  ****************************************************************************/
 void qtg_real_city_dialog_refresh(struct city *pcity)
 {
-  if (!::city_dlg_created) {
-    return;
-  }
-
   if (qtg_city_dialog_is_open(pcity)) {
-    city_dlg->refresh();
+    city_dialog::instance()->refresh();
   }
 }
 
@@ -3664,11 +3664,7 @@ void city_font_update()
   QList<QLabel *> l;
   QFont *f;
 
-  if (!::city_dlg_created) {
-    return;
-  }
-
-  l = city_dlg->findChildren<QLabel *>();
+  l = city_dialog::instance()->findChildren<QLabel *>();
 
   f = fc_font::instance()->get_font(fonts::notify_label);
 
@@ -3701,11 +3697,9 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
  ****************************************************************************/
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
-  if (!::city_dlg_created) {
-    return false;
-  }
 
-  if (city_dlg->pcity == pcity && city_dlg->isVisible()) {
+  if (city_dialog::instance()->pcity == pcity
+      && city_dialog::instance()->isVisible()) {
     return true;
   }
 
