@@ -24,6 +24,7 @@
 #include <QUrl>
 #include <QUrlQuery>
 #include <QNetworkDatagram>
+#include <QDebug>
 
 /* dependencies */
 #include "cvercmp.h"
@@ -107,10 +108,10 @@ void fcUdpScan::drop()
  **************************************************************************/
 bool fcUdpScan::begin_scan(struct server_scan *scan)
 {
+  const char *group;
   struct raw_data_out dout;
   char buffer[MAX_LEN_PACKET];
   enum QHostAddress::SpecialAddress address_type;
-  const char *group;
   size_t size;
 
   if (announce == ANNOUNCE_NONE) {
@@ -133,7 +134,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
     char errstr[2048];
 
     fc_snprintf(errstr, sizeof(errstr),
-                _("Binding socket to listen LAN announcements failed:\n%s"),
+                _("Binding socket to listen LAN announcements failed:\n"),
                 fc_strerror(fc_get_errno()));
     scan->error_func(scan, errstr);
     return FALSE;
@@ -151,8 +152,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   dio_output_init(&dout, buffer, sizeof(buffer));
   dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
   size = dio_output_used(&dout);
-  fcUdpScan::i()->writeDatagram(QByteArray(buffer, size), address_type,
-                                SERVER_LAN_PORT);
+  writeDatagram(QByteArray(buffer, size), QHostAddress(group), SERVER_LAN_PORT);
 
   fc_allocate_mutex(&scan->srvrs.mutex);
   scan->srvrs.servers = server_list_new();
@@ -164,7 +164,16 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 void fcUdpScan::readPendingDatagrams()
 {
   while (hasPendingDatagrams()) {
-    datagram = receiveDatagram();
+    bool add = true;
+    QNetworkDatagram qn = receiveDatagram();
+    for (auto d: datagram_list) {
+      if (d.data().data() == qn.data().data()) {
+          add = false;
+      }
+    }
+    if (add) {
+      datagram_list.append(qn);
+    }
   }
 }
 
@@ -191,60 +200,50 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   struct server *pserver;
   bool duplicate = FALSE;
 
-  if(datagram.isNull() || !datagram.isValid()) {
-    return SCAN_STATUS_WAITING;
-  }
-  msgbuf = datagram.data().data();
-  dio_input_init(&din, msgbuf, datagram.data().size());
-
-  dio_get_uint8_raw(&din, &type);
-  dio_get_string_raw(&din, servername, sizeof(servername));
-  dio_get_string_raw(&din, portstr, sizeof(portstr));
-  port = atoi(portstr);
-  dio_get_string_raw(&din, version, sizeof(version));
-  dio_get_string_raw(&din, status, sizeof(status));
-  dio_get_string_raw(&din, players, sizeof(players));
-  dio_get_string_raw(&din, humans, sizeof(humans));
-  dio_get_string_raw(&din, message, sizeof(message));
-
-  if (!fc_strcasecmp("none", servername)) {
-    bool nameinfo = FALSE;
-
-    const char *dst = NULL;
-    struct hostent *from;
-    const char *host = NULL;
-    sz_strlcpy(servername,
-               datagram.senderAddress().toString().toLocal8Bit());
-  }
-
-  /* UDP can send duplicate or delayed packets. */
-  fc_allocate_mutex(&scan->srvrs.mutex);
-  server_list_iterate(scan->srvrs.servers, aserver)
-  {
-    if (0 == fc_strcasecmp(aserver->host, servername)
-        && aserver->port == port) {
-      duplicate = TRUE;
-      return SCAN_STATUS_WAITING;
+  for (auto datagram:  datagram_list) {
+    if (datagram.isNull() || !datagram.isValid()) {
+      continue;
     }
+    msgbuf = datagram.data().data();
+    dio_input_init(&din, msgbuf, datagram.data().size());
+
+    dio_get_uint8_raw(&din, &type);
+    dio_get_string_raw(&din, servername, sizeof(servername));
+    dio_get_string_raw(&din, portstr, sizeof(portstr));
+    port = atoi(portstr);
+    dio_get_string_raw(&din, version, sizeof(version));
+    dio_get_string_raw(&din, status, sizeof(status));
+    dio_get_string_raw(&din, players, sizeof(players));
+    dio_get_string_raw(&din, humans, sizeof(humans));
+    dio_get_string_raw(&din, message, sizeof(message));
+
+    if (!fc_strcasecmp("none", servername)) {
+      bool nameinfo = FALSE;
+
+      const char *dst = NULL;
+      struct hostent *from;
+      const char *host = NULL;
+      sz_strlcpy(servername,
+                 datagram.senderAddress().toString().toLocal8Bit());
+    }
+
+    log_debug("Received a valid announcement from a server on the LAN.");
+
+    pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
+    pserver->host = fc_strdup(servername);
+    pserver->port = port;
+    pserver->version = fc_strdup(version);
+    pserver->state = fc_strdup(status);
+    pserver->nplayers = atoi(players);
+    pserver->humans = atoi(humans);
+    pserver->message = fc_strdup(message);
+    pserver->players = NULL;
+    found_new = TRUE;
+
+    server_list_prepend(scan->srvrs.servers, pserver);
+    fc_release_mutex(&scan->srvrs.mutex);
   }
-  server_list_iterate_end;
-
-  log_debug("Received a valid announcement from a server on the LAN.");
-
-  pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
-  pserver->host = fc_strdup(servername);
-  pserver->port = port;
-  pserver->version = fc_strdup(version);
-  pserver->state = fc_strdup(status);
-  pserver->nplayers = atoi(players);
-  pserver->humans = atoi(humans);
-  pserver->message = fc_strdup(message);
-  pserver->players = NULL;
-  found_new = TRUE;
-
-  server_list_prepend(scan->srvrs.servers, pserver);
-  fc_release_mutex(&scan->srvrs.mutex);
-
+  datagram_list.clear();
   if (found_new) {
     return SCAN_STATUS_PARTIAL;
   }

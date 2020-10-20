@@ -45,7 +45,7 @@ public slots:
 private:
   fcUdpScan(QObject *parent = 0);
   static fcUdpScan *m_instance;
-  QNetworkDatagram datagram;
+  QList<QNetworkDatagram> datagram_list;
 };
 
 
