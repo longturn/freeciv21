@@ -544,7 +544,6 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   scan = new server_scan;
   scan->type = type;
   scan->error_func = error_func;
-  scan->sock = -1;
   fc_init_mutex(&scan->srvrs.mutex);
 
   switch (type) {
@@ -660,14 +659,6 @@ void server_scan_finish(struct server_scan *scan)
     fc_thread_wait(&scan->meta.thr);
     fc_destroy_mutex(&scan->meta.mutex);
 
-    /* This mainly duplicates code from below "else" block.
-     * That's intentional, since they will be completely different in future
-     * versions. We are better prepared for that by having them separately
-     * already. */
-    if (scan->sock >= 0) {
-      fc_closesocket(scan->sock);
-      scan->sock = -1;
-    }
 
     if (scan->srvrs.servers) {
       fc_allocate_mutex(&scan->srvrs.mutex);
