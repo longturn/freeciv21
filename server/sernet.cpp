@@ -17,8 +17,8 @@
 
 #include "fc_prehdrs.h"
 
-#include <QUdpSocket>
 #include <QNetworkDatagram>
+#include <QUdpSocket>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1260,13 +1260,15 @@ int server_open_socket(void)
   udp_socket = new QUdpSocket();
 
   if (!udp_socket->bind(address_type, SERVER_LAN_PORT,
-            QAbstractSocket::ReuseAddressHint)) {
-    log_error("SO_REUSEADDR failed: %s", udp_socket->errorString().toLocal8Bit().data());
+                        QAbstractSocket::ReuseAddressHint)) {
+    log_error("SO_REUSEADDR failed: %s",
+              udp_socket->errorString().toLocal8Bit().data());
     return 1;
   }
   group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
-    log_error("Announcement socket binding failed: %s", udp_socket->errorString().toLocal8Bit().data());
+    log_error("Announcement socket binding failed: %s",
+              udp_socket->errorString().toLocal8Bit().data());
   }
 
   return 0;
@@ -1410,7 +1412,7 @@ static void get_lanserver_announcement(void)
 {
   fd_set readfs, exceptfs;
   fc_timeval tv;
-  char* msgbuf;
+  char *msgbuf;
   struct data_in din;
   int type;
 
@@ -1421,18 +1423,18 @@ static void get_lanserver_announcement(void)
   tv.tv_sec = 0;
   tv.tv_usec = 0;
 
-    if (udp_socket->hasPendingDatagrams()) {
-      QNetworkDatagram qnd = udp_socket->receiveDatagram();
-      msgbuf = qnd.data().data();
-      dio_input_init(&din, msgbuf, 1);
-      dio_get_uint8_raw(&din, &type);
-      if (type == SERVER_LAN_VERSION) {
-        log_debug("Received request for server LAN announcement.");
-        send_lanserver_response();
-      } else {
-        log_debug("Received invalid request for server LAN announcement.");
-      }
+  if (udp_socket->hasPendingDatagrams()) {
+    QNetworkDatagram qnd = udp_socket->receiveDatagram();
+    msgbuf = qnd.data().data();
+    dio_input_init(&din, msgbuf, 1);
+    dio_get_uint8_raw(&din, &type);
+    if (type == SERVER_LAN_VERSION) {
+      log_debug("Received request for server LAN announcement.");
+      send_lanserver_response();
+    } else {
+      log_debug("Received invalid request for server LAN announcement.");
     }
+  }
 }
 
 /*************************************************************************/ /**
@@ -1469,7 +1471,7 @@ static void send_lanserver_response(void)
     address_type = QHostAddress::AnyIPv4;
   }
   lockal_udpsock.bind(address_type, SERVER_LAN_PORT + 1,
-            QAbstractSocket::ReuseAddressHint);
+                      QAbstractSocket::ReuseAddressHint);
 
   lockal_udpsock.joinMulticastGroup(QHostAddress(group));
   /* Create a description of server state to send to clients.  */
@@ -1521,7 +1523,7 @@ static void send_lanserver_response(void)
   dio_put_string_raw(&dout, humans);
   dio_put_string_raw(&dout, get_meta_message_string());
   size = dio_output_used(&dout);
-  lockal_udpsock.writeDatagram(QByteArray(buffer, size),
-                         QHostAddress(group), SERVER_LAN_PORT +1);
+  lockal_udpsock.writeDatagram(QByteArray(buffer, size), QHostAddress(group),
+                               SERVER_LAN_PORT + 1);
   lockal_udpsock.close();
 }
