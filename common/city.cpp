@@ -564,7 +564,7 @@ void generate_city_map_indices(void)
   }
 
   fc_assert(NULL == city_map_index);
-  city_map_index = new iter_index[city_count_tiles];
+  city_map_index = new iter_index;
 
   /* copy the index numbers from city_map_index_tmp into city_map_index */
   for (i = 0; i < city_count_tiles; i++) {
@@ -605,7 +605,7 @@ void generate_city_map_indices(void)
 /**********************************************************************/ /**
    Free memory allocated by generate_citymap_index
  **************************************************************************/
-void free_city_map_index(void) { delete[] city_map_index; }
+void free_city_map_index(void) { delete city_map_index; }
 
 /**********************************************************************/ /**
    Return an id string for the output type.  This string can be used
