@@ -16,7 +16,7 @@
 
 #include <QUdpSocket>
 #include <QNetworkDatagram>
-#include <QObject>
+
 /* utility */
 #include "fcthread.h"
 

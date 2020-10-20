@@ -23,35 +23,29 @@
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QUrlQuery>
-#include <QtDebug>
 #include <QNetworkDatagram>
+
 /* dependencies */
 #include "cvercmp.h"
 
-/* utility */
+// /* utility */
 #include "fcintl.h"
 #include "fcthread.h"
-#include "log.h"
-#include "mem.h"
 #include "netintf.h"
-#include "rand.h" /* fc_rand() */
-#include "registry.h"
 #include "support.h"
 
-/* common */
+ /* common */
 #include "capstr.h"
 #include "dataio.h"
-#include "game.h"
-#include "packets.h"
 #include "version.h"
 
-/* client */
+ /* client */
 #include "chatline_common.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "servers.h"
 
-#include "gui_main_g.h"
+// #include "gui_main_g.h"
 
 struct server_scan {
   enum server_scan_type type;
