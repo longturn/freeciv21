@@ -73,9 +73,15 @@ extern enum announce_type announce;
 static bool begin_metaserver_scan(struct server_scan *scan);
 static void delete_server_list(struct server_list *server_list);
 
-fcUdpScan::fcUdpScan(QObject *parent) : QUdpSocket(parent) {
-        connect(this, &QUdpSocket::readyRead,
-                this, &fcUdpScan::readPendingDatagrams);
+fcUdpScan::fcUdpScan(QObject *parent) : QUdpSocket(parent)
+{
+  fcudp_scan = nullptr;
+  connect(this, &QUdpSocket::readyRead, this,
+          &fcUdpScan::readPendingDatagrams);
+  connect(
+      this,
+      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+      this, &fcUdpScan::sockError);
 }
 
 /**************************************************************************
@@ -88,6 +94,18 @@ fcUdpScan *fcUdpScan::i()
     m_instance = new fcUdpScan;
   }
   return m_instance;
+}
+
+/**************************************************************************
+  Pass errors to main scan
+**************************************************************************/
+void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
+{
+  char* errstr;
+  QString err;
+  if (!fcudp_scan) return;
+  errstr = errorString().toLocal8Bit().data();
+  fcudp_scan->error_func(fcudp_scan, errstr);
 }
 
 /**************************************************************************
@@ -114,6 +132,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   enum QHostAddress::SpecialAddress address_type;
   size_t size;
 
+  fcudp_scan = scan;
   if (announce == ANNOUNCE_NONE) {
     /* Succeeded in doing nothing */
     return TRUE;
@@ -131,23 +150,10 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 
   if (!bind(address_type, SERVER_LAN_PORT + 1,
             QAbstractSocket::ReuseAddressHint)) {
-    char errstr[2048];
-
-    fc_snprintf(errstr, sizeof(errstr),
-                _("Binding socket to listen LAN announcements failed:\n"),
-                fc_strerror(fc_get_errno()));
-    scan->error_func(scan, errstr);
-    return FALSE;
+    return false;
   }
 
-  if(!joinMulticastGroup(QHostAddress(group))) {
-      char errstr[2048];
-
-      fc_snprintf(errstr, sizeof(errstr),
-          _("Adding membership for LAN announcement group failed:\n%s"),
-          fc_strerror(fc_get_errno()));
-      scan->error_func(scan, errstr);
-    }
+  joinMulticastGroup(QHostAddress(group));
 
   dio_output_init(&dout, buffer, sizeof(buffer));
   dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);

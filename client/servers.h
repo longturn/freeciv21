@@ -42,7 +42,10 @@ public:
   enum server_scan_status get_server_list(struct server_scan *scan);
 public slots:
   void readPendingDatagrams();
+private slots:
+  void sockError(QAbstractSocket::SocketError socketError);
 private:
+  struct server_scan *fcudp_scan;
   fcUdpScan(QObject *parent = 0);
   static fcUdpScan *m_instance;
   QList<QNetworkDatagram> datagram_list;
