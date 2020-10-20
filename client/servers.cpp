@@ -109,6 +109,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
 {
   struct raw_data_out dout;
   char buffer[MAX_LEN_PACKET];
+  enum QHostAddress::SpecialAddress address_type;
   const char *group;
   size_t size;
 
@@ -118,8 +119,17 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   }
   group = get_multicast_group(announce == ANNOUNCE_IPV6);
 
-  if (!bind(QHostAddress::AnyIPv4, SERVER_LAN_PORT + 1,
-                        QAbstractSocket::ReuseAddressHint)) {
+  switch (announce) {
+  case ANNOUNCE_IPV6:
+    address_type = QHostAddress::AnyIPv6;
+    break;
+  case ANNOUNCE_IPV4:
+  default:
+    address_type = QHostAddress::AnyIPv4;
+  }
+
+  if (!bind(address_type, SERVER_LAN_PORT + 1,
+            QAbstractSocket::ReuseAddressHint)) {
     char errstr[2048];
 
     fc_snprintf(errstr, sizeof(errstr),
@@ -141,8 +151,8 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   dio_output_init(&dout, buffer, sizeof(buffer));
   dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
   size = dio_output_used(&dout);
-  fcUdpScan::i()->writeDatagram(QByteArray(buffer, size),
-                                QHostAddress::AnyIPv4, SERVER_LAN_PORT);
+  fcUdpScan::i()->writeDatagram(QByteArray(buffer, size), address_type,
+                                SERVER_LAN_PORT);
 
   fc_allocate_mutex(&scan->srvrs.mutex);
   scan->srvrs.servers = server_list_new();
@@ -181,7 +191,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   struct server *pserver;
   bool duplicate = FALSE;
 
-  if( datagram.isNull() || !datagram.isValid()) {
+  if(datagram.isNull() || !datagram.isValid()) {
     return SCAN_STATUS_WAITING;
   }
   msgbuf = datagram.data().data();
@@ -214,7 +224,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     if (0 == fc_strcasecmp(aserver->host, servername)
         && aserver->port == port) {
       duplicate = TRUE;
-      break;
+      return SCAN_STATUS_WAITING;
     }
   }
   server_list_iterate_end;
