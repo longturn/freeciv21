@@ -15,6 +15,7 @@
 #define FC__SERVERS_H
 
 #include <QUdpSocket>
+#include <QNetworkDatagram>
 #include <QObject>
 /* utility */
 #include "fcthread.h"
@@ -31,6 +32,7 @@ enum server_scan_status {
   SCAN_STATUS_ABORT
 };
 
+
 class fcUdpScan : public QUdpSocket {
 public:
   static void drop();
@@ -38,9 +40,12 @@ public:
   virtual ~fcUdpScan(){};
   bool begin_scan(struct server_scan *scan);
   enum server_scan_status get_server_list(struct server_scan *scan);
+public slots:
+  void readPendingDatagrams();
 private:
   fcUdpScan(QObject *parent = 0);
   static fcUdpScan *m_instance;
+  QNetworkDatagram datagram;
 };
 
 
