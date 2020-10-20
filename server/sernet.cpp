@@ -259,6 +259,8 @@ void close_connections_and_socket(void)
 
   if (srvarg.announce != ANNOUNCE_NONE) {
     udp_socket->close();
+    delete udp_socket;
+    udp_socket = nullptr;
   }
 
 #ifdef FREECIV_HAVE_LIBREADLINE
