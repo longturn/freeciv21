@@ -423,7 +423,7 @@ void city_widget::clear_worlist()
   worklist_init(&empty);
   struct city *pcity;
 
-  foreach (pcity, selected_cities) {
+  for (auto pcity: selected_cities) {
     Q_ASSERT(pcity != NULL);
     city_set_worklist(pcity, &empty);
   }
@@ -436,7 +436,7 @@ void city_widget::buy()
 {
   struct city *pcity;
 
-  foreach (pcity, selected_cities) {
+for (auto pcity: selected_cities) {
     Q_ASSERT(pcity != NULL);
     cityrep_buy(pcity);
   }
@@ -479,7 +479,7 @@ void city_widget::display_list_menu(const QPoint &)
   if (selected_cities.isEmpty()) {
     select_only = true;
   }
-  foreach (pcity, selected_cities) {
+  for (auto pcity: selected_cities) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
   fc_snprintf(buf, sizeof(buf), _("Buy ( Cost: %d )"), sell_gold);
@@ -646,7 +646,7 @@ void city_widget::display_list_menu(const QPoint &)
     }
     city_list_iterate_end;
 
-    foreach (pcity, selected_cities) {
+    for (auto pcity: selected_cities) {
       if (nullptr != pcity) {
         switch (m_state) {
         case CHANGE_PROD_NOW:
@@ -871,7 +871,7 @@ void city_widget::select_same_island()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    foreach (pscity, selected_cities) {
+    for (auto pscity: selected_cities) {
       if (NULL != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));
@@ -1108,7 +1108,7 @@ void city_widget::update_model()
     if (str.contains('\n')) {
       sl = str.split('\n');
       width = 0;
-      foreach (s, sl) {
+      for (auto s : sl) {
         width = qMax(width, fm.horizontalAdvance(s));
       }
       header()->resizeSection(j, width + 10);
@@ -1183,7 +1183,7 @@ void city_widget::cities_selected(const QItemSelection &sl,
   if (indexes.isEmpty()) {
     return;
   }
-  foreach (i, indexes) {
+  for (auto i: indexes) {
     qvar = i.data(Qt::UserRole);
     if (qvar.isNull()) {
       continue;

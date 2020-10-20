@@ -1049,7 +1049,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
   objs = gui()->sidebar_wdg->objects;
 
-  foreach (sw, objs) {
+  for (auto sw: objs) {
     sw->update_final_pixmap();
   }
   currentWidget()->hide();

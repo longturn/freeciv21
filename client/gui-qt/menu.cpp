@@ -111,11 +111,11 @@ void trade_generator::clear_trade_planing()
 {
   struct city *pcity;
   trade_city *tc;
-  foreach (pcity, virtual_cities) {
+  for (auto pcity : virtual_cities) {
     destroy_city_virtual(pcity);
   }
   virtual_cities.clear();
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     delete tc;
   }
   cities.clear();
@@ -144,7 +144,7 @@ void trade_generator::add_tile(struct tile *ptile)
 
   pcity = tile_city(ptile);
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (pcity != nullptr) {
       if (tc->city == pcity) {
         remove_city(pcity);
@@ -174,7 +174,7 @@ void trade_generator::remove_city(struct city *pcity)
 {
   trade_city *tc;
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (tc->city->tile == pcity->tile) {
       cities.removeAll(tc);
       gui()->infotab->chtwdg->append(
@@ -193,7 +193,7 @@ void trade_generator::remove_virtual_city(tile *ptile)
   struct city *c;
   trade_city *tc;
 
-  foreach (c, virtual_cities) {
+  for (auto c : virtual_cities) {
     if (c->tile == ptile) {
       virtual_cities.removeAll(c);
       gui()->infotab->chtwdg->append(
@@ -201,7 +201,7 @@ void trade_generator::remove_virtual_city(tile *ptile)
     }
   }
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (tc->city->tile == ptile) {
       cities.removeAll(tc);
       return;
@@ -223,19 +223,19 @@ void trade_generator::calculate()
     tdone = true;
     std::sort(cities.begin(), cities.end(), tradecity_rand);
     lines.clear();
-    foreach (tc, cities) {
+    for (auto tc : cities) {
       tc->pos_cities.clear();
       tc->new_tr_cities.clear();
       tc->curr_tr_cities.clear();
     }
-    foreach (tc, cities) {
+    for (auto tc : cities) {
       tc->trade_num = city_num_trade_routes(tc->city);
       tc->poss_trade_num = 0;
       tc->pos_cities.clear();
       tc->new_tr_cities.clear();
       tc->curr_tr_cities.clear();
       tc->done = false;
-      foreach (ttc, cities) {
+      for (auto ttc : cities) {
         if (!have_cities_trade_route(tc->city, ttc->city)
             && can_establish_trade_route(tc->city, ttc->city)) {
           tc->poss_trade_num++;
@@ -250,7 +250,7 @@ void trade_generator::calculate()
     discard();
     find_certain_routes();
 
-    foreach (tc, cities) {
+    for (auto tc : cities) {
       if (!tc->done) {
         tdone = false;
       }
@@ -259,7 +259,7 @@ void trade_generator::calculate()
       break;
     }
   }
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (!tc->done) {
       char text[1024];
       fc_snprintf(text, sizeof(text),
@@ -284,7 +284,7 @@ int trade_generator::find_over_max(struct city *pcity = nullptr)
   trade_city *tc;
   int max = 0;
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (pcity != tc->city) {
       max = qMax(max, tc->over_max);
     }
@@ -301,7 +301,7 @@ trade_city *trade_generator::find_most_free()
   trade_city *rc = nullptr;
   int max = 0;
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (max < tc->over_max) {
       max = tc->over_max;
       rc = tc;
@@ -404,11 +404,11 @@ void trade_generator::find_certain_routes()
   trade_city *tc;
   trade_city *ttc;
 
-  foreach (tc, cities) {
+  for (auto tc : cities) {
     if (tc->done || tc->over_max > 0) {
       continue;
     }
-    foreach (ttc, cities) {
+    for (auto ttc : cities) {
       if (ttc->done || ttc->over_max > 0 || tc == ttc || tc->done
           || tc->over_max > 0) {
         continue;
@@ -554,7 +554,7 @@ void gov_menu::create()
   int gov_count, i;
 
   // Clear any content
-  foreach (action, QWidget::actions()) {
+  for (auto action : QWidget::actions()) {
     removeAction(action);
     action->deleteLater();
   }
@@ -635,7 +635,7 @@ QSet<gov_menu *> gov_menu::instances = QSet<gov_menu *>();
  **************************************************************************/
 void gov_menu::create_all()
 {
-  foreach (gov_menu *m, instances) {
+  for (gov_menu *m : instances) {
     m->create();
   }
 }
@@ -645,7 +645,7 @@ void gov_menu::create_all()
  **************************************************************************/
 void gov_menu::update_all()
 {
-  foreach (gov_menu *m, instances) {
+  for (gov_menu *m : instances) {
     m->update();
   }
 }
@@ -676,7 +676,7 @@ static void reset_menu_and_sub_menues(QMenu *menu)
   QAction *action;
 
   /* Delete each existing menu item. */
-  foreach (action, menu->actions()) {
+  for (auto action : menu->actions()) {
     if (action->menu() != nullptr) {
       /* Delete the sub menu */
       reset_menu_and_sub_menues(action->menu());
@@ -831,7 +831,7 @@ void go_act_menu::update()
    * selected units can perform it. Checking if the action can be performed
    * at the current tile is pointless since it should be performed at the
    * target tile. */
-  foreach (QAction *item, items.keys()) {
+  for (QAction *item : items.keys()) {
     if (units_can_do_action(get_units_in_focus(), items.value(item), TRUE)) {
       item->setVisible(true);
       can_do_something = true;
@@ -867,7 +867,7 @@ QSet<go_act_menu *> go_act_menu::instances;
  **************************************************************************/
 void go_act_menu::reset_all()
 {
-  foreach (go_act_menu *m, instances) {
+  for (go_act_menu *m : instances) {
     m->reset();
   }
 }
@@ -877,7 +877,7 @@ void go_act_menu::reset_all()
  **************************************************************************/
 void go_act_menu::update_all()
 {
-  foreach (go_act_menu *m, instances) {
+  for (go_act_menu *m : instances) {
     m->update();
   }
 }
@@ -894,7 +894,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 
   int i = 0;
   qunit = punit;
-  foreach (fui, units_list.unit_list) {
+  for (auto fui : units_list.unit_list) {
     zunit = unit_list_find(client_player()->units, fui->id);
     i++;
     if (i >= pos) {
@@ -1691,8 +1691,8 @@ void mr_menu::execute_shortcut(int sid)
   seq = QKeySequence(shortcut_to_string(fcs));
 
   menu_list = findChildren<QMenu *>();
-  foreach (const QMenu *m, menu_list) {
-    foreach (QAction *a, m->actions()) {
+  for (const QMenu *m : menu_list) {
+    for (QAction *a : m->actions()) {
       if (a->shortcut() == seq && a->isEnabled()) {
         a->activate(QAction::Trigger);
         return;
@@ -1711,8 +1711,8 @@ QString mr_menu::shortcut_exist(fc_shortcut *fcs)
 
   seq = QKeySequence(shortcut_to_string(fcs));
   menu_list = findChildren<QMenu *>();
-  foreach (const QMenu *m, menu_list) {
-    foreach (QAction *a, m->actions()) {
+  for (const QMenu *m : menu_list) {
+    for (QAction *a : m->actions()) {
       if (a->shortcut() == seq && fcs->mouse == Qt::AllButtons) {
         return a->text();
       }
@@ -1735,8 +1735,8 @@ QString mr_menu::shortcut_2_menustring(int sid)
   seq = QKeySequence(shortcut_to_string(fcs));
 
   menu_list = findChildren<QMenu *>();
-  foreach (const QMenu *m, menu_list) {
-    foreach (QAction *a, m->actions()) {
+  for (const QMenu *m : menu_list) {
+    for (QAction *a : m->actions()) {
       if (a->shortcut() == seq) {
         return (a->text() + " ("
                 + a->shortcut().toString(QKeySequence::NativeText) + ")");
@@ -1793,7 +1793,7 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  foreach (act, roads_menu->actions()) {
+  for (auto act : roads_menu->actions()) {
     removeAction(act);
     act->deleteLater();
   }
@@ -1841,7 +1841,7 @@ void mr_menu::update_bases_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  foreach (act, bases_menu->actions()) {
+  for (auto act : bases_menu->actions()) {
     removeAction(act);
     act->deleteLater();
   }
@@ -1908,7 +1908,7 @@ void mr_menu::menus_sensitive()
   players_iterate_end;
 
   /** Disable first all sensitive menus */
-  foreach (QAction *a, menu_list) {
+  for (QAction *a : menu_list) {
     a->setEnabled(false);
   }
 
@@ -1920,7 +1920,7 @@ void mr_menu::menus_sensitive()
 
   /* Non unit menus */
   keys = menu_list.keys();
-  foreach (munit key, keys) {
+  for (munit key : keys) {
     i = menu_list.find(key);
     while (i != menu_list.end() && i.key() == key) {
       switch (key) {
@@ -1987,7 +1987,7 @@ void mr_menu::menus_sensitive()
   unit_list_iterate_end;
 
   keys = menu_list.keys();
-  foreach (munit key, keys) {
+  for (munit key : keys) {
     i = menu_list.find(key);
     while (i != menu_list.end() && i.key() == key) {
       switch (key) {
@@ -2679,7 +2679,7 @@ void mr_menu::slot_autocaravan()
   punit = head_of_units_in_focus();
   homecity = game_city_by_number(punit->homecity);
   home_tile = homecity->tile;
-  foreach (gilles, gui()->trade_gen.lines) {
+  for (auto gilles : gui()->trade_gen.lines) {
     if ((gilles.t1 == home_tile || gilles.t2 == home_tile)
         && gilles.autocaravan == nullptr) {
       /* send caravan */
@@ -2790,7 +2790,7 @@ void mr_menu::slot_execute_orders()
   struct tile *new_tile;
   int i = 0;
 
-  foreach (fui, units_list.unit_list) {
+  for (auto fui : units_list.unit_list) {
     i++;
     punit = unit_list_find(client_player()->units, fui->id);
     if (punit == nullptr) {
@@ -3210,7 +3210,7 @@ void mr_menu::tileset_custom_load()
                    " map topology!"));
   layout->addWidget(label);
 
-  foreach (s, sl) {
+  for (auto s : sl) {
     QByteArray on_bytes;
 
     on_bytes = s.toLocal8Bit();

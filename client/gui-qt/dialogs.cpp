@@ -1879,7 +1879,7 @@ void popup_action_selection(struct unit *actor_unit,
   unit_act = qdef_act::action()->vs_unit_get();
   city_act = qdef_act::action()->vs_city_get();
 
-  foreach (caras, gui()->trade_gen.lines) {
+  for (auto caras : gui()->trade_gen.lines) {
     if (caras.autocaravan == actor_unit) {
       int i;
       if (nullptr != game_unit_by_number(actor_unit->id)
@@ -4039,7 +4039,7 @@ void units_select::create_pixmap()
       pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
     }
     pix->fill(Qt::transparent);
-    foreach (punit, unit_list) {
+    for (auto punit: unit_list) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
       unit_pixmap->map_pixmap.fill(Qt::transparent);

@@ -963,7 +963,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  foreach (a, actions) {
+  for (auto a: actions) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1133,7 +1133,7 @@ int unit_actions::update_actions()
   a->set_pixmap(fc_icons::instance()->get_pixmap("done"));
   actions.append(a);
 
-  foreach (a, actions) {
+  for (auto a: actions) {
     a->setToolTip(
         gui()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
@@ -1983,7 +1983,7 @@ void hud_battle_log::update_size()
   gui()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  foreach (hudc, lhuc) {
+  for (auto hudc: lhuc) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -2021,7 +2021,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  foreach (hudc, lhuc) {
+  for (auto hudc: lhuc) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -2070,10 +2070,10 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
   hud_unit_combat *hupdate;
 
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
-    foreach (hudc, lhuc) {
+    for (auto hudc: lhuc) {
       if (hudc->get_focus()) {
         m_timer.restart();
-        foreach (hupdate, lhuc) {
+        for (auto hupdate : lhuc) {
           hupdate->set_fading(1.0);
         }
         return;
@@ -2093,7 +2093,7 @@ void hud_battle_log::showEvent(QShowEvent *event)
 {
   hud_unit_combat *hupdate;
 
-  foreach (hupdate, lhuc) {
+  for (auto hupdate : lhuc) {
     hupdate->set_fading(1.0);
   }
   m_timer.restart();

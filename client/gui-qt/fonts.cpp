@@ -104,7 +104,7 @@ void fc_font::init_fonts()
  ****************************************************************************/
 void fc_font::release_fonts()
 {
-  foreach (QFont *f, font_map) {
+  for (QFont *f: font_map) {
     delete f;
   }
 }
@@ -239,7 +239,7 @@ QString configure_font(QString font_name, QStringList sl, int size,
   QString str;
   QFont *f;
 
-  foreach (str, sl) {
+  for (auto str : sl) {
     if (database.families().contains(str)) {
       QByteArray fn_bytes;
 

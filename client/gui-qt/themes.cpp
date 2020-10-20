@@ -163,7 +163,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   sl << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
   name = QString(directory);
 
-  foreach (str, sl) {
+  for (auto str: sl) {
     f.setFileName(name + DIR_SEPARATOR + str + DIR_SEPARATOR
                   + "resource.qss");
     if (!f.exists()) {
