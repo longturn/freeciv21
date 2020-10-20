@@ -17,36 +17,35 @@
 
 // Qt
 #include <QByteArray>
+#include <QDebug>
 #include <QEventLoop>
 #include <QNetworkAccessManager>
+#include <QNetworkDatagram>
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QUrl>
 #include <QUrlQuery>
-#include <QNetworkDatagram>
-#include <QDebug>
 
 /* dependencies */
 #include "cvercmp.h"
 
-// /* utility */
+/* utility */
 #include "fcintl.h"
 #include "fcthread.h"
 #include "netintf.h"
 #include "support.h"
 
- /* common */
+/* common */
 #include "capstr.h"
 #include "dataio.h"
 #include "version.h"
 
- /* client */
+/* client */
 #include "chatline_common.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "servers.h"
 
-// #include "gui_main_g.h"
 
 struct server_scan {
   enum server_scan_type type;
@@ -101,9 +100,9 @@ fcUdpScan *fcUdpScan::i()
 **************************************************************************/
 void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 {
-  char* errstr;
-  QString err;
-  if (!fcudp_scan) return;
+  char *errstr;
+  if (!fcudp_scan)
+    return;
   errstr = errorString().toLocal8Bit().data();
   fcudp_scan->error_func(fcudp_scan, errstr);
 }
@@ -158,7 +157,8 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   dio_output_init(&dout, buffer, sizeof(buffer));
   dio_put_uint8_raw(&dout, SERVER_LAN_VERSION);
   size = dio_output_used(&dout);
-  writeDatagram(QByteArray(buffer, size), QHostAddress(group), SERVER_LAN_PORT);
+  writeDatagram(QByteArray(buffer, size), QHostAddress(group),
+                SERVER_LAN_PORT);
 
   fc_allocate_mutex(&scan->srvrs.mutex);
   scan->srvrs.servers = server_list_new();
@@ -172,9 +172,9 @@ void fcUdpScan::readPendingDatagrams()
   while (hasPendingDatagrams()) {
     bool add = true;
     QNetworkDatagram qn = receiveDatagram();
-    for (auto d: datagram_list) {
+    for (auto d : datagram_list) {
       if (d.data().data() == qn.data().data()) {
-          add = false;
+        add = false;
       }
     }
     if (add) {
@@ -182,7 +182,6 @@ void fcUdpScan::readPendingDatagrams()
     }
   }
 }
-
 
 /**********************************************************************/ /**
    Listens for UDP packets broadcasted from a server that responded
@@ -206,7 +205,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   struct server *pserver;
   bool duplicate = FALSE;
 
-  for (auto datagram:  datagram_list) {
+  for (auto datagram : datagram_list) {
     if (datagram.isNull() || !datagram.isValid()) {
       continue;
     }
@@ -667,7 +666,6 @@ void server_scan_finish(struct server_scan *scan)
     /* Wait thread to stop */
     fc_thread_wait(&scan->meta.thr);
     fc_destroy_mutex(&scan->meta.mutex);
-
 
     if (scan->srvrs.servers) {
       fc_allocate_mutex(&scan->srvrs.mutex);

@@ -14,8 +14,8 @@
 #ifndef FC__SERVERS_H
 #define FC__SERVERS_H
 
-#include <QUdpSocket>
 #include <QNetworkDatagram>
+#include <QUdpSocket>
 
 /* utility */
 #include "fcthread.h"
@@ -32,7 +32,6 @@ enum server_scan_status {
   SCAN_STATUS_ABORT
 };
 
-
 class fcUdpScan : public QUdpSocket {
 public:
   static void drop();
@@ -44,13 +43,13 @@ public slots:
   void readPendingDatagrams();
 private slots:
   void sockError(QAbstractSocket::SocketError socketError);
+
 private:
   struct server_scan *fcudp_scan;
   fcUdpScan(QObject *parent = 0);
   static fcUdpScan *m_instance;
   QList<QNetworkDatagram> datagram_list;
 };
-
 
 struct str_players {
   char *name;
@@ -80,8 +79,6 @@ struct server {
   TYPED_LIST_ITERATE(struct server, serverlist, pserver)
 #define server_list_iterate_end LIST_ITERATE_END
 
-
-
 struct server_scan;
 
 struct srv_list {
@@ -104,7 +101,5 @@ enum server_scan_type server_scan_get_type(const struct server_scan *scan);
 enum server_scan_status server_scan_poll(struct server_scan *scan);
 struct srv_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);
-
-
 
 #endif /* FC__SERVERS_H */
