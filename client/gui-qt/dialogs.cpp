@@ -895,7 +895,6 @@ void notify_dialog::calc_size(int &x, int &y)
 void notify_dialog::paintEvent(QPaintEvent *paint_event)
 {
   QPainter painter(this);
-  QPainterPath path;
   QPen pen;
   QFontMetrics fm(small_font);
   int i;

@@ -281,7 +281,6 @@ void fc_client::send_fake_chat_message(const QString &message)
 void fc_client::chat_message_received(const QString &message,
                                       const struct text_tag_list *tags)
 {
-  QTextCursor cursor;
   QColor col = output_window->palette().color(QPalette::Text);
   QString str = apply_tags(message, tags, col);
 

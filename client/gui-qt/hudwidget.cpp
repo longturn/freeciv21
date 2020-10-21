@@ -700,7 +700,6 @@ void hud_units::update_actions(unit_list *punits)
   bounding_rect.adjust(bounding_rect.width(), 0, bounding_rect.width() * 2,
                        0);
   if (punit->fuel > 1) {
-    QString s;
     int fuel;
 
     font.setPointSize(pix.height() / 4);

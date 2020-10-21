@@ -236,7 +236,6 @@ QString configure_font(QString font_name, QStringList sl, int size,
                        bool bold)
 {
   QFontDatabase database;
-  QString str;
   QFont *f;
 
   for (auto const &str : sl) {

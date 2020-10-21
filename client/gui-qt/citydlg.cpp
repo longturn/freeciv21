@@ -575,7 +575,6 @@ void impr_item::wheelEvent(QWheelEvent *event)
 void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
 {
   hud_message_box *ask;
-  QString s;
   char buf[256];
   int price;
   const int impr_id = improvement_number(impr);
@@ -1978,7 +1977,6 @@ void city_dialog::change_production(bool next)
   int i, pos;
   int item, targets_used;
   QList<cid> prod_list;
-  QString str;
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
   struct universal univ;

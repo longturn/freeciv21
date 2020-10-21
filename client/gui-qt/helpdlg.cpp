@@ -856,7 +856,6 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
   struct canvas *canvas;
   const struct unit_type *obsolete;
   struct unit_type *utype, *max_utype;
-  QList<int> list;
   QString str;
 
   utype = unit_type_by_translated_name(title);

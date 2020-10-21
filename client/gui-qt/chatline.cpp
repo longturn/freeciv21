@@ -428,8 +428,6 @@ void chatwdg::chat_message_received(const QString &message,
  ***************************************************************************/
 void chatwdg::append(const QString &str)
 {
-  QTextCursor cursor;
-
   chat_output->append(str);
   chat_output->verticalScrollBar()->setSliderPosition(
       chat_output->verticalScrollBar()->maximum());

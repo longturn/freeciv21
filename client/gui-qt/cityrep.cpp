@@ -1095,7 +1095,7 @@ void city_widget::update_model()
   QFont f = QApplication::font();
   QFontMetrics fm(f);
   QStringList sl;
-  QString s, str;
+  QString str;
   int width;
 
   setUpdatesEnabled(false);
