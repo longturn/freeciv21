@@ -126,7 +126,7 @@ static inline void SPECVEC_FOO(_vector_free)(SPECVEC_VECTOR *tthis)
 }
 
 static inline void SPECVEC_FOO(_vector_append)(SPECVEC_VECTOR *tthis,
-                                               SPECVEC_TYPE const pfoo)
+                                               SPECVEC_TYPE const &pfoo)
 {
   SPECVEC_FOO(_vector_reserve)(tthis, tthis->size + 1);
   tthis->p[tthis->size - 1] = pfoo;

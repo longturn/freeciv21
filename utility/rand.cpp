@@ -195,7 +195,7 @@ RANDOM_STATE fc_rand_state(void)
    Replace current rand_state with user-supplied; eg for save/restore.
    Caller should take care to set state.is_init beforehand if necessary.
  *************************************************************************/
-void fc_rand_set_state(RANDOM_STATE state)
+void fc_rand_set_state(RANDOM_STATE &state)
 {
   int i;
 

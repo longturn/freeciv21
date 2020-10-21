@@ -40,7 +40,7 @@ void fc_srand(RANDOM_TYPE seed);
 void fc_rand_uninit(void);
 bool fc_rand_is_init(void);
 RANDOM_STATE fc_rand_state(void);
-void fc_rand_set_state(RANDOM_STATE state);
+void fc_rand_set_state(RANDOM_STATE &state);
 
 void test_random1(int n);
 
