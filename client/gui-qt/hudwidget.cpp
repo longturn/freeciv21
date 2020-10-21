@@ -779,7 +779,7 @@ void hud_units::update_actions(unit_list *punits)
  ****************************************************************************/
 click_label::click_label() : QLabel()
 {
-  connect(this, &click_label::left_clicked, this, &click_label::on_clicked);
+  connect(this, &click_label::left_clicked, this, &click_label::mouse_clicked);
 }
 
 /************************************************************************/ /**
@@ -795,7 +795,7 @@ void click_label::mousePressEvent(QMouseEvent *e)
 /************************************************************************/ /**
    Centers on current unit
  ****************************************************************************/
-void click_label::on_clicked()
+void click_label::mouse_clicked()
 {
   gui()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
@@ -806,7 +806,7 @@ void click_label::on_clicked()
  ****************************************************************************/
 hud_action::hud_action(QWidget *parent) : QWidget(parent)
 {
-  connect(this, &hud_action::left_clicked, this, &hud_action::on_clicked);
+  connect(this, &hud_action::left_clicked, this, &hud_action::mouse_clicked);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   focus = false;
@@ -896,12 +896,12 @@ void hud_action::enterEvent(QEvent *event)
 /************************************************************************/ /**
    Right click event for hud_action
  ****************************************************************************/
-void hud_action::on_right_clicked() {}
+void hud_action::mouse_right_clicked() {}
 
 /************************************************************************/ /**
    Left click event for hud_action
  ****************************************************************************/
-void hud_action::on_clicked()
+void hud_action::mouse_clicked()
 {
   gui()->menu_bar->execute_shortcut(action_shortcut);
 }

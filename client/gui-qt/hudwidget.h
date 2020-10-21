@@ -139,7 +139,7 @@ public:
 signals:
   void left_clicked();
 private slots:
-  void on_clicked();
+  void mouse_clicked();
 
 protected:
   void mousePressEvent(QMouseEvent *e);
@@ -169,8 +169,8 @@ protected:
   void leaveEvent(QEvent *event);
   void enterEvent(QEvent *event);
 private slots:
-  void on_clicked();
-  void on_right_clicked();
+  void mouse_clicked();
+  void mouse_right_clicked();
 };
 
 /****************************************************************************
