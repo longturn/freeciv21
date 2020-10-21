@@ -17,6 +17,8 @@
 
 #include "fc_prehdrs.h"
 
+#include <QNetworkDatagram>
+#include <QUdpSocket>
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -99,7 +101,7 @@ EndpointRef serv_ep;
 #else
 static int *listen_socks;
 static int listen_count;
-static int socklan;
+static QUdpSocket *udp_socket = nullptr;
 #endif
 
 #if defined(__VMS)
@@ -256,7 +258,9 @@ void close_connections_and_socket(void)
   delete[] listen_socks;
 
   if (srvarg.announce != ANNOUNCE_NONE) {
-    fc_closesocket(socklan);
+    udp_socket->close();
+    delete udp_socket;
+    udp_socket = nullptr;
   }
 
 #ifdef FREECIV_HAVE_LIBREADLINE
@@ -1243,80 +1247,28 @@ int server_open_socket(void)
     lan_family = AF_INET;
   }
 
+  enum QHostAddress::SpecialAddress address_type;
+  switch (srvarg.announce) {
+  case ANNOUNCE_IPV6:
+    address_type = QHostAddress::AnyIPv6;
+    break;
+  case ANNOUNCE_IPV4:
+  default:
+    address_type = QHostAddress::AnyIPv4;
+  }
   /* Create socket for server LAN announcements */
-  if ((socklan = socket(lan_family, SOCK_DGRAM, 0)) < 0) {
-    log_error("Announcement socket failed: %s", fc_strerror(fc_get_errno()));
-    return 0; /* FIXME: Should this cause hard error as exit(EXIT_FAILURE).
-               *        It's failure to do as commandline parameters
-               * requested after all */
+  udp_socket = new QUdpSocket();
+
+  if (!udp_socket->bind(address_type, SERVER_LAN_PORT,
+                        QAbstractSocket::ReuseAddressHint)) {
+    log_error("SO_REUSEADDR failed: %s",
+              udp_socket->errorString().toLocal8Bit().data());
+    return 1;
   }
-
-  if (setsockopt(socklan, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on))
-      == -1) {
-    log_error("SO_REUSEADDR failed: %s", fc_strerror(fc_get_errno()));
-  }
-
-  fc_nonblock(socklan);
-
   group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
-
-  memset(&addr, 0, sizeof(addr));
-
-  addr.saddr.sa_family = lan_family;
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (addr.saddr.sa_family == AF_INET6) {
-    addr.saddr_in6.sin6_family = AF_INET6;
-    addr.saddr_in6.sin6_port = htons(SERVER_LAN_PORT);
-    addr.saddr_in6.sin6_addr = in6addr_any;
-  } else
-#endif /* IPv6 support */
-      if (addr.saddr.sa_family == AF_INET) {
-    addr.saddr_in4.sin_family = AF_INET;
-    addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT);
-    addr.saddr_in4.sin_addr.s_addr = htonl(INADDR_ANY);
-  } else {
-    fc_assert(FALSE);
-
-    log_error("Unsupported address family in server_open_socket()");
-  }
-
-  if (bind(socklan, &addr.saddr, sockaddr_size(&addr)) < 0) {
+  if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
     log_error("Announcement socket binding failed: %s",
-              fc_strerror(fc_get_errno()));
-  }
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (addr.saddr.sa_family == AF_INET6) {
-    inet_pton(AF_INET6, group, &mreq6.ipv6mr_multiaddr.s6_addr);
-    mreq6.ipv6mr_interface = 0; /* TODO: Interface selection */
-    if (setsockopt(socklan, IPPROTO_IPV6, FC_IPV6_ADD_MEMBERSHIP,
-                   (const char *) &mreq6, sizeof(mreq6))
-        < 0) {
-      log_error("FC_IPV6_ADD_MEMBERSHIP (%s) failed: %s", group,
-                fc_strerror(fc_get_errno()));
-    }
-  } else
-#endif /* IPV6 Support */
-      if (addr.saddr.sa_family == AF_INET) {
-    fc_inet_aton(group, &mreq4.imr_multiaddr, FALSE);
-#ifdef HAVE_IP_MREQN
-    mreq4.imr_address.s_addr = htonl(INADDR_ANY);
-    mreq4.imr_ifindex = 0;
-#else
-    mreq4.imr_interface.s_addr = htonl(INADDR_ANY);
-#endif
-
-    if (setsockopt(socklan, IPPROTO_IP, IP_ADD_MEMBERSHIP,
-                   (const char *) &mreq4, sizeof(mreq4))
-        < 0) {
-      log_error("IP_ADD_MEMBERSHIP (%s) failed: %s", group,
-                fc_strerror(fc_get_errno()));
-    }
-  } else {
-    fc_assert(FALSE);
-
-    log_error("Unsupported address family for broadcasting.");
+              udp_socket->errorString().toLocal8Bit().data());
   }
 
   return 0;
@@ -1460,7 +1412,7 @@ static void get_lanserver_announcement(void)
 {
   fd_set readfs, exceptfs;
   fc_timeval tv;
-  char msgbuf[128];
+  char *msgbuf;
   struct data_in din;
   int type;
 
@@ -1468,34 +1420,19 @@ static void get_lanserver_announcement(void)
     return;
   }
 
-  FD_ZERO(&readfs);
-  FD_ZERO(&exceptfs);
-  FD_SET(socklan, &exceptfs);
-  FD_SET(socklan, &readfs);
-
   tv.tv_sec = 0;
   tv.tv_usec = 0;
 
-  while (fc_select(socklan + 1, &readfs, NULL, &exceptfs, &tv) == -1) {
-    if (errno != EINTR) {
-      log_error("select failed: %s", fc_strerror(fc_get_errno()));
-      return;
-    }
-    /* EINTR can happen sometimes, especially when compiling with -pg.
-     * Generally we just want to run select again. */
-  }
-
-  /* We would need a raw network connection for broadcast messages */
-  if (FD_ISSET(socklan, &readfs)) {
-    if (0 < recvfrom(socklan, msgbuf, sizeof(msgbuf), 0, NULL, NULL)) {
-      dio_input_init(&din, msgbuf, 1);
-      dio_get_uint8_raw(&din, &type);
-      if (type == SERVER_LAN_VERSION) {
-        log_debug("Received request for server LAN announcement.");
-        send_lanserver_response();
-      } else {
-        log_debug("Received invalid request for server LAN announcement.");
-      }
+  if (udp_socket->hasPendingDatagrams()) {
+    QNetworkDatagram qnd = udp_socket->receiveDatagram();
+    msgbuf = qnd.data().data();
+    dio_input_init(&din, msgbuf, 1);
+    dio_get_uint8_raw(&din, &type);
+    if (type == SERVER_LAN_VERSION) {
+      log_debug("Received request for server LAN announcement.");
+      send_lanserver_response();
+    } else {
+      log_debug("Received invalid request for server LAN announcement.");
     }
   }
 }
@@ -1507,11 +1444,7 @@ static void get_lanserver_announcement(void)
 /* We would need a raw network connection for broadcast messages */
 static void send_lanserver_response(void)
 {
-#ifndef FREECIV_HAVE_WINSOCK
-  unsigned char buffer[MAX_LEN_PACKET];
-#else  /* FREECIV_HAVE_WINSOCK */
   char buffer[MAX_LEN_PACKET];
-#endif /* FREECIV_HAVE_WINSOCK */
   char hostname[512];
   char port[256];
   char version[256];
@@ -1524,42 +1457,23 @@ static void send_lanserver_response(void)
   int socksend, setting = 1;
   const char *group;
   size_t size;
-#ifndef FREECIV_HAVE_WINSOCK
-  unsigned char ttl;
-#endif
-
-  /* Create a socket to broadcast to client. */
-  if ((socksend = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
-    log_error("Lan response socket failed: %s", fc_strerror(fc_get_errno()));
-    return;
-  }
+  enum QHostAddress::SpecialAddress address_type;
+  QUdpSocket lockal_udpsock;
 
   /* Set the UDP Multicast group IP address of the packet. */
   group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
-  memset(&addr, 0, sizeof(addr));
-  addr.saddr_in4.sin_family = AF_INET;
-  addr.saddr_in4.sin_addr.s_addr = inet_addr(group);
-  addr.saddr_in4.sin_port = htons(SERVER_LAN_PORT + 1);
-
-/* this setsockopt call fails on Windows 98, so we stick with the default
- * value of 1 on Windows, which should be fine in most cases */
-#ifndef FREECIV_HAVE_WINSOCK
-  /* Set the Time-to-Live field for the packet.  */
-  ttl = SERVER_LAN_TTL;
-  if (setsockopt(socksend, IPPROTO_IP, IP_MULTICAST_TTL, (const char *) &ttl,
-                 sizeof(ttl))) {
-    log_error("setsockopt failed: %s", fc_strerror(fc_get_errno()));
-    return;
+  switch (srvarg.announce) {
+  case ANNOUNCE_IPV6:
+    address_type = QHostAddress::AnyIPv6;
+    break;
+  case ANNOUNCE_IPV4:
+  default:
+    address_type = QHostAddress::AnyIPv4;
   }
-#endif /* FREECIV_HAVE_WINSOCK */
+  lockal_udpsock.bind(address_type, SERVER_LAN_PORT + 1,
+                      QAbstractSocket::ReuseAddressHint);
 
-  if (setsockopt(socksend, SOL_SOCKET, SO_BROADCAST, (const char *) &setting,
-                 sizeof(setting))) {
-    log_error("Lan response setsockopt failed: %s",
-              fc_strerror(fc_get_errno()));
-    return;
-  }
-
+  lockal_udpsock.joinMulticastGroup(QHostAddress(group));
   /* Create a description of server state to send to clients.  */
   if (srvarg.identity_name[0] != '\0') {
     sz_strlcpy(hostname, srvarg.identity_name);
@@ -1609,14 +1523,7 @@ static void send_lanserver_response(void)
   dio_put_string_raw(&dout, humans);
   dio_put_string_raw(&dout, get_meta_message_string());
   size = dio_output_used(&dout);
-
-  /* Sending packet to client with the information gathered above. */
-  if (sendto(socksend, buffer, size, 0, &addr.saddr, sockaddr_size(&addr))
-      < 0) {
-    log_error("landserver response sendto failed: %s",
-              fc_strerror(fc_get_errno()));
-    return;
-  }
-
-  fc_closesocket(socksend);
+  lockal_udpsock.writeDatagram(QByteArray(buffer, size), QHostAddress(group),
+                               SERVER_LAN_PORT + 1);
+  lockal_udpsock.close();
 }
