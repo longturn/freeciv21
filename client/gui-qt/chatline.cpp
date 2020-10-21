@@ -405,7 +405,9 @@ void chatwdg::anchor_clicked(const QUrl &link)
     } else {
       output_window_append(ftc_client, _("This unit isn't known!"));
     }
-  } break;
+  }
+  case TLT_INVALID:
+    break;
   }
   if (ptile) {
     center_tile_mapcanvas(ptile);
@@ -631,6 +633,8 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       case TLT_UNIT:
         pcolor = get_color(tileset, COLOR_MAPVIEW_UNIT_LINK);
         break;
+      case TLT_INVALID:
+        break;
       }
 
       if (!pcolor) {
@@ -645,6 +649,8 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
                        QString::number(text_tag_link_id(ptag)));
       mm.insert(start, color);
     }
+    case TTT_INVALID:
+      break;
     }
   }
   text_tag_list_iterate_end;
