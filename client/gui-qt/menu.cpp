@@ -550,7 +550,6 @@ gov_menu::~gov_menu()
 void gov_menu::create()
 {
   QAction *action;
-  QList<QAction *> actions = QWidget::actions();
   struct government *gov, *revol_gov;
   int gov_count, i;
 
