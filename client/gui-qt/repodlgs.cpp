@@ -276,6 +276,10 @@ void unittype_item::wheelEvent(QWheelEvent *event)
 {
   int unit_count = 0;
 
+  if (client_is_observer() && client.conn.playing == NULL) {
+    return;
+  }
+
   unit_list_iterate(client_player()->units, punit)
   {
     if (punit->utype != utype) {
