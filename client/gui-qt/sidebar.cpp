@@ -534,7 +534,7 @@ void fc_sidebar::resize_me(int hght, bool force)
   non_std_count = 0;
 
   /* resize all non standard sidewidgets first*/
-  for (fc_sidewidget *sw : objects) {
+  for (fc_sidewidget *sw : qAsConst(objects)) {
     if (sw->standard != SW_STD) {
       sw->resize_pixmap(w, 0);
       sw->setFixedSize(w, sw->get_pixmap()->height());
@@ -547,7 +547,7 @@ void fc_sidebar::resize_me(int hght, bool force)
   h = h - non_std;
   h = h / (objects.count() - non_std_count) - 2;
   /* resize all standard sidewidgets */
-  for (fc_sidewidget *sw : objects) {
+  for (fc_sidewidget *sw : qAsConst(objects)) {
     if (sw->standard == SW_STD) {
       sw->resize_pixmap(w, h);
       sw->setFixedSize(w, h);

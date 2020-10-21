@@ -1879,7 +1879,7 @@ void popup_action_selection(struct unit *actor_unit,
   unit_act = qdef_act::action()->vs_unit_get();
   city_act = qdef_act::action()->vs_city_get();
 
-  for (auto caras : gui()->trade_gen.lines) {
+  for (auto caras : qAsConst(gui()->trade_gen.lines)) {
     if (caras.autocaravan == actor_unit) {
       int i;
       if (nullptr != game_unit_by_number(actor_unit->id)
@@ -3922,9 +3922,10 @@ void popup_upgrade_dialog(struct unit_list *punits)
   ask->setAttribute(Qt::WA_DeleteOnClose);
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
     std::unique_ptr<QVector<int>> uptr(punit_ids);
+    QVector<int> not_ptr = *uptr;
     struct unit *punit;
 
-    for (int id : *uptr) {
+    for (int id : not_ptr) {
       punit = game_unit_by_number(id);
       if (punit) {
         request_unit_upgrade(game_unit_by_number(id));
@@ -4039,7 +4040,7 @@ void units_select::create_pixmap()
       pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
     }
     pix->fill(Qt::transparent);
-    for (auto punit: unit_list) {
+    for (auto punit: qAsConst(unit_list)) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
       unit_pixmap->map_pixmap.fill(Qt::transparent);
