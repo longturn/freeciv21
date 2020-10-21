@@ -183,6 +183,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     }
   }
   activity_type_iterate_end;
+  FC_FREE(t);
 }
 
 /************************************************************************/ /**
