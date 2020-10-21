@@ -501,33 +501,30 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     egold = _("(Unknown)");
     egov = _("(Unknown)");
   }
-  /** Formatting rich text */
-  intel_str =
-      /* TRANS: this and similar literal strings interpreted as (Qt) HTML */
-      QString("<table><tr><td><b>") + _("Nation") + QString("</b></td><td>")
-      + QString(nation_adjective_for_player(pplayer)).toHtmlEscaped()
-      + QString("</td><tr><td><b>") + _("Ruler:") + QString("</b></td><td>")
-      + QString(ruler_title_for_player(pplayer, tbuf, sizeof(tbuf)))
-            .toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Government:")
-      + QString("</b></td><td>") + egov.toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Capital:")
-      + QString("</b></td><td>")
-      + QString(((!pcity) ? _("(Unknown)") : city_name_get(pcity)))
-            .toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Gold:")
-      + QString("</b></td><td>") + egold.toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Tax:")
-      + QString("</b></td><td>") + etax.toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Science:")
-      + QString("</b></td><td>") + esci.toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Luxury:")
-      + QString("</b></td><td>") + elux.toHtmlEscaped()
-      + QString("</td></tr><tr><td><b>") + _("Researching:")
-      + QString("</b></td><td>") + res.toHtmlEscaped()
-      + QString("<td></tr><tr><td><b>") + _("Culture:")
-      + QString("</b></td><td>") + cult.toHtmlEscaped()
-      + QString("</td></table>");
+
+  intel_str = "<table>";
+  QString line = "<tr><td><b>%1</b></td><td>%2</td></tr>";
+
+  intel_str +=
+      line.arg(_("Nation"))
+          .arg(
+              QString(nation_adjective_for_player(pplayer)).toHtmlEscaped());
+  intel_str +=
+      line.arg(_("Ruler"))
+          .arg(QString(ruler_title_for_player(pplayer, tbuf, sizeof(tbuf)))
+                   .toHtmlEscaped());
+  intel_str += line.arg(_("Government")).arg(egov.toHtmlEscaped());
+  intel_str +=
+      line.arg(_("Capital"))
+          .arg(QString(((!pcity) ? _("(Unknown)") : city_name_get(pcity)))
+                   .toHtmlEscaped());
+  intel_str += line.arg(_("Gold")).arg(egold.toHtmlEscaped());
+  intel_str += line.arg(_("Tax")).arg(etax.toHtmlEscaped());
+  intel_str += line.arg(_("Science")).arg(esci.toHtmlEscaped());
+  intel_str += line.arg(_("Luxury")).arg(elux.toHtmlEscaped());
+  intel_str += line.arg(_("Researching")).arg(res.toHtmlEscaped());
+  intel_str += line.arg(_("Culture:")).arg(cult.toHtmlEscaped());
+  intel_str += "</table>";
 
   for (int i = 0; i < static_cast<int>(DS_LAST); i++) {
     added = false;
