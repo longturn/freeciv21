@@ -34,7 +34,7 @@
 
 // gui-qt
 #include "fc_client.h"
-#include "repodlgs.h"
+#include "sciencedlg.h"
 #include "sidebar.h"
 #include "sprite.h"
 

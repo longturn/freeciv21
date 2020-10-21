@@ -49,6 +49,7 @@
 #include "colors.h"
 #include "fc_client.h"
 #include "mapview.h"
+#include "sciencedlg.h"
 #include "qtg_cxxside.h"
 #include "sidebar.h"
 
