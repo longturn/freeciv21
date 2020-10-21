@@ -2073,7 +2073,7 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
     for (auto hudc: qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
-        for (auto hupdate : lhuc) {
+        for (auto hupdate : qAsConst(lhuc)) {
           hupdate->set_fading(1.0);
         }
         return;

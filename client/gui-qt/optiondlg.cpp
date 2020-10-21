@@ -53,7 +53,7 @@ enum {
 };
 
 /* global value to store pointers to opened config dialogs */
-QMap<const struct option_set *, option_dialog *> dialog_list;
+QHash<const struct option_set *, option_dialog *> dialog_list;
 
 /************************************************************************/ /**
    Splits long text to 80 characters
