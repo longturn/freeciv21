@@ -35,6 +35,7 @@
 #include <QTextBlock>
 #include <QTextCodec>
 #include <QTextEdit>
+#include <QTimer>
 
 // utility
 #include "fcintl.h"
@@ -1016,7 +1017,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     gui()->infotab->move(
         qRound((size.width() * gui()->qt_settings.chat_fx_pos)),
         qRound((size.height() * gui()->qt_settings.chat_fy_pos)));
-    gui()->infotab->restore_chat();
     gui()->minimapview_wdg->move(
         qRound(gui()->qt_settings.minimap_x * mapview.width),
         qRound(gui()->qt_settings.minimap_y * mapview.height));
@@ -1032,6 +1032,8 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     side_disable_endturn(get_turn_done_button_state());
     gui()->mapview_wdg->resize(event->size().width(), size.height());
     gui()->unitinfo_wdg->update_actions(nullptr);
+    /* It could be resized before mapview, so delayed it a bit */
+    QTimer::singleShot(20, [] { gui()->infotab->restore_chat(); });
   }
   event->setAccepted(true);
 }
