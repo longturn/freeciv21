@@ -605,7 +605,11 @@ void generate_city_map_indices(void)
 /**********************************************************************/ /**
    Free memory allocated by generate_citymap_index
  **************************************************************************/
-void free_city_map_index(void) { delete[] city_map_index; }
+void free_city_map_index(void)
+{
+  delete[] city_map_index;
+  city_map_index = nullptr;
+}
 
 /**********************************************************************/ /**
    Return an id string for the output type.  This string can be used
