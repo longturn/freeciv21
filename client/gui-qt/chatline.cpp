@@ -49,7 +49,7 @@
 #include "qtg_cxxside.h"
 
 extern QApplication *qapp;
-static bool is_plain_public_message(QString s);
+static bool is_plain_public_message(const QString &s);
 
 FC_CPP_DECLARE_LISTENER(chat_listener)
 QStringList chat_listener::history = QStringList();
@@ -689,7 +689,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
    Helper function to determine if a given client input line is intended as
    a "plain" public message.
  ***************************************************************************/
-static bool is_plain_public_message(QString s)
+static bool is_plain_public_message(const QString &s)
 {
   QString s1, str;
   int i;

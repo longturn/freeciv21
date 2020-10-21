@@ -58,7 +58,7 @@ QHash<const struct option_set *, option_dialog *> dialog_list;
 /************************************************************************/ /**
    Splits long text to 80 characters
  ****************************************************************************/
-QString split_text(QString text, bool cut)
+QString split_text(const QString &text, bool cut)
 {
   QStringList sl;
   QString st, str, result;
@@ -100,7 +100,7 @@ QString split_text(QString text, bool cut)
 /************************************************************************/ /**
    Remove some text from given text(help text) to show as tooltip
  ****************************************************************************/
-QString cut_helptext(QString text)
+QString cut_helptext(const QString &text)
 {
   QStringList sl;
   QString ret_str;
@@ -330,7 +330,7 @@ void option_dialog::set_int(struct option *poption, int value)
    That function is not executed when user changes font, but when applying or
    resetting options.
  ****************************************************************************/
-void option_dialog::set_font(struct option *poption, QString s)
+void option_dialog::set_font(struct option *poption, const QString &s)
 {
   QStringList ql;
   QPushButton *qp;

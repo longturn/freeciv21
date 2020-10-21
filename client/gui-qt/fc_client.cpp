@@ -534,7 +534,7 @@ void fc_client::delete_cursors(void)
 /************************************************************************/ /**
    Finds not used index on game_view_tab and returns it
  ****************************************************************************/
-void fc_client::gimme_place(QWidget *widget, QString str)
+void fc_client::gimme_place(QWidget *widget, const QString &str)
 {
   QString x;
 
@@ -553,7 +553,7 @@ void fc_client::gimme_place(QWidget *widget, QString str)
    page, figure out some original string and put in in repodlg.h as comment
  to that QWidget class.
  ****************************************************************************/
-bool fc_client::is_repo_dlg_open(QString str)
+bool fc_client::is_repo_dlg_open(const QString &str)
 {
   QWidget *w;
 
@@ -569,7 +569,7 @@ bool fc_client::is_repo_dlg_open(QString str)
 /************************************************************************/ /**
    Returns index on game tab page of given report dialog
  ****************************************************************************/
-int fc_client::gimme_index_of(QString str)
+int fc_client::gimme_index_of(const QString &str)
 {
   int i;
   QWidget *w;
@@ -794,7 +794,7 @@ void fc_client::popdown_unit_sel()
 /************************************************************************/ /**
    Removes report dialog string from the list marking it as closed
  ****************************************************************************/
-void fc_client::remove_repo_dlg(QString str)
+void fc_client::remove_repo_dlg(const QString &str)
 {
   /* if app is closing opened_repo_dlg is already deleted */
   if (!is_closing()) {

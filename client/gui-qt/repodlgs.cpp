@@ -58,8 +58,8 @@
 
 #include "repodlgs.h"
 
-extern QString split_text(QString text, bool cut);
-extern QString cut_helptext(QString text);
+extern QString split_text(const QString &text, bool cut);
+extern QString cut_helptext(const QString &text);
 extern QString get_tooltip_improvement(impr_type *building,
                                        struct city *pcity, bool ext);
 extern QString get_tooltip_unit(struct unit_type *unit, bool ext);

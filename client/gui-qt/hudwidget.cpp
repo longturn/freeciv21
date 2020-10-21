@@ -123,7 +123,7 @@ void hud_message_box::keyPressEvent(QKeyEvent *event)
 /************************************************************************/ /**
    Sets text and title and shows message box
  ****************************************************************************/
-void hud_message_box::set_text_title(QString s1, QString s2)
+void hud_message_box::set_text_title(const QString &s1, const QString &s2)
 {
   QSpacerItem *spacer;
   QGridLayout *layout;
@@ -233,7 +233,7 @@ void hud_message_box::paintEvent(QPaintEvent *event)
 /************************************************************************/ /**
    Hud text constructor takes text to display and time
  ****************************************************************************/
-hud_text::hud_text(QString s, int time_secs, QWidget *parent)
+hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
     : QWidget(parent)
 {
   int size;
@@ -385,8 +385,9 @@ hud_input_box::~hud_input_box()
 /************************************************************************/ /**
    Sets text, title and default text and shows input box
  ****************************************************************************/
-void hud_input_box::set_text_title_definput(QString s1, QString s2,
-                                            QString def_input)
+void hud_input_box::set_text_title_definput(const QString &s1,
+                                            const QString &s2,
+                                            const QString &def_input)
 {
   QSpacerItem *spacer;
   QVBoxLayout *layout;

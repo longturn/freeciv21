@@ -58,7 +58,7 @@ void fc_font::drop()
 /************************************************************************/ /**
    Returns desired font
  ****************************************************************************/
-QFont *fc_font::get_font(QString name)
+QFont *fc_font::get_font(const QString &name)
 {
   /**
    * example: get_font("gui_qt_font_notify_label")
@@ -121,7 +121,7 @@ void fc_font::get_mapfont_size()
 /************************************************************************/ /**
    Adds new font or overwrite old one
  ****************************************************************************/
-void fc_font::set_font(QString name, QFont *qf)
+void fc_font::set_font(const QString &name, QFont *qf)
 {
   font_map.insert(name, qf);
 }
@@ -232,8 +232,8 @@ void configure_fonts()
 /************************************************************************/ /**
    Returns long font name, sets given for for use
  ****************************************************************************/
-QString configure_font(QString font_name, QStringList sl, int size,
-                       bool bold)
+QString configure_font(const QString &font_name, const QStringList &sl,
+                       int size, bool bold)
 {
   QFontDatabase database;
   QFont *f;

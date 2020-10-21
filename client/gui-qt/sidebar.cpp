@@ -59,8 +59,8 @@ void reduce_mod(int &mod, int &val)
 /***********************************************************************/ /**
    Sidewidget constructor
  ***************************************************************************/
-fc_sidewidget::fc_sidewidget(QPixmap *pix, QString label, QString pg,
-                             pfcn_bool func, int type)
+fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
+                             const QString &pg, pfcn_bool func, int type)
     : QWidget()
 {
   if (pix == nullptr) {
@@ -129,12 +129,12 @@ void fc_sidewidget::set_pixmap(QPixmap *pm)
 /***********************************************************************/ /**
    Sets custom text visible on top of sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_custom_labels(QString l) { custom_label = l; }
+void fc_sidewidget::set_custom_labels(const QString &l) { custom_label = l; }
 
 /***********************************************************************/ /**
    Sets tooltip for sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_tooltip(QString tooltip) { setToolTip(tooltip); }
+void fc_sidewidget::set_tooltip(const QString &tooltip) { setToolTip(tooltip); }
 
 /***********************************************************************/ /**
    Returns scaled (not default) pixmap for sidewidget
@@ -144,7 +144,7 @@ QPixmap *fc_sidewidget::get_pixmap() { return scaled_pixmap; }
 /***********************************************************************/ /**
    Sets default label on bottom of sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_label(QString str) { desc = str; }
+void fc_sidewidget::set_label(const QString &str) { desc = str; }
 
 /***********************************************************************/ /**
    Resizes default_pixmap to scaled_pixmap to fit current width,

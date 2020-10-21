@@ -53,7 +53,7 @@ class hud_message_box : public QMessageBox {
 public:
   hud_message_box(QWidget *parent);
   ~hud_message_box();
-  void set_text_title(QString s1, QString s2);
+  void set_text_title(const QString &s1, const QString &s2);
 
 protected:
   void paintEvent(QPaintEvent *event);
@@ -79,7 +79,7 @@ private:
 class hud_text : public QWidget {
   Q_OBJECT
 public:
-  hud_text(QString s, int time_secs, QWidget *parent);
+  hud_text(const QString &s, int time_secs, QWidget *parent);
   ~hud_text();
   void show_me();
 
@@ -109,7 +109,8 @@ class hud_input_box : public QDialog {
 public:
   hud_input_box(QWidget *parent);
   ~hud_input_box();
-  void set_text_title_definput(QString s1, QString s2, QString def_input);
+  void set_text_title_definput(const QString &s1, const QString &s2,
+                               const QString &def_input);
   QLineEdit input_edit;
 
 protected:

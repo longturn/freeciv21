@@ -30,8 +30,8 @@ class QDialogButtonBox;
 class QWidget;
 class QString;
 
-QString split_text(QString text, bool cut);
-QString cut_helptext(QString text);
+QString split_text(const QString &text, bool cut);
+QString cut_helptext(const QString &text);
 /****************************************************************************
   Dialog for client/server options
 ****************************************************************************/
@@ -62,7 +62,7 @@ private:
   void set_enum(struct option *poption, int index);
   void set_bitwise(struct option *poption, unsigned value);
   void set_color(struct option *poption, struct ft_color color);
-  void set_font(struct option *poption, QString s);
+  void set_font(struct option *poption, const QString &s);
   void get_color(struct option *poption, QByteArray &a1, QByteArray &a2);
   bool get_bool(struct option *poption);
   int get_int(struct option *poption);
