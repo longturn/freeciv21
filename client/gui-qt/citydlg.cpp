@@ -2587,7 +2587,7 @@ void city_dialog::disband_state_changed(bool allow_disband)
 /************************************************************************/ /**
    Context menu on governor tab in city worklist
  ****************************************************************************/
-void city_dialog::cma_context_menu(const QPoint &p)
+void city_dialog::cma_context_menu(const QPoint)
 {
   QMenu *cma_menu = new QMenu(this);
   QAction *cma_del_item;
@@ -2606,7 +2606,7 @@ void city_dialog::cma_context_menu(const QPoint &p)
 /************************************************************************/ /**
    Context menu on production tab in city worklist
  ****************************************************************************/
-void city_dialog::display_worklist_menu(const QPoint &p)
+void city_dialog::display_worklist_menu(const QPoint)
 {
   QAction *action;
   QAction *disband;

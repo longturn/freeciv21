@@ -493,7 +493,7 @@ private slots:
   void worklist_up();
   void worklist_down();
   void worklist_del();
-  void display_worklist_menu(const QPoint &p);
+  void display_worklist_menu(const QPoint);
   void disband_state_changed(bool allow_disband);
   void cma_slider(int val);
   void cma_celebrate_changed(int val);
@@ -502,7 +502,7 @@ private slots:
   void cma_changed();
   void cma_selected(const QItemSelection &sl, const QItemSelection &ds);
   void cma_double_clicked(int row, int column);
-  void cma_context_menu(const QPoint &p);
+  void cma_context_menu(const QPoint p);
   void save_cma();
   void city_rename();
   void zoom_in();

@@ -355,7 +355,7 @@ void plr_widget::restore_selection()
 /**********************************************************************/ /**
    Displays menu on header by right clicking
  **************************************************************************/
-void plr_widget::display_header_menu(const QPoint &)
+void plr_widget::display_header_menu(const QPoint)
 {
   QMenu *hideshow_column = new QMenu(this);
   hideshow_column->setTitle(_("Column visibility"));

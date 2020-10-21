@@ -461,7 +461,7 @@ void city_widget::center()
 /***********************************************************************/ /**
    Displays right click menu on city row
  ***************************************************************************/
-void city_widget::display_list_menu(const QPoint &)
+void city_widget::display_list_menu(const QPoint)
 {
   QMap<QString, cid> custom_labels;
   QMap<QString, int> cma_labels;
@@ -1120,7 +1120,7 @@ void city_widget::update_model()
 /***********************************************************************/ /**
    Context menu for header
  ***************************************************************************/
-void city_widget::display_header_menu(const QPoint &)
+void city_widget::display_header_menu(const QPoint)
 {
   QMenu *hideshow_column = new QMenu(this);
   QList<QAction *> actions;
