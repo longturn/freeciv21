@@ -480,7 +480,6 @@ struct option *option_dialog::get_color_option()
  ****************************************************************************/
 void option_dialog::set_color(struct option *poption, struct ft_color color)
 {
-  QPalette pal, pal2;
   QColor col;
   QWidget *w;
   QPushButton *but;
@@ -622,7 +621,6 @@ void option_dialog::add_option(struct option *poption)
   QCheckBox *check;
   QPushButton *button;
   QFont qf;
-  QPalette pal;
   int min, max, i;
   unsigned int j;
 

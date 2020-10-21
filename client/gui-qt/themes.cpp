@@ -50,7 +50,6 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QString path;
   QString fake_dir;
   QString data_dir;
-  QDir dir;
   QFile f;
   QString lnb = "LittleFinger";
   QPalette pal;
@@ -153,7 +152,6 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   char **array;
   char *data;
   QByteArray qba;
-  QString str;
   QString name;
   QString qtheme_name;
   QDir dir;

@@ -1885,7 +1885,6 @@ void mr_menu::update_bases_menu()
  **************************************************************************/
 void mr_menu::menus_sensitive()
 {
-  QList<QAction *> values;
   QList<munit> keys;
   QHash<munit, QAction *>::iterator i;
   struct unit_list *punits = nullptr;
@@ -3197,7 +3196,6 @@ void mr_menu::tileset_custom_load()
   const struct strvec *tlset_list;
   const struct option *poption;
   QStringList sl;
-  QString s;
 
   sl << "default_tileset_overhead_name"
      << "default_tileset_iso_name"
