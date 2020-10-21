@@ -34,7 +34,7 @@
 
 // gui-qt
 #include "fc_client.h"
-#include "repodlgs.h"
+#include "sciencedlg.h"
 #include "sidebar.h"
 #include "sprite.h"
 
@@ -59,8 +59,8 @@ void reduce_mod(int &mod, int &val)
 /***********************************************************************/ /**
    Sidewidget constructor
  ***************************************************************************/
-fc_sidewidget::fc_sidewidget(QPixmap *pix, QString label, QString pg,
-                             pfcn_bool func, int type)
+fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
+                             const QString &pg, pfcn_bool func, int type)
     : QWidget()
 {
   if (pix == nullptr) {
@@ -129,12 +129,12 @@ void fc_sidewidget::set_pixmap(QPixmap *pm)
 /***********************************************************************/ /**
    Sets custom text visible on top of sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_custom_labels(QString l) { custom_label = l; }
+void fc_sidewidget::set_custom_labels(const QString &l) { custom_label = l; }
 
 /***********************************************************************/ /**
    Sets tooltip for sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_tooltip(QString tooltip) { setToolTip(tooltip); }
+void fc_sidewidget::set_tooltip(const QString &tooltip) { setToolTip(tooltip); }
 
 /***********************************************************************/ /**
    Returns scaled (not default) pixmap for sidewidget
@@ -144,7 +144,7 @@ QPixmap *fc_sidewidget::get_pixmap() { return scaled_pixmap; }
 /***********************************************************************/ /**
    Sets default label on bottom of sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_label(QString str) { desc = str; }
+void fc_sidewidget::set_label(const QString &str) { desc = str; }
 
 /***********************************************************************/ /**
    Resizes default_pixmap to scaled_pixmap to fit current width,
@@ -534,7 +534,7 @@ void fc_sidebar::resize_me(int hght, bool force)
   non_std_count = 0;
 
   /* resize all non standard sidewidgets first*/
-  foreach (fc_sidewidget *sw, objects) {
+  for (fc_sidewidget *sw : qAsConst(objects)) {
     if (sw->standard != SW_STD) {
       sw->resize_pixmap(w, 0);
       sw->setFixedSize(w, sw->get_pixmap()->height());
@@ -547,7 +547,7 @@ void fc_sidebar::resize_me(int hght, bool force)
   h = h - non_std;
   h = h / (objects.count() - non_std_count) - 2;
   /* resize all standard sidewidgets */
-  foreach (fc_sidewidget *sw, objects) {
+  for (fc_sidewidget *sw : qAsConst(objects)) {
     if (sw->standard == SW_STD) {
       sw->resize_pixmap(w, h);
       sw->setFixedSize(w, h);
@@ -681,7 +681,7 @@ void side_right_click_science(void)
   QMenu *menu;
   QAction *act;
   QVariant qvar;
-  QList<qlist_item> curr_list;
+  QVector<qlist_item> curr_list;
   qlist_item item;
 
   if (!client_is_observer()) {

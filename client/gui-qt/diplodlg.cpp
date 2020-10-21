@@ -66,7 +66,6 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   QPushButton *add_clause1;
   QPushButton *add_clause2;
   QPixmap *pix = NULL;
-  QPalette palette;
   struct sprite *sprite, *sprite2;
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;

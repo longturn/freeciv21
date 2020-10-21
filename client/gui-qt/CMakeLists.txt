@@ -35,6 +35,7 @@ add_library(
   repodlgs.cpp
   shortcuts.cpp
   sidebar.cpp
+  sciencedlg.cpp
   spaceshipdlg.cpp
   sprite.cpp
   themes.cpp

@@ -41,19 +41,19 @@ void side_show_map(bool nothing);
 class fc_sidewidget : public QWidget {
   Q_OBJECT
 public:
-  fc_sidewidget(QPixmap *pix, QString label, QString pg, pfcn_bool func,
-                int type = SW_STD);
+  fc_sidewidget(QPixmap *pix, const QString &label, const QString &pg,
+                pfcn_bool func, int type = SW_STD);
   ~fc_sidewidget();
   int get_priority();
   QPixmap *get_pixmap();
   void paint(QPainter *painter, QPaintEvent *event);
   void resize_pixmap(int width, int height);
-  void set_custom_labels(QString l);
-  void set_label(QString str);
+  void set_custom_labels(const QString &);
+  void set_label(const QString &str);
   void set_left_click(pfcn_bool func);
   void set_pixmap(QPixmap *pm);
   void set_right_click(pfcn func);
-  void set_tooltip(QString tooltip);
+  void set_tooltip(const QString &tooltip);
   void set_wheel_down(pfcn func);
   void set_wheel_up(pfcn func);
   void update_final_pixmap();
