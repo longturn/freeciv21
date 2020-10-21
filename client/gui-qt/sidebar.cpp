@@ -681,7 +681,7 @@ void side_right_click_science(void)
   QMenu *menu;
   QAction *act;
   QVariant qvar;
-  QList<qlist_item> curr_list;
+  QVector<qlist_item> curr_list;
   qlist_item item;
 
   if (!client_is_observer()) {
