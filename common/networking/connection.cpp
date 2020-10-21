@@ -772,7 +772,7 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
     test = pconn->username;
     break;
   case CPT_HOST:
-    test = pconn->addr;
+    test = qPrintable(pconn->addr);
     break;
   case CPT_IP:
     if (is_server()) {

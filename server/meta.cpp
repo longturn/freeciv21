@@ -377,8 +377,7 @@ static bool send_to_metaserver(enum meta_flag flag)
             QString::fromUtf8(plr->nation != NO_NATION_SELECTED
                                   ? nation_of_player(plr)->flag_graphic_str
                                   : "none"));
-        post->addQueryItem(QLatin1String("plh[]"),
-                           QString::fromUtf8(pconn ? pconn->addr : ""));
+        post->addQueryItem(QLatin1String("plh[]"), pconn ? pconn->addr : "");
 
         /* is this player available to take?
          * TODO: there's some duplication here with

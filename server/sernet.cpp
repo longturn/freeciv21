@@ -60,6 +60,12 @@
 #include <unistd.h>
 #endif
 
+// Qt
+#include <QCoreApplication>
+#include <QHostInfo>
+#include <QTcpServer>
+#include <QTcpSocket>
+
 /* utility */
 #include "capability.h"
 #include "fciconv.h"
@@ -95,32 +101,9 @@
 
 static struct connection connections[MAX_NUM_CONNECTIONS];
 
-#ifdef GENERATING_MAC /* mac network globals */
-TEndpointInfo serv_info;
-EndpointRef serv_ep;
-#else
 static int *listen_socks;
 static int listen_count;
 static QUdpSocket *udp_socket = nullptr;
-#endif
-
-#if defined(__VMS)
-#if defined(_VAX_)
-#define lib$stop LIB$STOP
-#define sys$qiow SYS$QIOW
-#define sys$assign SYS$ASSIGN
-#endif
-#include <descrip.h>
-#include <efndef.h>
-#include <iodef.h>
-#include <lib$routines.h>
-#include <starlet.h>
-#include <stsdef.h>
-static unsigned long int tt_chan;
-static char input_char = 0;
-static char got_input = 0;
-void user_interrupt_callback();
-#endif
 
 #define PROCESSING_TIME_STATISTICS 0
 
@@ -134,31 +117,6 @@ static void send_ping_times_to_all(void);
 static void get_lanserver_announcement(void);
 static void send_lanserver_response(void);
 
-static bool no_input = FALSE;
-
-/* Avoid compiler warning about defined, but unused function
- * by defining it only when needed */
-#if defined(FREECIV_HAVE_LIBREADLINE)                                       \
-    || (!defined(FREECIV_SOCKET_ZERO_NOT_STDIN)                             \
-        && !defined(FREECIV_HAVE_LIBREADLINE))
-/*************************************************************************/ /**
-   This happens if you type an EOF character with nothing on the current
- line.
- *****************************************************************************/
-static void handle_stdin_close(void)
-{
-  /* Note this function may be called even if FREECIV_SOCKET_ZERO_NOT_STDIN,
-   * so the preprocessor check has to come inside the function body.  But
-   * perhaps we want to do this even when FREECIV_SOCKET_ZERO_NOT_STDIN? */
-#ifndef FREECIV_SOCKET_ZERO_NOT_STDIN
-  log_normal(_("Server cannot read standard input. Ignoring input."));
-  no_input = TRUE;
-#endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-}
-
-#endif /* FREECIV_HAVE_LIBREADLINE || (!FREECIV_SOCKET_ZERO_NOT_STDIN &&    \
-          !FREECIV_HAVE_LIBREADLINE) */
-
 #ifdef FREECIV_HAVE_LIBREADLINE
 /****************************************************************************/
 
@@ -167,22 +125,14 @@ static void handle_stdin_close(void)
 
 static char *history_file = NULL;
 
-static bool readline_handled_input = FALSE;
-
-static bool readline_initialized = FALSE;
-
 /*************************************************************************/ /**
    Readline callback for input.
  *****************************************************************************/
-static void handle_readline_input_callback(char *line)
+void handle_readline_input_callback(char *line)
 {
   char *line_internal;
 
-  if (no_input)
-    return;
-
-  if (!line) {
-    handle_stdin_close(); /* maybe print an 'are you sure?' message? */
+  if (line == NULL) {
     return;
   }
 
@@ -194,8 +144,6 @@ static void handle_readline_input_callback(char *line)
   (void) handle_stdin_input(NULL, line_internal);
   free(line_internal);
   free(line);
-
-  readline_handled_input = TRUE;
 }
 #endif /* FREECIV_HAVE_LIBREADLINE */
 
@@ -358,7 +306,6 @@ void flush_packets(void)
 {
   int i;
   int max_desc;
-  fd_set writefs, exceptfs;
   fc_timeval tv;
   time_t start;
 
@@ -372,46 +319,22 @@ void flush_packets(void)
       return;
     }
 
-    FC_FD_ZERO(&writefs);
-    FC_FD_ZERO(&exceptfs);
-    max_desc = -1;
-
-    for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-      struct connection *pconn = &connections[i];
-
-      if (pconn->used && !pconn->server.is_closing
-          && 0 < pconn->send_buffer->ndata) {
-        FD_SET(pconn->sock, &writefs);
-        FD_SET(pconn->sock, &exceptfs);
-        max_desc = MAX(pconn->sock, max_desc);
-      }
-    }
-
-    if (max_desc == -1) {
-      return;
-    }
-
-    if (fc_select(max_desc + 1, NULL, &writefs, &exceptfs, &tv) <= 0) {
-      return;
-    }
-
     for (i = 0; i < MAX_NUM_CONNECTIONS;
          i++) { /* check for freaky players */
       struct connection *pconn = &connections[i];
 
       if (pconn->used && !pconn->server.is_closing) {
-        if (FD_ISSET(pconn->sock, &exceptfs)) {
+        if (!pconn->sock->isOpen()) {
           log_verbose("connection (%s) cut due to exception data",
                       conn_description(pconn));
           connection_close_server(pconn, _("network exception"));
         } else {
           if (pconn->send_buffer && pconn->send_buffer->ndata > 0) {
-            if (FD_ISSET(pconn->sock, &writefs)) {
-              flush_connection_send_buffer_all(pconn);
-            } else {
-              cut_lagging_connection(pconn);
-            }
+            flush_connection_send_buffer_all(pconn);
           }
+          // FIXME Handle connections not taking writes
+          // They should be cut instead of filling their buffer
+          // cut_lagging_connection(pconn);
         }
       }
     }
@@ -498,10 +421,11 @@ static void incoming_client_packets(struct connection *pconn)
  *****************************************************************************/
 enum server_events server_sniff_all_input(void)
 {
+  // TODO later
+#if 0
   int i, s;
   int max_desc;
   bool excepting;
-  fd_set readfs, writefs, exceptfs;
   fc_timeval tv;
 #ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
   char *bufptr;
@@ -670,41 +594,16 @@ enum server_events server_sniff_all_input(void)
     tv.tv_sec = 1;
     tv.tv_usec = 0;
 
-    FC_FD_ZERO(&readfs);
-    FC_FD_ZERO(&writefs);
-    FC_FD_ZERO(&exceptfs);
-
     if (!no_input) {
 #ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
       fc_init_console();
-#else /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-#if !defined(__VMS)
-      FD_SET(0, &readfs);
-#endif /* VMS */
 #endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
     }
 
-    max_desc = 0;
-    for (i = 0; i < listen_count; i++) {
-      FD_SET(listen_socks[i], &readfs);
-      FD_SET(listen_socks[i], &exceptfs);
-      max_desc = MAX(max_desc, listen_socks[i]);
-    }
-
-    for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-      struct connection *pconn = connections + i;
-
-      if (pconn->used && !pconn->server.is_closing) {
-        FD_SET(pconn->sock, &readfs);
-        if (0 < pconn->send_buffer->ndata) {
-          FD_SET(pconn->sock, &writefs);
-        }
-        FD_SET(pconn->sock, &exceptfs);
-        max_desc = MAX(pconn->sock, max_desc);
-      }
-    }
     con_prompt_off(); /* output doesn't generate a new prompt */
 
+//     if (!socket->waitForReadyRead(1000 /* ms */)) {
+    // TODO timer
     if (fc_select(max_desc + 1, &readfs, &writefs, &exceptfs, &tv) == 0) {
       /* timeout */
       call_ai_refresh();
@@ -729,37 +628,14 @@ enum server_events server_sniff_all_input(void)
       }
 
       if (!no_input) {
-#if defined(__VMS)
-        {
-          struct {
-            short numchars;
-            char firstchar;
-            char reserved;
-            int reserved2;
-          } ttchar;
-          unsigned long status;
-
-          status =
-              sys$qiow(EFN$C_ENF, tt_chan, IO$_SENSEMODE | IO$M_TYPEAHDCNT,
-                       0, 0, 0, &ttchar, sizeof(ttchar), 0, 0, 0, 0);
-          if (!$VMS_STATUS_SUCCESS(status)) {
-            lib$stop(status);
-          }
-          if (ttchar.numchars) {
-            FD_SET(0, &readfs);
-          } else {
-            continue;
-          }
-        }
-#else /* !__VMS */
 #ifndef FREECIV_SOCKET_ZERO_NOT_STDIN
         really_close_connections();
         continue;
 #endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-#endif /* !__VMS */
       }
     }
 
+    // TODO Probably not needed
     excepting = FALSE;
     for (i = 0; i < listen_count; i++) {
       if (FD_ISSET(listen_socks[i], &exceptfs)) {
@@ -770,6 +646,7 @@ enum server_events server_sniff_all_input(void)
     if (excepting) { /* handle Ctrl-Z suspend/resume */
       continue;
     }
+    // TODO this should come from the QTcpServer
     for (i = 0; i < listen_count; i++) {
       s = listen_socks[i];
       if (FD_ISSET(s, &readfs)) { /* new players connects */
@@ -783,6 +660,7 @@ enum server_events server_sniff_all_input(void)
         }
       }
     }
+    // TODO on error() and find a way to include it (deprecated in 5.15!)
     for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
       /* check for freaky players */
       struct connection *pconn = &connections[i];
@@ -794,6 +672,7 @@ enum server_events server_sniff_all_input(void)
         connection_close_server(pconn, _("network exception"));
       }
     }
+    // TODO prompt, use QSocketNotifier on STDIN_FILENO
 #ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
     if (!no_input && (bufptr = fc_read_console())) {
       char *bufptr_internal = local_to_internal_string_malloc(bufptr);
@@ -852,6 +731,8 @@ enum server_events server_sniff_all_input(void)
     } else
 #endif /* !FREECIV_SOCKET_ZERO_NOT_STDIN */
 
+    // TODO QTcpSocket::readyRead() -- but why is it in the readline loop?
+    // oh DAMNIT there are #ifdefs
     { /* input from a player */
       for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
         struct connection *pconn = connections + i;
@@ -892,6 +773,7 @@ enum server_events server_sniff_all_input(void)
   }
   con_prompt_off();
 
+  // TODO use timer
   call_ai_refresh();
   script_server_signal_emit("pulse");
 
@@ -911,7 +793,7 @@ enum server_events server_sniff_all_input(void)
         timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
     timer_start(game.server.save_timer);
   }
-
+#endif // comment
   return S_E_OTHERWISE;
 }
 
@@ -948,84 +830,49 @@ static const char *makeup_connection_name(int *id)
    Returns 0 on success, -1 on failure (bad accept(), or too many
    connections).
  *****************************************************************************/
-static int server_accept_connection(int sockfd)
+static int server_accept_connection(QTcpSocket *socket)
 {
-  /* This used to have size_t for some platforms.  If this is necessary
-   * it should be done with a configure check not a platform check. */
-  socklen_t fromlen;
-
-  int new_sock;
-  union fc_sockaddr fromend;
-  bool nameinfo = FALSE;
-#ifdef FREECIV_IPV6_SUPPORT
-  char host[NI_MAXHOST], service[NI_MAXSERV];
-  char dst[INET6_ADDRSTRLEN];
-#else  /* IPv6 support */
-  struct hostent *from;
-  const char *host = NULL;
-  const char *dst;
-#endif /* IPv6 support */
-
-  fromlen = sizeof(fromend);
-
-  if ((new_sock = accept(sockfd, &fromend.saddr, &fromlen)) == -1) {
-    log_error("accept failed: %s", fc_strerror(fc_get_errno()));
-    return -1;
+  // Lookup the host name of the remote end.
+  // The IP address will always work
+  auto remote = socket->peerAddress().toString();
+  // Try a remote DNS lookup
+  auto host_info = QHostInfo::fromName(remote); // FIXME Blocking call
+  if (host_info.error() == QHostInfo::NoError) {
+    remote = host_info.hostName();
   }
 
-#ifdef FREECIV_IPV6_SUPPORT
-  if (fromend.saddr.sa_family == AF_INET6) {
-    inet_ntop(AF_INET6, &fromend.saddr_in6.sin6_addr, dst, sizeof(dst));
-  } else if (fromend.saddr.sa_family == AF_INET) {
-    inet_ntop(AF_INET, &fromend.saddr_in4.sin_addr, dst, sizeof(dst));
-  } else {
-    fc_assert(FALSE);
-
-    log_error("Unsupported address family in server_accept_connection()");
-
-    return -1;
+  // Reject the connection if we have reached the hard-coded limit
+  if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
+    log_verbose("Rejecting new connection from %s: maximum number of "
+                "connections exceeded (%d).",
+                qPrintable(remote), MAX_NUM_CONNECTIONS);
   }
-#else  /* IPv6 support */
-  dst = inet_ntoa(fromend.saddr_in4.sin_addr);
-#endif /* IPv6 support */
 
+  // Reject the connection if we have reached the limit for this host
   if (0 != game.server.maxconnectionsperhost) {
     int count = 0;
 
     conn_list_iterate(game.all_connections, pconn)
     {
-      if (0 != strcmp(dst, pconn->server.ipaddr)) {
+      // Use TolerantConversion so one connections from the same address on
+      // IPv4 and IPv6 are rejected as well.
+      if (socket->peerAddress().isEqual(pconn->sock->peerAddress(),
+                                        QHostAddress::TolerantConversion)) {
         continue;
       }
       if (++count >= game.server.maxconnectionsperhost) {
         log_verbose("Rejecting new connection from %s: maximum number of "
                     "connections for this address exceeded (%d).",
-                    dst, game.server.maxconnectionsperhost);
+                    qPrintable(remote), game.server.maxconnectionsperhost);
 
-        /* Disconnect the accepted socket. */
-        fc_closesocket(new_sock);
-
+        delete socket;
         return -1;
       }
     }
     conn_list_iterate_end;
   }
 
-#ifdef FREECIV_IPV6_SUPPORT
-  nameinfo = (0
-                  == getnameinfo(&fromend.saddr, fromlen, host, NI_MAXHOST,
-                                 service, NI_MAXSERV, NI_NUMERICSERV)
-              && '\0' != host[0]);
-#else  /* IPv6 support */
-  from = gethostbyaddr((char *) &fromend.saddr_in4.sin_addr,
-                       sizeof(fromend.saddr_in4.sin_addr), AF_INET);
-  if (NULL != from && '\0' != from->h_name[0]) {
-    host = from->h_name;
-    nameinfo = TRUE;
-  }
-#endif /* IPv6 support */
-
-  return server_make_connection(new_sock, (nameinfo ? host : dst), dst);
+  return server_make_connection(socket, remote);
 }
 
 /*************************************************************************/ /**
@@ -1034,13 +881,10 @@ static int server_accept_connection(int sockfd)
    Returns 0 on success, -1 on failure (bad accept(), or too many
    connections).
  *****************************************************************************/
-int server_make_connection(int new_sock, const char *client_addr,
-                           const char *client_ip)
+int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 {
   struct timer *timer;
   int i;
-
-  fc_nonblock(new_sock);
 
   for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
     struct connection *pconn = &connections[i];
@@ -1068,8 +912,9 @@ int server_make_connection(int new_sock, const char *client_addr,
       pconn->outgoing_packet_notify = NULL;
 
       sz_strlcpy(pconn->username, makeup_connection_name(&pconn->id));
-      sz_strlcpy(pconn->addr, client_addr);
-      sz_strlcpy(pconn->server.ipaddr, client_ip);
+      pconn->addr = client_addr;
+      sz_strlcpy(pconn->server.ipaddr,
+                 qUtf8Printable(new_sock->peerAddress().toString()));
 
       conn_list_append(game.all_connections, pconn);
 
@@ -1085,8 +930,9 @@ int server_make_connection(int new_sock, const char *client_addr,
     }
   }
 
+  // Should not happen as per the check earlier in server_attempt_connection
   log_error("maximum number of connections reached");
-  fc_closesocket(new_sock);
+  delete new_sock;
   return -1;
 }
 
@@ -1094,157 +940,32 @@ int server_make_connection(int new_sock, const char *client_addr,
    Open server socket to be used to accept client connections
    and open a server socket for server LAN announcements.
  *****************************************************************************/
-int server_open_socket(void)
+int server_open_socket()
 {
-  /* setup socket address */
-  union fc_sockaddr addr;
-#ifdef HAVE_IP_MREQN
-  struct ip_mreqn mreq4;
-#else
-  struct ip_mreq mreq4;
-#endif
-  const char *cause, *group;
-  int j, on, s;
-  int lan_family;
-  struct fc_sockaddr_list *list;
-  int name_count;
-  fc_errno eno = 0;
-  union fc_sockaddr *problematic = NULL;
-
-#ifdef FREECIV_IPV6_SUPPORT
-  struct ipv6_mreq mreq6;
-#endif
+  auto server = new QTcpServer;
 
   log_verbose("Server attempting to listen on %s:%d",
               srvarg.bind_addr ? srvarg.bind_addr : "(any)", srvarg.port);
 
-  /* Any supported family will do */
-  list = net_lookup_service(srvarg.bind_addr, srvarg.port, FC_ADDR_ANY);
+  if (!server->listen(QHostAddress::Any, srvarg.port)) {
+    // Failed
 
-  name_count = fc_sockaddr_list_size(list);
+    // TRANS: %1 is a port number, %2 is the error message
+    log_fatal(qPrintable(
+        QString::fromUtf8(_("Server: cannot listen on port %1: %2"))
+            .arg(srvarg.port)
+            .arg(server->errorString())));
 
-  /* Lookup addresses to bind. */
-  if (name_count <= 0) {
-    log_fatal(_("Server: bad address: <%s:%d>."),
-              srvarg.bind_addr ? srvarg.bind_addr : "(none)", srvarg.port);
-    exit(EXIT_FAILURE);
+    delete server;
+    QCoreApplication::exit(EXIT_FAILURE);
+    return 0;
   }
 
-  cause = "internal"; /* If cause is not overwritten but gets printed... */
-  on = 1;
-
-  /* Loop to create sockets, bind, listen. */
-  listen_socks = new int[name_count]{};
-  listen_count = 0;
-
-  fc_sockaddr_list_iterate(list, paddr)
-  {
-    /* Create socket for client connections. */
-    s = socket(paddr->saddr.sa_family, SOCK_STREAM, 0);
-    if (s == -1) {
-      /* Probably EAFNOSUPPORT or EPROTONOSUPPORT.
-       * Kernel might have disabled AF_INET6. */
-      eno = fc_get_errno();
-      cause = "socket";
-      problematic = paddr;
-      continue;
-    }
-
-#ifndef FREECIV_HAVE_WINSOCK
-    /* SO_REUSEADDR considered harmful on Win, necessary otherwise */
-    if (setsockopt(s, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(on))
-        == -1) {
-      log_error("setsockopt SO_REUSEADDR failed: %s",
-                fc_strerror(fc_get_errno()));
-      sockaddr_debug(paddr, LOG_NORMAL);
-    }
-#endif /* FREECIV_HAVE_WINSOCK */
-
-    /* AF_INET6 sockets should use IPv6 only,
-     * without stealing IPv4 from AF_INET sockets. */
-#ifdef FREECIV_IPV6_SUPPORT
-    if (paddr->saddr.sa_family == AF_INET6) {
-#ifdef IPV6_V6ONLY
-      if (setsockopt(s, IPPROTO_IPV6, IPV6_V6ONLY, (char *) &on, sizeof(on))
-          == -1) {
-        log_error("setsockopt IPV6_V6ONLY failed: %s",
-                  fc_strerror(fc_get_errno()));
-        sockaddr_debug(paddr, LOG_DEBUG);
-      }
-#endif /* IPV6_V6ONLY */
-    }
-#endif /* IPv6 support */
-
-    if (bind(s, &paddr->saddr, sockaddr_size(paddr)) == -1) {
-      eno = fc_get_errno();
-      cause = "bind";
-      problematic = paddr;
-
-      if (eno == EADDRNOTAVAIL) {
-        /* Close only this socket. This address is not available.
-         * This can happen with the IPv6 wildcard address if this
-         * machine has no IPv6 interfaces. */
-        /* If you change this logic, be sure to make clientside checking
-         * of acceptable port to match. */
-        fc_closesocket(s);
-        continue;
-      } else {
-        /* Close all sockets. Another program might have bound to
-         * one of our addresses, and might hijack some of our
-         * connections. */
-        fc_closesocket(s);
-        for (j = 0; j < listen_count; j++) {
-          fc_closesocket(listen_socks[j]);
-        }
-        listen_count = 0;
-        break;
-      }
-    }
-
-    if (listen(s, MAX_NUM_CONNECTIONS) == -1) {
-      eno = fc_get_errno();
-      cause = "listen";
-      problematic = paddr;
-      fc_closesocket(s);
-      continue;
-    }
-
-    listen_socks[listen_count++] = s;
-  }
-  fc_sockaddr_list_iterate_end;
-
-  if (listen_count == 0) {
-    log_fatal("%s failure: %s (%d failed)", cause, fc_strerror(eno),
-              name_count);
-    if (problematic != NULL) {
-      sockaddr_debug(problematic, LOG_NORMAL);
-    }
-    fc_sockaddr_list_iterate(list, paddr)
-    {
-      /* Do not list already logged 'problematic' again */
-      if (paddr != problematic) {
-        sockaddr_debug(paddr, LOG_DEBUG);
-      }
-    }
-    fc_sockaddr_list_iterate_end;
-    exit(EXIT_FAILURE);
-  }
-
-  fc_sockaddr_list_destroy(list);
-
+  // FIXME
   connections_set_close_callback(server_conn_close_callback);
 
   if (srvarg.announce == ANNOUNCE_NONE) {
     return 0;
-  }
-
-#ifdef FREECIV_IPV6_SUPPORT
-  if (srvarg.announce == ANNOUNCE_IPV6) {
-    lan_family = AF_INET6;
-  } else
-#endif /* IPV6 support */
-  {
-    lan_family = AF_INET;
   }
 
   enum QHostAddress::SpecialAddress address_type;
@@ -1265,7 +986,7 @@ int server_open_socket(void)
               udp_socket->errorString().toLocal8Bit().data());
     return 1;
   }
-  group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
+  auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
     log_error("Announcement socket binding failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
@@ -1293,17 +1014,6 @@ void init_connections(void)
     pconn->self = conn_list_new();
     conn_list_prepend(pconn->self, pconn);
   }
-#if defined(__VMS)
-  {
-    unsigned long status;
-
-    $DESCRIPTOR(tt_desc, "SYS$INPUT");
-    status = sys$assign(&tt_desc, &tt_chan, 0, 0);
-    if (!$VMS_STATUS_SUCCESS(status)) {
-      lib$stop(status);
-    }
-  }
-#endif /* VMS */
 }
 
 /*************************************************************************/ /**

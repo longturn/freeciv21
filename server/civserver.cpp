@@ -61,6 +61,7 @@
 #include "console.h"
 #include "meta.h"
 #include "sernet.h"
+#include "server.h"
 #include "srv_main.h"
 
 #ifdef GENERATING_MAC
@@ -76,7 +77,7 @@ static void Mac_options(int argc); /* don't need argv */
   if (S_S_RUNNING == server_state()) {                                      \
     save_game_auto(#sig, AS_INTERRUPT);                                     \
   }                                                                         \
-  exit(EXIT_SUCCESS);
+  QCoreApplication::exit(EXIT_SUCCESS);
 
 /**********************************************************************/ /**
    This function is called when a SIGINT (ctrl-c) is received.  It will exit
@@ -507,12 +508,11 @@ int main(int argc, char *argv[])
   init_our_capability();
 
   /* have arguments, call the main server loop... */
-  srv_main();
+  auto server = new freeciv::server;
+  QObject::connect(&app, &QCoreApplication::aboutToQuit, server,
+                   &QObject::deleteLater);
 
-  /* Technically, we won't ever get here. We exit via server_quit. */
-
-  /* done */
-  exit(EXIT_SUCCESS);
+  return app.exec();
 }
 
 #ifdef GENERATING_MAC

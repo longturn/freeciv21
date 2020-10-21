@@ -13,7 +13,8 @@
 #ifndef FC__SERNET_H
 #define FC__SERNET_H
 
-
+// Forward declarations
+class QTcpSocket;
 
 struct connection;
 
@@ -31,15 +32,14 @@ enum server_events {
 
 enum server_events server_sniff_all_input(void);
 
+void handle_readline_input_callback(char *line);
+
 int server_open_socket(void);
 void flush_packets(void);
 void close_connections_and_socket(void);
 void init_connections(void);
-int server_make_connection(int new_sock, const char *client_addr,
-                           const char *client_ip);
+int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
-
-
 
 #endif /* FC__SERNET_H */

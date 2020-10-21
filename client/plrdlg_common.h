@@ -13,7 +13,8 @@
 #ifndef FC__PLRDLG_COMMON_H
 #define FC__PLRDLG_COMMON_H
 
-
+// Qt
+#include <QString>
 
 /* utility */
 #include "support.h" /* bool type */
@@ -36,9 +37,9 @@ typedef int (*plr_dlg_sort_func)(const struct player *p1,
 struct player_dlg_column {
   bool show;
   enum player_dlg_column_type type;
-  const char *title;                          /* already translated */
-  const char *(*func)(const struct player *); /* if type = COL_*TEXT */
-  bool (*bool_func)(const struct player *);   /* if type = COL_BOOLEAN */
+  const char *title;                        /* already translated */
+  QString (*func)(const struct player *);   // if type = COL_*TEXT
+  bool (*bool_func)(const struct player *); /* if type = COL_BOOLEAN */
   plr_dlg_sort_func sort_func;
   const char *tagname; /* for save_options */
 };
@@ -46,13 +47,11 @@ struct player_dlg_column {
 extern struct player_dlg_column player_dlg_columns[];
 extern const int num_player_dlg_columns;
 
-const char *plrdlg_col_state(const struct player *plr);
+QString plrdlg_col_state(const struct player *plr);
 
 void init_player_dlg_common(void);
 int player_dlg_default_sort_column(void);
 
-const char *player_addr_hack(const struct player *pplayer);
-
-
+QString player_addr_hack(const struct player *pplayer);
 
 #endif /* FC__PLRDLG_COMMON_H */

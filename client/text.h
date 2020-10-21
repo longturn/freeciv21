@@ -14,8 +14,6 @@
 #ifndef FC__TEXT_H
 #define FC__TEXT_H
 
-
-
 #include "fc_types.h"
 #include "unitlist.h"
 
@@ -49,8 +47,8 @@ bool get_units_disband_info(char *buf, size_t bufsz,
 const char *get_spaceship_descr(struct player_spaceship *pship);
 const char *get_timeout_label_text(void);
 const char *format_duration(int duration);
-const char *get_ping_time_text(const struct player *pplayer);
-const char *get_score_text(const struct player *pplayer);
+QString get_ping_time_text(const struct player *pplayer);
+QString get_score_text(const struct player *pplayer);
 const char *get_report_title(const char *report_name);
 
 const char *get_act_sel_action_custom_text(struct action *paction,
@@ -66,7 +64,5 @@ const char *text_happiness_cities(const struct city *pcity);
 const char *text_happiness_luxuries(const struct city *pcity);
 const char *text_happiness_units(const struct city *pcity);
 const char *text_happiness_wonders(const struct city *pcity);
-
-
 
 #endif /* FC__TEXT_H */

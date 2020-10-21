@@ -35,6 +35,9 @@
   Includes cmdlevel stuff, which is connection-based.
 ***************************************************************************/
 
+// Qt
+#include <QString>
+
 /* utility */
 #include "shared.h"  /* MAX_LEN_ADDR */
 #include "support.h" /* bool type */
@@ -168,7 +171,7 @@ struct connection {
 
   struct conn_list *self; /* list with this connection as single element */
   char username[MAX_LEN_NAME];
-  char addr[MAX_LEN_ADDR];
+  QString addr;
 
   /*
    * "capability" gives the capability string of the executable (be it

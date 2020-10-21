@@ -513,7 +513,7 @@ static void package_conn_info(struct connection *pconn,
   packet->access_level = pconn->access_level;
 
   sz_strlcpy(packet->username, pconn->username);
-  sz_strlcpy(packet->addr, pconn->addr);
+  sz_strlcpy(packet->addr, qPrintable(pconn->addr));
   sz_strlcpy(packet->capability, pconn->capability);
 }
 

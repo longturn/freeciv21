@@ -23,6 +23,9 @@
 #include <string.h>
 #include <time.h>
 
+// Qt
+#include <QCoreApplication>
+
 #ifdef HAVE_NETDB_H
 #include <netdb.h>
 #endif
@@ -1945,7 +1948,8 @@ void server_quit(void)
   free_nls();
   con_log_close();
   cmdline_option_values_free();
-  exit(EXIT_SUCCESS);
+
+  QCoreApplication::exit(EXIT_SUCCESS);
 }
 
 /**********************************************************************/ /**
