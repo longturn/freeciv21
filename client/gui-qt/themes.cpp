@@ -38,8 +38,8 @@
 extern QApplication *current_app();
 extern QApplication *qapp;
 extern QString current_theme;
-static QString def_app_style;
-static QString stylestring;
+Q_GLOBAL_STATIC(QString, def_app_style)
+Q_GLOBAL_STATIC(QString, stylestring)
 
 /*************************************************************************/ /**
    Loads a qt theme directory/theme_name
@@ -54,8 +54,8 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QString lnb = "LittleFinger";
   QPalette pal;
 
-  if (def_app_style.isEmpty()) {
-    def_app_style = QApplication::style()->objectName();
+  if (def_app_style->isEmpty()) {
+    *def_app_style = QApplication::style()->objectName();
   }
 
   data_dir = QString(directory);
@@ -74,24 +74,24 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   fake_dir = data_dir;
   fake_dir.replace(QString(DIR_SEPARATOR), "/");
   QTextStream in(&f);
-  stylestring = in.readAll();
-  stylestring.replace(lnb, fake_dir + "/" + theme_name + "/");
+  *stylestring = in.readAll();
+  stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");
 
   if (QString(theme_name) == QString("System")) {
-    QApplication::setStyle(QStyleFactory::create(def_app_style));
+    QApplication::setStyle(QStyleFactory::create(*def_app_style));
   } else {
     QStyle *fstyle = QStyleFactory::create("Fusion");
 
     if (fstyle != nullptr) {
       QApplication::setStyle(fstyle);
     } else {
-      QApplication::setStyle(QStyleFactory::create(def_app_style));
+      QApplication::setStyle(QStyleFactory::create(*def_app_style));
     }
   }
 
   current_theme = theme_name;
   QPixmapCache::clear();
-  current_app()->setStyleSheet(stylestring);
+  current_app()->setStyleSheet(*stylestring);
   if (gui()) {
     gui()->reload_sidebar_icons();
   }
