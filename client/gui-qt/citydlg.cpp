@@ -3836,8 +3836,8 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
        * as (Qt) HTML */
       obsolete_str = obsolete_str
                      + QString(_("Obsoleted by %1 (%2)."))
-                           .arg(utype_name_translation(obsolete))
-                           .arg(advance_name_translation(tech))
+                           .arg(utype_name_translation(obsolete),
+                            advance_name_translation(tech))
                            .toHtmlEscaped();
     } else {
       obsolete_str = obsolete_str
