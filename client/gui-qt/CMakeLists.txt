@@ -32,6 +32,7 @@ add_library(
   notifyreport.cpp
   optiondlg.cpp
   page_main.cpp
+  page_load.cpp
   pages.cpp
   plrdlg.cpp
   qtg_cxxside.cpp

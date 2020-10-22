@@ -1,21 +1,16 @@
-/********************************************************************
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
-                              .___.
-          /)               ,-^     ^-.
-         //               /           \
-.-------| |--------------/  __     __  \-------------------.__
-|WMWMWMW| |>>>>>>>>>>>>> | />>\   />>\ |>>>>>>>>>>>>>>>>>>>>>>:>
-`-------| |--------------| \__/   \__/ |-------------------'^^
-         \\               \    /|\    / You should have received
-          \)               \   \_/   / a copy of the GNU General
-                            |       | Public License along with this
-    ⒻⓇⒺⒺⒸⒾⓋ ②①        |+H+H+H+| program; if not, write to
-      GPLv3                 \       / 51 Franklin Street,Fifth Floor
-                             ^-----^  Boston, MA  02110-1301, USA.
-********************************************************************/
+/**************************************************************************
+  /\ ___ /\        Copyright (c) 1996-2020 ＦＲＥＥＣＩＶ ２１ and Freeciv
+ (  o   o  )                 contributors. This file is part of Freeciv21.
+  \  >#<  /           Freeciv21 is free software: you can redistribute it
+  /       \                    and/or modify it under the terms of the GNU
+ /         \       ^      General Public License  as published by the Free
+|           |     //  Software Foundation, either version 3 of the License,
+ \         /    //                  or (at your option) any later version.
+  ///  ///   --                     You should have received a copy of the
+                          GNU General Public License along with Freeciv21.
+                                  If not, see https://www.gnu.org/licenses/.
+**************************************************************************/
+
 
 #ifndef FC__IDLECALLBACK_H
 #define FC__IDLECALLBACK_H
