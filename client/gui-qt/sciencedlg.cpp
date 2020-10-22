@@ -29,6 +29,7 @@
 #include "citydlg.h"
 #include "fc_client.h"
 #include "sidebar.h"
+#include "tooltips.h"
 
 #include "sciencedlg.h"
 
