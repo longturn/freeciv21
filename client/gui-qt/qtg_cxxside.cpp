@@ -105,7 +105,7 @@ void setup_gui_funcs()
 
   funcs->request_transport = qtg_request_transport;
 
-  funcs->update_infra_dialog = qtg_update_infra_dialog;
+  funcs->update_infra_dialog = [] {};
 
   funcs->gui_load_theme = qtg_gui_load_theme;
   funcs->gui_clear_theme = qtg_gui_clear_theme;

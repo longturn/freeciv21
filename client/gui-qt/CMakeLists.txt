@@ -14,7 +14,6 @@ add_library(
   endgamereport.cpp
   economyreport.cpp
   fc_client.cpp
-  finddlg.cpp
   fonts.cpp
   gotodlg.cpp
   graphics.cpp
@@ -22,7 +21,6 @@ add_library(
   helpdlg.cpp
   hudwidget.cpp
   icons.cpp
-  infradlg.cpp
   inteldlg.cpp
   luaconsole.cpp
   mapctrl.cpp
@@ -45,7 +43,6 @@ add_library(
   tooltips.cpp
   unitreport.cpp
   voteinfo_bar.cpp
-  wldlg.cpp
 )
 
 target_include_directories(gui-qt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
