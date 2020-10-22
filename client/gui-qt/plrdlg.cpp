@@ -31,6 +31,7 @@
 
 // gui-qt
 #include "fc_client.h"
+#include "inteldlg.h"
 #include "plrdlg.h"
 
 /**********************************************************************/ /**
@@ -951,4 +952,24 @@ void popdown_players_report()
     pr = reinterpret_cast<plr_report *>(w);
     pr->deleteLater();
   }
+}
+/**********************************************************************/ /**
+   Update the intelligence dialog for the given player.  This is called by
+   the core client code when that player's information changes.
+ **************************************************************************/
+void update_intel_dialog(struct player *p)
+{ /* PORTME */
+}
+/**********************************************************************/ /**
+   Close an intelligence dialog for the given player.
+ **************************************************************************/
+void close_intel_dialog(struct player *p)
+{ /* PORTME */
+}
+
+/**********************************************************************/ /**
+   Popup an intelligence dialog for the given player.
+ **************************************************************************/
+void popup_intel_dialog(struct player *p)
+{ /* PORTME */
 }

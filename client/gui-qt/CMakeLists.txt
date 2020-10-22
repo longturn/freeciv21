@@ -21,7 +21,6 @@ add_library(
   helpdlg.cpp
   hudwidget.cpp
   icons.cpp
-  inteldlg.cpp
   luaconsole.cpp
   mapctrl.cpp
   mapview.cpp
