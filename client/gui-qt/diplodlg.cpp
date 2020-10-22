@@ -40,6 +40,7 @@
 #include "colors.h"
 #include "diplodlg.h"
 #include "fc_client.h"
+#include "icons.h"
 #include "sidebar.h"
 
 typedef advance *p_advance;

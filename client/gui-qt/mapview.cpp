@@ -47,6 +47,7 @@
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
+#include "icons.h"
 #include "mapview.h"
 #include "sciencedlg.h"
 #include "qtg_cxxside.h"

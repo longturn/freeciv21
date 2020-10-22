@@ -60,6 +60,7 @@
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
+#include "icons.h"
 #include "hudwidget.h"
 #include "notifyreport.h"
 #include "qtg_cxxside.h"

@@ -35,6 +35,7 @@
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
+#include "icons.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
 

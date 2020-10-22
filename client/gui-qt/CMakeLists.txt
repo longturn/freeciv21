@@ -21,6 +21,7 @@ add_library(
   gui_main.cpp
   helpdlg.cpp
   hudwidget.cpp
+  icons.cpp
   infradlg.cpp
   inteldlg.cpp
   luaconsole.cpp

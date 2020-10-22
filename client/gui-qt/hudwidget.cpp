@@ -48,6 +48,7 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
+#include "icons.h"
 #include "sprite.h"
 
 static QString popup_terrain_info(struct tile *ptile);

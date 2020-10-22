@@ -66,6 +66,7 @@
 #include "colors.h"
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "icons.h"
 #include "tooltips.h"
 
 extern QApplication *qapp;
