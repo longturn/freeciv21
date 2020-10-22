@@ -31,6 +31,7 @@ add_library(
   minimap.cpp
   notifyreport.cpp
   optiondlg.cpp
+  page_game.cpp
   page_main.cpp
   page_load.cpp
   page_network.cpp
