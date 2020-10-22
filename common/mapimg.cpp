@@ -434,7 +434,7 @@ static void mapimg_log(const char *file, const char *function, int line,
 /* == additional functions == */
 
 static int bvplayers_count(const struct mapdef *pmapdef);
-static const char *bvplayers_str(const bv_player plrbv);
+static const char *bvplayers_str(const bv_player &plrbv);
 
 /* == map images data == */
 static struct {
@@ -3189,7 +3189,7 @@ static void base_coor_isohexa(struct img *pimg, int *base_x, int *base_y,
 /************************************************************************/ /**
    Convert the player bitvector to a string.
  ****************************************************************************/
-static const char *bvplayers_str(const bv_player plrbv)
+static const char *bvplayers_str(const bv_player &plrbv)
 {
   static char buf[MAX_NUM_PLAYER_SLOTS + 1];
   int i;
