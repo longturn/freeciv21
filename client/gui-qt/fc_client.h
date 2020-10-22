@@ -51,6 +51,7 @@
 #include "messagewin.h"
 #include "pages.h"
 #include "ratesdlg.h"
+#include "tradecalculation.h"
 #include "voteinfo_bar.h"
 
 enum connection_state {

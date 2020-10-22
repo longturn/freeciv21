@@ -41,6 +41,7 @@ add_library(
   spaceshipdlg.cpp
   sprite.cpp
   themes.cpp
+  tradecalculation.cpp
   tooltips.cpp
   unitreport.cpp
   voteinfo_bar.cpp
