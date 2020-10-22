@@ -29,6 +29,7 @@ add_library(
   menu.cpp
   messagedlg.cpp
   messagewin.cpp
+  notifyreport.cpp
   optiondlg.cpp
   pages.cpp
   plrdlg.cpp

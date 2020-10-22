@@ -59,7 +59,7 @@
 
 extern "C" void real_science_report_dialog_update(void *);
 
-extern void restart_notify_dialogs();
+extern void restart_notify_reports();
 extern void city_font_update();
 
 const bool gui_use_transliteration = false;
@@ -396,7 +396,7 @@ static void apply_notify_font(struct option *poption)
 {
   if (gui()) {
     qtg_gui_update_font("notify_label", option_font_get(poption));
-    restart_notify_dialogs();
+    restart_notify_reports();
   }
   if (gui() && qtg_get_current_client_page() == PAGE_GAME) {
     qtg_gui_update_font("city_label", option_font_get(poption));
