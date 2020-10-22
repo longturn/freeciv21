@@ -34,6 +34,7 @@ add_library(
   page_main.cpp
   page_load.cpp
   page_scenario.cpp
+  page_pregame.cpp
   pages.cpp
   plrdlg.cpp
   qtg_cxxside.cpp

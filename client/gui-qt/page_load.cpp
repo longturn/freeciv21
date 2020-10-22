@@ -170,3 +170,37 @@ void fc_client::start_from_save()
     switch_page(PAGE_GAME + 1);
   }
 }
+
+/**********************************************************************/ /**
+   Browse saves directory
+ **************************************************************************/
+void fc_client::browse_saves(void)
+{
+  QString str;
+  str = QString(_("Save Files"))
+        + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+  current_file = QFileDialog::getOpenFileName(
+      gui()->central_wdg, _("Open Save File"), QDir::homePath(), str);
+  if (!current_file.isEmpty()) {
+    start_from_save();
+  }
+}
+
+/**********************************************************************/ /**
+   State of preview has been changed
+ **************************************************************************/
+void fc_client::state_preview(int new_state)
+{
+  QItemSelection slctn;
+
+  if (show_preview->checkState() == Qt::Unchecked) {
+    gui_options.gui_qt_show_preview = false;
+  } else {
+    gui_options.gui_qt_show_preview = true;
+  }
+  slctn = saves_load->selectionModel()->selection();
+  saves_load->selectionModel()->clearSelection();
+  saves_load->selectionModel()->select(
+      slctn, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
+}
+
