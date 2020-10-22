@@ -39,6 +39,7 @@ add_library(
   spaceshipdlg.cpp
   sprite.cpp
   themes.cpp
+  unitreport.cpp
   voteinfo_bar.cpp
   wldlg.cpp
 )

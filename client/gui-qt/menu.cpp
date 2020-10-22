@@ -66,7 +66,7 @@
 #include "menu.h"
 
 extern QApplication *qapp;
-
+extern void toggle_units_report(bool);
 static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
 static void enable_interface(bool enable);
 
