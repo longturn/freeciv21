@@ -31,7 +31,7 @@
 
 // gui-qt
 #include "fc_client.h"
-#include "messagedlg.h"
+#include "messageoptions.h"
 
 extern QApplication *qapp;
 /**********************************************************************/ /**

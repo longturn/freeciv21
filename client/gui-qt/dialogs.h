@@ -29,6 +29,7 @@
 #include "fonts.h"
 #include "hudwidget.h"
 #include "mapview.h"
+#include "widgetdecorations.h"
 
 class QComboBox;
 class QGridLayout;

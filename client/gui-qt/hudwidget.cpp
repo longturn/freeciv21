@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QAction>
 #include <QApplication>
@@ -50,6 +46,7 @@
 #include "hudwidget.h"
 #include "icons.h"
 #include "sprite.h"
+#include "widgetdecorations.h"
 
 static QString popup_terrain_info(struct tile *ptile);
 
@@ -1902,53 +1899,6 @@ void hud_unit_combat::enterEvent(QEvent *event)
   update();
 }
 
-/****************************************************************************
-  Scale widget allowing scaling other widgets, shown in right top corner
-****************************************************************************/
-scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
-    : QRubberBand(s, p)
-{
-  QPixmap *pix;
-
-  size = 12;
-  pix = fc_icons::instance()->get_pixmap("plus");
-  plus = pix->scaledToWidth(size);
-  delete pix;
-  pix = fc_icons::instance()->get_pixmap("minus");
-  minus = plus = pix->scaledToWidth(size);
-  delete pix;
-  setFixedSize(2 * size, size);
-  scale = 1.0f;
-  setAttribute(Qt::WA_TransparentForMouseEvents, false);
-}
-
-/****************************************************************************
-  Draws 2 icons for resizing
-****************************************************************************/
-void scale_widget::paintEvent(QPaintEvent *event)
-{
-  QRubberBand::paintEvent(event);
-  QPainter p;
-  p.begin(this);
-  p.drawPixmap(0, 0, minus);
-  p.drawPixmap(size, 0, plus);
-  p.end();
-}
-
-/****************************************************************************
-  Mouse press event for scale widget
-****************************************************************************/
-void scale_widget::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::LeftButton) {
-    if (event->localPos().x() <= size) {
-      scale = scale / 1.2;
-    } else {
-      scale = scale * 1.2;
-    }
-    parentWidget()->update();
-  }
-}
 
 /************************************************************************/ /**
    Hud battle log contructor

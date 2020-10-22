@@ -36,6 +36,7 @@ class QIcon;
 class QLabel;
 class QRadioButton;
 class QVBoxLayout;
+class scale_widget;
 struct tile;
 struct unit;
 struct unit_list;
@@ -322,25 +323,6 @@ private:
   float fading;
   float hud_scale;
   QImage dimg, aimg;
-};
-
-/****************************************************************************
-  Widget for resizing other widgets
-****************************************************************************/
-class scale_widget : public QRubberBand {
-  Q_OBJECT
-public:
-  scale_widget(Shape s, QWidget *p = 0);
-  float scale;
-
-protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  int size;
-  QPixmap plus;
-  QPixmap minus;
 };
 
 /****************************************************************************

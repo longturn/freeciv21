@@ -101,67 +101,6 @@ private:
   void update_font(const QString &name, const QFont &font);
 };
 
-/**************************************************************************
-  Widget allowing resizing other widgets
-**************************************************************************/
-class resize_widget : public QLabel {
-  Q_OBJECT
-public:
-  resize_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  QPoint point;
-};
-
-/**************************************************************************
-  Widget allowing moving other widgets
-**************************************************************************/
-class move_widget : public QLabel {
-  Q_OBJECT
-public:
-  move_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  QPoint point;
-};
-
-/**************************************************************************
-  Abstract class for widgets wanting to do custom action
-  when closing widgets is called (eg. update menu)
-**************************************************************************/
-class fcwidget : public QFrame {
-  Q_OBJECT
-public:
-  virtual void update_menu() = 0;
-  bool was_destroyed;
-};
-
-/**************************************************************************
-  Widget allowing closing other widgets
-**************************************************************************/
-class close_widget : public QLabel {
-  Q_OBJECT
-public:
-  close_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mousePressEvent(QMouseEvent *event);
-  void notify_parent();
-};
-
-
-
 void mapview_freeze(void);
 void mapview_thaw(void);
 bool mapview_is_frozen(void);

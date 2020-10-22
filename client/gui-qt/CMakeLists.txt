@@ -26,7 +26,7 @@ add_library(
   mapctrl.cpp
   mapview.cpp
   menu.cpp
-  messagedlg.cpp
+  messageoptions.cpp
   messagewin.cpp
   minimap.cpp
   notifyreport.cpp
@@ -51,6 +51,7 @@ add_library(
   tooltips.cpp
   unitreport.cpp
   voteinfo_bar.cpp
+  widgetdecorations.cpp
 )
 
 target_include_directories(gui-qt PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})

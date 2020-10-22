@@ -56,7 +56,7 @@
 #include "gui_main.h"
 #include "hudwidget.h"
 #include "mapctrl.h"
-#include "messagedlg.h"
+#include "messageoptions.h"
 #include "minimap.h"
 #include "plrdlg.h"
 #include "ratesdlg.h"
