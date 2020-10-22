@@ -130,7 +130,7 @@ public:
   QString tech_str;
   struct player *other_player;
 public slots:
-  void display_header_menu(const QPoint &);
+  void display_header_menu(const QPoint);
   void nation_selected(const QItemSelection &sl, const QItemSelection &ds);
 
 private:

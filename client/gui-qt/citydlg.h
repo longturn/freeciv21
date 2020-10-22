@@ -65,7 +65,7 @@ QString get_tooltip_improvement(const impr_type *building,
                                 struct city *pcity = nullptr,
                                 bool ext = false);
 QString get_tooltip_unit(const struct unit_type *utype, bool ext = false);
-QString bold(QString text);
+QString bold(const QString &text);
 
 class fc_tooltip : public QObject {
   Q_OBJECT
@@ -390,6 +390,7 @@ protected:
 class city_dialog : public qfc_dialog {
 
   Q_OBJECT
+  Q_DISABLE_COPY(city_dialog);
 
   bool happines_shown;
   QHBoxLayout *single_page_layout;
@@ -448,7 +449,8 @@ class city_dialog : public qfc_dialog {
   QSlider *slider_tab[2 * O_LAST + 2];
 
 public:
-  city_dialog(QWidget *parent = 0);
+  static city_dialog* instance();
+  static void drop();
   ~city_dialog();
   void setup_ui(struct city *qcity);
   void refresh();
@@ -457,6 +459,8 @@ public:
   float zoom;
 
 private:
+  city_dialog(QWidget *parent = 0);
+  static city_dialog* m_instance;
   int current_building;
   void update_title();
   void update_building();
@@ -489,7 +493,7 @@ private slots:
   void worklist_up();
   void worklist_down();
   void worklist_del();
-  void display_worklist_menu(const QPoint &p);
+  void display_worklist_menu(const QPoint);
   void disband_state_changed(bool allow_disband);
   void cma_slider(int val);
   void cma_celebrate_changed(int val);
@@ -498,7 +502,7 @@ private slots:
   void cma_changed();
   void cma_selected(const QItemSelection &sl, const QItemSelection &ds);
   void cma_double_clicked(int row, int column);
-  void cma_context_menu(const QPoint &p);
+  void cma_context_menu(const QPoint p);
   void save_cma();
   void city_rename();
   void zoom_in();

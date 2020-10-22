@@ -49,6 +49,7 @@
 #include "colors.h"
 #include "fc_client.h"
 #include "mapview.h"
+#include "sciencedlg.h"
 #include "qtg_cxxside.h"
 #include "sidebar.h"
 
@@ -98,7 +99,7 @@ void draw_calculated_trade_routes(QPainter *painter)
   /* Draw calculated trade routes */
   if (gui_options.draw_city_trade_routes) {
 
-    foreach (qgilles, gui()->trade_gen.lines) {
+    for (auto qgilles : qAsConst(gui()->trade_gen.lines)) {
       base_map_distance_vector(&dx, &dy, TILE_XY(qgilles.t1),
                                TILE_XY(qgilles.t2));
       map_to_gui_vector(tileset, 1.0, &w, &h, dx, dy);
@@ -136,7 +137,7 @@ void draw_calculated_trade_routes(QPainter *painter)
     }
   }
   /* Draw virtual cities */
-  foreach (pcity, gui()->trade_gen.virtual_cities) {
+  for (auto pcity : qAsConst(gui()->trade_gen.virtual_cities)) {
     float canvas_x, canvas_y;
     if (pcity->tile != nullptr
         && tile_to_canvas_pos(&canvas_x, &canvas_y, pcity->tile)) {
@@ -1324,7 +1325,7 @@ void info_tile::calc_size()
   str = popup_info_text(itile);
   str_list = str.split("\n");
 
-  foreach (str, str_list) {
+  for (auto const &str : qAsConst(str_list)) {
     w = qMax(w, fm.horizontalAdvance(str));
   }
   setFixedHeight(str_list.count() * (fm.height() + 5));

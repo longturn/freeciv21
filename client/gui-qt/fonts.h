@@ -45,8 +45,8 @@ private:
 public:
   static fc_font *instance();
   static void drop();
-  void set_font(QString name, QFont *qf);
-  QFont *get_font(QString name);
+  void set_font(const QString &name, QFont *qf);
+  QFont *get_font(const QString &name);
   void init_fonts();
   void release_fonts();
   void get_mapfont_size();
@@ -55,7 +55,7 @@ public:
 };
 
 void configure_fonts();
-QString configure_font(QString font_name, QStringList sl, int size,
+QString configure_font(const QString &font_name, const QStringList &sl, int size,
                        bool bold = false);
 
 #endif // FC__FONTS_H

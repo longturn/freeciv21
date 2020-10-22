@@ -123,7 +123,7 @@ void hud_message_box::keyPressEvent(QKeyEvent *event)
 /************************************************************************/ /**
    Sets text and title and shows message box
  ****************************************************************************/
-void hud_message_box::set_text_title(QString s1, QString s2)
+void hud_message_box::set_text_title(const QString &s1, const QString &s2)
 {
   QSpacerItem *spacer;
   QGridLayout *layout;
@@ -233,7 +233,7 @@ void hud_message_box::paintEvent(QPaintEvent *event)
 /************************************************************************/ /**
    Hud text constructor takes text to display and time
  ****************************************************************************/
-hud_text::hud_text(QString s, int time_secs, QWidget *parent)
+hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
     : QWidget(parent)
 {
   int size;
@@ -385,8 +385,9 @@ hud_input_box::~hud_input_box()
 /************************************************************************/ /**
    Sets text, title and default text and shows input box
  ****************************************************************************/
-void hud_input_box::set_text_title_definput(QString s1, QString s2,
-                                            QString def_input)
+void hud_input_box::set_text_title_definput(const QString &s1,
+                                            const QString &s2,
+                                            const QString &def_input)
 {
   QSpacerItem *spacer;
   QVBoxLayout *layout;
@@ -700,7 +701,6 @@ void hud_units::update_actions(unit_list *punits)
   bounding_rect.adjust(bounding_rect.width(), 0, bounding_rect.width() * 2,
                        0);
   if (punit->fuel > 1) {
-    QString s;
     int fuel;
 
     font.setPointSize(pix.height() / 4);
@@ -779,7 +779,7 @@ void hud_units::update_actions(unit_list *punits)
  ****************************************************************************/
 click_label::click_label() : QLabel()
 {
-  connect(this, &click_label::left_clicked, this, &click_label::on_clicked);
+  connect(this, &click_label::left_clicked, this, &click_label::mouse_clicked);
 }
 
 /************************************************************************/ /**
@@ -795,7 +795,7 @@ void click_label::mousePressEvent(QMouseEvent *e)
 /************************************************************************/ /**
    Centers on current unit
  ****************************************************************************/
-void click_label::on_clicked()
+void click_label::mouse_clicked()
 {
   gui()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
@@ -806,7 +806,7 @@ void click_label::on_clicked()
  ****************************************************************************/
 hud_action::hud_action(QWidget *parent) : QWidget(parent)
 {
-  connect(this, &hud_action::left_clicked, this, &hud_action::on_clicked);
+  connect(this, &hud_action::left_clicked, this, &hud_action::mouse_clicked);
   setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
   focus = false;
@@ -896,12 +896,12 @@ void hud_action::enterEvent(QEvent *event)
 /************************************************************************/ /**
    Right click event for hud_action
  ****************************************************************************/
-void hud_action::on_right_clicked() {}
+void hud_action::mouse_right_clicked() {}
 
 /************************************************************************/ /**
    Left click event for hud_action
  ****************************************************************************/
-void hud_action::on_clicked()
+void hud_action::mouse_clicked()
 {
   gui()->menu_bar->execute_shortcut(action_shortcut);
 }
@@ -963,7 +963,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  foreach (a, actions) {
+  for (auto a: qAsConst(actions)) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1133,7 +1133,7 @@ int unit_actions::update_actions()
   a->set_pixmap(fc_icons::instance()->get_pixmap("done"));
   actions.append(a);
 
-  foreach (a, actions) {
+  for (auto a: qAsConst(actions)) {
     a->setToolTip(
         gui()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
@@ -1983,7 +1983,7 @@ void hud_battle_log::update_size()
   gui()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  foreach (hudc, lhuc) {
+  for (auto hudc: qAsConst(lhuc)) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -2021,7 +2021,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  foreach (hudc, lhuc) {
+  for (auto hudc: qAsConst(lhuc)) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -2070,10 +2070,10 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
   hud_unit_combat *hupdate;
 
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
-    foreach (hudc, lhuc) {
+    for (auto hudc: qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
-        foreach (hupdate, lhuc) {
+        for (auto hupdate : qAsConst(lhuc)) {
           hupdate->set_fading(1.0);
         }
         return;
@@ -2093,7 +2093,7 @@ void hud_battle_log::showEvent(QShowEvent *event)
 {
   hud_unit_combat *hupdate;
 
-  foreach (hupdate, lhuc) {
+  for (auto hupdate : qAsConst(lhuc)) {
     hupdate->set_fading(1.0);
   }
   m_timer.restart();

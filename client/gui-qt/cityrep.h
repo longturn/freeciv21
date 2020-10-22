@@ -166,13 +166,13 @@ public:
   void update_model();
   void update_city(struct city *pcity);
 public slots:
-  void display_header_menu(const QPoint &);
+  void display_header_menu(const QPoint);
   void hide_columns();
   void city_doubleclick(const QModelIndex &index);
   void city_view();
   void clear_worlist();
   void cities_selected(const QItemSelection &sl, const QItemSelection &ds);
-  void display_list_menu(const QPoint &);
+  void display_list_menu(const QPoint);
   void buy();
   void center();
   void select_all();

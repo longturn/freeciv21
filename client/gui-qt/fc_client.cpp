@@ -35,6 +35,7 @@
 #include <QTextBlock>
 #include <QTextCodec>
 #include <QTextEdit>
+#include <QTimer>
 
 // utility
 #include "fcintl.h"
@@ -280,7 +281,6 @@ void fc_client::send_fake_chat_message(const QString &message)
 void fc_client::chat_message_received(const QString &message,
                                       const struct text_tag_list *tags)
 {
-  QTextCursor cursor;
   QColor col = output_window->palette().color(QPalette::Text);
   QString str = apply_tags(message, tags, col);
 
@@ -534,7 +534,7 @@ void fc_client::delete_cursors(void)
 /************************************************************************/ /**
    Finds not used index on game_view_tab and returns it
  ****************************************************************************/
-void fc_client::gimme_place(QWidget *widget, QString str)
+void fc_client::gimme_place(QWidget *widget, const QString &str)
 {
   QString x;
 
@@ -553,7 +553,7 @@ void fc_client::gimme_place(QWidget *widget, QString str)
    page, figure out some original string and put in in repodlg.h as comment
  to that QWidget class.
  ****************************************************************************/
-bool fc_client::is_repo_dlg_open(QString str)
+bool fc_client::is_repo_dlg_open(const QString &str)
 {
   QWidget *w;
 
@@ -569,7 +569,7 @@ bool fc_client::is_repo_dlg_open(QString str)
 /************************************************************************/ /**
    Returns index on game tab page of given report dialog
  ****************************************************************************/
-int fc_client::gimme_index_of(QString str)
+int fc_client::gimme_index_of(const QString &str)
 {
   int i;
   QWidget *w;
@@ -794,7 +794,7 @@ void fc_client::popdown_unit_sel()
 /************************************************************************/ /**
    Removes report dialog string from the list marking it as closed
  ****************************************************************************/
-void fc_client::remove_repo_dlg(QString str)
+void fc_client::remove_repo_dlg(const QString &str)
 {
   /* if app is closing opened_repo_dlg is already deleted */
   if (!is_closing()) {
@@ -1016,7 +1016,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     gui()->infotab->move(
         qRound((size.width() * gui()->qt_settings.chat_fx_pos)),
         qRound((size.height() * gui()->qt_settings.chat_fy_pos)));
-    gui()->infotab->restore_chat();
     gui()->minimapview_wdg->move(
         qRound(gui()->qt_settings.minimap_x * mapview.width),
         qRound(gui()->qt_settings.minimap_y * mapview.height));
@@ -1032,6 +1031,8 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     side_disable_endturn(get_turn_done_button_state());
     gui()->mapview_wdg->resize(event->size().width(), size.height());
     gui()->unitinfo_wdg->update_actions(nullptr);
+    /* It could be resized before mapview, so delayed it a bit */
+    QTimer::singleShot(20, [] { gui()->infotab->restore_chat(); });
   }
   event->setAccepted(true);
 }
@@ -1049,7 +1050,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
   objs = gui()->sidebar_wdg->objects;
 
-  foreach (sw, objs) {
+  for (auto sw: qAsConst(objs)) {
     sw->update_final_pixmap();
   }
   currentWidget()->hide();

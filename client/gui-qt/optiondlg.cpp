@@ -53,12 +53,12 @@ enum {
 };
 
 /* global value to store pointers to opened config dialogs */
-QMap<const struct option_set *, option_dialog *> dialog_list;
+QHash<const struct option_set *, option_dialog *> dialog_list;
 
 /************************************************************************/ /**
    Splits long text to 80 characters
  ****************************************************************************/
-QString split_text(QString text, bool cut)
+QString split_text(const QString &text, bool cut)
 {
   QStringList sl;
   QString st, str, result;
@@ -66,7 +66,7 @@ QString split_text(QString text, bool cut)
   int j = 0;
 
   sl = text.split("\n");
-  foreach (const QString &s, sl) {
+  for (const QString &s: qAsConst(sl)) {
     st = s;
     while (st.count() >= 80) {
       str = st.left(80);
@@ -100,14 +100,14 @@ QString split_text(QString text, bool cut)
 /************************************************************************/ /**
    Remove some text from given text(help text) to show as tooltip
  ****************************************************************************/
-QString cut_helptext(QString text)
+QString cut_helptext(const QString &text)
 {
   QStringList sl;
   QString ret_str;
 
   /* Remove all lines from help which has '*' in first 3 chars */
   sl = text.split('\n');
-  foreach (const QString &s, sl) {
+  for (const QString &s: qAsConst(sl)) {
     if (s.count() > 2) {
       if (s.at(0) != '*' && s.at(1) != '*' && s.at(2) != '*') {
         ret_str = ret_str + s + '\n';
@@ -330,7 +330,7 @@ void option_dialog::set_int(struct option *poption, int value)
    That function is not executed when user changes font, but when applying or
    resetting options.
  ****************************************************************************/
-void option_dialog::set_font(struct option *poption, QString s)
+void option_dialog::set_font(struct option *poption, const QString &s)
 {
   QStringList ql;
   QPushButton *qp;
@@ -480,7 +480,6 @@ struct option *option_dialog::get_color_option()
  ****************************************************************************/
 void option_dialog::set_color(struct option *poption, struct ft_color color)
 {
-  QPalette pal, pal2;
   QColor col;
   QWidget *w;
   QPushButton *but;
@@ -622,7 +621,6 @@ void option_dialog::add_option(struct option *poption)
   QCheckBox *check;
   QPushButton *button;
   QFont qf;
-  QPalette pal;
   int min, max, i;
   unsigned int j;
 
