@@ -591,3 +591,9 @@ void fc_client::start_page_menu(QPoint pos)
   }
   players_iterate_end;
 }
+
+/**********************************************************************/ /**
+   Calls dialg selecting nations
+ **************************************************************************/
+void fc_client::slot_pick_nation() { popup_races_dialog(client_player()); }
+

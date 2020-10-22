@@ -33,6 +33,7 @@ add_library(
   optiondlg.cpp
   page_main.cpp
   page_load.cpp
+  page_network.cpp
   page_scenario.cpp
   page_pregame.cpp
   pages.cpp
