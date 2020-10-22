@@ -27,6 +27,7 @@ add_library(
   menu.cpp
   messagedlg.cpp
   messagewin.cpp
+  minimap.cpp
   notifyreport.cpp
   optiondlg.cpp
   pages.cpp

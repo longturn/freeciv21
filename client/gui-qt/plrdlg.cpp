@@ -29,9 +29,11 @@
 // utility
 #include "fcintl.h"
 
+//includes
+#include "inteldlg_g.h"
+
 // gui-qt
 #include "fc_client.h"
-#include "inteldlg.h"
 #include "plrdlg.h"
 
 /**********************************************************************/ /**

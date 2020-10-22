@@ -51,6 +51,7 @@
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
+#include "minimap.h"
 #include "optiondlg.h"
 #include "sidebar.h"
 #include "sprite.h"

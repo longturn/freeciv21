@@ -62,6 +62,7 @@ enum connection_state {
 class fc_sidebar;
 class fc_sidetax;
 class fc_sidewidget;
+class minimap_view;
 class MainWindow;
 class pregame_options;
 class QApplication;

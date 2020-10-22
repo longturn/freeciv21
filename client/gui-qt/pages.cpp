@@ -53,6 +53,7 @@
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
+#include "minimap.h"
 #include "pages.h"
 #include "plrdlg.h"
 #include "qtg_cxxside.h"
