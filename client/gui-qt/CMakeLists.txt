@@ -11,6 +11,7 @@ add_library(
   connectdlg.cpp
   dialogs.cpp
   diplodlg.cpp
+  endgamereport.cpp
   economyreport.cpp
   fc_client.cpp
   finddlg.cpp
@@ -33,7 +34,6 @@ add_library(
   plrdlg.cpp
   qtg_cxxside.cpp
   ratesdlg.cpp
-  repodlgs.cpp
   shortcuts.cpp
   sidebar.cpp
   sciencedlg.cpp

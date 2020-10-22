@@ -40,7 +40,6 @@
 #include "menu.h" // gov_menu
 #include "movement.h"
 #include "overview_common.h"
-#include "repodlgs.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"

@@ -50,6 +50,7 @@
 #include "chatline.h"
 #include "cityrep.h"
 #include "dialogs.h"
+#include "economyreport.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "gui_main.h"
@@ -58,14 +59,15 @@
 #include "messagedlg.h"
 #include "plrdlg.h"
 #include "ratesdlg.h"
-#include "repodlgs.h"
 #include "shortcuts.h"
+#include "sciencedlg.h"
 #include "spaceshipdlg.h"
 #include "sprite.h"
 
 #include "menu.h"
 
 extern QApplication *qapp;
+extern void popup_endgame_report();
 extern void toggle_units_report(bool);
 static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
 static void enable_interface(bool enable);
