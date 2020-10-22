@@ -11,6 +11,7 @@ add_library(
   connectdlg.cpp
   dialogs.cpp
   diplodlg.cpp
+  economyreport.cpp
   fc_client.cpp
   finddlg.cpp
   fonts.cpp
