@@ -44,32 +44,6 @@ void unscale_point(double scale_factor, int &x, int &y);
 void draw_calculated_trade_routes(QPainter *painter);
 
 /**************************************************************************
-  Struct used for idle callback to execute some callbacks later
-**************************************************************************/
-struct call_me_back {
-  void (*callback)(void *data);
-  void *data;
-};
-
-/**************************************************************************
-  Class to handle idle callbacks
-**************************************************************************/
-class mr_idle : public QObject {
-  Q_OBJECT
-public:
-  mr_idle();
-  ~mr_idle();
-
-  void add_callback(call_me_back *cb);
-private slots:
-  void idling();
-
-private:
-  QQueue<call_me_back *> callback_list;
-  QTimer timer;
-};
-
-/**************************************************************************
   QWidget used for displaying map
 **************************************************************************/
 class map_view : public QWidget {

@@ -147,47 +147,6 @@ void draw_calculated_trade_routes(QPainter *painter)
 }
 
 /**********************************************************************/ /**
-   Constructor for idle callbacks
- **************************************************************************/
-mr_idle::mr_idle()
-{
-  connect(&timer, &QTimer::timeout, this, &mr_idle::idling);
-  timer.start(5);
-}
-
-/**********************************************************************/ /**
-   Destructor for idle callbacks
- **************************************************************************/
-mr_idle::~mr_idle()
-{
-  call_me_back *cb;
-
-  while (!callback_list.isEmpty()) {
-    cb = callback_list.dequeue();
-    delete cb;
-  }
-}
-
-/**********************************************************************/ /**
-   Slot used to execute 1 callback from callbacks stored in idle list
- **************************************************************************/
-void mr_idle::idling()
-{
-  call_me_back *cb;
-
-  while (!callback_list.isEmpty()) {
-    cb = callback_list.dequeue();
-    (cb->callback)(cb->data);
-    delete cb;
-  }
-}
-
-/**********************************************************************/ /**
-   Adds one callback to execute later
- **************************************************************************/
-void mr_idle::add_callback(call_me_back *cb) { callback_list.enqueue(cb); }
-
-/**********************************************************************/ /**
    Constructor for map
  **************************************************************************/
 map_view::map_view() : QWidget()

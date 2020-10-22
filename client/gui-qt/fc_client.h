@@ -45,6 +45,7 @@
 #include "dialogs.h"
 #include "fonts.h"
 #include "gotodlg.h"
+#include "idlecallback.h"
 #include "mapview.h"
 #include "menu.h"
 #include "messagewin.h"

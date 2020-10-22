@@ -20,6 +20,7 @@ add_library(
   gui_main.cpp
   helpdlg.cpp
   hudwidget.cpp
+  idlecallback.cpp
   icons.cpp
   luaconsole.cpp
   mapctrl.cpp
