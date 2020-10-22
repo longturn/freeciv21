@@ -33,6 +33,7 @@
 #include "fcintl.h"
 
 // common
+#include "connectdlg_common.h"
 #include "version.h"
 
 // gui-qt
@@ -152,3 +153,20 @@ void fc_client::update_load_page(void)
   fileinfo_list_destroy(files);
 }
 
+/**********************************************************************/ /**
+   Starts game from chosen save - chosen_file (save or scenario)
+ **************************************************************************/
+void fc_client::start_from_save()
+{
+  if (!is_server_running()) {
+    client_start_server();
+    send_chat("/detach");
+  }
+  if (is_server_running() && !current_file.isEmpty()) {
+    QByteArray c_bytes;
+
+    c_bytes = current_file.toLocal8Bit();
+    send_chat_printf("/load %s", c_bytes.data());
+    switch_page(PAGE_GAME + 1);
+  }
+}

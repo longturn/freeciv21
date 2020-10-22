@@ -33,6 +33,7 @@ add_library(
   optiondlg.cpp
   page_main.cpp
   page_load.cpp
+  page_scenario.cpp
   pages.cpp
   plrdlg.cpp
   qtg_cxxside.cpp
