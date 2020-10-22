@@ -31,6 +31,7 @@ add_library(
   minimap.cpp
   notifyreport.cpp
   optiondlg.cpp
+  page_main.cpp
   pages.cpp
   plrdlg.cpp
   qtg_cxxside.cpp
