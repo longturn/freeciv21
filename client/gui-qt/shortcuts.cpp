@@ -11,10 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "shortcuts.h"
 // Qt
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -26,14 +23,11 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QWidget>
-
 // client
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
-#include "shortcuts.h"
 
 extern void real_menus_init();
 

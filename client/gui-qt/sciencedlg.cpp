@@ -4,10 +4,6 @@
 ###      ***                                     ***               ###
 #####################################################################*/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QComboBox>
 #include <QGridLayout>
@@ -15,27 +11,23 @@
 #include <QPainter>
 #include <QScrollArea>
 #include <QToolTip>
-
 // common
 #include "game.h"
 #include "government.h"
 #include "research.h"
-
 // client
 #include "client_main.h"
 #include "helpdata.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"
-
 // gui-qt
 #include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
+#include "sciencedlg.h"
 #include "sidebar.h"
 #include "tooltips.h"
-
-#include "sciencedlg.h"
 
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
@@ -70,7 +62,6 @@ struct reqtree {
   struct tree_node ***layers;
   int diagram_width, diagram_height;
 };
-
 
 /************************************************************************/ /**
    Compare unit_items (used for techs) by name

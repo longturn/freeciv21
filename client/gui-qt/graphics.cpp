@@ -11,13 +11,8 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // client
 #include "tilespec.h"
-
 // gui-qt
 #include "graphics.h"
 #include "qtg_cxxside.h"

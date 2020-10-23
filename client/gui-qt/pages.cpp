@@ -11,53 +11,18 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-
+#include "pages.h"
 // Qt
-#include <QAction>
-#include <QApplication>
-#include <QCheckBox>
-#include <QDateTime>
-#include <QFileDialog>
 #include <QGridLayout>
-#include <QHeaderView>
-#include <QLineEdit>
-#include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
-#include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
+#include <QLabel>
 // utility
 #include "fcintl.h"
-
-// common
-#include "game.h"
-#include "version.h"
-
-#include "cityrep_g.h"
-#include "repodlgs_g.h"
 // client
-#include "client_main.h"
-#include "colors_common.h"
-#include "connectdlg_common.h"
-#include "mapview_common.h"
-#include "text.h"
-#include "tilespec.h"
-
+#include "connectdlg_common.h" // Born to be in common, but he was deported
+#include "pages_g.h"
 // gui-qt
-#include "colors.h"
-#include "dialogs.h"
 #include "fc_client.h"
-#include "icons.h"
-#include "minimap.h"
-#include "pages.h"
-#include "plrdlg.h"
 #include "qtg_cxxside.h"
-#include "sidebar.h"
-#include "sprite.h"
-#include "voteinfo_bar.h"
-
 
 /**********************************************************************/ /**
    Sets the "page" that the client should show.  See also pages_g.h.
@@ -89,8 +54,6 @@ enum client_pages qtg_get_current_client_page()
    Update the start page.
  **************************************************************************/
 void update_start_page(void) { gui()->update_start_page(); }
-
-
 
 /**********************************************************************/ /**
    Sets application status bar for given time in miliseconds
@@ -135,7 +98,6 @@ void fc_client::create_loading_page()
   pages_layout[PAGE_GAME + 1]->addWidget(label, 0, 0, 1, 1,
                                          Qt::AlignHCenter);
 }
-
 
 /**********************************************************************/ /**
    spawn a server, if there isn't one, using the default settings.

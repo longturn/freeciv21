@@ -14,14 +14,13 @@
 #ifndef FC__OPTIONDLG_H
 #define FC__OPTIONDLG_H
 
-#include "optiondlg_g.h"
-
 // Qt
 #include <QDialog>
 #include <QMap>
-
+// client
+#include "optiondlg_g.h"
 // qt-client
-#include <dialogs.h>
+#include "dialogs.h"
 
 struct option_set;
 

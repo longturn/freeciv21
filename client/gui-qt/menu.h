@@ -14,8 +14,6 @@
 #ifndef FC__MENU_H
 #define FC__MENU_H
 
-#include "menu_g.h"
-
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
@@ -23,9 +21,9 @@
 // Qt
 #include <QDialog>
 #include <QMenuBar>
-
 // client
 #include "control.h"
+#include "menu_g.h"
 
 class QLabel;
 class QPushButton;
@@ -121,7 +119,6 @@ public:
   QList<qfc_delayed_unit_item *> unit_list;
   int nr_units;
 };
-
 
 /****************************************************************************
   Instantiable government menu.

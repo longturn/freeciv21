@@ -11,10 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "gotodlg.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -24,20 +21,16 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QTableWidget>
-
 /* common */
 #include "game.h"
-
 /* client */
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"
 #include "mapview_common.h"
 #include "text.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "gotodlg.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**

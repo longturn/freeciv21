@@ -11,47 +11,33 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QGraphicsDropShadowEffect>
-#include <QGroupBox>
 #include <QProgressBar>
-#include <QPushButton>
 #include <QScreen>
 #include <QScrollArea>
 #include <QSplitter>
-#include <QStack>
-#include <QStringList>
-#include <QTextBrowser>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-
 // utility
 #include "fcintl.h"
-
 // common
 #include "government.h"
 #include "movement.h"
 #include "nation.h"
 #include "specialist.h"
 #include "terrain.h"
-
 // client
 #include "client_main.h"
 #include "helpdata.h"
 #include "mapview_common.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
-#include "sprite.h"
 #include "qtg_cxxside.h"
+#include "sprite.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")

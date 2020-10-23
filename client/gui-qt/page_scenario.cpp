@@ -12,31 +12,17 @@
 **************************************************************************/
 
 #include "page_scenario.h"
-
 // Qt
-#include <QAction>
 #include <QApplication>
-#include <QCheckBox>
-#include <QDateTime>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QHeaderView>
-#include <QLineEdit>
-#include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
-#include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
 // utility
 #include "fcintl.h"
-
 // common
-#include "version.h"
 #include "chatline_common.h"
 #include "connectdlg_common.h"
-
+#include "version.h"
 // gui-qt
 #include "colors.h"
 #include "dialogs.h"
@@ -267,5 +253,3 @@ void fc_client::update_scenarios_page(void)
   scenarios_load->sortItems(0);
   scenarios_load->update();
 }
-
-

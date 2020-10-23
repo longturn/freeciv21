@@ -11,10 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "menu.h"
 // Qt
 #include <QApplication>
 #include <QFileDialog>
@@ -23,64 +20,53 @@
 #include <QScrollArea>
 #include <QStandardPaths>
 #include <QVBoxLayout>
-
 // utility
 #include "fcintl.h"
 #include "string_vector.h"
-
 // common
-#include "chatline_common.h"
-#include "featured_text.h"
 #include "game.h"
 #include "goto.h"
 #include "government.h"
 #include "map.h"
-#include "name_translation.h"
 #include "road.h"
 #include "unit.h"
-
 // client
 #include "cityrep_g.h"
 #include "client_main.h"
+#include "climisc.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
 #include "helpdata.h"
+#include "mapctrl_g.h"
 #include "mapview_common.h"
 #include "ratesdlg_g.h"
+#include "repodlgs_g.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "canvas.h"
 #include "chatline.h"
-#include "cityrep.h"
 #include "dialogs.h"
-#include "economyreport.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "gotodlg.h"
 #include "gui_main.h"
 #include "hudwidget.h"
-#include "mapctrl.h"
 #include "mapview.h"
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
 #include "plrdlg.h"
+#include "qtg_cxxside.h"
 #include "ratesdlg.h"
 #include "shortcuts.h"
-#include "sciencedlg.h"
 #include "spaceshipdlg.h"
 #include "sprite.h"
-#include "qtg_cxxside.h"
-
-#include "menu.h"
 
 extern QApplication *qapp;
 extern void popup_endgame_report();
 extern void toggle_units_report(bool);
 static void enable_interface(bool enable);
-
 
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
@@ -2847,7 +2833,7 @@ void mr_menu::tileset_custom_load()
                    " map topology!"));
   layout->addWidget(label);
 
-  for (auto const& s : qAsConst(sl)) {
+  for (auto const &s : qAsConst(sl)) {
     QByteArray on_bytes;
 
     on_bytes = s.toLocal8Bit();

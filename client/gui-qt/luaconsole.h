@@ -13,8 +13,6 @@
 #ifndef FC__LUACONSOLE_H
 #define FC__LUACONSOLE_H
 
-#include "luaconsole_g.h"
-
 void qload_lua_script();
 void qreload_lua_script();
 

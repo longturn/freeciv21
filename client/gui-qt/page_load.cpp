@@ -12,38 +12,26 @@
 **************************************************************************/
 
 #include "page_load.h"
-
 // Qt
-#include <QAction>
 #include <QApplication>
 #include <QCheckBox>
 #include <QDateTime>
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QItemSelectionModel>
 #include <QLabel>
-#include <QLineEdit>
 #include <QPushButton>
-#include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
 #include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
 // utility
 #include "fcintl.h"
-
 // common
 #include "chatline_common.h"
 #include "connectdlg_common.h"
-
 // client
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
-
 
 /**********************************************************************/ /**
    Creates buttons and layouts for load page.
@@ -206,4 +194,3 @@ void fc_client::state_preview(int new_state)
   saves_load->selectionModel()->select(
       slctn, QItemSelectionModel::Rows | QItemSelectionModel::SelectCurrent);
 }
-

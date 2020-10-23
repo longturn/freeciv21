@@ -18,26 +18,29 @@
 #include <QDialog>
 #include <QHash>
 #include <QList>
+// common
+#include "extras.h"
+// client
+#include "helpdlg_g.h"
+// gui-qt
+#include "dialogs.h"
 
-#include "dialogs.h"      // for qfc_dialog
-#include "extras.h"       // for unit_activity
-#include "helpdlg_g.h"    // for help_page_type
 class QCloseEvent;
-class QFrame;  // lines 34-34
+class QFrame;
 class QHideEvent;
-class QLabel;  // lines 35-35
+class QLabel;
 class QLayout;
 class QObject;
 class QPixmap;
 class QPushButton;
 class QShowEvent;
-class QSplitter;  // lines 36-36
-class QTextBrowser;  // lines 37-37
-class QTreeWidget;  // lines 38-38
-class QTreeWidgetItem;  // lines 39-39
-class QVBoxLayout;  // lines 40-40
-class help_widget;  // lines 42-42
-struct help_item;  // lines 32-32
+class QSplitter;
+class QTextBrowser;
+class QTreeWidget;
+class QTreeWidgetItem;
+class QVBoxLayout;
+class help_widget;
+struct help_item;
 
 class help_dialog : public qfc_dialog {
   Q_OBJECT

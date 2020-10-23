@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QAction>
 #include <QApplication>
@@ -25,17 +21,14 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QTimer>
-
 // common
 #include "chatline_common.h"
 #include "government.h"
 #include "research.h"
-
 // client
 #include "client_main.h"
 #include "climisc.h"
 #include "ratesdlg_g.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
@@ -139,7 +132,10 @@ void fc_sidewidget::set_custom_labels(const QString &l) { custom_label = l; }
 /***********************************************************************/ /**
    Sets tooltip for sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_tooltip(const QString &tooltip) { setToolTip(tooltip); }
+void fc_sidewidget::set_tooltip(const QString &tooltip)
+{
+  setToolTip(tooltip);
+}
 
 /***********************************************************************/ /**
    Returns scaled (not default) pixmap for sidewidget

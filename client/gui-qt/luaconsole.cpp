@@ -10,26 +10,20 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
 
+#include "luaconsole.h"
 // Qt
 #include <QFileDialog>
 #include <QString>
-
 // utility
 #include "shared.h"
-
 // common
 #include "featured_text.h"
-
+#include "luaconsole_g.h"
 /* client/luascript */
 #include "script_client.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "luaconsole.h"
 #include "qtg_cxxside.h"
 
 QString qlua_filename;

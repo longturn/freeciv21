@@ -7,13 +7,14 @@
 #ifndef FC__ENDGAMEREPORT_H
 #define FC__ENDGAMEREPORT_H
 
+// Qt
+#include <QObject>
+#include <QString>
+#include <QWidget>
+// client
 #include "repodlgs_g.h"
-
-#include <QObject>  // for Q_OBJECT
-#include <QString>      // for QString
-#include <QWidget>      // for QWidget
 class QObject;
-class QTableWidget;  // lines 12-12
+class QTableWidget;
 
 /****************************************************************************
   Tab widget to display economy report (F5)

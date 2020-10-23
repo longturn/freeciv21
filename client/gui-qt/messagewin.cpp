@@ -11,27 +11,19 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "messagewin.h"
 // Qt
 #include <QApplication>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QStyleFactory>
 #include <QTableWidget>
-
 // client
 #include "messagewin_common.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
-#include "messagewin.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**

@@ -14,24 +14,20 @@
 #ifndef FC__MESSAGEWIN_H
 #define FC__MESSAGEWIN_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include "messagewin_g.h"
+// qt-client <-> one true king
+#include "widgetdecorations.h"
 
-// qt-client
-#include "widgetdecorations.h"  // for fcwidget, move_widget (ptr only)
-class QEvent;  // lines 30-30
-class QGridLayout;  // lines 31-31
-class QItemSelection;  // lines 32-32
-class QMouseEvent;  // lines 33-33
+class QEvent;
+class QGridLayout;
+class QItemSelection;
+class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QPainter;
-class QPixmap;  // lines 34-34
+class QPixmap;
 class QResizeEvent;
-class QTableWidget;  // lines 35-35
+class QTableWidget;
 class chatwdg;
 
 /***************************************************************************

@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -24,21 +20,13 @@
 #include <QFontDialog>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPainter>
-#include <QPushButton>
 #include <QScrollArea>
 #include <QSpinBox>
-
 // utility
 #include "log.h"
 #include "string_vector.h"
-
 // client
-#include "client_main.h"
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "optiondlg.h"
@@ -66,7 +54,7 @@ QString split_text(const QString &text, bool cut)
   int j = 0;
 
   sl = text.split("\n");
-  for (const QString &s: qAsConst(sl)) {
+  for (const QString &s : qAsConst(sl)) {
     st = s;
     while (st.count() >= 80) {
       str = st.left(80);
@@ -107,7 +95,7 @@ QString cut_helptext(const QString &text)
 
   /* Remove all lines from help which has '*' in first 3 chars */
   sl = text.split('\n');
-  for (const QString &s: qAsConst(sl)) {
+  for (const QString &s : qAsConst(sl)) {
     if (s.count() > 2) {
       if (s.at(0) != '*' && s.at(1) != '*' && s.at(2) != '*') {
         ret_str = ret_str + s + '\n';

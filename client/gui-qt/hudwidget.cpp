@@ -11,41 +11,32 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
+#include "hudwidget.h"
 // Qt
-#include <QAction>
-#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
-#include <QGridLayout>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QLineEdit>
-#include <QPaintEvent>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QRadioButton>
-#include <QSpacerItem>
 #include <QVBoxLayout>
-
 // common
 #include "movement.h"
 #include "research.h"
 #include "tile.h"
 #include "unit.h"
 #include "unitlist.h"
-
 // client
 #include "calendar.h"
 #include "client_main.h"
 #include "goto.h"
 #include "mapview_common.h"
 #include "text.h"
-
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "hudwidget.h"
 #include "icons.h"
 #include "mapview.h"
 #include "qtg_cxxside.h"
@@ -781,7 +772,8 @@ void hud_units::update_actions(unit_list *punits)
  ****************************************************************************/
 click_label::click_label() : QLabel()
 {
-  connect(this, &click_label::left_clicked, this, &click_label::mouse_clicked);
+  connect(this, &click_label::left_clicked, this,
+          &click_label::mouse_clicked);
 }
 
 /************************************************************************/ /**
@@ -965,7 +957,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  for (auto a: qAsConst(actions)) {
+  for (auto a : qAsConst(actions)) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1135,7 +1127,7 @@ int unit_actions::update_actions()
   a->set_pixmap(fc_icons::instance()->get_pixmap("done"));
   actions.append(a);
 
-  for (auto a: qAsConst(actions)) {
+  for (auto a : qAsConst(actions)) {
     a->setToolTip(
         gui()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
@@ -1903,7 +1895,6 @@ void hud_unit_combat::enterEvent(QEvent *event)
   update();
 }
 
-
 /************************************************************************/ /**
    Hud battle log contructor
  ****************************************************************************/
@@ -1938,7 +1929,7 @@ void hud_battle_log::update_size()
   gui()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  for (auto hudc: qAsConst(lhuc)) {
+  for (auto hudc : qAsConst(lhuc)) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -1976,7 +1967,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  for (auto hudc: qAsConst(lhuc)) {
+  for (auto hudc : qAsConst(lhuc)) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -2025,7 +2016,7 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
   hud_unit_combat *hupdate;
 
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
-    for (auto hudc: qAsConst(lhuc)) {
+    for (auto hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
         for (auto hupdate : qAsConst(lhuc)) {

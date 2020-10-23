@@ -22,14 +22,14 @@
 #include <QMessageBox>
 #include <QRubberBand>
 #include <QTableWidget>
+// utility
+#include "fc_types.h"
+// gui-qt
+#include "shortcuts.h"
 
-#include "fc_types.h"       // for Unit_type_id
-#include "shortcuts.h"      // for shortcut_id
-
-class QComboBox;  // lines 33-33
-class QEvent;
+class QComboBox;
 class QFontMetrics;
-class QHBoxLayout;  // lines 34-34
+class QHBoxLayout;
 class QItemSelection;
 class QKeyEvent;
 class QMouseEvent;
@@ -38,15 +38,14 @@ class QObject;
 class QPaintEvent;
 class QPixmap;
 class QPushButton;
-class QRadioButton;  // lines 37-37
-class QShowEvent;
+class QRadioButton;
 class QTimerEvent;
-class QVBoxLayout;  // lines 38-38
-class move_widget;  // lines 32-32
-class scale_widget;  // lines 39-39
-struct tile;  // lines 40-40
-struct unit;  // lines 41-41
-struct unit_list;  // lines 42-42
+class QVBoxLayout;
+class move_widget;
+class scale_widget;
+struct tile;
+struct unit;
+struct unit_list;
 
 void show_new_turn_info();
 bool has_player_unit_type(Unit_type_id utype);

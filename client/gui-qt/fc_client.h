@@ -18,15 +18,12 @@
 #include <QMainWindow>
 #include <QPixmapCache>
 #include <QStackedWidget>
-
 // common
 #include "packets.h"
-
 // client
 #include "pages_g.h"
 #include "servers.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "chatline.h"
 #include "idlecallback.h"
@@ -40,7 +37,7 @@ enum connection_state {
   WAITING_TYPE
 };
 
-class QApplication;  // lines 70-70
+class QApplication;
 class QCheckBox;
 class QCloseEvent;
 class QComboBox;
@@ -50,24 +47,24 @@ class QEvent;
 class QGridLayout;
 class QItemSelection;
 class QKeyEvent;
-class QLabel;  // lines 72-72
-class QLineEdit;  // lines 73-73
+class QLabel;
+class QLineEdit;
 class QObject;
 class QPoint;
 class QPushButton;
 class QResizeEvent;
-class QSocketNotifier;  // lines 75-75
-class QSpinBox;  // lines 76-76
-class QStackedLayout;  // lines 77-77
-class QStatusBar;  // lines 78-78
-class QTableWidget;  // lines 80-80
-class QTextEdit;  // lines 81-81
-class QTimer;  // lines 82-82
+class QSocketNotifier;
+class QSpinBox;
+class QStackedLayout;
+class QStatusBar;
+class QTableWidget;
+class QTextEdit;
+class QTimer;
 class QTimerEvent;
-class QTreeWidget;  // lines 83-83
+class QTreeWidget;
 class choice_dialog;
-class fc_sidebar;  // lines 64-64
-class fc_sidewidget;  // lines 66-66
+class fc_sidebar;
+class fc_sidewidget;
 class goto_dialog;
 class hud_battle_log;
 class hud_units;
@@ -75,8 +72,8 @@ class info_tab;
 class info_tile;
 class map_view;
 class messagewdg;
-class minimap_view;  // lines 67-67
-class pregame_options;  // lines 69-69
+class minimap_view;
+class pregame_options;
 class pregamevote;
 class units_select;
 class xvote;
@@ -254,7 +251,7 @@ public:
   fc_sidewidget *sw_diplo;
   float map_scale;
   bool map_font_scale;
-  void gimme_place(QWidget *widget,const QString &str);
+  void gimme_place(QWidget *widget, const QString &str);
   int gimme_index_of(const QString &str);
   void remove_repo_dlg(const QString &str);
   bool is_repo_dlg_open(const QString &str);

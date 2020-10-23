@@ -11,16 +11,10 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // client
 #include "gui_interface.h"
-
 // gui-qt
 #include "fonts.h"
-
 #include "qtg_cxxside.h"
 
 /*******************************************************************/ /**

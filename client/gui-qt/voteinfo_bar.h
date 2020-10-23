@@ -13,10 +13,10 @@
 #ifndef FC__VOTEBAR_H
 #define FC__VOTEBAR_H
 
-#include "voteinfo_bar_g.h"
-
 // Qt
 #include <QWidget>
+// client
+#include "voteinfo_bar_g.h"
 
 class QGridLayout;
 class QLabel;

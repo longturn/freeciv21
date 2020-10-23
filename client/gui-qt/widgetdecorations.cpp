@@ -13,11 +13,9 @@
                    / /      ********************************************/
 
 #include "widgetdecorations.h"
-
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
-
 // gui-qt
 #include "fc_client.h"
 #include "icons.h"

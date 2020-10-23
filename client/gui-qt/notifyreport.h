@@ -7,21 +7,20 @@
 #ifndef FC__NOTIFYREPORT_H
 #define FC__NOTIFYREPORT_H
 
-#include "dialogs_g.h"
-
 // Qt
 #include <QDialog>
 #include <QMessageBox>
 #include <QVariant>
-
-#include "widgetdecorations.h"  // for close_widget (ptr only), fcwidget
+// client
+#include "dialogs_g.h"
+// gui-qt
+#include "widgetdecorations.h"
 
 class QLabel;
 class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QVBoxLayout;
-
 
 void restart_notify_reports();
 
@@ -56,4 +55,4 @@ private:
   QPoint cursor;
 };
 
-#endif  /* FC__NOTIFYREPORT_H */
+#endif /* FC__NOTIFYREPORT_H */

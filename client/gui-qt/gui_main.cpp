@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #ifdef AUDIO_SDL
 /* Though it would happily compile without this include,
  * it is needed for sound to work.
@@ -28,33 +24,25 @@
 #endif /* PLAIN_INCLUDE */
 #endif /* AUDIO_SDL */
 
+#include "gui_main.h"
 #include <stdio.h>
-
 // Qt
 #include <QApplication>
-#include <QMessageBox>
-#include <QScrollBar>
-#include <QStyleFactory>
-
 // utility
 #include "fc_cmdline.h"
 #include "fciconv.h"
 #include "log.h"
-
 // client
 #include "client_main.h"
 #include "clinet.h"
-#include "editgui_g.h"
 #include "mapview_g.h"
 #include "options.h"
 #include "sprite.h"
 #include "themes_common.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
-#include "gui_main.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "messagewin.h"

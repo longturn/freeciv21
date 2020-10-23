@@ -11,21 +11,14 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QApplication>
 #include <QKeyEvent>
 #include <QMouseEvent>
-#include <QPushButton>
-
 // common
 #include "control.h"
 #include "goto.h"
 #include "map.h"
-
 // client
 #include "chatline_common.h"
 #include "citydlg_common.h"
@@ -38,7 +31,6 @@
 #include "tile.h"
 #include "tilespec.h"
 #include "unit.h"
-
 // gui-qt
 #include "citydlg.h"
 #include "fc_client.h"

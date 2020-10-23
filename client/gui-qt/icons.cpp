@@ -5,10 +5,8 @@
 #####################################################################*/
 
 #include "icons.h"
-
 // Qt
 #include <QIcon>
-
 // utility
 #include "shared.h"
 
@@ -113,4 +111,3 @@ QString fc_icons::get_path(const QString &id)
 
   return fileinfoname(get_data_dirs(), png_bytes.data());
 }
-

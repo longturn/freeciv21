@@ -11,23 +11,16 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "voteinfo_bar.h"
 // Qt
 #include <QGridLayout>
 #include <QLabel>
 #include <QPainter>
 #include <QPushButton>
-
 // client
 #include "voteinfo.h"
-
 // gui-qt
 #include "fc_client.h"
-
-#include "voteinfo_bar.h"
 
 /***********************************************************************/ /**
    Constructor for pregamevote

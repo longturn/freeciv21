@@ -4,26 +4,20 @@
 ###      ***                                     ***               ###
 #####################################################################*/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "unitreport.h"
 // Qt
 #include <QHBoxLayout>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScrollArea>
-
 // client
 #include "client_main.h"
 #include "sprite.h"
-
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
-#include "unitreport.h"
 
 units_reports *units_reports::m_instance = 0;
 

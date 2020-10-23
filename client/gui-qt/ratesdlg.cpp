@@ -11,10 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "ratesdlg.h"
 // Qt
 #include <QApplication>
 #include <QDesktopWidget>
@@ -23,25 +20,19 @@
 #include <QPainter>
 #include <QScreen>
 #include <QVBoxLayout>
-
 // common
 #include "effects.h"
 #include "government.h"
 #include "multipliers.h"
 #include "packets.h"
-
 // client
 #include "client_main.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
-
-#include "ratesdlg.h"
 
 static int scale_to_mult(const struct multiplier *pmul, int scale);
 static int mult_to_scale(const struct multiplier *pmul, int val);

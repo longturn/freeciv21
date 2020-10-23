@@ -13,26 +13,18 @@
 #ifndef FC__RATESDLG_H
 #define FC__RATESDLG_H
 
-// In this case we have to include fc_config.h from header file.
-// Some other headers we include demand that fc_config.h must be
-// included also. Usually all source files include fc_config.h, but
-// there's moc generated meta_ratesdlg.cpp file which does not.
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QDialog>
 #include <QList>
+// gui-qt
+#include "dialogs.h"
 
-#include "dialogs.h"      // for qfc_dialog
-
-class QMouseEvent;  // lines 39-39
+class QMouseEvent;
 class QObject;
-class QPaintEvent;  // lines 40-40
-class QPushButton;  // lines 42-42
-class QSize;  // lines 43-43
-class QSlider;  // lines 44-44
+class QPaintEvent;
+class QPushButton;
+class QSize;
+class QSlider;
 
 /**************************************************************************
  * Custom slider with two settable values

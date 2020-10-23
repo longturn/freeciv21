@@ -11,22 +11,13 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "fonts.h"
 // Qt
-#include <QApplication>
 #include <QFontDatabase>
 #include <QGuiApplication>
 #include <QScreen>
-#include <QWidget>
-
 // client
 #include "options.h"
-
-// gui-qt
-#include "fonts.h"
 
 /************************************************************************/ /**
    Font provider constructor

@@ -11,18 +11,11 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "fc_client.h"
 // Qt
 #include <QApplication>
 #include <QComboBox>
 #include <QFormLayout>
-#include <QLineEdit>
-#include <QMainWindow>
-#include <QPainter>
-#include <QResizeEvent>
 #include <QScrollBar>
 #include <QSettings>
 #include <QSocketNotifier>
@@ -30,35 +23,27 @@
 #include <QStackedLayout>
 #include <QStandardPaths>
 #include <QStatusBar>
-#include <QStyleFactory>
-#include <QTabBar>
 #include <QTextBlock>
 #include <QTextCodec>
-#include <QTextEdit>
-#include <QTimer>
-
 // utility
 #include "fcintl.h"
 // common
-#include "game.h"
 #include "climisc.h"
-
+#include "game.h"
 // client
 #include "chatline_common.h"
 #include "chatline_g.h"
-#include "connectdlg_common.h"
 #include "client_main.h"
 #include "clinet.h"
+#include "connectdlg_common.h"
 #include "mapctrl_common.h"
-
 // gui-qt
-#include "fc_client.h"
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
-#include "minimap.h"
 #include "mapview.h"
 #include "messagewin.h"
+#include "minimap.h"
 #include "optiondlg.h"
 #include "sidebar.h"
 #include "sprite.h"
@@ -67,7 +52,6 @@
 fc_font *fc_font::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
 extern void write_shortcuts();
-
 
 /************************************************************************/ /**
    Constructor
@@ -959,7 +943,7 @@ void fc_game_tab_widget::current_changed(int index)
   }
   objs = gui()->sidebar_wdg->objects;
 
-  for (auto sw: qAsConst(objs)) {
+  for (auto sw : qAsConst(objs)) {
     sw->update_final_pixmap();
   }
   currentWidget()->hide();

@@ -12,37 +12,18 @@
 **************************************************************************/
 
 #include "page_network.h"
-
 // Qt
-#include <QAction>
-#include <QApplication>
 #include <QCheckBox>
-#include <QDateTime>
-#include <QFileDialog>
 #include <QGridLayout>
 #include <QHeaderView>
-#include <QLineEdit>
-#include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
 #include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
 // utility
 #include "fcintl.h"
-
-// common
-
-
-
 // client
 #include "chatline_common.h"
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
-
-
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"

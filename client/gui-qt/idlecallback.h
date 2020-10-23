@@ -11,7 +11,6 @@
                                   If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-
 #ifndef FC__IDLECALLBACK_H
 #define FC__IDLECALLBACK_H
 
@@ -44,4 +43,4 @@ private:
   QTimer timer;
 };
 
-#endif  /* FC__IDLECALLBACK_H */
+#endif /* FC__IDLECALLBACK_H */

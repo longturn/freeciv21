@@ -7,13 +7,11 @@
 #ifndef FC__SCIDLGS_H
 #define FC__SCIDLGS_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+// utility
+#include "fc_types.h"
+// client
 #include "repodlgs_g.h"
 
-#include "fc_types.h"     // for Tech_type_id
 class QComboBox;
 class QGridLayout;
 class QLabel;
@@ -21,7 +19,7 @@ class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QScrollArea;
-class progress_bar;  // lines 16-16
+class progress_bar;
 
 /****************************************************************************
   Helper item for research diagram, about drawn rectangles and what

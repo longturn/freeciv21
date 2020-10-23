@@ -2,12 +2,11 @@
 #include "tradecalculation.h"
 
 // common
-
 #include "city.h"
 #include "featured_text.h"
 #include "traderoutes.h"
-//client
-#include "chatline_common.h"  /* Help me, Im not in common */
+// client
+#include "chatline_common.h" /* Help me, I want to common */
 #include "client_main.h"
 // qt
 #include "fc_client.h"

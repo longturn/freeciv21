@@ -1,28 +1,13 @@
 
 #include "page_main.h"
-
 // Qt
-#include <QAction>
 #include <QApplication>
-#include <QCheckBox>
-#include <QDateTime>
-#include <QFileDialog>
 #include <QGridLayout>
-#include <QHeaderView>
-#include <QLineEdit>
 #include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
-#include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
 // utility
 #include "fcintl.h"
-
 // common
 #include "version.h"
-
 // gui-qt
 #include "colors.h"
 #include "dialogs.h"

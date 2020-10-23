@@ -4,17 +4,15 @@
 ###      ***                                     ***               ###
 #####################################################################*/
 
+#include "endgamereport.h"
 // Qt
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QTableWidget>
-
 // client
 #include "repodlgs_common.h"
 #include "sprite.h"
-
 // gui-qt
-#include "endgamereport.h"
 #include "fc_client.h"
 
 /************************************************************************/ /**

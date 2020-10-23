@@ -11,27 +11,20 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
+#include "dialogs.h"
 // Qt
 #include <QApplication>
 #include <QComboBox>
 #include <QGroupBox>
 #include <QHeaderView>
-#include <QImage>
-#include <QMessageBox>
-#include <QMouseEvent>
+#include <QKeyEvent>
 #include <QPainter>
-#include <QPainterPath>
 #include <QRadioButton>
-#include <QRect>
-#include <QTableWidgetItem>
-#include <QTextEdit>
 #include <QVBoxLayout>
 #include <QtMath>
-
 // utility
 #include "astring.h"
 #include "fcintl.h"
-
 // common
 #include "actions.h"
 #include "city.h"
@@ -42,7 +35,6 @@
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
-
 // client
 #include "audio.h"
 #include "chatline_common.h"
@@ -53,9 +45,7 @@
 #include "packhand.h"
 #include "text.h"
 #include "tilespec.h"
-
-// gui-qt
-#include "dialogs.h"
+// gui-qt - awesome client
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"

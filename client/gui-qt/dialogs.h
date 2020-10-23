@@ -18,28 +18,27 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QVariant>
-
-#include "dialogs_g.h"
+// utility
 #include "fc_types.h"
+// client
+#include "dialogs_g.h"
 // gui-qt
 #include "hudwidget.h"
-#include "hudwidget.h"
-#include "widgetdecorations.h"
 #include "widgetdecorations.h"
 
 class QCloseEvent;
-class QComboBox;   // lines 34-34
-class QGridLayout; // lines 35-35
+class QComboBox;
+class QGridLayout;
 class QHBoxLayout;
-class QItemSelection; // lines 37-37
+class QItemSelection;
 class QKeyEvent;
 class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QPainter;
-class QRadioButton; // lines 38-38
-class QTableWidget; // lines 40-40
-class QTextEdit;    // lines 41-41
+class QRadioButton;
+class QTableWidget;
+class QTextEdit;
 class QVBoxLayout;
 class QWheelEvent;
 struct tile;

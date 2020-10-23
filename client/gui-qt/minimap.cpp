@@ -4,45 +4,21 @@
 ###      ***                                     ***               ###
 #####################################################################*/
 
+#include "minimap.h"
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPixmap>
 #include <QToolTip>
 #include <QWheelEvent>
-
-// utility
-#include "log.h"
-#include "support.h"
-
-// common
-#include "calendar.h"
-#include "game.h"
-#include "map.h"
-#include "research.h"
-
 // client
-#include "climisc.h"
 #include "client_main.h"
-#include "colors_common.h"
-#include "mapctrl_common.h"
-#include "mapview_common.h"
-#include "menu.h" // gov_menu
-#include "movement.h"
 #include "overview_common.h"
-#include "sprite.h"
-#include "text.h"
-#include "tilespec.h"
-
 // gui-qt
-#include "colors.h"
 #include "fc_client.h"
-#include "icons.h"
 #include "mapview.h"
-#include "minimap.h"
-#include "sciencedlg.h"
+#include "menu.h"
 #include "qtg_cxxside.h"
-#include "sidebar.h"
 
 /**********************************************************************/ /**
     TODO drop it
@@ -87,7 +63,6 @@ static void gui_to_overview(int *ovr_x, int *ovr_y, int gui_x, int gui_y)
     *ovr_y = FC_WRAP(*ovr_y, NATURAL_HEIGHT * OVERVIEW_TILE_SIZE);
   }
 }
-
 
 /**********************************************************************/ /**
    Constructor for minimap
@@ -251,7 +226,6 @@ void minimap_view::update_pixmap(const QImage &image)
   *pix = QPixmap::fromImage(image);
   update();
 }
-
 
 /**********************************************************************/ /**
    Minimap thread's contructor
@@ -521,7 +495,4 @@ void overview_size_changed(void)
 /**********************************************************************/ /**
    Sets the position of the overview scroll window based on mapview position.
  **************************************************************************/
-void update_overview_scroll_window_pos(int x, int y)
-{
-}
-
+void update_overview_scroll_window_pos(int x, int y) {}

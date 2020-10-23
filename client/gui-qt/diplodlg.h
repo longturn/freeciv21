@@ -14,25 +14,20 @@
 #ifndef FC__DIPLODLG_H
 #define FC__DIPLODLG_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QMap>
 #include <QTabWidget>
-
 // common
-#include "diptreaty.h"    // for Treaty
+#include "diptreaty.h"
 
-class QCloseEvent;  // lines 35-35
-class QGridLayout;  // lines 36-36
-class QLabel;  // lines 38-38
+class QCloseEvent;
+class QGridLayout;
+class QLabel;
 class QObject;
-class QPushButton;  // lines 39-39
-class QSpinBox;  // lines 40-40
-class QTableWidget;  // lines 41-41
-class QTableWidgetItem;  // lines 42-42
+class QPushButton;
+class QSpinBox;
+class QTableWidget;
+class QTableWidgetItem;
 
 /****************************************************************************
   Diplomacy tab for one nation

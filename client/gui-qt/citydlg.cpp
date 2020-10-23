@@ -11,18 +11,15 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
+#include "citydlg.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
 #include <QDesktopWidget>
 #include <QGroupBox>
 #include <QHeaderView>
-#include <QImage>
-#include <QMenu>
-#include <QMessageBox>
 #include <QPainter>
 #include <QRadioButton>
-#include <QRect>
 #include <QScreen>
 #include <QScrollArea>
 #include <QScrollBar>
@@ -46,15 +43,12 @@
 #include "climisc.h"
 #include "control.h"
 #include "global_worklist.h"
-#include "helpdata.h"
 #include "mapview_common.h"
-#include "movement.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
 // gui-qt
 #include "canvas.h"
-#include "citydlg.h"
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
@@ -65,7 +59,7 @@
 #include "tooltips.h"
 
 extern QApplication *qapp;
-city_dialog* city_dialog::m_instance = 0;
+city_dialog *city_dialog::m_instance = 0;
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 
@@ -538,8 +532,8 @@ void impr_info::update_buildings()
   }
 
   if (impr_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(city_dialog::instance()->scroll_height
-                                                   + h + 6);
+    parentWidget()->parentWidget()->setFixedHeight(
+        city_dialog::instance()->scroll_height + h + 6);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
   }
@@ -1061,8 +1055,8 @@ void unit_info::update_units()
     h = tileset_unit_width(get_tileset()) + 6;
   }
   if (unit_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(city_dialog::instance()->scroll_height
-                                                   + h);
+    parentWidget()->parentWidget()->setFixedHeight(
+        city_dialog::instance()->scroll_height + h);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
   }
@@ -1961,7 +1955,6 @@ city_dialog::city_dialog(QWidget *parent) : qfc_dialog(parent)
   setLayout(single_page_layout);
 
   installEventFilter(this);
-
 }
 
 /************************************************************************/ /**
@@ -3622,10 +3615,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
 /************************************************************************/ /**
    Closes city dialog
  ****************************************************************************/
-void destroy_city_dialog()
-{
-  city_dialog::instance()->drop();
-}
+void destroy_city_dialog() { city_dialog::instance()->drop(); }
 
 /************************************************************************/ /**
    Close the dialog for the given city.
@@ -3633,7 +3623,6 @@ void destroy_city_dialog()
 void qtg_popdown_city_dialog(struct city *pcity)
 {
   city_dialog::instance()->hide();
-
 }
 
 /************************************************************************/ /**
@@ -3700,7 +3689,6 @@ bool qtg_city_dialog_is_open(struct city *pcity)
 
   return false;
 }
-
 
 /************************************************************************/ /**
    City item delegate constructor

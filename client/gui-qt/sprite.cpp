@@ -11,18 +11,12 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QImageReader>
 #include <QPainter>
-
 // utility
-#include <math.h>
 #include "log.h"
-
+#include <math.h>
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"

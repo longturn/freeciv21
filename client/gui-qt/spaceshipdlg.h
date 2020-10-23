@@ -14,15 +14,8 @@
 #ifndef FC__SPACESHIPDLG_H
 #define FC__SPACESHIPDLG_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "spaceshipdlg_g.h"
-
 /* client */
 #include "text.h"
-
 // Qt
 #include <QWidget>
 

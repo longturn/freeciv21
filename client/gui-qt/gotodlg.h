@@ -14,17 +14,12 @@
 #ifndef FC__GOTODLG_H
 #define FC__GOTODLG_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "gotodlg_g.h"
-
 // Qt
 #include <QWidget>
-
 // common
 #include "unit.h"
+// client
+#include "gotodlg_g.h"
 
 class QTableWidget;
 class QPushButton;

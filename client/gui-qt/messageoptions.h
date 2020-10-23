@@ -14,7 +14,6 @@
 #define FC__MESSAGEDLG_H
 
 #include "messagedlg_g.h"
-
 // Qt
 #include <QWidget>
 

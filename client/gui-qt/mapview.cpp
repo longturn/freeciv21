@@ -11,49 +11,36 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-
 // Qt
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPixmap>
-#include <QToolTip>
-#include <QWheelEvent>
-
 // utility
 #include "log.h"
-#include "support.h"
-
 // common
 #include "calendar.h"
 #include "game.h"
 #include "map.h"
-#include "research.h"
-
 // client
 #include "client_main.h"
 #include "climisc.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
-#include "mapview_g.h"
 #include "mapview_common.h"
-#include "menu.h" // gov_menu
-#include "movement.h"
+#include "mapview_g.h"
 #include "overview_common.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
-#include "icons.h"
 #include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
-#include "sciencedlg.h"
 #include "qtg_cxxside.h"
+#include "sciencedlg.h"
 #include "sidebar.h"
 #include "widgetdecorations.h"
 
@@ -337,7 +324,6 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
   }
 }
 
-
 /**********************************************************************/ /**
    Typically an info box is provided to tell the player about the state
    of their civilization.  This function is called when the label is
@@ -613,7 +599,6 @@ void tileset_changed(void)
     sci_rep->repaint();
   }
 }
-
 
 /**********************************************************************/ /**
    Return whether the map should be drawn or not.

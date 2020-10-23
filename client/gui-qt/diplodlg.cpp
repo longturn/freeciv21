@@ -11,22 +11,17 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "diplodlg.h"
 // Qt
 #include <QApplication>
 #include <QCloseEvent>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QLabel>
-#include <QMenu>
 #include <QPainter>
 #include <QPushButton>
 #include <QSpinBox>
 #include <QTableWidget>
-
 // utility
 #include "fcintl.h"
 // common
@@ -35,14 +30,11 @@
 #include "government.h"
 #include "player.h"
 #include "research.h"
-
 // client
 #include "client_main.h"
 #include "colors_common.h"
-
 // gui-qt
 #include "colors.h"
-#include "diplodlg.h"
 #include "diplodlg_g.h"
 #include "fc_client.h"
 #include "icons.h"

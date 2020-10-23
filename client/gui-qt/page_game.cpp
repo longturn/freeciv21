@@ -12,37 +12,19 @@
 ******    '"   **********************************************************/
 
 #include "page_game.h"
-
 // Qt
-#include <QAction>
-#include <QApplication>
-#include <QCheckBox>
-#include <QDateTime>
-#include <QFileDialog>
 #include <QGridLayout>
-#include <QHeaderView>
-#include <QLineEdit>
-#include <QPainter>
-#include <QSplitter>
-#include <QStackedWidget>
-#include <QTableWidget>
-#include <QTextEdit>
-#include <QTreeWidget>
-
 // utility
 #include "fcintl.h"
-
 // common
-#include "government.h"
-
 #include "cityrep_g.h"
+#include "government.h"
 #include "repodlgs_g.h"
 // client
 #include "client_main.h"
 #include "mapview_common.h"
 #include "text.h"
-
-// gui-qt
+// gui-qt - Eye of Storm
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "hudwidget.h"
@@ -85,8 +67,6 @@ void fc_client::rm_game_tab(int index)
 {
   game_tab_widget->removeWidget(game_tab_widget->widget(index));
 }
-
-
 
 /**********************************************************************/ /**
    Creates buttons and layouts for game page.

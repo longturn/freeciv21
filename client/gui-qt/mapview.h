@@ -14,22 +14,15 @@
 #ifndef FC__MAPVIEW_H
 #define FC__MAPVIEW_H
 
-// In this case we have to include fc_config.h from header file.
-// Some other headers we include demand that fc_config.h must be
-// included also. Usually all source files include fc_config.h, but
-// there's moc generated meta_mapview.cpp file which does not.
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QFrame>
 #include <QLabel>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
+// common
+#include "tilespec.h"
 
-#include "tilespec.h"     // for cursor_type
 class QEvent;
 class QFocusEvent;
 class QKeyEvent;

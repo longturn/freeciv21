@@ -11,23 +11,17 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QGridLayout>
 #include <QLabel>
 #include <QPushButton>
-
 // common
 #include "game.h"
 #include "victory.h"
-
 // client
 #include "client_main.h"
 #include "mapview_common.h"
-
+#include "spaceshipdlg_g.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"

@@ -7,30 +7,24 @@
 #ifndef FC__UNITREPORT_H
 #define FC__UNITREPORT_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "repodlgs_g.h"
-
-// gui-qt
-#include "mapview.h"
-
 // Qt
 #include <QLabel>
 #include <QPushButton>
 #include <QWidget>
 
-#include "widgetdecorations.h"  // for close_widget (ptr only), fcwidget
+// client
+#include "repodlgs_g.h"
+// gui-qt
+#include "mapview.h"
+#include "widgetdecorations.h"
 
 class QEvent;
-class QHBoxLayout;  // lines 25-25
+class QHBoxLayout; // lines 25-25
 class QObject;
 class QPaintEvent;
 class QScrollArea;
 class QWheelEvent;
 struct unit_type;
-
 
 class unittype_item : public QFrame {
 

@@ -10,9 +10,6 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
 
 // Qt
 #include <QApplication>
@@ -21,16 +18,13 @@
 #include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
-
 /* utility */
 #include "mem.h"
 #include "shared.h"
 #include "string_vector.h"
-
 /* client */
 #include "qtg_cxxside.h"
 #include "themes_common.h"
-
 // gui-qt
 #include "fc_client.h"
 
@@ -160,7 +154,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   sl << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
   name = QString(directory);
 
-  for (auto const &str: qAsConst(sl)) {
+  for (auto const &str : qAsConst(sl)) {
     f.setFileName(name + DIR_SEPARATOR + str + DIR_SEPARATOR
                   + "resource.qss");
     if (!f.exists()) {

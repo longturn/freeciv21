@@ -11,13 +11,9 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "plrdlg.h"
 // Qt
 #include <QApplication>
-#include <QHBoxLayout>
 #include <QHeaderView>
 #include <QLabel>
 #include <QMouseEvent>
@@ -26,10 +22,8 @@
 #include <QSortFilterProxyModel>
 #include <QSplitter>
 #include <QVBoxLayout>
-
 // utility
 #include "fcintl.h"
-
 // common
 #include "colors_common.h"
 #include "game.h"
@@ -39,12 +33,10 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "inteldlg_g.h"
-
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "plrdlg.h"
 #include "sprite.h"
 
 /**********************************************************************/ /**

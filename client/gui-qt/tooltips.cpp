@@ -9,16 +9,13 @@
 #include <QHelpEvent>
 #include <QModelIndex>
 #include <QToolTip>
-
 // utility
 #include "fcintl.h"
 #include "support.h"
-
 // client
 #include "client_main.h"
 #include "helpdata.h"
 #include "movement.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "tooltips.h"

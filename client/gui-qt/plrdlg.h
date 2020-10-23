@@ -13,31 +13,26 @@
 
 #ifndef FC__PLRDLG_H
 #define FC__PLRDLG_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "plrdlg_g.h"
-
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
 #include <QTreeView>
 #include <QWidget>
+// client
+#include "plrdlg_common.h"
+#include "plrdlg_g.h"
 
-#include "plrdlg_common.h"       // for num_player_dlg_columns
-class QHBoxLayout;  // lines 37-37
+class QHBoxLayout;
 class QItemSelection;
-class QLabel;  // lines 38-38
+class QLabel;
 class QMouseEvent;
 class QPainter;
 class QPoint;
-class QPushButton;  // lines 39-39
-class QSortFilterProxyModel;  // lines 40-40
-class QSplitter;  // lines 41-41
-class QVBoxLayout;  // lines 43-43
-class plr_report;  // lines 44-44
+class QPushButton;
+class QSortFilterProxyModel;
+class QSplitter;
+class QVBoxLayout;
+class plr_report;
 
 /***************************************************************************
   Item delegate for painting in model of nations view table

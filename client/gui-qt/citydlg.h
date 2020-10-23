@@ -57,6 +57,7 @@ class QVariant;
 class QWheelEvent;
 class fc_tooltip;
 struct canvas;
+
 #define NUM_INFO_FIELDS 15
 /****************************************************************************
   Custom progressbar with animated progress and right click event

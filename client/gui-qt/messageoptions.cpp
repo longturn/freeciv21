@@ -11,10 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "messageoptions.h"
 // Qt
 #include <QApplication>
 #include <QGridLayout>
@@ -22,16 +19,12 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTableWidget>
-
 // utility
 #include "log.h"
-
 // client
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "messageoptions.h"
 
 extern QApplication *qapp;
 /**********************************************************************/ /**

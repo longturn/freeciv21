@@ -4,58 +4,16 @@
 ###      ***                                     ***               ###
 #####################################################################*/
 
+#include "notifyreport.h"
 // Qt
-#include <QApplication>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QHeaderView>
-#include <QImage>
-#include <QMessageBox>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPainterPath>
-#include <QRadioButton>
-#include <QRect>
-#include <QTableWidgetItem>
-#include <QTextEdit>
-#include <QVBoxLayout>
-#include <QtMath>
-
-// utility
-#include "astring.h"
-#include "fcintl.h"
-
-// common
-#include "actions.h"
-#include "city.h"
-#include "game.h"
-#include "government.h"
-#include "improvement.h"
-#include "movement.h"
-#include "nation.h"
-#include "research.h"
-
 // client
-#include "audio.h"
-#include "chatline_common.h"
-#include "client_main.h"
-#include "control.h"
 #include "dialogs_g.h"
-#include "helpdata.h"
-#include "mapview_common.h"
-#include "packhand.h"
-#include "text.h"
-#include "tilespec.h"
-
 // gui-qt
-#include "dialogs.h"
-#include "notifyreport.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "hudwidget.h"
 #include "mapview.h"
-#include "qtg_cxxside.h"
-#include "sprite.h"
 
 /***********************************************************************/ /**
    Constructor for notify dialog
@@ -204,7 +162,6 @@ notify_dialog::~notify_dialog()
   was_destroyed = true;
   destroy();
 }
-
 
 /***********************************************************************/ /**
    Restarts all notify dialogs

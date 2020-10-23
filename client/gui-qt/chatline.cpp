@@ -11,32 +11,21 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include "chatline.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
+#include <QPainter>
 #include <QCompleter>
 #include <QGridLayout>
-#include <QKeyEvent>
-#include <QPainter>
-#include <QPushButton>
 #include <QScrollBar>
-#include <QStyle>
-#include <QStyleFactory>
 #include <QTextBlock>
-#include <QTextBrowser>
-#include <QTextLayout>
 // common
 #include "chat.h"
 #include "chatline_common.h"
 // client
 #include "audio.h"
 #include "climap.h"
-#include "climisc.h" /* for write_chatline_content */
 #include "colors_common.h"
 #include "connectdlg_common.h"
 #include "client_main.h"
