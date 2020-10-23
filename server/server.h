@@ -23,6 +23,9 @@
 // Qt
 #include <QObject>
 
+// Forward declarations
+struct timer; // utility/timing.h
+
 namespace freeciv {
 
 /// @brief A Freeciv server.
@@ -39,6 +42,8 @@ private:
 
   bool m_interactive = false;
   QObject *m_stdin_notifier = nullptr; // Actual type is OS-dependent
+
+  timer *m_eot_timer;
 };
 
 } // namespace freeciv

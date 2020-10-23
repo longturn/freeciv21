@@ -21,7 +21,6 @@
 #include "fc_types.h"
 #include "game.h"
 
-
 struct conn_list;
 
 struct server_arguments {
@@ -99,6 +98,10 @@ void check_for_full_turn_done(void);
 bool check_for_game_over(void);
 bool game_was_started(void);
 
+void server_gui_color_free(struct color *pcolor);
+int server_plr_tile_city_id_get(const struct tile *ptile,
+                                const struct player *pplayer);
+
 server_setting_id server_ss_by_name(const char *name);
 const char *server_ss_name_get(server_setting_id id);
 enum sset_type server_ss_type_get(server_setting_id id);
@@ -126,5 +129,23 @@ extern bool force_end_of_sniff;
 
 void update_nations_with_startpos(void);
 
+known_type mapimg_server_tile_known(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge);
+terrain *mapimg_server_tile_terrain(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge);
+player *mapimg_server_tile_owner(const struct tile *ptile,
+                                 const struct player *pplayer,
+                                 bool knowledge);
+player *mapimg_server_tile_city(const struct tile *ptile,
+                                const struct player *pplayer,
+                                bool knowledge);
+player *mapimg_server_tile_unit(const struct tile *ptile,
+                                const struct player *pplayer,
+                                bool knowledge);
+
+int mapimg_server_plrcolor_count(void);
+rgbcolor *mapimg_server_plrcolor_get(int i);
 
 #endif /* FC__SRV_MAIN_H */

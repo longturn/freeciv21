@@ -39,10 +39,24 @@
 // utility
 #include "fciconv.h" // local_to_internal_string_malloc
 
+// common
+#include "fc_interface.h"
+
 // server
+#include "ai.h"
 #include "console.h"
+#include "diplhand.h"
+#include "edithand.h"
+#include "maphand.h"
+#include "mapimg.h"
+#include "meta.h"
+#include "ruleset.h"
 #include "sernet.h"
+#include "settings.h"
+#include "srv_main.h"
 #include "stdinhand.h"
+#include "timing.h"
+#include "voting.h"
 
 using namespace freeciv;
 
@@ -69,6 +83,124 @@ void handle_readline_input_callback(char *line)
   (void) handle_stdin_input(NULL, line_internal);
   free(line_internal);
   free(line);
+}
+
+/**********************************************************************/ /**
+   Initialize server specific functions.
+ **************************************************************************/
+void fc_interface_init_server(void)
+{
+  struct functions *funcs = fc_interface_funcs();
+
+  funcs->server_setting_by_name = server_ss_by_name;
+  funcs->server_setting_name_get = server_ss_name_get;
+  funcs->server_setting_type_get = server_ss_type_get;
+  funcs->server_setting_val_bool_get = server_ss_val_bool_get;
+  funcs->server_setting_val_int_get = server_ss_val_int_get;
+  funcs->server_setting_val_bitwise_get = server_ss_val_bitwise_get;
+  funcs->create_extra = create_extra;
+  funcs->destroy_extra = destroy_extra;
+  funcs->player_tile_vision_get = map_is_known_and_seen;
+  funcs->player_tile_city_id_get = server_plr_tile_city_id_get;
+  funcs->gui_color_free = server_gui_color_free;
+
+  // Keep this function call at the end. It checks if all required functions
+  // are defined.
+  fc_interface_init();
+}
+
+/**********************************************************************/ /**
+   Server initialization.
+ **************************************************************************/
+void srv_prepare(void)
+{
+#ifdef HAVE_FCDB
+  if (!srvarg.auth_enabled) {
+    con_write(C_COMMENT, _("This freeciv-server program has player "
+                           "authentication support, but it's currently not "
+                           "in use."));
+  }
+#endif /* HAVE_FCDB */
+
+  /* make sure it's initialized */
+  srv_init();
+
+  fc_init_network();
+
+  /* must be before con_log_init() */
+  init_connections();
+  con_log_init(srvarg.log_filename, srvarg.loglevel,
+               srvarg.fatal_assertions);
+  /* logging available after this point */
+
+  server_open_socket();
+
+#if IS_BETA_VERSION
+  con_puts(C_COMMENT, "");
+  con_puts(C_COMMENT, beta_message());
+  con_puts(C_COMMENT, "");
+#endif
+
+  con_flush();
+
+  settings_init(TRUE);
+  stdinhand_init();
+  edithand_init();
+  voting_init();
+  diplhand_init();
+  voting_init();
+  ai_timer_init();
+
+  server_game_init(FALSE);
+  mapimg_init(mapimg_server_tile_known, mapimg_server_tile_terrain,
+              mapimg_server_tile_owner, mapimg_server_tile_city,
+              mapimg_server_tile_unit, mapimg_server_plrcolor_count,
+              mapimg_server_plrcolor_get);
+
+#ifdef HAVE_FCDB
+  if (srvarg.fcdb_enabled) {
+    bool success;
+
+    success = fcdb_init(srvarg.fcdb_conf);
+    free(srvarg.fcdb_conf); /* Never needed again */
+    srvarg.fcdb_conf = NULL;
+    if (!success) {
+      exit(EXIT_FAILURE);
+    }
+  }
+#endif /* HAVE_FCDB */
+
+  if (srvarg.ruleset != NULL) {
+    const char *testfilename;
+
+    testfilename = fileinfoname(get_data_dirs(), srvarg.ruleset);
+    if (testfilename == NULL) {
+      log_fatal(_("Ruleset directory \"%s\" not found"), srvarg.ruleset);
+      exit(EXIT_FAILURE);
+    }
+    sz_strlcpy(game.server.rulesetdir, srvarg.ruleset);
+  }
+
+  /* load a saved game */
+  if ('\0' == srvarg.load_filename[0]
+      || !load_command(NULL, srvarg.load_filename, FALSE, TRUE)) {
+    /* Rulesets are loaded on game initialization, but may be changed later
+     * if /load or /rulesetdir is done. */
+    load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
+  }
+
+  maybe_automatic_meta_message(default_meta_message_string());
+
+  if (!(srvarg.metaserver_no_send)) {
+    log_normal(_("Sending info to metaserver <%s>."), meta_addr_port());
+    /* Open socket for meta server */
+    if (!server_open_meta(srvarg.metaconnection_persistent)
+        || !send_server_info_to_metaserver(META_INFO)) {
+      con_write(C_FAIL, _("Not starting without explicitly requested "
+                          "metaserver connection."));
+      exit(EXIT_FAILURE);
+    }
+  }
 }
 
 } // anonymous namespace
@@ -112,6 +244,12 @@ server::server()
   if (m_interactive) {
     init_interactive();
   }
+
+  // Now init the old C API
+  fc_interface_init_server();
+  srv_prepare();
+
+  m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
 }
 
 /*************************************************************************/ /**
@@ -131,6 +269,10 @@ server::~server()
 
     // Power down readline
     rl_callback_handler_remove();
+  }
+
+  if (m_eot_timer != nullptr) {
+    timer_destroy(m_eot_timer);
   }
 }
 

@@ -145,26 +145,6 @@
 
 static void end_turn(void);
 static void announce_player(struct player *pplayer);
-static void fc_interface_init_server(void);
-
-static enum known_type mapimg_server_tile_known(const struct tile *ptile,
-                                                const struct player *pplayer,
-                                                bool knowledge);
-static struct terrain *
-mapimg_server_tile_terrain(const struct tile *ptile,
-                           const struct player *pplayer, bool knowledge);
-static struct player *mapimg_server_tile_owner(const struct tile *ptile,
-                                               const struct player *pplayer,
-                                               bool knowledge);
-static struct player *mapimg_server_tile_city(const struct tile *ptile,
-                                              const struct player *pplayer,
-                                              bool knowledge);
-static struct player *mapimg_server_tile_unit(const struct tile *ptile,
-                                              const struct player *pplayer,
-                                              bool knowledge);
-
-static int mapimg_server_plrcolor_count(void);
-static struct rgbcolor *mapimg_server_plrcolor_get(int i);
 
 static void handle_observer_ready(struct connection *pconn);
 
@@ -224,6 +204,10 @@ void init_game_seed(void)
  **************************************************************************/
 void srv_init(void)
 {
+  if (has_been_srv_init) {
+    return;
+  }
+
   i_am_server(); /* Tell to libfreeciv that we are server */
 
   /* NLS init */
@@ -3051,104 +3035,6 @@ static void srv_running(void)
 }
 
 /**********************************************************************/ /**
-   Server initialization.
- **************************************************************************/
-static void srv_prepare(void)
-{
-#ifdef HAVE_FCDB
-  if (!srvarg.auth_enabled) {
-    con_write(C_COMMENT, _("This freeciv-server program has player "
-                           "authentication support, but it's currently not "
-                           "in use."));
-  }
-#endif /* HAVE_FCDB */
-
-  /* make sure it's initialized */
-  if (!has_been_srv_init) {
-    srv_init();
-  }
-
-  fc_init_network();
-
-  /* must be before con_log_init() */
-  init_connections();
-  con_log_init(srvarg.log_filename, srvarg.loglevel,
-               srvarg.fatal_assertions);
-  /* logging available after this point */
-
-  server_open_socket();
-
-#if IS_BETA_VERSION
-  con_puts(C_COMMENT, "");
-  con_puts(C_COMMENT, beta_message());
-  con_puts(C_COMMENT, "");
-#endif
-
-  con_flush();
-
-  settings_init(TRUE);
-  stdinhand_init();
-  edithand_init();
-  voting_init();
-  diplhand_init();
-  voting_init();
-  ai_timer_init();
-
-  server_game_init(FALSE);
-  mapimg_init(mapimg_server_tile_known, mapimg_server_tile_terrain,
-              mapimg_server_tile_owner, mapimg_server_tile_city,
-              mapimg_server_tile_unit, mapimg_server_plrcolor_count,
-              mapimg_server_plrcolor_get);
-
-#ifdef HAVE_FCDB
-  if (srvarg.fcdb_enabled) {
-    bool success;
-
-    success = fcdb_init(srvarg.fcdb_conf);
-    free(srvarg.fcdb_conf); /* Never needed again */
-    srvarg.fcdb_conf = NULL;
-    if (!success) {
-      exit(EXIT_FAILURE);
-    }
-  }
-#endif /* HAVE_FCDB */
-
-  if (srvarg.ruleset != NULL) {
-    const char *testfilename;
-
-    testfilename = fileinfoname(get_data_dirs(), srvarg.ruleset);
-    if (testfilename == NULL) {
-      log_fatal(_("Ruleset directory \"%s\" not found"), srvarg.ruleset);
-      exit(EXIT_FAILURE);
-    }
-    sz_strlcpy(game.server.rulesetdir, srvarg.ruleset);
-  }
-
-  /* load a saved game */
-  if ('\0' == srvarg.load_filename[0]
-      || !load_command(NULL, srvarg.load_filename, FALSE, TRUE)) {
-    /* Rulesets are loaded on game initialization, but may be changed later
-     * if /load or /rulesetdir is done. */
-    load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
-  }
-
-  maybe_automatic_meta_message(default_meta_message_string());
-
-  if (!(srvarg.metaserver_no_send)) {
-    log_normal(_("Sending info to metaserver <%s>."), meta_addr_port());
-    /* Open socket for meta server */
-    if (!server_open_meta(srvarg.metaconnection_persistent)
-        || !send_server_info_to_metaserver(META_INFO)) {
-      con_write(C_FAIL, _("Not starting without explicitly requested "
-                          "metaserver connection."));
-      exit(EXIT_FAILURE);
-    }
-  }
-
-  eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
-}
-
-/**********************************************************************/ /**
    Score calculation.
  **************************************************************************/
 static void srv_scores(void)
@@ -3554,10 +3440,6 @@ void server_game_free(void)
  **************************************************************************/
 void srv_main(void)
 {
-  fc_interface_init_server();
-
-  srv_prepare();
-
   /* Run server loop */
   do {
     set_server_state(S_S_INITIAL);
@@ -3618,7 +3500,7 @@ void srv_main(void)
    Initialize client specific functions.
  **************************************************************************/
 struct color;
-static inline void server_gui_color_free(struct color *pcolor)
+void server_gui_color_free(struct color *pcolor)
 {
   fc_assert_ret(pcolor == NULL);
 
@@ -3629,8 +3511,8 @@ static inline void server_gui_color_free(struct color *pcolor)
    Returns the id of the city the player map of 'pplayer' has at 'ptile' or
    IDENTITY_NUMBER_ZERO if the player map don't have a city there.
  **************************************************************************/
-static int server_plr_tile_city_id_get(const struct tile *ptile,
-                                       const struct player *pplayer)
+int server_plr_tile_city_id_get(const struct tile *ptile,
+                                const struct player *pplayer)
 {
   const struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
 
@@ -3729,35 +3611,11 @@ unsigned int server_ss_val_bitwise_get(server_setting_id id)
 }
 
 /**********************************************************************/ /**
-   Initialize server specific functions.
- **************************************************************************/
-static void fc_interface_init_server(void)
-{
-  struct functions *funcs = fc_interface_funcs();
-
-  funcs->server_setting_by_name = server_ss_by_name;
-  funcs->server_setting_name_get = server_ss_name_get;
-  funcs->server_setting_type_get = server_ss_type_get;
-  funcs->server_setting_val_bool_get = server_ss_val_bool_get;
-  funcs->server_setting_val_int_get = server_ss_val_int_get;
-  funcs->server_setting_val_bitwise_get = server_ss_val_bitwise_get;
-  funcs->create_extra = create_extra;
-  funcs->destroy_extra = destroy_extra;
-  funcs->player_tile_vision_get = map_is_known_and_seen;
-  funcs->player_tile_city_id_get = server_plr_tile_city_id_get;
-  funcs->gui_color_free = server_gui_color_free;
-
-  /* Keep this function call at the end. It checks if all required functions
-     are defined. */
-  fc_interface_init();
-}
-
-/**********************************************************************/ /**
    Helper function for the mapimg module - tile knowledge.
  **************************************************************************/
-static enum known_type mapimg_server_tile_known(const struct tile *ptile,
-                                                const struct player *pplayer,
-                                                bool knowledge)
+known_type mapimg_server_tile_known(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge)
 {
   if (knowledge && pplayer) {
     return tile_get_known(ptile, pplayer);
@@ -3769,9 +3627,9 @@ static enum known_type mapimg_server_tile_known(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - tile terrain.
  **************************************************************************/
-static struct terrain *
-mapimg_server_tile_terrain(const struct tile *ptile,
-                           const struct player *pplayer, bool knowledge)
+terrain *mapimg_server_tile_terrain(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge)
 {
   if (knowledge && pplayer) {
     struct player_tile *plrtile = map_get_player_tile(ptile, pplayer);
@@ -3784,9 +3642,9 @@ mapimg_server_tile_terrain(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - tile owner.
  **************************************************************************/
-static struct player *mapimg_server_tile_owner(const struct tile *ptile,
-                                               const struct player *pplayer,
-                                               bool knowledge)
+player *mapimg_server_tile_owner(const struct tile *ptile,
+                                 const struct player *pplayer,
+                                 bool knowledge)
 {
   if (knowledge && pplayer
       && tile_get_known(ptile, pplayer) != TILE_KNOWN_SEEN) {
@@ -3800,9 +3658,8 @@ static struct player *mapimg_server_tile_owner(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - city owner.
  **************************************************************************/
-static struct player *mapimg_server_tile_city(const struct tile *ptile,
-                                              const struct player *pplayer,
-                                              bool knowledge)
+player *mapimg_server_tile_city(const struct tile *ptile,
+                                const struct player *pplayer, bool knowledge)
 {
   struct city *pcity = tile_city(ptile);
 
@@ -3826,9 +3683,8 @@ static struct player *mapimg_server_tile_city(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - unit owner.
  **************************************************************************/
-static struct player *mapimg_server_tile_unit(const struct tile *ptile,
-                                              const struct player *pplayer,
-                                              bool knowledge)
+player *mapimg_server_tile_unit(const struct tile *ptile,
+                                const struct player *pplayer, bool knowledge)
 {
   int unit_count = unit_list_size(ptile->units);
 
@@ -3847,12 +3703,9 @@ static struct player *mapimg_server_tile_unit(const struct tile *ptile,
 /**********************************************************************/ /**
    Helper function for the mapimg module - number of player colors.
  **************************************************************************/
-static int mapimg_server_plrcolor_count(void) { return playercolor_count(); }
+int mapimg_server_plrcolor_count(void) { return playercolor_count(); }
 
 /**********************************************************************/ /**
    Helper function for the mapimg module - one player color.
  **************************************************************************/
-static struct rgbcolor *mapimg_server_plrcolor_get(int i)
-{
-  return playercolor_get(i);
-}
+rgbcolor *mapimg_server_plrcolor_get(int i) { return playercolor_get(i); }
