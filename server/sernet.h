@@ -14,7 +14,9 @@
 #define FC__SERNET_H
 
 // Forward declarations
+class QTcpServer;
 class QTcpSocket;
+class QString;
 
 struct connection;
 
@@ -32,7 +34,7 @@ enum server_events {
 
 enum server_events server_sniff_all_input(void);
 
-int server_open_socket(void);
+QTcpServer *server_open_socket(void);
 void flush_packets(void);
 void close_connections_and_socket(void);
 void init_connections(void);

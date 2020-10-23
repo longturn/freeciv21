@@ -564,20 +564,6 @@ enum server_events server_sniff_all_input(void)
     if (excepting) { /* handle Ctrl-Z suspend/resume */
       continue;
     }
-    // TODO this should come from the QTcpServer
-    for (i = 0; i < listen_count; i++) {
-      s = listen_socks[i];
-      if (FD_ISSET(s, &readfs)) { /* new players connects */
-        log_verbose("got new connection");
-        if (-1 == server_accept_connection(s)) {
-          /* There will be a log_error() message from
-           * server_accept_connection() if something
-           * goes wrong, so no need to make another
-           * error-level message here. */
-          log_verbose("failed accepting connection");
-        }
-      }
-    }
     // TODO on error() and find a way to include it (deprecated in 5.15!)
     for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
       /* check for freaky players */
@@ -778,7 +764,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       conn_list_append(game.all_connections, pconn);
 
       log_verbose("connection (%s) from %s (%s)", pconn->username,
-                  pconn->addr, pconn->server.ipaddr);
+                  qUtf8Printable(pconn->addr), pconn->server.ipaddr);
       /* Give a ping timeout to send the PACKET_SERVER_JOIN_REQ, or close
        * the mute connection. This timer will be canceled into
        * connecthand.c:handle_login_request(). */
@@ -791,7 +777,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 
   // Should not happen as per the check earlier in server_attempt_connection
   log_error("maximum number of connections reached");
-  delete new_sock;
+  new_sock->deleteLater();
   return -1;
 }
 
@@ -799,7 +785,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
    Open server socket to be used to accept client connections
    and open a server socket for server LAN announcements.
  *****************************************************************************/
-int server_open_socket()
+QTcpServer *server_open_socket()
 {
   auto server = new QTcpServer;
 
@@ -815,16 +801,15 @@ int server_open_socket()
             .arg(srvarg.port)
             .arg(server->errorString())));
 
-    delete server;
     QCoreApplication::exit(EXIT_FAILURE);
-    return 0;
+    return server;
   }
 
   // FIXME
   connections_set_close_callback(server_conn_close_callback);
 
   if (srvarg.announce == ANNOUNCE_NONE) {
-    return 0;
+    return server;
   }
 
   enum QHostAddress::SpecialAddress address_type;
@@ -843,7 +828,7 @@ int server_open_socket()
                         QAbstractSocket::ReuseAddressHint)) {
     log_error("SO_REUSEADDR failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
-    return 1;
+    return server;
   }
   auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
@@ -851,7 +836,7 @@ int server_open_socket()
               udp_socket->errorString().toLocal8Bit().data());
   }
 
-  return 0;
+  return server;
 }
 
 /*************************************************************************/ /**

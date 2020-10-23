@@ -26,6 +26,8 @@
 // Forward declarations
 struct timer; // utility/timing.h
 
+class QTcpServer;
+
 namespace freeciv {
 
 /// @brief A Freeciv server.
@@ -36,12 +38,15 @@ public:
 
 private slots:
   void input_on_stdin();
+  void accept_connections();
 
 private:
   void init_interactive();
 
   bool m_interactive = false;
   QObject *m_stdin_notifier = nullptr; // Actual type is OS-dependent
+
+  QTcpServer *m_tcp_server = nullptr;
 
   timer *m_eot_timer;
 };

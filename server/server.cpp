@@ -20,8 +20,12 @@
 #include "server.h"
 
 // Qt
+#include <QCoreApplication>
 #include <QDir>
 #include <QFile>
+#include <QHostInfo>
+#include <QTcpServer>
+#include <QTcpSocket>
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
@@ -112,7 +116,7 @@ void fc_interface_init_server(void)
 /**********************************************************************/ /**
    Server initialization.
  **************************************************************************/
-void srv_prepare(void)
+QTcpServer *srv_prepare()
 {
 #ifdef HAVE_FCDB
   if (!srvarg.auth_enabled) {
@@ -133,7 +137,7 @@ void srv_prepare(void)
                srvarg.fatal_assertions);
   /* logging available after this point */
 
-  server_open_socket();
+  auto tcp_server = server_open_socket();
 
 #if IS_BETA_VERSION
   con_puts(C_COMMENT, "");
@@ -165,7 +169,8 @@ void srv_prepare(void)
     free(srvarg.fcdb_conf); /* Never needed again */
     srvarg.fcdb_conf = NULL;
     if (!success) {
-      exit(EXIT_FAILURE);
+      QCoreApplication::exit(EXIT_FAILURE);
+      return tcp_server;
     }
   }
 #endif /* HAVE_FCDB */
@@ -176,7 +181,8 @@ void srv_prepare(void)
     testfilename = fileinfoname(get_data_dirs(), srvarg.ruleset);
     if (testfilename == NULL) {
       log_fatal(_("Ruleset directory \"%s\" not found"), srvarg.ruleset);
-      exit(EXIT_FAILURE);
+      QCoreApplication::exit(EXIT_FAILURE);
+      return tcp_server;
     }
     sz_strlcpy(game.server.rulesetdir, srvarg.ruleset);
   }
@@ -198,9 +204,12 @@ void srv_prepare(void)
         || !send_server_info_to_metaserver(META_INFO)) {
       con_write(C_FAIL, _("Not starting without explicitly requested "
                           "metaserver connection."));
-      exit(EXIT_FAILURE);
+      QCoreApplication::exit(EXIT_FAILURE);
+      return tcp_server;
     }
   }
+
+  return tcp_server;
 }
 
 } // anonymous namespace
@@ -247,7 +256,14 @@ server::server()
 
   // Now init the old C API
   fc_interface_init_server();
-  srv_prepare();
+  m_tcp_server = srv_prepare();
+  m_tcp_server->setParent(this);
+  connect(m_tcp_server, &QTcpServer::newConnection, this,
+          &server::accept_connections);
+  connect(m_tcp_server, &QTcpServer::acceptError,
+          [](QAbstractSocket::SocketError error) {
+            log_error("Error accepting connection: %d", error);
+          });
 
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
 }
@@ -294,6 +310,69 @@ void server::init_interactive()
   rl_initialize();
   rl_callback_handler_install((char *) "> ", handle_readline_input_callback);
   rl_attempted_completion_function = freeciv_completion;
+}
+
+/*************************************************************************/ /**
+   Server accepts connections from client:
+   Low level socket stuff, and basic-initialize the connection struct.
+ *****************************************************************************/
+void server::accept_connections()
+{
+  // There may be several connections available.
+  while (m_tcp_server->hasPendingConnections()) {
+    auto socket = m_tcp_server->nextPendingConnection();
+    socket->setParent(this);
+
+    // Lookup the host name of the remote end.
+    // The IP address will always work
+    auto remote = socket->peerAddress().toString();
+    // Try a remote DNS lookup
+    auto host_info = QHostInfo::fromName(remote); // FIXME Blocking call
+    if (host_info.error() == QHostInfo::NoError) {
+      remote = host_info.hostName();
+    }
+
+    // Reject the connection if we have reached the hard-coded limit
+    if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
+      log_verbose("Rejecting new connection from %s: maximum number of "
+                  "connections exceeded (%d).",
+                  qPrintable(remote), MAX_NUM_CONNECTIONS);
+      socket->deleteLater();
+      continue;
+    }
+
+    // Reject the connection if we have reached the limit for this host
+    if (0 != game.server.maxconnectionsperhost) {
+      bool success = true;
+      int count = 0;
+
+      conn_list_iterate(game.all_connections, pconn)
+      {
+        // Use TolerantConversion so one connections from the same address on
+        // IPv4 and IPv6 are rejected as well.
+        if (socket->peerAddress().isEqual(
+                pconn->sock->peerAddress(),
+                QHostAddress::TolerantConversion)) {
+          continue;
+        }
+        if (++count >= game.server.maxconnectionsperhost) {
+          log_verbose("Rejecting new connection from %s: maximum number of "
+                      "connections for this address exceeded (%d).",
+                      qPrintable(remote), game.server.maxconnectionsperhost);
+
+          success = false;
+          socket->deleteLater();
+        }
+      }
+      conn_list_iterate_end;
+
+      if (!success) {
+        continue;
+      }
+    }
+
+    server_make_connection(socket, remote);
+  }
 }
 
 /*************************************************************************/ /**
