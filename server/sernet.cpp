@@ -188,7 +188,7 @@ void close_connections_and_socket(void)
    Now really close connections marked as 'is_closing'.
    Do this here to avoid recursive sending.
  *****************************************************************************/
-static void really_close_connections(void)
+void really_close_connections()
 {
   struct connection *closing[MAX_NUM_CONNECTIONS];
   struct connection *pconn;
@@ -564,19 +564,6 @@ enum server_events server_sniff_all_input(void)
     if (excepting) { /* handle Ctrl-Z suspend/resume */
       continue;
     }
-    // TODO on error() and find a way to include it (deprecated in 5.15!)
-    for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-      /* check for freaky players */
-      struct connection *pconn = &connections[i];
-
-      if (pconn->used && !pconn->server.is_closing
-          && FD_ISSET(pconn->sock, &exceptfs)) {
-        log_verbose("connection (%s) cut due to exception data",
-                    conn_description(pconn));
-        connection_close_server(pconn, _("network exception"));
-      }
-    }
-
     // TODO QTcpSocket::readyRead()
     { /* input from a player */
       for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {

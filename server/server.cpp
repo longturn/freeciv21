@@ -404,6 +404,8 @@ void server::error_on_socket()
     }
   }
   conn_list_iterate_end
+
+  really_close_connections();
 }
 
 /*************************************************************************/ /**
@@ -435,6 +437,8 @@ void server::input_on_socket()
     }
   }
   conn_list_iterate_end
+
+  really_close_connections();
 }
 
 /*************************************************************************/ /**

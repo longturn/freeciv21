@@ -38,6 +38,7 @@ QTcpServer *server_open_socket(void);
 void flush_packets(void);
 void incoming_client_packets(connection *pconn);
 void close_connections_and_socket(void);
+void really_close_connections();
 void init_connections(void);
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
 void handle_conn_pong(struct connection *pconn);
