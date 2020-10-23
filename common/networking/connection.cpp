@@ -78,10 +78,6 @@ void connection_close(struct connection *pconn, const char *reason)
     /* NB: we don't overwrite the original reason. */
     pconn->closing_reason = fc_strdup(reason);
   }
-  if (pconn->sock != nullptr) {
-    pconn->sock->deleteLater();
-    pconn->sock = nullptr;
-  }
 
   (*conn_close_callback)(pconn);
 }
