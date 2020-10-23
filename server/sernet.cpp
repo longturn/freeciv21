@@ -43,10 +43,6 @@
 #ifdef HAVE_PWD_H
 #include <pwd.h>
 #endif
-#ifdef FREECIV_HAVE_LIBREADLINE
-#include <readline/history.h>
-#include <readline/readline.h>
-#endif
 #ifdef HAVE_SYS_SELECT_H
 #include <sys/select.h>
 #endif
@@ -117,36 +113,6 @@ static void send_ping_times_to_all(void);
 static void get_lanserver_announcement(void);
 static void send_lanserver_response(void);
 
-#ifdef FREECIV_HAVE_LIBREADLINE
-/****************************************************************************/
-
-#define HISTORY_FILENAME "freeciv-server_history"
-#define HISTORY_LENGTH 100
-
-static char *history_file = NULL;
-
-/*************************************************************************/ /**
-   Readline callback for input.
- *****************************************************************************/
-void handle_readline_input_callback(char *line)
-{
-  char *line_internal;
-
-  if (line == NULL) {
-    return;
-  }
-
-  if (line[0] != '\0')
-    add_history(line);
-
-  con_prompt_enter(); /* just got an 'Enter' hit */
-  line_internal = local_to_internal_string_malloc(line);
-  (void) handle_stdin_input(NULL, line_internal);
-  free(line_internal);
-  free(line);
-}
-#endif /* FREECIV_HAVE_LIBREADLINE */
-
 /*************************************************************************/ /**
    Close the connection (very low-level). See also
    server_conn_close_callback().
@@ -210,16 +176,6 @@ void close_connections_and_socket(void)
     delete udp_socket;
     udp_socket = nullptr;
   }
-
-#ifdef FREECIV_HAVE_LIBREADLINE
-  if (history_file) {
-    write_history(history_file);
-    history_truncate_file(history_file, HISTORY_LENGTH);
-    delete[] history_file;
-    history_file = NULL;
-    clear_history();
-  }
-#endif /* FREECIV_HAVE_LIBREADLINE */
 
   send_server_info_to_metaserver(META_GOODBYE);
   server_close_meta();
@@ -433,44 +389,6 @@ enum server_events server_sniff_all_input(void)
 
   con_prompt_init();
 
-#ifdef FREECIV_HAVE_LIBREADLINE
-  {
-    if (!no_input && !readline_initialized) {
-      char *storage_dir = freeciv_storage_dir();
-
-      if (storage_dir != NULL) {
-        int fcdl = strlen(storage_dir) + 1;
-        char *fc_dir = new char[fcdl];
-
-        if (fc_dir != NULL) {
-          fc_snprintf(fc_dir, fcdl, "%s", storage_dir);
-
-          if (make_dir(fc_dir)) {
-            history_file =
-                new char[strlen(fc_dir) + 1 + strlen(HISTORY_FILENAME) + 1];
-            if (history_file) {
-              strcpy(history_file, fc_dir);
-              strcat(history_file, "/");
-              strcat(history_file, HISTORY_FILENAME);
-              using_history();
-              read_history(history_file);
-            }
-          }
-          delete[] fc_dir;
-        }
-      }
-
-      rl_initialize();
-      rl_callback_handler_install((char *) "> ",
-                                  handle_readline_input_callback);
-      rl_attempted_completion_function = freeciv_completion;
-
-      readline_initialized = TRUE;
-      atexit(rl_callback_handler_remove);
-    }
-  }
-#endif /* FREECIV_HAVE_LIBREADLINE */
-
   while (TRUE) {
     con_prompt_on(); /* accepting new input */
 
@@ -672,67 +590,8 @@ enum server_events server_sniff_all_input(void)
         connection_close_server(pconn, _("network exception"));
       }
     }
-    // TODO prompt, use QSocketNotifier on STDIN_FILENO
-#ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
-    if (!no_input && (bufptr = fc_read_console())) {
-      char *bufptr_internal = local_to_internal_string_malloc(bufptr);
 
-      con_prompt_enter(); /* will need a new prompt, regardless */
-      handle_stdin_input(NULL, bufptr_internal);
-      free(bufptr_internal);
-    }
-#else /* !FREECIV_SOCKET_ZERO_NOT_STDIN */
-    if (!no_input && FD_ISSET(0, &readfs)) { /* input from server operator */
-#ifdef FREECIV_HAVE_LIBREADLINE
-      rl_callback_read_char();
-      if (readline_handled_input) {
-        readline_handled_input = FALSE;
-        con_prompt_enter_clear();
-      }
-      continue;
-#else /* !FREECIV_HAVE_LIBREADLINE */
-      ssize_t didget;
-      char *buffer = NULL; /* Must be NULL when calling getline() */
-      char *buf_internal;
-
-#ifdef HAVE_GETLINE
-      size_t len = 0;
-
-      didget = getline(&buffer, &len, stdin);
-      if (didget >= 1) {
-        buffer[didget - 1] = '\0'; /* overwrite newline character */
-        didget--;
-        log_debug("Got line: \"%s\" (%ld, %ld)", buffer, (long int) didget,
-                  (long int) len);
-      }
-#else  /* HAVE_GETLINE */
-      buffer = new char[BUF_SIZE + 1];
-
-      didget = read(0, buffer, BUF_SIZE);
-      if (didget > 0) {
-        buffer[didget] = '\0';
-      } else {
-        didget = -1; /* error or end-of-file: closing stdin... */
-      }
-#endif /* HAVE_GETLINE */
-      if (didget < 0) {
-        handle_stdin_close();
-      }
-
-      con_prompt_enter(); /* will need a new prompt, regardless */
-
-      if (didget >= 0) {
-        buf_internal = local_to_internal_string_malloc(buffer);
-        handle_stdin_input(NULL, buf_internal);
-        free(buf_internal);
-      }
-      free(buffer);
-#endif /* !FREECIV_HAVE_LIBREADLINE */
-    } else
-#endif /* !FREECIV_SOCKET_ZERO_NOT_STDIN */
-
-    // TODO QTcpSocket::readyRead() -- but why is it in the readline loop?
-    // oh DAMNIT there are #ifdefs
+    // TODO QTcpSocket::readyRead()
     { /* input from a player */
       for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
         struct connection *pconn = connections + i;

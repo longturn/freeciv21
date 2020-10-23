@@ -20,7 +20,7 @@
 #include "server.h"
 
 // Qt
-#include <QDebug>
+#include <QDir>
 #include <QFile>
 
 // Stuff to wait for input on stdin.
@@ -33,16 +33,45 @@
 #endif
 
 // Readline
+#include <readline/history.h>
 #include <readline/readline.h>
 
 // utility
 #include "fciconv.h" // local_to_internal_string_malloc
 
 // server
+#include "console.h"
 #include "sernet.h"
 #include "stdinhand.h"
 
 using namespace freeciv;
+
+static const char *HISTORY_FILENAME = "freeciv-server_history";
+static const int HISTORY_LENGTH = 100;
+
+namespace {
+
+/*************************************************************************/ /**
+   Readline callback for input.
+ *****************************************************************************/
+void handle_readline_input_callback(char *line)
+{
+  if (line == nullptr) {
+    return;
+  }
+
+  if (line[0] != '\0') {
+    add_history(line);
+  }
+
+  con_prompt_enter(); /* just got an 'Enter' hit */
+  auto line_internal = local_to_internal_string_malloc(line);
+  (void) handle_stdin_input(NULL, line_internal);
+  free(line_internal);
+  free(line);
+}
+
+} // anonymous namespace
 
 /*************************************************************************/ /**
    Creates a server. It starts working as soon as there is an event loop.
@@ -91,6 +120,16 @@ server::server()
 server::~server()
 {
   if (m_interactive) {
+    // Save history
+    auto history_file = QString::fromUtf8(freeciv_storage_dir())
+                        + QLatin1String("/")
+                        + QLatin1String(HISTORY_FILENAME);
+    auto history_file_encoded = history_file.toLocal8Bit();
+    write_history(history_file_encoded.constData());
+    history_truncate_file(history_file_encoded.constData(), HISTORY_LENGTH);
+    clear_history();
+
+    // Power down readline
     rl_callback_handler_remove();
   }
 }
@@ -100,6 +139,15 @@ server::~server()
  *****************************************************************************/
 void server::init_interactive()
 {
+  // Read the history file
+  auto storage_dir = QString::fromUtf8(freeciv_storage_dir());
+  if (QDir().mkpath(storage_dir)) {
+    auto history_file =
+        storage_dir + QLatin1String("/") + QLatin1String(HISTORY_FILENAME);
+    using_history();
+    read_history(history_file.toLocal8Bit().constData());
+  }
+
   // Initialize readline
   rl_initialize();
   rl_callback_handler_install((char *) "> ", handle_readline_input_callback);

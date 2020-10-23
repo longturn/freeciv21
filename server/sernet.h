@@ -32,8 +32,6 @@ enum server_events {
 
 enum server_events server_sniff_all_input(void);
 
-void handle_readline_input_callback(char *line);
-
 int server_open_socket(void);
 void flush_packets(void);
 void close_connections_and_socket(void);
