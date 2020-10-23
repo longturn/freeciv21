@@ -1,16 +1,23 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996-2005 - Freeciv Development Team
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
+/**  / \                                                        ***********
+    / _ \
+   | / \ |                  Copyright (c) 1996-2020 Freeciv21 and
+   ||   || _______    Freeciv contributors. This file is part of Freeciv21.
+   ||   || |\     \    Freeciv21 is free software: you can redistribute it
+   ||   || ||\     \               and/or modify it under the terms of the
+   ||   || || \    |                       GNU  General Public License  as
+   ||   || ||  \__/              published by the Free Software Foundation,
+   ||   || ||   ||                         either version 3 of the License,
+    \\_/ \_/ \_//                    or (at your option) any later version.
+   /   _     _   \                  You should have received a copy of the
+  /               \        GNU General Public License along with Freeciv21.
+  |    O     O    |                               If not,
+  |   \  ___  /   |             see https://www.gnu.org/licenses/.
+ /     \ \_/ /     \
+/  -----  |  --\    \
+|     \__/|\__/ \   |                 FOLLOW THE WHITE RABBIT !
+\       |_|_|       /
+ \_____       _____/
+       \     /                                                      *****/
 #include "canvas.h"
 #include <math.h>
 // Qt

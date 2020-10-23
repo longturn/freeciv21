@@ -1,16 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 #ifndef FC__CHATLINE_H
 #define FC__CHATLINE_H
 
@@ -19,16 +18,16 @@
 #include <QLineEdit>
 #include <QTextBrowser>
 // gui-qt
-#include "listener.h"      // for listener
+#include "listener.h"
 
-class QCheckBox;  // lines 33-33
-class QMouseEvent;  // lines 34-34
+class QCheckBox;
+class QMouseEvent;
 class QObject;
 class QPaintEvent;
 class QPainter;
-class QPushButton;  // lines 35-35
+class QPushButton;
 class QUrl;
-class chat_listener;  // lines 32-32
+class chat_listener;
 
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color);
