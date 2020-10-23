@@ -1623,6 +1623,7 @@ struct unit_type *help_widget::uclass_max_values(struct unit_class *uclass)
   max->attack_strength = 0;
   max->bombard_rate = 0;
   max->build_cost = 0;
+  max->convert_time = 0;
   max->city_size = 0;
   max->defense_strength = 0;
   max->firepower = 0;
