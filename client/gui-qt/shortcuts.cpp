@@ -469,9 +469,10 @@ QString button_name(Qt::MouseButton bt)
 }
 
 /**********************************************************************/ /**
-   Constructor for button setting shortcut
+   Constructor and destructor for button setting shortcut
  **************************************************************************/
 fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
+fc_sc_button::~fc_sc_button() { delete sc; }
 
 /**********************************************************************/ /**
    Constructor setting given shortcut

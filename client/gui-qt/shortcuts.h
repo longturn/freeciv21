@@ -165,6 +165,7 @@ class fc_sc_button : public QPushButton {
 
 public:
   fc_sc_button();
+  ~fc_sc_button();
   fc_sc_button(fc_shortcut *s);
   fc_shortcut *sc;
   fc_shortcut *sc_orig;
