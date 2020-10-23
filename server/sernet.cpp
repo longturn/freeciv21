@@ -318,7 +318,7 @@ static bool get_packet(struct connection *pconn,
    Precondition - we have read_socket_data.
    Postcondition - there are no more packets to handle on this connection.
  *****************************************************************************/
-static void incoming_client_packets(struct connection *pconn)
+void incoming_client_packets(struct connection *pconn)
 {
   struct packet_to_handle packet;
 #if PROCESSING_TIME_STATISTICS

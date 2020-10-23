@@ -2710,8 +2710,7 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
       log_verbose("Server reports new connection %d %s", pinfo->id,
                   pinfo->username);
 
-      pconn =
-          static_cast<connection *>(fc_calloc(1, sizeof(struct connection)));
+      pconn = new connection{};
       pconn->buffer = NULL;
       pconn->send_buffer = NULL;
       pconn->ping_time = -1.0;

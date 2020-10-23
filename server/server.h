@@ -37,6 +37,7 @@ public:
   virtual ~server();
 
 private slots:
+  void input_on_socket();
   void input_on_stdin();
   void accept_connections();
 

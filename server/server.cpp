@@ -48,6 +48,7 @@
 
 // server
 #include "ai.h"
+#include "connecthand.h"
 #include "console.h"
 #include "diplhand.h"
 #include "edithand.h"
@@ -336,7 +337,7 @@ void server::accept_connections()
     if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
       log_verbose("Rejecting new connection from %s: maximum number of "
                   "connections exceeded (%d).",
-                  qPrintable(remote), MAX_NUM_CONNECTIONS);
+                  qUtf8Printable(remote), MAX_NUM_CONNECTIONS);
       socket->deleteLater();
       continue;
     }
@@ -358,7 +359,7 @@ void server::accept_connections()
         if (++count >= game.server.maxconnectionsperhost) {
           log_verbose("Rejecting new connection from %s: maximum number of "
                       "connections for this address exceeded (%d).",
-                      qPrintable(remote), game.server.maxconnectionsperhost);
+                      qUtf8Printable(remote), game.server.maxconnectionsperhost);
 
           success = false;
           socket->deleteLater();
@@ -371,8 +372,41 @@ void server::accept_connections()
       }
     }
 
-    server_make_connection(socket, remote);
+    if (server_make_connection(socket, remote) == 0) {
+      // Success making the connection, connect signals
+      connect(socket, &QIODevice::readyRead, this, input_on_socket);
+    }
   }
+}
+
+/*************************************************************************/ /**
+   Called when there's something to read on a socket.
+ *****************************************************************************/
+void server::input_on_socket()
+{
+  // Get the socket
+  auto socket = dynamic_cast<QTcpSocket *>(sender());
+  if (socket == nullptr) {
+    return;
+  }
+
+  // Find the corresponding connection
+  conn_list_iterate(game.all_connections, pconn) {
+    if (pconn->sock == socket && !pconn->server.is_closing) {
+      auto nb = read_socket_data(pconn->sock, pconn->buffer);
+      if (0 <= nb) {
+        /* We read packets; now handle them. */
+        incoming_client_packets(pconn);
+      } else if (-2 == nb) {
+        connection_close_server(pconn, _("client disconnected"));
+      } else {
+        /* Read failure; the connection is closed. */
+        connection_close_server(pconn, _("read error"));
+      }
+      break;
+    }
+  }
+  conn_list_iterate_end
 }
 
 /*************************************************************************/ /**

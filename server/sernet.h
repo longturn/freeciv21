@@ -36,6 +36,7 @@ enum server_events server_sniff_all_input(void);
 
 QTcpServer *server_open_socket(void);
 void flush_packets(void);
+void incoming_client_packets(connection *pconn);
 void close_connections_and_socket(void);
 void init_connections(void);
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);

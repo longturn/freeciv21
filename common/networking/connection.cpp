@@ -431,7 +431,7 @@ const char *conn_description(const struct connection *pconn)
 
   if (*pconn->username != '\0') {
     fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
-                pconn->addr);
+                qUtf8Printable(pconn->addr));
   } else {
     sz_strlcpy(buffer, "server");
   }
@@ -772,7 +772,7 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
     test = pconn->username;
     break;
   case CPT_HOST:
-    test = qPrintable(pconn->addr);
+    test = qUtf8Printable(pconn->addr);
     break;
   case CPT_IP:
     if (is_server()) {

@@ -172,7 +172,7 @@ void establish_new_connection(struct connection *pconn)
    * message option for the client with event */
 
   /* Notify the console that you're here. */
-  log_normal(_("%s has connected from %s."), pconn->username, pconn->addr);
+  log_normal(_("%s has connected from %s."), pconn->username, qUtf8Printable(pconn->addr));
 
   conn_compression_freeze(pconn);
   send_rulesets(dest);
@@ -267,12 +267,12 @@ void establish_new_connection(struct connection *pconn)
   if (conn_controls_player(pconn)) {
     package_event(&connect_info, NULL, E_CONNECTION, ftc_server,
                   _("%s has connected from %s (player %s)."),
-                  pconn->username, pconn->addr,
+                  pconn->username, qUtf8Printable(pconn->addr),
                   player_name(conn_get_player(pconn)));
   } else {
     package_event(&connect_info, NULL, E_CONNECTION, ftc_server,
                   _("%s has connected from %s."), pconn->username,
-                  pconn->addr);
+                  qUtf8Printable(pconn->addr));
   }
   conn_list_iterate(game.est_connections, aconn)
   {
@@ -351,7 +351,7 @@ bool handle_login_request(struct connection *pconn,
   }
 
   log_normal(_("Connection request from %s from %s"), req->username,
-             pconn->addr);
+             qUtf8Printable(pconn->addr));
 
   /* print server and client capabilities to console */
   log_normal(_("%s has client version %d.%d.%d%s"), pconn->username,
@@ -417,7 +417,7 @@ bool handle_login_request(struct connection *pconn,
     fc_snprintf(msg, sizeof(msg), _("Invalid username '%s'"), req->username);
     reject_new_connection(msg, pconn);
     log_normal(_("%s was rejected: Invalid name [%s]."), req->username,
-               pconn->addr);
+               qUtf8Printable(pconn->addr));
     return FALSE;
   }
 
@@ -441,7 +441,7 @@ bool handle_login_request(struct connection *pconn,
                   req->username);
       reject_new_connection(msg, pconn);
       log_normal(_("%s was rejected: Duplicate login name [%s]."),
-                 req->username, pconn->addr);
+                 req->username, qUtf8Printable(pconn->addr));
       return FALSE;
     }
   }
@@ -513,7 +513,7 @@ static void package_conn_info(struct connection *pconn,
   packet->access_level = pconn->access_level;
 
   sz_strlcpy(packet->username, pconn->username);
-  sz_strlcpy(packet->addr, qPrintable(pconn->addr));
+  sz_strlcpy(packet->addr, qUtf8Printable(pconn->addr));
   sz_strlcpy(packet->capability, pconn->capability);
 }
 
