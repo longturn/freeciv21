@@ -359,7 +359,8 @@ void server::accept_connections()
         if (++count >= game.server.maxconnectionsperhost) {
           log_verbose("Rejecting new connection from %s: maximum number of "
                       "connections for this address exceeded (%d).",
-                      qUtf8Printable(remote), game.server.maxconnectionsperhost);
+                      qUtf8Printable(remote),
+                      game.server.maxconnectionsperhost);
 
           success = false;
           socket->deleteLater();
@@ -374,9 +375,35 @@ void server::accept_connections()
 
     if (server_make_connection(socket, remote) == 0) {
       // Success making the connection, connect signals
-      connect(socket, &QIODevice::readyRead, this, input_on_socket);
+      connect(socket, &QIODevice::readyRead, this, &server::input_on_socket);
+      connect(socket,
+              QOverload<QAbstractSocket::SocketError>::of(
+                  &QAbstractSocket::error),
+              this, &server::error_on_socket);
     }
   }
+}
+
+/*************************************************************************/ /**
+   Called when there was an error on a socket.
+ *****************************************************************************/
+void server::error_on_socket()
+{
+  // Get the socket
+  auto socket = dynamic_cast<QTcpSocket *>(sender());
+  if (socket == nullptr) {
+    return;
+  }
+
+  // Find the corresponding connection
+  conn_list_iterate(game.all_connections, pconn)
+  {
+    if (pconn->sock == socket) {
+      connection_close_server(pconn, _("network exception"));
+      break;
+    }
+  }
+  conn_list_iterate_end
 }
 
 /*************************************************************************/ /**
@@ -391,7 +418,8 @@ void server::input_on_socket()
   }
 
   // Find the corresponding connection
-  conn_list_iterate(game.all_connections, pconn) {
+  conn_list_iterate(game.all_connections, pconn)
+  {
     if (pconn->sock == socket && !pconn->server.is_closing) {
       auto nb = read_socket_data(pconn->sock, pconn->buffer);
       if (0 <= nb) {
