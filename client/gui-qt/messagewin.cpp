@@ -49,6 +49,7 @@ info_tab::info_tab(QWidget *parent)
   mw->put_to_corner();
   mw->setFixedSize(13, 13);
   setMouseTracking(true);
+  chat_maximized = false;
 }
 
 /***********************************************************************/ /**
@@ -196,7 +197,7 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   palette.setColor(QPalette::Highlight, QColor(0, 0, 0, 0));
   palette.setColor(QPalette::HighlightedText, QColor(205, 206, 173));
   palette.setColor(QPalette::Text, QColor(205, 206, 173));
-
+  pix = nullptr;
   mesg_table->setPalette(palette);
   connect(
       mesg_table->selectionModel(),

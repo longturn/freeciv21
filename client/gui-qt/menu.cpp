@@ -68,7 +68,7 @@ static void enable_interface(bool enable);
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
  **************************************************************************/
-qfc_units_list::qfc_units_list() {}
+qfc_units_list::qfc_units_list() : nr_units(0) {}
 
 /**********************************************************************/ /**
    Adds givent unit to list

@@ -101,10 +101,8 @@ research_diagram::~research_diagram()
    Constructor for req_tooltip_help
  ****************************************************************************/
 req_tooltip_help::req_tooltip_help()
+    : tech_id(-1), tunit(nullptr), timpr(nullptr), tgov(nullptr)
 {
-  tech_id = -1;
-  tunit = nullptr;
-  timpr = nullptr;
 }
 
 /************************************************************************/ /**

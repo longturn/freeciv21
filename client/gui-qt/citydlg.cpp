@@ -1092,7 +1092,10 @@ void unit_info::clear_layout()
    city_label is used only for showing citizens icons
    and was created only to catch mouse events
  ****************************************************************************/
-city_label::city_label(int t, QWidget *parent) : QLabel(parent) { type = t; }
+city_label::city_label(int t, QWidget *parent)
+    : QLabel(parent), type(t), pcity(nullptr)
+{
+}
 
 /************************************************************************/ /**
    Mouse handler for city_label

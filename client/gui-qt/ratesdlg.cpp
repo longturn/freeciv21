@@ -295,6 +295,7 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
   moved = 0;
   on_min = false;
   on_max = false;
+  cursor_size = 0;
 
   if (client.conn.playing != nullptr) {
     max_rates = get_player_bonus(client.conn.playing, EFT_MAX_RATES) / 10;

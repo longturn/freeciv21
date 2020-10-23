@@ -78,10 +78,7 @@ enum delay_order { D_GOTO, D_NUKE, D_PARADROP, D_FORT };
 class qfc_rally_list {
 public:
   qfc_rally_list()
-  {
-    hover_tile = false;
-    hover_city = false;
-  };
+      : rally_city(nullptr), hover_tile(false), hover_city(false) {}
   bool hover_tile;
   bool hover_city;
   struct city *rally_city;

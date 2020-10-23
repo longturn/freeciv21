@@ -1221,6 +1221,7 @@ city_report::city_report() : QWidget()
   }
   layout->addWidget(city_wdg);
   setLayout(layout);
+  index = 0;
 }
 
 /***********************************************************************/ /**

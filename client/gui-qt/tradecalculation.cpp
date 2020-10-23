@@ -32,6 +32,8 @@ trade_city::trade_city(struct city *pcity)
   tile = nullptr;
   trade_num = 0;
   poss_trade_num = 0;
+  done = false;
+  over_max = false;
 }
 
 /**********************************************************************/ /**

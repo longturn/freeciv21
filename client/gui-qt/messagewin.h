@@ -73,7 +73,6 @@ private:
   QPoint cursor;
   QSize last_size;
   move_widget *mw;
-  bool hidden_state;
   bool resize_mode;
   bool resxy;
   bool resx;

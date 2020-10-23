@@ -802,6 +802,7 @@ hud_action::hud_action(QWidget *parent) : QWidget(parent)
   setMouseTracking(true);
   focus = false;
   action_pixmap = nullptr;
+  action_shortcut = SC_NONE;
 }
 
 /************************************************************************/ /**
@@ -1904,6 +1905,7 @@ hud_battle_log::hud_battle_log(QWidget *parent) : QWidget(parent)
   main_layout->setContentsMargins(0, 0, 0, 0);
   sw = new scale_widget(QRubberBand::Rectangle, this);
   sw->show();
+  scale = 1.0;
 }
 
 /************************************************************************/ /**

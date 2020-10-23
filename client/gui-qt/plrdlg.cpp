@@ -713,6 +713,8 @@ plr_report::plr_report() : QWidget()
   connect(toggle_ai_but, &QAbstractButton::pressed, this,
           &plr_report::toggle_ai_mode);
   setLayout(layout);
+  other_player = nullptr;
+  index = 0;
   if (gui()->qt_settings.player_repo_sort_col != -1) {
     plr_wdg->sortByColumn(gui()->qt_settings.player_repo_sort_col,
                           gui()->qt_settings.player_report_sort);
