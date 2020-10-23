@@ -13,14 +13,9 @@
 #ifndef FC__PAGES_H
 #define FC__PAGES_H
 
-#include "pages_g.h"
-
-// gui-qt
-#include "qtg_cxxside.h"
-
-struct player;
-struct connection;
-struct server_scan;
+struct connection;  // lines 22-22
+struct player;  // lines 21-21
+struct server_scan;  // lines 23-23
 
 void create_conn_menu(player *, connection *);
 void server_scan_error(server_scan *, const char *);

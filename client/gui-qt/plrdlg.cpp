@@ -19,6 +19,7 @@
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QPushButton>
@@ -29,12 +30,22 @@
 // utility
 #include "fcintl.h"
 
-//includes
+// common
+#include "colors_common.h"
+#include "game.h"
+#include "government.h"
+#include "research.h"
+// client
+#include "chatline_common.h"
+#include "client_main.h"
 #include "inteldlg_g.h"
 
 // gui-qt
+#include "colors.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "plrdlg.h"
+#include "sprite.h"
 
 /**********************************************************************/ /**
    Help function to draw checkbox inside delegate

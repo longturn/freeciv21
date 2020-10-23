@@ -38,13 +38,17 @@
 #include "calendar.h"
 #include "client_main.h"
 #include "goto.h"
+#include "mapview_common.h"
 #include "text.h"
 
 // gui-qt
+#include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
 #include "icons.h"
+#include "mapview.h"
+#include "qtg_cxxside.h"
 #include "sprite.h"
 #include "widgetdecorations.h"
 

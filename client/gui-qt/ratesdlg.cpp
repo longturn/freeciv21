@@ -26,10 +26,12 @@
 
 // common
 #include "effects.h"
+#include "government.h"
 #include "multipliers.h"
 #include "packets.h"
 
 // client
+#include "client_main.h"
 #include "tilespec.h"
 
 // gui-qt

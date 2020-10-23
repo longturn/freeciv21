@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include "chatline.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -22,30 +23,34 @@
 #include <QGridLayout>
 #include <QKeyEvent>
 #include <QPainter>
+#include <QPushButton>
 #include <QScrollBar>
+#include <QStyle>
 #include <QStyleFactory>
 #include <QTextBlock>
 #include <QTextBrowser>
 #include <QTextLayout>
-
 // common
 #include "chat.h"
 #include "chatline_common.h"
-
 // client
 #include "audio.h"
 #include "climap.h"
 #include "climisc.h" /* for write_chatline_content */
 #include "colors_common.h"
 #include "connectdlg_common.h"
+#include "client_main.h"
 #include "control.h"
 #include "game.h"
-
+#include "mapview_common.h"
 // gui-qt
-#include "chatline.h"
 #include "colors.h"
+#include "dialogs.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "gui_main.h"
+#include "mapview.h"
+#include "messagewin.h"
 #include "qtg_cxxside.h"
 
 extern QApplication *qapp;

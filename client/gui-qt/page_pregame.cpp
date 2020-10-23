@@ -33,15 +33,19 @@
 #include "fcintl.h"
 
 // common
-#include "version.h"
+#include "colors_common.h"
 #include "connectdlg_common.h"
-
+#include "game.h"
+// client
+#include "client_main.h"
 // gui-qt
+#include "canvas.h"
 #include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
 #include "sprite.h"
+#include "voteinfo_bar.h"
 
 /**********************************************************************/ /**
    Creates buttons and layouts for start page.

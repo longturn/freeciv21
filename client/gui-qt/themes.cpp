@@ -18,6 +18,7 @@
 #include <QApplication>
 #include <QDir>
 #include <QPalette>
+#include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
 
@@ -27,10 +28,8 @@
 #include "string_vector.h"
 
 /* client */
+#include "qtg_cxxside.h"
 #include "themes_common.h"
-
-/* client/include */
-#include "themes_g.h"
 
 // gui-qt
 #include "fc_client.h"

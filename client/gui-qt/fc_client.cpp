@@ -41,9 +41,14 @@
 #include "fcintl.h"
 // common
 #include "game.h"
+#include "climisc.h"
 
 // client
+#include "chatline_common.h"
+#include "chatline_g.h"
 #include "connectdlg_common.h"
+#include "client_main.h"
+#include "clinet.h"
 #include "mapctrl_common.h"
 
 // gui-qt
@@ -52,9 +57,12 @@
 #include "gui_main.h"
 #include "icons.h"
 #include "minimap.h"
+#include "mapview.h"
+#include "messagewin.h"
 #include "optiondlg.h"
 #include "sidebar.h"
 #include "sprite.h"
+#include "voteinfo_bar.h"
 
 fc_font *fc_font::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);

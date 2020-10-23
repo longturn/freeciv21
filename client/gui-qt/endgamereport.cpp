@@ -7,6 +7,7 @@
 // Qt
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QTableWidget>
 
 // client
 #include "repodlgs_common.h"

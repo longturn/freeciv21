@@ -11,25 +11,17 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-/* utility */
-#include "fcintl.h"
-#include "log.h"
-#include "support.h"
-
-#include "connectdlg_g.h"
-
+// common
+#include "game.h"
 /* client */
-#include "chatline_common.h" /* for append_output_window */
-#include "client_main.h"
+#include "chatline_common.h"
 #include "packhand_gen.h"
-
 // gui-qt
 #include "connectdlg.h"
+#include "connectdlg_g.h"
 #include "fc_client.h"
+#include "pages_g.h"
+#include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
    Close and destroy the dialog. But only if we don't have a local

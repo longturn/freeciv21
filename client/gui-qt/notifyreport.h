@@ -14,20 +14,14 @@
 #include <QMessageBox>
 #include <QVariant>
 
-// gui-qt
-#include "fonts.h"
-#include "hudwidget.h"
-#include "mapview.h"
+#include "widgetdecorations.h"  // for close_widget (ptr only), fcwidget
 
-class QComboBox;
-class QGridLayout;
-class QGroupBox;
-class QItemSelection;
-class QRadioButton;
-class QTableView;
-class QTableWidget;
-class QTextEdit;
-class QWidget;
+class QLabel;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QVBoxLayout;
+
 
 void restart_notify_reports();
 

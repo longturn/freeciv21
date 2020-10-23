@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QApplication>
 #include <QComboBox>
@@ -39,6 +35,7 @@
 // common
 #include "actions.h"
 #include "city.h"
+#include "climisc.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
@@ -60,8 +57,10 @@
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
-#include "icons.h"
+#include "fonts.h"
 #include "hudwidget.h"
+#include "icons.h"
+#include "mapview.h"
 #include "notifyreport.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
@@ -3444,7 +3443,6 @@ bool popup_theme_suggestion_dialog(const char *theme_name)
   return false;
 }
 
-
 /***********************************************************************/ /**
    This function is called when the client disconnects or the game is
    over.  It should close all dialog windows for that game.
@@ -3879,7 +3877,7 @@ void units_select::create_pixmap()
       pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
     }
     pix->fill(Qt::transparent);
-    for (auto punit: qAsConst(unit_list)) {
+    for (auto punit : qAsConst(unit_list)) {
       unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
                                       tileset_unit_height(tileset));
       unit_pixmap->map_pixmap.fill(Qt::transparent);

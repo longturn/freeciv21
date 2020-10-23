@@ -14,8 +14,6 @@
 #ifndef FC__COLORS_H
 #define FC__COLORS_H
 
-#include "colors_g.h"
-
 // Qt
 #include "QColor"
 

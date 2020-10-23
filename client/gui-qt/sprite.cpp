@@ -20,6 +20,7 @@
 #include <QPainter>
 
 // utility
+#include <math.h>
 #include "log.h"
 
 // gui-qt

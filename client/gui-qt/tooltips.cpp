@@ -5,7 +5,9 @@
 #####################################################################*/
 
 // Qt
+#include <QAbstractItemView>
 #include <QHelpEvent>
+#include <QModelIndex>
 #include <QToolTip>
 
 // utility
@@ -13,6 +15,7 @@
 #include "support.h"
 
 // client
+#include "client_main.h"
 #include "helpdata.h"
 #include "movement.h"
 

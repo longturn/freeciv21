@@ -14,12 +14,6 @@
 #ifndef FC__CITYREP_H
 #define FC__CITYREP_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "cityrep_g.h"
-
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
@@ -27,21 +21,18 @@
 #include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QWidget>
-
-// common
-#include "city.h"
-
 // client
-#include "citydlg_common.h"
 #include "cityrepdata.h"
 #include "climisc.h"
-#include "global_worklist.h"
 
-// agents
-#include "cma_fec.h"
-
-// gui-qt
-#include "sprite.h"
+class QItemSelection;
+class QMenu; // lines 50-50
+class QPainter;
+class QPoint;
+class QVBoxLayout; // lines 56-56
+class city_report; // lines 57-57
+struct city;
+template <class Key, class T> class QMap;
 
 #define NEG_VAL(x) ((x) < 0 ? (x) : (-x))
 #define CMA_NONE (10000)

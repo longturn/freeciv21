@@ -23,23 +23,30 @@
 #include <QRubberBand>
 #include <QTableWidget>
 
-// common
-#include "unit.h"
+#include "fc_types.h"       // for Unit_type_id
+#include "shortcuts.h"      // for shortcut_id
 
-// gui-qt
-#include "shortcuts.h"
-
-class move_widget;
-class QComboBox;
-class QHBoxLayout;
-class QIcon;
-class QLabel;
-class QRadioButton;
-class QVBoxLayout;
-class scale_widget;
-struct tile;
-struct unit;
-struct unit_list;
+class QComboBox;  // lines 33-33
+class QEvent;
+class QFontMetrics;
+class QHBoxLayout;  // lines 34-34
+class QItemSelection;
+class QKeyEvent;
+class QMouseEvent;
+class QMoveEvent;
+class QObject;
+class QPaintEvent;
+class QPixmap;
+class QPushButton;
+class QRadioButton;  // lines 37-37
+class QShowEvent;
+class QTimerEvent;
+class QVBoxLayout;  // lines 38-38
+class move_widget;  // lines 32-32
+class scale_widget;  // lines 39-39
+struct tile;  // lines 40-40
+struct unit;  // lines 41-41
+struct unit_list;  // lines 42-42
 
 void show_new_turn_info();
 bool has_player_unit_type(Unit_type_id utype);

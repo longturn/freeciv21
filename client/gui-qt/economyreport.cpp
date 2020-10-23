@@ -8,6 +8,7 @@
 #include <QApplication>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QMessageBox>
 
 // client
 #include "sprite.h"
@@ -15,6 +16,7 @@
 // gui-qt
 #include "fc_client.h"
 #include "economyreport.h"
+#include "hudwidget.h"
 
 /************************************************************************/ /**
    Constructor for economy report

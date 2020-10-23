@@ -32,12 +32,12 @@
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"
+#include "mapview_common.h"
 #include "text.h"
 
 // gui-qt
 #include "fc_client.h"
 #include "gotodlg.h"
-#include "qtg_cxxside.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**

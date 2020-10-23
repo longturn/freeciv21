@@ -33,31 +33,21 @@
 #include "fcintl.h"
 
 // common
-#include "game.h"
-#include "version.h"
 
-#include "cityrep_g.h"
-#include "repodlgs_g.h"
+
+
 // client
+#include "chatline_common.h"
 #include "client_main.h"
-#include "colors_common.h"
+#include "clinet.h"
 #include "connectdlg_common.h"
-#include "mapview_common.h"
-#include "text.h"
-#include "tilespec.h"
+
 
 // gui-qt
-#include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
-#include "icons.h"
-#include "minimap.h"
 #include "pages.h"
-#include "plrdlg.h"
 #include "qtg_cxxside.h"
-#include "sidebar.h"
-#include "sprite.h"
-#include "voteinfo_bar.h"
 
 static enum connection_state connection_status;
 static struct server_scan *meta_scan, *lan_scan;

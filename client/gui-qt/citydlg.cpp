@@ -11,10 +11,6 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -34,20 +30,16 @@
 #include <QVBoxLayout>
 #include <QWheelEvent>
 #include <QWidgetAction>
-
 // utility
 #include "fcintl.h"
 #include "support.h"
-
 // common
 #include "citizens.h"
 #include "city.h"
 #include "game.h"
-
 // agents
 #include "cma_core.h"
 #include "cma_fec.h"
-
 // client
 #include "citydlg_common.h"
 #include "client_main.h"
@@ -60,13 +52,16 @@
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
-
 // gui-qt
+#include "canvas.h"
 #include "citydlg.h"
 #include "colors.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "hudwidget.h"
 #include "icons.h"
+#include "mapview.h"
+#include "qtg_cxxside.h"
 #include "tooltips.h"
 
 extern QApplication *qapp;

@@ -11,17 +11,13 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "canvas.h"
+#include <math.h>
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPainterPath>
-
 // qt-client
-#include "canvas.h"
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"

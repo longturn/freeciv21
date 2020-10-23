@@ -25,23 +25,14 @@
 #include <QDialog>
 #include <QList>
 
-// common
-#include "government.h"
+#include "dialogs.h"      // for qfc_dialog
 
-// client
-#include "client_main.h"
-
-// gui-qt
-#include "dialogs.h"
-
-#include "ratesdlg_g.h"
-
-class QMouseEvent;
-class QPaintEvent;
-class QPixmap;
-class QPushButton;
-class QSize;
-class QSlider;
+class QMouseEvent;  // lines 39-39
+class QObject;
+class QPaintEvent;  // lines 40-40
+class QPushButton;  // lines 42-42
+class QSize;  // lines 43-43
+class QSlider;  // lines 44-44
 
 /**************************************************************************
  * Custom slider with two settable values

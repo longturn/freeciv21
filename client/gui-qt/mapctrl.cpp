@@ -27,10 +27,10 @@
 #include "map.h"
 
 // client
+#include "chatline_common.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climap.h"
-#include "control.h"
 #include "mapctrl.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
@@ -42,7 +42,8 @@
 // gui-qt
 #include "citydlg.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
+#include "mapview.h"
+#include "messagewin.h"
 #include "shortcuts.h"
 
 extern void side_disable_endturn(bool do_restore);

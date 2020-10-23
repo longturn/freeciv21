@@ -14,32 +14,30 @@
 #ifndef FC__HELPDLG_H
 #define FC__HELPDLG_H
 
-// common
-#include "extras.h"
-
 // Qt
 #include <QDialog>
 #include <QHash>
 #include <QList>
 
-// gui-qt
-#include "dialogs.h"
-
-#include "helpdlg_g.h"
-
-// Forward declarations
-struct canvas;
-struct help_item;
-
-class QFrame;
-class QLabel;
-class QSplitter;
-class QTextBrowser;
-class QTreeWidget;
-class QTreeWidgetItem;
-class QVBoxLayout;
-
-class help_widget;
+#include "dialogs.h"      // for qfc_dialog
+#include "extras.h"       // for unit_activity
+#include "helpdlg_g.h"    // for help_page_type
+class QCloseEvent;
+class QFrame;  // lines 34-34
+class QHideEvent;
+class QLabel;  // lines 35-35
+class QLayout;
+class QObject;
+class QPixmap;
+class QPushButton;
+class QShowEvent;
+class QSplitter;  // lines 36-36
+class QTextBrowser;  // lines 37-37
+class QTreeWidget;  // lines 38-38
+class QTreeWidgetItem;  // lines 39-39
+class QVBoxLayout;  // lines 40-40
+class help_widget;  // lines 42-42
+struct help_item;  // lines 32-32
 
 class help_dialog : public qfc_dialog {
   Q_OBJECT

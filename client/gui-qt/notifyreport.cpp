@@ -40,6 +40,7 @@
 #include "chatline_common.h"
 #include "client_main.h"
 #include "control.h"
+#include "dialogs_g.h"
 #include "helpdata.h"
 #include "mapview_common.h"
 #include "packhand.h"
@@ -50,7 +51,9 @@
 #include "dialogs.h"
 #include "notifyreport.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "hudwidget.h"
+#include "mapview.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
 

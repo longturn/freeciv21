@@ -13,53 +13,51 @@
 #ifndef FC__CITYDLG_H
 #define FC__CITYDLG_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "fc_types.h"
 // Qt
+#include "fc_types.h"
 #include <QDialog>
 #include <QElapsedTimer>
 #include <QItemDelegate>
 #include <QLabel>
-#include <QtMath>
-
-class city_dialog;
-class QCheckBox;
-class QComboBox;
-class QDialog;
-class QGridLayout;
-class QGroupBox;
-class QHBoxLayout;
-class QProgressBar;
-class QPushButton;
-class QRadioButton;
-class QSplitter;
-class QTableView;
-class QTableWidget;
-class QTabWidget;
-class QVariant;
-class QVBoxLayout;
-
-#define NUM_INFO_FIELDS 15
-
-// common
-#include "unittype.h"
-
-// client
-#include "canvas.h"
-
-// gui-qt
-#include "dialogs.h"
-#include "fonts.h"
-
-// Qt
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QToolTip>
+#include <QtMath>
+// gui-qt
+#include "dialogs.h"
 
-class QImage;
+class QAction;
+class QCheckBox;
+class QCloseEvent;
+class QContextMenuEvent;
+class QEvent;
+class QFont;
+class QGridLayout;
+class QGroupBox;
+class QHBoxLayout;
+class QHideEvent;
+class QItemSelection;
+class QMenu;
+class QMouseEvent;
+class QPaintEvent;
+class QPainter;
+class QPushButton;
+class QRadioButton;
+class QRect;
+class QResizeEvent;
+class QShowEvent;
+class QSlider;
+class QSplitter;
+class QTableWidget;
+class QTableWidgetItem;
+class QTimerEvent;
+class QVBoxLayout;
+class QVariant;
+class QWheelEvent;
 class fc_tooltip;
+struct canvas;
+#define NUM_INFO_FIELDS 15
 /****************************************************************************
   Custom progressbar with animated progress and right click event
 ****************************************************************************/
@@ -433,7 +431,7 @@ class city_dialog : public qfc_dialog {
   QSlider *slider_tab[2 * O_LAST + 2];
 
 public:
-  static city_dialog* instance();
+  static city_dialog *instance();
   static void drop();
   ~city_dialog();
   void setup_ui(struct city *qcity);
@@ -444,7 +442,7 @@ public:
 
 private:
   city_dialog(QWidget *parent = 0);
-  static city_dialog* m_instance;
+  static city_dialog *m_instance;
   int current_building;
   void update_title();
   void update_building();

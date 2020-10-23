@@ -20,19 +20,19 @@
 
 #include "messagewin_g.h"
 
-// Qt
-#include <QWidget>
-
 // qt-client
-#include "chatline.h"
-#include "mapview.h"
-
-class QEvent;
-class QGridLayout;
-class QItemSelection;
-class QMouseEvent;
-class QPixmap;
-class QTableWidget;
+#include "widgetdecorations.h"  // for fcwidget, move_widget (ptr only)
+class QEvent;  // lines 30-30
+class QGridLayout;  // lines 31-31
+class QItemSelection;  // lines 32-32
+class QMouseEvent;  // lines 33-33
+class QObject;
+class QPaintEvent;
+class QPainter;
+class QPixmap;  // lines 34-34
+class QResizeEvent;
+class QTableWidget;  // lines 35-35
+class chatwdg;
 
 /***************************************************************************
   Class representing message output

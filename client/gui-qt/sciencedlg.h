@@ -13,7 +13,15 @@
 
 #include "repodlgs_g.h"
 
-class progress_bar;
+#include "fc_types.h"     // for Tech_type_id
+class QComboBox;
+class QGridLayout;
+class QLabel;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QScrollArea;
+class progress_bar;  // lines 16-16
 
 /****************************************************************************
   Helper item for research diagram, about drawn rectangles and what

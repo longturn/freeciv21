@@ -9,7 +9,11 @@
 
 #include "repodlgs_g.h"
 
-class QTableWidget;
+#include <QObject>  // for Q_OBJECT
+#include <QString>      // for QString
+#include <QWidget>      // for QWidget
+class QObject;
+class QTableWidget;  // lines 12-12
 
 /****************************************************************************
   Tab widget to display economy report (F5)

@@ -43,7 +43,9 @@
 
 // client
 #include "client_main.h"
+#include "clinet.h"
 #include "editgui_g.h"
+#include "mapview_g.h"
 #include "options.h"
 #include "sprite.h"
 #include "themes_common.h"
@@ -55,6 +57,7 @@
 #include "gui_main.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
+#include "messagewin.h"
 #include "qtg_cxxside.h"
 
 extern "C" void real_science_report_dialog_update(void *);

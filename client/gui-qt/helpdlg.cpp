@@ -35,20 +35,23 @@
 #include "fcintl.h"
 
 // common
+#include "government.h"
 #include "movement.h"
 #include "nation.h"
 #include "specialist.h"
 #include "terrain.h"
-#include "unit.h"
 
 // client
+#include "client_main.h"
 #include "helpdata.h"
+#include "mapview_common.h"
 
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
 #include "sprite.h"
+#include "qtg_cxxside.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
 #define REQ_LABEL_NEVER _("(Never)")

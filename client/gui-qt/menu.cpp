@@ -40,23 +40,31 @@
 #include "unit.h"
 
 // client
+#include "cityrep_g.h"
+#include "client_main.h"
+#include "clinet.h"
 #include "connectdlg_common.h"
 #include "control.h"
 #include "helpdata.h"
 #include "mapview_common.h"
+#include "ratesdlg_g.h"
 #include "tilespec.h"
 
 // gui-qt
+#include "canvas.h"
 #include "chatline.h"
 #include "cityrep.h"
 #include "dialogs.h"
 #include "economyreport.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "gotodlg.h"
 #include "gui_main.h"
 #include "hudwidget.h"
 #include "mapctrl.h"
+#include "mapview.h"
 #include "messageoptions.h"
+#include "messagewin.h"
 #include "minimap.h"
 #include "plrdlg.h"
 #include "ratesdlg.h"
@@ -64,6 +72,7 @@
 #include "sciencedlg.h"
 #include "spaceshipdlg.h"
 #include "sprite.h"
+#include "qtg_cxxside.h"
 
 #include "menu.h"
 

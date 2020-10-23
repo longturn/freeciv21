@@ -14,32 +14,36 @@
 #ifndef FC__DIALOGS_H
 #define FC__DIALOGS_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "dialogs_g.h"
-
 // Qt
 #include <QDialog>
 #include <QMessageBox>
 #include <QVariant>
 
+#include "dialogs_g.h"
+#include "fc_types.h"
 // gui-qt
-#include "fonts.h"
 #include "hudwidget.h"
-#include "mapview.h"
+#include "hudwidget.h"
+#include "widgetdecorations.h"
 #include "widgetdecorations.h"
 
-class QComboBox;
-class QGridLayout;
-class QGroupBox;
-class QItemSelection;
-class QRadioButton;
-class QTableView;
-class QTableWidget;
-class QTextEdit;
-class QWidget;
+class QCloseEvent;
+class QComboBox;   // lines 34-34
+class QGridLayout; // lines 35-35
+class QHBoxLayout;
+class QItemSelection; // lines 37-37
+class QKeyEvent;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
+class QRadioButton; // lines 38-38
+class QTableWidget; // lines 40-40
+class QTextEdit;    // lines 41-41
+class QVBoxLayout;
+class QWheelEvent;
+struct tile;
+struct unit;
 
 typedef void (*pfcn_void)(QVariant, QVariant);
 void update_nationset_combo();

@@ -17,15 +17,19 @@
 #include <QToolTip>
 
 // common
+#include "game.h"
+#include "government.h"
 #include "research.h"
 
 // client
+#include "client_main.h"
 #include "helpdata.h"
 #include "reqtree.h"
 #include "sprite.h"
 #include "text.h"
 
 // gui-qt
+#include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
 #include "sidebar.h"

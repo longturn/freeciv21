@@ -30,9 +30,11 @@
 #include "research.h"
 
 // client
+#include "client_main.h"
 #include "climisc.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
+#include "mapview_g.h"
 #include "mapview_common.h"
 #include "menu.h" // gov_menu
 #include "movement.h"
@@ -44,8 +46,11 @@
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
+#include "fonts.h"
+#include "hudwidget.h"
 #include "icons.h"
 #include "mapview.h"
+#include "messagewin.h"
 #include "minimap.h"
 #include "sciencedlg.h"
 #include "qtg_cxxside.h"

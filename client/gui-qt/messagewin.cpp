@@ -22,12 +22,14 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QStyleFactory>
+#include <QTableWidget>
 
 // client
 #include "messagewin_common.h"
 
 // gui-qt
 #include "fc_client.h"
+#include "mapview.h"
 #include "messagewin.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"

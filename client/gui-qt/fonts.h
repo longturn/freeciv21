@@ -17,9 +17,6 @@
 // Qt
 #include <QMap>
 
-// gui-qt
-#include "listener.h"
-
 class QFont;
 class QStringList;
 

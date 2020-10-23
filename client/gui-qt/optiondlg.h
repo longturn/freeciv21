@@ -23,12 +23,7 @@
 // qt-client
 #include <dialogs.h>
 
-class Qdialog;
-class QVBoxLayout;
-class QTabWidget;
-class QDialogButtonBox;
-class QWidget;
-class QString;
+struct option_set;
 
 QString split_text(const QString &text, bool cut);
 QString cut_helptext(const QString &text);

@@ -32,6 +32,7 @@
 
 // gui-qt
 #include "fc_client.h"
+#include "hudwidget.h"
 #include "shortcuts.h"
 
 extern void real_menus_init();

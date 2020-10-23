@@ -21,11 +21,16 @@
 #include <QPushButton>
 #include <QWidget>
 
-class QGridLayout;
-class QHBoxLayout;
-class QItemSelection;
-class QTableWidget;
-class QTableWidgetItem;
+#include "widgetdecorations.h"  // for close_widget (ptr only), fcwidget
+
+class QEvent;
+class QHBoxLayout;  // lines 25-25
+class QObject;
+class QPaintEvent;
+class QScrollArea;
+class QWheelEvent;
+struct unit_type;
+
 
 class unittype_item : public QFrame {
 

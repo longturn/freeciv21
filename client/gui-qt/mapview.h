@@ -22,22 +22,21 @@
 #include <fc_config.h>
 #endif
 
-#include "mapview_g.h"
-
-// gui-qt
-#include "fonts.h"
-
 // Qt
 #include <QFrame>
 #include <QLabel>
-#include <QMutex>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
 
-// Forward declarations
-class QMutex;
-class QPixmap;
+#include "tilespec.h"     // for cursor_type
+class QEvent;
+class QFocusEvent;
+class QKeyEvent;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
 
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye);
 void unscale_point(double scale_factor, int &x, int &y);

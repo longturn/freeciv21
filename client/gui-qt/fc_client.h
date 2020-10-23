@@ -14,14 +14,6 @@
 #ifndef FC__FC_CLIENT_H
 #define FC__FC_CLIENT_H
 
-// In this case we have to include fc_config.h from header file.
-// Some other headers we include demand that fc_config.h must be
-// included also. Usually all source files include fc_config.h, but
-// there's moc generated meta_fc_client.cpp file which does not.
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 // Qt
 #include <QMainWindow>
 #include <QPixmapCache>
@@ -31,28 +23,15 @@
 #include "packets.h"
 
 // client
-#include "chatline_common.h"
-#include "client_main.h"
-#include "climisc.h"
-#include "clinet.h"
-#include "mapview_common.h"
+#include "pages_g.h"
 #include "servers.h"
 #include "tilespec.h"
 
 // gui-qt
-#include "canvas.h"
 #include "chatline.h"
-#include "dialogs.h"
-#include "fonts.h"
-#include "gotodlg.h"
 #include "idlecallback.h"
-#include "mapview.h"
 #include "menu.h"
-#include "messagewin.h"
-#include "pages.h"
-#include "ratesdlg.h"
 #include "tradecalculation.h"
-#include "voteinfo_bar.h"
 
 enum connection_state {
   LOGIN_TYPE,
@@ -61,27 +40,47 @@ enum connection_state {
   WAITING_TYPE
 };
 
-class fc_sidebar;
-class fc_sidetax;
-class fc_sidewidget;
-class minimap_view;
-class MainWindow;
-class pregame_options;
-class QApplication;
-class QDialog;
-class QLabel;
-class QLineEdit;
-class QMainWindow;
-class QSocketNotifier;
-class QSpinBox;
-class QStackedLayout;
-class QStatusBar;
-class QString;
-class QTableWidget;
-class QTextEdit;
-class QTimer;
-class QTreeWidget;
-struct fc_shortcut;
+class QApplication;  // lines 70-70
+class QCheckBox;
+class QCloseEvent;
+class QComboBox;
+class QCursor;
+class QDialogButtonBox;
+class QEvent;
+class QGridLayout;
+class QItemSelection;
+class QKeyEvent;
+class QLabel;  // lines 72-72
+class QLineEdit;  // lines 73-73
+class QObject;
+class QPoint;
+class QPushButton;
+class QResizeEvent;
+class QSocketNotifier;  // lines 75-75
+class QSpinBox;  // lines 76-76
+class QStackedLayout;  // lines 77-77
+class QStatusBar;  // lines 78-78
+class QTableWidget;  // lines 80-80
+class QTextEdit;  // lines 81-81
+class QTimer;  // lines 82-82
+class QTimerEvent;
+class QTreeWidget;  // lines 83-83
+class choice_dialog;
+class fc_sidebar;  // lines 64-64
+class fc_sidewidget;  // lines 66-66
+class goto_dialog;
+class hud_battle_log;
+class hud_units;
+class info_tab;
+class info_tile;
+class map_view;
+class messagewdg;
+class minimap_view;  // lines 67-67
+class pregame_options;  // lines 69-69
+class pregamevote;
+class units_select;
+class xvote;
+struct server_scan;
 
 /****************************************************************************
   Widget holding all game tabs

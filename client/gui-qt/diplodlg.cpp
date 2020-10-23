@@ -25,12 +25,16 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QTableWidget>
 
 // utility
 #include "fcintl.h"
 // common
+#include "climisc.h"
+#include "game.h"
 #include "government.h"
 #include "player.h"
+#include "research.h"
 
 // client
 #include "client_main.h"
@@ -39,9 +43,11 @@
 // gui-qt
 #include "colors.h"
 #include "diplodlg.h"
+#include "diplodlg_g.h"
 #include "fc_client.h"
 #include "icons.h"
 #include "sidebar.h"
+#include "sprite.h"
 
 typedef advance *p_advance;
 typedef city *p_city;

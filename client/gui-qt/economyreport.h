@@ -9,19 +9,18 @@
 
 #include "repodlgs_g.h"
 
-// gui-qt
-#include "mapview.h"
-
 // Qt
 #include <QLabel>
 #include <QPushButton>
 #include <QWidget>
 
-class QGridLayout;
-class QHBoxLayout;
-class QItemSelection;
-class QTableWidget;
-class QTableWidgetItem;
+#include "climisc.h"      // for cid
+
+class QItemSelection;  // lines 22-22
+class QLabel;
+class QObject;
+class QPushButton;
+class QTableWidget;  // lines 23-23
 
 /****************************************************************************
   Tab widget to display economy report (F5)

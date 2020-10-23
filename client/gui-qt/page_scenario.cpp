@@ -34,6 +34,7 @@
 
 // common
 #include "version.h"
+#include "chatline_common.h"
 #include "connectdlg_common.h"
 
 // gui-qt

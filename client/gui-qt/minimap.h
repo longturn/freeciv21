@@ -9,10 +9,6 @@
 
 #include "mapview_g.h"
 
-// gui-qt
-#include "mapview.h"
-#include "fonts.h"
-
 // Qt
 #include <QFrame>
 #include <QLabel>
@@ -21,9 +17,18 @@
 #include <QThread>
 #include <QTimer>
 
-// Forward declarations
-class QMutex;
-class QPixmap;
+#include "widgetdecorations.h"  // for fcwidget, resize_widget (ptr only)
+class QImage;
+class QMouseEvent;
+class QMoveEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
+class QPixmap;  // lines 26-26
+class QResizeEvent;
+class QShowEvent;
+class QWheelEvent;
+class QWidget;
 
 /**************************************************************************
   Thread helper for drawing minimap

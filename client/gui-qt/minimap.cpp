@@ -23,6 +23,7 @@
 
 // client
 #include "climisc.h"
+#include "client_main.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"

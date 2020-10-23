@@ -27,20 +27,25 @@
 #include <QTimer>
 
 // common
+#include "chatline_common.h"
+#include "government.h"
 #include "research.h"
 
 // client
 #include "client_main.h"
+#include "climisc.h"
+#include "ratesdlg_g.h"
 
 // gui-qt
 #include "fc_client.h"
+#include "fonts.h"
+#include "mapview.h"
 #include "sciencedlg.h"
 #include "sidebar.h"
 #include "sprite.h"
 
 extern void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                         int dest_x, int dest_y, int width, int height);
-
 static void reduce_mod(int &val, int &mod);
 
 /***********************************************************************/ /**

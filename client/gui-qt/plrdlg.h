@@ -20,28 +20,24 @@
 
 #include "plrdlg_g.h"
 
-// common
-#include "colors.h"
-#include "player.h"
-#include "research.h"
-
-// gui-qt
-#include "sprite.h"
-
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
 #include <QTreeView>
 #include <QWidget>
 
-class QHBoxLayout;
-class QLabel;
-class QPushButton;
-class QSortFilterProxyModel;
-class QSplitter;
-class QTableWidget;
-class QVBoxLayout;
-class plr_report;
+#include "plrdlg_common.h"       // for num_player_dlg_columns
+class QHBoxLayout;  // lines 37-37
+class QItemSelection;
+class QLabel;  // lines 38-38
+class QMouseEvent;
+class QPainter;
+class QPoint;
+class QPushButton;  // lines 39-39
+class QSortFilterProxyModel;  // lines 40-40
+class QSplitter;  // lines 41-41
+class QVBoxLayout;  // lines 43-43
+class plr_report;  // lines 44-44
 
 /***************************************************************************
   Item delegate for painting in model of nations view table

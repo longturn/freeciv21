@@ -2,12 +2,17 @@
 #include "tradecalculation.h"
 
 // common
+
 #include "city.h"
 #include "featured_text.h"
 #include "traderoutes.h"
-
+//client
+#include "chatline_common.h"  /* Help me, Im not in common */
+#include "client_main.h"
 // qt
 #include "fc_client.h"
+#include "mapview.h"
+#include "messagewin.h"
 
 static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
 

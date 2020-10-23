@@ -11,15 +11,11 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 /* utility */
-#include "mem.h"
-
+#include "rgbcolor.h"
 // gui-qt
 #include "colors.h"
+#include "colors_g.h"
 #include "qtg_cxxside.h"
 
 /************************************************************************/ /**

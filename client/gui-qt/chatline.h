@@ -14,25 +14,21 @@
 #ifndef FC__CHATLINE_H
 #define FC__CHATLINE_H
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "chatline_g.h"
-
 // Qt
 #include <QEvent>
 #include <QLineEdit>
 #include <QTextBrowser>
-
 // gui-qt
-#include "fonts.h"
-#include "listener.h"
+#include "listener.h"      // for listener
 
-class chat_listener;
-class QCheckBox;
-class QMouseEvent;
-class QPushButton;
+class QCheckBox;  // lines 33-33
+class QMouseEvent;  // lines 34-34
+class QObject;
+class QPaintEvent;
+class QPainter;
+class QPushButton;  // lines 35-35
+class QUrl;
+class chat_listener;  // lines 32-32
 
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color);

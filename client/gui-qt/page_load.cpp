@@ -21,7 +21,9 @@
 #include <QFileDialog>
 #include <QGridLayout>
 #include <QHeaderView>
+#include <QLabel>
 #include <QLineEdit>
+#include <QPushButton>
 #include <QPainter>
 #include <QSplitter>
 #include <QStackedWidget>
@@ -33,12 +35,13 @@
 #include "fcintl.h"
 
 // common
+#include "chatline_common.h"
 #include "connectdlg_common.h"
-#include "version.h"
+
+// client
+#include "options.h"
 
 // gui-qt
-#include "colors.h"
-#include "dialogs.h"
 #include "fc_client.h"
 
 

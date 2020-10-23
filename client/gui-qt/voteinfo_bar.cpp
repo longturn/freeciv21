@@ -17,7 +17,9 @@
 
 // Qt
 #include <QGridLayout>
+#include <QLabel>
 #include <QPainter>
+#include <QPushButton>
 
 // client
 #include "voteinfo.h"

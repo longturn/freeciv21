@@ -22,24 +22,17 @@
 #include <QMap>
 #include <QTabWidget>
 
-#include "diplodlg_g.h"
-
 // common
-#include "research.h"
+#include "diptreaty.h"    // for Treaty
 
-//  client
-#include "game.h"
-#include "sprite.h"
-#include "tilespec.h"
-
-class QCloseEvent;
-class QGridLayout;
-class QIcon;
-class QLabel;
-class QPushButton;
-class QSpinBox;
-class QTableWidget;
-class QTableWidgetItem;
+class QCloseEvent;  // lines 35-35
+class QGridLayout;  // lines 36-36
+class QLabel;  // lines 38-38
+class QObject;
+class QPushButton;  // lines 39-39
+class QSpinBox;  // lines 40-40
+class QTableWidget;  // lines 41-41
+class QTableWidgetItem;  // lines 42-42
 
 /****************************************************************************
   Diplomacy tab for one nation

@@ -23,7 +23,7 @@
 // gui-qt
 #include "canvas.h"
 #include "pages.h"
-
+#include "pages_g.h"
 void setup_gui_funcs();
 
 void qtg_ui_init();

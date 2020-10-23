@@ -15,10 +15,8 @@
 #define FC__CANVAS_H
 
 #include "canvas_g.h"
-
 // Qt
 #include <QPixmap>
-
 struct canvas {
   QPixmap map_pixmap;
 };

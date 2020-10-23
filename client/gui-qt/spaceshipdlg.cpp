@@ -18,6 +18,7 @@
 // Qt
 #include <QGridLayout>
 #include <QLabel>
+#include <QPushButton>
 
 // common
 #include "game.h"
@@ -25,6 +26,7 @@
 
 // client
 #include "client_main.h"
+#include "mapview_common.h"
 
 // gui-qt
 #include "canvas.h"
