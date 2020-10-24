@@ -119,6 +119,10 @@ void send_all_info(struct conn_list *dest);
 void identity_number_release(int id);
 void identity_number_reserve(int id);
 int identity_number(void);
+
+void srv_ready();
+void srv_scores();
+
 void server_game_init(bool keep_ruleset_value);
 void server_game_free(void);
 const char *aifill(int amount);

@@ -45,6 +45,7 @@ private slots:
 
   // Higher-level stuff
   void prepare_game(bool initial = false);
+  void update_game_state();
   void shut_game_down();
 
 private:

@@ -413,6 +413,7 @@ void server::error_on_socket()
   conn_list_iterate_end
 
   really_close_connections();
+  update_game_state();
 }
 
 /*************************************************************************/ /**
@@ -446,6 +447,7 @@ void server::input_on_socket()
   conn_list_iterate_end
 
   really_close_connections();
+  update_game_state();
 }
 
 /*************************************************************************/ /**
@@ -475,6 +477,8 @@ void server::input_on_stdin()
       free(non_const_line);
     }
   }
+
+  update_game_state();
 }
 
 /*************************************************************************/ /**
@@ -503,6 +507,32 @@ void server::prepare_game(bool initial)
 
   log_normal(_("Now accepting new client connections on port %d."),
              srvarg.port);
+}
+
+/*************************************************************************/ /**
+   Checks if the game state has changed and take action if appropriate.
+ *****************************************************************************/
+void server::update_game_state()
+{
+  // Set eg in game_start.
+  if (force_end_of_sniff) {
+    force_end_of_sniff = false;
+
+    if (S_S_RUNNING > server_state()) {
+      // If restarting for lack of players, the state is S_S_OVER,
+      // so don't try to start the game.
+      srv_ready(); // srv_ready() sets server state to S_S_RUNNING.
+                   //       srv_running(); FIXME convert to use Qt event loop
+                   //       srv_scores();
+    }
+  }
+
+  // All clients disconnected
+  // FIXME need extra conditions here or the game is reset every time a
+  // command is entered
+  if (conn_list_size(game.est_connections) == 0) {
+    shut_game_down();
+  }
 }
 
 /*************************************************************************/ /**

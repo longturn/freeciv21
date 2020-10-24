@@ -3037,7 +3037,7 @@ static void srv_running(void)
 /**********************************************************************/ /**
    Score calculation.
  **************************************************************************/
-static void srv_scores(void)
+void srv_scores()
 {
   /* Recalculate the scores in case of a spaceship victory */
   players_iterate(pplayer) { calc_civ_score(pplayer); }
@@ -3091,7 +3091,7 @@ static void final_ruleset_adjustments(void)
 /**********************************************************************/ /**
    Set up one game.
  **************************************************************************/
-static void srv_ready(void)
+void srv_ready()
 {
   (void) send_server_info_to_metaserver(META_INFO);
 
