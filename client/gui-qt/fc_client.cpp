@@ -43,6 +43,7 @@
 #include "minimap.h"
 #include "optiondlg.h"
 #include "page_main.h"
+#include "page_load.h"
 #include "sidebar.h"
 #include "sprite.h"
 #include "voteinfo_bar.h"
@@ -159,8 +160,7 @@ void fc_client::init()
   create_scenario_page();
 
   // PAGE_LOAD
-  pages[PAGE_LOAD] = new QWidget(central_wdg);
-  create_load_page();
+  pages[PAGE_LOAD] = new page_load(central_wdg, this);
 
   // PAGE_NETWORK
   pages[PAGE_NETWORK] = new QWidget(central_wdg);
@@ -184,7 +184,7 @@ void fc_client::init()
 
   //pages[PAGE_MAIN]->setLayout(pages_layout[PAGE_MAIN]);
   pages[PAGE_NETWORK]->setLayout(pages_layout[PAGE_NETWORK]);
-  pages[PAGE_LOAD]->setLayout(pages_layout[PAGE_LOAD]);
+  //pages[PAGE_LOAD]->setLayout(pages_layout[PAGE_LOAD]);
   pages[PAGE_SCENARIO]->setLayout(pages_layout[PAGE_SCENARIO]);
   pages[PAGE_START]->setLayout(pages_layout[PAGE_START]);
   pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
@@ -333,7 +333,7 @@ void fc_client::switch_page(int new_pg)
     voteinfo_gui_update();
     break;
   case PAGE_LOAD:
-    update_load_page();
+    qobject_cast<page_load *>(pages[PAGE_LOAD])->update_load_page();
     break;
   case PAGE_GAME:
     if (!gui_options.gui_qt_show_titlebar) {

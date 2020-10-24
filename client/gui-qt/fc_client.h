@@ -264,7 +264,7 @@ private slots:
   void slot_lan_scan();
   void slot_meta_scan();
   void slot_connect();
-  void slot_disconnect();
+
   void slot_pregame_observe();
   void slot_pregame_start();
   void update_network_lists();
@@ -272,13 +272,12 @@ private slots:
   void slot_pick_nation();
 
   void start_scenario();
-  void start_from_save();
-  void browse_saves();
+
   void browse_scenarios();
   void clear_status_bar();
-  void state_preview(int);
 
 public slots:
+  void slot_disconnect();
   void start_new_game();
   void switch_page(int i);
   void popup_client_options();
@@ -305,7 +304,6 @@ private:
   void update_server_list(enum server_scan_type sstype,
                           const struct server_list *list);
   bool check_server_scan(server_scan *scan_data);
-  void update_load_page(void);
   void create_cursors(void);
   void delete_cursors(void);
   void update_scenarios_page(void);

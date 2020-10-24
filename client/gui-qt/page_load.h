@@ -14,6 +14,28 @@
 #ifndef FC__PAGE_LOAD_H
 #define FC__PAGE_LOAD_H
 
-/* TODO */
+#include "ui_page_load.h"
+#include <QWidget>
+class fc_client;
+
+class page_load : public QWidget
+{
+    Q_OBJECT
+    public:
+    page_load(QWidget *, fc_client *);
+    ~page_load();
+    void update_load_page(void);
+private slots:
+  void slot_selection_changed(const QItemSelection &,
+                              const QItemSelection &);
+  void state_preview(int);
+  void browse_saves();
+
+private:
+  void start_from_save();
+  fc_client* gui;
+  Ui::FormPageLoad ui;
+  QString current_file;
+};
 
 #endif /* FC__PAGE_LOAD_H */
