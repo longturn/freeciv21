@@ -564,44 +564,6 @@ enum server_events server_sniff_all_input(void)
     if (excepting) { /* handle Ctrl-Z suspend/resume */
       continue;
     }
-    // TODO QTcpSocket::readyRead()
-    { /* input from a player */
-      for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-        struct connection *pconn = connections + i;
-        int nb;
-
-        if (!pconn->used || pconn->server.is_closing
-            || !FD_ISSET(pconn->sock, &readfs)) {
-          continue;
-        }
-
-        nb = read_socket_data(pconn->sock, pconn->buffer);
-        if (0 <= nb) {
-          /* We read packets; now handle them. */
-          incoming_client_packets(pconn);
-        } else if (-2 == nb) {
-          connection_close_server(pconn, _("client disconnected"));
-        } else {
-          /* Read failure; the connection is closed. */
-          connection_close_server(pconn, _("read error"));
-        }
-      }
-
-      for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
-        struct connection *pconn = &connections[i];
-
-        if (pconn->used && !pconn->server.is_closing && pconn->send_buffer
-            && pconn->send_buffer->ndata > 0) {
-          if (FD_ISSET(pconn->sock, &writefs)) {
-            flush_connection_send_buffer_all(pconn);
-          } else {
-            cut_lagging_connection(pconn);
-          }
-        }
-      }
-      really_close_connections();
-      break;
-    }
   }
   con_prompt_off();
 

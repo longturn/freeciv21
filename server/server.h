@@ -37,10 +37,15 @@ public:
   virtual ~server();
 
 private slots:
+  // Low-level stuff
   void error_on_socket();
   void input_on_socket();
   void input_on_stdin();
   void accept_connections();
+
+  // Higher-level stuff
+  void prepare_game(bool initial = false);
+  void shut_game_down();
 
 private:
   void init_interactive();

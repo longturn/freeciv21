@@ -42,6 +42,7 @@
 
 // utility
 #include "fciconv.h" // local_to_internal_string_malloc
+#include "rand.h"
 
 // common
 #include "fc_interface.h"
@@ -55,7 +56,9 @@
 #include "maphand.h"
 #include "mapimg.h"
 #include "meta.h"
+#include "notify.h"
 #include "ruleset.h"
+#include "savemain.h"
 #include "sernet.h"
 #include "settings.h"
 #include "srv_main.h"
@@ -267,6 +270,10 @@ server::server()
           });
 
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
+
+  // Prepare a game
+  // true because this is the first game in this server's lifetime
+  prepare_game(true);
 }
 
 /*************************************************************************/ /**
@@ -468,4 +475,54 @@ void server::input_on_stdin()
       free(non_const_line);
     }
   }
+}
+
+/*************************************************************************/ /**
+   Prepares for a new game.
+ *****************************************************************************/
+void server::prepare_game(bool initial)
+{
+  // This is called both when starting the server and when restarting after
+  // all clients have disconnected. 'initial' is true when starting.
+  if (!initial) {
+    shut_game_down();
+  }
+
+  set_server_state(S_S_INITIAL);
+
+  /* Load a script file. */
+  if (NULL != srvarg.script_filename) {
+    /* Adding an error message more here will duplicate them. */
+    (void) read_init_script(NULL, srvarg.script_filename, TRUE, FALSE);
+  }
+
+  (void) aifill(game.info.aifill);
+  if (!game_was_started()) {
+    event_cache_clear();
+  }
+
+  log_normal(_("Now accepting new client connections on port %d."),
+             srvarg.port);
+}
+
+/*************************************************************************/ /**
+   Shuts a game down when all players have left.
+ *****************************************************************************/
+void server::shut_game_down()
+{
+  /* Close it even between games. */
+  save_system_close();
+
+  if (game.info.timeout == -1 || srvarg.exit_on_end) {
+    /* For autogames or if the -e option is specified, exit the server. */
+    server_quit();
+  }
+
+  /* Reset server */
+  server_game_free();
+  fc_rand_uninit();
+  server_game_init(FALSE);
+  mapimg_reset();
+  load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
+  game.info.is_new_game = TRUE;
 }
