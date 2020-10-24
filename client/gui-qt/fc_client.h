@@ -270,7 +270,7 @@ private slots:
   void update_network_lists();
   void start_page_menu(QPoint);
   void slot_pick_nation();
-  void start_new_game();
+
   void start_scenario();
   void start_from_save();
   void browse_saves();
@@ -279,6 +279,7 @@ private slots:
   void state_preview(int);
 
 public slots:
+  void start_new_game();
   void switch_page(int i);
   void popup_client_options();
   void update_info_label();

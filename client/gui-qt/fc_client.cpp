@@ -42,6 +42,7 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "optiondlg.h"
+#include "page_main.h"
 #include "sidebar.h"
 #include "sprite.h"
 #include "voteinfo_bar.h"
@@ -145,9 +146,9 @@ void fc_client::init()
   create_cursors();
 
   // PAGE_MAIN
-  pages[PAGE_MAIN] = new QWidget(central_wdg);
+  pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
-  create_main_page();
+
 
   // PAGE_START
   pages[PAGE_START] = new QWidget(central_wdg);
@@ -181,7 +182,7 @@ void fc_client::init()
 
   pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
 
-  pages[PAGE_MAIN]->setLayout(pages_layout[PAGE_MAIN]);
+  //pages[PAGE_MAIN]->setLayout(pages_layout[PAGE_MAIN]);
   pages[PAGE_NETWORK]->setLayout(pages_layout[PAGE_NETWORK]);
   pages[PAGE_LOAD]->setLayout(pages_layout[PAGE_LOAD]);
   pages[PAGE_SCENARIO]->setLayout(pages_layout[PAGE_SCENARIO]);

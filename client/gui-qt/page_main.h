@@ -11,6 +11,19 @@
 #ifndef FC__PAGE_MAIN_H
 #define FC__PAGE_MAIN_H
 
-/* TODO */
+#include <QWidget>
+
+class fc_client;
+#include "ui_page_main.h"
+
+class page_main : public QWidget
+{
+    Q_OBJECT
+    public:
+    page_main(QWidget *, fc_client*);
+    ~page_main();
+private:
+  Ui::Form ui;
+};
 
 #endif /* FC__PAGE_MAIN_H */

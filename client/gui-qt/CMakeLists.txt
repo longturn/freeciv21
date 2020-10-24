@@ -1,5 +1,6 @@
 set(CMAKE_AUTOMOC ON)
-
+set(CMAKE_AUTOUIC ON)
+include_directories( ${CMAKE_BINARY_DIR} )
 add_library(
   gui-qt
   STATIC
