@@ -141,7 +141,7 @@ void fc_client::init()
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
   pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
-
+  create_start_page();
   // PAGE_GAME
   gui_options.gui_qt_allied_chat_only = true;
   path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
@@ -158,7 +158,6 @@ void fc_client::init()
   pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
 
   pages[PAGE_START]->setLayout(pages_layout[PAGE_START]);
-  create_start_page();
   pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
 
