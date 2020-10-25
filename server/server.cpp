@@ -309,6 +309,9 @@ server::~server()
   if (m_eot_timer != nullptr) {
     timer_destroy(m_eot_timer);
   }
+  if (m_between_turns_timer != nullptr) {
+    timer_destroy(m_between_turns_timer);
+  }
 }
 
 /*************************************************************************/ /**
