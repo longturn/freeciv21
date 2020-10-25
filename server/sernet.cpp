@@ -260,38 +260,21 @@ static void cut_lagging_connection(struct connection *pconn)
  *****************************************************************************/
 void flush_packets(void)
 {
-  int i;
-  int max_desc;
-  fc_timeval tv;
-  time_t start;
+  for (int i = 0; i < MAX_NUM_CONNECTIONS; i++) { // check for freaky players
+    struct connection *pconn = &connections[i];
 
-  (void) time(&start);
-
-  for (;;) {
-    tv.tv_sec = (game.server.netwait - (time(NULL) - start));
-    tv.tv_usec = 0;
-
-    if (tv.tv_sec < 0) {
-      return;
-    }
-
-    for (i = 0; i < MAX_NUM_CONNECTIONS;
-         i++) { /* check for freaky players */
-      struct connection *pconn = &connections[i];
-
-      if (pconn->used && !pconn->server.is_closing) {
-        if (!pconn->sock->isOpen()) {
-          log_verbose("connection (%s) cut due to exception data",
-                      conn_description(pconn));
-          connection_close_server(pconn, _("network exception"));
-        } else {
-          if (pconn->send_buffer && pconn->send_buffer->ndata > 0) {
-            flush_connection_send_buffer_all(pconn);
-          }
-          // FIXME Handle connections not taking writes
-          // They should be cut instead of filling their buffer
-          // cut_lagging_connection(pconn);
+    if (pconn->used && !pconn->server.is_closing) {
+      if (!pconn->sock->isOpen()) {
+        log_verbose("connection (%s) cut due to exception data",
+                    conn_description(pconn));
+        connection_close_server(pconn, _("network exception"));
+      } else {
+        if (pconn->send_buffer && pconn->send_buffer->ndata > 0) {
+          flush_connection_send_buffer_all(pconn);
         }
+        // FIXME Handle connections not taking writes
+        // They should be cut instead of filling their buffer
+        // cut_lagging_connection(pconn);
       }
     }
   }
