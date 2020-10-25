@@ -567,6 +567,11 @@ void server::prepare_game()
 
   log_normal(_("Now accepting new client connections on port %d."),
              srvarg.port);
+
+  if (game.info.timeout == -1) {
+    // Autogame, start as soon as the event loop allows
+    QTimer::singleShot(0, this, &server::update_game_state);
+  }
 }
 
 /*************************************************************************/ /**
@@ -647,6 +652,11 @@ void server::begin_phase()
     game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
     log_debug("Inresponsive between turns %g seconds",
               game.server.turn_change_time);
+  }
+
+  if (game.info.timeout == -1) {
+    // Autogame, end phase as soon as the event loop allows
+    QTimer::singleShot(0, this, &server::end_phase);
   }
 }
 
@@ -731,6 +741,11 @@ void server::end_turn()
     timer_clear(m_eot_timer);
 
     srv_scores();
+
+    if (game.info.timeout == -1) {
+      // Autogame, end game immediately if nobody is connected
+      update_game_state();
+    }
   }
 }
 
@@ -773,11 +788,12 @@ void server::update_game_state()
     }
   }
 
-  // All clients disconnected
+  // Game over and all clients disconnected; restart if needed
   if (server_state() == S_S_OVER
       && conn_list_size(game.est_connections) == 0) {
-    shut_game_down();
-    prepare_game();
+    if (shut_game_down()) {
+      prepare_game();
+    }
   }
 
   // Set up the quitidle timer if not done already
@@ -806,9 +822,10 @@ void server::update_game_state()
 }
 
 /*************************************************************************/ /**
-   Shuts a game down when all players have left.
+   Shuts a game down when all players have left. Returns whether a new game
+   should be started.
  *****************************************************************************/
-void server::shut_game_down()
+bool server::shut_game_down()
 {
   /* Close it even between games. */
   save_system_close();
@@ -816,7 +833,7 @@ void server::shut_game_down()
   if (game.info.timeout == -1 || srvarg.exit_on_end) {
     /* For autogames or if the -e option is specified, exit the server. */
     server_quit();
-    return;
+    return false;
   }
 
   /* Reset server */
@@ -826,6 +843,7 @@ void server::shut_game_down()
   mapimg_reset();
   load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
   game.info.is_new_game = TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

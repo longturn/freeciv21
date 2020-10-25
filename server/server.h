@@ -52,7 +52,7 @@ private slots:
   void end_phase();
   void end_turn();
   void update_game_state();
-  void shut_game_down();
+  bool shut_game_down();
   void quit_idle();
   void pulse();
 
