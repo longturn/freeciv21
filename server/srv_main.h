@@ -116,6 +116,9 @@ void player_nation_defaults(struct player *pplayer,
                             struct nation_type *pnation, bool set_name);
 void send_all_info(struct conn_list *dest);
 
+void begin_turn(bool is_new_turn);
+void begin_phase(bool is_new_phase);
+
 void identity_number_release(int id);
 void identity_number_reserve(int id);
 int identity_number(void);

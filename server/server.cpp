@@ -222,6 +222,8 @@ QTcpServer *srv_prepare()
    Creates a server. It starts working as soon as there is an event loop.
  *****************************************************************************/
 server::server()
+    : m_is_new_turn(false), m_need_send_pending_events(false),
+      m_skip_mapimg(false)
 {
   // Get notifications when there's some input on stdin. This is OS-dependent
   // and Qt doesn't have a wrapper. Maybe it should be split to a separate
@@ -510,20 +512,114 @@ void server::prepare_game(bool initial)
 }
 
 /*************************************************************************/ /**
+   Do everything needed to start a new phase on top of calling begin_phase.
+ *****************************************************************************/
+void server::begin_phase()
+{
+  log_debug("Starting phase %d/%d.", game.info.phase,
+            game.server.num_phases);
+  ::begin_phase(m_is_new_turn);
+  if (m_need_send_pending_events) {
+    // When loading a savegame, we need to send loaded events, after
+    // the clients switched to the game page (after the first
+    // packet_start_phase is received).
+    conn_list_iterate(game.est_connections, pconn)
+    {
+      send_pending_events(pconn, true);
+    }
+    conn_list_iterate_end;
+    m_need_send_pending_events = false;
+  }
+
+  m_is_new_turn = true;
+
+  // This will thaw the reports and agents at the client.
+  lsend_packet_thaw_client(game.est_connections);
+
+#ifdef LOG_TIMERS
+  // Before sniff (human player activites), report time to now:
+  log_verbose("End/start-turn server/ai activities: %g seconds",
+              timer_read_seconds(m_eot_timer));
+#endif
+
+  // Do auto-saves just before starting server_sniff_all_input(), so that
+  // autosave happens effectively "at the same time" as manual
+  // saves, from the point of view of restarting and AI players.
+  // Post-increment so we don't count the first loop.
+  if (game.info.phase == 0) {
+    // Create autosaves if requested.
+    if (m_save_counter >= game.server.save_nturns
+        && game.server.save_nturns > 0) {
+      m_save_counter = 0;
+      save_game_auto("Autosave", AS_TURN);
+    }
+    m_save_counter++;
+
+    if (!m_skip_mapimg) {
+      // Save map image(s).
+      for (int i = 0; i < mapimg_count(); i++) {
+        struct mapdef *pmapdef = mapimg_isvalid(i);
+        if (pmapdef != NULL) {
+          mapimg_create(pmapdef, FALSE, game.server.save_name,
+                        srvarg.saves_pathname);
+        } else {
+          log_error("%s", mapimg_error());
+        }
+      }
+    } else {
+      m_skip_mapimg = FALSE;
+    }
+  }
+
+  log_debug("sniffingpackets");
+  check_for_full_turn_done(); // HACK: don't wait during AI phases
+
+  if (m_between_turns_timer != NULL) {
+    game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
+    log_debug("Inresponsive between turns %g seconds",
+              game.server.turn_change_time);
+  }
+}
+
+/*************************************************************************/ /**
    Checks if the game state has changed and take action if appropriate.
  *****************************************************************************/
 void server::update_game_state()
 {
-  // Set eg in game_start.
+  // Set in the following cases:
+  // - in pregame: game start
+  // - during the game: turn done, end game and any other command affecting
+  //                    game speed
+  // It basically says: I got a command that requires to get out of the usual
+  // "wait for clients to send stuff" mode.
   if (force_end_of_sniff) {
     force_end_of_sniff = false;
 
-    if (S_S_RUNNING > server_state()) {
+    if (server_state() < S_S_RUNNING) {
+      // Pregame: start the game
       // If restarting for lack of players, the state is S_S_OVER,
       // so don't try to start the game.
       srv_ready(); // srv_ready() sets server state to S_S_RUNNING.
                    //       srv_running(); FIXME convert to use Qt event loop
                    //       srv_scores();
+
+      timer_start(m_eot_timer);
+
+      // This will freeze the reports and agents at the client.
+      //
+      // Do this before the starting the turn so that the PACKET_THAW_CLIENT
+      // packet in begin_turn is balanced.
+      lsend_packet_freeze_client(game.est_connections);
+
+      // Start the first turn
+      begin_turn(game.info.is_new_game);
+
+      // Start the first phase
+      m_need_send_pending_events = !game.info.is_new_game;
+      m_is_new_turn = game.info.is_new_game;
+      m_save_counter = game.info.is_new_game ? 1 : 0;
+      m_skip_mapimg = !game.info.is_new_game;
+      begin_phase();
     }
   }
 

@@ -1119,7 +1119,7 @@ static void ai_start_phase(void)
    Note: This does not give "time" to any player;
          it is solely for updating turn-dependent data.
  **************************************************************************/
-static void begin_turn(bool is_new_turn)
+void begin_turn(bool is_new_turn)
 {
   log_debug("Begin turn");
 
@@ -1222,13 +1222,21 @@ static void begin_turn(bool is_new_turn)
   }
 
   sanity_check();
+
+  if (game.server.num_phases != 1) {
+    // We allow everyone to begin adjusting cities and such
+    // from the beginning of the turn.
+    // With simultaneous movement we send begin_turn packet in
+    // begin_phase() only after AI players have finished their actions.
+    lsend_packet_begin_turn(game.est_connections);
+  }
 }
 
 /**********************************************************************/ /**
    Begin a phase of movement.  This handles all beginning-of-phase actions
    for one or more players.
  **************************************************************************/
-static void begin_phase(bool is_new_phase)
+void begin_phase(bool is_new_phase)
 {
   log_debug("Begin phase");
 
@@ -2863,20 +2871,6 @@ static void srv_running(void)
   bool need_send_pending_events = !game.info.is_new_game;
   int save_counter = game.info.is_new_game ? 1 : 0;
 
-  /* We may as well reset is_new_game now. */
-  game.info.is_new_game = FALSE;
-
-  log_verbose("srv_running() mostly redundant send_server_settings()");
-  send_server_settings(NULL);
-
-  timer_start(eot_timer);
-
-  if (game.server.autosaves & (1 << AS_TIMER)) {
-    game.server.save_timer =
-        timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
-    timer_start(game.server.save_timer);
-  }
-
   /*
    * This will freeze the reports and agents at the client.
    *
@@ -3361,6 +3355,18 @@ void srv_ready()
   }
 
   CALL_FUNC_EACH_AI(game_start);
+
+  /* We may as well reset is_new_game now. */
+  game.info.is_new_game = FALSE;
+
+  log_verbose("srv_running() mostly redundant send_server_settings()");
+  send_server_settings(NULL);
+
+  if (game.server.autosaves & (1 << AS_TIMER)) {
+    game.server.save_timer =
+        timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
+    timer_start(game.server.save_timer);
+  }
 }
 
 /**********************************************************************/ /**
