@@ -729,6 +729,7 @@ void server::shut_game_down()
   if (game.info.timeout == -1 || srvarg.exit_on_end) {
     /* For autogames or if the -e option is specified, exit the server. */
     server_quit();
+    return;
   }
 
   /* Reset server */
