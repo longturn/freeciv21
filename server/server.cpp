@@ -26,6 +26,7 @@
 #include <QHostInfo>
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QTimer>
 
 // Stuff to wait for input on stdin.
 #ifdef Q_OS_WIN
@@ -390,6 +391,19 @@ void server::accept_connections()
               QOverload<QAbstractSocket::SocketError>::of(
                   &QAbstractSocket::error),
               this, &server::error_on_socket);
+
+      // Prevents quitidle from firing immediately
+      m_someone_ever_connected = true;
+
+      // Turn off the quitidle timeout if it's running
+      if (m_quitidle_timer != nullptr) {
+        // There may be a "race condition" here if the timeout signal is
+        // already queued and we're going to quit. This should be fairly rare
+        // in practice.
+        m_quitidle_timer->stop();
+        m_quitidle_timer->deleteLater();
+        m_quitidle_timer = nullptr;
+      }
     }
   }
 }
@@ -716,6 +730,30 @@ void server::update_game_state()
     shut_game_down();
     prepare_game();
   }
+
+  // Set up the quitidle timer if not done already
+  if (server_state() == S_S_RUNNING && m_someone_ever_connected
+      && m_quitidle_timer == nullptr && srvarg.quitidle != 0
+      && conn_list_size(game.est_connections) == 0) {
+
+    if (srvarg.exit_on_end) {
+      log_normal(_("Shutting down in %d seconds for lack of players."),
+                 srvarg.quitidle);
+
+      set_meta_message_string(N_("shutting down soon for lack of players"));
+    } else {
+      log_normal(_("Restarting in %d seconds for lack of players."),
+                 srvarg.quitidle);
+
+      set_meta_message_string(N_("restarting soon for lack of players"));
+    }
+    (void) send_server_info_to_metaserver(META_INFO);
+
+    m_quitidle_timer = new QTimer(this);
+    m_quitidle_timer->setSingleShot(true);
+    m_quitidle_timer->start(1000 * srvarg.quitidle);
+    connect(m_quitidle_timer, &QTimer::timeout, this, &server::quit_idle);
+  }
 }
 
 /*************************************************************************/ /**
@@ -739,4 +777,33 @@ void server::shut_game_down()
   mapimg_reset();
   load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
   game.info.is_new_game = TRUE;
+}
+
+/*************************************************************************/ /**
+   Quit because we're idle (ie no one was connected in the last
+   srvarg.quitidle seconds).
+ *****************************************************************************/
+void server::quit_idle()
+{
+  m_quitidle_timer = nullptr;
+
+  if (srvarg.exit_on_end) {
+    log_normal(_("Shutting down for lack of players."));
+    set_meta_message_string("shutting down for lack of players");
+  } else {
+    log_normal(_("Restarting for lack of players."));
+    set_meta_message_string("restarting for lack of players");
+  }
+
+  (void) send_server_info_to_metaserver(META_INFO);
+
+  set_server_state(S_S_OVER);
+
+  if (srvarg.exit_on_end) {
+    // No need for anything more; just quit.
+    server_quit();
+  } else {
+    force_end_of_sniff = true;
+    update_game_state();
+  }
 }

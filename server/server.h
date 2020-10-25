@@ -27,6 +27,7 @@
 struct timer; // utility/timing.h
 
 class QTcpServer;
+class QTimer;
 
 namespace freeciv {
 
@@ -51,6 +52,7 @@ private slots:
   void end_turn();
   void update_game_state();
   void shut_game_down();
+  void quit_idle();
 
 private:
   void init_interactive();
@@ -64,6 +66,9 @@ private:
 
   bool m_is_new_turn, m_need_send_pending_events, m_skip_mapimg;
   int m_save_counter = 0;
+
+  bool m_someone_ever_connected = false;
+  QTimer *m_quitidle_timer = nullptr;
 };
 
 } // namespace freeciv

@@ -383,63 +383,6 @@ enum server_events server_sniff_all_input(void)
 
     get_lanserver_announcement();
 
-    /* end server if no players for 'srvarg.quitidle' seconds,
-     * but only if at least one player has previously connected. */
-    if (srvarg.quitidle != 0) {
-      static time_t last_noplayers;
-      static bool conns;
-
-      if (conn_list_size(game.est_connections) > 0) {
-        conns = TRUE;
-      }
-      if (conns && conn_list_size(game.est_connections) == 0) {
-        if (last_noplayers != 0) {
-          if (time(NULL) > last_noplayers + srvarg.quitidle) {
-            save_game_auto("Lost all connections", AS_QUITIDLE);
-
-            if (srvarg.exit_on_end) {
-              log_normal(_("Shutting down for lack of players."));
-              set_meta_message_string("shutting down for lack of players");
-            } else {
-              log_normal(_("Restarting for lack of players."));
-              set_meta_message_string("restarting for lack of players");
-            }
-            (void) send_server_info_to_metaserver(META_INFO);
-
-            set_server_state(S_S_OVER);
-            force_end_of_sniff = TRUE;
-
-            if (srvarg.exit_on_end) {
-              /* No need for anything more; just quit. */
-              server_quit();
-            }
-
-            /* Do not restart before someone has connected and left again */
-            conns = FALSE;
-          }
-        } else {
-          last_noplayers = time(NULL);
-
-          if (srvarg.exit_on_end) {
-            log_normal(_("Shutting down in %d seconds for lack of players."),
-                       srvarg.quitidle);
-
-            set_meta_message_string(
-                N_("shutting down soon for lack of players"));
-          } else {
-            log_normal(_("Restarting in %d seconds for lack of players."),
-                       srvarg.quitidle);
-
-            set_meta_message_string(
-                N_("restarting soon for lack of players"));
-          }
-          (void) send_server_info_to_metaserver(META_INFO);
-        }
-      } else {
-        last_noplayers = 0;
-      }
-    }
-
     /* Pinging around for statistics */
     if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
       /* send data about the previous run */
