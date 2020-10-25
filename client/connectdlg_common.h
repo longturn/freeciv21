@@ -13,8 +13,6 @@ Freeciv - Copyright (C) 2003 - The Freeciv Project
 #ifndef FC__CONNECTDLG_COMMON_H
 #define FC__CONNECTDLG_COMMON_H
 
-
-
 /* utility */
 #include "support.h" /* bool */
 
@@ -28,7 +26,5 @@ void send_client_wants_hack(const char *filename);
 void send_save_game(const char *filename);
 
 void set_ruleset(const char *ruleset);
-
-
 
 #endif /* FC__CONNECTDLG_COMMON_H */
