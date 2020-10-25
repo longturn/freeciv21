@@ -1812,7 +1812,7 @@ static void mapdef_destroy(struct mapdef *pmapdef)
     return;
   }
 
-  free(pmapdef);
+  delete pmapdef;
 }
 
 /*

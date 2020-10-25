@@ -61,8 +61,7 @@ static void calc_activity(struct actcalc *calc, const struct tile *ptile,
     int activity_units[ACTIVITY_LAST];
   } * t;
 
-  t = static_cast<tmp_state *>(fc_calloc(1, sizeof(*t)));
-
+  t =  new tmp_state[1]();
   memset(calc, 0, sizeof(*calc));
 
   /* Contributions from real units */

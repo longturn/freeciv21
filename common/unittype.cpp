@@ -909,12 +909,12 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
             || ml_range->max > move_fragments)) {
       /* The number of move fragments is in range of the action enabler. */
 
-      free(ml_range);
+      delete ml_range;
 
       return TRUE;
     }
 
-    free(ml_range);
+    delete ml_range;
   }
   action_enabler_list_iterate_end;
 

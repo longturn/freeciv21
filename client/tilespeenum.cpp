@@ -1621,7 +1621,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
           }
         }
 
-        free(tags);
+        delete[] tags;
         tags = NULL;
       }
     }
@@ -1670,7 +1670,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         (void) sprite_hash_replace(t->sprite_hash, tags[k], ss);
       }
     }
-    free(tags);
+    delete[] tags;
   }
 
   secfile_check_unused(file);

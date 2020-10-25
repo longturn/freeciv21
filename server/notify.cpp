@@ -670,7 +670,7 @@ void event_cache_add_for_players(const struct packet_chat_msg *packet,
   }
 
   if (NULL != players) {
-    free(players);
+    delete players;
   }
 }
 

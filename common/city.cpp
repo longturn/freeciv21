@@ -447,9 +447,7 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
     return;
   }
 
-  city_map_data = static_cast<int *>(
-      fc_calloc(city_map_tiles(city_map_radius_sq_get(pcity)),
-                sizeof(*city_map_data)));
+  city_map_data = new int[city_map_tiles(city_map_radius_sq_get(pcity))]();
 
   city_map_iterate(city_map_radius_sq_get(pcity), cindex, x, y)
   {
@@ -463,7 +461,7 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
 
   log_base(level, "[%s (%d)] workers map:", city_name_get(pcity), pcity->id);
   citylog_map_data(level, city_map_radius_sq_get(pcity), city_map_data);
-  FC_FREE(city_map_data);
+  delete[] city_map_data;
 }
 
 #ifdef FREECIV_DEBUG
@@ -477,9 +475,8 @@ static void citylog_map_index(enum log_level level)
   if (!log_do_output_for_level(level)) {
     return;
   }
-
-  city_map_data = fc_calloc(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
-                            sizeof(*city_map_data));
+  city_map_data = new int[city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
+                            sizeof(*city_map_data)];
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)
   {
@@ -489,7 +486,7 @@ static void citylog_map_index(enum log_level level)
 
   log_debug("city map index:");
   citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data);
-  FC_FREE(city_map_data);
+  delete[] city_map_data;
 }
 
 /**********************************************************************/ /**

@@ -1075,7 +1075,7 @@ static void compat_load_020600(struct loaddata *loading,
     secfile_insert_str_vec(loading->file, modname, specialist_count(),
                            "savefile.specialists_vector");
 
-    free(modname);
+    delete[] modname;
   }
 
   /* Replace all city specialist count fields with correct names */
@@ -1226,7 +1226,7 @@ static void compat_load_020600(struct loaddata *loading,
 
     secfile_insert_str_vec(loading->file, modname, DS_LAST,
                            "savefile.diplstate_type_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Fix save games from Freeciv versions with a bug that made it view
@@ -1450,7 +1450,7 @@ static void insert_server_side_agent(struct loaddata *loading,
 
     secfile_insert_str_vec(loading->file, modname, SSA_COUNT,
                            "savefile.server_side_agent_list");
-    free(modname);
+    delete[] modname;
   }
 
   /* Insert server_side_agent unit field. */
@@ -1894,7 +1894,7 @@ static void compat_load_dev(struct loaddata *loading)
         }
       }
 
-      free(modname);
+      delete[] modname;
     }
 
     /* Old unit order tgt_vec refers to order sub targets */

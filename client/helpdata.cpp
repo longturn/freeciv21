@@ -1140,7 +1140,7 @@ void boot_help_texts(void)
           sz_strlcat(long_buffer, "\n\n");
         }
       }
-      free(paras);
+      delete[] paras;
       paras = NULL;
       pitem->text = fc_strdup(long_buffer);
       help_list_append(help_nodes, pitem);

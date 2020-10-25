@@ -1421,7 +1421,7 @@ enum ane_kind action_not_enabled_reason(struct unit *punit, action_id act_id,
                                                 target_city, target_unit);
   enum ane_kind out = explnat->kind;
 
-  free(explnat);
+  delete explnat;
 
   return out;
 }
@@ -1701,7 +1701,7 @@ static void explain_why_no_action_enabled(struct unit *punit,
     break;
   }
 
-  free(explnat);
+  delete explnat;
 }
 
 /**********************************************************************/ /**
@@ -2348,7 +2348,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
     break;
   }
 
-  free(explnat);
+  delete explnat;
 }
 
 /**********************************************************************/ /**
