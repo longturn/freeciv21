@@ -44,7 +44,11 @@ private slots:
   void accept_connections();
 
   // Higher-level stuff
-  void prepare_game(bool initial = false);
+  void prepare_game();
+  void begin_turn();
+  void begin_phase();
+  void end_phase();
+  void end_turn();
   void update_game_state();
   void shut_game_down();
 
@@ -56,7 +60,10 @@ private:
 
   QTcpServer *m_tcp_server = nullptr;
 
-  timer *m_eot_timer;
+  timer *m_eot_timer = nullptr, *m_between_turns_timer = nullptr;
+
+  bool m_is_new_turn, m_need_send_pending_events, m_skip_mapimg;
+  int m_save_counter = 0;
 };
 
 } // namespace freeciv

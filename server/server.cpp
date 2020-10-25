@@ -58,7 +58,9 @@
 #include "meta.h"
 #include "notify.h"
 #include "ruleset.h"
+#include "sanitycheck.h"
 #include "savemain.h"
+#include "score.h"
 #include "sernet.h"
 #include "settings.h"
 #include "srv_main.h"
@@ -274,8 +276,7 @@ server::server()
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
 
   // Prepare a game
-  // true because this is the first game in this server's lifetime
-  prepare_game(true);
+  prepare_game();
 }
 
 /*************************************************************************/ /**
@@ -486,14 +487,8 @@ void server::input_on_stdin()
 /*************************************************************************/ /**
    Prepares for a new game.
  *****************************************************************************/
-void server::prepare_game(bool initial)
+void server::prepare_game()
 {
-  // This is called both when starting the server and when restarting after
-  // all clients have disconnected. 'initial' is true when starting.
-  if (!initial) {
-    shut_game_down();
-  }
-
   set_server_state(S_S_INITIAL);
 
   /* Load a script file. */
@@ -509,6 +504,17 @@ void server::prepare_game(bool initial)
 
   log_normal(_("Now accepting new client connections on port %d."),
              srvarg.port);
+}
+
+/*************************************************************************/ /**
+   Do everything needed to start a new turn on top of calling begin_turn.
+ *****************************************************************************/
+void server::begin_turn()
+{
+  ::begin_turn(m_is_new_turn);
+
+  // Start the first phase
+  begin_phase();
 }
 
 /*************************************************************************/ /**
@@ -582,6 +588,90 @@ void server::begin_phase()
 }
 
 /*************************************************************************/ /**
+   Do everything needed to end a phase on top of calling end_phase.
+ *****************************************************************************/
+void server::end_phase()
+{
+  m_between_turns_timer =
+      timer_renew(m_between_turns_timer, TIMER_USER, TIMER_ACTIVE);
+  timer_start(m_between_turns_timer);
+
+  /* After sniff, re-zero the timer: (read-out above on next loop) */
+  timer_clear(m_eot_timer);
+  timer_start(m_eot_timer);
+
+  conn_list_do_buffer(game.est_connections);
+
+  sanity_check();
+
+  // This will freeze the reports and agents at the client.
+  lsend_packet_freeze_client(game.est_connections);
+
+  ::end_phase();
+
+  conn_list_do_unbuffer(game.est_connections);
+
+  if (S_S_OVER == server_state()) {
+    end_turn();
+    return;
+  }
+  game.server.additional_phase_seconds = 0;
+
+  game.info.phase++;
+  if (server_state() == S_S_RUNNING
+      && game.info.phase < game.server.num_phases) {
+    begin_phase();
+  } else {
+    end_turn();
+  }
+}
+
+/*************************************************************************/ /**
+   Do everything needed to end a turn on top of calling end_turn.
+ *****************************************************************************/
+void server::end_turn()
+{
+  ::end_turn();
+  log_debug("Sendinfotometaserver");
+  (void) send_server_info_to_metaserver(META_REFRESH);
+
+  if (S_S_OVER != server_state() && check_for_game_over()) {
+    set_server_state(S_S_OVER);
+    if (game.info.turn > game.server.end_turn) {
+      // endturn was reached - rank users based on team scores
+      rank_users(TRUE);
+    } else {
+      // game ended for victory conditions - rank users based on survival
+      rank_users(FALSE);
+    }
+  } else if (S_S_OVER == server_state()) {
+    // game terminated by /endgame command - calculate team scores
+    rank_users(TRUE);
+  }
+
+  if (server_state() == S_S_RUNNING) {
+    // Still running, start the next turn!
+    begin_turn();
+  } else {
+    // Game over
+    // This will thaw the reports and agents at the client.
+    lsend_packet_thaw_client(game.est_connections);
+
+    if (game.server.save_timer != NULL) {
+      timer_destroy(game.server.save_timer);
+      game.server.save_timer = NULL;
+    }
+    if (m_between_turns_timer != nullptr) {
+      timer_destroy(m_between_turns_timer);
+      m_between_turns_timer = nullptr;
+    }
+    timer_clear(m_eot_timer);
+
+    srv_scores();
+  }
+}
+
+/*************************************************************************/ /**
    Checks if the game state has changed and take action if appropriate.
  *****************************************************************************/
 void server::update_game_state()
@@ -600,8 +690,6 @@ void server::update_game_state()
       // If restarting for lack of players, the state is S_S_OVER,
       // so don't try to start the game.
       srv_ready(); // srv_ready() sets server state to S_S_RUNNING.
-                   //       srv_running(); FIXME convert to use Qt event loop
-                   //       srv_scores();
 
       timer_start(m_eot_timer);
 
@@ -612,22 +700,21 @@ void server::update_game_state()
       lsend_packet_freeze_client(game.est_connections);
 
       // Start the first turn
-      begin_turn(game.info.is_new_game);
-
-      // Start the first phase
       m_need_send_pending_events = !game.info.is_new_game;
       m_is_new_turn = game.info.is_new_game;
       m_save_counter = game.info.is_new_game ? 1 : 0;
       m_skip_mapimg = !game.info.is_new_game;
-      begin_phase();
+      begin_turn();
+    } else {
+      end_phase(); // Will end game if needed
     }
   }
 
   // All clients disconnected
-  // FIXME need extra conditions here or the game is reset every time a
-  // command is entered
-  if (conn_list_size(game.est_connections) == 0) {
+  if (server_state() == S_S_OVER
+      && conn_list_size(game.est_connections) == 0) {
     shut_game_down();
+    prepare_game();
   }
 }
 

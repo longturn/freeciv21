@@ -143,7 +143,6 @@
 
 #include "srv_main.h"
 
-static void end_turn(void);
 static void announce_player(struct player *pplayer);
 
 static void handle_observer_ready(struct connection *pconn);
@@ -1401,7 +1400,7 @@ void begin_phase(bool is_new_phase)
    End a phase of movement.  This handles all end-of-phase actions
    for one or more players.
  **************************************************************************/
-static void end_phase(void)
+void end_phase()
 {
   log_debug("Endphase");
 
@@ -1555,7 +1554,7 @@ static void end_phase(void)
 /**********************************************************************/ /**
    Handle the end of each turn.
  **************************************************************************/
-static void end_turn(void)
+void end_turn()
 {
   int food = 0, shields = 0, trade = 0, settlers = 0;
 

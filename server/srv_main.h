@@ -118,6 +118,8 @@ void send_all_info(struct conn_list *dest);
 
 void begin_turn(bool is_new_turn);
 void begin_phase(bool is_new_phase);
+void end_phase();
+void end_turn();
 
 void identity_number_release(int id);
 void identity_number_reserve(int id);
