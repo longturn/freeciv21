@@ -222,7 +222,7 @@ bool client_start_server(void)
     return FALSE;
   }
 
-  storage = QString(freeciv_storage_dir());
+  storage = QString::fromUtf8(freeciv_storage_dir());
   if (storage == NULL) {
     output_window_append(ftc_client,
                          _("Cannot find freeciv storage directory"));
@@ -231,7 +231,7 @@ bool client_start_server(void)
     return FALSE;
   }
 
-  ruleset = tileset_what_ruleset(tileset);
+  ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
 
   /* Set up the command-line parameters. */
   port_buf = QString::number(internal_server_port);
