@@ -447,7 +447,7 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
     return;
   }
 
-  city_map_data = new int[city_map_tiles(city_map_radius_sq_get(pcity))];
+  city_map_data = new int[city_map_tiles(city_map_radius_sq_get(pcity))]();
 
   city_map_iterate(city_map_radius_sq_get(pcity), cindex, x, y)
   {
