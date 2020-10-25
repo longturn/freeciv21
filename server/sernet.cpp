@@ -108,7 +108,6 @@ static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
 
-static void get_lanserver_announcement(void);
 static void send_lanserver_response(void);
 
 /*************************************************************************/ /**
@@ -378,51 +377,6 @@ enum server_events server_sniff_all_input(void)
       con_prompt_off();
       return S_E_FORCE_END_OF_SNIFF;
     }
-
-    get_lanserver_announcement();
-
-    /* Pinging around for statistics */
-    if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
-      /* send data about the previous run */
-      send_ping_times_to_all();
-
-      conn_list_iterate(game.all_connections, pconn)
-      {
-        if ((!pconn->server.is_closing
-             && 0 < timer_list_size(pconn->server.ping_timers)
-             && timer_read_seconds(
-                    timer_list_front(pconn->server.ping_timers))
-                    > game.server.pingtimeout)
-            || pconn->ping_time > game.server.pingtimeout) {
-          /* cut mute players, except for hack-level ones */
-          if (pconn->access_level == ALLOW_HACK) {
-            log_verbose("connection (%s) [hack-level] ping timeout ignored",
-                        conn_description(pconn));
-          } else {
-            log_verbose("connection (%s) cut due to ping timeout",
-                        conn_description(pconn));
-            connection_close_server(pconn, _("ping timeout"));
-          }
-        } else if (pconn->established) {
-          /* We don't send ping to connection not established, because
-           * we wouldn't be able to handle asynchronous ping/pong with
-           * different packet header size. */
-          connection_ping(pconn);
-        }
-      }
-      conn_list_iterate_end;
-      game.server.last_ping = time(NULL);
-    }
-
-    /* if we've waited long enough after a failure, respond to the client */
-    conn_list_iterate(game.all_connections, pconn)
-    {
-      if (srvarg.auth_enabled && !pconn->server.is_closing
-          && pconn->server.status != AS_ESTABLISHED) {
-        auth_process_status(pconn);
-      }
-    }
-    conn_list_iterate_end
 
         /* Don't wait if timeout == -1 (i.e. on auto games) */
         if (S_S_RUNNING == server_state() && game.info.timeout == -1)
@@ -835,7 +789,7 @@ void send_ping_times_to_all()
    Listen for UDP packets multicasted from clients requesting
    announcement of servers on the LAN.
  *****************************************************************************/
-static void get_lanserver_announcement(void)
+void get_lanserver_announcement()
 {
   fd_set readfs, exceptfs;
   fc_timeval tv;

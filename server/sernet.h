@@ -45,5 +45,6 @@ void connection_ping(struct connection *pconn);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
 void send_ping_times_to_all();
+void get_lanserver_announcement();
 
 #endif /* FC__SERNET_H */

@@ -51,6 +51,7 @@
 // server
 #include "ai.h"
 #include "aiiface.h"
+#include "auth.h"
 #include "connecthand.h"
 #include "console.h"
 #include "diplhand.h"
@@ -862,6 +863,18 @@ void server::quit_idle()
 void server::pulse()
 {
   send_pings();
+
+  get_lanserver_announcement();
+
+  // if we've waited long enough after a failure, respond to the client
+  conn_list_iterate(game.all_connections, pconn)
+  {
+    if (srvarg.auth_enabled && !pconn->server.is_closing
+        && pconn->server.status != AS_ESTABLISHED) {
+      auth_process_status(pconn);
+    }
+  }
+  conn_list_iterate_end
 
   call_ai_refresh();
   script_server_signal_emit("pulse");
