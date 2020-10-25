@@ -62,11 +62,11 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   QStringList sav;
   gui = c;
   ui.setupUi(this);
-  ui.lbl_show_preview->setText(_("Show preview"));
+  ui.show_preview->setText(_("Show preview"));
   ui.load_pix->setProperty("themed_border", true);
   ui.load_pix->setFixedSize(0, 0);
   sav << _("Choose Saved Game to Load") << _("Date");
-
+  ui.load_save_text->setText("");
   ui.load_save_text->setTextFormat(Qt::RichText);
   ui.load_save_text->setWordWrap(true);
   ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
@@ -79,7 +79,6 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   ui.saves_load->setEditTriggers(QAbstractItemView::NoEditTriggers);
   ui.saves_load->setSelectionMode(QAbstractItemView::SingleSelection);
   ui.saves_load->verticalHeader()->setVisible(false);
-
   header = ui.saves_load->horizontalHeader();
   header->setSectionResizeMode(0, QHeaderView::Stretch);
   header->setStretchLastSection(true);
