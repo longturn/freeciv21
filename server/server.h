@@ -53,6 +53,7 @@ private slots:
   void update_game_state();
   void shut_game_down();
   void quit_idle();
+  void pulse();
 
 private:
   void init_interactive();
@@ -69,6 +70,8 @@ private:
 
   bool m_someone_ever_connected = false;
   QTimer *m_quitidle_timer = nullptr;
+
+  QTimer *m_pulse_timer = nullptr;
 };
 
 } // namespace freeciv

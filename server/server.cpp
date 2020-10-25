@@ -50,6 +50,7 @@
 
 // server
 #include "ai.h"
+#include "aiiface.h"
 #include "connecthand.h"
 #include "console.h"
 #include "diplhand.h"
@@ -62,6 +63,7 @@
 #include "sanitycheck.h"
 #include "savemain.h"
 #include "score.h"
+#include "script_server.h" // scripting
 #include "sernet.h"
 #include "settings.h"
 #include "srv_main.h"
@@ -278,6 +280,11 @@ server::server()
 
   // Prepare a game
   prepare_game();
+
+  // Start pulsing
+  m_pulse_timer = new QTimer(this);
+  m_pulse_timer->start(1000);
+  connect(m_pulse_timer, &QTimer::timeout, this, &server::pulse);
 }
 
 /*************************************************************************/ /**
@@ -805,5 +812,33 @@ void server::quit_idle()
   } else {
     force_end_of_sniff = true;
     update_game_state();
+  }
+}
+
+/*************************************************************************/ /**
+   Called every second.
+ *****************************************************************************/
+void server::pulse()
+{
+  call_ai_refresh();
+  script_server_signal_emit("pulse");
+  (void) send_server_info_to_metaserver(META_REFRESH);
+  if (current_turn_timeout() > 0 && S_S_RUNNING == server_state()
+      && game.server.phase_timer
+      && (timer_read_seconds(game.server.phase_timer)
+              + game.server.additional_phase_seconds
+          > game.tinfo.seconds_to_phasedone)) {
+    con_prompt_off();
+    // TODO end of turn timeout
+    update_game_state();
+  }
+  if ((game.server.autosaves & (1 << AS_TIMER))
+      && S_S_RUNNING == server_state()
+      && (timer_read_seconds(game.server.save_timer)
+          >= game.server.save_frequency * 60)) {
+    save_game_auto("Timer", AS_TIMER);
+    game.server.save_timer =
+        timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
+    timer_start(game.server.save_timer);
   }
 }
