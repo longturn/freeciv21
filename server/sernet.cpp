@@ -103,7 +103,6 @@ static QUdpSocket *udp_socket = nullptr;
 
 #define PROCESSING_TIME_STATISTICS 0
 
-static int server_accept_connection(int sockfd);
 static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
@@ -229,29 +228,6 @@ static void server_conn_close_callback(struct connection *pconn)
 }
 
 /*************************************************************************/ /**
-   If a connection lags too much this function is called and we try to cut
-   it.
- *****************************************************************************/
-static void cut_lagging_connection(struct connection *pconn)
-{
-  if (!pconn->server.is_closing && game.server.tcptimeout != 0
-      && pconn->last_write && conn_list_size(game.all_connections) > 1
-      && pconn->access_level != ALLOW_HACK
-      && timer_read_seconds(pconn->last_write) > game.server.tcptimeout) {
-    /* Cut the connections to players who lag too much.  This
-     * usually happens because client animation slows the client
-     * too much and it can't keep up with the server.  We don't
-     * cut HACK connections, or cut in single-player games, since
-     * it wouldn't help the game progress.  For other connections
-     * the best thing to do when they lag too much is to be
-     * disconnected and reconnect. */
-    log_verbose("connection (%s) cut due to lagging player",
-                conn_description(pconn));
-    connection_close_server(pconn, _("lagging connection"));
-  }
-}
-
-/*************************************************************************/ /**
    Attempt to flush all information in the send buffers for upto 'netwait'
    seconds.
  *****************************************************************************/
@@ -347,129 +323,6 @@ void incoming_client_packets(struct connection *pconn)
 }
 
 /*************************************************************************/ /**
-   Get and handle:
-   - new connections,
-   - input from connections,
-   - input from server operator in stdin
-
-   This function also handles prompt printing, via the con_prompt_*
-   functions.  That is, other functions should not need to do so.  --dwp
- *****************************************************************************/
-enum server_events server_sniff_all_input(void)
-{
-  // TODO later
-#if 0
-  int i, s;
-  int max_desc;
-  bool excepting;
-  fc_timeval tv;
-#ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
-  char *bufptr;
-#endif
-
-  con_prompt_init();
-
-  while (TRUE) {
-    con_prompt_on(); /* accepting new input */
-
-    if (force_end_of_sniff) {
-      force_end_of_sniff = FALSE;
-      con_prompt_off();
-      return S_E_FORCE_END_OF_SNIFF;
-    }
-
-        /* Don't wait if timeout == -1 (i.e. on auto games) */
-        if (S_S_RUNNING == server_state() && game.info.timeout == -1)
-    {
-      call_ai_refresh();
-      script_server_signal_emit("pulse");
-      (void) send_server_info_to_metaserver(META_REFRESH);
-      return S_E_END_OF_TURN_TIMEOUT;
-    }
-
-    tv.tv_sec = 1;
-    tv.tv_usec = 0;
-
-    if (!no_input) {
-#ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
-      fc_init_console();
-#endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-    }
-
-    con_prompt_off(); /* output doesn't generate a new prompt */
-
-//     if (!socket->waitForReadyRead(1000 /* ms */)) {
-    // TODO timer
-    if (fc_select(max_desc + 1, &readfs, &writefs, &exceptfs, &tv) == 0) {
-      /* timeout */
-      call_ai_refresh();
-      script_server_signal_emit("pulse");
-      (void) send_server_info_to_metaserver(META_REFRESH);
-      if (current_turn_timeout() > 0 && S_S_RUNNING == server_state()
-          && game.server.phase_timer
-          && (timer_read_seconds(game.server.phase_timer)
-                  + game.server.additional_phase_seconds
-              > game.tinfo.seconds_to_phasedone)) {
-        con_prompt_off();
-        return S_E_END_OF_TURN_TIMEOUT;
-      }
-      if ((game.server.autosaves & (1 << AS_TIMER))
-          && S_S_RUNNING == server_state()
-          && (timer_read_seconds(game.server.save_timer)
-              >= game.server.save_frequency * 60)) {
-        save_game_auto("Timer", AS_TIMER);
-        game.server.save_timer =
-            timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
-        timer_start(game.server.save_timer);
-      }
-
-      if (!no_input) {
-#ifndef FREECIV_SOCKET_ZERO_NOT_STDIN
-        really_close_connections();
-        continue;
-#endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-      }
-    }
-
-    // TODO Probably not needed
-    excepting = FALSE;
-    for (i = 0; i < listen_count; i++) {
-      if (FD_ISSET(listen_socks[i], &exceptfs)) {
-        excepting = TRUE;
-        break;
-      }
-    }
-    if (excepting) { /* handle Ctrl-Z suspend/resume */
-      continue;
-    }
-  }
-  con_prompt_off();
-
-  // TODO use timer
-  call_ai_refresh();
-  script_server_signal_emit("pulse");
-
-  if (current_turn_timeout() > 0 && S_S_RUNNING == server_state()
-      && game.server.phase_timer
-      && (timer_read_seconds(game.server.phase_timer)
-              + game.server.additional_phase_seconds
-          > game.tinfo.seconds_to_phasedone)) {
-    return S_E_END_OF_TURN_TIMEOUT;
-  }
-  if ((game.server.autosaves & (1 << AS_TIMER))
-      && S_S_RUNNING == server_state()
-      && (timer_read_seconds(game.server.save_timer)
-          >= game.server.save_frequency * 60)) {
-    save_game_auto("Timer", AS_TIMER);
-    game.server.save_timer =
-        timer_renew(game.server.save_timer, TIMER_USER, TIMER_ACTIVE);
-    timer_start(game.server.save_timer);
-  }
-#endif // comment
-  return S_E_OTHERWISE;
-}
-
-/*************************************************************************/ /**
    Make up a name for the connection, before we get any data from
    it to use as a sensible name.  Name will be 'c' + integer,
    guaranteed not to be the same as any other connection name,
@@ -494,57 +347,6 @@ static const char *makeup_connection_name(int *id)
       return name;
     }
   }
-}
-
-/*************************************************************************/ /**
-   Server accepts connection from client:
-   Low level socket stuff, and basic-initialize the connection struct.
-   Returns 0 on success, -1 on failure (bad accept(), or too many
-   connections).
- *****************************************************************************/
-static int server_accept_connection(QTcpSocket *socket)
-{
-  // Lookup the host name of the remote end.
-  // The IP address will always work
-  auto remote = socket->peerAddress().toString();
-  // Try a remote DNS lookup
-  auto host_info = QHostInfo::fromName(remote); // FIXME Blocking call
-  if (host_info.error() == QHostInfo::NoError) {
-    remote = host_info.hostName();
-  }
-
-  // Reject the connection if we have reached the hard-coded limit
-  if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
-    log_verbose("Rejecting new connection from %s: maximum number of "
-                "connections exceeded (%d).",
-                qPrintable(remote), MAX_NUM_CONNECTIONS);
-  }
-
-  // Reject the connection if we have reached the limit for this host
-  if (0 != game.server.maxconnectionsperhost) {
-    int count = 0;
-
-    conn_list_iterate(game.all_connections, pconn)
-    {
-      // Use TolerantConversion so one connections from the same address on
-      // IPv4 and IPv6 are rejected as well.
-      if (socket->peerAddress().isEqual(pconn->sock->peerAddress(),
-                                        QHostAddress::TolerantConversion)) {
-        continue;
-      }
-      if (++count >= game.server.maxconnectionsperhost) {
-        log_verbose("Rejecting new connection from %s: maximum number of "
-                    "connections for this address exceeded (%d).",
-                    qPrintable(remote), game.server.maxconnectionsperhost);
-
-        delete socket;
-        return -1;
-      }
-    }
-    conn_list_iterate_end;
-  }
-
-  return server_make_connection(socket, remote);
 }
 
 /*************************************************************************/ /**

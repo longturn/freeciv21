@@ -26,14 +26,6 @@ struct connection;
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
 
-enum server_events {
-  S_E_END_OF_TURN_TIMEOUT,
-  S_E_OTHERWISE,
-  S_E_FORCE_END_OF_SNIFF,
-};
-
-enum server_events server_sniff_all_input(void);
-
 QTcpServer *server_open_socket(void);
 void flush_packets(void);
 void incoming_client_packets(connection *pconn);
