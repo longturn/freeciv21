@@ -46,6 +46,7 @@
 #include "page_main.h"
 #include "page_network.h"
 #include "page_pregame.h"
+#include "page_scenario.h"
 #include "sidebar.h"
 #include "sprite.h"
 #include "voteinfo_bar.h"
@@ -68,22 +69,12 @@ fc_client::fc_client() : QMainWindow()
    * After adding new QObjects null them here.
    */
   main_wdg = NULL;
-  connect_lan = NULL;
-  connect_metaserver = NULL;
   central_layout = NULL;
   output_window = NULL;
-  scenarios_view = NULL;
-  connect_host_edit = NULL;
-  connect_port_edit = NULL;
-  connect_login_edit = NULL;
-  connect_password_edit = NULL;
-  connect_confirm_password_edit = NULL;
   button = NULL;
   button_box = NULL;
   server_notifier = NULL;
   chat_line = NULL;
-  saves_load = NULL;
-  scenarios_load = NULL;
   status_bar = NULL;
   status_bar_label = NULL;
   menu_bar = NULL;
@@ -143,22 +134,11 @@ void fc_client::init()
   set_status_bar(_("Welcome to Freeciv"));
   create_cursors();
 
-  // PAGE_MAIN
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
-
-  // PAGE_START
   pages[PAGE_START] = new QWidget(central_wdg);
-  create_start_page();
-
-  // PAGE_SCENARIO
-  pages[PAGE_SCENARIO] = new QWidget(central_wdg);
-  create_scenario_page();
-
-  // PAGE_LOAD
+  pages[PAGE_SCENARIO] = new page_scenario(central_wdg, this);
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
-
-  // PAGE_NETWORK
   pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
 
@@ -177,8 +157,8 @@ void fc_client::init()
 
   pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
 
-  pages[PAGE_SCENARIO]->setLayout(pages_layout[PAGE_SCENARIO]);
   pages[PAGE_START]->setLayout(pages_layout[PAGE_START]);
+  create_start_page();
   pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
 
@@ -329,6 +309,7 @@ void fc_client::switch_page(int new_pg)
   case PAGE_MAIN:
     break;
   case PAGE_START:
+    if (pre_vote)
     pre_vote->hide();
     voteinfo_gui_update();
     break;
@@ -360,7 +341,7 @@ void fc_client::switch_page(int new_pg)
     show_new_turn_info();
     break;
   case PAGE_SCENARIO:
-    update_scenarios_page();
+    qobject_cast<page_scenario *>(pages[PAGE_SCENARIO])->update_scenarios_page();
     break;
   case PAGE_NETWORK:
     qobject_cast<page_network *>(pages[PAGE_NETWORK])

@@ -568,21 +568,3 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
 
 }
 
-
-void fc_client::slot_selection_changed(const QItemSelection &selected,
-                                          const QItemSelection &deselected)
-{
-
-  QModelIndexList indexes = selected.indexes();
-  QStringList sl;
-  QModelIndex index;
-  QVariant qvar;
-    index = indexes.at(0);
-    qvar = index.data(Qt::UserRole);
-    sl = qvar.toStringList();
-    scenarios_text->setText(sl.at(0));
-    if (sl.count() > 1) {
-      scenarios_view->setText(sl.at(2));
-      current_file = sl.at(1);
-    }
-}

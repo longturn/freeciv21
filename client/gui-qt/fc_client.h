@@ -141,8 +141,6 @@ class fc_client : public QMainWindow, private chat_listener {
   Q_OBJECT
   QWidget *main_wdg;
   QWidget *pages[(int) PAGE_GAME + 2];
-  QWidget *connect_lan;
-  QWidget *connect_metaserver;
   QWidget *game_main_widget;
 
   QGridLayout *pages_layout[PAGE_GAME + 2];
@@ -150,17 +148,6 @@ class fc_client : public QMainWindow, private chat_listener {
   QGridLayout *game_layout;
 
   QTextEdit *output_window;
-  QTextEdit *scenarios_view;
-  QLabel *scenarios_text;
-  QLabel *load_save_text;
-  QLabel *load_pix;
-  QCheckBox *show_preview;
-
-  QLineEdit *connect_host_edit;
-  QLineEdit *connect_port_edit;
-  QLineEdit *connect_login_edit;
-  QLineEdit *connect_password_edit;
-  QLineEdit *connect_confirm_password_edit;
 
   QPushButton *button;
   QPushButton *obs_button;
@@ -173,8 +160,6 @@ class fc_client : public QMainWindow, private chat_listener {
 
   chat_input *chat_line;
 
-  QTableWidget *saves_load;
-  QTableWidget *scenarios_load;
   QTreeWidget *start_players_tree;
 
   QTimer *update_info_timer;
@@ -261,8 +246,6 @@ private slots:
   void slot_pregame_start();
   void start_page_menu(QPoint);
   void slot_pick_nation();
-  void start_scenario();
-  void browse_scenarios();
   void clear_status_bar();
 
 public slots:
@@ -273,22 +256,15 @@ public slots:
   void update_info_label();
   void quit();
 
-protected slots:
-
-  void slot_selection_changed(const QItemSelection &,
-                              const QItemSelection &);
-
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags);
-  void create_scenario_page();
-  void create_start_page();
   void create_game_page();
   void create_loading_page();
+  void create_start_page();
   bool chat_active_on_page(enum client_pages);
   void create_cursors(void);
   void delete_cursors(void);
-  void update_scenarios_page(void);
   void update_buttons();
   void init();
   void read_settings();

@@ -28,85 +28,64 @@
 #include "dialogs.h"
 #include "fc_client.h"
 
-/**********************************************************************/ /**
-   Creates buttons and layouts for scenario page.
- **************************************************************************/
-void fc_client::create_scenario_page()
+page_scenario::page_scenario(QWidget *parent, fc_client *gui) : QWidget(parent)
 {
-  QPushButton *but;
   QHeaderView *header;
   QStringList sav;
 
-  pages_layout[PAGE_SCENARIO] = new QGridLayout;
-  scenarios_load = new QTableWidget;
-  scenarios_view = new QTextEdit;
-  scenarios_text = new QLabel;
-
-  scenarios_view->setObjectName("scenarios_view");
-  scenarios_text->setTextFormat(Qt::RichText);
-  scenarios_text->setWordWrap(true);
+  ui.setupUi(this);
+  king = gui;
+  ui.scenarios_view->setObjectName("scenarios_view");
+  ui.scenarios_text->setTextFormat(Qt::RichText);
+  ui.scenarios_text->setWordWrap(true);
   sav << _("Choose a Scenario");
-  scenarios_load->setRowCount(0);
-  scenarios_load->setColumnCount(sav.count());
-  scenarios_load->setHorizontalHeaderLabels(sav);
-  scenarios_load->setProperty("showGrid", "false");
-  scenarios_load->setProperty("selectionBehavior", "SelectRows");
-  scenarios_load->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  scenarios_load->setSelectionMode(QAbstractItemView::SingleSelection);
-  scenarios_load->verticalHeader()->setVisible(false);
-  pages_layout[PAGE_SCENARIO]->addWidget(scenarios_load, 0, 0, 3, 3,
-                                         Qt::AlignLeft);
-  pages_layout[PAGE_SCENARIO]->addWidget(scenarios_view, 1, 3, 2, 3);
-  pages_layout[PAGE_SCENARIO]->addWidget(scenarios_text, 0, 3, 1, 2,
-                                         Qt::AlignTop);
-  scenarios_view->setReadOnly(true);
-  scenarios_view->setWordWrapMode(QTextOption::WordWrap);
-  scenarios_text->setAlignment(Qt::AlignCenter);
+  ui.scenarios_load->setRowCount(0);
+  ui.scenarios_load->setColumnCount(sav.count());
+  ui.scenarios_load->setHorizontalHeaderLabels(sav);
+  ui.scenarios_load->setProperty("showGrid", "false");
+  ui.scenarios_load->setProperty("selectionBehavior", "SelectRows");
+  ui.scenarios_load->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui.scenarios_load->setSelectionMode(QAbstractItemView::SingleSelection);
+  ui.scenarios_load->verticalHeader()->setVisible(false);
+  ui.scenarios_view->setReadOnly(true);
+  ui.scenarios_view->setWordWrapMode(QTextOption::WordWrap);
+  ui.scenarios_text->setAlignment(Qt::AlignCenter);
 
-  header = scenarios_load->horizontalHeader();
+  header = ui.scenarios_load->horizontalHeader();
   header->setSectionResizeMode(0, QHeaderView::Stretch);
   header->setStretchLastSection(true);
-  connect(scenarios_load->selectionModel(),
+  connect(ui.scenarios_load->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
-          &fc_client::slot_selection_changed);
+          &page_scenario::slot_selection_changed);
 
-  but = new QPushButton;
-  but->setText(_("Browse..."));
-  but->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
-  connect(but, &QAbstractButton::clicked, this,
-          &fc_client::browse_scenarios);
-  pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 0);
+  ui.bbrowse->setText(_("Browse..."));
+  ui.bbrowse->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
+  connect(ui.bbrowse, &QAbstractButton::clicked, this,
+          &page_scenario::browse_scenarios);
 
-  but = new QPushButton;
-  but->setText(_("Cancel"));
-  but->setIcon(
+  ui.bcancel->setText(_("Cancel"));
+  ui.bcancel->setIcon(
       QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton));
-  connect(but, &QAbstractButton::clicked, this, &fc_client::slot_disconnect);
-  pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 3);
-
-  pages_layout[PAGE_SCENARIO]->setColumnStretch(2, 10);
-  pages_layout[PAGE_SCENARIO]->setColumnStretch(4, 20);
-  pages_layout[PAGE_SCENARIO]->setColumnStretch(3, 20);
-  pages_layout[PAGE_SCENARIO]->setRowStretch(1, 5);
-  but = new QPushButton;
-  but->setText(_("Load Scenario"));
-  but->setIcon(
+  connect(ui.bcancel, &QAbstractButton::clicked, gui, &fc_client::slot_disconnect);
+  ui.bload->setText(_("Load Scenario"));
+  ui.bload->setIcon(
       QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
-  connect(but, &QAbstractButton::clicked, this, &fc_client::start_scenario);
-  pages_layout[PAGE_SCENARIO]->addWidget(but, 4, 4);
+  connect(ui.bload, &QAbstractButton::clicked, this, &page_scenario::start_scenario);
 }
+
+page_scenario::~page_scenario() {}
 
 /**********************************************************************/ /**
    Browse scenarios directory
  **************************************************************************/
-void fc_client::browse_scenarios(void)
+void page_scenario::browse_scenarios(void)
 {
   QString str;
 
   str = QString(_("Scenarios Files"))
         + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
   current_file = QFileDialog::getOpenFileName(
-      gui()->central_wdg, _("Open Scenario File"), QDir::homePath(), str);
+      this, _("Open Scenario File"), QDir::homePath(), str);
   if (!current_file.isEmpty()) {
     start_scenario();
   }
@@ -115,7 +94,7 @@ void fc_client::browse_scenarios(void)
 /**********************************************************************/ /**
    Starts game from chosen scenario - chosen_file (save or scenario)
  **************************************************************************/
-void fc_client::start_scenario()
+void page_scenario::start_scenario()
 {
   if (!is_server_running()) {
     client_start_server();
@@ -126,22 +105,22 @@ void fc_client::start_scenario()
 
     c_bytes = current_file.toLocal8Bit();
     send_chat_printf("/load %s", c_bytes.data());
-    switch_page(PAGE_GAME + 1);
+    king->switch_page(PAGE_GAME + 1);
   }
 }
 
 /**********************************************************************/ /**
    Gets scenarios list and updates it in TableWidget = scenarios_load
  **************************************************************************/
-void fc_client::update_scenarios_page(void)
+void page_scenario::update_scenarios_page(void)
 {
   struct fileinfo_list *files;
   int row = 0;
 
-  scenarios_load->clearContents();
-  scenarios_load->setRowCount(0);
-  scenarios_text->setText("");
-  scenarios_view->setText("");
+  ui.scenarios_load->clearContents();
+  ui.scenarios_load->setRowCount(0);
+  ui.scenarios_text->setText("");
+  ui.scenarios_view->setText("");
 
   files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
   fileinfo_list_iterate(files, pfile)
@@ -194,12 +173,12 @@ void fc_client::update_scenarios_page(void)
           version = QString(_("pre-2.6"));
         }
 
-        rows = scenarios_load->rowCount();
+        rows = ui.scenarios_load->rowCount();
         for (i = 0; i < rows; ++i) {
-          if (scenarios_load->item(i, 0)
-              && scenarios_load->item(i, 0)->text() == pfile->name) {
+          if (ui.scenarios_load->item(i, 0)
+              && ui.scenarios_load->item(i, 0)->text() == pfile->name) {
             found = true;
-            item = scenarios_load->takeItem(i, 0);
+            item = ui.scenarios_load->takeItem(i, 0);
             break;
           }
         }
@@ -214,7 +193,7 @@ void fc_client::update_scenarios_page(void)
         }
         if (add_item) {
           item = new QTableWidgetItem();
-          scenarios_load->insertRow(row);
+          ui.scenarios_load->insertRow(row);
         }
         item->setText(QString(pfile->name));
         format = QString("<br>") + QString(_("Format:")) + " "
@@ -239,10 +218,10 @@ void fc_client::update_scenarios_page(void)
         sl.replaceInStrings("\n", "<br>");
         item->setData(Qt::UserRole, sl);
         if (add_item) {
-          scenarios_load->setItem(row, 0, item);
+          ui.scenarios_load->setItem(row, 0, item);
           row++;
         } else {
-          scenarios_load->setItem(i, 0, item);
+          ui.scenarios_load->setItem(i, 0, item);
         }
       }
       secfile_destroy(sf);
@@ -250,6 +229,23 @@ void fc_client::update_scenarios_page(void)
   }
   fileinfo_list_iterate_end;
   fileinfo_list_destroy(files);
-  scenarios_load->sortItems(0);
-  scenarios_load->update();
+  ui.scenarios_load->sortItems(0);
+  ui.scenarios_load->update();
+}
+
+void page_scenario::slot_selection_changed(const QItemSelection &selected,
+                                          const QItemSelection &deselected)
+{
+  QModelIndexList indexes = selected.indexes();
+  QStringList sl;
+  QModelIndex index;
+  QVariant qvar;
+    index = indexes.at(0);
+    qvar = index.data(Qt::UserRole);
+    sl = qvar.toStringList();
+    ui.scenarios_text->setText(sl.at(0));
+    if (sl.count() > 1) {
+      ui.scenarios_view->setText(sl.at(2));
+      current_file = sl.at(1);
+    }
 }
