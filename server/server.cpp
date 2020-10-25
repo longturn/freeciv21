@@ -832,7 +832,8 @@ void server::pulse()
               + game.server.additional_phase_seconds
           > game.tinfo.seconds_to_phasedone)) {
     con_prompt_off();
-    // TODO end of turn timeout
+    // This will be interpreted as "end phase"
+    force_end_of_sniff = true;
     update_game_state();
   }
   if ((game.server.autosaves & (1 << AS_TIMER))
