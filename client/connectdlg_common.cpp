@@ -98,7 +98,7 @@ serverProcess *serverProcess::i()
 void serverProcess::drop()
 {
   if (m_instance) {
-    delete m_instance;
+    m_instance->deleteLater();
     m_instance = 0;
   }
 }
