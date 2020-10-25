@@ -27,13 +27,6 @@
 #include "menu.h"
 #include "tradecalculation.h"
 
-enum connection_state {
-  LOGIN_TYPE,
-  NEW_PASSWORD_TYPE,
-  ENTER_PASSWORD_TYPE,
-  WAITING_TYPE
-};
-
 class QApplication;
 class QCheckBox;
 class QCloseEvent;
@@ -75,6 +68,13 @@ class pregamevote;
 class units_select;
 class xvote;
 struct server_scan;
+
+enum connection_state {
+  LOGIN_TYPE,
+  NEW_PASSWORD_TYPE,
+  ENTER_PASSWORD_TYPE,
+  WAITING_TYPE
+};
 
 /****************************************************************************
   Widget holding all game tabs
@@ -173,15 +173,10 @@ class fc_client : public QMainWindow, private chat_listener {
 
   chat_input *chat_line;
 
-  QTableWidget *lan_widget;
-  QTableWidget *wan_widget;
-  QTableWidget *info_widget;
   QTableWidget *saves_load;
   QTableWidget *scenarios_load;
   QTreeWidget *start_players_tree;
 
-  QTimer *meta_scan_timer;
-  QTimer *lan_scan_timer;
   QTimer *update_info_timer;
 
   QStatusBar *status_bar;
@@ -217,10 +212,10 @@ public:
   void popup_tile_info(struct tile *ptile);
   void popdown_tile_info();
   void set_diplo_dialog(choice_dialog *widget);
-  void handle_authentication_req(enum authentication_type type,
-                                 const char *message);
   choice_dialog *get_diplo_dialog();
   void update_sidebar_position();
+  void authentication_request(enum authentication_type type,
+                               const char *message);
 
   mr_idle mr_idler;
   QWidget *central_wdg;
@@ -261,18 +256,12 @@ private slots:
   void send_fake_chat_message(const QString &message);
   void server_input(int sock);
   void closing();
-  void slot_lan_scan();
-  void slot_meta_scan();
-  void slot_connect();
 
   void slot_pregame_observe();
   void slot_pregame_start();
-  void update_network_lists();
   void start_page_menu(QPoint);
   void slot_pick_nation();
-
   void start_scenario();
-
   void browse_scenarios();
   void clear_status_bar();
 
@@ -292,22 +281,14 @@ protected slots:
 private:
   void chat_message_received(const QString &message,
                              const struct text_tag_list *tags);
-  void create_main_page();
-  void create_network_page();
-  void create_load_page();
   void create_scenario_page();
   void create_start_page();
   void create_game_page();
   void create_loading_page();
   bool chat_active_on_page(enum client_pages);
-  void destroy_server_scans(void);
-  void update_server_list(enum server_scan_type sstype,
-                          const struct server_list *list);
-  bool check_server_scan(server_scan *scan_data);
   void create_cursors(void);
   void delete_cursors(void);
   void update_scenarios_page(void);
-  void set_connection_state(enum connection_state state);
   void update_buttons();
   void init();
   void read_settings();

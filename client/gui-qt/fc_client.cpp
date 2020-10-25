@@ -42,8 +42,10 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "optiondlg.h"
-#include "page_main.h"
 #include "page_load.h"
+#include "page_main.h"
+#include "page_network.h"
+#include "page_pregame.h"
 #include "sidebar.h"
 #include "sprite.h"
 #include "voteinfo_bar.h"
@@ -80,13 +82,8 @@ fc_client::fc_client() : QMainWindow()
   button_box = NULL;
   server_notifier = NULL;
   chat_line = NULL;
-  lan_widget = NULL;
-  wan_widget = NULL;
-  info_widget = NULL;
   saves_load = NULL;
   scenarios_load = NULL;
-  meta_scan_timer = NULL;
-  lan_scan_timer = NULL;
   status_bar = NULL;
   status_bar_label = NULL;
   menu_bar = NULL;
@@ -150,7 +147,6 @@ void fc_client::init()
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
 
-
   // PAGE_START
   pages[PAGE_START] = new QWidget(central_wdg);
   create_start_page();
@@ -163,8 +159,7 @@ void fc_client::init()
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
 
   // PAGE_NETWORK
-  pages[PAGE_NETWORK] = new QWidget(central_wdg);
-  create_network_page();
+  pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
 
   // PAGE_GAME
@@ -182,9 +177,6 @@ void fc_client::init()
 
   pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
 
-  //pages[PAGE_MAIN]->setLayout(pages_layout[PAGE_MAIN]);
-  pages[PAGE_NETWORK]->setLayout(pages_layout[PAGE_NETWORK]);
-  //pages[PAGE_LOAD]->setLayout(pages_layout[PAGE_LOAD]);
   pages[PAGE_SCENARIO]->setLayout(pages_layout[PAGE_SCENARIO]);
   pages[PAGE_START]->setLayout(pages_layout[PAGE_START]);
   pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
@@ -293,6 +285,13 @@ bool fc_client::chat_active_on_page(enum client_pages check)
   return false;
 }
 
+void fc_client::authentication_request(enum authentication_type type,
+                                       const char *message)
+{
+  qobject_cast<page_network *>(pages[PAGE_NETWORK])
+      ->handle_authentication_req(type, message);
+}
+
 /************************************************************************/ /**
    Switch from one client page to another.
    Argument is int cause QSignalMapper doesn't want to work with enum
@@ -315,7 +314,8 @@ void fc_client::switch_page(int new_pg)
   }
 
   if (page == PAGE_NETWORK) {
-    destroy_server_scans();
+    qobject_cast<page_network *>(pages[PAGE_NETWORK])
+        ->destroy_server_scans();
   }
   menuBar()->setVisible(false);
   if (status_bar != nullptr) {
@@ -363,14 +363,10 @@ void fc_client::switch_page(int new_pg)
     update_scenarios_page();
     break;
   case PAGE_NETWORK:
-    update_network_lists();
-    set_connection_state(LOGIN_TYPE);
-    connect_host_edit->setText(server_host);
-    fc_snprintf(buf, sizeof(buf), "%d", server_port);
-    connect_port_edit->setText(buf);
-    connect_login_edit->setText(user_name);
-    connect_password_edit->setDisabled(true);
-    connect_confirm_password_edit->setDisabled(true);
+    qobject_cast<page_network *>(pages[PAGE_NETWORK])
+        ->update_network_lists();
+    qobject_cast<page_network *>(pages[PAGE_NETWORK])
+        ->set_connection_state(LOGIN_TYPE);
     break;
   case (PAGE_GAME + 1):
     break;

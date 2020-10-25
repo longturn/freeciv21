@@ -1,16 +1,14 @@
 /**************************************************************************
-\^~~~~\   )  (   /~~~~^/ *     _      Copyright (c) 1996-2020 Freeciv21 and
- ) *** \  {**}  / *** (  *  _ {o} _      Freeciv contributors. This file is
-  ) *** \_ ^^ _/ *** (   * {o}{o}{o}   part of Freeciv21. Freeciv21 is free
-  ) ****   vv   **** (   *  ~\ | /~software: you can redistribute it and/or
-   )_****      ****_(    *    OoO      modify it under the terms of the GNU
-     )*** m  m ***(      *    /|\      General Public License  as published
-       by the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version. You should have received  a copy of
-                        the GNU General Public License along with Freeciv21.
-                                 If not, see https://www.gnu.org/licenses/.
+             .--~~,__        Copyright (c) 1996-2020 Freeciv21 and Freeciv
+:-....,-------`~~'._.'       contributors. This file is part of Freeciv21.
+ `-,,,  ,_      ;'~U'  Freeciv21 is free software: you can redistribute it
+  _,-' ,'`-__; '--.            and/or modify it under the terms of the GNU
+ (_/'~~      ''''(;            General Public License  as published by the
+                             Free Software Foundation, either version 3 of
+       the License, or (at your option) any later version. You should have
+   received a copy of the GNU General Public License along with Freeciv21.
+                                If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #include "page_network.h"
 // Qt
 #include <QCheckBox>
@@ -34,183 +32,143 @@ static enum connection_state connection_status;
 static struct server_scan *meta_scan, *lan_scan;
 static bool holding_srv_list_mutex = false;
 
-/**********************************************************************/ /**
-   Creates buttons and layouts for network page.
- **************************************************************************/
-void fc_client::create_network_page(void)
+page_network::page_network(QWidget *parent, fc_client *gui) : QWidget(parent), meta_scan_timer(nullptr), lan_scan_timer(nullptr)
 {
+  king = gui;
+  ui.setupUi(this);
+
   QHeaderView *header;
   QLabel *connect_msg;
   QLabel *lan_label;
   QPushButton *network_button;
 
-  pages_layout[PAGE_NETWORK] = new QGridLayout;
-  QVBoxLayout *page_network_layout = new QVBoxLayout;
-  QGridLayout *page_network_grid_layout = new QGridLayout;
-  QHBoxLayout *page_network_lan_layout = new QHBoxLayout;
-  QHBoxLayout *page_network_wan_layout = new QHBoxLayout;
-
-  connect_host_edit = new QLineEdit;
-  connect_port_edit = new QLineEdit;
-  connect_login_edit = new QLineEdit;
-  connect_password_edit = new QLineEdit;
-  connect_confirm_password_edit = new QLineEdit;
-
-  connect_password_edit->setEchoMode(QLineEdit::Password);
-  connect_confirm_password_edit->setEchoMode(QLineEdit::Password);
-
-  connect_password_edit->setDisabled(true);
-  connect_confirm_password_edit->setDisabled(true);
-  connect_lan = new QWidget;
-  connect_metaserver = new QWidget;
-  lan_widget = new QTableWidget;
-  wan_widget = new QTableWidget;
-  info_widget = new QTableWidget;
+  ui.connect_password_edit->setEchoMode(QLineEdit::Password);
+  ui.connect_confirm_password_edit->setEchoMode(QLineEdit::Password);
+  ui.connect_password_edit->setDisabled(true);
+  ui.connect_confirm_password_edit->setDisabled(true);
 
   QStringList servers_list;
   servers_list << _("Server Name") << _("Port") << _("Version")
                << _("Status") << Q_("?count:Players") << _("Comment");
   QStringList server_info;
   server_info << _("Name") << _("Type") << _("Host") << _("Nation");
+  // TODO put it to designer
+  ui.lan_widget->setRowCount(0);
+  ui.lan_widget->setColumnCount(servers_list.count());
+  ui.lan_widget->verticalHeader()->setVisible(false);
+  ui.lan_widget->setAutoScroll(false);
+  ui.wan_widget->setRowCount(0);
+  ui.wan_widget->setColumnCount(servers_list.count());
+  ui.wan_widget->verticalHeader()->setVisible(false);
+  ui.wan_widget->setAutoScroll(false);
+  ui.info_widget->setRowCount(0);
+  ui.info_widget->setColumnCount(server_info.count());
+  ui.info_widget->verticalHeader()->setVisible(false);
+  ui.lan_widget->setHorizontalHeaderLabels(servers_list);
+  ui.lan_widget->setProperty("showGrid", "false");
+  ui.lan_widget->setProperty("selectionBehavior", "SelectRows");
+  ui.lan_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui.lan_widget->setSelectionMode(QAbstractItemView::SingleSelection);
+  ui.wan_widget->setHorizontalHeaderLabels(servers_list);
+  ui.wan_widget->setProperty("showGrid", "false");
+  ui.wan_widget->setProperty("selectionBehavior", "SelectRows");
+  ui.wan_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui.wan_widget->setSelectionMode(QAbstractItemView::SingleSelection);
 
-  lan_widget->setRowCount(0);
-  lan_widget->setColumnCount(servers_list.count());
-  lan_widget->verticalHeader()->setVisible(false);
-  lan_widget->setAutoScroll(false);
-
-  wan_widget->setRowCount(0);
-  wan_widget->setColumnCount(servers_list.count());
-  wan_widget->verticalHeader()->setVisible(false);
-  wan_widget->setAutoScroll(false);
-
-  info_widget->setRowCount(0);
-  info_widget->setColumnCount(server_info.count());
-  info_widget->verticalHeader()->setVisible(false);
-
-  lan_widget->setHorizontalHeaderLabels(servers_list);
-  lan_widget->setProperty("showGrid", "false");
-  lan_widget->setProperty("selectionBehavior", "SelectRows");
-  lan_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  lan_widget->setSelectionMode(QAbstractItemView::SingleSelection);
-
-  wan_widget->setHorizontalHeaderLabels(servers_list);
-  wan_widget->setProperty("showGrid", "false");
-  wan_widget->setProperty("selectionBehavior", "SelectRows");
-  wan_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  wan_widget->setSelectionMode(QAbstractItemView::SingleSelection);
-
-  connect(wan_widget->selectionModel(),
+  connect(ui.wan_widget->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
-          &fc_client::slot_selection_changed);
+          &page_network::slot_selection_changed);
 
-  connect(lan_widget->selectionModel(),
+  connect(ui.lan_widget->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
-          &fc_client::slot_selection_changed);
-  connect(wan_widget, &QTableWidget::itemDoubleClicked, this,
-          &fc_client::slot_connect);
-  connect(lan_widget, &QTableWidget::itemDoubleClicked, this,
-          &fc_client::slot_connect);
+          &page_network::slot_selection_changed);
+  connect(ui.wan_widget, &QTableWidget::itemDoubleClicked, this,
+          &page_network::slot_connect);
+  connect(ui.lan_widget, &QTableWidget::itemDoubleClicked, this,
+          &page_network::slot_connect);
 
-  info_widget->setHorizontalHeaderLabels(server_info);
-  info_widget->setProperty("selectionBehavior", "SelectRows");
-  info_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  info_widget->setSelectionMode(QAbstractItemView::SingleSelection);
-  info_widget->setProperty("showGrid", "false");
-  info_widget->setAlternatingRowColors(true);
+  ui.info_widget->setHorizontalHeaderLabels(server_info);
+  ui.info_widget->setProperty("selectionBehavior", "SelectRows");
+  ui.info_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui.info_widget->setSelectionMode(QAbstractItemView::SingleSelection);
+  ui.info_widget->setProperty("showGrid", "false");
+  ui.info_widget->setAlternatingRowColors(true);
 
-  header = lan_widget->horizontalHeader();
+  header = ui.lan_widget->horizontalHeader();
   header->setSectionResizeMode(0, QHeaderView::Stretch);
   header->setStretchLastSection(true);
-  header = wan_widget->horizontalHeader();
+  header = ui.wan_widget->horizontalHeader();
   header->setSectionResizeMode(0, QHeaderView::Stretch);
   header->setStretchLastSection(true);
-  header = info_widget->horizontalHeader();
+  header = ui.info_widget->horizontalHeader();
   header->setSectionResizeMode(0, QHeaderView::Stretch);
   header->setStretchLastSection(true);
 
-  QStringList label_names;
-  label_names << _("Connect") << _("Port") << _("Login") << _("Password")
-              << _("Confirm Password");
+  ui.lhost->setText(_("Connect"));
+  ui.lport->setText(_("Port"));
+  ui.lname->setText(_("Password"));
+  ui.lpass->setText(_("Connect"));
+  ui.lconfpass->setText(_("Confirm Password"));
 
-  for (int i = 0; i < label_names.count(); i++) {
-    connect_msg = new QLabel;
-    connect_msg->setText(label_names[i]);
-    page_network_grid_layout->addWidget(connect_msg, i, 0, Qt::AlignHCenter);
-  }
+  ui.refresh_button->setText(_("Refresh"));
+  ui.cancel_button->setText(_("Cancel"));
+  ui.connect_button->setText(_("Connect"));
+  QObject::connect(ui.refresh_button, &QAbstractButton::clicked, this,
+                   &page_network::update_network_lists);
+  QObject::connect(ui.cancel_button, &QPushButton::clicked,
+                   [gui]() { gui->switch_page(PAGE_MAIN); });
+  connect(ui.connect_button, &QAbstractButton::clicked, this,
+          &page_network::slot_connect);
+  connect(ui.connect_login_edit, &QLineEdit::returnPressed, this,
+          &page_network::slot_connect);
+  connect(ui.connect_password_edit, &QLineEdit::returnPressed, this,
+          &page_network::slot_connect);
+  connect(ui.connect_confirm_password_edit, &QLineEdit::returnPressed, this,
+          &page_network::slot_connect);
 
-  page_network_grid_layout->addWidget(connect_host_edit, 0, 1);
-  page_network_grid_layout->addWidget(connect_port_edit, 1, 1);
-  page_network_grid_layout->addWidget(connect_login_edit, 2, 1);
-  page_network_grid_layout->addWidget(connect_password_edit, 3, 1);
-  page_network_grid_layout->addWidget(connect_confirm_password_edit, 4, 1);
-  page_network_grid_layout->addWidget(info_widget, 0, 2, 5, 4);
+  ui.lan_label->setText(_("Internet servers:"));
+  ui.wan_label->setText(_("Local servers:"));
 
-  network_button = new QPushButton(_("Refresh"));
-  QObject::connect(network_button, &QAbstractButton::clicked, this,
-                   &fc_client::update_network_lists);
-  page_network_grid_layout->addWidget(network_button, 5, 0);
+  ui.connect_host_edit->setText(server_host);
+  ui.connect_port_edit->setText(QString::number(server_port));
+  ui.connect_login_edit->setText(user_name);
+  ui.connect_password_edit->setDisabled(true);
+  ui.connect_confirm_password_edit->setDisabled(true);
 
-  network_button = new QPushButton(_("Cancel"));
-  QObject::connect(network_button, &QPushButton::clicked,
-                   [this]() { switch_page(PAGE_MAIN); });
-  page_network_grid_layout->addWidget(network_button, 5, 2, 1, 1);
-
-  network_button = new QPushButton(_("Connect"));
-  page_network_grid_layout->addWidget(network_button, 5, 5, 1, 1);
-  connect(network_button, &QAbstractButton::clicked, this,
-          &fc_client::slot_connect);
-  connect(connect_login_edit, &QLineEdit::returnPressed, this,
-          &fc_client::slot_connect);
-  connect(connect_password_edit, &QLineEdit::returnPressed, this,
-          &fc_client::slot_connect);
-  connect(connect_confirm_password_edit, &QLineEdit::returnPressed, this,
-          &fc_client::slot_connect);
-
-  connect_lan->setLayout(page_network_lan_layout);
-  connect_metaserver->setLayout(page_network_wan_layout);
-  page_network_lan_layout->addWidget(lan_widget, 0);
-  page_network_wan_layout->addWidget(wan_widget, 1);
-  lan_label = new QLabel(_("Internet servers:"));
-  page_network_layout->addWidget(lan_label, 1);
-  page_network_layout->addWidget(wan_widget, 10);
-  lan_label = new QLabel(_("Local servers:"));
-  page_network_layout->addWidget(lan_label, 1);
-  page_network_layout->addWidget(lan_widget, 1);
-  page_network_grid_layout->setColumnStretch(3, 4);
-  pages_layout[PAGE_NETWORK]->addLayout(page_network_layout, 1, 1);
-  pages_layout[PAGE_NETWORK]->addLayout(page_network_grid_layout, 2, 1);
 }
+
+page_network::~page_network() {}
 
 /**********************************************************************/ /**
    Update network page connection state.
  **************************************************************************/
-void fc_client::set_connection_state(enum connection_state state)
+void page_network::set_connection_state(enum connection_state state)
 {
   switch (state) {
   case LOGIN_TYPE:
-    set_status_bar("");
-    connect_password_edit->setText("");
-    connect_password_edit->setDisabled(true);
-    connect_confirm_password_edit->setText("");
-    connect_confirm_password_edit->setDisabled(true);
+    king->set_status_bar("");
+    ui.connect_password_edit->setText("");
+    ui.connect_password_edit->setDisabled(true);
+    ui.connect_confirm_password_edit->setText("");
+    ui.connect_confirm_password_edit->setDisabled(true);
     break;
   case NEW_PASSWORD_TYPE:
-    connect_password_edit->setText("");
-    connect_confirm_password_edit->setText("");
-    connect_password_edit->setDisabled(false);
-    connect_confirm_password_edit->setDisabled(false);
-    connect_password_edit->setFocus(Qt::OtherFocusReason);
+    ui.connect_password_edit->setText("");
+    ui.connect_confirm_password_edit->setText("");
+    ui.connect_password_edit->setDisabled(false);
+    ui.connect_confirm_password_edit->setDisabled(false);
+    ui.connect_password_edit->setFocus(Qt::OtherFocusReason);
     break;
   case ENTER_PASSWORD_TYPE:
-    connect_password_edit->setText("");
-    connect_confirm_password_edit->setText("");
-    connect_password_edit->setDisabled(false);
-    connect_confirm_password_edit->setDisabled(true);
-    connect_password_edit->setFocus(Qt::OtherFocusReason);
+    ui.connect_password_edit->setText("");
+    ui.connect_confirm_password_edit->setText("");
+    ui.connect_password_edit->setDisabled(false);
+    ui.connect_confirm_password_edit->setDisabled(true);
+    ui.connect_password_edit->setFocus(Qt::OtherFocusReason);
 
     break;
   case WAITING_TYPE:
-    set_status_bar("");
+    king->set_status_bar("");
     break;
   }
 
@@ -220,8 +178,8 @@ void fc_client::set_connection_state(enum connection_state state)
 /**********************************************************************/ /**
    Updates list of servers in network page in proper QTableViews
  **************************************************************************/
-void fc_client::update_server_list(enum server_scan_type sstype,
-                                   const struct server_list *list)
+void page_network::update_server_list(enum server_scan_type sstype,
+                                      const struct server_list *list)
 {
   QTableWidget *sel = NULL;
   QString host, portstr;
@@ -231,10 +189,10 @@ void fc_client::update_server_list(enum server_scan_type sstype,
 
   switch (sstype) {
   case SERVER_SCAN_LOCAL:
-    sel = lan_widget;
+    sel = ui.lan_widget;
     break;
   case SERVER_SCAN_GLOBAL:
-    sel = wan_widget;
+    sel = ui.wan_widget;
     break;
   default:
     break;
@@ -248,8 +206,8 @@ void fc_client::update_server_list(enum server_scan_type sstype,
     return;
   }
 
-  host = connect_host_edit->text();
-  portstr = connect_port_edit->text();
+  host = ui.connect_host_edit->text();
+  portstr = ui.connect_port_edit->text();
   port = portstr.toInt();
   old_row_count = sel->rowCount();
   sel->clearContents();
@@ -333,7 +291,7 @@ void server_scan_error(struct server_scan *scan, const char *message)
 /**********************************************************************/ /**
    Free the server scans.
  **************************************************************************/
-void fc_client::destroy_server_scans(void)
+void page_network::destroy_server_scans(void)
 {
   if (meta_scan) {
     server_scan_finish(meta_scan);
@@ -363,26 +321,26 @@ void fc_client::destroy_server_scans(void)
 /**********************************************************************/ /**
    Stop and restart the metaserver and lan server scans.
  **************************************************************************/
-void fc_client::update_network_lists(void)
+void page_network::update_network_lists(void)
 {
   destroy_server_scans();
 
   lan_scan_timer = new QTimer(this);
   lan_scan = server_scan_begin(SERVER_SCAN_LOCAL, server_scan_error);
-  connect(lan_scan_timer, &QTimer::timeout, this, &fc_client::slot_lan_scan);
+  connect(lan_scan_timer, &QTimer::timeout, this, &page_network::slot_lan_scan);
   lan_scan_timer->start(500);
 
   meta_scan_timer = new QTimer(this);
   meta_scan = server_scan_begin(SERVER_SCAN_GLOBAL, server_scan_error);
   connect(meta_scan_timer, &QTimer::timeout, this,
-          &fc_client::slot_meta_scan);
+          &page_network::slot_meta_scan);
   meta_scan_timer->start(800);
 }
 
 /**********************************************************************/ /**
    This function updates the list of servers every so often.
  **************************************************************************/
-bool fc_client::check_server_scan(server_scan *scan_data)
+bool page_network::check_server_scan(server_scan *scan_data)
 {
   struct server_scan *scan = scan_data;
   enum server_scan_status stat;
@@ -416,7 +374,7 @@ bool fc_client::check_server_scan(server_scan *scan_data)
 /**********************************************************************/ /**
    Executes lan scan network
  **************************************************************************/
-void fc_client::slot_lan_scan()
+void page_network::slot_lan_scan()
 {
   if (lan_scan_timer == NULL) {
     return;
@@ -427,7 +385,7 @@ void fc_client::slot_lan_scan()
 /**********************************************************************/ /**
    Executes metaserver scan network
  **************************************************************************/
-void fc_client::slot_meta_scan()
+void page_network::slot_meta_scan()
 {
   if (meta_scan_timer == NULL) {
     return;
@@ -438,10 +396,10 @@ void fc_client::slot_meta_scan()
    Configure the dialog depending on what type of authentication request the
    server is making.
  **************************************************************************/
-void fc_client::handle_authentication_req(enum authentication_type type,
-                                          const char *message)
+void page_network::handle_authentication_req(enum authentication_type type,
+                                             const char *message)
 {
-  set_status_bar(QString::fromUtf8(message));
+  king->set_status_bar(QString::fromUtf8(message));
   destroy_server_scans();
 
   switch (type) {
@@ -476,7 +434,7 @@ void fc_client::handle_authentication_req(enum authentication_type type,
    and port). if on the login page, send connect and/or authentication
    requests to the server.
  **************************************************************************/
-void fc_client::slot_connect()
+void page_network::slot_connect()
 {
   char errbuf[512];
   struct packet_authentication_reply reply;
@@ -484,25 +442,25 @@ void fc_client::slot_connect()
 
   switch (connection_status) {
   case LOGIN_TYPE:
-    ba_bytes = connect_login_edit->text().toLocal8Bit();
+    ba_bytes = ui.connect_login_edit->text().toLocal8Bit();
     sz_strlcpy(user_name, ba_bytes.data());
-    ba_bytes = connect_host_edit->text().toLocal8Bit();
+    ba_bytes = ui.connect_host_edit->text().toLocal8Bit();
     sz_strlcpy(server_host, ba_bytes.data());
-    server_port = connect_port_edit->text().toInt();
+    server_port = ui.connect_port_edit->text().toInt();
 
     if (connect_to_server(user_name, server_host, server_port, errbuf,
                           sizeof(errbuf))
         != -1) {
     } else {
-      set_status_bar(QString::fromUtf8(errbuf));
+      king->set_status_bar(QString::fromUtf8(errbuf));
       output_window_append(ftc_client, errbuf);
     }
 
     return;
   case NEW_PASSWORD_TYPE:
-    ba_bytes = connect_password_edit->text().toLatin1();
+    ba_bytes = ui.connect_password_edit->text().toLatin1();
     sz_strlcpy(password, ba_bytes.data());
-    ba_bytes = connect_confirm_password_edit->text().toLatin1();
+    ba_bytes = ui.connect_confirm_password_edit->text().toLatin1();
     sz_strlcpy(reply.password, ba_bytes.data());
 
     if (strncmp(reply.password, password, MAX_LEN_NAME) == 0) {
@@ -510,13 +468,13 @@ void fc_client::slot_connect()
       send_packet_authentication_reply(&client.conn, &reply);
       set_connection_state(WAITING_TYPE);
     } else {
-      set_status_bar(_("Passwords don't match, enter password."));
+      king->set_status_bar(_("Passwords don't match, enter password."));
       set_connection_state(NEW_PASSWORD_TYPE);
     }
 
     return;
   case ENTER_PASSWORD_TYPE:
-    ba_bytes = connect_password_edit->text().toLatin1();
+    ba_bytes = ui.connect_password_edit->text().toLatin1();
     sz_strlcpy(reply.password, ba_bytes.data());
     send_packet_authentication_reply(&client.conn, &reply);
     set_connection_state(WAITING_TYPE);
@@ -528,12 +486,11 @@ void fc_client::slot_connect()
   log_error("Unsupported connection status: %d", connection_status);
 }
 
-
 /**********************************************************************/ /**
-   TODO SPLIT TO SCENARIO AND LOAD
+
  **************************************************************************/
-void fc_client::slot_selection_changed(const QItemSelection &selected,
-                                       const QItemSelection &deselected)
+void page_network::slot_selection_changed(const QItemSelection &selected,
+                                          const QItemSelection &deselected)
 {
 
   QModelIndexList indexes = selected.indexes();
@@ -544,8 +501,7 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
   QVariant qvar;
   QString str_pixmap;
 
-  client_pages i = current_page();
-  const char *terr_name;
+  client_pages i = king->current_page();
   const struct server *pserver = NULL;
   int ii = 0;
   int k, col, n, nat_y, nat_x;
@@ -557,62 +513,70 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
     return;
   }
 
-  switch (i) {
-  case PAGE_NETWORK:
-    index = indexes.at(0);
-    connect_host_edit->setText(index.data().toString());
-    index = indexes.at(1);
-    connect_port_edit->setText(index.data().toString());
+  index = indexes.at(0);
+  ui.connect_host_edit->setText(index.data().toString());
+  index = indexes.at(1);
+  ui.connect_port_edit->setText(index.data().toString());
 
-    tw = qobject_cast<QItemSelectionModel *>(sender());
+  tw = qobject_cast<QItemSelectionModel *>(sender());
 
-    if (tw == lan_widget->selectionModel()) {
-      wan_widget->clearSelection();
-    } else {
-      lan_widget->clearSelection();
-    }
+  if (tw == ui.lan_widget->selectionModel()) {
+    ui.wan_widget->clearSelection();
+  } else {
+    ui.lan_widget->clearSelection();
+  }
 
-    srvrs = server_scan_get_list(meta_scan);
-    if (!holding_srv_list_mutex) {
-      fc_allocate_mutex(&srvrs->mutex);
-    }
-    if (srvrs->servers) {
-      pserver = server_list_get(srvrs->servers, index.row());
-    }
-    if (!holding_srv_list_mutex) {
-      fc_release_mutex(&srvrs->mutex);
-    }
-    if (!pserver || !pserver->players) {
-      return;
-    }
-    n = pserver->nplayers;
-    info_widget->clearContents();
-    info_widget->setRowCount(0);
-    for (k = 0; k < n; k++) {
-      info_widget->insertRow(k);
-      for (col = 0; col < 4; col++) {
-        item = new QTableWidgetItem();
-        switch (col) {
-        case 0:
-          item->setText(pserver->players[k].name);
-          break;
-        case 1:
-          item->setText(pserver->players[k].type);
-          break;
-        case 2:
-          item->setText(pserver->players[k].host);
-          break;
-        case 3:
-          item->setText(pserver->players[k].nation);
-          break;
-        default:
-          break;
-        }
-        info_widget->setItem(k, col, item);
+  srvrs = server_scan_get_list(meta_scan);
+  if (!holding_srv_list_mutex) {
+    fc_allocate_mutex(&srvrs->mutex);
+  }
+  if (srvrs->servers) {
+    pserver = server_list_get(srvrs->servers, index.row());
+  }
+  if (!holding_srv_list_mutex) {
+    fc_release_mutex(&srvrs->mutex);
+  }
+  if (!pserver || !pserver->players) {
+    return;
+  }
+  n = pserver->nplayers;
+  ui.info_widget->clearContents();
+  ui.info_widget->setRowCount(0);
+  for (k = 0; k < n; k++) {
+    ui.info_widget->insertRow(k);
+    for (col = 0; col < 4; col++) {
+      item = new QTableWidgetItem();
+      switch (col) {
+      case 0:
+        item->setText(pserver->players[k].name);
+        break;
+      case 1:
+        item->setText(pserver->players[k].type);
+        break;
+      case 2:
+        item->setText(pserver->players[k].host);
+        break;
+      case 3:
+        item->setText(pserver->players[k].nation);
+        break;
+      default:
+        break;
       }
+      ui.info_widget->setItem(k, col, item);
     }
-    break;
-  case PAGE_SCENARIO:
+  }
+
+}
+
+
+void fc_client::slot_selection_changed(const QItemSelection &selected,
+                                          const QItemSelection &deselected)
+{
+
+  QModelIndexList indexes = selected.indexes();
+  QStringList sl;
+  QModelIndex index;
+  QVariant qvar;
     index = indexes.at(0);
     qvar = index.data(Qt::UserRole);
     sl = qvar.toStringList();
@@ -621,8 +585,4 @@ void fc_client::slot_selection_changed(const QItemSelection &selected,
       scenarios_view->setText(sl.at(2));
       current_file = sl.at(1);
     }
-    break;
-  default:
-    break;
-  }
 }

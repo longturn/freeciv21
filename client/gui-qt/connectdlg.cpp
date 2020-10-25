@@ -38,7 +38,7 @@ void qtg_close_connection_dialog()
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
-  gui()->handle_authentication_req(type, message);
+  gui()->authentication_request(type, message);
 }
 
 /**********************************************************************/ /**
