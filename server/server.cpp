@@ -419,6 +419,44 @@ void server::accept_connections()
 }
 
 /*************************************************************************/ /**
+   Sends pings to clients if needed.
+ *****************************************************************************/
+void server::send_pings()
+{
+  // Pinging around for statistics
+  if (time(NULL) > (game.server.last_ping + game.server.pingtime)) {
+    // send data about the previous run
+    send_ping_times_to_all();
+
+    conn_list_iterate(game.all_connections, pconn)
+    {
+      if ((!pconn->server.is_closing
+           && 0 < timer_list_size(pconn->server.ping_timers)
+           && timer_read_seconds(timer_list_front(pconn->server.ping_timers))
+                  > game.server.pingtimeout)
+          || pconn->ping_time > game.server.pingtimeout) {
+        // cut mute players, except for hack-level ones
+        if (pconn->access_level == ALLOW_HACK) {
+          log_verbose("connection (%s) [hack-level] ping timeout ignored",
+                      conn_description(pconn));
+        } else {
+          log_verbose("connection (%s) cut due to ping timeout",
+                      conn_description(pconn));
+          connection_close_server(pconn, _("ping timeout"));
+        }
+      } else if (pconn->established) {
+        // We don't send ping to connection not established, because we
+        // wouldn't be able to handle asynchronous ping/pong with different
+        // packet header size.
+        connection_ping(pconn);
+      }
+    }
+    conn_list_iterate_end;
+    game.server.last_ping = time(NULL);
+  }
+}
+
+/*************************************************************************/ /**
    Called when there was an error on a socket.
  *****************************************************************************/
 void server::error_on_socket()
@@ -823,6 +861,8 @@ void server::quit_idle()
  *****************************************************************************/
 void server::pulse()
 {
+  send_pings();
+
   call_ai_refresh();
   script_server_signal_emit("pulse");
   (void) send_server_info_to_metaserver(META_REFRESH);

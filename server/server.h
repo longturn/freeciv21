@@ -43,6 +43,7 @@ private slots:
   void input_on_socket();
   void input_on_stdin();
   void accept_connections();
+  void send_pings();
 
   // Higher-level stuff
   void prepare_game();

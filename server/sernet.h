@@ -41,7 +41,9 @@ void close_connections_and_socket(void);
 void really_close_connections();
 void init_connections(void);
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
+void connection_ping(struct connection *pconn);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
+void send_ping_times_to_all();
 
 #endif /* FC__SERNET_H */

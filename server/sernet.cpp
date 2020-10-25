@@ -107,8 +107,6 @@ static int server_accept_connection(int sockfd);
 static void start_processing_request(struct connection *pconn,
                                      int request_id);
 static void finish_processing_request(struct connection *pconn);
-static void connection_ping(struct connection *pconn);
-static void send_ping_times_to_all(void);
 
 static void get_lanserver_announcement(void);
 static void send_lanserver_response(void);
@@ -769,7 +767,7 @@ static void finish_processing_request(struct connection *pconn)
 /*************************************************************************/ /**
    Ping a connection.
  *****************************************************************************/
-static void connection_ping(struct connection *pconn)
+void connection_ping(struct connection *pconn)
 {
   struct timer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
 
@@ -811,7 +809,7 @@ void handle_client_heartbeat(struct connection *pconn)
 /*************************************************************************/ /**
    Send ping time info about all connections to all connections.
  *****************************************************************************/
-static void send_ping_times_to_all(void)
+void send_ping_times_to_all()
 {
   struct packet_conn_ping_info packet;
   int i;
