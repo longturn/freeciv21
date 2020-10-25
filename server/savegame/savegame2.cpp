@@ -1224,7 +1224,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->extra.order[j] = NULL;
     }
@@ -1254,7 +1254,7 @@ static void sg_load_savefile(struct loaddata *loading)
                     modname[j]);
       }
     }
-    free(modname);
+    delete[] modname;
   }
 
   /* Load specials. */
@@ -1294,7 +1294,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->special.order[j] = special_by_rule_name(modname[j]);
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->special.order[j] = S_LAST;
     }
@@ -1330,7 +1330,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->base.order[j] = NULL;
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->base.order[j] = NULL;
     }
@@ -1365,7 +1365,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->road.order[j] = NULL;
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->road.order[j] = NULL;
     }
@@ -1399,7 +1399,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->specialist.order[j] = NULL;
     }
@@ -1428,7 +1428,7 @@ static void sg_load_savefile(struct loaddata *loading)
           diplstate_type_by_name(modname[j], fc_strcasecmp);
     }
 
-    free(modname);
+    delete[] modname;
   }
 
   terrain_type_iterate(pterr) { pterr->identifier_load = '\0'; }
@@ -2865,7 +2865,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
 
     BV_SET(plr->flags, fid);
   }
-  free(slist);
+  delete[] slist;
 
   /* Nation */
   string = secfile_lookup_str(loading->file, "player%d.nation", plrno);

@@ -683,5 +683,5 @@ void server_scan_finish(struct server_scan *scan)
 
   fc_destroy_mutex(&scan->srvrs.mutex);
 
-  free(scan);
+  delete scan;
 }

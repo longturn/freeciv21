@@ -944,7 +944,7 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint8_raw(din, vec + inx)) {
-      free(vec);
+      delete[] vec;
       return FALSE;
     }
   }
@@ -970,7 +970,7 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint16_raw(din, vec + inx)) {
-      free(vec);
+      delete[] vec;
       return FALSE;
     }
   }

@@ -1159,8 +1159,7 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
   if (tries == max_tries) {
     int count = 0, *positions;
 
-    positions =
-        static_cast<int *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*positions)));
+    positions = new int[MAP_INDEX_SIZE]();
 
     whole_map_iterate(nmap, check_tile)
     {
@@ -1177,7 +1176,7 @@ struct tile *rand_map_pos_filtered(const struct civ_map *nmap, void *data,
       ptile = wld.map.tiles + positions[fc_rand(count)];
     }
 
-    FC_FREE(positions);
+    delete[] positions;
   }
 
   return ptile;

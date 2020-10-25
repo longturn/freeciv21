@@ -342,7 +342,7 @@ struct cm_result *cm_result_new(struct city *pcity)
   struct cm_result *result;
 
   /* initialise all values */
-  result = static_cast<cm_result *>(fc_calloc(1, sizeof(*result)));
+  result = new cm_result[1]();
   result->city_radius_sq =
       pcity ? city_map_radius_sq_get(pcity) : CITY_MAP_MAX_RADIUS_SQ;
   result->worker_positions =
@@ -2481,8 +2481,7 @@ void cm_print_city(const struct city *pcity)
  ****************************************************************************/
 void cm_print_result(const struct cm_result *result)
 {
-  int *city_map_data = static_cast<int *>(fc_calloc(
-      city_map_tiles(result->city_radius_sq), sizeof(*city_map_data)));
+  int *city_map_data = new int[city_map_tiles(result->city_radius_sq)]();
 
   log_test("cm_print_result(result=%p)", (void *) result);
   log_test("  found_a_valid=%d disorder=%d happy=%d", result->found_a_valid,
@@ -2501,7 +2500,7 @@ void cm_print_result(const struct cm_result *result)
   city_map_iterate_end;
   log_test("workers map (2: free worked; 1: worker; 0: not used):");
   citylog_map_data(LOG_TEST, result->city_radius_sq, city_map_data);
-  FC_FREE(city_map_data);
+  delete[] city_map_data;
 
   log_test("  (workers/specialists) %d/%s", cm_result_workers(result),
            specialists_string(result->specialists));

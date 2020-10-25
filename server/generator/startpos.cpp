@@ -352,10 +352,8 @@ bool create_start_positions(enum map_startpos mode,
     mode = MAPSTARTPOS_VARIABLE;
   }
 
-  tile_value_aux =
-      static_cast<int *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*tile_value_aux)));
-  tile_value =
-      static_cast<int *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*tile_value)));
+  tile_value_aux = new int[MAP_INDEX_SIZE]();
+  tile_value = new int[MAP_INDEX_SIZE]();
 
   /* get the tile value */
   whole_map_iterate(&(wld.map), value_tile)

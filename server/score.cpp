@@ -162,8 +162,7 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
  **************************************************************************/
 static void build_landarea_map(struct claim_map *pcmap)
 {
-  bv_player *claims =
-      static_cast<bv_player *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*claims)));
+  bv_player *claims = new bv_player[MAP_INDEX_SIZE]();
 
   memset(pcmap, 0, sizeof(*pcmap));
 
@@ -216,7 +215,7 @@ static void build_landarea_map(struct claim_map *pcmap)
   }
   whole_map_iterate_end;
 
-  FC_FREE(claims);
+  delete[] claims;
 
 #if LAND_AREA_DEBUG >= 2
   print_landarea_map(pcmap, turn);

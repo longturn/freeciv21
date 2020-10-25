@@ -1206,7 +1206,7 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
         char *fullname;
         size_t len = strlen(dirname) + strlen(filename) + 2;
 
-        fullname = static_cast<char *>(fc_malloc(len));
+        fullname = new char[len];
         fc_snprintf(fullname, len, "%s" DIR_SEPARATOR "%s", dirname,
                     filename);
 

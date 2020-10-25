@@ -627,7 +627,7 @@ struct text_tag *text_tag_new(enum text_tag_type tag_type,
   if (ok) {
     return ptag;
   } else {
-    free(ptag);
+    delete ptag;
     return NULL;
   }
 }
@@ -651,7 +651,7 @@ struct text_tag *text_tag_copy(const struct text_tag *ptag)
 /**********************************************************************/ /**
    Free a text_tag structure.
  **************************************************************************/
-void text_tag_destroy(struct text_tag *ptag) { free(ptag); }
+void text_tag_destroy(struct text_tag *ptag) { delete ptag; }
 
 /**********************************************************************/ /**
    Return the type of this text tag.
