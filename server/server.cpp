@@ -667,10 +667,7 @@ void server::begin_phase()
               game.server.turn_change_time);
   }
 
-  if (game.info.timeout == -1) {
-    // Autogame, end phase as soon as the event loop allows
-    QTimer::singleShot(0, this, &server::end_phase);
-  }
+  QTimer::singleShot(0, this, &server::update_game_state);
 }
 
 /*************************************************************************/ /**
