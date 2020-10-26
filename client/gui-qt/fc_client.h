@@ -25,7 +25,6 @@
 #include "chatline.h"
 #include "idlecallback.h"
 #include "menu.h"
-#include "pregameoptions.h" // make qt UIC happy
 #include "tradecalculation.h"
 
 class QApplication;
@@ -140,38 +139,27 @@ public slots:
 
 class fc_client : public QMainWindow, private chat_listener {
   Q_OBJECT
-  QWidget *main_wdg;
-  QWidget *game_main_widget;
 
-  QGridLayout *pages_layout[PAGE_GAME + 2];
-  QStackedLayout *central_layout;
+  enum client_pages page;
   QGridLayout *game_layout;
-
-  //QTextEdit *output_window;
-
-  QPushButton *button;
-  QPushButton *obs_button;
-  QPushButton *start_button;
-  QPushButton *nation_button;
-
-  QDialogButtonBox *button_box;
-
-  QSocketNotifier *server_notifier;
-
-  chat_input *chat_line;
-
-  QTreeWidget *start_players_tree;
-
-  QTimer *update_info_timer;
-
-  QStatusBar *status_bar;
+  QGridLayout *pages_layout[PAGE_GAME + 2];
   QLabel *status_bar_label;
-  info_tile *info_tile_wdg;
+  QMap<QString, QWidget *> opened_repo_dlgs;
+  QSocketNotifier *server_notifier;
+  QStackedLayout *central_layout;
+  QStatusBar *status_bar;
+  QString current_file;
+  QStringList status_bar_queue;
+  QTimer *update_info_timer;
+  QWidget *game_main_widget;
+  bool quitting;
+  bool send_new_aifill_to_server;
   choice_dialog *opened_dialog;
-  fc_sidewidget *sw_map;
   fc_sidewidget *sw_cities;
-  fc_sidewidget *sw_tax;
   fc_sidewidget *sw_economy;
+  fc_sidewidget *sw_map;
+  fc_sidewidget *sw_tax;
+  info_tile *info_tile_wdg;
 
 public:
   fc_client();
@@ -198,30 +186,6 @@ public:
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
   void update_sidebar_position();
-  mr_idle mr_idler;
-  QWidget *central_wdg;
-  mr_menu *menu_bar;
-  fc_corner *corner_wid;
-  fc_game_tab_widget *game_tab_widget;
-  messagewdg *msgwdg;
-  info_tab *infotab;
-  units_select *unit_sel;
-  xvote *x_vote;
-  goto_dialog *gtd;
-  QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
-  fc_settings qt_settings;
-  trade_generator trade_gen;
-  qfc_rally_list rallies;
-  hud_units *unitinfo_wdg;
-  hud_battle_log *battlelog_wdg;
-  bool interface_locked;
-  fc_sidewidget *sw_cunit;
-  fc_sidewidget *sw_science;
-  fc_sidewidget *sw_endturn;
-  fc_sidewidget *sw_indicators;
-  fc_sidewidget *sw_diplo;
-  float map_scale;
-  bool map_font_scale;
   void gimme_place(QWidget *widget, const QString &str);
   int gimme_index_of(const QString &str);
   void remove_repo_dlg(const QString &str);
@@ -230,6 +194,31 @@ public:
   bool is_closing();
   void update_sidebar_tooltips();
   void reload_sidebar_icons();
+  QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
+  QWidget *central_wdg;
+  bool interface_locked;
+  bool map_font_scale;
+  fc_corner *corner_wid;
+  fc_game_tab_widget *game_tab_widget;
+  fc_settings qt_settings;
+  fc_sidewidget *sw_cunit;
+  fc_sidewidget *sw_diplo;
+  fc_sidewidget *sw_endturn;
+  fc_sidewidget *sw_indicators;
+  fc_sidewidget *sw_science;
+  float map_scale;
+  goto_dialog *gtd;
+  hud_battle_log *battlelog_wdg;
+  hud_units *unitinfo_wdg;
+  info_tab *infotab;
+  messagewdg *msgwdg;
+  mr_idle mr_idler;
+  mr_menu *menu_bar;
+  qfc_rally_list rallies;
+  trade_generator trade_gen;
+  units_select *unit_sel;
+  xvote *x_vote;
+
 private slots:
 
   void server_input(int sock);
@@ -246,19 +235,11 @@ public slots:
 private:
   void create_game_page();
   void create_loading_page();
-  void create_start_page();
   void create_cursors(void);
   void delete_cursors(void);
-  void update_buttons();
   void init();
   void read_settings();
 
-  enum client_pages page;
-  QMap<QString, QWidget *> opened_repo_dlgs;
-  QStringList status_bar_queue;
-  QString current_file;
-  bool send_new_aifill_to_server;
-  bool quitting;
 protected:
   void timerEvent(QTimerEvent *);
   void closeEvent(QCloseEvent *event);

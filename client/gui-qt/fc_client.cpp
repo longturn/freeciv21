@@ -68,13 +68,8 @@ fc_client::fc_client() : QMainWindow()
    * were created.
    * After adding new QObjects null them here.
    */
-  main_wdg = NULL;
   central_layout = NULL;
-  //output_window = NULL;
-  button = NULL;
-  button_box = NULL;
   server_notifier = NULL;
-  chat_line = NULL;
   status_bar = NULL;
   status_bar_label = NULL;
   menu_bar = NULL;
@@ -84,7 +79,6 @@ fc_client::fc_client() : QMainWindow()
   infotab = NULL;
   central_wdg = NULL;
   game_tab_widget = NULL;
-  start_players_tree = NULL;
   unit_sel = NULL;
   info_tile_wdg = NULL;
   opened_dialog = NULL;

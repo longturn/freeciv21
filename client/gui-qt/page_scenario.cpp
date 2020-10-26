@@ -13,10 +13,7 @@
 
 #include "page_scenario.h"
 // Qt
-#include <QApplication>
 #include <QFileDialog>
-#include <QGridLayout>
-#include <QHeaderView>
 // utility
 #include "fcintl.h"
 // common

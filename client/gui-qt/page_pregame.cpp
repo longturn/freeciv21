@@ -13,15 +13,8 @@
 
 #include "page_pregame.h"
 // Qt
-#include <QAction>
-#include <QComboBox>
-#include <QFormLayout>
-#include <QGridLayout>
-#include <QHeaderView>
 #include <QPainter>
 #include <QScrollBar>
-#include <QSplitter>
-#include <QTreeWidget>
 // utility
 #include "fcintl.h"
 // common

@@ -13,16 +13,8 @@
 
 #include "page_load.h"
 // Qt
-#include <QApplication>
-#include <QCheckBox>
 #include <QDateTime>
 #include <QFileDialog>
-#include <QGridLayout>
-#include <QHeaderView>
-#include <QItemSelectionModel>
-#include <QLabel>
-#include <QPushButton>
-#include <QTableWidget>
 // utility
 #include "fcintl.h"
 // common
@@ -53,7 +45,6 @@ static struct terrain *char2terrain(char ch)
   terrain_type_iterate_end;
   return nullptr;
 }
-
 
 page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
 {
@@ -349,7 +340,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
         ui.load_pix->setPixmap(*(new QPixmap));
       }
       ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
-                             ui.load_pix->pixmap()->height());
+                                ui.load_pix->pixmap()->height());
       if ((sf = secfile_load_section(fn_bytes.data(), "research", TRUE))) {
         sname = secfile_lookup_str_default(
             sf, nullptr, "research.r%d.now_name", curr_player);

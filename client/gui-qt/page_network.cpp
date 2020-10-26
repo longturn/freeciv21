@@ -10,11 +10,6 @@
                                 If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 #include "page_network.h"
-// Qt
-#include <QCheckBox>
-#include <QGridLayout>
-#include <QHeaderView>
-#include <QTableWidget>
 // utility
 #include "fcintl.h"
 // client
@@ -499,8 +494,6 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   QModelIndex index;
   QTableWidgetItem *item;
   QItemSelectionModel *tw;
-  QVariant qvar;
-  QString str_pixmap;
 
   client_pages i = king->current_page();
   const struct server *pserver = NULL;
@@ -508,7 +501,6 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   int k, col, n, nat_y, nat_x;
   struct section_file *sf;
   struct srv_list *srvrs;
-  QByteArray fn_bytes;
 
   if (indexes.isEmpty()) {
     return;
