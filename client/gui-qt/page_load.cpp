@@ -107,6 +107,7 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
       QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
   connect(ui.bload, &QAbstractButton::clicked, this,
           &page_load::start_from_save);
+  setLayout(ui.vertLayout);
 }
 
 page_load::~page_load() {}

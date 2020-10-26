@@ -71,6 +71,7 @@ page_scenario::page_scenario(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bload->setIcon(
       QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
   connect(ui.bload, &QAbstractButton::clicked, this, &page_scenario::start_scenario);
+  setLayout(ui.gridLayout);
 }
 
 page_scenario::~page_scenario() {}

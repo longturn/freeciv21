@@ -58,6 +58,7 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   beta = beta_message();
 #endif /* IS_BETA_VERSION */
   ui.lversion->setText(QString(msgbuf) + beta);
+  setLayout(ui.gridLayout);
 }
 
 page_main::~page_main() {}

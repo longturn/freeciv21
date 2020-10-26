@@ -134,6 +134,7 @@ page_network::page_network(QWidget *parent, fc_client *gui) : QWidget(parent), m
   ui.connect_login_edit->setText(user_name);
   ui.connect_password_edit->setDisabled(true);
   ui.connect_confirm_password_edit->setDisabled(true);
+  setLayout(ui.gridLayout);
 
 }
 
