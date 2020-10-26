@@ -18,6 +18,7 @@
 #include "connectdlg_g.h"
 #include "fc_client.h"
 #include "pages_g.h"
+#include "page_network.h"
 #include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
@@ -38,7 +39,8 @@ void qtg_close_connection_dialog()
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
-  gui()->authentication_request(type, message);
+  qobject_cast<page_network *>(gui()->pages[PAGE_NETWORK])
+      ->handle_authentication_req(type, message);
 }
 
 /**********************************************************************/ /**

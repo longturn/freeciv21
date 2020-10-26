@@ -40,6 +40,7 @@ add_library(
   page_pregame.cpp
   pages.cpp
   plrdlg.cpp
+  pregameoptions.cpp
   qtg_cxxside.cpp
   ratesdlg.cpp
   shortcuts.cpp

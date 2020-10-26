@@ -14,14 +14,18 @@
 #include "page_pregame.h"
 // Qt
 #include <QAction>
+#include <QComboBox>
+#include <QFormLayout>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QPainter>
+#include <QScrollBar>
 #include <QSplitter>
 #include <QTreeWidget>
 // utility
 #include "fcintl.h"
 // common
+#include "chatline_common.h"
 #include "colors_common.h"
 #include "connectdlg_common.h"
 #include "game.h"
@@ -29,103 +33,74 @@
 #include "client_main.h"
 // gui-qt
 #include "canvas.h"
+#include "chatline.h"
 #include "colors.h"
 #include "dialogs.h"
 #include "fc_client.h"
 #include "icons.h"
+#include "pregameoptions.h"
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-/**********************************************************************/ /**
-   Creates buttons and layouts for start page.
- **************************************************************************/
-void fc_client::create_start_page()
+page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
 {
-  QPushButton *but;
-  QSplitter *splitter;
-  QGridLayout *up_layout;
-  QGridLayout *down_layout;
-  QWidget *up_widget;
-  QWidget *down_widget;
+  king = gui;
+  ui.setupUi(this);
+
   QFont f;
-
   QStringList player_widget_list;
-  pages_layout[PAGE_START] = new QGridLayout;
-  up_layout = new QGridLayout;
-  down_layout = new QGridLayout;
-  start_players_tree = new QTreeWidget;
-  pr_options = new pregame_options(this);
-  chat_line = new chat_input;
-  chat_line->setProperty("doomchat", true);
-  output_window = new QTextEdit;
-  output_window->setReadOnly(false);
-  f.setBold(true);
-  output_window->setFont(f);
 
-  pr_options->init();
+  ui.chat_line->setProperty("doomchat", true);
+
+  ui.output_window->setReadOnly(false);
+  f.setBold(true);
+  ui.output_window->setFont(f);
   player_widget_list << _("Name") << _("Ready") << Q_("?player:Leader")
                      << _("Flag") << _("Border") << _("Nation") << _("Team")
                      << _("Host");
-
-  start_players_tree->setColumnCount(player_widget_list.count());
-  start_players_tree->setHeaderLabels(player_widget_list);
-  start_players_tree->setContextMenuPolicy(Qt::CustomContextMenu);
-  start_players_tree->setProperty("selectionBehavior", "SelectRows");
-  start_players_tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  start_players_tree->setRootIsDecorated(false);
-
-  connect(start_players_tree,
-          SIGNAL(customContextMenuRequested(const QPoint &)),
-          SLOT(start_page_menu(QPoint)));
-
-  up_layout->addWidget(start_players_tree, 0, 0, 3, 6);
-  up_layout->addWidget(pr_options, 0, 6, 3, 2);
-  but = new QPushButton;
-  but->setText(_("Disconnect"));
-  but->setIcon(style()->standardPixmap(QStyle::SP_DialogCancelButton));
-  QObject::connect(but, &QAbstractButton::clicked, this,
-                   &fc_client::slot_disconnect);
-  down_layout->addWidget(but, 5, 4);
-  nation_button = new QPushButton;
-  nation_button->setText(_("Pick Nation"));
-  nation_button->setIcon(fc_icons::instance()->get_icon("flag"));
-  down_layout->addWidget(nation_button, 5, 5);
-  QObject::connect(nation_button, &QAbstractButton::clicked, this,
-                   &fc_client::slot_pick_nation);
-
-  obs_button = new QPushButton;
-  obs_button->setText(_("Observe"));
-  obs_button->setIcon(fc_icons::instance()->get_icon("meeting-observer"));
-  down_layout->addWidget(obs_button, 5, 6);
-  QObject::connect(obs_button, &QAbstractButton::clicked, this,
-                   &fc_client::slot_pregame_observe);
-  start_button = new QPushButton;
-  start_button->setText(_("Start"));
-  start_button->setIcon(style()->standardPixmap(QStyle::SP_DialogOkButton));
-  down_layout->addWidget(start_button, 5, 7);
-  QObject::connect(start_button, &QAbstractButton::clicked, this,
-                   &fc_client::slot_pregame_start);
+  ui.start_players_tree->setColumnCount(player_widget_list.count());
+  ui.start_players_tree->setHeaderLabels(player_widget_list);
+  ui.start_players_tree->setContextMenuPolicy(Qt::CustomContextMenu);
+  ui.start_players_tree->setProperty("selectionBehavior", "SelectRows");
+  ui.start_players_tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
+  ui.start_players_tree->setRootIsDecorated(false);
+  connect(ui.start_players_tree, &QWidget::customContextMenuRequested, this,
+          &page_pregame::start_page_menu);
+  ui.bdisc->setText(_("Disconnect"));
+  ui.bdisc->setIcon(style()->standardPixmap(QStyle::SP_DialogCancelButton));
+  connect(ui.bdisc, &QAbstractButton::clicked, gui,
+          &fc_client::slot_disconnect);
+  ui.bpick->setText(_("Pick Nation"));
+  ui.bpick->setIcon(fc_icons::instance()->get_icon("flag"));
+  connect(ui.bpick, &QAbstractButton::clicked, this,
+          &page_pregame::slot_pick_nation);
+  ui.bops->setText(_("Observe"));
+  ui.bops->setIcon(fc_icons::instance()->get_icon("meeting-observer"));
+  connect(ui.bops, &QAbstractButton::clicked, this,
+          &page_pregame::slot_pregame_observe);
+  ui.bstart->setText(_("Start"));
+  ui.bstart->setIcon(style()->standardPixmap(QStyle::SP_DialogOkButton));
+  connect(ui.bstart, &QAbstractButton::clicked, this,
+          &page_pregame::slot_pregame_start);
   pre_vote = new pregamevote;
+  // down_layout->addWidget(pre_vote, 4, 0, 1, 4);
+  pre_vote->hide();
+  chat_listener::listen();
+  setLayout(ui.gridLayout);
+}
 
-  down_layout->addWidget(pre_vote, 4, 0, 1, 4);
-  down_layout->addWidget(chat_line, 5, 0, 1, 4);
-  down_layout->addWidget(output_window, 3, 0, 1, 8);
-  splitter = new QSplitter;
-  up_widget = new QWidget();
-  down_widget = new QWidget();
-  up_widget->setLayout(up_layout);
-  down_widget->setLayout(down_layout);
-  splitter->addWidget(up_widget);
-  splitter->addWidget(down_widget);
-  splitter->setOrientation(Qt::Vertical);
-  pages_layout[PAGE_START]->addWidget(splitter);
+page_pregame::~page_pregame() {}
+
+void page_pregame::set_rulesets(int num_rulesets, char **rulesets)
+{
+  ui.pr_options->set_rulesets(num_rulesets, rulesets);
 }
 
 /**********************************************************************/ /**
    Updates start page (start page = client connected to server, but game not
    started)
  **************************************************************************/
-void fc_client::update_start_page()
+void page_pregame::update_start_page()
 {
   int conn_num, i;
   QVariant qvar, qvar2;
@@ -148,7 +123,7 @@ void fc_client::update_start_page()
     return;
   }
 
-  start_players_tree->clear();
+  ui.start_players_tree->clear();
   qvar2 = 0;
 
   player_item = new QTreeWidgetItem();
@@ -158,7 +133,7 @@ void fc_client::update_start_page()
   i = 0;
   players_iterate(pplayer) { i++; }
   players_iterate_end;
-  gui()->pr_options->set_aifill(i);
+  ui.pr_options->set_aifill(i);
   /**
    * Inserts playing players, observing custom players, and AI)
    */
@@ -250,7 +225,7 @@ void fc_client::update_start_page()
             break;
           }
           pixmap = new QPixmap(
-              start_players_tree->header()->sectionSizeHint(col), 16);
+              ui.start_players_tree->header()->sectionSizeHint(col), 16);
           pixmap->fill(Qt::transparent);
           p.begin(pixmap);
           p.fillRect(pixmap->width() / 2 - 8, 0, 16, 16, Qt::black);
@@ -297,7 +272,7 @@ void fc_client::update_start_page()
   players_iterate_end;
 
   player_item->addChildren(items);
-  start_players_tree->insertTopLevelItem(0, player_item);
+  ui.start_players_tree->insertTopLevelItem(0, player_item);
 
   /**
    * Insert global observers
@@ -334,7 +309,7 @@ void fc_client::update_start_page()
   conn_list_iterate_end;
 
   global_item->addChildren(items);
-  start_players_tree->insertTopLevelItem(1, global_item);
+  ui.start_players_tree->insertTopLevelItem(1, global_item);
   items.clear();
 
   /**
@@ -358,27 +333,26 @@ void fc_client::update_start_page()
   conn_list_iterate_end;
 
   detach_item->addChildren(items);
-  start_players_tree->insertTopLevelItem(2, detach_item);
-  start_players_tree->header()->setSectionResizeMode(
+  ui.start_players_tree->insertTopLevelItem(2, detach_item);
+  ui.start_players_tree->header()->setSectionResizeMode(
       QHeaderView::ResizeToContents);
-  start_players_tree->expandAll();
+  ui.start_players_tree->expandAll();
   update_buttons();
 }
-
 
 /**********************************************************************/ /**
    Updates observe button in case user started observing manually
  **************************************************************************/
-void fc_client::update_buttons()
+void page_pregame::update_buttons()
 {
   bool sensitive;
   QString text;
 
   /* Observe button */
   if (client_is_observer() || client_is_global_observer()) {
-    obs_button->setText(_("Don't Observe"));
+    ui.bops->setText(_("Don't Observe"));
   } else {
-    obs_button->setText(_("Observe"));
+    ui.bops->setText(_("Observe"));
   }
 
   /* Ready button */
@@ -423,28 +397,27 @@ void fc_client::update_buttons()
       sensitive = false;
     }
   }
-  start_button->setEnabled(sensitive);
-  start_button->setText(text);
+  ui.bstart->setEnabled(sensitive);
+  ui.bstart->setText(text);
 
   /* Nation button */
   sensitive = game.info.is_new_game && can_client_control();
-  nation_button->setEnabled(sensitive);
+  ui.bpick->setEnabled(sensitive);
 
   sensitive = game.info.is_new_game;
-  pr_options->setEnabled(sensitive);
-
-  gui()->pr_options->update_buttons();
-  gui()->pr_options->update_ai_level();
+  ui.pr_options->setEnabled(sensitive);
+  ui.pr_options->update_buttons();
+  ui.pr_options->update_ai_level();
 }
 
 /**********************************************************************/ /**
    Context menu on some player, arg Qpoint specifies some pixel on screen
  **************************************************************************/
-void fc_client::start_page_menu(QPoint pos)
+void page_pregame::start_page_menu(QPoint pos)
 {
   QAction *action;
   QMenu *menu, *submenu_AI, *submenu_team;
-  QPoint global_pos = start_players_tree->mapToGlobal(pos);
+  QPoint global_pos = ui.start_players_tree->mapToGlobal(pos);
   QString me, splayer, str, sp;
   bool need_empty_team;
   const char *level_cmd, *level_name;
@@ -453,7 +426,7 @@ void fc_client::start_page_menu(QPoint pos)
   QVariant qvar, qvar2;
 
   me = client.conn.username;
-  QTreeWidgetItem *item = start_players_tree->itemAt(pos);
+  QTreeWidgetItem *item = ui.start_players_tree->itemAt(pos);
 
   menu = new QMenu(this);
   submenu_AI = new QMenu(this);
@@ -485,7 +458,7 @@ void fc_client::start_page_menu(QPoint pos)
       sp = "\"" + splayer + "\"";
       if (me != splayer) {
         str = QString(_("Observe"));
-        action = new QAction(str, start_players_tree);
+        action = new QAction(str, ui.start_players_tree);
         str = "/observe " + sp;
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
@@ -493,14 +466,14 @@ void fc_client::start_page_menu(QPoint pos)
 
         if (ALLOW_CTRL <= client.conn.access_level) {
           str = QString(_("Remove player"));
-          action = new QAction(str, start_players_tree);
+          action = new QAction(str, ui.start_players_tree);
           str = "/remove " + sp;
           QObject::connect(action, &QAction::triggered,
                            [this, str]() { send_fake_chat_message(str); });
           menu->addAction(action);
         }
         str = QString(_("Take this player"));
-        action = new QAction(str, start_players_tree);
+        action = new QAction(str, ui.start_players_tree);
         str = "/take " + sp;
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
@@ -509,7 +482,7 @@ void fc_client::start_page_menu(QPoint pos)
 
       if (can_conn_edit_players_nation(&client.conn, pplayer)) {
         str = QString(_("Pick nation"));
-        action = new QAction(str, start_players_tree);
+        action = new QAction(str, ui.start_players_tree);
         str = "PICK:" + QString(player_name(pplayer)); /* PICK is a key */
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
@@ -529,7 +502,8 @@ void fc_client::start_page_menu(QPoint pos)
               level_name =
                   ai_level_translated_name(static_cast<ai_level>(level));
               level_cmd = ai_level_cmd(static_cast<ai_level>(level));
-              action = new QAction(QString(level_name), start_players_tree);
+              action =
+                  new QAction(QString(level_name), ui.start_players_tree);
               str = "/" + QString(level_cmd) + " " + sp;
               QObject::connect(action, &QAction::triggered, [this, str]() {
                 send_fake_chat_message(str);
@@ -559,7 +533,7 @@ void fc_client::start_page_menu(QPoint pos)
             need_empty_team = false;
           }
           str = team_slot_name_translation(tslot);
-          action = new QAction(str, start_players_tree);
+          action = new QAction(str, ui.start_players_tree);
           str = "/team" + sp + " \"" + QString(team_slot_rule_name(tslot))
                 + "\"";
           QObject::connect(action, &QAction::triggered,
@@ -571,7 +545,7 @@ void fc_client::start_page_menu(QPoint pos)
 
       if (ALLOW_CTRL <= client.conn.access_level && NULL != pplayer) {
         str = QString(_("Aitoggle player"));
-        action = new QAction(str, start_players_tree);
+        action = new QAction(str, ui.start_players_tree);
         str = "/aitoggle " + sp;
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
@@ -585,8 +559,65 @@ void fc_client::start_page_menu(QPoint pos)
   players_iterate_end;
 }
 
+/************************************************************************/ /**
+   Slot to send fake chat messages. Do not use in new code.
+ ****************************************************************************/
+void page_pregame::send_fake_chat_message(const QString &message)
+{
+  send_chat_message(message);
+}
+
+/************************************************************************/ /**
+   Appends text to chat window
+ ****************************************************************************/
+void page_pregame::chat_message_received(const QString &message,
+                                         const struct text_tag_list *tags)
+{
+  QColor col = ui.output_window->palette().color(QPalette::Text);
+  QString str = apply_tags(message, tags, col);
+
+  if (ui.output_window != NULL) {
+    ui.output_window->append(str);
+    ui.output_window->verticalScrollBar()->setSliderPosition(
+        ui.output_window->verticalScrollBar()->maximum());
+  }
+}
+
+/************************************************************************/ /**
+   User clicked Observe button in START_PAGE
+ ****************************************************************************/
+void page_pregame::slot_pregame_observe()
+{
+  if (client_is_observer() || client_is_global_observer()) {
+    if (game.info.is_new_game) {
+      send_chat("/take -");
+    } else {
+      send_chat("/detach");
+    }
+    ui.bops->setText(_("Don't Observe"));
+  } else {
+    send_chat("/observe");
+    ui.bops->setText(_("Observe"));
+  }
+}
+
+/************************************************************************/ /**
+   User clicked Start in START_PAGE
+ ****************************************************************************/
+void page_pregame::slot_pregame_start()
+{
+  if (can_client_control()) {
+    dsend_packet_player_ready(&client.conn, player_number(client_player()),
+                              !client_player()->is_ready);
+  } else {
+    dsend_packet_player_ready(&client.conn, 0, TRUE);
+  }
+}
+
 /**********************************************************************/ /**
    Calls dialg selecting nations
  **************************************************************************/
-void fc_client::slot_pick_nation() { popup_races_dialog(client_player()); }
-
+void page_pregame::slot_pick_nation()
+{
+  popup_races_dialog(client_player());
+}

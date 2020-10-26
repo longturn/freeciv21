@@ -25,6 +25,7 @@
 #include "chatline.h"
 #include "idlecallback.h"
 #include "menu.h"
+#include "pregameoptions.h" // make qt UIC happy
 #include "tradecalculation.h"
 
 class QApplication;
@@ -140,14 +141,13 @@ public slots:
 class fc_client : public QMainWindow, private chat_listener {
   Q_OBJECT
   QWidget *main_wdg;
-  QWidget *pages[(int) PAGE_GAME + 2];
   QWidget *game_main_widget;
 
   QGridLayout *pages_layout[PAGE_GAME + 2];
   QStackedLayout *central_layout;
   QGridLayout *game_layout;
 
-  QTextEdit *output_window;
+  //QTextEdit *output_window;
 
   QPushButton *button;
   QPushButton *obs_button;
@@ -176,7 +176,7 @@ class fc_client : public QMainWindow, private chat_listener {
 public:
   fc_client();
   ~fc_client();
-
+  QWidget *pages[(int) PAGE_GAME + 2];
   void fc_main(QApplication *);
   map_view *mapview_wdg;
   fc_sidebar *sidebar_wdg;
@@ -190,7 +190,6 @@ public:
   void set_status_bar(QString str, int timeout = 2000);
   int add_game_tab(QWidget *widget);
   void rm_game_tab(int index); /* doesn't delete widget */
-  void update_start_page();
   void toggle_unit_sel_widget(struct tile *ptile);
   void update_unit_sel();
   void popdown_unit_sel();
@@ -199,9 +198,6 @@ public:
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
   void update_sidebar_position();
-  void authentication_request(enum authentication_type type,
-                               const char *message);
-
   mr_idle mr_idler;
   QWidget *central_wdg;
   mr_menu *menu_bar;
@@ -209,12 +205,10 @@ public:
   fc_game_tab_widget *game_tab_widget;
   messagewdg *msgwdg;
   info_tab *infotab;
-  pregamevote *pre_vote;
   units_select *unit_sel;
   xvote *x_vote;
   goto_dialog *gtd;
   QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
-  pregame_options *pr_options;
   fc_settings qt_settings;
   trade_generator trade_gen;
   qfc_rally_list rallies;
@@ -236,33 +230,23 @@ public:
   bool is_closing();
   void update_sidebar_tooltips();
   void reload_sidebar_icons();
-
 private slots:
-  void send_fake_chat_message(const QString &message);
+
   void server_input(int sock);
   void closing();
-
-  void slot_pregame_observe();
-  void slot_pregame_start();
-  void start_page_menu(QPoint);
-  void slot_pick_nation();
   void clear_status_bar();
 
 public slots:
   void slot_disconnect();
   void start_new_game();
   void switch_page(int i);
-  void popup_client_options();
   void update_info_label();
   void quit();
 
 private:
-  void chat_message_received(const QString &message,
-                             const struct text_tag_list *tags);
   void create_game_page();
   void create_loading_page();
   void create_start_page();
-  bool chat_active_on_page(enum client_pages);
   void create_cursors(void);
   void delete_cursors(void);
   void update_buttons();
@@ -275,7 +259,6 @@ private:
   QString current_file;
   bool send_new_aifill_to_server;
   bool quitting;
-
 protected:
   void timerEvent(QTimerEvent *);
   void closeEvent(QCloseEvent *event);
@@ -288,31 +271,8 @@ signals:
   Class for showing options in PAGE_START, options like ai_fill, ruleset
   etc.
 ***************************************************************************/
-class pregame_options : public QWidget {
-  Q_OBJECT
-  QComboBox *ailevel;
-  QComboBox *cruleset;
-  QPushButton *nation;
-  QSpinBox *max_players;
-
-public:
-  pregame_options(QWidget *parent);
-  void init();
-
-  void set_rulesets(int num_rulesets, char **rulesets);
-  void set_aifill(int aifill);
-  void update_ai_level();
-  void update_buttons();
-private slots:
-  void max_players_change(int i);
-  void ailevel_change(int i);
-  void ruleset_change(int i);
-  void pick_nation();
-public slots:
-  void popup_server_options();
-};
 
 // Return fc_client instance. Implementation in gui_main.cpp
 class fc_client *gui();
-
+void popup_client_options();
 #endif /* FC__FC_CLIENT_H */

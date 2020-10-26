@@ -70,7 +70,7 @@ fc_client::fc_client() : QMainWindow()
    */
   main_wdg = NULL;
   central_layout = NULL;
-  output_window = NULL;
+  //output_window = NULL;
   button = NULL;
   button_box = NULL;
   server_notifier = NULL;
@@ -91,7 +91,6 @@ fc_client::fc_client() : QMainWindow()
   current_file = "";
   status_bar_queue.clear();
   quitting = false;
-  pre_vote = NULL;
   x_vote = NULL;
   gtd = NULL;
   update_info_timer = nullptr;
@@ -136,12 +135,11 @@ void fc_client::init()
 
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
-  pages[PAGE_START] = new QWidget(central_wdg);
+  pages[PAGE_START] = new page_pregame(central_wdg, this);
   pages[PAGE_SCENARIO] = new page_scenario(central_wdg, this);
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
   pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
-  create_start_page();
   // PAGE_GAME
   gui_options.gui_qt_allied_chat_only = true;
   path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
@@ -157,7 +155,6 @@ void fc_client::init()
 
   pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
 
-  pages[PAGE_START]->setLayout(pages_layout[PAGE_START]);
   pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
 
@@ -228,48 +225,6 @@ bool fc_client::is_closing() { return quitting; }
  ****************************************************************************/
 void fc_client::closing() { quitting = true; }
 
-/************************************************************************/ /**
-   Slot to send fake chat messages. Do not use in new code.
- ****************************************************************************/
-void fc_client::send_fake_chat_message(const QString &message)
-{
-  send_chat_message(message);
-}
-
-/************************************************************************/ /**
-   Appends text to chat window
- ****************************************************************************/
-void fc_client::chat_message_received(const QString &message,
-                                      const struct text_tag_list *tags)
-{
-  QColor col = output_window->palette().color(QPalette::Text);
-  QString str = apply_tags(message, tags, col);
-
-  if (output_window != NULL) {
-    output_window->append(str);
-    output_window->verticalScrollBar()->setSliderPosition(
-        output_window->verticalScrollBar()->maximum());
-  }
-}
-
-/************************************************************************/ /**
-   Return whether chatline should be active on page.
- ****************************************************************************/
-bool fc_client::chat_active_on_page(enum client_pages check)
-{
-  if (check == PAGE_START || check == PAGE_GAME) {
-    return true;
-  }
-
-  return false;
-}
-
-void fc_client::authentication_request(enum authentication_type type,
-                                       const char *message)
-{
-  qobject_cast<page_network *>(pages[PAGE_NETWORK])
-      ->handle_authentication_req(type, message);
-}
 
 /************************************************************************/ /**
    Switch from one client page to another.
@@ -308,8 +263,6 @@ void fc_client::switch_page(int new_pg)
   case PAGE_MAIN:
     break;
   case PAGE_START:
-    if (pre_vote)
-    pre_vote->hide();
     voteinfo_gui_update();
     break;
   case PAGE_LOAD:
@@ -451,36 +404,7 @@ void fc_client::slot_disconnect()
   switch_page(PAGE_MAIN);
 }
 
-/************************************************************************/ /**
-   User clicked Observe button in START_PAGE
- ****************************************************************************/
-void fc_client::slot_pregame_observe()
-{
-  if (client_is_observer() || client_is_global_observer()) {
-    if (game.info.is_new_game) {
-      send_chat("/take -");
-    } else {
-      send_chat("/detach");
-    }
-    obs_button->setText(_("Don't Observe"));
-  } else {
-    send_chat("/observe");
-    obs_button->setText(_("Observe"));
-  }
-}
 
-/************************************************************************/ /**
-   User clicked Start in START_PAGE
- ****************************************************************************/
-void fc_client::slot_pregame_start()
-{
-  if (can_client_control()) {
-    dsend_packet_player_ready(&client.conn, player_number(client_player()),
-                              !client_player()->is_ready);
-  } else {
-    dsend_packet_player_ready(&client.conn, 0, TRUE);
-  }
-}
 
 /****************************************************************************
   Deletes cursors
@@ -771,7 +695,7 @@ void fc_client::remove_repo_dlg(const QString &str)
 /************************************************************************/ /**
    Popups client options
  ****************************************************************************/
-void fc_client::popup_client_options()
+void popup_client_options()
 {
   option_dialog_popup(_("Set local options"), client_optset);
 }
@@ -930,196 +854,3 @@ void fc_game_tab_widget::current_changed(int index)
   }
 }
 
-/************************************************************************/ /**
-   Pregame options contructor
- ****************************************************************************/
-pregame_options::pregame_options(QWidget *parent) : QWidget(parent) {}
-
-/************************************************************************/ /**
-   Init's layout and default values for options in START_PAGE
- ****************************************************************************/
-void pregame_options::init()
-{
-  QFormLayout *layout;
-  QPushButton *qclient_options;
-  QHBoxLayout *hbox = nullptr;
-  QPushButton *but;
-  int level;
-
-  layout = new QFormLayout(this);
-  nation = new QPushButton(this);
-  qclient_options = new QPushButton(_("Client Options"));
-  max_players = new QSpinBox(this);
-  ailevel = new QComboBox(this);
-  cruleset = new QComboBox(this);
-  max_players->setRange(1, MAX_NUM_PLAYERS);
-
-  // Text and icon set by update_buttons()
-  connect(nation, &QPushButton::clicked, this,
-          &pregame_options::pick_nation);
-  connect(qclient_options, SIGNAL(clicked()), parentWidget(),
-          SLOT(popup_client_options()));
-  for (level = 0; level < AI_LEVEL_COUNT; level++) {
-    if (is_settable_ai_level(static_cast<ai_level>(level))) {
-      const char *level_name =
-          ai_level_translated_name(static_cast<ai_level>(level));
-      ailevel->addItem(level_name, level);
-    }
-  }
-  ailevel->setCurrentIndex(-1);
-
-  connect(max_players, SIGNAL(valueChanged(int)),
-          SLOT(max_players_change(int)));
-  connect(ailevel, SIGNAL(currentIndexChanged(int)),
-          SLOT(ailevel_change(int)));
-  connect(cruleset, SIGNAL(currentIndexChanged(int)),
-          SLOT(ruleset_change(int)));
-
-  but = new QPushButton;
-  but->setText(_("More Game Options"));
-  but->setIcon(fc_icons::instance()->get_icon("preferences-other"));
-  QObject::connect(but, &QAbstractButton::clicked, this,
-                   &pregame_options::popup_server_options);
-
-  layout->setFieldGrowthPolicy(QFormLayout::AllNonFixedFieldsGrow);
-  layout->addRow(_("Nation:"), nation);
-  layout->addRow(_("Rules:"), cruleset);
-
-  hbox = new QHBoxLayout();
-  hbox->addWidget(max_players);
-  hbox->addWidget(ailevel);
-  layout->addRow(_("Players:"), hbox);
-  layout->addWidget(but);
-  layout->addWidget(qclient_options);
-  setLayout(layout);
-
-  update_buttons();
-}
-
-/************************************************************************/ /**
-   Update the ruleset list
- ****************************************************************************/
-void pregame_options::set_rulesets(int num_rulesets, char **rulesets)
-{
-  int i;
-  int def_idx = -1;
-
-  cruleset->clear();
-  cruleset->blockSignals(true);
-  for (i = 0; i < num_rulesets; i++) {
-    cruleset->addItem(rulesets[i], i);
-    if (!strcmp("default", rulesets[i])) {
-      def_idx = i;
-    }
-  }
-
-  /* HACK: server should tell us the current ruleset. */
-  cruleset->setCurrentIndex(def_idx);
-  cruleset->blockSignals(false);
-}
-
-/************************************************************************/ /**
-   Sets the value of the "aifill" option. Doesn't send the new value to the
-   server
- ****************************************************************************/
-void pregame_options::set_aifill(int aifill)
-{
-  max_players->blockSignals(true);
-  max_players->setValue(aifill);
-  max_players->blockSignals(false);
-}
-
-/************************************************************************/ /**
-   Updates the buttons whenever the game state has changed
- ****************************************************************************/
-void pregame_options::update_buttons()
-{
-  struct sprite *psprite = nullptr;
-  QPixmap *pixmap = nullptr;
-  const struct player *pplayer = client_player();
-
-  // Update the "Select Nation" button
-  if (pplayer != nullptr) {
-    if (pplayer->nation != nullptr) {
-      // Defeat keyboard shortcut mnemonics
-      nation->setText(
-          QString(nation_adjective_for_player(pplayer)).replace("&", "&&"));
-      psprite = get_nation_shield_sprite(tileset, pplayer->nation);
-      pixmap = psprite->pm;
-      nation->setIconSize(pixmap->size());
-      nation->setIcon(QIcon(*pixmap));
-    } else {
-      nation->setText(_("Random"));
-      nation->setIcon(fc_icons::instance()->get_icon("flush-random"));
-    }
-  }
-}
-
-/************************************************************************/ /**
-   Updates the AI skill level control
- ****************************************************************************/
-void pregame_options::update_ai_level()
-{
-  enum ai_level level = server_ai_level();
-
-  if (ai_level_is_valid(level)) {
-    int i = ailevel->findData(level);
-
-    ailevel->setCurrentIndex(i);
-  } else {
-    ailevel->setCurrentIndex(-1);
-  }
-}
-
-/************************************************************************/ /**
-   Slot for changing aifill value
- ****************************************************************************/
-void pregame_options::max_players_change(int i)
-{
-  option_int_set(optset_option_by_name(server_optset, "aifill"), i);
-}
-
-/************************************************************************/ /**
-   Slot for changing level of AI
- ****************************************************************************/
-void pregame_options::ailevel_change(int i)
-{
-  QVariant v = ailevel->currentData();
-
-  if (v.isValid()) {
-    enum ai_level k = static_cast<ai_level>(v.toInt());
-
-    /* Suppress changes provoked by server rather than local user */
-    if (server_ai_level() != k) {
-      const char *name = ai_level_cmd(k);
-
-      send_chat_printf("/%s", name);
-    }
-  }
-}
-
-/************************************************************************/ /**
-   Slot for changing ruleset
- ****************************************************************************/
-void pregame_options::ruleset_change(int i)
-{
-  if (!cruleset->currentText().isEmpty()) {
-    QByteArray rn_bytes;
-
-    rn_bytes = cruleset->currentText().toLocal8Bit();
-    set_ruleset(rn_bytes.data());
-  }
-}
-
-/************************************************************************/ /**
-   Slot for picking a nation
- ****************************************************************************/
-void pregame_options::pick_nation() { popup_races_dialog(client_player()); }
-
-/************************************************************************/ /**
-   Popups client options
- ****************************************************************************/
-void pregame_options::popup_server_options()
-{
-  option_dialog_popup(_("Set server options"), server_optset);
-}

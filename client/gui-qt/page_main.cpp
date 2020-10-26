@@ -36,8 +36,8 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
           &fc_client::start_new_game);
   connect(ui.bscenario, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_SCENARIO); });
-  connect(ui.boptions, &QAbstractButton::clicked, gui,
-          &fc_client::popup_client_options);
+  connect(ui.boptions, &QAbstractButton::clicked,
+          [=]() { popup_client_options(); });
   connect(ui.bquit, &QAbstractButton::clicked, gui, &fc_client::quit);
   connect(ui.bconnect, &QPushButton::clicked,
           [gui]() { gui->switch_page(PAGE_NETWORK); });

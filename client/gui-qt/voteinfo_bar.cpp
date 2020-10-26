@@ -16,6 +16,7 @@
 #include <QPushButton>
 // client
 #include "voteinfo.h"
+#include "page_pregame.h"
 // gui-qt
 #include "fc_client.h"
 
@@ -217,7 +218,7 @@ void xvote::paintEvent(QPaintEvent *event)
 void voteinfo_gui_update(void)
 {
   if (gui()->current_page() == PAGE_START) {
-    gui()->pre_vote->update_vote();
+    qobject_cast<page_pregame *>(gui()->pages[PAGE_START])->pre_vote->update_vote();
   }
   if (gui()->current_page() == PAGE_GAME) {
 

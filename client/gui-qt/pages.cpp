@@ -19,6 +19,7 @@
 #include "pages_g.h"
 // gui-qt
 #include "fc_client.h"
+#include "page_pregame.h"
 #include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
@@ -36,7 +37,8 @@ void qtg_real_set_client_page(enum client_pages page)
  **************************************************************************/
 void qtg_set_rulesets(int num_rulesets, char **rulesets)
 {
-  gui()->pr_options->set_rulesets(num_rulesets, rulesets);
+    qobject_cast<page_pregame *>(gui()->pages[PAGE_START])
+      ->set_rulesets(num_rulesets, rulesets);
 }
 
 /**********************************************************************/ /**
@@ -50,7 +52,11 @@ enum client_pages qtg_get_current_client_page()
 /**********************************************************************/ /**
    Update the start page.
  **************************************************************************/
-void update_start_page(void) { gui()->update_start_page(); }
+void update_start_page(void)
+{
+  qobject_cast<page_pregame *>(gui()->pages[PAGE_START])
+      ->update_start_page();
+}
 
 /**********************************************************************/ /**
    Sets application status bar for given time in miliseconds

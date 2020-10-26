@@ -43,6 +43,7 @@
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "messagewin.h"
+#include "page_pregame.h"
 #include "qtg_cxxside.h"
 
 extern "C" void real_science_report_dialog_update(void *);
@@ -210,7 +211,7 @@ void qtg_real_conn_list_dialog_update(void *unused)
   if (qtg_get_current_client_page() == PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_START);
   }
-  gui()->update_start_page();
+    qobject_cast<page_pregame*>(gui()->pages[PAGE_START])->update_start_page();
 }
 
 /**********************************************************************/ /**

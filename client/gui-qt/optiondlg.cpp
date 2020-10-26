@@ -27,6 +27,7 @@
 // gui-qt
 #include "fc_client.h"
 #include "optiondlg.h"
+#include "page_pregame.h"
 
 enum {
   RESPONSE_CANCEL,
@@ -863,7 +864,8 @@ void option_gui_update(struct option *poption)
       update_nationset_combo();
     }
     if (strcmp(option_name(poption), "aifill") == 0) {
-      gui()->pr_options->set_aifill(option_int_get(poption));
+
+      //qobject_cast<page_pregame *>(gui()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
     }
   }
 }

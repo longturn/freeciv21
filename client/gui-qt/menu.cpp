@@ -53,6 +53,7 @@
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
+#include "page_pregame.h"
 #include "plrdlg.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
@@ -64,7 +65,8 @@ extern QApplication *qapp;
 extern void popup_endgame_report();
 extern void toggle_units_report(bool);
 static void enable_interface(bool enable);
-
+extern "C" void option_dialog_popup(const char *name,
+                                    const struct option_set *poptset);
 /**********************************************************************/ /**
    Constructor for units used in delayed orders
  **************************************************************************/
@@ -2930,7 +2932,7 @@ void mr_menu::slot_build_base(int id)
 /**********************************************************************/ /**
    Invoke dialog with local options
  **************************************************************************/
-void mr_menu::local_options() { gui()->popup_client_options(); }
+void mr_menu::local_options() { popup_client_options(); }
 
 /**********************************************************************/ /**
    Invoke dialog with shortcut options
@@ -2940,7 +2942,10 @@ void mr_menu::shortcut_options() { popup_shortcuts_dialog(); }
 /**********************************************************************/ /**
    Invoke dialog with server options
  **************************************************************************/
-void mr_menu::server_options() { gui()->pr_options->popup_server_options(); }
+void mr_menu::server_options()
+{
+  option_dialog_popup(_("Set server options"), server_optset);
+}
 
 /**********************************************************************/ /**
    Invoke dialog with server options

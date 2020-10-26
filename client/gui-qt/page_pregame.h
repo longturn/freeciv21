@@ -17,21 +17,31 @@
 #include <QWidget>
 
 class fc_client;
+class pregame_options;
+class pregamevote;
+#include "pregameoptions.h" // before ui
 #include "ui_page_pregame.h"
 
-class page_pregame : public QWidget {
+class page_pregame : public QWidget, private chat_listener {
   Q_OBJECT
 public:
   page_pregame(QWidget *, fc_client *);
   ~page_pregame();
-    void update_start_page();
-private slots
-    slot_pick_nation();
+  void update_start_page();
+  void set_rulesets(int num_rulesets, char **rulesets);
+  pregamevote *pre_vote;
+private slots:
+  void slot_pick_nation();
+  void start_page_menu(QPoint pos);
+  void send_fake_chat_message(const QString &message);
 private:
-void update_buttons();
-void start_page_menu();
+  void update_buttons();
+  void chat_message_received(const QString &message,
+                        const struct text_tag_list *tags);
+  void slot_pregame_observe();
+  void slot_pregame_start();
   Ui::FormPagePregame ui;
-  fc_client* king;  // serve the King
+  fc_client *king; // serve the King
 };
 
 #endif /* FC__PAGE_PREGAME_H */
