@@ -41,8 +41,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <ctype.h>
 #include <errno.h>
 #include <math.h> /* ceil() */

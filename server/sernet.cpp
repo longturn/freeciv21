@@ -15,8 +15,7 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
+// Qt
 #include <QNetworkDatagram>
 #include <QUdpSocket>
 #include <errno.h>

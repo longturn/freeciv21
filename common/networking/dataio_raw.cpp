@@ -23,8 +23,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <limits.h>
 #include <math.h>
 #include <stdint.h>

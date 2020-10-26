@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
