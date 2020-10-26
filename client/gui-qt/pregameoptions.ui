@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>FormPregameOptions</class>
+ <widget class="QWidget" name="FormPregameOptions">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>991</width>
+    <height>713</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QWidget" name="gridLayoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>420</x>
+     <y>180</y>
+     <width>391</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="1">
+     <widget class="QPushButton" name="nation">
+      <property name="text">
+       <string>nation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="0">
+     <widget class="QLabel" name="lplayers">
+      <property name="text">
+       <string>players</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="lnations">
+      <property name="text">
+       <string>nation</string>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QSpinBox" name="max_players"/>
+      </item>
+      <item>
+       <widget class="QComboBox" name="ailevel"/>
+      </item>
+     </layout>
+    </item>
+    <item row="1" column="1">
+     <widget class="QComboBox" name="cruleset"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QLabel" name="lrules">
+      <property name="text">
+       <string>rules</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="1">
+     <widget class="QPushButton" name="qserveroptions">
+      <property name="text">
+       <string>srvopt</string>
+      </property>
+     </widget>
+    </item>
+    <item row="4" column="1">
+     <widget class="QPushButton" name="qclientoptions">
+      <property name="text">
+       <string>clientopt</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

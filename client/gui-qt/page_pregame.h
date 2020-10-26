@@ -14,6 +14,24 @@
 #ifndef FC__PAGE_PREGAME_H
 #define FC__PAGE_PREGAME_H
 
-/* TODO */
+#include <QWidget>
+
+class fc_client;
+#include "ui_page_pregame.h"
+
+class page_pregame : public QWidget {
+  Q_OBJECT
+public:
+  page_pregame(QWidget *, fc_client *);
+  ~page_pregame();
+    void update_start_page();
+private slots
+    slot_pick_nation();
+private:
+void update_buttons();
+void start_page_menu();
+  Ui::FormPagePregame ui;
+  fc_client* king;  // serve the King
+};
 
 #endif /* FC__PAGE_PREGAME_H */
