@@ -97,14 +97,13 @@
 
 // Qt
 #include <QString>
-#include <QtDebug>
+#include <QThread>
 
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 
 #include "support.h"
 
@@ -468,39 +467,7 @@ const char *fc_strerror(fc_errno err)
 /************************************************************************/ /**
    Suspend execution for the specified number of microseconds.
  ****************************************************************************/
-void fc_usleep(unsigned long usec)
-{
-#ifdef HAVE_USLEEP
-  usleep(usec);
-#else              /* HAVE_USLEEP */
-#ifdef HAVE_SNOOZE /* BeOS */
-  snooze(usec);
-#else              /* HAVE_SNOOZE */
-#ifdef GENERATING_MAC
-  EventRecord the_event; /* dummy - always be a null event */
-
-  usec /= 16666; /* microseconds to 1/60th seconds */
-  if (usec < 1) {
-    usec = 1;
-  }
-  /* supposed to give other application processor time for the mac */
-  WaitNextEvent(0, &the_event, usec, 0L);
-#else /* GENERATING_MAC */
-#ifdef FREECIV_MSWINDOWS
-  Sleep(usec / 1000);
-#else  /* FREECIV_MSWINDOWS */
-  fc_timeval tv;
-
-  tv.tv_sec = 0;
-  tv.tv_usec = usec;
-  /* FIXME: an interrupt can cause an EINTR return here.  In that case we
-   * need to have another select call. */
-  fc_select(0, NULL, NULL, NULL, &tv);
-#endif /* FREECIV_MSWINDOWS */
-#endif /* GENERATING_MAC */
-#endif /* HAVE_SNOOZE */
-#endif /* HAVE_USLEEP */
-}
+void fc_usleep(unsigned long usec) { QThread::usleep(usec); }
 
 /************************************************************************/ /**
    Replace 'search' by 'replace' within 'str'. If needed 'str' is resized

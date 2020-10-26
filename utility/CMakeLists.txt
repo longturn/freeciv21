@@ -53,7 +53,6 @@ add_library(
   iterator.cpp
   log.cpp
   mem.cpp
-  netintf.cpp
   netfile.cpp
   rand.cpp
   registry.cpp

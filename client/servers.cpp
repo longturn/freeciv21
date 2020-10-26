@@ -32,7 +32,7 @@
 /* utility */
 #include "fcintl.h"
 #include "fcthread.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "support.h"
 
 /* common */
@@ -45,7 +45,6 @@
 #include "chatline_g.h"
 #include "client_main.h"
 #include "servers.h"
-
 
 struct server_scan {
   enum server_scan_type type;

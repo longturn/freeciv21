@@ -25,7 +25,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "registry.h"
 #include "support.h"
 

@@ -68,7 +68,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"
@@ -97,8 +96,6 @@
 
 static struct connection connections[MAX_NUM_CONNECTIONS];
 
-static int *listen_socks;
-static int listen_count;
 static QUdpSocket *udp_socket = nullptr;
 
 #define PROCESSING_TIME_STATISTICS 0
@@ -162,11 +159,6 @@ void close_connections_and_socket(void)
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 
-  for (i = 0; i < listen_count; i++) {
-    fc_closesocket(listen_socks[i]);
-  }
-  delete[] listen_socks;
-
   if (srvarg.announce != ANNOUNCE_NONE) {
     udp_socket->close();
     delete udp_socket;
@@ -177,7 +169,6 @@ void close_connections_and_socket(void)
   server_close_meta();
 
   packets_deinit();
-  fc_shutdown_network();
 }
 
 /*************************************************************************/ /**
@@ -593,8 +584,6 @@ void send_ping_times_to_all()
  *****************************************************************************/
 void get_lanserver_announcement()
 {
-  fd_set readfs, exceptfs;
-  fc_timeval tv;
   char *msgbuf;
   struct data_in din;
   int type;
@@ -602,9 +591,6 @@ void get_lanserver_announcement()
   if (srvarg.announce == ANNOUNCE_NONE) {
     return;
   }
-
-  tv.tv_sec = 0;
-  tv.tv_usec = 0;
 
   if (udp_socket->hasPendingDatagrams()) {
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
@@ -636,7 +622,6 @@ static void send_lanserver_response(void)
   char humans[256];
   char status[256];
   struct raw_data_out dout;
-  union fc_sockaddr addr;
   int socksend, setting = 1;
   const char *group;
   size_t size;

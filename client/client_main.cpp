@@ -53,7 +53,7 @@
 #include "idex.h"
 #include "map.h"
 #include "mapimg.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
@@ -234,7 +234,6 @@ static void at_exit(void)
 {
   emergency_exit();
   packets_deinit();
-  fc_shutdown_network();
   update_queue_free();
   fc_destroy_ow_mutex();
 }
@@ -616,7 +615,6 @@ int client_main(int argc, char *argv[])
 
   ui_init();
   charsets_init();
-  fc_init_network();
   update_queue_init();
 
   fc_init_ow_mutex();

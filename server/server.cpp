@@ -139,8 +139,6 @@ QTcpServer *srv_prepare()
   /* make sure it's initialized */
   srv_init();
 
-  fc_init_network();
-
   /* must be before con_log_init() */
   init_connections();
   con_log_init(srvarg.log_filename, srvarg.loglevel,
