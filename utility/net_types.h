@@ -11,10 +11,9 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-/* This header contains some upper level types related to networking.
- * The idea is that this header can be included without need to special
- * handling of the conflicts of definitions of lower level types that
- * appear in netintf.h */
+/* This header contained some upper level types related to networking. It is
+ * now reduced to some definitions related to LAN scans that don't have a
+ * direct Qt equivalent. */
 
 #ifndef FC__NET_TYPES_H
 #define FC__NET_TYPES_H
@@ -23,7 +22,5 @@
 enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 #define ANNOUNCE_DEFAULT ANNOUNCE_IPV4
-
-enum fc_addr_family { FC_ADDR_IPV4, FC_ADDR_IPV6, FC_ADDR_ANY };
 
 #endif /* FC__NET_TYPES_H */

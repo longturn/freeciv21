@@ -416,10 +416,10 @@ QTcpServer *server_open_socket()
     // Failed
 
     // TRANS: %1 is a port number, %2 is the error message
-    log_fatal(qPrintable(
-        QString::fromUtf8(_("Server: cannot listen on port %1: %2"))
-            .arg(srvarg.port)
-            .arg(server->errorString())));
+    log_fatal("%s", qPrintable(QString::fromUtf8(
+                                   _("Server: cannot listen on port %1: %2"))
+                                   .arg(srvarg.port)
+                                   .arg(server->errorString())));
 
     QCoreApplication::exit(EXIT_FAILURE);
     return server;

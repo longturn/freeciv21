@@ -215,12 +215,6 @@ bool client_start_server(void)
   char buf[512];
   int connect_tries = 0;
 
-#ifdef FREECIV_IPV6_SUPPORT
-  enum fc_addr_family family = FC_ADDR_ANY;
-#else
-  enum fc_addr_family family = FC_ADDR_IPV4;
-#endif /* FREECIV_IPV6_SUPPORT */
-
   /* only one server (forked from this client) shall be running at a time */
   /* This also resets client_has_hack. */
   client_kill_server(TRUE);
