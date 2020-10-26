@@ -26,7 +26,4 @@ enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 enum fc_addr_family { FC_ADDR_IPV4, FC_ADDR_IPV6, FC_ADDR_ANY };
 
-void fc_init_network(void);
-void fc_shutdown_network(void);
-
 #endif /* FC__NET_TYPES_H */
