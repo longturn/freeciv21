@@ -389,25 +389,14 @@ double try_to_autoconnect(void)
     exit(EXIT_FAILURE);
   }
 
-  switch (try_to_connect(server_host, server_port, user_name, errbuf,
-                         sizeof(errbuf))) {
-  case 0: /* Success! */
-    /* Don't call me again */
+  if (try_to_connect(server_host, server_port, user_name, errbuf,
+                     sizeof(errbuf))
+      == 0) {
+    // Success! Don't call me again
     autoconnecting = FALSE;
     return FC_INFINITY;
-#ifndef FREECIV_MSWINDOWS
-  /* See PR#4042 for more info on issues with try_to_connect() and errno. */
-  case ECONNREFUSED: /* Server not available (yet) */
-    if (!warning_shown) {
-      log_error("Connection to server refused. Please start the server.");
-      output_window_append(ftc_client, _("Connection to server refused. "
-                                         "Please start the server."));
-      warning_shown = 1;
-    }
-    /* Try again in 0.5 seconds */
-    return 0.001 * AUTOCONNECT_INTERVAL;
-#endif     /* FREECIV_MSWINDOWS */
-  default: /* All other errors are fatal */
+  } else {
+    // All errors are fatal
     log_fatal(_("Error contacting server \"%s\" at port %d "
                 "as \"%s\":\n %s\n"),
               server_host, server_port, user_name, errbuf);
