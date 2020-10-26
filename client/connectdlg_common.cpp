@@ -15,6 +15,7 @@
 #endif
 
 // Qt
+#include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
 #include <QTcpServer>
@@ -281,12 +282,14 @@ bool client_start_server(void)
       break;
     }
   }
+  // Wait for the server to print its welcome screen
+  serverProcess::i()->waitForReadyRead();
   server_quitting = FALSE;
   /* a reasonable number of tries */
-  while (
-      connect_to_server(user_name, "localhost", internal_server_port, buf,
-                        sizeof(buf) && serverProcess::i()->processId() != 0)
-      == -1) {
+  while (connect_to_server(
+             user_name, "localhost", internal_server_port, buf,
+             sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
+         == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
     if (connect_tries++ > NUMBER_OF_TRIES) {
       log_error("Last error from connect attempts: '%s'", buf);

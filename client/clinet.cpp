@@ -143,6 +143,9 @@ static int try_to_connect(const char *hostname, int port,
       });
 
   client.conn.sock->connectToHost(QString::fromUtf8(hostname), port);
+  if (!client.conn.sock->waitForConnected(-1)) {
+    return -1;
+  }
 
   make_connection(client.conn.sock, username);
 

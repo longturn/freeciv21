@@ -346,10 +346,7 @@ void server::init_interactive()
    Checks if the server is ready for the event loop to start. In practice,
    this is only false if opening the port failed.
  *****************************************************************************/
-bool server::is_ready() const
-{
-  return m_tcp_server->isListening();
-}
+bool server::is_ready() const { return m_tcp_server->isListening(); }
 
 /*************************************************************************/ /**
    Server accepts connections from client:
@@ -813,9 +810,8 @@ void server::update_game_state()
   }
 
   // Set up the quitidle timer if not done already
-  if (server_state() == S_S_RUNNING && m_someone_ever_connected
-      && m_quitidle_timer == nullptr && srvarg.quitidle != 0
-      && conn_list_size(game.est_connections) == 0) {
+  if (m_someone_ever_connected && m_quitidle_timer == nullptr
+      && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
 
     if (srvarg.exit_on_end) {
       log_normal(_("Shutting down in %d seconds for lack of players."),
