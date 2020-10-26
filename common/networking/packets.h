@@ -182,7 +182,7 @@ void packets_deinit(void);
     return NULL;                                                            \
   }                                                                         \
   remove_packet_from_buffer(pc->buffer);                                    \
-  result = new typeof(*result);                                             \
+  result = new std::remove_reference<decltype(*result)>::type;              \
   *result = packet_buf;                                                     \
   return result;
 
