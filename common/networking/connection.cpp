@@ -74,9 +74,9 @@ void connection_close(struct connection *pconn, const char *reason)
 {
   fc_assert_ret(NULL != pconn);
 
-  if (NULL != reason && NULL == pconn->closing_reason) {
+  if (NULL != reason && pconn->closing_reason.isEmpty()) {
     /* NB: we don't overwrite the original reason. */
-    pconn->closing_reason = fc_strdup(reason);
+    pconn->closing_reason = QString::fromUtf8(reason);
   }
 
   (*conn_close_callback)(pconn);
@@ -431,10 +431,11 @@ const char *conn_description(const struct connection *pconn)
   } else {
     sz_strlcpy(buffer, "server");
   }
-  if (NULL != pconn->closing_reason) {
+  if (!pconn->closing_reason.isEmpty()) {
     /* TRANS: Appending the reason why a connection has closed.
      * Preserve leading space. */
-    cat_snprintf(buffer, sizeof(buffer), _(" (%s)"), pconn->closing_reason);
+    cat_snprintf(buffer, sizeof(buffer), _(" (%s)"),
+                 qUtf8Printable(pconn->closing_reason));
   } else if (!pconn->established) {
     /* TRANS: preserve leading space. */
     sz_strlcat(buffer, _(" (connection incomplete)"));
@@ -551,7 +552,6 @@ void connection_common_init(struct connection *pconn)
   pconn->established = FALSE;
   pconn->used = TRUE;
   packet_header_init(&pconn->packet_header);
-  pconn->closing_reason = NULL;
   pconn->last_write = NULL;
   pconn->buffer = new_socket_packet_buffer();
   pconn->send_buffer = new_socket_packet_buffer();
@@ -580,9 +580,6 @@ void connection_common_close(struct connection *pconn)
     pconn->sock = nullptr;
     pconn->used = FALSE;
     pconn->established = FALSE;
-    if (NULL != pconn->closing_reason) {
-      free(pconn->closing_reason);
-    }
 
     free_socket_packet_buffer(pconn->buffer);
     pconn->buffer = NULL;

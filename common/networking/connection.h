@@ -148,7 +148,7 @@ struct connection {
   bool used;
   bool established; /* have negotiated initial packets */
   struct packet_header packet_header;
-  char *closing_reason;
+  QString closing_reason;
 
   /* connection is "observer", not controller; may be observing
    * specific player, or all (implementation incomplete).

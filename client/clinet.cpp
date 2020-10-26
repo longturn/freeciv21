@@ -83,20 +83,20 @@ static void close_socket_nomessage(struct connection *pc)
  **************************************************************************/
 static void client_conn_close_callback(struct connection *pconn)
 {
-  char reason[256];
+  QString reason;
 
-  if (NULL != pconn->closing_reason) {
-    fc_strlcpy(reason, pconn->closing_reason, sizeof(reason));
+  if (pconn->sock != nullptr) {
+    reason = pconn->sock->errorString();
   } else {
-    fc_strlcpy(reason, _("unknown reason"), sizeof(reason));
+    reason = QString::fromUtf8(_("unknown reason"));
   }
 
   close_socket_nomessage(pconn);
   /* If we lost connection to the internal server - kill it. */
   client_kill_server(TRUE);
-  log_error("Lost connection to server: %s.", reason);
+  log_error("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
-                       reason);
+                       qUtf8Printable(reason));
 }
 
 /**********************************************************************/ /**
@@ -135,12 +135,13 @@ static int try_to_connect(const char *hostname, int port,
   // Connect
   client.conn.sock = new QTcpSocket;
 
-  QObject::connect(client.conn.sock,
-                   QOverload<QAbstractSocket::SocketError>::of(
-                       &QAbstractSocket::error),
-                   [] {
-                     qFatal("TODO better error reporting"); // TODO
-                   });
+  QObject::connect(
+      client.conn.sock,
+      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+      [] {
+        connection_close(&client.conn,
+                         qUtf8Printable(client.conn.sock->errorString()));
+      });
 
   client.conn.sock->connectToHost(QString::fromUtf8(hostname), port);
 
