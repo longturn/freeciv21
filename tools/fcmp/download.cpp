@@ -15,12 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
 #include <errno.h>
 #include <unistd.h>
 

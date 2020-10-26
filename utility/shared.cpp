@@ -1623,10 +1623,8 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 char *get_multicast_group(bool ipv6_preferred)
 {
   static const char *default_multicast_group_ipv4 = "225.1.1.1";
-#ifdef FREECIV_IPV6_SUPPORT
   /* TODO: Get useful group (this is node local) */
   static const char *default_multicast_group_ipv6 = "FF31::8000:15B4";
-#endif /* IPv6 support */
 
   if (mc_group == NULL) {
     char *env = getenv("FREECIV_MULTICAST_GROUP");
@@ -1634,11 +1632,9 @@ char *get_multicast_group(bool ipv6_preferred)
     if (env) {
       mc_group = fc_strdup(env);
     } else {
-#ifdef FREECIV_IPV6_SUPPORT
       if (ipv6_preferred) {
         mc_group = fc_strdup(default_multicast_group_ipv6);
       } else
-#endif /* IPv6 support */
       {
         mc_group = fc_strdup(default_multicast_group_ipv4);
       }
