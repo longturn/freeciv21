@@ -388,11 +388,9 @@ QTcpServer *server_open_socket()
                                    .arg(srvarg.port)
                                    .arg(server->errorString())));
 
-    QCoreApplication::exit(EXIT_FAILURE);
     return server;
   }
 
-  // FIXME
   connections_set_close_callback(server_conn_close_callback);
 
   if (srvarg.announce == ANNOUNCE_NONE) {

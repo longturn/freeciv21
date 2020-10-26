@@ -37,6 +37,8 @@ public:
   explicit server();
   virtual ~server();
 
+  bool is_ready() const;
+
 private slots:
   // Low-level stuff
   void error_on_socket();

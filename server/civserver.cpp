@@ -505,6 +505,10 @@ int main(int argc, char *argv[])
 
   /* have arguments, call the main server loop... */
   auto server = new freeciv::server;
+  if (!server->is_ready()) {
+    delete server;
+    exit(EXIT_FAILURE);
+  }
   QObject::connect(&app, &QCoreApplication::aboutToQuit, server,
                    &QObject::deleteLater);
 

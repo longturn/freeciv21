@@ -146,6 +146,10 @@ QTcpServer *srv_prepare()
   /* logging available after this point */
 
   auto tcp_server = server_open_socket();
+  if (!tcp_server->isListening()) {
+    // Don't even try to start a game.
+    return tcp_server;
+  }
 
 #if IS_BETA_VERSION
   con_puts(C_COMMENT, "");
@@ -268,6 +272,11 @@ server::server()
   fc_interface_init_server();
   m_tcp_server = srv_prepare();
   m_tcp_server->setParent(this);
+  if (!m_tcp_server->isListening()) {
+    // Could not listen on the specified port. Rely on the caller checking
+    // our state and not starting the event loop.
+    return;
+  }
   connect(m_tcp_server, &QTcpServer::newConnection, this,
           &server::accept_connections);
   connect(m_tcp_server, &QTcpServer::acceptError,
@@ -331,6 +340,15 @@ void server::init_interactive()
   rl_initialize();
   rl_callback_handler_install((char *) "> ", handle_readline_input_callback);
   rl_attempted_completion_function = freeciv_completion;
+}
+
+/*************************************************************************/ /**
+   Checks if the server is ready for the event loop to start. In practice,
+   this is only false if opening the port failed.
+ *****************************************************************************/
+bool server::is_ready() const
+{
+  return m_tcp_server->isListening();
 }
 
 /*************************************************************************/ /**
