@@ -166,7 +166,6 @@ public:
   fc_corner *corner_wid;
   fc_settings qt_settings;
   float map_scale;
-  mr_idle mr_idler;
   mr_menu *menu_bar;
   qfc_rally_list rallies;
   trade_generator trade_gen;

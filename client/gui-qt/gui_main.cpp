@@ -291,7 +291,7 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
 
   cb->callback = callback;
   cb->data = data;
-  king()->mr_idler.add_callback(cb);
+  mr_idle::idlecb()->add_callback(cb);
 }
 
 /**********************************************************************/ /**
