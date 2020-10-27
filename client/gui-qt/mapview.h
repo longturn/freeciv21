@@ -74,10 +74,11 @@ private:
 **************************************************************************/
 class info_tile : public QLabel {
   Q_OBJECT
-  QFont info_font;
+  Q_DISABLE_COPY(info_tile);
 
 public:
-  info_tile(struct tile *ptile, QWidget *parent = 0);
+  static info_tile *i(struct tile *p = nullptr);
+  static void drop();
   struct tile *itile;
 
 protected:
@@ -85,11 +86,16 @@ protected:
   void paint(QPainter *painter, QPaintEvent *event);
 
 private:
+  QFont info_font;
+  info_tile(struct tile *ptile, QWidget *parent = 0);
+  static info_tile *m_instance;
   QStringList str_list;
   void calc_size();
   void update_font(const QString &name, const QFont &font);
 };
 
+void popdown_tile_info();
+void popup_tile_info(struct tile *ptile);
 void mapview_freeze(void);
 void mapview_thaw(void);
 bool mapview_is_frozen(void);

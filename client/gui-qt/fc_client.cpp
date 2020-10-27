@@ -69,7 +69,6 @@ fc_client::fc_client() : QMainWindow()
   menu_bar = NULL;
   central_wdg = NULL;
   unit_sel = NULL;
-  info_tile_wdg = NULL;
   opened_dialog = NULL;
   current_file = "";
   status_bar_queue.clear();
@@ -150,6 +149,7 @@ fc_client::~fc_client()
   if (fc_shortcuts::sc()) {
     delete fc_shortcuts::sc();
   }
+  mr_idle::idlecb()->drop();
   delete_cursors();
 }
 

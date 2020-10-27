@@ -20,7 +20,6 @@
 #include "chatline_common.h"
 #include "citydlg_common.h"
 #include "client_main.h"
-#include "climap.h"
 #include "mapctrl.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
@@ -416,7 +415,7 @@ void map_view::shortcut_pressed(int key)
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
   if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
       && ptile != nullptr) {
-    king()->popup_tile_info(ptile);
+    popup_tile_info(ptile);
     return;
   }
 
@@ -440,7 +439,7 @@ void map_view::shortcut_released(Qt::MouseButton bt)
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
   if (bt == sc->mouse && md == sc->mod) {
-    king()->popdown_tile_info();
+    popdown_tile_info();
     return;
   }
 
@@ -490,38 +489,3 @@ void map_view::mouseMoveEvent(QMouseEvent *event)
       canvas_pos_to_tile(event->pos().x(), event->pos().y()));
 }
 
-/**********************************************************************/ /**
-   Popups information label tile
- **************************************************************************/
-void fc_client::popup_tile_info(struct tile *ptile)
-{
-  struct unit *punit = NULL;
-
-  Q_ASSERT(info_tile_wdg == NULL);
-  if (TILE_UNKNOWN != client_tile_get_known(ptile)) {
-    mapdeco_set_crosshair(ptile, true);
-    punit = find_visible_unit(ptile);
-    if (punit) {
-      mapdeco_set_gotoroute(punit);
-      if (punit->goto_tile && unit_has_orders(punit)) {
-        mapdeco_set_crosshair(punit->goto_tile, true);
-      }
-    }
-    info_tile_wdg = new info_tile(ptile, queen()->mapview_wdg);
-    info_tile_wdg->show();
-  }
-}
-
-/**********************************************************************/ /**
-   Popdowns information label tile
- **************************************************************************/
-void fc_client::popdown_tile_info()
-{
-  mapdeco_clear_crosshairs();
-  mapdeco_clear_gotoroutes();
-  if (info_tile_wdg != NULL) {
-    info_tile_wdg->close();
-    delete info_tile_wdg;
-    info_tile_wdg = NULL;
-  }
-}

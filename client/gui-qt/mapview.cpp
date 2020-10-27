@@ -20,6 +20,7 @@
 // client
 #include "client_main.h"
 #include "climisc.h"
+#include "climap.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
@@ -51,7 +52,7 @@ extern QApplication *qapp;
 #define MAX_DIRTY_RECTS 20
 static int num_dirty_rects = 0;
 static QRect dirty_rects[MAX_DIRTY_RECTS];
-
+info_tile *info_tile::m_instance = 0;
 extern int last_center_enemy;
 extern int last_center_capital;
 extern int last_center_player_city;
@@ -641,6 +642,57 @@ void info_tile::update_font(const QString &name, const QFont &font)
     calc_size();
     update();
   }
+}
+
+/**********************************************************************/ /**
+   Deletes current instance
+ **************************************************************************/
+void info_tile::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = 0;
+  }
+}
+
+/**********************************************************************/ /**
+   Returns given instance
+ **************************************************************************/
+info_tile *info_tile::i(struct tile *p)
+{
+  if (!m_instance)
+    m_instance = new info_tile(p, queen()->mapview_wdg);
+  return m_instance;
+}
+
+/**********************************************************************/ /**
+   Popups information label tile
+ **************************************************************************/
+void popup_tile_info(struct tile *ptile)
+{
+  struct unit *punit = NULL;
+
+  if (TILE_UNKNOWN != client_tile_get_known(ptile)) {
+    mapdeco_set_crosshair(ptile, true);
+    punit = find_visible_unit(ptile);
+    if (punit) {
+      mapdeco_set_gotoroute(punit);
+      if (punit->goto_tile && unit_has_orders(punit)) {
+        mapdeco_set_crosshair(punit->goto_tile, true);
+      }
+    }
+    info_tile::i(ptile)->show();
+  }
+}
+
+/**********************************************************************/ /**
+   Popdowns information label tile
+ **************************************************************************/
+void popdown_tile_info()
+{
+  mapdeco_clear_crosshairs();
+  mapdeco_clear_gotoroutes();
+  info_tile::i()->drop();
 }
 
 /**********************************************************************/ /**
