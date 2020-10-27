@@ -546,7 +546,7 @@ struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 /**********************************************************************/ /**
    Constructor for global menubar in gameview
  **************************************************************************/
-mr_menu::mr_menu() : QMenuBar() {}
+mr_menu::mr_menu() : QMenuBar(), initialized(false) {}
 
 /**********************************************************************/ /**
    Initializes menu system, and add custom enum(munit) for most of options
@@ -1279,6 +1279,7 @@ void mr_menu::setup_menus()
     menus[i]->setAttribute(Qt::WA_TranslucentBackground);
   }
   this->setVisible(false);
+  initialized = false;
 }
 
 /**********************************************************************/ /**
@@ -1376,6 +1377,7 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
+  if (!initialized) return;
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1413,9 +1415,10 @@ void mr_menu::update_roads_menu()
 {
   QAction *act;
   struct unit_list *punits = nullptr;
-  QList<QAction *> actions = roads_menu->actions();
   bool enabled = false;
 
+  if (!initialized) return;
+  QList<QAction *> actions = roads_menu->actions();
   for (auto act : qAsConst(actions)) {
     removeAction(act);
     act->deleteLater();
@@ -1462,9 +1465,10 @@ void mr_menu::update_bases_menu()
 {
   QAction *act;
   struct unit_list *punits = nullptr;
-  QList<QAction *> actions = bases_menu->actions();
   bool enabled = false;
+  if (!initialized) return;
 
+  QList<QAction *> actions = bases_menu->actions();
   for (auto act : qAsConst(actions)) {
     removeAction(act);
     act->deleteLater();
@@ -1521,6 +1525,7 @@ void mr_menu::menus_sensitive()
   struct terrain *pterrain;
   const struct unit_type *ptype = NULL;
 
+  if (!initialized) return;
   players_iterate(pplayer)
   {
     if (city_list_size(pplayer->cities)) {
