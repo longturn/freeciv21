@@ -28,45 +28,14 @@
 #include "tradecalculation.h"
 
 class QApplication;
-class QCheckBox;
-class QCloseEvent;
-class QComboBox;
-class QCursor;
-class QDialogButtonBox;
-class QEvent;
 class QGridLayout;
-class QItemSelection;
-class QKeyEvent;
-class QLabel;
-class QLineEdit;
 class QObject;
 class QPoint;
-class QPushButton;
-class QResizeEvent;
 class QSocketNotifier;
-class QSpinBox;
 class QStackedLayout;
 class QStatusBar;
-class QTableWidget;
-class QTextEdit;
-class QTimer;
 class QTimerEvent;
-class QTreeWidget;
 class choice_dialog;
-class fc_sidebar;
-class fc_sidewidget;
-class goto_dialog;
-class hud_battle_log;
-class hud_units;
-class info_tab;
-class info_tile;
-class map_view;
-class messagewdg;
-class minimap_view;
-class pregame_options;
-class pregamevote;
-class units_select;
-class xvote;
 struct server_scan;
 
 enum connection_state {
@@ -122,7 +91,7 @@ public slots:
   void close_fc();
 };
 
-class fc_client : public QMainWindow, private chat_listener {
+class fc_client : public QMainWindow {
   Q_OBJECT
 
   enum client_pages page;
@@ -179,7 +148,6 @@ private:
   void create_loading_page();
   void create_cursors(void);
   void delete_cursors(void);
-  void init();
   void read_settings();
 
 protected:

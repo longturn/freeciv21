@@ -58,35 +58,20 @@ extern void write_shortcuts();
 /************************************************************************/ /**
    Constructor
  ****************************************************************************/
-fc_client::fc_client() : QMainWindow()
+fc_client::fc_client()
+    : QMainWindow(), central_layout(nullptr), server_notifier(nullptr),
+      status_bar(nullptr), status_bar_label(nullptr), menu_bar(nullptr),
+      central_wdg(nullptr), opened_dialog(nullptr), current_file(""),
+      quitting(false), interface_locked(false), map_scale(1.0f),
+      map_font_scale(true)
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
-  central_layout = NULL;
-  server_notifier = NULL;
-  status_bar = NULL;
-  status_bar_label = NULL;
-  menu_bar = NULL;
-  central_wdg = NULL;
-  opened_dialog = NULL;
-  current_file = "";
   status_bar_queue.clear();
-  quitting = false;
-  interface_locked = false;
-  map_scale = 1.0f;
-  map_font_scale = true;
   for (int i = 0; i <= PAGE_GAME; i++) {
     pages_layout[i] = NULL;
     pages[i] = NULL;
   }
-  init();
-}
-
-/************************************************************************/ /**
-   Initializes layouts for all pages
- ****************************************************************************/
-void fc_client::init()
-{
   fc_font::instance()->init_fonts();
   read_settings();
   QApplication::setFont(*fc_font::instance()->get_font(fonts::default_font));
@@ -135,7 +120,6 @@ void fc_client::init()
   setCentralWidget(central_wdg);
   resize(pages[PAGE_MAIN]->minimumSizeHint());
   setVisible(true);
-  chat_listener::listen();
   QPixmapCache::setCacheLimit(80000);
 }
 
@@ -186,7 +170,6 @@ bool fc_client::is_closing() { return quitting; }
    Called when fc_client is going to quit
  ****************************************************************************/
 void fc_client::closing() { quitting = true; }
-
 
 /************************************************************************/ /**
    Switch from one client page to another.
@@ -255,7 +238,8 @@ void fc_client::switch_page(int new_pg)
     show_new_turn_info();
     break;
   case PAGE_SCENARIO:
-    qobject_cast<page_scenario *>(pages[PAGE_SCENARIO])->update_scenarios_page();
+    qobject_cast<page_scenario *>(pages[PAGE_SCENARIO])
+        ->update_scenarios_page();
     break;
   case PAGE_NETWORK:
     qobject_cast<page_network *>(pages[PAGE_NETWORK])
@@ -365,8 +349,6 @@ void fc_client::slot_disconnect()
 
   switch_page(PAGE_MAIN);
 }
-
-
 
 /****************************************************************************
   Deletes cursors
@@ -551,7 +533,6 @@ void fc_client::write_settings()
   write_shortcuts();
 }
 
-
 /************************************************************************/ /**
    Popups client options
  ****************************************************************************/
@@ -598,7 +579,7 @@ void qtg_real_set_client_page(enum client_pages page)
  **************************************************************************/
 void qtg_set_rulesets(int num_rulesets, char **rulesets)
 {
-    qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+  qobject_cast<page_pregame *>(king()->pages[PAGE_START])
       ->set_rulesets(num_rulesets, rulesets);
 }
 
