@@ -228,8 +228,7 @@ void global_worklist_destroy(struct global_worklist *pgwl)
     int i;
 
     for (i = 0; i < pgwl->unbuilt.length; i++) {
-      // sveinung
-      // puni_name = pgwl->unbuilt.entries + i;
+      puni_name = pgwl->unbuilt.entries + i;
       puni_name->kind = pgwl->unbuilt.entries[i].kind;
       puni_name->name = pgwl->unbuilt.entries[i].name;
       free(puni_name->kind);
