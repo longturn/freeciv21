@@ -161,47 +161,6 @@ private:
   int last_index;
 };
 
-/***************************************************************************
- Transparent widget for selecting units
-***************************************************************************/
-class units_select : public fcwidget {
-  Q_OBJECT
-  QPixmap *pix;
-  QPixmap *h_pix;          /** pixmap for highlighting */
-  QSize item_size;         /** size of each pixmap of unit */
-  QList<unit *> unit_list; /** storing units only for drawing, for rest units
-                            * iterate utile->units */
-  QFont ufont;
-  QFont info_font;
-  int row_count;
-  close_widget *cw;
-
-public:
-  units_select(struct tile *ptile, QWidget *parent);
-  ~units_select();
-  void update_menu();
-  void update_units();
-  void create_pixmap();
-  tile *utile;
-
-protected:
-  void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void wheelEvent(QWheelEvent *event);
-  void closeEvent(QCloseEvent *event);
-private slots:
-  void update_img();
-
-private:
-  bool more;
-  int show_line;
-  int highligh_num;
-  int unit_count;
-};
-
 /**************************************************************************
   A QPushButton that includes data like function to call and parmeters
 **************************************************************************/

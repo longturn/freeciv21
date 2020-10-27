@@ -68,7 +68,6 @@ fc_client::fc_client() : QMainWindow()
   status_bar_label = NULL;
   menu_bar = NULL;
   central_wdg = NULL;
-  unit_sel = NULL;
   opened_dialog = NULL;
   current_file = "";
   status_bar_queue.clear();
@@ -550,46 +549,6 @@ void fc_client::write_settings()
   s.setValue("new_turn_text", qt_settings.show_new_turn_text);
   s.setValue("show_battle_log", qt_settings.show_battle_log);
   write_shortcuts();
-}
-
-/************************************************************************/ /**
-   Shows/closes unit selection widget
- ****************************************************************************/
-void fc_client::toggle_unit_sel_widget(struct tile *ptile)
-{
-  if (unit_sel != NULL) {
-    unit_sel->close();
-    delete unit_sel;
-    unit_sel = new units_select(ptile, queen()->mapview_wdg);
-    unit_sel->show();
-  } else {
-    unit_sel = new units_select(ptile, queen()->mapview_wdg);
-    unit_sel->show();
-  }
-}
-
-/************************************************************************/ /**
-   Update unit selection widget if open
- ****************************************************************************/
-void fc_client::update_unit_sel()
-{
-  if (unit_sel != NULL) {
-    unit_sel->update_units();
-    unit_sel->create_pixmap();
-    unit_sel->update();
-  }
-}
-
-/************************************************************************/ /**
-   Closes unit selection widget.
- ****************************************************************************/
-void fc_client::popdown_unit_sel()
-{
-  if (unit_sel != nullptr) {
-    unit_sel->close();
-    delete unit_sel;
-    unit_sel = nullptr;
-  }
 }
 
 

@@ -34,6 +34,7 @@
 #include "messagewin.h"
 #include "page_game.h"
 #include "shortcuts.h"
+#include "unitselect.h"
 
 extern void side_disable_endturn(bool do_restore);
 extern void qload_lua_script();
@@ -305,7 +306,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_SHOW_UNITS);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
         && ptile != nullptr && unit_list_size(ptile->units) > 0) {
-      king()->toggle_unit_sel_widget(ptile);
+      toggle_unit_sel_widget(ptile);
       return;
     }
 

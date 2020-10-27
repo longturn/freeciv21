@@ -46,6 +46,7 @@
 #include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
+#include "unitselect.h"
 
 extern "C" void real_science_report_dialog_update(void *);
 
@@ -212,7 +213,8 @@ void qtg_real_conn_list_dialog_update(void *unused)
   if (qtg_get_current_client_page() == PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_START);
   }
-    qobject_cast<page_pregame*>(king()->pages[PAGE_START])->update_start_page();
+  qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+      ->update_start_page();
 }
 
 /**********************************************************************/ /**
@@ -275,8 +277,9 @@ void qtg_set_unit_icons_more_arrow(bool onoff)
  **************************************************************************/
 void qtg_real_focus_units_changed(void)
 {
-  if (king()->unit_sel != nullptr && king()->unit_sel->isVisible()) {
-    king()->unit_sel->update_units();
+  units_select *unit_sel = queen()->unit_selector;
+  if (unit_sel != nullptr && unit_sel->isVisible()) {
+    unit_sel->update_units();
   }
 }
 

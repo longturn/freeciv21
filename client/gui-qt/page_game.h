@@ -28,6 +28,7 @@ class info_tab;
 class hud_battle_log;
 class goto_dialog;
 class unitinfo_wdg;
+class units_select;
 class xvote;
 
 /****************************************************************************
@@ -64,6 +65,7 @@ public:
   fc_game_tab_widget *game_tab_widget;
   fc_sidebar *sidebar_wdg;
   goto_dialog *gtd;
+  units_select *unit_selector;
   hud_battle_log *battlelog_wdg;
   hud_units *unitinfo_wdg;
   info_tab *infotab;

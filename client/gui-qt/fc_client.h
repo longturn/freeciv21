@@ -149,9 +149,6 @@ public:
   enum client_pages current_page();
 
   void set_status_bar(QString str, int timeout = 2000);
-  void toggle_unit_sel_widget(struct tile *ptile);
-  void update_unit_sel();
-  void popdown_unit_sel();
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
   void write_settings();
@@ -166,7 +163,6 @@ public:
   mr_menu *menu_bar;
   qfc_rally_list rallies;
   trade_generator trade_gen;
-  units_select *unit_sel;
 
 private slots:
   void server_input(int sock);

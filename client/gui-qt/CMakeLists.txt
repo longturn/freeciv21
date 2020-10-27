@@ -51,6 +51,7 @@ add_library(
   tradecalculation.cpp
   tooltips.cpp
   unitreport.cpp
+  unitselect.cpp
   voteinfo_bar.cpp
   widgetdecorations.cpp
 )
