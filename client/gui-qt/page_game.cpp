@@ -14,14 +14,17 @@
 #include "page_game.h"
 // Qt
 #include <QGridLayout>
+#include <QResizeEvent>
 // utility
 #include "fcintl.h"
 // common
+#include "calendar.h"
 #include "cityrep_g.h"
 #include "government.h"
 #include "repodlgs_g.h"
 // client
 #include "client_main.h"
+#include "climisc.h"
 #include "mapview_common.h"
 #include "text.h"
 // gui-qt - Eye of Storm
@@ -29,6 +32,7 @@
 #include "gotodlg.h"
 #include "hudwidget.h"
 #include "icons.h"
+#include "mapctrl_common.h"
 #include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
@@ -48,10 +52,9 @@ static void cycle_enemy_units();
 
 extern void toggle_units_report(bool);
 
-page_game::page_game(QWidget *parent, fc_client *c) : QWidget(parent)
+page_game::page_game(QWidget *parent) : QWidget(parent)
 {
   QGridLayout *page_game_layout;
-  king = c;
   QGridLayout *game_layout;
 
   page_game_layout = new QGridLayout;
@@ -152,6 +155,81 @@ void page_game::reload_sidebar_icons()
 }
 
 /**********************************************************************/ /**
+   Update position
+ **************************************************************************/
+void page_game::update_sidebar_position()
+{
+  QGridLayout *l = qobject_cast<QGridLayout*>(layout());
+  l->removeWidget(queen()->sidebar_wdg);
+  if (gui_options.gui_qt_sidebar_left) {
+    l->addWidget(queen()->sidebar_wdg, 1, 0);
+  } else {
+    l->addWidget(sidebar_wdg, 1, 2);
+  }
+}
+
+
+/**********************************************************************/ /**
+   Real update, updates only once per 300 ms.
+ **************************************************************************/
+void page_game::update_info_label(void)
+{
+  QString s, eco_info;
+
+  if (king()->current_page() != PAGE_GAME) {
+    return;
+  }
+  if (update_info_timer == nullptr) {
+    update_info_timer = new QTimer();
+    update_info_timer->setSingleShot(true);
+    connect(update_info_timer, &QTimer::timeout, this,
+            &page_game::update_info_label);
+    update_info_timer->start(300);
+    return;
+  }
+
+  if (update_info_timer->remainingTime() > 0) {
+    return;
+  }
+  update_sidebar_tooltips();
+  if (head_of_units_in_focus() != nullptr) {
+    real_menus_update();
+  }
+  /* TRANS: T is shortcut from Turn */
+  s = QString(_("%1 \nT:%2"))
+          .arg(calendar_text(), QString::number(game.info.turn));
+
+  sw_map->set_custom_labels(s);
+  sw_map->update_final_pixmap();
+
+  set_indicator_icons(client_research_sprite(), client_warming_sprite(),
+                      client_cooling_sprite(), client_government_sprite());
+
+  if (client.conn.playing != NULL) {
+    if (player_get_expected_income(client.conn.playing) > 0) {
+      eco_info =
+          QString(_("%1 (+%2)"))
+              .arg(QString::number(client.conn.playing->economic.gold),
+                   QString::number(
+                       player_get_expected_income(client.conn.playing)));
+    } else {
+      eco_info =
+          QString(_("%1 (%2)"))
+              .arg(QString::number(client.conn.playing->economic.gold),
+                   QString::number(
+                       player_get_expected_income(client.conn.playing)));
+    }
+    sw_economy->set_custom_labels(eco_info);
+  } else {
+    sw_economy->set_custom_labels("");
+  }
+  sw_tax->update_final_pixmap();
+  sw_economy->update_final_pixmap();
+  delete update_info_timer;
+  update_info_timer = nullptr;
+}
+
+/**********************************************************************/ /**
    Updates sidebar tooltips
  **************************************************************************/
 void page_game::update_sidebar_tooltips()
@@ -164,7 +242,7 @@ void page_game::update_sidebar_tooltips()
   struct improvement_entry building_entries[B_LAST];
   struct unit_entry unit_entries[U_LAST];
 
-  if (gui()->current_page() != PAGE_GAME) {
+  if (king()->current_page() != PAGE_GAME) {
     return;
   }
 
@@ -371,5 +449,172 @@ void cycle_enemy_units()
 }
 
 page_game *queen() {
-  return qobject_cast<page_game *>(gui()->pages[PAGE_GAME]);
+  return qobject_cast<page_game *>(king()->pages[PAGE_GAME]);
 }
+
+/************************************************************************/ /**
+   Game tab widget constructor
+ ****************************************************************************/
+fc_game_tab_widget::fc_game_tab_widget() : QStackedWidget() {}
+
+/************************************************************************/ /**
+   Init default settings for game_tab_widget
+ ****************************************************************************/
+void fc_game_tab_widget::init()
+{
+  connect(this, &QStackedWidget::currentChanged, this,
+          &fc_game_tab_widget::current_changed);
+}
+
+/************************************************************************/ /**
+   Resize event for all game tab widgets
+ ****************************************************************************/
+void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
+{
+  QSize size;
+  size = event->size();
+  if (C_S_RUNNING <= client_state()) {
+    queen()->sidebar_wdg->resize_me(size.height());
+    map_canvas_resized(size.width(), size.height());
+    queen()->infotab->resize(
+        qRound((size.width() * king()->qt_settings.chat_fwidth)),
+        qRound((size.height() * king()->qt_settings.chat_fheight)));
+    queen()->infotab->move(
+        qRound((size.width() * king()->qt_settings.chat_fx_pos)),
+        qRound((size.height() * king()->qt_settings.chat_fy_pos)));
+    queen()->minimapview_wdg->move(
+        qRound(king()->qt_settings.minimap_x * mapview.width),
+        qRound(king()->qt_settings.minimap_y * mapview.height));
+    queen()->minimapview_wdg->resize(
+        qRound(king()->qt_settings.minimap_width * mapview.width),
+        qRound(king()->qt_settings.minimap_height * mapview.height));
+    queen()->battlelog_wdg->set_scale(king()->qt_settings.battlelog_scale);
+    queen()->battlelog_wdg->move(
+        qRound(king()->qt_settings.battlelog_x * mapview.width),
+        qRound(king()->qt_settings.battlelog_y * mapview.height));
+    queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
+    queen()->update_sidebar_tooltips();
+    side_disable_endturn(get_turn_done_button_state());
+    queen()->mapview_wdg->resize(event->size().width(), size.height());
+    queen()->unitinfo_wdg->update_actions(nullptr);
+    /* It could be resized before mapview, so delayed it a bit */
+    QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
+  }
+  event->setAccepted(true);
+}
+
+/************************************************************************/ /**
+   Tab has been changed
+ ****************************************************************************/
+void fc_game_tab_widget::current_changed(int index)
+{
+  QList<fc_sidewidget *> objs;
+  fc_sidewidget *sw;
+
+  if (king()->is_closing()) {
+    return;
+  }
+  objs = queen()->sidebar_wdg->objects;
+
+  for (auto sw : qAsConst(objs)) {
+    sw->update_final_pixmap();
+  }
+  currentWidget()->hide();
+  widget(index)->show();
+
+  /* Set focus to map instead sidebar */
+  if (queen()->mapview_wdg && king()->current_page() == PAGE_GAME
+      && index == 0) {
+    queen()->mapview_wdg->setFocus();
+  }
+}
+
+/**********************************************************************/ /**
+   Inserts tab widget to game view page
+ **************************************************************************/
+int page_game::add_game_tab(QWidget *widget)
+{
+  int i;
+
+  i = game_tab_widget->addWidget(widget);
+  game_tab_widget->setCurrentWidget(widget);
+  return i;
+}
+
+/**********************************************************************/ /**
+   Removes given tab widget from game page
+ **************************************************************************/
+void page_game::rm_game_tab(int index)
+{
+  game_tab_widget->removeWidget(queen()->game_tab_widget->widget(index));
+}
+
+/************************************************************************/ /**
+   Finds not used index on game_view_tab and returns it
+ ****************************************************************************/
+void page_game::gimme_place(QWidget *widget, const QString &str)
+{
+  QString x;
+
+  x = opened_repo_dlgs.key(widget);
+
+  if (x.isEmpty()) {
+    opened_repo_dlgs.insert(str, widget);
+    return;
+  }
+  log_error("Failed to find place for new tab widget");
+  return;
+}
+
+/************************************************************************/ /**
+   Returns index on game tab page of given report dialog
+ ****************************************************************************/
+int page_game::gimme_index_of(const QString &str)
+{
+  int i;
+  QWidget *w;
+
+  if (str == "MAP") {
+    return 0;
+  }
+
+  w = opened_repo_dlgs.value(str);
+  i = queen()->game_tab_widget->indexOf(w);
+  return i;
+}
+
+/************************************************************************/ /**
+   Removes report dialog string from the list marking it as closed
+ ****************************************************************************/
+void page_game::remove_repo_dlg(const QString &str)
+{
+  /* if app is closing opened_repo_dlg is already deleted */
+  if (!king()->is_closing()) {
+    opened_repo_dlgs.remove(str);
+  }
+}
+
+/************************************************************************/ /**
+   Checks if given report is opened, if you create new report as tab on game
+   page, figure out some original string and put in in repodlg.h as comment
+ to that QWidget class.
+ ****************************************************************************/
+bool page_game::is_repo_dlg_open(const QString &str)
+{
+  QWidget *w;
+
+  w = opened_repo_dlgs.value(str);
+
+  if (w == NULL) {
+    return false;
+  }
+
+  return true;
+}
+
+/**********************************************************************/ /**
+   Typically an info box is provided to tell the player about the state
+   of their civilization.  This function is called when the label is
+   changed.
+ **************************************************************************/
+void update_info_label(void) { queen()->update_info_label(); }

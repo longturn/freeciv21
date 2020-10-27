@@ -170,8 +170,8 @@ void help_dialog::update_fonts() { help_wdg->update_fonts(); }
 ****************************************************************************/
 void help_dialog::hideEvent(QHideEvent *event)
 {
-  gui()->qt_settings.help_geometry = saveGeometry();
-  gui()->qt_settings.help_splitter1 = splitter->saveState();
+  king()->qt_settings.help_geometry = saveGeometry();
+  king()->qt_settings.help_splitter1 = splitter->saveState();
 }
 
 /****************************************************************************
@@ -181,9 +181,9 @@ void help_dialog::showEvent(QShowEvent *event)
 {
   QList<int> sizes;
 
-  if (!gui()->qt_settings.help_geometry.isNull()) {
-    restoreGeometry(gui()->qt_settings.help_geometry);
-    splitter->restoreState(gui()->qt_settings.help_splitter1);
+  if (!king()->qt_settings.help_geometry.isNull()) {
+    restoreGeometry(king()->qt_settings.help_geometry);
+    splitter->restoreState(king()->qt_settings.help_splitter1);
   } else {
     QList<QScreen *> screens = QGuiApplication::screens();
     QRect rect = screens[0]->availableGeometry();
@@ -199,8 +199,8 @@ void help_dialog::showEvent(QShowEvent *event)
 ****************************************************************************/
 void help_dialog::closeEvent(QCloseEvent *event)
 {
-  gui()->qt_settings.help_geometry = saveGeometry();
-  gui()->qt_settings.help_splitter1 = splitter->saveState();
+  king()->qt_settings.help_geometry = saveGeometry();
+  king()->qt_settings.help_splitter1 = splitter->saveState();
 }
 
 /**********************************************************************/ /**

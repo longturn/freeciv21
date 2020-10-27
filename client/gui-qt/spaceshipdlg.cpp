@@ -59,7 +59,7 @@ ss_report::ss_report(struct player *pplayer)
  ****************************************************************************/
 ss_report::~ss_report()
 {
-  gui()->remove_repo_dlg("SPS");
+  queen()->remove_repo_dlg("SPS");
   qtg_canvas_free(can);
 }
 
@@ -69,8 +69,8 @@ ss_report::~ss_report()
 void ss_report::init()
 {
   int index;
-  gui()->gimme_place(this, "SPS");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "SPS");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
 }
@@ -115,11 +115,11 @@ void popup_spaceship_dialog(struct player *pplayer)
   if (client_is_global_observer()) {
     return;
   }
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     ss_rep = new ss_report(pplayer);
     ss_rep->init();
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
     if (queen()->game_tab_widget->currentIndex() == i) {
       return;
@@ -146,10 +146,10 @@ void refresh_spaceship_dialog(struct player *pplayer)
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     return;
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
@@ -167,10 +167,10 @@ void popdown_all_spaceships_dialogs()
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     return;
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);

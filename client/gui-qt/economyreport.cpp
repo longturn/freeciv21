@@ -77,7 +77,7 @@ eco_report::eco_report() : QWidget()
 /************************************************************************/ /**
    Destructor for economy report
  ****************************************************************************/
-eco_report::~eco_report() { gui()->remove_repo_dlg("ECO"); }
+eco_report::~eco_report() { queen()->remove_repo_dlg("ECO"); }
 
 /************************************************************************/ /**
    Initializes place in tab for economy report
@@ -85,8 +85,8 @@ eco_report::~eco_report() { gui()->remove_repo_dlg("ECO"); }
 void eco_report::init()
 {
   curr_row = -1;
-  gui()->gimme_place(this, "ECO");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "ECO");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -265,7 +265,7 @@ void eco_report::disband_units()
 {
   struct universal selected;
   char buf[1024];
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   Unit_type_id utype;
 
   selected = cid_decode(uid);
@@ -287,7 +287,7 @@ void eco_report::disband_units()
       disband_all_units(putype, false, buf, sizeof(buf));
     }
 
-    result = new hud_message_box(gui()->central_wdg);
+    result = new hud_message_box(king()->central_wdg);
     result->set_text_title(buf, _("Disband Results"));
     result->setStandardButtons(QMessageBox::Ok);
     result->setAttribute(Qt::WA_DeleteOnClose);
@@ -302,7 +302,7 @@ void eco_report::sell_buildings()
 {
   struct universal selected;
   char buf[1024];
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   const struct impr_type *pimprove;
   Impr_type_id impr_id;
 
@@ -330,7 +330,7 @@ void eco_report::sell_buildings()
 
     sell_all_improvements(pimprove, false, buf, sizeof(buf));
 
-    result = new hud_message_box(gui()->central_wdg);
+    result = new hud_message_box(king()->central_wdg);
     result->set_text_title(buf, _("Sell-Off: Results"));
     result->setStandardButtons(QMessageBox::Ok);
     result->setAttribute(Qt::WA_DeleteOnClose);
@@ -346,7 +346,7 @@ void eco_report::sell_redundant()
   struct universal selected;
   char buf[1024];
   QString s;
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   const struct impr_type *pimprove;
   Impr_type_id impr_id;
 
@@ -374,7 +374,7 @@ void eco_report::sell_redundant()
 
     sell_all_improvements(pimprove, true, buf, sizeof(buf));
 
-    result = new hud_message_box(gui()->central_wdg);
+    result = new hud_message_box(king()->central_wdg);
     result->set_text_title(buf, _("Sell-Off: Results"));
     result->setStandardButtons(QMessageBox::Ok);
     result->setAttribute(Qt::WA_DeleteOnClose);
@@ -391,8 +391,8 @@ void real_economy_report_dialog_update(void *unused)
   eco_report *eco_rep;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("ECO")) {
-    i = gui()->gimme_index_of("ECO");
+  if (queen()->is_repo_dlg_open("ECO")) {
+    i = queen()->gimme_index_of("ECO");
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       eco_rep = reinterpret_cast<eco_report *>(w);
@@ -411,12 +411,12 @@ void economy_report_dialog_popup(bool raise)
   int i;
   eco_report *eco_rep;
   QWidget *w;
-  if (!gui()->is_repo_dlg_open("ECO")) {
+  if (!queen()->is_repo_dlg_open("ECO")) {
     eco_rep = new eco_report;
     eco_rep->init();
     eco_rep->update_report();
   } else {
-    i = gui()->gimme_index_of("ECO");
+    i = queen()->gimme_index_of("ECO");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
@@ -438,8 +438,8 @@ void popdown_economy_report()
   eco_report *eco_rep;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("ECO")) {
-    i = gui()->gimme_index_of("ECO");
+  if (queen()->is_repo_dlg_open("ECO")) {
+    i = queen()->gimme_index_of("ECO");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     eco_rep = reinterpret_cast<eco_report *>(w);

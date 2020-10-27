@@ -129,7 +129,7 @@ void minimap_view::scale(double factor)
  **************************************************************************/
 void minimap_view::update_menu()
 {
-  ::gui()->menu_bar->minimap_status->setChecked(false);
+  ::king()->menu_bar->minimap_status->setChecked(false);
 }
 
 /**********************************************************************/ /**
@@ -357,9 +357,9 @@ void minimap_view::resizeEvent(QResizeEvent *event)
       && size.height() > 0) {
     w_ratio = static_cast<float>(width()) / gui_options.overview.width;
     h_ratio = static_cast<float>(height()) / gui_options.overview.height;
-    gui()->qt_settings.minimap_width =
+    king()->qt_settings.minimap_width =
         static_cast<float>(size.width()) / mapview.width;
-    gui()->qt_settings.minimap_height =
+    king()->qt_settings.minimap_height =
         static_cast<float>(size.height()) / mapview.height;
   }
   update_image();
@@ -405,7 +405,7 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
   int x, y;
 
   if (event->button() == Qt::LeftButton) {
-    if (gui()->interface_locked) {
+    if (king()->interface_locked) {
       return;
     }
     cursor = event->globalPos() - geometry().topLeft();
@@ -435,7 +435,7 @@ void minimap_view::mousePressEvent(QMouseEvent *event)
  **************************************************************************/
 void minimap_view::mouseMoveEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (event->buttons() & Qt::LeftButton) {
@@ -445,8 +445,8 @@ void minimap_view::mouseMoveEvent(QMouseEvent *event)
     p = r - p;
     move(event->globalPos() - cursor);
     setCursor(Qt::SizeAllCursor);
-    gui()->qt_settings.minimap_x = static_cast<float>(p.x()) / mapview.width;
-    gui()->qt_settings.minimap_y =
+    king()->qt_settings.minimap_x = static_cast<float>(p.x()) / mapview.width;
+    king()->qt_settings.minimap_y =
         static_cast<float>(p.y()) / mapview.height;
   }
 }
@@ -489,12 +489,12 @@ void get_overview_area_dimensions(int *width, int *height)
 void overview_size_changed(void)
 {
   queen()->minimapview_wdg->resize(0, 0);
-  queen()->minimapview_wdg->move(gui()->qt_settings.minimap_x * mapview.width,
-                               gui()->qt_settings.minimap_y
+  queen()->minimapview_wdg->move(king()->qt_settings.minimap_x * mapview.width,
+                               king()->qt_settings.minimap_y
                                    * mapview.height);
   queen()->minimapview_wdg->resize(
-      gui()->qt_settings.minimap_width * mapview.width,
-      gui()->qt_settings.minimap_height * mapview.height);
+      king()->qt_settings.minimap_width * mapview.width,
+      king()->qt_settings.minimap_height * mapview.height);
 }
 
 /**********************************************************************/ /**

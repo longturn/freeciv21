@@ -652,8 +652,8 @@ plr_widget::~plr_widget()
   delete pid;
   delete list_model;
   delete filter_model;
-  gui()->qt_settings.player_repo_sort_col = header()->sortIndicatorSection();
-  gui()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
+  king()->qt_settings.player_repo_sort_col = header()->sortIndicatorSection();
+  king()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
 }
 
 /**********************************************************************/ /**
@@ -716,24 +716,24 @@ plr_report::plr_report() : QWidget()
   setLayout(layout);
   other_player = nullptr;
   index = 0;
-  if (gui()->qt_settings.player_repo_sort_col != -1) {
-    plr_wdg->sortByColumn(gui()->qt_settings.player_repo_sort_col,
-                          gui()->qt_settings.player_report_sort);
+  if (king()->qt_settings.player_repo_sort_col != -1) {
+    plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
+                          king()->qt_settings.player_report_sort);
   }
 }
 
 /**********************************************************************/ /**
    Destructor for plr_report
  **************************************************************************/
-plr_report::~plr_report() { gui()->remove_repo_dlg("PLR"); }
+plr_report::~plr_report() { queen()->remove_repo_dlg("PLR"); }
 
 /**********************************************************************/ /**
    Adds plr_report to tab widget
  **************************************************************************/
 void plr_report::init()
 {
-  gui()->gimme_place(this, "PLR");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "PLR");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -902,7 +902,7 @@ void popup_players_dialog(bool raise)
   int i;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("PLR")) {
+  if (!queen()->is_repo_dlg_open("PLR")) {
     plr_report *pr = new plr_report;
 
     pr->init();
@@ -910,7 +910,7 @@ void popup_players_dialog(bool raise)
   } else {
     plr_report *pr;
 
-    i = gui()->gimme_index_of("PLR");
+    i = queen()->gimme_index_of("PLR");
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);
@@ -931,8 +931,8 @@ void real_players_dialog_update(void *unused)
   plr_report *pr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("PLR")) {
-    i = gui()->gimme_index_of("PLR");
+  if (queen()->is_repo_dlg_open("PLR")) {
+    i = queen()->gimme_index_of("PLR");
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       pr = reinterpret_cast<plr_report *>(w);
@@ -950,8 +950,8 @@ void popdown_players_report()
   plr_report *pr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("PLR")) {
-    i = gui()->gimme_index_of("PLR");
+  if (queen()->is_repo_dlg_open("PLR")) {
+    i = queen()->gimme_index_of("PLR");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     pr = reinterpret_cast<plr_report *>(w);

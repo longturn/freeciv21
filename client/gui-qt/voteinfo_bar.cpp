@@ -218,10 +218,10 @@ void xvote::paintEvent(QPaintEvent *event)
  ***************************************************************************/
 void voteinfo_gui_update(void)
 {
-  if (gui()->current_page() == PAGE_START) {
-    qobject_cast<page_pregame *>(gui()->pages[PAGE_START])->pre_vote->update_vote();
+  if (king()->current_page() == PAGE_START) {
+    qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pre_vote->update_vote();
   }
-  if (gui()->current_page() == PAGE_GAME) {
+  if (king()->current_page() == PAGE_GAME) {
 
     if (queen()->x_vote != NULL) {
       queen()->x_vote->show();

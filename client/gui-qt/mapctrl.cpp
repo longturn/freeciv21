@@ -46,7 +46,7 @@ extern void qreload_lua_script();
  **************************************************************************/
 void popup_newcity_dialog(struct unit *punit, const char *suggestname)
 {
-  hud_input_box *ask = new hud_input_box(gui()->central_wdg);
+  hud_input_box *ask = new hud_input_box(king()->central_wdg);
   int index = tile_index(unit_tile(punit));
 
   ask->set_text_title_definput(_("What should we call our new city?"),
@@ -221,21 +221,21 @@ void map_view::shortcut_pressed(int key)
 
   /* Trade Generator - skip */
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
-  if (bt == sc->mouse && md == sc->mod && gui()->trade_gen.hover_city) {
+  if (bt == sc->mouse && md == sc->mod && king()->trade_gen.hover_city) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
-    gui()->trade_gen.add_tile(ptile);
+    king()->trade_gen.add_tile(ptile);
     queen()->mapview_wdg->repaint();
     return;
   }
 
   /* Rally point - select city - skip */
-  if (bt == sc->mouse && md == sc->mod && gui()->rallies.hover_city) {
+  if (bt == sc->mouse && md == sc->mod && king()->rallies.hover_city) {
     char text[1024];
 
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
     if (tile_city(ptile)) {
-      gui()->rallies.hover_tile = true;
-      gui()->rallies.rally_city = tile_city(ptile);
+      king()->rallies.hover_tile = true;
+      king()->rallies.rally_city = tile_city(ptile);
 
       fc_snprintf(text, sizeof(text),
                   _("Selected city %s. Now choose rally point."),
@@ -248,10 +248,10 @@ void map_view::shortcut_pressed(int key)
   }
 
   /* Rally point - select tile  - skip */
-  if (bt == Qt::LeftButton && gui()->rallies.hover_tile && ptile != NULL) {
+  if (bt == Qt::LeftButton && king()->rallies.hover_tile && ptile != NULL) {
     char text[1024];
 
-    struct city *pcity = gui()->rallies.rally_city;
+    struct city *pcity = king()->rallies.rally_city;
     fc_assert_ret(pcity != NULL);
 
     if (send_rally_tile(pcity, ptile)) {
@@ -266,35 +266,35 @@ void map_view::shortcut_pressed(int key)
       output_window_append(ftc_client, text);
     }
 
-    gui()->rallies.rally_city = NULL;
-    gui()->rallies.hover_tile = false;
+    king()->rallies.rally_city = NULL;
+    king()->rallies.hover_tile = false;
     return;
   }
 
-  if (bt == Qt::LeftButton && gui()->menu_bar->delayed_order) {
+  if (bt == Qt::LeftButton && king()->menu_bar->delayed_order) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
-    gui()->menu_bar->set_tile_for_order(ptile);
+    king()->menu_bar->set_tile_for_order(ptile);
     clear_hover_state();
     exit_goto_state();
-    gui()->menu_bar->delayed_order = false;
+    king()->menu_bar->delayed_order = false;
     return;
   }
 
   if (bt == Qt::LeftButton && queen()->infotab->chat_maximized) {
     queen()->infotab->restore_chat();
   }
-  if (bt == Qt::LeftButton && gui()->menu_bar->quick_airlifting) {
+  if (bt == Qt::LeftButton && king()->menu_bar->quick_airlifting) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
     if (tile_city(ptile)) {
-      multiairlift(tile_city(ptile), gui()->menu_bar->airlift_type_id);
+      multiairlift(tile_city(ptile), king()->menu_bar->airlift_type_id);
     } else {
       output_window_append(ftc_client, "No city selected for airlift");
     }
-    gui()->menu_bar->quick_airlifting = false;
+    king()->menu_bar->quick_airlifting = false;
     return;
   }
   /* Check configured shortcuts */
-  if (!gui()->menu_bar->delayed_order) {
+  if (!king()->menu_bar->delayed_order) {
     sc = fc_shortcuts::sc()->get_shortcut(SC_QUICK_SELECT);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
         && pcity != nullptr) {
@@ -306,7 +306,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_SHOW_UNITS);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
         && ptile != nullptr && unit_list_size(ptile->units) > 0) {
-      gui()->toggle_unit_sel_widget(ptile);
+      king()->toggle_unit_sel_widget(ptile);
       return;
     }
 
@@ -340,7 +340,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_RELOAD_TILESET);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod) {
       QPixmapCache::clear();
-      tilespec_reread(tileset_basename(tileset), true, gui()->map_scale);
+      tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
       return;
     }
 
@@ -416,7 +416,7 @@ void map_view::shortcut_pressed(int key)
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
   if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
       && ptile != nullptr) {
-    gui()->popup_tile_info(ptile);
+    king()->popup_tile_info(ptile);
     return;
   }
 
@@ -440,15 +440,15 @@ void map_view::shortcut_released(Qt::MouseButton bt)
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_INFO);
   if (bt == sc->mouse && md == sc->mod) {
-    gui()->popdown_tile_info();
+    king()->popdown_tile_info();
     return;
   }
 
   sc = fc_shortcuts::sc()->get_shortcut(SC_SELECT_BUTTON);
   if (bt == sc->mouse && md == sc->mod) {
-    if (gui()->trade_gen.hover_city || gui()->rallies.hover_city) {
-      gui()->trade_gen.hover_city = false;
-      gui()->rallies.hover_city = false;
+    if (king()->trade_gen.hover_city || king()->rallies.hover_city) {
+      king()->trade_gen.hover_city = false;
+      king()->rallies.hover_city = false;
       return;
     }
     if (menu_click) {

@@ -61,7 +61,7 @@ void qload_lua_script()
 
   str = QString(_("Lua scripts")) + QString(" (*.lua)");
   qlua_filename = QFileDialog::getOpenFileName(
-      gui()->central_wdg, _("Load lua script"), QDir::homePath(), str);
+      king()->central_wdg, _("Load lua script"), QDir::homePath(), str);
   if (!qlua_filename.isEmpty()) {
     script_client_do_file(qlua_filename.toLocal8Bit().constData());
   }

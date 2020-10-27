@@ -15,6 +15,6 @@ struct connection;
 struct player;
 struct server_scan;
 
-void create_conn_menu(player *, connection *);
+//void create_conn_menu(player *, connection *);
 
 #endif /* FC__PAGES_H */

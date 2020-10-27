@@ -81,7 +81,7 @@ struct qlist_item {
 /****************************************************************************
   Widget embedded as tab on game view (F6 default)
   Uses string "SCI" to mark it as opened
-  You can check it using if (gui()->is_repo_dlg_open("SCI"))
+  You can check it using if (queen()->is_repo_dlg_open("SCI"))
 ****************************************************************************/
 class science_report : public QWidget {
   Q_OBJECT

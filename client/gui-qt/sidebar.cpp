@@ -341,7 +341,7 @@ void fc_sidewidget::update_final_pixmap()
     delete final_pixmap;
   }
 
-  i = gui()->gimme_index_of(page);
+  i = queen()->gimme_index_of(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
@@ -513,7 +513,7 @@ void fc_sidebar::resize_me(int hght, bool force)
 
   h = hght;
   qdp = QApplication::desktop();
-  screen_hres = qdp->availableGeometry(gui()->central_wdg).width();
+  screen_hres = qdp->availableGeometry(king()->central_wdg).width();
   w = (100 * screen_hres) / 1920;
   w = qMax(w, 80);
 
@@ -584,7 +584,7 @@ void side_center_unit()
  ***************************************************************************/
 void side_disable_endturn(bool do_restore)
 {
-  if (gui()->current_page() != PAGE_GAME) {
+  if (king()->current_page() != PAGE_GAME) {
     return;
   }
   queen()->sw_endturn->disabled = !do_restore;
@@ -596,7 +596,7 @@ void side_disable_endturn(bool do_restore)
  ***************************************************************************/
 void side_blink_endturn(bool do_restore)
 {
-  if (gui()->current_page() != PAGE_GAME) {
+  if (king()->current_page() != PAGE_GAME) {
     return;
   }
   queen()->sw_endturn->blink = !do_restore;
@@ -623,7 +623,7 @@ void side_indicators_menu()
 void side_right_click_diplomacy(void)
 {
   if (client_is_observer()) {
-    QMenu *menu = new QMenu(gui()->central_wdg);
+    QMenu *menu = new QMenu(king()->central_wdg);
     QAction *eiskalt;
     QString erwischt;
 
@@ -656,7 +656,7 @@ void side_right_click_diplomacy(void)
     menu->popup(QCursor::pos());
   } else {
     int i;
-    i = gui()->gimme_index_of("DDI");
+    i = queen()->gimme_index_of("DDI");
     if (i < 0) {
       return;
     }
@@ -693,7 +693,7 @@ void side_right_click_science(void)
       return;
     }
     std::sort(curr_list.begin(), curr_list.end(), comp_less_than);
-    menu = new QMenu(gui()->central_wdg);
+    menu = new QMenu(king()->central_wdg);
     for (int i = 0; i < curr_list.count(); i++) {
       QIcon ic;
       struct sprite *sp;
@@ -727,11 +727,11 @@ void side_left_click_science(bool nothing)
   if (client_is_global_observer()) {
     return;
   }
-  if (!gui()->is_repo_dlg_open("SCI")) {
+  if (!queen()->is_repo_dlg_open("SCI")) {
     sci_rep = new science_report;
     sci_rep->init(true);
   } else {
-    i = gui()->gimme_index_of("SCI");
+    i = queen()->gimme_index_of("SCI");
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);

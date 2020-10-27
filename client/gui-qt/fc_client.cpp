@@ -33,7 +33,6 @@
 #include "client_main.h"
 #include "clinet.h"
 #include "connectdlg_common.h"
-#include "mapctrl_common.h"
 // gui-qt
 #include "fonts.h"
 #include "gui_main.h"
@@ -68,7 +67,6 @@ fc_client::fc_client() : QMainWindow()
   status_bar = NULL;
   status_bar_label = NULL;
   menu_bar = NULL;
-  msgwdg = NULL;
   central_wdg = NULL;
   unit_sel = NULL;
   info_tile_wdg = NULL;
@@ -76,8 +74,6 @@ fc_client::fc_client() : QMainWindow()
   current_file = "";
   status_bar_queue.clear();
   quitting = false;
-  update_info_timer = nullptr;
-  game_layout = nullptr;
   interface_locked = false;
   map_scale = 1.0f;
   map_font_scale = true;
@@ -97,10 +93,10 @@ void fc_client::init()
   read_settings();
   QApplication::setFont(*fc_font::instance()->get_font(fonts::default_font));
   QString path;
+
   central_wdg = new QWidget;
   central_layout = new QStackedLayout;
 
-  // General part not related to any single page
   menu_bar = new mr_menu();
   corner_wid = new fc_corner(this);
   if (!gui_options.gui_qt_show_titlebar) {
@@ -113,7 +109,6 @@ void fc_client::init()
   status_bar->addWidget(status_bar_label, 1);
   set_status_bar(_("Welcome to Freeciv"));
   create_cursors();
-
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
   pages[PAGE_START] = new page_pregame(central_wdg, this);
@@ -121,22 +116,16 @@ void fc_client::init()
   pages[PAGE_LOAD] = new page_load(central_wdg, this);
   pages[PAGE_NETWORK] = new page_network(central_wdg, this);
   pages[PAGE_NETWORK]->setVisible(false);
-  // PAGE_GAME
   gui_options.gui_qt_allied_chat_only = true;
   path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation);
   if (!path.isEmpty()) {
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
   }
   init_mapcanvas_and_overview();
-  // sveinung or before init map?
-  pages[PAGE_GAME] = new page_game(central_wdg, this);
-  //create_game_page();
-
+  pages[PAGE_GAME] = new page_game(central_wdg);
   pages[PAGE_GAME + 1] = new QWidget(central_wdg);
   create_loading_page();
-
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
-
   central_layout->addWidget(pages[PAGE_MAIN]);
   central_layout->addWidget(pages[PAGE_NETWORK]);
   central_layout->addWidget(pages[PAGE_LOAD]);
@@ -144,15 +133,11 @@ void fc_client::init()
   central_layout->addWidget(pages[PAGE_START]);
   central_layout->addWidget(pages[PAGE_GAME]);
   central_layout->addWidget(pages[PAGE_GAME + 1]);
-
   central_wdg->setLayout(central_layout);
   setCentralWidget(central_wdg);
-
   resize(pages[PAGE_MAIN]->minimumSizeHint());
   setVisible(true);
-
   chat_listener::listen();
-
   QPixmapCache::setCacheLimit(80000);
 }
 
@@ -233,7 +218,7 @@ void fc_client::switch_page(int new_pg)
   if (status_bar != nullptr) {
     status_bar->setVisible(true);
   }
-  QApplication::alert(gui()->central_wdg);
+  QApplication::alert(king()->central_wdg);
   central_layout->setCurrentWidget(pages[new_pg]);
   page = new_page;
   i_page = new_page;
@@ -256,7 +241,7 @@ void fc_client::switch_page(int new_pg)
     queen()->infotab->chtwdg->update_widgets();
     status_bar->setVisible(false);
     if (gui_options.gui_qt_fullscreen) {
-      gui()->showFullScreen();
+      king()->showFullScreen();
       queen()->game_tab_widget->showFullScreen();
     }
     menuBar()->setVisible(true);
@@ -397,58 +382,6 @@ void fc_client::delete_cursors(void)
       delete fc_cursors[cursor][frame];
     }
   }
-}
-
-/************************************************************************/ /**
-   Finds not used index on game_view_tab and returns it
- ****************************************************************************/
-void fc_client::gimme_place(QWidget *widget, const QString &str)
-{
-  QString x;
-
-  x = opened_repo_dlgs.key(widget);
-
-  if (x.isEmpty()) {
-    opened_repo_dlgs.insert(str, widget);
-    return;
-  }
-  log_error("Failed to find place for new tab widget");
-  return;
-}
-
-/************************************************************************/ /**
-   Checks if given report is opened, if you create new report as tab on game
-   page, figure out some original string and put in in repodlg.h as comment
- to that QWidget class.
- ****************************************************************************/
-bool fc_client::is_repo_dlg_open(const QString &str)
-{
-  QWidget *w;
-
-  w = opened_repo_dlgs.value(str);
-
-  if (w == NULL) {
-    return false;
-  }
-
-  return true;
-}
-
-/************************************************************************/ /**
-   Returns index on game tab page of given report dialog
- ****************************************************************************/
-int fc_client::gimme_index_of(const QString &str)
-{
-  int i;
-  QWidget *w;
-
-  if (str == "MAP") {
-    return 0;
-  }
-
-  w = opened_repo_dlgs.value(str);
-  i = queen()->game_tab_widget->indexOf(w);
-  return i;
 }
 
 /************************************************************************/ /**
@@ -659,16 +592,6 @@ void fc_client::popdown_unit_sel()
   }
 }
 
-/************************************************************************/ /**
-   Removes report dialog string from the list marking it as closed
- ****************************************************************************/
-void fc_client::remove_repo_dlg(const QString &str)
-{
-  /* if app is closing opened_repo_dlg is already deleted */
-  if (!is_closing()) {
-    opened_repo_dlgs.remove(str);
-  }
-}
 
 /************************************************************************/ /**
    Popups client options
@@ -698,6 +621,96 @@ void fc_client::create_cursors(void)
       c = new QCursor(*pix, hot_x, hot_y);
       fc_cursors[cursor][frame] = c;
     }
+  }
+}
+
+/**********************************************************************/ /**
+   Sets the "page" that the client should show.  See also pages_g.h.
+ **************************************************************************/
+void qtg_real_set_client_page(enum client_pages page)
+{
+  king()->switch_page(page);
+}
+
+/**********************************************************************/ /**
+   Set the list of available rulesets.  The default ruleset should be
+   "default", and if the user changes this then set_ruleset() should be
+   called.
+ **************************************************************************/
+void qtg_set_rulesets(int num_rulesets, char **rulesets)
+{
+    qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+      ->set_rulesets(num_rulesets, rulesets);
+}
+
+/**********************************************************************/ /**
+   Returns current client page
+ **************************************************************************/
+enum client_pages qtg_get_current_client_page()
+{
+  return king()->current_page();
+}
+
+/**********************************************************************/ /**
+   Update the start page.
+ **************************************************************************/
+void update_start_page(void)
+{
+  qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+      ->update_start_page();
+}
+
+/**********************************************************************/ /**
+   Sets application status bar for given time in miliseconds
+ **************************************************************************/
+void fc_client::set_status_bar(QString message, int timeout)
+{
+  if (status_bar_label->text().isEmpty()) {
+    status_bar_label->setText(message);
+    QTimer::singleShot(timeout, this, SLOT(clear_status_bar()));
+  } else {
+    status_bar_queue.append(message);
+    while (status_bar_queue.count() > 3) {
+      status_bar_queue.removeFirst();
+    }
+  }
+}
+
+/**********************************************************************/ /**
+   Clears status bar or shows next message in queue if exists
+ **************************************************************************/
+void fc_client::clear_status_bar()
+{
+  QString str;
+
+  if (!status_bar_queue.isEmpty()) {
+    str = status_bar_queue.takeFirst();
+    status_bar_label->setText(str);
+    QTimer::singleShot(2000, this, SLOT(clear_status_bar()));
+  } else {
+    status_bar_label->setText("");
+  }
+}
+
+/**********************************************************************/ /**
+   Creates page LOADING, showing label with Loading text
+ **************************************************************************/
+void fc_client::create_loading_page()
+{
+  QLabel *label = new QLabel(_("Loading..."));
+
+  pages_layout[PAGE_GAME + 1] = new QGridLayout;
+  pages_layout[PAGE_GAME + 1]->addWidget(label, 0, 0, 1, 1,
+                                         Qt::AlignHCenter);
+}
+
+/**********************************************************************/ /**
+   spawn a server, if there isn't one, using the default settings.
+ **************************************************************************/
+void fc_client::start_new_game()
+{
+  if (is_server_running() || client_start_server()) {
+    /* saved settings are sent in client/options.c load_settable_options() */
   }
 }
 
@@ -754,81 +767,3 @@ void fc_corner::maximize()
    Slot for minimizing freeciv window via corner widget
  ****************************************************************************/
 void fc_corner::minimize() { mw->showMinimized(); }
-
-/************************************************************************/ /**
-   Game tab widget constructor
- ****************************************************************************/
-fc_game_tab_widget::fc_game_tab_widget() : QStackedWidget() {}
-
-/************************************************************************/ /**
-   Init default settings for game_tab_widget
- ****************************************************************************/
-void fc_game_tab_widget::init()
-{
-  connect(this, &QStackedWidget::currentChanged, this,
-          &fc_game_tab_widget::current_changed);
-}
-
-/************************************************************************/ /**
-   Resize event for all game tab widgets
- ****************************************************************************/
-void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
-{
-  QSize size;
-  size = event->size();
-  if (C_S_RUNNING <= client_state()) {
-    queen()->sidebar_wdg->resize_me(size.height());
-    map_canvas_resized(size.width(), size.height());
-    queen()->infotab->resize(
-        qRound((size.width() * gui()->qt_settings.chat_fwidth)),
-        qRound((size.height() * gui()->qt_settings.chat_fheight)));
-    queen()->infotab->move(
-        qRound((size.width() * gui()->qt_settings.chat_fx_pos)),
-        qRound((size.height() * gui()->qt_settings.chat_fy_pos)));
-    queen()->minimapview_wdg->move(
-        qRound(gui()->qt_settings.minimap_x * mapview.width),
-        qRound(gui()->qt_settings.minimap_y * mapview.height));
-    queen()->minimapview_wdg->resize(
-        qRound(gui()->qt_settings.minimap_width * mapview.width),
-        qRound(gui()->qt_settings.minimap_height * mapview.height));
-    queen()->battlelog_wdg->set_scale(gui()->qt_settings.battlelog_scale);
-    queen()->battlelog_wdg->move(
-        qRound(gui()->qt_settings.battlelog_x * mapview.width),
-        qRound(gui()->qt_settings.battlelog_y * mapview.height));
-    queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
-    queen()->update_sidebar_tooltips();
-    side_disable_endturn(get_turn_done_button_state());
-    queen()->mapview_wdg->resize(event->size().width(), size.height());
-    queen()->unitinfo_wdg->update_actions(nullptr);
-    /* It could be resized before mapview, so delayed it a bit */
-    QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
-  }
-  event->setAccepted(true);
-}
-
-/************************************************************************/ /**
-   Tab has been changed
- ****************************************************************************/
-void fc_game_tab_widget::current_changed(int index)
-{
-  QList<fc_sidewidget *> objs;
-  fc_sidewidget *sw;
-
-  if (gui()->is_closing()) {
-    return;
-  }
-  objs = queen()->sidebar_wdg->objects;
-
-  for (auto sw : qAsConst(objs)) {
-    sw->update_final_pixmap();
-  }
-  currentWidget()->hide();
-  widget(index)->show();
-
-  /* Set focus to map instead sidebar */
-  if (queen()->mapview_wdg && gui()->current_page() == PAGE_GAME
-      && index == 0) {
-    queen()->mapview_wdg->setFocus();
-  }
-}
-

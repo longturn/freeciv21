@@ -388,7 +388,7 @@ bool fc_shortcut_popup::check_if_exist()
       id++;
     }
     if (desc.isEmpty()) {
-      desc = gui()->menu_bar->shortcut_exist(sc);
+      desc = king()->menu_bar->shortcut_exist(sc);
     }
     if (!desc.isEmpty()) {
       fc_sc_button *fsb;
@@ -520,7 +520,7 @@ void fc_sc_button::popup_error()
   /* TRANS: Given shortcut(%1) is already assigned */
   title =
       QString(_("%1 is already assigned to")).arg(shortcut_to_string(sc));
-  scinfo = new hud_message_box(gui()->central_wdg);
+  scinfo = new hud_message_box(king()->central_wdg);
   scinfo->setStandardButtons(QMessageBox::Ok);
   scinfo->setDefaultButton(QMessageBox::Ok);
   scinfo->set_text_title(err_message, title);
@@ -676,7 +676,7 @@ void fc_shortcuts_dialog::apply_option(int response)
   switch (response) {
   case RESPONSE_APPLY:
     real_menus_init();
-    gui()->menuBar()->setVisible(true);
+    king()->menuBar()->setVisible(true);
     break;
   case RESPONSE_CANCEL:
     fc_shortcuts::hash = *hashcopy;
@@ -685,7 +685,7 @@ void fc_shortcuts_dialog::apply_option(int response)
     break;
   case RESPONSE_OK:
     real_menus_init();
-    gui()->menuBar()->setVisible(true);
+    king()->menuBar()->setVisible(true);
     close();
     break;
   case RESPONSE_SAVE:
@@ -703,7 +703,7 @@ void fc_shortcuts_dialog::apply_option(int response)
  **************************************************************************/
 void popup_shortcuts_dialog()
 {
-  fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(gui());
+  fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(king());
   sh->show();
 }
 

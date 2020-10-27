@@ -93,7 +93,7 @@ void move_widget::put_to_corner() { move(0, 0); }
  **************************************************************************/
 void move_widget::mouseMoveEvent(QMouseEvent *event)
 {
-  if (!gui()->interface_locked) {
+  if (!king()->interface_locked) {
     parentWidget()->move(event->globalPos() - point);
   }
 }
@@ -103,7 +103,7 @@ void move_widget::mouseMoveEvent(QMouseEvent *event)
  **************************************************************************/
 void move_widget::mousePressEvent(QMouseEvent *event)
 {
-  if (!gui()->interface_locked) {
+  if (!king()->interface_locked) {
     point = event->globalPos() - parentWidget()->geometry().topLeft();
   }
   update();
@@ -139,7 +139,7 @@ void resize_widget::mouseMoveEvent(QMouseEvent *event)
 {
   QPoint qp, np;
 
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   qp = event->globalPos();
@@ -157,7 +157,7 @@ void resize_widget::mousePressEvent(QMouseEvent *event)
 {
   QPoint qp;
 
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   qp = event->globalPos();
@@ -193,7 +193,7 @@ void close_widget::put_to_corner()
  **************************************************************************/
 void close_widget::mousePressEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (event->button() == Qt::LeftButton) {

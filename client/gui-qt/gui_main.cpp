@@ -68,7 +68,7 @@ static void apply_titlebar(struct option *poption);
 /**********************************************************************/ /**
    Return fc_client instance
  **************************************************************************/
-class fc_client *gui() { return freeciv_qt; }
+class fc_client *king() { return freeciv_qt; }
 
 /**********************************************************************/ /**
    Do any necessary pre-initialization of the UI, if necessary.
@@ -212,7 +212,7 @@ void qtg_real_conn_list_dialog_update(void *unused)
   if (qtg_get_current_client_page() == PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_START);
   }
-    qobject_cast<page_pregame*>(gui()->pages[PAGE_START])->update_start_page();
+    qobject_cast<page_pregame*>(king()->pages[PAGE_START])->update_start_page();
 }
 
 /**********************************************************************/ /**
@@ -222,7 +222,7 @@ void qtg_real_conn_list_dialog_update(void *unused)
 void qtg_sound_bell()
 {
   QApplication::beep();
-  QApplication::alert(gui()->central_wdg);
+  QApplication::alert(king()->central_wdg);
 }
 
 /**********************************************************************/ /**
@@ -232,14 +232,14 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  **************************************************************************/
-void qtg_add_net_input(int sock) { gui()->add_server_source(sock); }
+void qtg_add_net_input(int sock) { king()->add_server_source(sock); }
 
 /**********************************************************************/ /**
    Stop waiting for any server network data.  See add_net_input().
 
    This function is called if the client disconnects from the server.
  **************************************************************************/
-void qtg_remove_net_input() { gui()->remove_server_source(); }
+void qtg_remove_net_input() { king()->remove_server_source(); }
 
 /**********************************************************************/ /**
    Set one of the unit icons (specified by idx) in the information area
@@ -275,8 +275,8 @@ void qtg_set_unit_icons_more_arrow(bool onoff)
  **************************************************************************/
 void qtg_real_focus_units_changed(void)
 {
-  if (gui()->unit_sel != nullptr && gui()->unit_sel->isVisible()) {
-    gui()->unit_sel->update_units();
+  if (king()->unit_sel != nullptr && king()->unit_sel->isVisible()) {
+    king()->unit_sel->update_units();
   }
 }
 
@@ -291,7 +291,7 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
 
   cb->callback = callback;
   cb->data = data;
-  gui()->mr_idler.add_callback(cb);
+  king()->mr_idler.add_callback(cb);
 }
 
 /**********************************************************************/ /**
@@ -304,23 +304,23 @@ void apply_titlebar(struct option *poption)
   Qt::WindowFlags flags = Qt::Window;
   val = option_bool_get(poption);
 
-  if (gui()->current_page() < PAGE_GAME) {
+  if (king()->current_page() < PAGE_GAME) {
     return;
   }
 
   if (val) {
     w = new QWidget();
-    gui()->setWindowFlags(flags);
-    delete gui()->corner_wid;
-    gui()->corner_wid = nullptr;
-    gui()->menu_bar->setCornerWidget(w);
+    king()->setWindowFlags(flags);
+    delete king()->corner_wid;
+    king()->corner_wid = nullptr;
+    king()->menu_bar->setCornerWidget(w);
   } else {
     flags |= Qt::CustomizeWindowHint;
-    gui()->setWindowFlags(flags);
-    gui()->corner_wid = new fc_corner(gui());
-    gui()->menu_bar->setCornerWidget(gui()->corner_wid);
+    king()->setWindowFlags(flags);
+    king()->corner_wid = new fc_corner(king());
+    king()->menu_bar->setCornerWidget(king()->corner_wid);
   }
-  gui()->show();
+  king()->show();
 }
 
 /**********************************************************************/ /**
@@ -328,7 +328,7 @@ void apply_titlebar(struct option *poption)
  **************************************************************************/
 void apply_sidebar(struct option *poption)
 {
-  gui()->update_sidebar_position();
+  queen()->update_sidebar_position();
 }
 
 /**********************************************************************/ /**
@@ -340,7 +340,7 @@ static void apply_font(struct option *poption)
   QFont *remove_old;
   QString s;
 
-  if (gui()) {
+  if (king()) {
     f = new QFont;
     s = option_font_get(poption);
     f->fromString(s);
@@ -367,7 +367,7 @@ static void apply_help_font(struct option *poption)
   QFont *remove_old;
   QString s;
 
-  if (gui()) {
+  if (king()) {
     f = new QFont;
     s = option_font_get(poption);
     f->fromString(s);
@@ -384,11 +384,11 @@ static void apply_help_font(struct option *poption)
  **************************************************************************/
 static void apply_notify_font(struct option *poption)
 {
-  if (gui()) {
+  if (king()) {
     qtg_gui_update_font("notify_label", option_font_get(poption));
     restart_notify_reports();
   }
-  if (gui() && qtg_get_current_client_page() == PAGE_GAME) {
+  if (king() && qtg_get_current_client_page() == PAGE_GAME) {
     qtg_gui_update_font("city_label", option_font_get(poption));
     city_font_update();
   }
@@ -464,7 +464,7 @@ void reset_unit_table(void)
  **************************************************************************/
 void popup_quit_dialog()
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
   ask->setDefaultButton(QMessageBox::Cancel);
@@ -475,7 +475,7 @@ void popup_quit_dialog()
     if (client.conn.used) {
       disconnect_from_server();
     }
-    gui()->write_settings();
+    king()->write_settings();
     qapp->quit();
   });
   ask->show();

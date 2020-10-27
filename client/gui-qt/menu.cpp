@@ -95,8 +95,8 @@ void real_menus_init(void)
   if (!game.client.ruleset_ready) {
     return;
   }
-  gui()->menu_bar->clear();
-  gui()->menu_bar->setup_menus();
+  king()->menu_bar->clear();
+  king()->menu_bar->setup_menus();
 
   gov_menu::create_all();
 
@@ -111,18 +111,18 @@ void real_menus_init(void)
 void real_menus_update(void)
 {
   if (C_S_RUNNING <= client_state()) {
-    gui()->menuBar()->setVisible(true);
+    king()->menuBar()->setVisible(true);
     if (!is_waiting_turn_change()) {
-      gui()->menu_bar->menus_sensitive();
-      gui()->menu_bar->update_airlift_menu();
-      gui()->menu_bar->update_roads_menu();
-      gui()->menu_bar->update_bases_menu();
+      king()->menu_bar->menus_sensitive();
+      king()->menu_bar->update_airlift_menu();
+      king()->menu_bar->update_roads_menu();
+      king()->menu_bar->update_bases_menu();
       gov_menu::update_all();
       go_act_menu::update_all();
       queen()->unitinfo_wdg->update_actions(nullptr);
     }
   } else {
-    gui()->menuBar()->setVisible(false);
+    king()->menuBar()->setVisible(false);
   }
 }
 
@@ -629,12 +629,12 @@ void mr_menu::setup_menus()
           &mr_menu::slot_minimap_view);
   osd_status = menu->addAction(_("Show new turn information"));
   osd_status->setCheckable(true);
-  osd_status->setChecked(gui()->qt_settings.show_new_turn_text);
+  osd_status->setChecked(king()->qt_settings.show_new_turn_text);
   connect(osd_status, &QAction::triggered, this,
           &mr_menu::slot_show_new_turn_text);
   btlog_status = menu->addAction(_("Show combat detailed information"));
   btlog_status->setCheckable(true);
-  btlog_status->setChecked(gui()->qt_settings.show_battle_log);
+  btlog_status->setChecked(king()->qt_settings.show_battle_log);
   connect(btlog_status, &QAction::triggered, this, &mr_menu::slot_battlelog);
   lock_status = menu->addAction(_("Lock interface"));
   lock_status->setCheckable(true);
@@ -1572,7 +1572,7 @@ void mr_menu::menus_sensitive()
         }
         break;
       case ENDGAME:
-        if (gui()->is_repo_dlg_open("END")) {
+        if (queen()->is_repo_dlg_open("END")) {
           i.value()->setEnabled(true);
           i.value()->setVisible(true);
         } else {
@@ -2269,29 +2269,29 @@ void mr_menu::slot_orders_clear()
  **************************************************************************/
 void mr_menu::slot_rally()
 {
-  gui()->rallies.hover_tile = false;
-  gui()->rallies.hover_city = true;
+  king()->rallies.hover_tile = false;
+  king()->rallies.hover_city = true;
 }
 
 /**********************************************************************/ /**
    Adds one city to trade planning
  **************************************************************************/
-void mr_menu::slot_trade_city() { gui()->trade_gen.hover_city = true; }
+void mr_menu::slot_trade_city() { king()->trade_gen.hover_city = true; }
 
 /**********************************************************************/ /**
    Adds all cities to trade planning
  **************************************************************************/
-void mr_menu::slot_trade_add_all() { gui()->trade_gen.add_all_cities(); }
+void mr_menu::slot_trade_add_all() { king()->trade_gen.add_all_cities(); }
 
 /**********************************************************************/ /**
    Trade calculation slot
  **************************************************************************/
-void mr_menu::slot_calculate() { gui()->trade_gen.calculate(); }
+void mr_menu::slot_calculate() { king()->trade_gen.calculate(); }
 
 /**********************************************************************/ /**
    Slot for clearing trade routes
  **************************************************************************/
-void mr_menu::slot_clear_trade() { gui()->trade_gen.clear_trade_planing(); }
+void mr_menu::slot_clear_trade() { king()->trade_gen.clear_trade_planing(); }
 
 /**********************************************************************/ /**
    Sends automatic caravan
@@ -2308,7 +2308,7 @@ void mr_menu::slot_autocaravan()
   punit = head_of_units_in_focus();
   homecity = game_city_by_number(punit->homecity);
   home_tile = homecity->tile;
-  for (auto gilles : qAsConst(gui()->trade_gen.lines)) {
+  for (auto gilles : qAsConst(king()->trade_gen.lines)) {
     if ((gilles.t1 == home_tile || gilles.t2 == home_tile)
         && gilles.autocaravan == nullptr) {
       /* send caravan */
@@ -2319,10 +2319,10 @@ void mr_menu::slot_autocaravan()
       }
       if (send_goto_tile(punit, dest_tile)) {
         int i;
-        i = gui()->trade_gen.lines.indexOf(gilles);
-        gilles = gui()->trade_gen.lines.takeAt(i);
+        i = king()->trade_gen.lines.indexOf(gilles);
+        gilles = king()->trade_gen.lines.takeAt(i);
         gilles.autocaravan = punit;
-        gui()->trade_gen.lines.append(gilles);
+        king()->trade_gen.lines.append(gilles);
         sent = true;
         break;
       }
@@ -2528,12 +2528,12 @@ void mr_menu::slot_center_view() { request_center_focus_unit(); }
  **************************************************************************/
 void mr_menu::slot_lock()
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     enable_interface(false);
   } else {
     enable_interface(true);
   }
-  gui()->interface_locked = !gui()->interface_locked;
+  king()->interface_locked = !king()->interface_locked;
 }
 
 /**********************************************************************/ /**
@@ -2546,9 +2546,9 @@ void enable_interface(bool enable)
   QList<resize_widget *> lr;
   int i;
 
-  lc = gui()->findChildren<close_widget *>();
-  lm = gui()->findChildren<move_widget *>();
-  lr = gui()->findChildren<resize_widget *>();
+  lc = king()->findChildren<close_widget *>();
+  lm = king()->findChildren<move_widget *>();
+  lr = king()->findChildren<resize_widget *>();
 
   for (i = 0; i < lc.size(); ++i) {
     lc.at(i)->setVisible(!enable);
@@ -2567,11 +2567,11 @@ void enable_interface(bool enable)
 void mr_menu::slot_fullscreen()
 {
   if (!gui_options.gui_qt_fullscreen) {
-    gui()->showFullScreen();
+    king()->showFullScreen();
     queen()->game_tab_widget->showFullScreen();
   } else {
     // FIXME Doesnt return properly, probably something with sidebar
-    gui()->showNormal();
+    king()->showNormal();
     queen()->game_tab_widget->showNormal();
   }
   gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
@@ -2595,9 +2595,9 @@ void mr_menu::slot_minimap_view()
 void mr_menu::slot_show_new_turn_text()
 {
   if (osd_status->isChecked()) {
-    gui()->qt_settings.show_new_turn_text = true;
+    king()->qt_settings.show_new_turn_text = true;
   } else {
-    gui()->qt_settings.show_new_turn_text = false;
+    king()->qt_settings.show_new_turn_text = false;
   }
 }
 
@@ -2607,9 +2607,9 @@ void mr_menu::slot_show_new_turn_text()
 void mr_menu::slot_battlelog()
 {
   if (btlog_status->isChecked()) {
-    gui()->qt_settings.show_battle_log = true;
+    king()->qt_settings.show_battle_log = true;
   } else {
-    gui()->qt_settings.show_battle_log = false;
+    king()->qt_settings.show_battle_log = false;
   }
 }
 
@@ -2638,8 +2638,8 @@ void mr_menu::slot_city_growth() { key_city_growth_toggle(); }
  **************************************************************************/
 void mr_menu::zoom_in()
 {
-  gui()->map_scale = gui()->map_scale * 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, gui()->map_scale);
+  king()->map_scale = king()->map_scale * 1.2f;
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
 /**********************************************************************/ /**
@@ -2649,12 +2649,12 @@ void mr_menu::zoom_reset()
 {
   QFont *qf;
 
-  gui()->map_scale = 1.0f;
+  king()->map_scale = 1.0f;
   qf = fc_font::instance()->get_font(fonts::city_names);
   qf->setPointSize(fc_font::instance()->city_fontsize);
   qf = fc_font::instance()->get_font(fonts::city_productions);
   qf->setPointSize(fc_font::instance()->prod_fontsize);
-  tilespec_reread(tileset_basename(tileset), true, gui()->map_scale);
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
 /**********************************************************************/ /**
@@ -2665,13 +2665,13 @@ void mr_menu::zoom_scale_fonts()
   QFont *qf;
 
   if (scale_fonts_status->isChecked()) {
-    gui()->map_font_scale = true;
+    king()->map_font_scale = true;
   } else {
     qf = fc_font::instance()->get_font(fonts::city_names);
     qf->setPointSize(fc_font::instance()->city_fontsize);
     qf = fc_font::instance()->get_font(fonts::city_productions);
     qf->setPointSize(fc_font::instance()->prod_fontsize);
-    gui()->map_font_scale = false;
+    king()->map_font_scale = false;
   }
   update_city_descriptions();
 }
@@ -2681,8 +2681,8 @@ void mr_menu::zoom_scale_fonts()
  **************************************************************************/
 void mr_menu::zoom_out()
 {
-  gui()->map_scale = gui()->map_scale / 1.2f;
-  tilespec_reread(tileset_basename(tileset), true, gui()->map_scale);
+  king()->map_scale = king()->map_scale / 1.2f;
+  tilespec_reread(tileset_basename(tileset), true, king()->map_scale);
 }
 
 /**********************************************************************/ /**
@@ -2776,7 +2776,7 @@ void mr_menu::slot_wait() { key_unit_wait(); }
 void mr_menu::slot_unit_filter()
 {
   unit_hud_selector *uhs;
-  uhs = new unit_hud_selector(gui()->central_wdg);
+  uhs = new unit_hud_selector(king()->central_wdg);
   uhs->show_me();
 }
 
@@ -2869,14 +2869,14 @@ void mr_menu::load_new_tileset()
   but = qobject_cast<QPushButton *>(sender());
   tn_bytes = but->text().toLocal8Bit();
   tilespec_reread(tn_bytes.data(), true, 1.0f);
-  gui()->map_scale = 1.0f;
+  king()->map_scale = 1.0f;
   but->parentWidget()->close();
 }
 
 /**********************************************************************/ /**
    Action "Calculate trade routes"
  **************************************************************************/
-void mr_menu::calc_trade_routes() { gui()->trade_gen.calculate(); }
+void mr_menu::calc_trade_routes() { king()->trade_gen.calculate(); }
 
 /**********************************************************************/ /**
    Action "TAX RATES"
@@ -2976,7 +2976,7 @@ void mr_menu::save_image()
   int current_width, current_height;
   int full_size_x, full_size_y;
   QString path, storage_path;
-  hud_message_box *saved = new hud_message_box(gui()->central_wdg);
+  hud_message_box *saved = new hud_message_box(king()->central_wdg);
   bool map_saved;
   QString img_name;
 
@@ -3042,7 +3042,7 @@ void mr_menu::save_game_as()
   str = QString(_("Save Games"))
         + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
   current_file = QFileDialog::getSaveFileName(
-      gui()->central_wdg, _("Save Game As..."), location, str);
+      king()->central_wdg, _("Save Game As..."), location, str);
   if (!current_file.isEmpty()) {
     QByteArray cf_bytes;
 
@@ -3059,7 +3059,7 @@ void mr_menu::back_to_menu()
   hud_message_box *ask;
 
   if (is_server_running()) {
-    ask = new hud_message_box(gui()->central_wdg);
+    ask = new hud_message_box(king()->central_wdg);
     ask->set_text_title(_("Leaving a local game will end it!"),
                         "Leave game");
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);

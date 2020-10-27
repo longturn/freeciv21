@@ -956,7 +956,7 @@ void popup_notify_goto_dialog(const char *headline, const char *lines,
                               struct tile *ptile)
 {
   notify_goto *ask =
-      new notify_goto(headline, lines, tags, ptile, gui()->central_wdg);
+      new notify_goto(headline, lines, tags, ptile, king()->central_wdg);
   ask->show();
 }
 
@@ -965,7 +965,7 @@ void popup_notify_goto_dialog(const char *headline, const char *lines,
  ***************************************************************************/
 void popup_connect_msg(const char *headline, const char *message)
 {
-  QMessageBox *msg = new QMessageBox(gui()->central_wdg);
+  QMessageBox *msg = new QMessageBox(king()->central_wdg);
 
   msg->setText(message);
   msg->setStandardButtons(QMessageBox::Ok);
@@ -991,7 +991,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
 void popup_races_dialog(struct player *pplayer)
 {
   if (!is_race_dialog_open) {
-    race_dialog = new races_dialog(pplayer, gui()->central_wdg);
+    race_dialog = new races_dialog(pplayer, king()->central_wdg);
     is_race_dialog_open = true;
     race_dialog->show();
   }
@@ -1018,7 +1018,7 @@ void unit_select_dialog_popup(struct tile *ptile)
   if (ptile != NULL
       && (unit_list_size(ptile->units) > 1
           || (unit_list_size(ptile->units) == 1 && tile_city(ptile)))) {
-    gui()->toggle_unit_sel_widget(ptile);
+    king()->toggle_unit_sel_widget(ptile);
   }
 }
 
@@ -1027,7 +1027,7 @@ void unit_select_dialog_popup(struct tile *ptile)
  ***************************************************************************/
 void unit_select_dialog_update_real(void *unused)
 {
-  gui()->update_unit_sel();
+  king()->update_unit_sel();
 }
 
 /***********************************************************************/ /**
@@ -1070,7 +1070,7 @@ void popup_revolution_dialog(struct government *government)
   const Government_type_id government_id = government_number(government);
 
   if (0 > client.conn.playing->revolution_finishes) {
-    ask = new hud_message_box(gui()->central_wdg);
+    ask = new hud_message_box(king()->central_wdg);
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Cancel);
     ask->set_text_title(_("You say you wanna revolution?"),
@@ -1146,7 +1146,7 @@ choice_dialog::choice_dialog(const QString title, const QString text,
   setWindowFlags(Qt::Dialog);
   setWindowTitle(title);
   setAttribute(Qt::WA_DeleteOnClose);
-  gui()->set_diplo_dialog(this);
+  king()->set_diplo_dialog(this);
 
   unit_id = IDENTITY_NUMBER_ZERO;
   target_id[ATK_SELF] = unit_id;
@@ -1173,7 +1173,7 @@ choice_dialog::~choice_dialog()
 {
   buttons_list.clear();
   action_button_map.clear();
-  gui()->set_diplo_dialog(NULL);
+  king()->set_diplo_dialog(NULL);
 
   if (run_on_close) {
     run_on_close(unit_id);
@@ -1719,7 +1719,7 @@ void popup_action_selection(struct unit *actor_unit,
   unit_act = qdef_act::action()->vs_unit_get();
   city_act = qdef_act::action()->vs_city_get();
 
-  for (auto caras : qAsConst(gui()->trade_gen.lines)) {
+  for (auto caras : qAsConst(king()->trade_gen.lines)) {
     if (caras.autocaravan == actor_unit) {
       int i;
       if (nullptr != game_unit_by_number(actor_unit->id)
@@ -1728,8 +1728,8 @@ void popup_action_selection(struct unit *actor_unit,
                           target_city->id, 0, "");
         client_unit_init_act_prob_cache(actor_unit);
         diplomat_queue_handle_primary(actor_unit->id);
-        i = gui()->trade_gen.lines.indexOf(caras);
-        gui()->trade_gen.lines.takeAt(i);
+        i = king()->trade_gen.lines.indexOf(caras);
+        king()->trade_gen.lines.takeAt(i);
         return;
       }
     }
@@ -1784,7 +1784,7 @@ void popup_action_selection(struct unit *actor_unit,
              unit_name_translation(actor_unit));
   }
 
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if ((cd != nullptr) && cd->targeted_unit != nullptr) {
     cd->update_dialog(act_probs);
     return;
@@ -2558,7 +2558,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
   if (pvcity) {
     pvictim = city_owner(pvcity);
   }
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if (cd != NULL) {
     cd->close();
   }
@@ -3050,7 +3050,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
               client_player()->economic.gold);
 
   if (INCITE_IMPOSSIBLE_COST == cost) {
-    hud_message_box *impossible = new hud_message_box(gui()->central_wdg);
+    hud_message_box *impossible = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 _("You can't incite a revolt in %s."), city_name_get(tcity));
@@ -3059,7 +3059,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
     impossible->setAttribute(Qt::WA_DeleteOnClose);
     impossible->show();
   } else if (cost <= client_player()->economic.gold) {
-    hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+    hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 PL_("Incite a revolt for %d gold?\n%s",
@@ -3076,7 +3076,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
     ask->show();
     return;
   } else {
-    hud_message_box *too_much = new hud_message_box(gui()->central_wdg);
+    hud_message_box *too_much = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 PL_("Inciting a revolt costs %d gold.\n%s",
@@ -3098,7 +3098,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
 void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
                         const struct action *paction)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   char buf[1024];
   char buf2[1024];
   int diplomat_id = actor->id;
@@ -3336,7 +3336,7 @@ disband_box::~disband_box() { unit_list_destroy(cpunits); }
  ***************************************************************************/
 void popup_disband_dialog(struct unit_list *punits)
 {
-  disband_box *ask = new disband_box(punits, gui()->central_wdg);
+  disband_box *ask = new disband_box(punits, king()->central_wdg);
   ask->show();
 }
 
@@ -3346,7 +3346,7 @@ void popup_disband_dialog(struct unit_list *punits)
  ***************************************************************************/
 void popup_tileset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3363,7 +3363,7 @@ void popup_tileset_suggestion_dialog(void)
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
     sz_strlcpy(forced_tileset_name, game.control.preferred_tileset);
     if (!tilespec_reread(game.control.preferred_tileset, true,
-                         gui()->map_scale)) {
+                         king()->map_scale)) {
       tileset_error(LOG_ERROR, _("Can't load requested tileset %s."),
                     game.control.preferred_tileset);
     }
@@ -3377,7 +3377,7 @@ void popup_tileset_suggestion_dialog(void)
  ***************************************************************************/
 void popup_soundset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3402,7 +3402,7 @@ void popup_soundset_suggestion_dialog(void)
  ***************************************************************************/
 void popup_musicset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3441,7 +3441,7 @@ void popdown_all_game_dialogs(void)
   QList<choice_dialog *> cd_list;
   QList<notify_dialog *> nd_list;
 
-  QApplication::alert(gui()->central_wdg);
+  QApplication::alert(king()->central_wdg);
   cd_list = queen()->game_tab_widget->findChildren<choice_dialog *>();
   for (i = 0; i < cd_list.count(); i++) {
     cd_list[i]->close();
@@ -3459,7 +3459,7 @@ void popdown_all_game_dialogs(void)
   popdown_science_report();
   popdown_city_report();
   popdown_endgame_report();
-  gui()->popdown_unit_sel();
+  king()->popdown_unit_sel();
 }
 
 /***********************************************************************/ /**
@@ -3469,7 +3469,7 @@ void popdown_all_game_dialogs(void)
  ***************************************************************************/
 int action_selection_actor_unit(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->unit_id;
@@ -3486,7 +3486,7 @@ int action_selection_actor_unit(void)
  ***************************************************************************/
 int action_selection_target_city(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_CITY];
@@ -3503,7 +3503,7 @@ int action_selection_target_city(void)
  ***************************************************************************/
 int action_selection_target_tile(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_TILE];
@@ -3520,7 +3520,7 @@ int action_selection_target_tile(void)
  **************************************************************************/
 int action_selection_target_extra(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->sub_target_id[ASTK_EXTRA];
@@ -3537,7 +3537,7 @@ int action_selection_target_extra(void)
  ***************************************************************************/
 int action_selection_target_unit(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_UNIT];
@@ -3562,7 +3562,7 @@ void action_selection_refresh(struct unit *actor_unit,
   Choice_dialog_button *cancel_button;
   QVariant qv1, qv2;
 
-  asd = gui()->get_diplo_dialog();
+  asd = king()->get_diplo_dialog();
   if (asd == NULL) {
     fc_assert_msg(asd != NULL,
                   "The action selection dialog should have been open");
@@ -3682,7 +3682,7 @@ void action_selection_close(void)
 {
   choice_dialog *cd;
 
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if (cd != NULL) {
     did_not_decide = true;
     cd->close();
@@ -3707,7 +3707,7 @@ void show_tileset_error(const char *msg)
               msg);
 
   if (QCoreApplication::instance() != nullptr) {
-    QMessageBox *ask = new QMessageBox(gui()->central_wdg);
+    QMessageBox *ask = new QMessageBox(king()->central_wdg);
 
     ask->setText(buf);
     ask->setStandardButtons(QMessageBox::Ok);
@@ -3723,7 +3723,7 @@ void show_tileset_error(const char *msg)
 void popup_upgrade_dialog(struct unit_list *punits)
 {
   char buf[512];
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString title;
   QVector<int> *punit_ids;
 
@@ -4252,7 +4252,7 @@ void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
                            int attacker_hp, int defender_hp,
                            bool make_att_veteran, bool make_def_veteran)
 {
-  if (gui()->qt_settings.show_battle_log) {
+  if (king()->qt_settings.show_battle_log) {
     hud_unit_combat *huc = new hud_unit_combat(
         attacker_unit_id, defender_unit_id, attacker_hp, defender_hp,
         make_att_veteran, make_def_veteran, queen()->battlelog_wdg->scale,

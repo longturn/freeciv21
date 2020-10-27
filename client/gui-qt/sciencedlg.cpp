@@ -465,7 +465,7 @@ science_report::~science_report()
   if (goal_list) {
     delete goal_list;
   }
-  gui()->remove_repo_dlg("SCI");
+  queen()->remove_repo_dlg("SCI");
 }
 
 /************************************************************************/ /**
@@ -475,8 +475,8 @@ science_report::~science_report()
  ****************************************************************************/
 void science_report::init(bool raise)
 {
-  gui()->gimme_place(this, "SCI");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "SCI");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
 }
@@ -734,8 +734,8 @@ void real_science_report_dialog_update(void *unused)
   }
   queen()->update_sidebar_tooltips();
 
-  if (gui()->is_repo_dlg_open("SCI")) {
-    i = gui()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open("SCI")) {
+    i = queen()->gimme_index_of("SCI");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -752,8 +752,8 @@ void popdown_science_report()
   science_report *sci_rep;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("SCI")) {
-    i = gui()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open("SCI")) {
+    i = queen()->gimme_index_of("SCI");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -770,8 +770,8 @@ void science_report_dialog_redraw(void)
   science_report *sci_rep;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("SCI")) {
-    i = gui()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open("SCI")) {
+    i = queen()->gimme_index_of("SCI");
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       sci_rep = reinterpret_cast<science_report *>(w);
@@ -793,11 +793,11 @@ void science_report_dialog_popup(bool raise)
   if (client_is_global_observer()) {
     return;
   }
-  if (!gui()->is_repo_dlg_open("SCI")) {
+  if (!queen()->is_repo_dlg_open("SCI")) {
     sci_rep = new science_report;
     sci_rep->init(raise);
   } else {
-    i = gui()->gimme_index_of("SCI");
+    i = queen()->gimme_index_of("SCI");
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
     if (queen()->game_tab_widget->currentIndex() == i) {

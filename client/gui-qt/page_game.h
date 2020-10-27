@@ -14,8 +14,9 @@
 #ifndef FC__PAGE_GAME_H
 #define FC__PAGE_GAME_H
 
-#include <QWidget>
 #include <QStackedWidget>
+#include <QWidget>
+#include <QMap>
 
 class fc_client;
 class map_view;
@@ -44,40 +45,46 @@ private slots:
   void current_changed(int index);
 };
 
-
 class page_game : public QWidget {
   Q_OBJECT
 public:
-  page_game(QWidget *, fc_client *);
+  page_game(QWidget *);
   ~page_game();
-
-public:
+  void update_sidebar_position();
   void reload_sidebar_icons();
   void update_sidebar_tooltips();
-  map_view *mapview_wdg;
-  fc_sidebar *sidebar_wdg;
-  minimap_view *minimapview_wdg;
-  hud_units *unitinfo_wdg;
-  hud_battle_log *battlelog_wdg;
-  info_tab *infotab;
-  xvote *x_vote;
-  goto_dialog *gtd;
+  int add_game_tab(QWidget *widget);
+  void rm_game_tab(int index); /* doesn't delete widget */
+  void gimme_place(QWidget *widget, const QString &str);
+  int gimme_index_of(const QString &str);
+  void remove_repo_dlg(const QString &str);
+  bool is_repo_dlg_open(const QString &str);
+
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
+  fc_sidebar *sidebar_wdg;
+  goto_dialog *gtd;
+  hud_battle_log *battlelog_wdg;
+  hud_units *unitinfo_wdg;
+  info_tab *infotab;
+  map_view *mapview_wdg;
+  minimap_view *minimapview_wdg;
+  xvote *x_vote;
   fc_sidewidget *sw_diplo;
-    fc_sidewidget *sw_indicators;
-      fc_sidewidget *sw_endturn;
-        fc_sidewidget *sw_economy;
-          fc_sidewidget *sw_cunit;
+  fc_sidewidget *sw_indicators;
+  fc_sidewidget *sw_endturn;
   fc_sidewidget *sw_science;
-  fc_sidewidget *sw_cities;
-
-  fc_sidewidget *sw_map;
-  fc_sidewidget *sw_tax;
+public slots:
+  void update_info_label();
 private slots:
 private:
-
-  fc_client *king;
+  QMap<QString, QWidget *> opened_repo_dlgs;
+  QTimer *update_info_timer;
+  fc_sidewidget *sw_cities;
+  fc_sidewidget *sw_cunit;
+  fc_sidewidget *sw_economy;
+  fc_sidewidget *sw_map;
+  fc_sidewidget *sw_tax;
 };
 
 /**********************************************************************/ /**

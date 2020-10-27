@@ -545,9 +545,9 @@ hud_units::~hud_units() {}
  ****************************************************************************/
 void hud_units::moveEvent(QMoveEvent *event)
 {
-  gui()->qt_settings.unit_info_pos_fx =
+  king()->qt_settings.unit_info_pos_fx =
       static_cast<float>(event->pos().x()) / queen()->mapview_wdg->width();
-  gui()->qt_settings.unit_info_pos_fy =
+  king()->qt_settings.unit_info_pos_fy =
       static_cast<float>(event->pos().y()) / queen()->mapview_wdg->height();
 }
 
@@ -590,9 +590,9 @@ void hud_units::update_actions(unit_list *punits)
   text_label.setFixedHeight((height() * 2) / 10);
 
   move(qRound(queen()->mapview_wdg->width()
-              * gui()->qt_settings.unit_info_pos_fx),
+              * king()->qt_settings.unit_info_pos_fx),
        qRound((queen()->mapview_wdg->height()
-               * gui()->qt_settings.unit_info_pos_fy)));
+               * king()->qt_settings.unit_info_pos_fy)));
   unit_icons->setFixedHeight((height() * 8) / 10);
 
   setUpdatesEnabled(false);
@@ -896,7 +896,7 @@ void hud_action::mouse_right_clicked() {}
  ****************************************************************************/
 void hud_action::mouse_clicked()
 {
-  gui()->menu_bar->execute_shortcut(action_shortcut);
+  king()->menu_bar->execute_shortcut(action_shortcut);
 }
 
 /************************************************************************/ /**
@@ -1128,7 +1128,7 @@ int unit_actions::update_actions()
 
   for (auto a : qAsConst(actions)) {
     a->setToolTip(
-        gui()->menu_bar->shortcut_2_menustring(a->action_shortcut));
+        king()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
     a->setFixedWidth(height());
     layout->addWidget(a);
@@ -1636,7 +1636,7 @@ void show_new_turn_info()
   int i;
   char buf[25];
 
-  if (!client_has_player() || !gui()->qt_settings.show_new_turn_text) {
+  if (!client_has_player() || !king()->qt_settings.show_new_turn_text) {
     return;
   }
   close_list = queen()->mapview_wdg->findChildren<hud_text *>();
@@ -1926,7 +1926,7 @@ void hud_battle_log::update_size()
   hud_unit_combat *hudc;
   int w = 3 * tileset_unit_height(tileset) / 2 * scale;
 
-  gui()->qt_settings.battlelog_scale = scale;
+  king()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
   for (auto hudc : qAsConst(lhuc)) {
@@ -2001,8 +2001,8 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
   QPoint p;
 
   p = pos();
-  gui()->qt_settings.battlelog_x = static_cast<float>(p.x()) / mapview.width;
-  gui()->qt_settings.battlelog_y =
+  king()->qt_settings.battlelog_x = static_cast<float>(p.x()) / mapview.width;
+  king()->qt_settings.battlelog_y =
       static_cast<float>(p.y()) / mapview.height;
   m_timer.restart();
 }

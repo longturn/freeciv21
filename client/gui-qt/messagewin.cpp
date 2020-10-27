@@ -80,7 +80,7 @@ void info_tab::maximize_chat()
  ***************************************************************************/
 void info_tab::mousePressEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (event->button() == Qt::LeftButton) {
@@ -108,7 +108,7 @@ void info_tab::mousePressEvent(QMouseEvent *event)
 void info_tab::mouseReleaseEvent(QMouseEvent *event)
 {
   QPoint p;
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (resize_mode) {
@@ -119,13 +119,13 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
     setCursor(Qt::ArrowCursor);
   }
   p = pos();
-  gui()->qt_settings.chat_fwidth =
+  king()->qt_settings.chat_fwidth =
       static_cast<float>(width()) / queen()->mapview_wdg->width();
-  gui()->qt_settings.chat_fheight =
+  king()->qt_settings.chat_fheight =
       static_cast<float>(height()) / queen()->mapview_wdg->height();
-  gui()->qt_settings.chat_fx_pos =
+  king()->qt_settings.chat_fx_pos =
       static_cast<float>(p.x()) / queen()->mapview_wdg->width();
-  gui()->qt_settings.chat_fy_pos =
+  king()->qt_settings.chat_fy_pos =
       static_cast<float>(p.y()) / queen()->mapview_wdg->height();
 }
 
@@ -135,7 +135,7 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
  ***************************************************************************/
 void info_tab::mouseMoveEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if ((event->buttons() & Qt::LeftButton) && resize_mode && resy) {
@@ -245,7 +245,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     }
     if (QApplication::mouseButtons() == Qt::RightButton
         && pmsg->event == E_DIPLOMACY) {
-      j = gui()->gimme_index_of("DDI");
+      j = queen()->gimme_index_of("DDI");
       queen()->game_tab_widget->setCurrentIndex(j);
     }
   }

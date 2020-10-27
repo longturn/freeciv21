@@ -81,14 +81,14 @@ void draw_calculated_trade_routes(QPainter *painter)
   struct color *pcolor;
   QPen pen;
 
-  if (!can_client_control() || gui()->trade_gen.cities.empty()) {
+  if (!can_client_control() || king()->trade_gen.cities.empty()) {
     return;
   }
   pcolor = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_NO_BUILT);
   /* Draw calculated trade routes */
   if (gui_options.draw_city_trade_routes) {
 
-    for (auto qgilles : qAsConst(gui()->trade_gen.lines)) {
+    for (auto qgilles : qAsConst(king()->trade_gen.lines)) {
       base_map_distance_vector(&dx, &dy, TILE_XY(qgilles.t1),
                                TILE_XY(qgilles.t2));
       map_to_gui_vector(tileset, 1.0, &w, &h, dx, dy);
@@ -126,7 +126,7 @@ void draw_calculated_trade_routes(QPainter *painter)
     }
   }
   /* Draw virtual cities */
-  for (auto pcity : qAsConst(gui()->trade_gen.virtual_cities)) {
+  for (auto pcity : qAsConst(king()->trade_gen.virtual_cities)) {
     float canvas_x, canvas_y;
     if (pcity->tile != nullptr
         && tile_to_canvas_pos(&canvas_x, &canvas_y, pcity->tile)) {
@@ -169,7 +169,7 @@ void map_view::update_cursor(enum cursor_type ct)
   cursor_frame = 0;
   i = static_cast<int>(ct);
   cursor = i;
-  setCursor(*(gui()->fc_cursors[i][0]));
+  setCursor(*(king()->fc_cursors[i][0]));
 }
 
 /**********************************************************************/ /**
@@ -189,7 +189,7 @@ void map_view::timer_event()
   if (cursor_frame == NUM_CURSOR_FRAMES) {
     cursor_frame = 0;
   }
-  setCursor(*(gui()->fc_cursors[cursor][cursor_frame]));
+  setCursor(*(king()->fc_cursors[cursor][cursor_frame]));
 }
 
 /**********************************************************************/ /**
@@ -320,73 +320,6 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
   if (cont_searching) {
     resume_searching(pos_x, pos_y, w, h, wdth, hght, recursive_nr);
   }
-}
-
-/**********************************************************************/ /**
-   Typically an info box is provided to tell the player about the state
-   of their civilization.  This function is called when the label is
-   changed.
- **************************************************************************/
-void update_info_label(void) { gui()->update_info_label(); }
-
-/**********************************************************************/ /**
-   Real update, updates only once per 300 ms.
- **************************************************************************/
-void fc_client::update_info_label(void)
-{
-  QString s, eco_info;
-
-  if (current_page() != PAGE_GAME) {
-    return;
-  }
-  if (update_info_timer == nullptr) {
-    update_info_timer = new QTimer();
-    update_info_timer->setSingleShot(true);
-    connect(update_info_timer, &QTimer::timeout, this,
-            &fc_client::update_info_label);
-    update_info_timer->start(300);
-    return;
-  }
-
-  if (update_info_timer->remainingTime() > 0) {
-    return;
-  }
-  queen()->update_sidebar_tooltips();
-  if (head_of_units_in_focus() != nullptr) {
-    real_menus_update();
-  }
-  /* TRANS: T is shortcut from Turn */
-  s = QString(_("%1 \nT:%2"))
-          .arg(calendar_text(), QString::number(game.info.turn));
-
-  queen()->sw_map->set_custom_labels(s);
-  queen()->sw_map->update_final_pixmap();
-
-  set_indicator_icons(client_research_sprite(), client_warming_sprite(),
-                      client_cooling_sprite(), client_government_sprite());
-
-  if (client.conn.playing != NULL) {
-    if (player_get_expected_income(client.conn.playing) > 0) {
-      eco_info =
-          QString(_("%1 (+%2)"))
-              .arg(QString::number(client.conn.playing->economic.gold),
-                   QString::number(
-                       player_get_expected_income(client.conn.playing)));
-    } else {
-      eco_info =
-          QString(_("%1 (%2)"))
-              .arg(QString::number(client.conn.playing->economic.gold),
-                   QString::number(
-                       player_get_expected_income(client.conn.playing)));
-    }
-    queen()->sw_economy->set_custom_labels(eco_info);
-  } else {
-    queen()->sw_economy->set_custom_labels("");
-  }
-  queen()->sw_tax->update_final_pixmap();
-  queen()->sw_economy->update_final_pixmap();
-  delete update_info_timer;
-  update_info_timer = nullptr;
 }
 
 /**********************************************************************/ /**
@@ -587,8 +520,8 @@ void tileset_changed(void)
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
   /* Update science report if open */
-  if (gui()->is_repo_dlg_open("SCI")) {
-    i = gui()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open("SCI")) {
+    i = queen()->gimme_index_of("SCI");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);

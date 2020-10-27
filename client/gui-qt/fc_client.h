@@ -126,16 +126,13 @@ class fc_client : public QMainWindow, private chat_listener {
   Q_OBJECT
 
   enum client_pages page;
-  QGridLayout *game_layout;
   QGridLayout *pages_layout[PAGE_GAME + 2];
   QLabel *status_bar_label;
-  QMap<QString, QWidget *> opened_repo_dlgs;
   QSocketNotifier *server_notifier;
   QStackedLayout *central_layout;
   QStatusBar *status_bar;
   QString current_file;
   QStringList status_bar_queue;
-  QTimer *update_info_timer;
   bool quitting;
   bool send_new_aifill_to_server;
   choice_dialog *opened_dialog;
@@ -153,8 +150,6 @@ public:
   enum client_pages current_page();
 
   void set_status_bar(QString str, int timeout = 2000);
-  int add_game_tab(QWidget *widget);
-  void rm_game_tab(int index); /* doesn't delete widget */
   void toggle_unit_sel_widget(struct tile *ptile);
   void update_unit_sel();
   void popdown_unit_sel();
@@ -162,11 +157,6 @@ public:
   void popdown_tile_info();
   void set_diplo_dialog(choice_dialog *widget);
   choice_dialog *get_diplo_dialog();
-  void update_sidebar_position();
-  void gimme_place(QWidget *widget, const QString &str);
-  int gimme_index_of(const QString &str);
-  void remove_repo_dlg(const QString &str);
-  bool is_repo_dlg_open(const QString &str);
   void write_settings();
   bool is_closing();
   QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
@@ -176,7 +166,6 @@ public:
   fc_corner *corner_wid;
   fc_settings qt_settings;
   float map_scale;
-  messagewdg *msgwdg;
   mr_idle mr_idler;
   mr_menu *menu_bar;
   qfc_rally_list rallies;
@@ -192,7 +181,6 @@ public slots:
   void slot_disconnect();
   void start_new_game();
   void switch_page(int i);
-  void update_info_label();
   void quit();
 
 private:
@@ -211,6 +199,6 @@ signals:
 };
 
 // Return fc_client instance. Implementation in gui_main.cpp
-class fc_client *gui();
+class fc_client *king();
 void popup_client_options();
 #endif /* FC__FC_CLIENT_H */

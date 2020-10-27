@@ -702,7 +702,7 @@ void unit_item::contextMenuEvent(QContextMenuEvent *event)
     return;
   }
 
-  menu = new QMenu(gui()->central_wdg);
+  menu = new QMenu(king()->central_wdg);
   menu->addAction(activate);
   menu->addAction(activate_and_close);
 
@@ -1104,7 +1104,7 @@ city_label::city_label(int t, QWidget *parent)
 void city_label::mousePressEvent(QMouseEvent *event)
 {
   int citnum, i;
-  int w = tileset_small_sprite_width(tileset) / gui()->map_scale;
+  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
   int num_citizens = pcity->size;
 
   if (cma_is_city_under_agent(pcity, NULL)) {
@@ -2131,10 +2131,10 @@ city_dialog::~city_dialog()
  ****************************************************************************/
 void city_dialog::hideEvent(QHideEvent *event)
 {
-  gui()->qt_settings.city_geometry = saveGeometry();
-  gui()->qt_settings.city_splitter1 = prod_unit_splitter->saveState();
-  gui()->qt_settings.city_splitter2 = central_left_splitter->saveState();
-  gui()->qt_settings.city_splitter3 = central_splitter->saveState();
+  king()->qt_settings.city_geometry = saveGeometry();
+  king()->qt_settings.city_splitter1 = prod_unit_splitter->saveState();
+  king()->qt_settings.city_splitter2 = central_left_splitter->saveState();
+  king()->qt_settings.city_splitter3 = central_splitter->saveState();
 }
 
 /************************************************************************/ /**
@@ -2142,11 +2142,11 @@ void city_dialog::hideEvent(QHideEvent *event)
  ****************************************************************************/
 void city_dialog::showEvent(QShowEvent *event)
 {
-  if (!gui()->qt_settings.city_geometry.isNull()) {
-    restoreGeometry(gui()->qt_settings.city_geometry);
-    prod_unit_splitter->restoreState(gui()->qt_settings.city_splitter1);
-    central_left_splitter->restoreState(gui()->qt_settings.city_splitter2);
-    central_splitter->restoreState(gui()->qt_settings.city_splitter3);
+  if (!king()->qt_settings.city_geometry.isNull()) {
+    restoreGeometry(king()->qt_settings.city_geometry);
+    prod_unit_splitter->restoreState(king()->qt_settings.city_splitter1);
+    central_left_splitter->restoreState(king()->qt_settings.city_splitter2);
+    central_splitter->restoreState(king()->qt_settings.city_splitter3);
   } else {
     QList<QScreen *> screens = QGuiApplication::screens();
     QRect rect = screens[0]->availableGeometry();
@@ -2160,10 +2160,10 @@ void city_dialog::showEvent(QShowEvent *event)
  ****************************************************************************/
 void city_dialog::closeEvent(QCloseEvent *event)
 {
-  gui()->qt_settings.city_geometry = saveGeometry();
-  gui()->qt_settings.city_splitter1 = prod_unit_splitter->saveState();
-  gui()->qt_settings.city_splitter2 = central_left_splitter->saveState();
-  gui()->qt_settings.city_splitter3 = central_splitter->saveState();
+  king()->qt_settings.city_geometry = saveGeometry();
+  king()->qt_settings.city_splitter1 = prod_unit_splitter->saveState();
+  king()->qt_settings.city_splitter2 = central_left_splitter->saveState();
+  king()->qt_settings.city_splitter3 = central_splitter->saveState();
 }
 
 /************************************************************************/ /**
@@ -2215,7 +2215,7 @@ void city_dialog::city_rename()
     return;
   }
 
-  ask = new hud_input_box(gui()->central_wdg);
+  ask = new hud_input_box(king()->central_wdg);
   ask->set_text_title_definput(_("What should we rename the city to?"),
                                _("Rename City"), city_name_get(pcity));
   ask->setAttribute(Qt::WA_DeleteOnClose);
@@ -2264,7 +2264,7 @@ void city_dialog::zoom_out()
  ****************************************************************************/
 void city_dialog::save_cma()
 {
-  hud_input_box *ask = new hud_input_box(gui()->central_wdg);
+  hud_input_box *ask = new hud_input_box(king()->central_wdg);
 
   ask->set_text_title_definput(_("What should we name the preset?"),
                                _("Name new preset"), _("new preset"));
@@ -2719,8 +2719,8 @@ void city_dialog::update_citizens()
   QPixmap *pix;
   int num_citizens =
       get_city_citizen_types(pcity, FEELING_FINAL, categories);
-  int w = tileset_small_sprite_width(tileset) / gui()->map_scale;
-  int h = tileset_small_sprite_height(tileset) / gui()->map_scale;
+  int w = tileset_small_sprite_width(tileset) / king()->map_scale;
+  int h = tileset_small_sprite_height(tileset) / king()->map_scale;
 
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
@@ -3540,7 +3540,7 @@ void city_dialog::worklist_down()
  ****************************************************************************/
 void city_dialog::save_worklist()
 {
-  hud_input_box *ask = new hud_input_box(gui()->central_wdg);
+  hud_input_box *ask = new hud_input_box(king()->central_wdg);
   int city_id = pcity->id;
 
   ask->set_text_title_definput(_("What should we name new worklist?"),

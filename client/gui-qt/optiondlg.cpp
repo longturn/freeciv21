@@ -751,7 +751,7 @@ void option_dialog_popup(const char *name, const struct option_set *poptset)
     opt_dialog = dialog_list[poptset];
     opt_dialog->show();
   } else {
-    opt_dialog = new option_dialog(name, poptset, gui()->central_wdg);
+    opt_dialog = new option_dialog(name, poptset, king()->central_wdg);
     ::dialog_list.insert(poptset, opt_dialog);
     opt_dialog->show();
   }
@@ -865,7 +865,7 @@ void option_gui_update(struct option *poption)
     }
     if (strcmp(option_name(poption), "aifill") == 0) {
       //sveinung
-      //qobject_cast<page_pregame *>(gui()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
+      //qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
     }
   }
 }

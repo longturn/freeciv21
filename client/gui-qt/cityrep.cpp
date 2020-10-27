@@ -664,7 +664,7 @@ void city_widget::display_list_menu(const QPoint)
         case SELL:
           building = target.value.building;
           if (sell_ask) {
-            hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+            hud_message_box *ask = new hud_message_box(king()->central_wdg);
             imprname = improvement_name_translation(building);
             fc_snprintf(buf, sizeof(buf),
                         _("Are you sure you want to sell those %s?"),
@@ -1205,8 +1205,8 @@ city_widget::~city_widget()
   delete c_i_d;
   delete list_model;
   delete filter_model;
-  gui()->qt_settings.city_repo_sort_col = header()->sortIndicatorSection();
-  gui()->qt_settings.city_report_sort = header()->sortIndicatorOrder();
+  king()->qt_settings.city_repo_sort_col = header()->sortIndicatorSection();
+  king()->qt_settings.city_report_sort = header()->sortIndicatorOrder();
 }
 
 /***********************************************************************/ /**
@@ -1216,9 +1216,9 @@ city_report::city_report() : QWidget()
 {
   layout = new QVBoxLayout;
   city_wdg = new city_widget(this);
-  if (gui()->qt_settings.city_repo_sort_col != -1) {
-    city_wdg->sortByColumn(gui()->qt_settings.city_repo_sort_col,
-                           gui()->qt_settings.city_report_sort);
+  if (king()->qt_settings.city_repo_sort_col != -1) {
+    city_wdg->sortByColumn(king()->qt_settings.city_repo_sort_col,
+                           king()->qt_settings.city_report_sort);
   }
   layout->addWidget(city_wdg);
   setLayout(layout);
@@ -1228,15 +1228,15 @@ city_report::city_report() : QWidget()
 /***********************************************************************/ /**
    Destructor for city report
  ***************************************************************************/
-city_report::~city_report() { gui()->remove_repo_dlg("CTS"); }
+city_report::~city_report() { queen()->remove_repo_dlg("CTS"); }
 
 /***********************************************************************/ /**
    Inits place in game tab widget
  ***************************************************************************/
 void city_report::init()
 {
-  gui()->gimme_place(this, "CTS");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "CTS");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -1262,12 +1262,12 @@ void city_report_dialog_popup(bool raise)
   city_report *cr;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("CTS")) {
+  if (!queen()->is_repo_dlg_open("CTS")) {
     cr = new city_report;
     cr->init();
     cr->update_report();
   } else {
-    i = gui()->gimme_index_of("CTS");
+    i = queen()->gimme_index_of("CTS");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
@@ -1289,8 +1289,8 @@ void real_city_report_dialog_update(void *unused)
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1308,8 +1308,8 @@ void real_city_report_update_city(struct city *pcity)
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1327,8 +1327,8 @@ void popdown_city_report()
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     cr = reinterpret_cast<city_report *>(w);

@@ -770,8 +770,8 @@ bool diplo_dlg::init(bool raise)
     return false;
   }
   setAttribute(Qt::WA_DeleteOnClose);
-  gui()->gimme_place(this, "DDI");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "DDI");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 
   return true;
@@ -792,7 +792,7 @@ diplo_dlg::~diplo_dlg()
     removeTab(dw->get_index());
     dw->deleteLater();
   }
-  gui()->remove_repo_dlg("DDI");
+  queen()->remove_repo_dlg("DDI");
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
@@ -846,10 +846,10 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  if (!queen()->is_repo_dlg_open("DDI")) {
     return;
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -877,8 +877,8 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
     return;
   }
 
-  if (gui()->current_page() != PAGE_GAME) {
-    gui()->switch_page(PAGE_GAME);
+  if (king()->current_page() != PAGE_GAME) {
+    king()->switch_page(PAGE_GAME);
   }
 
   pix2 = new QPixmap();
@@ -911,7 +911,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   delete pix2;
   delete def_pix_del;
 
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  if (!queen()->is_repo_dlg_open("DDI")) {
     dd = new diplo_dlg(counterpart, initiated_from);
 
     if (!dd->init(false)) {
@@ -921,7 +921,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
     dd->update_dlg();
     dd->make_active(counterpart);
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -949,10 +949,10 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  if (!queen()->is_repo_dlg_open("DDI")) {
     return;
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -971,10 +971,10 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   diplo_dlg *dd;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  if (!queen()->is_repo_dlg_open("DDI")) {
     return;
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -993,10 +993,10 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  if (!queen()->is_repo_dlg_open("DDI")) {
     return;
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -1016,11 +1016,11 @@ void close_all_diplomacy_dialogs(void)
   diplo_dlg *dd;
   QWidget *w;
 
-  qapp->alert(gui()->central_wdg);
-  if (!gui()->is_repo_dlg_open("DDI")) {
+  qapp->alert(king()->central_wdg);
+  if (!queen()->is_repo_dlg_open("DDI")) {
     return;
   }
-  i = gui()->gimme_index_of("DDI");
+  i = queen()->gimme_index_of("DDI");
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);

@@ -53,15 +53,15 @@ endgame_report::endgame_report(const struct packet_endgame_report *packet)
 /************************************************************************/ /**
    Destructor for endgame report
  ****************************************************************************/
-endgame_report::~endgame_report() { gui()->remove_repo_dlg("END"); }
+endgame_report::~endgame_report() { queen()->remove_repo_dlg("END"); }
 
 /************************************************************************/ /**
    Initializes place in tab for endgame report
  ****************************************************************************/
 void endgame_report::init()
 {
-  gui()->gimme_place(this, "END");
-  index = gui()->add_game_tab(this);
+  queen()->gimme_place(this, "END");
+  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -120,8 +120,8 @@ void endgame_report_dialog_start(const struct packet_endgame_report *packet)
 void popdown_endgame_report()
 {
   int i;
-  if (gui()->is_repo_dlg_open("END")) {
-    i = gui()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open("END")) {
+    i = queen()->gimme_index_of("END");
     fc_assert(i != -1);
     delete queen()->game_tab_widget->widget(i);
   }
@@ -133,8 +133,8 @@ void popdown_endgame_report()
 void popup_endgame_report()
 {
   int i;
-  if (gui()->is_repo_dlg_open("END")) {
-    i = gui()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open("END")) {
+    i = queen()->gimme_index_of("END");
     queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
@@ -148,8 +148,8 @@ void endgame_report_dialog_player(const struct packet_endgame_player *packet)
   endgame_report *end_rep;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("END")) {
-    i = gui()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open("END")) {
+    i = queen()->gimme_index_of("END");
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     end_rep = reinterpret_cast<endgame_report *>(w);

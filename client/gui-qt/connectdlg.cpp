@@ -27,7 +27,7 @@
  **************************************************************************/
 void qtg_close_connection_dialog()
 {
-  if (gui()->current_page() != PAGE_NETWORK) {
+  if (king()->current_page() != PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_MAIN);
   }
 }
@@ -39,7 +39,7 @@ void qtg_close_connection_dialog()
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
-  qobject_cast<page_network *>(gui()->pages[PAGE_NETWORK])
+  qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
       ->handle_authentication_req(type, message);
 }
 

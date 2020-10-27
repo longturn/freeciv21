@@ -247,7 +247,7 @@ void popup_rates_dialog(void)
   tax_rates_dialog *trd;
 
   p = QCursor::pos();
-  trd = new tax_rates_dialog(gui()->central_wdg);
+  trd = new tax_rates_dialog(king()->central_wdg);
   p.setY(p.y() - trd->height() / 2);
   if (p.y() < 50) {
     p.setY(50);
@@ -279,7 +279,7 @@ void popup_multiplier_dialog(void)
   if (!can_client_issue_orders()) {
     return;
   }
-  mrd = new multipler_rates_dialog(gui()->central_wdg);
+  mrd = new multipler_rates_dialog(king()->central_wdg);
   mrd->show();
 }
 

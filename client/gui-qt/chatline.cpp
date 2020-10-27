@@ -739,7 +739,7 @@ void qtg_real_output_window_append(const char *astring,
   QString wakeup;
 
   str = QString::fromUtf8(astring);
-  gui()->set_status_bar(str);
+  king()->set_status_bar(str);
 
   wakeup = gui_options.gui_qt_wakeup_text;
 
@@ -749,13 +749,13 @@ void qtg_real_output_window_append(const char *astring,
   }
 
   if (str.contains(client.conn.username)) {
-    qapp->alert(gui()->central_wdg);
+    qapp->alert(king()->central_wdg);
   }
 
   /* Play sound if we encountered wakeup string */
   if (str.contains(wakeup) && client_state() < C_S_RUNNING
       && !wakeup.isEmpty()) {
-    qapp->alert(gui()->central_wdg);
+    qapp->alert(king()->central_wdg);
     audio_play_sound("e_player_wake", NULL);
   }
 
@@ -797,5 +797,5 @@ version_message_event::version_message_event(const QString &msg)
  ***************************************************************************/
 void qtg_version_message(const char *vertext)
 {
-  current_app()->postEvent(gui(), new version_message_event(vertext));
+  current_app()->postEvent(king(), new version_message_event(vertext));
 }

@@ -136,7 +136,7 @@ void unittype_item::upgrade_units()
 {
   char buf[1024];
   char buf2[2048];
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   int price;
   QString s2;
   const struct unit_type *upgrade;
