@@ -38,7 +38,6 @@ add_library(
   page_network.cpp
   page_scenario.cpp
   page_pregame.cpp
-  pages.cpp
   plrdlg.cpp
   pregameoptions.cpp
   qtg_cxxside.cpp

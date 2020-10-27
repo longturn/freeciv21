@@ -1280,7 +1280,7 @@ void mr_menu::setup_menus()
     menus[i]->setAttribute(Qt::WA_TranslucentBackground);
   }
   this->setVisible(false);
-  initialized = false;
+  initialized = true;
 }
 
 /**********************************************************************/ /**
