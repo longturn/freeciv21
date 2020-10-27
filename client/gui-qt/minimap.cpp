@@ -22,6 +22,7 @@
 #include "fc_client.h"
 #include "mapview.h"
 #include "menu.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
@@ -440,7 +441,7 @@ void minimap_view::mouseMoveEvent(QMouseEvent *event)
   if (event->buttons() & Qt::LeftButton) {
     QPoint p, r;
     p = event->pos();
-    r = mapTo(gui()->mapview_wdg, p);
+    r = mapTo(queen()->mapview_wdg, p);
     p = r - p;
     move(event->globalPos() - cursor);
     setCursor(Qt::SizeAllCursor);
@@ -463,7 +464,7 @@ void minimap_view::mouseReleaseEvent(QMouseEvent *event)
  **************************************************************************/
 struct canvas *get_overview_window(void)
 {
-  gui()->minimapview_wdg->update_image();
+  queen()->minimapview_wdg->update_image();
   return NULL;
 }
 
@@ -487,11 +488,11 @@ void get_overview_area_dimensions(int *width, int *height)
  **************************************************************************/
 void overview_size_changed(void)
 {
-  gui()->minimapview_wdg->resize(0, 0);
-  gui()->minimapview_wdg->move(gui()->qt_settings.minimap_x * mapview.width,
+  queen()->minimapview_wdg->resize(0, 0);
+  queen()->minimapview_wdg->move(gui()->qt_settings.minimap_x * mapview.width,
                                gui()->qt_settings.minimap_y
                                    * mapview.height);
-  gui()->minimapview_wdg->resize(
+  queen()->minimapview_wdg->resize(
       gui()->qt_settings.minimap_width * mapview.width,
       gui()->qt_settings.minimap_height * mapview.height);
 }

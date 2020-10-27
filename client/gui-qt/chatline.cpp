@@ -38,6 +38,7 @@
 #include "gui_main.h"
 #include "mapview.h"
 #include "messagewin.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 
 extern QApplication *qapp;
@@ -323,11 +324,11 @@ void chatwdg::state_changed(int state)
  ***************************************************************************/
 void chatwdg::toggle_size()
 {
-  if (gui()->infotab->chat_maximized) {
-    gui()->infotab->restore_chat();
+  if (queen()->infotab->chat_maximized) {
+    queen()->infotab->restore_chat();
     return;
   } else {
-    gui()->infotab->maximize_chat();
+    queen()->infotab->maximize_chat();
     chat_line->setFocus();
   }
 }
@@ -457,8 +458,8 @@ bool chatwdg::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
       QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
       if (keyEvent->key() == Qt::Key_Escape) {
-        gui()->infotab->restore_chat();
-        gui()->mapview_wdg->setFocus();
+        queen()->infotab->restore_chat();
+        queen()->mapview_wdg->setFocus();
         return true;
       }
     }

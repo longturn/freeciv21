@@ -42,6 +42,7 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "optiondlg.h"
+#include "page_game.h"
 #include "page_load.h"
 #include "page_main.h"
 #include "page_network.h"
@@ -61,36 +62,22 @@ extern void write_shortcuts();
 fc_client::fc_client() : QMainWindow()
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-  /**
-   * Somehow freeciv-client-common asks to switch to page when all widgets
-   * haven't been created yet by Qt, even constructor finished job,
-   * so we null all Qt objects, so while switching we will know if they
-   * were created.
-   * After adding new QObjects null them here.
-   */
+
   central_layout = NULL;
   server_notifier = NULL;
   status_bar = NULL;
   status_bar_label = NULL;
   menu_bar = NULL;
-  mapview_wdg = NULL;
-  sidebar_wdg = nullptr;
   msgwdg = NULL;
-  infotab = NULL;
   central_wdg = NULL;
-  game_tab_widget = NULL;
   unit_sel = NULL;
   info_tile_wdg = NULL;
   opened_dialog = NULL;
   current_file = "";
   status_bar_queue.clear();
   quitting = false;
-  x_vote = NULL;
-  gtd = NULL;
   update_info_timer = nullptr;
   game_layout = nullptr;
-  unitinfo_wdg = nullptr;
-  battlelog_wdg = nullptr;
   interface_locked = false;
   map_scale = 1.0f;
   map_font_scale = true;
@@ -140,16 +127,14 @@ void fc_client::init()
   if (!path.isEmpty()) {
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
   }
-  pages[PAGE_GAME] = new QWidget(central_wdg);
   init_mapcanvas_and_overview();
-  create_game_page();
+  // sveinung or before init map?
+  pages[PAGE_GAME] = new page_game(central_wdg, this);
+  //create_game_page();
 
   pages[PAGE_GAME + 1] = new QWidget(central_wdg);
   create_loading_page();
 
-  pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
-
-  pages[PAGE_GAME]->setLayout(pages_layout[PAGE_GAME]);
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
 
   central_layout->addWidget(pages[PAGE_MAIN]);
@@ -166,7 +151,6 @@ void fc_client::init()
   resize(pages[PAGE_MAIN]->minimumSizeHint());
   setVisible(true);
 
-  game_tab_widget->init();
   chat_listener::listen();
 
   QPixmapCache::setCacheLimit(80000);
@@ -269,20 +253,20 @@ void fc_client::switch_page(int new_pg)
     showMaximized();
     /* For MS Windows, it might ingore first */
     showMaximized();
-    gui()->infotab->chtwdg->update_widgets();
+    queen()->infotab->chtwdg->update_widgets();
     status_bar->setVisible(false);
     if (gui_options.gui_qt_fullscreen) {
       gui()->showFullScreen();
-      gui()->game_tab_widget->showFullScreen();
+      queen()->game_tab_widget->showFullScreen();
     }
     menuBar()->setVisible(true);
-    mapview_wdg->setFocus();
+    queen()->mapview_wdg->setFocus();
     center_on_something();
     voteinfo_gui_update();
     update_info_label();
-    minimapview_wdg->reset();
+    queen()->minimapview_wdg->reset();
     overview_size_changed();
-    update_sidebar_tooltips();
+    queen()->update_sidebar_tooltips();
     real_science_report_dialog_update(nullptr);
     show_new_turn_info();
     break;
@@ -463,7 +447,7 @@ int fc_client::gimme_index_of(const QString &str)
   }
 
   w = opened_repo_dlgs.value(str);
-  i = game_tab_widget->indexOf(w);
+  i = queen()->game_tab_widget->indexOf(w);
   return i;
 }
 
@@ -643,10 +627,10 @@ void fc_client::toggle_unit_sel_widget(struct tile *ptile)
   if (unit_sel != NULL) {
     unit_sel->close();
     delete unit_sel;
-    unit_sel = new units_select(ptile, gui()->mapview_wdg);
+    unit_sel = new units_select(ptile, queen()->mapview_wdg);
     unit_sel->show();
   } else {
-    unit_sel = new units_select(ptile, gui()->mapview_wdg);
+    unit_sel = new units_select(ptile, queen()->mapview_wdg);
     unit_sel->show();
   }
 }
@@ -793,31 +777,31 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
   QSize size;
   size = event->size();
   if (C_S_RUNNING <= client_state()) {
-    gui()->sidebar_wdg->resize_me(size.height());
+    queen()->sidebar_wdg->resize_me(size.height());
     map_canvas_resized(size.width(), size.height());
-    gui()->infotab->resize(
+    queen()->infotab->resize(
         qRound((size.width() * gui()->qt_settings.chat_fwidth)),
         qRound((size.height() * gui()->qt_settings.chat_fheight)));
-    gui()->infotab->move(
+    queen()->infotab->move(
         qRound((size.width() * gui()->qt_settings.chat_fx_pos)),
         qRound((size.height() * gui()->qt_settings.chat_fy_pos)));
-    gui()->minimapview_wdg->move(
+    queen()->minimapview_wdg->move(
         qRound(gui()->qt_settings.minimap_x * mapview.width),
         qRound(gui()->qt_settings.minimap_y * mapview.height));
-    gui()->minimapview_wdg->resize(
+    queen()->minimapview_wdg->resize(
         qRound(gui()->qt_settings.minimap_width * mapview.width),
         qRound(gui()->qt_settings.minimap_height * mapview.height));
-    gui()->battlelog_wdg->set_scale(gui()->qt_settings.battlelog_scale);
-    gui()->battlelog_wdg->move(
+    queen()->battlelog_wdg->set_scale(gui()->qt_settings.battlelog_scale);
+    queen()->battlelog_wdg->move(
         qRound(gui()->qt_settings.battlelog_x * mapview.width),
         qRound(gui()->qt_settings.battlelog_y * mapview.height));
-    gui()->x_vote->move(width() / 2 - gui()->x_vote->width() / 2, 0);
-    gui()->update_sidebar_tooltips();
+    queen()->x_vote->move(width() / 2 - queen()->x_vote->width() / 2, 0);
+    queen()->update_sidebar_tooltips();
     side_disable_endturn(get_turn_done_button_state());
-    gui()->mapview_wdg->resize(event->size().width(), size.height());
-    gui()->unitinfo_wdg->update_actions(nullptr);
+    queen()->mapview_wdg->resize(event->size().width(), size.height());
+    queen()->unitinfo_wdg->update_actions(nullptr);
     /* It could be resized before mapview, so delayed it a bit */
-    QTimer::singleShot(20, [] { gui()->infotab->restore_chat(); });
+    QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
   }
   event->setAccepted(true);
 }
@@ -833,7 +817,7 @@ void fc_game_tab_widget::current_changed(int index)
   if (gui()->is_closing()) {
     return;
   }
-  objs = gui()->sidebar_wdg->objects;
+  objs = queen()->sidebar_wdg->objects;
 
   for (auto sw : qAsConst(objs)) {
     sw->update_final_pixmap();
@@ -842,9 +826,9 @@ void fc_game_tab_widget::current_changed(int index)
   widget(index)->show();
 
   /* Set focus to map instead sidebar */
-  if (gui()->mapview_wdg && gui()->current_page() == PAGE_GAME
+  if (queen()->mapview_wdg && gui()->current_page() == PAGE_GAME
       && index == 0) {
-    gui()->mapview_wdg->setFocus();
+    queen()->mapview_wdg->setFocus();
   }
 }
 

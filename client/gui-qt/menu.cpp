@@ -54,6 +54,7 @@
 #include "messagewin.h"
 #include "minimap.h"
 #include "page_pregame.h"
+#include "page_game.h"
 #include "plrdlg.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
@@ -118,7 +119,7 @@ void real_menus_update(void)
       gui()->menu_bar->update_bases_menu();
       gov_menu::update_all();
       go_act_menu::update_all();
-      gui()->unitinfo_wdg->update_actions(nullptr);
+      queen()->unitinfo_wdg->update_actions(nullptr);
     }
   } else {
     gui()->menuBar()->setVisible(false);
@@ -1303,7 +1304,7 @@ void mr_menu::execute_shortcut(int sid)
   fc_shortcut *fcs;
 
   if (sid == SC_GOTO) {
-    gui()->mapview_wdg->menu_click = true;
+    queen()->mapview_wdg->menu_click = true;
     slot_unit_goto();
     return;
   }
@@ -2044,7 +2045,7 @@ void mr_menu::slot_show_eco_report() { economy_report_dialog_popup(false); }
  **************************************************************************/
 void mr_menu::slot_show_map()
 {
-  ::gui()->game_tab_widget->setCurrentIndex(0);
+  ::queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /**********************************************************************/ /**
@@ -2329,7 +2330,7 @@ void mr_menu::slot_autocaravan()
   }
 
   if (!sent) {
-    gui()->infotab->chtwdg->append(_("Didn't find any trade route"
+    queen()->infotab->chtwdg->append(_("Didn't find any trade route"
                                      " to establish"));
   }
 }
@@ -2567,11 +2568,11 @@ void mr_menu::slot_fullscreen()
 {
   if (!gui_options.gui_qt_fullscreen) {
     gui()->showFullScreen();
-    gui()->game_tab_widget->showFullScreen();
+    queen()->game_tab_widget->showFullScreen();
   } else {
     // FIXME Doesnt return properly, probably something with sidebar
     gui()->showNormal();
-    gui()->game_tab_widget->showNormal();
+    queen()->game_tab_widget->showNormal();
   }
   gui_options.gui_qt_fullscreen = !gui_options.gui_qt_fullscreen;
 }
@@ -2582,9 +2583,9 @@ void mr_menu::slot_fullscreen()
 void mr_menu::slot_minimap_view()
 {
   if (minimap_status->isChecked()) {
-    ::gui()->minimapview_wdg->show();
+    ::queen()->minimapview_wdg->show();
   } else {
-    ::gui()->minimapview_wdg->hide();
+    ::queen()->minimapview_wdg->hide();
   }
 }
 
@@ -2981,8 +2982,8 @@ void mr_menu::save_image()
 
   full_size_x = (wld.map.xsize + 2) * tileset_tile_width(tileset);
   full_size_y = (wld.map.ysize + 2) * tileset_tile_height(tileset);
-  current_width = gui()->mapview_wdg->width();
-  current_height = gui()->mapview_wdg->height();
+  current_width = queen()->mapview_wdg->width();
+  current_height = queen()->mapview_wdg->height();
   if (tileset_hex_width(tileset) > 0) {
     full_size_y = full_size_y * 11 / 20;
   } else if (tileset_is_isometric(tileset)) {

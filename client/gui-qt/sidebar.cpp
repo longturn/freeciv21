@@ -30,6 +30,7 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "mapview.h"
+#include "page_game.h"
 #include "sciencedlg.h"
 #include "sidebar.h"
 #include "sprite.h"
@@ -249,7 +250,7 @@ void fc_sidewidget::mousePressEvent(QMouseEvent *event)
     right_click();
   }
   if (event->button() == Qt::RightButton && right_click == nullptr) {
-    gui()->game_tab_widget->setCurrentIndex(0);
+    queen()->game_tab_widget->setCurrentIndex(0);
   }
 }
 
@@ -341,7 +342,7 @@ void fc_sidewidget::update_final_pixmap()
   }
 
   i = gui()->gimme_index_of(page);
-  if (i == gui()->game_tab_widget->currentIndex()) {
+  if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
   final_pixmap =
@@ -551,7 +552,7 @@ void fc_sidebar::resize_me(int hght, bool force)
  ***************************************************************************/
 void side_show_map(bool nothing)
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /***********************************************************************/ /**
@@ -574,7 +575,7 @@ void side_rates_wdg(bool nothing)
  ***************************************************************************/
 void side_center_unit()
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
 }
 
@@ -586,8 +587,8 @@ void side_disable_endturn(bool do_restore)
   if (gui()->current_page() != PAGE_GAME) {
     return;
   }
-  gui()->sw_endturn->disabled = !do_restore;
-  gui()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->disabled = !do_restore;
+  queen()->sw_endturn->update_final_pixmap();
 }
 
 /***********************************************************************/ /**
@@ -598,8 +599,8 @@ void side_blink_endturn(bool do_restore)
   if (gui()->current_page() != PAGE_GAME) {
     return;
   }
-  gui()->sw_endturn->blink = !do_restore;
-  gui()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->blink = !do_restore;
+  queen()->sw_endturn->update_final_pixmap();
 }
 
 /***********************************************************************/ /**
@@ -607,7 +608,7 @@ void side_blink_endturn(bool do_restore)
  ***************************************************************************/
 void side_indicators_menu()
 {
-  gov_menu *menu = new gov_menu(gui()->sidebar_wdg);
+  gov_menu *menu = new gov_menu(queen()->sidebar_wdg);
 
   menu->create();
   menu->update();
@@ -634,9 +635,9 @@ void side_right_click_diplomacy(void)
       erwischt = QString(_("Observe %1")).arg(pplayer->name);
       erwischt =
           erwischt + " (" + nation_plural_translation(pplayer->nation) + ")";
-      eiskalt = new QAction(erwischt, gui()->mapview_wdg);
+      eiskalt = new QAction(erwischt, queen()->mapview_wdg);
       eiskalt->setData(QVariant::fromValue((void *) pplayer));
-      QObject::connect(eiskalt, &QAction::triggered, gui()->sw_diplo,
+      QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
                        &fc_sidewidget::some_slot);
       menu->addAction(eiskalt);
     }
@@ -644,10 +645,10 @@ void side_right_click_diplomacy(void)
 
         if (!client_is_global_observer())
     {
-      eiskalt = new QAction(_("Observe globally"), gui()->mapview_wdg);
+      eiskalt = new QAction(_("Observe globally"), queen()->mapview_wdg);
       eiskalt->setData(-1);
       menu->addAction(eiskalt);
-      QObject::connect(eiskalt, &QAction::triggered, gui()->sw_diplo,
+      QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
                        &fc_sidewidget::some_slot);
     }
 
@@ -659,7 +660,7 @@ void side_right_click_diplomacy(void)
     if (i < 0) {
       return;
     }
-    gui()->game_tab_widget->setCurrentIndex(i);
+    queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 
@@ -702,11 +703,11 @@ void side_right_click_science(void)
       if (sp) {
         ic = QIcon(*sp->pm);
       }
-      act = new QAction(ic, curr_list.at(i).tech_str, gui()->mapview_wdg);
+      act = new QAction(ic, curr_list.at(i).tech_str, queen()->mapview_wdg);
       act->setData(qvar);
       act->setProperty("scimenu", true);
       menu->addAction(act);
-      QObject::connect(act, &QAction::triggered, gui()->sw_science,
+      QObject::connect(act, &QAction::triggered, queen()->sw_science,
                        &fc_sidewidget::some_slot);
     }
     menu->setAttribute(Qt::WA_DeleteOnClose);
@@ -731,12 +732,12 @@ void side_left_click_science(bool nothing)
     sci_rep->init(true);
   } else {
     i = gui()->gimme_index_of("SCI");
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      gui()->game_tab_widget->setCurrentIndex(0);
+      queen()->game_tab_widget->setCurrentIndex(0);
       return;
     }
     sci_rep = reinterpret_cast<science_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(sci_rep);
+    queen()->game_tab_widget->setCurrentWidget(sci_rep);
   }
 }

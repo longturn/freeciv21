@@ -18,6 +18,7 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "mapview.h"
+#include "page_game.h"
 
 /***********************************************************************/ /**
    Constructor for notify dialog
@@ -45,7 +46,7 @@ notify_dialog::notify_dialog(const char *caption, const char *headline,
   y = 0;
   calc_size(x, y);
   resize(x, y);
-  gui()->mapview_wdg->find_place(gui()->mapview_wdg->width() - x - 4, 4, x,
+  queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4, x,
                                  y, x, y, 0);
   move(x, y);
   was_destroyed = false;
@@ -175,7 +176,7 @@ void restart_notify_reports()
   QList<notify_dialog *> nd_list;
   int i;
 
-  nd_list = gui()->mapview_wdg->findChildren<notify_dialog *>();
+  nd_list = queen()->mapview_wdg->findChildren<notify_dialog *>();
   for (i = 0; i < nd_list.count(); i++) {
     nd_list[i]->restart();
     delete nd_list[i];

@@ -77,21 +77,6 @@ enum connection_state {
 };
 
 /****************************************************************************
-  Widget holding all game tabs
-****************************************************************************/
-class fc_game_tab_widget : public QStackedWidget {
-  Q_OBJECT
-public:
-  fc_game_tab_widget();
-  void init();
-
-protected:
-  void resizeEvent(QResizeEvent *event);
-private slots:
-  void current_changed(int index);
-};
-
-/****************************************************************************
   Some qt-specific options like size to save between restarts
 ****************************************************************************/
 struct fc_settings {
@@ -151,14 +136,9 @@ class fc_client : public QMainWindow, private chat_listener {
   QString current_file;
   QStringList status_bar_queue;
   QTimer *update_info_timer;
-  QWidget *game_main_widget;
   bool quitting;
   bool send_new_aifill_to_server;
   choice_dialog *opened_dialog;
-  fc_sidewidget *sw_cities;
-  fc_sidewidget *sw_economy;
-  fc_sidewidget *sw_map;
-  fc_sidewidget *sw_tax;
   info_tile *info_tile_wdg;
 
 public:
@@ -166,9 +146,6 @@ public:
   ~fc_client();
   QWidget *pages[(int) PAGE_GAME + 2];
   void fc_main(QApplication *);
-  map_view *mapview_wdg;
-  fc_sidebar *sidebar_wdg;
-  minimap_view *minimapview_wdg;
   void add_server_source(int);
   void remove_server_source();
   bool event(QEvent *event);
@@ -192,35 +169,21 @@ public:
   bool is_repo_dlg_open(const QString &str);
   void write_settings();
   bool is_closing();
-  void update_sidebar_tooltips();
-  void reload_sidebar_icons();
   QCursor *fc_cursors[CURSOR_LAST][NUM_CURSOR_FRAMES];
   QWidget *central_wdg;
   bool interface_locked;
   bool map_font_scale;
   fc_corner *corner_wid;
-  fc_game_tab_widget *game_tab_widget;
   fc_settings qt_settings;
-  fc_sidewidget *sw_cunit;
-  fc_sidewidget *sw_diplo;
-  fc_sidewidget *sw_endturn;
-  fc_sidewidget *sw_indicators;
-  fc_sidewidget *sw_science;
   float map_scale;
-  goto_dialog *gtd;
-  hud_battle_log *battlelog_wdg;
-  hud_units *unitinfo_wdg;
-  info_tab *infotab;
   messagewdg *msgwdg;
   mr_idle mr_idler;
   mr_menu *menu_bar;
   qfc_rally_list rallies;
   trade_generator trade_gen;
   units_select *unit_sel;
-  xvote *x_vote;
 
 private slots:
-
   void server_input(int sock);
   void closing();
   void clear_status_bar();
@@ -233,7 +196,6 @@ public slots:
   void quit();
 
 private:
-  void create_game_page();
   void create_loading_page();
   void create_cursors(void);
   void delete_cursors(void);
@@ -247,11 +209,6 @@ protected:
 signals:
   void keyCaught(QKeyEvent *e);
 };
-
-/***************************************************************************
-  Class for showing options in PAGE_START, options like ai_fill, ruleset
-  etc.
-***************************************************************************/
 
 // Return fc_client instance. Implementation in gui_main.cpp
 class fc_client *gui();

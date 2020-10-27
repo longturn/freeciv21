@@ -18,6 +18,7 @@
 // gui-qt
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "page_game.h"
 
 /************************************************************************/ /**
    Constructor for economy report
@@ -86,7 +87,7 @@ void eco_report::init()
   curr_row = -1;
   gui()->gimme_place(this, "ECO");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
 }
 
 /************************************************************************/ /**
@@ -392,13 +393,13 @@ void real_economy_report_dialog_update(void *unused)
 
   if (gui()->is_repo_dlg_open("ECO")) {
     i = gui()->gimme_index_of("ECO");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       eco_rep = reinterpret_cast<eco_report *>(w);
       eco_rep->update_report();
     }
   }
-  gui()->update_sidebar_tooltips();
+  queen()->update_sidebar_tooltips();
 }
 
 /************************************************************************/ /**
@@ -417,14 +418,14 @@ void economy_report_dialog_popup(bool raise)
   } else {
     i = gui()->gimme_index_of("ECO");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      gui()->game_tab_widget->setCurrentIndex(0);
+      queen()->game_tab_widget->setCurrentIndex(0);
       return;
     }
     eco_rep = reinterpret_cast<eco_report *>(w);
     eco_rep->update_report();
-    gui()->game_tab_widget->setCurrentWidget(eco_rep);
+    queen()->game_tab_widget->setCurrentWidget(eco_rep);
   }
 }
 
@@ -440,7 +441,7 @@ void popdown_economy_report()
   if (gui()->is_repo_dlg_open("ECO")) {
     i = gui()->gimme_index_of("ECO");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     eco_rep = reinterpret_cast<eco_report *>(w);
     eco_rep->deleteLater();
   }

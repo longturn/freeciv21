@@ -35,6 +35,7 @@
 #include "diplodlg_g.h"
 #include "fc_client.h"
 #include "icons.h"
+#include "page_game.h"
 #include "sidebar.h"
 #include "sprite.h"
 
@@ -682,11 +683,11 @@ void diplo_wdg::update_wdg()
  ****************************************************************************/
 void diplo_wdg::restore_pixmap()
 {
-  gui()->sw_diplo->set_pixmap(fc_icons::instance()->get_pixmap("nations"));
-  gui()->sw_diplo->resize_pixmap(gui()->sw_diplo->width(),
-                                 gui()->sw_diplo->height());
-  gui()->sw_diplo->set_custom_labels(QString());
-  gui()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->set_pixmap(fc_icons::instance()->get_pixmap("nations"));
+  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+                                 queen()->sw_diplo->height());
+  queen()->sw_diplo->set_custom_labels(QString());
+  queen()->sw_diplo->update_final_pixmap();
 }
 
 /************************************************************************/ /**
@@ -771,7 +772,7 @@ bool diplo_dlg::init(bool raise)
   setAttribute(Qt::WA_DeleteOnClose);
   gui()->gimme_place(this, "DDI");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
 
   return true;
 }
@@ -792,7 +793,7 @@ diplo_dlg::~diplo_dlg()
     dw->deleteLater();
   }
   gui()->remove_repo_dlg("DDI");
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /************************************************************************/ /**
@@ -850,7 +851,7 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dw = dd->find_widget(counterpart);
   dw->treaty.accept0 = I_accepted;
@@ -885,28 +886,28 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   pix = get_nation_flag_sprite(
             tileset, nation_of_player(player_by_number(counterpart)))
             ->pm;
-  *pix2 = pix->scaledToWidth(gui()->sw_diplo->width() - 2,
+  *pix2 = pix->scaledToWidth(queen()->sw_diplo->width() - 2,
                              Qt::SmoothTransformation);
-  if (pix2->height() > gui()->sw_diplo->height()) {
-    *pix2 = pix->scaledToHeight(gui()->sw_diplo->height(),
+  if (pix2->height() > queen()->sw_diplo->height()) {
+    *pix2 = pix->scaledToHeight(queen()->sw_diplo->height(),
                                 Qt::SmoothTransformation);
   }
-  pix3 = new QPixmap(gui()->sw_diplo->width(), gui()->sw_diplo->height());
+  pix3 = new QPixmap(queen()->sw_diplo->width(), queen()->sw_diplo->height());
   pix3->fill(Qt::transparent);
   def_pix = fc_icons::instance()->get_pixmap("nations");
   *def_pix_del =
-      def_pix->scaled(gui()->sw_diplo->width(), gui()->sw_diplo->height(),
+      def_pix->scaled(queen()->sw_diplo->width(), queen()->sw_diplo->height(),
                       Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   p.begin(pix3);
   p.drawPixmap(1, 1, *pix2);
   p.drawPixmap(0, 0, *def_pix_del);
   p.end();
-  gui()->sw_diplo->set_pixmap(pix3);
-  gui()->sw_diplo->resize_pixmap(gui()->sw_diplo->width(),
-                                 gui()->sw_diplo->height());
-  gui()->sw_diplo->set_custom_labels(
+  queen()->sw_diplo->set_pixmap(pix3);
+  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+                                 queen()->sw_diplo->height());
+  queen()->sw_diplo->set_custom_labels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
-  gui()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->update_final_pixmap();
   delete pix2;
   delete def_pix_del;
 
@@ -922,18 +923,18 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   fw = dd->find_widget(counterpart);
   if (fw == NULL) {
     dd->add_widget(counterpart, initiated_from);
-    gui()->game_tab_widget->setCurrentIndex(i);
+    queen()->game_tab_widget->setCurrentIndex(i);
   }
   dd->make_active(counterpart);
 
   /* Bring it to front if user requested meeting */
   if (player_by_number(initiated_from) == client.conn.playing) {
-    gui()->game_tab_widget->setCurrentIndex(i);
+    queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 
@@ -953,7 +954,7 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dw = dd->find_widget(counterpart);
   add_clause(&dw->treaty, player_by_number(giver), type, value);
@@ -975,7 +976,7 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dd->close_widget(counterpart);
 }
@@ -997,7 +998,7 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dw = dd->find_widget(counterpart);
   remove_clause(&dw->treaty, player_by_number(giver), type, value);
@@ -1021,7 +1022,7 @@ void close_all_diplomacy_dialogs(void)
   }
   i = gui()->gimme_index_of("DDI");
   fc_assert(i != -1);
-  w = gui()->game_tab_widget->widget(i);
+  w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
   dd->close();
   delete dd;

@@ -52,6 +52,7 @@
 #include "hudwidget.h"
 #include "icons.h"
 #include "mapview.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "tooltips.h"
 
@@ -3045,7 +3046,7 @@ void city_dialog::setup_ui(struct city *qcity)
 city_dialog *city_dialog::instance()
 {
   if (!m_instance) {
-    m_instance = new city_dialog(gui()->mapview_wdg);
+    m_instance = new city_dialog(queen()->mapview_wdg);
   }
   return m_instance;
 }

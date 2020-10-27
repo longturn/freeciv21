@@ -22,6 +22,7 @@
 #include "fc_client.h"
 #include "fonts.h"
 #include "hudwidget.h"
+#include "page_game.h"
 
 units_reports *units_reports::m_instance = 0;
 
@@ -265,7 +266,7 @@ units_reports::units_reports() : fcwidget()
   layout = new QHBoxLayout;
   scroll_layout = new QHBoxLayout(this);
   init_layout();
-  setParent(gui()->mapview_wdg);
+  setParent(queen()->mapview_wdg);
   cw = new close_widget(this);
   cw->setFixedSize(12, 12);
   setVisible(false);
@@ -442,7 +443,7 @@ void units_reports::update_units(bool show)
     setVisible(true);
   }
   setUpdatesEnabled(true);
-  setFixedWidth(qMin(total_len, gui()->mapview_wdg->width()));
+  setFixedWidth(qMin(total_len, queen()->mapview_wdg->width()));
   if (ui != nullptr) {
     setFixedHeight(ui->height() + 60);
   }
@@ -488,7 +489,7 @@ void toggle_units_report(bool x)
 {
   Q_UNUSED(x);
   if (units_reports::instance()->isVisible()
-      && gui()->game_tab_widget->currentIndex() == 0) {
+      && queen()->game_tab_widget->currentIndex() == 0) {
     units_reports::instance()->drop();
   } else {
     units_report_dialog_popup(true);
@@ -511,6 +512,6 @@ void real_units_report_dialog_update(void *unused)
  ****************************************************************************/
 void units_report_dialog_popup(bool raise)
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
   units_reports::instance()->update_units(true);
 }

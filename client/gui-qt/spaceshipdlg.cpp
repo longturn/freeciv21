@@ -23,6 +23,7 @@
 #include "canvas.h"
 #include "fc_client.h"
 #include "qtg_cxxside.h"
+#include "page_game.h"
 #include "spaceshipdlg.h"
 
 class QGridLayout;
@@ -70,7 +71,7 @@ void ss_report::init()
   int index;
   gui()->gimme_place(this, "SPS");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
 }
 
@@ -120,12 +121,12 @@ void popup_spaceship_dialog(struct player *pplayer)
   } else {
     i = gui()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    if (gui()->game_tab_widget->currentIndex() == i) {
+    if (queen()->game_tab_widget->currentIndex() == i) {
       return;
     }
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(ss_rep);
+    queen()->game_tab_widget->setCurrentWidget(ss_rep);
   }
 }
 
@@ -150,9 +151,9 @@ void refresh_spaceship_dialog(struct player *pplayer)
   } else {
     i = gui()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(ss_rep);
+    queen()->game_tab_widget->setCurrentWidget(ss_rep);
     ss_rep->update_report();
   }
 }
@@ -171,7 +172,7 @@ void popdown_all_spaceships_dialogs()
   } else {
     i = gui()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
     ss_rep->deleteLater();
   }

@@ -28,6 +28,7 @@
 #include "text.h"
 // gui-qt
 #include "fc_client.h"
+#include "page_game.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**
@@ -355,10 +356,10 @@ void popup_goto_dialog(void)
     return;
   }
 
-  if (gui()->gtd != NULL) {
-    gui()->gtd->init();
-    gui()->gtd->update_dlg();
-    gui()->gtd->sort_def();
-    gui()->gtd->show_me();
+  if (queen()->gtd != NULL) {
+    queen()->gtd->init();
+    queen()->gtd->update_dlg();
+    queen()->gtd->sort_def();
+    queen()->gtd->show_me();
   }
 }

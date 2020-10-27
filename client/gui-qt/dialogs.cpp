@@ -49,6 +49,7 @@
 #include "icons.h"
 #include "mapview.h"
 #include "notifyreport.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
 
@@ -980,7 +981,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
                          const char *lines)
 {
   notify_dialog *nd =
-      new notify_dialog(caption, headline, lines, gui()->mapview_wdg);
+      new notify_dialog(caption, headline, lines, queen()->mapview_wdg);
   nd->show();
 }
 
@@ -1789,7 +1790,7 @@ void popup_action_selection(struct unit *actor_unit,
     return;
   }
   cd = new choice_dialog(astr_str(&title), astr_str(&text),
-                         gui()->game_tab_widget,
+                         queen()->game_tab_widget,
                          diplomat_queue_handle_primary);
   qv1 = actor_unit->id;
 
@@ -2563,7 +2564,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
   }
   struct astring stra = ASTRING_INIT;
   cd = new choice_dialog(_("Steal"), _("Steal Technology"),
-                         gui()->game_tab_widget,
+                         queen()->game_tab_widget,
                          diplomat_queue_handle_secondary);
 
   /* Put both actor and target city in qv1 since qv2 is taken */
@@ -3201,7 +3202,7 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
   pfcn_void func;
   choice_dialog *cd = new choice_dialog(
       _("Sabotage"), _("Select Improvement to Sabotage"),
-      gui()->game_tab_widget, diplomat_queue_handle_secondary);
+      queen()->game_tab_widget, diplomat_queue_handle_secondary);
   int nr = 0;
   struct astring stra = ASTRING_INIT;
   QList<QVariant> actor_and_target;
@@ -3266,7 +3267,7 @@ void popup_pillage_dialog(struct unit *punit, bv_extras extras)
     return;
   }
   cd = new choice_dialog(_("What To Pillage"), _("Select what to pillage:"),
-                         gui()->game_tab_widget);
+                         queen()->game_tab_widget);
   qv2 = punit->id;
   while ((tgt = get_preferred_pillage(extras))) {
     int what;
@@ -3441,11 +3442,11 @@ void popdown_all_game_dialogs(void)
   QList<notify_dialog *> nd_list;
 
   QApplication::alert(gui()->central_wdg);
-  cd_list = gui()->game_tab_widget->findChildren<choice_dialog *>();
+  cd_list = queen()->game_tab_widget->findChildren<choice_dialog *>();
   for (i = 0; i < cd_list.count(); i++) {
     cd_list[i]->close();
   }
-  nd_list = gui()->game_tab_widget->findChildren<notify_dialog *>();
+  nd_list = queen()->game_tab_widget->findChildren<notify_dialog *>();
   for (i = 0; i < nd_list.count(); i++) {
     nd_list[i]->close();
   }
@@ -4137,7 +4138,7 @@ void units_select::update_units()
  ***************************************************************************/
 void units_select::closeEvent(QCloseEvent *event)
 {
-  gui()->mapview_wdg->setFocus();
+  queen()->mapview_wdg->setFocus();
   QWidget::closeEvent(event);
 }
 
@@ -4254,10 +4255,10 @@ void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
   if (gui()->qt_settings.show_battle_log) {
     hud_unit_combat *huc = new hud_unit_combat(
         attacker_unit_id, defender_unit_id, attacker_hp, defender_hp,
-        make_att_veteran, make_def_veteran, gui()->battlelog_wdg->scale,
-        gui()->battlelog_wdg);
+        make_att_veteran, make_def_veteran, queen()->battlelog_wdg->scale,
+        queen()->battlelog_wdg);
 
-    gui()->battlelog_wdg->add_combat_info(huc);
-    gui()->battlelog_wdg->show();
+    queen()->battlelog_wdg->add_combat_info(huc);
+    queen()->battlelog_wdg->show();
   }
 }

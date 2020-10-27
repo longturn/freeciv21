@@ -36,6 +36,7 @@
 #include "fonts.h"
 #include "icons.h"
 #include "mapview.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
 #include "widgetdecorations.h"
@@ -545,9 +546,9 @@ hud_units::~hud_units() {}
 void hud_units::moveEvent(QMoveEvent *event)
 {
   gui()->qt_settings.unit_info_pos_fx =
-      static_cast<float>(event->pos().x()) / gui()->mapview_wdg->width();
+      static_cast<float>(event->pos().x()) / queen()->mapview_wdg->width();
   gui()->qt_settings.unit_info_pos_fy =
-      static_cast<float>(event->pos().y()) / gui()->mapview_wdg->height();
+      static_cast<float>(event->pos().y()) / queen()->mapview_wdg->height();
 }
 
 /************************************************************************/ /**
@@ -588,9 +589,9 @@ void hud_units::update_actions(unit_list *punits)
   setFixedHeight(parentWidget()->height() / 12);
   text_label.setFixedHeight((height() * 2) / 10);
 
-  move(qRound(gui()->mapview_wdg->width()
+  move(qRound(queen()->mapview_wdg->width()
               * gui()->qt_settings.unit_info_pos_fx),
-       qRound((gui()->mapview_wdg->height()
+       qRound((queen()->mapview_wdg->height()
                * gui()->qt_settings.unit_info_pos_fy)));
   unit_icons->setFixedHeight((height() * 8) / 10);
 
@@ -788,7 +789,7 @@ void click_label::mousePressEvent(QMouseEvent *e)
  ****************************************************************************/
 void click_label::mouse_clicked()
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
 }
 
@@ -1638,7 +1639,7 @@ void show_new_turn_info()
   if (!client_has_player() || !gui()->qt_settings.show_new_turn_text) {
     return;
   }
-  close_list = gui()->mapview_wdg->findChildren<hud_text *>();
+  close_list = queen()->mapview_wdg->findChildren<hud_text *>();
   for (i = 0; i < close_list.size(); ++i) {
     close_list.at(i)->close();
     close_list.at(i)->deleteLater();
@@ -1672,7 +1673,7 @@ void show_new_turn_info()
       + QString(_("Gold: %1 (%2)"))
             .arg(client.conn.playing->economic.gold)
             .arg(buf);
-  ht = new hud_text(s, 5, gui()->mapview_wdg);
+  ht = new hud_text(s, 5, queen()->mapview_wdg);
   ht->show_me();
 }
 

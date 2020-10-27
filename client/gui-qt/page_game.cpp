@@ -48,34 +48,13 @@ static void cycle_enemy_units();
 
 extern void toggle_units_report(bool);
 
-/**********************************************************************/ /**
-   Inserts tab widget to game view page
- **************************************************************************/
-int fc_client::add_game_tab(QWidget *widget)
+page_game::page_game(QWidget *parent, fc_client *c) : QWidget(parent)
 {
-  int i;
-
-  i = game_tab_widget->addWidget(widget);
-  game_tab_widget->setCurrentWidget(widget);
-  return i;
-}
-
-/**********************************************************************/ /**
-   Removes given tab widget from game page
- **************************************************************************/
-void fc_client::rm_game_tab(int index)
-{
-  game_tab_widget->removeWidget(game_tab_widget->widget(index));
-}
-
-/**********************************************************************/ /**
-   Creates buttons and layouts for game page.
- **************************************************************************/
-void fc_client::create_game_page()
-{
+  QGridLayout *page_game_layout;
+  king = c;
   QGridLayout *game_layout;
 
-  pages_layout[PAGE_GAME] = new QGridLayout;
+  page_game_layout = new QGridLayout;
   game_main_widget = new QWidget;
   game_layout = new QGridLayout;
   game_layout->setContentsMargins(0, 0, 0, 0);
@@ -83,7 +62,6 @@ void fc_client::create_game_page()
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
   sidebar_wdg = new fc_sidebar();
-
   sw_map = new fc_sidewidget(fc_icons::instance()->get_pixmap("view"),
                              Q_("?noun:View"), "MAP", side_show_map);
   sw_tax = new fc_sidewidget(nullptr, nullptr, "", side_rates_wdg, SW_TAX);
@@ -142,21 +120,26 @@ void fc_client::create_game_page()
   game_tab_widget = new fc_game_tab_widget;
   game_tab_widget->setMinimumSize(600, 400);
   game_tab_widget->setContentsMargins(0, 0, 0, 0);
-  add_game_tab(game_main_widget);
+
+  game_tab_widget->addWidget(game_main_widget);
   if (gui_options.gui_qt_sidebar_left) {
-    pages_layout[PAGE_GAME]->addWidget(sidebar_wdg, 1, 0);
+    page_game_layout->addWidget(sidebar_wdg, 1, 0);
   } else {
-    pages_layout[PAGE_GAME]->addWidget(sidebar_wdg, 1, 2);
+    page_game_layout->addWidget(sidebar_wdg, 1, 2);
   }
-  pages_layout[PAGE_GAME]->addWidget(game_tab_widget, 1, 1);
-  pages_layout[PAGE_GAME]->setContentsMargins(0, 0, 0, 0);
-  pages_layout[PAGE_GAME]->setSpacing(0);
+  page_game_layout->addWidget(game_tab_widget, 1, 1);
+  page_game_layout->setContentsMargins(0, 0, 0, 0);
+  page_game_layout->setSpacing(0);
+  setLayout(page_game_layout);
+  game_tab_widget->init();
 }
+
+page_game::~page_game() {}
 
 /**********************************************************************/ /**
    Reloads sidebar icons (useful on theme change)
  **************************************************************************/
-void fc_client::reload_sidebar_icons()
+void page_game::reload_sidebar_icons()
 {
   sw_map->set_pixmap(fc_icons::instance()->get_pixmap("view"));
   sw_cunit->set_pixmap(fc_icons::instance()->get_pixmap("units"));
@@ -171,7 +154,7 @@ void fc_client::reload_sidebar_icons()
 /**********************************************************************/ /**
    Updates sidebar tooltips
  **************************************************************************/
-void fc_client::update_sidebar_tooltips()
+void page_game::update_sidebar_tooltips()
 {
   QString str;
   int max;
@@ -181,7 +164,7 @@ void fc_client::update_sidebar_tooltips()
   struct improvement_entry building_entries[B_LAST];
   struct unit_entry unit_entries[U_LAST];
 
-  if (current_page() != PAGE_GAME) {
+  if (gui()->current_page() != PAGE_GAME) {
     return;
   }
 
@@ -348,19 +331,6 @@ void center_next_player_capital()
 }
 
 /**********************************************************************/ /**
-   Update position
- **************************************************************************/
-void fc_client::update_sidebar_position()
-{
-  pages_layout[PAGE_GAME]->removeWidget(gui()->sidebar_wdg);
-  if (gui_options.gui_qt_sidebar_left) {
-    pages_layout[PAGE_GAME]->addWidget(sidebar_wdg, 1, 0);
-  } else {
-    pages_layout[PAGE_GAME]->addWidget(sidebar_wdg, 1, 2);
-  }
-}
-
-/**********************************************************************/ /**
    Center on next enemy unit
  **************************************************************************/
 void cycle_enemy_units()
@@ -398,4 +368,8 @@ void cycle_enemy_units()
     center_tile_mapcanvas(ptile);
     last_center_enemy = first_id;
   }
+}
+
+page_game *queen() {
+  return qobject_cast<page_game *>(gui()->pages[PAGE_GAME]);
 }

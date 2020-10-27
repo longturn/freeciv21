@@ -33,6 +33,7 @@
 #include "fc_client.h"
 #include "mapview.h"
 #include "messagewin.h"
+#include "page_game.h"
 #include "shortcuts.h"
 
 extern void side_disable_endturn(bool do_restore);
@@ -81,7 +82,7 @@ void create_line_at_mouse_pos(void)
   int x, y;
 
   global_pos = QCursor::pos();
-  local_pos = gui()->mapview_wdg->mapFromGlobal(global_pos);
+  local_pos = queen()->mapview_wdg->mapFromGlobal(global_pos);
   x = local_pos.x();
   y = local_pos.y();
 
@@ -122,7 +123,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Up:
     case Qt::Key_8:
       if (is_shift) {
-        recenter_button_pressed(gui()->mapview_wdg->width() / 2, 0);
+        recenter_button_pressed(queen()->mapview_wdg->width() / 2, 0);
       } else {
         key_unit_move(DIR8_NORTH);
       }
@@ -130,7 +131,7 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Left:
     case Qt::Key_4:
       if (is_shift) {
-        recenter_button_pressed(0, gui()->mapview_wdg->height() / 2);
+        recenter_button_pressed(0, queen()->mapview_wdg->height() / 2);
       } else {
         key_unit_move(DIR8_WEST);
       }
@@ -138,8 +139,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Right:
     case Qt::Key_6:
       if (is_shift) {
-        recenter_button_pressed(gui()->mapview_wdg->width(),
-                                gui()->mapview_wdg->height() / 2);
+        recenter_button_pressed(queen()->mapview_wdg->width(),
+                                queen()->mapview_wdg->height() / 2);
       } else {
         key_unit_move(DIR8_EAST);
       }
@@ -147,8 +148,8 @@ void map_view::keyPressEvent(QKeyEvent *event)
     case Qt::Key_Down:
     case Qt::Key_2:
       if (is_shift) {
-        recenter_button_pressed(gui()->mapview_wdg->width() / 2,
-                                gui()->mapview_wdg->height());
+        recenter_button_pressed(queen()->mapview_wdg->width() / 2,
+                                queen()->mapview_wdg->height());
       } else {
         key_unit_move(DIR8_SOUTH);
       }
@@ -175,15 +176,15 @@ void map_view::keyPressEvent(QKeyEvent *event)
       return;
     case Qt::Key_Escape:
       key_cancel_action();
-      if (gui()->infotab->chat_maximized) {
-        gui()->infotab->restore_chat();
+      if (queen()->infotab->chat_maximized) {
+        queen()->infotab->restore_chat();
       }
       return;
     case Qt::Key_Enter:
     case Qt::Key_Return:
-      if (!gui()->infotab->chat_maximized) {
-        gui()->infotab->maximize_chat();
-        gui()->infotab->chtwdg->chat_line->setFocus();
+      if (!queen()->infotab->chat_maximized) {
+        queen()->infotab->maximize_chat();
+        queen()->infotab->chtwdg->chat_line->setFocus();
       }
       return;
     default:
@@ -223,7 +224,7 @@ void map_view::shortcut_pressed(int key)
   if (bt == sc->mouse && md == sc->mod && gui()->trade_gen.hover_city) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
     gui()->trade_gen.add_tile(ptile);
-    gui()->mapview_wdg->repaint();
+    queen()->mapview_wdg->repaint();
     return;
   }
 
@@ -279,8 +280,8 @@ void map_view::shortcut_pressed(int key)
     return;
   }
 
-  if (bt == Qt::LeftButton && gui()->infotab->chat_maximized) {
-    gui()->infotab->restore_chat();
+  if (bt == Qt::LeftButton && queen()->infotab->chat_maximized) {
+    queen()->infotab->restore_chat();
   }
   if (bt == Qt::LeftButton && gui()->menu_bar->quick_airlifting) {
     ptile = canvas_pos_to_tile(pos.x(), pos.y());
@@ -318,8 +319,8 @@ void map_view::shortcut_pressed(int key)
 
     sc = fc_shortcuts::sc()->get_shortcut(SC_POPUP_COMB_INF);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
-        && gui()->battlelog_wdg != nullptr) {
-      gui()->battlelog_wdg->show();
+        && queen()->battlelog_wdg != nullptr) {
+      queen()->battlelog_wdg->show();
       return;
     }
 
@@ -363,7 +364,7 @@ void map_view::shortcut_pressed(int key)
     sc = fc_shortcuts::sc()->get_shortcut(SC_MAKE_LINK);
     if (((key && key == sc->key) || bt == sc->mouse) && md == sc->mod
         && ptile != nullptr) {
-      gui()->infotab->chtwdg->make_link(ptile);
+      queen()->infotab->chtwdg->make_link(ptile);
       return;
     }
     sc = fc_shortcuts::sc()->get_shortcut(SC_BUY_MAP);
@@ -506,7 +507,7 @@ void fc_client::popup_tile_info(struct tile *ptile)
         mapdeco_set_crosshair(punit->goto_tile, true);
       }
     }
-    info_tile_wdg = new info_tile(ptile, mapview_wdg);
+    info_tile_wdg = new info_tile(ptile, queen()->mapview_wdg);
     info_tile_wdg->show();
   }
 }

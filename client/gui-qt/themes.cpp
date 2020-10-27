@@ -20,6 +20,7 @@
 #include "shared.h"
 #include "string_vector.h"
 /* client */
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "themes_common.h"
 // gui-qt
@@ -83,7 +84,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QPixmapCache::clear();
   current_app()->setStyleSheet(*stylestring);
   if (gui()) {
-    gui()->reload_sidebar_icons();
+    queen()->reload_sidebar_icons();
   }
   pal.setBrush(QPalette::Link, QColor(92, 170, 229));
   pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));

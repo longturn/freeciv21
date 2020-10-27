@@ -22,6 +22,7 @@
 #include "options.h"
 // gui-qt
 #include "fc_client.h"
+#include "page_game.h"
 
 extern QApplication *qapp;
 /**********************************************************************/ /**
@@ -71,7 +72,7 @@ message_dlg::message_dlg()
   setLayout(layout);
   gui()->gimme_place(this, "MSD");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
 
   fill_data();
   margins = msgtab->contentsMargins();
@@ -172,11 +173,11 @@ void popup_messageopt_dialog(void)
   } else {
     i = gui()->gimme_index_of("MSD");
     fc_assert(i != -1);
-    if (gui()->game_tab_widget->currentIndex() == i) {
+    if (queen()->game_tab_widget->currentIndex() == i) {
       return;
     }
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     mdlg = reinterpret_cast<message_dlg *>(w);
-    gui()->game_tab_widget->setCurrentWidget(mdlg);
+    queen()->game_tab_widget->setCurrentWidget(mdlg);
   }
 }

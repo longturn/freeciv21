@@ -43,6 +43,7 @@
 #include "helpdlg.h"
 #include "hudwidget.h"
 #include "messagewin.h"
+#include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 
@@ -348,7 +349,7 @@ static void apply_font(struct option *poption)
     delete remove_old;
     fc_font::instance()->set_font(s, f);
     update_city_descriptions();
-    gui()->infotab->chtwdg->update_font();
+    queen()->infotab->chtwdg->update_font();
     QApplication::setFont(
         *fc_font::instance()->get_font(fonts::default_font));
     real_science_report_dialog_update(nullptr);

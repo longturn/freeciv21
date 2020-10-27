@@ -18,6 +18,7 @@
 #include "sprite.h"
 // gui-qt
 #include "fc_client.h"
+#include "page_game.h"
 
 /************************************************************************/ /**
    Constructor for endgame report
@@ -61,7 +62,7 @@ void endgame_report::init()
 {
   gui()->gimme_place(this, "END");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
 }
 
 /************************************************************************/ /**
@@ -122,7 +123,7 @@ void popdown_endgame_report()
   if (gui()->is_repo_dlg_open("END")) {
     i = gui()->gimme_index_of("END");
     fc_assert(i != -1);
-    delete gui()->game_tab_widget->widget(i);
+    delete queen()->game_tab_widget->widget(i);
   }
 }
 
@@ -134,7 +135,7 @@ void popup_endgame_report()
   int i;
   if (gui()->is_repo_dlg_open("END")) {
     i = gui()->gimme_index_of("END");
-    gui()->game_tab_widget->setCurrentIndex(i);
+    queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 
@@ -150,7 +151,7 @@ void endgame_report_dialog_player(const struct packet_endgame_player *packet)
   if (gui()->is_repo_dlg_open("END")) {
     i = gui()->gimme_index_of("END");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     end_rep = reinterpret_cast<endgame_report *>(w);
     end_rep->update_report(packet);
   }

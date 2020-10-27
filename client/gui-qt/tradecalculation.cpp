@@ -20,6 +20,7 @@
 #include "fc_client.h"
 #include "mapview.h"
 #include "messagewin.h"
+#include "page_game.h"
 
 static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
 
@@ -75,7 +76,7 @@ void trade_generator::clear_trade_planing()
   }
   cities.clear();
   lines.clear();
-  gui()->mapview_wdg->repaint();
+  queen()->mapview_wdg->repaint();
 }
 
 /**********************************************************************/ /**
@@ -85,7 +86,7 @@ void trade_generator::add_city(struct city *pcity)
 {
   trade_city *tc = new trade_city(pcity);
   cities.append(tc);
-  gui()->infotab->chtwdg->append(
+  queen()->infotab->chtwdg->append(
       QString(_("Adding city %1 to trade planning")).arg(tc->city->name));
 }
 
@@ -132,7 +133,7 @@ void trade_generator::remove_city(struct city *pcity)
   for (auto tc : qAsConst(cities)) {
     if (tc->city->tile == pcity->tile) {
       cities.removeAll(tc);
-      gui()->infotab->chtwdg->append(
+      queen()->infotab->chtwdg->append(
           QString(_("Removing city %1 from trade planning"))
               .arg(tc->city->name));
       return;
@@ -151,7 +152,7 @@ void trade_generator::remove_virtual_city(tile *ptile)
   for (auto c : qAsConst(virtual_cities)) {
     if (c->tile == ptile) {
       virtual_cities.removeAll(c);
-      gui()->infotab->chtwdg->append(
+      queen()->infotab->chtwdg->append(
           QString(_("Removing city %1 from trade planning")).arg(c->name));
     }
   }
@@ -227,7 +228,7 @@ void trade_generator::calculate()
     }
   }
 
-  gui()->mapview_wdg->repaint();
+  queen()->mapview_wdg->repaint();
 }
 
 /**********************************************************************/ /**

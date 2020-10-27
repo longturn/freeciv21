@@ -27,6 +27,7 @@
 #include "cityrep.h"
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 
 /***********************************************************************/ /**
@@ -453,7 +454,7 @@ void city_widget::center()
   pcity = selected_cities[0];
   Q_ASSERT(pcity != NULL);
   center_tile_mapcanvas(pcity->tile);
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /***********************************************************************/ /**
@@ -1236,7 +1237,7 @@ void city_report::init()
 {
   gui()->gimme_place(this, "CTS");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
 }
 
 /***********************************************************************/ /**
@@ -1268,13 +1269,13 @@ void city_report_dialog_popup(bool raise)
   } else {
     i = gui()->gimme_index_of("CTS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      gui()->game_tab_widget->setCurrentIndex(0);
+      queen()->game_tab_widget->setCurrentIndex(0);
       return;
     }
     cr = reinterpret_cast<city_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(cr);
+    queen()->game_tab_widget->setCurrentWidget(cr);
     cr->update_report();
   }
 }
@@ -1290,8 +1291,8 @@ void real_city_report_dialog_update(void *unused)
 
   if (gui()->is_repo_dlg_open("CTS")) {
     i = gui()->gimme_index_of("CTS");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
       cr->update_report();
     }
@@ -1309,8 +1310,8 @@ void real_city_report_update_city(struct city *pcity)
 
   if (gui()->is_repo_dlg_open("CTS")) {
     i = gui()->gimme_index_of("CTS");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
       cr->update_city(pcity);
     }
@@ -1329,7 +1330,7 @@ void popdown_city_report()
   if (gui()->is_repo_dlg_open("CTS")) {
     i = gui()->gimme_index_of("CTS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     cr = reinterpret_cast<city_report *>(w);
     cr->deleteLater();
   }

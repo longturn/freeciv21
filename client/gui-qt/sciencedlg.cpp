@@ -29,6 +29,7 @@
 #include "canvas.h"
 #include "citydlg.h"
 #include "fc_client.h"
+#include "page_game.h"
 #include "sciencedlg.h"
 #include "sidebar.h"
 #include "tooltips.h"
@@ -476,7 +477,7 @@ void science_report::init(bool raise)
 {
   gui()->gimme_place(this, "SCI");
   index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
 }
 
@@ -723,20 +724,20 @@ void real_science_report_dialog_update(void *unused)
   }
 
   if (blk) {
-    gui()->sw_science->keep_blinking = true;
-    gui()->sw_science->set_custom_labels(str);
-    gui()->sw_science->sblink();
+    queen()->sw_science->keep_blinking = true;
+    queen()->sw_science->set_custom_labels(str);
+    queen()->sw_science->sblink();
   } else {
-    gui()->sw_science->keep_blinking = false;
-    gui()->sw_science->set_custom_labels(str);
-    gui()->sw_science->update_final_pixmap();
+    queen()->sw_science->keep_blinking = false;
+    queen()->sw_science->set_custom_labels(str);
+    queen()->sw_science->update_final_pixmap();
   }
-  gui()->update_sidebar_tooltips();
+  queen()->update_sidebar_tooltips();
 
   if (gui()->is_repo_dlg_open("SCI")) {
     i = gui()->gimme_index_of("SCI");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
     sci_rep->update_report();
   }
@@ -754,7 +755,7 @@ void popdown_science_report()
   if (gui()->is_repo_dlg_open("SCI")) {
     i = gui()->gimme_index_of("SCI");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
     sci_rep->deleteLater();
   }
@@ -771,8 +772,8 @@ void science_report_dialog_redraw(void)
 
   if (gui()->is_repo_dlg_open("SCI")) {
     i = gui()->gimme_index_of("SCI");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       sci_rep = reinterpret_cast<science_report *>(w);
       sci_rep->redraw();
     }
@@ -797,12 +798,12 @@ void science_report_dialog_popup(bool raise)
     sci_rep->init(raise);
   } else {
     i = gui()->gimme_index_of("SCI");
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
-    if (gui()->game_tab_widget->currentIndex() == i) {
+    if (queen()->game_tab_widget->currentIndex() == i) {
       sci_rep->redraw();
     } else if (raise) {
-      gui()->game_tab_widget->setCurrentWidget(sci_rep);
+      queen()->game_tab_widget->setCurrentWidget(sci_rep);
     }
   }
 }

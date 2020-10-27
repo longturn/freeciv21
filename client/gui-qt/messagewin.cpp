@@ -21,6 +21,7 @@
 // gui-qt
 #include "fc_client.h"
 #include "mapview.h"
+#include "page_game.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**
@@ -119,13 +120,13 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
   }
   p = pos();
   gui()->qt_settings.chat_fwidth =
-      static_cast<float>(width()) / gui()->mapview_wdg->width();
+      static_cast<float>(width()) / queen()->mapview_wdg->width();
   gui()->qt_settings.chat_fheight =
-      static_cast<float>(height()) / gui()->mapview_wdg->height();
+      static_cast<float>(height()) / queen()->mapview_wdg->height();
   gui()->qt_settings.chat_fx_pos =
-      static_cast<float>(p.x()) / gui()->mapview_wdg->width();
+      static_cast<float>(p.x()) / queen()->mapview_wdg->width();
   gui()->qt_settings.chat_fy_pos =
-      static_cast<float>(p.y()) / gui()->mapview_wdg->height();
+      static_cast<float>(p.y()) / queen()->mapview_wdg->height();
 }
 
 /***********************************************************************/ /**
@@ -245,7 +246,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     if (QApplication::mouseButtons() == Qt::RightButton
         && pmsg->event == E_DIPLOMACY) {
       j = gui()->gimme_index_of("DDI");
-      gui()->game_tab_widget->setCurrentIndex(j);
+      queen()->game_tab_widget->setCurrentIndex(j);
     }
   }
   mesg_table->clearSelection();
@@ -359,14 +360,14 @@ void real_meswin_dialog_update(void *unused)
   int i, num;
   const struct message *pmsg;
 
-  if (gui()->infotab == NULL) {
+  if (queen()->infotab == NULL) {
     return;
   }
-  gui()->infotab->msgwdg->clr();
+  queen()->infotab->msgwdg->clr();
   num = meswin_get_num_messages();
   for (i = 0; i < num; i++) {
     pmsg = meswin_get_message(i);
-    gui()->infotab->msgwdg->msg(pmsg);
+    queen()->infotab->msgwdg->msg(pmsg);
   }
-  gui()->infotab->msgwdg->msg_update();
+  queen()->infotab->msgwdg->msg_update();
 }

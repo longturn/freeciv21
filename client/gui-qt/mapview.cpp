@@ -36,6 +36,7 @@
 #include "mapview.h"
 #include "messagewin.h"
 #include "minimap.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sciencedlg.h"
 #include "sidebar.h"
@@ -176,8 +177,8 @@ void map_view::update_cursor(enum cursor_type ct)
  **************************************************************************/
 void map_view::timer_event()
 {
-  if (gui()->infotab->underMouse() || gui()->minimapview_wdg->underMouse()
-      || gui()->sidebar_wdg->underMouse()) {
+  if (queen()->infotab->underMouse() || queen()->minimapview_wdg->underMouse()
+      || queen()->sidebar_wdg->underMouse()) {
     update_cursor(CURSOR_DEFAULT);
     return;
   }
@@ -350,7 +351,7 @@ void fc_client::update_info_label(void)
   if (update_info_timer->remainingTime() > 0) {
     return;
   }
-  update_sidebar_tooltips();
+  queen()->update_sidebar_tooltips();
   if (head_of_units_in_focus() != nullptr) {
     real_menus_update();
   }
@@ -358,8 +359,8 @@ void fc_client::update_info_label(void)
   s = QString(_("%1 \nT:%2"))
           .arg(calendar_text(), QString::number(game.info.turn));
 
-  sw_map->set_custom_labels(s);
-  sw_map->update_final_pixmap();
+  queen()->sw_map->set_custom_labels(s);
+  queen()->sw_map->update_final_pixmap();
 
   set_indicator_icons(client_research_sprite(), client_warming_sprite(),
                       client_cooling_sprite(), client_government_sprite());
@@ -378,12 +379,12 @@ void fc_client::update_info_label(void)
                    QString::number(
                        player_get_expected_income(client.conn.playing)));
     }
-    sw_economy->set_custom_labels(eco_info);
+    queen()->sw_economy->set_custom_labels(eco_info);
   } else {
-    sw_economy->set_custom_labels("");
+    queen()->sw_economy->set_custom_labels("");
   }
-  sw_tax->update_final_pixmap();
-  sw_economy->update_final_pixmap();
+  queen()->sw_tax->update_final_pixmap();
+  queen()->sw_economy->update_final_pixmap();
   delete update_info_timer;
   update_info_timer = nullptr;
 }
@@ -402,8 +403,8 @@ void fc_client::update_info_label(void)
  **************************************************************************/
 void update_unit_info_label(struct unit_list *punitlist)
 {
-  if (gui()->unitinfo_wdg->isVisible()) {
-    gui()->unitinfo_wdg->update_actions(nullptr);
+  if (queen()->unitinfo_wdg->isVisible()) {
+    queen()->unitinfo_wdg->update_actions(nullptr);
   }
 }
 
@@ -413,7 +414,7 @@ void update_unit_info_label(struct unit_list *punitlist)
  **************************************************************************/
 void update_mouse_cursor(enum cursor_type new_cursor_type)
 {
-  gui()->mapview_wdg->update_cursor(new_cursor_type);
+  queen()->mapview_wdg->update_cursor(new_cursor_type);
 }
 
 /**********************************************************************/ /**
@@ -422,8 +423,8 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
  **************************************************************************/
 void qtg_update_timeout_label(void)
 {
-  gui()->sw_endturn->set_custom_labels(QString(get_timeout_label_text()));
-  gui()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->set_custom_labels(QString(get_timeout_label_text()));
+  queen()->sw_endturn->update_final_pixmap();
 }
 
 /**********************************************************************/ /**
@@ -448,7 +449,7 @@ void update_turn_done_button(bool do_restore)
 void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
                          struct sprite *flake, struct sprite *gov)
 {
-  gui()->sw_indicators->update_final_pixmap();
+  queen()->sw_indicators->update_final_pixmap();
 }
 
 /**********************************************************************/ /**
@@ -458,7 +459,7 @@ void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
 static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
                             int pixel_height)
 {
-  gui()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width, pixel_height);
+  queen()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width, pixel_height);
 }
 
 /**********************************************************************/ /**
@@ -502,8 +503,8 @@ void flush_dirty(void)
     return;
   }
   if (num_dirty_rects == MAX_DIRTY_RECTS) {
-    flush_mapcanvas(0, 0, gui()->mapview_wdg->width(),
-                    gui()->mapview_wdg->height());
+    flush_mapcanvas(0, 0, queen()->mapview_wdg->width(),
+                    queen()->mapview_wdg->height());
   } else {
     int i;
 
@@ -520,13 +521,13 @@ void flush_dirty(void)
    The canvas should have already been flushed to screen via flush_dirty -
    all this function does is make sure the hardware has caught up.
  **************************************************************************/
-void gui_flush(void) { gui()->mapview_wdg->update(); }
+void gui_flush(void) { queen()->mapview_wdg->update(); }
 
 /**********************************************************************/ /**
    Update (refresh) the locations of the mapview scrollbars (if it uses
    them).
  **************************************************************************/
-void update_map_canvas_scrollbars(void) { gui()->mapview_wdg->update(); }
+void update_map_canvas_scrollbars(void) { queen()->mapview_wdg->update(); }
 
 /**********************************************************************/ /**
    Update the size of the sliders on the scrollbars.
@@ -589,7 +590,7 @@ void tileset_changed(void)
   if (gui()->is_repo_dlg_open("SCI")) {
     i = gui()->gimme_index_of("SCI");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
     sci_rep->reset_tree();
     sci_rep->update_report();

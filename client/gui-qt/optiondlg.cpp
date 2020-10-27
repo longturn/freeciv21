@@ -864,7 +864,7 @@ void option_gui_update(struct option *poption)
       update_nationset_combo();
     }
     if (strcmp(option_name(poption), "aifill") == 0) {
-
+      //sveinung
       //qobject_cast<page_pregame *>(gui()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
     }
   }

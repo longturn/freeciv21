@@ -19,6 +19,7 @@
 #include "pages_g.h"
 // gui-qt
 #include "fc_client.h"
+#include "page_game.h"
 #include "page_pregame.h"
 #include "qtg_cxxside.h"
 
@@ -110,4 +111,38 @@ void fc_client::start_new_game()
   if (is_server_running() || client_start_server()) {
     /* saved settings are sent in client/options.c load_settable_options() */
   }
+}
+
+/**********************************************************************/ /**
+   Update position
+ **************************************************************************/
+void fc_client::update_sidebar_position()
+{
+  // sveinung
+  // pages_layout[PAGE_GAME]->removeWidget(queen()->sidebar_wdg);
+  // if (gui_options.gui_qt_sidebar_left) {
+  //   pages_layout[PAGE_GAME]->addWidget(queen()->sidebar_wdg, 1, 0);
+  // } else {
+  //   pages_layout[PAGE_GAME]->addWidget(sidebar_wdg, 1, 2);
+  // }
+}
+
+/**********************************************************************/ /**
+   Inserts tab widget to game view page
+ **************************************************************************/
+int fc_client::add_game_tab(QWidget *widget)
+{
+  int i;
+
+  i = queen()->game_tab_widget->addWidget(widget);
+  queen()->game_tab_widget->setCurrentWidget(widget);
+  return i;
+}
+
+/**********************************************************************/ /**
+   Removes given tab widget from game page
+ **************************************************************************/
+void fc_client::rm_game_tab(int index)
+{
+  queen()->game_tab_widget->removeWidget(queen()->game_tab_widget->widget(index));
 }

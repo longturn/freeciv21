@@ -16,6 +16,7 @@
 #include <QPushButton>
 // client
 #include "voteinfo.h"
+#include "page_game.h"
 #include "page_pregame.h"
 // gui-qt
 #include "fc_client.h"
@@ -222,9 +223,9 @@ void voteinfo_gui_update(void)
   }
   if (gui()->current_page() == PAGE_GAME) {
 
-    if (gui()->x_vote != NULL) {
-      gui()->x_vote->show();
-      gui()->x_vote->update_vote();
+    if (queen()->x_vote != NULL) {
+      queen()->x_vote->show();
+      queen()->x_vote->update_vote();
     }
   }
 }
