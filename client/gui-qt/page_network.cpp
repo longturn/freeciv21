@@ -32,9 +32,6 @@ page_network::page_network(QWidget *parent, fc_client *gui) : QWidget(parent), m
   ui.setupUi(this);
 
   QHeaderView *header;
-  QLabel *connect_msg;
-  QLabel *lan_label;
-  QPushButton *network_button;
 
   ui.connect_password_edit->setEchoMode(QLineEdit::Password);
   ui.connect_confirm_password_edit->setEchoMode(QLineEdit::Password);
@@ -494,11 +491,8 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   QTableWidgetItem *item;
   QItemSelectionModel *tw;
 
-  client_pages i = king->current_page();
   const struct server *pserver = NULL;
-  int ii = 0;
-  int k, col, n, nat_y, nat_x;
-  struct section_file *sf;
+  int k, col, n;
   struct srv_list *srvrs;
 
   if (indexes.isEmpty()) {

@@ -509,7 +509,6 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
 void fc_game_tab_widget::current_changed(int index)
 {
   QList<fc_sidewidget *> objs;
-  fc_sidewidget *sw;
 
   if (king()->is_closing()) {
     return;

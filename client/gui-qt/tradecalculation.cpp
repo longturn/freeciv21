@@ -65,8 +65,6 @@ void trade_generator::add_all_cities()
  **************************************************************************/
 void trade_generator::clear_trade_planing()
 {
-  struct city *pcity;
-  trade_city *tc;
   for (auto pcity : qAsConst(virtual_cities)) {
     destroy_city_virtual(pcity);
   }
@@ -96,8 +94,6 @@ void trade_generator::add_city(struct city *pcity)
 void trade_generator::add_tile(struct tile *ptile)
 {
   struct city *pcity;
-  trade_city *tc;
-
   pcity = tile_city(ptile);
 
   for (auto tc : qAsConst(cities)) {
@@ -128,8 +124,6 @@ void trade_generator::add_tile(struct tile *ptile)
  **************************************************************************/
 void trade_generator::remove_city(struct city *pcity)
 {
-  trade_city *tc;
-
   for (auto tc : qAsConst(cities)) {
     if (tc->city->tile == pcity->tile) {
       cities.removeAll(tc);
@@ -146,9 +140,6 @@ void trade_generator::remove_city(struct city *pcity)
  **************************************************************************/
 void trade_generator::remove_virtual_city(tile *ptile)
 {
-  struct city *c;
-  trade_city *tc;
-
   for (auto c : qAsConst(virtual_cities)) {
     if (c->tile == ptile) {
       virtual_cities.removeAll(c);
@@ -170,8 +161,6 @@ void trade_generator::remove_virtual_city(tile *ptile)
  **************************************************************************/
 void trade_generator::calculate()
 {
-  trade_city *tc;
-  trade_city *ttc;
   int i;
   bool tdone;
 
@@ -237,7 +226,6 @@ void trade_generator::calculate()
  **************************************************************************/
 int trade_generator::find_over_max(struct city *pcity = nullptr)
 {
-  trade_city *tc;
   int max = 0;
 
   for (auto tc : qAsConst(cities)) {
@@ -253,7 +241,6 @@ int trade_generator::find_over_max(struct city *pcity = nullptr)
  **************************************************************************/
 trade_city *trade_generator::find_most_free()
 {
-  trade_city *tc;
   trade_city *rc = nullptr;
   int max = 0;
 
@@ -357,9 +344,6 @@ bool tradecity_rand(const trade_city *t1, const trade_city *t2)
  **************************************************************************/
 void trade_generator::find_certain_routes()
 {
-  trade_city *tc;
-  trade_city *ttc;
-
   for (auto tc : qAsConst(cities)) {
     if (tc->done || tc->over_max > 0) {
       continue;

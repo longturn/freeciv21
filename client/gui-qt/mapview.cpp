@@ -77,8 +77,6 @@ void draw_calculated_trade_routes(QPainter *painter)
   int dx, dy;
   float w, h;
   float x1, y1, x2, y2;
-  qtiles qgilles;
-  struct city *pcity;
   struct color *pcolor;
   QPen pen;
 

@@ -57,15 +57,15 @@ void reduce_mod(int &mod, int &val)
  ***************************************************************************/
 fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
                              const QString &pg, pfcn_bool func, int type)
-    : QWidget(), keep_blinking(false), blink(false), disabled(false),
-      left_click(func), desc(label), standard(type), hover(false),
-      right_click(nullptr), wheel_down(nullptr), wheel_up(nullptr), page(pg)
+    : QWidget(), blink(false), keep_blinking(false), disabled(false),
+      standard(type), page(pg), hover(false), right_click(nullptr),
+      wheel_down(nullptr), wheel_up(nullptr), left_click(func),
+      def_pixmap(pix), desc(label)
 {
   if (pix == nullptr) {
     pix = new QPixmap(12, 12);
     pix->fill(Qt::black);
   }
-  def_pixmap = pix;
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
   sfont = new QFont(*fc_font::instance()->get_font(fonts::notify_label));

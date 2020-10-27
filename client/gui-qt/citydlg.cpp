@@ -1094,8 +1094,9 @@ void unit_info::clear_layout()
    and was created only to catch mouse events
  ****************************************************************************/
 city_label::city_label(int t, QWidget *parent)
-    : QLabel(parent), type(t), pcity(nullptr)
+    : QLabel(parent), pcity(nullptr)
 {
+  type = t;
 }
 
 /************************************************************************/ /**

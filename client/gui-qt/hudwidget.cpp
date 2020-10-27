@@ -1923,7 +1923,6 @@ hud_battle_log::~hud_battle_log()
 ****************************************************************************/
 void hud_battle_log::update_size()
 {
-  hud_unit_combat *hudc;
   int w = 3 * tileset_unit_height(tileset) / 2 * scale;
 
   king()->qt_settings.battlelog_scale = scale;
@@ -2012,9 +2011,6 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
  ****************************************************************************/
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
-  hud_unit_combat *hudc;
-  hud_unit_combat *hupdate;
-
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
     for (auto hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
@@ -2037,8 +2033,6 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
  ****************************************************************************/
 void hud_battle_log::showEvent(QShowEvent *event)
 {
-  hud_unit_combat *hupdate;
-
   for (auto hupdate : qAsConst(lhuc)) {
     hupdate->set_fading(1.0);
   }

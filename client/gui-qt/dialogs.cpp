@@ -1710,7 +1710,6 @@ void popup_action_selection(struct unit *actor_unit,
 {
   struct astring title = ASTRING_INIT, text = ASTRING_INIT;
   choice_dialog *cd;
-  qtiles caras;
   QVariant qv1, qv2;
   pfcn_void func;
   struct city *actor_homecity;

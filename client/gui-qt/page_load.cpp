@@ -194,17 +194,13 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
   QModelIndexList indexes = selected.indexes();
   QStringList sl;
   QModelIndex index;
-  QTableWidgetItem *item;
-  QItemSelectionModel *tw;
   QVariant qvar;
   QString str_pixmap;
 
   const char *terr_name;
-  const struct server *pserver = NULL;
   int ii = 0;
-  int k, col, n, nat_y, nat_x;
+  int nat_y, nat_x;
   struct section_file *sf;
-  struct srv_list *srvrs;
   QByteArray fn_bytes;
 
   if (indexes.isEmpty()) {

@@ -420,7 +420,6 @@ void city_widget::clear_worlist()
 {
   struct worklist empty;
   worklist_init(&empty);
-  struct city *pcity;
 
   for (auto pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
@@ -433,8 +432,6 @@ void city_widget::clear_worlist()
  ***************************************************************************/
 void city_widget::buy()
 {
-  struct city *pcity;
-
   for (auto pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
     cityrep_buy(pcity);
@@ -470,7 +467,6 @@ void city_widget::display_list_menu(const QPoint)
   bool select_only = false;
   char buf[200];
   int sell_gold;
-  struct city *pcity;
   QMenu *list_menu;
   QAction cty_view(style()->standardIcon(QStyle::SP_CommandLink),
                    Q_("?verb:View"), 0);
@@ -556,7 +552,6 @@ void city_widget::display_list_menu(const QPoint)
     const char *imprname;
     const struct impr_type *building;
     Impr_type_id impr_id;
-    struct city *pcity;
     int city_id;
     bool need_clear = true;
     bool sell_ask = true;
@@ -860,7 +855,6 @@ void city_widget::select_same_island()
   QItemSelection selection;
   QModelIndex i;
   struct city *pcity;
-  struct city *pscity;
   QVariant qvar;
 
   for (int j = 0; j < filter_model->rowCount(); j++) {
@@ -1173,7 +1167,6 @@ void city_widget::cities_selected(const QItemSelection &sl,
                                   const QItemSelection &ds)
 {
   QModelIndexList indexes = selectionModel()->selectedIndexes();
-  QModelIndex i;
   QVariant qvar;
   struct city *pcity;
 

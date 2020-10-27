@@ -292,7 +292,6 @@ go_act_menu::~go_act_menu()
  **************************************************************************/
 static void reset_menu_and_sub_menues(QMenu *menu)
 {
-  QAction *action;
   QList<QAction *> actions = menu->actions();
   /* Delete each existing menu item. */
   for (auto action : qAsConst(actions)) {
@@ -507,7 +506,6 @@ void go_act_menu::update_all()
  **************************************************************************/
 struct tile *mr_menu::find_last_unit_pos(unit *punit, int pos)
 {
-  qfc_delayed_unit_item *fui;
   struct tile *ptile = nullptr;
   struct unit *zunit;
   struct unit *qunit;
@@ -1313,7 +1311,7 @@ void mr_menu::execute_shortcut(int sid)
 
   menu_list = findChildren<QMenu *>();
   for (const QMenu *m : qAsConst(menu_list)) {
-    QList<QAction *> actions;
+    QList<QAction *> actions = m->actions();
     for (QAction *a : actions) {
       if (a->shortcut() == seq && a->isEnabled()) {
         a->activate(QAction::Trigger);
@@ -2298,7 +2296,6 @@ void mr_menu::slot_clear_trade() { king()->trade_gen.clear_trade_planing(); }
  **************************************************************************/
 void mr_menu::slot_autocaravan()
 {
-  qtiles gilles;
   struct unit *punit;
   struct city *homecity;
   struct tile *home_tile;
@@ -2413,7 +2410,6 @@ void mr_menu::slot_delayed_goto()
  **************************************************************************/
 void mr_menu::slot_execute_orders()
 {
-  qfc_delayed_unit_item *fui;
   struct unit *punit;
   struct tile *last_tile;
   struct tile *new_tile;

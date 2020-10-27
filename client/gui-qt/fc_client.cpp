@@ -59,11 +59,11 @@ extern void write_shortcuts();
    Constructor
  ****************************************************************************/
 fc_client::fc_client()
-    : QMainWindow(), central_layout(nullptr), server_notifier(nullptr),
-      status_bar(nullptr), status_bar_label(nullptr), menu_bar(nullptr),
-      central_wdg(nullptr), opened_dialog(nullptr), current_file(""),
-      quitting(false), interface_locked(false), map_scale(1.0f),
-      map_font_scale(true)
+    : QMainWindow(), status_bar_label(nullptr), server_notifier(nullptr),
+      central_layout(nullptr), status_bar(nullptr), current_file(""),
+      quitting(false), opened_dialog(nullptr), central_wdg(nullptr),
+      interface_locked(false), map_font_scale(true), map_scale(1.0f),
+      menu_bar(nullptr)
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
 
@@ -179,7 +179,6 @@ void fc_client::closing() { quitting = true; }
  ****************************************************************************/
 void fc_client::switch_page(int new_pg)
 {
-  char buf[256];
   enum client_pages new_page;
   int i_page;
 

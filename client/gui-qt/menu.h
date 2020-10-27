@@ -78,7 +78,11 @@ enum delay_order { D_GOTO, D_NUKE, D_PARADROP, D_FORT };
 class qfc_rally_list {
 public:
   qfc_rally_list()
-      : rally_city(nullptr), hover_tile(false), hover_city(false) {}
+  {
+    rally_city = nullptr;
+    hover_tile = false;
+    hover_city = false;
+  }
   bool hover_tile;
   bool hover_city;
   struct city *rally_city;
@@ -180,6 +184,7 @@ class mr_menu : public QMenuBar {
   QHash<munit, QAction *> menu_list;
   qfc_units_list units_list;
   bool initialized;
+
 public:
   mr_menu();
   void setup_menus();

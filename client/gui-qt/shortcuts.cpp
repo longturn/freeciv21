@@ -370,7 +370,6 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
  **************************************************************************/
 bool fc_shortcut_popup::check_if_exist()
 {
-  fc_shortcut *fsc;
   QString desc;
   int id = 0;
 
@@ -548,7 +547,6 @@ fc_shortcuts_dialog::~fc_shortcuts_dialog() {}
  **************************************************************************/
 void fc_shortcuts_dialog::init()
 {
-  fc_shortcut *sc;
   QPushButton *but;
   QScrollArea *scroll;
   QSize size;
