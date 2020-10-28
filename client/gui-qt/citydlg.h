@@ -143,12 +143,13 @@ class unit_info : public QFrame {
   Q_OBJECT
 
 public:
-  unit_info(bool supp);
+  unit_info(QWidget *);
   ~unit_info();
   void add_item(unit_item *item);
   void init_layout();
   void update_units();
   void clear_layout();
+  void set_supp(bool);
   QHBoxLayout *layout;
   QList<unit_item *> unit_list;
 
@@ -353,7 +354,7 @@ class city_label : public QLabel {
   Q_OBJECT
 
 public:
-  city_label(int type, QWidget *parent = 0);
+  city_label(QWidget *parent = 0);
   void set_city(struct city *pcity);
 
 private:
@@ -364,6 +365,7 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 };
 
+#include "ui_citydlg.h"
 /****************************************************************************
   City dialog
 ****************************************************************************/
@@ -371,63 +373,17 @@ class city_dialog : public qfc_dialog {
 
   Q_OBJECT
   Q_DISABLE_COPY(city_dialog);
-
-  bool happines_shown;
-  QHBoxLayout *single_page_layout;
-  QHBoxLayout *happiness_layout;
-  QSplitter *prod_unit_splitter;
-  QSplitter *central_left_splitter;
-  QSplitter *central_splitter;
-  QHBoxLayout *leftbot_layout;
-  QWidget *prod_happ_widget;
-  QWidget *top_widget;
-  QVBoxLayout *left_layout;
-  city_map *view;
-  city_label *citizens_label;
-  city_label *lab_table[6];
+  Ui::FormCityDlg ui;
+  //city_label *citizens_label;
+  //city_label *lab_table[6];
   QGridLayout *info_grid_layout;
   QGroupBox *info_labels_group;
-  QGroupBox *happiness_group;
-  QWidget *happiness_widget;
   QWidget *info_widget;
   QLabel *qlt[NUM_INFO_FIELDS];
-  QLabel *cma_info_text;
-  QLabel *cma_result;
-  QLabel *cma_result_pix;
-  QLabel *supp_units;
-  QLabel *curr_units;
-  QLabel *curr_impr;
-  progress_bar *production_combo_p;
-  QTableWidget *p_table_p;
-  QTableWidget *nationality_table;
-  QTableWidget *cma_table;
-  QCheckBox *cma_celeb_checkbox;
-  QCheckBox *future_targets;
-  QCheckBox *show_units;
-  QCheckBox *show_buildings;
-  QCheckBox *show_wonders;
-  QRadioButton *r1, *r2, *r3, *r4;
-  QPushButton *button;
-  QPushButton *buy_button;
-  QPushButton *cma_enable_but;
-  QPushButton *next_city_but;
-  QPushButton *prev_city_but;
-  QPushButton *work_next_but;
-  QPushButton *work_prev_but;
-  QPushButton *work_add_but;
-  QPushButton *work_rem_but;
-  QPushButton *but_menu_worklist;
-  QPushButton *happiness_button;
-  QPushButton *zoom_in_button;
-  QPushButton *zoom_out_button;
   QPixmap *citizen_pixmap;
-  unit_info *current_units;
-  unit_info *supported_units;
-  impr_info *city_buildings;
-  QPushButton *lcity_name;
+  bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
-  QSlider *slider_tab[2 * O_LAST + 2];
-
+  //QPushButton *lcity_name;
 public:
   static city_dialog *instance();
   static void drop();
