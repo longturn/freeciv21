@@ -88,6 +88,7 @@ public:
   QList<unittype_item *> unittype_list;
 
 protected:
+  void mousePressEvent(QMouseEvent *event);
   void paintEvent(QPaintEvent *event);
 };
 

@@ -134,30 +134,27 @@ void unittype_item::init_img()
  ****************************************************************************/
 void unittype_item::upgrade_units()
 {
-  char buf[1024];
-  char buf2[2048];
+  QString b, c;
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   int price;
-  QString s2;
   const struct unit_type *upgrade;
   const Unit_type_id type = utype_number(utype);
 
   upgrade = can_upgrade_unittype(client_player(), utype);
   price = unit_upgrade_price(client_player(), utype, upgrade);
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              PL_("Treasury contains %d gold.", "Treasury contains %d gold.",
-                  client_player()->economic.gold),
-              client_player()->economic.gold);
-  fc_snprintf(buf2, ARRAY_SIZE(buf2),
-              PL_("Upgrade as many %s to %s as possible "
-                  "for %d gold each?\n%s",
-                  "Upgrade as many %s to %s as possible "
-                  "for %d gold each?\n%s",
-                  price),
-              utype_name_translation(utype), utype_name_translation(upgrade),
-              price, buf);
-  s2 = QString(buf2);
-  ask->set_text_title(s2, _("Upgrade Obsolete Units"));
+  b = QString::asprintf(PL_("Treasury contains %d gold.",
+                            "Treasury contains %d gold.",
+                            client_player()->economic.gold),
+                        client_player()->economic.gold);
+  c = QString::asprintf(PL_("Upgrade as many %s to %s as possible "
+                            "for %d gold each?\n%s",
+                            "Upgrade as many %s to %s as possible "
+                            "for %d gold each?\n%s",
+                            price),
+                        utype_name_translation(utype),
+                        utype_name_translation(upgrade), price,
+                        b.toUtf8().data());
+  ask->set_text_title(c, _("Upgrade Obsolete Units"));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
   ask->setDefaultButton(QMessageBox::Cancel);
   ask->setAttribute(Qt::WA_DeleteOnClose);
@@ -449,6 +446,17 @@ void units_reports::update_units(bool show)
   }
   layout->update();
   updateGeometry();
+}
+
+/************************************************************************/ /**
+   Mouse press event -activates unit and closes dialog
+ ****************************************************************************/
+void units_reports::mousePressEvent(QMouseEvent *event)
+{
+  if (event->button() == Qt::RightButton) {
+    event->accept();
+    close();
+  }
 }
 
 /************************************************************************/ /**
