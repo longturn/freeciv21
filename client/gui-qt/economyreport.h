@@ -11,30 +11,17 @@
 #ifndef FC__ECONOMYREPORT_H
 #define FC__ECONOMYREPORT_H
 
-// Qt
-#include <QLabel>
-#include <QPushButton>
-#include <QWidget>
+#include "ui_economyreport.h"
+
 // client
 #include "climisc.h"
 #include "repodlgs_g.h"
-
-class QItemSelection;
-class QLabel;
-class QObject;
-class QPushButton;
-class QTableWidget;
 
 /****************************************************************************
   Tab widget to display economy report (F5)
 ****************************************************************************/
 class eco_report : public QWidget {
   Q_OBJECT
-  QPushButton *disband_button;
-  QPushButton *sell_button;
-  QPushButton *sell_redun_button;
-  QTableWidget *eco_widget;
-  QLabel *eco_label;
 
 public:
   eco_report();
@@ -48,7 +35,7 @@ private:
   int max_row;
   cid uid;
   int counter;
-
+  Ui::FormEconomyReport ui;
 private slots:
   void disband_units();
   void sell_buildings();

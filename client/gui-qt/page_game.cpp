@@ -174,8 +174,6 @@ void page_game::update_sidebar_position()
  **************************************************************************/
 void page_game::update_info_label(void)
 {
-  QString s, eco_info;
-
   if (king()->current_page() != PAGE_GAME) {
     return;
   }
@@ -183,12 +181,16 @@ void page_game::update_info_label(void)
     update_info_timer = new QTimer();
     update_info_timer->setSingleShot(true);
     connect(update_info_timer, &QTimer::timeout, this,
-            &page_game::update_info_label);
+            &page_game::update_info_label_timeout);
     update_info_timer->start(300);
     return;
   }
+}
 
-  if (update_info_timer->remainingTime() > 0) {
+void page_game::update_info_label_timeout(void)
+{
+  QString s, eco_info;
+  if (update_info_timer->remainingTime() != -1) {
     return;
   }
   update_sidebar_tooltips();

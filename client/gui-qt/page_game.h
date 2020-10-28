@@ -60,7 +60,7 @@ public:
   int gimme_index_of(const QString &str);
   void remove_repo_dlg(const QString &str);
   bool is_repo_dlg_open(const QString &str);
-
+  void update_info_label();
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
   fc_sidebar *sidebar_wdg;
@@ -77,8 +77,8 @@ public:
   fc_sidewidget *sw_endturn;
   fc_sidewidget *sw_science;
 public slots:
-  void update_info_label();
 private slots:
+  void update_info_label_timeout();
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;

@@ -9,10 +9,6 @@
 **************************************************************************/
 
 #include "economyreport.h"
-// Qt
-#include <QApplication>
-#include <QGridLayout>
-#include <QHeaderView>
 // client
 #include "sprite.h"
 // gui-qt
@@ -25,53 +21,29 @@
  ****************************************************************************/
 eco_report::eco_report() : QWidget()
 {
-  QHeaderView *header;
-  QGridLayout *eco_layout = new QGridLayout;
-  eco_widget = new QTableWidget;
-  disband_button = new QPushButton;
-  sell_button = new QPushButton;
-  sell_redun_button = new QPushButton;
-  eco_label = new QLabel;
+  ui.setupUi(this);
 
   QStringList slist;
   slist << _("Type") << Q_("?Building or Unit type:Name") << _("Redundant")
-        << _("Count") << _("Cost") << _("U Total");
-  eco_widget->setColumnCount(slist.count());
-  eco_widget->setHorizontalHeaderLabels(slist);
-  eco_widget->setProperty("showGrid", "false");
-  eco_widget->setProperty("selectionBehavior", "SelectRows");
-  eco_widget->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  eco_widget->horizontalHeader()->resizeSections(QHeaderView::Stretch);
-  eco_widget->verticalHeader()->setVisible(false);
-  eco_widget->setSelectionMode(QAbstractItemView::SingleSelection);
-  eco_widget->setSortingEnabled(true);
-  header = eco_widget->horizontalHeader();
-  header->setSectionResizeMode(1, QHeaderView::Stretch);
-  header->setStretchLastSection(true);
-  disband_button->setText(_("Disband"));
-  disband_button->setEnabled(false);
-  sell_button->setText(_("Sell All"));
-  sell_button->setEnabled(false);
-  sell_redun_button->setText(_("Sell Redundant"));
-  sell_redun_button->setEnabled(false);
-  eco_layout->addWidget(eco_widget, 1, 0, 5, 5);
-  eco_layout->addWidget(disband_button, 0, 0, 1, 1);
-  eco_layout->addWidget(sell_button, 0, 1, 1, 1);
-  eco_layout->addWidget(sell_redun_button, 0, 2, 1, 1);
-  eco_layout->addWidget(eco_label, 6, 0, 1, 5);
+        << _("Count") << _("Cost") << _("U Total") << "";
+  ui.eco_widget->setColumnCount(slist.count());
+  ui.eco_widget->setHorizontalHeaderLabels(slist);
+  ui.bdisband->setText(_("Disband"));
+  ui.bsell->setText(_("Sell All"));
+  ui.bredun->setText(_("Sell Redundant"));
 
-  connect(disband_button, &QAbstractButton::pressed, this,
+  connect(ui.bdisband, &QAbstractButton::pressed, this,
           &eco_report::disband_units);
-  connect(sell_button, &QAbstractButton::pressed, this,
+  connect(ui.bsell, &QAbstractButton::pressed, this,
           &eco_report::sell_buildings);
-  connect(sell_redun_button, &QAbstractButton::pressed, this,
+  connect(ui.bredun, &QAbstractButton::pressed, this,
           &eco_report::sell_redundant);
-  connect(eco_widget->selectionModel(),
+  connect(ui.eco_widget->selectionModel(),
           SIGNAL(selectionChanged(const QItemSelection &,
                                   const QItemSelection &)),
           SLOT(selection_changed(const QItemSelection &,
                                  const QItemSelection &)));
-  setLayout(eco_layout);
+  setLayout(ui.eco_layout);
 }
 
 /************************************************************************/ /**
@@ -108,8 +80,8 @@ void eco_report::update_report()
   QPixmap pix_scaled;
   struct sprite *sprite;
 
-  eco_widget->setRowCount(0);
-  eco_widget->clearContents();
+  ui.eco_widget->setRowCount(0);
+  ui.eco_widget->clearContents();
   get_economy_report_data(building_entries, &entries_used, &building_total,
                           &tax);
   for (i = 0; i < entries_used; i++) {
@@ -128,7 +100,7 @@ void eco_report::update_report()
     }
     cid id = cid_encode_building(pimprove);
 
-    eco_widget->insertRow(i);
+    ui.eco_widget->insertRow(i);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
       switch (j) {
@@ -154,7 +126,7 @@ void eco_report::update_report()
         break;
       }
       item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-      eco_widget->setItem(i, j, item);
+      ui.eco_widget->setItem(i, j, item);
     }
   }
   max_row = i;
@@ -171,7 +143,7 @@ void eco_report::update_report()
     }
     id = cid_encode_unit(putype);
 
-    eco_widget->insertRow(i + max_row);
+    ui.eco_widget->insertRow(i + max_row);
     for (j = 0; j < 6; j++) {
       item = new QTableWidgetItem;
       item->setTextAlignment(Qt::AlignHCenter);
@@ -201,13 +173,15 @@ void eco_report::update_report()
         break;
       }
       item->setTextAlignment(Qt::AlignVCenter | Qt::AlignHCenter);
-      eco_widget->setItem(max_row + i, j, item);
+      ui.eco_widget->setItem(max_row + i, j, item);
     }
   }
   max_row = max_row + i;
   fc_snprintf(buf, sizeof(buf), _("Income: %d    Total Costs: %d"), tax,
               building_total + unit_total);
-  eco_label->setText(buf);
+  ui.eco_label->setText(buf);
+  // ui.eco_widget->resizeRowsToContents();
+  ui.eco_widget->resizeColumnsToContents();
 }
 
 /************************************************************************/ /**
@@ -221,9 +195,9 @@ void eco_report::selection_changed(const QItemSelection &sl,
   QVariant qvar;
   struct universal selected;
   const struct impr_type *pimprove;
-  disband_button->setEnabled(false);
-  sell_button->setEnabled(false);
-  sell_redun_button->setEnabled(false);
+  ui.bdisband->setEnabled(false);
+  ui.bsell->setEnabled(false);
+  ui.bredun->setEnabled(false);
 
   if (sl.isEmpty()) {
     return;
@@ -231,26 +205,26 @@ void eco_report::selection_changed(const QItemSelection &sl,
 
   curr_row = sl.indexes().at(0).row();
   if (curr_row >= 0 && curr_row <= max_row) {
-    itm = eco_widget->item(curr_row, 0);
+    itm = ui.eco_widget->item(curr_row, 0);
     qvar = itm->data(Qt::UserRole);
     uid = qvar.toInt();
     selected = cid_decode(uid);
     switch (selected.kind) {
     case VUT_IMPROVEMENT:
       pimprove = selected.value.building;
-      counter = eco_widget->item(curr_row, 3)->text().toInt();
+      counter = ui.eco_widget->item(curr_row, 3)->text().toInt();
       if (can_sell_building(pimprove)) {
-        sell_button->setEnabled(true);
+        ui.bsell->setEnabled(true);
       }
-      itm = eco_widget->item(curr_row, 2);
+      itm = ui.eco_widget->item(curr_row, 2);
       i = itm->text().toInt();
       if (i > 0) {
-        sell_redun_button->setEnabled(true);
+        ui.bredun->setEnabled(true);
       }
       break;
     case VUT_UTYPE:
-      counter = eco_widget->item(curr_row, 3)->text().toInt();
-      disband_button->setEnabled(true);
+      counter = ui.eco_widget->item(curr_row, 3)->text().toInt();
+      ui.bdisband->setEnabled(true);
       break;
     default:
       log_error("Not supported type: %d.", selected.kind);
@@ -344,8 +318,7 @@ void eco_report::sell_buildings()
 void eco_report::sell_redundant()
 {
   struct universal selected;
-  char buf[1024];
-  QString s;
+  QString s, buf;
   hud_message_box *ask = new hud_message_box(king()->central_wdg);
   const struct impr_type *pimprove;
   Impr_type_id impr_id;
@@ -354,10 +327,9 @@ void eco_report::sell_redundant()
   pimprove = selected.value.building;
   impr_id = improvement_number(pimprove);
 
-  fc_snprintf(buf, ARRAY_SIZE(buf),
-              _("Do you really wish to sell "
-                "every redundant %s (%d total)?"),
-              improvement_name_translation(pimprove), counter);
+  buf = QString::asprintf(_("Do you really wish to sell "
+                            "every redundant %s (%d total)?"),
+                          improvement_name_translation(pimprove), counter);
 
   ask->set_text_title(s, _("Sell Improvements"));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
