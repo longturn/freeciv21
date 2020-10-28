@@ -10,6 +10,7 @@
 
 #ifndef FC__PLRDLG_H
 #define FC__PLRDLG_H
+
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
@@ -109,8 +110,9 @@ class plr_widget : public QTreeView {
   struct player *selected_player;
 
 public:
-  plr_widget(plr_report *pr);
+  plr_widget(QWidget *);
   ~plr_widget();
+  void set_pr_rep(plr_report *pr);
   void restore_selection();
   plr_model *get_model() const;
   QString intel_str;
@@ -126,23 +128,12 @@ private:
   void hide_columns();
 };
 
+#include "ui_plrdlg.h"
 /***************************************************************************
   Widget to show as tab widget in players view.
 ***************************************************************************/
 class plr_report : public QWidget {
   Q_OBJECT
-  plr_widget *plr_wdg;
-  QLabel *plr_label;
-  QLabel *ally_label;
-  QLabel *tech_label;
-  QSplitter *v_splitter;
-  QSplitter *h_splitter;
-  QPushButton *meet_but;
-  QPushButton *cancel_but;
-  QPushButton *withdraw_but;
-  QPushButton *toggle_ai_but;
-  QVBoxLayout *layout;
-  QHBoxLayout *hlayout;
 
 public:
   plr_report();
@@ -152,14 +143,13 @@ public:
   void call_meeting();
 
 private:
+  Ui::FormPlrDlg ui;
   struct player *other_player;
   int index;
 private slots:
   void req_meeeting();
-  void req_caancel_threaty(); /** somehow autoconnect feature messes
-                               *  here and names are bit odd to cheat
-                               *  autoconnect */
-  void req_wiithdrw_vision();
+  void plr_cancel_threaty();
+  void plr_withdraw_vision();
   void toggle_ai_mode();
 };
 

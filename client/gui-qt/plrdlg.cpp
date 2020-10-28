@@ -10,15 +10,9 @@
 
 #include "plrdlg.h"
 // Qt
-#include <QApplication>
-#include <QHeaderView>
-#include <QLabel>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QPushButton>
 #include <QSortFilterProxyModel>
-#include <QSplitter>
-#include <QVBoxLayout>
 // utility
 #include "fcintl.h"
 // common
@@ -296,9 +290,8 @@ void plr_model::populate()
 /**********************************************************************/ /**
    Constructor for plr_widget
  **************************************************************************/
-plr_widget::plr_widget(plr_report *pr) : QTreeView()
+plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
 {
-  plr = pr;
   other_player = NULL;
   selected_player = nullptr;
   pid = new plr_item_delegate(this);
@@ -320,6 +313,7 @@ plr_widget::plr_widget(plr_report *pr) : QTreeView()
   hide_columns();
   connect(header(), &QWidget::customContextMenuRequested, this,
           &plr_widget::display_header_menu);
+
   connect(
       selectionModel(),
       SIGNAL(
@@ -327,6 +321,10 @@ plr_widget::plr_widget(plr_report *pr) : QTreeView()
       SLOT(nation_selected(const QItemSelection &, const QItemSelection &)));
 }
 
+void plr_widget::set_pr_rep(plr_report *pr)
+{
+  plr = pr;
+}
 /**********************************************************************/ /**
    Restores selection of previously selected nation
  **************************************************************************/
@@ -661,65 +659,28 @@ plr_widget::~plr_widget()
  **************************************************************************/
 plr_report::plr_report() : QWidget()
 {
-  v_splitter = new QSplitter(Qt::Vertical);
-  h_splitter = new QSplitter(Qt::Horizontal);
-  layout = new QVBoxLayout;
-  hlayout = new QHBoxLayout;
-  plr_wdg = new plr_widget(this);
-  plr_label = new QLabel;
-  plr_label->setFrameStyle(QFrame::StyledPanel);
-  plr_label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  plr_label->setWordWrap(true);
-  plr_label->setTextFormat(Qt::RichText);
-  ally_label = new QLabel;
-  ally_label->setFrameStyle(QFrame::StyledPanel);
-  ally_label->setTextFormat(Qt::RichText);
-  ally_label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  ally_label->setWordWrap(true);
-  tech_label = new QLabel;
-  tech_label->setTextFormat(Qt::RichText);
-  tech_label->setFrameStyle(QFrame::StyledPanel);
-  tech_label->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-  tech_label->setWordWrap(true);
-  meet_but = new QPushButton;
-  meet_but->setText(_("Meet"));
-  cancel_but = new QPushButton;
-  cancel_but->setText(_("Cancel Treaty"));
-  withdraw_but = new QPushButton;
-  withdraw_but->setText(_("Withdraw Vision"));
-  toggle_ai_but = new QPushButton;
-  toggle_ai_but->setText(_("Toggle AI Mode"));
-  meet_but->setDisabled(true);
-  cancel_but->setDisabled(true);
-  withdraw_but->setDisabled(true);
-  toggle_ai_but->setDisabled(true);
-  v_splitter->addWidget(plr_wdg);
-  h_splitter->addWidget(plr_label);
-  h_splitter->addWidget(ally_label);
-  h_splitter->addWidget(tech_label);
-  v_splitter->addWidget(h_splitter);
-  layout->addWidget(v_splitter);
-  hlayout->addWidget(meet_but);
-  hlayout->addWidget(cancel_but);
-  hlayout->addWidget(withdraw_but);
-  hlayout->addWidget(toggle_ai_but);
-  hlayout->addStretch();
-  layout->addLayout(hlayout);
-  connect(meet_but, &QAbstractButton::pressed, this,
+  ui.setupUi(this);
+
+  ui.meet_but->setText(_("Meet"));
+  ui.cancel_but->setText(_("Cancel Treaty"));
+  ui.withdraw_but->setText(_("Withdraw Vision"));
+  ui.toggle_ai_but->setText(_("Toggle AI Mode"));
+  connect(ui.meet_but, &QAbstractButton::pressed, this,
           &plr_report::req_meeeting);
-  connect(cancel_but, &QAbstractButton::pressed, this,
-          &plr_report::req_caancel_threaty);
-  connect(withdraw_but, &QAbstractButton::pressed, this,
-          &plr_report::req_wiithdrw_vision);
-  connect(toggle_ai_but, &QAbstractButton::pressed, this,
+  connect(ui.cancel_but, &QAbstractButton::pressed, this,
+          &plr_report::plr_cancel_threaty);
+  connect(ui.withdraw_but, &QAbstractButton::pressed, this,
+          &plr_report::plr_withdraw_vision);
+  connect(ui.toggle_ai_but, &QAbstractButton::pressed, this,
           &plr_report::toggle_ai_mode);
-  setLayout(layout);
+  setLayout(ui.layout);
   other_player = nullptr;
   index = 0;
   if (king()->qt_settings.player_repo_sort_col != -1) {
-    plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
+    ui.plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
                           king()->qt_settings.player_report_sort);
   }
+  ui.plr_wdg->set_pr_rep(this);
 }
 
 /**********************************************************************/ /**
@@ -742,16 +703,15 @@ void plr_report::init()
  **************************************************************************/
 void plr_report::call_meeting()
 {
-  if (meet_but->isEnabled()) {
+  if (ui.meet_but->isEnabled()) {
     req_meeeting();
   }
 }
 
 /**********************************************************************/ /**
-   Slot for canceling threaty (name changed to cheat autoconnect, and
-   doubled execution)
+   Slot for canceling threaty
  **************************************************************************/
-void plr_report::req_caancel_threaty()
+void plr_report::plr_cancel_threaty()
 {
   dsend_packet_diplomacy_cancel_pact(
       &client.conn, player_number(other_player), CLAUSE_CEASEFIRE);
@@ -769,7 +729,7 @@ void plr_report::req_meeeting()
 /**********************************************************************/ /**
    Slot for withdrawing vision
  **************************************************************************/
-void plr_report::req_wiithdrw_vision()
+void plr_report::plr_withdraw_vision()
 {
   dsend_packet_diplomacy_cancel_pact(
       &client.conn, player_number(other_player), CLAUSE_VISION);
@@ -801,17 +761,17 @@ void plr_report::toggle_ai_mode()
     int level;
     if (act == toggle_ai_act) {
       send_chat_printf("/aitoggle \"%s\"",
-                       player_name(plr_wdg->other_player));
+                       player_name(ui.plr_wdg->other_player));
       return;
     }
     if (act && act->isVisible()) {
       level = act->data().toInt();
-      if (is_human(plr_wdg->other_player)) {
+      if (is_human(ui.plr_wdg->other_player)) {
         send_chat_printf("/aitoggle \"%s\"",
-                         player_name(plr_wdg->other_player));
+                         player_name(ui.plr_wdg->other_player));
       }
       send_chat_printf("/%s %s", ai_level_cmd(static_cast<ai_level>(level)),
-                       player_name(plr_wdg->other_player));
+                       player_name(ui.plr_wdg->other_player));
     }
   });
 
@@ -841,10 +801,10 @@ void plr_report::update_report(bool update_selection)
 
   /* Force updating selected player information */
   if (update_selection) {
-    qmi = plr_wdg->currentIndex();
+    qmi = ui.plr_wdg->currentIndex();
     if (qmi.isValid()) {
-      plr_wdg->clearSelection();
-      plr_wdg->setCurrentIndex(qmi);
+      ui.plr_wdg->clearSelection();
+      ui.plr_wdg->setCurrentIndex(qmi);
     }
   }
 
@@ -857,19 +817,19 @@ void plr_report::update_report(bool update_selection)
   }
   players_iterate_end;
 
-  if (player_count != plr_wdg->get_model()->rowCount()) {
-    plr_wdg->get_model()->populate();
+  if (player_count != ui.plr_wdg->get_model()->rowCount()) {
+    ui.plr_wdg->get_model()->populate();
   }
 
-  plr_wdg->header()->resizeSections(QHeaderView::ResizeToContents);
-  meet_but->setDisabled(true);
-  cancel_but->setDisabled(true);
-  withdraw_but->setDisabled(true);
-  toggle_ai_but->setDisabled(true);
-  plr_label->setText(plr_wdg->intel_str);
-  ally_label->setText(plr_wdg->ally_str);
-  tech_label->setText(plr_wdg->tech_str);
-  other_player = plr_wdg->other_player;
+  ui.plr_wdg->header()->resizeSections(QHeaderView::ResizeToContents);
+  ui.meet_but->setDisabled(true);
+  ui.cancel_but->setDisabled(true);
+  ui.withdraw_but->setDisabled(true);
+  ui.toggle_ai_but->setDisabled(true);
+  ui.plr_label->setText(ui.plr_wdg->intel_str);
+  ui.ally_label->setText(ui.plr_wdg->ally_str);
+  ui.tech_label->setText(ui.plr_wdg->tech_str);
+  other_player = ui.plr_wdg->other_player;
   if (other_player == NULL || !can_client_issue_orders()) {
     return;
   }
@@ -880,18 +840,18 @@ void plr_report::update_report(bool update_selection)
     // with omniscience
     if (pplayer_can_cancel_treaty(client_player(), other_player)
         != DIPL_ERROR) {
-      cancel_but->setEnabled(true);
+      ui.cancel_but->setEnabled(true);
     }
-    toggle_ai_but->setEnabled(true);
+    ui.toggle_ai_but->setEnabled(true);
   }
   if (gives_shared_vision(client_player(), other_player)
       && !players_on_same_team(client_player(), other_player)) {
-    withdraw_but->setEnabled(true);
+    ui.withdraw_but->setEnabled(true);
   }
   if (can_meet_with_player(other_player)) {
-    meet_but->setEnabled(true);
+    ui.meet_but->setEnabled(true);
   }
-  plr_wdg->restore_selection();
+  ui.plr_wdg->restore_selection();
 }
 
 /**********************************************************************/ /**
