@@ -1563,7 +1563,10 @@ city_dialog::city_dialog(QWidget *parent)
       SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
 
   setSizeGripEnabled(true);
-  setLayout(ui.gridLayout);
+  setLayout(ui.vlayout);
+  ui.tab->setLayout(ui.tabLayout);
+  ui.tabWidget->setCurrentIndex(0);
+  //setLayout(ui.gridLayout);
 
   installEventFilter(this);
 }

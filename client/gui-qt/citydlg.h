@@ -383,7 +383,6 @@ class city_dialog : public qfc_dialog {
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
-  //QPushButton *lcity_name;
 public:
   static city_dialog *instance();
   static void drop();
