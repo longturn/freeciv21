@@ -365,16 +365,13 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 };
 
-class city_info : public QFrame {
+class city_info : public QWidget {
   Q_OBJECT
-
 public:
   city_info(QWidget *parent = 0);
   void update_labels(struct city *ci_city);
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
-protected:
-
 };
 
 #include "ui_citydlg.h"
@@ -386,9 +383,7 @@ class city_dialog : public qfc_dialog {
   Q_OBJECT
   Q_DISABLE_COPY(city_dialog);
   Ui::FormCityDlg ui;
-  //city_label *citizens_label;
   //city_label *lab_table[6];
-  //QGroupBox *info_labels_group;
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1305</width>
-    <height>1147</height>
+    <width>1628</width>
+    <height>1285</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>260</x>
-     <y>50</y>
+     <x>60</x>
+     <y>40</y>
      <width>661</width>
      <height>781</height>
     </rect>
@@ -32,90 +32,17 @@
        <attribute name="title">
         <string>Tab 1</string>
        </attribute>
-       <widget class="QWidget" name="gridLayoutWidget">
+       <widget class="QWidget" name="gridLayoutWidgetXX">
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>0</y>
-          <width>641</width>
-          <height>731</height>
+          <x>30</x>
+          <y>20</y>
+          <width>611</width>
+          <height>691</height>
          </rect>
         </property>
         <layout class="QGridLayout" name="tabLayout">
-         <item row="6" column="0">
-          <widget class="QPushButton" name="work_add_but">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="7" column="0" colspan="6">
-          <widget class="QLabel" name="curr_units">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item row="11" column="0" colspan="6">
-          <widget class="QLabel" name="supp_units">
-           <property name="text">
-            <string>TextLabel</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="6">
-          <widget class="city_label" name="citizens_label">
-           <property name="text">
-            <string>citizens</string>
-           </property>
-          </widget>
-         </item>
-         <item row="3" column="0" colspan="4">
-          <widget class="progress_bar" name="production_combo_p">
-           <property name="value">
-            <number>24</number>
-           </property>
-          </widget>
-         </item>
-         <item row="4" column="0" colspan="4">
-          <widget class="QTableWidget" name="p_table_p">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>200</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0" colspan="4">
-          <widget class="QPushButton" name="buy_button">
-           <property name="text">
-            <string>buy</string>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="0">
-          <widget class="QPushButton" name="prev_city_but">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="6" column="2">
-          <widget class="QPushButton" name="work_next_but">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="2" colspan="3">
-          <widget class="QPushButton" name="lcity_name">
-           <property name="text">
-            <string>PushButton</string>
-           </property>
-          </widget>
-         </item>
-         <item row="14" column="0" colspan="6">
+         <item row="13" column="0" colspan="6">
           <widget class="QScrollArea" name="scroll3">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -147,83 +74,21 @@
            </widget>
           </widget>
          </item>
-         <item row="2" column="4" rowspan="5" colspan="2">
-          <widget class="city_info" name="info_wdg" native="true"/>
-         </item>
-         <item row="6" column="1">
+         <item row="5" column="1">
           <widget class="QPushButton" name="work_prev_but">
            <property name="text">
             <string/>
            </property>
           </widget>
          </item>
-         <item row="6" column="3">
-          <widget class="QPushButton" name="work_rem_but">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="12" column="0" colspan="6">
-          <widget class="QScrollArea" name="scroll2">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>32</height>
-            </size>
-           </property>
-           <property name="verticalScrollBarPolicy">
-            <enum>Qt::ScrollBarAlwaysOff</enum>
-           </property>
-           <property name="widgetResizable">
-            <bool>true</bool>
-           </property>
-           <widget class="unit_info" name="supported_units">
-            <property name="geometry">
-             <rect>
-              <x>0</x>
-              <y>0</y>
-              <width>16</width>
-              <height>56</height>
-             </rect>
-            </property>
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-           </widget>
-          </widget>
-         </item>
-         <item row="13" column="0" colspan="6">
-          <widget class="QLabel" name="curr_impr">
+         <item row="6" column="0" colspan="6">
+          <widget class="QLabel" name="curr_units">
            <property name="text">
             <string>TextLabel</string>
            </property>
           </widget>
          </item>
-         <item row="15" column="5">
-          <widget class="QPushButton" name="bclose">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="15" column="1">
-          <widget class="QPushButton" name="next_city_but">
-           <property name="text">
-            <string/>
-           </property>
-          </widget>
-         </item>
-         <item row="8" column="0" colspan="6">
+         <item row="7" column="0" colspan="6">
           <widget class="QScrollArea" name="scroll">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -252,7 +117,7 @@
               <x>0</x>
               <y>0</y>
               <width>16</width>
-              <height>56</height>
+              <height>36</height>
              </rect>
             </property>
             <property name="sizePolicy">
@@ -263,6 +128,141 @@
             </property>
            </widget>
           </widget>
+         </item>
+         <item row="12" column="0" colspan="6">
+          <widget class="QLabel" name="curr_impr">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="0">
+          <widget class="QPushButton" name="prev_city_but">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="0" colspan="4">
+          <widget class="progress_bar" name="production_combo_p">
+           <property name="value">
+            <number>24</number>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="0" colspan="6">
+          <widget class="city_label" name="citizens_label">
+           <property name="text">
+            <string>citizens</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="3">
+          <widget class="QPushButton" name="work_rem_but">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="10" column="0" colspan="6">
+          <widget class="QLabel" name="supp_units">
+           <property name="text">
+            <string>TextLabel</string>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="1">
+          <widget class="QPushButton" name="next_city_but">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="4" column="0" colspan="4">
+          <widget class="QTableWidget" name="p_table_p">
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>200</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="0">
+          <widget class="QPushButton" name="work_add_but">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="14" column="2" colspan="3">
+          <widget class="QPushButton" name="lcity_name">
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item row="5" column="2">
+          <widget class="QPushButton" name="work_next_but">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="11" column="0" colspan="6">
+          <widget class="QScrollArea" name="scroll2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>0</width>
+             <height>32</height>
+            </size>
+           </property>
+           <property name="verticalScrollBarPolicy">
+            <enum>Qt::ScrollBarAlwaysOff</enum>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="unit_info" name="supported_units">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>16</width>
+              <height>36</height>
+             </rect>
+            </property>
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+          </widget>
+         </item>
+         <item row="14" column="5">
+          <widget class="QPushButton" name="bclose">
+           <property name="text">
+            <string/>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0" colspan="4">
+          <widget class="QPushButton" name="buy_button">
+           <property name="text">
+            <string>buy</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="4" rowspan="4" colspan="2">
+          <widget class="city_info" name="info_wdg" native="true"/>
          </item>
         </layout>
        </widget>
@@ -280,7 +280,7 @@
           <height>791</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout"/>
+        <layout class="QGridLayout" name="gridLayout2"/>
        </widget>
       </widget>
      </widget>

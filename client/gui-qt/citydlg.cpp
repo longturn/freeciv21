@@ -1127,8 +1127,7 @@ void city_label::mousePressEvent(QMouseEvent *event)
  ****************************************************************************/
 void city_label::set_city(city *pciti) { pcity = pciti; }
 
-
-city_info::city_info(QWidget *parent) : QFrame(parent)
+city_info::city_info(QWidget *parent) : QWidget(parent)
 {
   int info_nr;
   int iter;
@@ -1136,7 +1135,7 @@ city_info::city_info(QWidget *parent) : QFrame(parent)
   QLabel *ql;
   QStringList info_list;
 
-  QGridLayout *info_grid_layout = new QGridLayout(parent);
+  QGridLayout *info_grid_layout = new QGridLayout();
   small_font = fc_font::instance()->get_font(fonts::notify_label);
   info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
             << _("Luxury:") << _("Science:") << _("Granary:")
@@ -1164,7 +1163,7 @@ city_info::city_info(QWidget *parent) : QFrame(parent)
 }
 void city_info::update_labels(struct city *pcity)
 {
-   int illness = 0;
+  int illness = 0;
   char buffer[512];
   char buf[2 * NUM_INFO_FIELDS][512];
   int granaryturns;
@@ -1563,7 +1562,7 @@ void city_map::context_menu(QPoint point)
    Constructor for city_dialog, sets layouts, policies ...
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
-    : qfc_dialog(parent), future_targets(true), show_units(true),
+    : qfc_dialog(parent), future_targets(false), show_units(true),
       show_wonders(true), show_buildings(true)
 {
   int info_nr;
@@ -1604,19 +1603,19 @@ city_dialog::city_dialog(QWidget *parent)
 
   ui.supported_units->set_supp(true);
   ui.scroll2->setWidgetResizable(true);
-  ui.scroll2->setMaximumHeight(tileset_unit_with_upkeep_height(get_tileset())
-   + 6
-                            + ui.scroll2->horizontalScrollBar()->height());
+  ui.scroll2->setMaximumHeight(
+      tileset_unit_with_upkeep_height(get_tileset()) + 6
+      + ui.scroll2->horizontalScrollBar()->height());
   ui.scroll2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   ui.scroll->setWidgetResizable(true);
   ui.scroll->setMaximumHeight(tileset_unit_height(get_tileset()) + 6
-                            + ui.scroll->horizontalScrollBar()->height());
+                              + ui.scroll->horizontalScrollBar()->height());
   ui.scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  //ui.scroll->setWidget(current_units);
   scroll_height = ui.scroll->horizontalScrollBar()->height();
   ui.scroll3->setWidgetResizable(true);
-  ui.scroll3->setMaximumHeight(tileset_unit_height(tileset) + 6
-                             + ui.scroll3->horizontalScrollBar()->height());
+  ui.scroll3->setMaximumHeight(
+      tileset_unit_height(tileset) + 6
+      + ui.scroll3->horizontalScrollBar()->height());
   ui.scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   ui.scroll->setProperty("city_scroll", true);
   ui.scroll2->setProperty("city_scroll", true);
@@ -1691,8 +1690,8 @@ city_dialog::city_dialog(QWidget *parent)
 
   ui.tab->setLayout(ui.tabLayout);
   setLayout(ui.vlayout);
-  ui.tabWidget->setCurrentIndex(0);
-  //setLayout(ui.gridLayout);
+  //ui.tabWidget->setCurrentIndex(0);
+  // setLayout(ui.gridLayout);
 
   installEventFilter(this);
 }
@@ -2635,10 +2634,7 @@ void city_dialog::update_nation_table()
 /************************************************************************/ /**
    Updates information label ( food, prod ... surpluses ...)
  ****************************************************************************/
-void city_dialog::update_info_label()
-{
-  ui.info_wdg->update_labels(pcity);
-}
+void city_dialog::update_info_label() { ui.info_wdg->update_labels(pcity); }
 
 /************************************************************************/ /**
    Setups whole city dialog, public function
