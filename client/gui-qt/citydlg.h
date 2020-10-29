@@ -372,6 +372,7 @@ public:
   void update_labels(struct city *ci_city);
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
+  int positions;
 };
 
 #include "ui_citydlg.h"

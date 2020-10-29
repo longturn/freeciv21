@@ -2262,21 +2262,19 @@ void city_dialog::update_cma_tab()
   if (cma_is_city_under_agent(pcity, NULL)) {
     // view->update();
     s = QString(cmafec_get_short_descr_of_city(pcity));
-    // pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
-    // pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
-    //                  Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    // ui.cma_result_pix->setPixmap(pix);
-    // ui.cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
+    pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
+                     Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ui.cma_result_pix->setPixmap(pix);
     /* TRANS: %1 is custom string chosen by player */
     ui.cma_result->setText(QString(_("<h3>Governor Enabled<br>(%1)</h3>"))
                                .arg(s.toHtmlEscaped()));
     ui.cma_result->setAlignment(Qt::AlignCenter);
   } else {
-    // pix = style()->standardPixmap(QStyle::SP_DialogCancelButton);
-    // pix = pix.scaled(1.6 * pix.width(), 1.6 * pix.height(),
-    //                  Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-    // cma_result_pix->setPixmap(pix);
-    // cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    pix = style()->standardPixmap(QStyle::SP_DialogCancelButton);
+    pix = pix.scaled(1.6 * pix.width(), 1.6 * pix.height(),
+                     Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    ui.cma_result_pix->setPixmap(pix);
     ui.cma_result->setText(QString(_("<h3>Governor Disabled</h3>")));
     ui.cma_result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
   }
