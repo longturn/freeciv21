@@ -365,6 +365,18 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 };
 
+class city_info : public QFrame {
+  Q_OBJECT
+
+public:
+  city_info(QWidget *parent = 0);
+  void update_labels(struct city *ci_city);
+private:
+  QLabel *qlt[NUM_INFO_FIELDS];
+protected:
+
+};
+
 #include "ui_citydlg.h"
 /****************************************************************************
   City dialog
@@ -376,10 +388,7 @@ class city_dialog : public qfc_dialog {
   Ui::FormCityDlg ui;
   //city_label *citizens_label;
   //city_label *lab_table[6];
-  QGridLayout *info_grid_layout;
-  QGroupBox *info_labels_group;
-  QWidget *info_widget;
-  QLabel *qlt[NUM_INFO_FIELDS];
+  //QGroupBox *info_labels_group;
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;

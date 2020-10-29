@@ -16,8 +16,8 @@
   <widget class="QWidget" name="verticalLayoutWidget">
    <property name="geometry">
     <rect>
-     <x>310</x>
-     <y>220</y>
+     <x>260</x>
+     <y>50</y>
      <width>661</width>
      <height>781</height>
     </rect>
@@ -148,7 +148,7 @@
           </widget>
          </item>
          <item row="2" column="4" rowspan="5" colspan="2">
-          <widget class="QWidget" name="info_wdg" native="true"/>
+          <widget class="city_info" name="info_wdg" native="true"/>
          </item>
          <item row="6" column="1">
           <widget class="QPushButton" name="work_prev_but">
@@ -271,6 +271,17 @@
        <attribute name="title">
         <string>Tab 2</string>
        </attribute>
+       <widget class="QWidget" name="gridLayoutWidget_2">
+        <property name="geometry">
+         <rect>
+          <x>0</x>
+          <y>-50</y>
+          <width>661</width>
+          <height>791</height>
+         </rect>
+        </property>
+        <layout class="QGridLayout" name="gridLayout"/>
+       </widget>
       </widget>
      </widget>
     </item>
@@ -296,6 +307,12 @@
   </customwidget>
   <customwidget>
    <class>impr_info</class>
+   <extends>QWidget</extends>
+   <header>citydlg.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>city_info</class>
    <extends>QWidget</extends>
    <header>citydlg.h</header>
    <container>1</container>
