@@ -439,9 +439,8 @@ void impr_item::leaveEvent(QEvent *event)
 /************************************************************************/ /**
    Improvement list constructor
  ****************************************************************************/
-impr_info::impr_info(QWidget *parent) : QFrame(parent)
+impr_info::impr_info() : QFrame()
 {
-  setParent(parent);
   layout = new QHBoxLayout(this);
   init_layout();
 }
@@ -974,7 +973,7 @@ void unit_item::sentry_unit()
 /************************************************************************/ /**
    Class representing list of units ( unit_item 's)
  ****************************************************************************/
-unit_info::unit_info(QWidget *x) : QFrame(x)
+unit_info::unit_info() : QFrame()
 {
   layout = new QHBoxLayout(this);
   init_layout();
@@ -1001,10 +1000,10 @@ void unit_info::add_item(unit_item *item) { unit_list.append(item); }
  ****************************************************************************/
 void unit_info::init_layout()
 {
-  // QSizePolicy size_fixed_policy(QSizePolicy::Fixed,
-  //                               QSizePolicy::MinimumExpanding,
-  //                               QSizePolicy::Slider);
-  // setSizePolicy(size_fixed_policy);
+  QSizePolicy size_fixed_policy(QSizePolicy::Fixed,
+                                QSizePolicy::MinimumExpanding,
+                                QSizePolicy::Slider);
+  setSizePolicy(size_fixed_policy);
   setLayout(layout);
 }
 
@@ -1441,7 +1440,7 @@ city_dialog::city_dialog(QWidget *parent)
   setMouseTracking(true);
   selected_row_p = -1;
   pcity = NULL;
-  // ui.lcity_name->setToolTip(_("Click to change city name"));
+  ui.lcity_name->setToolTip(_("Click to change city name"));
   /* City information widget texts about surpluses and so on */
   info_wdg = ui.info_wdg;
 
@@ -1479,21 +1478,21 @@ city_dialog::city_dialog(QWidget *parent)
   citizen_pixmap = NULL;
 
   ui.supported_units->set_supp(true);
-  // scroll2->setWidgetResizable(true);
-  // scroll2->setMaximumHeight(tileset_unit_with_upkeep_height(get_tileset())
-  // + 6
-  //                          + scroll2->horizontalScrollBar()->height());
-  // scroll2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  // ui.scroll->setWidgetResizable(true);
-  // ui.scroll->setMaximumHeight(tileset_unit_height(get_tileset()) + 6
-  //                           + ui.scroll->horizontalScrollBar()->height());
-  // ui.scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  // scroll->setWidget(current_units);
-  // scroll_height = scroll->horizontalScrollBar()->height();
-  // scroll3->setWidgetResizable(true);
-  // scroll3->setMaximumHeight(tileset_unit_height(tileset) + 6
-  //                           + scroll3->horizontalScrollBar()->height());
-  // scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  ui.scroll2->setWidgetResizable(true);
+  ui.scroll2->setMaximumHeight(tileset_unit_with_upkeep_height(get_tileset())
+   + 6
+                            + ui.scroll2->horizontalScrollBar()->height());
+  ui.scroll2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  ui.scroll->setWidgetResizable(true);
+  ui.scroll->setMaximumHeight(tileset_unit_height(get_tileset()) + 6
+                            + ui.scroll->horizontalScrollBar()->height());
+  ui.scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  //ui.scroll->setWidget(current_units);
+  scroll_height = ui.scroll->horizontalScrollBar()->height();
+  ui.scroll3->setWidgetResizable(true);
+  ui.scroll3->setMaximumHeight(tileset_unit_height(tileset) + 6
+                             + ui.scroll3->horizontalScrollBar()->height());
+  ui.scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   ui.scroll->setProperty("city_scroll", true);
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);

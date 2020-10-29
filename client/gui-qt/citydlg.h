@@ -143,7 +143,7 @@ class unit_info : public QFrame {
   Q_OBJECT
 
 public:
-  unit_info(QWidget *);
+  unit_info();
   ~unit_info();
   void add_item(unit_item *item);
   void init_layout();
@@ -190,7 +190,7 @@ protected:
 class impr_info : public QFrame {
   Q_OBJECT
 public:
-  impr_info(QWidget *parent);
+  impr_info();
   ~impr_info();
   void add_item(impr_item *item);
   void init_layout();
