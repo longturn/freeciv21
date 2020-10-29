@@ -26,7 +26,7 @@
     <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="tab">
        <attribute name="title">
@@ -267,20 +267,96 @@
         </layout>
        </widget>
       </widget>
-      <widget class="QWidget" name="tab_2">
+      <widget class="QWidget" name="tab2">
        <attribute name="title">
         <string>Tab 2</string>
        </attribute>
        <widget class="QWidget" name="gridLayoutWidget_2">
         <property name="geometry">
          <rect>
-          <x>0</x>
-          <y>-50</y>
-          <width>661</width>
-          <height>791</height>
+          <x>80</x>
+          <y>0</y>
+          <width>551</width>
+          <height>671</height>
          </rect>
         </property>
-        <layout class="QGridLayout" name="gridLayout2"/>
+        <layout class="QGridLayout" name="tabLayout2">
+         <item row="0" column="2">
+          <widget class="QLabel" name="cma_result">
+           <property name="text">
+            <string>cma_info_text</string>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="2">
+          <widget class="city_info" name="cma_city_info" native="true"/>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="cma_enable_but">
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item row="3" column="2">
+          <widget class="QPushButton" name="bsavecma">
+           <property name="text">
+            <string>PushButton</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0" rowspan="2">
+          <widget class="QGroupBox" name="qgbox">
+           <property name="title">
+            <string>GroupBox</string>
+           </property>
+           <widget class="QWidget" name="gridLayoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>30</y>
+              <width>391</width>
+              <height>321</height>
+             </rect>
+            </property>
+            <layout class="QGridLayout" name="qgboxLayout">
+             <item row="0" column="1">
+              <widget class="QTableWidget" name="cma_table">
+               <property name="contextMenuPolicy">
+                <enum>Qt::CustomContextMenu</enum>
+               </property>
+               <property name="editTriggers">
+                <set>QAbstractItemView::NoEditTriggers</set>
+               </property>
+               <property name="selectionMode">
+                <enum>QAbstractItemView::SingleSelection</enum>
+               </property>
+               <property name="selectionBehavior">
+                <enum>QAbstractItemView::SelectRows</enum>
+               </property>
+               <property name="showGrid">
+                <bool>false</bool>
+               </property>
+               <property name="columnCount">
+                <number>1</number>
+               </property>
+               <attribute name="horizontalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <attribute name="verticalHeaderVisible">
+                <bool>false</bool>
+               </attribute>
+               <column/>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item row="2" column="0" rowspan="2">
+          <widget class="QGroupBox" name="qsliderbox"/>
+         </item>
+        </layout>
        </widget>
       </widget>
      </widget>

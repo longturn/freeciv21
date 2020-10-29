@@ -387,6 +387,8 @@ class city_dialog : public qfc_dialog {
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
+  QCheckBox *cma_celeb_checkbox;
+  QSlider *slider_tab[2 * O_LAST + 2];
 public:
   static city_dialog *instance();
   static void drop();

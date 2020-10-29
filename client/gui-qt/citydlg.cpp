@@ -1662,12 +1662,8 @@ city_dialog::city_dialog(QWidget *parent)
   header = ui.p_table_p->horizontalHeader();
   header->setStretchLastSection(true);
 
-  // but_menu_worklist->setText(_("Worklist menu"));
-  // but_menu_worklist->setIcon(style()->standardIcon(QStyle::SP_FileLinkIcon));
   connect(ui.p_table_p, &QWidget::customContextMenuRequested, this,
           &city_dialog::display_worklist_menu);
-  // connect(but_menu_worklist, &QAbstractButton::clicked, this,
-  //         &city_dialog::delete_prod);
   connect(ui.production_combo_p, &progress_bar::clicked, this,
           &city_dialog::show_targets);
   connect(ui.work_add_but, &QAbstractButton::clicked, this,
@@ -1688,9 +1684,90 @@ city_dialog::city_dialog(QWidget *parent)
 
   setSizeGripEnabled(true);
 
+  ui.qgbox->setTitle(_("Presets:"));
+  qsliderbox = ui.qsliderbox;
+  qsliderbox->setTitle(_("Governor settings"));
+  hbox = new QHBoxLayout;
+  gridl = new QGridLayout;
+  slider_grid = new QGridLayout;
+
+  ui.cma_table->horizontalHeader()->setSectionResizeMode(
+      QHeaderView::Stretch);
+
+  connect(
+      ui.cma_table->selectionModel(),
+      SIGNAL(
+          selectionChanged(const QItemSelection &, const QItemSelection &)),
+      SLOT(cma_selected(const QItemSelection &, const QItemSelection &)));
+  connect(ui.cma_table, &QWidget::customContextMenuRequested, this,
+          &city_dialog::cma_context_menu);
+  connect(ui.cma_table, &QTableWidget::cellDoubleClicked, this,
+          &city_dialog::cma_double_clicked);
+
+  str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
+           << _("Luxury") << _("Science") << _("Celebrate");
+  some_label = new QLabel(_("Minimal Surplus"));
+  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+  slider_grid->addWidget(some_label, 0, 0, 1, 3);
+  some_label = new QLabel(_("Priority"));
+  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
+  slider_grid->addWidget(some_label, 0, 3, 1, 3);
+
+  for (int i = 0; i < str_list.count(); i++) {
+    some_label = new QLabel(str_list.at(i));
+    slider_grid->addWidget(some_label, i + 1, 0, 1, 1);
+    some_label = new QLabel("0");
+    some_label->setMinimumWidth(25);
+
+    if (i != str_list.count() - 1) {
+      slider = new QSlider(Qt::Horizontal);
+      slider->setPageStep(1);
+      slider->setFocusPolicy(Qt::TabFocus);
+      slider_tab[2 * i] = slider;
+      slider->setRange(-20, 20);
+      slider->setSingleStep(1);
+      slider_grid->addWidget(some_label, i + 1, 1, 1, 1);
+      slider_grid->addWidget(slider, i + 1, 2, 1, 1);
+      slider->setProperty("FC", QVariant::fromValue((void *) some_label));
+
+      connect(slider, &QAbstractSlider::valueChanged, this,
+              &city_dialog::cma_slider);
+    } else {
+      cma_celeb_checkbox = new QCheckBox;
+      slider_grid->addWidget(cma_celeb_checkbox, i + 1, 2, 1, 1);
+      connect(cma_celeb_checkbox, &QCheckBox::stateChanged, this,
+              &city_dialog::cma_celebrate_changed);
+    }
+
+    some_label = new QLabel("0");
+    some_label->setMinimumWidth(25);
+    slider = new QSlider(Qt::Horizontal);
+    slider->setFocusPolicy(Qt::TabFocus);
+    slider->setRange(0, 25);
+    slider_tab[2 * i + 1] = slider;
+    slider->setProperty("FC", QVariant::fromValue((void *) some_label));
+    slider_grid->addWidget(some_label, i + 1, 3, 1, 1);
+    slider_grid->addWidget(slider, i + 1, 4, 1, 1);
+    connect(slider, &QAbstractSlider::valueChanged, this,
+            &city_dialog::cma_slider);
+  }
+  qsliderbox->setLayout(slider_grid);
+  ui.cma_enable_but->setFocusPolicy(Qt::TabFocus);
+  connect(ui.cma_enable_but, &QAbstractButton::pressed, this,
+          &city_dialog::cma_enable);
+  ui.qgbox->setLayout(ui.qgboxLayout);
+
+  ui.bsavecma->setText(_("Save"));
+  ui.bsavecma->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
+  connect(ui.bsavecma, &QAbstractButton::pressed, this,
+          &city_dialog::save_cma);
+
+  ui.tab2->setLayout(ui.tabLayout2);
   ui.tab->setLayout(ui.tabLayout);
   setLayout(ui.vlayout);
-  //ui.tabWidget->setCurrentIndex(0);
+  // ui.tabWidget->setCurrentIndex(0);
   // setLayout(ui.gridLayout);
 
   installEventFilter(this);
@@ -1784,37 +1861,37 @@ void city_dialog::show_happiness()
  ****************************************************************************/
 void city_dialog::update_disabled()
 {
-  // if (NULL == client.conn.playing
-  //     || city_owner(pcity) != client.conn.playing) {
-  //   ui.prev_city_but->setDisabled(true);
-  //   ui.next_city_but->setDisabled(true);
-  //   buy_button->setDisabled(true);
-  //   cma_enable_but->setDisabled(true);
-  //   ui.production_combo_p->setDisabled(true);
-  //   but_menu_worklist->setDisabled(true);
-  //   current_units->setDisabled(true);
-  //   supported_units->setDisabled(true);
-  //   view->setDisabled(true);
+  if (NULL == client.conn.playing
+      || city_owner(pcity) != client.conn.playing) {
+    ui.prev_city_but->setDisabled(true);
+    ui.next_city_but->setDisabled(true);
+    ui.buy_button->setDisabled(true);
+    ui.cma_enable_but->setDisabled(true);
+    ui.production_combo_p->setDisabled(true);
+    // but_menu_worklist->setDisabled(true);
+    ui.current_units->setDisabled(true);
+    ui.supported_units->setDisabled(true);
+    // view->setDisabled(true);
 
-  //   if (!client_is_observer()) {
-  //   }
-  // } else {
-  //   ui.prev_city_but->setEnabled(true);
-  //   ui.next_city_but->setEnabled(true);
-  //   buy_button->setEnabled(true);
-  //   cma_enable_but->setEnabled(true);
-  //   ui.production_combo_p->setEnabled(true);
-  //   but_menu_worklist->setEnabled(true);
-  //   current_units->setEnabled(true);
-  //   supported_units->setEnabled(true);
-  //   view->setEnabled(true);
-  // }
+    if (!client_is_observer()) {
+    }
+  } else {
+    ui.prev_city_but->setEnabled(true);
+    ui.next_city_but->setEnabled(true);
+    ui.buy_button->setEnabled(true);
+    ui.cma_enable_but->setEnabled(true);
+    ui.production_combo_p->setEnabled(true);
+    // but_menu_worklist->setEnabled(true);
+    ui.current_units->setEnabled(true);
+    ui.supported_units->setEnabled(true);
+    // view->setEnabled(true);
+  }
 
-  // if (can_client_issue_orders()) {
-  //   cma_enable_but->setEnabled(true);
-  // } else {
-  //   cma_enable_but->setDisabled(true);
-  // }
+  if (can_client_issue_orders()) {
+    ui.cma_enable_but->setEnabled(true);
+  } else {
+    ui.cma_enable_but->setDisabled(true);
+  }
 
   update_prod_buttons();
 }
@@ -1994,32 +2071,32 @@ void city_dialog::zoom_out()
  ****************************************************************************/
 void city_dialog::save_cma()
 {
-  // hud_input_box *ask = new hud_input_box(king()->central_wdg);
+  hud_input_box *ask = new hud_input_box(king()->central_wdg);
 
-  // ask->set_text_title_definput(_("What should we name the preset?"),
-  //                              _("Name new preset"), _("new preset"));
-  // ask->setAttribute(Qt::WA_DeleteOnClose);
-  // connect(ask, &hud_message_box::accepted, this, [=]() {
-  //   struct cm_parameter param;
-  //   QByteArray ask_bytes = ask->input_edit.text().toLocal8Bit();
-  //   QString text = ask_bytes.data();
-  //   if (!text.isEmpty()) {
-  //     param.allow_disorder = false;
-  //     param.allow_specialists = true;
-  //     param.require_happy = cma_celeb_checkbox->isChecked();
-  //     param.happy_factor = slider_tab[2 * O_LAST + 1]->value();
+  ask->set_text_title_definput(_("What should we name the preset?"),
+                               _("Name new preset"), _("new preset"));
+  ask->setAttribute(Qt::WA_DeleteOnClose);
+  connect(ask, &hud_message_box::accepted, this, [=]() {
+    struct cm_parameter param;
+    QByteArray ask_bytes = ask->input_edit.text().toLocal8Bit();
+    QString text = ask_bytes.data();
+    if (!text.isEmpty()) {
+      param.allow_disorder = false;
+      param.allow_specialists = true;
+      param.require_happy = cma_celeb_checkbox->isChecked();
+      param.happy_factor = slider_tab[2 * O_LAST + 1]->value();
 
-  //     for (int i = O_FOOD; i < O_LAST; i++) {
-  //       param.minimal_surplus[i] = slider_tab[2 * i]->value();
-  //       param.factor[i] = slider_tab[2 * i + 1]->value();
-  //     }
+      for (int i = O_FOOD; i < O_LAST; i++) {
+        param.minimal_surplus[i] = slider_tab[2 * i]->value();
+        param.factor[i] = slider_tab[2 * i + 1]->value();
+      }
 
-  //     ask_bytes = text.toLocal8Bit();
-  //     cmafec_preset_add(ask_bytes.data(), &param);
-  //     update_cma_tab();
-  //   }
-  // });
-  // ask->show();
+      ask_bytes = text.toLocal8Bit();
+      cmafec_preset_add(ask_bytes.data(), &param);
+      update_cma_tab();
+    }
+  });
+  ask->show();
 }
 
 /************************************************************************/ /**
@@ -2041,19 +2118,19 @@ void city_dialog::cma_enable()
  ****************************************************************************/
 void city_dialog::cma_changed()
 {
-  // struct cm_parameter param;
+  struct cm_parameter param;
 
-  // param.allow_disorder = false;
-  // param.allow_specialists = true;
-  // param.require_happy = cma_celeb_checkbox->isChecked();
-  // param.happy_factor = slider_tab[2 * O_LAST + 1]->value();
+  param.allow_disorder = false;
+  param.allow_specialists = true;
+  param.require_happy = cma_celeb_checkbox->isChecked();
+  param.happy_factor = slider_tab[2 * O_LAST + 1]->value();
 
-  // for (int i = O_FOOD; i < O_LAST; i++) {
-  //   param.minimal_surplus[i] = slider_tab[2 * i]->value();
-  //   param.factor[i] = slider_tab[2 * i + 1]->value();
-  // }
+  for (int i = O_FOOD; i < O_LAST; i++) {
+    param.minimal_surplus[i] = slider_tab[2 * i]->value();
+    param.factor[i] = slider_tab[2 * i + 1]->value();
+  }
 
-  // cma_put_city_under_agent(pcity, &param);
+  cma_put_city_under_agent(pcity, &param);
 }
 
 /************************************************************************/ /**
@@ -2081,28 +2158,28 @@ void city_dialog::cma_double_clicked(int row, int column)
 void city_dialog::cma_selected(const QItemSelection &sl,
                                const QItemSelection &ds)
 {
-  // const struct cm_parameter *param;
-  // QModelIndex index;
-  // QModelIndexList indexes = sl.indexes();
+  const struct cm_parameter *param;
+  QModelIndex index;
+  QModelIndexList indexes = sl.indexes();
 
-  // if (indexes.isEmpty() || cma_table->signalsBlocked()) {
-  //   return;
-  // }
+  if (indexes.isEmpty() || ui.cma_table->signalsBlocked()) {
+    return;
+  }
 
-  // index = indexes.at(0);
-  // int ind = index.row();
+  index = indexes.at(0);
+  int ind = index.row();
 
-  // if (cma_table->currentRow() == -1 || cmafec_preset_num() == 0) {
-  //   return;
-  // }
+  if (ui.cma_table->currentRow() == -1 || cmafec_preset_num() == 0) {
+    return;
+  }
 
-  // param = cmafec_preset_get_parameter(ind);
-  // update_sliders();
+  param = cmafec_preset_get_parameter(ind);
+  update_sliders();
 
-  // if (cma_is_city_under_agent(pcity, NULL)) {
-  //   cma_release_city(pcity);
-  //   cma_put_city_under_agent(pcity, param);
-  // }
+  if (cma_is_city_under_agent(pcity, NULL)) {
+    cma_release_city(pcity);
+    cma_put_city_under_agent(pcity, param);
+  }
 }
 
 /************************************************************************/ /**
@@ -2110,48 +2187,48 @@ void city_dialog::cma_selected(const QItemSelection &sl,
  ****************************************************************************/
 void city_dialog::update_sliders()
 {
-  // struct cm_parameter param;
-  // const struct cm_parameter *cparam;
-  // int output;
-  // QVariant qvar;
-  // QLabel *label;
+  struct cm_parameter param;
+  const struct cm_parameter *cparam;
+  int output;
+  QVariant qvar;
+  QLabel *label;
 
-  // if (!cma_is_city_under_agent(pcity, &param)) {
-  //   if (cma_table->currentRow() == -1 || cmafec_preset_num() == 0) {
-  //     return;
-  //   }
-  //   cparam = cmafec_preset_get_parameter(cma_table->currentRow());
-  //   cm_copy_parameter(&param, cparam);
-  // }
+  if (!cma_is_city_under_agent(pcity, &param)) {
+    if (ui.cma_table->currentRow() == -1 || cmafec_preset_num() == 0) {
+      return;
+    }
+    cparam = cmafec_preset_get_parameter(ui.cma_table->currentRow());
+    cm_copy_parameter(&param, cparam);
+  }
 
-  // for (output = O_FOOD; output < 2 * O_LAST; output++) {
-  //   slider_tab[output]->blockSignals(true);
-  // }
+  for (output = O_FOOD; output < 2 * O_LAST; output++) {
+    slider_tab[output]->blockSignals(true);
+  }
 
-  // for (output = O_FOOD; output < O_LAST; output++) {
-  //   qvar = slider_tab[2 * output + 1]->property("FC");
-  //   label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-  //   label->setText(QString::number(param.factor[output]));
-  //   slider_tab[2 * output + 1]->setValue(param.factor[output]);
-  //   qvar = slider_tab[2 * output]->property("FC");
-  //   label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-  //   label->setText(QString::number(param.minimal_surplus[output]));
-  //   slider_tab[2 * output]->setValue(param.minimal_surplus[output]);
-  // }
+  for (output = O_FOOD; output < O_LAST; output++) {
+    qvar = slider_tab[2 * output + 1]->property("FC");
+    label = reinterpret_cast<QLabel *>(qvar.value<void *>());
+    label->setText(QString::number(param.factor[output]));
+    slider_tab[2 * output + 1]->setValue(param.factor[output]);
+    qvar = slider_tab[2 * output]->property("FC");
+    label = reinterpret_cast<QLabel *>(qvar.value<void *>());
+    label->setText(QString::number(param.minimal_surplus[output]));
+    slider_tab[2 * output]->setValue(param.minimal_surplus[output]);
+  }
 
-  // slider_tab[2 * O_LAST + 1]->blockSignals(true);
-  // qvar = slider_tab[2 * O_LAST + 1]->property("FC");
-  // label = reinterpret_cast<QLabel *>(qvar.value<void *>());
-  // label->setText(QString::number(param.happy_factor));
-  // slider_tab[2 * O_LAST + 1]->setValue(param.happy_factor);
-  // slider_tab[2 * O_LAST + 1]->blockSignals(false);
-  // cma_celeb_checkbox->blockSignals(true);
-  // cma_celeb_checkbox->setChecked(param.require_happy);
-  // cma_celeb_checkbox->blockSignals(false);
+  slider_tab[2 * O_LAST + 1]->blockSignals(true);
+  qvar = slider_tab[2 * O_LAST + 1]->property("FC");
+  label = reinterpret_cast<QLabel *>(qvar.value<void *>());
+  label->setText(QString::number(param.happy_factor));
+  slider_tab[2 * O_LAST + 1]->setValue(param.happy_factor);
+  slider_tab[2 * O_LAST + 1]->blockSignals(false);
+  cma_celeb_checkbox->blockSignals(true);
+  cma_celeb_checkbox->setChecked(param.require_happy);
+  cma_celeb_checkbox->blockSignals(false);
 
-  // for (output = O_FOOD; output < 2 * O_LAST; output++) {
-  //   slider_tab[output]->blockSignals(false);
-  // }
+  for (output = O_FOOD; output < 2 * O_LAST; output++) {
+    slider_tab[output]->blockSignals(false);
+  }
 }
 
 /************************************************************************/ /**
@@ -2159,66 +2236,66 @@ void city_dialog::update_sliders()
  ****************************************************************************/
 void city_dialog::update_cma_tab()
 {
-  // QString s;
-  // QTableWidgetItem *item;
-  // struct cm_parameter param;
-  // QPixmap pix;
-  // int i;
+  QString s;
+  QTableWidgetItem *item;
+  struct cm_parameter param;
+  QPixmap pix;
+  int i;
 
-  // cma_table->clear();
-  // cma_table->setRowCount(0);
+  ui.cma_table->clear();
+  ui.cma_table->setRowCount(0);
 
-  // for (i = 0; i < cmafec_preset_num(); i++) {
-  //   item = new QTableWidgetItem;
-  //   item->setText(cmafec_preset_get_descr(i));
-  //   cma_table->insertRow(i);
-  //   cma_table->setItem(i, 0, item);
-  // }
+  for (i = 0; i < cmafec_preset_num(); i++) {
+    item = new QTableWidgetItem;
+    item->setText(cmafec_preset_get_descr(i));
+    ui.cma_table->insertRow(i);
+    ui.cma_table->setItem(i, 0, item);
+  }
 
-  // if (cmafec_preset_num() == 0) {
-  //   cma_table->insertRow(0);
-  //   item = new QTableWidgetItem;
-  //   item->setText(_("No governor defined"));
-  //   cma_table->setItem(0, 0, item);
-  // }
+  if (cmafec_preset_num() == 0) {
+    ui.cma_table->insertRow(0);
+    item = new QTableWidgetItem;
+    item->setText(_("No governor defined"));
+    ui.cma_table->setItem(0, 0, item);
+  }
 
-  // if (cma_is_city_under_agent(pcity, NULL)) {
-  //   view->update();
-  //   s = QString(cmafec_get_short_descr_of_city(pcity));
-  //   pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
-  //   pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
-  //                    Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  //   cma_result_pix->setPixmap(pix);
-  //   cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-  //   /* TRANS: %1 is custom string chosen by player */
-  //   cma_result->setText(QString(_("<h3>Governor Enabled<br>(%1)</h3>"))
-  //                           .arg(s.toHtmlEscaped()));
-  //   cma_result->setAlignment(Qt::AlignCenter);
-  // } else {
-  //   pix = style()->standardPixmap(QStyle::SP_DialogCancelButton);
-  //   pix = pix.scaled(1.6 * pix.width(), 1.6 * pix.height(),
-  //                    Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
-  //   cma_result_pix->setPixmap(pix);
-  //   cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-  //   cma_result->setText(QString(_("<h3>Governor Disabled</h3>")));
-  //   cma_result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
-  // }
+  if (cma_is_city_under_agent(pcity, NULL)) {
+    // view->update();
+    s = QString(cmafec_get_short_descr_of_city(pcity));
+    // pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
+    // pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
+    //                  Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    // ui.cma_result_pix->setPixmap(pix);
+    // ui.cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    /* TRANS: %1 is custom string chosen by player */
+    ui.cma_result->setText(QString(_("<h3>Governor Enabled<br>(%1)</h3>"))
+                               .arg(s.toHtmlEscaped()));
+    ui.cma_result->setAlignment(Qt::AlignCenter);
+  } else {
+    // pix = style()->standardPixmap(QStyle::SP_DialogCancelButton);
+    // pix = pix.scaled(1.6 * pix.width(), 1.6 * pix.height(),
+    //                  Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    // cma_result_pix->setPixmap(pix);
+    // cma_result_pix->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    ui.cma_result->setText(QString(_("<h3>Governor Disabled</h3>")));
+    ui.cma_result->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
+  }
 
-  // if (cma_is_city_under_agent(pcity, NULL)) {
-  //   cmafec_get_fe_parameter(pcity, &param);
-  //   i = cmafec_preset_get_index_of_parameter(
-  //       const_cast<struct cm_parameter *const>(&param));
-  //   if (i >= 0 && i < cma_table->rowCount()) {
-  //     cma_table->blockSignals(true);
-  //     cma_table->setCurrentCell(i, 0);
-  //     cma_table->blockSignals(false);
-  //   }
+  if (cma_is_city_under_agent(pcity, NULL)) {
+    cmafec_get_fe_parameter(pcity, &param);
+    i = cmafec_preset_get_index_of_parameter(
+        const_cast<struct cm_parameter *const>(&param));
+    if (i >= 0 && i < ui.cma_table->rowCount()) {
+      ui.cma_table->blockSignals(true);
+      ui.cma_table->setCurrentCell(i, 0);
+      ui.cma_table->blockSignals(false);
+    }
 
-  //   cma_enable_but->setText(_("Disable"));
-  // } else {
-  //   cma_enable_but->setText(_("Enable"));
-  // }
-  // update_sliders();
+    ui.cma_enable_but->setText(_("Disable"));
+  } else {
+    ui.cma_enable_but->setText(_("Enable"));
+  }
+  update_sliders();
 }
 
 /************************************************************************/ /**
@@ -2226,25 +2303,25 @@ void city_dialog::update_cma_tab()
  ****************************************************************************/
 void city_dialog::cma_remove()
 {
-  // int i;
-  // hud_message_box *ask;
+  int i;
+  hud_message_box *ask;
 
-  // i = cma_table->currentRow();
+  i = ui.cma_table->currentRow();
 
-  // if (i == -1 || cmafec_preset_num() == 0) {
-  //   return;
-  // }
+  if (i == -1 || cmafec_preset_num() == 0) {
+    return;
+  }
 
-  // ask = new hud_message_box(city_dialog::instance());
-  // ask->set_text_title(_("Remove this preset?"),
-  // cmafec_preset_get_descr(i)); ask->setStandardButtons(QMessageBox::Cancel
-  // | QMessageBox::Ok); ask->setDefaultButton(QMessageBox::Cancel);
-  // ask->setAttribute(Qt::WA_DeleteOnClose);
-  // connect(ask, &hud_message_box::accepted, this, [=]() {
-  //   cmafec_preset_remove(i);
-  //   update_cma_tab();
-  // });
-  // ask->show();
+  ask = new hud_message_box(city_dialog::instance());
+  ask->set_text_title(_("Remove this preset?"), cmafec_preset_get_descr(i));
+  ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
+  ask->setDefaultButton(QMessageBox::Cancel);
+  ask->setAttribute(Qt::WA_DeleteOnClose);
+  connect(ask, &hud_message_box::accepted, this, [=]() {
+    cmafec_preset_remove(i);
+    update_cma_tab();
+  });
+  ask->show();
 }
 
 /************************************************************************/ /**
@@ -2634,7 +2711,11 @@ void city_dialog::update_nation_table()
 /************************************************************************/ /**
    Updates information label ( food, prod ... surpluses ...)
  ****************************************************************************/
-void city_dialog::update_info_label() { ui.info_wdg->update_labels(pcity); }
+void city_dialog::update_info_label()
+{
+  ui.info_wdg->update_labels(pcity);
+  ui.cma_city_info->update_labels(pcity);
+}
 
 /************************************************************************/ /**
    Setups whole city dialog, public function
@@ -2644,7 +2725,7 @@ void city_dialog::setup_ui(struct city *qcity)
   QPixmap q_pix = *get_icon_sprite(tileset, ICON_CITYDLG)->pm;
   QIcon q_icon = ::QIcon(q_pix);
 
-  setContentsMargins(0, 0, 0, 0);
+  setContentsMargins(5, 5, 5, 5);
   setWindowIcon(q_icon);
   pcity = qcity;
   ui.production_combo_p->blockSignals(true);
@@ -3228,6 +3309,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
  ****************************************************************************/
 void destroy_city_dialog()
 {
+  // Only tyrans destroy cities instead building
   if (king()->current_page() >= PAGE_GAME)
     city_dialog::instance()->drop();
 }
