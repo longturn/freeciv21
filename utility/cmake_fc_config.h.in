@@ -125,9 +125,6 @@
 /* sys/time.h available */
 #cmakedefine HAVE_SYS_TIME_H
 
-/* dirent.h available */
-#cmakedefine HAVE_DIRENT_H
-
 /* iconv() available */
 #cmakedefine HAVE_ICONV
 
@@ -156,9 +153,6 @@
 
 /* localtime_r() available */
 #cmakedefine HAVE_LOCALTIME_R
-
-/* opendir() available */
-#cmakedefine HAVE_OPENDIR
 
 /* pclose() available */
 #cmakedefine HAVE_PCLOSE

@@ -94,10 +94,7 @@ if(UNIX)
   require_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
   require_include_file("unistd.h" HAVE_UNISTD_H)
   require_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
-
-  require_function_exists(opendir FREECIV_HAVE_OPENDIR)
 endif()
-require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
 # Some systems don't have a well-defined root user
 if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)
