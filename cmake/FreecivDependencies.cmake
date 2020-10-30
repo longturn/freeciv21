@@ -29,14 +29,6 @@ set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-# Provided by any C99 compiler, no need to check them
-set(HAVE_SIGNAL_H TRUE)
-set(HAVE_STRERROR TRUE)
-set(FREECIV_HAVE_INTTYPES_H TRUE)
-set(FREECIV_HAVE_LOCALE_H TRUE)
-set(FREECIV_HAVE_STDBOOL_H TRUE)
-set(FREECIV_HAVE_STDINT_H TRUE)
-
 # Required to generate the network protocol implementation
 find_package(PythonInterp 3 REQUIRED)
 
@@ -96,8 +88,6 @@ find_package(ZLIB REQUIRED)
 set(HAVE_GETTIMEOFDAY_H TRUE)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
-  check_function_exists(vfork HAVE_VFORK)
-  check_function_exists(fork HAVE_FORK)
   require_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
   require_include_file("libgen.h" HAVE_LIBGEN_H)
   require_include_file("pwd.h" HAVE_PWD_H)

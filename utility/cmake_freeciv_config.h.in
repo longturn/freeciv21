@@ -53,17 +53,8 @@
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS
 
-/* locale.h available */
-#cmakedefine FREECIV_HAVE_LOCALE_H
-
 /* libintl.h available */
 #cmakedefine FREECIV_HAVE_LIBINTL_H
-
-/* inttypes.h available */
-#cmakedefine FREECIV_HAVE_INTTYPES_H
-
-/* stdint.h available */
-#cmakedefine FREECIV_HAVE_STDINT_H
 
 /* sys/types.h available */
 #cmakedefine FREECIV_HAVE_SYS_TYPES_H
@@ -79,9 +70,6 @@
 
 /* dirent.h available */
 #cmakedefine FREECIV_HAVE_DIRENT_H
-
-/* Have standard compliant stdbool.h */
-#cmakedefine FREECIV_HAVE_STDBOOL_H
 
 /* Readline support */
 #cmakedefine FREECIV_HAVE_LIBREADLINE

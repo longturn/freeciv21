@@ -15,16 +15,13 @@
 #include <fc_config.h>
 #endif
 
+#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
-
-#ifdef HAVE_SIGNAL_H
-#include <signal.h>
 #endif
 
 #ifdef FREECIV_MSWINDOWS
@@ -57,11 +54,6 @@
 #include "server.h"
 #include "srv_main.h"
 
-#ifdef HAVE_SIGNAL_H
-#define USE_INTERRUPT_HANDLERS
-#endif
-
-#ifdef USE_INTERRUPT_HANDLERS
 #define save_and_exit(sig)                                                  \
   if (S_S_RUNNING == server_state()) {                                      \
     save_game_auto(#sig, AS_INTERRUPT);                                     \
@@ -119,7 +111,6 @@ static void signal_handler(int sig)
 #endif /* SIGPIPE */
   }
 }
-#endif /* USE_INTERRUPT_HANDLERS */
 
 /**********************************************************************/ /**
   Entry point for Freeciv server.  Basically, does two things:
@@ -144,7 +135,6 @@ int main(int argc, char *argv[])
 #endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
-#ifdef USE_INTERRUPT_HANDLERS
   if (SIG_ERR == signal(SIGINT, signal_handler)) {
     fc_fprintf(stderr, _("Failed to install SIGINT handler: %s\n"),
                fc_strerror(fc_get_errno()));
@@ -174,7 +164,6 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 #endif /* SIGPIPE */
-#endif /* USE_INTERRUPT_HANDLERS */
 
   QCoreApplication app(argc, argv);
 

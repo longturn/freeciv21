@@ -80,12 +80,6 @@
 /* pwd.h available */
 #cmakedefine HAVE_PWD_H
 
-/* signal.h available */
-#cmakedefine HAVE_SIGNAL_H
-
-/* stdlib.h available */
-#cmakedefine HAVE_STDLIB_H
-
 /* strings.h available */
 #cmakedefine HAVE_STRINGS_H
 
@@ -122,12 +116,6 @@
 /* libintl.h available */
 #cmakedefine HAVE_LIBINTL_H
 
-/* inttypes.h available */
-#undef HAVE_INTTYPES_H
-
-/* stdint.h available */
-#define HAVE_STDINT_H
-
 /* sys/types.h available */
 #cmakedefine HAVE_SYS_TYPES_H
 
@@ -142,25 +130,6 @@
 
 /* dirent.h available */
 #cmakedefine HAVE_DIRENT_H
-
-/* stdbool.h available */
-#cmakedefine HAVE_STDBOOL_H
-
-/* fork() available */
-#cmakedefine HAVE_FORK
-
-/* vfork() available */
-#cmakedefine HAVE_VFORK
-
-#ifdef HAVE_FORK
-/* fork() is assumed to be a working one when available at all */
-#define HAVE_WORKING_FORK 1
-#endif
-
-#ifdef HAVE_VFORK
-/* vfork() is assumed to be a working one when available at all */
-#define HAVE_WORKING_VFORK 1
-#endif
 
 /* iconv() available */
 #cmakedefine HAVE_ICONV

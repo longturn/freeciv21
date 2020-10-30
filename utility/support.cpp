@@ -436,17 +436,9 @@ const char *fc_strerror(fc_errno err)
   }
   return buf;
 #else /* FREECIV_MSWINDOWS */
-#ifdef HAVE_STRERROR
   static char buf[256];
 
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
-#else  /* HAVE_STRERROR */
-  static char buf[64];
-
-  fc_snprintf(buf, sizeof(buf), _("error %d (compiled without strerror)"),
-              err);
-  return buf;
-#endif /* HAVE_STRERROR */
 #endif /* FREECIV_MSWINDOWS */
 }
 
