@@ -1509,7 +1509,7 @@ void free_nls(void)
  ****************************************************************************/
 void dont_run_as_root(const char *argv0, const char *fallback)
 {
-#if (defined(ALWAYS_ROOT) || defined(__EMX__) || defined(__BEOS__))
+#ifdef ALWAYS_ROOT
   return;
 #else
   if (getuid() == 0 || geteuid() == 0) {

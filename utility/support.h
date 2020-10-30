@@ -42,26 +42,6 @@
 #define TRUE true
 #define FALSE false
 
-#ifndef __cplusplus
-#if __BEOS__
-#include <posix/be_prim.h>
-#define __bool_true_false_are_defined 1
-#else
-#ifdef FREECIV_HAVE_STDBOOL_H
-#include <stdbool.h>
-#else /* Implement <stdbool.h> ourselves */
-#undef bool
-#undef true
-#undef false
-#undef __bool_true_false_are_defined
-#define bool unsigned int
-#define true 1
-#define false 0
-#define __bool_true_false_are_defined 1
-#endif /* ! FREECIV_HAVE_STDBOOL_H */
-#endif /* ! __BEOS__ */
-#endif /* __cplusplus */
-
 /* intptr_t header */
 /* Prefer full inttypes.h if present. */
 #ifdef FREECIV_HAVE_INTTYPES_H
