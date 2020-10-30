@@ -269,7 +269,11 @@ static int read_from_connection(struct connection *pc, bool block)
   int ret = 0;
   while (socket->bytesAvailable() > 0) {
     int result = read_socket_data(socket, pc->buffer);
-    if (result >= 0) {
+    if (result == 0) {
+      // There is data in the socket but we can't read it, probably the
+      // connection buffer is full.
+      break;
+    } else if (result > 0) {
       ret += result;
     } else {
       // Error
