@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,9 +22,6 @@
 
 #ifdef HAVE_ARPA_INET_H
 #include <arpa/inet.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
 #endif
 
 /* utility */

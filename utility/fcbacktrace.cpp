@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif /* HAVE_CONFIG_H */
 
-#include "fc_prehdrs.h"
-
 #ifdef HAVE_EXECINFO_H
 #include <execinfo.h>
 #endif

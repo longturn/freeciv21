@@ -32,7 +32,7 @@
 /* utility */
 #include "fcintl.h"
 #include "fcthread.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "support.h"
 
 /* common */
@@ -45,7 +45,6 @@
 #include "chatline_g.h"
 #include "client_main.h"
 #include "servers.h"
-
 
 struct server_scan {
   enum server_scan_type type;
@@ -189,7 +188,6 @@ void fcUdpScan::readPendingDatagrams()
  **************************************************************************/
 enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
 {
-  char *msgbuf;
   int type;
   struct data_in din;
   char servername[512];
@@ -209,8 +207,8 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     if (datagram.isNull() || !datagram.isValid()) {
       continue;
     }
-    msgbuf = datagram.data().data();
-    dio_input_init(&din, msgbuf, datagram.data().size());
+    auto data = datagram.data();
+    dio_input_init(&din, data.constData(), data.size());
 
     dio_get_uint8_raw(&din, &type);
     dio_get_string_raw(&din, servername, sizeof(servername));

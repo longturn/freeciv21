@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -31,28 +29,11 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
-
 /* utility */
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "support.h"
 #include "timing.h"
 
@@ -377,8 +358,7 @@ static bool send_to_metaserver(enum meta_flag flag)
             QString::fromUtf8(plr->nation != NO_NATION_SELECTED
                                   ? nation_of_player(plr)->flag_graphic_str
                                   : "none"));
-        post->addQueryItem(QLatin1String("plh[]"),
-                           QString::fromUtf8(pconn ? pconn->addr : ""));
+        post->addQueryItem(QLatin1String("plh[]"), pconn ? pconn->addr : "");
 
         /* is this player available to take?
          * TODO: there's some duplication here with

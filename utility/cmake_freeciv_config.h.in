@@ -65,9 +65,6 @@
 /* stdint.h available */
 #cmakedefine FREECIV_HAVE_STDINT_H
 
-/* ws2tcpip.h available */
-#cmakedefine FREECIV_HAVE_WS2TCPIP_H
-
 /* sys/types.h available */
 #cmakedefine FREECIV_HAVE_SYS_TYPES_H
 
@@ -80,15 +77,6 @@
 /* sys/time.h available */
 #cmakedefine FREECIV_HAVE_SYS_TIME_H
 
-/* sys/socket.h available */
-#cmakedefine FREECIV_HAVE_SYS_SOCKET_H
-
-/* sys/select.h available */
-#cmakedefine FREECIV_HAVE_SYS_SELECT_H
-
-/* netinet/in.h available */
-#cmakedefine FREECIV_HAVE_NETINET_IN_H
-
 /* dirent.h available */
 #cmakedefine FREECIV_HAVE_DIRENT_H
 
@@ -98,9 +86,6 @@
 /* Readline support */
 #cmakedefine FREECIV_HAVE_LIBREADLINE
 
-/* Have socklen_t type defined */
-#cmakedefine FREECIV_HAVE_SOCKLEN_T
-
 /* jansson network protocol in use */
 #cmakedefine FREECIV_JSON_CONNECTION
 
@@ -109,12 +94,6 @@
 
 /* Windows build */
 #cmakedefine FREECIV_MSWINDOWS 1
-
-/* uses some winsock version */
-#cmakedefine FREECIV_HAVE_WINSOCK
-
-/* uses winsock2 */
-#cmakedefine FREECIV_HAVE_WINSOCK2
 
 /* socket zero isn't same stdin */
 #cmakedefine FREECIV_SOCKET_ZERO_NOT_STDIN
@@ -136,9 +115,6 @@
 
 /* Location for freeciv to store its information */
 #cmakedefine FREECIV_STORAGE_DIR "${FREECIV_STORAGE_DIR}"
-
-/* IPv6 Support built in */
-#cmakedefine FREECIV_IPV6_SUPPORT
 
 /* Max number of AI modules */
 #cmakedefine FREECIV_AI_MOD_LAST ${FREECIV_AI_MOD_LAST}

@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h> /* LoadLibrary() */
 #endif
@@ -53,7 +51,7 @@
 #include "idex.h"
 #include "map.h"
 #include "mapimg.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
@@ -234,7 +232,6 @@ static void at_exit(void)
 {
   emergency_exit();
   packets_deinit();
-  fc_shutdown_network();
   update_queue_free();
   fc_destroy_ow_mutex();
 }
@@ -556,10 +553,8 @@ int client_main(int argc, char *argv[])
         announce = ANNOUNCE_IPV4;
       } else if (!strcasecmp(option, "none")) {
         announce = ANNOUNCE_NONE;
-#ifdef FREECIV_IPV6_SUPPORT
       } else if (!strcasecmp(option, "ipv6")) {
         announce = ANNOUNCE_IPV6;
-#endif /* IPv6 support */
       } else {
         fc_fprintf(stderr, _("Invalid announce protocol \"%s\".\n"), option);
         exit(EXIT_FAILURE);
@@ -616,7 +611,6 @@ int client_main(int argc, char *argv[])
 
   ui_init();
   charsets_init();
-  fc_init_network();
   update_queue_init();
 
   fc_init_ow_mutex();

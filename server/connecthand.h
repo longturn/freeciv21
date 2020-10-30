@@ -13,6 +13,7 @@
 #ifndef FC__CONNECTHAND_H
 #define FC__CONNECTHAND_H
 
+#include "connection.h" // cmdlevel
 #include "support.h" /* bool type */
 
 #include "fc_types.h"

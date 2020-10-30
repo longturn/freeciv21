@@ -6750,7 +6750,7 @@ void show_players(struct connection *caller)
         fc_snprintf(buf, sizeof(buf),
                     _("%s from %s (command access level %s), "
                       "bufsize=%dkb"),
-                    pconn->username, pconn->addr,
+                    pconn->username, qUtf8Printable(pconn->addr),
                     cmdlevel_name(pconn->access_level),
                     (pconn->send_buffer->nsize >> 10));
         if (pconn->observer) {

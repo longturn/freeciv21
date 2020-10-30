@@ -47,9 +47,6 @@
 /* Can run programs as root */
 #cmakedefine ALWAYS_ROOT
 
-/* struct ip_mreqn available */
-#cmakedefine HAVE_IP_MREQN
-
 /* arpa/inet.h available */
 #cmakedefine HAVE_ARPA_INET_H
 
@@ -65,9 +62,6 @@
 /* execinfo.h available */
 #cmakedefine HAVE_EXECINFO_H
 
-/* fcntl.h available */
-#cmakedefine HAVE_FCNTL_H
-
 /* libcharset.h available */
 #cmakedefine HAVE_LIBCHARSET_H
 
@@ -82,9 +76,6 @@
 
 /* memory.h available */
 #cmakedefine HAVE_MEMORY_H
-
-/* netdb.h available */
-#cmakedefine HAVE_NETDB_H
 
 /* pwd.h available */
 #cmakedefine HAVE_PWD_H
@@ -104,9 +95,6 @@
 /* sys/file.h available */
 #cmakedefine HAVE_SYS_FILE_H
 
-/* sys/ioctl.h available */
-#cmakedefine HAVE_SYS_IOCTL_H
-
 /* sys/signal.h available */
 #cmakedefine HAVE_SYS_SIGNAL_H
 
@@ -115,9 +103,6 @@
 
 /* sys/termio.h available */
 #cmakedefine HAVE_SYS_TERMIO_H
-
-/* sys/uio.h available */
-#cmakedefine HAVE_SYS_UIO_H
 
 /* sys/utsname.h available */
 #cmakedefine HAVE_SYS_UTSNAME_H
@@ -143,9 +128,6 @@
 /* stdint.h available */
 #define HAVE_STDINT_H
 
-/* ws2tcpip.h available */
-#cmakedefine HAVE_WS2TCPIP_H
-
 /* sys/types.h available */
 #cmakedefine HAVE_SYS_TYPES_H
 
@@ -157,15 +139,6 @@
 
 /* sys/time.h available */
 #cmakedefine HAVE_SYS_TIME_H
-
-/* sys/socket.h available */
-#cmakedefine HAVE_SYS_SOCKET_H
-
-/* sys/select.h available */
-#cmakedefine HAVE_SYS_SELECT_H
-
-/* netinet/in.h available */
-#cmakedefine HAVE_NETINET_IN_H
 
 /* dirent.h available */
 #cmakedefine HAVE_DIRENT_H
@@ -197,12 +170,6 @@
 /* backtrace() available */
 #cmakedefine HAVE_BACKTRACE
 
-/* bind() available */
-#cmakedefine HAVE_BIND
-
-/* connect() available */
-#cmakedefine HAVE_CONNECT
-
 /* fdopen() available */
 #cmakedefine HAVE_FDOPEN
 
@@ -215,17 +182,8 @@
 /* ftime() available */
 #cmakedefine HAVE_FTIME
 
-/* getaddrinfo() available */
-#cmakedefine HAVE_GETADDRINFO
-
-/* gethostbyname() available */
-#cmakedefine HAVE_GETHOSTBYNAME
-
 /* getline() available */
 #cmakedefine HAVE_GETLINE
-
-/* getnameinfo() available */
-#cmakedefine HAVE_GETNAMEINFO
 
 /* getpwuid() available */
 #cmakedefine HAVE_GETPWUID
@@ -235,15 +193,6 @@
 
 /* gettimeofday() available */
 #cmakedefine HAVE_GETTIMEOFDAY
-
-/* inet_aton() available */
-#cmakedefine HAVE_INET_ATON
-
-/* inet_ntop() available */
-#cmakedefine HAVE_INET_NTOP
-
-/* inet_pton() available */
-#cmakedefine HAVE_INET_PTON
 
 /* localtime_r() available */
 #cmakedefine HAVE_LOCALTIME_R
@@ -259,9 +208,6 @@
 
 /* putenv() available */
 #cmakedefine HAVE_PUTENV
-
-/* select() available */
-#cmakedefine HAVE_SELECT
 
 /* setenv() available */
 #cmakedefine HAVE_SETENV
@@ -313,16 +259,6 @@
 
 /* _stricoll() available */
 #cmakedefine HAVE__STRICOLL
-
-/* fcntl() available */
-#cmakedefine HAVE_FCNTL
-
-/* ioctl() available */
-#cmakedefine HAVE_IOCTL
-
-#if defined(HAVE_FCNTL) || defined(HAVE_IOCTL)
-#define NONBLOCKING_SOCKETS 1
-#endif
 
 /* Custom path to CA cert bundle */
 #cmakedefine CUSTOM_CACERT_PATH

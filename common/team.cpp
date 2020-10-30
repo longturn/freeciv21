@@ -43,7 +43,7 @@ struct team {
 };
 
 static struct {
-  struct team_slot *slots;
+  struct team_slot *tslots;
   int used_slots;
 } team_slots;
 
@@ -55,12 +55,12 @@ void team_slots_init(void)
   int i;
 
   /* Init team slots and names. */
-  team_slots.slots = static_cast<team_slot *>(
-      fc_calloc(team_slot_count(), sizeof(*team_slots.slots)));
+  team_slots.tslots = static_cast<team_slot *>(
+      fc_calloc(team_slot_count(), sizeof(*team_slots.tslots)));
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < team_slot_count(); i++) {
-    struct team_slot *tslot = team_slots.slots + i;
+    struct team_slot *tslot = team_slots.tslots + i;
 
     tslot->team = NULL;
     tslot->defined_name = NULL;
@@ -75,7 +75,7 @@ void team_slots_init(void)
 /************************************************************************/ /**
    Returns TRUE if the team slots have been initialized.
  ****************************************************************************/
-bool team_slots_initialised(void) { return (team_slots.slots != NULL); }
+bool team_slots_initialised(void) { return (team_slots.tslots != NULL); }
 
 /************************************************************************/ /**
    Remove all team slots.
@@ -100,8 +100,8 @@ void team_slots_free(void)
 #endif /* FREECIV_ENABLE_NLS */
   }
   team_slots_iterate_end;
-  free(team_slots.slots);
-  team_slots.slots = NULL;
+  free(team_slots.tslots);
+  team_slots.tslots = NULL;
 
   team_slots.used_slots = 0;
 }
@@ -114,7 +114,7 @@ int team_slot_count(void) { return (MAX_NUM_TEAM_SLOTS); }
 /************************************************************************/ /**
    Returns the first team slot.
  ****************************************************************************/
-struct team_slot *team_slot_first(void) { return team_slots.slots; }
+struct team_slot *team_slot_first(void) { return team_slots.tslots; }
 
 /************************************************************************/ /**
    Returns the next team slot.
@@ -122,7 +122,7 @@ struct team_slot *team_slot_first(void) { return team_slots.slots; }
 struct team_slot *team_slot_next(struct team_slot *tslot)
 {
   tslot++;
-  return (tslot < team_slots.slots + team_slot_count() ? tslot : NULL);
+  return (tslot < team_slots.tslots + team_slot_count() ? tslot : NULL);
 }
 
 /************************************************************************/ /**
@@ -133,7 +133,7 @@ int team_slot_index(const struct team_slot *tslot)
   fc_assert_ret_val(team_slots_initialised(), -1);
   fc_assert_ret_val(tslot != NULL, -1);
 
-  return tslot - team_slots.slots;
+  return tslot - team_slots.tslots;
 }
 
 /************************************************************************/ /**
@@ -172,7 +172,7 @@ struct team_slot *team_slot_by_number(int team_id)
     return NULL;
   }
 
-  return team_slots.slots + team_id;
+  return team_slots.tslots + team_id;
 }
 
 /************************************************************************/ /**

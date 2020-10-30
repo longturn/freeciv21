@@ -14,10 +14,12 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
+// Qt
+#include <QCoreApplication>
 #include <QDebug>
 #include <QProcess>
+#include <QTcpServer>
+
 #include <fcntl.h>
 #include <stdio.h>
 #include <string.h>
@@ -26,7 +28,6 @@
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h>
 #endif
-
 
 /* utility */
 #include "astring.h"
@@ -37,7 +38,7 @@
 #include "ioz.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
@@ -181,6 +182,24 @@ void client_kill_server(bool force)
   client_has_hack = FALSE;
 }
 
+/*********************************************************************/ /**
+   Finds the next (lowest) free port.
+ *************************************************************************/
+static int find_next_free_port(int starting_port, int highest_port)
+{
+  // Make sure it's destroyed and resources are cleaned up on return
+  QTcpServer server;
+
+  // Simply attempt to listen until we find a port that works
+  for (int port = starting_port; port < highest_port; ++port) {
+    if (server.listen(QHostAddress::LocalHost, port)) {
+      return port;
+    }
+  }
+
+  return -1;
+}
+
 /**********************************************************************/ /**
    Forks a server if it can. Returns FALSE if we find we
    couldn't start the server.
@@ -195,12 +214,6 @@ bool client_start_server(void)
   char buf[512];
   int connect_tries = 0;
 
-#ifdef FREECIV_IPV6_SUPPORT
-  enum fc_addr_family family = FC_ADDR_ANY;
-#else
-  enum fc_addr_family family = FC_ADDR_IPV4;
-#endif /* FREECIV_IPV6_SUPPORT */
-
   /* only one server (forked from this client) shall be running at a time */
   /* This also resets client_has_hack. */
   client_kill_server(TRUE);
@@ -212,8 +225,7 @@ bool client_start_server(void)
    * used by standalone server on Windows where this is known to be buggy
    * by not starting from DEFAULT_SOCK_PORT but from one higher. */
   internal_server_port = find_next_free_port(DEFAULT_SOCK_PORT + 1,
-                                             DEFAULT_SOCK_PORT + 1 + 10000,
-                                             family, "localhost", TRUE);
+                                             DEFAULT_SOCK_PORT + 1 + 10000);
 
   if (internal_server_port < 0) {
     output_window_append(ftc_client, _("Couldn't start the server."));
@@ -270,12 +282,14 @@ bool client_start_server(void)
       break;
     }
   }
+  // Wait for the server to print its welcome screen
+  serverProcess::i()->waitForReadyRead();
   server_quitting = FALSE;
   /* a reasonable number of tries */
-  while (
-      connect_to_server(user_name, "localhost", internal_server_port, buf,
-                        sizeof(buf) && serverProcess::i()->processId() != 0)
-      == -1) {
+  while (connect_to_server(
+             user_name, "localhost", internal_server_port, buf,
+             sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
+         == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
     if (connect_tries++ > NUMBER_OF_TRIES) {
       log_error("Last error from connect attempts: '%s'", buf);

@@ -69,7 +69,6 @@ class QDialog;
 class QLabel;
 class QLineEdit;
 class QMainWindow;
-class QSocketNotifier;
 class QSpinBox;
 class QStackedLayout;
 class QStatusBar;
@@ -191,8 +190,6 @@ class fc_client : public QMainWindow, private chat_listener {
 
   QDialogButtonBox *button_box;
 
-  QSocketNotifier *server_notifier;
-
   chat_input *chat_line;
 
   QTableWidget *lan_widget;
@@ -223,8 +220,7 @@ public:
   map_view *mapview_wdg;
   fc_sidebar *sidebar_wdg;
   minimap_view *minimapview_wdg;
-  void add_server_source(int);
-  void remove_server_source();
+  void add_server_source(QTcpSocket *socket);
   bool event(QEvent *event);
 
   enum client_pages current_page();
@@ -281,7 +277,7 @@ public:
 
 private slots:
   void send_fake_chat_message(const QString &message);
-  void server_input(int sock);
+  void server_input();
   void closing();
   void slot_lan_scan();
   void slot_meta_scan();
