@@ -91,12 +91,11 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
 {
   /* room for more? */
   if (buf->nsize - buf->ndata < extra_space) {
-    buf->nsize = buf->ndata + extra_space;
-
     /* added this check so we don't gobble up too much mem */
-    if (buf->nsize > MAX_LEN_BUFFER) {
+    if (buf->ndata + extra_space > MAX_LEN_BUFFER) {
       return FALSE;
     }
+    buf->nsize = buf->ndata + extra_space;
     buf->data = (unsigned char *) fc_realloc(buf->data, buf->nsize);
   }
 
@@ -116,8 +115,8 @@ int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
   int didget;
 
   if (!buffer_ensure_free_extra_space(buffer, MAX_LEN_PACKET)) {
-    log_error("can't grow buffer");
-    return -1;
+    // Let's first process the packets in the buffer
+    return 0;
   }
 
   log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
