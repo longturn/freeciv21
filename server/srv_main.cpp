@@ -3164,9 +3164,6 @@ void srv_ready()
 
   CALL_FUNC_EACH_AI(game_start);
 
-  /* We may as well reset is_new_game now. */
-  game.info.is_new_game = FALSE;
-
   log_verbose("srv_running() mostly redundant send_server_settings()");
   send_server_settings(NULL);
 

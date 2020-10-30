@@ -792,6 +792,10 @@ void server::update_game_state()
       m_is_new_turn = game.info.is_new_game;
       m_save_counter = game.info.is_new_game ? 1 : 0;
       m_skip_mapimg = !game.info.is_new_game;
+
+      // We may as well reset is_new_game now.
+      game.info.is_new_game = FALSE;
+
       begin_turn();
     } else {
       end_phase(); // Will end game if needed
