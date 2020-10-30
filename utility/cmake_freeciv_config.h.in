@@ -74,9 +74,6 @@
 /* Readline support */
 #cmakedefine FREECIV_HAVE_LIBREADLINE
 
-/* jansson network protocol in use */
-#cmakedefine FREECIV_JSON_CONNECTION
-
 /* Delta protocol enabled */
 #cmakedefine FREECIV_DELTA_PROTOCOL
 

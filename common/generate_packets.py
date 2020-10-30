@@ -347,14 +347,6 @@ class Field:
 
     # Returns code which put this field.
     def get_put(self,deltafragment):
-        return '''#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = \"%(name)s\";
-#endif /* FREECIV_JSON_CONNECTION */
-'''%self.__dict__ \
-               + self.get_put_real(deltafragment);
-
-    # The code which put this field before it is wrapped in address adding.
-    def get_put_real(self,deltafragment):
         if self.dataio_type=="bitvector":
             return "DIO_BV_PUT(&dout, &field_addr, packet->%(name)s);"%self.__dict__
 
@@ -396,72 +388,17 @@ class Field:
     {
       int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-      int count = 0;
-
-      for (i = 0; i < %(array_size_u)s; i++) {
-        if (old->%(name)s[i] != real_packet->%(name)s[i]) {
-          count++;
-        }
-      }
-      /* Create the array. */
-      DIO_PUT(farray, &dout, &field_addr, count + 1);
-
-      /* Enter array. */
-      field_addr.sub_location = plocation_elem_new(0);
-
-      count = 0;
-#endif /* FREECIV_JSON_CONNECTION */
-
       fc_assert(%(array_size_u)s < 255);
 
       for (i = 0; i < %(array_size_u)s; i++) {
         if (old->%(name)s[i] != real_packet->%(name)s[i]) {
-#ifdef FREECIV_JSON_CONNECTION
-          /* Next diff array element. */
-          field_addr.sub_location->number = count - 1;
-
-          /* Create the diff array element. */
-          DIO_PUT(farray, &dout, &field_addr, 2);
-
-          /* Enter diff array element (start at the index address). */
-          field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
           DIO_PUT(uint8, &dout, &field_addr, i);
 
-#ifdef FREECIV_JSON_CONNECTION
-          /* Content address. */
-          field_addr.sub_location->sub_location->number = 1;
-#endif /* FREECIV_JSON_CONNECTION */
           %(c)s
-
-#ifdef FREECIV_JSON_CONNECTION
-          /* Exit diff array element. */
-          free(field_addr.sub_location->sub_location);
-          field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
         }
       }
-#ifdef FREECIV_JSON_CONNECTION
-      field_addr.sub_location->number = count - 1;
-
-      /* Create the diff array element. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter diff array element. Point to index address. */
-      field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
       DIO_PUT(uint8, &dout, &field_addr, 255);
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit diff array element. */
-      free(field_addr.sub_location->sub_location);
-      field_addr.sub_location->sub_location = NULL;
-
-      /* Exit array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
         if self.is_array == 2 and self.dataio_type != "string" \
            and self.dataio_type != "estring":
@@ -469,73 +406,20 @@ class Field:
     {
       int i, j;
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Create the outer array. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter the outer array. */
-      field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
       for (i = 0; i < %(array_size1_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-        /* Next inner array (an element in the outer array). */
-        field_addr.sub_location->number = i;
-
-        /* Create the inner array. */
-        DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-        /* Enter the inner array. */
-        field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
         for (j = 0; j < %(array_size2_u)s; j++) {
-#ifdef FREECIV_JSON_CONNECTION
-          /* Next element (in the inner array). */
-          field_addr.sub_location->sub_location->number = j;
-#endif /* FREECIV_JSON_CONNECTION */
           %(c)s
         }
-
-#ifdef FREECIV_JSON_CONNECTION
-        /* Exit the inner array. */
-        free(field_addr.sub_location->sub_location);
-        field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
       }
-
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit the outer array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
         else:
             return '''
     {
       int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Create the array. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter the array. */
-      field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
       for (i = 0; i < %(array_size_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-        /* Next array element. */
-        field_addr.sub_location->number = i;
-#endif /* FREECIV_JSON_CONNECTION */
         %(c)s
       }
-
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
 
     # Returns a code fragment which will get the field if the
@@ -558,14 +442,6 @@ class Field:
 
     # Returns code which get this field.
     def get_get(self,deltafragment):
-        return '''#ifdef FREECIV_JSON_CONNECTION
-field_addr.name = \"%(name)s\";
-#endif /* FREECIV_JSON_CONNECTION */
-'''%self.__dict__ \
-               + self.get_get_real(deltafragment);
-
-    # The code which get this field before it is wrapped in address adding.
-    def get_get_real(self,deltafragment):
         if self.struct_type=="float" and not self.is_array:
             return '''if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &real_packet->%(name)s, %(float_factor)d)) {
   RECEIVE_PACKET_FIELD_ERROR(%(name)s);
@@ -674,97 +550,35 @@ field_addr.name = \"%(name)s\";
 {
   int i, j;
 
-#ifdef FREECIV_JSON_CONNECTION
-  /* Enter outer array. */
-  field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 %(extra)s
   for (i = 0; i < %(array_size1_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Update address of outer array element (inner array). */
-    field_addr.sub_location->number = i;
-
-    /* Enter inner array. */
-    field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
     for (j = 0; j < %(array_size2_u)s; j++) {
-#ifdef FREECIV_JSON_CONNECTION
-      /* Update address of element in inner array. */
-      field_addr.sub_location->sub_location->number = j;
-#endif /* FREECIV_JSON_CONNECTION */
       %(c)s
     }
-
-#ifdef FREECIV_JSON_CONNECTION
-    /* Exit inner array. */
-    free(field_addr.sub_location->sub_location);
-    field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit outer array. */
-  free(field_addr.sub_location);
-  field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
             else:
                 return '''
 {
   int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-  /* Enter array. */
-  field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 %(extra)s
   for (i = 0; i < %(array_size_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-    field_addr.sub_location->number = i;
-#endif /* FREECIV_JSON_CONNECTION */
     %(c)s
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit array. */
-  free(field_addr.sub_location);
-  field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
         elif deltafragment and self.diff and self.is_array == 1:
             return '''
 {
 int count;
 
-#ifdef FREECIV_JSON_CONNECTION
-/* Enter array. */
-field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
 for (count = 0;; count++) {
   int i;
-
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.sub_location->number = count;
-
-  /* Enter diff array element (start at the index address). */
-  field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 
   if (!DIO_GET(uint8, &din, &field_addr, &i)) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s);
   }
   if (i == 255) {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Exit diff array element. */
-    free(field_addr.sub_location->sub_location);
-    field_addr.sub_location->sub_location = NULL;
-
-    /* Exit diff array. */
-    free(field_addr.sub_location);
-    field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
-
     break;
   }
   if (i > %(array_size_u)s) {
@@ -773,25 +587,9 @@ for (count = 0;; count++) {
                                \"(> %(array_size_u)s) in array diff\",
                                i);
   } else {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Content address. */
-    field_addr.sub_location->sub_location->number = 1;
-#endif /* FREECIV_JSON_CONNECTION */
     %(c)s
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit diff array element. */
-  free(field_addr.sub_location->sub_location);
-  field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }
-
-#ifdef FREECIV_JSON_CONNECTION
-/* Exit array. */
-free(field_addr.sub_location);
-field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
         else:
             return '''
@@ -1060,18 +858,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
         else:
             post=""
 
-        if len(self.fields) != 0:
-            faddr = '''#ifdef FREECIV_JSON_CONNECTION
-  struct plocation field_addr;
-  {
-    struct plocation *field_addr_tmp = plocation_field_new(NULL);
-    field_addr = *field_addr_tmp;
-    FC_FREE(field_addr_tmp);
-  }
-#endif /* FREECIV_JSON_CONNECTION */
-'''
-        else:
-            faddr = ""
+        faddr = ''
 
         for i in range(2):
             for k,v in vars().items():
@@ -1120,9 +907,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
 '''%self.get_dict(vars())
 
         body=body+'''
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = "fields";
-#endif /* FREECIV_JSON_CONNECTION */
   DIO_BV_PUT(&dout, &field_addr, fields);
 '''
 
@@ -1169,9 +953,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
 '''
             delta_body1='''
 #ifdef FREECIV_DELTA_PROTOCOL
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = "fields";
-#endif /* FREECIV_JSON_CONNECTION */
   DIO_BV_GET(&din, &field_addr, fields);
   '''
             body1=""
@@ -1201,18 +982,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
         else:
             post=""
 
-        if len(self.fields) != 0:
-            faddr = '''#ifdef FREECIV_JSON_CONNECTION
-  struct plocation field_addr;
-  {
-    struct plocation *field_addr_tmp = plocation_field_new(NULL);
-    field_addr = *field_addr_tmp;
-    FC_FREE(field_addr_tmp);
-  }
-#endif /* FREECIV_JSON_CONNECTION */
-'''
-        else:
-            faddr = ""
+        faddr = ''
 
         for i in range(2):
             for k,v in vars().items():

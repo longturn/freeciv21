@@ -13,8 +13,6 @@
 #ifndef FC__PACKETS_H
 #define FC__PACKETS_H
 
-
-
 struct connection;
 struct data_in;
 
@@ -100,13 +98,8 @@ struct packet_handlers {
 void *get_packet_from_connection_raw(struct connection *pc,
                                      enum packet_type *ptype);
 
-#ifdef FREECIV_JSON_CONNECTION
-#define get_packet_from_connection(pc, ptype)                               \
-  get_packet_from_connection_json(pc, ptype)
-#else
 #define get_packet_from_connection(pc, ptype)                               \
   get_packet_from_connection_raw(pc, ptype)
-#endif
 
 void remove_packet_from_buffer(struct socket_packet_buffer *buffer);
 
@@ -134,10 +127,6 @@ const struct packet_handlers *packet_handlers_initial(void);
 const struct packet_handlers *packet_handlers_get(const char *capability);
 
 void packets_deinit(void);
-
-#ifdef FREECIV_JSON_CONNECTION
-#include "packets_json.h"
-#else
 
 #define SEND_PACKET_START(packet_type)                                      \
   unsigned char buffer[MAX_LEN_PACKET];                                     \
@@ -190,8 +179,6 @@ void packets_deinit(void);
   log_packet("Error on field '" #field "'" __VA_ARGS__);                    \
   return NULL
 
-#endif /* FREECIV_JSON_PROTOCOL */
-
 int send_packet_data(struct connection *pc, unsigned char *data, int len,
                      enum packet_type packet_type);
 bool packet_check(struct data_in *din, struct connection *pc);
@@ -211,7 +198,5 @@ bool packet_check(struct data_in *din, struct connection *pc);
   } else {                                                                  \
     strvec = NULL;                                                          \
   }
-
-
 
 #endif /* FC__PACKETS_H */

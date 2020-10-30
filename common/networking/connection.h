@@ -22,14 +22,6 @@
 #include <sys/time.h>
 #endif
 
-#ifdef FREECIV_JSON_CONNECTION
-#include <jansson.h>
-#endif /* FREECIV_JSON_CONNECTION */
-
-#ifndef FREECIV_JSON_CONNECTION
-#define USE_COMPRESSION
-#endif /* FREECIV_JSON_CONNECTION */
-
 /**************************************************************************
   The connection struct and related stuff.
   Includes cmdlevel stuff, which is connection-based.
@@ -162,10 +154,6 @@ struct connection {
   struct socket_packet_buffer *buffer;
   struct socket_packet_buffer *send_buffer;
   struct timer *last_write;
-#ifdef FREECIV_JSON_CONNECTION
-  bool json_mode;
-  json_t *json_packet;
-#endif /* FREECIV_JSON_CONNECTION */
 
   double ping_time;
 
@@ -271,13 +259,11 @@ struct connection {
     const struct packet_handlers *handlers;
   } phs;
 
-#ifdef USE_COMPRESSION
   struct {
     int frozen_level;
 
     struct byte_vector queue;
   } compression;
-#endif
   struct {
     int bytes_send;
   } statistics;
