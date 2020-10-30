@@ -549,7 +549,6 @@ void send_ping_times_to_all()
  *****************************************************************************/
 void get_lanserver_announcement()
 {
-  char *msgbuf;
   struct data_in din;
   int type;
 
@@ -559,8 +558,8 @@ void get_lanserver_announcement()
 
   if (udp_socket->hasPendingDatagrams()) {
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
-    msgbuf = qnd.data().data();
-    dio_input_init(&din, msgbuf, 1);
+    auto data = qnd.data();
+    dio_input_init(&din, data.constData(), 1);
     dio_get_uint8_raw(&din, &type);
     if (type == SERVER_LAN_VERSION) {
       log_debug("Received request for server LAN announcement.");
