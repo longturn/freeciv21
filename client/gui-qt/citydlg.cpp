@@ -527,10 +527,9 @@ void impr_info::update_buildings()
     h = ui->height();
     layout->addWidget(ui, 0, Qt::AlignVCenter);
   }
-
+  layout->setContentsMargins(0,0,0,0);
   if (impr_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(
-        city_dialog::instance()->scroll_height + h + 6);
+    parentWidget()->parentWidget()->setFixedHeight(h + 12);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
   }
@@ -1030,8 +1029,6 @@ void unit_info::update_units()
 {
   int i = unit_list.count();
   int j;
-  int h;
-  float hexfix;
   unit_item *ui;
 
   setUpdatesEnabled(false);
@@ -1041,20 +1038,11 @@ void unit_info::update_units()
     ui = unit_list[j];
     layout->addWidget(ui, 0, Qt::AlignVCenter);
   }
+  layout->setContentsMargins(0,0,0,0);
 
-  hexfix = 1.0;
-  if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
-    hexfix = 0.75;
-  }
-
-  if (tileset_is_isometric(tileset)) {
-    h = tileset_unit_width(get_tileset()) * 0.7 * hexfix + 6;
-  } else {
-    h = tileset_unit_width(get_tileset()) + 6;
-  }
   if (unit_list.count() > 0) {
     parentWidget()->parentWidget()->setFixedHeight(
-        city_dialog::instance()->scroll_height + h);
+        ui->height() + 12);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
   }
