@@ -62,9 +62,6 @@
 #ifdef HAVE_SYS_UTSNAME_H
 #include <sys/utsname.h>
 #endif
-#ifdef FREECIV_HAVE_LIBZ
-#include <zlib.h>
-#endif
 #ifdef FREECIV_MSWINDOWS
 #include <process.h>
 #include <windows.h>
@@ -77,9 +74,7 @@
 #include <libgen.h>
 #endif
 
-#ifdef FREECIV_HAVE_LIBZ
 #include <zlib.h>
-#endif
 
 // Qt
 #include <QString>
@@ -348,7 +343,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
    Wrapper function for gzopen() with filename conversion to local
    encoding on Windows.
  ****************************************************************************/
-#ifdef FREECIV_HAVE_LIBZ
 gzFile fc_gzopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -363,7 +357,6 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
   return gzopen(filename, opentype);
 #endif /* FREECIV_MSWINDOWS */
 }
-#endif /* FREECIV_HAVE_LIBZ */
 
 /************************************************************************/ /**
    Wrapper function for remove() with filename conversion to local

@@ -75,6 +75,8 @@
 #define fc__fallthrough
 #endif
 
+#include <zlib.h>
+
 #ifdef FREECIV_MSWINDOWS
 typedef long int fc_errno;
 #else
@@ -93,10 +95,7 @@ int fc_strcoll(const char *str0, const char *str1);
 int fc_stricoll(const char *str0, const char *str1);
 
 FILE *fc_fopen(const char *filename, const char *opentype);
-#ifdef FREECIV_HAVE_LIBZ
-#include <zlib.h>
 gzFile fc_gzopen(const char *filename, const char *opentype);
-#endif
 int fc_remove(const char *filename);
 int fc_stat(const char *filename, struct stat *buf);
 

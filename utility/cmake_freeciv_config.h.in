@@ -80,9 +80,6 @@
 /* No freeciv specific debugging support at all */
 #cmakedefine FREECIV_NDEBUG
 
-/* zlib is available */
-#cmakedefine FREECIV_HAVE_LIBZ
-
 /* libbzip2 is available */
 #cmakedefine FREECIV_HAVE_LIBBZ2
 
