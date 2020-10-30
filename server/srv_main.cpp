@@ -23,6 +23,8 @@
 
 // Qt
 #include <QCoreApplication>
+#include <QDebug>
+#include <QElapsedTimer>
 
 /* utility */
 #include "astring.h"
@@ -1098,6 +1100,8 @@ static void ai_start_phase(void)
  **************************************************************************/
 void begin_turn(bool is_new_turn)
 {
+  QElapsedTimer timer;
+  timer.start();
   log_debug("Begin turn");
 
   event_cache_remove_old();
@@ -1207,6 +1211,9 @@ void begin_turn(bool is_new_turn)
     // begin_phase() only after AI players have finished their actions.
     lsend_packet_begin_turn(game.est_connections);
   }
+  if (srvarg.timetrack) {
+    qInfo() << "Begin turn:" << timer.elapsed() << "milliseconds";
+  }
 }
 
 /**********************************************************************/ /**
@@ -1215,6 +1222,8 @@ void begin_turn(bool is_new_turn)
  **************************************************************************/
 void begin_phase(bool is_new_phase)
 {
+  QElapsedTimer timer;
+  timer.start();
   log_debug("Begin phase");
 
   conn_list_do_buffer(game.est_connections);
@@ -1372,6 +1381,9 @@ void begin_phase(bool is_new_phase)
      * will be responsive again */
     lsend_packet_begin_turn(game.est_connections);
   }
+  if (srvarg.timetrack) {
+    qInfo() << "Start phase:" << timer.elapsed() << "milliseconds";
+  }
 }
 
 /**********************************************************************/ /**
@@ -1380,6 +1392,8 @@ void begin_phase(bool is_new_phase)
  **************************************************************************/
 void end_phase()
 {
+  QElapsedTimer timer;
+  timer.start();
   log_debug("Endphase");
 
   /*
@@ -1527,6 +1541,9 @@ void end_phase()
     adv_data_phase_done(pplayer);
   }
   phase_players_iterate_end;
+  if (srvarg.timetrack) {
+    qInfo() << "End phase:" << timer.elapsed() << "milliseconds";
+  }
 }
 
 /**********************************************************************/ /**
@@ -1536,6 +1553,8 @@ void end_turn()
 {
   int food = 0, shields = 0, trade = 0, settlers = 0;
 
+  QElapsedTimer timer;
+  timer.start();
   log_debug("Endturn");
 
   /* Hack: because observer players never get an end-phase packet we send
@@ -1766,6 +1785,9 @@ void end_turn()
 
   log_debug("Sendyeartoclients");
   send_year_to_clients();
+  if (srvarg.timetrack) {
+    qInfo() << "End turn:" << timer.elapsed() << "milliseconds";
+  }
 }
 
 /**********************************************************************/ /**
@@ -1779,7 +1801,8 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
   if (!(game.server.autosaves & (1 << type))) {
     return;
   }
-
+  QElapsedTimer timer;
+  timer.start();
   switch (type) {
   case AS_TURN:
     reason_filename = NULL;
@@ -1808,6 +1831,9 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
                 game.server.save_name);
   }
   save_game(filename, save_reason, FALSE);
+  if (srvarg.timetrack) {
+    qInfo() << "Autosave time:" << timer.elapsed() << "milliseconds";
+  }
 }
 
 /**********************************************************************/ /**

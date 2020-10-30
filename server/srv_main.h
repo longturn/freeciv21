@@ -51,6 +51,7 @@ struct server_arguments {
   int quitidle;
   /* exit the server on game ending */
   bool exit_on_end;
+  bool timetrack;          /* defaults to FALSE */
   /* authentication options */
   bool fcdb_enabled;        /* defaults to FALSE */
   char *fcdb_conf;          /* freeciv database configuration file */
