@@ -281,6 +281,8 @@ int main(int argc, char *argv[])
       free(option);
     } else if (is_option("--exit-on-end", argv[inx])) {
       srvarg.exit_on_end = TRUE;
+    } else if (is_option("--timetrack", argv[inx])) {
+      srvarg.timetrack = TRUE;
     } else if ((option =
                     get_option_malloc("--debug", argv, &inx, argc, FALSE))) {
       if (!log_parse_level_str(option, &srvarg.loglevel)) {
@@ -447,6 +449,8 @@ int main(int argc, char *argv[])
                 _("Quit if no players for TIME seconds"));
     cmdhelp_add(help, "e", "exit-on-end",
                 _("When a game ends, exit instead of restarting"));
+    cmdhelp_add(help, "t", "timetrack",
+                _("Prints stats about elapsed time on misc tasks"));
     cmdhelp_add(help, "s",
                 /* TRANS: "saves" is exactly what user must type, do not
                    translate. */
