@@ -50,9 +50,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#ifdef GENERATING_MAC
-#include <events.h> /* for WaitNextEvent() */
-#endif
 #ifdef HAVE_SYS_TIME_H
 #include <sys/time.h>
 #endif
