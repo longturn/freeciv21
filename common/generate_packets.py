@@ -830,22 +830,20 @@ static char *stats_%(name)s_names[] = {%(names)s};
                     diff='force_to_send'
                 else:
                     diff='0'
-                delta_header='''#ifdef FREECIV_DELTA_PROTOCOL
+                delta_header='''
   %(name)s_fields fields;
   struct %(packet_name)s *old;
   bool differ;
   struct genhash **hash = pc->phs.sent + %(type)s;
   int different = %(diff)s;
-#endif /* FREECIV_DELTA_PROTOCOL */
 '''
-                body=self.get_delta_send_body()+"\n#ifndef FREECIV_DELTA_PROTOCOL"
+                body=self.get_delta_send_body()
             else:
                 delta_header=""
-                body="#if 1 /* To match endif */"
+                body=""
+                for field in self.fields:
+                    body=body+field.get_put(0)+"\n"
             body=body+"\n"
-            for field in self.fields:
-                body=body+field.get_put(0)+"\n"
-            body=body+"\n#endif\n"
         else:
             body=""
             delta_header=""
@@ -871,7 +869,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
     # Helper for get_send()
     def get_delta_send_body(self):
         intro='''
-#ifdef FREECIV_DELTA_PROTOCOL
   if (NULL == *hash) {
     *hash = genhash_new_full(hash_%(name)s, cmp_%(name)s,
                              NULL, NULL, NULL, free);
@@ -929,7 +926,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
     genhash_remove(*hash, real_packet);
   }
 '''%i
-        body=body+'''#endif /* FREECIV_DELTA_PROTOCOL */'''
 
         return intro+body
 
@@ -945,32 +941,28 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
 '''
         if self.delta:
-            delta_header='''#ifdef FREECIV_DELTA_PROTOCOL
+            delta_header='''
   %(name)s_fields fields;
   struct %(packet_name)s *old;
   struct genhash **hash = pc->phs.received + %(type)s;
-#endif /* FREECIV_DELTA_PROTOCOL */
 '''
             delta_body1='''
-#ifdef FREECIV_DELTA_PROTOCOL
   DIO_BV_GET(&din, &field_addr, fields);
   '''
             body1=""
             for field in self.key_fields:
                 body1=body1+prefix("  ",field.get_get(1))+"\n"
-            body1=body1+"\n#else /* FREECIV_DELTA_PROTOCOL */\n"
             body2=self.get_delta_receive_body()
         else:
             delta_header=""
             delta_body1=""
-            body1="#if 1 /* To match endif */\n"
+            body1=""
+            for field in self.fields:
+                body1=body1+prefix("  ",field.get_get(0))+"\n"
+            if not body1:
+                body1="  real_packet->__dummy = 0xff;"
             body2=""
-        nondelta=""
-        for field in self.fields:
-            nondelta=nondelta+prefix("  ",field.get_get(0))+"\n"
-        if not nondelta:
-            nondelta="  real_packet->__dummy = 0xff;"
-        body1=body1+nondelta+"\n#endif\n"
+        body1=body1+"\n"
 
         if self.gen_log:
             log='  %(log_macro)s("%(name)s: got info about (%(keys_format)s)"%(keys_arg)s);\n'
@@ -1003,7 +995,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
         else:
             fl=""
         body='''
-#ifdef FREECIV_DELTA_PROTOCOL
   if (NULL == *hash) {
     *hash = genhash_new_full(hash_%(name)s, cmp_%(name)s,
                              NULL, NULL, NULL, free);
@@ -1039,9 +1030,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
   }
 '''%i
 
-        return body+extro+'''
-#endif /* FREECIV_DELTA_PROTOCOL */
-'''
+        return body+extro
 
 # Class which represents a packet. A packet contains a list of fields.
 class Packet:
@@ -1266,11 +1255,9 @@ class Packet:
         result=""
         for v in self.variants:
             if v.delta:
-                result=result+"#ifdef FREECIV_DELTA_PROTOCOL\n"
                 result=result+v.get_hash()
                 result=result+v.get_cmp()
                 result=result+v.get_bitvector()
-                result=result+"#endif /* FREECIV_DELTA_PROTOCOL */\n\n"
             result=result+v.get_receive()
             result=result+v.get_send()
         return result
@@ -1726,7 +1713,6 @@ void delta_stats_reset(void);
 ''')
         output_c.write(get_packet_functional_capability(packets))
         output_c.write('''
-#ifdef FREECIV_DELTA_PROTOCOL
 static genhash_val_t hash_const(const void *vkey)
 {
   return 0;
@@ -1736,7 +1722,6 @@ static bool cmp_const(const void *vkey1, const void *vkey2)
 {
   return TRUE;
 }
-#endif /* FREECIV_DELTA_PROTOCOL */
 ''')
 
         if generate_stats:
