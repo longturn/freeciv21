@@ -84,8 +84,6 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 # Compression
 find_package(ZLIB REQUIRED)
 
-# it works !
-set(HAVE_GETTIMEOFDAY_H TRUE)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
@@ -98,7 +96,6 @@ if(UNIX)
   require_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
 
   require_function_exists(opendir FREECIV_HAVE_OPENDIR)
-  require_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
 endif()
 require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
 # Some systems don't have a well-defined root user
@@ -136,4 +133,3 @@ endif()
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
 endif()
-set(HAVE_GETTIMEOFDAY_H TRUE)

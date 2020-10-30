@@ -14,12 +14,8 @@
 /**********************************************************************
   Measuring times; original author: David Pfitzner <dwp@mso.anu.edu.au>
 
-  We assume we have at least ANSI/ISO C timing functions, so
-  that we can use:
-     clock_t clock() for CPU times
-     time_t time() for user-time
-  If we have HAVE_GETTIMEOFDAY we use gettimeofday() for user-time
-  to get (usually) better resolution than time().
+  We assume we have gettimeofday() for user-time to get (usually)
+  better resolution than time(). One day this will be ported to Qt.
 
   As well as measuring single time intervals, these functions
   support accumulating the time from multiple separate intervals.
@@ -46,14 +42,8 @@
 
 #include <time.h>
 
-#ifdef HAVE_GETTIMEOFDAY
 #include <sys/time.h>
 #include <unistd.h>
-#endif
-
-#ifdef HAVE_FTIME
-#include <sys/timeb.h>
-#endif
 
 /* utility */
 #include "log.h"
@@ -89,13 +79,7 @@ struct timer {
   /* this is start of current timing, if state == TIMER_STARTED: */
   union {
     clock_t c;
-#ifdef HAVE_GETTIMEOFDAY
     struct timeval tv;
-#elif HAVE_FTIME
-    struct timeb tp;
-#else
-    time_t t;
-#endif
   } start;
 };
 
@@ -114,7 +98,6 @@ static void report_clock_failed(struct timer *t)
   t->use = TIMER_IGNORE;
 }
 
-#ifdef HAVE_GETTIMEOFDAY
 /*******************************************************************/ /**
    Report if gettimeofday() returns -1, but only the first time.
    Ignore this timer from now on.
@@ -129,22 +112,6 @@ static void report_gettimeofday_failed(struct timer *t)
   }
   t->use = TIMER_IGNORE;
 }
-#elif !defined HAVE_FTIME
-/*******************************************************************/ /**
-   Report if time() returns -1, but only the first time.
-   Ignore this timer from now on.
- ***********************************************************************/
-static void report_time_failed(struct timer *t)
-{
-  static bool first = TRUE;
-
-  if (first) {
-    log_test("time() returned -1, ignoring timer");
-    first = FALSE;
-  }
-  t->use = TIMER_IGNORE;
-}
-#endif
 
 /*******************************************************************/ /**
    Allocate a new timer with specified "type" and "use".
@@ -232,22 +199,12 @@ void timer_start(struct timer *t)
       return;
     }
   } else {
-#ifdef HAVE_GETTIMEOFDAY
     int ret = gettimeofday(&t->start.tv, NULL);
 
     if (ret == -1) {
       report_gettimeofday_failed(t);
       return;
     }
-#elif defined HAVE_FTIME
-    ftime(&t->start.tp);
-#else
-    t->start.t = time(NULL);
-    if (t->start.t == (time_t) -1) {
-      report_time_failed(t);
-      return;
-    }
-#endif
   }
   t->state = TIMER_STARTED;
 }
@@ -279,7 +236,6 @@ void timer_stop(struct timer *t)
     t->sec += (now - t->start.c) / (double) CLOCKS_PER_SEC;
     t->start.c = now;
   } else {
-#ifdef HAVE_GETTIMEOFDAY
     struct timeval now;
     int ret = gettimeofday(&now, NULL);
 
@@ -299,32 +255,6 @@ void timer_stop(struct timer *t)
       t->usec -= sec * N_USEC_PER_SEC;
     }
     t->start.tv = now;
-#elif defined HAVE_FTIME
-    struct timeb now;
-
-    ftime(&now);
-    t->usec += 1000 * ((long) now.millitm - (long) t->start.tp.millitm);
-    t->sec += now.time - t->start.tp.time;
-    if (t->usec < 0) {
-      t->usec += N_USEC_PER_SEC;
-      t->sec -= 1.0;
-    } else if (t->usec >= N_USEC_PER_SEC) {
-      long sec = t->usec / N_USEC_PER_SEC;
-
-      t->sec += sec;
-      t->usec -= sec * N_USEC_PER_SEC;
-    }
-    t->start.tp = now;
-#else
-    time_t now = time(NULL);
-
-    if (now == (time_t) -1) {
-      report_time_failed(t);
-      return;
-    }
-    t->sec += difftime(now, t->start.t);
-    t->start.t = now;
-#endif
   }
   t->state = TIMER_STOPPED;
 }
@@ -356,7 +286,6 @@ double timer_read_seconds(struct timer *t)
  ***********************************************************************/
 void timer_usleep_since_start(struct timer *t, long usec)
 {
-#ifdef HAVE_GETTIMEOFDAY
   int ret;
   struct timeval tv_now;
   long elapsed_usec;
@@ -378,20 +307,4 @@ void timer_usleep_since_start(struct timer *t, long usec)
 
   if (wait_usec > 0)
     fc_usleep(wait_usec);
-#elif HAVE_FTIME
-  struct timeb now;
-  long elapsed_usec, wait_usec;
-
-  ftime(&now);
-
-  elapsed_usec = (now.time - t->start.tp.time) * N_USEC_PER_SEC
-                 + (now.millitm - t->start.tp.millitm);
-  wait_usec = usec - elapsed_usec;
-
-  if (wait_usec > 0) {
-    fc_usleep(wait_usec);
-  }
-#else
-  fc_usleep(usec);
-#endif
 }
