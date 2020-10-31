@@ -445,7 +445,7 @@ void rank_users(bool interrupt)
   /* don't fail silently, at least print an error */
   if (!fp) {
     log_error("couldn't open ranking log file: \"%s\"",
-              srvarg.ranklog_filename);
+              qUtf8Printable(srvarg.ranklog_filename));
     return;
   }
 

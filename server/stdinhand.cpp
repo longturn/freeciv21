@@ -504,7 +504,8 @@ static void open_metaserver_connection(struct connection *caller,
   server_open_meta(persistent);
   if (send_server_info_to_metaserver(META_INFO)) {
     cmd_reply(CMD_METACONN, caller, C_OK,
-              _("Open metaserver connection to [%s]."), meta_addr_port());
+              _("Open metaserver connection to [%s]."),
+              qUtf8Printable(meta_addr_port()));
   }
 }
 
@@ -516,7 +517,8 @@ static void close_metaserver_connection(struct connection *caller)
   if (send_server_info_to_metaserver(META_GOODBYE)) {
     server_close_meta();
     cmd_reply(CMD_METACONN, caller, C_OK,
-              _("Close metaserver connection to [%s]."), meta_addr_port());
+              _("Close metaserver connection to [%s]."),
+              qUtf8Printable(meta_addr_port()));
   }
 }
 
@@ -644,7 +646,7 @@ static bool metaserver_command(struct connection *caller, char *arg,
   srvarg.metaserver_addr = QString::fromUtf8(arg);
 
   cmd_reply(CMD_METASERVER, caller, C_OK, _("Metaserver is now [%s]."),
-            meta_addr_port());
+            qUtf8Printable(meta_addr_port()));
   return TRUE;
 }
 
@@ -654,7 +656,7 @@ static bool metaserver_command(struct connection *caller, char *arg,
 static bool show_serverid(struct connection *caller, char *arg)
 {
   cmd_reply(CMD_SRVID, caller, C_COMMENT, _("Server id: %s"),
-            srvarg.serverid);
+            qUtf8Printable(srvarg.serverid));
 
   return TRUE;
 }
@@ -1283,7 +1285,8 @@ static void write_init_script(char *script_filename)
     if (!srvarg.metaserver_addr.isEmpty()
         && srvarg.metaserver_addr
                != QLatin1String(DEFAULT_META_SERVER_ADDR)) {
-      fprintf(script_file, "metaserver %s\n", meta_addr_port());
+      fprintf(script_file, "metaserver %s\n",
+              qUtf8Printable(meta_addr_port()));
     }
 
     if (0
@@ -4824,7 +4827,7 @@ static bool reset_command(struct connection *caller, char *arg, bool check,
       if (NULL != caller) {
         cmd_reply(CMD_RESET, caller, C_FAIL,
                   _("Could not read script file '%s'."),
-                  srvarg.script_filename);
+                  qUtf8Printable(srvarg.script_filename));
       }
       return FALSE;
     }
