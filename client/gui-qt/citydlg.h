@@ -205,41 +205,6 @@ protected:
 };
 
 /****************************************************************************
-  Class used for showing tiles and workers view in city dialog
-****************************************************************************/
-class city_map : public QWidget {
-
-  Q_OBJECT
-  canvas *view;
-  canvas *miniview;
-  QPixmap zoomed_pixmap;
-
-public:
-  city_map(QWidget *parent);
-  ~city_map();
-  void set_pixmap(struct city *pcity, float z);
-
-private:
-  void mousePressEvent(QMouseEvent *event);
-  void paintEvent(QPaintEvent *event);
-  struct city *mcity;
-  int radius;
-  float zoom;
-  int wdth;
-  int hight;
-  int cutted_width;
-  int cutted_height;
-  int delta_x;
-  int delta_y;
-
-protected:
-  QSize sizeHint() const;
-  QSize minimumSizeHint() const;
-private slots:
-  void context_menu(QPoint point);
-};
-
-/****************************************************************************
   Item delegate for production popup
 ****************************************************************************/
 class city_production_delegate : public QItemDelegate {
@@ -399,7 +364,6 @@ class city_dialog : public qfc_dialog {
   Q_OBJECT
   Q_DISABLE_COPY(city_dialog);
   Ui::FormCityDlg ui;
-  //city_label *lab_table[6];
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
