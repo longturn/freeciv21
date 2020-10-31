@@ -15,11 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-/* Under Mac OS X sys/types.h must be included before dirent.h */
-#include <sys/types.h>
-#endif
-
 #include <errno.h>
 #include <limits.h>
 #include <locale.h>

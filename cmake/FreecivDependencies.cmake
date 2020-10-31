@@ -84,13 +84,9 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 # Compression
 find_package(ZLIB REQUIRED)
 
-# Miscellaneous POSIX headers and functions
 if(UNIX)
-  require_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
+  # To find the current user name
   require_include_file("pwd.h" HAVE_PWD_H)
-  require_include_file("sys/time.h" HAVE_SYS_TIME_H)
-  require_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)
-  require_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
 endif()
 
 check_function_exists("getpwuid" HAVE_GETPWUID)

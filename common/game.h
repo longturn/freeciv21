@@ -13,13 +13,7 @@
 #ifndef FC__GAME_H
 #define FC__GAME_H
 
-
-
 #include <time.h> /* time_t */
-
-#ifdef FREECIV_HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
 
 /* utility */
 #include "fcthread.h"
@@ -854,7 +848,5 @@ extern struct world wld;
 #define RS_DEFAULT_EXPLODE_NUCLEAR_MAX_RANGE 0
 
 #define RS_ACTION_NO_MAX_DISTANCE "unlimited"
-
-
 
 #endif /* FC__GAME_H */

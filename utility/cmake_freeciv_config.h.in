@@ -53,12 +53,6 @@
 /* libintl.h available */
 #cmakedefine FREECIV_HAVE_LIBINTL_H
 
-/* sys/types.h available */
-#cmakedefine FREECIV_HAVE_SYS_TYPES_H
-
-/* sys/time.h available */
-#cmakedefine FREECIV_HAVE_SYS_TIME_H
-
 /* Readline support */
 #cmakedefine FREECIV_HAVE_LIBREADLINE
 

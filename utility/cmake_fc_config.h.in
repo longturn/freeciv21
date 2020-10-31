@@ -62,9 +62,6 @@
 /* libcharset.h available */
 #cmakedefine HAVE_LIBCHARSET_H
 
-/* sys/wait.h available */
-#cmakedefine HAVE_SYS_WAIT_H
-
 /* lzma.h available */
 #cmakedefine HAVE_LZMA_H
 
@@ -103,12 +100,6 @@
 
 /* libintl.h available */
 #cmakedefine HAVE_LIBINTL_H
-
-/* sys/types.h available */
-#cmakedefine HAVE_SYS_TYPES_H
-
-/* sys/time.h available */
-#cmakedefine HAVE_SYS_TIME_H
 
 /* iconv() available */
 #cmakedefine HAVE_ICONV

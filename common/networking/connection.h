@@ -15,13 +15,6 @@
 
 #include <time.h> /* time_t */
 
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef FREECIV_HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-
 /**************************************************************************
   The connection struct and related stuff.
   Includes cmdlevel stuff, which is connection-based.

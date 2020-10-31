@@ -27,10 +27,6 @@
 #include <stdlib.h> /* size_t */
 #include <sys/stat.h>
 
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-
 #ifdef TRUE
 #undef TRUE
 #endif
@@ -142,15 +138,6 @@ char fc_toupper(char c);
 char fc_tolower(char c);
 
 const char *fc_basename(const char *path);
-
-static inline bool is_bigendian(void)
-{
-#ifdef WORDS_BIGENDIAN
-  return TRUE;
-#else  /* WORDS_BIGENDIAN */
-  return FALSE;
-#endif /* WORDS_BIGENDIAN */
-}
 
 void make_escapes(const char *str, char *buf, size_t buf_len);
 void remove_escapes(const char *str, bool full_escapes, char *buf,
