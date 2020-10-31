@@ -105,9 +105,6 @@ endif()
 # Networking library
 if (WIN32 OR MINGW OR MSYS)
   set(FREECIV_MSWINDOWS TRUE)
-else()
-  # For endianess conversion
-  require_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
 endif()
 
 if (EMSCRIPTEN)

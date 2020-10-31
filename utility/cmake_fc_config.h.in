@@ -47,9 +47,6 @@
 /* Can run programs as root */
 #cmakedefine ALWAYS_ROOT
 
-/* arpa/inet.h available */
-#cmakedefine HAVE_ARPA_INET_H
-
 /* bzlib.h available */
 #cmakedefine HAVE_BZLIB_H
 
