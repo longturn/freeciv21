@@ -293,13 +293,7 @@ char *fc_strcasestr(const char *haystack, const char *needle)
  ****************************************************************************/
 int fc_strcoll(const char *str0, const char *str1)
 {
-#if defined(ENABLE_NLS) && defined(HAVE_STRCOLL)
   return strcoll(str0, str1);
-#elif defined(ENABLE_NLS) && defined(HAVE__STRCOLL)
-  return _strcoll(str0, str1);
-#else
-  return strcmp(str0, str1);
-#endif
 }
 
 /************************************************************************/ /**
@@ -640,9 +634,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
 #define VSNP_BUF_SIZE (64 * 1024)
 int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
 {
-#ifdef HAVE_WORKING_VSNPRINTF
   int r;
-#endif
 
   /* This may be overzealous, but I suspect any triggering of these to
    * be bugs.  */
@@ -651,7 +643,6 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   fc_assert_ret_val(0 < n, -1);
   fc_assert_ret_val(NULL != format, -1);
 
-#ifdef HAVE_WORKING_VSNPRINTF
   r = vsnprintf(str, n, format, ap);
   str[n - 1] = 0;
 
@@ -661,50 +652,6 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   }
 
   return r;
-#else /* HAVE_WORKING_VSNPRINTF */
-  {
-    /* Don't use fc_malloc() or log_*() here, since they may call
-       fc_vsnprintf() if it fails.  */
-
-    static char *buf;
-    size_t len;
-
-    if (!buf) {
-      buf = static_cast<char *>(malloc(VSNP_BUF_SIZE));
-
-      if (!buf) {
-        fprintf(stderr,
-                "Could not allocate %i bytes for vsnprintf() "
-                "replacement.",
-                VSNP_BUF_SIZE);
-        exit(EXIT_FAILURE);
-      }
-    }
-#ifdef HAVE_VSNPRINTF
-    vsnprintf(buf, n, format, ap);
-#else
-    vsprintf(buf, format, ap);
-#endif /* HAVE_VSNPRINTF */
-    buf[VSNP_BUF_SIZE - 1] = '\0';
-    len = strlen(buf);
-
-    if (len >= VSNP_BUF_SIZE - 1) {
-      fprintf(stderr,
-              "Overflow in vsnprintf replacement!"
-              " (buffer size %d) aborting...\n",
-              VSNP_BUF_SIZE);
-      abort();
-    }
-    if (n >= len + 1) {
-      memcpy(str, buf, len + 1);
-      return len;
-    } else {
-      memcpy(str, buf, n - 1);
-      str[n - 1] = '\0';
-      return -1;
-    }
-  }
-#endif /* HAVE_WORKING_VSNPRINTF */
 }
 
 /************************************************************************/ /**

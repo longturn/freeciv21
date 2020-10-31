@@ -22,15 +22,12 @@
 
 #include <errno.h>
 #include <limits.h>
+#include <locale.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#ifdef HAVE_LOCALE_H
-#include <locale.h>
-#endif
 
 #ifdef HAVE_PWD_H
 #include <pwd.h>
@@ -52,6 +49,7 @@
 #include <QDateTime>
 #include <QDir>
 #include <QString>
+#include <QtGlobal>
 
 /* utility */
 #include "astring.h"
@@ -1360,16 +1358,7 @@ static void autocap_update(void)
 void switch_lang(const char *lang)
 {
 #ifdef FREECIV_ENABLE_NLS
-#ifdef HAVE_SETENV
-  setenv("LANG", lang, TRUE);
-#else  /* HAVE_SETENV */
-  if (lang != NULL) {
-    static char envstr[40];
-
-    fc_snprintf(envstr, sizeof(envstr), "LANG=%s", lang);
-    putenv(envstr);
-  }
-#endif /* HAVE_SETENV */
+  qputenv("LANG", lang);
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1677,43 +1666,13 @@ char *skip_to_basename(char *filepath)
  ****************************************************************************/
 bool make_dir(const char *pathname)
 {
-  char *dir;
-  char *path = NULL;
-
-  path = interpret_tilde_alloc(pathname);
-  dir = path;
-  do {
-    dir = strchr(dir, DIR_SEPARATOR_CHAR);
-    /* We set the current / with 0, and restore it afterwards */
-    if (dir) {
-      *dir = '\0';
-    }
-
-#ifdef FREECIV_MSWINDOWS
-#ifdef HAVE__MKDIR
-    /* Prefer _mkdir() in Windows even if mkdir() would seem to be available
-     * - chances are that it's wrong kind of mkdir().
-     * TODO: Make a configure check for mkdir() that also makes sure that it
-     *       takes two parameters, and prefer such proper mkdir() here. */
-    {
-      char *path_in_local_encoding = internal_to_local_string_malloc(path);
-
-      _mkdir(path_in_local_encoding);
-      delete[] path_in_local_encoding;
-    }
-#else  /* HAVE__MKDIR */
-    mkdir(path);
-#endif /* HAVE__MKDIR */
-#endif /* FREECIV_MSWINDOWS */
-
-    if (dir) {
-      *dir = DIR_SEPARATOR_CHAR;
-      dir++;
-    }
-  } while (dir);
-
+  auto path = interpret_tilde_alloc(pathname);
+  auto str = QString::fromUtf8(path);
+  // We can always create a directory with an empty name -- it's the current
+  // folder.
+  auto r = str.isEmpty() ? true : QDir().mkpath(str);
   delete[] path;
-  return TRUE;
+  return r;
 }
 
 /************************************************************************/ /**
