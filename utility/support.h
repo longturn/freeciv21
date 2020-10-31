@@ -128,12 +128,6 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
 
 int fc_gethostname(char *buf, size_t len);
 
-#ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
-/* Support for console I/O in case FREECIV_SOCKET_ZERO_NOT_STDIN. */
-void fc_init_console(void);
-char *fc_read_console(void);
-#endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
-
 bool is_reg_file_for_access(const char *name, bool write_access);
 
 int fc_break_lines(char *str, size_t desired_len);

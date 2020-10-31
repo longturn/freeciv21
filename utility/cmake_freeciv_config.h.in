@@ -71,9 +71,6 @@
 /* Windows build */
 #cmakedefine FREECIV_MSWINDOWS 1
 
-/* socket zero isn't same stdin */
-#cmakedefine FREECIV_SOCKET_ZERO_NOT_STDIN
-
 /* Extra debugging support */
 #cmakedefine FREECIV_DEBUG
 
