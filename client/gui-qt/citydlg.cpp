@@ -3342,8 +3342,9 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
     : QTableView()
 {
   QPoint pos, sh;
-  int desk_width = (QGuiApplication::screens())[0]->availableGeometry().width();
-  int desk_height = (QGuiApplication::screens())[0]->availableGeometry().height();
+  auto temp = QGuiApplication::screens();
+  int desk_width = temp[0]->availableGeometry().width();
+  int desk_height = temp[0]->availableGeometry().height();
   fc_tt = new fc_tooltip(this);
   setAttribute(Qt::WA_DeleteOnClose);
   setWindowFlags(Qt::Popup);

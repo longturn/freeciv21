@@ -1284,7 +1284,7 @@ void mr_menu::execute_shortcut(int sid)
   menu_list = findChildren<QMenu *>();
   for (const QMenu *m : qAsConst(menu_list)) {
     QList<QAction *> actions = m->actions();
-    for (QAction *a : actions) {
+    for (QAction *a : qAsConst(actions)) {
       if (a->shortcut() == seq && a->isEnabled()) {
         a->activate(QAction::Trigger);
         return;

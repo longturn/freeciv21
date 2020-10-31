@@ -1425,7 +1425,8 @@ static void get_lanserver_announcement(void)
 
   if (udp_socket->hasPendingDatagrams()) {
     QNetworkDatagram qnd = udp_socket->receiveDatagram();
-    msgbuf = qnd.data().data();
+    auto temp = qnd.data();
+    msgbuf = temp.data();
     dio_input_init(&din, msgbuf, 1);
     dio_get_uint8_raw(&din, &type);
     if (type == SERVER_LAN_VERSION) {

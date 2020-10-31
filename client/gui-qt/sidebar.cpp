@@ -511,7 +511,8 @@ void fc_sidebar::resize_me(int hght, bool force)
   int w, h, non_std, non_std_count, hres;
 
   h = hght;
-  hres = (QGuiApplication::screens())[0]->availableGeometry().width();
+  auto temp = (QGuiApplication::screens());
+  hres = temp[0]->availableGeometry().width();
   w = (100 * hres) / 1920;
   w = qMax(w, 80);
 
