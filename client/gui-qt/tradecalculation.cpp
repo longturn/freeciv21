@@ -333,14 +333,6 @@ bool trade_generator::discard_any(trade_city *tc, int freeroutes)
 }
 
 /**********************************************************************/ /**
-   Helper function ato randomize list
- **************************************************************************/
-bool tradecity_rand(const trade_city *t1, const trade_city *t2)
-{
-  return (qrand() % 2);
-}
-
-/**********************************************************************/ /**
    Adds routes for cities which can only have maximum possible trade routes
  **************************************************************************/
 void trade_generator::find_certain_routes()
