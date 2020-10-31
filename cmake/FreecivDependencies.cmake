@@ -7,27 +7,14 @@ include(GNUInstallDirs) # For install paths
 # We install so many files... skip up-to-date messages
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# errors out if an include file is not found
-macro(require_include_file file variable)
-  check_include_file(${file} ${variable})
-  if(NOT ${variable})
-    message(FATAL_ERROR "Cannot find header ${file}")
-  endif()
-endmacro()
-
-# errors out if a function is not found
-macro(require_function_exists function variable)
-  check_function_exists(${function} ${variable})
-  if(NOT ${variable})
-    message(FATAL_ERROR "Cannot find function ${function}")
-  endif()
-endmacro()
-
 # Language support
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
+
+# Should be available in C++11 but not all systems have it
+check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 
 # Required to generate the network protocol implementation
 find_package(PythonInterp 3 REQUIRED)
@@ -86,7 +73,7 @@ find_package(ZLIB REQUIRED)
 
 if(UNIX)
   # To find the current user name
-  require_include_file("pwd.h" HAVE_PWD_H)
+  check_include_file("pwd.h" HAVE_PWD_H)
 endif()
 
 check_function_exists("getpwuid" HAVE_GETPWUID)
