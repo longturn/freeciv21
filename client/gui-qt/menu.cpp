@@ -10,8 +10,8 @@
 
 #include "menu.h"
 // Qt
-#include <QApplication>
 #include <QActionGroup>
+#include <QApplication>
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>
@@ -54,8 +54,8 @@
 #include "messageoptions.h"
 #include "messagewin.h"
 #include "minimap.h"
-#include "page_pregame.h"
 #include "page_game.h"
+#include "page_pregame.h"
 #include "plrdlg.h"
 #include "qtg_cxxside.h"
 #include "ratesdlg.h"
@@ -67,6 +67,8 @@ extern QApplication *qapp;
 extern void popup_endgame_report();
 extern void toggle_units_report(bool);
 static void enable_interface(bool enable);
+static QKeySequence shortcut2key(enum shortcut_id s);
+
 extern "C" void option_dialog_popup(const char *name,
                                     const struct option_set *poptset);
 /**********************************************************************/ /**
@@ -86,6 +88,12 @@ void qfc_units_list::add(qfc_delayed_unit_item *fui)
    Clears list of units
  **************************************************************************/
 void qfc_units_list::clear() { unit_list.clear(); }
+
+QKeySequence shortcut2key(enum shortcut_id s)
+{
+  return QKeySequence(
+      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(s)));
+}
 
 /**********************************************************************/ /**
    Initialize menus (sensitivity, name, etc.) based on the
@@ -407,7 +415,7 @@ void go_act_menu::create()
 #define ADD_OLD_SHORTCUT(wanted_action_id, sc_id)                           \
   if (act_id == wanted_action_id) {                                         \
     item->setShortcut(QKeySequence(                                         \
-        shortcut_to_string(fc_shortcuts::sc()->get_shortcut(sc_id))));      \
+        shortcut_to_string(fc_shortcuts::sc()->get_shortcut(sc_id))));        \
   }
 
       /* Create and add the menu item. It will be hidden or shown based on
@@ -608,21 +616,18 @@ void mr_menu::setup_menus()
   /* View Menu */
   menu = this->addMenu(Q_("?verb:View"));
   act = menu->addAction(_("Center View"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_CENTER_VIEW))));
+  act->setShortcut(shortcut2key(SC_CENTER_VIEW));
   connect(act, &QAction::triggered, this, &mr_menu::slot_center_view);
   menu->addSeparator();
   act = menu->addAction(_("Fullscreen"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_FULLSCREEN))));
+  act->setShortcut(shortcut2key(SC_FULLSCREEN));
   act->setCheckable(true);
   act->setChecked(gui_options.gui_qt_fullscreen);
   connect(act, &QAction::triggered, this, &mr_menu::slot_fullscreen);
   menu->addSeparator();
   minimap_status = menu->addAction(_("Minimap"));
   minimap_status->setCheckable(true);
-  minimap_status->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_MINIMAP))));
+  minimap_status->setShortcut(shortcut2key(SC_MINIMAP));
   minimap_status->setChecked(true);
   connect(minimap_status, &QAction::triggered, this,
           &mr_menu::slot_minimap_view);
@@ -637,23 +642,19 @@ void mr_menu::setup_menus()
   connect(btlog_status, &QAction::triggered, this, &mr_menu::slot_battlelog);
   lock_status = menu->addAction(_("Lock interface"));
   lock_status->setCheckable(true);
-  lock_status->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_IFACE_LOCK))));
+  lock_status->setShortcut(shortcut2key(SC_IFACE_LOCK));
   lock_status->setChecked(false);
   connect(lock_status, &QAction::triggered, this, &mr_menu::slot_lock);
   connect(minimap_status, &QAction::triggered, this, &mr_menu::slot_lock);
   menu->addSeparator();
   act = menu->addAction(_("Zoom in"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_ZOOM_IN))));
+  act->setShortcut(shortcut2key(SC_ZOOM_IN));
   connect(act, &QAction::triggered, this, &mr_menu::zoom_in);
   act = menu->addAction(_("Zoom default"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_ZOOM_RESET))));
+  act->setShortcut(shortcut2key(SC_ZOOM_RESET));
   connect(act, &QAction::triggered, this, &mr_menu::zoom_reset);
   act = menu->addAction(_("Zoom out"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_ZOOM_OUT))));
+  act->setShortcut(shortcut2key(SC_ZOOM_OUT));
   connect(act, &QAction::triggered, this, &mr_menu::zoom_out);
   scale_fonts_status = menu->addAction(_("Scale fonts"));
   connect(scale_fonts_status, &QAction::triggered, this,
@@ -668,20 +669,17 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("City Output"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_output);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_CITY_OUTPUT))));
+  act->setShortcut(shortcut2key(SC_CITY_OUTPUT));
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_output);
   act = menu->addAction(_("Map Grid"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_MAP_GRID))));
+  act->setShortcut(shortcut2key(SC_MAP_GRID));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_map_grid);
   connect(act, &QAction::triggered, this, &mr_menu::slot_map_grid);
   act = menu->addAction(_("National Borders"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_borders);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_NAT_BORDERS))));
+  act->setShortcut(shortcut2key(SC_NAT_BORDERS));
   connect(act, &QAction::triggered, this, &mr_menu::slot_borders);
   act = menu->addAction(_("Native Tiles"));
   act->setCheckable(true);
@@ -690,15 +688,13 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_native_tiles);
   act = menu->addAction(_("City Full Bar"));
   act->setCheckable(true);
-  act->setShortcut(QKeySequence(shortcut_to_string(
-      fc_shortcuts::sc()->get_shortcut(SC_SHOW_FULLBAR))));
+  act->setShortcut(shortcut2key(SC_SHOW_FULLBAR));
   act->setChecked(gui_options.draw_full_citybar);
   connect(act, &QAction::triggered, this, &mr_menu::slot_fullbar);
   act = menu->addAction(_("City Names"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_names);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_CITY_NAMES))));
+  act->setShortcut(shortcut2key(SC_CITY_NAMES));
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_names);
   act = menu->addAction(_("City Growth"));
   act->setCheckable(true);
@@ -708,8 +704,7 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("City Production Levels"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_productions);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_CITY_PROD))));
+  act->setShortcut(shortcut2key(SC_CITY_PROD));
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_production);
   act = menu->addAction(_("City Buy Cost"));
   act->setCheckable(true);
@@ -718,8 +713,7 @@ void mr_menu::setup_menus()
   act = menu->addAction(_("City Traderoutes"));
   act->setCheckable(true);
   act->setChecked(gui_options.draw_city_trade_routes);
-  act->setShortcut(QKeySequence(shortcut_to_string(
-      fc_shortcuts::sc()->get_shortcut(SC_TRADE_ROUTES))));
+  act->setShortcut(shortcut2key(SC_TRADE_ROUTES));
   connect(act, &QAction::triggered, this, &mr_menu::slot_city_traderoutes);
 
   /* Select Menu */
@@ -749,13 +743,11 @@ void mr_menu::setup_menus()
           &mr_menu::slot_select_same_everywhere);
   menu->addSeparator();
   act = menu->addAction(_("Wait"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_WAIT))));
+  act->setShortcut(shortcut2key(SC_WAIT));
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_wait);
   act = menu->addAction(_("Done"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_DONE_MOVING))));
+  act->setShortcut(shortcut2key(SC_DONE_MOVING));
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_done_moving);
 
@@ -767,8 +759,7 @@ void mr_menu::setup_menus()
   /* Unit Menu */
   menu = this->addMenu(_("Unit"));
   act = menu->addAction(_("Go to Tile"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_GOTO))));
+  act->setShortcut(shortcut2key(SC_GOTO));
   menu_list.insert(STANDARD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_goto);
 
@@ -780,42 +771,35 @@ void mr_menu::setup_menus()
   menu_list.insert(GOTO_CITY, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_return_to_city);
   act = menu->addAction(_("Go to/Airlift to City..."));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_GOTOAIRLIFT))));
+  act->setShortcut(shortcut2key(SC_GOTOAIRLIFT));
   menu_list.insert(AIRLIFT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_airlift);
   menu->addSeparator();
   act = menu->addAction(_("Auto Explore"));
   menu_list.insert(EXPLORE, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_AUTOEXPLORE))));
+  act->setShortcut(shortcut2key(SC_AUTOEXPLORE));
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_explore);
   act = menu->addAction(_("Patrol"));
   menu_list.insert(STANDARD, act);
   act->setEnabled(false);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_PATROL))));
+  act->setShortcut(shortcut2key(SC_PATROL));
   connect(act, &QAction::triggered, this, &mr_menu::slot_patrol);
   menu->addSeparator();
   act = menu->addAction(_("Sentry"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_SENTRY))));
+  act->setShortcut(shortcut2key(SC_SENTRY));
   menu_list.insert(SENTRY, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_sentry);
   act = menu->addAction(_("Unsentry All On Tile"));
-  act->setShortcut(QKeySequence(shortcut_to_string(
-      fc_shortcuts::sc()->get_shortcut(SC_UNSENTRY_TILE))));
+  act->setShortcut(shortcut2key(SC_UNSENTRY_TILE));
   menu_list.insert(WAKEUP, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unsentry);
   menu->addSeparator();
   act = menu->addAction(_("Load"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_LOAD))));
+  act->setShortcut(shortcut2key(SC_LOAD));
   menu_list.insert(LOAD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_load);
   act = menu->addAction(_("Unload"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_UNLOAD))));
+  act->setShortcut(shortcut2key(SC_UNLOAD));
   menu_list.insert(UNLOAD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_unload);
   act = menu->addAction(_("Unload All From Transporter"));
@@ -827,12 +811,10 @@ void mr_menu::setup_menus()
   act = menu->addAction(QString(action_id_name_translation(ACTION_HOME_CITY))
                             .replace("&", "&&"));
   menu_list.insert(HOMECITY, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_SETHOME))));
+  act->setShortcut(shortcut2key(SC_SETHOME));
   connect(act, &QAction::triggered, this, &mr_menu::slot_set_home);
   act = menu->addAction(_("Upgrade"));
-  act->setShortcut(QKeySequence(shortcut_to_string(
-      fc_shortcuts::sc()->get_shortcut(SC_UPGRADE_UNIT))));
+  act->setShortcut(shortcut2key(SC_UPGRADE_UNIT));
   menu_list.insert(UPGRADE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_upgrade);
   act = menu->addAction(_("Convert"));
@@ -848,8 +830,7 @@ void mr_menu::setup_menus()
   menu = this->addMenu(_("Combat"));
   act = menu->addAction(_("Fortify Unit"));
   menu_list.insert(FORTIFY, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_FORTIFY))));
+  act->setShortcut(shortcut2key(SC_FORTIFY));
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_fortify);
   act = menu->addAction(
       QString(Q_(terrain_control.gui_type_base0)).replace("&", "&&"));
@@ -870,8 +851,7 @@ void mr_menu::setup_menus()
   /* TRANS: Menu item to bring up the action selection dialog. */
   act = menu->addAction(_("Do..."));
   menu_list.insert(ORDER_DIPLOMAT_DLG, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_DO))));
+  act->setShortcut(shortcut2key(SC_DO));
   connect(act, &QAction::triggered, this, &mr_menu::slot_action);
 
   /* Work Menu */
@@ -879,40 +859,33 @@ void mr_menu::setup_menus()
   act =
       menu->addAction(QString(action_id_name_translation(ACTION_FOUND_CITY))
                           .replace("&", "&&"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_BUILDCITY))));
+  act->setShortcut(shortcut2key(SC_BUILDCITY));
   menu_list.insert(BUILD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_city);
   act = menu->addAction(_("Auto Settler"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_AUTOMATE))));
+  act->setShortcut(shortcut2key(SC_AUTOMATE));
   menu_list.insert(AUTOSETTLER, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_auto_settler);
   menu->addSeparator();
   act = menu->addAction(_("Build Road"));
   menu_list.insert(ROAD, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_BUILDROAD))));
+  act->setShortcut(shortcut2key(SC_BUILDROAD));
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_road);
   roads_menu = menu->addMenu(_("Build Path"));
   act = menu->addAction(_("Build Irrigation"));
-  act->setShortcut(QKeySequence(shortcut_to_string(
-      fc_shortcuts::sc()->get_shortcut(SC_BUILDIRRIGATION))));
+  act->setShortcut(shortcut2key(SC_BUILDIRRIGATION));
   menu_list.insert(IRRIGATION, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_irrigation);
   act = menu->addAction(_("Cultivate"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_CULTIVATE))));
+  act->setShortcut(shortcut2key(SC_CULTIVATE));
   menu_list.insert(CULTIVATE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_cultivate);
   act = menu->addAction(_("Build Mine"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_BUILDMINE))));
+  act->setShortcut(shortcut2key(SC_BUILDMINE));
   menu_list.insert(MINE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_mine);
   act = menu->addAction(_("Plant"));
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_PLANT))));
+  act->setShortcut(shortcut2key(SC_PLANT));
   menu_list.insert(PLANT, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_plant);
   menu->addSeparator();
@@ -931,13 +904,11 @@ void mr_menu::setup_menus()
   menu->addSeparator();
   act = menu->addAction(_("Transform Terrain"));
   menu_list.insert(TRANSFORM, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_TRANSFORM))));
+  act->setShortcut(shortcut2key(SC_TRANSFORM));
   connect(act, &QAction::triggered, this, &mr_menu::slot_transform);
   act = menu->addAction(_("Clean Pollution"));
   menu_list.insert(POLLUTION, act);
-  act->setShortcut(QKeySequence(
-      shortcut_to_string(fc_shortcuts::sc()->get_shortcut(SC_PARADROP))));
+  act->setShortcut(shortcut2key(SC_PARADROP));
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_pollution);
   act = menu->addAction(_("Clean Nuclear Fallout"));
   menu_list.insert(FALLOUT, act);
@@ -1377,7 +1348,8 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1417,7 +1389,8 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   QList<QAction *> actions = roads_menu->actions();
   for (auto act : qAsConst(actions)) {
     removeAction(act);
@@ -1466,7 +1439,8 @@ void mr_menu::update_bases_menu()
   QAction *act;
   struct unit_list *punits = nullptr;
   bool enabled = false;
-  if (!initialized) return;
+  if (!initialized)
+    return;
 
   QList<QAction *> actions = bases_menu->actions();
   for (auto act : qAsConst(actions)) {
@@ -1514,7 +1488,7 @@ void mr_menu::update_bases_menu()
 void mr_menu::menus_sensitive()
 {
   QList<munit> keys;
-  QHash<munit, QAction *>::iterator i;
+  QMultiHash<munit, QAction *>::iterator i;
   struct unit_list *punits = nullptr;
   struct road_type *proad;
   struct extra_type *tgt;
@@ -1525,7 +1499,8 @@ void mr_menu::menus_sensitive()
   struct terrain *pterrain;
   const struct unit_type *ptype = NULL;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   players_iterate(pplayer)
   {
     if (city_list_size(pplayer->cities)) {
@@ -2329,7 +2304,7 @@ void mr_menu::slot_autocaravan()
 
   if (!sent) {
     queen()->infotab->chtwdg->append(_("Didn't find any trade route"
-                                     " to establish"));
+                                       " to establish"));
   }
 }
 
