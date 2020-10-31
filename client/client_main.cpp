@@ -26,6 +26,9 @@
 #include <stdlib.h>
 #include <time.h>
 
+// Qt
+#include <QApplication>
+
 /* utility */
 #include "bitvector.h"
 #include "capstr.h"
@@ -335,6 +338,9 @@ int client_main(int argc, char *argv[])
 #endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
+  QApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
+
   i_am_client(); /* Tell to libfreeciv that we are client */
 
   fc_interface_init_client();
@@ -577,10 +583,6 @@ int client_main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-  /* Remove all options except those intended for the UI. */
-  argv[1 + ui_options] = NULL;
-  argc = 1 + ui_options;
-
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
 
@@ -694,7 +696,7 @@ int client_main(int argc, char *argv[])
   editor_init();
 
   /* run gui-specific client */
-  ui_main(argc, argv);
+  ui_main();
 
   /* termination */
   client_exit();

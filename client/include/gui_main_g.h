@@ -25,7 +25,7 @@ class QTcpSocket;
 #include "gui_proto_constructor.h"
 
 GUI_FUNC_PROTO(void, ui_init, void)
-GUI_FUNC_PROTO(void, ui_main, int argc, char *argv[])
+GUI_FUNC_PROTO(void, ui_main, void)
 GUI_FUNC_PROTO(void, ui_exit, void)
 GUI_FUNC_PROTO(void, options_extra_init, void)
 

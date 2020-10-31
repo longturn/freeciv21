@@ -31,7 +31,7 @@ class QTcpSocket;
 
 struct gui_funcs {
   void (*ui_init)(void);
-  void (*ui_main)(int argc, char *argv[]);
+  void (*ui_main)();
   void (*ui_exit)(void);
 
   enum gui_type (*get_gui_type)(void);

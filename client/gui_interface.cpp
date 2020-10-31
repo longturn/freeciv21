@@ -48,7 +48,7 @@ void ui_init(void) { funcs.ui_init(); }
 /**********************************************************************/ /**
    Call ui_main callback
  **************************************************************************/
-void ui_main(int argc, char *argv[]) { funcs.ui_main(argc, argv); }
+void ui_main() { funcs.ui_main(); }
 
 /**********************************************************************/ /**
    Call ui_exit callback
