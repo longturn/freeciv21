@@ -16,14 +16,11 @@
 #endif
 
 #include <assert.h>
+#include <signal.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef HAVE_SIGNAL_H
-#include <signal.h>
-#endif
 
 /* utility */
 #include "capability.h"
@@ -770,7 +767,6 @@ int main(int argc, char **argv)
   struct tag_types *tag_info = &html_tags;
 
   init_nls();
-  registry_module_init();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   /* Set the default log level. */
@@ -900,7 +896,6 @@ int main(int argc, char **argv)
   }
 
   con_log_close();
-  registry_module_close();
   free_libfreeciv();
   free_nls();
   cmdline_option_values_free();

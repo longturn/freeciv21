@@ -30,9 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
+// Qt
+#include <QtEndian>
 
 /* utility */
 #include "bitvector.h"
@@ -258,13 +257,13 @@ void dio_put_uint8_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_uint16_raw(struct raw_data_out *dout, int value)
 {
-  uint16_t x = htons(value);
+  uint16_t x = qToBigEndian(uint16_t(value));
   FC_STATIC_ASSERT(sizeof(x) == 2, uint16_not_2_bytes);
 
-  FIELD_RANGE_TEST((int) ntohs(x) != value, ,
+  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
                    "Trying to put %d into 16 bits; "
                    "it will result %d at receiving side.",
-                   value, (int) ntohs(x));
+                   value, (int) qFromBigEndian(x));
 
   if (enough_space(dout, 2)) {
     memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 2);
@@ -277,13 +276,13 @@ void dio_put_uint16_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_uint32_raw(struct raw_data_out *dout, int value)
 {
-  uint32_t x = htonl(value);
+  uint32_t x = qToBigEndian(uint32_t(value));
   FC_STATIC_ASSERT(sizeof(x) == 4, uint32_not_4_bytes);
 
-  FIELD_RANGE_TEST((int) ntohl(x) != value, ,
+  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
                    "Trying to put %d into 32 bits; "
                    "it will result %d at receiving side.",
-                   value, (int) ntohl(x));
+                   value, (int) qFromBigEndian(x));
 
   if (enough_space(dout, 4)) {
     memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 4);
@@ -584,7 +583,7 @@ bool dio_get_uint16_raw(struct data_in *din, int *dest)
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 2);
-  *dest = ntohs(x);
+  *dest = qFromBigEndian(x);
   din->current += 2;
   return TRUE;
 }
@@ -605,7 +604,7 @@ bool dio_get_uint32_raw(struct data_in *din, int *dest)
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 4);
-  *dest = ntohl(x);
+  *dest = qFromBigEndian(x);
   din->current += 4;
   return TRUE;
 }

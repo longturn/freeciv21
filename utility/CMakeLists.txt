@@ -40,7 +40,6 @@ add_library(
   deprecations.cpp
   distribute.cpp
   fc_cmdline.cpp
-  fc_dirent.cpp
   fc_utf8.cpp
   fcbacktrace.cpp
   fciconv.cpp
@@ -57,7 +56,6 @@ add_library(
   rand.cpp
   registry.cpp
   registry_ini.cpp
-  registry_xml.cpp
   section_file.cpp
   shared.cpp
   string_vector.cpp

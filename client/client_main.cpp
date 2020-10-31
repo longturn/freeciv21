@@ -355,7 +355,6 @@ int client_main(int argc, char *argv[])
   (void) bindtextdomain("freeciv-nations", get_locale_dir());
 #endif
 
-  registry_module_init();
   audio_init();
   init_character_encodings(gui_character_encoding, gui_use_transliteration);
 #ifdef ENABLE_NLS
@@ -751,7 +750,6 @@ void client_exit(void)
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 
-  registry_module_close();
   free_libfreeciv();
   free_nls();
 

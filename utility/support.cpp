@@ -50,24 +50,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#ifdef GENERATING_MAC
-#include <events.h> /* for WaitNextEvent() */
-#endif
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h> /* usleep, fcntl, gethostname */
-#endif
-#ifdef HAVE_SYS_UTSNAME_H
-#include <sys/utsname.h>
-#endif
-#ifdef FREECIV_HAVE_LIBZ
-#include <zlib.h>
-#endif
 #ifdef FREECIV_MSWINDOWS
 #include <process.h>
 #include <windows.h>
@@ -75,16 +57,12 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#ifdef HAVE_LIBGEN_H
-/* POSIX version of basename() */
-#include <libgen.h>
-#endif
 
-#ifdef FREECIV_HAVE_LIBZ
 #include <zlib.h>
-#endif
 
 // Qt
+#include <QFileInfo>
+#include <QHostInfo>
 #include <QString>
 #include <QThread>
 
@@ -300,13 +278,7 @@ char *fc_strcasestr(const char *haystack, const char *needle)
  ****************************************************************************/
 int fc_strcoll(const char *str0, const char *str1)
 {
-#if defined(ENABLE_NLS) && defined(HAVE_STRCOLL)
   return strcoll(str0, str1);
-#elif defined(ENABLE_NLS) && defined(HAVE__STRCOLL)
-  return _strcoll(str0, str1);
-#else
-  return strcmp(str0, str1);
-#endif
 }
 
 /************************************************************************/ /**
@@ -351,7 +323,6 @@ FILE *fc_fopen(const char *filename, const char *opentype)
    Wrapper function for gzopen() with filename conversion to local
    encoding on Windows.
  ****************************************************************************/
-#ifdef FREECIV_HAVE_LIBZ
 gzFile fc_gzopen(const char *filename, const char *opentype)
 {
 #ifdef FREECIV_MSWINDOWS
@@ -366,7 +337,6 @@ gzFile fc_gzopen(const char *filename, const char *opentype)
   return gzopen(filename, opentype);
 #endif /* FREECIV_MSWINDOWS */
 }
-#endif /* FREECIV_HAVE_LIBZ */
 
 /************************************************************************/ /**
    Wrapper function for remove() with filename conversion to local
@@ -439,17 +409,9 @@ const char *fc_strerror(fc_errno err)
   }
   return buf;
 #else /* FREECIV_MSWINDOWS */
-#ifdef HAVE_STRERROR
   static char buf[256];
 
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
-#else  /* HAVE_STRERROR */
-  static char buf[64];
-
-  fc_snprintf(buf, sizeof(buf), _("error %d (compiled without strerror)"),
-              err);
-  return buf;
-#endif /* HAVE_STRERROR */
 #endif /* FREECIV_MSWINDOWS */
 }
 
@@ -657,9 +619,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
 #define VSNP_BUF_SIZE (64 * 1024)
 int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
 {
-#ifdef HAVE_WORKING_VSNPRINTF
   int r;
-#endif
 
   /* This may be overzealous, but I suspect any triggering of these to
    * be bugs.  */
@@ -668,7 +628,6 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   fc_assert_ret_val(0 < n, -1);
   fc_assert_ret_val(NULL != format, -1);
 
-#ifdef HAVE_WORKING_VSNPRINTF
   r = vsnprintf(str, n, format, ap);
   str[n - 1] = 0;
 
@@ -678,50 +637,6 @@ int fc_vsnprintf(char *str, size_t n, const char *format, va_list ap)
   }
 
   return r;
-#else /* HAVE_WORKING_VSNPRINTF */
-  {
-    /* Don't use fc_malloc() or log_*() here, since they may call
-       fc_vsnprintf() if it fails.  */
-
-    static char *buf;
-    size_t len;
-
-    if (!buf) {
-      buf = static_cast<char *>(malloc(VSNP_BUF_SIZE));
-
-      if (!buf) {
-        fprintf(stderr,
-                "Could not allocate %i bytes for vsnprintf() "
-                "replacement.",
-                VSNP_BUF_SIZE);
-        exit(EXIT_FAILURE);
-      }
-    }
-#ifdef HAVE_VSNPRINTF
-    vsnprintf(buf, n, format, ap);
-#else
-    vsprintf(buf, format, ap);
-#endif /* HAVE_VSNPRINTF */
-    buf[VSNP_BUF_SIZE - 1] = '\0';
-    len = strlen(buf);
-
-    if (len >= VSNP_BUF_SIZE - 1) {
-      fprintf(stderr,
-              "Overflow in vsnprintf replacement!"
-              " (buffer size %d) aborting...\n",
-              VSNP_BUF_SIZE);
-      abort();
-    }
-    if (n >= len + 1) {
-      memcpy(str, buf, len + 1);
-      return len;
-    } else {
-      memcpy(str, buf, n - 1);
-      str[n - 1] = '\0';
-      return -1;
-    }
-  }
-#endif /* HAVE_WORKING_VSNPRINTF */
 }
 
 /************************************************************************/ /**
@@ -778,111 +693,10 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
  ****************************************************************************/
 int fc_gethostname(char *buf, size_t len)
 {
-#ifdef HAVE_GETHOSTNAME
-  return gethostname(buf, len);
-#else
-  return -1;
-#endif
-}
-
-#ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
-/****************************************************************************
-  Support for console I/O in case FREECIV_SOCKET_ZERO_NOT_STDIN.
-****************************************************************************/
-
-#define CONSOLE_BUF_SIZE 100
-static char console_buf[CONSOLE_BUF_SIZE + 1];
-
-/***************************************************************************/
-
-#ifdef FREECIV_MSWINDOWS
-static HANDLE console_thread = INVALID_HANDLE_VALUE;
-
-static DWORD WINAPI thread_proc(LPVOID arg)
-{
-  if (fgets(console_buf, CONSOLE_BUF_SIZE, stdin)) {
-    char *s;
-
-    if ((s = strchr(console_buf, '\n'))) {
-      *s = '\0';
-    }
-  }
-
+  auto name = QHostInfo::localHostName();
+  fc_strlcpy(buf, name.toUtf8().data(), len);
   return 0;
 }
-#endif /* FREECIV_MSWINDOWS */
-
-/************************************************************************/ /**
-   Initialize console I/O in case FREECIV_SOCKET_ZERO_NOT_STDIN.
- ****************************************************************************/
-void fc_init_console(void)
-{
-#ifdef FREECIV_MSWINDOWS
-  DWORD threadid;
-
-  if (console_thread != INVALID_HANDLE_VALUE) {
-    return;
-  }
-
-  console_buf[0] = '\0';
-  console_thread =
-      (HANDLE) CreateThread(NULL, 0, thread_proc, NULL, 0, &threadid);
-#else /* FREECIV_MSWINDOWS */
-  static bool initialized = FALSE;
-
-  if (!initialized) {
-    initialized = TRUE;
-#ifdef HAVE_FILENO
-    fc_nonblock(fileno(stdin));
-#endif
-  }
-#endif /* FREECIV_MSWINDOWS */
-}
-
-/************************************************************************/ /**
-   Read a line from console I/O in case FREECIV_SOCKET_ZERO_NOT_STDIN.
-
-   This returns a pointer to a statically allocated buffer.
-   Subsequent calls to fc_read_console() or fc_init_console() will
-   overwrite it.
- ****************************************************************************/
-char *fc_read_console(void)
-{
-#ifdef FREECIV_MSWINDOWS
-  if (WaitForSingleObject(console_thread, 0) == WAIT_OBJECT_0) {
-    CloseHandle(console_thread);
-    console_thread = INVALID_HANDLE_VALUE;
-
-    return console_buf;
-  }
-
-  return NULL;
-#else  /* FREECIV_MSWINDOWS */
-  if (!feof(stdin)) { /* input from server operator */
-    static char *bufptr = console_buf;
-
-    /* fetch chars until \n, or run out of space in buffer */
-    /* blocks if fc_nonblock() in fc_init_console() failed */
-    while ((*bufptr = fgetc(stdin)) != EOF) {
-      if (*bufptr == '\n') {
-        *bufptr = '\0';
-      }
-      if (*bufptr == '\0') {
-        bufptr = console_buf;
-
-        return console_buf;
-      }
-      if ((bufptr - console_buf) <= CONSOLE_BUF_SIZE) {
-        bufptr++; /* prevent overrun */
-      }
-    }
-  }
-
-  return NULL;
-#endif /* FREECIV_MSWINDOWS */
-}
-
-#endif /* FREECIV_SOCKET_ZERO_NOT_STDIN */
 
 /************************************************************************/ /**
    Returns TRUE iff the file is a regular file or a link to a regular
@@ -1057,13 +871,8 @@ char fc_tolower(char c)
  ****************************************************************************/
 const char *fc_basename(const char *path)
 {
-  static char buf[2048];
-
-  /* Copy const parameter string to buffer that basename() can
-   * modify */
-  fc_strlcpy(buf, path, sizeof(buf));
-
-  return basename(buf);
+  QFileInfo fi(path);
+  return fc_strdup(fi.fileName().toUtf8().constData());
 }
 
 /************************************************************************/ /**

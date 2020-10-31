@@ -38,9 +38,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef FREECIV_HAVE_LIBZ
 #include <zlib.h>
-#endif
 
 #ifdef HAVE_BZLIB_H
 #include <bzlib.h>
@@ -127,9 +125,7 @@ struct fz_FILE_s {
   union {
     struct mem_fzFILE mem;
     FILE *plain; /* FZ_PLAIN */
-#ifdef FREECIV_HAVE_LIBZ
     gzFile zlib; /* FZ_ZLIB */
-#endif
 #ifdef FREECIV_HAVE_LIBBZ2
     struct bzip2_struct bz2;
 #endif
@@ -146,9 +142,7 @@ static inline bool fz_method_is_valid(enum fz_method method)
 {
   switch (method) {
   case FZ_PLAIN:
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB:
-#endif
 #ifdef FREECIV_HAVE_LIBBZ2
   case FZ_BZIP2:
 #endif
@@ -340,11 +334,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
     }
 #endif /* FREECIV_HAVE_LIBLZMA */
 
-#ifdef FREECIV_HAVE_LIBZ
     method = FZ_ZLIB;
-#else
-    method = FZ_PLAIN;
-#endif
   }
 
   fp->method = fz_method_validate(method);
@@ -408,7 +398,6 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
     }
     return fp;
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB:
     /*  gz files are binary files, so we should add "b" to mode! */
     sz_strlcat(mode, "b");
@@ -421,7 +410,6 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
       fp = NULL;
     }
     return fp;
-#endif /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     fp->u.plain = fc_fopen(filename, mode);
     if (!fp->u.plain) {
@@ -502,12 +490,10 @@ int fz_fclose(fz_FILE *fp)
     free(fp);
     return BZ_OK == error ? 0 : 1;
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB:
     error = gzclose(fp->u.zlib);
     free(fp);
     return 0 > error ? error : 0; /* Only negative Z values are errors. */
-#endif                            /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     error = fclose(fp->u.plain);
     free(fp);
@@ -691,10 +677,8 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
     return retval;
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB:
     return gzgets(fp->u.zlib, buffer, size);
-#endif /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     return fgets(buffer, size, fp->u.plain);
   }
@@ -823,7 +807,6 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     }
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB: {
     char buffer[65536];
 
@@ -836,7 +819,6 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     }
     return gzwrite(fp->u.zlib, buffer, (unsigned int) strlen(buffer));
   }
-#endif /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     va_start(ap, format);
     num = vfprintf(fp->u.plain, format, ap);
@@ -876,14 +858,12 @@ int fz_ferror(fz_FILE *fp)
   case FZ_BZIP2:
     return (BZ_OK != fp->u.bz2.error && BZ_STREAM_END != fp->u.bz2.error);
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB: {
     int error;
 
     (void) gzerror(fp->u.zlib, &error); /* Ignore string result here. */
     return 0 > error ? error : 0; /* Only negative Z values are errors. */
   }
-#endif /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     return ferror(fp->u.plain);
     break;
@@ -1024,14 +1004,12 @@ const char *fz_strerror(fz_FILE *fp)
     return bzip2error;
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
-#ifdef FREECIV_HAVE_LIBZ
   case FZ_ZLIB: {
     int errnum;
     const char *estr = gzerror(fp->u.zlib, &errnum);
 
     return Z_ERRNO == errnum ? fc_strerror(fc_get_errno()) : estr;
   }
-#endif /* FREECIV_HAVE_LIBZ */
   case FZ_PLAIN:
     return fc_strerror(fc_get_errno());
   }

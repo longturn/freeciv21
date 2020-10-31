@@ -190,7 +190,6 @@ void flush_connection_send_buffer_all(struct connection *pc)
 /**********************************************************************/ /**
    Flush'em
  **************************************************************************/
-#ifndef FREECIV_JSON_CONNECTION
 static void flush_connection_send_buffer_packets(struct connection *pc)
 {
   if (pc && pc->used && pc->send_buffer->ndata >= MAX_LEN_PACKET) {
@@ -201,7 +200,6 @@ static void flush_connection_send_buffer_packets(struct connection *pc)
     }
   }
 }
-#endif /* FREECIV_JSON_CONNECTION */
 
 /**********************************************************************/ /**
    Add data to send to the connection.
@@ -242,7 +240,6 @@ bool connection_send_data(struct connection *pconn,
 
   pconn->statistics.bytes_send += len;
 
-#ifndef FREECIV_JSON_CONNECTION
   if (0 < pconn->send_buffer->do_buffer_sends) {
     flush_connection_send_buffer_packets(pconn);
     if (!add_connection_data(pconn, data, len)) {
@@ -251,9 +248,7 @@ bool connection_send_data(struct connection *pconn,
       return FALSE;
     }
     flush_connection_send_buffer_packets(pconn);
-  } else
-#endif /* FREECIV_JSON_CONNECTION */
-  {
+  } else {
     flush_connection_send_buffer_all(pconn);
     if (!add_connection_data(pconn, data, len)) {
       log_verbose("cut connection %s due to huge send buffer (2)",
@@ -494,9 +489,7 @@ int get_next_request_id(int old_request_id)
  **************************************************************************/
 void free_compression_queue(struct connection *pc)
 {
-#ifdef USE_COMPRESSION
   byte_vector_free(&pc->compression.queue);
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -555,16 +548,11 @@ void connection_common_init(struct connection *pconn)
   pconn->buffer = new_socket_packet_buffer();
   pconn->send_buffer = new_socket_packet_buffer();
   pconn->statistics.bytes_send = 0;
-#ifdef FREECIV_JSON_CONNECTION
-  pconn->json_mode = TRUE;
-#endif /* FREECIV_JSON_CONNECTION */
 
   init_packet_hashs(pconn);
 
-#ifdef USE_COMPRESSION
   byte_vector_init(&pconn->compression.queue);
   pconn->compression.frozen_level = 0;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -634,12 +622,10 @@ void conn_reset_delta_state(struct connection *pc)
  **************************************************************************/
 void conn_compression_freeze(struct connection *pconn)
 {
-#ifdef USE_COMPRESSION
   if (0 == pconn->compression.frozen_level) {
     byte_vector_reserve(&pconn->compression.queue, 0);
   }
   pconn->compression.frozen_level++;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -648,11 +634,7 @@ void conn_compression_freeze(struct connection *pconn)
  **************************************************************************/
 bool conn_compression_frozen(const struct connection *pconn)
 {
-#ifdef USE_COMPRESSION
   return 0 < pconn->compression.frozen_level;
-#else  /* USE_COMPRESSION */
-  return FALSE;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -660,10 +642,8 @@ bool conn_compression_frozen(const struct connection *pconn)
  **************************************************************************/
 void conn_list_compression_freeze(const struct conn_list *pconn_list)
 {
-#ifdef USE_COMPRESSION
   conn_list_iterate(pconn_list, pconn) { conn_compression_freeze(pconn); }
   conn_list_iterate_end;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -671,10 +651,8 @@ void conn_list_compression_freeze(const struct conn_list *pconn_list)
  **************************************************************************/
 void conn_list_compression_thaw(const struct conn_list *pconn_list)
 {
-#ifdef USE_COMPRESSION
   conn_list_iterate(pconn_list, pconn) { conn_compression_thaw(pconn); }
   conn_list_iterate_end;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**

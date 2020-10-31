@@ -47,65 +47,23 @@
 /* Has thread condition variable implementation */
 #cmakedefine FREECIV_HAVE_THREAD_COND
 
-/* Build xml-backend for registry */
-#cmakedefine FREECIV_HAVE_XML_REGISTRY
-
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS
-
-/* locale.h available */
-#cmakedefine FREECIV_HAVE_LOCALE_H
 
 /* libintl.h available */
 #cmakedefine FREECIV_HAVE_LIBINTL_H
 
-/* inttypes.h available */
-#cmakedefine FREECIV_HAVE_INTTYPES_H
-
-/* stdint.h available */
-#cmakedefine FREECIV_HAVE_STDINT_H
-
-/* sys/types.h available */
-#cmakedefine FREECIV_HAVE_SYS_TYPES_H
-
-/* gettimeofday.h available */
-#cmakedefine HAVE_GETTIMEOFDAY
-
-/* unistd.h available */
-#cmakedefine FREECIV_HAVE_UNISTD_H
-
-/* sys/time.h available */
-#cmakedefine FREECIV_HAVE_SYS_TIME_H
-
-/* dirent.h available */
-#cmakedefine FREECIV_HAVE_DIRENT_H
-
-/* Have standard compliant stdbool.h */
-#cmakedefine FREECIV_HAVE_STDBOOL_H
-
 /* Readline support */
 #cmakedefine FREECIV_HAVE_LIBREADLINE
 
-/* jansson network protocol in use */
-#cmakedefine FREECIV_JSON_CONNECTION
-
-/* Delta protocol enabled */
-#cmakedefine FREECIV_DELTA_PROTOCOL
-
 /* Windows build */
 #cmakedefine FREECIV_MSWINDOWS 1
-
-/* socket zero isn't same stdin */
-#cmakedefine FREECIV_SOCKET_ZERO_NOT_STDIN
 
 /* Extra debugging support */
 #cmakedefine FREECIV_DEBUG
 
 /* No freeciv specific debugging support at all */
 #cmakedefine FREECIV_NDEBUG
-
-/* zlib is available */
-#cmakedefine FREECIV_HAVE_LIBZ
 
 /* libbzip2 is available */
 #cmakedefine FREECIV_HAVE_LIBBZ2
@@ -127,8 +85,5 @@
 
 /* C++11 static assert supported */
 #cmakedefine FREECIV_CXX11_STATIC_ASSERT
-
-/* opendir() available */
-#cmakedefine FREECIV_HAVE_OPENDIR
 
 #endif /* FC__FREECIV_CONFIG_H */

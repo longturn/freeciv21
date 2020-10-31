@@ -7,35 +7,14 @@ include(GNUInstallDirs) # For install paths
 # We install so many files... skip up-to-date messages
 set(CMAKE_INSTALL_MESSAGE LAZY)
 
-# errors out if an include file is not found
-macro(require_include_file file variable)
-  check_include_file(${file} ${variable})
-  if(NOT ${variable})
-    message(FATAL_ERROR "Cannot find header ${file}")
-  endif()
-endmacro()
-
-# errors out if a function is not found
-macro(require_function_exists function variable)
-  check_function_exists(${function} ${variable})
-  if(NOT ${variable})
-    message(FATAL_ERROR "Cannot find function ${function}")
-  endif()
-endmacro()
-
 # Language support
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED TRUE)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-# Provided by any C99 compiler, no need to check them
-set(HAVE_SIGNAL_H TRUE)
-set(HAVE_STRERROR TRUE)
-set(FREECIV_HAVE_INTTYPES_H TRUE)
-set(FREECIV_HAVE_LOCALE_H TRUE)
-set(FREECIV_HAVE_STDBOOL_H TRUE)
-set(FREECIV_HAVE_STDINT_H TRUE)
+# Should be available in C++11 but not all systems have it
+check_function_exists(at_quick_exit HAVE_AT_QUICK_EXIT)
 
 # Required to generate the network protocol implementation
 find_package(PythonInterp 3 REQUIRED)
@@ -92,25 +71,12 @@ add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 # Compression
 find_package(ZLIB REQUIRED)
 
-# it works !
-set(HAVE_GETTIMEOFDAY_H TRUE)
-# Miscellaneous POSIX headers and functions
 if(UNIX)
-  check_function_exists(vfork HAVE_VFORK)
-  check_function_exists(fork HAVE_FORK)
-  require_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
-  require_include_file("libgen.h" HAVE_LIBGEN_H)
-  require_include_file("pwd.h" HAVE_PWD_H)
-  require_include_file("sys/time.h" HAVE_SYS_TIME_H)
-  require_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)
-  require_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
-  require_include_file("unistd.h" HAVE_UNISTD_H)
-  require_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
-
-  require_function_exists(opendir FREECIV_HAVE_OPENDIR)
-  require_function_exists(gettimeofday HAVE_GETTIMEOFDAY)
+  # To find the current user name
+  check_include_file("pwd.h" HAVE_PWD_H)
 endif()
-require_include_file("dirent.h" FREECIV_HAVE_DIRENT_H)
+
+check_function_exists("getpwuid" HAVE_GETPWUID)
 # Some systems don't have a well-defined root user
 if (EMSCRIPTEN)
   set(ALWAYS_ROOT TRUE)
@@ -119,9 +85,6 @@ endif()
 # Networking library
 if (WIN32 OR MINGW OR MSYS)
   set(FREECIV_MSWINDOWS TRUE)
-else()
-  # For endianess conversion
-  require_include_file("arpa/inet.h" HAVE_ARPA_INET_H)
 endif()
 
 if (EMSCRIPTEN)
@@ -146,4 +109,3 @@ endif()
 if (FREECIV_ENABLE_FCMP_CLI OR FREECIV_ENABLE_FCMP_QT)
   find_package(SQLite3 REQUIRED)
 endif()
-set(HAVE_GETTIMEOFDAY_H TRUE)

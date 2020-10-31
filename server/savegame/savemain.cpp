@@ -217,12 +217,10 @@ void save_game(const char *orig_filename, const char *save_reason,
 
   if (stdata->save_compress_level > 0) {
     switch (stdata->save_compress_type) {
-#ifdef FREECIV_HAVE_LIBZ
     case FZ_ZLIB:
       /* Append ".gz" to filename. */
       sz_strlcat(stdata->filepath, ".gz");
       break;
-#endif
 #ifdef FREECIV_HAVE_LIBBZ2
     case FZ_BZIP2:
       /* Append ".bz2" to filename. */

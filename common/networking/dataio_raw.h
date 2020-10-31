@@ -80,10 +80,6 @@ struct plocation *plocation_field_new(char *name);
 struct plocation *plocation_elem_new(int number);
 const char *plocation_name(const struct plocation *loc);
 
-#ifdef FREECIV_JSON_CONNECTION
-#include "dataio_json.h"
-#endif
-
 /* network string conversion */
 typedef char *(*DIO_PUT_CONV_FUN)(const char *src, size_t *length);
 void dio_set_put_conv_callback(DIO_PUT_CONV_FUN fun);
@@ -160,15 +156,11 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
 #define dio_get_estring_raw dio_get_string_raw
 #define dio_put_estring_raw dio_put_string_raw
 
-#ifndef FREECIV_JSON_CONNECTION
-
 /* Should be a function but we need some macro magic. */
 #define DIO_BV_GET(pdin, location, bv)                                      \
   dio_get_memory_raw((pdin), (bv).vec, sizeof((bv).vec))
 
 #define DIO_GET(f, d, l, ...) dio_get_##f##_raw(d, ##__VA_ARGS__)
-
-#endif /* FREECIV_JSON_CONNECTION */
 
 /* puts */
 void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
@@ -209,16 +201,10 @@ void dio_put_uint8_vec8_raw(struct raw_data_out *dout, int *values,
 void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
                              int stop_value);
 
-#ifndef FREECIV_JSON_CONNECTION
-
 /* Should be a function but we need some macro magic. */
 #define DIO_BV_PUT(pdout, location, bv)                                     \
   dio_put_memory_raw((pdout), (bv).vec, sizeof((bv).vec))
 
 #define DIO_PUT(f, d, l, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)
-
-#endif /* FREECIV_JSON_CONNECTION */
-
-
 
 #endif /* FC__DATAIO_RAW_H */
