@@ -1022,6 +1022,10 @@ city_label::city_label(QWidget *parent) : QLabel(parent), pcity(nullptr)
   type = FEELING_FINAL;
 }
 
+void city_label::set_type(int x)
+{
+  type = x;
+}
 /************************************************************************/ /**
    Mouse handler for city_label
  ****************************************************************************/
@@ -1480,10 +1484,35 @@ city_dialog::city_dialog(QWidget *parent)
   connect(ui.bsavecma, &QAbstractButton::pressed, this,
           &city_dialog::save_cma);
 
+  ui.nationality_group->setTitle(_("Nationality"));
+  ui.happiness_group->setTitle(_("Happiness"));
+  ui.label1->setText(_("Cities:"));
+  ui.label2->setText(_("Luxuries:"));
+  ui.label3->setText(_("Buildings:"));
+  ui.label4->setText(_("Nationality:"));
+  ui.label5->setText(_("Units:"));
+  ui.label6->setText(_("Wonders:"));
+  ui.label1->setFont(*small_font);
+  ui.label2->setFont(*small_font);
+  ui.label4->setFont(*small_font);
+  ui.label3->setFont(*small_font);
+  ui.label5->setFont(*small_font);
+  ui.label6->setFont(*small_font);
+  lab_table[0] = ui.lab_table1;
+  lab_table[1] = ui.lab_table2;
+  lab_table[2] = ui.lab_table3;
+  lab_table[3] = ui.lab_table4;
+  lab_table[4] = ui.lab_table5;
+  lab_table[5] = ui.lab_table6;
+  for (int x = 0; x < 6; x++) {
+    lab_table[5]->set_type(x);
+  }
+
+  ui.tab3->setLayout(ui.tabLayout3);
   ui.tab2->setLayout(ui.tabLayout2);
   ui.tab->setLayout(ui.tabLayout);
   setLayout(ui.vlayout);
-  // ui.tabWidget->setCurrentIndex(0);
+  ui.tabWidget->setCurrentIndex(0);
 
   installEventFilter(this);
 }
@@ -1533,45 +1562,6 @@ void city_dialog::change_production(bool next)
 }
 
 /************************************************************************/ /**
-   Sets tooltip for happiness/pruction button switcher
- ****************************************************************************/
-void city_dialog::update_happiness_button()
-{
-  // if (happines_shown) {
-  //   happiness_button->setToolTip(_("Show city production"));
-  // } else {
-  //   happiness_button->setToolTip(_("Show happiness information"));
-  // }
-}
-
-/************************************************************************/ /**
-   Shows happiness tab
- ****************************************************************************/
-void city_dialog::show_happiness()
-{
-  // setUpdatesEnabled(false);
-
-  // if (!happines_shown) {
-  //   leftbot_layout->replaceWidget(prod_unit_splitter, happiness_widget,
-  //                                 Qt::FindDirectChildrenOnly);
-  //   prod_unit_splitter->hide();
-  //   happiness_widget->show();
-  //   happiness_widget->updateGeometry();
-  // } else {
-  //   leftbot_layout->replaceWidget(happiness_widget, prod_unit_splitter,
-  //                                 Qt::FindDirectChildrenOnly);
-  //   prod_unit_splitter->show();
-  //   prod_unit_splitter->updateGeometry();
-  //   happiness_widget->hide();
-  // }
-
-  // setUpdatesEnabled(true);
-  // update();
-  // happines_shown = !happines_shown;
-  // update_happiness_button();
-}
-
-/************************************************************************/ /**
    Updates buttons/widgets which should be enabled/disabled
  ****************************************************************************/
 void city_dialog::update_disabled()
@@ -1583,11 +1573,8 @@ void city_dialog::update_disabled()
     ui.buy_button->setDisabled(true);
     ui.cma_enable_but->setDisabled(true);
     ui.production_combo_p->setDisabled(true);
-    // but_menu_worklist->setDisabled(true);
     ui.current_units->setDisabled(true);
     ui.supported_units->setDisabled(true);
-    // view->setDisabled(true);
-
     if (!client_is_observer()) {
     }
   } else {
@@ -1596,10 +1583,8 @@ void city_dialog::update_disabled()
     ui.buy_button->setEnabled(true);
     ui.cma_enable_but->setEnabled(true);
     ui.production_combo_p->setEnabled(true);
-    // but_menu_worklist->setEnabled(true);
     ui.current_units->setEnabled(true);
     ui.supported_units->setEnabled(true);
-    // view->setEnabled(true);
   }
 
   if (can_client_issue_orders()) {
@@ -1649,9 +1634,9 @@ city_dialog::~city_dialog()
     delete citizen_pixmap;
   }
 
-  // cma_table->clear();
+  ui.cma_table->clear();
   ui.p_table_p->clear();
-  // nationality_table->clear();
+  ui.nationality_table->clear();
   ui.current_units->clear_layout();
   ui.supported_units->clear_layout();
   removeEventFilter(this);
@@ -1907,7 +1892,7 @@ void city_dialog::update_cma_tab()
   }
 
   if (cma_is_city_under_agent(pcity, NULL)) {
-    // view->update();
+    // view->update(); sveinung - update map here ?
     s = QString(cmafec_get_short_descr_of_city(pcity));
     pix = style()->standardPixmap(QStyle::SP_DialogApplyButton);
     pix = pix.scaled(2 * pix.width(), 2 * pix.height(),
@@ -2164,49 +2149,49 @@ void city_dialog::update_citizens()
   ui.citizens_label->set_city(pcity);
   ui.citizens_label->setPixmap(*citizen_pixmap);
 
-  // lab_table[FEELING_FINAL]->setPixmap(*citizen_pixmap);
-  // lab_table[FEELING_FINAL]->setToolTip(text_happiness_wonders(pcity));
+  lab_table[FEELING_FINAL]->setPixmap(*citizen_pixmap);
+  lab_table[FEELING_FINAL]->setToolTip(text_happiness_wonders(pcity));
 
-  // for (int k = 0; k < FEELING_LAST - 1; k++) {
-  //   lab_table[k]->set_city(pcity);
-  //   num_citizens = get_city_citizen_types(
-  //       pcity, static_cast<citizen_feeling>(k), categories);
+  for (int k = 0; k < FEELING_LAST - 1; k++) {
+    lab_table[k]->set_city(pcity);
+    num_citizens = get_city_citizen_types(
+        pcity, static_cast<citizen_feeling>(k), categories);
 
-  //   for (j = 0, i = 0; i < num_citizens; i++, j++) {
-  //     dest_rect.moveTo(i * w, 0);
-  //     pix = get_citizen_sprite(tileset, categories[j], j, pcity)->pm;
-  //     p.begin(citizen_pixmap);
-  //     p.drawPixmap(dest_rect, *pix, source_rect);
-  //     p.end();
-  //   }
+    for (j = 0, i = 0; i < num_citizens; i++, j++) {
+      dest_rect.moveTo(i * w, 0);
+      pix = get_citizen_sprite(tileset, categories[j], j, pcity)->pm;
+      p.begin(citizen_pixmap);
+      p.drawPixmap(dest_rect, *pix, source_rect);
+      p.end();
+    }
 
-  //   lab_table[k]->setPixmap(*citizen_pixmap);
+    lab_table[k]->setPixmap(*citizen_pixmap);
 
-  //   switch (k) {
-  //   case FEELING_BASE:
-  //     lab_table[k]->setToolTip(text_happiness_cities(pcity));
-  //     break;
+    switch (k) {
+    case FEELING_BASE:
+      lab_table[k]->setToolTip(text_happiness_cities(pcity));
+      break;
 
-  //   case FEELING_LUXURY:
-  //     lab_table[k]->setToolTip(text_happiness_luxuries(pcity));
-  //     break;
+    case FEELING_LUXURY:
+      lab_table[k]->setToolTip(text_happiness_luxuries(pcity));
+      break;
 
-  //   case FEELING_EFFECT:
-  //     lab_table[k]->setToolTip(text_happiness_buildings(pcity));
-  //     break;
+    case FEELING_EFFECT:
+      lab_table[k]->setToolTip(text_happiness_buildings(pcity));
+      break;
 
-  //   case FEELING_NATIONALITY:
-  //     lab_table[k]->setToolTip(text_happiness_nationality(pcity));
-  //     break;
+    case FEELING_NATIONALITY:
+      lab_table[k]->setToolTip(text_happiness_nationality(pcity));
+      break;
 
-  //   case FEELING_MARTIAL:
-  //     lab_table[k]->setToolTip(text_happiness_units(pcity));
-  //     break;
+    case FEELING_MARTIAL:
+      lab_table[k]->setToolTip(text_happiness_units(pcity));
+      break;
 
-  //   default:
-  //     break;
-  //   }
-  // }
+    default:
+      break;
+    }
+  }
 }
 
 /************************************************************************/ /**
@@ -2218,8 +2203,6 @@ void city_dialog::refresh()
   ui.production_combo_p->blockSignals(true);
 
   if (pcity) {
-    // view->set_pixmap(pcity, zoom);
-    // view->update();
     update_title();
     update_info_label();
     update_buy_button();
@@ -2230,7 +2213,6 @@ void city_dialog::refresh()
     update_nation_table();
     update_cma_tab();
     update_disabled();
-    // map update
     key_city_show_open(pcity);
   } else {
     key_city_hide_open(pcity);
@@ -2262,77 +2244,77 @@ void city_dialog::update_sliders()
  ****************************************************************************/
 void city_dialog::update_nation_table()
 {
-  // QFont f = QApplication::font();
-  // QFontMetrics fm(f);
-  // QPixmap *pix = NULL;
-  // QPixmap pix_scaled;
-  // QString str;
-  // QStringList info_list;
-  // QTableWidgetItem *item;
-  // char buf[8];
-  // citizens nationality_i;
-  // int h;
-  // int i = 0;
-  // struct sprite *sprite;
+  QFont f = QApplication::font();
+  QFontMetrics fm(f);
+  QPixmap *pix = NULL;
+  QPixmap pix_scaled;
+  QString str;
+  QStringList info_list;
+  QTableWidgetItem *item;
+  char buf[8];
+  citizens nationality_i;
+  int h;
+  int i = 0;
+  struct sprite *sprite;
 
-  // h = fm.height() + 6;
-  // nationality_table->clear();
-  // nationality_table->setRowCount(0);
-  // info_list.clear();
-  // info_list << _("#") << _("Flag") << _("Nation");
-  // nationality_table->setHorizontalHeaderLabels(info_list);
+  h = fm.height() + 6;
+  ui.nationality_table->clear();
+  ui.nationality_table->setRowCount(0);
+  info_list.clear();
+  info_list << _("#") << _("Flag") << _("Nation");
+  ui.nationality_table->setHorizontalHeaderLabels(info_list);
 
-  // citizens_iterate(pcity, pslot, nationality)
-  // {
-  //   nationality_table->insertRow(i);
+  citizens_iterate(pcity, pslot, nationality)
+  {
+    ui.nationality_table->insertRow(i);
 
-  //   for (int j = 0; j < nationality_table->columnCount(); j++) {
-  //     item = new QTableWidgetItem;
+    for (int j = 0; j < ui.nationality_table->columnCount(); j++) {
+      item = new QTableWidgetItem;
 
-  //     switch (j) {
-  //     case 0:
-  //       nationality_i = citizens_nation_get(pcity, pslot);
+      switch (j) {
+      case 0:
+        nationality_i = citizens_nation_get(pcity, pslot);
 
-  //       if (nationality_i == 0) {
-  //         str = "-";
-  //       } else {
-  //         fc_snprintf(buf, sizeof(buf), "%d", nationality_i);
-  //         str = QString(buf);
-  //       }
+        if (nationality_i == 0) {
+          str = "-";
+        } else {
+          fc_snprintf(buf, sizeof(buf), "%d", nationality_i);
+          str = QString(buf);
+        }
 
-  //       item->setText(str);
-  //       break;
+        item->setText(str);
+        break;
 
-  //     case 1:
-  //       sprite = get_nation_flag_sprite(
-  //           tileset, nation_of_player(player_slot_get_player(pslot)));
+      case 1:
+        sprite = get_nation_flag_sprite(
+            tileset, nation_of_player(player_slot_get_player(pslot)));
 
-  //       if (sprite != NULL) {
-  //         pix = sprite->pm;
-  //         pix_scaled = pix->scaledToHeight(h);
-  //         item->setData(Qt::DecorationRole, pix_scaled);
-  //       } else {
-  //         item->setText("FLAG MISSING");
-  //       }
-  //       break;
+        if (sprite != NULL) {
+          pix = sprite->pm;
+          pix_scaled = pix->scaledToHeight(h);
+          item->setData(Qt::DecorationRole, pix_scaled);
+        } else {
+          item->setText("FLAG MISSING");
+        }
+        break;
 
-  //     case 2:
-  //       item->setText(
-  //           nation_adjective_for_player(player_slot_get_player(pslot)));
-  //       break;
+      case 2:
+        item->setText(
+            nation_adjective_for_player(player_slot_get_player(pslot)));
+        break;
 
-  //     default:
-  //       break;
-  //     }
-  //     nationality_table->setItem(i, j, item);
-  //   }
-  //   i++;
-  // }
-  // citizens_iterate_end;
-  // nationality_table->horizontalHeader()->setStretchLastSection(false);
-  // nationality_table->resizeColumnsToContents();
-  // nationality_table->resizeRowsToContents();
-  // nationality_table->horizontalHeader()->setStretchLastSection(true);
+      default:
+        break;
+      }
+      ui.nationality_table->setItem(i, j, item);
+    }
+    i++;
+  }
+  citizens_iterate_end;
+  ui.nationality_table->horizontalHeader()->setStretchLastSection(false);
+  ui.nationality_table->resizeColumnsToContents();
+  ui.nationality_table->resizeRowsToContents();
+  ui.nationality_table->horizontalHeader()->setStretchLastSection(true);
 }
 
 /************************************************************************/ /**

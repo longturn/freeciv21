@@ -314,6 +314,7 @@ class city_label : public QLabel {
 public:
   city_label(QWidget *parent = 0);
   void set_city(struct city *pcity);
+  void set_type(int);
 
 private:
   struct city *pcity;
@@ -359,6 +360,7 @@ class city_dialog : public qfc_dialog {
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
+  city_label *lab_table[6];
 public:
   static city_dialog *instance();
   static void drop();
@@ -385,7 +387,6 @@ private:
   void update_disabled();
   void update_sliders();
   void update_prod_buttons();
-  void update_happiness_button();
   void change_production(bool next);
 
 private slots:
@@ -394,7 +395,6 @@ private slots:
   void production_changed(int index);
   void show_targets();
   void show_targets_worklist();
-  void show_happiness();
   void buy();
   void dbl_click_p(QTableWidgetItem *item);
   void delete_prod();
