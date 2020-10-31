@@ -1484,7 +1484,6 @@ city_dialog::city_dialog(QWidget *parent)
   ui.tab->setLayout(ui.tabLayout);
   setLayout(ui.vlayout);
   // ui.tabWidget->setCurrentIndex(0);
-  // setLayout(ui.gridLayout);
 
   installEventFilter(this);
 }
