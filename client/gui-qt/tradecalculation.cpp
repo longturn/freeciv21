@@ -23,8 +23,6 @@
 #include "messagewin.h"
 #include "page_game.h"
 
-static bool tradecity_rand(const trade_city *t1, const trade_city *t2);
-
 /**********************************************************************/ /**
    Constructor for trade city used to trade calculation
  **************************************************************************/
