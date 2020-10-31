@@ -32,9 +32,6 @@
 #ifdef HAVE_PWD_H
 #include <pwd.h>
 #endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
 #include <lmcons.h> /* UNLEN */

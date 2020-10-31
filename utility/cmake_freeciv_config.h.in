@@ -56,9 +56,6 @@
 /* sys/types.h available */
 #cmakedefine FREECIV_HAVE_SYS_TYPES_H
 
-/* unistd.h available */
-#cmakedefine FREECIV_HAVE_UNISTD_H
-
 /* sys/time.h available */
 #cmakedefine FREECIV_HAVE_SYS_TIME_H
 

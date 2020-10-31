@@ -92,8 +92,6 @@ if(UNIX)
   require_include_file("sys/time.h" HAVE_SYS_TIME_H)
   require_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)
   require_include_file("sys/types.h" FREECIV_HAVE_SYS_TYPES_H)
-  require_include_file("unistd.h" HAVE_UNISTD_H)
-  require_include_file("unistd.h" FREECIV_HAVE_UNISTD_H)
 endif()
 
 check_function_exists("getpwuid" HAVE_GETPWUID)
