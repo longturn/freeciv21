@@ -41,33 +41,6 @@ extern QString get_tooltip_improvement(impr_type *building,
 extern QString get_tooltip_unit(struct unit_type *unit, bool ext);
 extern QApplication *qapp;
 
-/****************************************************************************
-  From reqtree.c used to get tooltips
-****************************************************************************/
-struct tree_node {
-  bool is_dummy;
-  Tech_type_id tech;
-  int nrequire;
-  struct tree_node **require;
-  int nprovide;
-  struct tree_node **provide;
-  int order, layer;
-  int node_x, node_y, node_width, node_height;
-  int number;
-};
-
-/****************************************************************************
-  From reqtree.c used to get tooltips
-****************************************************************************/
-struct reqtree {
-  int num_nodes;
-  struct tree_node **nodes;
-  int num_layers;
-  int *layer_size;
-  struct tree_node ***layers;
-  int diagram_width, diagram_height;
-};
-
 /************************************************************************/ /**
    Compare unit_items (used for techs) by name
  ****************************************************************************/
