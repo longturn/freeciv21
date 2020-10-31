@@ -77,6 +77,7 @@
 #include <zlib.h>
 
 // Qt
+#include <QHostInfo>
 #include <QString>
 #include <QThread>
 
@@ -760,11 +761,9 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
  ****************************************************************************/
 int fc_gethostname(char *buf, size_t len)
 {
-#ifdef HAVE_GETHOSTNAME
-  return gethostname(buf, len);
-#else
-  return -1;
-#endif
+  auto name = QHostInfo::localHostName();
+  fc_strlcpy(buf, name.toUtf8().data(), len);
+  return 0;
 }
 
 #ifdef FREECIV_SOCKET_ZERO_NOT_STDIN
