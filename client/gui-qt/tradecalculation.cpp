@@ -9,6 +9,7 @@
 **************************************************************************/
 #include "tradecalculation.h"
 
+#include <random>
 // common
 #include "city.h"
 #include "featured_text.h"
@@ -163,10 +164,12 @@ void trade_generator::calculate()
 {
   int i;
   bool tdone;
+  std::random_device rd;
+  std::mt19937 g(rd());
 
   for (i = 0; i < 100; i++) {
     tdone = true;
-    std::sort(cities.begin(), cities.end(), tradecity_rand);
+    std::shuffle(cities.begin(), cities.end(), g);
     lines.clear();
     for (auto tc : qAsConst(cities)) {
       tc->pos_cities.clear();
