@@ -11,6 +11,7 @@
 #include "menu.h"
 // Qt
 #include <QApplication>
+#include <QActionGroup>
 #include <QFileDialog>
 #include <QMainWindow>
 #include <QMessageBox>

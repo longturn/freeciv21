@@ -11,12 +11,12 @@
 // Qt
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPixmap>
+#include <QScreen>
 #include <QTimer>
 // common
 #include "chatline_common.h"
@@ -508,13 +508,11 @@ void fc_sidebar::paint(QPainter *painter, QPaintEvent *event)
 **************************************************************************/
 void fc_sidebar::resize_me(int hght, bool force)
 {
-  int w, h, non_std, non_std_count, screen_hres;
-  QDesktopWidget *qdp;
+  int w, h, non_std, non_std_count, hres;
 
   h = hght;
-  qdp = QApplication::desktop();
-  screen_hres = qdp->availableGeometry(king()->central_wdg).width();
-  w = (100 * screen_hres) / 1920;
+  hres = (QGuiApplication::screens())[0]->availableGeometry().width();
+  w = (100 * hres) / 1920;
   w = qMax(w, 80);
 
   if (!force && w == width() && h == height()) {
