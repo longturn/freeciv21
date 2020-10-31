@@ -2786,7 +2786,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
       break;
     case HOVER_GOTO:
       do_unit_goto(ptile);
-      break;
+      return;
     case HOVER_PARADROP:
       unit_list_iterate(punits, punit) { do_unit_paradrop_to(punit, ptile); }
       unit_list_iterate_end;
@@ -2808,7 +2808,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 
     clear_hover_state();
     update_unit_info_label(get_units_in_focus());
-  }  if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
+  } if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
           && can_client_issue_orders()
          && near_pcity->client.city_opened) {
       int city_x, city_y;
