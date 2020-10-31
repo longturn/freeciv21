@@ -47,9 +47,6 @@
 /* Has thread condition variable implementation */
 #cmakedefine FREECIV_HAVE_THREAD_COND
 
-/* Build xml-backend for registry */
-#cmakedefine FREECIV_HAVE_XML_REGISTRY
-
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS
 

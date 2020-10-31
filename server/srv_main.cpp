@@ -195,10 +195,6 @@ void srv_init(void)
   (void) bindtextdomain("freeciv-nations", get_locale_dir());
 #endif
 
-  /* This is before ai module initializations so that if ai module
-   * wants to use registry files, it can. */
-  registry_module_init();
-
   /* We want this before any AI stuff */
   timing_log_init();
 
@@ -1933,7 +1929,6 @@ void server_quit(void)
   rulesets_deinit();
   CALL_FUNC_EACH_AI(module_close);
   timing_log_free();
-  registry_module_close();
   fc_destroy_mutex(&game.server.mutexes.city_list);
   free_libfreeciv();
   free_nls();

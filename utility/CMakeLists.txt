@@ -56,7 +56,6 @@ add_library(
   rand.cpp
   registry.cpp
   registry_ini.cpp
-  registry_xml.cpp
   section_file.cpp
   shared.cpp
   string_vector.cpp

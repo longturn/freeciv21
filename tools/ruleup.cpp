@@ -149,7 +149,6 @@ int main(int argc, char **argv)
 
   init_nls();
 
-  registry_module_init();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   rup_parse_cmdline(argc, argv);
@@ -200,7 +199,6 @@ int main(int argc, char **argv)
     log_error(_("Can't load ruleset %s"), rs_selected);
   }
 
-  registry_module_close();
   log_close();
   free_libfreeciv();
   free_nls();
