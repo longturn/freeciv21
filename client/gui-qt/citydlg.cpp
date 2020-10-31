@@ -14,6 +14,7 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QHeaderView>
+#include <QMouseEvent>
 #include <QPainter>
 #include <QRadioButton>
 #include <QScreen>
@@ -1359,7 +1360,6 @@ city_dialog::city_dialog(QWidget *parent)
 
   int h = 2 * fm.height() + 2;
   small_font = fc_font::instance()->get_font(fonts::notify_label);
-  zoom = 1.0;
   ui.setupUi(this);
 
   setMouseTracking(true);
@@ -1762,31 +1762,6 @@ void city_dialog::city_rename()
   ask->show();
 }
 
-/************************************************************************/ /**
-   Zooms in tiles view
- ****************************************************************************/
-void city_dialog::zoom_in()
-{
-  // zoom = zoom * 1.2;
-  // if (pcity) {
-  //   view->set_pixmap(pcity, zoom);
-  // }
-  // updateGeometry();
-  // left_layout->update();
-}
-
-/************************************************************************/ /**
-   Zooms out tiles view
- ****************************************************************************/
-void city_dialog::zoom_out()
-{
-  // zoom = zoom / 1.2;
-  // if (pcity) {
-  //   view->set_pixmap(pcity, zoom);
-  // }
-  // updateGeometry();
-  // left_layout->update();
-}
 
 /************************************************************************/ /**
    Save cma dialog input

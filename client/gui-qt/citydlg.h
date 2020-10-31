@@ -368,7 +368,6 @@ public:
   void cma_check_agent();
   struct city *pcity;
   int scroll_height;
-  float zoom;
 
 private:
   city_dialog(QWidget *parent = 0);
@@ -415,8 +414,6 @@ private slots:
   void cma_context_menu(const QPoint p);
   void save_cma();
   void city_rename();
-  void zoom_in();
-  void zoom_out();
 
 protected:
   void showEvent(QShowEvent *event);
