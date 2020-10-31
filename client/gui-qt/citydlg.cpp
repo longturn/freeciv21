@@ -21,7 +21,6 @@
 #include <QScrollBar>
 #include <QSplitter>
 #include <QVBoxLayout>
-#include <QWheelEvent>
 #include <QWidgetAction>
 // utility
 #include "fcintl.h"
@@ -494,22 +493,6 @@ void impr_info::clear_layout()
 }
 
 /************************************************************************/ /**
-   Mouse wheel event - send it to scrollbar
- ****************************************************************************/
-void impr_info::wheelEvent(QWheelEvent *event)
-{
-  QPoint p;
-
-  p = parentWidget()->parentWidget()->pos();
-  p = mapToGlobal(p);
-  QWheelEvent new_event(QPoint(5, 5), p + QPoint(5, 5), event->pixelDelta(),
-                        event->angleDelta(), event->angleDelta().y(),
-                        Qt::Horizontal, event->buttons(),
-                        event->modifiers());
-  QApplication::sendEvent(parentWidget(), &new_event);
-}
-
-/************************************************************************/ /**
    Updates list of improvements
  ****************************************************************************/
 void impr_info::update_buildings()
@@ -538,22 +521,6 @@ void impr_info::update_buildings()
   setUpdatesEnabled(true);
   layout->update();
   updateGeometry();
-}
-
-/************************************************************************/ /**
-   Mouse wheel event - send it to scrollbar
- ****************************************************************************/
-void impr_item::wheelEvent(QWheelEvent *event)
-{
-  QPoint p;
-
-  p = parentWidget()->parentWidget()->pos();
-  p = mapToGlobal(p);
-  QWheelEvent new_event(QPoint(5, 5), p + QPoint(5, 5), event->pixelDelta(),
-                        event->angleDelta(), event->angleDelta().y(),
-                        Qt::Horizontal, event->buttons(),
-                        event->modifiers());
-  QApplication::sendEvent(parentWidget()->parentWidget(), &new_event);
 }
 
 /************************************************************************/ /**
@@ -931,22 +898,6 @@ void unit_item::enterEvent(QEvent *event)
 void unit_item::leaveEvent(QEvent *event) { init_pix(); }
 
 /************************************************************************/ /**
-   Mouse wheel event - send it to scrollbar
- ****************************************************************************/
-void unit_item::wheelEvent(QWheelEvent *event)
-{
-  QPoint p;
-
-  p = parentWidget()->parentWidget()->pos();
-  p = mapToGlobal(p);
-  QWheelEvent new_event(QPoint(5, 5), p + QPoint(5, 5), event->pixelDelta(),
-                        event->angleDelta(), event->angleDelta().y(),
-                        Qt::Horizontal, event->buttons(),
-                        event->modifiers());
-  QApplication::sendEvent(parentWidget()->parentWidget(), &new_event);
-}
-
-/************************************************************************/ /**
    Mouse press event -activates unit and closes dialog
  ****************************************************************************/
 void unit_item::mousePressEvent(QMouseEvent *event)
@@ -1004,22 +955,6 @@ void unit_info::init_layout()
                                 QSizePolicy::Slider);
   setSizePolicy(size_fixed_policy);
   setLayout(layout);
-}
-
-/************************************************************************/ /**
-   Mouse wheel event - send it to scrollbar
- ****************************************************************************/
-void unit_info::wheelEvent(QWheelEvent *event)
-{
-  QPoint p;
-
-  p = parentWidget()->parentWidget()->pos();
-  p = mapToGlobal(p);
-  QWheelEvent new_event(QPoint(5, 5), p + QPoint(5, 5), event->pixelDelta(),
-                        event->angleDelta(), event->angleDelta().y(),
-                        Qt::Horizontal, event->buttons(),
-                        event->modifiers());
-  QApplication::sendEvent(parentWidget(), &new_event);
 }
 
 /************************************************************************/ /**
