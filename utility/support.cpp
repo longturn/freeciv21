@@ -66,14 +66,11 @@
 #ifdef HAVE_STRINGS_H
 #include <strings.h>
 #endif
-#ifdef HAVE_LIBGEN_H
-/* POSIX version of basename() */
-#include <libgen.h>
-#endif
 
 #include <zlib.h>
 
 // Qt
+#include <QFileInfo>
 #include <QHostInfo>
 #include <QString>
 #include <QThread>
@@ -883,13 +880,8 @@ char fc_tolower(char c)
  ****************************************************************************/
 const char *fc_basename(const char *path)
 {
-  static char buf[2048];
-
-  /* Copy const parameter string to buffer that basename() can
-   * modify */
-  fc_strlcpy(buf, path, sizeof(buf));
-
-  return basename(buf);
+  QFileInfo fi(path);
+  return fc_strdup(fi.fileName().toUtf8().constData());
 }
 
 /************************************************************************/ /**

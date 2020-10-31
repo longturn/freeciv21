@@ -62,9 +62,6 @@
 /* libcharset.h available */
 #cmakedefine HAVE_LIBCHARSET_H
 
-/* libgen.h available */
-#cmakedefine HAVE_LIBGEN_H
-
 /* sys/wait.h available */
 #cmakedefine HAVE_SYS_WAIT_H
 

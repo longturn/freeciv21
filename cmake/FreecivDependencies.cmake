@@ -87,7 +87,6 @@ find_package(ZLIB REQUIRED)
 # Miscellaneous POSIX headers and functions
 if(UNIX)
   require_include_file("sys/wait.h" HAVE_SYS_WAIT_H)
-  require_include_file("libgen.h" HAVE_LIBGEN_H)
   require_include_file("pwd.h" HAVE_PWD_H)
   require_include_file("sys/time.h" HAVE_SYS_TIME_H)
   require_include_file("sys/time.h" FREECIV_HAVE_SYS_TIME_H)
