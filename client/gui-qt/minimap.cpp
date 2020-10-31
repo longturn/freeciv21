@@ -26,50 +26,6 @@
 #include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
-    TODO drop it
- **************************************************************************/
-static void gui_to_overview(int *ovr_x, int *ovr_y, int gui_x, int gui_y)
-{
-  double ntl_x, ntl_y;
-  const double gui_xd = gui_x, gui_yd = gui_y;
-  const double W = tileset_tile_width(tileset);
-  const double H = tileset_tile_height(tileset);
-  double map_x, map_y;
-
-  if (tileset_is_isometric(tileset)) {
-    map_x = (gui_xd * H + gui_yd * W) / (W * H);
-    map_y = (gui_yd * W - gui_xd * H) / (W * H);
-  } else {
-    map_x = gui_xd / W;
-    map_y = gui_yd / H;
-  }
-
-  if (MAP_IS_ISOMETRIC) {
-    ntl_y = map_x + map_y - wld.map.xsize;
-    ntl_x = 2 * map_x - ntl_y;
-  } else {
-    ntl_x = map_x;
-    ntl_y = map_y;
-  }
-
-  *ovr_x = floor((ntl_x - (double) gui_options.overview.map_x0)
-                 * OVERVIEW_TILE_SIZE);
-  *ovr_y = floor((ntl_y - (double) gui_options.overview.map_y0)
-                 * OVERVIEW_TILE_SIZE);
-
-  if (current_topo_has_flag(TF_WRAPX)) {
-    *ovr_x = FC_WRAP(*ovr_x, NATURAL_WIDTH * OVERVIEW_TILE_SIZE);
-  } else {
-    if (MAP_IS_ISOMETRIC) {
-      *ovr_x -= OVERVIEW_TILE_SIZE;
-    }
-  }
-  if (current_topo_has_flag(TF_WRAPY)) {
-    *ovr_y = FC_WRAP(*ovr_y, NATURAL_HEIGHT * OVERVIEW_TILE_SIZE);
-  }
-}
-
-/**********************************************************************/ /**
    Constructor for minimap
  **************************************************************************/
 minimap_view::minimap_view(QWidget *parent) : fcwidget()
@@ -158,13 +114,13 @@ void minimap_view::draw_viewport(QPainter *painter)
     return;
   }
 
-  gui_to_overview(&x[0], &y[0], mapview.gui_x0, mapview.gui_y0);
-  gui_to_overview(&x[1], &y[1], mapview.gui_x0 + mapview.width,
-                  mapview.gui_y0);
-  gui_to_overview(&x[2], &y[2], mapview.gui_x0 + mapview.width,
-                  mapview.gui_y0 + mapview.height);
-  gui_to_overview(&x[3], &y[3], mapview.gui_x0,
-                  mapview.gui_y0 + mapview.height);
+  gui_to_overview_pos(tileset, &x[0], &y[0], mapview.gui_x0, mapview.gui_y0);
+  gui_to_overview_pos(tileset, &x[1], &y[1], mapview.gui_x0 + mapview.width,
+                      mapview.gui_y0);
+  gui_to_overview_pos(tileset, &x[2], &y[2], mapview.gui_x0 + mapview.width,
+                      mapview.gui_y0 + mapview.height);
+  gui_to_overview_pos(tileset, &x[3], &y[3], mapview.gui_x0,
+                      mapview.gui_y0 + mapview.height);
   painter->setPen(QColor(Qt::white));
 
   if (scale_factor > 1) {
@@ -190,7 +146,7 @@ void minimap_view::scale_point(int &x, int &y)
   int ax, bx;
   int dx, dy;
 
-  gui_to_overview(&ax, &bx, mapview.gui_x0 + mapview.width / 2,
+  gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
                   mapview.gui_y0 + mapview.height / 2);
   x = qRound(x * scale_factor);
   y = qRound(y * scale_factor);
@@ -208,8 +164,8 @@ void unscale_point(double scale_factor, int &x, int &y)
   int ax, bx;
   int dx, dy;
 
-  gui_to_overview(&ax, &bx, mapview.gui_x0 + mapview.width / 2,
-                  mapview.gui_y0 + mapview.height / 2);
+  gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
+                      mapview.gui_y0 + mapview.height / 2);
   dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
   dy = qRound(bx * scale_factor - gui_options.overview.height / 2);
   x = x + dx;
@@ -445,7 +401,8 @@ void minimap_view::mouseMoveEvent(QMouseEvent *event)
     p = r - p;
     move(event->globalPos() - cursor);
     setCursor(Qt::SizeAllCursor);
-    king()->qt_settings.minimap_x = static_cast<float>(p.x()) / mapview.width;
+    king()->qt_settings.minimap_x =
+        static_cast<float>(p.x()) / mapview.width;
     king()->qt_settings.minimap_y =
         static_cast<float>(p.y()) / mapview.height;
   }
@@ -489,9 +446,9 @@ void get_overview_area_dimensions(int *width, int *height)
 void overview_size_changed(void)
 {
   queen()->minimapview_wdg->resize(0, 0);
-  queen()->minimapview_wdg->move(king()->qt_settings.minimap_x * mapview.width,
-                               king()->qt_settings.minimap_y
-                                   * mapview.height);
+  queen()->minimapview_wdg->move(
+      king()->qt_settings.minimap_x * mapview.width,
+      king()->qt_settings.minimap_y * mapview.height);
   queen()->minimapview_wdg->resize(
       king()->qt_settings.minimap_width * mapview.width,
       king()->qt_settings.minimap_height * mapview.height);
