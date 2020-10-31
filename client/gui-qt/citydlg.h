@@ -15,6 +15,7 @@
 #include "fc_types.h"
 #include <QDialog>
 #include <QElapsedTimer>
+#include <QGroupBox>
 #include <QItemDelegate>
 #include <QLabel>
 #include <QProgressBar>
@@ -375,6 +376,20 @@ private:
   int positions;
 };
 
+
+class governor_sliders : public QGroupBox {
+  Q_OBJECT
+public:
+  governor_sliders(QWidget *parent = 0);
+  void update_sliders(struct cm_parameter &param);
+  QCheckBox *cma_celeb_checkbox;
+  QSlider *slider_tab[2 * O_LAST + 2];
+private slots:
+  void cma_slider(int val);
+  void cma_celebrate_changed(int val);
+};
+
+
 #include "ui_citydlg.h"
 /****************************************************************************
   City dialog
@@ -388,14 +403,13 @@ class city_dialog : public qfc_dialog {
   QPixmap *citizen_pixmap;
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
-  QCheckBox *cma_celeb_checkbox;
-  QSlider *slider_tab[2 * O_LAST + 2];
 public:
   static city_dialog *instance();
   static void drop();
   ~city_dialog();
   void setup_ui(struct city *qcity);
   void refresh();
+  void cma_check_agent();
   struct city *pcity;
   int scroll_height;
   float zoom;
@@ -437,8 +451,6 @@ private slots:
   void worklist_del();
   void display_worklist_menu(const QPoint);
   void disband_state_changed(bool allow_disband);
-  void cma_slider(int val);
-  void cma_celebrate_changed(int val);
   void cma_remove();
   void cma_enable();
   void cma_changed();
