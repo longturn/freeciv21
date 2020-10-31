@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__DIPLODLG_H
-#define FC__DIPLODLG_H
+#pragma once
 
 // Qt
 #include <QMap>
@@ -102,5 +100,3 @@ public:
 private:
   int index;
 };
-
-#endif /* FC__DIPLODLG_H */

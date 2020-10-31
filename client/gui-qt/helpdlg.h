@@ -7,10 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__HELPDLG_H
-#define FC__HELPDLG_H
-
+#pragma once
 // Qt
 #include <QDialog>
 #include <QHash>
@@ -145,5 +142,3 @@ public:
 };
 
 void update_help_fonts();
-
-#endif /* FC__HELPDLG_H */

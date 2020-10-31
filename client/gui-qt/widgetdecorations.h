@@ -10,9 +10,7 @@
                \\               If not, see https://www.gnu.org/licenses/.
                 ))
 *************   V   ******************************************************/
-
-#ifndef FC__WIDGET_DECORATIONS_H
-#define FC__WIDGET_DECORATIONS_H
+#pragma once
 
 #include <QFrame>
 #include <QLabel>
@@ -95,5 +93,3 @@ protected:
   void mousePressEvent(QMouseEvent *event);
   void notify_parent();
 };
-
-#endif /* FC__WIDGET_DECORATIONS_H */

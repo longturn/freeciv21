@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__FC_CLIENT_H
-#define FC__FC_CLIENT_H
+#pragma once
 
 // Qt
 #include <QMainWindow>
@@ -161,4 +159,3 @@ signals:
 // Return fc_client instance. Implementation in gui_main.cpp
 class fc_client *king();
 void popup_client_options();
-#endif /* FC__FC_CLIENT_H */

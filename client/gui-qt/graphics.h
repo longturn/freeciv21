@@ -7,10 +7,5 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__GRAPHICS_H
-#define FC__GRAPHICS_H
-
+#pragma once
 #include "graphics_g.h"
-
-#endif /* FC__GRAPHICS_H */

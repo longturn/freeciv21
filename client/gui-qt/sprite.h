@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__SPRITE_H
-#define FC__SPRITE_H
+#pragma once
 
 #include "sprite_g.h"
 
@@ -18,5 +16,3 @@ class QPixmap;
 struct sprite {
   QPixmap *pm;
 };
-
-#endif /* FC__SPRITE_H */

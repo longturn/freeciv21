@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__MAPVIEW_H
-#define FC__MAPVIEW_H
+#pragma once
 
 // Qt
 #include <QFrame>
@@ -101,5 +99,3 @@ void mapview_thaw(void);
 bool mapview_is_frozen(void);
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
                              struct sprite *ssprite);
-
-#endif /* FC__MAPVIEW_H */

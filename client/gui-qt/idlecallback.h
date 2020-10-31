@@ -10,9 +10,7 @@
                           GNU General Public License along with Freeciv21.
                                   If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__IDLECALLBACK_H
-#define FC__IDLECALLBACK_H
+#pragma once
 
 #include <QQueue>
 #include <QTimer>
@@ -45,5 +43,3 @@ private:
   QQueue<call_me_back *> callback_list;
   QTimer timer;
 };
-
-#endif /* FC__IDLECALLBACK_H */

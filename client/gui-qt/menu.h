@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__MENU_H
-#define FC__MENU_H
+#pragma once
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -332,5 +330,3 @@ private slots:
 private:
   struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };
-
-#endif /* FC__MENU_H */

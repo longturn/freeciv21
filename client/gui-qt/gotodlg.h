@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__GOTODLG_H
-#define FC__GOTODLG_H
+#pragma once
 
 // Qt
 #include <QWidget>
@@ -61,5 +59,3 @@ private:
   void fill_tab(struct player *pplayer);
   struct tile *original_tile;
 };
-
-#endif /* FC__GOTODLG_H */

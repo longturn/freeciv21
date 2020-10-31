@@ -10,8 +10,7 @@
                           GNU General Public License along with Freeciv21.
                                   If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__UNITSELECT_H
-#define FC__UNITSELECT_H
+#pragma once
 
 #include "widgetdecorations.h"
 #include <QWidget>
@@ -67,5 +66,3 @@ private:
 void toggle_unit_sel_widget(struct tile *ptile);
 void update_unit_sel();
 void popdown_unit_sel();
-
-#endif /* UNITSELECT */

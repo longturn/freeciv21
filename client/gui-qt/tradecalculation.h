@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__TRADECALC_H
-#define FC__TRADECALC_H
+#pragma once
 
 #include <QList>
 
@@ -77,5 +76,3 @@ private:
   void discard_trade(trade_city *tc1, trade_city *tc2);
   void find_certain_routes();
 };
-
-#endif /* FC__TRADECALC_H */

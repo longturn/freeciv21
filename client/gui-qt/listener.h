@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__LISTENER_H
-#define FC__LISTENER_H
+#pragma once
 
 #include <set>
 
@@ -213,5 +211,3 @@ void listener<_type_>::invoke(_member_fct_ function, _arg1_t_ arg1,
     ((*it)->*function)(arg1, arg2);
   }
 }
-
-#endif // FC__LISTENER_H

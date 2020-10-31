@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__OPTIONDLG_H
-#define FC__OPTIONDLG_H
+#pragma once
 
 // Qt
 #include <QDialog>
@@ -69,5 +67,3 @@ private slots:
   void set_color();
   void set_font();
 };
-
-#endif /* FC__OPTIONDLG_H */

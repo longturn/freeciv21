@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__ICONS_H
-#define FC__ICONS_H
+#pragma once
 
 #include <QPixmapCache>
 
@@ -30,5 +28,3 @@ public:
   QPixmap *get_pixmap(const QString &id);
   QString get_path(const QString &id);
 };
-
-#endif /* FC__ICONS_H */

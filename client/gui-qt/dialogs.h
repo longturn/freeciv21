@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__DIALOGS_H
-#define FC__DIALOGS_H
+#pragma once
 
 // Qt
 #include <QDialog>
@@ -223,5 +221,3 @@ void popup_upgrade_dialog(struct unit_list *punits);
 void popup_disband_dialog(struct unit_list *punits);
 bool try_default_unit_action(QVariant q1, QVariant q2);
 bool try_default_city_action(QVariant q1, QVariant q2);
-
-#endif /* FC__DIALOGS_H */

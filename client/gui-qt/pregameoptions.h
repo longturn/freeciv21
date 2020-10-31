@@ -10,9 +10,7 @@
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__PREGAMEOPTIONS_H
-#define FC__PREGAMEOPTIONS_H
+#pragma once
 
 #include <QWidget>
 
@@ -39,5 +37,3 @@ private slots:
 private:
   Ui::FormPregameOptions ui;
 };
-
-#endif /* PREGAMEOPTIONS */

@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__TOOLTIP_H
-#define FC__TOOLTIP_H
+#pragma once
 
 #include <QObject>
 
@@ -32,4 +30,3 @@ protected:
   bool eventFilter(QObject *obj, QEvent *event);
 };
 
-#endif /* FC__TOOLTIP_H */

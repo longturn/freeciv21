@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__FONTS_H
-#define FC__FONTS_H
+#pragma once
 
 // Qt
 #include <QMap>
@@ -51,5 +49,3 @@ public:
 void configure_fonts();
 QString configure_font(const QString &font_name, const QStringList &sl, int size,
                        bool bold = false);
-
-#endif // FC__FONTS_H

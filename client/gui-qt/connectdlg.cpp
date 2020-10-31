@@ -61,9 +61,3 @@ void handle_game_load(bool load_successful, const char *filename)
   }
 }
 
-/**********************************************************************/ /**
-   Provide an interface for connecting to a Freeciv server.
- **************************************************************************/
-void qtg_server_connect()
-{ /* PORTME */
-}

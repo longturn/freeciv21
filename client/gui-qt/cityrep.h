@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__CITYREP_H
-#define FC__CITYREP_H
+#pragma once
 
 // Qt
 #include <QAbstractListModel>
@@ -22,27 +20,26 @@
 #include "cityrepdata.h"
 #include "climisc.h"
 
-class QItemSelection;
-class QMenu; // lines 50-50
-class QPainter;
-class QPoint;
-class QVBoxLayout; // lines 56-56
-class city_report; // lines 57-57
-struct city;
-template <class Key, class T> class QMap;
-
 #define NEG_VAL(x) ((x) < 0 ? (x) : (-x))
 #define CMA_NONE (10000)
 #define CMA_CUSTOM (10001)
 
-class QMenu;
 class QHBoxLayout;
+class QItemSelection;
 class QLabel;
+class QMenu;
+class QMenu;
+class QPainter;
+class QPoint;
 class QPushButton;
 class QSortFilterProxyModel;
 class QTableWidget;
 class QVBoxLayout;
+class QVBoxLayout;
 class city_report;
+class city_report;
+struct city;
+template <class Key, class T> class QMap;
 
 class city_sort_model : public QSortFilterProxyModel {
   bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
@@ -206,5 +203,3 @@ private:
 };
 
 void popdown_city_report();
-
-#endif /* FC__CITYREP_H */

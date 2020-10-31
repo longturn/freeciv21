@@ -7,8 +7,4 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__CONNECTDLG_H
-#define FC__CONNECTDLG_H
-
-#endif /* FC__CONNECTDLG_H */
+#pragma once

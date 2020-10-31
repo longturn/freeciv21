@@ -504,7 +504,7 @@ void put_cross_overlay_tile(struct tile *ptile)
  **************************************************************************/
 void draw_selection_rectangle(int canvas_x, int canvas_y, int w, int h)
 {
-  /* PORTME */
+  /* DON'T PORTME */
 }
 
 /**********************************************************************/ /**

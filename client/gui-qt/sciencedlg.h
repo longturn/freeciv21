@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__SCIDLGS_H
-#define FC__SCIDLGS_H
+#pragma once
 
 // utility
 #include "fc_types.h"
@@ -116,5 +114,3 @@ private slots:
 
 void popdown_science_report();
 bool comp_less_than(const qlist_item &q1, const qlist_item &q2);
-
-#endif /* FC__REPODLGS_H */

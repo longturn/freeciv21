@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__PAGE_MAIN_H
-#define FC__PAGE_MAIN_H
+#pragma once
 
 #include <QWidget>
 
@@ -25,5 +23,3 @@ class page_main : public QWidget
 private:
   Ui::Form ui;
 };
-
-#endif /* FC__PAGE_MAIN_H */

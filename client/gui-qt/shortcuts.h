@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__SHORTCUTSDLG_H
-#define FC__SHORTCUTSDLG_H
+#pragma once
 
 #include <QDialog>
 #include <QLineEdit>
@@ -194,5 +192,3 @@ private slots:
   void apply_option(int response);
   void edit_shortcut();
 };
-
-#endif /* FC__SHORTCUSDLG_H */

@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__VOTEBAR_H
-#define FC__VOTEBAR_H
+#pragma once
 
 // Qt
 #include <QWidget>
@@ -57,5 +55,3 @@ protected:
   void paint(QPainter *painter, QPaintEvent *event);
   void paintEvent(QPaintEvent *event);
 };
-
-#endif /* FC__VOTEBAR_H */

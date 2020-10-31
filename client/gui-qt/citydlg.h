@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CITYDLG_H
-#define FC__CITYDLG_H
+#pragma once
 
 #include "fc_types.h"
 // Qt
@@ -424,5 +423,3 @@ protected:
 
 void destroy_city_dialog();
 void city_font_update();
-
-#endif /* FC__CITYDLG_H */

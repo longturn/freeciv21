@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__ENDGAMEREPORT_H
-#define FC__ENDGAMEREPORT_H
+#pragma once
 
 // Qt
 #include <QObject>
@@ -40,5 +38,3 @@ private:
 
 void popdown_endgame_report();
 void popup_endgame_report();
-
-#endif /* FC__ENDGAMEREPORT_H */

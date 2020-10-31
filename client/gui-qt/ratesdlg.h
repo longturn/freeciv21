@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__RATESDLG_H
-#define FC__RATESDLG_H
+#pragma once
 
 // Qt
 #include <QDialog>
@@ -88,5 +87,3 @@ private slots:
 };
 
 void popup_multiplier_dialog(void);
-
-#endif /* FC__RATESDLG_H */

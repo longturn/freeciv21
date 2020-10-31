@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CHATLINE_H
-#define FC__CHATLINE_H
+#pragma once
 
 // Qt
 #include <QEvent>
@@ -141,5 +140,3 @@ public:
   explicit version_message_event(const QString &msg);
   QString get_message() const { return message; }
 };
-
-#endif /* FC__CHATLINE_H */

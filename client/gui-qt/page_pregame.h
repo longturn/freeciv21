@@ -10,9 +10,7 @@
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__PAGE_PREGAME_H
-#define FC__PAGE_PREGAME_H
+#pragma once
 
 #include <QWidget>
 
@@ -43,5 +41,3 @@ private:
   Ui::FormPagePregame ui;
   fc_client *king; // serve the King
 };
-
-#endif /* FC__PAGE_PREGAME_H */

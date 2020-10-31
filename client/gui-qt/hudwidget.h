@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__HUDWIDGET_H
-#define FC__HUDWIDGET_H
+#pragma once
 
 // Qt
 #include <QDialog>
@@ -355,5 +353,3 @@ private:
   move_widget *mw;
   QElapsedTimer m_timer;
 };
-
-#endif /* FC__HUDWIDGET_H */

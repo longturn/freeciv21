@@ -10,9 +10,7 @@
                         the GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__PAGE_NETWORK_H
-#define FC__PAGE_NETWORK_H
+#pragma once
 
 #include "ui_page_network.h"
 #include <QWidget>
@@ -53,5 +51,3 @@ private:
 };
 
 void server_scan_error(server_scan *, const char *);
-
-#endif /* FC__PAGE_NETWORK_H */

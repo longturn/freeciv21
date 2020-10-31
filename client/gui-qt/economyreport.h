@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__ECONOMYREPORT_H
-#define FC__ECONOMYREPORT_H
+#pragma once
 
 #include "ui_economyreport.h"
 
@@ -44,5 +42,3 @@ private slots:
 };
 
 void popdown_economy_report();
-
-#endif /* FC__ECONOMYREPORT_H */

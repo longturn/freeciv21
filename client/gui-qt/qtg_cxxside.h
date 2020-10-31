@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__QTG_CXXSIDE_H
-#define FC__QTG_CXXSIDE_H
+#pragma once
 
 // common
 #include "fc_types.h"
@@ -135,4 +133,3 @@ char **qtg_get_gui_specific_themes_directories(int *count);
 char **qtg_get_useable_themes_in_directory(const char *directory,
                                            int *count);
 
-#endif /* FC__QTG_CXXSIDE_H */

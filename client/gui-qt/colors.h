@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__COLORS_H
-#define FC__COLORS_H
+#pragma once
 
 // Qt
 #include "QColor"
@@ -17,5 +15,3 @@
 struct color {
   QColor qcolor;
 };
-
-#endif /* FC__COLORS_H */

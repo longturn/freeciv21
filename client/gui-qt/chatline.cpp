@@ -741,27 +741,6 @@ void qtg_real_output_window_append(const char *astring,
 }
 
 /***********************************************************************/ /**
-   Get the text of the output window, and call write_chatline_content() to
-   log it.
- ***************************************************************************/
-void log_output_window(void)
-{
-  /* PORTME */
-  write_chatline_content(NULL);
-}
-
-/***********************************************************************/ /**
-   Clear all text from the output window.
- ***************************************************************************/
-void clear_output_window(void)
-{
-  /* PORTME */
-#if 0
-  set_output_window_text(_("Cleared output window."));
-#endif
-}
-
-/***********************************************************************/ /**
    Version message event constructor.
  ***************************************************************************/
 version_message_event::version_message_event(const QString &msg)

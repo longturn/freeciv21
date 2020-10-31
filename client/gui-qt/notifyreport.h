@@ -7,10 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__NOTIFYREPORT_H
-#define FC__NOTIFYREPORT_H
-
+#pragma once
 // Qt
 #include <QDialog>
 #include <QMessageBox>
@@ -58,5 +55,3 @@ private:
   QFont small_font;
   QPoint cursor;
 };
-
-#endif /* FC__NOTIFYREPORT_H */

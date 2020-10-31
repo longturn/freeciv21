@@ -10,9 +10,7 @@
          / /      '"      GNU General Public License along with Freeciv21.
          \ \                    If not, see https://www.gnu.org/licenses/.
 ******    '"   **********************************************************/
-
-#ifndef FC__PAGE_GAME_H
-#define FC__PAGE_GAME_H
+#pragma once
 
 #include <QStackedWidget>
 #include <QWidget>
@@ -93,5 +91,3 @@ private:
    Return game instandce
  **************************************************************************/
 page_game *queen();
-
-#endif /* FC__PAGE_GAME_H */

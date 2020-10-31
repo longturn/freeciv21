@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__MESSAGEDLG_H
-#define FC__MESSAGEDLG_H
+#pragma once
 
 #include "messagedlg_g.h"
 // Qt
@@ -36,5 +34,3 @@ private slots:
 };
 
 void popup_messageopt_dialog(void);
-
-#endif /* FC__MESSAGEDLG_H */

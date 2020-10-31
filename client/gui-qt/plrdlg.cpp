@@ -923,18 +923,13 @@ void popdown_players_report()
    the core client code when that player's information changes.
  **************************************************************************/
 void update_intel_dialog(struct player *p)
-{ /* PORTME */
+{
+  real_players_dialog_update(p);
 }
 /**********************************************************************/ /**
    Close an intelligence dialog for the given player.
  **************************************************************************/
 void close_intel_dialog(struct player *p)
-{ /* PORTME */
-}
-
-/**********************************************************************/ /**
-   Popup an intelligence dialog for the given player.
- **************************************************************************/
-void popup_intel_dialog(struct player *p)
-{ /* PORTME */
+{
+  real_players_dialog_update(p);
 }

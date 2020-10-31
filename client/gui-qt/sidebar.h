@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__SIDEBAR_H
-#define FC__SIDEBAR_H
+#pragma once
 
 // Qt
 #include <QWidget>
@@ -109,5 +107,3 @@ protected:
 private:
   QVBoxLayout *layout;
 };
-
-#endif /* FC__SIDEBAR_H */

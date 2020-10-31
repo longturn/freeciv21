@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__UNITREPORT_H
-#define FC__UNITREPORT_H
+#pragma once
 
 // Qt
 #include <QLabel>
@@ -94,5 +92,3 @@ protected:
 
 void popdown_units_report();
 void toggle_units_report(bool);
-
-#endif /* FC__UNITREPORT_H */

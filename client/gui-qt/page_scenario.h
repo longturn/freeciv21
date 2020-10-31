@@ -8,8 +8,7 @@
                     of the GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PAGE_SCENARIO_H
-#define FC__PAGE_SCENARIO_H
+#pragma once
 
 #include "ui_page_scenario.h"
 #include <QWidget>
@@ -32,5 +31,3 @@ private:
   Ui::FormPageScenario ui;
   QString current_file;
 };
-
-#endif /* FC__PAGE_SCENARIO_H */

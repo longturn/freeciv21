@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__PLRDLG_H
-#define FC__PLRDLG_H
+#pragma once
 
 // Qt
 #include <QAbstractListModel>
@@ -155,5 +153,3 @@ private slots:
 
 void popup_players_dialog(bool raise);
 void popdown_players_report(void);
-
-#endif /* FC__PLRDLG_H */

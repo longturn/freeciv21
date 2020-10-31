@@ -7,12 +7,10 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__MESSAGEWIN_H
-#define FC__MESSAGEWIN_H
+#pragma once
 
 #include "messagewin_g.h"
-// qt-client <-> one true king
+// qt-client is one true king
 #include "widgetdecorations.h"
 
 class QEvent;
@@ -84,5 +82,3 @@ protected:
   void mouseReleaseEvent(QMouseEvent *event);
   int &e_pos();
 };
-
-#endif /* FC__MESSAGEWIN_H */

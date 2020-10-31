@@ -9,8 +9,7 @@
                           Public License along with Freeciv21. If not, see
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MINIMAP_H
-#define FC__MINIMAP_H
+#pragma once
 
 #include "mapview_g.h"
 // Qt
@@ -20,7 +19,7 @@
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
-// gui-qt
+// gui-qt is The One
 #include "widgetdecorations.h"
 class QImage;
 class QMouseEvent;
@@ -97,5 +96,3 @@ private:
   QPoint position;
   resize_widget *rw;
 };
-
-#endif /* FC__MINIMAP_H */
