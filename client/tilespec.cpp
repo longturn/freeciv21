@@ -4732,7 +4732,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
                                            const struct tile *ptile,
                                            const struct city *citymode)
 {
-  const struct city *pcity;
+   const struct city *pcity;
   const struct city *pwork;
   struct unit *psettler;
   struct drawn_sprite *saved_sprs = sprs;
@@ -4759,28 +4759,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
 
   if (pcity && city_base_to_city_map(&city_x, &city_y, pcity, ptile)) {
     /* FIXME: check elsewhere for valid tile (instead of above) */
-
-    if (pcity->client.city_opened) {
-      if (tile_worked(ptile)) {
-        int food = city_tile_output_now(pcity, ptile, O_FOOD);
-        int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
-        int trade = city_tile_output_now(pcity, ptile, O_TRADE);
-        const int ox =
-            t->type == TS_ISOMETRIC ? t->normal_tile_width / 3 : 0;
-        const int oy =
-            t->type == TS_ISOMETRIC ? -t->normal_tile_height / 3 : 0;
-
-        food = CLIP(0, food / game.info.granularity, NUM_TILES_DIGITS - 1);
-        shields =
-            CLIP(0, shields / game.info.granularity, NUM_TILES_DIGITS - 1);
-        trade = CLIP(0, trade / game.info.granularity, NUM_TILES_DIGITS - 1);
-
-        ADD_SPRITE(t->sprites.city.tile_foodnum[food], TRUE, ox, oy);
-        ADD_SPRITE(t->sprites.city.tile_shieldnum[shields], TRUE, ox, oy);
-        ADD_SPRITE(t->sprites.city.tile_tradenum[trade], TRUE, ox, oy);
-      }
-      ADD_SPRITE_SIMPLE(t->sprites.grid.unavailable);
-    } else if (!citymode && pcity->client.colored) {
+     if (!citymode && pcity->client.colored) {
       /* Add citymap overlay for a city. */
       int idx = pcity->client.color_index % NUM_CITY_COLORS;
 
@@ -4790,7 +4769,8 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
         ADD_SPRITE_SIMPLE(t->sprites.city.unworked_tile_overlay.p[idx]);
       }
     } else if (NULL != pwork && pwork == pcity
-               && (citymode || gui_options.draw_city_output)) {
+               && (citymode || gui_options.draw_city_output
+                || pcity->client.city_opened)) {
       /* Add on the tile output sprites. */
       int food = city_tile_output_now(pcity, ptile, O_FOOD);
       int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
