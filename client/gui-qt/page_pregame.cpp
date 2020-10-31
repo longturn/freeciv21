@@ -476,9 +476,18 @@ void page_pregame::start_page_menu(QPoint pos)
       if (can_conn_edit_players_nation(&client.conn, pplayer)) {
         str = QString(_("Pick nation"));
         action = new QAction(str, ui.start_players_tree);
-        str = "PICK:" + QString(player_name(pplayer)); /* PICK is a key */
-        QObject::connect(action, &QAction::triggered,
-                         [this, str]() { send_fake_chat_message(str); });
+        str = QString(player_name(pplayer)); /* PICK is a key */
+        QObject::connect(action, &QAction::triggered, [this, str]() {
+          QString splayer;
+          players_iterate(pplayer)
+          {
+            splayer = QString(pplayer->name);
+            if (!splayer.compare(str)) {
+              popup_races_dialog(pplayer);
+            }
+          }
+          players_iterate_end;
+        });
         menu->addAction(action);
       }
 

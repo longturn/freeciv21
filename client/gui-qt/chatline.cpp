@@ -109,29 +109,6 @@ void chat_listener::send_chat_message(const QString &message)
   int index;
   QString splayer, s;
 
-  /* FIXME
-   * Key == PICK: used for picking nation, it was put here cause those
-   * Qt slots are a bit limited ...I'm unable to pass custom player pointer
-   * or idk how to do that
-   */
-  s = message;
-  index = message.indexOf("PICK:");
-
-  if (index != -1) {
-    s = s.remove("PICK:");
-    /* now should be playername left in string */
-    players_iterate(pplayer)
-    {
-      splayer = QString(pplayer->name);
-
-      if (!splayer.compare(s)) {
-        popup_races_dialog(pplayer);
-      }
-    }
-    players_iterate_end;
-    return;
-  }
-
   history << message;
   reset_history_position();
 
