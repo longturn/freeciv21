@@ -1344,23 +1344,10 @@ city_dialog::city_dialog(QWidget *parent)
     : qfc_dialog(parent), future_targets(false), show_units(true),
       show_wonders(true), show_buildings(true)
 {
-  int info_nr;
-  int iter;
   QFont f = QApplication::font();
   QFont *small_font;
   QFontMetrics fm(f);
-  QGridLayout *gridl, *slider_grid;
-  QGroupBox *group_box, *map_box, *prod_options, *qgbox, *qgbprod,
-      *qsliderbox, *result_box;
-  QHBoxLayout *hbox, *hbox_layout, *prod_option_layout, *work_but_layout;
   QHeaderView *header;
-  QLabel *lab2, *label, *ql, *some_label;
-  QPushButton *qpush2;
-  QSizePolicy size_expanding_policy(QSizePolicy::Expanding,
-                                    QSizePolicy::Expanding);
-  QSlider *slider;
-  QStringList info_list, str_list;
-  QWidget *curr_unit_wdg;
 
   int h = 2 * fm.height() + 2;
   small_font = fc_font::instance()->get_font(fonts::notify_label);
@@ -1416,22 +1403,11 @@ city_dialog::city_dialog(QWidget *parent)
   ui.work_rem_but->setIcon(
       style()->standardIcon(QStyle::SP_DialogDiscardButton));
   ui.production_combo_p->setToolTip(_("Click to change current production"));
-  ui.p_table_p->setColumnCount(3);
-  ui.p_table_p->setProperty("showGrid", "false");
-  ui.p_table_p->setProperty("selectionBehavior", "SelectRows");
-  ui.p_table_p->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  ui.p_table_p->verticalHeader()->setVisible(false);
-  ui.p_table_p->horizontalHeader()->setVisible(false);
-  ui.p_table_p->setSelectionMode(QAbstractItemView::SingleSelection);
   ui.production_combo_p->setFixedHeight(h);
-  ui.p_table_p->setMinimumWidth(200);
-  ui.p_table_p->setSizeAdjustPolicy(
-      QAbstractScrollArea::AdjustToContentsOnFirstShow);
+  ui.p_table_p->setMinimumWidth(160);
   ui.p_table_p->setContextMenuPolicy(Qt::CustomContextMenu);
-  ui.p_table_p->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   header = ui.p_table_p->horizontalHeader();
   header->setStretchLastSection(true);
-
   connect(ui.p_table_p, &QWidget::customContextMenuRequested, this,
           &city_dialog::display_worklist_menu);
   connect(ui.production_combo_p, &progress_bar::clicked, this,
@@ -1451,15 +1427,11 @@ city_dialog::city_dialog(QWidget *parent)
       SIGNAL(
           selectionChanged(const QItemSelection &, const QItemSelection &)),
       SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
-
   setSizeGripEnabled(true);
 
   /* governor tab */
   ui.qgbox->setTitle(_("Presets:"));
   ui.qsliderbox->setTitle(_("Governor settings"));
-  hbox = new QHBoxLayout;
-  gridl = new QGridLayout;
-  slider_grid = new QGridLayout;
 
   ui.cma_table->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
@@ -1477,7 +1449,6 @@ city_dialog::city_dialog(QWidget *parent)
   ui.cma_enable_but->setFocusPolicy(Qt::TabFocus);
   connect(ui.cma_enable_but, &QAbstractButton::pressed, this,
           &city_dialog::cma_enable);
-  ui.qgbox->setLayout(ui.qgboxLayout);
 
   ui.bsavecma->setText(_("Save"));
   ui.bsavecma->setIcon(style()->standardIcon(QStyle::SP_DialogSaveButton));
@@ -1509,6 +1480,9 @@ city_dialog::city_dialog(QWidget *parent)
   }
 
   ui.tab3->setLayout(ui.tabLayout3);
+  ui.tabWidget->setTabText(2, _("Happiness"));
+  ui.tabWidget->setTabText(1, _("Governor"));
+  ui.tabWidget->setTabText(0, _("General"));
   ui.tab2->setLayout(ui.tabLayout2);
   ui.tab->setLayout(ui.tabLayout);
   setLayout(ui.vlayout);
@@ -2334,7 +2308,6 @@ void city_dialog::setup_ui(struct city *qcity)
   QPixmap q_pix = *get_icon_sprite(tileset, ICON_CITYDLG)->pm;
   QIcon q_icon = ::QIcon(q_pix);
 
-  setContentsMargins(5, 5, 5, 5);
   setWindowIcon(q_icon);
   pcity = qcity;
   ui.production_combo_p->blockSignals(true);
