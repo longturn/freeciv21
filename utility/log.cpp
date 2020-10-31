@@ -20,6 +20,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// Qt
+#include <QString>
+
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
@@ -237,6 +240,14 @@ out:
                "to use advanced log levels based on files.\n"));
   return FALSE;
 #endif /* FREECIV_DEBUG */
+}
+
+/**********************************************************************/ /**
+   Wrapper around log_parse_level_str(const char *)
+ **************************************************************************/
+bool log_parse_level_str(const QString &level_str, enum log_level *ret_level)
+{
+  return log_parse_level_str(qPrintable(level_str), ret_level);
 }
 
 /**********************************************************************/ /**

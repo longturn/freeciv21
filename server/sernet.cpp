@@ -23,8 +23,8 @@
 
 // Qt
 #include <QCoreApplication>
-#include <QNetworkDatagram>
 #include <QHostInfo>
+#include <QNetworkDatagram>
 #include <QTcpServer>
 #include <QTcpSocket>
 #include <QUdpSocket>
@@ -377,7 +377,9 @@ QTcpServer *server_open_socket()
   auto server = new QTcpServer;
 
   log_verbose("Server attempting to listen on %s:%d",
-              srvarg.bind_addr ? srvarg.bind_addr : "(any)", srvarg.port);
+              srvarg.bind_addr.isNull() ? qPrintable(srvarg.bind_addr)
+                                        : "(any)",
+              srvarg.port);
 
   if (!server->listen(QHostAddress::Any, srvarg.port)) {
     // Failed
@@ -607,8 +609,8 @@ static void send_lanserver_response(void)
 
   lockal_udpsock.joinMulticastGroup(QHostAddress(group));
   /* Create a description of server state to send to clients.  */
-  if (srvarg.identity_name[0] != '\0') {
-    sz_strlcpy(hostname, srvarg.identity_name);
+  if (!srvarg.identity_name.isEmpty()) {
+    sz_strlcpy(hostname, qUtf8Printable(srvarg.identity_name));
   } else if (fc_gethostname(hostname, sizeof(hostname)) != 0) {
     sz_strlcpy(hostname, "none");
   }

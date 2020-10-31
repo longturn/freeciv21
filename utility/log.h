@@ -13,12 +13,13 @@
 #ifndef FC__LOG_H
 #define FC__LOG_H
 
-
-
 #include <stdarg.h>
 #include <stdlib.h>
 
 #include "support.h" /* bool type and fc__attribute */
+
+// Forward declarations
+class QString;
 
 enum log_level {
   LOG_FATAL = 0,
@@ -57,6 +58,8 @@ void log_init(const char *filename, enum log_level initial_level,
               int fatal_assertions);
 void log_close(void);
 bool log_parse_level_str(const char *level_str, enum log_level *ret_level);
+bool log_parse_level_str(const QString &level_str,
+                         enum log_level *ret_level);
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
 log_callback_fn log_set_callback(log_callback_fn callback);
@@ -222,7 +225,5 @@ void fc_assert_fail(const char *file, const char *function, int line,
 #define FC_STATIC_ASSERT(cond, tag)                                         \
   enum { static_assert_##tag = 1 / (!!(cond)) }
 #endif
-
-
 
 #endif /* FC__LOG_H */

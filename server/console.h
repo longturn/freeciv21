@@ -16,7 +16,8 @@
 /* utility */
 #include "support.h" /* bool type and fc__attribute */
 
-
+// Forward definitions
+class QString;
 
 #define MAX_LEN_CONSOLE_LINE 1024 /* closing '\0' included */
 
@@ -54,7 +55,7 @@ enum rfc_status {
 };
 
 /* initialize logging via console */
-void con_log_init(const char *log_filename, enum log_level level,
+void con_log_init(const QString &log_filename, enum log_level level,
                   int fatal_assertions);
 void con_log_close(void);
 
@@ -89,7 +90,5 @@ void con_set_style(bool i);
 
 /* return server output style */
 bool con_get_style(void);
-
-
 
 #endif /* FC__CONSOLE_H */

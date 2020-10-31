@@ -177,8 +177,7 @@ QTcpServer *srv_prepare()
   if (srvarg.fcdb_enabled) {
     bool success;
 
-    success = fcdb_init(srvarg.fcdb_conf);
-    free(srvarg.fcdb_conf); /* Never needed again */
+    success = fcdb_init(qUtf8Printable(srvarg.fcdb_conf));
     srvarg.fcdb_conf = NULL;
     if (!success) {
       QCoreApplication::exit(EXIT_FAILURE);
@@ -190,18 +189,20 @@ QTcpServer *srv_prepare()
   if (srvarg.ruleset != NULL) {
     const char *testfilename;
 
-    testfilename = fileinfoname(get_data_dirs(), srvarg.ruleset);
+    testfilename =
+        fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
     if (testfilename == NULL) {
       log_fatal(_("Ruleset directory \"%s\" not found"), srvarg.ruleset);
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;
     }
-    sz_strlcpy(game.server.rulesetdir, srvarg.ruleset);
+    sz_strlcpy(game.server.rulesetdir, qUtf8Printable(srvarg.ruleset));
   }
 
   /* load a saved game */
-  if ('\0' == srvarg.load_filename[0]
-      || !load_command(NULL, srvarg.load_filename, FALSE, TRUE)) {
+  if (srvarg.load_filename.isEmpty()
+      || !load_command(NULL, qUtf8Printable(srvarg.load_filename), FALSE,
+                       TRUE)) {
     /* Rulesets are loaded on game initialization, but may be changed later
      * if /load or /rulesetdir is done. */
     load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
@@ -570,7 +571,8 @@ void server::prepare_game()
   /* Load a script file. */
   if (NULL != srvarg.script_filename) {
     /* Adding an error message more here will duplicate them. */
-    (void) read_init_script(NULL, srvarg.script_filename, TRUE, FALSE);
+    (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
+                            TRUE, FALSE);
   }
 
   (void) aifill(game.info.aifill);
@@ -648,7 +650,7 @@ void server::begin_phase()
         struct mapdef *pmapdef = mapimg_isvalid(i);
         if (pmapdef != NULL) {
           mapimg_create(pmapdef, FALSE, game.server.save_name,
-                        srvarg.saves_pathname);
+                        qUtf8Printable(srvarg.saves_pathname));
         } else {
           log_error("%s", mapimg_error());
         }

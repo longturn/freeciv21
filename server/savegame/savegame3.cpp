@@ -1982,20 +1982,18 @@ static void sg_load_game(struct loaddata *loading)
       loading->file, default_meta_patches_string(), "game.meta_patches");
   set_meta_patches_string(str);
 
-  if (0 == strcmp(DEFAULT_META_SERVER_ADDR, srvarg.metaserver_addr)) {
+  if (srvarg.metaserver_addr == QLatin1String(DEFAULT_META_SERVER_ADDR)) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --Metaserver). */
-    sz_strlcpy(srvarg.metaserver_addr,
-               secfile_lookup_str_default(loading->file,
-                                          DEFAULT_META_SERVER_ADDR,
-                                          "game.meta_server"));
+    srvarg.metaserver_addr = QString::fromUtf8(secfile_lookup_str_default(
+        loading->file, DEFAULT_META_SERVER_ADDR, "game.meta_server"));
   }
 
-  if ('\0' == srvarg.serverid[0]) {
+  if (srvarg.serverid.isEmpty()) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --serverid). */
-    sz_strlcpy(srvarg.serverid, secfile_lookup_str_default(loading->file, "",
-                                                           "game.serverid"));
+    srvarg.serverid = QString::fromUtf8(
+        secfile_lookup_str_default(loading->file, "", "game.serverid"));
   }
   sz_strlcpy(server.game_identifier,
              secfile_lookup_str_default(loading->file, "", "game.id"));
@@ -2163,10 +2161,12 @@ static void sg_save_game(struct savedata *saving)
 
   secfile_insert_str(saving->file, get_meta_patches_string(),
                      "game.meta_patches");
-  secfile_insert_str(saving->file, meta_addr_port(), "game.meta_server");
+  secfile_insert_str(saving->file, qUtf8Printable(meta_addr_port()),
+                     "game.meta_server");
 
   secfile_insert_str(saving->file, server.game_identifier, "game.id");
-  secfile_insert_str(saving->file, srvarg.serverid, "game.serverid");
+  secfile_insert_str(saving->file, qUtf8Printable(srvarg.serverid),
+                     "game.serverid");
 
   secfile_insert_str(
       saving->file,
