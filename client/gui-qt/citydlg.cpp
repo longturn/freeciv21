@@ -41,6 +41,7 @@
 #include "control.h"
 #include "global_worklist.h"
 #include "mapview_common.h"
+#include "mapctrl_common.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
@@ -1326,7 +1327,6 @@ governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
             &governor_sliders::cma_slider);
   }
   setLayout(slider_grid);
-
 }
 
 /************************************************************************/ /**
@@ -1708,16 +1708,14 @@ city_dialog::city_dialog(QWidget *parent)
   setMouseTracking(true);
   selected_row_p = -1;
   pcity = NULL;
-  ui.lcity_name->setToolTip(_("Click to change city name"));
-  /* City information widget texts about surpluses and so on */
 
+  // main tab
+  ui.lcity_name->setToolTip(_("Click to change city name"));
   ui.buy_button->setIcon(fc_icons::instance()->get_icon("help-donate"));
   connect(ui.buy_button, &QAbstractButton::clicked, this, &city_dialog::buy);
-
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
   citizen_pixmap = NULL;
-
   ui.supported_units->set_supp(true);
   ui.scroll2->setWidgetResizable(true);
   ui.scroll2->setMaximumHeight(
@@ -1737,32 +1735,26 @@ city_dialog::city_dialog(QWidget *parent)
   ui.scroll->setProperty("city_scroll", true);
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
-
   ui.bclose->setIcon(fc_icons::instance()->get_icon("city-close"));
   ui.bclose->setIconSize(QSize(56, 56));
   ui.bclose->setToolTip(_("Close city dialog"));
   connect(ui.bclose, &QAbstractButton::clicked, this, &QWidget::hide);
-
   ui.next_city_but->setIcon(fc_icons::instance()->get_icon("city-right"));
   ui.next_city_but->setIconSize(QSize(56, 56));
   ui.next_city_but->setToolTip(_("Show next city"));
   connect(ui.next_city_but, &QAbstractButton::clicked, this,
           &city_dialog::next_city);
-
   connect(ui.prev_city_but, &QAbstractButton::clicked, this,
           &city_dialog::prev_city);
   ui.prev_city_but->setIcon(fc_icons::instance()->get_icon("city-left"));
   ui.prev_city_but->setIconSize(QSize(56, 56));
   ui.prev_city_but->setToolTip(_("Show previous city"));
-
   ui.work_next_but->setIcon(fc_icons::instance()->get_icon("go-down"));
   ui.work_prev_but->setIcon(fc_icons::instance()->get_icon("go-up"));
   ui.work_add_but->setIcon(fc_icons::instance()->get_icon("list-add"));
   ui.work_rem_but->setIcon(
       style()->standardIcon(QStyle::SP_DialogDiscardButton));
-
   ui.production_combo_p->setToolTip(_("Click to change current production"));
-
   ui.p_table_p->setColumnCount(3);
   ui.p_table_p->setProperty("showGrid", "false");
   ui.p_table_p->setProperty("selectionBehavior", "SelectRows");
@@ -1801,6 +1793,7 @@ city_dialog::city_dialog(QWidget *parent)
 
   setSizeGripEnabled(true);
 
+  /* governor tab */
   ui.qgbox->setTitle(_("Presets:"));
   ui.qsliderbox->setTitle(_("Governor settings"));
   hbox = new QHBoxLayout;
@@ -2013,6 +2006,9 @@ city_dialog::~city_dialog()
  ****************************************************************************/
 void city_dialog::hideEvent(QHideEvent *event)
 {
+  if (pcity) {
+    key_city_hide_open(pcity);
+  }
   king()->qt_settings.city_geometry = saveGeometry();
 }
 
@@ -2028,6 +2024,9 @@ void city_dialog::showEvent(QShowEvent *event)
     QRect rect = screens[0]->availableGeometry();
 
     resize((rect.width() * 4) / 5, (rect.height() * 5) / 6);
+  }
+  if (pcity) {
+    key_city_show_open(pcity);
   }
 }
 
@@ -2600,7 +2599,10 @@ void city_dialog::refresh()
     update_nation_table();
     update_cma_tab();
     update_disabled();
+    // map update
+    key_city_show_open(pcity);
   } else {
+    key_city_hide_open(pcity);
     destroy_city_dialog();
   }
 

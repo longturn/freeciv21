@@ -32,7 +32,7 @@
 
 /* common/aicore */
 #include "path_finding.h"
-
+#include "cma_core.h"
 /* client/include */
 #include "chatline_g.h"
 #include "citydlg_g.h"
@@ -2778,6 +2778,7 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
   struct city *pcity = tile_city(ptile);
   struct unit_list *punits = get_units_in_focus();
   bool maybe_goto = FALSE;
+  struct city *near_pcity = find_city_near_tile(ptile);
 
   if (hover_state != HOVER_NONE) {
     switch (hover_state) {
@@ -2807,7 +2808,21 @@ void do_map_click(struct tile *ptile, enum quickselect_type qtype)
 
     clear_hover_state();
     update_unit_info_label(get_units_in_focus());
-  } else if (qtype != SELECT_POPUP && qtype != SELECT_APPEND) {
+  }  if (near_pcity && !cma_is_city_under_agent(near_pcity, NULL)
+          && can_client_issue_orders()
+         && near_pcity->client.city_opened) {
+      int city_x, city_y;
+
+      fc_assert_ret(city_base_to_city_map(&city_x, &city_y, near_pcity, ptile));
+
+      if (NULL != tile_worked(ptile) && tile_worked(ptile) == near_pcity) {
+        dsend_packet_city_make_specialist(&client.conn, near_pcity->id,
+                                          ptile->index);
+      } else if (city_can_work_tile(near_pcity, ptile)) {
+        dsend_packet_city_make_worker(&client.conn, near_pcity->id, ptile->index);
+      }
+      city_workers_display = near_pcity;
+    } else if (qtype != SELECT_POPUP && qtype != SELECT_APPEND) {
     /* Bypass stack or city popup if quickselect is specified. */
     struct unit *qunit = quickselect(ptile, qtype);
 

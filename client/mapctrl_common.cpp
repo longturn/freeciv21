@@ -369,6 +369,28 @@ void key_city_overlay(int canvas_x, int canvas_y)
   }
 }
 
+void key_city_show_open(struct city *pcity)
+{
+  if (can_client_change_view() && pcity) {
+
+    if (pcity) {
+      pcity->client.city_opened = true;
+      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
+    }
+  }
+}
+
+void key_city_hide_open(struct city *pcity)
+{
+  if (can_client_change_view() && pcity) {
+
+    if (pcity) {
+      pcity->client.city_opened = false;
+      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
+    }
+  }
+}
+
 /**********************************************************************/ /**
    Shift-Left-Click on owned city or any visible unit to copy.
    Returns whether it found anything to try to copy.
