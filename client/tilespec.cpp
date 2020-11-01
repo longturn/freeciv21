@@ -5172,6 +5172,7 @@ static int fill_grid_sprite_array(
     const struct city *pcity, const struct city *citymode)
 {
   struct drawn_sprite *saved_sprs = sprs;
+  struct city *xcity;
 
   if (pedge) {
     bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
@@ -5221,8 +5222,15 @@ static int fill_grid_sprite_array(
           worked[i] = (NULL != tile_worked(tile));
         }
       }
+        if (tile) {
+          { // Draw city grid for main citymap
+            xcity = find_city_near_tile(tile);
+            if (xcity && xcity->client.city_opened) {
+              ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
+            }
+          }
+      }
     }
-
     if (mapdeco_is_highlight_set(pedge->tile[0])
         || mapdeco_is_highlight_set(pedge->tile[1])) {
       ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
