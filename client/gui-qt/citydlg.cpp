@@ -1033,12 +1033,13 @@ void city_label::mousePressEvent(QMouseEvent *event)
 {
   int citnum, i;
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
-  int num_citizens = pcity->size;
+  int num_citizens;
 
+  if (!pcity) return;
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
-
+  num_citizens = pcity->size
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
   citnum = event->x() / w;
