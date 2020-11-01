@@ -1039,7 +1039,7 @@ void city_label::mousePressEvent(QMouseEvent *event)
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
-  num_citizens = pcity->size
+  num_citizens = pcity->size;
   i = 1 + (num_citizens * 5 / 200);
   w = w / i;
   citnum = event->x() / w;
