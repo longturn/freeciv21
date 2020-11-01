@@ -41,7 +41,7 @@ lazy_overwrite=0
 def verbose(s):
     if "-v" in sys.argv:
         print(s)
-        
+
 def prefix(prefix,str):
     lines=str.split("\n")
     lines=map(lambda x,prefix=prefix: prefix+x,lines)
@@ -83,7 +83,7 @@ def without(all,part):
         if i not in part:
             result.append(i)
     return result
-    
+
 # A simple container for a type alias
 class Type:
     def __init__(self,alias,dest):
@@ -253,7 +253,7 @@ class Field:
       %(tmp)s;
     }
   }'''%self.get_dict(vars())
-        
+
         return repr(self.__dict__)
 
     # Returns code which sets "differ" by comparing the field
@@ -271,7 +271,7 @@ class Field:
             return "  differ = !are_%(dataio_type)ss_equal(&old->%(name)s, &real_packet->%(name)s);"%self.__dict__
         if not self.is_array:
             return "  differ = (old->%(name)s != real_packet->%(name)s);"%self.__dict__
-        
+
         if self.dataio_type=="string" or self.dataio_type=="estring":
             c="strcmp(old->%(name)s[i], real_packet->%(name)s[i]) != 0"%self.__dict__
             array_size_u=self.array_size1_u
@@ -324,7 +324,7 @@ class Field:
 '''%(cmp,i)
 
     # Returns a code fragment which will put this field if the
-    # content has changed. Does nothing for bools-in-header.    
+    # content has changed. Does nothing for bools-in-header.
     def get_put_wrapper(self,packet,i,deltafragment):
         if fold_bool_into_header and self.struct_type=="bool" and \
            not self.is_array:
@@ -347,14 +347,6 @@ class Field:
 
     # Returns code which put this field.
     def get_put(self,deltafragment):
-        return '''#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = \"%(name)s\";
-#endif /* FREECIV_JSON_CONNECTION */
-'''%self.__dict__ \
-               + self.get_put_real(deltafragment);
-
-    # The code which put this field before it is wrapped in address adding.
-    def get_put_real(self,deltafragment):
         if self.dataio_type=="bitvector":
             return "DIO_BV_PUT(&dout, &field_addr, packet->%(name)s);"%self.__dict__
 
@@ -396,72 +388,17 @@ class Field:
     {
       int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-      int count = 0;
-
-      for (i = 0; i < %(array_size_u)s; i++) {
-        if (old->%(name)s[i] != real_packet->%(name)s[i]) {
-          count++;
-        }
-      }
-      /* Create the array. */
-      DIO_PUT(farray, &dout, &field_addr, count + 1);
-
-      /* Enter array. */
-      field_addr.sub_location = plocation_elem_new(0);
-
-      count = 0;
-#endif /* FREECIV_JSON_CONNECTION */
-
       fc_assert(%(array_size_u)s < 255);
 
       for (i = 0; i < %(array_size_u)s; i++) {
         if (old->%(name)s[i] != real_packet->%(name)s[i]) {
-#ifdef FREECIV_JSON_CONNECTION
-          /* Next diff array element. */
-          field_addr.sub_location->number = count - 1;
-
-          /* Create the diff array element. */
-          DIO_PUT(farray, &dout, &field_addr, 2);
-
-          /* Enter diff array element (start at the index address). */
-          field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
           DIO_PUT(uint8, &dout, &field_addr, i);
 
-#ifdef FREECIV_JSON_CONNECTION
-          /* Content address. */
-          field_addr.sub_location->sub_location->number = 1;
-#endif /* FREECIV_JSON_CONNECTION */
           %(c)s
-
-#ifdef FREECIV_JSON_CONNECTION
-          /* Exit diff array element. */
-          free(field_addr.sub_location->sub_location);
-          field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
         }
       }
-#ifdef FREECIV_JSON_CONNECTION
-      field_addr.sub_location->number = count - 1;
-
-      /* Create the diff array element. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter diff array element. Point to index address. */
-      field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
       DIO_PUT(uint8, &dout, &field_addr, 255);
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit diff array element. */
-      free(field_addr.sub_location->sub_location);
-      field_addr.sub_location->sub_location = NULL;
-
-      /* Exit array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
         if self.is_array == 2 and self.dataio_type != "string" \
            and self.dataio_type != "estring":
@@ -469,73 +406,20 @@ class Field:
     {
       int i, j;
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Create the outer array. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter the outer array. */
-      field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
       for (i = 0; i < %(array_size1_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-        /* Next inner array (an element in the outer array). */
-        field_addr.sub_location->number = i;
-
-        /* Create the inner array. */
-        DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-        /* Enter the inner array. */
-        field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
         for (j = 0; j < %(array_size2_u)s; j++) {
-#ifdef FREECIV_JSON_CONNECTION
-          /* Next element (in the inner array). */
-          field_addr.sub_location->sub_location->number = j;
-#endif /* FREECIV_JSON_CONNECTION */
           %(c)s
         }
-
-#ifdef FREECIV_JSON_CONNECTION
-        /* Exit the inner array. */
-        free(field_addr.sub_location->sub_location);
-        field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
       }
-
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit the outer array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
         else:
             return '''
     {
       int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-      /* Create the array. */
-      DIO_PUT(farray, &dout, &field_addr, %(array_size_u)s);
-
-      /* Enter the array. */
-      field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
       for (i = 0; i < %(array_size_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-        /* Next array element. */
-        field_addr.sub_location->number = i;
-#endif /* FREECIV_JSON_CONNECTION */
         %(c)s
       }
-
-#ifdef FREECIV_JSON_CONNECTION
-      /* Exit array. */
-      free(field_addr.sub_location);
-      field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
     }'''%self.get_dict(vars())
 
     # Returns a code fragment which will get the field if the
@@ -558,14 +442,6 @@ class Field:
 
     # Returns code which get this field.
     def get_get(self,deltafragment):
-        return '''#ifdef FREECIV_JSON_CONNECTION
-field_addr.name = \"%(name)s\";
-#endif /* FREECIV_JSON_CONNECTION */
-'''%self.__dict__ \
-               + self.get_get_real(deltafragment);
-
-    # The code which get this field before it is wrapped in address adding.
-    def get_get_real(self,deltafragment):
         if self.struct_type=="float" and not self.is_array:
             return '''if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &real_packet->%(name)s, %(float_factor)d)) {
   RECEIVE_PACKET_FIELD_ERROR(%(name)s);
@@ -595,7 +471,7 @@ field_addr.name = \"%(name)s\";
   if (!DIO_GET(%(dataio_type)s, &din, &field_addr, &readin)) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s);
   }
-  real_packet->%(name)s = static_cast<typeof(real_packet->%(name)s)>(readin);
+  real_packet->%(name)s = static_cast<decltype(real_packet->%(name)s)>(readin);
 }'''%self.__dict__
 
         if self.is_struct:
@@ -674,97 +550,35 @@ field_addr.name = \"%(name)s\";
 {
   int i, j;
 
-#ifdef FREECIV_JSON_CONNECTION
-  /* Enter outer array. */
-  field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 %(extra)s
   for (i = 0; i < %(array_size1_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Update address of outer array element (inner array). */
-    field_addr.sub_location->number = i;
-
-    /* Enter inner array. */
-    field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
     for (j = 0; j < %(array_size2_u)s; j++) {
-#ifdef FREECIV_JSON_CONNECTION
-      /* Update address of element in inner array. */
-      field_addr.sub_location->sub_location->number = j;
-#endif /* FREECIV_JSON_CONNECTION */
       %(c)s
     }
-
-#ifdef FREECIV_JSON_CONNECTION
-    /* Exit inner array. */
-    free(field_addr.sub_location->sub_location);
-    field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit outer array. */
-  free(field_addr.sub_location);
-  field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
             else:
                 return '''
 {
   int i;
 
-#ifdef FREECIV_JSON_CONNECTION
-  /* Enter array. */
-  field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 %(extra)s
   for (i = 0; i < %(array_size_u)s; i++) {
-#ifdef FREECIV_JSON_CONNECTION
-    field_addr.sub_location->number = i;
-#endif /* FREECIV_JSON_CONNECTION */
     %(c)s
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit array. */
-  free(field_addr.sub_location);
-  field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
         elif deltafragment and self.diff and self.is_array == 1:
             return '''
 {
 int count;
 
-#ifdef FREECIV_JSON_CONNECTION
-/* Enter array. */
-field_addr.sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
-
 for (count = 0;; count++) {
   int i;
-
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.sub_location->number = count;
-
-  /* Enter diff array element (start at the index address). */
-  field_addr.sub_location->sub_location = plocation_elem_new(0);
-#endif /* FREECIV_JSON_CONNECTION */
 
   if (!DIO_GET(uint8, &din, &field_addr, &i)) {
     RECEIVE_PACKET_FIELD_ERROR(%(name)s);
   }
   if (i == 255) {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Exit diff array element. */
-    free(field_addr.sub_location->sub_location);
-    field_addr.sub_location->sub_location = NULL;
-
-    /* Exit diff array. */
-    free(field_addr.sub_location);
-    field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
-
     break;
   }
   if (i > %(array_size_u)s) {
@@ -773,25 +587,9 @@ for (count = 0;; count++) {
                                \"(> %(array_size_u)s) in array diff\",
                                i);
   } else {
-#ifdef FREECIV_JSON_CONNECTION
-    /* Content address. */
-    field_addr.sub_location->sub_location->number = 1;
-#endif /* FREECIV_JSON_CONNECTION */
     %(c)s
   }
-
-#ifdef FREECIV_JSON_CONNECTION
-  /* Exit diff array element. */
-  free(field_addr.sub_location->sub_location);
-  field_addr.sub_location->sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }
-
-#ifdef FREECIV_JSON_CONNECTION
-/* Exit array. */
-free(field_addr.sub_location);
-field_addr.sub_location = NULL;
-#endif /* FREECIV_JSON_CONNECTION */
 }'''%self.get_dict(vars())
         else:
             return '''
@@ -814,7 +612,7 @@ class Variant:
         self.packet_name=packet.name
         self.fields=fields
         self.no=no
-        
+
         self.no_packet=packet.no_packet
         self.want_post_recv=packet.want_post_recv
         self.want_pre_send=packet.want_pre_send
@@ -901,7 +699,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
     # Returns a code fragment which declares the packet specific
     # bitvector. Each bit in this bitvector represents one non-key
-    # field.    
+    # field.
     def get_bitvector(self):
         return "BV_DEFINE(%(name)s_fields, %(bits)d);\n"%self.__dict__
 
@@ -961,7 +759,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
     # Returns a code fragment which is the implementation of the cmp
     # function. The cmp function is using all key fields. The cmp
-    # function is used for the hash table.    
+    # function is used for the hash table.
     def get_cmp(self):
         if len(self.key_fields)==0:
             return "#define cmp_%(name)s cmp_const\n\n"%self.__dict__
@@ -1032,22 +830,20 @@ static char *stats_%(name)s_names[] = {%(names)s};
                     diff='force_to_send'
                 else:
                     diff='0'
-                delta_header='''#ifdef FREECIV_DELTA_PROTOCOL
+                delta_header='''
   %(name)s_fields fields;
   struct %(packet_name)s *old;
   bool differ;
   struct genhash **hash = pc->phs.sent + %(type)s;
   int different = %(diff)s;
-#endif /* FREECIV_DELTA_PROTOCOL */
 '''
-                body=self.get_delta_send_body()+"\n#ifndef FREECIV_DELTA_PROTOCOL"
+                body=self.get_delta_send_body()
             else:
                 delta_header=""
-                body="#if 1 /* To match endif */"
+                body=""
+                for field in self.fields:
+                    body=body+field.get_put(0)+"\n"
             body=body+"\n"
-            for field in self.fields:
-                body=body+field.get_put(0)+"\n"
-            body=body+"\n#endif\n"
         else:
             body=""
             delta_header=""
@@ -1060,18 +856,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
         else:
             post=""
 
-        if len(self.fields) != 0:
-            faddr = '''#ifdef FREECIV_JSON_CONNECTION
-  struct plocation field_addr;
-  {
-    struct plocation *field_addr_tmp = plocation_field_new(NULL);
-    field_addr = *field_addr_tmp;
-    FC_FREE(field_addr_tmp);
-  }
-#endif /* FREECIV_JSON_CONNECTION */
-'''
-        else:
-            faddr = ""
+        faddr = ''
 
         for i in range(2):
             for k,v in vars().items():
@@ -1084,7 +869,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
     # Helper for get_send()
     def get_delta_send_body(self):
         intro='''
-#ifdef FREECIV_DELTA_PROTOCOL
   if (NULL == *hash) {
     *hash = genhash_new_full(hash_%(name)s, cmp_%(name)s,
                              NULL, NULL, NULL, free);
@@ -1120,9 +904,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
 '''%self.get_dict(vars())
 
         body=body+'''
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = "fields";
-#endif /* FREECIV_JSON_CONNECTION */
   DIO_BV_PUT(&dout, &field_addr, fields);
 '''
 
@@ -1145,7 +926,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
     genhash_remove(*hash, real_packet);
   }
 '''%i
-        body=body+'''#endif /* FREECIV_DELTA_PROTOCOL */'''
 
         return intro+body
 
@@ -1161,58 +941,40 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
 '''
         if self.delta:
-            delta_header='''#ifdef FREECIV_DELTA_PROTOCOL
+            delta_header='''
   %(name)s_fields fields;
   struct %(packet_name)s *old;
   struct genhash **hash = pc->phs.received + %(type)s;
-#endif /* FREECIV_DELTA_PROTOCOL */
 '''
             delta_body1='''
-#ifdef FREECIV_DELTA_PROTOCOL
-#ifdef FREECIV_JSON_CONNECTION
-  field_addr.name = "fields";
-#endif /* FREECIV_JSON_CONNECTION */
   DIO_BV_GET(&din, &field_addr, fields);
   '''
             body1=""
             for field in self.key_fields:
                 body1=body1+prefix("  ",field.get_get(1))+"\n"
-            body1=body1+"\n#else /* FREECIV_DELTA_PROTOCOL */\n"
             body2=self.get_delta_receive_body()
         else:
             delta_header=""
             delta_body1=""
-            body1="#if 1 /* To match endif */\n"
+            body1=""
+            for field in self.fields:
+                body1=body1+prefix("  ",field.get_get(0))+"\n"
+            if not body1:
+                body1="  real_packet->__dummy = 0xff;"
             body2=""
-        nondelta=""
-        for field in self.fields:
-            nondelta=nondelta+prefix("  ",field.get_get(0))+"\n"
-        if not nondelta:
-            nondelta="  real_packet->__dummy = 0xff;"
-        body1=body1+nondelta+"\n#endif\n"
+        body1=body1+"\n"
 
         if self.gen_log:
             log='  %(log_macro)s("%(name)s: got info about (%(keys_format)s)"%(keys_arg)s);\n'
         else:
             log=""
-        
+
         if self.want_post_recv:
             post="  post_receive_%(packet_name)s(pc, real_packet);\n"
         else:
             post=""
 
-        if len(self.fields) != 0:
-            faddr = '''#ifdef FREECIV_JSON_CONNECTION
-  struct plocation field_addr;
-  {
-    struct plocation *field_addr_tmp = plocation_field_new(NULL);
-    field_addr = *field_addr_tmp;
-    FC_FREE(field_addr_tmp);
-  }
-#endif /* FREECIV_JSON_CONNECTION */
-'''
-        else:
-            faddr = ""
+        faddr = ''
 
         for i in range(2):
             for k,v in vars().items():
@@ -1233,7 +995,6 @@ static char *stats_%(name)s_names[] = {%(names)s};
         else:
             fl=""
         body='''
-#ifdef FREECIV_DELTA_PROTOCOL
   if (NULL == *hash) {
     *hash = genhash_new_full(hash_%(name)s, cmp_%(name)s,
                              NULL, NULL, NULL, free);
@@ -1269,9 +1030,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
   }
 '''%i
 
-        return body+extro+'''
-#endif /* FREECIV_DELTA_PROTOCOL */
-'''
+        return body+extro
 
 # Class which represents a packet. A packet contains a list of fields.
 class Packet:
@@ -1282,7 +1041,7 @@ class Packet:
         self.gen_log=generate_logs
         str=str.strip()
         lines=str.split("\n")
-        
+
         mo=re.search("^\s*(\S+)\s*=\s*(\d+)\s*;\s*(.*?)\s*$",lines[0])
         assert mo,repr(lines[0])
 
@@ -1319,7 +1078,7 @@ class Packet:
 
         self.want_pre_send="pre-send" in arr
         if self.want_pre_send: arr.remove("pre-send")
-        
+
         self.want_post_recv="post-recv" in arr
         if self.want_post_recv: arr.remove("post-recv")
 
@@ -1375,7 +1134,7 @@ class Packet:
         if self.keys_arg:
             self.keys_arg=",\n    "+self.keys_arg
 
-        
+
         self.want_dsend=self.dsend_given
 
         if len(self.fields)==0:
@@ -1416,7 +1175,7 @@ class Packet:
         for f in self.fields:
             if f.add_cap:  all_caps[f.add_cap]=1
             if f.remove_cap:  all_caps[f.remove_cap]=1
-                        
+
         all_caps=all_caps.keys()
         choices=get_choices(all_caps)
         self.variants=[]
@@ -1496,11 +1255,9 @@ class Packet:
         result=""
         for v in self.variants:
             if v.delta:
-                result=result+"#ifdef FREECIV_DELTA_PROTOCOL\n"
                 result=result+v.get_hash()
                 result=result+v.get_cmp()
                 result=result+v.get_bitvector()
-                result=result+"#endif /* FREECIV_DELTA_PROTOCOL */\n\n"
             result=result+v.get_receive()
             result=result+v.get_send()
         return result
@@ -1528,7 +1285,7 @@ class Packet:
   struct %(name)s packet, *real_packet = &packet;
 
 %(fill)s
-  
+
   return send_%(name)s(pc, real_packet);
 }
 
@@ -1544,7 +1301,7 @@ class Packet:
   struct %(name)s packet, *real_packet = &packet;
 
 %(fill)s
-  
+
   lsend_%(name)s(dest, real_packet);
 }
 
@@ -1566,7 +1323,7 @@ extern "C" const char *const packet_functional_capability = "%s";
 # delta_stats_report() function.
 def get_report(packets):
     if not generate_stats: return 'void delta_stats_report(void) {}\n\n'
-    
+
     intro='''
 void delta_stats_report(void) {
   int i;
@@ -1851,7 +1608,7 @@ def strip_c_comment(s):
       l=i.split("*/",1)
       assert len(l)==2,repr(i)
       result=result+l[1]
-  return result  
+  return result
 
 # Main function. It reads and parses the input and generates the
 # various files.
@@ -1956,7 +1713,6 @@ void delta_stats_reset(void);
 ''')
         output_c.write(get_packet_functional_capability(packets))
         output_c.write('''
-#ifdef FREECIV_DELTA_PROTOCOL
 static genhash_val_t hash_const(const void *vkey)
 {
   return 0;
@@ -1966,7 +1722,6 @@ static bool cmp_const(const void *vkey1, const void *vkey2)
 {
   return TRUE;
 }
-#endif /* FREECIV_DELTA_PROTOCOL */
 ''')
 
         if generate_stats:
@@ -2030,7 +1785,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
                           struct player *pplayer, struct connection *pconn);
 
 ''')
-    
+
         for p in packets:
             if "cs" in p.dirs and not p.no_handle:
                 a=p.name[len("packet_"):]
@@ -2054,7 +1809,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
         f.write('''
 
 
-                
+
 #endif /* FC__HAND_GEN_H */
 ''')
         f.close()
@@ -2169,7 +1924,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 /* common */
 #include "packets.h"
 
-#include "packhand_gen.h" 
+#include "packhand_gen.h"
 
 bool client_handle_packet(enum packet_type type, const void *packet)
 {

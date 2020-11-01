@@ -13,29 +13,15 @@
 #ifndef FC__CONNECTION_H
 #define FC__CONNECTION_H
 
-
-
 #include <time.h> /* time_t */
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef FREECIV_HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-
-#ifdef FREECIV_JSON_CONNECTION
-#include <jansson.h>
-#endif /* FREECIV_JSON_CONNECTION */
-
-#ifndef FREECIV_JSON_CONNECTION
-#define USE_COMPRESSION
-#endif /* FREECIV_JSON_CONNECTION */
 
 /**************************************************************************
   The connection struct and related stuff.
   Includes cmdlevel stuff, which is connection-based.
 ***************************************************************************/
+
+// Qt
+#include <QString>
 
 /* utility */
 #include "shared.h"  /* MAX_LEN_ADDR */
@@ -45,6 +31,9 @@
 /* common */
 #include "fc_types.h"
 
+// Forward declarations
+class QTcpSocket;
+
 struct conn_pattern_list;
 struct genhash;
 struct packet_handlers;
@@ -53,8 +42,9 @@ struct timer_list;
 /* Used in the network protocol. */
 #define MAX_LEN_PACKET 4096
 #define MAX_LEN_CAPSTR 512
-#define MAX_LEN_PASSWORD 512 /* do not change this under any circumstances  \
-                              */
+#define MAX_LEN_PASSWORD                                                    \
+  512 /* do not change this under any circumstances                         \
+       */
 #define MAX_LEN_CONTENT (MAX_LEN_PACKET - 20)
 
 #define MAX_LEN_BUFFER (MAX_LEN_PACKET * 128)
@@ -139,11 +129,11 @@ struct packet_header {
 ***********************************************************/
 struct connection {
   int id; /* used for server/client communication */
-  int sock;
+  QTcpSocket *sock = nullptr;
   bool used;
   bool established; /* have negotiated initial packets */
   struct packet_header packet_header;
-  char *closing_reason;
+  QString closing_reason;
 
   /* connection is "observer", not controller; may be observing
    * specific player, or all (implementation incomplete).
@@ -157,16 +147,12 @@ struct connection {
   struct socket_packet_buffer *buffer;
   struct socket_packet_buffer *send_buffer;
   struct timer *last_write;
-#ifdef FREECIV_JSON_CONNECTION
-  bool json_mode;
-  json_t *json_packet;
-#endif /* FREECIV_JSON_CONNECTION */
 
   double ping_time;
 
   struct conn_list *self; /* list with this connection as single element */
   char username[MAX_LEN_NAME];
-  char addr[MAX_LEN_ADDR];
+  QString addr;
 
   /*
    * "capability" gives the capability string of the executable (be it
@@ -266,13 +252,11 @@ struct connection {
     const struct packet_handlers *handlers;
   } phs;
 
-#ifdef USE_COMPRESSION
   struct {
     int frozen_level;
 
     struct byte_vector queue;
   } compression;
-#endif
   struct {
     int bytes_send;
   } statistics;
@@ -282,7 +266,7 @@ typedef void (*conn_close_fn_t)(struct connection *pconn);
 void connections_set_close_callback(conn_close_fn_t func);
 void connection_close(struct connection *pconn, const char *reason);
 
-int read_socket_data(int sock, struct socket_packet_buffer *buffer);
+int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer);
 void flush_connection_send_buffer_all(struct connection *pc);
 bool connection_send_data(struct connection *pconn,
                           const unsigned char *data, int len);
@@ -362,7 +346,5 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
                                               size_t error_buf_len);
 
 bool conn_is_valid(const struct connection *pconn);
-
-
 
 #endif /* FC__CONNECTION_H */

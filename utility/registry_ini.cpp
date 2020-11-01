@@ -627,10 +627,9 @@ static bool is_legal_table_entry_name(char c, bool num)
    and then subsequent u1, u2, etc, in strict order with no omissions,
    and with all of the columns for all uN in the same order as for u0.
 
-   If compression_level is non-zero, then compress using zlib.  (Should
-   only supply non-zero compression_level if already know that
- FREECIV_HAVE_LIBZ.) Below simply specifies FZ_ZLIB method, since
- fz_fromFile() automatically changes to FZ_PLAIN method when level == 0.
+   If compression_level is non-zero, then compress using zlib. Below
+   simply specifies FZ_ZLIB method, since fz_fromFile() automatically
+   changes to FZ_PLAIN method when level == 0.
  **************************************************************************/
 bool secfile_save(const struct section_file *secfile, const char *filename,
                   int compression_level, enum fz_method compression_method)
@@ -2277,7 +2276,7 @@ int *secfile_lookup_plain_enum_vec_full(
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
-      free(vec);
+      delete[] vec;
       *dim = 0;
       return NULL;
     }
@@ -2454,7 +2453,7 @@ int *secfile_lookup_bitwise_enum_vec_full(
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
-      free(vec);
+      delete[] vec;
       *dim = 0;
 
       return NULL;
@@ -2669,7 +2668,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
       SECFILE_LOG(secfile, NULL,
                   "An error occurred when looking up to \"%s,%d\" entry.",
                   fullpath, (int) i);
-      free(vec);
+      delete[] vec;
       *dim = 0;
       return NULL;
     }

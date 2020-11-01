@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #ifdef FREECIV_MSWINDOWS
 #include <windows.h> /* LoadLibrary() */
 #endif
@@ -27,6 +25,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
+// Qt
+#include <QApplication>
 
 /* utility */
 #include "bitvector.h"
@@ -53,7 +54,7 @@
 #include "idex.h"
 #include "map.h"
 #include "mapimg.h"
-#include "netintf.h"
+#include "net_types.h"
 #include "packets.h"
 #include "player.h"
 #include "research.h"
@@ -234,7 +235,6 @@ static void at_exit(void)
 {
   emergency_exit();
   packets_deinit();
-  fc_shutdown_network();
   update_queue_free();
   fc_destroy_ow_mutex();
 }
@@ -338,6 +338,9 @@ int client_main(int argc, char *argv[])
 #endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
+  QApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
+
   i_am_client(); /* Tell to libfreeciv that we are client */
 
   fc_interface_init_client();
@@ -358,7 +361,6 @@ int client_main(int argc, char *argv[])
   (void) bindtextdomain("freeciv-nations", get_locale_dir());
 #endif
 
-  registry_module_init();
   audio_init();
   init_character_encodings(gui_character_encoding, gui_use_transliteration);
 #ifdef ENABLE_NLS
@@ -556,10 +558,8 @@ int client_main(int argc, char *argv[])
         announce = ANNOUNCE_IPV4;
       } else if (!strcasecmp(option, "none")) {
         announce = ANNOUNCE_NONE;
-#ifdef FREECIV_IPV6_SUPPORT
       } else if (!strcasecmp(option, "ipv6")) {
         announce = ANNOUNCE_IPV6;
-#endif /* IPv6 support */
       } else {
         fc_fprintf(stderr, _("Invalid announce protocol \"%s\".\n"), option);
         exit(EXIT_FAILURE);
@@ -582,10 +582,6 @@ int client_main(int argc, char *argv[])
                          "incompatible\n"));
     exit(EXIT_FAILURE);
   }
-
-  /* Remove all options except those intended for the UI. */
-  argv[1 + ui_options] = NULL;
-  argc = 1 + ui_options;
 
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
@@ -616,7 +612,6 @@ int client_main(int argc, char *argv[])
 
   ui_init();
   charsets_init();
-  fc_init_network();
   update_queue_init();
 
   fc_init_ow_mutex();
@@ -701,7 +696,7 @@ int client_main(int argc, char *argv[])
   editor_init();
 
   /* run gui-specific client */
-  ui_main(argc, argv);
+  ui_main();
 
   /* termination */
   client_exit();
@@ -757,7 +752,6 @@ void client_exit(void)
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 
-  registry_module_close();
   free_libfreeciv();
   free_nls();
 

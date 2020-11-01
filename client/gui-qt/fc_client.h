@@ -109,8 +109,7 @@ public:
   ~fc_client();
   QWidget *pages[(int) PAGE_GAME + 2];
   void fc_main(QApplication *);
-  void add_server_source(int);
-  void remove_server_source();
+  void add_server_source(QTcpSocket *socket);
   bool event(QEvent *event);
 
   enum client_pages current_page();
@@ -132,7 +131,7 @@ public:
   trade_generator trade_gen;
 
 private slots:
-  void server_input(int sock);
+  void server_input();
   void closing();
   void clear_status_bar();
 

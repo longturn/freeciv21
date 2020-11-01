@@ -46,7 +46,7 @@ struct player_slot {
 };
 
 static struct {
-  struct player_slot *slots;
+  struct player_slot *pslots;
   int used_slots; /* number of used/allocated players in the player slots */
 } player_slots;
 
@@ -328,12 +328,12 @@ void player_slots_init(void)
   int i;
 
   /* Init player slots. */
-  player_slots.slots = static_cast<player_slot *>(
-      fc_calloc(player_slot_count(), sizeof(*player_slots.slots)));
+  player_slots.pslots = static_cast<player_slot *>(
+      fc_calloc(player_slot_count(), sizeof(*player_slots.pslots)));
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < player_slot_count(); i++) {
-    player_slots.slots[i].player = NULL;
+    player_slots.pslots[i].player = NULL;
   }
   player_slots.used_slots = 0;
 }
@@ -341,7 +341,7 @@ void player_slots_init(void)
 /*******************************************************************/ /**
    Return whether player slots are already initialized.
  ***********************************************************************/
-bool player_slots_initialised(void) { return (player_slots.slots != NULL); }
+bool player_slots_initialised(void) { return (player_slots.pslots != NULL); }
 
 /*******************************************************************/ /**
    Remove all player slots.
@@ -350,15 +350,15 @@ void player_slots_free(void)
 {
   players_iterate(pplayer) { player_destroy(pplayer); }
   players_iterate_end;
-  free(player_slots.slots);
-  player_slots.slots = NULL;
+  free(player_slots.pslots);
+  player_slots.pslots = NULL;
   player_slots.used_slots = 0;
 }
 
 /*******************************************************************/ /**
    Returns the first player slot.
  ***********************************************************************/
-struct player_slot *player_slot_first(void) { return player_slots.slots; }
+struct player_slot *player_slot_first(void) { return player_slots.pslots; }
 
 /*******************************************************************/ /**
    Returns the next slot.
@@ -366,7 +366,7 @@ struct player_slot *player_slot_first(void) { return player_slots.slots; }
 struct player_slot *player_slot_next(struct player_slot *pslot)
 {
   pslot++;
-  return (pslot < player_slots.slots + player_slot_count() ? pslot : NULL);
+  return (pslot < player_slots.pslots + player_slot_count() ? pslot : NULL);
 }
 
 /*******************************************************************/ /**
@@ -383,7 +383,7 @@ int player_slot_index(const struct player_slot *pslot)
 {
   fc_assert_ret_val(NULL != pslot, -1);
 
-  return pslot - player_slots.slots;
+  return pslot - player_slots.pslots;
 }
 
 /*******************************************************************/ /**
@@ -423,7 +423,7 @@ struct player_slot *player_slot_by_number(int player_id)
     return NULL;
   }
 
-  return player_slots.slots + player_id;
+  return player_slots.pslots + player_id;
 }
 
 /*******************************************************************/ /**
@@ -474,7 +474,6 @@ struct player *player_new(struct player_slot *pslot)
   pplayer = static_cast<player *>(fc_calloc(1, sizeof(*pplayer)));
   pplayer->slot = pslot;
   pslot->player = pplayer;
-
 
   pplayer->diplstates = static_cast<const player_diplstate **>(
       fc_calloc(player_slot_count(), sizeof(*pplayer->diplstates)));
@@ -718,7 +717,8 @@ void player_destroy(struct player *pplayer)
 
   delete pplayer->tile_known;
   if (!is_server()) {
-    vision_layer_iterate(v) {
+    vision_layer_iterate(v)
+    {
       pplayer->client.tile_vision[v]->clear();
       delete pplayer->client.tile_vision[v];
     }

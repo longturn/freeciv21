@@ -1827,7 +1827,7 @@ static bool save_nations_ruleset(const char *filename, const char *name,
     secfile_insert_str_vec(sfile, tmp,
                            game.server.ruledit.embedded_nations_count,
                            "ruledit.embedded_nations");
-    free(tmp);
+    delete[] tmp;
   }
 
   save_traits(game.server.default_traits, NULL, sfile, "default_traits", "");

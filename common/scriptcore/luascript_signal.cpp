@@ -165,9 +165,10 @@ void luascript_signal_emit_valist(struct fc_lua *fcl,
   struct signal *psignal;
 
   fc_assert_ret(fcl);
-  fc_assert_ret(fcl->signals);
+  fc_assert_ret(fcl->signals_hash);
 
-  if (luascript_signal_hash_lookup(fcl->signals, signal_name, &psignal)) {
+  if (luascript_signal_hash_lookup(fcl->signals_hash, signal_name,
+                                   &psignal)) {
     signal_callback_list_iterate(psignal->callbacks, pcallback)
     {
       va_list args_cb;
@@ -211,9 +212,10 @@ static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
   struct signal *psignal;
 
   fc_assert_ret_val(fcl, NULL);
-  fc_assert_ret_val(fcl->signals, NULL);
+  fc_assert_ret_val(fcl->signals_hash, NULL);
 
-  if (luascript_signal_hash_lookup(fcl->signals, signal_name, &psignal)) {
+  if (luascript_signal_hash_lookup(fcl->signals_hash, signal_name,
+                                   &psignal)) {
     luascript_log(fcl, LOG_ERROR, "Signal \"%s\" was already created.",
                   signal_name);
     return NULL;
@@ -228,7 +230,7 @@ static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
       *(parg_types + i) = api_types(va_arg(args, int));
     }
     created = signal_new(nargs, parg_types);
-    luascript_signal_hash_insert(fcl->signals, signal_name, created);
+    luascript_signal_hash_insert(fcl->signals_hash, signal_name, created);
     strcpy(sn, signal_name);
     luascript_signal_name_list_append(fcl->signal_names, sn);
 
@@ -295,9 +297,10 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
   struct signal_callback *pcallback_found = NULL;
 
   fc_assert_ret(fcl != NULL);
-  fc_assert_ret(fcl->signals != NULL);
+  fc_assert_ret(fcl->signals_hash != NULL);
 
-  if (luascript_signal_hash_lookup(fcl->signals, signal_name, &psignal)) {
+  if (luascript_signal_hash_lookup(fcl->signals_hash, signal_name,
+                                   &psignal)) {
     /* check for a duplicate callback */
     signal_callback_list_iterate(psignal->callbacks, pcallback)
     {
@@ -343,9 +346,10 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
   struct signal *psignal;
 
   fc_assert_ret_val(fcl != NULL, FALSE);
-  fc_assert_ret_val(fcl->signals != NULL, FALSE);
+  fc_assert_ret_val(fcl->signals_hash != NULL, FALSE);
 
-  if (luascript_signal_hash_lookup(fcl->signals, signal_name, &psignal)) {
+  if (luascript_signal_hash_lookup(fcl->signals_hash, signal_name,
+                                   &psignal)) {
     /* check for a duplicate callback */
     signal_callback_list_iterate(psignal->callbacks, pcallback)
     {
@@ -372,8 +376,8 @@ void luascript_signal_init(struct fc_lua *fcl)
 {
   fc_assert_ret(fcl != NULL);
 
-  if (NULL == fcl->signals) {
-    fcl->signals = luascript_signal_hash_new();
+  if (NULL == fcl->signals_hash) {
+    fcl->signals_hash = luascript_signal_hash_new();
     fcl->signal_names = luascript_signal_name_list_new_full(sn_free);
   }
 }
@@ -383,12 +387,12 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  if (NULL != fcl && NULL != fcl->signals) {
-    luascript_signal_hash_destroy(fcl->signals);
+  if (NULL != fcl && NULL != fcl->signals_hash) {
+    luascript_signal_hash_destroy(fcl->signals_hash);
 
     luascript_signal_name_list_destroy(fcl->signal_names);
 
-    fcl->signals = NULL;
+    fcl->signals_hash = NULL;
   }
 }
 
@@ -414,9 +418,10 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
   struct signal *psignal;
 
   fc_assert_ret_val(fcl != NULL, NULL);
-  fc_assert_ret_val(fcl->signals != NULL, NULL);
+  fc_assert_ret_val(fcl->signals_hash != NULL, NULL);
 
-  if (luascript_signal_hash_lookup(fcl->signals, signal_name, &psignal)) {
+  if (luascript_signal_hash_lookup(fcl->signals_hash, signal_name,
+                                   &psignal)) {
     struct signal_callback *pcallback =
         signal_callback_list_get(psignal->callbacks, sindex);
     if (pcallback) {

@@ -826,7 +826,7 @@ int get_unittype_bonus(const struct player *pplayer,
     return 0;
   }
 
-  fc_assert_ret_val(pplayer != NULL && punittype != NULL, 0);
+  fc_assert_ret_val(punittype != NULL, 0);
 
   if (ptile != NULL) {
     pcity = tile_city(ptile);

@@ -1426,7 +1426,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->extra.order[j] = NULL;
     }
@@ -1456,7 +1456,7 @@ static void sg_load_savefile(struct loaddata *loading)
                     modname[j]);
       }
     }
-    free(modname);
+    delete[] modname;
   }
 
   /* Load specialists. */
@@ -1487,7 +1487,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->specialist.order[j] = NULL;
     }
@@ -1521,7 +1521,7 @@ static void sg_load_savefile(struct loaddata *loading)
       }
     }
 
-    free(modname);
+    delete[] modname;
   }
 
   /* Load action decision order. */
@@ -1547,7 +1547,7 @@ static void sg_load_savefile(struct loaddata *loading)
           action_decision_by_name(modname[j], fc_strcasecmp);
     }
 
-    free(modname);
+    delete[] modname;
   }
 
   /* Load server side agent order. */
@@ -1573,7 +1573,7 @@ static void sg_load_savefile(struct loaddata *loading)
           server_side_agent_by_name(modname[j], fc_strcasecmp);
     }
 
-    free(modname);
+    delete[] modname;
   }
 
   terrain_type_iterate(pterr) { pterr->identifier_load = '\0'; }
@@ -1709,7 +1709,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, ACTIVITY_LAST,
                            "savefile.activities_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save specialists order in the savegame. */
@@ -1731,7 +1731,7 @@ static void sg_save_savefile(struct savedata *saving)
     secfile_insert_str_vec(saving->file, modname, specialist_count(),
                            "savefile.specialists_vector");
 
-    free(modname);
+    delete[] modname;
   }
 
   /* Save trait order in savegame. */
@@ -1751,7 +1751,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, TRAIT_COUNT,
                            "savefile.trait_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save extras order in the savegame. */
@@ -1770,7 +1770,7 @@ static void sg_save_savefile(struct savedata *saving)
     secfile_insert_str_vec(saving->file, modname,
                            game.control.num_extra_types,
                            "savefile.extras_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save multipliers order in the savegame. */
@@ -1791,7 +1791,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, multiplier_count(),
                            "savefile.multipliers_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save diplstate type order in the savegame. */
@@ -1810,7 +1810,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, DS_LAST,
                            "savefile.diplstate_type_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save city_option order in the savegame. */
@@ -1829,7 +1829,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, CITYO_LAST,
                            "savefile.city_options_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save action order in the savegame. */
@@ -1848,7 +1848,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, NUM_ACTIONS,
                            "savefile.action_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save action decision order in the savegame. */
@@ -1868,7 +1868,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, ACT_DEC_COUNT,
                            "savefile.action_decision_vector");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save server side agent order in the savegame. */
@@ -1889,7 +1889,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     secfile_insert_str_vec(saving->file, modname, SSA_COUNT,
                            "savefile.server_side_agent_list");
-    free(modname);
+    delete[] modname;
   }
 
   /* Save terrain character mapping in the savegame. */
@@ -1982,20 +1982,18 @@ static void sg_load_game(struct loaddata *loading)
       loading->file, default_meta_patches_string(), "game.meta_patches");
   set_meta_patches_string(str);
 
-  if (0 == strcmp(DEFAULT_META_SERVER_ADDR, srvarg.metaserver_addr)) {
+  if (srvarg.metaserver_addr == QLatin1String(DEFAULT_META_SERVER_ADDR)) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --Metaserver). */
-    sz_strlcpy(srvarg.metaserver_addr,
-               secfile_lookup_str_default(loading->file,
-                                          DEFAULT_META_SERVER_ADDR,
-                                          "game.meta_server"));
+    srvarg.metaserver_addr = QString::fromUtf8(secfile_lookup_str_default(
+        loading->file, DEFAULT_META_SERVER_ADDR, "game.meta_server"));
   }
 
-  if ('\0' == srvarg.serverid[0]) {
+  if (srvarg.serverid.isEmpty()) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --serverid). */
-    sz_strlcpy(srvarg.serverid, secfile_lookup_str_default(loading->file, "",
-                                                           "game.serverid"));
+    srvarg.serverid = QString::fromUtf8(
+        secfile_lookup_str_default(loading->file, "", "game.serverid"));
   }
   sz_strlcpy(server.game_identifier,
              secfile_lookup_str_default(loading->file, "", "game.id"));
@@ -2163,10 +2161,12 @@ static void sg_save_game(struct savedata *saving)
 
   secfile_insert_str(saving->file, get_meta_patches_string(),
                      "game.meta_patches");
-  secfile_insert_str(saving->file, meta_addr_port(), "game.meta_server");
+  secfile_insert_str(saving->file, qUtf8Printable(meta_addr_port()),
+                     "game.meta_server");
 
   secfile_insert_str(saving->file, server.game_identifier, "game.id");
-  secfile_insert_str(saving->file, srvarg.serverid, "game.serverid");
+  secfile_insert_str(saving->file, qUtf8Printable(srvarg.serverid),
+                     "game.serverid");
 
   secfile_insert_str(
       saving->file,
@@ -3293,8 +3293,7 @@ static void sg_load_map_known(struct loaddata *loading)
 
   if (secfile_lookup_bool_default(loading->file, TRUE, "game.save_known")) {
     int lines = player_slot_max_used_number() / 32 + 1, j, p, l, i;
-    unsigned int *known = static_cast<unsigned int *>(
-        fc_calloc(lines * MAP_INDEX_SIZE, sizeof(*known)));
+    unsigned int *known = new unsigned int[lines * MAP_INDEX_SIZE]();
 
     for (l = 0; l < lines; l++) {
       for (j = 0; j < 8; j++) {
@@ -3334,7 +3333,7 @@ static void sg_load_map_known(struct loaddata *loading)
     }
     whole_map_iterate_end;
 
-    FC_FREE(known);
+    delete[] known;
   }
 }
 
@@ -3977,7 +3976,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
 
     BV_SET(plr->flags, fid);
   }
-  free(slist);
+  delete slist;
 
   /* Nation */
   str = secfile_lookup_str(loading->file, "player%d.nation", plrno);
@@ -7200,8 +7199,7 @@ static void sg_load_researches(struct loaddata *loading)
     }
 
     if (game.server.multiresearch) {
-      vlist_research = static_cast<int *>(
-          fc_calloc(game.control.num_tech_types, sizeof(int)));
+      vlist_research = new int[game.control.num_tech_types]();
       vlist_research = secfile_lookup_int_vec(loading->file, &count_res,
                                               "research.r%d.vbs", i);
       advance_index_iterate(A_FIRST, o)
@@ -7210,7 +7208,7 @@ static void sg_load_researches(struct loaddata *loading)
       }
       advance_index_iterate_end;
       if (vlist_research) {
-        free(vlist_research);
+        delete[] vlist_research;
       }
     }
   }
@@ -7248,8 +7246,7 @@ static void sg_save_researches(struct savedata *saving)
       secfile_insert_int(saving->file, presearch->bulbs_researching_saved,
                          "research.r%d.bulbs_before", i);
       if (game.server.multiresearch) {
-        vlist_research = static_cast<int *>(
-            fc_calloc(game.control.num_tech_types, sizeof(int)));
+        vlist_research = new int[game.control.num_tech_types]();
         advance_index_iterate(A_FIRST, j)
         {
           vlist_research[j] =
@@ -7260,7 +7257,7 @@ static void sg_save_researches(struct savedata *saving)
                                game.control.num_tech_types,
                                "research.r%d.vbs", i);
         if (vlist_research) {
-          free(vlist_research);
+          delete[] vlist_research;
         }
       }
       technology_save(saving->file, "research.r%d.saved", i,

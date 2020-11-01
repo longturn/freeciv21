@@ -20,7 +20,7 @@
 void setup_gui_funcs();
 
 void qtg_ui_init();
-void qtg_ui_main(int argc, char *argv[]);
+void qtg_ui_main();
 void qtg_ui_exit();
 
 enum gui_type qtg_get_gui_type();
@@ -86,7 +86,7 @@ void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
 void qtg_set_rulesets(int num_rulesets, char **rulesets);
 void qtg_options_extra_init();
 void qtg_server_connect();
-void qtg_add_net_input(int sock);
+void qtg_add_net_input(QTcpSocket *sock);
 void qtg_remove_net_input();
 void qtg_real_conn_list_dialog_update(void *unused);
 void qtg_close_connection_dialog();

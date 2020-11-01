@@ -186,8 +186,7 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
   const float *weight;
   bool axe = TRUE;
   int *target_map, *source_map;
-  int *alt_int_map =
-      static_cast<int *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*alt_int_map)));
+  int *alt_int_map = new int[MAP_INDEX_SIZE]();
 
   fc_assert_ret(NULL != int_map);
 

@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
@@ -90,9 +88,6 @@ void fcmp_init(void)
 {
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
-  registry_module_init();
-
-  fc_init_network();
 
   fc_srand(time(NULL)); /* Needed at least for Windows version of
                            netfile_get_section_file() */
@@ -103,8 +98,6 @@ void fcmp_init(void)
  **************************************************************************/
 void fcmp_deinit(void)
 {
-  registry_module_close();
-  fc_shutdown_network();
   /* log_init() was not done by fcmp_init(); we assume the caller called
    * fcmp_parse_cmdline() (which sets up logging) in between */
   log_close();

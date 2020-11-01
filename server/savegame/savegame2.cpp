@@ -1224,7 +1224,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->extra.order[j] = NULL;
     }
@@ -1254,7 +1254,7 @@ static void sg_load_savefile(struct loaddata *loading)
                     modname[j]);
       }
     }
-    free(modname);
+    delete[] modname;
   }
 
   /* Load specials. */
@@ -1294,7 +1294,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->special.order[j] = special_by_rule_name(modname[j]);
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->special.order[j] = S_LAST;
     }
@@ -1330,7 +1330,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->base.order[j] = NULL;
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->base.order[j] = NULL;
     }
@@ -1365,7 +1365,7 @@ static void sg_load_savefile(struct loaddata *loading)
         loading->road.order[j] = NULL;
       }
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->road.order[j] = NULL;
     }
@@ -1399,7 +1399,7 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
-    free(modname);
+    delete[] modname;
     for (; j < nmod; j++) {
       loading->specialist.order[j] = NULL;
     }
@@ -1428,7 +1428,7 @@ static void sg_load_savefile(struct loaddata *loading)
           diplstate_type_by_name(modname[j], fc_strcasecmp);
     }
 
-    free(modname);
+    delete[] modname;
   }
 
   terrain_type_iterate(pterr) { pterr->identifier_load = '\0'; }
@@ -1526,20 +1526,18 @@ static void sg_load_game(struct loaddata *loading)
       loading->file, default_meta_patches_string(), "game.meta_patches");
   set_meta_patches_string(string);
 
-  if (0 == strcmp(DEFAULT_META_SERVER_ADDR, srvarg.metaserver_addr)) {
+  if (srvarg.metaserver_addr == QLatin1String(DEFAULT_META_SERVER_ADDR)) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --Metaserver). */
-    sz_strlcpy(srvarg.metaserver_addr,
-               secfile_lookup_str_default(loading->file,
-                                          DEFAULT_META_SERVER_ADDR,
-                                          "game.meta_server"));
+    srvarg.metaserver_addr = QString::fromUtf8(secfile_lookup_str_default(
+        loading->file, DEFAULT_META_SERVER_ADDR, "game.meta_server"));
   }
 
-  if ('\0' == srvarg.serverid[0]) {
+  if (srvarg.serverid.isEmpty()) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --serverid). */
-    sz_strlcpy(srvarg.serverid, secfile_lookup_str_default(loading->file, "",
-                                                           "game.serverid"));
+    srvarg.serverid = QString::fromUtf8(
+        secfile_lookup_str_default(loading->file, "", "game.serverid"));
   }
   sz_strlcpy(server.game_identifier,
              secfile_lookup_str_default(loading->file, "", "game.id"));
@@ -2865,7 +2863,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
 
     BV_SET(plr->flags, fid);
   }
-  free(slist);
+  delete[] slist;
 
   /* Nation */
   string = secfile_lookup_str(loading->file, "player%d.nation", plrno);

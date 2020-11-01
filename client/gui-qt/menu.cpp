@@ -1348,8 +1348,7 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized)
-    return;
+  if (!initialized) return;
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1389,8 +1388,7 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  if (!initialized)
-    return;
+  if (!initialized) return;
   QList<QAction *> actions = roads_menu->actions();
   for (auto act : qAsConst(actions)) {
     removeAction(act);
@@ -1439,8 +1437,7 @@ void mr_menu::update_bases_menu()
   QAction *act;
   struct unit_list *punits = nullptr;
   bool enabled = false;
-  if (!initialized)
-    return;
+  if (!initialized) return;
 
   QList<QAction *> actions = bases_menu->actions();
   for (auto act : qAsConst(actions)) {
@@ -1499,8 +1496,7 @@ void mr_menu::menus_sensitive()
   struct terrain *pterrain;
   const struct unit_type *ptype = NULL;
 
-  if (!initialized)
-    return;
+  if (!initialized) return;
   players_iterate(pplayer)
   {
     if (city_list_size(pplayer->cities)) {

@@ -16,9 +16,7 @@
 
 #include "freeciv_config.h"
 
-#ifdef FREECIV_HAVE_LOCALE_H
 #include <locale.h>
-#endif
 
 #include "shared.h" /* bool */
 

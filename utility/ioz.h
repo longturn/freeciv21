@@ -34,9 +34,7 @@ typedef struct fz_FILE_s fz_FILE;
 /* (Possibly) supported methods (depending on freeciv_config.h). */
 enum fz_method {
   FZ_PLAIN = 0,
-#ifdef FREECIV_HAVE_LIBZ
   FZ_ZLIB,
-#endif
 #ifdef FREECIV_HAVE_LIBBZ2
   FZ_BZIP2,
 #endif

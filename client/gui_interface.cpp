@@ -48,7 +48,7 @@ void ui_init(void) { funcs.ui_init(); }
 /**********************************************************************/ /**
    Call ui_main callback
  **************************************************************************/
-void ui_main(int argc, char *argv[]) { funcs.ui_main(argc, argv); }
+void ui_main() { funcs.ui_main(); }
 
 /**********************************************************************/ /**
    Call ui_exit callback
@@ -302,7 +302,7 @@ void server_connect(void) { funcs.server_connect(); }
 /**********************************************************************/ /**
    Call add_net_input callback
  **************************************************************************/
-void add_net_input(int sock) { funcs.add_net_input(sock); }
+void add_net_input(QTcpSocket *sock) { funcs.add_net_input(sock); }
 
 /**********************************************************************/ /**
    Call remove_net_input callback

@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 /* ANSI */
 #include <stdlib.h>
 
@@ -87,8 +85,6 @@ int main(int argc, char **argv)
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
 
-  registry_module_init();
-
   log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
   /* Initialize command line arguments. */
@@ -121,7 +117,6 @@ int main(int argc, char **argv)
     }
   }
 
-  registry_module_close();
   log_close();
   free_libfreeciv();
   free_nls();

@@ -17,7 +17,8 @@
 
 #include "support.h" /* bool type */
 
-
+// Forward declarations
+class QString;
 
 #define DEFAULT_META_SERVER_NO_SEND TRUE
 #define DEFAULT_META_SERVER_ADDR FREECIV_META_URL
@@ -39,14 +40,12 @@ void set_meta_patches_string(const char *string);
 void set_meta_message_string(const char *string);
 void set_user_meta_message_string(const char *string);
 
-char *meta_addr_port(void);
+QString meta_addr_port();
 
 void server_close_meta(void);
 bool server_open_meta(bool persistent);
 bool is_metaserver_open(void);
 
 bool send_server_info_to_metaserver(enum meta_flag flag);
-
-
 
 #endif /* FC__META_H */

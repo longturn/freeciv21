@@ -545,9 +545,7 @@ compresstype_name(enum fz_method compresstype)
 {
   switch (compresstype) {
     NAME_CASE(FZ_PLAIN, "PLAIN", N_("No compression"));
-#ifdef FREECIV_HAVE_LIBZ
     NAME_CASE(FZ_ZLIB, "LIBZ", N_("Using zlib (gzip format)"));
-#endif
 #ifdef FREECIV_HAVE_LIBBZ2
     NAME_CASE(FZ_BZIP2, "BZIP2", N_("Using bzip2 (deprecated)"));
 #endif

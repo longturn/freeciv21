@@ -14,7 +14,8 @@
 #ifndef FC__QTG_CSIDE_H
 #define FC__QTG_CSIDE_H
 
-
+// Forward declarations
+class QTcpSocket;
 
 /* common */
 #include "fc_types.h"
@@ -30,7 +31,7 @@
 
 struct gui_funcs {
   void (*ui_init)(void);
-  void (*ui_main)(int argc, char *argv[]);
+  void (*ui_main)();
   void (*ui_exit)(void);
 
   enum gui_type (*get_gui_type)(void);
@@ -96,7 +97,7 @@ struct gui_funcs {
   void (*set_rulesets)(int num_rulesets, char **rulesets);
   void (*options_extra_init)(void);
   void (*server_connect)(void);
-  void (*add_net_input)(int sock);
+  void (*add_net_input)(QTcpSocket *sock);
   void (*remove_net_input)(void);
   void (*real_conn_list_dialog_update)(void *unused);
   void (*close_connection_dialog)(void);
@@ -145,7 +146,5 @@ struct gui_funcs {
 };
 
 struct gui_funcs *get_gui_funcs(void);
-
-
 
 #endif /* FC__QTG_CSIDE_H */

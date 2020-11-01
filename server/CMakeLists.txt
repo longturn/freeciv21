@@ -66,6 +66,7 @@ add_library(
   sanitycheck.cpp
   score.cpp
   sernet.cpp
+  server.cpp
   settings.cpp
   spacerace.cpp
   srv_log.cpp

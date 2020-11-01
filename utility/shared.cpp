@@ -15,34 +15,17 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-/* Under Mac OS X sys/types.h must be included before dirent.h */
-#include <sys/types.h>
-#endif
-
-#ifdef FREECIV_HAVE_DIRENT_H
-#include <dirent.h>
-#endif
-
 #include <errno.h>
 #include <limits.h>
+#include <locale.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#ifdef HAVE_LOCALE_H
-#include <locale.h>
-#endif
-
 #ifdef HAVE_PWD_H
 #include <pwd.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
 #endif
 #ifdef FREECIV_MSWINDOWS
 #define ALWAYS_ROOT
@@ -54,9 +37,14 @@
 #endif /* HAVE_DIRECT_H */
 #endif /* FREECIV_MSWINDOWS */
 
+// Qt
+#include <QDateTime>
+#include <QDir>
+#include <QString>
+#include <QtGlobal>
+
 /* utility */
 #include "astring.h"
-#include "fc_dirent.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "mem.h"
@@ -999,41 +987,19 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
   /* First assemble a full list of names. */
   strvec_iterate(dirs, dirname)
   {
-    DIR *dir;
-    struct dirent *entry;
+    QDir dir(QString::fromUtf8(dirname));
 
-    /* Open the directory for reading. */
-    dir = fc_opendir(dirname);
-    if (!dir) {
-      if (errno == ENOENT) {
-        log_verbose("Skipping non-existing data directory %s.", dirname);
-      } else {
-        /* TRANS: "...: <externally translated error string>."*/
-        log_error(_("Could not read data directory %s: %s."), dirname,
-                  fc_strerror(fc_get_errno()));
-      }
+    if (!dir.exists()) {
+      log_verbose("Skipping non-existing data directory %s.", dirname);
       continue;
     }
 
-    /* Scan all entries in the directory. */
-    while ((entry = readdir(dir))) {
-      size_t len = strlen(entry->d_name);
-
-      /* Make sure the file name matches. */
-      if (len > suffix_len
-          && strcmp(suffix, entry->d_name + len - suffix_len) == 0) {
-        /* Strdup the entry so we can safely write to it. */
-        char *match = fc_strdup(entry->d_name);
-
-        /* Clip the suffix. */
-        match[len - suffix_len] = '\0';
-
-        strvec_append(files, match);
-        delete[] match;
-      }
+    // Get all entries in the directory matching the pattern
+    dir.setNameFilters({QLatin1String("*") + QString::fromUtf8(suffix)});
+    for (auto name : dir.entryList()) {
+      name.truncate(name.length() - strlen(suffix));
+      strvec_append(files, name.toUtf8().data());
     }
-
-    closedir(dir);
   }
   strvec_iterate_end;
 
@@ -1182,55 +1148,34 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
 
   res = fileinfo_list_new_full(fileinfo_destroy);
 
+  auto infix_str = QString::fromUtf8(infix);
+
   /* First assemble a full list of names. */
   strvec_iterate(dirs, dirname)
   {
-    DIR *dir;
-    struct dirent *entry;
+    QDir dir(QString::fromUtf8(dirname));
 
-    /* Open the directory for reading. */
-    dir = fc_opendir(dirname);
-    if (!dir) {
+    if (!dir.exists()) {
       continue;
     }
 
-    /* Scan all entries in the directory. */
-    while ((entry = readdir(dir))) {
-      char *ptr;
-      /* Strdup the entry so we can safely write to it. */
-      char *filename = fc_strdup(entry->d_name);
+    // Get all entries in the directory matching the pattern
+    QStringList name_filters = {QLatin1String("*") + infix_str
+                                + QLatin1String("*")};
+    for (const auto &info : dir.entryInfoList(name_filters, QDir::NoFilter,
+                                              QDir::Name | QDir::Time)) {
+      // Clip the infix.
+      auto name = info.fileName();
+      name.truncate(name.indexOf(infix_str));
 
-      /* Make sure the file name matches. */
-      if ((ptr = strstr(filename, infix))) {
-        struct stat buf;
-        char *fullname;
-        size_t len = strlen(dirname) + strlen(filename) + 2;
+      // Create the fileinfo structure
+      fileinfo *file = new fileinfo;
+      file->name = fc_strdup(name.toUtf8().data());
+      file->fullname = fc_strdup(info.fileName().toUtf8().data());
+      file->mtime = info.lastModified().toSecsSinceEpoch();
 
-        fullname = static_cast<char *>(fc_malloc(len));
-        fc_snprintf(fullname, len, "%s" DIR_SEPARATOR "%s", dirname,
-                    filename);
-
-        if (fc_stat(fullname, &buf) == 0) {
-          fileinfo *file = new fileinfo;
-
-          /* Clip the suffix. */
-          *ptr = '\0';
-
-          file->name = filename;
-          file->fullname = fullname;
-          file->mtime = buf.st_mtime;
-
-          fileinfo_list_append(res, file);
-        } else {
-          delete[] fullname;
-          delete[] filename;
-        }
-      } else {
-        delete[] filename;
-      }
+      fileinfo_list_append(res, file);
     }
-
-    closedir(dir);
   }
   strvec_iterate_end;
 
@@ -1406,16 +1351,7 @@ static void autocap_update(void)
 void switch_lang(const char *lang)
 {
 #ifdef FREECIV_ENABLE_NLS
-#ifdef HAVE_SETENV
-  setenv("LANG", lang, TRUE);
-#else  /* HAVE_SETENV */
-  if (lang != NULL) {
-    static char envstr[40];
-
-    fc_snprintf(envstr, sizeof(envstr), "LANG=%s", lang);
-    putenv(envstr);
-  }
-#endif /* HAVE_SETENV */
+  qputenv("LANG", lang);
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1511,7 +1447,7 @@ void free_nls(void)
  ****************************************************************************/
 void dont_run_as_root(const char *argv0, const char *fallback)
 {
-#if (defined(ALWAYS_ROOT) || defined(__EMX__) || defined(__BEOS__))
+#ifdef ALWAYS_ROOT
   return;
 #else
   if (getuid() == 0 || geteuid() == 0) {
@@ -1625,10 +1561,8 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
 char *get_multicast_group(bool ipv6_preferred)
 {
   static const char *default_multicast_group_ipv4 = "225.1.1.1";
-#ifdef FREECIV_IPV6_SUPPORT
   /* TODO: Get useful group (this is node local) */
   static const char *default_multicast_group_ipv6 = "FF31::8000:15B4";
-#endif /* IPv6 support */
 
   if (mc_group == NULL) {
     char *env = getenv("FREECIV_MULTICAST_GROUP");
@@ -1636,12 +1570,9 @@ char *get_multicast_group(bool ipv6_preferred)
     if (env) {
       mc_group = fc_strdup(env);
     } else {
-#ifdef FREECIV_IPV6_SUPPORT
       if (ipv6_preferred) {
         mc_group = fc_strdup(default_multicast_group_ipv6);
-      } else
-#endif /* IPv6 support */
-      {
+      } else {
         mc_group = fc_strdup(default_multicast_group_ipv4);
       }
     }
@@ -1728,43 +1659,13 @@ char *skip_to_basename(char *filepath)
  ****************************************************************************/
 bool make_dir(const char *pathname)
 {
-  char *dir;
-  char *path = NULL;
-
-  path = interpret_tilde_alloc(pathname);
-  dir = path;
-  do {
-    dir = strchr(dir, DIR_SEPARATOR_CHAR);
-    /* We set the current / with 0, and restore it afterwards */
-    if (dir) {
-      *dir = '\0';
-    }
-
-#ifdef FREECIV_MSWINDOWS
-#ifdef HAVE__MKDIR
-    /* Prefer _mkdir() in Windows even if mkdir() would seem to be available
-     * - chances are that it's wrong kind of mkdir().
-     * TODO: Make a configure check for mkdir() that also makes sure that it
-     *       takes two parameters, and prefer such proper mkdir() here. */
-    {
-      char *path_in_local_encoding = internal_to_local_string_malloc(path);
-
-      _mkdir(path_in_local_encoding);
-      delete[] path_in_local_encoding;
-    }
-#else  /* HAVE__MKDIR */
-    mkdir(path);
-#endif /* HAVE__MKDIR */
-#endif /* FREECIV_MSWINDOWS */
-
-    if (dir) {
-      *dir = DIR_SEPARATOR_CHAR;
-      dir++;
-    }
-  } while (dir);
-
+  auto path = interpret_tilde_alloc(pathname);
+  auto str = QString::fromUtf8(path);
+  // We can always create a directory with an empty name -- it's the current
+  // folder.
+  auto r = str.isEmpty() ? true : QDir().mkpath(str);
   delete[] path;
-  return TRUE;
+  return r;
 }
 
 /************************************************************************/ /**

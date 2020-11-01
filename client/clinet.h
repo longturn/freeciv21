@@ -13,21 +13,20 @@
 #ifndef FC__CLINET_H
 #define FC__CLINET_H
 
-
+// Forward declarations
+class QTcpSocket;
 
 int connect_to_server(const char *username, const char *hostname, int port,
                       char *errbuf, int errbufsize);
 
-void make_connection(int socket, const char *username);
+void make_connection(QTcpSocket *sock, const char *username);
 
-void input_from_server(int fd);
-void input_from_server_till_request_got_processed(int fd,
+void input_from_server(QTcpSocket *sock);
+void input_from_server_till_request_got_processed(QTcpSocket *socket,
                                                   int expected_request_id);
 void disconnect_from_server(void);
 
 double try_to_autoconnect(void);
 void start_autoconnecting_to_server(void);
-
-
 
 #endif /* FC__CLINET_H */

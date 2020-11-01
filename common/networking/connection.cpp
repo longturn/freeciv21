@@ -15,29 +15,14 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
-#include <errno.h>
-#include <string.h>
-#include <time.h>
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H
-/* For some platforms this must be below sys/types.h. */
-#include <sys/select.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+// Qt
+#include <QTcpSocket>
 
 /* utility */
 #include "fcintl.h"
 #include "genhash.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "support.h" /* fc_str(n)casecmp */
 
 /* common */
@@ -89,9 +74,9 @@ void connection_close(struct connection *pconn, const char *reason)
 {
   fc_assert_ret(NULL != pconn);
 
-  if (NULL != reason && NULL == pconn->closing_reason) {
+  if (NULL != reason && pconn->closing_reason.isEmpty()) {
     /* NB: we don't overwrite the original reason. */
-    pconn->closing_reason = fc_strdup(reason);
+    pconn->closing_reason = QString::fromUtf8(reason);
   }
 
   (*conn_close_callback)(pconn);
@@ -106,12 +91,11 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
 {
   /* room for more? */
   if (buf->nsize - buf->ndata < extra_space) {
-    buf->nsize = buf->ndata + extra_space;
-
     /* added this check so we don't gobble up too much mem */
-    if (buf->nsize > MAX_LEN_BUFFER) {
+    if (buf->ndata + extra_space > MAX_LEN_BUFFER) {
       return FALSE;
     }
+    buf->nsize = buf->ndata + extra_space;
     buf->data = (unsigned char *) fc_realloc(buf->data, buf->nsize);
   }
 
@@ -126,18 +110,18 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
      >0  :  number of bytes read
      =0  :  non-blocking sockets only; no data read, would block
  **************************************************************************/
-int read_socket_data(int sock, struct socket_packet_buffer *buffer)
+int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
 {
   int didget;
 
   if (!buffer_ensure_free_extra_space(buffer, MAX_LEN_PACKET)) {
-    log_error("can't grow buffer");
-    return -1;
+    // Let's first process the packets in the buffer
+    return 0;
   }
 
   log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
-  didget = fc_readsocket(sock, (char *) (buffer->data + buffer->ndata),
-                         buffer->nsize - buffer->ndata);
+  didget = sock->read((char *) (buffer->data + buffer->ndata),
+                      buffer->nsize - buffer->ndata);
 
   if (didget > 0) {
     buffer->ndata += didget;
@@ -147,13 +131,6 @@ int read_socket_data(int sock, struct socket_packet_buffer *buffer)
     log_debug("EOF on socket read");
     return -2;
   }
-
-#ifdef NONBLOCKING_SOCKETS
-  else if (errno == EWOULDBLOCK || errno == EAGAIN) {
-    log_debug("EGAIN on socket read");
-    return 0;
-  }
-#endif /* NONBLOCKING_SOCKETS */
 
   return -1;
 }
@@ -171,48 +148,19 @@ static int write_socket_data(struct connection *pc,
   }
 
   for (start = 0; buf->ndata - start > limit;) {
-    fd_set writefs, exceptfs;
-    fc_timeval tv;
-
-    FC_FD_ZERO(&writefs);
-    FC_FD_ZERO(&exceptfs);
-    FD_SET(pc->sock, &writefs);
-    FD_SET(pc->sock, &exceptfs);
-
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-
-    if (fc_select(pc->sock + 1, NULL, &writefs, &exceptfs, &tv) <= 0) {
-      if (errno != EINTR) {
-        break;
-      } else {
-        /* EINTR can happen sometimes, especially when compiling with -pg.
-         * Generally we just want to run select again. */
-        continue;
-      }
-    }
-
-    if (FD_ISSET(pc->sock, &exceptfs)) {
+    if (!pc->sock->isOpen()) {
       connection_close(pc, _("network exception"));
       return -1;
     }
 
-    if (FD_ISSET(pc->sock, &writefs)) {
-      nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
-      log_debug("trying to write %d limit=%d", nblock, limit);
-      if ((nput = fc_writesocket(pc->sock, (const char *) buf->data + start,
-                                 nblock))
-          == -1) {
-#ifdef NONBLOCKING_SOCKETS
-        if (errno == EWOULDBLOCK || errno == EAGAIN) {
-          break;
-        }
-#endif /* NONBLOCKING_SOCKETS */
-        connection_close(pc, _("lagging connection"));
-        return -1;
-      }
-      start += nput;
+    nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
+    log_debug("trying to write %d limit=%d", nblock, limit);
+    if ((nput = pc->sock->write((const char *) buf->data + start, nblock))
+        == -1) {
+      connection_close(pc, pc->sock->errorString().toUtf8().data());
+      return -1;
     }
+    start += nput;
   }
 
   if (start > 0) {
@@ -242,7 +190,6 @@ void flush_connection_send_buffer_all(struct connection *pc)
 /**********************************************************************/ /**
    Flush'em
  **************************************************************************/
-#ifndef FREECIV_JSON_CONNECTION
 static void flush_connection_send_buffer_packets(struct connection *pc)
 {
   if (pc && pc->used && pc->send_buffer->ndata >= MAX_LEN_PACKET) {
@@ -253,7 +200,6 @@ static void flush_connection_send_buffer_packets(struct connection *pc)
     }
   }
 }
-#endif /* FREECIV_JSON_CONNECTION */
 
 /**********************************************************************/ /**
    Add data to send to the connection.
@@ -294,7 +240,6 @@ bool connection_send_data(struct connection *pconn,
 
   pconn->statistics.bytes_send += len;
 
-#ifndef FREECIV_JSON_CONNECTION
   if (0 < pconn->send_buffer->do_buffer_sends) {
     flush_connection_send_buffer_packets(pconn);
     if (!add_connection_data(pconn, data, len)) {
@@ -303,9 +248,7 @@ bool connection_send_data(struct connection *pconn,
       return FALSE;
     }
     flush_connection_send_buffer_packets(pconn);
-  } else
-#endif /* FREECIV_JSON_CONNECTION */
-  {
+  } else {
     flush_connection_send_buffer_all(pconn);
     if (!add_connection_data(pconn, data, len)) {
       log_verbose("cut connection %s due to huge send buffer (2)",
@@ -478,14 +421,15 @@ const char *conn_description(const struct connection *pconn)
 
   if (*pconn->username != '\0') {
     fc_snprintf(buffer, sizeof(buffer), _("%s from %s"), pconn->username,
-                pconn->addr);
+                qUtf8Printable(pconn->addr));
   } else {
     sz_strlcpy(buffer, "server");
   }
-  if (NULL != pconn->closing_reason) {
+  if (!pconn->closing_reason.isEmpty()) {
     /* TRANS: Appending the reason why a connection has closed.
      * Preserve leading space. */
-    cat_snprintf(buffer, sizeof(buffer), _(" (%s)"), pconn->closing_reason);
+    cat_snprintf(buffer, sizeof(buffer), _(" (%s)"),
+                 qUtf8Printable(pconn->closing_reason));
   } else if (!pconn->established) {
     /* TRANS: preserve leading space. */
     sz_strlcat(buffer, _(" (connection incomplete)"));
@@ -545,9 +489,7 @@ int get_next_request_id(int old_request_id)
  **************************************************************************/
 void free_compression_queue(struct connection *pc)
 {
-#ifdef USE_COMPRESSION
   byte_vector_free(&pc->compression.queue);
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -602,21 +544,15 @@ void connection_common_init(struct connection *pconn)
   pconn->established = FALSE;
   pconn->used = TRUE;
   packet_header_init(&pconn->packet_header);
-  pconn->closing_reason = NULL;
   pconn->last_write = NULL;
   pconn->buffer = new_socket_packet_buffer();
   pconn->send_buffer = new_socket_packet_buffer();
   pconn->statistics.bytes_send = 0;
-#ifdef FREECIV_JSON_CONNECTION
-  pconn->json_mode = TRUE;
-#endif /* FREECIV_JSON_CONNECTION */
 
   init_packet_hashs(pconn);
 
-#ifdef USE_COMPRESSION
   byte_vector_init(&pconn->compression.queue);
   pconn->compression.frozen_level = 0;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -627,12 +563,10 @@ void connection_common_close(struct connection *pconn)
   if (!pconn->used) {
     log_error("WARNING: Trying to close already closed connection");
   } else {
-    fc_closesocket(pconn->sock);
+    pconn->sock->deleteLater();
+    pconn->sock = nullptr;
     pconn->used = FALSE;
     pconn->established = FALSE;
-    if (NULL != pconn->closing_reason) {
-      free(pconn->closing_reason);
-    }
 
     free_socket_packet_buffer(pconn->buffer);
     pconn->buffer = NULL;
@@ -688,12 +622,10 @@ void conn_reset_delta_state(struct connection *pc)
  **************************************************************************/
 void conn_compression_freeze(struct connection *pconn)
 {
-#ifdef USE_COMPRESSION
   if (0 == pconn->compression.frozen_level) {
     byte_vector_reserve(&pconn->compression.queue, 0);
   }
   pconn->compression.frozen_level++;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -702,11 +634,7 @@ void conn_compression_freeze(struct connection *pconn)
  **************************************************************************/
 bool conn_compression_frozen(const struct connection *pconn)
 {
-#ifdef USE_COMPRESSION
   return 0 < pconn->compression.frozen_level;
-#else  /* USE_COMPRESSION */
-  return FALSE;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -714,10 +642,8 @@ bool conn_compression_frozen(const struct connection *pconn)
  **************************************************************************/
 void conn_list_compression_freeze(const struct conn_list *pconn_list)
 {
-#ifdef USE_COMPRESSION
   conn_list_iterate(pconn_list, pconn) { conn_compression_freeze(pconn); }
   conn_list_iterate_end;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -725,10 +651,8 @@ void conn_list_compression_freeze(const struct conn_list *pconn_list)
  **************************************************************************/
 void conn_list_compression_thaw(const struct conn_list *pconn_list)
 {
-#ifdef USE_COMPRESSION
   conn_list_iterate(pconn_list, pconn) { conn_compression_thaw(pconn); }
   conn_list_iterate_end;
-#endif /* USE_COMPRESSION */
 }
 
 /**********************************************************************/ /**
@@ -818,7 +742,7 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
     test = pconn->username;
     break;
   case CPT_HOST:
-    test = pconn->addr;
+    test = qUtf8Printable(pconn->addr);
     break;
   case CPT_IP:
     if (is_server()) {

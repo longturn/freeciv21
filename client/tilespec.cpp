@@ -1621,7 +1621,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
           }
         }
 
-        free(tags);
+        delete[] tags;
         tags = NULL;
       }
     }
@@ -1670,7 +1670,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         (void) sprite_hash_replace(t->sprite_hash, tags[k], ss);
       }
     }
-    free(tags);
+    delete[] tags;
   }
 
   secfile_check_unused(file);
@@ -1767,14 +1767,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   if (!(file = secfile_load(fname, TRUE))) {
     log_error("Could not open '%s':\n%s", fname, secfile_error());
-    free(fname);
+    delete fname;
     return NULL;
   }
 
   if (!check_tilespec_capabilities(file, "tilespec", TILESPEC_CAPSTR, fname,
                                    verbose)) {
     secfile_destroy(file);
-    free(fname);
+    delete fname;
     return NULL;
   }
 
@@ -2429,13 +2429,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   secfile_check_unused(file);
   secfile_destroy(file);
   log_verbose("finished reading \"%s\".", fname);
-  free(fname);
+  delete fname;
 
   return t;
 
 ON_ERROR:
   secfile_destroy(file);
-  free(fname);
+  delete fname;
   tileset_free(t);
   if (NULL != sections) {
     section_list_destroy(sections);

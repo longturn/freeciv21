@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// Qt
+#include <QString>
+
 /* utility */
 #include "bitvector.h"
 #include "log.h"
@@ -162,8 +165,7 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
  **************************************************************************/
 static void build_landarea_map(struct claim_map *pcmap)
 {
-  bv_player *claims =
-      static_cast<bv_player *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*claims)));
+  bv_player *claims = new bv_player[MAP_INDEX_SIZE]();
 
   memset(pcmap, 0, sizeof(*pcmap));
 
@@ -216,7 +218,7 @@ static void build_landarea_map(struct claim_map *pcmap)
   }
   whole_map_iterate_end;
 
-  FC_FREE(claims);
+  delete[] claims;
 
 #if LAND_AREA_DEBUG >= 2
   print_landarea_map(pcmap, turn);
@@ -434,16 +436,16 @@ void rank_users(bool interrupt)
   struct team *t_winner = NULL;
 
   /* don't output ranking info if we haven't enabled it via cmdline */
-  if (!srvarg.ranklog_filename) {
+  if (srvarg.ranklog_filename.isNull()) {
     return;
   }
 
-  fp = fc_fopen(srvarg.ranklog_filename, "w");
+  fp = fc_fopen(srvarg.ranklog_filename.toUtf8().constData(), "w");
 
   /* don't fail silently, at least print an error */
   if (!fp) {
     log_error("couldn't open ranking log file: \"%s\"",
-              srvarg.ranklog_filename);
+              qUtf8Printable(srvarg.ranklog_filename));
     return;
   }
 

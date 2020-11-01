@@ -15,19 +15,10 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
 
 /* utility */
 #include "capability.h"
@@ -45,7 +36,6 @@
 
 #include "packets.h"
 
-#ifdef USE_COMPRESSION
 #include <zlib.h>
 /*
  * Value for the 16bit size to indicate a jumbo packet
@@ -67,8 +57,6 @@
 
 #define MAX_DECOMPRESSION 400
 
-#endif /* USE_COMPRESSION */
-
 /*
  * Valid values are 0, 1 and 2. For 2 you have to set generate_stats
  * to 1 in generate_packets.py.
@@ -85,7 +73,6 @@ extern const char *const packet_functional_capability;
 
 static struct packet_handler_hash *packet_handlers = NULL;
 
-#ifdef USE_COMPRESSION
 static int stat_size_alone = 0;
 static int stat_size_uncompressed = 0;
 static int stat_size_compressed = 0;
@@ -177,7 +164,6 @@ static bool conn_compression_flush(struct connection *pconn)
   }
   return pconn->used;
 }
-#endif /* USE_COMPRESSION */
 
 /**********************************************************************/ /**
    Thaw the connection. Then maybe compress the data waiting to send them
@@ -186,7 +172,6 @@ static bool conn_compression_flush(struct connection *pconn)
  **************************************************************************/
 bool conn_compression_thaw(struct connection *pconn)
 {
-#ifdef USE_COMPRESSION
   pconn->compression.frozen_level--;
   fc_assert_action_msg(pconn->compression.frozen_level >= 0,
                        pconn->compression.frozen_level = 0,
@@ -195,7 +180,6 @@ bool conn_compression_thaw(struct connection *pconn)
   if (0 == pconn->compression.frozen_level) {
     return conn_compression_flush(pconn);
   }
-#endif /* USE_COMPRESSION */
   return pconn->used;
 }
 
@@ -223,7 +207,6 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     pc->outgoing_packet_notify(pc, packet_type, len, result);
   }
 
-#ifdef USE_COMPRESSION
   if (TRUE) {
     int size = len;
 
@@ -268,9 +251,6 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
                   stat_size_alone, stat_size_no_compression,
                   stat_size_uncompressed, stat_size_compressed);
   }
-#else  /* USE_COMPRESSION */
-  connection_send_data(pc, data, len);
-#endif /* USE_COMPRESSION */
 
 #if PACKET_SIZE_STATISTICS
   {
@@ -372,10 +352,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
     int itype;
   } utype;
   struct data_in din;
-#ifdef USE_COMPRESSION
   bool compressed_packet = FALSE;
   int header_size = 0;
-#endif
   void *data;
   void *(*receive_handler)(struct connection *);
 
@@ -395,7 +373,6 @@ void *get_packet_from_connection_raw(struct connection *pc,
   /* The non-compressed case */
   whole_packet_len = len_read;
 
-#ifdef USE_COMPRESSION
   /* Compression signalling currently assumes a 2-byte packet length; if that
    * changes, the protocol should probably be changed */
   fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
@@ -417,13 +394,11 @@ void *get_packet_from_connection_raw(struct connection *pc,
     log_compress("COMPRESS: got a normal packet of size %d",
                  whole_packet_len);
   }
-#endif /* USE_COMPRESSION */
 
   if ((unsigned) whole_packet_len > pc->buffer->ndata) {
     return NULL; /* not all data has been read */
   }
 
-#ifdef USE_COMPRESSION
   if (whole_packet_len < header_size) {
     log_verbose("The packet size is reported to be less than header alone. "
                 "The connection will be closed now.");
@@ -498,7 +473,6 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
     return get_packet_from_connection(pc, ptype);
   }
-#endif /* USE_COMPRESSION */
 
   /*
    * At this point the packet is a plain uncompressed one. These have

@@ -40,7 +40,7 @@
 /************************************************************************/ /**
    The player-name (aka nation leader) column of the plrdlg.
  ****************************************************************************/
-static const char *col_name(const struct player *player)
+static QString col_name(const struct player *player)
 {
   return player_name(player);
 }
@@ -57,7 +57,7 @@ static int cmp_name(const struct player *pplayer1,
 /************************************************************************/ /**
    The username (connection name) column of the plrdlg.
  ****************************************************************************/
-static const char *col_username(const struct player *player)
+static QString col_username(const struct player *player)
 {
   return player->username;
 }
@@ -65,7 +65,7 @@ static const char *col_username(const struct player *player)
 /************************************************************************/ /**
    The name of the player's nation for the plrdlg.
  ****************************************************************************/
-static const char *col_nation(const struct player *player)
+static QString col_nation(const struct player *player)
 {
   return nation_adjective_for_player(player);
 }
@@ -73,7 +73,7 @@ static const char *col_nation(const struct player *player)
 /************************************************************************/ /**
    The name of the player's team (or empty) for the plrdlg.
  ****************************************************************************/
-static const char *col_team(const struct player *player)
+static QString col_team(const struct player *player)
 {
   return team_name_translation(player->team);
 }
@@ -93,7 +93,7 @@ static bool col_ai(const struct player *plr)
    Returns a translated string giving the embassy status
    (none/with us/with them/both).
  ****************************************************************************/
-static const char *col_embassy(const struct player *player)
+static QString col_embassy(const struct player *player)
 {
   return get_embassy_status(client.conn.playing, player);
 }
@@ -102,7 +102,7 @@ static const char *col_embassy(const struct player *player)
    Returns a translated string giving the diplomatic status
    ("war" or "ceasefire (5)").
  ****************************************************************************/
-static const char *col_diplstate(const struct player *player)
+static QString col_diplstate(const struct player *player)
 {
   static char buf[100];
   const struct player_diplstate *pds;
@@ -173,7 +173,7 @@ static int cmp_diplstate(const struct player *player1,
 /************************************************************************/ /**
    Return a string displaying the AI's love (or not) for you...
  ****************************************************************************/
-static const char *col_love(const struct player *player)
+static QString col_love(const struct player *player)
 {
   if (NULL == client.conn.playing || player == client.conn.playing
       || is_human(player)) {
@@ -214,7 +214,7 @@ static int cmp_love(const struct player *player1,
 /************************************************************************/ /**
    Returns a translated string giving our shared-vision status.
  ****************************************************************************/
-static const char *col_vision(const struct player *player)
+static QString col_vision(const struct player *player)
 {
   return get_vision_status(client.conn.playing, player);
 }
@@ -224,7 +224,7 @@ static const char *col_vision(const struct player *player)
 
    FIXME: These terms aren't very intuitive for new players.
  ****************************************************************************/
-const char *plrdlg_col_state(const struct player *plr)
+QString plrdlg_col_state(const struct player *plr)
 {
   if (!plr->is_alive) {
     /* TRANS: Dead -- Rest In Peace -- Reqia In Pace */
@@ -270,7 +270,7 @@ const char *plrdlg_col_state(const struct player *plr)
    Returns a string telling the player's client's hostname (the
    machine from which he is connecting).
  ****************************************************************************/
-static const char *col_host(const struct player *player)
+static QString col_host(const struct player *player)
 {
   return player_addr_hack(player);
 }
@@ -278,7 +278,7 @@ static const char *col_host(const struct player *player)
 /************************************************************************/ /**
    Returns a string telling how many turns the player has been idle.
  ****************************************************************************/
-static const char *col_idle(const struct player *plr)
+static QString col_idle(const struct player *plr)
 {
   int idle;
   static char buf[100];
@@ -355,7 +355,7 @@ void init_player_dlg_common(void)
    kept as a blank address if no one is controlling a player, but there are
    observers.
  ****************************************************************************/
-const char *player_addr_hack(const struct player *pplayer)
+QString player_addr_hack(const struct player *pplayer)
 {
   conn_list_iterate(pplayer->connections, pconn)
   {

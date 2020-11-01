@@ -21,40 +21,40 @@
 #include "fc_types.h"
 #include "game.h"
 
-
 struct conn_list;
 
 struct server_arguments {
   /* metaserver information */
   bool metaserver_no_send;
-  char metaserver_addr[256];
+  QString metaserver_addr;
   bool metaconnection_persistent;
-  char identity_name[256];
+  QString identity_name;
   unsigned short int metaserver_port;
   /* address this server is to listen on (NULL => INADDR_ANY) */
-  char *bind_addr;
+  QString bind_addr;
   /* this server's listen port */
   int port;
   /* address to bind when connecting to the metaserver (NULL => bind_addr) */
-  char *bind_meta_addr;
+  QString bind_meta_addr;
   /* the log level */
   enum log_level loglevel;
   /* filenames */
-  char *log_filename;
-  char *ranklog_filename;
-  char load_filename[512]; /* FIXME: may not be long enough? use MAX_PATH? */
-  char *script_filename;
-  char *saves_pathname;
-  char *scenarios_pathname;
-  char *ruleset;
-  char serverid[256];
+  QString log_filename;
+  QString ranklog_filename;
+  QString load_filename;
+  QString script_filename;
+  QString saves_pathname;
+  QString scenarios_pathname;
+  QString ruleset;
+  QString serverid;
   /* quit if there no players after a given time interval */
   int quitidle;
   /* exit the server on game ending */
   bool exit_on_end;
+  bool timetrack; /* defaults to FALSE */
   /* authentication options */
   bool fcdb_enabled;        /* defaults to FALSE */
-  char *fcdb_conf;          /* freeciv database configuration file */
+  QString fcdb_conf;        /* freeciv database configuration file */
   bool auth_enabled;        /* defaults to FALSE */
   bool auth_allow_guests;   /* defaults to FALSE */
   bool auth_allow_newusers; /* defaults to FALSE */
@@ -88,7 +88,6 @@ extern struct civserver {
 
 void init_game_seed(void);
 void srv_init(void);
-void srv_main(void);
 void server_quit(void);
 void save_game_auto(const char *save_reason, enum autosave_type type);
 
@@ -98,6 +97,10 @@ void set_server_state(enum server_states newstate);
 void check_for_full_turn_done(void);
 bool check_for_game_over(void);
 bool game_was_started(void);
+
+void server_gui_color_free(struct color *pcolor);
+int server_plr_tile_city_id_get(const struct tile *ptile,
+                                const struct player *pplayer);
 
 server_setting_id server_ss_by_name(const char *name);
 const char *server_ss_name_get(server_setting_id id);
@@ -113,9 +116,18 @@ void player_nation_defaults(struct player *pplayer,
                             struct nation_type *pnation, bool set_name);
 void send_all_info(struct conn_list *dest);
 
+void begin_turn(bool is_new_turn);
+void begin_phase(bool is_new_phase);
+void end_phase();
+void end_turn();
+
 void identity_number_release(int id);
 void identity_number_reserve(int id);
 int identity_number(void);
+
+void srv_ready();
+void srv_scores();
+
 void server_game_init(bool keep_ruleset_value);
 void server_game_free(void);
 const char *aifill(int amount);
@@ -126,5 +138,23 @@ extern bool force_end_of_sniff;
 
 void update_nations_with_startpos(void);
 
+known_type mapimg_server_tile_known(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge);
+terrain *mapimg_server_tile_terrain(const struct tile *ptile,
+                                    const struct player *pplayer,
+                                    bool knowledge);
+player *mapimg_server_tile_owner(const struct tile *ptile,
+                                 const struct player *pplayer,
+                                 bool knowledge);
+player *mapimg_server_tile_city(const struct tile *ptile,
+                                const struct player *pplayer,
+                                bool knowledge);
+player *mapimg_server_tile_unit(const struct tile *ptile,
+                                const struct player *pplayer,
+                                bool knowledge);
+
+int mapimg_server_plrcolor_count(void);
+rgbcolor *mapimg_server_plrcolor_get(int i);
 
 #endif /* FC__SRV_MAIN_H */

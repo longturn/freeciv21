@@ -141,8 +141,9 @@ static bool surrender_command(struct connection *caller, char *str,
 static bool handle_stdin_input_real(struct connection *caller, char *str,
                                     bool check, int read_recursion);
 static bool read_init_script_real(struct connection *caller,
-                                  char *script_filename, bool from_cmdline,
-                                  bool check, int read_recursion);
+                                  const char *script_filename,
+                                  bool from_cmdline, bool check,
+                                  int read_recursion);
 static bool reset_command(struct connection *caller, char *arg, bool check,
                           int read_recursion);
 static bool default_command(struct connection *caller, char *arg,
@@ -503,7 +504,8 @@ static void open_metaserver_connection(struct connection *caller,
   server_open_meta(persistent);
   if (send_server_info_to_metaserver(META_INFO)) {
     cmd_reply(CMD_METACONN, caller, C_OK,
-              _("Open metaserver connection to [%s]."), meta_addr_port());
+              _("Open metaserver connection to [%s]."),
+              qUtf8Printable(meta_addr_port()));
   }
 }
 
@@ -515,7 +517,8 @@ static void close_metaserver_connection(struct connection *caller)
   if (send_server_info_to_metaserver(META_GOODBYE)) {
     server_close_meta();
     cmd_reply(CMD_METACONN, caller, C_OK,
-              _("Close metaserver connection to [%s]."), meta_addr_port());
+              _("Close metaserver connection to [%s]."),
+              qUtf8Printable(meta_addr_port()));
   }
 }
 
@@ -640,10 +643,10 @@ static bool metaserver_command(struct connection *caller, char *arg,
   }
   close_metaserver_connection(caller);
 
-  sz_strlcpy(srvarg.metaserver_addr, arg);
+  srvarg.metaserver_addr = QString::fromUtf8(arg);
 
   cmd_reply(CMD_METASERVER, caller, C_OK, _("Metaserver is now [%s]."),
-            meta_addr_port());
+            qUtf8Printable(meta_addr_port()));
   return TRUE;
 }
 
@@ -653,7 +656,7 @@ static bool metaserver_command(struct connection *caller, char *arg,
 static bool show_serverid(struct connection *caller, char *arg)
 {
   cmd_reply(CMD_SRVID, caller, C_COMMENT, _("Server id: %s"),
-            srvarg.serverid);
+            qUtf8Printable(srvarg.serverid));
 
   return TRUE;
 }
@@ -1137,7 +1140,7 @@ static bool read_command(struct connection *caller, char *arg, bool check,
 /**********************************************************************/ /**
    Main entry point for reading an init script.
  **************************************************************************/
-bool read_init_script(struct connection *caller, char *script_filename,
+bool read_init_script(struct connection *caller, const char *script_filename,
                       bool from_cmdline, bool check)
 {
   return read_init_script_real(caller, script_filename, from_cmdline, check,
@@ -1156,8 +1159,9 @@ bool read_init_script(struct connection *caller, char *script_filename,
    permissions unless there are other bugs.
  **************************************************************************/
 static bool read_init_script_real(struct connection *caller,
-                                  char *script_filename, bool from_cmdline,
-                                  bool check, int read_recursion)
+                                  const char *script_filename,
+                                  bool from_cmdline, bool check,
+                                  int read_recursion)
 {
   FILE *script_file;
   const char extension[] = ".serv";
@@ -1278,10 +1282,11 @@ static void write_init_script(char *script_filename)
     fprintf(script_file, "%s\n",
             ai_level_cmd(ai_level(game.info.skill_level)));
 
-    if (*srvarg.metaserver_addr != '\0'
-        && ((0
-             != strcmp(srvarg.metaserver_addr, DEFAULT_META_SERVER_ADDR)))) {
-      fprintf(script_file, "metaserver %s\n", meta_addr_port());
+    if (!srvarg.metaserver_addr.isEmpty()
+        && srvarg.metaserver_addr
+               != QLatin1String(DEFAULT_META_SERVER_ADDR)) {
+      fprintf(script_file, "metaserver %s\n",
+              qUtf8Printable(meta_addr_port()));
     }
 
     if (0
@@ -2107,7 +2112,7 @@ static void show_ruleset_info(struct connection *caller, enum command_id cmd,
     fc_break_lines(translated, LINE_BREAK);
     cmd_reply(cmd, caller, C_COMMENT, "%s", translated);
     cmd_reply(cmd, caller, C_COMMENT, horiz_line);
-    free(translated);
+    delete[] translated;
   }
 
   free(show_arg);
@@ -3808,7 +3813,7 @@ bool load_command(struct connection *caller, const char *filename,
   uloadtimer = timer_new(TIMER_USER, TIMER_ACTIVE);
   timer_start(uloadtimer);
 
-  sz_strlcpy(srvarg.load_filename, arg);
+  srvarg.load_filename = QString::fromUtf8(arg);
 
   savegame_load(file);
   secfile_check_unused(file);
@@ -3835,7 +3840,8 @@ bool load_command(struct connection *caller, const char *filename,
   send_player_diplstate_c(NULL, NULL);
 
   /* Everything seemed to load ok; spread the good news. */
-  dlsend_packet_game_load(game.est_connections, TRUE, srvarg.load_filename);
+  dlsend_packet_game_load(game.est_connections, TRUE,
+                          qUtf8Printable(srvarg.load_filename));
 
   /* Attach connections to players. Currently, this applies only
    * to connections that have the same username as a player. */
@@ -4815,12 +4821,13 @@ static bool reset_command(struct connection *caller, char *arg, bool check,
     settings_reset();
     /* load initial script */
     if (NULL != srvarg.script_filename
-        && !read_init_script_real(NULL, srvarg.script_filename, TRUE, FALSE,
-                                  read_recursion + 1)) {
+        && !read_init_script_real(NULL,
+                                  qUtf8Printable(srvarg.script_filename),
+                                  TRUE, FALSE, read_recursion + 1)) {
       if (NULL != caller) {
         cmd_reply(CMD_RESET, caller, C_FAIL,
                   _("Could not read script file '%s'."),
-                  srvarg.script_filename);
+                  qUtf8Printable(srvarg.script_filename));
       }
       return FALSE;
     }
@@ -5786,7 +5793,7 @@ static bool mapimg_command(struct connection *caller, char *arg, bool check)
 
         if (pmapdef == NULL
             || !mapimg_create(pmapdef, TRUE, game.server.save_name,
-                              srvarg.saves_pathname)) {
+                              qUtf8Printable(srvarg.saves_pathname))) {
           cmd_reply(CMD_MAPIMG, caller, C_FAIL,
                     _("Error saving map image %d: %s."), id, mapimg_error());
           ret = FALSE;
@@ -5803,7 +5810,7 @@ static bool mapimg_command(struct connection *caller, char *arg, bool check)
       pmapdef = mapimg_isvalid(id);
       if (pmapdef == NULL
           || !mapimg_create(pmapdef, TRUE, game.server.save_name,
-                            srvarg.saves_pathname)) {
+                            qUtf8Printable(srvarg.saves_pathname))) {
         cmd_reply(CMD_MAPIMG, caller, C_FAIL,
                   _("Error saving map image %d: %s."), id, mapimg_error());
         ret = FALSE;
@@ -6750,7 +6757,7 @@ void show_players(struct connection *caller)
         fc_snprintf(buf, sizeof(buf),
                     _("%s from %s (command access level %s), "
                       "bufsize=%dkb"),
-                    pconn->username, pconn->addr,
+                    pconn->username, qUtf8Printable(pconn->addr),
                     cmdlevel_name(pconn->access_level),
                     (pconn->send_buffer->nsize >> 10));
         if (pconn->observer) {

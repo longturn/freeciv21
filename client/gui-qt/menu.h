@@ -182,7 +182,6 @@ class mr_menu : public QMenuBar {
   QMultiHash<munit, QAction*> menu_list;
   qfc_units_list units_list;
   bool initialized;
-
 public:
   mr_menu();
   void setup_menus();

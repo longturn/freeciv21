@@ -15,11 +15,11 @@
 #include <QFormLayout>
 #include <QScrollBar>
 #include <QSettings>
-#include <QSocketNotifier>
 #include <QSpinBox>
 #include <QStackedLayout>
 #include <QStandardPaths>
 #include <QStatusBar>
+#include <QTcpSocket>
 #include <QTextBlock>
 #include <QTextCodec>
 // utility
@@ -66,7 +66,6 @@ fc_client::fc_client()
       menu_bar(nullptr)
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
-
   status_bar_queue.clear();
   for (int i = 0; i <= PAGE_GAME; i++) {
     pages_layout[i] = NULL;
@@ -265,12 +264,13 @@ enum client_pages fc_client::current_page() { return page; }
 /************************************************************************/ /**
    Add notifier for server input
  ****************************************************************************/
-void fc_client::add_server_source(int sock)
+void fc_client::add_server_source(QTcpSocket *sock)
 {
-  server_notifier = new QSocketNotifier(sock, QSocketNotifier::Read);
+  connect(sock, &QIODevice::readyRead, this, &fc_client::server_input);
 
-  connect(server_notifier, &QSocketNotifier::activated, this,
-          &fc_client::server_input);
+  // By the time we reach this function, the socket may already have received
+  // data. Make sure that it's processed as well.
+  input_from_server(sock);
 }
 
 /************************************************************************/ /**
@@ -298,18 +298,13 @@ void fc_client::closeEvent(QCloseEvent *event)
 }
 
 /************************************************************************/ /**
-   Removes notifier
- ****************************************************************************/
-void fc_client::remove_server_source() { server_notifier->deleteLater(); }
-
-/************************************************************************/ /**
    There is input from server
  ****************************************************************************/
-void fc_client::server_input(int sock)
+void fc_client::server_input()
 {
-  server_notifier->setEnabled(false);
-  input_from_server(sock);
-  server_notifier->setEnabled(true);
+  if (auto socket = dynamic_cast<QTcpSocket *>(sender())) {
+    input_from_server(socket);
+  }
 }
 
 /************************************************************************/ /**

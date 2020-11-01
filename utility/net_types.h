@@ -11,49 +11,16 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-/* This header contains some upper level types related to networking.
- * The idea is that this header can be included without need to special
- * handling of the conflicts of definitions of lower level types that
- * appear in netintf.h */
+/* This header contained some upper level types related to networking. It is
+ * now reduced to some definitions related to LAN scans that don't have a
+ * direct Qt equivalent. */
 
 #ifndef FC__NET_TYPES_H
 #define FC__NET_TYPES_H
-
-
-
-/* gen_headers */
-#include "freeciv_config.h"
-
-/* map symbolic Winsock error names to symbolic errno names */
-#ifdef FREECIV_HAVE_WINSOCK
-#undef EINTR
-#undef EINPROGRESS
-#undef EWOULDBLOCK
-#undef ECONNRESET
-#undef ECONNREFUSED
-#undef EADDRNOTAVAIL
-#undef ETIMEDOUT
-#undef ECONNABORTED
-#define EINTR WSAEINTR
-#define EINPROGRESS WSAEWOULDBLOCK
-#define EWOULDBLOCK WSAEWOULDBLOCK
-#define ECONNRESET WSAECONNRESET
-#define ECONNREFUSED WSAECONNREFUSED
-#define EADDRNOTAVAIL WSAEADDRNOTAVAIL
-#define ETIMEDOUT WSAETIMEDOUT
-#define ECONNABORTED WSAECONNABORTED
-#endif /* FREECIV_HAVE_WINSOCK */
 
 /* Which protocol will be used for LAN announcements */
 enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 #define ANNOUNCE_DEFAULT ANNOUNCE_IPV4
-
-enum fc_addr_family { FC_ADDR_IPV4, FC_ADDR_IPV6, FC_ADDR_ANY };
-
-void fc_init_network(void);
-void fc_shutdown_network(void);
-
-
 
 #endif /* FC__NET_TYPES_H */

@@ -3375,8 +3375,8 @@ pf_path_new_to_start_tile(const struct pf_parameter *param)
 void pf_path_destroy(struct pf_path *path)
 {
   if (NULL != path) {
-    free(path->positions);
-    free(path);
+    delete[] path->positions;
+    delete path;
   }
 }
 
@@ -3691,7 +3691,7 @@ void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
   fc_assert_ret(NULL != pfrm);
 
   pf_pos_hash_destroy(pfrm->hash);
-  free(pfrm);
+  delete pfrm;
 }
 
 /************************************************************************/ /**

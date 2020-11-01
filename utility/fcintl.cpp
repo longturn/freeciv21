@@ -62,8 +62,7 @@ const char *skip_intl_qualifier_prefix(const char *str)
 char *capitalized_string(const char *str)
 {
   int len = strlen(str);
-  char *result = static_cast<char *>(fc_malloc(len + 1));
-
+  char *result = new char[len + 1];
   fc_strlcpy(result, str, len + 1);
 
   if (autocap) {

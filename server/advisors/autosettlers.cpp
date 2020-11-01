@@ -1128,8 +1128,7 @@ void auto_settlers_player(struct player *pplayer)
 {
   struct settlermap *state;
 
-  state =
-      static_cast<settlermap *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*state)));
+  state = new settlermap[MAP_INDEX_SIZE]();
 
   as_timer = timer_renew(as_timer, TIMER_CPU, TIMER_DEBUG);
   timer_start(as_timer);
@@ -1220,7 +1219,7 @@ void auto_settlers_player(struct player *pplayer)
 #endif
   }
 
-  FC_FREE(state);
+  delete[] state;
 }
 
 /**********************************************************************/ /**

@@ -63,9 +63,7 @@ static void con_handle_log(enum log_level level, const char *message,
     conn_list_iterate(game.est_connections, pconn)
     {
       pconn->send_buffer->do_buffer_sends = 0;
-#ifdef USE_COMPRESSION
       pconn->compression.frozen_level = 0;
-#endif
     }
     conn_list_iterate_end;
 
@@ -145,14 +143,15 @@ static void depr_warn_callback(const char *msg)
 /********************************************************************/ /**
    Initialize logging via console.
  ************************************************************************/
-void con_log_init(const char *log_filename, enum log_level level,
+void con_log_init(const QString &log_filename, enum log_level level,
                   int fatal_assertions)
 {
 #ifdef FREECIV_DEBUG
-  log_init(log_filename, level, con_handle_log, log_prefix,
+  log_init(qUtf8Printable(log_filename), level, con_handle_log, log_prefix,
            fatal_assertions);
 #else
-  log_init(log_filename, level, con_handle_log, NULL, fatal_assertions);
+  log_init(qUtf8Printable(log_filename), level, con_handle_log, NULL,
+           fatal_assertions);
 #endif /* FREECIV_DEBUG */
   backtrace_init();
   deprecation_warn_cb_set(depr_warn_callback);

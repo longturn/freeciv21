@@ -23,8 +23,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <limits.h>
 #include <math.h>
 #include <stdint.h>
@@ -32,18 +30,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
+// Qt
+#include <QtEndian>
 
 /* utility */
 #include "bitvector.h"
@@ -269,13 +257,13 @@ void dio_put_uint8_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_uint16_raw(struct raw_data_out *dout, int value)
 {
-  uint16_t x = htons(value);
+  uint16_t x = qToBigEndian(uint16_t(value));
   FC_STATIC_ASSERT(sizeof(x) == 2, uint16_not_2_bytes);
 
-  FIELD_RANGE_TEST((int) ntohs(x) != value, ,
+  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
                    "Trying to put %d into 16 bits; "
                    "it will result %d at receiving side.",
-                   value, (int) ntohs(x));
+                   value, (int) qFromBigEndian(x));
 
   if (enough_space(dout, 2)) {
     memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 2);
@@ -288,13 +276,13 @@ void dio_put_uint16_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_uint32_raw(struct raw_data_out *dout, int value)
 {
-  uint32_t x = htonl(value);
+  uint32_t x = qToBigEndian(uint32_t(value));
   FC_STATIC_ASSERT(sizeof(x) == 4, uint32_not_4_bytes);
 
-  FIELD_RANGE_TEST((int) ntohl(x) != value, ,
+  FIELD_RANGE_TEST((int) qFromBigEndian(x) != value, ,
                    "Trying to put %d into 32 bits; "
                    "it will result %d at receiving side.",
-                   value, (int) ntohl(x));
+                   value, (int) qFromBigEndian(x));
 
   if (enough_space(dout, 4)) {
     memcpy(ADD_TO_POINTER(dout->dest, dout->current), &x, 4);
@@ -595,7 +583,7 @@ bool dio_get_uint16_raw(struct data_in *din, int *dest)
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 2);
-  *dest = ntohs(x);
+  *dest = qFromBigEndian(x);
   din->current += 2;
   return TRUE;
 }
@@ -616,7 +604,7 @@ bool dio_get_uint32_raw(struct data_in *din, int *dest)
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 4);
-  *dest = ntohl(x);
+  *dest = qFromBigEndian(x);
   din->current += 4;
   return TRUE;
 }
@@ -944,7 +932,7 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint8_raw(din, vec + inx)) {
-      free(vec);
+      delete[] vec;
       return FALSE;
     }
   }
@@ -970,7 +958,7 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint16_raw(din, vec + inx)) {
-      free(vec);
+      delete[] vec;
       return FALSE;
     }
   }

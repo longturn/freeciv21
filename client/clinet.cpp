@@ -15,46 +15,9 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
-#include <errno.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#ifdef FREECIV_HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
-#ifdef HAVE_NETDB_H
-#include <netdb.h>
-#endif
-#ifdef HAVE_PWD_H
-#include <pwd.h>
-#endif
-#ifdef HAVE_SYS_SELECT_H
-#include <sys/select.h>
-#endif
-#ifdef HAVE_SYS_TIME_H
-#include <sys/time.h>
-#endif
-#ifdef HAVE_SYS_UIO_H
-#include <sys/uio.h>
-#endif
-#ifdef HAVE_SYS_UTSNAME_H
-#include <sys/utsname.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
+// Qt
+#include <QString>
+#include <QTcpSocket>
 
 /* utility */
 #include "capstr.h"
@@ -62,7 +25,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "registry.h"
 #include "support.h"
 
@@ -99,8 +61,6 @@
 #define MAX_AUTOCONNECT_ATTEMPTS 100
 
 extern char forced_tileset_name[512];
-static struct fc_sockaddr_list *list = NULL;
-static int name_count;
 
 /**********************************************************************/ /**
    Close socket and cleanup.  This one doesn't print a message, so should
@@ -122,66 +82,26 @@ static void close_socket_nomessage(struct connection *pc)
  **************************************************************************/
 static void client_conn_close_callback(struct connection *pconn)
 {
-  char reason[256];
+  QString reason;
 
-  if (NULL != pconn->closing_reason) {
-    fc_strlcpy(reason, pconn->closing_reason, sizeof(reason));
+  if (pconn->sock != nullptr) {
+    reason = pconn->sock->errorString();
   } else {
-    fc_strlcpy(reason, _("unknown reason"), sizeof(reason));
+    reason = QString::fromUtf8(_("unknown reason"));
   }
 
   close_socket_nomessage(pconn);
   /* If we lost connection to the internal server - kill it. */
   client_kill_server(TRUE);
-  log_error("Lost connection to server: %s.", reason);
+  log_error("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
-                       reason);
+                       qUtf8Printable(reason));
 }
 
 /**********************************************************************/ /**
-   Get ready to [try to] connect to a server:
-    - translate HOSTNAME and PORT (with defaults of "localhost" and
-      DEFAULT_SOCK_PORT respectively) to a raw IP address and port number,
- and store them in the `names' variable
-    - return 0 on success
-      or put an error message in ERRBUF and return -1 on failure
- **************************************************************************/
-static int get_server_address(const char *hostname, int port, char *errbuf,
-                              int errbufsize)
-{
-  if (port == 0) {
-#ifdef FREECIV_JSON_CONNECTION
-    port = FREECIV_JSON_PORT;
-#else  /* FREECIV_JSON_CONNECTION */
-    port = DEFAULT_SOCK_PORT;
-#endif /* FREECIV_JSON_CONNECTION */
-  }
-
-  /* use name to find TCP/IP address of server */
-  if (!hostname) {
-    hostname = "localhost";
-  }
-
-  if (list != NULL) {
-    fc_sockaddr_list_destroy(list);
-  }
-
-  /* Any supported family will do */
-  list = net_lookup_service(hostname, port, FC_ADDR_ANY);
-
-  name_count = fc_sockaddr_list_size(list);
-
-  if (name_count <= 0) {
-    (void) fc_strlcpy(errbuf, _("Failed looking up host."), errbufsize);
-    return -1;
-  }
-
-  return 0;
-}
-
-/**********************************************************************/ /**
-   Try to connect to a server (get_server_address() must be called first!):
-    - try to create a TCP socket and connect it to `names'
+   Try to connect to a server:
+    - try to create a TCP socket to the given hostname and port (default to
+      localhost:DEFAULT_SOCK_PORT) and connect it to `names'.
     - if successful:
            - start monitoring the socket for packets from the server
            - send a "login request" packet to the server
@@ -190,10 +110,17 @@ static int get_server_address(const char *hostname, int port, char *errbuf,
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
  **************************************************************************/
-static int try_to_connect(const char *username, char *errbuf, int errbufsize)
+static int try_to_connect(const char *hostname, int port,
+                          const char *username, char *errbuf, int errbufsize)
 {
-  int sock = -1;
-  fc_errno err = 0;
+  // Apply defaults
+  if (hostname == nullptr) {
+    hostname = "localhost";
+  }
+
+  if (port == 0) {
+    port = DEFAULT_SOCK_PORT;
+  }
 
   connections_set_close_callback(client_conn_close_callback);
 
@@ -202,39 +129,22 @@ static int try_to_connect(const char *username, char *errbuf, int errbufsize)
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
     return -1;
   }
+  client.conn.used = true; // Now there will be a connection :)
 
-  /* Try all (IPv4, IPv6, ...) addresses until we have a connection. */
-  sock = -1;
-  fc_sockaddr_list_iterate(list, paddr)
-  {
-    if ((sock = socket(paddr->saddr.sa_family, SOCK_STREAM, 0)) == -1) {
-      if (err == 0) {
-        err = fc_get_errno();
-      }
-      /* Probably EAFNOSUPPORT or EPROTONOSUPPORT. */
-      continue;
-    }
+  // Connect
+  client.conn.sock = new QTcpSocket;
 
-    if (fc_connect(sock, &paddr->saddr, sockaddr_size(paddr)) == -1) {
-      err = fc_get_errno(); /* Save errno value before calling anything */
-      fc_closesocket(sock);
-      sock = -1;
-      continue;
-    } else {
-      /* We have a connection! */
-      break;
-    }
-  }
-  fc_sockaddr_list_iterate_end;
+  QObject::connect(
+      client.conn.sock,
+      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+      [] {
+        connection_close(&client.conn,
+                         qUtf8Printable(client.conn.sock->errorString()));
+      });
 
-  client.conn.sock = sock;
-  if (client.conn.sock == -1) {
-    (void) fc_strlcpy(errbuf, fc_strerror(err), errbufsize);
-#ifdef FREECIV_HAVE_WINSOCK
+  client.conn.sock->connectToHost(QString::fromUtf8(hostname), port);
+  if (!client.conn.sock->waitForConnected(-1)) {
     return -1;
-#else
-    return err;
-#endif /* FREECIV_HAVE_WINSOCK */
   }
 
   make_connection(client.conn.sock, username);
@@ -253,11 +163,7 @@ int connect_to_server(const char *username, const char *hostname, int port,
     errbuf[0] = '\0';
   }
 
-  if (0 != get_server_address(hostname, port, errbuf, errbufsize)) {
-    return -1;
-  }
-
-  if (0 != try_to_connect(username, errbuf, errbufsize)) {
+  if (0 != try_to_connect(hostname, port, username, errbuf, errbufsize)) {
     return -1;
   }
 
@@ -272,7 +178,7 @@ int connect_to_server(const char *username, const char *hostname, int port,
 /**********************************************************************/ /**
    Called after a connection is completed (e.g., in try_to_connect).
  **************************************************************************/
-void make_connection(int sock, const char *username)
+void make_connection(QTcpSocket *sock, const char *username)
 {
   struct packet_server_join_req req;
 
@@ -333,82 +239,59 @@ void disconnect_from_server(void)
    to the server.
 
    Returns:
-     -1  :  an error occurred - you should close the socket
+     -1  :  an error occurred - you should close the socket FIXME dropped!
      -2  :  the connection was closed
      >0  :  number of bytes read
      =0  :  no data read, would block
  **************************************************************************/
 static int read_from_connection(struct connection *pc, bool block)
 {
-  for (;;) {
-    fd_set readfs, writefs, exceptfs;
-    int socket_fd = pc->sock;
-    bool have_data_for_server =
-        (pc->used && pc->send_buffer && 0 < pc->send_buffer->ndata);
-    int n;
-    fc_timeval tv;
+  QTcpSocket *socket = pc->sock;
+  bool have_data_for_server =
+      (pc->used && pc->send_buffer && 0 < pc->send_buffer->ndata);
 
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
+  if (!socket->isOpen()) {
+    return -2;
+  }
 
-    FC_FD_ZERO(&readfs);
-    FD_SET(socket_fd, &readfs);
+  // By the way, if there's some data available for the server let's send
+  // it now
+  if (have_data_for_server) {
+    flush_connection_send_buffer_all(pc);
+  }
 
-    FC_FD_ZERO(&exceptfs);
-    FD_SET(socket_fd, &exceptfs);
+  if (block) {
+    // Wait (and block the main event loop) until we get some data
+    socket->waitForReadyRead();
+  }
 
-    if (have_data_for_server) {
-      FC_FD_ZERO(&writefs);
-      FD_SET(socket_fd, &writefs);
-      n = fc_select(socket_fd + 1, &readfs, &writefs, &exceptfs,
-                    block ? NULL : &tv);
+  // Consume everything
+  int ret = 0;
+  while (socket->bytesAvailable() > 0) {
+    int result = read_socket_data(socket, pc->buffer);
+    if (result == 0) {
+      // There is data in the socket but we can't read it, probably the
+      // connection buffer is full.
+      break;
+    } else if (result > 0) {
+      ret += result;
     } else {
-      n = fc_select(socket_fd + 1, &readfs, NULL, &exceptfs,
-                    block ? NULL : &tv);
-    }
-
-    /* the socket is neither readable, writeable nor got an
-     * exception */
-    if (n == 0) {
-      return 0;
-    }
-
-    if (n == -1) {
-      if (errno == EINTR) {
-        /* EINTR can happen sometimes, especially when compiling with -pg.
-         * Generally we just want to run select again. */
-        log_debug("select() returned EINTR");
-        continue;
-      }
-
-      log_error("select() return=%d errno=%d (%s)", n, errno,
-                fc_strerror(fc_get_errno()));
-      return -1;
-    }
-
-    if (FD_ISSET(socket_fd, &exceptfs)) {
-      return -1;
-    }
-
-    if (have_data_for_server && FD_ISSET(socket_fd, &writefs)) {
-      flush_connection_send_buffer_all(pc);
-    }
-
-    if (FD_ISSET(socket_fd, &readfs)) {
-      return read_socket_data(socket_fd, pc->buffer);
+      // Error
+      return result;
     }
   }
+  return ret;
 }
 
 /**********************************************************************/ /**
    This function is called when the client received a new input from the
    server.
  **************************************************************************/
-void input_from_server(int fd)
+void input_from_server(QTcpSocket *sock)
 {
   int nb;
 
-  fc_assert_ret(fd == client.conn.sock);
+  fc_assert_ret(sock == client.conn.sock);
 
   nb = read_from_connection(&client.conn, FALSE);
   if (0 <= nb) {
@@ -435,16 +318,16 @@ void input_from_server(int fd)
 }
 
 /**********************************************************************/ /**
-   This function will sniff at the given fd, get the packet and call
+   This function will sniff from the given socket, get the packet and call
    client_packet_input. It will return if there is a network error or if
    the PACKET_PROCESSING_FINISHED packet for the given request is
    received.
  **************************************************************************/
-void input_from_server_till_request_got_processed(int fd,
+void input_from_server_till_request_got_processed(QTcpSocket *socket,
                                                   int expected_request_id)
 {
   fc_assert_ret(expected_request_id);
-  fc_assert_ret(fd == client.conn.sock);
+  fc_assert_ret(socket == client.conn.sock);
 
   log_debug("input_from_server_till_request_got_processed("
             "expected_request_id=%d)",
@@ -513,24 +396,14 @@ double try_to_autoconnect(void)
     exit(EXIT_FAILURE);
   }
 
-  switch (try_to_connect(user_name, errbuf, sizeof(errbuf))) {
-  case 0: /* Success! */
-    /* Don't call me again */
+  if (try_to_connect(server_host, server_port, user_name, errbuf,
+                     sizeof(errbuf))
+      == 0) {
+    // Success! Don't call me again
     autoconnecting = FALSE;
     return FC_INFINITY;
-#ifndef FREECIV_MSWINDOWS
-  /* See PR#4042 for more info on issues with try_to_connect() and errno. */
-  case ECONNREFUSED: /* Server not available (yet) */
-    if (!warning_shown) {
-      log_error("Connection to server refused. Please start the server.");
-      output_window_append(ftc_client, _("Connection to server refused. "
-                                         "Please start the server."));
-      warning_shown = 1;
-    }
-    /* Try again in 0.5 seconds */
-    return 0.001 * AUTOCONNECT_INTERVAL;
-#endif     /* FREECIV_MSWINDOWS */
-  default: /* All other errors are fatal */
+  } else {
+    // All errors are fatal
     log_fatal(_("Error contacting server \"%s\" at port %d "
                 "as \"%s\":\n %s\n"),
               server_host, server_port, user_name, errbuf);
@@ -556,11 +429,5 @@ void start_autoconnecting_to_server(void)
                        0.001 * AUTOCONNECT_INTERVAL,
                        MAX_AUTOCONNECT_ATTEMPTS);
 
-  if (get_server_address(server_host, server_port, buf, sizeof(buf)) < 0) {
-    log_fatal(_("Error contacting server \"%s\" at port %d "
-                "as \"%s\":\n %s\n"),
-              server_host, server_port, user_name, buf);
-    exit(EXIT_FAILURE);
-  }
   autoconnecting = TRUE;
 }

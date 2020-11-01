@@ -1629,7 +1629,7 @@ const char *format_duration(int duration)
    Return text giving the ping time for the player.  This is generally used
    used in the playerdlg.  This should only be used in playerdlg_common.c.
  ****************************************************************************/
-const char *get_ping_time_text(const struct player *pplayer)
+QString get_ping_time_text(const struct player *pplayer)
 {
   static struct astring str = ASTRING_INIT;
 
@@ -1658,7 +1658,7 @@ const char *get_ping_time_text(const struct player *pplayer)
    Return text giving the score of the player. This should only be used
    in playerdlg_common.c.
  ****************************************************************************/
-const char *get_score_text(const struct player *pplayer)
+QString get_score_text(const struct player *pplayer)
 {
   static struct astring str = ASTRING_INIT;
 

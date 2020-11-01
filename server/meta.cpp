@@ -15,8 +15,6 @@
 #include <fc_config.h>
 #endif
 
-#include "fc_prehdrs.h"
-
 #include <ctype.h>
 #include <errno.h>
 #include <stdio.h>
@@ -31,28 +29,11 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#ifdef HAVE_NETINET_IN_H
-#include <netinet/in.h>
-#endif
-#ifdef HAVE_SYS_SOCKET_H
-#include <sys/socket.h>
-#endif
-#ifdef HAVE_SYS_TYPES_H
-#include <sys/types.h>
-#endif
-#ifdef HAVE_UNISTD_H
-#include <unistd.h>
-#endif
-#ifdef HAVE_ARPA_INET_H
-#include <arpa/inet.h>
-#endif
-
 /* utility */
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
 #include "mem.h"
-#include "netintf.h"
 #include "support.h"
 #include "timing.h"
 
@@ -193,7 +174,7 @@ void set_user_meta_message_string(const char *string)
 /*********************************************************************/ /**
    Return string describing both metaserver name and port.
  *************************************************************************/
-char *meta_addr_port(void) { return srvarg.metaserver_addr; }
+QString meta_addr_port() { return srvarg.metaserver_addr; }
 
 /*********************************************************************/ /**
    We couldn't find or connect to the metaserver.
@@ -244,7 +225,7 @@ static void send_metaserver_post(void *arg)
   auto addr = (srvarg.bind_meta_addr != nullptr ? srvarg.bind_meta_addr
                                                 : srvarg.bind_addr);
 
-  QNetworkRequest request(QUrl(QString::fromUtf8(srvarg.metaserver_addr)));
+  QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -297,8 +278,8 @@ static bool send_to_metaserver(enum meta_flag flag)
   }
 
   /* get hostname */
-  if (srvarg.identity_name[0] != '\0') {
-    sz_strlcpy(host, srvarg.identity_name);
+  if (!srvarg.identity_name.isEmpty()) {
+    sz_strlcpy(host, qUtf8Printable(srvarg.identity_name));
   } else if (fc_gethostname(host, sizeof(host)) != 0) {
     sz_strlcpy(host, "unknown");
   }
@@ -332,8 +313,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     post->addQueryItem(QLatin1String("capability"),
                        QString::fromUtf8(our_capability));
 
-    post->addQueryItem(QLatin1String("serverid"),
-                       QString::fromUtf8(srvarg.serverid));
+    post->addQueryItem(QLatin1String("serverid"), srvarg.serverid);
     post->addQueryItem(QLatin1String("message"),
                        QString::fromUtf8(get_meta_message_string()));
 
@@ -377,8 +357,7 @@ static bool send_to_metaserver(enum meta_flag flag)
             QString::fromUtf8(plr->nation != NO_NATION_SELECTED
                                   ? nation_of_player(plr)->flag_graphic_str
                                   : "none"));
-        post->addQueryItem(QLatin1String("plh[]"),
-                           QString::fromUtf8(pconn ? pconn->addr : ""));
+        post->addQueryItem(QLatin1String("plh[]"), pconn ? pconn->addr : "");
 
         /* is this player available to take?
          * TODO: there's some duplication here with

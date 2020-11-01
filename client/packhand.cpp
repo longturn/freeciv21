@@ -2711,8 +2711,7 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
       log_verbose("Server reports new connection %d %s", pinfo->id,
                   pinfo->username);
 
-      pconn =
-          static_cast<connection *>(fc_calloc(1, sizeof(struct connection)));
+      pconn = new connection{};
       pconn->buffer = NULL;
       pconn->send_buffer = NULL;
       pconn->ping_time = -1.0;
@@ -2741,7 +2740,7 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
     pconn->playing = pplayer;
 
     sz_strlcpy(pconn->username, pinfo->username);
-    sz_strlcpy(pconn->addr, pinfo->addr);
+    pconn->addr = pinfo->addr;
     sz_strlcpy(pconn->capability, pinfo->capability);
 
     if (pinfo->id == client.conn.id) {
@@ -3062,7 +3061,8 @@ void handle_tile_info(const struct packet_tile_info *packet)
     client.conn.playing->tile_known->setBit(tile_index(ptile), false);
     vision_layer_iterate(v)
     {
-      client.conn.playing->client.tile_vision[v]->setBit(tile_index(ptile), false);
+      client.conn.playing->client.tile_vision[v]->setBit(tile_index(ptile),
+                                                         false);
     }
     vision_layer_iterate_end;
 
@@ -3071,7 +3071,8 @@ void handle_tile_info(const struct packet_tile_info *packet)
       client.conn.playing->tile_known->setBit(tile_index(ptile));
       vision_layer_iterate(v)
       {
-        client.conn.playing->client.tile_vision[v]->setBit(tile_index(ptile));
+        client.conn.playing->client.tile_vision[v]->setBit(
+            tile_index(ptile));
       }
       vision_layer_iterate_end;
       break;

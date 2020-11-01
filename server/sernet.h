@@ -13,7 +13,10 @@
 #ifndef FC__SERNET_H
 #define FC__SERNET_H
 
-
+// Forward declarations
+class QTcpServer;
+class QTcpSocket;
+class QString;
 
 struct connection;
 
@@ -23,23 +26,17 @@ struct connection;
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
 
-enum server_events {
-  S_E_END_OF_TURN_TIMEOUT,
-  S_E_OTHERWISE,
-  S_E_FORCE_END_OF_SNIFF,
-};
-
-enum server_events server_sniff_all_input(void);
-
-int server_open_socket(void);
+QTcpServer *server_open_socket(void);
 void flush_packets(void);
+void incoming_client_packets(connection *pconn);
 void close_connections_and_socket(void);
+void really_close_connections();
 void init_connections(void);
-int server_make_connection(int new_sock, const char *client_addr,
-                           const char *client_ip);
+int server_make_connection(QTcpSocket *new_sock, const QString &client_addr);
+void connection_ping(struct connection *pconn);
 void handle_conn_pong(struct connection *pconn);
 void handle_client_heartbeat(struct connection *pconn);
-
-
+void send_ping_times_to_all();
+void get_lanserver_announcement();
 
 #endif /* FC__SERNET_H */

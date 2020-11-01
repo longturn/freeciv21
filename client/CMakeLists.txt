@@ -77,6 +77,8 @@ target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_subdirectory(agents)
 add_subdirectory(luascript)
 
+target_link_libraries(client PUBLIC Qt5::Widgets)
+
 target_link_libraries(client PUBLIC agents)
 target_link_libraries(client PUBLIC client_gen)
 target_link_libraries(client PUBLIC cvercmp)

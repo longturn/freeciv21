@@ -26,7 +26,6 @@
 // Qt
 #include <QApplication>
 // utility
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "log.h"
 // client
@@ -57,7 +56,6 @@ const bool gui_use_transliteration = false;
 const char *const gui_character_encoding = "UTF-8";
 const char *client_string = "gui-qt";
 static fc_client *freeciv_qt;
-static QApplication *qapp = nullptr;
 
 void reset_unit_table(void);
 static void apply_font(struct option *poption);
@@ -86,43 +84,6 @@ int main(int argc, char **argv)
 }
 
 /**********************************************************************/ /**
-   Print extra usage information, including one line help on each option,
-   to stderr.
- **************************************************************************/
-static void print_usage()
-{
-  /* add client-specific usage information here */
-  fc_fprintf(stderr,
-             _("This client accepts the standard Qt command-line options\n"
-               "after '--'. See the Qt documentation.\n\n"));
-
-  /* TRANS: No full stop after the URL, could cause confusion. */
-  fc_fprintf(stderr, _("Report bugs at %s\n"), BUG_URL);
-}
-
-/**********************************************************************/ /**
-   Search for gui-specic command line options, that are not handled by Qt
-   (QApplication). Returns true iff program is to be executed, and not
-   to exit after showing the results from option parsing.
- **************************************************************************/
-static bool parse_options(int argc, char **argv)
-{
-  int i = 1;
-
-  while (i < argc) {
-    if (is_option("--help", argv[i])) {
-      print_usage();
-      return false;
-    }
-    // Can't check against unknown options, as those might be Qt options
-
-    i++;
-  }
-
-  return true;
-}
-
-/**********************************************************************/ /**
    Migrate Qt client specific options from freeciv-2.5 options
  **************************************************************************/
 static void migrate_options_from_2_5()
@@ -138,10 +99,9 @@ static void migrate_options_from_2_5()
    The main loop for the UI.  This is called from main(), and when it
    exits the client will exit.
  **************************************************************************/
-void qtg_ui_main(int argc, char *argv[])
+void qtg_ui_main()
 {
-  if (parse_options(argc, argv)) {
-    qapp = new QApplication(argc, argv);
+  if (true) {
     QPixmap *qpm;
     QIcon app_icon;
 
@@ -149,7 +109,7 @@ void qtg_ui_main(int argc, char *argv[])
     tileset_load_tiles(tileset);
     qpm = get_icon_sprite(tileset, ICON_FREECIV)->pm;
     app_icon = ::QIcon(*qpm);
-    qapp->setWindowIcon(app_icon);
+    qApp->setWindowIcon(app_icon);
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,
        * so prevent any future migrations from other versions */
@@ -161,14 +121,14 @@ void qtg_ui_main(int argc, char *argv[])
       qtg_gui_clear_theme();
     }
     freeciv_qt = new fc_client();
-    freeciv_qt->fc_main(qapp);
+    freeciv_qt->fc_main(qApp);
   }
 }
 
 /**********************************************************************/ /**
    Return the running QApplication.
  **************************************************************************/
-QApplication *current_app() { return qapp; }
+QApplication *current_app() { return qApp; }
 
 /**********************************************************************/ /**
    Extra initializers for client options.
@@ -198,12 +158,7 @@ void qtg_options_extra_init()
 /**********************************************************************/ /**
    Do any necessary UI-specific cleanup
  **************************************************************************/
-void qtg_ui_exit()
-{
-  delete freeciv_qt;
-  delete qapp;
-  qapp = nullptr;
-}
+void qtg_ui_exit() { delete freeciv_qt; }
 
 /**********************************************************************/ /**
    Update the connected users list at pregame state.
@@ -234,14 +189,14 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  **************************************************************************/
-void qtg_add_net_input(int sock) { king()->add_server_source(sock); }
+void qtg_add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
 /**********************************************************************/ /**
    Stop waiting for any server network data.  See add_net_input().
 
    This function is called if the client disconnects from the server.
  **************************************************************************/
-void qtg_remove_net_input() { king()->remove_server_source(); }
+void qtg_remove_net_input() {}
 
 /**********************************************************************/ /**
    Set one of the unit icons (specified by idx) in the information area
@@ -479,7 +434,7 @@ void popup_quit_dialog()
       disconnect_from_server();
     }
     king()->write_settings();
-    qapp->quit();
+    qApp->quit();
   });
   ask->show();
 }
