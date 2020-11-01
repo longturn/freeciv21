@@ -15,6 +15,10 @@
 #include <fc_config.h>
 #endif
 
+// Qt
+#include <QDir>
+#include <QString>
+
 /* utility */
 #include "log.h"
 #include "mem.h"
@@ -246,25 +250,29 @@ void save_game(const char *orig_filename, const char *save_reason,
   }
 
   if (!path_is_absolute(stdata->filepath)) {
-    char tmpname[600];
+    QString tmpname;
 
     if (!scenario) {
       /* Ensure the saves directory exists. */
-      make_dir(srvarg.saves_pathname);
+      if (srvarg.saves_pathname.isNull()) {
+        QDir().mkpath(srvarg.saves_pathname);
+      }
 
-      sz_strlcpy(tmpname, srvarg.saves_pathname);
+      tmpname = srvarg.saves_pathname;
     } else {
       /* Make sure scenario directory exist */
-      make_dir(srvarg.scenarios_pathname);
+      if (srvarg.saves_pathname.isNull()) {
+        QDir().mkpath(srvarg.scenarios_pathname);
+      }
 
-      sz_strlcpy(tmpname, srvarg.scenarios_pathname);
+      tmpname = srvarg.scenarios_pathname;
     }
 
-    if (tmpname[0] != '\0') {
-      sz_strlcat(tmpname, "/");
+    if (!tmpname.isEmpty()) {
+      tmpname += QLatin1String("/");
     }
-    sz_strlcat(tmpname, stdata->filepath);
-    sz_strlcpy(stdata->filepath, tmpname);
+    tmpname += QString::fromUtf8(stdata->filepath);
+    sz_strlcpy(stdata->filepath, qUtf8Printable(tmpname));
   }
 
   if (save_thread != NULL) {

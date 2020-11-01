@@ -22,8 +22,6 @@
 #include "commands.h"
 #include "console.h"
 
-
-
 void stdinhand_init(void);
 void stdinhand_turn(void);
 void stdinhand_free(void);
@@ -34,7 +32,7 @@ void cmd_reply(enum command_id cmd, struct connection *caller,
 
 bool handle_stdin_input(struct connection *caller, char *str);
 void set_ai_level_direct(struct player *pplayer, enum ai_level level);
-bool read_init_script(struct connection *caller, char *script_filename,
+bool read_init_script(struct connection *caller, const char *script_filename,
                       bool from_cmdline, bool check);
 struct strvec *get_init_script_choices(void);
 void show_players(struct connection *caller);
@@ -67,7 +65,5 @@ void set_running_game_access_level(void);
 #ifdef FREECIV_HAVE_LIBREADLINE
 char **freeciv_completion(const char *text, int start, int end);
 #endif
-
-
 
 #endif /* FC__STDINHAND_H */

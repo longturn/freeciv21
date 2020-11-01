@@ -996,7 +996,8 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
 
     // Get all entries in the directory matching the pattern
     dir.setNameFilters({QLatin1String("*") + QString::fromUtf8(suffix)});
-    for (const auto &name : dir.entryList()) {
+    for (auto name : dir.entryList()) {
+      name.truncate(name.length() - strlen(suffix));
       strvec_append(files, name.toUtf8().data());
     }
   }

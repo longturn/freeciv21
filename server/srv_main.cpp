@@ -206,31 +206,20 @@ void srv_init(void)
   /* init server arguments... */
 
   srvarg.metaserver_no_send = DEFAULT_META_SERVER_NO_SEND;
-  sz_strlcpy(srvarg.metaserver_addr, DEFAULT_META_SERVER_ADDR);
+  srvarg.metaserver_addr = QLatin1String(DEFAULT_META_SERVER_ADDR);
   srvarg.metaconnection_persistent = FALSE;
-  srvarg.identity_name[0] = '\0';
-  srvarg.serverid[0] = '\0';
 
-  srvarg.bind_addr = NULL;
   srvarg.port = DEFAULT_SOCK_PORT;
-
-  srvarg.bind_meta_addr = NULL;
 
   srvarg.loglevel = LOG_NORMAL;
 
-  srvarg.log_filename = NULL;
   srvarg.fatal_assertions = -1;
-  srvarg.ranklog_filename = NULL;
-  srvarg.load_filename[0] = '\0';
-  srvarg.script_filename = NULL;
   srvarg.saves_pathname = strdup("");
   srvarg.scenarios_pathname = strdup("");
-  srvarg.ruleset = NULL;
 
   srvarg.quitidle = 0;
 
   srvarg.fcdb_enabled = FALSE;
-  srvarg.fcdb_conf = NULL;
   srvarg.auth_enabled = FALSE;
   srvarg.auth_allow_guests = FALSE;
   srvarg.auth_allow_newusers = FALSE;

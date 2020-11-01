@@ -26,35 +26,35 @@ struct conn_list;
 struct server_arguments {
   /* metaserver information */
   bool metaserver_no_send;
-  char metaserver_addr[256];
+  QString metaserver_addr;
   bool metaconnection_persistent;
-  char identity_name[256];
+  QString identity_name;
   unsigned short int metaserver_port;
   /* address this server is to listen on (NULL => INADDR_ANY) */
-  char *bind_addr;
+  QString bind_addr;
   /* this server's listen port */
   int port;
   /* address to bind when connecting to the metaserver (NULL => bind_addr) */
-  char *bind_meta_addr;
+  QString bind_meta_addr;
   /* the log level */
   enum log_level loglevel;
   /* filenames */
-  char *log_filename;
-  char *ranklog_filename;
-  char load_filename[512]; /* FIXME: may not be long enough? use MAX_PATH? */
-  char *script_filename;
-  char *saves_pathname;
-  char *scenarios_pathname;
-  char *ruleset;
-  char serverid[256];
+  QString log_filename;
+  QString ranklog_filename;
+  QString load_filename;
+  QString script_filename;
+  QString saves_pathname;
+  QString scenarios_pathname;
+  QString ruleset;
+  QString serverid;
   /* quit if there no players after a given time interval */
   int quitidle;
   /* exit the server on game ending */
   bool exit_on_end;
-  bool timetrack;          /* defaults to FALSE */
+  bool timetrack; /* defaults to FALSE */
   /* authentication options */
   bool fcdb_enabled;        /* defaults to FALSE */
-  char *fcdb_conf;          /* freeciv database configuration file */
+  QString fcdb_conf;        /* freeciv database configuration file */
   bool auth_enabled;        /* defaults to FALSE */
   bool auth_allow_guests;   /* defaults to FALSE */
   bool auth_allow_newusers; /* defaults to FALSE */

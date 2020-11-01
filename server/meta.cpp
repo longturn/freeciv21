@@ -174,7 +174,7 @@ void set_user_meta_message_string(const char *string)
 /*********************************************************************/ /**
    Return string describing both metaserver name and port.
  *************************************************************************/
-char *meta_addr_port(void) { return srvarg.metaserver_addr; }
+QString meta_addr_port() { return srvarg.metaserver_addr; }
 
 /*********************************************************************/ /**
    We couldn't find or connect to the metaserver.
@@ -225,7 +225,7 @@ static void send_metaserver_post(void *arg)
   auto addr = (srvarg.bind_meta_addr != nullptr ? srvarg.bind_meta_addr
                                                 : srvarg.bind_addr);
 
-  QNetworkRequest request(QUrl(QString::fromUtf8(srvarg.metaserver_addr)));
+  QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
@@ -278,8 +278,8 @@ static bool send_to_metaserver(enum meta_flag flag)
   }
 
   /* get hostname */
-  if (srvarg.identity_name[0] != '\0') {
-    sz_strlcpy(host, srvarg.identity_name);
+  if (!srvarg.identity_name.isEmpty()) {
+    sz_strlcpy(host, qUtf8Printable(srvarg.identity_name));
   } else if (fc_gethostname(host, sizeof(host)) != 0) {
     sz_strlcpy(host, "unknown");
   }
@@ -313,8 +313,7 @@ static bool send_to_metaserver(enum meta_flag flag)
     post->addQueryItem(QLatin1String("capability"),
                        QString::fromUtf8(our_capability));
 
-    post->addQueryItem(QLatin1String("serverid"),
-                       QString::fromUtf8(srvarg.serverid));
+    post->addQueryItem(QLatin1String("serverid"), srvarg.serverid);
     post->addQueryItem(QLatin1String("message"),
                        QString::fromUtf8(get_meta_message_string()));
 

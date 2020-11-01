@@ -18,6 +18,9 @@
 #include <stdio.h>
 #include <string.h>
 
+// Qt
+#include <QString>
+
 /* utility */
 #include "bitvector.h"
 #include "log.h"
@@ -433,16 +436,16 @@ void rank_users(bool interrupt)
   struct team *t_winner = NULL;
 
   /* don't output ranking info if we haven't enabled it via cmdline */
-  if (!srvarg.ranklog_filename) {
+  if (srvarg.ranklog_filename.isNull()) {
     return;
   }
 
-  fp = fc_fopen(srvarg.ranklog_filename, "w");
+  fp = fc_fopen(srvarg.ranklog_filename.toUtf8().constData(), "w");
 
   /* don't fail silently, at least print an error */
   if (!fp) {
     log_error("couldn't open ranking log file: \"%s\"",
-              srvarg.ranklog_filename);
+              qUtf8Printable(srvarg.ranklog_filename));
     return;
   }
 
