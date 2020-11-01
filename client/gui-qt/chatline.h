@@ -1,38 +1,32 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__CHATLINE_H
-#define FC__CHATLINE_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "chatline_g.h"
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
+#pragma once
 
 // Qt
 #include <QEvent>
 #include <QLineEdit>
 #include <QTextBrowser>
-
 // gui-qt
-#include "fonts.h"
 #include "listener.h"
 
-class chat_listener;
 class QCheckBox;
 class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
 class QPushButton;
+class QUrl;
+class chat_listener;
 
 QString apply_tags(QString str, const struct text_tag_list *tags,
                    QColor bg_color);
@@ -146,5 +140,3 @@ public:
   explicit version_message_event(const QString &msg);
   QString get_message() const { return message; }
 };
-
-#endif /* FC__CHATLINE_H */

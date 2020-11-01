@@ -1,35 +1,27 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "messagewin.h"
 // Qt
 #include <QApplication>
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QMouseEvent>
 #include <QPainter>
-#include <QStyleFactory>
-
+#include <QTableWidget>
 // client
 #include "messagewin_common.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "messagewin.h"
-#include "qtg_cxxside.h"
+#include "mapview.h"
+#include "page_game.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**
@@ -58,6 +50,7 @@ info_tab::info_tab(QWidget *parent)
   mw->put_to_corner();
   mw->setFixedSize(13, 13);
   setMouseTracking(true);
+  chat_maximized = false;
 }
 
 /***********************************************************************/ /**
@@ -87,7 +80,7 @@ void info_tab::maximize_chat()
  ***************************************************************************/
 void info_tab::mousePressEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (event->button() == Qt::LeftButton) {
@@ -115,7 +108,7 @@ void info_tab::mousePressEvent(QMouseEvent *event)
 void info_tab::mouseReleaseEvent(QMouseEvent *event)
 {
   QPoint p;
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if (resize_mode) {
@@ -126,14 +119,14 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
     setCursor(Qt::ArrowCursor);
   }
   p = pos();
-  gui()->qt_settings.chat_fwidth =
-      static_cast<float>(width()) / gui()->mapview_wdg->width();
-  gui()->qt_settings.chat_fheight =
-      static_cast<float>(height()) / gui()->mapview_wdg->height();
-  gui()->qt_settings.chat_fx_pos =
-      static_cast<float>(p.x()) / gui()->mapview_wdg->width();
-  gui()->qt_settings.chat_fy_pos =
-      static_cast<float>(p.y()) / gui()->mapview_wdg->height();
+  king()->qt_settings.chat_fwidth =
+      static_cast<float>(width()) / queen()->mapview_wdg->width();
+  king()->qt_settings.chat_fheight =
+      static_cast<float>(height()) / queen()->mapview_wdg->height();
+  king()->qt_settings.chat_fx_pos =
+      static_cast<float>(p.x()) / queen()->mapview_wdg->width();
+  king()->qt_settings.chat_fy_pos =
+      static_cast<float>(p.y()) / queen()->mapview_wdg->height();
 }
 
 /***********************************************************************/ /**
@@ -142,7 +135,7 @@ void info_tab::mouseReleaseEvent(QMouseEvent *event)
  ***************************************************************************/
 void info_tab::mouseMoveEvent(QMouseEvent *event)
 {
-  if (gui()->interface_locked) {
+  if (king()->interface_locked) {
     return;
   }
   if ((event->buttons() & Qt::LeftButton) && resize_mode && resy) {
@@ -205,7 +198,7 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   palette.setColor(QPalette::Highlight, QColor(0, 0, 0, 0));
   palette.setColor(QPalette::HighlightedText, QColor(205, 206, 173));
   palette.setColor(QPalette::Text, QColor(205, 206, 173));
-
+  pix = nullptr;
   mesg_table->setPalette(palette);
   connect(
       mesg_table->selectionModel(),
@@ -252,8 +245,8 @@ void messagewdg::item_selected(const QItemSelection &sl,
     }
     if (QApplication::mouseButtons() == Qt::RightButton
         && pmsg->event == E_DIPLOMACY) {
-      j = gui()->gimme_index_of("DDI");
-      gui()->game_tab_widget->setCurrentIndex(j);
+      j = queen()->gimme_index_of("DDI");
+      queen()->game_tab_widget->setCurrentIndex(j);
     }
   }
   mesg_table->clearSelection();
@@ -346,18 +339,12 @@ void messagewdg::resizeEvent(QResizeEvent *event) { msg_update(); }
    Display the message dialog.  Optionally raise it.
    Typically triggered by F10.
  ***************************************************************************/
-void meswin_dialog_popup(bool raise)
-{ /* PORTME */
-}
+void meswin_dialog_popup(bool raise) {}
 
 /***********************************************************************/ /**
    Return whether the message dialog is open.
  ***************************************************************************/
-bool meswin_dialog_is_open(void)
-{
-  /* PORTME */
-  return true;
-}
+bool meswin_dialog_is_open(void) { return true;}
 
 /***********************************************************************/ /**
    Do the work of updating (populating) the message dialog.
@@ -367,14 +354,14 @@ void real_meswin_dialog_update(void *unused)
   int i, num;
   const struct message *pmsg;
 
-  if (gui()->infotab == NULL) {
+  if (queen()->infotab == NULL) {
     return;
   }
-  gui()->infotab->msgwdg->clr();
+  queen()->infotab->msgwdg->clr();
   num = meswin_get_num_messages();
   for (i = 0; i < num; i++) {
     pmsg = meswin_get_message(i);
-    gui()->infotab->msgwdg->msg(pmsg);
+    queen()->infotab->msgwdg->msg(pmsg);
   }
-  gui()->infotab->msgwdg->msg_update();
+  queen()->infotab->msgwdg->msg_update();
 }

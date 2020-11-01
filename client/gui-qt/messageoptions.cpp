@@ -1,20 +1,14 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "messageoptions.h"
 // Qt
 #include <QApplication>
 #include <QGridLayout>
@@ -22,16 +16,13 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QTableWidget>
-
 // utility
 #include "log.h"
-
 // client
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "messagedlg.h"
+#include "page_game.h"
 
 extern QApplication *qapp;
 /**********************************************************************/ /**
@@ -79,9 +70,9 @@ message_dlg::message_dlg()
   layout->setColumnStretch(1, 10);
   layout->setColumnStretch(3, 1);
   setLayout(layout);
-  gui()->gimme_place(this, "MSD");
-  index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->gimme_place(this, "MSD");
+  index = queen()->add_game_tab(this);
+  queen()->game_tab_widget->setCurrentIndex(index);
 
   fill_data();
   margins = msgtab->contentsMargins();
@@ -97,7 +88,7 @@ message_dlg::message_dlg()
 /**********************************************************************/ /**
    Message widget destructor
  **************************************************************************/
-message_dlg::~message_dlg() { gui()->remove_repo_dlg("MSD"); }
+message_dlg::~message_dlg() { queen()->remove_repo_dlg("MSD"); }
 
 /**********************************************************************/ /**
    Fills column in table
@@ -177,16 +168,16 @@ void popup_messageopt_dialog(void)
   int i;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("MSD")) {
+  if (!queen()->is_repo_dlg_open("MSD")) {
     mdlg = new message_dlg;
   } else {
-    i = gui()->gimme_index_of("MSD");
+    i = queen()->gimme_index_of("MSD");
     fc_assert(i != -1);
-    if (gui()->game_tab_widget->currentIndex() == i) {
+    if (queen()->game_tab_widget->currentIndex() == i) {
       return;
     }
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     mdlg = reinterpret_cast<message_dlg *>(w);
-    gui()->game_tab_widget->setCurrentWidget(mdlg);
+    queen()->game_tab_widget->setCurrentWidget(mdlg);
   }
 }

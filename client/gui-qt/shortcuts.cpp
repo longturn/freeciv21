@@ -1,20 +1,14 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "shortcuts.h"
 // Qt
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -26,13 +20,11 @@
 #include <QSettings>
 #include <QVBoxLayout>
 #include <QWidget>
-
 // client
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "shortcuts.h"
+#include "hudwidget.h"
 
 extern void real_menus_init();
 
@@ -378,7 +370,6 @@ void fc_shortcut_popup::closeEvent(QCloseEvent *ev)
  **************************************************************************/
 bool fc_shortcut_popup::check_if_exist()
 {
-  fc_shortcut *fsc;
   QString desc;
   int id = 0;
 
@@ -396,7 +387,7 @@ bool fc_shortcut_popup::check_if_exist()
       id++;
     }
     if (desc.isEmpty()) {
-      desc = gui()->menu_bar->shortcut_exist(sc);
+      desc = king()->menu_bar->shortcut_exist(sc);
     }
     if (!desc.isEmpty()) {
       fc_sc_button *fsb;
@@ -477,9 +468,13 @@ QString button_name(Qt::MouseButton bt)
 }
 
 /**********************************************************************/ /**
-   Constructor for button setting shortcut
+   Constructor and destructor for button setting shortcut
  **************************************************************************/
-fc_sc_button::fc_sc_button() : QPushButton() { sc = new fc_shortcut; }
+fc_sc_button::fc_sc_button() : QPushButton(), sc_orig(nullptr)
+{
+  sc = new fc_shortcut;
+}
+fc_sc_button::~fc_sc_button() { delete sc; }
 
 /**********************************************************************/ /**
    Constructor setting given shortcut
@@ -524,7 +519,7 @@ void fc_sc_button::popup_error()
   /* TRANS: Given shortcut(%1) is already assigned */
   title =
       QString(_("%1 is already assigned to")).arg(shortcut_to_string(sc));
-  scinfo = new hud_message_box(gui()->central_wdg);
+  scinfo = new hud_message_box(king()->central_wdg);
   scinfo->setStandardButtons(QMessageBox::Ok);
   scinfo->setDefaultButton(QMessageBox::Ok);
   scinfo->set_text_title(err_message, title);
@@ -552,7 +547,6 @@ fc_shortcuts_dialog::~fc_shortcuts_dialog() {}
  **************************************************************************/
 void fc_shortcuts_dialog::init()
 {
-  fc_shortcut *sc;
   QPushButton *but;
   QScrollArea *scroll;
   QSize size;
@@ -680,7 +674,7 @@ void fc_shortcuts_dialog::apply_option(int response)
   switch (response) {
   case RESPONSE_APPLY:
     real_menus_init();
-    gui()->menuBar()->setVisible(true);
+    king()->menuBar()->setVisible(true);
     break;
   case RESPONSE_CANCEL:
     fc_shortcuts::hash = *hashcopy;
@@ -689,7 +683,7 @@ void fc_shortcuts_dialog::apply_option(int response)
     break;
   case RESPONSE_OK:
     real_menus_init();
-    gui()->menuBar()->setVisible(true);
+    king()->menuBar()->setVisible(true);
     close();
     break;
   case RESPONSE_SAVE:
@@ -707,7 +701,7 @@ void fc_shortcuts_dialog::apply_option(int response)
  **************************************************************************/
 void popup_shortcuts_dialog()
 {
-  fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(gui());
+  fc_shortcuts_dialog *sh = new fc_shortcuts_dialog(king());
   sh->show();
 }
 

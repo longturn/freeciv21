@@ -1,51 +1,44 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+   //           Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors.
+ _oo\ This file is  part of Freeciv21. Freeciv21 is free software: you can
+(__/ \  _  _   redistribute it and/or modify it under the terms of the GNU
+   \  \/ \/ \    General Public License  as published by the Free Software
+   (         )\        Foundation, either version 3 of the License, or (at
+    \_______/  \  your option) any later version. You should have received
+     [[] [[] a copy of the GNU General Public License along with Freeciv21.
+     [[] [[]                     If not, see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "chatline.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
+#include <QPainter>
 #include <QCompleter>
 #include <QGridLayout>
-#include <QKeyEvent>
-#include <QPainter>
 #include <QScrollBar>
-#include <QStyleFactory>
 #include <QTextBlock>
-#include <QTextBrowser>
-#include <QTextLayout>
-
 // common
 #include "chat.h"
 #include "chatline_common.h"
-
 // client
 #include "audio.h"
 #include "climap.h"
-#include "climisc.h" /* for write_chatline_content */
 #include "colors_common.h"
 #include "connectdlg_common.h"
+#include "client_main.h"
 #include "control.h"
 #include "game.h"
-
+#include "mapview_common.h"
 // gui-qt
-#include "chatline.h"
 #include "colors.h"
+#include "dialogs.h"
 #include "fc_client.h"
+#include "fonts.h"
 #include "gui_main.h"
+#include "mapview.h"
+#include "messagewin.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 
 extern QApplication *qapp;
@@ -115,29 +108,6 @@ void chat_listener::send_chat_message(const QString &message)
 {
   int index;
   QString splayer, s;
-
-  /* FIXME
-   * Key == PICK: used for picking nation, it was put here cause those
-   * Qt slots are a bit limited ...I'm unable to pass custom player pointer
-   * or idk how to do that
-   */
-  s = message;
-  index = message.indexOf("PICK:");
-
-  if (index != -1) {
-    s = s.remove("PICK:");
-    /* now should be playername left in string */
-    players_iterate(pplayer)
-    {
-      splayer = QString(pplayer->name);
-
-      if (!splayer.compare(s)) {
-        popup_races_dialog(pplayer);
-      }
-    }
-    players_iterate_end;
-    return;
-  }
 
   history << message;
   reset_history_position();
@@ -331,11 +301,11 @@ void chatwdg::state_changed(int state)
  ***************************************************************************/
 void chatwdg::toggle_size()
 {
-  if (gui()->infotab->chat_maximized) {
-    gui()->infotab->restore_chat();
+  if (queen()->infotab->chat_maximized) {
+    queen()->infotab->restore_chat();
     return;
   } else {
-    gui()->infotab->maximize_chat();
+    queen()->infotab->maximize_chat();
     chat_line->setFocus();
   }
 }
@@ -465,8 +435,8 @@ bool chatwdg::eventFilter(QObject *obj, QEvent *event)
     if (event->type() == QEvent::KeyPress) {
       QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
       if (keyEvent->key() == Qt::Key_Escape) {
-        gui()->infotab->restore_chat();
-        gui()->mapview_wdg->setFocus();
+        queen()->infotab->restore_chat();
+        queen()->mapview_wdg->setFocus();
         return true;
       }
     }
@@ -746,7 +716,7 @@ void qtg_real_output_window_append(const char *astring,
   QString wakeup;
 
   str = QString::fromUtf8(astring);
-  gui()->set_status_bar(str);
+  king()->set_status_bar(str);
 
   wakeup = gui_options.gui_qt_wakeup_text;
 
@@ -756,39 +726,18 @@ void qtg_real_output_window_append(const char *astring,
   }
 
   if (str.contains(client.conn.username)) {
-    qapp->alert(gui()->central_wdg);
+    qapp->alert(king()->central_wdg);
   }
 
   /* Play sound if we encountered wakeup string */
   if (str.contains(wakeup) && client_state() < C_S_RUNNING
       && !wakeup.isEmpty()) {
-    qapp->alert(gui()->central_wdg);
+    qapp->alert(king()->central_wdg);
     audio_play_sound("e_player_wake", NULL);
   }
 
   chat_listener::update_word_list();
   chat_listener::invoke(&chat_listener::chat_message_received, str, tags);
-}
-
-/***********************************************************************/ /**
-   Get the text of the output window, and call write_chatline_content() to
-   log it.
- ***************************************************************************/
-void log_output_window(void)
-{
-  /* PORTME */
-  write_chatline_content(NULL);
-}
-
-/***********************************************************************/ /**
-   Clear all text from the output window.
- ***************************************************************************/
-void clear_output_window(void)
-{
-  /* PORTME */
-#if 0
-  set_output_window_text(_("Cleared output window."));
-#endif
 }
 
 /***********************************************************************/ /**
@@ -804,5 +753,5 @@ version_message_event::version_message_event(const QString &msg)
  ***************************************************************************/
 void qtg_version_message(const char *vertext)
 {
-  current_app()->postEvent(gui(), new version_message_event(vertext));
+  current_app()->postEvent(king(), new version_message_event(vertext));
 }

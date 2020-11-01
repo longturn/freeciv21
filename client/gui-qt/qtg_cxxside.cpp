@@ -1,26 +1,17 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // client
 #include "gui_interface.h"
-
 // gui-qt
 #include "fonts.h"
-
 #include "qtg_cxxside.h"
 
 /*******************************************************************/ /**
@@ -69,7 +60,7 @@ void setup_gui_funcs()
 
   funcs->set_rulesets = qtg_set_rulesets;
   funcs->options_extra_init = qtg_options_extra_init;
-  funcs->server_connect = qtg_server_connect;
+  funcs->server_connect = [] {};
   funcs->add_net_input = qtg_add_net_input;
   funcs->remove_net_input = qtg_remove_net_input;
   funcs->real_conn_list_dialog_update = qtg_real_conn_list_dialog_update;
@@ -105,7 +96,7 @@ void setup_gui_funcs()
 
   funcs->request_transport = qtg_request_transport;
 
-  funcs->update_infra_dialog = qtg_update_infra_dialog;
+  funcs->update_infra_dialog = [] {};
 
   funcs->gui_load_theme = qtg_gui_load_theme;
   funcs->gui_clear_theme = qtg_gui_clear_theme;

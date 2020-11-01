@@ -1,35 +1,26 @@
-/*****************************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-*****************************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "luaconsole.h"
 // Qt
 #include <QFileDialog>
 #include <QString>
-
 // utility
 #include "shared.h"
-
 // common
 #include "featured_text.h"
-
+#include "luaconsole_g.h"
 /* client/luascript */
 #include "script_client.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "luaconsole.h"
 #include "qtg_cxxside.h"
 
 QString qlua_filename;
@@ -70,7 +61,7 @@ void qload_lua_script()
 
   str = QString(_("Lua scripts")) + QString(" (*.lua)");
   qlua_filename = QFileDialog::getOpenFileName(
-      gui()->central_wdg, _("Load lua script"), QDir::homePath(), str);
+      king()->central_wdg, _("Load lua script"), QDir::homePath(), str);
   if (!qlua_filename.isEmpty()) {
     script_client_do_file(qlua_filename.toLocal8Bit().constData());
   }

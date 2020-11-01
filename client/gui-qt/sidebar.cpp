@@ -1,46 +1,42 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996-2005 - Freeciv Development Team
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QAction>
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QHBoxLayout>
 #include <QMenu>
 #include <QPaintEvent>
 #include <QPainter>
 #include <QPixmap>
+#include <QScreen>
 #include <QTimer>
-
 // common
+#include "chatline_common.h"
+#include "government.h"
 #include "research.h"
-
 // client
 #include "client_main.h"
-
+#include "climisc.h"
+#include "ratesdlg_g.h"
 // gui-qt
 #include "fc_client.h"
+#include "fonts.h"
+#include "mapview.h"
+#include "page_game.h"
 #include "sciencedlg.h"
 #include "sidebar.h"
 #include "sprite.h"
 
 extern void pixmap_copy(QPixmap *dest, QPixmap *src, int src_x, int src_y,
                         int dest_x, int dest_y, int width, int height);
-
 static void reduce_mod(int &val, int &mod);
 
 /***********************************************************************/ /**
@@ -61,26 +57,19 @@ void reduce_mod(int &mod, int &val)
  ***************************************************************************/
 fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
                              const QString &pg, pfcn_bool func, int type)
-    : QWidget()
+    : QWidget(), blink(false), keep_blinking(false), disabled(false),
+      standard(type), page(pg), hover(false), right_click(nullptr),
+      wheel_down(nullptr), wheel_up(nullptr), left_click(func),
+      def_pixmap(pix), desc(label)
 {
   if (pix == nullptr) {
     pix = new QPixmap(12, 12);
     pix->fill(Qt::black);
   }
-  blink = false;
-  disabled = false;
-  def_pixmap = pix;
+  if (def_pixmap == nullptr)  { def_pixmap = new QPixmap(5,5); }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
   sfont = new QFont(*fc_font::instance()->get_font(fonts::notify_label));
-  left_click = func;
-  desc = label;
-  standard = type;
-  hover = false;
-  right_click = nullptr;
-  wheel_down = nullptr;
-  wheel_up = nullptr;
-  page = pg;
   setContextMenuPolicy(Qt::CustomContextMenu);
   timer = new QTimer;
   timer->setSingleShot(false);
@@ -134,7 +123,10 @@ void fc_sidewidget::set_custom_labels(const QString &l) { custom_label = l; }
 /***********************************************************************/ /**
    Sets tooltip for sidewidget
  ***************************************************************************/
-void fc_sidewidget::set_tooltip(const QString &tooltip) { setToolTip(tooltip); }
+void fc_sidewidget::set_tooltip(const QString &tooltip)
+{
+  setToolTip(tooltip);
+}
 
 /***********************************************************************/ /**
    Returns scaled (not default) pixmap for sidewidget
@@ -259,7 +251,7 @@ void fc_sidewidget::mousePressEvent(QMouseEvent *event)
     right_click();
   }
   if (event->button() == Qt::RightButton && right_click == nullptr) {
-    gui()->game_tab_widget->setCurrentIndex(0);
+    queen()->game_tab_widget->setCurrentIndex(0);
   }
 }
 
@@ -350,8 +342,8 @@ void fc_sidewidget::update_final_pixmap()
     delete final_pixmap;
   }
 
-  i = gui()->gimme_index_of(page);
-  if (i == gui()->game_tab_widget->currentIndex()) {
+  i = queen()->gimme_index_of(page);
+  if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
   final_pixmap =
@@ -517,13 +509,12 @@ void fc_sidebar::paint(QPainter *painter, QPaintEvent *event)
 **************************************************************************/
 void fc_sidebar::resize_me(int hght, bool force)
 {
-  int w, h, non_std, non_std_count, screen_hres;
-  QDesktopWidget *qdp;
+  int w, h, non_std, non_std_count, hres;
 
   h = hght;
-  qdp = QApplication::desktop();
-  screen_hres = qdp->availableGeometry(gui()->central_wdg).width();
-  w = (100 * screen_hres) / 1920;
+  auto temp = (QGuiApplication::screens());
+  hres = temp[0]->availableGeometry().width();
+  w = (100 * hres) / 1920;
   w = qMax(w, 80);
 
   if (!force && w == width() && h == height()) {
@@ -561,7 +552,7 @@ void fc_sidebar::resize_me(int hght, bool force)
  ***************************************************************************/
 void side_show_map(bool nothing)
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /***********************************************************************/ /**
@@ -584,7 +575,7 @@ void side_rates_wdg(bool nothing)
  ***************************************************************************/
 void side_center_unit()
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
 }
 
@@ -593,11 +584,11 @@ void side_center_unit()
  ***************************************************************************/
 void side_disable_endturn(bool do_restore)
 {
-  if (gui()->current_page() != PAGE_GAME) {
+  if (king()->current_page() != PAGE_GAME) {
     return;
   }
-  gui()->sw_endturn->disabled = !do_restore;
-  gui()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->disabled = !do_restore;
+  queen()->sw_endturn->update_final_pixmap();
 }
 
 /***********************************************************************/ /**
@@ -605,11 +596,11 @@ void side_disable_endturn(bool do_restore)
  ***************************************************************************/
 void side_blink_endturn(bool do_restore)
 {
-  if (gui()->current_page() != PAGE_GAME) {
+  if (king()->current_page() != PAGE_GAME) {
     return;
   }
-  gui()->sw_endturn->blink = !do_restore;
-  gui()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->blink = !do_restore;
+  queen()->sw_endturn->update_final_pixmap();
 }
 
 /***********************************************************************/ /**
@@ -617,7 +608,7 @@ void side_blink_endturn(bool do_restore)
  ***************************************************************************/
 void side_indicators_menu()
 {
-  gov_menu *menu = new gov_menu(gui()->sidebar_wdg);
+  gov_menu *menu = new gov_menu(queen()->sidebar_wdg);
 
   menu->create();
   menu->update();
@@ -632,7 +623,7 @@ void side_indicators_menu()
 void side_right_click_diplomacy(void)
 {
   if (client_is_observer()) {
-    QMenu *menu = new QMenu(gui()->central_wdg);
+    QMenu *menu = new QMenu(king()->central_wdg);
     QAction *eiskalt;
     QString erwischt;
 
@@ -644,9 +635,9 @@ void side_right_click_diplomacy(void)
       erwischt = QString(_("Observe %1")).arg(pplayer->name);
       erwischt =
           erwischt + " (" + nation_plural_translation(pplayer->nation) + ")";
-      eiskalt = new QAction(erwischt, gui()->mapview_wdg);
+      eiskalt = new QAction(erwischt, queen()->mapview_wdg);
       eiskalt->setData(QVariant::fromValue((void *) pplayer));
-      QObject::connect(eiskalt, &QAction::triggered, gui()->sw_diplo,
+      QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
                        &fc_sidewidget::some_slot);
       menu->addAction(eiskalt);
     }
@@ -654,10 +645,10 @@ void side_right_click_diplomacy(void)
 
         if (!client_is_global_observer())
     {
-      eiskalt = new QAction(_("Observe globally"), gui()->mapview_wdg);
+      eiskalt = new QAction(_("Observe globally"), queen()->mapview_wdg);
       eiskalt->setData(-1);
       menu->addAction(eiskalt);
-      QObject::connect(eiskalt, &QAction::triggered, gui()->sw_diplo,
+      QObject::connect(eiskalt, &QAction::triggered, queen()->sw_diplo,
                        &fc_sidewidget::some_slot);
     }
 
@@ -665,11 +656,11 @@ void side_right_click_diplomacy(void)
     menu->popup(QCursor::pos());
   } else {
     int i;
-    i = gui()->gimme_index_of("DDI");
+    i = queen()->gimme_index_of("DDI");
     if (i < 0) {
       return;
     }
-    gui()->game_tab_widget->setCurrentIndex(i);
+    queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
 
@@ -702,7 +693,7 @@ void side_right_click_science(void)
       return;
     }
     std::sort(curr_list.begin(), curr_list.end(), comp_less_than);
-    menu = new QMenu(gui()->central_wdg);
+    menu = new QMenu(king()->central_wdg);
     for (int i = 0; i < curr_list.count(); i++) {
       QIcon ic;
       struct sprite *sp;
@@ -712,11 +703,11 @@ void side_right_click_science(void)
       if (sp) {
         ic = QIcon(*sp->pm);
       }
-      act = new QAction(ic, curr_list.at(i).tech_str, gui()->mapview_wdg);
+      act = new QAction(ic, curr_list.at(i).tech_str, queen()->mapview_wdg);
       act->setData(qvar);
       act->setProperty("scimenu", true);
       menu->addAction(act);
-      QObject::connect(act, &QAction::triggered, gui()->sw_science,
+      QObject::connect(act, &QAction::triggered, queen()->sw_science,
                        &fc_sidewidget::some_slot);
     }
     menu->setAttribute(Qt::WA_DeleteOnClose);
@@ -736,17 +727,17 @@ void side_left_click_science(bool nothing)
   if (client_is_global_observer()) {
     return;
   }
-  if (!gui()->is_repo_dlg_open("SCI")) {
+  if (!queen()->is_repo_dlg_open("SCI")) {
     sci_rep = new science_report;
     sci_rep->init(true);
   } else {
-    i = gui()->gimme_index_of("SCI");
-    w = gui()->game_tab_widget->widget(i);
+    i = queen()->gimme_index_of("SCI");
+    w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      gui()->game_tab_widget->setCurrentIndex(0);
+      queen()->game_tab_widget->setCurrentIndex(0);
       return;
     }
     sci_rep = reinterpret_cast<science_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(sci_rep);
+    queen()->game_tab_widget->setCurrentWidget(sci_rep);
   }
 }

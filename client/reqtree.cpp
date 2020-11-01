@@ -59,49 +59,6 @@
  */
 
 /****************************************************************************
-  This structure desribes a node in a technology tree diagram.
-  A node can by dummy or real. Real node describes a technology.
-****************************************************************************/
-struct tree_node {
-  bool is_dummy;
-  Tech_type_id tech;
-
-  /* Incoming edges */
-  int nrequire;
-  struct tree_node **require;
-
-  /* Outgoing edges */
-  int nprovide;
-  struct tree_node **provide;
-
-  /* logical position on the diagram */
-  int order, layer;
-
-  /* Coordinates of the rectangle on the diagram in pixels */
-  int node_x, node_y, node_width, node_height;
-
-  /* for general purpose */
-  int number;
-};
-
-/****************************************************************************
-  Structure which describes abstract technology diagram.
-  Nodes are ordered inside layers[] table.
-****************************************************************************/
-struct reqtree {
-  int num_nodes;
-  struct tree_node **nodes;
-
-  int num_layers;
-  /* size of each layer */
-  int *layer_size;
-  struct tree_node ***layers;
-
-  /* in pixels */
-  int diagram_width, diagram_height;
-};
-
-/****************************************************************************
   Edge types for coloring the edges by type in the tree
 ****************************************************************************/
 enum reqtree_edge_type {

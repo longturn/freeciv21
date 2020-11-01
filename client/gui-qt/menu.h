@@ -1,20 +1,13 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__MENU_H
-#define FC__MENU_H
-
-#include "menu_g.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -23,9 +16,9 @@
 // Qt
 #include <QDialog>
 #include <QMenuBar>
-
 // client
 #include "control.h"
+#include "menu_g.h"
 
 class QLabel;
 class QPushButton;
@@ -84,9 +77,10 @@ class qfc_rally_list {
 public:
   qfc_rally_list()
   {
+    rally_city = nullptr;
     hover_tile = false;
     hover_city = false;
-  };
+  }
   bool hover_tile;
   bool hover_city;
   struct city *rally_city;
@@ -120,70 +114,6 @@ public:
   void clear();
   QList<qfc_delayed_unit_item *> unit_list;
   int nr_units;
-};
-
-/**************************************************************************
-  Helper item for trade calculation
-***************************************************************************/
-class trade_city {
-public:
-  trade_city(struct city *pcity);
-
-  bool done;
-  int over_max;
-  int poss_trade_num;
-  int trade_num; // already created + generated
-  QList<struct city *> curr_tr_cities;
-  QList<struct city *> new_tr_cities;
-  QList<struct city *> pos_cities;
-  struct city *city;
-  struct tile *tile;
-};
-
-/**************************************************************************
-  Struct of 2 tiles, used for drawing trade routes.
-  Also assigned caravan if it was sent
-***************************************************************************/
-struct qtiles {
-  struct tile *t1;
-  struct tile *t2;
-  struct unit *autocaravan;
-
-  bool operator==(const qtiles &a) const
-  {
-    return (t1 == a.t1 && t2 == a.t2 && autocaravan == a.autocaravan);
-  }
-};
-
-/**************************************************************************
-  Class trade generator, used for calulating possible trade routes
-***************************************************************************/
-class trade_generator {
-public:
-  trade_generator();
-
-  bool hover_city;
-  QList<qtiles> lines;
-  QList<struct city *> virtual_cities;
-  QList<trade_city *> cities;
-
-  void add_all_cities();
-  void add_city(struct city *pcity);
-  void add_tile(struct tile *ptile);
-  void calculate();
-  void clear_trade_planing();
-  void remove_city(struct city *pcity);
-  void remove_virtual_city(struct tile *ptile);
-
-private:
-  bool discard_any(trade_city *tc, int freeroutes);
-  bool discard_one(trade_city *tc);
-  int find_over_max(struct city *pcity);
-  trade_city *find_most_free();
-  void check_if_done(trade_city *tc1, trade_city *tc2);
-  void discard();
-  void discard_trade(trade_city *tc1, trade_city *tc2);
-  void find_certain_routes();
 };
 
 /****************************************************************************
@@ -249,7 +179,7 @@ class mr_menu : public QMenuBar {
   QActionGroup *action_vs_unit;
   QMenu *action_unit_menu;
   QMenu *action_city_menu;
-  QHash<munit, QAction *> menu_list;
+  QMultiHash<munit, QAction*> menu_list;
   qfc_units_list units_list;
   bool initialized;
 public:
@@ -399,5 +329,3 @@ private slots:
 private:
   struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };
-
-#endif /* FC__MENU_H */

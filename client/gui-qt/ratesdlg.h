@@ -1,44 +1,23 @@
-/***********************************************************************
- Freeciv - Copyright (C) 2003 - The Freeciv Project
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-#ifndef FC__RATESDLG_H
-#define FC__RATESDLG_H
-
-// In this case we have to include fc_config.h from header file.
-// Some other headers we include demand that fc_config.h must be
-// included also. Usually all source files include fc_config.h, but
-// there's moc generated meta_ratesdlg.cpp file which does not.
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QDialog>
 #include <QList>
-
-// common
-#include "government.h"
-
-// client
-#include "client_main.h"
-
 // gui-qt
 #include "dialogs.h"
 
-#include "ratesdlg_g.h"
-
 class QMouseEvent;
+class QObject;
 class QPaintEvent;
-class QPixmap;
 class QPushButton;
 class QSize;
 class QSlider;
@@ -108,5 +87,3 @@ private slots:
 };
 
 void popup_multiplier_dialog(void);
-
-#endif /* FC__RATESDLG_H */

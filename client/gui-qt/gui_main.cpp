@@ -1,19 +1,12 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 #ifdef AUDIO_SDL
 /* Though it would happily compile without this include,
@@ -28,37 +21,35 @@
 #endif /* PLAIN_INCLUDE */
 #endif /* AUDIO_SDL */
 
+#include "gui_main.h"
 #include <stdio.h>
-
 // Qt
 #include <QApplication>
-#include <QMessageBox>
-#include <QScrollBar>
-#include <QStyleFactory>
-
 // utility
 #include "fciconv.h"
 #include "log.h"
-
 // client
 #include "client_main.h"
-#include "editgui_g.h"
+#include "clinet.h"
+#include "mapview_g.h"
 #include "options.h"
 #include "sprite.h"
 #include "themes_common.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
-#include "gui_main.h"
 #include "helpdlg.h"
 #include "hudwidget.h"
+#include "messagewin.h"
+#include "page_game.h"
+#include "page_pregame.h"
 #include "qtg_cxxside.h"
+#include "unitselect.h"
 
 extern "C" void real_science_report_dialog_update(void *);
 
-extern void restart_notify_dialogs();
+extern void restart_notify_reports();
 extern void city_font_update();
 
 const bool gui_use_transliteration = false;
@@ -76,7 +67,7 @@ static void apply_titlebar(struct option *poption);
 /**********************************************************************/ /**
    Return fc_client instance
  **************************************************************************/
-class fc_client *gui() { return freeciv_qt; }
+class fc_client *king() { return freeciv_qt; }
 
 /**********************************************************************/ /**
    Do any necessary pre-initialization of the UI, if necessary.
@@ -177,7 +168,8 @@ void qtg_real_conn_list_dialog_update(void *unused)
   if (qtg_get_current_client_page() == PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_START);
   }
-  gui()->update_start_page();
+  qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+      ->update_start_page();
 }
 
 /**********************************************************************/ /**
@@ -187,7 +179,7 @@ void qtg_real_conn_list_dialog_update(void *unused)
 void qtg_sound_bell()
 {
   QApplication::beep();
-  QApplication::alert(gui()->central_wdg);
+  QApplication::alert(king()->central_wdg);
 }
 
 /**********************************************************************/ /**
@@ -197,7 +189,7 @@ void qtg_sound_bell()
    This function is called after the client succesfully has connected
    to the server.
  **************************************************************************/
-void qtg_add_net_input(QTcpSocket *sock) { gui()->add_server_source(sock); }
+void qtg_add_net_input(QTcpSocket *sock) { king()->add_server_source(sock); }
 
 /**********************************************************************/ /**
    Stop waiting for any server network data.  See add_net_input().
@@ -240,8 +232,9 @@ void qtg_set_unit_icons_more_arrow(bool onoff)
  **************************************************************************/
 void qtg_real_focus_units_changed(void)
 {
-  if (gui()->unit_sel != nullptr && gui()->unit_sel->isVisible()) {
-    gui()->unit_sel->update_units();
+  units_select *unit_sel = queen()->unit_selector;
+  if (unit_sel != nullptr && unit_sel->isVisible()) {
+    unit_sel->update_units();
   }
 }
 
@@ -256,7 +249,7 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
 
   cb->callback = callback;
   cb->data = data;
-  gui()->mr_idler.add_callback(cb);
+  mr_idle::idlecb()->add_callback(cb);
 }
 
 /**********************************************************************/ /**
@@ -269,23 +262,23 @@ void apply_titlebar(struct option *poption)
   Qt::WindowFlags flags = Qt::Window;
   val = option_bool_get(poption);
 
-  if (gui()->current_page() < PAGE_GAME) {
+  if (king()->current_page() < PAGE_GAME) {
     return;
   }
 
   if (val) {
     w = new QWidget();
-    gui()->setWindowFlags(flags);
-    delete gui()->corner_wid;
-    gui()->corner_wid = nullptr;
-    gui()->menu_bar->setCornerWidget(w);
+    king()->setWindowFlags(flags);
+    delete king()->corner_wid;
+    king()->corner_wid = nullptr;
+    king()->menu_bar->setCornerWidget(w);
   } else {
     flags |= Qt::CustomizeWindowHint;
-    gui()->setWindowFlags(flags);
-    gui()->corner_wid = new fc_corner(gui());
-    gui()->menu_bar->setCornerWidget(gui()->corner_wid);
+    king()->setWindowFlags(flags);
+    king()->corner_wid = new fc_corner(king());
+    king()->menu_bar->setCornerWidget(king()->corner_wid);
   }
-  gui()->show();
+  king()->show();
 }
 
 /**********************************************************************/ /**
@@ -293,7 +286,7 @@ void apply_titlebar(struct option *poption)
  **************************************************************************/
 void apply_sidebar(struct option *poption)
 {
-  gui()->update_sidebar_position();
+  queen()->update_sidebar_position();
 }
 
 /**********************************************************************/ /**
@@ -305,7 +298,7 @@ static void apply_font(struct option *poption)
   QFont *remove_old;
   QString s;
 
-  if (gui()) {
+  if (king()) {
     f = new QFont;
     s = option_font_get(poption);
     f->fromString(s);
@@ -314,7 +307,7 @@ static void apply_font(struct option *poption)
     delete remove_old;
     fc_font::instance()->set_font(s, f);
     update_city_descriptions();
-    gui()->infotab->chtwdg->update_font();
+    queen()->infotab->chtwdg->update_font();
     QApplication::setFont(
         *fc_font::instance()->get_font(fonts::default_font));
     real_science_report_dialog_update(nullptr);
@@ -332,7 +325,7 @@ static void apply_help_font(struct option *poption)
   QFont *remove_old;
   QString s;
 
-  if (gui()) {
+  if (king()) {
     f = new QFont;
     s = option_font_get(poption);
     f->fromString(s);
@@ -349,11 +342,11 @@ static void apply_help_font(struct option *poption)
  **************************************************************************/
 static void apply_notify_font(struct option *poption)
 {
-  if (gui()) {
+  if (king()) {
     qtg_gui_update_font("notify_label", option_font_get(poption));
-    restart_notify_dialogs();
+    restart_notify_reports();
   }
-  if (gui() && qtg_get_current_client_page() == PAGE_GAME) {
+  if (king() && qtg_get_current_client_page() == PAGE_GAME) {
     qtg_gui_update_font("city_label", option_font_get(poption));
     city_font_update();
   }
@@ -429,7 +422,7 @@ void reset_unit_table(void)
  **************************************************************************/
 void popup_quit_dialog()
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
   ask->setDefaultButton(QMessageBox::Cancel);
@@ -440,7 +433,7 @@ void popup_quit_dialog()
     if (client.conn.used) {
       disconnect_from_server();
     }
-    gui()->write_settings();
+    king()->write_settings();
     qApp->quit();
   });
   ask->show();

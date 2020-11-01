@@ -1,38 +1,29 @@
-/**********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__MESSAGEWIN_H
-#define FC__MESSAGEWIN_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 #include "messagewin_g.h"
-
-// Qt
-#include <QWidget>
-
-// qt-client
-#include "chatline.h"
-#include "mapview.h"
+// qt-client is one true king
+#include "widgetdecorations.h"
 
 class QEvent;
 class QGridLayout;
 class QItemSelection;
 class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
 class QPixmap;
+class QResizeEvent;
 class QTableWidget;
+class chatwdg;
 
 /***************************************************************************
   Class representing message output
@@ -80,7 +71,6 @@ private:
   QPoint cursor;
   QSize last_size;
   move_widget *mw;
-  bool hidden_state;
   bool resize_mode;
   bool resxy;
   bool resx;
@@ -92,5 +82,3 @@ protected:
   void mouseReleaseEvent(QMouseEvent *event);
   int &e_pos();
 };
-
-#endif /* FC__MESSAGEWIN_H */

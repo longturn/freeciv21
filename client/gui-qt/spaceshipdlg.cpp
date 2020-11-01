@@ -1,35 +1,29 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QGridLayout>
 #include <QLabel>
-
+#include <QPushButton>
 // common
 #include "game.h"
 #include "victory.h"
-
 // client
 #include "client_main.h"
-
+#include "mapview_common.h"
+#include "spaceshipdlg_g.h"
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
 #include "qtg_cxxside.h"
+#include "page_game.h"
 #include "spaceshipdlg.h"
 
 class QGridLayout;
@@ -65,7 +59,7 @@ ss_report::ss_report(struct player *pplayer)
  ****************************************************************************/
 ss_report::~ss_report()
 {
-  gui()->remove_repo_dlg("SPS");
+  queen()->remove_repo_dlg("SPS");
   qtg_canvas_free(can);
 }
 
@@ -75,9 +69,9 @@ ss_report::~ss_report()
 void ss_report::init()
 {
   int index;
-  gui()->gimme_place(this, "SPS");
-  index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->gimme_place(this, "SPS");
+  index = queen()->add_game_tab(this);
+  queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
 }
 
@@ -121,18 +115,18 @@ void popup_spaceship_dialog(struct player *pplayer)
   if (client_is_global_observer()) {
     return;
   }
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     ss_rep = new ss_report(pplayer);
     ss_rep->init();
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    if (gui()->game_tab_widget->currentIndex() == i) {
+    if (queen()->game_tab_widget->currentIndex() == i) {
       return;
     }
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(ss_rep);
+    queen()->game_tab_widget->setCurrentWidget(ss_rep);
   }
 }
 
@@ -152,14 +146,14 @@ void refresh_spaceship_dialog(struct player *pplayer)
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     return;
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(ss_rep);
+    queen()->game_tab_widget->setCurrentWidget(ss_rep);
     ss_rep->update_report();
   }
 }
@@ -173,12 +167,12 @@ void popdown_all_spaceships_dialogs()
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open("SPS")) {
     return;
   } else {
-    i = gui()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of("SPS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
     ss_rep->deleteLater();
   }

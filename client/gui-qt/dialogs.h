@@ -1,49 +1,47 @@
-/**********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__DIALOGS_H
-#define FC__DIALOGS_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "dialogs_g.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QDialog>
 #include <QMessageBox>
 #include <QVariant>
-
+// utility
+#include "fc_types.h"
+// client
+#include "dialogs_g.h"
 // gui-qt
-#include "fonts.h"
 #include "hudwidget.h"
-#include "mapview.h"
+#include "widgetdecorations.h"
 
+class QCloseEvent;
 class QComboBox;
 class QGridLayout;
-class QGroupBox;
+class QHBoxLayout;
 class QItemSelection;
+class QKeyEvent;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
 class QRadioButton;
-class QTableView;
 class QTableWidget;
 class QTextEdit;
-class QWidget;
+class QVBoxLayout;
+class QWheelEvent;
+struct tile;
+struct unit;
 
 typedef void (*pfcn_void)(QVariant, QVariant);
 void update_nationset_combo();
 void popup_races_dialog(struct player *pplayer);
-void restart_notify_dialogs();
 
 class qdef_act {
   Q_DISABLE_COPY(qdef_act);
@@ -161,78 +159,6 @@ private:
   int last_index;
 };
 
-/***************************************************************************
- Widget around map view to display informations like demographics report,
- top 5 cities, traveler's report.
-***************************************************************************/
-class notify_dialog : public fcwidget {
-  Q_OBJECT
-public:
-  notify_dialog(const char *caption, const char *headline, const char *lines,
-                QWidget *parent = 0);
-  virtual void update_menu();
-  ~notify_dialog();
-  void restart();
-
-protected:
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-
-private:
-  void paintEvent(QPaintEvent *paint_event);
-  void calc_size(int &x, int &y);
-  close_widget *cw;
-  QLabel *label;
-  QVBoxLayout *layout;
-  QString qcaption;
-  QString qheadline;
-  QStringList qlist;
-  QFont small_font;
-  QPoint cursor;
-};
-
-/***************************************************************************
- Transparent widget for selecting units
-***************************************************************************/
-class units_select : public fcwidget {
-  Q_OBJECT
-  QPixmap *pix;
-  QPixmap *h_pix;          /** pixmap for highlighting */
-  QSize item_size;         /** size of each pixmap of unit */
-  QList<unit *> unit_list; /** storing units only for drawing, for rest units
-                            * iterate utile->units */
-  QFont ufont;
-  QFont info_font;
-  int row_count;
-  close_widget *cw;
-
-public:
-  units_select(struct tile *ptile, QWidget *parent);
-  ~units_select();
-  void update_menu();
-  void update_units();
-  void create_pixmap();
-  tile *utile;
-
-protected:
-  void paint(QPainter *painter, QPaintEvent *event);
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void keyPressEvent(QKeyEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void wheelEvent(QWheelEvent *event);
-  void closeEvent(QCloseEvent *event);
-private slots:
-  void update_img();
-
-private:
-  bool more;
-  int show_line;
-  int highligh_num;
-  int unit_count;
-};
-
 /**************************************************************************
   A QPushButton that includes data like function to call and parmeters
 **************************************************************************/
@@ -295,5 +221,3 @@ void popup_upgrade_dialog(struct unit_list *punits);
 void popup_disband_dialog(struct unit_list *punits);
 bool try_default_unit_action(QVariant q1, QVariant q2);
 bool try_default_city_action(QVariant q1, QVariant q2);
-
-#endif /* FC__DIALOGS_H */

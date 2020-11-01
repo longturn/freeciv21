@@ -1,54 +1,45 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "hudwidget.h"
 // Qt
-#include <QAction>
-#include <QApplication>
 #include <QComboBox>
 #include <QDialogButtonBox>
-#include <QGridLayout>
 #include <QGroupBox>
-#include <QHBoxLayout>
 #include <QHeaderView>
-#include <QLineEdit>
-#include <QPaintEvent>
+#include <QKeyEvent>
 #include <QPainter>
 #include <QRadioButton>
-#include <QSpacerItem>
 #include <QVBoxLayout>
-
 // common
 #include "movement.h"
 #include "research.h"
 #include "tile.h"
 #include "unit.h"
 #include "unitlist.h"
-
 // client
 #include "calendar.h"
 #include "client_main.h"
 #include "goto.h"
+#include "mapview_common.h"
 #include "text.h"
-
 // gui-qt
+#include "canvas.h"
 #include "fc_client.h"
 #include "fonts.h"
-#include "hudwidget.h"
+#include "icons.h"
+#include "mapview.h"
+#include "page_game.h"
+#include "qtg_cxxside.h"
 #include "sprite.h"
+#include "widgetdecorations.h"
 
 static QString popup_terrain_info(struct tile *ptile);
 
@@ -554,10 +545,10 @@ hud_units::~hud_units() {}
  ****************************************************************************/
 void hud_units::moveEvent(QMoveEvent *event)
 {
-  gui()->qt_settings.unit_info_pos_fx =
-      static_cast<float>(event->pos().x()) / gui()->mapview_wdg->width();
-  gui()->qt_settings.unit_info_pos_fy =
-      static_cast<float>(event->pos().y()) / gui()->mapview_wdg->height();
+  king()->qt_settings.unit_info_pos_fx =
+      static_cast<float>(event->pos().x()) / queen()->mapview_wdg->width();
+  king()->qt_settings.unit_info_pos_fy =
+      static_cast<float>(event->pos().y()) / queen()->mapview_wdg->height();
 }
 
 /************************************************************************/ /**
@@ -598,10 +589,10 @@ void hud_units::update_actions(unit_list *punits)
   setFixedHeight(parentWidget()->height() / 12);
   text_label.setFixedHeight((height() * 2) / 10);
 
-  move(qRound(gui()->mapview_wdg->width()
-              * gui()->qt_settings.unit_info_pos_fx),
-       qRound((gui()->mapview_wdg->height()
-               * gui()->qt_settings.unit_info_pos_fy)));
+  move(qRound(queen()->mapview_wdg->width()
+              * king()->qt_settings.unit_info_pos_fx),
+       qRound((queen()->mapview_wdg->height()
+               * king()->qt_settings.unit_info_pos_fy)));
   unit_icons->setFixedHeight((height() * 8) / 10);
 
   setUpdatesEnabled(false);
@@ -779,7 +770,8 @@ void hud_units::update_actions(unit_list *punits)
  ****************************************************************************/
 click_label::click_label() : QLabel()
 {
-  connect(this, &click_label::left_clicked, this, &click_label::mouse_clicked);
+  connect(this, &click_label::left_clicked, this,
+          &click_label::mouse_clicked);
 }
 
 /************************************************************************/ /**
@@ -797,7 +789,7 @@ void click_label::mousePressEvent(QMouseEvent *e)
  ****************************************************************************/
 void click_label::mouse_clicked()
 {
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
   request_center_focus_unit();
 }
 
@@ -811,6 +803,7 @@ hud_action::hud_action(QWidget *parent) : QWidget(parent)
   setMouseTracking(true);
   focus = false;
   action_pixmap = nullptr;
+  action_shortcut = SC_NONE;
 }
 
 /************************************************************************/ /**
@@ -903,7 +896,7 @@ void hud_action::mouse_right_clicked() {}
  ****************************************************************************/
 void hud_action::mouse_clicked()
 {
-  gui()->menu_bar->execute_shortcut(action_shortcut);
+  king()->menu_bar->execute_shortcut(action_shortcut);
 }
 
 /************************************************************************/ /**
@@ -963,7 +956,7 @@ int unit_actions::update_actions()
   clear_layout();
   setUpdatesEnabled(false);
 
-  for (auto a: qAsConst(actions)) {
+  for (auto a : qAsConst(actions)) {
     delete a;
   }
   qDeleteAll(actions);
@@ -1133,9 +1126,9 @@ int unit_actions::update_actions()
   a->set_pixmap(fc_icons::instance()->get_pixmap("done"));
   actions.append(a);
 
-  for (auto a: qAsConst(actions)) {
+  for (auto a : qAsConst(actions)) {
     a->setToolTip(
-        gui()->menu_bar->shortcut_2_menustring(a->action_shortcut));
+        king()->menu_bar->shortcut_2_menustring(a->action_shortcut));
     a->setFixedHeight(height());
     a->setFixedWidth(height());
     layout->addWidget(a);
@@ -1643,10 +1636,10 @@ void show_new_turn_info()
   int i;
   char buf[25];
 
-  if (!client_has_player() || !gui()->qt_settings.show_new_turn_text) {
+  if (!client_has_player() || !king()->qt_settings.show_new_turn_text) {
     return;
   }
-  close_list = gui()->mapview_wdg->findChildren<hud_text *>();
+  close_list = queen()->mapview_wdg->findChildren<hud_text *>();
   for (i = 0; i < close_list.size(); ++i) {
     close_list.at(i)->close();
     close_list.at(i)->deleteLater();
@@ -1680,7 +1673,7 @@ void show_new_turn_info()
       + QString(_("Gold: %1 (%2)"))
             .arg(client.conn.playing->economic.gold)
             .arg(buf);
-  ht = new hud_text(s, 5, gui()->mapview_wdg);
+  ht = new hud_text(s, 5, queen()->mapview_wdg);
   ht->show_me();
 }
 
@@ -1901,54 +1894,6 @@ void hud_unit_combat::enterEvent(QEvent *event)
   update();
 }
 
-/****************************************************************************
-  Scale widget allowing scaling other widgets, shown in right top corner
-****************************************************************************/
-scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
-    : QRubberBand(s, p)
-{
-  QPixmap *pix;
-
-  size = 12;
-  pix = fc_icons::instance()->get_pixmap("plus");
-  plus = pix->scaledToWidth(size);
-  delete pix;
-  pix = fc_icons::instance()->get_pixmap("minus");
-  minus = plus = pix->scaledToWidth(size);
-  delete pix;
-  setFixedSize(2 * size, size);
-  scale = 1.0f;
-  setAttribute(Qt::WA_TransparentForMouseEvents, false);
-}
-
-/****************************************************************************
-  Draws 2 icons for resizing
-****************************************************************************/
-void scale_widget::paintEvent(QPaintEvent *event)
-{
-  QRubberBand::paintEvent(event);
-  QPainter p;
-  p.begin(this);
-  p.drawPixmap(0, 0, minus);
-  p.drawPixmap(size, 0, plus);
-  p.end();
-}
-
-/****************************************************************************
-  Mouse press event for scale widget
-****************************************************************************/
-void scale_widget::mousePressEvent(QMouseEvent *event)
-{
-  if (event->button() == Qt::LeftButton) {
-    if (event->localPos().x() <= size) {
-      scale = scale / 1.2;
-    } else {
-      scale = scale * 1.2;
-    }
-    parentWidget()->update();
-  }
-}
-
 /************************************************************************/ /**
    Hud battle log contructor
  ****************************************************************************/
@@ -1961,6 +1906,7 @@ hud_battle_log::hud_battle_log(QWidget *parent) : QWidget(parent)
   main_layout->setContentsMargins(0, 0, 0, 0);
   sw = new scale_widget(QRubberBand::Rectangle, this);
   sw->show();
+  scale = 1.0;
 }
 
 /************************************************************************/ /**
@@ -1977,13 +1923,12 @@ hud_battle_log::~hud_battle_log()
 ****************************************************************************/
 void hud_battle_log::update_size()
 {
-  hud_unit_combat *hudc;
   int w = 3 * tileset_unit_height(tileset) / 2 * scale;
 
-  gui()->qt_settings.battlelog_scale = scale;
+  king()->qt_settings.battlelog_scale = scale;
   delete layout();
   main_layout = new QVBoxLayout;
-  for (auto hudc: qAsConst(lhuc)) {
+  for (auto hudc : qAsConst(lhuc)) {
     hudc->set_scale(scale);
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
@@ -2021,7 +1966,7 @@ void hud_battle_log::add_combat_info(hud_unit_combat *huc)
     hudc = lhuc.takeLast();
     delete hudc;
   }
-  for (auto hudc: qAsConst(lhuc)) {
+  for (auto hudc : qAsConst(lhuc)) {
     main_layout->addWidget(hudc);
     hudc->set_fading(1.0);
   }
@@ -2055,8 +2000,8 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
   QPoint p;
 
   p = pos();
-  gui()->qt_settings.battlelog_x = static_cast<float>(p.x()) / mapview.width;
-  gui()->qt_settings.battlelog_y =
+  king()->qt_settings.battlelog_x = static_cast<float>(p.x()) / mapview.width;
+  king()->qt_settings.battlelog_y =
       static_cast<float>(p.y()) / mapview.height;
   m_timer.restart();
 }
@@ -2066,11 +2011,8 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
  ****************************************************************************/
 void hud_battle_log::timerEvent(QTimerEvent *event)
 {
-  hud_unit_combat *hudc;
-  hud_unit_combat *hupdate;
-
   if (m_timer.elapsed() > 4000 && m_timer.elapsed() < 5000) {
-    for (auto hudc: qAsConst(lhuc)) {
+    for (auto hudc : qAsConst(lhuc)) {
       if (hudc->get_focus()) {
         m_timer.restart();
         for (auto hupdate : qAsConst(lhuc)) {
@@ -2091,8 +2033,6 @@ void hud_battle_log::timerEvent(QTimerEvent *event)
  ****************************************************************************/
 void hud_battle_log::showEvent(QShowEvent *event)
 {
-  hud_unit_combat *hupdate;
-
   for (auto hupdate : qAsConst(lhuc)) {
     hupdate->set_fading(1.0);
   }

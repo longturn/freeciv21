@@ -4732,7 +4732,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
                                            const struct tile *ptile,
                                            const struct city *citymode)
 {
-  const struct city *pcity;
+   const struct city *pcity;
   const struct city *pwork;
   struct unit *psettler;
   struct drawn_sprite *saved_sprs = sprs;
@@ -4759,8 +4759,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
 
   if (pcity && city_base_to_city_map(&city_x, &city_y, pcity, ptile)) {
     /* FIXME: check elsewhere for valid tile (instead of above) */
-
-    if (!citymode && pcity->client.colored) {
+     if (!citymode && pcity->client.colored) {
       /* Add citymap overlay for a city. */
       int idx = pcity->client.color_index % NUM_CITY_COLORS;
 
@@ -4770,7 +4769,8 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
         ADD_SPRITE_SIMPLE(t->sprites.city.unworked_tile_overlay.p[idx]);
       }
     } else if (NULL != pwork && pwork == pcity
-               && (citymode || gui_options.draw_city_output)) {
+               && (citymode || gui_options.draw_city_output
+                || pcity->client.city_opened)) {
       /* Add on the tile output sprites. */
       int food = city_tile_output_now(pcity, ptile, O_FOOD);
       int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
@@ -5172,6 +5172,7 @@ static int fill_grid_sprite_array(
     const struct city *pcity, const struct city *citymode)
 {
   struct drawn_sprite *saved_sprs = sprs;
+  struct city *xcity;
 
   if (pedge) {
     bool known[NUM_EDGE_TILES], city[NUM_EDGE_TILES];
@@ -5221,8 +5222,15 @@ static int fill_grid_sprite_array(
           worked[i] = (NULL != tile_worked(tile));
         }
       }
+        if (tile) {
+          { // Draw city grid for main citymap
+            xcity = find_city_near_tile(tile);
+            if (xcity && xcity->client.city_opened) {
+              ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
+            }
+          }
+      }
     }
-
     if (mapdeco_is_highlight_set(pedge->tile[0])
         || mapdeco_is_highlight_set(pedge->tile[1])) {
       ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);

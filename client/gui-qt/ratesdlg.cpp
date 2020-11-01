@@ -1,44 +1,34 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "ratesdlg.h"
 // Qt
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QGroupBox>
 #include <QMouseEvent>
 #include <QPainter>
 #include <QScreen>
 #include <QVBoxLayout>
-
 // common
 #include "effects.h"
+#include "government.h"
 #include "multipliers.h"
 #include "packets.h"
-
 // client
+#include "client_main.h"
 #include "tilespec.h"
-
 // gui-qt
 #include "dialogs.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
+#include "icons.h"
 #include "sprite.h"
-
-#include "ratesdlg.h"
 
 static int scale_to_mult(const struct multiplier *pmul, int scale);
 static int mult_to_scale(const struct multiplier *pmul, int val);
@@ -256,7 +246,7 @@ void popup_rates_dialog(void)
   tax_rates_dialog *trd;
 
   p = QCursor::pos();
-  trd = new tax_rates_dialog(gui()->central_wdg);
+  trd = new tax_rates_dialog(king()->central_wdg);
   p.setY(p.y() - trd->height() / 2);
   if (p.y() < 50) {
     p.setY(50);
@@ -288,7 +278,7 @@ void popup_multiplier_dialog(void)
   if (!can_client_issue_orders()) {
     return;
   }
-  mrd = new multipler_rates_dialog(gui()->central_wdg);
+  mrd = new multipler_rates_dialog(king()->central_wdg);
   mrd->show();
 }
 
@@ -304,6 +294,7 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
   moved = 0;
   on_min = false;
   on_max = false;
+  cursor_size = 0;
 
   if (client.conn.playing != nullptr) {
     max_rates = get_player_bonus(client.conn.playing, EFT_MAX_RATES) / 10;

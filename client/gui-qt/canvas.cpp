@@ -1,27 +1,30 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996-2005 - Freeciv Development Team
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+/**  / \                                                        ***********
+    / _ \
+   | / \ |                  Copyright (c) 1996-2020 Freeciv21 and
+   ||   || _______    Freeciv contributors. This file is part of Freeciv21.
+   ||   || |\     \    Freeciv21 is free software: you can redistribute it
+   ||   || ||\     \               and/or modify it under the terms of the
+   ||   || || \    |                       GNU  General Public License  as
+   ||   || ||  \__/              published by the Free Software Foundation,
+   ||   || ||   ||                         either version 3 of the License,
+    \\_/ \_/ \_//                    or (at your option) any later version.
+   /   _     _   \                  You should have received a copy of the
+  /               \        GNU General Public License along with Freeciv21.
+  |    O     O    |                               If not,
+  |   \  ___  /   |             see https://www.gnu.org/licenses/.
+ /     \ \_/ /     \
+/  -----  |  --\    \
+|     \__/|\__/ \   |                 FOLLOW THE WHITE RABBIT !
+\       |_|_|       /
+ \_____       _____/
+       \     /                                                      *****/
+#include "canvas.h"
+#include <math.h>
 // Qt
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPainterPath>
-
 // qt-client
-#include "canvas.h"
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
@@ -349,8 +352,8 @@ QFont *get_font(client_font font)
   switch (font) {
   case FONT_CITY_NAME:
     qf = fc_font::instance()->get_font(fonts::city_names);
-    if (gui()->map_scale != 1.0f && gui()->map_font_scale) {
-      ssize = ceil(gui()->map_scale * fc_font::instance()->city_fontsize);
+    if (king()->map_scale != 1.0f && king()->map_font_scale) {
+      ssize = ceil(king()->map_scale * fc_font::instance()->city_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
       }
@@ -358,8 +361,8 @@ QFont *get_font(client_font font)
     break;
   case FONT_CITY_PROD:
     qf = fc_font::instance()->get_font(fonts::city_productions);
-    if (gui()->map_scale != 1.0f && gui()->map_font_scale) {
-      ssize = ceil(gui()->map_scale * fc_font::instance()->prod_fontsize);
+    if (king()->map_scale != 1.0f && king()->map_font_scale) {
+      ssize = ceil(king()->map_scale * fc_font::instance()->prod_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
       }

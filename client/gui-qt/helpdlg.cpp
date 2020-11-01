@@ -1,53 +1,39 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QApplication>
-#include <QDesktopWidget>
 #include <QGraphicsDropShadowEffect>
-#include <QGroupBox>
 #include <QProgressBar>
-#include <QPushButton>
 #include <QScreen>
 #include <QScrollArea>
 #include <QSplitter>
-#include <QStack>
-#include <QStringList>
-#include <QTextBrowser>
 #include <QTreeWidget>
 #include <QVBoxLayout>
-
 // utility
 #include "fcintl.h"
-
 // common
+#include "government.h"
 #include "movement.h"
 #include "nation.h"
 #include "specialist.h"
 #include "terrain.h"
-#include "unit.h"
-
 // client
+#include "client_main.h"
 #include "helpdata.h"
-
+#include "mapview_common.h"
 // gui-qt
 #include "fc_client.h"
 #include "fonts.h"
 #include "helpdlg.h"
+#include "qtg_cxxside.h"
 #include "sprite.h"
 
 #define MAX_HELP_TEXT_SIZE 8192
@@ -184,8 +170,8 @@ void help_dialog::update_fonts() { help_wdg->update_fonts(); }
 ****************************************************************************/
 void help_dialog::hideEvent(QHideEvent *event)
 {
-  gui()->qt_settings.help_geometry = saveGeometry();
-  gui()->qt_settings.help_splitter1 = splitter->saveState();
+  king()->qt_settings.help_geometry = saveGeometry();
+  king()->qt_settings.help_splitter1 = splitter->saveState();
 }
 
 /****************************************************************************
@@ -195,9 +181,9 @@ void help_dialog::showEvent(QShowEvent *event)
 {
   QList<int> sizes;
 
-  if (!gui()->qt_settings.help_geometry.isNull()) {
-    restoreGeometry(gui()->qt_settings.help_geometry);
-    splitter->restoreState(gui()->qt_settings.help_splitter1);
+  if (!king()->qt_settings.help_geometry.isNull()) {
+    restoreGeometry(king()->qt_settings.help_geometry);
+    splitter->restoreState(king()->qt_settings.help_splitter1);
   } else {
     QList<QScreen *> screens = QGuiApplication::screens();
     QRect rect = screens[0]->availableGeometry();
@@ -213,8 +199,8 @@ void help_dialog::showEvent(QShowEvent *event)
 ****************************************************************************/
 void help_dialog::closeEvent(QCloseEvent *event)
 {
-  gui()->qt_settings.help_geometry = saveGeometry();
-  gui()->qt_settings.help_splitter1 = splitter->saveState();
+  king()->qt_settings.help_geometry = saveGeometry();
+  king()->qt_settings.help_splitter1 = splitter->saveState();
 }
 
 /**********************************************************************/ /**
@@ -1637,6 +1623,7 @@ struct unit_type *help_widget::uclass_max_values(struct unit_class *uclass)
   max->attack_strength = 0;
   max->bombard_rate = 0;
   max->build_cost = 0;
+  max->convert_time = 0;
   max->city_size = 0;
   max->defense_strength = 0;
   max->firepower = 0;

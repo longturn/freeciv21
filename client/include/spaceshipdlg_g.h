@@ -17,7 +17,7 @@
 
 #include "gui_proto_constructor.h"
 
-GUI_FUNC_PROTO(void, popup_spaceship_dialog, struct player *pplayer)
+void popup_spaceship_dialog(struct player *pplayer);
 GUI_FUNC_PROTO(void, popdown_spaceship_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, refresh_spaceship_dialog, struct player *pplayer)
 

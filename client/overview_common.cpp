@@ -80,7 +80,7 @@ static void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
 /************************************************************************/ /**
    Translate from gui to overview coordinate systems.
  ****************************************************************************/
-static void gui_to_overview_pos(const struct tileset *t, int *ovr_x,
+void gui_to_overview_pos(const struct tileset *t, int *ovr_x,
                                 int *ovr_y, int gui_x, int gui_y)
 {
   double ntl_x, ntl_y;

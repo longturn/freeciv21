@@ -1,37 +1,28 @@
-/***********************************************************************
- Freeciv - Copyright (C) 2005 The Freeciv Team
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QApplication>
 #include <QDir>
 #include <QPalette>
+#include <QStyle>
 #include <QStyleFactory>
 #include <QTextStream>
-
 /* utility */
 #include "mem.h"
 #include "shared.h"
 #include "string_vector.h"
-
 /* client */
+#include "page_game.h"
+#include "qtg_cxxside.h"
 #include "themes_common.h"
-
-/* client/include */
-#include "themes_g.h"
-
 // gui-qt
 #include "fc_client.h"
 
@@ -92,8 +83,8 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   current_theme = theme_name;
   QPixmapCache::clear();
   current_app()->setStyleSheet(*stylestring);
-  if (gui()) {
-    gui()->reload_sidebar_icons();
+  if (king()) {
+    queen()->reload_sidebar_icons();
   }
   pal.setBrush(QPalette::Link, QColor(92, 170, 229));
   pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));
@@ -161,7 +152,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
   sl << dir.entryList(QDir::AllDirs | QDir::NoDotAndDotDot);
   name = QString(directory);
 
-  for (auto const &str: qAsConst(sl)) {
+  for (auto const &str : qAsConst(sl)) {
     f.setFileName(name + DIR_SEPARATOR + str + DIR_SEPARATOR
                   + "resource.qss");
     if (!f.exists()) {

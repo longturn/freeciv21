@@ -1,45 +1,40 @@
-/**********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__HELPDLG_H
-#define FC__HELPDLG_H
-
-// common
-#include "extras.h"
-
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 // Qt
 #include <QDialog>
 #include <QHash>
 #include <QList>
-
+// common
+#include "extras.h"
+// client
+#include "helpdlg_g.h"
 // gui-qt
 #include "dialogs.h"
 
-#include "helpdlg_g.h"
-
-// Forward declarations
-struct canvas;
-struct help_item;
-
+class QCloseEvent;
 class QFrame;
+class QHideEvent;
 class QLabel;
+class QLayout;
+class QObject;
+class QPixmap;
+class QPushButton;
+class QShowEvent;
 class QSplitter;
 class QTextBrowser;
 class QTreeWidget;
 class QTreeWidgetItem;
 class QVBoxLayout;
-
 class help_widget;
+struct help_item;
 
 class help_dialog : public qfc_dialog {
   Q_OBJECT
@@ -147,5 +142,3 @@ public:
 };
 
 void update_help_fonts();
-
-#endif /* FC__HELPDLG_H */

@@ -1,51 +1,37 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "dialogs.h"
 // Qt
 #include <QApplication>
 #include <QComboBox>
 #include <QGroupBox>
 #include <QHeaderView>
-#include <QImage>
-#include <QMessageBox>
-#include <QMouseEvent>
+#include <QKeyEvent>
 #include <QPainter>
-#include <QPainterPath>
 #include <QRadioButton>
-#include <QRect>
-#include <QTableWidgetItem>
-#include <QTextEdit>
 #include <QVBoxLayout>
 #include <QtMath>
-
 // utility
 #include "astring.h"
 #include "fcintl.h"
-
 // common
 #include "actions.h"
 #include "city.h"
+#include "climisc.h"
 #include "game.h"
 #include "government.h"
 #include "improvement.h"
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
-
 // client
 #include "audio.h"
 #include "chatline_common.h"
@@ -56,13 +42,17 @@
 #include "packhand.h"
 #include "text.h"
 #include "tilespec.h"
-
-// gui-qt
-#include "dialogs.h"
+// gui-qt - awesome client
 #include "fc_client.h"
+#include "fonts.h"
 #include "hudwidget.h"
+#include "icons.h"
+#include "mapview.h"
+#include "notifyreport.h"
+#include "page_game.h"
 #include "qtg_cxxside.h"
 #include "sprite.h"
+#include "unitselect.h"
 
 /* Locations for non action enabler controlled buttons. */
 #define BUTTON_MOVE ACTION_COUNT
@@ -813,154 +803,6 @@ void races_dialog::ok_pressed()
 }
 
 /***********************************************************************/ /**
-   Constructor for notify dialog
- ***************************************************************************/
-notify_dialog::notify_dialog(const char *caption, const char *headline,
-                             const char *lines, QWidget *parent)
-    : fcwidget()
-{
-  int x, y;
-  QString qlines;
-
-  setAttribute(Qt::WA_DeleteOnClose);
-  setCursor(Qt::ArrowCursor);
-  setParent(parent);
-  setFrameStyle(QFrame::Box);
-  cw = new close_widget(this);
-  cw->put_to_corner();
-
-  qcaption = QString(caption);
-  qheadline = QString(headline);
-  qlines = QString(lines);
-  qlist = qlines.split("\n");
-  small_font = *fc_font::instance()->get_font("gui_qt_font_notify_label");
-  x = 0;
-  y = 0;
-  calc_size(x, y);
-  resize(x, y);
-  gui()->mapview_wdg->find_place(gui()->mapview_wdg->width() - x - 4, 4, x,
-                                 y, x, y, 0);
-  move(x, y);
-  was_destroyed = false;
-}
-
-/***********************************************************************/ /**
-   Starts new copy of notify dialog and closes current one
- ***************************************************************************/
-void notify_dialog::restart()
-{
-  QString s, q;
-  int i;
-  QByteArray capt_bytes;
-  QByteArray hl_bytes;
-  QByteArray qb_bytes;
-
-  for (i = 0; i < qlist.size(); ++i) {
-    s = qlist.at(i);
-    q = q + s;
-    if (i < qlist.size() - 1) {
-      q = q + QChar('\n');
-    }
-  }
-  capt_bytes = qcaption.toLocal8Bit();
-  hl_bytes = qheadline.toLocal8Bit();
-  qb_bytes = q.toLocal8Bit();
-  popup_notify_dialog(capt_bytes.data(), hl_bytes.data(), qb_bytes.data());
-  close();
-  destroy();
-}
-
-/***********************************************************************/ /**
-   Calculates size of notify dialog
- ***************************************************************************/
-void notify_dialog::calc_size(int &x, int &y)
-{
-  QFontMetrics fm(small_font);
-  int i;
-  QStringList str_list;
-
-  str_list = qlist;
-  str_list << qcaption << qheadline;
-
-  for (i = 0; i < str_list.count(); i++) {
-    x = qMax(x, fm.horizontalAdvance(str_list.at(i)));
-    y = y + 3 + fm.height();
-  }
-  x = x + 15;
-}
-
-/***********************************************************************/ /**
-   Paint Event for notify dialog
- ***************************************************************************/
-void notify_dialog::paintEvent(QPaintEvent *paint_event)
-{
-  QPainter painter(this);
-  QPen pen;
-  QFontMetrics fm(small_font);
-  int i;
-
-  pen.setWidth(1);
-  pen.setColor(palette().color(QPalette::Text));
-  painter.setFont(small_font);
-  painter.setPen(pen);
-  painter.drawText(10, fm.height() + 3, qcaption);
-  painter.drawText(10, 2 * fm.height() + 6, qheadline);
-  for (i = 0; i < qlist.count(); i++) {
-    painter.drawText(10, 3 + (fm.height() + 3) * (i + 3), qlist[i]);
-  }
-  cw->put_to_corner();
-}
-
-/***********************************************************************/ /**
-   Called when mouse button was pressed, just to close on right click
- ***************************************************************************/
-void notify_dialog::mousePressEvent(QMouseEvent *event)
-{
-  cursor = event->globalPos() - geometry().topLeft();
-  if (event->button() == Qt::RightButton) {
-    was_destroyed = true;
-    close();
-  }
-}
-
-/***********************************************************************/ /**
-   Called when mouse button was pressed and moving around
- ***************************************************************************/
-void notify_dialog::mouseMoveEvent(QMouseEvent *event)
-{
-  move(event->globalPos() - cursor);
-  setCursor(Qt::SizeAllCursor);
-}
-
-/***********************************************************************/ /**
-   Called when mouse button unpressed. Restores cursor.
- ***************************************************************************/
-void notify_dialog::mouseReleaseEvent(QMouseEvent *event)
-{
-  setCursor(Qt::ArrowCursor);
-}
-
-/***********************************************************************/ /**
-   Called when close button was pressed
- ***************************************************************************/
-void notify_dialog::update_menu()
-{
-  was_destroyed = true;
-  destroy();
-}
-
-/***********************************************************************/ /**
-   Destructor for notify dialog, notice that somehow object is not destroyed
-   immediately, so it can be still visible for parent, check boolean
-   was_destroyed if u suspect it could not be destroyed yet
- ***************************************************************************/
-notify_dialog::~notify_dialog()
-{
-  was_destroyed = true;
-  destroy();
-}
-
-/***********************************************************************/ /**
    Default actions provider constructor
  ***************************************************************************/
 qdef_act::qdef_act()
@@ -1115,7 +957,7 @@ void popup_notify_goto_dialog(const char *headline, const char *lines,
                               struct tile *ptile)
 {
   notify_goto *ask =
-      new notify_goto(headline, lines, tags, ptile, gui()->central_wdg);
+      new notify_goto(headline, lines, tags, ptile, king()->central_wdg);
   ask->show();
 }
 
@@ -1124,7 +966,7 @@ void popup_notify_goto_dialog(const char *headline, const char *lines,
  ***************************************************************************/
 void popup_connect_msg(const char *headline, const char *message)
 {
-  QMessageBox *msg = new QMessageBox(gui()->central_wdg);
+  QMessageBox *msg = new QMessageBox(king()->central_wdg);
 
   msg->setText(message);
   msg->setStandardButtons(QMessageBox::Ok);
@@ -1140,7 +982,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
                          const char *lines)
 {
   notify_dialog *nd =
-      new notify_dialog(caption, headline, lines, gui()->mapview_wdg);
+      new notify_dialog(caption, headline, lines, queen()->mapview_wdg);
   nd->show();
 }
 
@@ -1150,7 +992,7 @@ void popup_notify_dialog(const char *caption, const char *headline,
 void popup_races_dialog(struct player *pplayer)
 {
   if (!is_race_dialog_open) {
-    race_dialog = new races_dialog(pplayer, gui()->central_wdg);
+    race_dialog = new races_dialog(pplayer, king()->central_wdg);
     is_race_dialog_open = true;
     race_dialog->show();
   }
@@ -1177,7 +1019,7 @@ void unit_select_dialog_popup(struct tile *ptile)
   if (ptile != NULL
       && (unit_list_size(ptile->units) > 1
           || (unit_list_size(ptile->units) == 1 && tile_city(ptile)))) {
-    gui()->toggle_unit_sel_widget(ptile);
+    toggle_unit_sel_widget(ptile);
   }
 }
 
@@ -1186,7 +1028,7 @@ void unit_select_dialog_popup(struct tile *ptile)
  ***************************************************************************/
 void unit_select_dialog_update_real(void *unused)
 {
-  gui()->update_unit_sel();
+  update_unit_sel();
 }
 
 /***********************************************************************/ /**
@@ -1229,7 +1071,7 @@ void popup_revolution_dialog(struct government *government)
   const Government_type_id government_id = government_number(government);
 
   if (0 > client.conn.playing->revolution_finishes) {
-    ask = new hud_message_box(gui()->central_wdg);
+    ask = new hud_message_box(king()->central_wdg);
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Cancel);
     ask->set_text_title(_("You say you wanna revolution?"),
@@ -1305,7 +1147,7 @@ choice_dialog::choice_dialog(const QString title, const QString text,
   setWindowFlags(Qt::Dialog);
   setWindowTitle(title);
   setAttribute(Qt::WA_DeleteOnClose);
-  gui()->set_diplo_dialog(this);
+  king()->set_diplo_dialog(this);
 
   unit_id = IDENTITY_NUMBER_ZERO;
   target_id[ATK_SELF] = unit_id;
@@ -1332,7 +1174,7 @@ choice_dialog::~choice_dialog()
 {
   buttons_list.clear();
   action_button_map.clear();
-  gui()->set_diplo_dialog(NULL);
+  king()->set_diplo_dialog(NULL);
 
   if (run_on_close) {
     run_on_close(unit_id);
@@ -1868,7 +1710,6 @@ void popup_action_selection(struct unit *actor_unit,
 {
   struct astring title = ASTRING_INIT, text = ASTRING_INIT;
   choice_dialog *cd;
-  qtiles caras;
   QVariant qv1, qv2;
   pfcn_void func;
   struct city *actor_homecity;
@@ -1878,7 +1719,7 @@ void popup_action_selection(struct unit *actor_unit,
   unit_act = qdef_act::action()->vs_unit_get();
   city_act = qdef_act::action()->vs_city_get();
 
-  for (auto caras : qAsConst(gui()->trade_gen.lines)) {
+  for (auto caras : qAsConst(king()->trade_gen.lines)) {
     if (caras.autocaravan == actor_unit) {
       int i;
       if (nullptr != game_unit_by_number(actor_unit->id)
@@ -1887,8 +1728,8 @@ void popup_action_selection(struct unit *actor_unit,
                           target_city->id, 0, "");
         client_unit_init_act_prob_cache(actor_unit);
         diplomat_queue_handle_primary(actor_unit->id);
-        i = gui()->trade_gen.lines.indexOf(caras);
-        gui()->trade_gen.lines.takeAt(i);
+        i = king()->trade_gen.lines.indexOf(caras);
+        king()->trade_gen.lines.takeAt(i);
         return;
       }
     }
@@ -1943,13 +1784,13 @@ void popup_action_selection(struct unit *actor_unit,
              unit_name_translation(actor_unit));
   }
 
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if ((cd != nullptr) && cd->targeted_unit != nullptr) {
     cd->update_dialog(act_probs);
     return;
   }
   cd = new choice_dialog(astr_str(&title), astr_str(&text),
-                         gui()->game_tab_widget,
+                         queen()->game_tab_widget,
                          diplomat_queue_handle_primary);
   qv1 = actor_unit->id;
 
@@ -2717,13 +2558,13 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
   if (pvcity) {
     pvictim = city_owner(pvcity);
   }
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if (cd != NULL) {
     cd->close();
   }
   struct astring stra = ASTRING_INIT;
   cd = new choice_dialog(_("Steal"), _("Steal Technology"),
-                         gui()->game_tab_widget,
+                         queen()->game_tab_widget,
                          diplomat_queue_handle_secondary);
 
   /* Put both actor and target city in qv1 since qv2 is taken */
@@ -3209,7 +3050,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
               client_player()->economic.gold);
 
   if (INCITE_IMPOSSIBLE_COST == cost) {
-    hud_message_box *impossible = new hud_message_box(gui()->central_wdg);
+    hud_message_box *impossible = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 _("You can't incite a revolt in %s."), city_name_get(tcity));
@@ -3218,7 +3059,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
     impossible->setAttribute(Qt::WA_DeleteOnClose);
     impossible->show();
   } else if (cost <= client_player()->economic.gold) {
-    hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+    hud_message_box *ask = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 PL_("Incite a revolt for %d gold?\n%s",
@@ -3235,7 +3076,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
     ask->show();
     return;
   } else {
-    hud_message_box *too_much = new hud_message_box(gui()->central_wdg);
+    hud_message_box *too_much = new hud_message_box(king()->central_wdg);
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 PL_("Inciting a revolt costs %d gold.\n%s",
@@ -3257,7 +3098,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
 void popup_bribe_dialog(struct unit *actor, struct unit *tunit, int cost,
                         const struct action *paction)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   char buf[1024];
   char buf2[1024];
   int diplomat_id = actor->id;
@@ -3361,7 +3202,7 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
   pfcn_void func;
   choice_dialog *cd = new choice_dialog(
       _("Sabotage"), _("Select Improvement to Sabotage"),
-      gui()->game_tab_widget, diplomat_queue_handle_secondary);
+      queen()->game_tab_widget, diplomat_queue_handle_secondary);
   int nr = 0;
   struct astring stra = ASTRING_INIT;
   QList<QVariant> actor_and_target;
@@ -3426,7 +3267,7 @@ void popup_pillage_dialog(struct unit *punit, bv_extras extras)
     return;
   }
   cd = new choice_dialog(_("What To Pillage"), _("Select what to pillage:"),
-                         gui()->game_tab_widget);
+                         queen()->game_tab_widget);
   qv2 = punit->id;
   while ((tgt = get_preferred_pillage(extras))) {
     int what;
@@ -3495,7 +3336,7 @@ disband_box::~disband_box() { unit_list_destroy(cpunits); }
  ***************************************************************************/
 void popup_disband_dialog(struct unit_list *punits)
 {
-  disband_box *ask = new disband_box(punits, gui()->central_wdg);
+  disband_box *ask = new disband_box(punits, king()->central_wdg);
   ask->show();
 }
 
@@ -3505,7 +3346,7 @@ void popup_disband_dialog(struct unit_list *punits)
  ***************************************************************************/
 void popup_tileset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3522,7 +3363,7 @@ void popup_tileset_suggestion_dialog(void)
   QObject::connect(ask, &hud_message_box::accepted, [=]() {
     sz_strlcpy(forced_tileset_name, game.control.preferred_tileset);
     if (!tilespec_reread(game.control.preferred_tileset, true,
-                         gui()->map_scale)) {
+                         king()->map_scale)) {
       tileset_error(LOG_ERROR, _("Can't load requested tileset %s."),
                     game.control.preferred_tileset);
     }
@@ -3536,7 +3377,7 @@ void popup_tileset_suggestion_dialog(void)
  ***************************************************************************/
 void popup_soundset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3561,7 +3402,7 @@ void popup_soundset_suggestion_dialog(void)
  ***************************************************************************/
 void popup_musicset_suggestion_dialog(void)
 {
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString text;
   QString title;
 
@@ -3591,21 +3432,6 @@ bool popup_theme_suggestion_dialog(const char *theme_name)
 }
 
 /***********************************************************************/ /**
-   Restarts all notify dialogs
- ***************************************************************************/
-void restart_notify_dialogs()
-{
-  QList<notify_dialog *> nd_list;
-  int i;
-
-  nd_list = gui()->mapview_wdg->findChildren<notify_dialog *>();
-  for (i = 0; i < nd_list.count(); i++) {
-    nd_list[i]->restart();
-    delete nd_list[i];
-  }
-}
-
-/***********************************************************************/ /**
    This function is called when the client disconnects or the game is
    over.  It should close all dialog windows for that game.
  ***************************************************************************/
@@ -3615,12 +3441,12 @@ void popdown_all_game_dialogs(void)
   QList<choice_dialog *> cd_list;
   QList<notify_dialog *> nd_list;
 
-  QApplication::alert(gui()->central_wdg);
-  cd_list = gui()->game_tab_widget->findChildren<choice_dialog *>();
+  QApplication::alert(king()->central_wdg);
+  cd_list = queen()->game_tab_widget->findChildren<choice_dialog *>();
   for (i = 0; i < cd_list.count(); i++) {
     cd_list[i]->close();
   }
-  nd_list = gui()->game_tab_widget->findChildren<notify_dialog *>();
+  nd_list = queen()->game_tab_widget->findChildren<notify_dialog *>();
   for (i = 0; i < nd_list.count(); i++) {
     nd_list[i]->close();
   }
@@ -3633,7 +3459,7 @@ void popdown_all_game_dialogs(void)
   popdown_science_report();
   popdown_city_report();
   popdown_endgame_report();
-  gui()->popdown_unit_sel();
+  popdown_unit_sel();
 }
 
 /***********************************************************************/ /**
@@ -3643,7 +3469,7 @@ void popdown_all_game_dialogs(void)
  ***************************************************************************/
 int action_selection_actor_unit(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->unit_id;
@@ -3660,7 +3486,7 @@ int action_selection_actor_unit(void)
  ***************************************************************************/
 int action_selection_target_city(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_CITY];
@@ -3677,7 +3503,7 @@ int action_selection_target_city(void)
  ***************************************************************************/
 int action_selection_target_tile(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_TILE];
@@ -3694,7 +3520,7 @@ int action_selection_target_tile(void)
  **************************************************************************/
 int action_selection_target_extra(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->sub_target_id[ASTK_EXTRA];
@@ -3711,7 +3537,7 @@ int action_selection_target_extra(void)
  ***************************************************************************/
 int action_selection_target_unit(void)
 {
-  choice_dialog *cd = gui()->get_diplo_dialog();
+  choice_dialog *cd = king()->get_diplo_dialog();
 
   if (cd != NULL) {
     return cd->target_id[ATK_UNIT];
@@ -3736,7 +3562,7 @@ void action_selection_refresh(struct unit *actor_unit,
   Choice_dialog_button *cancel_button;
   QVariant qv1, qv2;
 
-  asd = gui()->get_diplo_dialog();
+  asd = king()->get_diplo_dialog();
   if (asd == NULL) {
     fc_assert_msg(asd != NULL,
                   "The action selection dialog should have been open");
@@ -3856,7 +3682,7 @@ void action_selection_close(void)
 {
   choice_dialog *cd;
 
-  cd = gui()->get_diplo_dialog();
+  cd = king()->get_diplo_dialog();
   if (cd != NULL) {
     did_not_decide = true;
     cd->close();
@@ -3881,7 +3707,7 @@ void show_tileset_error(const char *msg)
               msg);
 
   if (QCoreApplication::instance() != nullptr) {
-    QMessageBox *ask = new QMessageBox(gui()->central_wdg);
+    QMessageBox *ask = new QMessageBox(king()->central_wdg);
 
     ask->setText(buf);
     ask->setStandardButtons(QMessageBox::Ok);
@@ -3897,7 +3723,7 @@ void show_tileset_error(const char *msg)
 void popup_upgrade_dialog(struct unit_list *punits)
 {
   char buf[512];
-  hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+  hud_message_box *ask = new hud_message_box(king()->central_wdg);
   QString title;
   QVector<int> *punit_ids;
 
@@ -3934,424 +3760,6 @@ void popup_upgrade_dialog(struct unit_list *punits)
   ask->show();
 }
 
-/***********************************************************************/ /**
-   Contructor for units_select
- ***************************************************************************/
-units_select::units_select(tile *ptile, QWidget *parent)
-{
-  QPoint p, final_p;
-
-  setParent(parent);
-  utile = ptile;
-  pix = NULL;
-  show_line = 0;
-  highligh_num = -1;
-  ufont.setItalic(true);
-  info_font = *fc_font::instance()->get_font(fonts::notify_label);
-  update_units();
-  h_pix = NULL;
-  create_pixmap();
-  p = mapFromGlobal(QCursor::pos());
-  cw = new close_widget(this);
-  setMouseTracking(true);
-  final_p.setX(p.x());
-  final_p.setY(p.y());
-  if (p.x() + width() > parentWidget()->width()) {
-    final_p.setX(parentWidget()->width() - width());
-  }
-  if (p.y() - height() < 0) {
-    final_p.setY(height());
-  }
-  move(final_p.x(), final_p.y() - height());
-  setFocus();
-  /* Build fails with qt5 connect style for static functions
-   * Qt5.2 so dont update */
-  QTimer::singleShot(10, this, SLOT(update_img()));
-}
-
-/***********************************************************************/ /**
-   Destructor for unit select
- ***************************************************************************/
-units_select::~units_select()
-{
-  delete h_pix;
-  delete pix;
-  delete cw;
-}
-
-/***********************************************************************/ /**
-   Create pixmap of whole widget except borders (pix)
- ***************************************************************************/
-void units_select::create_pixmap()
-{
-  int a;
-  int x, y, i;
-  QFontMetrics fm(info_font);
-  QImage cropped_img;
-  QImage img;
-  QList<QPixmap *> pix_list;
-  QPainter p;
-  QPen pen;
-  QPixmap pixc;
-  QPixmap *pixp;
-  QPixmap *tmp_pix;
-  QRect crop;
-  struct canvas *unit_pixmap;
-  struct unit *punit;
-  float isosize;
-
-  if (pix != NULL) {
-    delete pix;
-    pix = NULL;
-  };
-  isosize = 0.7;
-  if (tileset_hex_height(tileset) > 0 || tileset_hex_width(tileset) > 0) {
-    isosize = 0.5;
-  }
-
-  update_units();
-  if (unit_list.count() > 0) {
-    if (!tileset_is_isometric(tileset)) {
-      item_size.setWidth(tileset_unit_width(tileset));
-      item_size.setHeight(tileset_unit_width(tileset));
-    } else {
-      item_size.setWidth(tileset_unit_width(tileset) * isosize);
-      item_size.setHeight(tileset_unit_width(tileset) * isosize);
-    }
-    more = false;
-    if (h_pix != nullptr) {
-      delete h_pix;
-    }
-    h_pix = new QPixmap(item_size.width(), item_size.height());
-    h_pix->fill(palette().color(QPalette::HighlightedText));
-    if (unit_count < 5) {
-      row_count = 1;
-      pix = new QPixmap((unit_list.size()) * item_size.width(),
-                        item_size.height());
-    } else if (unit_count < 9) {
-      row_count = 2;
-      pix = new QPixmap(4 * item_size.width(), 2 * item_size.height());
-    } else {
-      row_count = 3;
-      if (unit_count > 12) {
-        more = true;
-      }
-      pix = new QPixmap(4 * item_size.width(), 3 * item_size.height());
-    }
-    pix->fill(Qt::transparent);
-    for (auto punit: qAsConst(unit_list)) {
-      unit_pixmap = qtg_canvas_create(tileset_unit_width(tileset),
-                                      tileset_unit_height(tileset));
-      unit_pixmap->map_pixmap.fill(Qt::transparent);
-      put_unit(punit, unit_pixmap, 1.0, 0, 0);
-      img = unit_pixmap->map_pixmap.toImage();
-      crop = zealous_crop_rect(img);
-      cropped_img = img.copy(crop);
-      if (!tileset_is_isometric(tileset)) {
-        img = cropped_img.scaled(
-            tileset_unit_width(tileset), tileset_unit_width(tileset),
-            Qt::KeepAspectRatio, Qt::SmoothTransformation);
-      } else {
-        img = cropped_img.scaled(tileset_unit_width(tileset) * isosize,
-                                 tileset_unit_width(tileset) * isosize,
-                                 Qt::KeepAspectRatio,
-                                 Qt::SmoothTransformation);
-      }
-      pixc = QPixmap::fromImage(img);
-      pixp = new QPixmap(pixc);
-      pix_list.push_back(pixp);
-      qtg_canvas_free(unit_pixmap);
-    }
-    a = qMin(item_size.width() / 4, 12);
-    x = 0, y = -item_size.height(), i = -1;
-    p.begin(pix);
-    ufont.setPixelSize(a);
-    p.setFont(ufont);
-    pen.setColor(palette().color(QPalette::Text));
-    p.setPen(pen);
-
-    while (!pix_list.isEmpty()) {
-      tmp_pix = pix_list.takeFirst();
-      i++;
-      if (i % 4 == 0) {
-        x = 0;
-        y = y + item_size.height();
-      }
-      punit = unit_list.at(i);
-      Q_ASSERT(punit != NULL);
-
-      if (i == highligh_num) {
-        p.drawPixmap(x, y, *h_pix);
-        p.drawPixmap(x, y, *tmp_pix);
-      } else {
-        p.drawPixmap(x, y, *tmp_pix);
-      }
-
-      if (client_is_global_observer()
-          || unit_owner(punit) == client.conn.playing) {
-        int rate, f;
-        QString str;
-
-        rate = unit_type_get(punit)->move_rate;
-        f = ((punit->fuel) - 1);
-        str = QString(move_points_text(punit->moves_left, false));
-        if (utype_fuel(unit_type_get(punit))) {
-          str = str + "("
-                + QString(
-                    move_points_text((rate * f) + punit->moves_left, false))
-                + ")";
-        }
-        /* TRANS: MP = Movement points */
-        str = QString(_("MP:")) + str;
-        p.drawText(x, y + item_size.height() - 4, str);
-      }
-
-      x = x + item_size.width();
-      delete tmp_pix;
-    }
-    p.end();
-    setFixedWidth(pix->width() + 20);
-    setFixedHeight(pix->height() + 2 * (fm.height() + 6));
-    qDeleteAll(pix_list.begin(), pix_list.end());
-  }
-}
-
-/***********************************************************************/ /**
-   Event for mouse moving around units_select
- ***************************************************************************/
-void units_select::mouseMoveEvent(QMouseEvent *event)
-{
-  int a, b;
-  int old_h;
-  QFontMetrics fm(info_font);
-
-  old_h = highligh_num;
-  highligh_num = -1;
-  if (event->x() > width() - 11 || event->y() > height() - fm.height() - 5
-      || event->y() < fm.height() + 3 || event->x() < 11) {
-    /** do nothing if mouse is on border, just skip next if */
-  } else if (row_count > 0) {
-    a = (event->x() - 10) / item_size.width();
-    b = (event->y() - fm.height() - 3) / item_size.height();
-    highligh_num = b * 4 + a;
-  }
-  if (old_h != highligh_num) {
-    create_pixmap();
-    update();
-  }
-}
-
-/***********************************************************************/ /**
-   Mouse pressed event for units_select.
-   Left Button - chooses units
-   Right Button - closes widget
- ***************************************************************************/
-void units_select::mousePressEvent(QMouseEvent *event)
-{
-  struct unit *punit;
-  if (event->button() == Qt::RightButton) {
-    was_destroyed = true;
-    close();
-    destroy();
-  }
-  if (event->button() == Qt::LeftButton && highligh_num != -1) {
-    update_units();
-    if (highligh_num >= unit_list.count()) {
-      return;
-    }
-    punit = unit_list.at(highligh_num);
-    unit_focus_set(punit);
-    was_destroyed = true;
-    close();
-    destroy();
-  }
-}
-
-/***********************************************************************/ /**
-   Update image, because in constructor theme colors
-   are uninitialized in QPainter
- ***************************************************************************/
-void units_select::update_img()
-{
-  create_pixmap();
-  update();
-}
-
-/***********************************************************************/ /**
-   Redirected paint event
- ***************************************************************************/
-void units_select::paint(QPainter *painter, QPaintEvent *event)
-{
-  QFontMetrics fm(info_font);
-  int h, i;
-  int *f_size;
-  QPen pen;
-  QString str, str2;
-  struct unit *punit;
-  int point_size = info_font.pointSize();
-  int pixel_size = info_font.pixelSize();
-
-  if (point_size < 0) {
-    f_size = &pixel_size;
-  } else {
-    f_size = &point_size;
-  }
-  if (highligh_num != -1 && highligh_num < unit_list.count()) {
-    punit = unit_list.at(highligh_num);
-    /* TRANS: HP - hit points */
-    str2 = QString(_("%1 HP:%2/%3"))
-               .arg(QString(unit_activity_text(punit)),
-                    QString::number(punit->hp),
-                    QString::number(unit_type_get(punit)->hp));
-  }
-  str = QString(PL_("%1 unit", "%1 units", unit_list_size(utile->units)))
-            .arg(unit_list_size(utile->units));
-  for (i = *f_size; i > 4; i--) {
-    if (point_size < 0) {
-      info_font.setPixelSize(i);
-    } else {
-      info_font.setPointSize(i);
-    }
-    QFontMetrics qfm(info_font);
-    if (10 + qfm.horizontalAdvance(str2) < width()) {
-      break;
-    }
-  }
-  h = fm.height();
-  if (pix != NULL) {
-    painter->drawPixmap(10, h + 3, *pix);
-    pen.setColor(palette().color(QPalette::Text));
-    painter->setPen(pen);
-    painter->setFont(info_font);
-    painter->drawText(10, h, str);
-    if (highligh_num != -1 && highligh_num < unit_list.count()) {
-      painter->drawText(10, height() - 5, str2);
-    }
-    /* draw scroll */
-    if (more) {
-      int maxl = ((unit_count - 1) / 4) + 1;
-      float page_height = 3.0f / maxl;
-      float page_start = (static_cast<float>(show_line)) / maxl;
-      pen.setColor(palette().color(QPalette::HighlightedText));
-      painter->setBrush(palette().color(QPalette::HighlightedText).darker());
-      painter->setPen(palette().color(QPalette::HighlightedText).darker());
-      painter->drawRect(pix->width() + 10, h, 8, h + pix->height());
-      painter->setPen(pen);
-      painter->drawRoundedRect(pix->width() + 10,
-                               h + page_start * pix->height(), 8,
-                               h + page_height * pix->height(), 2, 2);
-    }
-  }
-  if (point_size < 0) {
-    info_font.setPixelSize(*f_size);
-  } else {
-    info_font.setPointSize(*f_size);
-  }
-  cw->put_to_corner();
-}
-
-/***********************************************************************/ /**
-   Paint event, redirects to paint(...)
- ***************************************************************************/
-void units_select::paintEvent(QPaintEvent *event)
-{
-  QPainter painter;
-
-  painter.begin(this);
-  paint(&painter, event);
-  painter.end();
-}
-
-/***********************************************************************/ /**
-   Function from abstract fcwidget to update menu, its not needed
-   cause widget is easy closable via right mouse click
- ***************************************************************************/
-void units_select::update_menu()
-{
-  was_destroyed = true;
-  close();
-  destroy();
-}
-
-/***********************************************************************/ /**
-   Updates unit list on tile
- ***************************************************************************/
-void units_select::update_units()
-{
-  int i = 1;
-  struct unit_list *punit_list;
-
-  unit_count = 0;
-  if (utile == NULL) {
-    struct unit *punit = head_of_units_in_focus();
-    if (punit) {
-      utile = unit_tile(punit);
-    }
-  }
-  unit_list.clear();
-  if (utile != nullptr) {
-    punit_list = utile->units;
-    if (punit_list != nullptr) {
-      unit_list_iterate(utile->units, punit)
-      {
-        unit_count++;
-        if (i > show_line * 4)
-          unit_list.push_back(punit);
-        i++;
-      }
-      unit_list_iterate_end;
-    }
-  }
-  if (unit_list.count() == 0) {
-    close();
-  }
-}
-
-/***********************************************************************/ /**
-   Close event for units_select, restores focus to map
- ***************************************************************************/
-void units_select::closeEvent(QCloseEvent *event)
-{
-  gui()->mapview_wdg->setFocus();
-  QWidget::closeEvent(event);
-}
-
-/***********************************************************************/ /**
-   Mouse wheel event for units_select
- ***************************************************************************/
-void units_select::wheelEvent(QWheelEvent *event)
-{
-  int nr;
-
-  if (!more && utile == NULL) {
-    return;
-  }
-  nr = qCeil(static_cast<qreal>(unit_list_size(utile->units)) / 4) - 3;
-  if (event->delta() < 0) {
-    show_line++;
-    show_line = qMin(show_line, nr);
-  } else {
-    show_line--;
-    show_line = qMax(0, show_line);
-  }
-  update_units();
-  create_pixmap();
-  update();
-  event->accept();
-}
-
-/***********************************************************************/ /**
-   Keyboard handler for units_select
- ***************************************************************************/
-void units_select::keyPressEvent(QKeyEvent *event)
-{
-  if (event->key() == Qt::Key_Escape) {
-    was_destroyed = true;
-    close();
-    destroy();
-  }
-  QWidget::keyPressEvent(event);
-}
 
 /***********************************************************************/ /**
    Set current diplo dialog
@@ -4426,13 +3834,13 @@ void qtg_popup_combat_info(int attacker_unit_id, int defender_unit_id,
                            int attacker_hp, int defender_hp,
                            bool make_att_veteran, bool make_def_veteran)
 {
-  if (gui()->qt_settings.show_battle_log) {
+  if (king()->qt_settings.show_battle_log) {
     hud_unit_combat *huc = new hud_unit_combat(
         attacker_unit_id, defender_unit_id, attacker_hp, defender_hp,
-        make_att_veteran, make_def_veteran, gui()->battlelog_wdg->scale,
-        gui()->battlelog_wdg);
+        make_att_veteran, make_def_veteran, queen()->battlelog_wdg->scale,
+        queen()->battlelog_wdg);
 
-    gui()->battlelog_wdg->add_combat_info(huc);
-    gui()->battlelog_wdg->show();
+    queen()->battlelog_wdg->add_combat_info(huc);
+    queen()->battlelog_wdg->show();
   }
 }

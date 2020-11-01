@@ -1,35 +1,25 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-/* utility */
-#include "fcintl.h"
-#include "log.h"
-#include "support.h"
-
-#include "connectdlg_g.h"
-
+// common
+#include "game.h"
 /* client */
-#include "chatline_common.h" /* for append_output_window */
-#include "client_main.h"
+#include "chatline_common.h"
 #include "packhand_gen.h"
-
 // gui-qt
 #include "connectdlg.h"
+#include "connectdlg_g.h"
 #include "fc_client.h"
+#include "pages_g.h"
+#include "page_network.h"
+#include "qtg_cxxside.h"
 
 /**********************************************************************/ /**
    Close and destroy the dialog. But only if we don't have a local
@@ -37,7 +27,7 @@
  **************************************************************************/
 void qtg_close_connection_dialog()
 {
-  if (gui()->current_page() != PAGE_NETWORK) {
+  if (king()->current_page() != PAGE_NETWORK) {
     qtg_real_set_client_page(PAGE_MAIN);
   }
 }
@@ -49,7 +39,8 @@ void qtg_close_connection_dialog()
 void handle_authentication_req(enum authentication_type type,
                                const char *message)
 {
-  gui()->handle_authentication_req(type, message);
+  qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
+      ->handle_authentication_req(type, message);
 }
 
 /**********************************************************************/ /**
@@ -70,9 +61,3 @@ void handle_game_load(bool load_successful, const char *filename)
   }
 }
 
-/**********************************************************************/ /**
-   Provide an interface for connecting to a Freeciv server.
- **************************************************************************/
-void qtg_server_connect()
-{ /* PORTME */
-}

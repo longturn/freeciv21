@@ -1,35 +1,34 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QApplication>
 #include <QHeaderView>
 #include <QVBoxLayout>
-
 // utility
 #include "fcintl.h"
-
+// common
+#include "citydlg_common.h"
+#include "cma_fec.h"
+#include "game.h"
+#include "global_worklist.h"
 // client
+#include "cityrep_g.h"
 #include "client_main.h"
-
+#include "mapview_common.h"
 // gui-qt
 #include "cityrep.h"
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "page_game.h"
+#include "qtg_cxxside.h"
 
 /***********************************************************************/ /**
    Overriden compare for sorting items
@@ -421,9 +420,8 @@ void city_widget::clear_worlist()
 {
   struct worklist empty;
   worklist_init(&empty);
-  struct city *pcity;
 
-  for (auto pcity: qAsConst(selected_cities)) {
+  for (auto pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
     city_set_worklist(pcity, &empty);
   }
@@ -434,9 +432,7 @@ void city_widget::clear_worlist()
  ***************************************************************************/
 void city_widget::buy()
 {
-  struct city *pcity;
-
-for (auto pcity: qAsConst(selected_cities)) {
+  for (auto pcity : qAsConst(selected_cities)) {
     Q_ASSERT(pcity != NULL);
     cityrep_buy(pcity);
   }
@@ -455,7 +451,7 @@ void city_widget::center()
   pcity = selected_cities[0];
   Q_ASSERT(pcity != NULL);
   center_tile_mapcanvas(pcity->tile);
-  gui()->game_tab_widget->setCurrentIndex(0);
+  queen()->game_tab_widget->setCurrentIndex(0);
 }
 
 /***********************************************************************/ /**
@@ -471,7 +467,6 @@ void city_widget::display_list_menu(const QPoint)
   bool select_only = false;
   char buf[200];
   int sell_gold;
-  struct city *pcity;
   QMenu *list_menu;
   QAction cty_view(style()->standardIcon(QStyle::SP_CommandLink),
                    Q_("?verb:View"), 0);
@@ -479,7 +474,7 @@ void city_widget::display_list_menu(const QPoint)
   if (selected_cities.isEmpty()) {
     select_only = true;
   }
-  for (auto pcity: qAsConst(selected_cities)) {
+  for (auto pcity : qAsConst(selected_cities)) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
   fc_snprintf(buf, sizeof(buf), _("Buy ( Cost: %d )"), sell_gold);
@@ -557,7 +552,6 @@ void city_widget::display_list_menu(const QPoint)
     const char *imprname;
     const struct impr_type *building;
     Impr_type_id impr_id;
-    struct city *pcity;
     int city_id;
     bool need_clear = true;
     bool sell_ask = true;
@@ -646,7 +640,7 @@ void city_widget::display_list_menu(const QPoint)
     }
     city_list_iterate_end;
 
-    for (auto pcity: qAsConst(selected_cities)) {
+    for (auto pcity : qAsConst(selected_cities)) {
       if (nullptr != pcity) {
         switch (m_state) {
         case CHANGE_PROD_NOW:
@@ -665,7 +659,7 @@ void city_widget::display_list_menu(const QPoint)
         case SELL:
           building = target.value.building;
           if (sell_ask) {
-            hud_message_box *ask = new hud_message_box(gui()->central_wdg);
+            hud_message_box *ask = new hud_message_box(king()->central_wdg);
             imprname = improvement_name_translation(building);
             fc_snprintf(buf, sizeof(buf),
                         _("Are you sure you want to sell those %s?"),
@@ -861,7 +855,6 @@ void city_widget::select_same_island()
   QItemSelection selection;
   QModelIndex i;
   struct city *pcity;
-  struct city *pscity;
   QVariant qvar;
 
   for (int j = 0; j < filter_model->rowCount(); j++) {
@@ -871,7 +864,7 @@ void city_widget::select_same_island()
       continue;
     }
     pcity = reinterpret_cast<city *>(qvar.value<void *>());
-    for (auto pscity: qAsConst(selected_cities)) {
+    for (auto pscity : qAsConst(selected_cities)) {
       if (NULL != pcity
           && (tile_continent(pcity->tile) == tile_continent(pscity->tile))) {
         selection.append(QItemSelectionRange(i));
@@ -1108,7 +1101,7 @@ void city_widget::update_model()
     if (str.contains('\n')) {
       sl = str.split('\n');
       width = 0;
-      for (auto const& s : qAsConst(sl)) {
+      for (auto const &s : qAsConst(sl)) {
         width = qMax(width, fm.horizontalAdvance(s));
       }
       header()->resizeSection(j, width + 10);
@@ -1174,7 +1167,6 @@ void city_widget::cities_selected(const QItemSelection &sl,
                                   const QItemSelection &ds)
 {
   QModelIndexList indexes = selectionModel()->selectedIndexes();
-  QModelIndex i;
   QVariant qvar;
   struct city *pcity;
 
@@ -1183,7 +1175,7 @@ void city_widget::cities_selected(const QItemSelection &sl,
   if (indexes.isEmpty()) {
     return;
   }
-  for (auto i: qAsConst(indexes)) {
+  for (auto i : qAsConst(indexes)) {
     qvar = i.data(Qt::UserRole);
     if (qvar.isNull()) {
       continue;
@@ -1206,8 +1198,8 @@ city_widget::~city_widget()
   delete c_i_d;
   delete list_model;
   delete filter_model;
-  gui()->qt_settings.city_repo_sort_col = header()->sortIndicatorSection();
-  gui()->qt_settings.city_report_sort = header()->sortIndicatorOrder();
+  king()->qt_settings.city_repo_sort_col = header()->sortIndicatorSection();
+  king()->qt_settings.city_report_sort = header()->sortIndicatorOrder();
 }
 
 /***********************************************************************/ /**
@@ -1217,27 +1209,28 @@ city_report::city_report() : QWidget()
 {
   layout = new QVBoxLayout;
   city_wdg = new city_widget(this);
-  if (gui()->qt_settings.city_repo_sort_col != -1) {
-    city_wdg->sortByColumn(gui()->qt_settings.city_repo_sort_col,
-                           gui()->qt_settings.city_report_sort);
+  if (king()->qt_settings.city_repo_sort_col != -1) {
+    city_wdg->sortByColumn(king()->qt_settings.city_repo_sort_col,
+                           king()->qt_settings.city_report_sort);
   }
   layout->addWidget(city_wdg);
   setLayout(layout);
+  index = 0;
 }
 
 /***********************************************************************/ /**
    Destructor for city report
  ***************************************************************************/
-city_report::~city_report() { gui()->remove_repo_dlg("CTS"); }
+city_report::~city_report() { queen()->remove_repo_dlg("CTS"); }
 
 /***********************************************************************/ /**
    Inits place in game tab widget
  ***************************************************************************/
 void city_report::init()
 {
-  gui()->gimme_place(this, "CTS");
-  index = gui()->add_game_tab(this);
-  gui()->game_tab_widget->setCurrentIndex(index);
+  queen()->gimme_place(this, "CTS");
+  index = queen()->add_game_tab(this);
+  queen()->game_tab_widget->setCurrentIndex(index);
 }
 
 /***********************************************************************/ /**
@@ -1262,20 +1255,20 @@ void city_report_dialog_popup(bool raise)
   city_report *cr;
   QWidget *w;
 
-  if (!gui()->is_repo_dlg_open("CTS")) {
+  if (!queen()->is_repo_dlg_open("CTS")) {
     cr = new city_report;
     cr->init();
     cr->update_report();
   } else {
-    i = gui()->gimme_index_of("CTS");
+    i = queen()->gimme_index_of("CTS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
-      gui()->game_tab_widget->setCurrentIndex(0);
+      queen()->game_tab_widget->setCurrentIndex(0);
       return;
     }
     cr = reinterpret_cast<city_report *>(w);
-    gui()->game_tab_widget->setCurrentWidget(cr);
+    queen()->game_tab_widget->setCurrentWidget(cr);
     cr->update_report();
   }
 }
@@ -1289,10 +1282,10 @@ void real_city_report_dialog_update(void *unused)
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
       cr->update_report();
     }
@@ -1308,10 +1301,10 @@ void real_city_report_update_city(struct city *pcity)
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
-    if (gui()->game_tab_widget->currentIndex() == i) {
-      w = gui()->game_tab_widget->widget(i);
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
+    if (queen()->game_tab_widget->currentIndex() == i) {
+      w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
       cr->update_city(pcity);
     }
@@ -1327,10 +1320,10 @@ void popdown_city_report()
   city_report *cr;
   QWidget *w;
 
-  if (gui()->is_repo_dlg_open("CTS")) {
-    i = gui()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open("CTS")) {
+    i = queen()->gimme_index_of("CTS");
     fc_assert(i != -1);
-    w = gui()->game_tab_widget->widget(i);
+    w = queen()->game_tab_widget->widget(i);
     cr = reinterpret_cast<city_report *>(w);
     cr->deleteLater();
   }

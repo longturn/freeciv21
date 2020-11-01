@@ -1,75 +1,34 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__MAPVIEW_H
-#define FC__MAPVIEW_H
-
-// In this case we have to include fc_config.h from header file.
-// Some other headers we include demand that fc_config.h must be
-// included also. Usually all source files include fc_config.h, but
-// there's moc generated meta_mapview.cpp file which does not.
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "mapview_g.h"
-
-// gui-qt
-#include "fonts.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QFrame>
 #include <QLabel>
-#include <QMutex>
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
+// common
+#include "tilespec.h"
 
-// Forward declarations
-class QMutex;
-class QPixmap;
-
-class minimap_view;
+class QEvent;
+class QFocusEvent;
+class QKeyEvent;
+class QMouseEvent;
+class QObject;
+class QPaintEvent;
+class QPainter;
 
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye);
 void unscale_point(double scale_factor, int &x, int &y);
 void draw_calculated_trade_routes(QPainter *painter);
-
-/**************************************************************************
-  Struct used for idle callback to execute some callbacks later
-**************************************************************************/
-struct call_me_back {
-  void (*callback)(void *data);
-  void *data;
-};
-
-/**************************************************************************
-  Class to handle idle callbacks
-**************************************************************************/
-class mr_idle : public QObject {
-  Q_OBJECT
-public:
-  mr_idle();
-  ~mr_idle();
-
-  void add_callback(call_me_back *cb);
-private slots:
-  void idling();
-
-private:
-  QQueue<call_me_back *> callback_list;
-  QTimer timer;
-};
 
 /**************************************************************************
   QWidget used for displaying map
@@ -113,10 +72,11 @@ private:
 **************************************************************************/
 class info_tile : public QLabel {
   Q_OBJECT
-  QFont info_font;
+  Q_DISABLE_COPY(info_tile);
 
 public:
-  info_tile(struct tile *ptile, QWidget *parent = 0);
+  static info_tile *i(struct tile *p = nullptr);
+  static void drop();
   struct tile *itile;
 
 protected:
@@ -124,138 +84,18 @@ protected:
   void paint(QPainter *painter, QPaintEvent *event);
 
 private:
+  QFont info_font;
+  info_tile(struct tile *ptile, QWidget *parent = 0);
+  static info_tile *m_instance;
   QStringList str_list;
   void calc_size();
   void update_font(const QString &name, const QFont &font);
 };
 
-/**************************************************************************
-  Widget allowing resizing other widgets
-**************************************************************************/
-class resize_widget : public QLabel {
-  Q_OBJECT
-public:
-  resize_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  QPoint point;
-};
-
-/**************************************************************************
-  Widget allowing moving other widgets
-**************************************************************************/
-class move_widget : public QLabel {
-  Q_OBJECT
-public:
-  move_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mouseMoveEvent(QMouseEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  QPoint point;
-};
-
-/**************************************************************************
-  Abstract class for widgets wanting to do custom action
-  when closing widgets is called (eg. update menu)
-**************************************************************************/
-class fcwidget : public QFrame {
-  Q_OBJECT
-public:
-  virtual void update_menu() = 0;
-  bool was_destroyed;
-};
-
-/**************************************************************************
-  Widget allowing closing other widgets
-**************************************************************************/
-class close_widget : public QLabel {
-  Q_OBJECT
-public:
-  close_widget(QWidget *parent);
-  void put_to_corner();
-
-protected:
-  void mousePressEvent(QMouseEvent *event);
-  void notify_parent();
-};
-
-/**************************************************************************
-  Thread helper for drawing minimap
-**************************************************************************/
-class minimap_thread : public QThread {
-  Q_OBJECT
-public:
-  minimap_thread(QObject *parent = 0);
-  ~minimap_thread();
-  void render(double scale_factor, int width, int height);
-
-signals:
-  void rendered_image(const QImage &image);
-
-protected:
-  void run() Q_DECL_OVERRIDE;
-
-private:
-  int mini_width, mini_height;
-  double scale;
-  QMutex mutex;
-};
-
-/**************************************************************************
-  QLabel used for displaying overview (minimap)
-**************************************************************************/
-class minimap_view : public fcwidget {
-  Q_OBJECT
-public:
-  minimap_view(QWidget *parent);
-  ~minimap_view();
-  void paint(QPainter *painter, QPaintEvent *event);
-  virtual void update_menu();
-  void update_image();
-  void reset();
-
-protected:
-  void paintEvent(QPaintEvent *event);
-  void resizeEvent(QResizeEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-  void mouseMoveEvent(QMouseEvent *event);
-  void mouseReleaseEvent(QMouseEvent *event);
-  void wheelEvent(QWheelEvent *event);
-  void moveEvent(QMoveEvent *event);
-  void showEvent(QShowEvent *event);
-
-private slots:
-  void update_pixmap(const QImage &image);
-  void zoom_in();
-  void zoom_out();
-
-private:
-  void draw_viewport(QPainter *painter);
-  void scale(double factor);
-  void scale_point(int &x, int &y);
-  double scale_factor;
-  float w_ratio, h_ratio;
-  minimap_thread thread;
-  QBrush background;
-  QPixmap *pix;
-  QPoint cursor;
-  QPoint position;
-  resize_widget *rw;
-};
-
+void popdown_tile_info();
+void popup_tile_info(struct tile *ptile);
 void mapview_freeze(void);
 void mapview_thaw(void);
 bool mapview_is_frozen(void);
 void pixmap_put_overlay_tile(int canvas_x, int canvas_y,
                              struct sprite *ssprite);
-
-#endif /* FC__MAPVIEW_H */

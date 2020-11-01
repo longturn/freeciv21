@@ -1,24 +1,13 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__CITYREP_H
-#define FC__CITYREP_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "cityrep_g.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QAbstractListModel>
@@ -27,34 +16,30 @@
 #include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QWidget>
-
-// common
-#include "city.h"
-
 // client
-#include "citydlg_common.h"
 #include "cityrepdata.h"
 #include "climisc.h"
-#include "global_worklist.h"
-
-// agents
-#include "cma_fec.h"
-
-// gui-qt
-#include "sprite.h"
 
 #define NEG_VAL(x) ((x) < 0 ? (x) : (-x))
 #define CMA_NONE (10000)
 #define CMA_CUSTOM (10001)
 
-class QMenu;
 class QHBoxLayout;
+class QItemSelection;
 class QLabel;
+class QMenu;
+class QMenu;
+class QPainter;
+class QPoint;
 class QPushButton;
 class QSortFilterProxyModel;
 class QTableWidget;
 class QVBoxLayout;
+class QVBoxLayout;
 class city_report;
+class city_report;
+struct city;
+template <class Key, class T> class QMap;
 
 class city_sort_model : public QSortFilterProxyModel {
   bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
@@ -218,5 +203,3 @@ private:
 };
 
 void popdown_city_report();
-
-#endif /* FC__CITYREP_H */

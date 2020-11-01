@@ -575,6 +575,17 @@ QComboBox:hover {
   color: #3399FF;
 }
 
+city_dialog QTabWidget::pane {
+  margin: 1px, 1px, 1px, 1px;
+  border-left: 4px solid #485261;
+  border-top: 2px solid #485261;
+  border-bottom: 2px solid #485261;
+  border-right: 4px solid #485261;
+  border-radius: 2px;
+  border-top-left-radius: 0px;
+  padding: 0px;
+}
+
 city_dialog QScrollArea QWidget {
   background: #414a57;
 }

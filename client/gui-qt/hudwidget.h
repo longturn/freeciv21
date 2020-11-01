@@ -1,18 +1,13 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__HUDWIDGET_H
-#define FC__HUDWIDGET_H
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QDialog>
@@ -22,20 +17,27 @@
 #include <QMessageBox>
 #include <QRubberBand>
 #include <QTableWidget>
-
-// common
-#include "unit.h"
-
+// utility
+#include "fc_types.h"
 // gui-qt
 #include "shortcuts.h"
 
-class move_widget;
 class QComboBox;
+class QFontMetrics;
 class QHBoxLayout;
-class QIcon;
-class QLabel;
+class QItemSelection;
+class QKeyEvent;
+class QMouseEvent;
+class QMoveEvent;
+class QObject;
+class QPaintEvent;
+class QPixmap;
+class QPushButton;
 class QRadioButton;
+class QTimerEvent;
 class QVBoxLayout;
+class move_widget;
+class scale_widget;
 struct tile;
 struct unit;
 struct unit_list;
@@ -325,25 +327,6 @@ private:
 };
 
 /****************************************************************************
-  Widget for resizing other widgets
-****************************************************************************/
-class scale_widget : public QRubberBand {
-  Q_OBJECT
-public:
-  scale_widget(Shape s, QWidget *p = 0);
-  float scale;
-
-protected:
-  void paintEvent(QPaintEvent *event);
-  void mousePressEvent(QMouseEvent *event);
-
-private:
-  int size;
-  QPixmap plus;
-  QPixmap minus;
-};
-
-/****************************************************************************
   Widget showing combat log
 ****************************************************************************/
 class hud_battle_log : public QWidget {
@@ -370,5 +353,3 @@ private:
   move_widget *mw;
   QElapsedTimer m_timer;
 };
-
-#endif /* FC__HUDWIDGET_H */

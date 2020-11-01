@@ -1,19 +1,12 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 // Qt
 #include <QApplication>
@@ -24,24 +17,17 @@
 #include <QFontDialog>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPainter>
-#include <QPushButton>
 #include <QScrollArea>
 #include <QSpinBox>
-
 // utility
 #include "log.h"
 #include "string_vector.h"
-
 // client
-#include "client_main.h"
 #include "options.h"
-
 // gui-qt
 #include "fc_client.h"
 #include "optiondlg.h"
+#include "page_pregame.h"
 
 enum {
   RESPONSE_CANCEL,
@@ -66,7 +52,7 @@ QString split_text(const QString &text, bool cut)
   int j = 0;
 
   sl = text.split("\n");
-  for (const QString &s: qAsConst(sl)) {
+  for (const QString &s : qAsConst(sl)) {
     st = s;
     while (st.count() >= 80) {
       str = st.left(80);
@@ -107,7 +93,7 @@ QString cut_helptext(const QString &text)
 
   /* Remove all lines from help which has '*' in first 3 chars */
   sl = text.split('\n');
-  for (const QString &s: qAsConst(sl)) {
+  for (const QString &s : qAsConst(sl)) {
     if (s.count() > 2) {
       if (s.at(0) != '*' && s.at(1) != '*' && s.at(2) != '*') {
         ret_str = ret_str + s + '\n';
@@ -765,7 +751,7 @@ void option_dialog_popup(const char *name, const struct option_set *poptset)
     opt_dialog = dialog_list[poptset];
     opt_dialog->show();
   } else {
-    opt_dialog = new option_dialog(name, poptset, gui()->central_wdg);
+    opt_dialog = new option_dialog(name, poptset, king()->central_wdg);
     ::dialog_list.insert(poptset, opt_dialog);
     opt_dialog->show();
   }
@@ -878,7 +864,8 @@ void option_gui_update(struct option *poption)
       update_nationset_combo();
     }
     if (strcmp(option_name(poption), "aifill") == 0) {
-      gui()->pr_options->set_aifill(option_int_get(poption));
+      //sveinung
+      //qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
     }
   }
 }

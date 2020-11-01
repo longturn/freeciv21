@@ -1,20 +1,14 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "gotodlg.h"
 // Qt
 #include <QApplication>
 #include <QCheckBox>
@@ -24,20 +18,17 @@
 #include <QPainter>
 #include <QPushButton>
 #include <QTableWidget>
-
 /* common */
 #include "game.h"
-
 /* client */
 #include "client_main.h"
 #include "control.h"
 #include "goto.h"
+#include "mapview_common.h"
 #include "text.h"
-
 // gui-qt
 #include "fc_client.h"
-#include "gotodlg.h"
-#include "qtg_cxxside.h"
+#include "page_game.h"
 #include "sprite.h"
 
 /***********************************************************************/ /**
@@ -365,10 +356,10 @@ void popup_goto_dialog(void)
     return;
   }
 
-  if (gui()->gtd != NULL) {
-    gui()->gtd->init();
-    gui()->gtd->update_dlg();
-    gui()->gtd->sort_def();
-    gui()->gtd->show_me();
+  if (queen()->gtd != NULL) {
+    queen()->gtd->init();
+    queen()->gtd->update_dlg();
+    queen()->gtd->sort_def();
+    queen()->gtd->show_me();
   }
 }

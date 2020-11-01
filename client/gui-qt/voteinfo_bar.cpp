@@ -1,31 +1,25 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-// Qt
-#include <QGridLayout>
-#include <QPainter>
-
-// client
-#include "voteinfo.h"
-
-// gui-qt
-#include "fc_client.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 #include "voteinfo_bar.h"
+// Qt
+#include <QGridLayout>
+#include <QLabel>
+#include <QPainter>
+#include <QPushButton>
+// client
+#include "voteinfo.h"
+#include "page_game.h"
+#include "page_pregame.h"
+// gui-qt
+#include "fc_client.h"
 
 /***********************************************************************/ /**
    Constructor for pregamevote
@@ -224,14 +218,14 @@ void xvote::paintEvent(QPaintEvent *event)
  ***************************************************************************/
 void voteinfo_gui_update(void)
 {
-  if (gui()->current_page() == PAGE_START) {
-    gui()->pre_vote->update_vote();
+  if (king()->current_page() == PAGE_START) {
+    qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pre_vote->update_vote();
   }
-  if (gui()->current_page() == PAGE_GAME) {
+  if (king()->current_page() == PAGE_GAME) {
 
-    if (gui()->x_vote != NULL) {
-      gui()->x_vote->show();
-      gui()->x_vote->update_vote();
+    if (queen()->x_vote != NULL) {
+      queen()->x_vote->show();
+      queen()->x_vote->update_vote();
     }
   }
 }

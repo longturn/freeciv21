@@ -1,45 +1,32 @@
-/**********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__PLRDLG_H
-#define FC__PLRDLG_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include "plrdlg_g.h"
-
-// common
-#include "colors.h"
-#include "player.h"
-#include "research.h"
-
-// gui-qt
-#include "sprite.h"
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
 // Qt
 #include <QAbstractListModel>
 #include <QItemDelegate>
 #include <QTreeView>
 #include <QWidget>
+// client
+#include "plrdlg_common.h"
+#include "plrdlg_g.h"
 
 class QHBoxLayout;
+class QItemSelection;
 class QLabel;
+class QMouseEvent;
+class QPainter;
+class QPoint;
 class QPushButton;
 class QSortFilterProxyModel;
 class QSplitter;
-class QTableWidget;
 class QVBoxLayout;
 class plr_report;
 
@@ -121,8 +108,9 @@ class plr_widget : public QTreeView {
   struct player *selected_player;
 
 public:
-  plr_widget(plr_report *pr);
+  plr_widget(QWidget *);
   ~plr_widget();
+  void set_pr_rep(plr_report *pr);
   void restore_selection();
   plr_model *get_model() const;
   QString intel_str;
@@ -138,23 +126,12 @@ private:
   void hide_columns();
 };
 
+#include "ui_plrdlg.h"
 /***************************************************************************
   Widget to show as tab widget in players view.
 ***************************************************************************/
 class plr_report : public QWidget {
   Q_OBJECT
-  plr_widget *plr_wdg;
-  QLabel *plr_label;
-  QLabel *ally_label;
-  QLabel *tech_label;
-  QSplitter *v_splitter;
-  QSplitter *h_splitter;
-  QPushButton *meet_but;
-  QPushButton *cancel_but;
-  QPushButton *withdraw_but;
-  QPushButton *toggle_ai_but;
-  QVBoxLayout *layout;
-  QHBoxLayout *hlayout;
 
 public:
   plr_report();
@@ -164,18 +141,15 @@ public:
   void call_meeting();
 
 private:
+  Ui::FormPlrDlg ui;
   struct player *other_player;
   int index;
 private slots:
   void req_meeeting();
-  void req_caancel_threaty(); /** somehow autoconnect feature messes
-                               *  here and names are bit odd to cheat
-                               *  autoconnect */
-  void req_wiithdrw_vision();
+  void plr_cancel_threaty();
+  void plr_withdraw_vision();
   void toggle_ai_mode();
 };
 
 void popup_players_dialog(bool raise);
 void popdown_players_report(void);
-
-#endif /* FC__PLRDLG_H */

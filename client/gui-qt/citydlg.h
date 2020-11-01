@@ -1,81 +1,60 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
+#pragma once
 
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-#ifndef FC__CITYDLG_H
-#define FC__CITYDLG_H
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
+#include "fc_types.h"
 // Qt
+#include "fc_types.h"
 #include <QDialog>
 #include <QElapsedTimer>
+#include <QGroupBox>
 #include <QItemDelegate>
 #include <QLabel>
-#include <QtMath>
-
-class city_dialog;
-class QCheckBox;
-class QComboBox;
-class QDialog;
-class QGridLayout;
-class QGroupBox;
-class QHBoxLayout;
-class QProgressBar;
-class QPushButton;
-class QRadioButton;
-class QSplitter;
-class QTableView;
-class QTableWidget;
-class QTabWidget;
-class QVariant;
-class QVBoxLayout;
-
-#define NUM_INFO_FIELDS 15
-
-// common
-#include "unittype.h"
-
-// client
-#include "canvas.h"
-
-// gui-qt
-#include "dialogs.h"
-#include "fonts.h"
-
-// Qt
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QToolTip>
+#include <QtMath>
+// gui-qt
+#include "dialogs.h"
 
-class QImage;
+class QAction;
+class QCheckBox;
+class QCloseEvent;
+class QContextMenuEvent;
+class QEvent;
+class QFont;
+class QGridLayout;
+class QGroupBox;
+class QHBoxLayout;
+class QHideEvent;
+class QItemSelection;
+class QMenu;
+class QMouseEvent;
+class QPaintEvent;
+class QPainter;
+class QPushButton;
+class QRadioButton;
+class QRect;
+class QResizeEvent;
+class QShowEvent;
+class QSlider;
+class QSplitter;
+class QTableWidget;
+class QTableWidgetItem;
+class QTimerEvent;
+class QVBoxLayout;
+class QVariant;
+class fc_tooltip;
+struct canvas;
 
-QString get_tooltip(QVariant qvar);
-QString get_tooltip_improvement(const impr_type *building,
-                                struct city *pcity = nullptr,
-                                bool ext = false);
-QString get_tooltip_unit(const struct unit_type *utype, bool ext = false);
-QString bold(const QString &text);
-
-class fc_tooltip : public QObject {
-  Q_OBJECT
-public:
-  explicit fc_tooltip(QObject *parent = NULL) : QObject(parent) {}
-
-protected:
-  bool eventFilter(QObject *obj, QEvent *event);
-};
-
+#define NUM_INFO_FIELDS 15
 /****************************************************************************
   Custom progressbar with animated progress and right click event
 ****************************************************************************/
@@ -149,7 +128,6 @@ private slots:
   void unload_all();
 
 protected:
-  void wheelEvent(QWheelEvent *event);
   void mousePressEvent(QMouseEvent *event);
   void leaveEvent(QEvent *event);
   void enterEvent(QEvent *event);
@@ -163,20 +141,19 @@ class unit_info : public QFrame {
   Q_OBJECT
 
 public:
-  unit_info(bool supp);
+  unit_info();
   ~unit_info();
   void add_item(unit_item *item);
   void init_layout();
   void update_units();
   void clear_layout();
+  void set_supp(bool);
   QHBoxLayout *layout;
   QList<unit_item *> unit_list;
 
 private:
   bool supports;
 
-protected:
-  void wheelEvent(QWheelEvent *event);
 };
 
 /****************************************************************************
@@ -197,7 +174,6 @@ private:
   struct city *pcity;
 
 protected:
-  void wheelEvent(QWheelEvent *event);
   void mouseDoubleClickEvent(QMouseEvent *event);
   void leaveEvent(QEvent *event);
   void enterEvent(QEvent *event);
@@ -209,7 +185,7 @@ protected:
 class impr_info : public QFrame {
   Q_OBJECT
 public:
-  impr_info(QWidget *parent);
+  impr_info();
   ~impr_info();
   void add_item(impr_item *item);
   void init_layout();
@@ -217,44 +193,6 @@ public:
   void clear_layout();
   QHBoxLayout *layout;
   QList<impr_item *> impr_list;
-
-protected:
-  void wheelEvent(QWheelEvent *event);
-};
-
-/****************************************************************************
-  Class used for showing tiles and workers view in city dialog
-****************************************************************************/
-class city_map : public QWidget {
-
-  Q_OBJECT
-  canvas *view;
-  canvas *miniview;
-  QPixmap zoomed_pixmap;
-
-public:
-  city_map(QWidget *parent);
-  ~city_map();
-  void set_pixmap(struct city *pcity, float z);
-
-private:
-  void mousePressEvent(QMouseEvent *event);
-  void paintEvent(QPaintEvent *event);
-  struct city *mcity;
-  int radius;
-  float zoom;
-  int wdth;
-  int hight;
-  int cutted_width;
-  int cutted_height;
-  int delta_x;
-  int delta_y;
-
-protected:
-  QSize sizeHint() const;
-  QSize minimumSizeHint() const;
-private slots:
-  void context_menu(QPoint point);
 };
 
 /****************************************************************************
@@ -373,8 +311,9 @@ class city_label : public QLabel {
   Q_OBJECT
 
 public:
-  city_label(int type, QWidget *parent = 0);
+  city_label(QWidget *parent = 0);
   void set_city(struct city *pcity);
+  void set_type(int);
 
 private:
   struct city *pcity;
@@ -384,6 +323,31 @@ protected:
   void mousePressEvent(QMouseEvent *event);
 };
 
+class city_info : public QWidget {
+  Q_OBJECT
+public:
+  city_info(QWidget *parent = 0);
+  void update_labels(struct city *ci_city);
+private:
+  QLabel *qlt[NUM_INFO_FIELDS];
+  int positions;
+};
+
+
+class governor_sliders : public QGroupBox {
+  Q_OBJECT
+public:
+  governor_sliders(QWidget *parent = 0);
+  void update_sliders(struct cm_parameter &param);
+  QCheckBox *cma_celeb_checkbox;
+  QSlider *slider_tab[2 * O_LAST + 2];
+private slots:
+  void cma_slider(int val);
+  void cma_celebrate_changed(int val);
+};
+
+
+#include "ui_citydlg.h"
 /****************************************************************************
   City dialog
 ****************************************************************************/
@@ -391,76 +355,24 @@ class city_dialog : public qfc_dialog {
 
   Q_OBJECT
   Q_DISABLE_COPY(city_dialog);
-
-  bool happines_shown;
-  QHBoxLayout *single_page_layout;
-  QHBoxLayout *happiness_layout;
-  QSplitter *prod_unit_splitter;
-  QSplitter *central_left_splitter;
-  QSplitter *central_splitter;
-  QHBoxLayout *leftbot_layout;
-  QWidget *prod_happ_widget;
-  QWidget *top_widget;
-  QVBoxLayout *left_layout;
-  city_map *view;
-  city_label *citizens_label;
-  city_label *lab_table[6];
-  QGridLayout *info_grid_layout;
-  QGroupBox *info_labels_group;
-  QGroupBox *happiness_group;
-  QWidget *happiness_widget;
-  QWidget *info_widget;
-  QLabel *qlt[NUM_INFO_FIELDS];
-  QLabel *cma_info_text;
-  QLabel *cma_result;
-  QLabel *cma_result_pix;
-  QLabel *supp_units;
-  QLabel *curr_units;
-  QLabel *curr_impr;
-  progress_bar *production_combo_p;
-  QTableWidget *p_table_p;
-  QTableWidget *nationality_table;
-  QTableWidget *cma_table;
-  QCheckBox *cma_celeb_checkbox;
-  QCheckBox *future_targets;
-  QCheckBox *show_units;
-  QCheckBox *show_buildings;
-  QCheckBox *show_wonders;
-  QRadioButton *r1, *r2, *r3, *r4;
-  QPushButton *button;
-  QPushButton *buy_button;
-  QPushButton *cma_enable_but;
-  QPushButton *next_city_but;
-  QPushButton *prev_city_but;
-  QPushButton *work_next_but;
-  QPushButton *work_prev_but;
-  QPushButton *work_add_but;
-  QPushButton *work_rem_but;
-  QPushButton *but_menu_worklist;
-  QPushButton *happiness_button;
-  QPushButton *zoom_in_button;
-  QPushButton *zoom_out_button;
+  Ui::FormCityDlg ui;
   QPixmap *citizen_pixmap;
-  unit_info *current_units;
-  unit_info *supported_units;
-  impr_info *city_buildings;
-  QPushButton *lcity_name;
+  bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
-  QSlider *slider_tab[2 * O_LAST + 2];
-
+  city_label *lab_table[6];
 public:
-  static city_dialog* instance();
+  static city_dialog *instance();
   static void drop();
   ~city_dialog();
   void setup_ui(struct city *qcity);
   void refresh();
+  void cma_check_agent();
   struct city *pcity;
   int scroll_height;
-  float zoom;
 
 private:
   city_dialog(QWidget *parent = 0);
-  static city_dialog* m_instance;
+  static city_dialog *m_instance;
   int current_building;
   void update_title();
   void update_building();
@@ -474,7 +386,6 @@ private:
   void update_disabled();
   void update_sliders();
   void update_prod_buttons();
-  void update_happiness_button();
   void change_production(bool next);
 
 private slots:
@@ -483,7 +394,6 @@ private slots:
   void production_changed(int index);
   void show_targets();
   void show_targets_worklist();
-  void show_happiness();
   void buy();
   void dbl_click_p(QTableWidgetItem *item);
   void delete_prod();
@@ -495,8 +405,6 @@ private slots:
   void worklist_del();
   void display_worklist_menu(const QPoint);
   void disband_state_changed(bool allow_disband);
-  void cma_slider(int val);
-  void cma_celebrate_changed(int val);
   void cma_remove();
   void cma_enable();
   void cma_changed();
@@ -505,8 +413,6 @@ private slots:
   void cma_context_menu(const QPoint p);
   void save_cma();
   void city_rename();
-  void zoom_in();
-  void zoom_out();
 
 protected:
   void showEvent(QShowEvent *event);
@@ -517,5 +423,3 @@ protected:
 
 void destroy_city_dialog();
 void city_font_update();
-
-#endif /* FC__CITYDLG_H */
