@@ -66,6 +66,7 @@ fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
     pix = new QPixmap(12, 12);
     pix->fill(Qt::black);
   }
+  if (def_pixmap == nullptr)  { def_pixmap = new QPixmap(5,5); }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
   sfont = new QFont(*fc_font::instance()->get_font(fonts::notify_label));
