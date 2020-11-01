@@ -103,7 +103,7 @@ struct player *client_player(void);
 bool client_map_is_known_and_seen(const struct tile *ptile,
                                   const struct player *pplayer,
                                   enum vision_layer vlayer);
-void set_seconds_to_turndone(double seconds);
+void set_miliseconds_to_turndone(int miliseconds);
 int get_seconds_to_turndone(void);
 bool is_waiting_turn_change(void);
 void start_turn_change_wait(void);

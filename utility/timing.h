@@ -10,13 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-
-/* Measuring times; original author: David Pfitzner <dwp@mso.anu.edu.au> */
-
-#ifndef FC__TIMING_H
-#define FC__TIMING_H
-
-
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -81,6 +75,3 @@ double timer_read_seconds(struct timer *t);
 
 void timer_usleep_since_start(struct timer *t, long usec);
 
-
-
-#endif /* FC__TIMER_H */

@@ -1280,7 +1280,7 @@ void handle_new_year(int year, int fragments, int turn)
   update_unit_info_label(get_units_in_focus());
   menus_update();
 
-  set_seconds_to_turndone(current_turn_timeout());
+  set_miliseconds_to_turndone(current_turn_timeout() * 1000);
 
 #if 0
   /* This information shouldn't be needed, but if it is this is the only
@@ -2174,7 +2174,7 @@ void handle_timeout_info(float seconds_to_phasedone,
      * represents the number of seconds from now to the end of the turn
      * (not from the start of the turn). So we need to restart our
      * timer. */
-    set_seconds_to_turndone(seconds_to_phasedone);
+    set_miliseconds_to_turndone(seconds_to_phasedone * 1000);
   }
 
   game.tinfo.last_turn_change_time = last_turn_change_time;
