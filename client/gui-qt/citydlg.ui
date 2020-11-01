@@ -690,30 +690,6 @@
     </item>
    </layout>
   </widget>
-  <widget class="QGroupBox" name="groupBox">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>630</y>
-     <width>341</width>
-     <height>291</height>
-    </rect>
-   </property>
-   <property name="title">
-    <string>GroupBox</string>
-   </property>
-   <widget class="QWidget" name="gridLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>331</width>
-      <height>251</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" name="gridLayout_2"/>
-   </widget>
-  </widget>
  </widget>
  <customwidgets>
   <customwidget>
