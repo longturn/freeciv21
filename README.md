@@ -1,7 +1,7 @@
 Freeciv21
 =========
 
-[![License: GPL v2](https://img.shields.io/badge/License-GPLv2%2B-blue)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html) [![Build Status](https://travis-ci.org/longturn/freeciv21.svg?branch=master)](https://travis-ci.org/longturn/freeciv21)
+[![License: GPL v3+](https://img.shields.io/badge/License-GPLv3%2B-blue)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Build Status](https://travis-ci.org/longturn/freeciv21.svg?branch=master)](https://travis-ci.org/longturn/freeciv21)
 
 Freeciv21 is an empire-building strategy game inspired by the history of human civilization. It takes its roots in the well-known FOSS game Freeciv and extends it for more fun, with a revived focus on competitive multiplayer environments.
 
