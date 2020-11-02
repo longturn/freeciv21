@@ -2477,7 +2477,7 @@ void set_unit_class_caches(struct unit_class *pclass)
           subset_mover = FALSE;
         }
       }
-      extra_type_list_iterate_end;
+      extra_type_list_iterate_end
     }
 
     if (subset_mover) {
