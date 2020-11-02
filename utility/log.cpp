@@ -21,6 +21,7 @@
 #include <string.h>
 
 // Qt
+#include <QDebug>
 #include <QString>
 
 /* utility */
@@ -581,7 +582,7 @@ void log_time(QString msg, bool log)
     logging = true;
   }
   if (logging) {
-    qInfo(qPrintable(msg));
+    qInfo() << qPrintable(msg);
   }
 }
 
