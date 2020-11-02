@@ -278,7 +278,7 @@ static int team_placement_vertical(const struct tile *ptile1,
  ****************************************************************************/
 static void team_placement_state_destroy(struct team_placement_state *pstate)
 {
-  delete pstate->startpos;
+  delete[] pstate->startpos;
   delete pstate;
 }
 

@@ -146,6 +146,8 @@ bool script_server_load_file(const char *filename, char **buf)
       buffer[len] = '\0';
 
       *buf = buffer;
+    } else {
+      free(buffer);
     }
     fclose(ffile);
   }

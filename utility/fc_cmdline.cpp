@@ -159,7 +159,7 @@ static size_t fc_strcspn(const char *s, const char *reject)
    The user has the responsiblity to free the memory allocated by
    **tokens using free_tokens().
  **************************************************************************/
-int get_tokens(const char *str, char **tokens, size_t num_tokens,
+unsigned int get_tokens(const char *str, char **tokens, size_t num_tokens,
                const char *delimiterset)
 {
   unsigned int token;

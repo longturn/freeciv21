@@ -3823,6 +3823,7 @@ bool qtg_request_transport(struct unit *pcargo, struct tile *ptile)
 
   hul = new hud_unit_loader(pcargo, ptile);
   hul->show_me();
+  unit_list_destroy(potential_transports);
   return true;
 }
 

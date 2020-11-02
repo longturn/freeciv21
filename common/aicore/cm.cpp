@@ -366,7 +366,7 @@ void cm_result_destroy(struct cm_result *result)
     if (result->worker_positions != NULL) {
       FC_FREE(result->worker_positions);
     }
-    FC_FREE(result);
+    FCPP_FREE(result);
   }
 }
 

@@ -789,6 +789,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
     return SINGLE_MOVE;
 
   } else if (!is_native_tile_to_class(pclass, t2)) {
+    /* FIXME the same if then x else x 2 times */
     if (tile_city(t2) == NULL) {
       /* Loading to transport. */
 

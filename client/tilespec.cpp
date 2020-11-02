@@ -1767,7 +1767,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   if (!(file = secfile_load(fname, TRUE))) {
     log_error("Could not open '%s':\n%s", fname, secfile_error());
-    delete fname;
+    delete[] fname;
     return NULL;
   }
 
@@ -2398,6 +2398,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       if (verbose) {
         log_error("Can't find spec file \"%s\".", spec_filenames[i]);
       }
+      free(sf);
       goto ON_ERROR;
     }
     sf->file_name = fc_strdup(dname);
@@ -6612,7 +6613,7 @@ struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
                                       const struct unit *punit,
                                       const int *upkeep_cost)
 {
-  const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES + 1);
+  const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES);
 
   if (upkeep > 0) {
     return t->sprites.upkeep.output[otype][upkeep - 1];

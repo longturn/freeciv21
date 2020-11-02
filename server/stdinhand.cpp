@@ -1757,7 +1757,7 @@ static void show_help_option(struct connection *caller,
     fc_break_lines(help, LINE_BREAK);
     cmd_reply(help_cmd, caller, C_COMMENT, _("Description:"));
     cmd_reply_prefix(help_cmd, caller, C_COMMENT, "  ", "  %s", help);
-    FC_FREE(help);
+    FCPP_FREE(help);
   }
   cmd_reply(help_cmd, caller, C_COMMENT, _("Status: %s"),
             (setting_is_changeable(pset, NULL, NULL, 0) ? _("changeable")
@@ -2097,13 +2097,13 @@ static bool away_command(struct connection *caller, bool check)
 static void show_ruleset_info(struct connection *caller, enum command_id cmd,
                               bool check, int read_recursion)
 {
-  char *show_arg = strdup("changed");
+  char *show_arg;
 
   /* show changed settings only at the top level of recursion */
   if (read_recursion != 0) {
     return;
   }
-
+  show_arg = strdup("changed");
   show_settings(caller, cmd, show_arg, check);
 
   if (game.ruleset_summary != NULL) {
@@ -3783,6 +3783,7 @@ bool load_command(struct connection *caller, const char *filename,
   }
 
   if (check) {
+    free(file);
     return TRUE;
   }
 
@@ -4116,7 +4117,7 @@ static bool playercolor_command(struct connection *caller, char *str,
   enum m_pre_result match_result;
   struct player *pplayer;
   struct rgbcolor *prgbcolor = NULL;
-  int ntokens = 0;
+  unsigned int ntokens = 0;
   char *token[2];
   bool ret = TRUE;
 

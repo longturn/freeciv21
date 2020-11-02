@@ -86,7 +86,7 @@ static void package_event_full(struct packet_chat_msg *packet,
   }
 
   if (is_capitalization_enabled()) {
-    free_capitalized(str);
+    FCPP_FREE(str);
   }
 }
 

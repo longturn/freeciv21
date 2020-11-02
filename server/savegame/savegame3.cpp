@@ -3976,7 +3976,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
 
     BV_SET(plr->flags, fid);
   }
-  delete slist;
+  delete[] slist;
 
   /* Nation */
   str = secfile_lookup_str(loading->file, "player%d.nation", plrno);

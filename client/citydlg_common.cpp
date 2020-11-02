@@ -520,7 +520,7 @@ static void city_sum_add_real(struct city_sum *sum, double value,
       sum->sums[i].value += value;
       sum->sums[i].aux += aux;
       FC_FREE(posdesc);
-      FC_FREE(negdesc);
+      FCPP_FREE(negdesc);
       return;
     }
   }

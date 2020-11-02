@@ -339,7 +339,7 @@ void minimap_view::wheelEvent(QWheelEvent *event)
  **************************************************************************/
 void minimap_view::zoom_in()
 {
-  if (scale_factor < gui_options.overview.width / 8) {
+  if (scale_factor < double(gui_options.overview.width) / 8) {
     scale(1.2);
   }
 }

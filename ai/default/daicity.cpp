@@ -990,7 +990,7 @@ static bool building_crucial(const struct player *plr,
                              struct impr_type *pimprove,
                              const struct city *pcity)
 {
-#if 0 /* This check will become more complicated now. */ 
+#if 0 /* This check will become more complicated now. */
   if (ai_wants_no_science(plr)
       && building_has_effect(pimprove, EFT_SCIENCE_BONUS)) {
     return FALSE;
@@ -1613,7 +1613,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
      * like the others, so the AI will research techs that make it available,
      * for rulesets that do not provide it from the start.
      */
-    v += TRADE_WEIGHTING / 10;
+    v += float(TRADE_WEIGHTING) / 10;
   } else {
     /* Base want is calculated above using a more direct approach. */
     v += base_want(ait, pplayer, pcity, pimprove);
