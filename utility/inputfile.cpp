@@ -398,6 +398,7 @@ static bool check_include(struct inputfile *inf)
   }
   if (!(*c == '\0' || is_comment(*c))) {
     inf_log(inf, LOG_ERROR, "Junk after filename for '*include' line");
+    free(bare_name);
     return FALSE;
   }
   inf->cur_line_pos = astr_len(&inf->cur_line) - 1;

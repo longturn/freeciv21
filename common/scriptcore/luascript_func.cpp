@@ -131,10 +131,8 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                                va_list args)
 {
   struct luascript_func *pfunc;
-  api_types *parg_types =
-      static_cast<api_types *>(fc_calloc(nargs, sizeof(*parg_types)));
-  api_types *pret_types =
-      static_cast<api_types *>(fc_calloc(nreturns, sizeof(*pret_types)));
+  api_types *parg_types;
+  api_types *pret_types;
   int i;
 
   fc_assert_ret(fcl);
@@ -145,6 +143,10 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                   func_name);
     return;
   }
+  parg_types =
+      static_cast<api_types *>(fc_calloc(nargs, sizeof(*parg_types)));
+  pret_types =
+      static_cast<api_types *>(fc_calloc(nreturns, sizeof(*pret_types)));
 
   for (i = 0; i < nargs; i++) {
     *(parg_types + i) = api_types(va_arg(args, int));

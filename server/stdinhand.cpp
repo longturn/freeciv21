@@ -3783,6 +3783,7 @@ bool load_command(struct connection *caller, const char *filename,
   }
 
   if (check) {
+    free(file);
     return TRUE;
   }
 
