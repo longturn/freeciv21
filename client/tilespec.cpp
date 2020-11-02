@@ -6138,12 +6138,12 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
    The main loop needs to call toggle_focus_unit_state about this often
    to do the active-unit animation.
  ****************************************************************************/
-double get_focus_unit_toggle_timeout(const struct tileset *t)
+int get_focus_unit_toggle_timeout(const struct tileset *t)
 {
   if (t->sprites.unit.select[0]) {
-    return 0.1;
+    return 100;
   } else {
-    return 0.5;
+    return 500;
   }
 }
 

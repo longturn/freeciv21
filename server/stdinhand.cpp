@@ -3702,7 +3702,7 @@ end:
 bool load_command(struct connection *caller, const char *filename,
                   bool check, bool cmdline_load)
 {
-  struct timer *loadtimer, *uloadtimer;
+  civtimer *loadtimer, *uloadtimer;
   struct section_file *file;
   char arg[MAX_LEN_PATH];
   struct conn_list *global_observers;

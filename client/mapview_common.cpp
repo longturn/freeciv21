@@ -15,12 +15,17 @@
 #include <fc_config.h>
 #endif
 
+#include <QCoreApplication>
+#include <QElapsedTimer>
+#include <QEventLoop>
+#include <QGlobalStatic>
+#include <QTimer>
+
 /* utility */
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
 #include "support.h"
-#include "timing.h"
 
 /* common */
 #include "featured_text.h"
@@ -110,8 +115,7 @@ struct trade_route_line {
 
 /* A trade route line might need to be drawn in two parts. */
 static const int MAX_TRADE_ROUTE_DRAW_LINES = 2;
-
-static struct timer *anim_timer = NULL;
+Q_GLOBAL_STATIC(QElapsedTimer, anim_timer);
 
 enum animation_type { ANIM_MOVEMENT, ANIM_BATTLE, ANIM_EXPL, ANIM_NUKE };
 
@@ -159,6 +163,16 @@ struct animation {
 
 struct animation_list *animations = NULL;
 
+void anim_delay(int milliseconds)
+{
+  QEventLoop loop;
+  QTimer t;
+  t.connect(&t, &QTimer::timeout, &loop, &QEventLoop::quit);
+  t.start(milliseconds);
+  QCoreApplication::processEvents(QEventLoop::AllEvents, 20);
+  loop.exec();
+}
+
 /************************************************************************/ /**
    Initialize animations system
  ****************************************************************************/
@@ -180,8 +194,7 @@ void animations_free(void)
 static void animation_add(struct animation *anim)
 {
   if (animation_list_size(animations) == 0) {
-    anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-    timer_start(anim_timer);
+    anim_timer->start();
   }
 
   anim->finished = FALSE;
@@ -403,11 +416,10 @@ void update_animation(void)
 
       if (animation_list_size(animations) > 0) {
         /* Start next */
-        anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-        timer_start(anim_timer);
+        anim_timer->start();
       }
     } else {
-      double time_gone = timer_read_seconds(anim_timer);
+      double time_gone = double(anim_timer->elapsed()) / 1000;
       bool finished = FALSE;
 
       switch (anim->type) {
@@ -984,8 +996,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
 
       gui_distance_vector(tileset, &diff_x, &diff_y, start_x, start_y,
                           gui_x0, gui_y0);
-      anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-      timer_start(anim_timer);
+      anim_timer->start();
 
       unqueue_mapview_updates(TRUE);
 
@@ -997,7 +1008,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
          * frame's position is calculated from the expected time when the
          * frame will complete, rather than the time when the frame drawing
          * is started. */
-        currtime = timer_read_seconds(anim_timer);
+        currtime = double(anim_timer->elapsed()) / 1000;
         currtime += total_time / total_frames;
 
         mytime = MIN(currtime, timing_sec);
@@ -1008,7 +1019,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
         frames++;
       } while (currtime < timing_sec);
 
-      currtime = timer_read_seconds(anim_timer);
+      currtime = double(anim_timer->elapsed()) / 1000;
       total_frames += frames;
       total_time += currtime;
       log_debug("Got %d frames in %f seconds: %f FPS (avg %f).", frames,
@@ -2591,9 +2602,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
     while (punit0->hp > hp0 || punit1->hp > hp1) {
       const int diff0 = punit0->hp - hp0, diff1 = punit1->hp - hp1;
 
-      anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-      timer_start(anim_timer);
-
       if (fc_rand(diff0 + diff1) < diff0) {
         punit0->hp--;
         refresh_unit_mapcanvas(punit0, unit_tile(punit0), FALSE, FALSE);
@@ -2604,9 +2612,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
       unqueue_mapview_updates(TRUE);
       gui_flush();
-
-      timer_usleep_since_start(anim_timer,
-                               gui_options.smooth_combat_step_msec * 1000ul);
+      anim_delay(gui_options.smooth_combat_step_msec);
     }
 
     if (num_tiles_explode_unit > 0
@@ -2624,9 +2630,6 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
         struct sprite *sprite = *sprite_vector_get(anim, i);
 
         get_sprite_dimensions(sprite, &w, &h);
-        anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-        timer_start(anim_timer);
-
         /* We first draw the explosion onto the unit and draw draw the
          * complete thing onto the map canvas window. This avoids
          * flickering. */
@@ -2645,9 +2648,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
 
         flush_dirty();
         gui_flush();
-
-        timer_usleep_since_start(
-            anim_timer, gui_options.smooth_combat_step_msec * 2 * 1000ul);
+        anim_delay(gui_options.smooth_combat_step_msec);
       }
     }
   }
@@ -2727,13 +2728,12 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     } else {
 
       /* Start the timer (AFTER the unqueue above). */
-      anim_timer = timer_renew(anim_timer, TIMER_USER, TIMER_ACTIVE);
-      timer_start(anim_timer);
+      anim_timer->start();
 
       do {
         int new_x, new_y;
 
-        mytime = MIN(timer_read_seconds(anim_timer), timing_sec);
+        mytime = MIN(anim_timer->elapsed(), timing_sec);
 
         new_x = start_x + canvas_dx * (mytime / timing_sec);
         new_y = start_y + canvas_dy * (mytime / timing_sec);

@@ -150,9 +150,9 @@ bv_identity_numbers identity_numbers_used;
 static bool has_been_srv_init = FALSE;
 
 /* time server processing at end-of-turn */
-static struct timer *eot_timer = NULL;
+static civtimer *eot_timer = NULL;
 
-static struct timer *between_turns = NULL;
+static civtimer *between_turns = NULL;
 
 /**********************************************************************/ /**
    Initialize the game seed.  This may safely be called multiple times.
@@ -1192,9 +1192,7 @@ void begin_turn(bool is_new_turn)
     // begin_phase() only after AI players have finished their actions.
     lsend_packet_begin_turn(game.est_connections);
   }
-  if (srvarg.timetrack) {
-    qInfo() << "Begin turn:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("Begin turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1362,9 +1360,7 @@ void begin_phase(bool is_new_phase)
      * will be responsive again */
     lsend_packet_begin_turn(game.est_connections);
   }
-  if (srvarg.timetrack) {
-    qInfo() << "Start phase:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("Start phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1522,9 +1518,7 @@ void end_phase()
     adv_data_phase_done(pplayer);
   }
   phase_players_iterate_end;
-  if (srvarg.timetrack) {
-    qInfo() << "End phase:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("End phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1766,9 +1760,7 @@ void end_turn()
 
   log_debug("Sendyeartoclients");
   send_year_to_clients();
-  if (srvarg.timetrack) {
-    qInfo() << "End turn:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("End turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1782,8 +1774,7 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
   if (!(game.server.autosaves & (1 << type))) {
     return;
   }
-  QElapsedTimer timer;
-  timer.start();
+
   switch (type) {
   case AS_TURN:
     reason_filename = NULL;
@@ -1812,9 +1803,6 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
                 game.server.save_name);
   }
   save_game(filename, save_reason, FALSE);
-  if (srvarg.timetrack) {
-    qInfo() << "Autosave time:" << timer.elapsed() << "milliseconds";
-  }
 }
 
 /**********************************************************************/ /**

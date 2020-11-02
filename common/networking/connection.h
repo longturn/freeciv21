@@ -22,6 +22,7 @@
 
 // Qt
 #include <QString>
+#include <QList>
 
 /* utility */
 #include "shared.h"  /* MAX_LEN_ADDR */
@@ -37,7 +38,6 @@ class QTcpSocket;
 struct conn_pattern_list;
 struct genhash;
 struct packet_handlers;
-struct timer_list;
 
 /* Used in the network protocol. */
 #define MAX_LEN_PACKET 4096
@@ -146,7 +146,7 @@ struct connection {
 
   struct socket_packet_buffer *buffer;
   struct socket_packet_buffer *send_buffer;
-  struct timer *last_write;
+  struct civtimer *last_write;
 
   double ping_time;
 
@@ -193,7 +193,7 @@ struct connection {
 
       /* The start times of the PACKET_CONN_PING which have been sent but
        * weren't PACKET_CONN_PONGed yet? */
-      struct timer_list *ping_timers;
+      QList<civtimer*> *ping_timers;
 
       /* Holds number of tries for authentication from client. */
       int auth_tries;

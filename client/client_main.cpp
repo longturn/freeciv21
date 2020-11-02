@@ -21,13 +21,12 @@
 
 #include <math.h>
 #include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <time.h>
 
 // Qt
 #include <QApplication>
+#include <QElapsedTimer>
+#include <QGlobalStatic>
+#include <QTimer>
 
 /* utility */
 #include "bitvector.h"
@@ -43,7 +42,6 @@
 #include "rand.h"
 #include "registry.h"
 #include "support.h"
-#include "timing.h"
 
 /* common */
 #include "ai.h"
@@ -1072,12 +1070,12 @@ bool client_is_observer(void)
 /* Seconds_to_turndone is the number of seconds the server has told us
  * are left.  The timer tells exactly how much time has passed since the
  * server gave us that data. */
-static double seconds_to_turndone = 0.0;
-static struct timer *turndone_timer;
+static int miliseconds_to_turndone = 0;
+Q_GLOBAL_STATIC(QTimer, turndone_timer)
 
 /* The timer tells how long since server informed us about starting
  * turn-change activities. */
-static struct timer *between_turns = NULL;
+Q_GLOBAL_STATIC(QElapsedTimer, between_turns)
 static bool waiting_turn_change = FALSE;
 
 /* This value shows what value the timeout label is currently showing for
@@ -1091,16 +1089,16 @@ static int seconds_shown_to_new_turn;
    The seconds are taken as a double even though most callers will just
    know an integer value.
  **************************************************************************/
-void set_seconds_to_turndone(double seconds)
+void set_miliseconds_to_turndone(int miliseconds)
 {
   if (current_turn_timeout() > 0) {
-    seconds_to_turndone = seconds;
-    turndone_timer = timer_renew(turndone_timer, TIMER_USER, TIMER_ACTIVE);
-    timer_start(turndone_timer);
+    miliseconds_to_turndone = miliseconds;
+    turndone_timer->setSingleShot(true);
+    turndone_timer->start(miliseconds);
 
     /* Maybe we should do an update_timeout_label here, but it doesn't
      * seem to be necessary. */
-    seconds_shown_to_turndone = ceil(seconds) + 0.1;
+    seconds_shown_to_turndone = miliseconds / 1000;
   }
 }
 
@@ -1115,8 +1113,7 @@ bool is_waiting_turn_change(void) { return waiting_turn_change; }
 void start_turn_change_wait(void)
 {
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
-  between_turns = timer_renew(between_turns, TIMER_USER, TIMER_ACTIVE);
-  timer_start(between_turns);
+  between_turns->start();
 
   waiting_turn_change = TRUE;
 }
@@ -1175,33 +1172,29 @@ double real_timer_callback(void)
   {
     double blink_time = blink_turn_done_button();
 
-    time_until_next_call = MIN(time_until_next_call, blink_time);
+    time_until_next_call = MIN(time_until_next_call, blink_time) / 1000;
   }
 
   if (get_num_units_in_focus() > 0) {
     double blink_time = blink_active_unit();
 
-    time_until_next_call = MIN(time_until_next_call, blink_time);
+    time_until_next_call = MIN(time_until_next_call, blink_time) / 1000;
   }
 
   /* It is possible to have current_turn_timeout() > 0 but !turndone_timer,
    * in the first moments after the timeout is set. */
   if (current_turn_timeout() > 0 && turndone_timer) {
-    double seconds =
-        seconds_to_turndone - timer_read_seconds(turndone_timer);
-    int iseconds = ceil(seconds) + 0.1; /* Turn should end right on 0. */
 
-    if (iseconds < seconds_shown_to_turndone) {
-      seconds_shown_to_turndone = iseconds;
+    if (turndone_timer->remainingTime() / 1000 < seconds_shown_to_turndone) {
+      seconds_shown_to_turndone = turndone_timer->remainingTime() / 1000;
       update_timeout_label();
     }
 
-    time_until_next_call =
-        MIN(time_until_next_call, seconds - floor(seconds) + 0.001);
+    time_until_next_call = MIN(time_until_next_call, 1.0);
   }
   if (waiting_turn_change) {
     double seconds =
-        game.tinfo.last_turn_change_time - timer_read_seconds(between_turns);
+        game.tinfo.last_turn_change_time - between_turns->elapsed() / 1000;
     int iseconds = ceil(seconds) + 0.1; /* Turn should end right on 0. */
 
     if (iseconds < game.tinfo.last_turn_change_time) {

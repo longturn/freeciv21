@@ -1309,7 +1309,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
   char mapimgfile[MAX_LEN_PATH];
   bool ret = TRUE;
 #ifdef FREECIV_DEBUG
-  struct timer *timer_cpu, *timer_user;
+  civtimer *timer_cpu, *timer_user;
 #endif
 
   if (map_is_empty()) {

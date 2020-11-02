@@ -260,7 +260,7 @@ int fill_basic_terrain_layer_sprite_array(struct tileset *t,
                                           int layer,
                                           struct terrain *pterrain);
 
-double get_focus_unit_toggle_timeout(const struct tileset *t);
+int get_focus_unit_toggle_timeout(const struct tileset *t);
 void reset_focus_unit_state(struct tileset *t);
 void focus_unit_in_combat(struct tileset *t);
 void toggle_focus_unit_state(struct tileset *t);

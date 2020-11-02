@@ -417,7 +417,7 @@ void savegame3_save(struct section_file *sfile, const char *save_reason,
   fc_assert_ret(sfile != NULL);
 
 #ifdef DEBUG_TIMERS
-  struct timer *savetimer = timer_new(TIMER_CPU, TIMER_DEBUG);
+  civtimer *savetimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(savetimer);
 #endif
 

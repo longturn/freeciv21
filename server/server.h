@@ -23,9 +23,7 @@
 // Qt
 #include <QObject>
 
-// Forward declarations
-struct timer; // utility/timing.h
-
+class civtimer;
 class QTcpServer;
 class QTimer;
 
@@ -66,7 +64,7 @@ private:
 
   QTcpServer *m_tcp_server = nullptr;
 
-  timer *m_eot_timer = nullptr, *m_between_turns_timer = nullptr;
+  civtimer *m_eot_timer = nullptr, *m_between_turns_timer = nullptr;
 
   bool m_is_new_turn, m_need_send_pending_events, m_skip_mapimg;
   int m_save_counter = 0;

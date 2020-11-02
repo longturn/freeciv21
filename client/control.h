@@ -188,8 +188,8 @@ void update_unit_pix_label(struct unit_list *punitlist);
 
 struct unit *find_visible_unit(struct tile *ptile);
 void set_units_in_combat(struct unit *pattacker, struct unit *pdefender);
-double blink_active_unit(void);
-double blink_turn_done_button(void);
+int blink_active_unit(void);
+int blink_turn_done_button(void);
 
 bool should_ask_server_for_actions(const struct unit *punit);
 void action_selection_no_longer_in_progress(const int old_actor_id);

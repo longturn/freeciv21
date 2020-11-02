@@ -78,7 +78,7 @@ action_id as_actions_transform[MAX_NUM_ACTIONS];
 action_id as_actions_extra[MAX_NUM_ACTIONS];
 action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 
-static struct timer *as_timer = NULL;
+static civtimer *as_timer = NULL;
 
 /**********************************************************************/ /**
    Free resources allocated for autosettlers system
@@ -1208,15 +1208,9 @@ void auto_settlers_player(struct player *pplayer)
   }
 
   if (timer_in_use(as_timer)) {
-
-#ifdef LOG_TIMERS
-    log_verbose("%s autosettlers consumed %g milliseconds.",
-                nation_rule_name(nation_of_player(pplayer)),
-                1000.0 * timer_read_seconds(as_timer));
-#else
-    log_verbose("%s autosettlers finished",
-                nation_rule_name(nation_of_player(pplayer)));
-#endif
+    log_time(QString("%1 autosettlers consumed %2 milliseconds.")
+                 .arg(nation_rule_name(nation_of_player(pplayer)))
+                 .arg(1000.0 * timer_read_seconds(as_timer)));
   }
 
   delete[] state;

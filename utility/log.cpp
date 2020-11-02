@@ -574,4 +574,15 @@ void fc_assert_fail(const char *file, const char *function, int line,
     raise(fc_fatal_assertions);
   }
 }
+void log_time(QString msg, bool log)
+{
+  static bool logging;
+  if (log) {
+    logging = true;
+  }
+  if (logging) {
+    qInfo(qPrintable(msg));
+  }
+}
+
 #endif /* FREECIV_NDEBUG */

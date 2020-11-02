@@ -25,7 +25,6 @@
 #include "shared.h" /* for MIN() */
 #include "specialist.h"
 #include "support.h"
-#include "timing.h"
 
 /* common */
 #include "city.h"
@@ -80,7 +79,7 @@
  * Misc statistic to analyze performance.
  */
 static struct {
-  struct timer *wall_timer;
+  civtimer *wall_timer;
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
@@ -462,7 +461,7 @@ static void new_turn(void) { report_stats(); }
 void cma_init(void)
 {
   struct agent self;
-  struct timer *timer = stats.wall_timer;
+  civtimer *timer = stats.wall_timer;
 
   log_debug("sizeof(struct cm_result)=%d",
             (unsigned int) sizeof(struct cm_result));
