@@ -387,7 +387,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
    * For optimal performance AI should build more caravans, but
    * we want it to build less valued buildings too. */
   trader_trait = ai_trait_get_value(TRAIT_TRADER, pplayer);
-  want /= (130 * TRAIT_DEFAULT_VALUE / trader_trait);
+  want /= (130.f * TRAIT_DEFAULT_VALUE / trader_trait);
 
   /* Increase want for trade routes if our economy is very weak.
    * We may have enough gold, but only because we have already set
