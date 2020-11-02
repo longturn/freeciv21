@@ -434,6 +434,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
           log_verbose("Uncompressing of the packet stream failed. "
                       "The connection will be closed now.");
           connection_close(pc, _("decoding error"));
+          free(decompressed);
           return NULL;
         }
       }
