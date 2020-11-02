@@ -731,7 +731,7 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
       }
     }
   }
-  FC_FREE(slist);
+  FCPP_FREE(slist);
 
   return ok;
 }

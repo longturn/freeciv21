@@ -1757,7 +1757,7 @@ static void show_help_option(struct connection *caller,
     fc_break_lines(help, LINE_BREAK);
     cmd_reply(help_cmd, caller, C_COMMENT, _("Description:"));
     cmd_reply_prefix(help_cmd, caller, C_COMMENT, "  ", "  %s", help);
-    FC_FREE(help);
+    FCPP_FREE(help);
   }
   cmd_reply(help_cmd, caller, C_COMMENT, _("Status: %s"),
             (setting_is_changeable(pset, NULL, NULL, 0) ? _("changeable")

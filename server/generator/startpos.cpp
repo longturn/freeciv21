@@ -542,7 +542,7 @@ bool create_start_positions(enum map_startpos mode,
   }
 
   FC_FREE(tile_value_aux);
-  FC_FREE(tile_value);
+  FCPP_FREE(tile_value);
 
   return !failure;
 }

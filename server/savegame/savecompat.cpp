@@ -404,7 +404,7 @@ static void compat_load_020400(struct loaddata *loading,
              * bogus so we trash them */
             secfile_entry_delete(loading->file, "map.%s", newname);
             entry_set_name(pentry, newname);
-            FC_FREE(name2);
+            FCPP_FREE(name2);
           }
         }
         entry_list_iterate_end;

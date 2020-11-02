@@ -33,6 +33,10 @@
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
 #define fc_calloc(n, esz) calloc(n, esz)
 
+#define FCPP_FREE(ptr)                                                      \
+delete[] (ptr);                                                             \
+(ptr) = NULL;
+
 #define FC_FREE(ptr)                                                        \
   do {                                                                      \
     delete (ptr);                                                           \

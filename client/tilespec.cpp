@@ -1767,7 +1767,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   if (!(file = secfile_load(fname, TRUE))) {
     log_error("Could not open '%s':\n%s", fname, secfile_error());
-    delete fname;
+    delete[] fname;
     return NULL;
   }
 
