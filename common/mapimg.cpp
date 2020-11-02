@@ -574,14 +574,14 @@ char *mapimg_help(const char *cmdname)
   enum mapimg_layer layer;
   struct astring defaults[MAPDEF_COUNT];
   struct astring str_format = ASTRING_INIT, str_showplr = ASTRING_INIT;
-  struct mapdef *pmapdef = mapdef_new(FALSE);
+  struct mapdef *pmapdef;
   static struct astring help = ASTRING_INIT;
 
   if (astr_len(&help) > 0) {
     /* Help text was created already. */
     return fc_strdup(astr_str(&help));
   }
-
+  pmapdef = mapdef_new(FALSE);
   /* Possible 'format' settings (toolkit + format). */
   for (tool = imagetool_begin(); tool != imagetool_end();
        tool = imagetool_next(tool)) {
