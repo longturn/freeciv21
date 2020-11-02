@@ -1208,7 +1208,7 @@ void auto_settlers_player(struct player *pplayer)
   }
 
   if (timer_in_use(as_timer)) {
-    log_time(QString("%s autosettlers consumed %g milliseconds.")
+    log_time(QString("%1 autosettlers consumed %2 milliseconds.")
                  .arg(nation_rule_name(nation_of_player(pplayer)))
                  .arg(1000.0 * timer_read_seconds(as_timer)));
   }

@@ -453,8 +453,9 @@ bool handle_login_request(struct connection *pconn,
                 "a ping to unestablished connection %s?",
                 pconn->server.ping_timers->size(),
                 conn_description(pconn));
-  // sveinung delete this ?
-  pconn->server.ping_timers->removeFirst();
+
+  civtimer *deltimer = pconn->server.ping_timers->takeFirst();
+  timer_destroy(deltimer);
 
   if (game.server.connectmsg[0] != '\0') {
     log_debug("Sending connectmsg: %s", game.server.connectmsg);

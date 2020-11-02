@@ -84,7 +84,9 @@ static void close_connection(struct connection *pconn)
   }
 
   if (pconn->server.ping_timers != NULL) {
-    //sveinung delete this ?
+    while(!pconn->server.ping_timers->isEmpty()) {
+      timer_destroy(pconn->server.ping_timers->takeFirst());
+    }
     delete pconn->server.ping_timers;
     pconn->server.ping_timers = NULL;
   }
@@ -335,7 +337,6 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       pconn->server.auth_tries = 0;
       pconn->server.auth_settime = 0;
       pconn->server.status = AS_NOT_ESTABLISHED;
-      // sveinung delete/remove something
       pconn->server.ping_timers = new QList<civtimer*>;
       pconn->server.granted_access_level = pconn->access_level;
       pconn->server.ignore_list =

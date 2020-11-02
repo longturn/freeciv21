@@ -626,7 +626,7 @@ void server::begin_phase()
   // This will thaw the reports and agents at the client.
   lsend_packet_thaw_client(game.est_connections);
 
-  log_time(QString("End/start-turn server/ai activities: %g seconds")
+  log_time(QString("End/start-turn server/ai activities: %1 seconds")
                .arg(timer_read_seconds(m_eot_timer)));
 
   // Do auto-saves just before starting server_sniff_all_input(), so that
