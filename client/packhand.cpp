@@ -724,7 +724,6 @@ void handle_city_info(const struct packet_city_info *packet)
   pcity->city_options = packet->city_options;
 
   if (pcity->surplus[O_SCIENCE] != packet->surplus[O_SCIENCE]
-      || pcity->surplus[O_SCIENCE] != packet->surplus[O_SCIENCE]
       || pcity->waste[O_SCIENCE] != packet->waste[O_SCIENCE]
       || (pcity->unhappy_penalty[O_SCIENCE]
           != packet->unhappy_penalty[O_SCIENCE])
