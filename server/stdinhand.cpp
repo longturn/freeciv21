@@ -2097,13 +2097,13 @@ static bool away_command(struct connection *caller, bool check)
 static void show_ruleset_info(struct connection *caller, enum command_id cmd,
                               bool check, int read_recursion)
 {
-  char *show_arg = strdup("changed");
+  char *show_arg;
 
   /* show changed settings only at the top level of recursion */
   if (read_recursion != 0) {
     return;
   }
-
+  show_arg = strdup("changed");
   show_settings(caller, cmd, show_arg, check);
 
   if (game.ruleset_summary != NULL) {
