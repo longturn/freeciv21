@@ -128,7 +128,7 @@ void timer_stop(civtimer *t)
     return;
   }
   t->msec = t->elapsed();
-  t->sec += (double(t->elapsed()) / 1000);
+  t->sec = (double(t->elapsed()) / 1000);
   t->state = TIMER_STOPPED;
 }
 
