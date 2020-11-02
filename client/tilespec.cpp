@@ -2398,6 +2398,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       if (verbose) {
         log_error("Can't find spec file \"%s\".", spec_filenames[i]);
       }
+      free(sf);
       goto ON_ERROR;
     }
     sf->file_name = fc_strdup(dname);

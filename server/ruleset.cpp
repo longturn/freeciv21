@@ -694,7 +694,10 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
     output[i] = A_LAST;
   }
   slist = secfile_lookup_str_vec(file, &nval, "%s.%s", prefix, entry);
-  if (slist == NULL || nval == 0) {
+  if (slist == NULL) {
+    return TRUE;
+  } else if (nval == 0) {
+    FCPP_FREE(slist);
     return TRUE;
   } else if (nval > MAX_NUM_TECH_LIST) {
     ruleset_error(LOG_ERROR,
@@ -2907,9 +2910,9 @@ static bool load_ruleset_terrain(struct section_file *file,
       }
       for (j = T_FIRST; j < i; j++) {
         if (pterrain->identifier == terrain_by_number(j)->identifier) {
-          ruleset_error(
-              LOG_ERROR, "\"%s\" [%s] has the same identifier as [%s].",
-              filename, tsection, terrain_sections[j]);
+          ruleset_error(LOG_ERROR,
+                        "\"%s\" [%s] has the same identifier as [%s].",
+                        filename, tsection, terrain_sections[j]);
           ok = FALSE;
           break;
         }
