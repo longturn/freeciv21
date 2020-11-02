@@ -1462,7 +1462,7 @@ static void adjust_ai_unit_choice(struct city *pcity,
     choice->value.building = improvement_by_number(id);
     choice->want = choice->want
                    * (0.5
-                      + (ai_trait_get_value(TRAIT_BUILDER, city_owner(pcity))
+                      + double((ai_trait_get_value(TRAIT_BUILDER, city_owner(pcity)))
                          / TRAIT_DEFAULT_VALUE / 2));
     choice->type = CT_BUILDING;
     adv_choice_set_use(choice, "veterancy building");
