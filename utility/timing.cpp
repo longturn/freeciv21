@@ -19,12 +19,7 @@
 
 /* utility */
 #include "log.h"
-#include "mem.h"
-#include "support.h"
 
-#ifndef CLOCKS_PER_SEC
-#define CLOCKS_PER_SEC 1000000 /* what sorcery is this ? */
-#endif
 
 enum timer_state { TIMER_STARTED, TIMER_STOPPED };
 
@@ -36,12 +31,11 @@ public:
   enum timer_use use;
   double sec;
   int msec;
-  double now;
 };
 
 civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
     : QElapsedTimer(), state(TIMER_STOPPED), type(ttype), use(tuse),
-      sec(0.0), msec(0), now(0.0)
+      sec(0.0), msec(0)
 {
 }
 
@@ -113,7 +107,7 @@ void timer_start(civtimer *t)
     return;
   }
   t->state = TIMER_STARTED;
-  t->start();
+  t->restart();
 }
 
 /*******************************************************************/ /**
@@ -133,17 +127,8 @@ void timer_stop(civtimer *t)
     log_error("tried to stop already stopped timer");
     return;
   }
-  if (t->type == TIMER_CPU) {
-    double now;
-    now = double(t->elapsed()) / 1000;
-    t->sec += (now - t->now);
-    t->now = now;
-  } else {
-    int now = t->elapsed();
-    t->msec += (now - t->msec);
-    t->sec += (double(now) / 1000 - t->sec);
-    t->now = now;
-  }
+  t->msec = t->elapsed();
+  t->sec += (double(t->elapsed()) / 1000);
   t->state = TIMER_STOPPED;
 }
 
