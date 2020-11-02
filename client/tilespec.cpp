@@ -6612,7 +6612,7 @@ struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
                                       const struct unit *punit,
                                       const int *upkeep_cost)
 {
-  const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES + 1);
+  const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES);
 
   if (upkeep > 0) {
     return t->sprites.upkeep.output[otype][upkeep - 1];
