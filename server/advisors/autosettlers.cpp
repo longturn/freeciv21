@@ -1208,15 +1208,9 @@ void auto_settlers_player(struct player *pplayer)
   }
 
   if (timer_in_use(as_timer)) {
-
-#ifdef LOG_TIMERS
-    log_verbose("%s autosettlers consumed %g milliseconds.",
-                nation_rule_name(nation_of_player(pplayer)),
-                1000.0 * timer_read_seconds(as_timer));
-#else
-    log_verbose("%s autosettlers finished",
-                nation_rule_name(nation_of_player(pplayer)));
-#endif
+    log_time(QString("%s autosettlers consumed %g milliseconds.")
+                 .arg(nation_rule_name(nation_of_player(pplayer)))
+                 .arg(1000.0 * timer_read_seconds(as_timer)));
   }
 
   delete[] state;

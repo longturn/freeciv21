@@ -226,4 +226,6 @@ void fc_assert_fail(const char *file, const char *function, int line,
   enum { static_assert_##tag = 1 / (!!(cond)) }
 #endif
 
+void log_time(QString msg, bool log = false);
+
 #endif /* FC__LOG_H */

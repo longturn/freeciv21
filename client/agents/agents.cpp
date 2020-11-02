@@ -752,11 +752,12 @@ void wait_for_requests(const char *agent_name, int first_request_id,
 
   agent->first_outstanding_request_id = 0;
 
-  log_debug(
-      "A:%s: waited %fs in total for network; "
-      "requests=%d; waited %d times",
-      agent->agent.name, timer_read_seconds(agent->stats.network_wall_timer),
-      agent->stats.wait_at_network_requests, agent->stats.wait_at_network);
+  log_time(QString("A:%1: waited %2ms in total for network; "
+                   "requests=%3; waited %4 times")
+               .arg(agent->agent.name)
+               .arg(agent->stats.network_wall_timer)
+               .arg(agent->stats.wait_at_network_requests)
+               .arg(agent->stats.wait_at_network));
 }
 
 /************************************************************************/ /**

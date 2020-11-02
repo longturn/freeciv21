@@ -1192,9 +1192,7 @@ void begin_turn(bool is_new_turn)
     // begin_phase() only after AI players have finished their actions.
     lsend_packet_begin_turn(game.est_connections);
   }
-  if (srvarg.timetrack) {
-    qInfo() << "Begin turn:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("Begin turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1362,9 +1360,7 @@ void begin_phase(bool is_new_phase)
      * will be responsive again */
     lsend_packet_begin_turn(game.est_connections);
   }
-  if (srvarg.timetrack) {
-    qInfo() << "Start phase:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("Start phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1522,9 +1518,7 @@ void end_phase()
     adv_data_phase_done(pplayer);
   }
   phase_players_iterate_end;
-  if (srvarg.timetrack) {
-    qInfo() << "End phase:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("End phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1766,9 +1760,7 @@ void end_turn()
 
   log_debug("Sendyeartoclients");
   send_year_to_clients();
-  if (srvarg.timetrack) {
-    qInfo() << "End turn:" << timer.elapsed() << "milliseconds";
-  }
+  log_time(QString("End turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**

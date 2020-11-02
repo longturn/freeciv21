@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QString>
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -343,6 +344,7 @@ int main(int argc, char *argv[])
   }
   if (parser.isSet("timetrack")) {
     srvarg.timetrack = true;
+    log_time("Time tracking enabled", true);
   }
   if (parser.isSet("debug")) {
     if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {

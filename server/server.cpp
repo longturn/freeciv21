@@ -447,8 +447,7 @@ void server::send_pings()
 
     conn_list_iterate(game.all_connections, pconn)
     {
-      if ((!pconn->server.is_closing
-           && 0 < pconn->server.ping_timers->size()
+      if ((!pconn->server.is_closing && 0 < pconn->server.ping_timers->size()
            && timer_read_seconds(pconn->server.ping_timers->front())
                   > game.server.pingtimeout)
           || pconn->ping_time > game.server.pingtimeout) {
@@ -627,11 +626,8 @@ void server::begin_phase()
   // This will thaw the reports and agents at the client.
   lsend_packet_thaw_client(game.est_connections);
 
-#ifdef LOG_TIMERS
-  // Before sniff (human player activites), report time to now:
-  log_verbose("End/start-turn server/ai activities: %g seconds",
-              timer_read_seconds(m_eot_timer));
-#endif
+  log_time(QString("End/start-turn server/ai activities: %g seconds")
+               .arg(timer_read_seconds(m_eot_timer)));
 
   // Do auto-saves just before starting server_sniff_all_input(), so that
   // autosave happens effectively "at the same time" as manual

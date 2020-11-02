@@ -509,9 +509,11 @@ void handle_conn_pong(struct connection *pconn)
   timer = pconn->server.ping_timers->front();
   pconn->ping_time = timer_read_seconds(timer);
   pconn->server.ping_timers->removeFirst();
-  log_debug("got pong from %s (open=%d); ping time = %fs",
-            conn_description(pconn),
-            pconn->server.ping_timers->size(), pconn->ping_time);
+
+  log_time(QString("got pong from %1 (open=%2); ping time = %3s")
+               .arg(conn_description(pconn))
+               .arg(pconn->server.ping_timers->size())
+               .arg(pconn->ping_time));
 }
 
 /*************************************************************************/ /**

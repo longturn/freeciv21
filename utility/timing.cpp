@@ -40,7 +40,8 @@ public:
 };
 
 civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
-    : QElapsedTimer(), state(TIMER_STOPPED), type(ttype), use(tuse), sec(0.0), msec(0), now(0.0)
+    : QElapsedTimer(), state(TIMER_STOPPED), type(ttype), use(tuse),
+      sec(0.0), msec(0), now(0.0)
 {
 }
 
@@ -56,7 +57,7 @@ civtimer *timer_new(enum timer_timetype type, enum timer_use use)
    Allocate a new timer, or reuse t, with specified "type" and "use".
  ***********************************************************************/
 civtimer *timer_renew(civtimer *t, enum timer_timetype type,
-                          enum timer_use use)
+                      enum timer_use use)
 {
   if (!t) {
     t = new civtimer(type, use);
@@ -140,7 +141,7 @@ void timer_stop(civtimer *t)
   } else {
     int now = t->elapsed();
     t->msec += (now - t->msec);
-    t->sec += (double(now)/1000 - t->sec);
+    t->sec += (double(now) / 1000 - t->sec);
     t->now = now;
   }
   t->state = TIMER_STOPPED;

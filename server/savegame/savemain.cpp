@@ -204,8 +204,6 @@ void save_game(const char *orig_filename, const char *save_reason,
 
   timer_cpu = timer_new(TIMER_CPU, TIMER_ACTIVE);
   timer_start(timer_cpu);
-  timer_user = timer_new(TIMER_USER, TIMER_ACTIVE);
-  timer_start(timer_user);
 
   /* Allowing duplicates shouldn't be allowed. However, it takes very too
    * long time for huge game saving... */
@@ -294,12 +292,8 @@ void save_game(const char *orig_filename, const char *save_reason,
     save_thread_run(stdata);
   }
 
-if (srvarg.timetrack) {
-  qInfo("Save time: %g seconds (%g apparent)", timer_read_seconds(timer_cpu), timer_read_seconds(timer_user));
-}
-
+  log_time(QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
   timer_destroy(timer_cpu);
-  timer_destroy(timer_user);
 }
 
 /************************************************************************/ /**
