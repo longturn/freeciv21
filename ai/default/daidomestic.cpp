@@ -587,7 +587,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     building_advisor_choose(pcity, cur);
     cur->want = cur->want
                 * (0.5
-                   + (ai_trait_get_value(TRAIT_BUILDER, pplayer)
+                   + double((ai_trait_get_value(TRAIT_BUILDER, pplayer))
                       / TRAIT_DEFAULT_VALUE / 2));
     choice = adv_better_choice_free(choice, cur);
 

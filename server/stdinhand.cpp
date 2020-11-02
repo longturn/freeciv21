@@ -4116,7 +4116,7 @@ static bool playercolor_command(struct connection *caller, char *str,
   enum m_pre_result match_result;
   struct player *pplayer;
   struct rgbcolor *prgbcolor = NULL;
-  int ntokens = 0;
+  unsigned int ntokens = 0;
   char *token[2];
   bool ret = TRUE;
 
