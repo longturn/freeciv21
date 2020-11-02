@@ -11,136 +11,55 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-/**********************************************************************
-  Measuring times; original author: David Pfitzner <dwp@mso.anu.edu.au>
-
-  We assume we have gettimeofday() for user-time to get (usually)
-  better resolution than time(). One day this will be ported to Qt.
-
-  As well as measuring single time intervals, these functions
-  support accumulating the time from multiple separate intervals.
-
-  Notice the struct timer is an opaque type: modules outside timing.c
-  can only use it as a pointer (cf FILE type).  This is done for two
-  main reasons:
-
-   1. General principle of data hiding and encapsulation
-
-   2. Means we don't have to include fc_config.h and possibly system
-      specific header files in timing.h.  Such stuff is confined
-      inside timing.c.
-
-  However there is a disadvantage: any code using a timer must do
-  memory allocation and deallocation for it.  Some of the functions
-  below are intended to make this reasonably convenient; see function
-  comments.
-***********************************************************************/
-
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
-
-#include <time.h>
-
-#include <sys/time.h>
-#include <unistd.h>
+#include "timing.h"
+#include <QElapsedTimer>
 
 /* utility */
 #include "log.h"
 #include "mem.h"
-#include "shared.h" /* TRUE, FALSE */
 #include "support.h"
 
-#include "timing.h"
-
 #ifndef CLOCKS_PER_SEC
-#ifdef CLOCKS_PER_SECOND
-#define CLOCKS_PER_SEC CLOCKS_PER_SECOND
-#else
-#define CLOCKS_PER_SEC 1000000 /* wild guess!! */
+#define CLOCKS_PER_SEC 1000000 /* what sorcery is this ? */
 #endif
-#endif
-
-#define N_USEC_PER_SEC 1000000L /* not 1000! :-) */
 
 enum timer_state { TIMER_STARTED, TIMER_STOPPED };
 
-struct timer {
-  /* type: */
+class civtimer : public QElapsedTimer {
+public:
+  civtimer(enum timer_timetype type, enum timer_use use);
+  enum timer_state state;
   enum timer_timetype type;
   enum timer_use use;
-  enum timer_state state;
-
-  /* this is accumulated time for previous timings: */
   double sec;
-  long usec; /* not always used, in which case zero,
-                or if used may be negative, but >= -1000000 */
-
-  /* this is start of current timing, if state == TIMER_STARTED: */
-  union {
-    clock_t c;
-    struct timeval tv;
-  } start;
+  int msec;
+  double now;
 };
 
-/*******************************************************************/ /**
-   Report if clock() returns -1, but only the first time.
-   Ignore this timer from now on.
- ***********************************************************************/
-static void report_clock_failed(struct timer *t)
+civtimer::civtimer(enum timer_timetype ttype, enum timer_use tuse)
+    : QElapsedTimer(), state(TIMER_STOPPED), type(ttype), use(tuse), sec(0.0), msec(0), now(0.0)
 {
-  static bool first = TRUE;
-
-  if (first) {
-    log_test("clock() returned -1, ignoring timer");
-    first = FALSE;
-  }
-  t->use = TIMER_IGNORE;
 }
 
-/*******************************************************************/ /**
-   Report if gettimeofday() returns -1, but only the first time.
-   Ignore this timer from now on.
- ***********************************************************************/
-static void report_gettimeofday_failed(struct timer *t)
-{
-  static bool first = TRUE;
-
-  if (first) {
-    log_test("gettimeofday() returned -1, ignoring timer");
-    first = FALSE;
-  }
-  t->use = TIMER_IGNORE;
-}
-
-/*******************************************************************/ /**
+/***********************************************************************
    Allocate a new timer with specified "type" and "use".
-   The timer is created as cleared, and stopped.
  ***********************************************************************/
-struct timer *timer_new(enum timer_timetype type, enum timer_use use)
+civtimer *timer_new(enum timer_timetype type, enum timer_use use)
 {
   return timer_renew(NULL, type, use);
 }
 
-/*******************************************************************/ /**
+/************************************************************************
    Allocate a new timer, or reuse t, with specified "type" and "use".
-   The timer is created as cleared, and stopped.
-   If t is NULL, allocate and return a new timer, else
-   just re-initialise t and return t.
-   This is intended to be useful to allocate a static t just once, eg:
-   {
-      static struct timer *t = NULL;
-      t = timer_renew(t, TIMER_CPU, TIMER_USE);
-      ... stuff ...
-      log_verbose("That took %g seconds.", timer_read_seconds(t));
-      ... never free t ...
-   }
  ***********************************************************************/
-struct timer *timer_renew(struct timer *t, enum timer_timetype type,
+civtimer *timer_renew(civtimer *t, enum timer_timetype type,
                           enum timer_use use)
 {
   if (!t) {
-    t = (struct timer *) fc_malloc(sizeof(struct timer));
+    t = new civtimer(type, use);
   }
   t->type = type;
   t->use = use;
@@ -149,12 +68,12 @@ struct timer *timer_renew(struct timer *t, enum timer_timetype type,
 }
 
 /*******************************************************************/ /**
-   Free the memory associated with a timer.
+   Deletes timer
  ***********************************************************************/
-void timer_destroy(struct timer *t)
+void timer_destroy(civtimer *t)
 {
-  if (t != NULL) {
-    free(t);
+  if (t != nullptr) {
+    delete t;
   }
 }
 
@@ -162,26 +81,26 @@ void timer_destroy(struct timer *t)
    Return whether timer is in use.
    t may be NULL, in which case returns 0
  ***********************************************************************/
-bool timer_in_use(struct timer *t) { return (t && t->use != TIMER_IGNORE); }
+bool timer_in_use(civtimer *t) { return (t && t->use != TIMER_IGNORE); }
 
 /*******************************************************************/ /**
    Reset accumulated time to zero, and stop timer if going.
    That is, this may be called whether t is started or stopped;
    in either case the timer is in the stopped state after this function.
  ***********************************************************************/
-void timer_clear(struct timer *t)
+void timer_clear(civtimer *t)
 {
   fc_assert_ret(NULL != t);
   t->state = TIMER_STOPPED;
   t->sec = 0.0;
-  t->usec = 0;
+  t->msec = 0;
 }
 
 /*******************************************************************/ /**
    Start timing, adding to previous accumulated time if timer has not
    been cleared.  A warning is printed if the timer is already started.
  ***********************************************************************/
-void timer_start(struct timer *t)
+void timer_start(civtimer *t)
 {
   fc_assert_ret(NULL != t);
 
@@ -192,21 +111,8 @@ void timer_start(struct timer *t)
     log_error("tried to start already started timer");
     return;
   }
-  if (t->type == TIMER_CPU) {
-    t->start.c = clock();
-    if (t->start.c == (clock_t) -1) {
-      report_clock_failed(t);
-      return;
-    }
-  } else {
-    int ret = gettimeofday(&t->start.tv, NULL);
-
-    if (ret == -1) {
-      report_gettimeofday_failed(t);
-      return;
-    }
-  }
   t->state = TIMER_STARTED;
+  t->start();
 }
 
 /*******************************************************************/ /**
@@ -215,7 +121,7 @@ void timer_start(struct timer *t)
    can call this to take a point reading if the timer is active.)
    A warning is printed if the timer is already stopped.
  ***********************************************************************/
-void timer_stop(struct timer *t)
+void timer_stop(civtimer *t)
 {
   fc_assert_ret(NULL != t);
 
@@ -227,34 +133,15 @@ void timer_stop(struct timer *t)
     return;
   }
   if (t->type == TIMER_CPU) {
-    clock_t now = clock();
-
-    if (now == (clock_t) -1) {
-      report_clock_failed(t);
-      return;
-    }
-    t->sec += (now - t->start.c) / (double) CLOCKS_PER_SEC;
-    t->start.c = now;
+    double now;
+    now = double(t->elapsed()) / 1000;
+    t->sec += (now - t->now);
+    t->now = now;
   } else {
-    struct timeval now;
-    int ret = gettimeofday(&now, NULL);
-
-    if (ret == -1) {
-      report_gettimeofday_failed(t);
-      return;
-    }
-    t->usec += (now.tv_usec - t->start.tv.tv_usec);
-    t->sec += (now.tv_sec - t->start.tv.tv_sec);
-    if (t->usec < 0) {
-      t->usec += N_USEC_PER_SEC;
-      t->sec -= 1.0;
-    } else if (t->usec >= N_USEC_PER_SEC) {
-      long sec = t->usec / N_USEC_PER_SEC;
-
-      t->sec += sec;
-      t->usec -= sec * N_USEC_PER_SEC;
-    }
-    t->start.tv = now;
+    int now = t->elapsed();
+    t->msec += (now - t->msec);
+    t->sec += (double(now)/1000 - t->sec);
+    t->now = now;
   }
   t->state = TIMER_STOPPED;
 }
@@ -264,7 +151,7 @@ void timer_stop(struct timer *t)
    timer, reads it (and accumulates), and then restarts it.
    Returns 0.0 for unused timers.
  ***********************************************************************/
-double timer_read_seconds(struct timer *t)
+double timer_read_seconds(civtimer *t)
 {
   fc_assert_ret_val(NULL != t, -1.0);
 
@@ -275,36 +162,5 @@ double timer_read_seconds(struct timer *t)
     timer_stop(t);
     t->state = TIMER_STARTED;
   }
-  return t->sec + t->usec / (double) N_USEC_PER_SEC;
-}
-
-/*******************************************************************/ /**
-   Sleeps until the given number of microseconds have elapsed since the
-   timer was started.  Leaves the timer running.
-   Must be called with an active, running user timer.
-   (If timer is broken or in wrong state, just sleep for entire interval.)
- ***********************************************************************/
-void timer_usleep_since_start(struct timer *t, long usec)
-{
-  int ret;
-  struct timeval tv_now;
-  long elapsed_usec;
-  long wait_usec;
-
-  fc_assert_ret(NULL != t);
-
-  ret = gettimeofday(&tv_now, NULL);
-
-  if ((ret == -1) || (t->type != TIMER_USER) || (t->use != TIMER_ACTIVE)
-      || (t->state != TIMER_STARTED)) {
-    fc_usleep(usec);
-    return;
-  }
-
-  elapsed_usec = (tv_now.tv_sec - t->start.tv.tv_sec) * N_USEC_PER_SEC
-                 + (tv_now.tv_usec - t->start.tv.tv_usec);
-  wait_usec = usec - elapsed_usec;
-
-  if (wait_usec > 0)
-    fc_usleep(wait_usec);
+  return t->sec;
 }

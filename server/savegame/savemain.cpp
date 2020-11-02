@@ -16,6 +16,7 @@
 #endif
 
 // Qt
+#include <QDebug>
 #include <QDir>
 #include <QString>
 
@@ -51,7 +52,7 @@ void savegame_load(struct section_file *sfile)
   fc_assert_ret(sfile != NULL);
 
 #ifdef DEBUG_TIMERS
-  struct timer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
+  civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(loadtimer);
 #endif
 
@@ -147,7 +148,7 @@ void save_game(const char *orig_filename, const char *save_reason,
                bool scenario)
 {
   char *dot, *filename;
-  struct timer *timer_cpu, *timer_user;
+  civtimer *timer_cpu, *timer_user;
   struct save_thread_data *stdata;
 
   stdata = static_cast<save_thread_data *>(fc_malloc(sizeof(*stdata)));
@@ -293,10 +294,9 @@ void save_game(const char *orig_filename, const char *save_reason,
     save_thread_run(stdata);
   }
 
-#ifdef LOG_TIMERS
-  log_verbose("Save time: %g seconds (%g apparent)",
-              timer_read_seconds(timer_cpu), timer_read_seconds(timer_user));
-#endif
+if (srvarg.timetrack) {
+  qInfo("Save time: %g seconds (%g apparent)", timer_read_seconds(timer_cpu), timer_read_seconds(timer_user));
+}
 
   timer_destroy(timer_cpu);
   timer_destroy(timer_user);

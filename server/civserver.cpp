@@ -62,7 +62,7 @@
  **************************************************************************/
 static void signal_handler(int sig)
 {
-  static struct timer *timer = NULL;
+  static civtimer *timer = NULL;
 
   switch (sig) {
   case SIGINT:

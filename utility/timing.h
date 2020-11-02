@@ -51,27 +51,17 @@ enum timer_use {
 #define TIMER_DEBUG TIMER_IGNORE
 #endif
 
-struct timer; /* opaque type; see comments in timing.c */
+class civtimer;
 
-#define SPECLIST_TAG timer
-#define SPECLIST_TYPE struct timer
-#include "speclist.h"
-#define timer_list_iterate(ARG_list, NAME_item)                             \
-  TYPED_LIST_ITERATE(struct timer, (ARG_list), NAME_item)
-#define timer_list_iterate_end LIST_ITERATE_END
-
-struct timer *timer_new(enum timer_timetype type, enum timer_use use);
-struct timer *timer_renew(struct timer *t, enum timer_timetype type,
+civtimer *timer_new(enum timer_timetype type, enum timer_use use);
+civtimer *timer_renew(civtimer *t, enum timer_timetype type,
                           enum timer_use use);
 
-void timer_destroy(struct timer *t);
-bool timer_in_use(struct timer *t);
+void timer_destroy(civtimer *t);
+bool timer_in_use(civtimer *t);
 
-void timer_clear(struct timer *t);
-void timer_start(struct timer *t);
-void timer_stop(struct timer *t);
+void timer_clear(civtimer *t);
+void timer_start(civtimer *t);
+void timer_stop(civtimer *t);
 
-double timer_read_seconds(struct timer *t);
-
-void timer_usleep_since_start(struct timer *t, long usec);
-
+double timer_read_seconds(civtimer *t);

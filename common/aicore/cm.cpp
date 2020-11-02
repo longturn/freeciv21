@@ -97,7 +97,7 @@
 #ifdef GATHER_TIME_STATS
 static struct {
   struct one_perf {
-    struct timer *wall_timer;
+    civtimer *wall_timer;
     int query_count;
     int apply_count;
     const char *name;

@@ -78,7 +78,7 @@ action_id as_actions_transform[MAX_NUM_ACTIONS];
 action_id as_actions_extra[MAX_NUM_ACTIONS];
 action_id as_actions_rmextra[MAX_NUM_ACTIONS];
 
-static struct timer *as_timer = NULL;
+static civtimer *as_timer = NULL;
 
 /**********************************************************************/ /**
    Free resources allocated for autosettlers system

@@ -150,9 +150,9 @@ bv_identity_numbers identity_numbers_used;
 static bool has_been_srv_init = FALSE;
 
 /* time server processing at end-of-turn */
-static struct timer *eot_timer = NULL;
+static civtimer *eot_timer = NULL;
 
-static struct timer *between_turns = NULL;
+static civtimer *between_turns = NULL;
 
 /**********************************************************************/ /**
    Initialize the game seed.  This may safely be called multiple times.
@@ -1782,8 +1782,7 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
   if (!(game.server.autosaves & (1 << type))) {
     return;
   }
-  QElapsedTimer timer;
-  timer.start();
+
   switch (type) {
   case AS_TURN:
     reason_filename = NULL;
@@ -1812,9 +1811,6 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
                 game.server.save_name);
   }
   save_game(filename, save_reason, FALSE);
-  if (srvarg.timetrack) {
-    qInfo() << "Autosave time:" << timer.elapsed() << "milliseconds";
-  }
 }
 
 /**********************************************************************/ /**

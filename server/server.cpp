@@ -448,8 +448,8 @@ void server::send_pings()
     conn_list_iterate(game.all_connections, pconn)
     {
       if ((!pconn->server.is_closing
-           && 0 < timer_list_size(pconn->server.ping_timers)
-           && timer_read_seconds(timer_list_front(pconn->server.ping_timers))
+           && 0 < pconn->server.ping_timers->size()
+           && timer_read_seconds(pconn->server.ping_timers->front())
                   > game.server.pingtimeout)
           || pconn->ping_time > game.server.pingtimeout) {
         // cut mute players, except for hack-level ones

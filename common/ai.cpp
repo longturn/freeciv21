@@ -34,7 +34,7 @@ static int ai_type_count = 0;
 #ifdef DEBUG_AITIMERS
 struct ai_timer {
   int count;
-  struct timer *timer;
+  civtimer *timer;
 };
 
 static struct ai_timer *ai_timer_get(const struct ai_type *ai);

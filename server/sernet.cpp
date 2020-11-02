@@ -84,7 +84,8 @@ static void close_connection(struct connection *pconn)
   }
 
   if (pconn->server.ping_timers != NULL) {
-    timer_list_destroy(pconn->server.ping_timers);
+    //sveinung delete this ?
+    delete pconn->server.ping_timers;
     pconn->server.ping_timers = NULL;
   }
 
@@ -236,7 +237,7 @@ void incoming_client_packets(struct connection *pconn)
 {
   struct packet_to_handle packet;
 #if PROCESSING_TIME_STATISTICS
-  struct timer *request_time = NULL;
+  civtimer *request_time = NULL;
 #endif
 
   while (get_packet(pconn, &packet)) {
@@ -315,7 +316,7 @@ static const char *makeup_connection_name(int *id)
  *****************************************************************************/
 int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 {
-  struct timer *timer;
+  civtimer *timer;
   int i;
 
   for (i = 0; i < MAX_NUM_CONNECTIONS; i++) {
@@ -334,7 +335,8 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       pconn->server.auth_tries = 0;
       pconn->server.auth_settime = 0;
       pconn->server.status = AS_NOT_ESTABLISHED;
-      pconn->server.ping_timers = timer_list_new_full(timer_destroy);
+      // sveinung delete/remove something
+      pconn->server.ping_timers = new QList<civtimer*>;
       pconn->server.granted_access_level = pconn->access_level;
       pconn->server.ignore_list =
           conn_pattern_list_new_full(conn_pattern_destroy);
@@ -357,7 +359,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
        * connecthand.c:handle_login_request(). */
       timer = timer_new(TIMER_USER, TIMER_ACTIVE);
       timer_start(timer);
-      timer_list_append(pconn->server.ping_timers, timer);
+      pconn->server.ping_timers->append(timer);
       return 0;
     }
   }
@@ -483,12 +485,12 @@ static void finish_processing_request(struct connection *pconn)
  *****************************************************************************/
 void connection_ping(struct connection *pconn)
 {
-  struct timer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
+  civtimer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
 
   log_debug("sending ping to %s (open=%d)", conn_description(pconn),
-            timer_list_size(pconn->server.ping_timers));
+            pconn->server.ping_timers->size());
   timer_start(timer);
-  timer_list_append(pconn->server.ping_timers, timer);
+  pconn->server.ping_timers->append(timer);
   send_packet_conn_ping(pconn);
 }
 
@@ -497,19 +499,19 @@ void connection_ping(struct connection *pconn)
  *****************************************************************************/
 void handle_conn_pong(struct connection *pconn)
 {
-  struct timer *timer;
+  civtimer *timer;
 
-  if (timer_list_size(pconn->server.ping_timers) == 0) {
+  if (pconn->server.ping_timers->size() == 0) {
     log_error("got unexpected pong from %s", conn_description(pconn));
     return;
   }
 
-  timer = timer_list_front(pconn->server.ping_timers);
+  timer = pconn->server.ping_timers->front();
   pconn->ping_time = timer_read_seconds(timer);
-  timer_list_pop_front(pconn->server.ping_timers);
+  pconn->server.ping_timers->removeFirst();
   log_debug("got pong from %s (open=%d); ping time = %fs",
             conn_description(pconn),
-            timer_list_size(pconn->server.ping_timers), pconn->ping_time);
+            pconn->server.ping_timers->size(), pconn->ping_time);
 }
 
 /*************************************************************************/ /**

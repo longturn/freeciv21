@@ -488,7 +488,7 @@ bool is_metaserver_open(void) { return server_is_open; }
  *************************************************************************/
 bool send_server_info_to_metaserver(enum meta_flag flag)
 {
-  static struct timer *last_send_timer = NULL;
+  static civtimer *last_send_timer = NULL;
   static bool want_update;
 
   if (!server_is_open) {
