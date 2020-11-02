@@ -3987,9 +3987,8 @@ static bool load_government_names(struct section_file *file,
       }
       multipliers_iterate_end;
     }
+    section_list_destroy(sec);
   }
-
-  section_list_destroy(sec);
 
   return ok;
 }
