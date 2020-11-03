@@ -146,7 +146,7 @@ struct connection {
 
   struct socket_packet_buffer *buffer;
   struct socket_packet_buffer *send_buffer;
-  struct civtimer *last_write;
+  class civtimer *last_write;
 
   double ping_time;
 
