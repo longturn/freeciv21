@@ -1,31 +1,23 @@
-/*****************************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-*****************************************************************************/
-
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
 
-#include <stdarg.h>
+#include <QList>
+#include <QtGlobal>
 
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
-#include "mem.h"
-#include "shared.h"
 #include "support.h"
-
-/* common */
-#include "version.h"
 
 #include "fc_cmdhelp.h"
 
@@ -35,35 +27,24 @@ struct cmdarg {
   char *helpstr;
 };
 
-/* 'struct cmdarg_list' and related functions. */
-#define SPECLIST_TAG cmdarg
-#define SPECLIST_TYPE struct cmdarg
-#include "speclist.h"
-#define cmdarg_list_iterate(cmdarg_list, pcmdarg)                           \
-  TYPED_LIST_ITERATE(struct cmdarg, cmdarg_list, pcmdarg)
-#define cmdarg_list_iterate_end LIST_ITERATE_END
-
 struct cmdhelp {
   char *cmdname;
-  struct cmdarg_list *cmdarglist;
+  QList<cmdarg*> *cmdarglist;
 };
 
 static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
                                  const char *helpstr);
 static void cmdarg_destroy(struct cmdarg *pcmdarg);
-static int cmdarg_compare(const struct cmdarg *const *pcmdarg0,
-                          const struct cmdarg *const *pcmdarg1);
 
 /*************************************************************************/ /**
    Create a new command help struct.
  *****************************************************************************/
 struct cmdhelp *cmdhelp_new(const char *cmdname)
 {
-  struct cmdhelp *pcmdhelp =
-      static_cast<cmdhelp *>(fc_calloc(1, sizeof(*pcmdhelp)));
+  struct cmdhelp *pcmdhelp = new cmdhelp[1]();
 
-  pcmdhelp->cmdname = fc_strdup(fc_basename(cmdname));
-  pcmdhelp->cmdarglist = cmdarg_list_new();
+  pcmdhelp->cmdname = qstrdup(fc_basename(cmdname));
+  pcmdhelp->cmdarglist = new QList<cmdarg*>;
 
   return pcmdhelp;
 }
@@ -75,15 +56,14 @@ void cmdhelp_destroy(struct cmdhelp *pcmdhelp)
 {
   if (pcmdhelp) {
     if (pcmdhelp->cmdname) {
-      free(pcmdhelp->cmdname);
+      delete[] pcmdhelp->cmdname;
     }
-    cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg)
-    {
+    for (auto pcmdarg : qAsConst(*pcmdhelp->cmdarglist)) {
       cmdarg_destroy(pcmdarg);
     }
-    cmdarg_list_iterate_end;
   }
-  free(pcmdhelp);
+  delete pcmdhelp->cmdarglist;
+  delete[] pcmdhelp;
 }
 
 /*************************************************************************/ /**
@@ -101,7 +81,7 @@ void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
   va_end(args);
 
   pcmdarg = cmdarg_new(shortarg, longarg, buf);
-  cmdarg_list_append(pcmdhelp->cmdarglist, pcmdarg);
+  pcmdhelp->cmdarglist->append(pcmdarg);
 }
 
 /*************************************************************************/ /**
@@ -113,9 +93,8 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
   fc_fprintf(stderr, _("Usage: %s [option ...]\nValid option are:\n"),
              pcmdhelp->cmdname);
 
-  cmdarg_list_sort(pcmdhelp->cmdarglist, cmdarg_compare);
-  cmdarg_list_iterate(pcmdhelp->cmdarglist, pcmdarg)
-  {
+  std::sort(pcmdhelp->cmdarglist->begin(), pcmdhelp->cmdarglist->end());
+  for (auto pcmdarg : qAsConst(*pcmdhelp->cmdarglist)) {
     if (pcmdarg->shortarg != '\0') {
       fc_fprintf(stderr, "  -%c, --%-15s %s\n", pcmdarg->shortarg,
                  pcmdarg->longarg, pcmdarg->helpstr);
@@ -124,7 +103,6 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
                  pcmdarg->helpstr);
     }
   }
-  cmdarg_list_iterate_end;
 
   if (gui_options) {
     char buf[128];
@@ -151,8 +129,7 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
 static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
                                  const char *helpstr)
 {
-  struct cmdarg *pcmdarg =
-      static_cast<cmdarg *>(fc_calloc(1, sizeof(*pcmdarg)));
+  struct cmdarg *pcmdarg = new cmdarg[1]();
 
   if (shortarg && strlen(shortarg) == 1) {
     pcmdarg->shortarg = shortarg[0];
@@ -160,8 +137,8 @@ static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
     /* '\0' means no short argument for this option. */
     pcmdarg->shortarg = '\0';
   }
-  pcmdarg->longarg = fc_strdup(longarg);
-  pcmdarg->helpstr = fc_strdup(helpstr);
+  pcmdarg->longarg = qstrdup(longarg);
+  pcmdarg->helpstr = qstrdup(helpstr);
 
   return pcmdarg;
 }
@@ -173,53 +150,12 @@ static void cmdarg_destroy(struct cmdarg *pcmdarg)
 {
   if (pcmdarg) {
     if (pcmdarg->longarg) {
-      free(pcmdarg->longarg);
+      delete[] pcmdarg->longarg;
     }
     if (pcmdarg->helpstr) {
-      free(pcmdarg->helpstr);
+      delete[] pcmdarg->helpstr;
     }
   }
-  free(pcmdarg);
+  delete []pcmdarg;
 }
 
-/*************************************************************************/ /**
-   Compare two command argument definitions.
- *****************************************************************************/
-static int cmdarg_compare(const struct cmdarg *const *pp0,
-                          const struct cmdarg *const *pp1)
-{
-  const struct cmdarg *pcmdarg0 = *pp0;
-  const struct cmdarg *pcmdarg1 = *pp1;
-  int c0, c1;
-
-  if (pcmdarg0 == NULL) {
-    return -1;
-  }
-  if (pcmdarg1 == NULL) {
-    return 1;
-  }
-
-  /* Arguments without a short option are listed at the end sorted by the
-   * long option. */
-  if (pcmdarg0->shortarg == '\0') {
-    if (pcmdarg1->shortarg == '\0') {
-      return fc_strcasecmp(pcmdarg0->longarg, pcmdarg1->longarg);
-    } else {
-      return 1;
-    }
-  }
-  if (pcmdarg1->shortarg == '\0') {
-    return -1;
-  }
-
-  /* All other are sorted alphabetically by the shortarg in the following
-   * order: AaBbCcDd... */
-  c0 = (int) (unsigned char) fc_tolower(pcmdarg0->shortarg);
-  c1 = (int) (unsigned char) fc_tolower(pcmdarg1->shortarg);
-  if (c0 == c1) {
-    return (int) (unsigned char) pcmdarg0->shortarg
-           - (int) (unsigned char) pcmdarg1->shortarg;
-  } else {
-    return c0 - c1;
-  }
-}
