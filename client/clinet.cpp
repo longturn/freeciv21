@@ -110,8 +110,8 @@ static void client_conn_close_callback(struct connection *pconn)
       message in ERRBUF and return the Unix error code (ie., errno, which
       will be non-zero).
  **************************************************************************/
-static int try_to_connect(const char *hostname, int port,
-                          const char *username, char *errbuf, int errbufsize)
+static int try_to_connect(QString &hostname, int port, QString &username,
+                          char *errbuf, int errbufsize)
 {
   // Apply defaults
   if (hostname == nullptr) {
@@ -142,7 +142,7 @@ static int try_to_connect(const char *hostname, int port,
                          qUtf8Printable(client.conn.sock->errorString()));
       });
 
-  client.conn.sock->connectToHost(QString::fromUtf8(hostname), port);
+  client.conn.sock->connectToHost(hostname, port);
   if (!client.conn.sock->waitForConnected(-1)) {
     return -1;
   }
@@ -156,7 +156,7 @@ static int try_to_connect(const char *hostname, int port,
    Connect to a freeciv-server instance -- or at least try to.  On success,
    return 0; on failure, put an error message in ERRBUF and return -1.
  **************************************************************************/
-int connect_to_server(const char *username, const char *hostname, int port,
+int connect_to_server(QString &username, QString &hostname, int port,
                       char *errbuf, int errbufsize)
 {
   if (errbufsize > 0 && errbuf != NULL) {
@@ -168,7 +168,7 @@ int connect_to_server(const char *username, const char *hostname, int port,
   }
 
   if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, hostname);
+    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(hostname));
     gui_options.default_server_port = port;
   }
 
@@ -178,7 +178,7 @@ int connect_to_server(const char *username, const char *hostname, int port,
 /**********************************************************************/ /**
    Called after a connection is completed (e.g., in try_to_connect).
  **************************************************************************/
-void make_connection(QTcpSocket *sock, const char *username)
+void make_connection(QTcpSocket *sock, QString &username)
 {
   struct packet_server_join_req req;
 
@@ -200,7 +200,7 @@ void make_connection(QTcpSocket *sock, const char *username)
   req.patch_version = PATCH_VERSION;
   sz_strlcpy(req.version_label, VERSION_LABEL);
   sz_strlcpy(req.capability, our_capability);
-  sz_strlcpy(req.username, username);
+  sz_strlcpy(req.username, qUtf8Printable(username));
 
   send_packet_server_join_req(&client.conn, &req);
 }
@@ -392,7 +392,8 @@ double try_to_autoconnect(void)
   if (count >= MAX_AUTOCONNECT_ATTEMPTS) {
     log_fatal(_("Failed to contact server \"%s\" at port "
                 "%d as \"%s\" after %d attempts"),
-              server_host, server_port, user_name, count);
+              qUtf8Printable(server_host), server_port,
+              qUtf8Printable(user_name), count);
     exit(EXIT_FAILURE);
   }
 
@@ -406,7 +407,8 @@ double try_to_autoconnect(void)
     // All errors are fatal
     log_fatal(_("Error contacting server \"%s\" at port %d "
                 "as \"%s\":\n %s\n"),
-              server_host, server_port, user_name, errbuf);
+              qUtf8Printable(server_host), server_port,
+              qUtf8Printable(user_name), errbuf);
     exit(EXIT_FAILURE);
   }
 }
@@ -422,12 +424,12 @@ void start_autoconnecting_to_server(void)
 {
   char buf[512];
 
-  output_window_printf(ftc_client,
-                       _("Auto-connecting to server \"%s\" at port %d "
-                         "as \"%s\" every %f second(s) for %d times"),
-                       server_host, server_port, user_name,
-                       0.001 * AUTOCONNECT_INTERVAL,
-                       MAX_AUTOCONNECT_ATTEMPTS);
+  output_window_printf(
+      ftc_client,
+      _("Auto-connecting to server \"%s\" at port %d "
+        "as \"%s\" every %f second(s) for %d times"),
+      qUtf8Printable(server_host), server_port, qUtf8Printable(user_name),
+      0.001 * AUTOCONNECT_INTERVAL, MAX_AUTOCONNECT_ATTEMPTS);
 
   autoconnecting = TRUE;
 }

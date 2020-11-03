@@ -385,7 +385,7 @@ static bool meta_read_response(struct server_scan *scan)
   if (NULL == f) {
     fc_snprintf(str, sizeof(str),
                 _("Failed to read the metaserver data from %s."),
-                metaserver);
+                qUtf8Printable(cmd_metaserver));
     scan->error_func(scan, str);
 
     return FALSE;
@@ -404,7 +404,7 @@ static bool meta_read_response(struct server_scan *scan)
     fc_snprintf(str, sizeof(str),
                 _("Failed to parse the metaserver data from %s:\n"
                   "%s."),
-                metaserver, secfile_error());
+                qUtf8Printable(cmd_metaserver), secfile_error());
     scan->error_func(scan, str);
 
     return FALSE;
@@ -454,7 +454,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
   post.addQueryItem(QLatin1String("client_cap"),
                     QString::fromUtf8(our_capability));
 
-  QNetworkRequest request(QUrl(QString::fromUtf8(metaserver)));
+  QNetworkRequest request(cmd_metaserver);
   request.setHeader(QNetworkRequest::UserAgentHeader,
                     QLatin1String("Freeciv/" VERSION_STRING));
   request.setHeader(QNetworkRequest::ContentTypeHeader,
