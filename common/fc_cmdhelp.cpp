@@ -29,7 +29,7 @@ struct cmdarg {
 
 struct cmdhelp {
   char *cmdname;
-  QList<cmdarg*> *cmdarglist;
+  QList<cmdarg *> *cmdarglist;
 };
 
 static struct cmdarg *cmdarg_new(const char *shortarg, const char *longarg,
@@ -44,7 +44,7 @@ struct cmdhelp *cmdhelp_new(const char *cmdname)
   struct cmdhelp *pcmdhelp = new cmdhelp[1]();
 
   pcmdhelp->cmdname = qstrdup(fc_basename(cmdname));
-  pcmdhelp->cmdarglist = new QList<cmdarg*>;
+  pcmdhelp->cmdarglist = new QList<cmdarg *>;
 
   return pcmdhelp;
 }
@@ -85,6 +85,13 @@ void cmdhelp_add(struct cmdhelp *pcmdhelp, const char *shortarg,
 }
 
 /*************************************************************************/ /**
+   Helper sort function in alphabetical order
+ *****************************************************************************/
+static bool lettersort(cmdarg *i, cmdarg *j)
+{
+  return tolower(i->shortarg) < tolower(j->shortarg);
+}
+/*************************************************************************/ /**
    Display the help for the command.
  *****************************************************************************/
 void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
@@ -93,7 +100,8 @@ void cmdhelp_display(struct cmdhelp *pcmdhelp, bool sort, bool gui_options,
   fc_fprintf(stderr, _("Usage: %s [option ...]\nValid option are:\n"),
              pcmdhelp->cmdname);
 
-  std::sort(pcmdhelp->cmdarglist->begin(), pcmdhelp->cmdarglist->end());
+  std::sort(pcmdhelp->cmdarglist->begin(), pcmdhelp->cmdarglist->end(),
+            lettersort);
   for (auto pcmdarg : qAsConst(*pcmdhelp->cmdarglist)) {
     if (pcmdarg->shortarg != '\0') {
       fc_fprintf(stderr, "  -%c, --%-15s %s\n", pcmdarg->shortarg,
@@ -156,6 +164,5 @@ static void cmdarg_destroy(struct cmdarg *pcmdarg)
       delete[] pcmdarg->helpstr;
     }
   }
-  delete []pcmdarg;
+  delete[] pcmdarg;
 }
-
