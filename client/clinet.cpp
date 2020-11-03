@@ -144,6 +144,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
 
   client.conn.sock->connectToHost(hostname, port);
   if (!client.conn.sock->waitForConnected(-1)) {
+    errbuf[0] = '\0';
     return -1;
   }
 
