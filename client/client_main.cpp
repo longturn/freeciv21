@@ -623,7 +623,7 @@ int client_main(int argc, char *argv[])
 
   fill_topo_ts_default();
 
-  if (forced_tileset_name[0] != '\0') {
+  if (!forced_tileset_name.isEmpty()) {
     if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
                            TRUE)) {
       log_error(_("Can't load requested tileset %s!"),
