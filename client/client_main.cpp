@@ -396,42 +396,32 @@ int client_main(int argc, char *argv[])
 #ifndef FREECIV_NDEBUG
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
 #endif /* FREECIV_NDEBUG */
-       /* TRANS: "file" is exactly what user must type, do not translate. */
-       {{"f", _("file")}, _("Load saved game FILE"), "FILE"},
+       {{"f", "file"}, _("Load saved game FILE"), "FILE"},
 #ifdef FREECIV_DEBUG
        {{"H", "Hackless"},
         _("Do not request hack access to local, but not spawned, server")},
 #endif /* FREECIV_DEBUG */
-       {{"l", _("log")},
+       {{"l", "log"},
         _("Use FILE as logfile (spawned server also uses this)"),
         "FILE"},
-       /* TRANS: "Meta" is exactly what user must type, do not translate. */
-       {{"M", _("Meta")}, _("Connect to the metaserver at HOST"), "HOST"},
-       {{"n", _("name")}, _("Use NAME as username on server"), "NAME"},
-       /* TRANS: "port" is exactly what user must type, do not translate. */
-       {{"p", _("port")},
+       {{"M", "Meta"}, _("Connect to the metaserver at HOST"), "HOST"},
+       {{"n", "name"}, _("Use NAME as username on server"), "NAME"},
+       {{"p", "port"},
         _("Connect to server port PORT (usually with -a)"),
         "PORT"},
        {{"P", _("Plugin")},
         QString::asprintf(_("Use PLUGIN for sound output %s"),
                           audio_get_all_plugin_names()),
         "PLUGIN"},
-       /* TRANS: "read" is exactly what user must type, do not translate. */
-       {{"r", _("read")},
+       {{"r", "read"},
         _("Read startup script FILE (for spawned server only)"),
         "FILE"},
-       /* TRANS: , do not translate "server" */
-       {{"s", _("server")},
+       {{"s", "server"},
         _("Connect to the server at HOST (usually with -a)"),
         "HOST"},
-       /* TRANS: "Sound" is exactly what user must type, do not translate. */
-       {{"S", _("Sound")}, _("Read sound tags from FILE"), "FILE"},
-       /* TRANS: "music" is exactly what user must type, do not translate. */
-       {{"m", _("music")}, _("Read music tags from FILE"), "FILE"},
-       /* TRANS: "tiles" is exactly what user must type, do not translate. */
-       {{"t", _("tiles")},
-        _("Use data file FILE.tilespec for tiles"),
-        "FILE"},
+       {{"S", "Sound"}, _("Read sound tags from FILE"), "FILE"},
+       {{"m", "music"}, _("Read music tags from FILE"), "FILE"},
+       {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
        {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
   if (!ok) {
     log_fatal("Adding command line arguments failed");
