@@ -185,6 +185,7 @@ void flush_connection_send_buffer_all(struct connection *pc)
                                           && pc->send_buffer->ndata > 0);
     }
   }
+  pc->sock->flush();
 }
 
 /**********************************************************************/ /**
@@ -199,6 +200,7 @@ static void flush_connection_send_buffer_packets(struct connection *pc)
                                           && pc->send_buffer->ndata > 0);
     }
   }
+  pc->sock->flush();
 }
 
 /**********************************************************************/ /**
