@@ -2500,6 +2500,7 @@ void city_dialog::prev_city()
   }
 
   center_tile_mapcanvas(other_pcity->tile);
+  key_city_hide_open(pcity);
   qtg_real_city_dialog_popup(other_pcity);
 }
 
