@@ -434,10 +434,8 @@ void page_network::slot_connect()
 
   switch (connection_status) {
   case LOGIN_TYPE:
-    ba_bytes = ui.connect_login_edit->text().toLocal8Bit();
-    sz_strlcpy(user_name, ba_bytes.data());
-    ba_bytes = ui.connect_host_edit->text().toLocal8Bit();
-    sz_strlcpy(server_host, ba_bytes.data());
+    user_name = ui.connect_login_edit->text().toLocal8Bit();
+    server_host = ui.connect_host_edit->text().toLocal8Bit();
     server_port = ui.connect_port_edit->text().toInt();
 
     if (connect_to_server(user_name, server_host, server_port, errbuf,

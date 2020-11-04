@@ -257,15 +257,15 @@ bool client_start_server(void)
             << "-e"
             << "--saves" << savesdir << "--scenarios" << scensdir << "-A"
             << "none";
-  if (logfile) {
+  if (logfile.isEmpty()) {
     enum log_level llvl = log_get_level();
     dbg_lvl_buf = QString::number(llvl);
     arguments << "--debug" << dbg_lvl_buf << "--log" << logfile;
   }
-  if (scriptfile) {
+  if (scriptfile.isEmpty()) {
     arguments << "--read" << scriptfile;
   }
-  if (savefile) {
+  if (savefile.isEmpty()) {
     arguments << "--file" << savefile;
   }
   if (are_deprecation_warnings_enabled()) {
@@ -286,8 +286,9 @@ bool client_start_server(void)
   serverProcess::i()->waitForReadyRead();
   server_quitting = FALSE;
   /* a reasonable number of tries */
+  QString srv = "localhost";
   while (connect_to_server(
-             user_name, "localhost", internal_server_port, buf,
+             user_name, srv, internal_server_port, buf,
              sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
          == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
