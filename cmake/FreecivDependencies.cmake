@@ -49,6 +49,10 @@ endif()
 if(FREECIV_ENABLE_NLS)
   find_package(Intl REQUIRED)
   set(FREECIV_HAVE_LIBINTL_H TRUE)
+  set(ENABLE_NLS TRUE)
+  include(GettextTranslate)
+  add_subdirectory(translations/core)
+  add_subdirectory(translations/nations)
 endif()
 
 # Lua
