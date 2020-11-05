@@ -54,6 +54,7 @@ if(FREECIV_ENABLE_NLS)
   include(GettextTranslate)
   add_subdirectory(translations/core)
   add_subdirectory(translations/nations)
+  add_subdirectory(translations/ruledit)
 endif()
 
 # Lua

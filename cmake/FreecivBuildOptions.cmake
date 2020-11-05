@@ -25,7 +25,7 @@ cmake_dependent_option(
   "Build the ruleset updater"
   ON FREECIV_ENABLE_TOOLS OFF)
 
-option(FREECIV_ENABLE_NLS "Enable internationalization" OFF)
+option(FREECIV_ENABLE_NLS "Enable internationalization" ON)
 
 set(FREECIV_BUG_URL "https://github.com/longturn/freeciv21/issues"
     CACHE STRING "Where to file bug reports")
