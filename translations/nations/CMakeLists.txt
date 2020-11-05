@@ -1,1 +1,1 @@
-GettextTranslate()
+#GettextTranslate()
