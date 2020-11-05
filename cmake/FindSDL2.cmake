@@ -137,7 +137,7 @@ if(SDL_LIBRARY_TEMP)
   # So I use a temporary variable until the end so I can set the
   # "real" variable in one-shot.
   if(APPLE)
-    set(SDL_LIBRARY_TEMP ${SDL2_LIBRARY_TEMP} "-framework Cocoa")
+    set(SDL_LIBRARY_TEMP ${SDL_LIBRARY_TEMP} "-framework Cocoa")
   endif()
 
   # For threads, as mentioned Apple doesn't need this.
