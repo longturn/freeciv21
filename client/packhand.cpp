@@ -3272,7 +3272,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
 
   if (packet->preferred_soundset[0] != '\0') {
     /* There is soundset suggestion */
-    if (strcmp(packet->preferred_soundset, sound_set_name)) {
+    if (QString(packet->preferred_soundset) != sound_set_name) {
       /* It's not currently in use */
       if (gui_options.autoaccept_soundset_suggestion) {
         audio_restart(game.control.preferred_soundset, music_set_name);
@@ -3284,7 +3284,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
 
   if (packet->preferred_musicset[0] != '\0') {
     /* There is musicset suggestion */
-    if (strcmp(packet->preferred_musicset, music_set_name)) {
+    if (QString(packet->preferred_musicset) != music_set_name) {
       /* It's not currently in use */
       if (gui_options.autoaccept_musicset_suggestion) {
         audio_restart(sound_set_name, game.control.preferred_musicset);

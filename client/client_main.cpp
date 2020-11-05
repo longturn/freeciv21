@@ -24,6 +24,7 @@
 
 // Qt
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QElapsedTimer>
 #include <QGlobalStatic>
 #include <QTimer>
@@ -130,17 +131,17 @@ static struct rgbcolor *mapimg_client_plrcolor_get(int i);
 
 static void fc_interface_init_client(void);
 
-char *logfile = NULL;
-char *scriptfile = NULL;
-char *savefile = NULL;
-char forced_tileset_name[512] = "\0";
-char sound_plugin_name[512] = "\0";
-char sound_set_name[512] = "\0";
-char music_set_name[512] = "\0";
-char server_host[512] = "\0";
-char user_name[512] = "\0";
+QString logfile;
+QString scriptfile;
+QString savefile;
+QString forced_tileset_name;
+QString sound_plugin_name;
+QString sound_set_name;
+QString music_set_name;
+QString server_host;
+QString user_name;
 char password[MAX_LEN_PASSWORD] = "\0";
-char metaserver[512] = "\0";
+QString cmd_metaserver;
 int server_port = -1;
 bool auto_connect =
     FALSE;               /* TRUE = skip "Connect to Freeciv Server" dialog */
@@ -369,210 +370,144 @@ int client_main(int argc, char *argv[])
 
   announce = ANNOUNCE_DEFAULT;
 
-  while (i < argc) {
-    if (ui_separator) {
-      argv[1 + ui_options] = argv[i];
-      ui_options++;
-    } else if (is_option("--help", argv[i])) {
-      struct cmdhelp *help = cmdhelp_new(argv[0]);
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
 
-      cmdhelp_add(help, "A",
-                  /* TRANS: "Announce" is exactly what user must type, do not
-                     translate. */
-                  _("Announce PROTO"),
-                  _("Announce game in LAN using protocol PROTO "
-                    "(IPv4/IPv6/none)"));
-      cmdhelp_add(help, "a", "autoconnect", _("Skip connect dialog"));
+  // List of all the supported options
+  bool ok = parser.addOptions(
+      {{{"A", _("Announce")},
+        // TRANS: Do not translate IPv4, IPv6 and none
+        _("Announce game in LAN using protocol PROTO (IPv4/IPv6/none)"),
+        _("PROTO"),
+        "IPv4"},
+       {{"a", "autoconnect"}, _("Skip connect dialog")},
+       {{"d", _("debug")},
 #ifdef FREECIV_DEBUG
-      cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not
-                     translate. */
-                  _("debug LEVEL"),
-                  _("Set debug log level (one of f,e,w,n,v,d, or "
-                    "d:file1,min,max:...)"));
-#else  /* FREECIV_DEBUG */
-      cmdhelp_add(help, "d",
-                  /* TRANS: "debug" is exactly what user must type, do not
-                     translate. */
-                  _("debug LEVEL"), _("Set debug log level (%d to %d)"),
-                  LOG_FATAL, LOG_VERBOSE);
+        /* TRANS: "debug" do not translate. */
+        _("Set debug log level (one of f,e,w,n,v,d, or "
+          "d:file1,min,max:...)"),
+#else
+        /* TRANS: "debug" do not translate. */
+        QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
+                          LOG_VERBOSE),
 #endif /* FREECIV_DEBUG */
+        _("LEVEL")},
 #ifndef FREECIV_NDEBUG
-      cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not
-                     translate. */
-                  _("Fatal [SIGNAL]"),
-                  _("Raise a signal on failed assertion"));
+       {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
 #endif /* FREECIV_NDEBUG */
-      cmdhelp_add(help, "f",
-                  /* TRANS: "file" is exactly what user must type, do not
-                     translate. */
-                  _("file FILE"), _("Load saved game FILE"));
-      cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
+       {{"f", "file"}, _("Load saved game FILE"), "FILE"},
 #ifdef FREECIV_DEBUG
-      cmdhelp_add(
-          help, "H", "Hackless",
-          _("Do not request hack access to local, but not spawned, server"));
+       {{"H", "Hackless"},
+        _("Do not request hack access to local, but not spawned, server")},
 #endif /* FREECIV_DEBUG */
-      cmdhelp_add(help, "l",
-                  /* TRANS: "log" is exactly what user must type, do not
-                     translate. */
-                  _("log FILE"),
-                  _("Use FILE as logfile (spawned server also uses this)"));
-      cmdhelp_add(help, "M",
-                  /* TRANS: "Meta" is exactly what user must type, do not
-                     translate. */
-                  _("Meta HOST"), _("Connect to the metaserver at HOST"));
-      cmdhelp_add(help, "n",
-                  /* TRANS: "name" is exactly what user must type, do not
-                     translate. */
-                  _("name NAME"), _("Use NAME as username on server"));
-      cmdhelp_add(help, "p",
-                  /* TRANS: "port" is exactly what user must type, do not
-                     translate. */
-                  _("port PORT"),
-                  _("Connect to server port PORT (usually with -a)"));
-      cmdhelp_add(help, "P",
-                  /* TRANS: "Plugin" is exactly what user must type, do not
-                     translate. */
-                  _("Plugin PLUGIN"), _("Use PLUGIN for sound output %s"),
-                  audio_get_all_plugin_names());
-      cmdhelp_add(help, "r",
-                  /* TRANS: "read" is exactly what user must type, do not
-                     translate. */
-                  _("read FILE"),
-                  _("Read startup script FILE (for spawned server only)"));
-      cmdhelp_add(help, "s",
-                  /* TRANS: "server" is exactly what user must type, do not
-                     translate. */
-                  _("server HOST"),
-                  _("Connect to the server at HOST (usually with -a)"));
-      cmdhelp_add(help, "S",
-                  /* TRANS: "Sound" is exactly what user must type, do not
-                     translate. */
-                  _("Sound FILE"), _("Read sound tags from FILE"));
-      cmdhelp_add(help, "m",
-                  /* TRANS: "music" is exactly what user must type, do not
-                     translate. */
-                  _("music FILE"), _("Read music tags from FILE"));
-      cmdhelp_add(help, "t",
-                  /* TRANS: "tiles" is exactly what user must type, do not
-                     translate. */
-                  _("tiles FILE"),
-                  _("Use data file FILE.tilespec for tiles"));
-      cmdhelp_add(help, "v", "version", _("Print the version number"));
-      cmdhelp_add(help, "w", "warnings",
-                  _("Warn about deprecated modpack constructs"));
+       {{"l", "log"},
+        _("Use FILE as logfile (spawned server also uses this)"),
+        "FILE"},
+       {{"M", "Meta"}, _("Connect to the metaserver at HOST"), "HOST"},
+       {{"n", "name"}, _("Use NAME as username on server"), "NAME"},
+       {{"p", "port"},
+        _("Connect to server port PORT (usually with -a)"),
+        "PORT"},
+       {{"P", _("Plugin")},
+        QString::asprintf(_("Use PLUGIN for sound output %s"),
+                          audio_get_all_plugin_names()),
+        "PLUGIN"},
+       {{"r", "read"},
+        _("Read startup script FILE (for spawned server only)"),
+        "FILE"},
+       {{"s", "server"},
+        _("Connect to the server at HOST (usually with -a)"),
+        "HOST"},
+       {{"S", "Sound"}, _("Read sound tags from FILE"), "FILE"},
+       {{"m", "music"}, _("Read music tags from FILE"), "FILE"},
+       {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
+       {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
+  if (!ok) {
+    log_fatal("Adding command line arguments failed");
+    exit(EXIT_FAILURE);
+  }
+  parser.process(app);
 
-      /* The function below prints a header and footer for the options.
-       * Furthermore, the options are sorted. */
-      cmdhelp_display(help, TRUE, TRUE, TRUE);
-      cmdhelp_destroy(help);
-
-      exit(EXIT_SUCCESS);
-    } else if (is_option("--version", argv[i])) {
-      fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
-      exit(EXIT_SUCCESS);
+  // Process the parsed options
+  if (parser.isSet("version")) {
+    fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
+    exit(EXIT_SUCCESS);
+  }
 #ifdef FREECIV_DEBUG
-    } else if (is_option("--Hackless", argv[i])) {
-      hackless = TRUE;
-#endif /* FREECIV_DEBUG */
-    } else if ((option = get_option_malloc("--log", argv, &i, argc, TRUE))) {
-      logfile = option;
+  if (parser.isSet("Hackless")) {
+    hackless = TRUE;
+  }
+#endif
+  if (parser.isSet("log")) {
+    logfile = parser.value("log");
+  }
 #ifndef FREECIV_NDEBUG
-    } else if (is_option("--Fatal", argv[i])) {
-      if (i + 1 >= argc || '-' == argv[i + 1][0]) {
-        fatal_assertions = SIGABRT;
-      } else if (str_to_int(argv[i + 1], &fatal_assertions)) {
-        i++;
-      } else {
-        fc_fprintf(stderr, _("Invalid signal number \"%s\".\n"),
-                   argv[i + 1]);
-        fc_fprintf(stderr, _("Try using --help.\n"));
-        exit(EXIT_FAILURE);
-      }
+  if (parser.isSet("Fatal")) {
+    fatal_assertions = SIGABRT;
+  }
 #endif /* FREECIV_NDEBUG */
-    } else if ((option =
-                    get_option_malloc("--read", argv, &i, argc, TRUE))) {
-      scriptfile = option;
-    } else if ((option =
-                    get_option_malloc("--file", argv, &i, argc, TRUE))) {
-      savefile = option;
-      auto_spawn = TRUE;
-    } else if ((option =
-                    get_option_malloc("--name", argv, &i, argc, FALSE))) {
-      sz_strlcpy(user_name, option);
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--Meta", argv, &i, argc, FALSE))) {
-      sz_strlcpy(metaserver, option);
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--Sound", argv, &i, argc, FALSE))) {
-      sz_strlcpy(sound_set_name, option);
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--music", argv, &i, argc, FALSE))) {
-      sz_strlcpy(music_set_name, option);
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--Plugin", argv, &i, argc, FALSE))) {
-      sz_strlcpy(sound_plugin_name, option);
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--port", argv, &i, argc, FALSE))) {
-      if (!str_to_int(option, &server_port)) {
-        fc_fprintf(stderr,
-                   _("Invalid port \"%s\" specified with --port option.\n"),
-                   option);
-        fc_fprintf(stderr, _("Try using --help.\n"));
-        exit(EXIT_FAILURE);
-      }
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--server", argv, &i, argc, FALSE))) {
-      sz_strlcpy(server_host, option);
-      free(option);
-    } else if (is_option("--autoconnect", argv[i])) {
-      auto_connect = TRUE;
-    } else if ((option =
-                    get_option_malloc("--debug", argv, &i, argc, FALSE))) {
-      if (!log_parse_level_str(option, &loglevel)) {
-        fc_fprintf(stderr,
-                   _("Invalid debug level \"%s\" specified with --debug "
-                     "option.\n"),
-                   option);
-        fc_fprintf(stderr, _("Try using --help.\n"));
-        exit(EXIT_FAILURE);
-      }
-      free(option);
-    } else if ((option =
-                    get_option_malloc("--tiles", argv, &i, argc, FALSE))) {
-      sz_strlcpy(forced_tileset_name, option);
-      free(option);
-    } else if ((option = get_option_malloc("--Announce", argv, &i, argc,
-                                           FALSE))) {
-      if (!strcasecmp(option, "ipv4")) {
-        announce = ANNOUNCE_IPV4;
-      } else if (!strcasecmp(option, "none")) {
-        announce = ANNOUNCE_NONE;
-      } else if (!strcasecmp(option, "ipv6")) {
-        announce = ANNOUNCE_IPV6;
-      } else {
-        fc_fprintf(stderr, _("Invalid announce protocol \"%s\".\n"), option);
-        exit(EXIT_FAILURE);
-      }
-      free(option);
-    } else if (is_option("--warnings", argv[i])) {
-      deprecation_warnings_enable();
-    } else if (is_option("--", argv[i])) {
-      ui_separator = TRUE;
-    } else {
-      fc_fprintf(stderr, _("Unrecognized option: \"%s\"\n"), argv[i]);
+  if (parser.isSet("read")) {
+    scriptfile = parser.value("read");
+  }
+  if (parser.isSet("file")) {
+    savefile = parser.value("file");
+    auto_spawn = TRUE;
+  }
+  if (parser.isSet("name")) {
+    user_name = parser.value("name");
+  }
+  if (parser.isSet("Meta")) {
+    cmd_metaserver = parser.value("Meta");
+  }
+  if (parser.isSet("Sound")) {
+    sound_set_name = parser.value("Sound");
+  }
+  if (parser.isSet("music")) {
+    music_set_name = parser.value("music");
+  }
+  if (parser.isSet("Plugin")) {
+    sound_plugin_name = parser.value("Plugin");
+  }
+  if (parser.isSet("port")) {
+    bool conversion_ok;
+    server_port = parser.value("port").toUInt(&conversion_ok);
+    if (!conversion_ok) {
+      log_fatal(_("Invalid port number %s"),
+                qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
-    i++;
-  } /* of while */
+  }
+  if (parser.isSet("autoconnect")) {
+    auto_connect = TRUE;
+  }
+  if (parser.isSet("debug")) {
+    if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
+      log_fatal(
+          _("Invalid debug level \"%s\" specified with --debug option.\n"),
+          qPrintable(parser.value("option")));
+      exit(EXIT_FAILURE);
+    }
+  }
+  if (parser.isSet("tiles")) {
+    forced_tileset_name = parser.value("tiles");
+  }
+  if (parser.isSet("Announce")) {
+    auto value = parser.value("Announce").toLower();
+    if (value == QLatin1String("ipv4")) {
+      announce = ANNOUNCE_IPV4;
+    } else if (value == QLatin1String("ipv6")) {
+      announce = ANNOUNCE_IPV6;
+    } else if (value == QLatin1String("none")) {
+      announce = ANNOUNCE_NONE;
+    } else {
+      log_error(_("Illegal value \"%s\" for --Announce"),
+                qPrintable(parser.value("Announce")));
+    }
+  }
+  if (parser.isSet("warnings")) {
+    deprecation_warnings_enable();
+  }
 
   if (auto_spawn && auto_connect) {
     /* TRANS: don't translate option names */
@@ -584,7 +519,7 @@ int client_main(int argc, char *argv[])
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
 
-  log_init(logfile, loglevel, NULL, NULL, fatal_assertions);
+  log_init(qUtf8Printable(logfile), loglevel, NULL, NULL, fatal_assertions);
   backtrace_init();
 
   /* after log_init: */
@@ -627,24 +562,24 @@ int client_main(int argc, char *argv[])
 
   script_client_init();
 
-  if (sound_set_name[0] == '\0') {
-    sz_strlcpy(sound_set_name, gui_options.default_sound_set_name);
+  if (sound_set_name.isEmpty()) {
+    sound_set_name = gui_options.default_sound_set_name;
   }
-  if (music_set_name[0] == '\0') {
-    sz_strlcpy(music_set_name, gui_options.default_music_set_name);
+  if (music_set_name.isEmpty()) {
+    music_set_name = gui_options.default_music_set_name;
   }
-  if (sound_plugin_name[0] == '\0') {
-    sz_strlcpy(sound_plugin_name, gui_options.default_sound_plugin_name);
+  if (sound_plugin_name.isEmpty()) {
+    sound_plugin_name = gui_options.default_sound_plugin_name;
   }
-  if (server_host[0] == '\0') {
-    sz_strlcpy(server_host, gui_options.default_server_host);
+  if (server_host.isEmpty()) {
+    server_host = gui_options.default_server_host;
   } else if (gui_options.use_prev_server) {
-    sz_strlcpy(gui_options.default_server_host, server_host);
+    sz_strlcpy(gui_options.default_server_host, qUtf8Printable(server_host));
   }
-  if (user_name[0] == '\0') {
-    sz_strlcpy(user_name, gui_options.default_user_name);
+  if (user_name.isEmpty()) {
+    user_name = gui_options.default_user_name;
   }
-  if (metaserver[0] == '\0') {
+  if (cmd_metaserver.isEmpty()) {
     /* FIXME: Find a cleaner way to achieve this. */
     /* www.cazfi.net/freeciv/metaserver/ was default metaserver
      * over one release when meta.freeciv.org was unavailable. */
@@ -659,9 +594,9 @@ int client_main(int argc, char *argv[])
     if (0
         == strcmp(gui_options.default_metaserver,
                   DEFAULT_METASERVER_OPTION)) {
-      sz_strlcpy(metaserver, FREECIV_META_URL);
+      cmd_metaserver = FREECIV_META_URL;
     } else {
-      sz_strlcpy(metaserver, gui_options.default_metaserver);
+      cmd_metaserver = gui_options.default_metaserver;
     }
   }
   if (server_port == -1) {
@@ -678,9 +613,11 @@ int client_main(int argc, char *argv[])
 
   fill_topo_ts_default();
 
-  if (forced_tileset_name[0] != '\0') {
-    if (!tilespec_try_read(forced_tileset_name, TRUE, -1, TRUE)) {
-      log_error(_("Can't load requested tileset %s!"), forced_tileset_name);
+  if (!forced_tileset_name.isEmpty()) {
+    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
+                           TRUE)) {
+      log_error(_("Can't load requested tileset %s!"),
+                qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
     }

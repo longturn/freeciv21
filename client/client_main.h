@@ -13,8 +13,6 @@
 #ifndef FC__CLIENT_MAIN_H
 #define FC__CLIENT_MAIN_H
 
-
-
 #include "fc_types.h"
 
 #include "packets.h" /* enum report_type */
@@ -64,16 +62,16 @@ bool is_server_busy(void);
 void client_remove_cli_conn(struct connection *pconn);
 void client_remove_all_cli_conn(void);
 
-extern char *logfile;
-extern char *scriptfile;
-extern char *savefile;
-extern char sound_plugin_name[512];
-extern char sound_set_name[512];
-extern char music_set_name[512];
-extern char server_host[512];
-extern char user_name[512];
+extern QString logfile;
+extern QString scriptfile;
+extern QString savefile;
+extern QString sound_plugin_name;
+extern QString sound_set_name;
+extern QString music_set_name;
+extern QString server_host;
+extern QString user_name;
 extern char password[MAX_LEN_PASSWORD];
-extern char metaserver[512];
+extern QString cmd_metaserver;
 extern int server_port;
 extern bool auto_connect;
 extern bool auto_spawn;
