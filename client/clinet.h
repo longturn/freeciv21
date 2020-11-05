@@ -16,10 +16,10 @@
 // Forward declarations
 class QTcpSocket;
 
-int connect_to_server(const char *username, const char *hostname, int port,
+int connect_to_server(QString &username, QString &hostname, int port,
                       char *errbuf, int errbufsize);
 
-void make_connection(QTcpSocket *sock, const char *username);
+void make_connection(QTcpSocket *sock, QString &username);
 
 void input_from_server(QTcpSocket *sock);
 void input_from_server_till_request_got_processed(QTcpSocket *socket,

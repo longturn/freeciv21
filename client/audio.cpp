@@ -137,13 +137,13 @@ void audio_add_plugin(struct audio_plugin *p)
 /**********************************************************************/ /**
    Choose plugin. Returns TRUE on success, FALSE if not
  **************************************************************************/
-bool audio_select_plugin(const char *const name)
+bool audio_select_plugin(QString &name)
 {
   int i;
   bool found = FALSE;
 
   for (i = 0; i < num_plugins_used; i++) {
-    if (strcmp(plugins[i].name, name) == 0) {
+    if (QString(plugins[i].name) == name) {
       found = TRUE;
       break;
     }
@@ -157,13 +157,14 @@ bool audio_select_plugin(const char *const name)
   }
 
   if (!found) {
-    log_fatal(_("Plugin '%s' isn't available. Available are %s"), name,
-              audio_get_all_plugin_names());
+    log_fatal(_("Plugin '%s' isn't available. Available are %s"),
+              qUtf8Printable(name), audio_get_all_plugin_names());
     exit(EXIT_FAILURE);
   }
 
   if (!plugins[i].init()) {
-    log_error("Plugin %s found, but can't be initialized.", name);
+    log_error("Plugin %s found, but can't be initialized.",
+              qUtf8Printable(name));
     return FALSE;
   }
 
@@ -196,17 +197,16 @@ void audio_init(void)
    Returns the filename for the given audio set. Returns NULL if
    set couldn't be found. Caller has to free the return value.
  **************************************************************************/
-static const char *audiospec_fullname(const char *audioset_name, bool music)
+static const char *audiospec_fullname(QString &audioset_name, bool music)
 {
   const char *suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
-  const char *audioset_default =
-      music ? "stdmusic" : "stdsounds"; /* Do not i18n! */
+  QString audioset_default =
+      music ? QString("stdmusic") : QString("stdsounds");
   char *fname = static_cast<char *>(
-      fc_malloc(strlen(audioset_name) + strlen(suffix) + 1));
+      fc_malloc(audioset_name.size() + strlen(suffix) + 1));
   const char *dname;
 
-  sprintf(fname, "%s%s", audioset_name, suffix);
-
+  sprintf(fname, "%s%s", qUtf8Printable(audioset_name), suffix);
   dname = fileinfoname(get_data_dirs(), fname);
   free(fname);
 
@@ -214,13 +214,13 @@ static const char *audiospec_fullname(const char *audioset_name, bool music)
     return fc_strdup(dname);
   }
 
-  if (strcmp(audioset_name, audioset_default) == 0) {
+  if (audioset_name == audioset_default) {
     /* avoid endless recursion */
     return NULL;
   }
 
-  log_error("Couldn't find audioset \"%s\", trying \"%s\".", audioset_name,
-            audioset_default);
+  log_error("Couldn't find audioset \"%s\", trying \"%s\".",
+            qUtf8Printable(audioset_name), qUtf8Printable(audioset_default));
 
   return audiospec_fullname(audioset_default, music);
 }
@@ -262,16 +262,15 @@ static bool check_audiofile_capstr(struct section_file *sfile,
 /**********************************************************************/ /**
    Initialize audio system and autoselect a plugin
  **************************************************************************/
-void audio_real_init(const char *const soundset_name,
-                     const char *const musicset_name,
-                     const char *const preferred_plugin_name)
+void audio_real_init(QString &soundset_name, QString &musicset_name,
+                     QString &preferred_plugin_name)
 {
   const char *ss_filename;
   const char *ms_filename;
   char us_ss_capstr[] = SOUNDSPEC_CAPSTR;
   char us_ms_capstr[] = MUSICSPEC_CAPSTR;
 
-  if (strcmp(preferred_plugin_name, "none") == 0) {
+  if (preferred_plugin_name == "none") {
     /* We explicitly choose none plugin, silently skip the code below */
     log_verbose("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
@@ -288,21 +287,21 @@ void audio_real_init(const char *const soundset_name,
     ms_tagfile = NULL;
     return;
   }
-  if (!soundset_name) {
+  if (soundset_name.isEmpty()) {
     log_fatal("No sound spec-file given!");
     exit(EXIT_FAILURE);
   }
-  if (!musicset_name) {
+  if (musicset_name.isEmpty()) {
     log_fatal("No music spec-file given!");
     exit(EXIT_FAILURE);
   }
-  log_verbose("Initializing sound using %s and %s...", soundset_name,
-              musicset_name);
+  log_verbose("Initializing sound using %s and %s...",
+              qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
   ss_filename = audiospec_fullname(soundset_name, FALSE);
   ms_filename = audiospec_fullname(musicset_name, TRUE);
   if (!ss_filename || !ms_filename) {
-    log_error("Cannot find audio spec-file \"%s\" or \"%s\"", soundset_name,
-              musicset_name);
+    log_error("Cannot find audio spec-file \"%s\" or \"%s\"",
+              qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
     log_normal(_("To get sound you need to download a sound set!"));
     log_normal(_("Get sound sets from <%s>."),
                "http://www.freeciv.org/wiki/Sounds");
@@ -360,12 +359,12 @@ void audio_real_init(const char *const soundset_name,
 /**********************************************************************/ /**
    Switch soundset
  **************************************************************************/
-void audio_restart(const char *soundset_name, const char *musicset_name)
+void audio_restart(QString soundset_name, QString musicset_name)
 {
   audio_stop(); /* Fade down old one */
 
-  sz_strlcpy(sound_set_name, soundset_name);
-  sz_strlcpy(music_set_name, musicset_name);
+  sound_set_name = soundset_name;
+  music_set_name = musicset_name;
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
 }
 

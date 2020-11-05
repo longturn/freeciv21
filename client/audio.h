@@ -13,8 +13,6 @@
 #ifndef FC__AUDIO_H
 #define FC__AUDIO_H
 
-
-
 #include "support.h" /* bool type */
 
 #define MAX_AUDIO_NAME_LEN 20
@@ -24,6 +22,7 @@
 
 typedef void (*audio_finished_callback)(void);
 
+class QString;
 struct audio_plugin {
   char name[MAX_AUDIO_NAME_LEN];
   char descr[MAX_AUDIO_DESCR_LEN];
@@ -46,14 +45,13 @@ const struct strvec *get_soundset_list(const struct option *poption);
 const struct strvec *get_musicset_list(const struct option *poption);
 
 void audio_init(void);
-void audio_real_init(const char *const soundspec_name,
-                     const char *const musicset_name,
-                     const char *const preferred_plugin_name);
+void audio_real_init(QString &soundspec_name, QString &musicset_name,
+                     QString &preferred_plugin_name);
 void audio_add_plugin(struct audio_plugin *p);
 void audio_shutdown(void);
 void audio_stop(void);
 void audio_stop_usage(void);
-void audio_restart(const char *soundset_name, const char *musicset_name);
+void audio_restart(QString soundset_name, QString musicset_name);
 
 void audio_play_sound(const char *const tag, const char *const alt_tag);
 void audio_play_music(const char *const tag, char *const alt_tag,
@@ -63,9 +61,7 @@ void audio_play_track(const char *const tag, char *const alt_tag);
 double audio_get_volume(void);
 void audio_set_volume(double volume);
 
-bool audio_select_plugin(const char *const name);
+bool audio_select_plugin(QString &name);
 const char *audio_get_all_plugin_names(void);
-
-
 
 #endif /* FC__AUDIO_H */
