@@ -131,6 +131,11 @@ macro(GettextTranslate)
   else()
     set (GMO_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR})
   endif()
+  if(GettextTranslate_POT_BINARY)
+    set (POT_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
+  else()
+    set (POT_BUILD_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+  endif()
 
   if (NOT EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/POTFILES.in)
     message(FATAL_ERROR "There is no POTFILES.in in
@@ -175,7 +180,7 @@ macro(GettextTranslate)
   endforeach()
 
   set(TEMPLATE_FILE ${MAKEVAR_DOMAIN}.pot)
-  set(TEMPLATE_FILE_ABS ${CMAKE_CURRENT_SOURCE_DIR}/${TEMPLATE_FILE})
+  set(TEMPLATE_FILE_ABS ${POT_BUILD_DIR}/${TEMPLATE_FILE})
   string(REGEX MATCHALL "[^ ]+" XGETTEXT_OPTS ${MAKEVAR_XGETTEXT_OPTIONS})
   #add_custom_target(${MAKEVAR_DOMAIN}.pot-update DEPENDS
   #  ${TEMPLATE_FILE_ABS}
