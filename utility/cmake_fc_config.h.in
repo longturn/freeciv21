@@ -41,9 +41,7 @@
 /* enable audio */
 #cmakedefine AUDIO_SDL
 
-/* audio via SDL2_mixer */
-#cmakedefine AUDIO_SDL2
-
+#cmakedefine SDL2_PLAIN_INCLUDE
 /* Can run programs as root */
 #cmakedefine ALWAYS_ROOT
 
