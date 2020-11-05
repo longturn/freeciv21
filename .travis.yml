@@ -46,7 +46,7 @@ jobs:
           - readline
           - sqlite
           - sdl2
-          - sdl2_audio
+          - sdl2_mixer
 
 script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
