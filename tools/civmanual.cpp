@@ -22,9 +22,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Qt
+#include <QCommandLineParser>
+#include <QCoreApplication>
+
 /* utility */
 #include "capability.h"
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -187,7 +190,7 @@ void insert_client_build_info(char *outbuf, size_t outlen);
 /* Needed for "About Freeciv" help */
 const char *client_string = "freeciv-manual";
 
-static char *ruleset = NULL;
+static QString ruleset;
 
 /**********************************************************************/ /**
    Replace html special characters ('&', '<' and '>').
@@ -766,57 +769,74 @@ int main(int argc, char **argv)
   int retval = EXIT_SUCCESS;
   struct tag_types *tag_info = &html_tags;
 
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
+
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   /* Set the default log level. */
   srvarg.loglevel = LOG_NORMAL;
 
-  /* parse command-line arguments... */
-  inx = 1;
-  while (inx < argc) {
-    if ((option = get_option_malloc("--ruleset", argv, &inx, argc, TRUE))) {
-      if (ruleset != NULL) {
-        fc_fprintf(stderr, _("Multiple rulesets requested. Only one "
-                             "ruleset at a time is supported.\n"));
-      } else {
-        ruleset = option;
-      }
-    } else if (is_option("--help", argv[inx])) {
-      showhelp = TRUE;
-      break;
-    } else if (is_option("--version", argv[inx])) {
-      showvers = TRUE;
-    } else if ((option =
-                    get_option_malloc("--log", argv, &inx, argc, TRUE))) {
-      srvarg.log_filename = option;
-    } else if (is_option("--wiki", argv[inx])) {
-      tag_info = &wiki_tags;
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
+
+  bool ok = parser.addOptions({
+      {{"d", "debug"},
+#ifdef FREECIV_DEBUG
+       _("Set debug log level (one of f,e,w,n,v,d, or d:file1,min,max:...)"),
+#else
+       QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
+                         LOG_VERBOSE),
+#endif
+       // TRANS: Command-line argument
+       _("LEVEL")},
 #ifndef FREECIV_NDEBUG
-    } else if (is_option("--Fatal", argv[inx])) {
-      if (inx + 1 >= argc || '-' == argv[inx + 1][0]) {
-        srvarg.fatal_assertions = SIGABRT;
-      } else if (str_to_int(argv[inx + 1], &srvarg.fatal_assertions)) {
-        inx++;
-      } else {
-        fc_fprintf(stderr, _("Invalid signal number \"%s\".\n"),
-                   argv[inx + 1]);
-        inx++;
-        showhelp = TRUE;
-      }
-#endif /* FREECIV_NDEBUG */
-    } else if ((option =
-                    get_option_malloc("--debug", argv, &inx, argc, FALSE))) {
-      if (!log_parse_level_str(option, &srvarg.loglevel)) {
-        showhelp = TRUE;
-        break;
-      }
-      free(option);
-    } else {
-      fc_fprintf(stderr, _("Unrecognized option: \"%s\"\n"), argv[inx]);
+      {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
+#endif // FREECIV_NDEBUG
+      {{"l", "log"},
+       _("Use FILE as logfile"),
+       // TRANS: Command-line argument
+       _("FILE")},
+      {{"r", "ruleset"},
+       _("Make manual for RULESET"),
+       // TRANS: Command-line argument
+       _("RULESET")},
+      {{"w", "wiki"}, _("Write manual in wiki format")},
+  });
+  if (!ok) {
+    qFatal("Adding command line arguments failed");
+  }
+
+  // Parse
+  parser.process(app);
+
+  // Process the parsed options
+  if (parser.isSet("debug")) {
+    if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {
       exit(EXIT_FAILURE);
     }
-    inx++;
+  }
+#ifndef FREECIV_NDEBUG
+  if (parser.isSet("Fatal")) {
+    srvarg.fatal_assertions = SIGABRT;
+  }
+#endif // FREECIV_NDEBUG
+  if (parser.isSet("ruleset")) {
+    if (parser.values("ruleset").size() > 1) {
+      fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
+                           "at time supported.\n"));
+      exit(EXIT_FAILURE);
+    } else {
+      ruleset = parser.value("ruleset");
+    }
+  }
+  if (parser.isSet("log")) {
+    srvarg.log_filename = parser.value("log");
+  }
+  if (parser.isSet("wiki")) {
+    tag_info = &wiki_tags;
   }
 
   init_our_capability();
@@ -838,58 +858,11 @@ int main(int argc, char **argv)
   game_init(FALSE);
 
   /* Set ruleset user requested in to use */
-  if (ruleset != NULL) {
-    sz_strlcpy(game.server.rulesetdir, ruleset);
+  if (!ruleset.isEmpty()) {
+    sz_strlcpy(game.server.rulesetdir, qPrintable(ruleset));
   }
 
   settings_init(FALSE);
-
-  if (showvers && !showhelp) {
-    fc_fprintf(stderr, "%s \n", freeciv_name_version());
-    exit(EXIT_SUCCESS);
-  } else if (showhelp) {
-    struct cmdhelp *help = cmdhelp_new(argv[0]);
-
-#ifdef FREECIV_DEBUG
-    cmdhelp_add(help, "d",
-                /* TRANS: "debug" is exactly what user must type, do not
-                   translate. */
-                _("debug NUM"),
-                _("Set debug log level (one of f,e,w,n,v,d, "
-                  "or d:file1,min,max:...)"));
-#else  /* FREECIV_DEBUG */
-    cmdhelp_add(help, "d",
-                /* TRANS: "debug" is exactly what user must type, do not
-                   translate. */
-                _("debug NUM"), _("Set debug log level (%d to %d)"),
-                LOG_FATAL, LOG_VERBOSE);
-#endif /* FREECIV_DEBUG */
-#ifndef FREECIV_NDEBUG
-    cmdhelp_add(help, "F",
-                /* TRANS: "Fatal" is exactly what user must type, do not
-                   translate. */
-                _("Fatal [SIGNAL]"),
-                _("Raise a signal on failed assertion"));
-#endif /* FREECIV_NDEBUG */
-    cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
-    cmdhelp_add(
-        help, "l",
-        /* TRANS: "log" is exactly what user must type, do not translate. */
-        _("log FILE"), _("Use FILE as logfile"));
-    cmdhelp_add(help, "r",
-                /* TRANS: "ruleset" is exactly what user must type, do not
-                   translate. */
-                _("ruleset RULESET"), _("Make manual for RULESET"));
-    cmdhelp_add(help, "v", "version", _("Print the version number"));
-    cmdhelp_add(help, "w", "wiki", _("Write manual in wiki format"));
-
-    /* The function below prints a header and footer for the options.
-     * Furthermore, the options are sorted. */
-    cmdhelp_display(help, TRUE, FALSE, TRUE);
-    cmdhelp_destroy(help);
-
-    exit(EXIT_SUCCESS);
-  }
 
   if (!manual_command(tag_info)) {
     retval = EXIT_FAILURE;
@@ -898,7 +871,6 @@ int main(int argc, char **argv)
   con_log_close();
   free_libfreeciv();
   free_nls();
-  cmdline_option_values_free();
 
   return retval;
 }
