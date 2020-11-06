@@ -15,25 +15,21 @@
 #include <fc_config.h>
 #endif
 
+#include "servers.h"
+
 // Qt
 #include <QByteArray>
 #include <QDebug>
 #include <QEventLoop>
 #include <QNetworkAccessManager>
-#include <QNetworkDatagram>
 #include <QNetworkReply>
-#include <QNetworkRequest>
-#include <QUrl>
 #include <QUrlQuery>
 
 /* dependencies */
 #include "cvercmp.h"
 
 /* utility */
-#include "fcintl.h"
-#include "fcthread.h"
 #include "net_types.h"
-#include "support.h"
 
 /* common */
 #include "capstr.h"
@@ -41,10 +37,8 @@
 #include "version.h"
 
 /* client */
-#include "chatline_common.h"
 #include "chatline_g.h"
 #include "client_main.h"
-#include "servers.h"
 
 struct server_scan {
   enum server_scan_type type;

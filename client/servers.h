@@ -17,9 +17,6 @@
 #include <QNetworkDatagram>
 #include <QUdpSocket>
 
-/* utility */
-#include "fcthread.h"
-
 #define SERVER_LAN_PORT 4555
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
