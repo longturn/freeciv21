@@ -50,7 +50,7 @@ struct server_scan {
   enum server_scan_type type;
   ServerScanErrorFunc error_func;
 
-  struct srv_list srvrs;
+  struct server_list *servers;
   int sock;
 
   /* Only used for metaserver */
@@ -155,7 +155,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   size = dio_output_used(&dout);
   writeDatagram(QByteArray(buffer, size), QHostAddress(group),
                 SERVER_LAN_PORT);
-  scan->srvrs.servers = server_list_new();
+  scan->servers = server_list_new();
 
   return TRUE;
 }
@@ -237,7 +237,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     pserver->players = NULL;
     found_new = TRUE;
 
-    server_list_prepend(scan->srvrs.servers, pserver);
+    server_list_prepend(scan->servers, pserver);
   }
   datagram_list.clear();
   if (found_new) {
@@ -384,7 +384,7 @@ static bool meta_read_response(struct server_scan *scan)
 
   /* parse message body */
   srvrs = parse_metaserver_data(f);
-  scan->srvrs.servers = srvrs;
+  scan->servers = srvrs;
 
   /* 'f' (hence 'meta.mem') was closed in parse_metaserver_data(). */
   scan->meta.mem.clear();
@@ -600,13 +600,13 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
 /**********************************************************************/ /**
    Returns the srv_list currently held by the scan (may be NULL).
  **************************************************************************/
-struct srv_list *server_scan_get_list(struct server_scan *scan)
+struct server_list *server_scan_get_list(struct server_scan *scan)
 {
   if (!scan) {
     return NULL;
   }
 
-  return &scan->srvrs;
+  return scan->servers;
 }
 
 /**********************************************************************/ /**
@@ -623,15 +623,15 @@ void server_scan_finish(struct server_scan *scan)
     /* Signal metaserver scan thread to stop */
     scan->meta.status = SCAN_STATUS_ABORT;
 
-    if (scan->srvrs.servers) {
-      delete_server_list(scan->srvrs.servers);
-      scan->srvrs.servers = NULL;
+    if (scan->servers) {
+      delete_server_list(scan->servers);
+      scan->servers = NULL;
     }
   } else {
     fcUdpScan::i()->drop();
-    if (scan->srvrs.servers) {
-      delete_server_list(scan->srvrs.servers);
-      scan->srvrs.servers = NULL;
+    if (scan->servers) {
+      delete_server_list(scan->servers);
+      scan->servers = NULL;
     }
   }
 

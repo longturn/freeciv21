@@ -344,11 +344,11 @@ bool page_network::check_server_scan(server_scan *scan_data)
 
   if (stat >= SCAN_STATUS_PARTIAL) {
     enum server_scan_type type;
-    struct srv_list *srvrs;
+    struct server_list *srvrs;
 
     type = server_scan_get_type(scan);
     srvrs = server_scan_get_list(scan);
-    update_server_list(type, srvrs->servers);
+    update_server_list(type, srvrs);
   }
 
   if (stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE) {
@@ -486,7 +486,7 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
 
   const struct server *pserver = NULL;
   int k, col, n;
-  struct srv_list *srvrs;
+  struct server_list *srvrs;
 
   if (indexes.isEmpty()) {
     return;
@@ -506,8 +506,8 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   }
 
   srvrs = server_scan_get_list(meta_scan);
-  if (srvrs->servers) {
-    pserver = server_list_get(srvrs->servers, index.row());
+  if (srvrs) {
+    pserver = server_list_get(srvrs, index.row());
   }
   if (!pserver || !pserver->players) {
     return;
