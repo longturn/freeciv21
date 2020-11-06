@@ -20,7 +20,6 @@ project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
 # After project() because the list of languages has to be known
 include(FreecivDependencies)
 include(FreecivHelpers)
-
 # Put all executables at the root of the build tree
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 

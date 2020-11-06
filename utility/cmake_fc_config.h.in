@@ -130,5 +130,8 @@
 /* _stricoll() available */
 #cmakedefine HAVE__STRICOLL
 
+/* translations */
+#cmakedefine ENABLE_NLS
+
 /* Custom path to CA cert bundle */
 #cmakedefine CUSTOM_CACERT_PATH

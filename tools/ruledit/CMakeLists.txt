@@ -31,5 +31,6 @@ target_link_libraries(freeciv-ruledit server)
 target_link_libraries(freeciv-ruledit tools_ruleutil)
 target_link_libraries(freeciv-ruledit tools_shared)
 target_link_libraries(freeciv-ruledit Qt5::Widgets)
+add_dependencies(freeciv-ruledit freeciv_translations)
 
 install(TARGETS freeciv-ruledit)

@@ -15,4 +15,4 @@ tools/ruledit/tab_nation.cpp
 tools/ruledit/tab_tech.cpp
 tools/ruledit/tab_unit.cpp
 tools/ruledit/req_edit.cpp
-tools/ruledit/validity.c
+tools/ruledit/validity.cpp

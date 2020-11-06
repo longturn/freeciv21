@@ -45,14 +45,11 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
           [gui]() { gui->switch_page(PAGE_LOAD); });
 
   rev_ver = fc_git_revision();
-
-  if (rev_ver == NULL) {
-    /* TRANS: "version 2.6.0, Qt client" */
-    msgbuf = QString::asprintf(_("%s%s, Qt client"), word_version(),
-                               VERSION_STRING);
-  } else {
-    msgbuf = QString::asprintf("%s%s", word_version(), VERSION_STRING);
-    msgbuf += QString::asprintf(_("commit: %s"), rev_ver);
+  /* TRANS: "version 2.6.0, Qt client" */
+  msgbuf =
+      QString(_("%1%2, Qt client")).arg(word_version()).arg(VERSION_STRING);
+  if (rev_ver != nullptr) {
+    msgbuf += QString(_("commit: %1")).arg(rev_ver);
   }
 #if IS_BETA_VERSION
   beta = beta_message();
