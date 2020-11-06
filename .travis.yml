@@ -43,7 +43,8 @@ jobs:
           - qt
           - readline
           - sqlite
-
+    script:
+      - brew link gettext --force
 script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build
