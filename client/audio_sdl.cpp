@@ -17,14 +17,10 @@
 
 #include <string.h>
 
-#ifdef SDL2_PLAIN_INCLUDE
-#include <SDL.h>
-#include <SDL_mixer.h>
-#else /* SDL2_PLAIN_INCLUDE */
+#ifdef AUDIO_SDL
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
-#endif /* SDL2_PLAIN_INCLUDE */
-
+#endif
 /* utility */
 #include "log.h"
 #include "support.h"

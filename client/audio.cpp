@@ -347,7 +347,8 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   }
 
 #ifdef AUDIO_SDL
-  if (audio_select_plugin("sdl"))
+  QString audio_str = "sdl";
+  if (audio_select_plugin(audio_str))
     return;
 #endif
   log_normal(_("No real audio subsystem managed to initialize!"));
