@@ -57,9 +57,6 @@ struct server_scan {
   struct {
     enum server_scan_status status;
 
-    fc_thread thr;
-    fc_mutex mutex;
-
     const char *urlpath;
     QByteArray mem;
   } meta;
@@ -158,10 +155,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   size = dio_output_used(&dout);
   writeDatagram(QByteArray(buffer, size), QHostAddress(group),
                 SERVER_LAN_PORT);
-
-  fc_allocate_mutex(&scan->srvrs.mutex);
   scan->srvrs.servers = server_list_new();
-  fc_release_mutex(&scan->srvrs.mutex);
 
   return TRUE;
 }
@@ -232,7 +226,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
 
     log_debug("Received a valid announcement from a server on the LAN.");
 
-    pserver = static_cast<server *>(fc_malloc(sizeof(*pserver)));
+    pserver = new server;
     pserver->host = fc_strdup(servername);
     pserver->port = port;
     pserver->version = fc_strdup(version);
@@ -244,7 +238,6 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     found_new = TRUE;
 
     server_list_prepend(scan->srvrs.servers, pserver);
-    fc_release_mutex(&scan->srvrs.mutex);
   }
   datagram_list.clear();
   if (found_new) {
@@ -311,8 +304,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   for (i = 0; i < nservers; i++) {
     const char *host, *port, *version, *state, *message, *nplayers, *nhumans;
     int n;
-    struct server *pserver =
-        (struct server *) fc_malloc(sizeof(struct server));
+    struct server *pserver = new server;
 
     host = secfile_lookup_str_default(file, "", "server%d.host", i);
     pserver->host = fc_strdup(host);
@@ -338,8 +330,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
     pserver->humans = n;
 
     if (pserver->nplayers > 0) {
-      pserver->players = static_cast<str_players *>(
-          fc_malloc(pserver->nplayers * sizeof(*pserver->players)));
+      pserver->players = new str_players[pserver->nplayers];
     } else {
       pserver->players = NULL;
     }
@@ -392,10 +383,8 @@ static bool meta_read_response(struct server_scan *scan)
   }
 
   /* parse message body */
-  fc_allocate_mutex(&scan->srvrs.mutex);
   srvrs = parse_metaserver_data(f);
   scan->srvrs.servers = srvrs;
-  fc_release_mutex(&scan->srvrs.mutex);
 
   /* 'f' (hence 'meta.mem') was closed in parse_metaserver_data(). */
   scan->meta.mem.clear();
@@ -421,21 +410,16 @@ static void metaserver_scan(void *arg)
   struct server_scan *scan = static_cast<server_scan *>(arg);
 
   if (!begin_metaserver_scan(scan)) {
-    fc_allocate_mutex(&scan->meta.mutex);
     scan->meta.status = SCAN_STATUS_ERROR;
   } else {
     if (!meta_read_response(scan)) {
-      fc_allocate_mutex(&scan->meta.mutex);
       scan->meta.status = SCAN_STATUS_ERROR;
     } else {
-      fc_allocate_mutex(&scan->meta.mutex);
       if (scan->meta.status == SCAN_STATUS_WAITING) {
         scan->meta.status = SCAN_STATUS_DONE;
       }
     }
   }
-
-  fc_release_mutex(&scan->meta.mutex);
 }
 
 /**********************************************************************/ /**
@@ -507,22 +491,22 @@ static void delete_server_list(struct server_list *server_list)
     int i;
     int n = ptmp->nplayers;
 
-    free(ptmp->host);
-    free(ptmp->version);
-    free(ptmp->state);
-    free(ptmp->message);
+    delete[] ptmp->host;
+    delete[] ptmp->version;
+    delete[] ptmp->state;
+    delete[] ptmp->message;
 
     if (ptmp->players) {
       for (i = 0; i < n; i++) {
-        free(ptmp->players[i].name);
-        free(ptmp->players[i].type);
-        free(ptmp->players[i].host);
-        free(ptmp->players[i].nation);
+        delete[] ptmp->players[i].name;
+        delete[] ptmp->players[i].type;
+        delete[] ptmp->players[i].host;
+        delete[] ptmp->players[i].nation;
       }
-      free(ptmp->players);
+      delete[] ptmp->players;
     }
 
-    free(ptmp);
+    delete ptmp;
   }
   server_list_iterate_end;
 
@@ -545,36 +529,20 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
                                       ServerScanErrorFunc error_func)
 {
   struct server_scan *scan;
-  bool ok = FALSE;
 
   scan = new server_scan;
   scan->type = type;
   scan->error_func = error_func;
-  fc_init_mutex(&scan->srvrs.mutex);
 
   switch (type) {
-  case SERVER_SCAN_GLOBAL: {
-    int thr_ret;
-
-    fc_init_mutex(&scan->meta.mutex);
-    scan->meta.status = SCAN_STATUS_WAITING;
-    thr_ret = fc_thread_start(&scan->meta.thr, metaserver_scan, scan);
-    if (thr_ret) {
-      ok = FALSE;
-    } else {
-      ok = TRUE;
-    }
-  } break;
+  case SERVER_SCAN_GLOBAL:
+    metaserver_scan(scan);
+  break;
   case SERVER_SCAN_LOCAL:
-    ok = fcUdpScan::i()->begin_scan(scan);
+    fcUdpScan::i()->begin_scan(scan);
     break;
   default:
     break;
-  }
-
-  if (!ok) {
-    server_scan_finish(scan);
-    scan = NULL;
   }
 
   return scan;
@@ -616,11 +584,7 @@ enum server_scan_status server_scan_poll(struct server_scan *scan)
   switch (scan->type) {
   case SERVER_SCAN_GLOBAL: {
     enum server_scan_status status;
-
-    fc_allocate_mutex(&scan->meta.mutex);
     status = scan->meta.status;
-    fc_release_mutex(&scan->meta.mutex);
-
     return status;
   } break;
   case SERVER_SCAN_LOCAL:
@@ -657,19 +621,11 @@ void server_scan_finish(struct server_scan *scan)
 
   if (scan->type == SERVER_SCAN_GLOBAL) {
     /* Signal metaserver scan thread to stop */
-    fc_allocate_mutex(&scan->meta.mutex);
     scan->meta.status = SCAN_STATUS_ABORT;
-    fc_release_mutex(&scan->meta.mutex);
-
-    /* Wait thread to stop */
-    fc_thread_wait(&scan->meta.thr);
-    fc_destroy_mutex(&scan->meta.mutex);
 
     if (scan->srvrs.servers) {
-      fc_allocate_mutex(&scan->srvrs.mutex);
       delete_server_list(scan->srvrs.servers);
       scan->srvrs.servers = NULL;
-      fc_release_mutex(&scan->srvrs.mutex);
     }
   } else {
     fcUdpScan::i()->drop();
@@ -678,8 +634,6 @@ void server_scan_finish(struct server_scan *scan)
       scan->srvrs.servers = NULL;
     }
   }
-
-  fc_destroy_mutex(&scan->srvrs.mutex);
 
   delete scan;
 }

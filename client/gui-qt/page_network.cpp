@@ -24,9 +24,9 @@
 
 static enum connection_state connection_status;
 static struct server_scan *meta_scan, *lan_scan;
-static bool holding_srv_list_mutex = false;
 
-page_network::page_network(QWidget *parent, fc_client *gui) : QWidget(parent), meta_scan_timer(nullptr), lan_scan_timer(nullptr)
+page_network::page_network(QWidget *parent, fc_client *gui)
+    : QWidget(parent), meta_scan_timer(nullptr), lan_scan_timer(nullptr)
 {
   king = gui;
   ui.setupUi(this);
@@ -126,7 +126,6 @@ page_network::page_network(QWidget *parent, fc_client *gui) : QWidget(parent), m
   ui.connect_password_edit->setDisabled(true);
   ui.connect_confirm_password_edit->setDisabled(true);
   setLayout(ui.gridLayout);
-
 }
 
 page_network::~page_network() {}
@@ -275,9 +274,8 @@ void server_scan_error(struct server_scan *scan, const char *message)
 {
   qtg_version_message(message);
   log_error("%s", message);
-
-  /* Main thread will finalize the scan later (or even concurrently) -
-   * do not do anything here to cause double free or raze condition. */
+  qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
+      ->destroy_server_scans();
 }
 
 /**********************************************************************/ /**
@@ -319,7 +317,8 @@ void page_network::update_network_lists(void)
 
   lan_scan_timer = new QTimer(this);
   lan_scan = server_scan_begin(SERVER_SCAN_LOCAL, server_scan_error);
-  connect(lan_scan_timer, &QTimer::timeout, this, &page_network::slot_lan_scan);
+  connect(lan_scan_timer, &QTimer::timeout, this,
+          &page_network::slot_lan_scan);
   lan_scan_timer->start(500);
 
   meta_scan_timer = new QTimer(this);
@@ -349,11 +348,7 @@ bool page_network::check_server_scan(server_scan *scan_data)
 
     type = server_scan_get_type(scan);
     srvrs = server_scan_get_list(scan);
-    fc_allocate_mutex(&srvrs->mutex);
-    holding_srv_list_mutex = true;
     update_server_list(type, srvrs->servers);
-    holding_srv_list_mutex = false;
-    fc_release_mutex(&srvrs->mutex);
   }
 
   if (stat == SCAN_STATUS_ERROR || stat == SCAN_STATUS_DONE) {
@@ -511,14 +506,8 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
   }
 
   srvrs = server_scan_get_list(meta_scan);
-  if (!holding_srv_list_mutex) {
-    fc_allocate_mutex(&srvrs->mutex);
-  }
   if (srvrs->servers) {
     pserver = server_list_get(srvrs->servers, index.row());
-  }
-  if (!holding_srv_list_mutex) {
-    fc_release_mutex(&srvrs->mutex);
   }
   if (!pserver || !pserver->players) {
     return;
@@ -549,6 +538,4 @@ void page_network::slot_selection_changed(const QItemSelection &selected,
       ui.info_widget->setItem(k, col, item);
     }
   }
-
 }
-
