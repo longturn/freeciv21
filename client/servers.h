@@ -17,9 +17,6 @@
 #include <QNetworkDatagram>
 #include <QUdpSocket>
 
-/* utility */
-#include "fcthread.h"
-
 #define SERVER_LAN_PORT 4555
 #define SERVER_LAN_TTL 1
 #define SERVER_LAN_VERSION 2
@@ -81,11 +78,6 @@ struct server {
 
 struct server_scan;
 
-struct srv_list {
-  struct server_list *servers;
-  fc_mutex mutex;
-};
-
 enum server_scan_type {
   SERVER_SCAN_LOCAL,  /* Local servers, detected through a LAN scan */
   SERVER_SCAN_GLOBAL, /* Global servers, read from the metaserver */
@@ -99,7 +91,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
                                       ServerScanErrorFunc error_func);
 enum server_scan_type server_scan_get_type(const struct server_scan *scan);
 enum server_scan_status server_scan_poll(struct server_scan *scan);
-struct srv_list *server_scan_get_list(struct server_scan *scan);
+struct server_list *server_scan_get_list(struct server_scan *scan);
 void server_scan_finish(struct server_scan *scan);
 
 #endif /* FC__SERVERS_H */
