@@ -9,6 +9,7 @@ top_builddir = ../..
 
 # These options get passed to xgettext.
 XGETTEXT_OPTIONS = \
+  --qt \
   --from-code=UTF-8 \
   --keyword=_ --flag=_:1:pass-c-format \
   --keyword=N_ --flag=N_:1:pass-c-format \
