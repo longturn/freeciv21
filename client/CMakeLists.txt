@@ -30,6 +30,10 @@ target_include_directories(client_gen PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(client_gen PUBLIC common)
 
+if (AUDIO_SDL)
+  set(FREECIV_AUDIO audio_sdl.cpp)
+endif()
+
 add_library(
   client
   STATIC
@@ -68,8 +72,8 @@ add_library(
   voteinfo.cpp
   zoom.cpp
   audio.cpp
-  audio_sdl.cpp
   audio_none.cpp
+  ${FREECIV_AUDIO}
 )
 
 target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
