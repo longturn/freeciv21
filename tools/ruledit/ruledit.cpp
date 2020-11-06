@@ -24,8 +24,11 @@
 #include <windows.h>
 #endif
 
+// Qt
+#include <QApplication>
+#include <QCommandLineParser>
+
 /* utility */
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -49,7 +52,7 @@
 
 #include "ruledit.h"
 
-static int re_parse_cmdline(int argc, char *argv[]);
+static void re_parse_cmdline(const QCoreApplication &app);
 
 struct ruledit_arguments reargs;
 
@@ -74,6 +77,9 @@ int main(int argc, char **argv)
 #endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
+  QApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
+
   init_nls();
 
 #ifdef ENABLE_NLS
@@ -88,41 +94,42 @@ int main(int argc, char **argv)
   log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
   /* Initialize command line arguments. */
-  reargs.ruleset = NULL;
+  re_parse_cmdline(app);
 
-  ui_options = re_parse_cmdline(argc, argv);
+  init_connections();
 
-  if (ui_options != -1) {
-    init_connections();
+  settings_init(FALSE);
 
-    settings_init(FALSE);
+  /* Reset aifill to zero */
+  game.info.aifill = 0;
 
-    /* Reset aifill to zero */
-    game.info.aifill = 0;
+  game_init(FALSE);
+  i_am_tool();
 
-    game_init(FALSE);
-    i_am_tool();
+  /* Initialize the fc_interface functions needed to understand rules. */
+  fc_interface_init_tool();
 
-    /* Initialize the fc_interface functions needed to understand rules. */
-    fc_interface_init_tool();
+  if (comments_load()) {
+    auto main = new ruledit_main;
+    auto gui = new ruledit_gui(main);
 
-    if (comments_load()) {
-      ruledit_qt_run(ui_options, argv);
+    main->show();
 
-      comments_free();
-    } else {
-      /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
-       * freeciv version */
-      log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
-    }
+    QObject::connect(&app, &QCoreApplication::aboutToQuit, main,
+                     &QObject::deleteLater);
+
+    app.exec();
+
+    comments_free();
+  } else {
+    /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
+     * freeciv version */
+    log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
   }
 
   log_close();
   free_libfreeciv();
   free_nls();
-
-  /* Clean up command line arguments. */
-  cmdline_option_values_free();
 
   return EXIT_SUCCESS;
 }
@@ -130,75 +137,43 @@ int main(int argc, char **argv)
 /**********************************************************************/ /**
    Parse freeciv-ruledit commandline.
  **************************************************************************/
-static int re_parse_cmdline(int argc, char *argv[])
+static void re_parse_cmdline(const QCoreApplication &app)
 {
-  int i = 1;
-  bool ui_separator = FALSE;
-  int ui_options = 0;
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
 
-  while (i < argc) {
-    char *option;
-
-    if (ui_separator) {
-      argv[1 + ui_options] = argv[i];
-      ui_options++;
-    } else if (is_option("--help", argv[i])) {
-      struct cmdhelp *help = cmdhelp_new(argv[0]);
-
-      cmdhelp_add(help, "h", "help", R__("Print a summary of the options"));
-      cmdhelp_add(help, "v", "version", R__("Print the version number"));
-      cmdhelp_add(help, "r",
-                  /* TRANS: argument (don't translate) VALUE (translate) */
-                  R__("ruleset RULESET"),
-                  R__("Ruleset to use as the starting point."));
+  bool ok = parser.addOptions({
 #ifndef FREECIV_NDEBUG
-      cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not
-                     translate. */
-                  _("Fatal [SIGNAL]"),
-                  _("Raise a signal on failed assertion"));
-#endif /* FREECIV_NDEBUG */
-      /* The function below prints a header and footer for the options.
-       * Furthermore, the options are sorted. */
-      cmdhelp_display(help, TRUE, TRUE, TRUE);
-      cmdhelp_destroy(help);
-
-      exit(EXIT_SUCCESS);
-    } else if (is_option("--version", argv[i])) {
-      fc_fprintf(stderr, "%s \n", freeciv_name_version());
-
-      exit(EXIT_SUCCESS);
-    } else if ((option =
-                    get_option_malloc("--ruleset", argv, &i, argc, true))) {
-      if (reargs.ruleset) {
-        fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));
-      } else {
-        reargs.ruleset = option;
-      }
-#ifndef FREECIV_NDEBUG
-    } else if (is_option("--Fatal", argv[i])) {
-      if (i + 1 >= argc || '-' == argv[i + 1][0]) {
-        fatal_assertions = SIGABRT;
-      } else if (str_to_int(argv[i + 1], &fatal_assertions)) {
-        i++;
-      } else {
-        fc_fprintf(stderr, _("Invalid signal number \"%s\".\n"),
-                   argv[i + 1]);
-        fc_fprintf(stderr, _("Try using --help.\n"));
-        exit(EXIT_FAILURE);
-      }
-#endif /* FREECIV_NDEBUG */
-    } else if (is_option("--", argv[i])) {
-      ui_separator = TRUE;
-    } else {
-      fc_fprintf(stderr, R__("Unrecognized option: \"%s\"\n"), argv[i]);
-      exit(EXIT_FAILURE);
-    }
-
-    i++;
+      {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
+#endif // FREECIV_NDEBUG
+      {{"r", "ruleset"},
+       R__("Ruleset to use as the starting point."),
+       // TRANS: Command-line argument
+       R__("RULESET")},
+  });
+  if (!ok) {
+    log_fatal("Adding command line arguments failed");
+    exit(EXIT_FAILURE);
   }
 
-  return ui_options;
+  // Parse
+  parser.process(app);
+
+  // Process the parsed options
+#ifndef FREECIV_NDEBUG
+  if (parser.isSet("Fatal")) {
+    fatal_assertions = SIGABRT;
+  }
+#endif // FREECIV_NDEBUG
+  if (parser.isSet("ruleset")) {
+    if (parser.values("ruleset").size() >= 1) {
+      fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));
+      exit(EXIT_FAILURE);
+    } else {
+      reargs.ruleset = parser.value("ruleset");
+    }
+  }
 }
 
 /**********************************************************************/ /**

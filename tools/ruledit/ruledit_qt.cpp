@@ -60,34 +60,7 @@
 #include "ruledit_qt.h"
 
 static ruledit_gui *gui;
-static QApplication *qapp;
 static conversion_log *convlog;
-
-/**********************************************************************/ /**
-   Run ruledit-qt gui.
- **************************************************************************/
-int ruledit_qt_run(int argc, char **argv)
-{
-  ruledit_main *main_window;
-  QWidget *central;
-  int ret;
-
-  qapp = new QApplication(argc, argv);
-  central = new QWidget;
-  main_window = new ruledit_main(qapp, central);
-
-  gui = new ruledit_gui;
-  gui->setup(central);
-  main_window->setCentralWidget(central);
-  main_window->setVisible(true);
-
-  ret = qapp->exec();
-
-  delete gui;
-  delete qapp;
-
-  return ret;
-}
 
 /**********************************************************************/ /**
    Display requirer list.
@@ -102,7 +75,7 @@ void ruledit_qt_display_requirers(const char *msg, void *data)
 /**********************************************************************/ /**
    Setup GUI object
  **************************************************************************/
-void ruledit_gui::setup(QWidget *central_in)
+ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
 {
   QVBoxLayout *full_layout = new QVBoxLayout();
   QVBoxLayout *preload_layout = new QVBoxLayout();
@@ -118,7 +91,8 @@ void ruledit_gui::setup(QWidget *central_in)
   data.nationlist = NULL;
   data.nationlist_saved = NULL;
 
-  central = central_in;
+  auto central = new QWidget;
+  main->setCentralWidget(central);
 
   rev_ver = fc_git_revision();
 
@@ -142,7 +116,7 @@ void ruledit_gui::setup(QWidget *central_in)
   rs_label->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
   preload_layout->addWidget(rs_label);
   ruleset_select = new QLineEdit(central);
-  if (reargs.ruleset) {
+  if (reargs.ruleset.isEmpty()) {
     ruleset_select->setText(reargs.ruleset);
   } else {
     ruleset_select->setText(GAME_DEFAULT_RULESETDIR);
@@ -420,23 +394,20 @@ void ruledit_gui::refresh_effect_edits()
 /**********************************************************************/ /**
    Main window constructor
  **************************************************************************/
-ruledit_main::ruledit_main(QApplication *qapp_in, QWidget *central_in)
-    : QMainWindow()
+ruledit_main::ruledit_main() : QMainWindow()
 {
   const QString title = QString::fromUtf8(R__("Freeciv Ruleset Editor"));
-
-  qapp = qapp_in;
-  central = central_in;
 
   setWindowTitle(title);
 }
 
 /**********************************************************************/ /**
-   Open dialog to confirm that user wants to quit ruledit.
+   User clicked windows close button.
  **************************************************************************/
-void ruledit_main::popup_quit_dialog()
+void ruledit_main::closeEvent(QCloseEvent *cevent)
 {
-  QMessageBox ask(central);
+  // Ask for confirmation
+  QMessageBox ask(centralWidget());
   int ret;
 
   ask.setText(R__("Are you sure you want to quit?"));
@@ -448,22 +419,11 @@ void ruledit_main::popup_quit_dialog()
 
   switch (ret) {
   case QMessageBox::Cancel:
-    return;
+    // Cancelled by user
+    cevent->ignore();
     break;
   case QMessageBox::Ok:
-    qapp->quit();
+    close();
     break;
   }
-}
-
-/**********************************************************************/ /**
-   User clicked windows close button.
- **************************************************************************/
-void ruledit_main::closeEvent(QCloseEvent *cevent)
-{
-  // Handle quit via confirmation dialog.
-  popup_quit_dialog();
-
-  // Do not handle quit here, but let user to answer to confirmation dialog.
-  cevent->ignore();
 }
