@@ -67,6 +67,19 @@ if(FREECIV_ENABLE_NLS)
   add_dependencies(freeciv_translations update-gmo)
 endif()
 
+# SDL2 for audio
+find_package(SDL2 QUIET)
+find_package(SDL2_mixer QUIET)
+if (SDL2_MIXER_LIBRARIES AND SDL2_LIBRARY)
+  set(AUDIO_SDL TRUE)
+endif()
+if (NOT SDL2_LIBRARY)
+  message("SDL2 not found")
+endif()
+if (NOT SDL2_MIXER_LIBRARIES)
+  message("SDL2_mixer not found")
+endif()
+
 # Lua
 #
 # Lua is not binary compatible even between minor releases. We stick to Lua 5.4.

@@ -14,6 +14,7 @@ jobs:
         - gettext
         - qt5-default
         - libsqlite3-dev
+        - libsdl2-mixer-dev
   - name: "ubuntu-clang"
     dist: focal
     compiler: clang
@@ -26,6 +27,7 @@ jobs:
         - gettext
         - qt5-default
         - libsqlite3-dev
+        - libsdl2-mixer-dev
   - name: "os_x"
     os: osx
     osx_image: xcode11.3
@@ -43,8 +45,11 @@ jobs:
           - qt
           - readline
           - sqlite
+          - sdl2
+          - sdl2_mixer
     script:
       - brew link gettext --force
+
 script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build

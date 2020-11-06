@@ -9,16 +9,7 @@
 **************************************************************************/
 
 #ifdef AUDIO_SDL
-/* Though it would happily compile without this include,
- * it is needed for sound to work.
- * It defines "main" macro to rename our main() so that
- * it can install SDL's own. */
-#ifdef SDL2_PLAIN_INCLUDE
-#include <SDL.h>
-#include <SDL_mixer.h>
-#else /* PLAIN_INCLUDE */
 #include <SDL2/SDL.h>
-#endif /* PLAIN_INCLUDE */
 #endif /* AUDIO_SDL */
 
 #include "gui_main.h"
