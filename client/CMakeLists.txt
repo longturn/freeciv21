@@ -89,6 +89,6 @@ if(FREECIV_ENABLE_CLIENT)
   add_executable(freeciv-qt packhand.cpp) # packhand.c depends on gui-qt
   target_link_libraries(freeciv-qt client )
   target_link_libraries(freeciv-qt gui-qt)
-  update_default_translations(freeciv-qt)
+  add_dependencies(freeciv-qt freeciv_translations)
   install(TARGETS freeciv-qt)
 endif()
