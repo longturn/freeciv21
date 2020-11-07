@@ -155,10 +155,10 @@ static const char *download_modpack_recursive(const char *URL,
 
   if (type == MPT_SCENARIO) {
     fc_snprintf(local_dir, sizeof(local_dir), "%s" DIR_SEPARATOR "scenarios",
-                fcmp->inst_prefix);
+                qPrintable(fcmp->inst_prefix));
   } else {
     fc_snprintf(local_dir, sizeof(local_dir), "%s" DIR_SEPARATOR DATASUBDIR,
-                fcmp->inst_prefix);
+                qPrintable(fcmp->inst_prefix));
   }
 
   baseURLpart = secfile_lookup_str(control, "info.baseURL");
@@ -393,16 +393,10 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
   const char *mp_name;
   int start_idx;
 
-  list_file = netfile_get_section_file(
-      QUrl::fromUserInput(QString::fromUtf8(fcmp->list_url)), mcb);
+  list_file = netfile_get_section_file(fcmp->list_url, mcb);
 
   if (list_file == NULL) {
     return _("Cannot fetch and parse modpack list");
-  }
-
-  for (start_idx = strlen(fcmp->list_url);
-       start_idx > 0 && fcmp->list_url[start_idx - 1] != '/'; start_idx--) {
-    /* Nothing */
   }
 
   list_capstr = secfile_lookup_str(list_file, "info.options");
@@ -452,7 +446,6 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
         list_file, NULL, "modpacks.list%d.notes", modpack_count);
 
     if (mp_name != NULL && mpURL != NULL) {
-      char mpURL_full[2048];
       enum modpack_type type =
           modpack_type_by_name(mp_type_str, fc_strcasecmp);
 
@@ -467,18 +460,13 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
         mp_subtype = "-";
       }
 
-      if (mpURL[0] == '.') {
-        char URLstart[start_idx];
+      QUrl from_list = QUrl::fromUserInput(mpURL);
+      QUrl resolved = from_list.isRelative()
+                          ? fcmp->list_url.resolved(from_list)
+                          : from_list;
 
-        strncpy(URLstart, fcmp->list_url, start_idx - 1);
-        URLstart[start_idx - 1] = '\0';
-        fc_snprintf(mpURL_full, sizeof(mpURL_full), "%s%s", URLstart,
-                    mpURL + 1);
-      } else {
-        sz_strlcpy(mpURL_full, mpURL);
-      }
-
-      cb(mp_name, mpURL_full, mpver, mplic, type, _(mp_subtype), mp_notes);
+      cb(mp_name, qPrintable(resolved.toString()), mpver, mplic, type,
+         _(mp_subtype), mp_notes);
     }
     modpack_count++;
   } while (mp_name != NULL);

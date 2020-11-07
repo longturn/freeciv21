@@ -13,11 +13,13 @@
 #ifndef FC__RULEDIT_H
 #define FC__RULEDIT_H
 
+#include <QString>
+
 void show_experimental(QWidget *wdg);
 
 struct ruledit_arguments {
-  /* Ruleset name. Is NULL if not specified. */
-  char *ruleset;
+  /* Ruleset name. Is empty if not specified. */
+  QString ruleset;
 };
 
 extern struct ruledit_arguments reargs;

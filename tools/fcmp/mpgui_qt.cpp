@@ -30,7 +30,6 @@
 #include <QVBoxLayout>
 
 // utility
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -47,7 +46,9 @@
 
 #include "mpgui_qt.h"
 
-struct fcmp_params fcmp = {MODPACK_LIST_URL, NULL, NULL};
+struct fcmp_params fcmp = {
+    QUrl::fromUserInput(QLatin1String(MODPACK_LIST_URL)), QLatin1String(),
+    QLatin1String()};
 
 static mpgui *gui;
 
@@ -82,75 +83,54 @@ static void gui_download_modpack(const QString &url);
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  int ui_options;
+  QApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
 
   fcmp_init();
 
-  /* This modifies argv! */
-  ui_options = fcmp_parse_cmdline(argc, argv);
+  // Delegate option parsing to the common function.
+  fcmp_parse_cmdline(app);
 
-  if (ui_options != -1) {
-    int i;
+  // Start
+  mpgui_main *main_window;
+  QWidget *central;
+  const char *errmsg;
 
-    for (i = 1; i <= ui_options; i++) {
-      if (is_option("--help", argv[i])) {
-        fc_fprintf(stderr, _("This modpack installer accepts the standard "
-                             "Qt command-line options\n"
-                             "after '--'. See the Qt documentation.\n\n"));
+  load_install_info_lists(&fcmp);
 
-        /* TRANS: No full stop after the URL, could cause confusion. */
-        fc_fprintf(stderr, _("Report bugs at %s\n"), BUG_URL);
+  central = new QWidget;
+  main_window = new mpgui_main(&app, central);
 
-        ui_options = -1;
-      }
-    }
+  main_window->setGeometry(0, 30, 640, 60);
+  main_window->setWindowTitle(
+      QString::fromUtf8(_("Freeciv modpack installer (Qt)")));
+
+  gui = new mpgui;
+
+  gui->setup(central, &fcmp);
+
+  main_window->setCentralWidget(central);
+  main_window->setVisible(true);
+
+  errmsg = download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
+  if (errmsg != nullptr) {
+    gui->display_msg(errmsg);
   }
 
-  if (ui_options != -1) {
-    QApplication *qapp;
-    mpgui_main *main_window;
-    QWidget *central;
-    const char *errmsg;
+  app.exec();
 
-    load_install_info_lists(&fcmp);
-
-    qapp = new QApplication(ui_options, argv);
-    central = new QWidget;
-    main_window = new mpgui_main(qapp, central);
-
-    main_window->setGeometry(0, 30, 640, 60);
-    main_window->setWindowTitle(
-        QString::fromUtf8(_("Freeciv modpack installer (Qt)")));
-
-    gui = new mpgui;
-
-    gui->setup(central, &fcmp);
-
-    main_window->setCentralWidget(central);
-    main_window->setVisible(true);
-
-    errmsg = download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
-    if (errmsg != nullptr) {
-      gui->display_msg(errmsg);
+  if (worker != nullptr) {
+    if (worker->isRunning()) {
+      worker->wait();
     }
-
-    qapp->exec();
-
-    if (worker != nullptr) {
-      if (worker->isRunning()) {
-        worker->wait();
-      }
-      delete worker;
-    }
-
-    delete gui;
-    delete qapp;
-
-    close_mpdbs();
+    delete worker;
   }
+
+  delete gui;
+
+  close_mpdbs();
 
   fcmp_deinit();
-  cmdline_option_values_free();
 
   return EXIT_SUCCESS;
 }
@@ -246,7 +226,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   if (params->autoinstall == nullptr) {
     URLedit->setText(DEFAULT_URL_START);
   } else {
-    URLedit->setText(QString::fromUtf8(params->autoinstall));
+    URLedit->setText(params->autoinstall);
   }
   URLedit->setFocus();
 

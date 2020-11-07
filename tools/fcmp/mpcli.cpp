@@ -22,7 +22,6 @@
 #include <QString>
 
 /* utility */
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -39,7 +38,8 @@
 #include "modinst.h"
 
 struct fcmp_params fcmp = {
-    .list_url = MODPACK_LIST_URL, .inst_prefix = NULL, .autoinstall = NULL};
+    QUrl::fromUserInput(QLatin1String(MODPACK_LIST_URL)), QLatin1String(),
+    QLatin1String()};
 
 /**********************************************************************/ /**
    Progress indications from downloader
@@ -98,68 +98,46 @@ static void setup_modpack_list(const char *name, const char *URL,
 int main(int argc, char *argv[])
 {
   QCoreApplication app(argc, argv);
-
-  int ui_options;
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
 
   fcmp_init();
 
-  /* This modifies argv! */
-  ui_options = fcmp_parse_cmdline(argc, argv);
+  // Delegate option parsing to the common function.
+  fcmp_parse_cmdline(app);
 
-  if (ui_options != -1) {
-    int i;
+  const char *rev_ver;
 
-    for (i = 1; i <= ui_options; i++) {
-      if (is_option("--help", argv[i])) {
-        fc_fprintf(stderr, _("This modpack installer does not support any "
-                             "specific options\n\n"));
+  load_install_info_lists(&fcmp);
 
-        /* TRANS: No full stop after the URL, could cause confusion. */
-        fc_fprintf(stderr, _("Report bugs at %s\n"), BUG_URL);
+  log_normal(_("Freeciv modpack installer (command line version)"));
 
-        ui_options = -1;
-      } else {
-        log_error(_("Unknown option '--' '%s'"), argv[i]);
-        ui_options = -1;
-      }
-    }
+  log_normal("%s%s", word_version(), VERSION_STRING);
+
+  rev_ver = fc_git_revision();
+  if (rev_ver != NULL) {
+    log_normal(_("commit: %s"), rev_ver);
   }
 
-  if (ui_options != -1) {
-    const char *rev_ver;
+  log_normal("%s", "");
 
-    load_install_info_lists(&fcmp);
+  if (fcmp.autoinstall == NULL) {
+    download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
+  } else {
+    const char *errmsg;
 
-    log_normal(_("Freeciv modpack installer (command line version)"));
+    errmsg = download_modpack(qPrintable(fcmp.autoinstall), &fcmp,
+                              msg_callback, NULL);
 
-    log_normal("%s%s", word_version(), VERSION_STRING);
-
-    rev_ver = fc_git_revision();
-    if (rev_ver != NULL) {
-      log_normal(_("commit: %s"), rev_ver);
-    }
-
-    log_normal("%s", "");
-
-    if (fcmp.autoinstall == NULL) {
-      download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
+    if (errmsg == NULL) {
+      log_normal(_("Modpack installed successfully"));
     } else {
-      const char *errmsg;
-
-      errmsg = download_modpack(fcmp.autoinstall, &fcmp, msg_callback, NULL);
-
-      if (errmsg == NULL) {
-        log_normal(_("Modpack installed successfully"));
-      } else {
-        log_error(_("Modpack install failed: %s"), errmsg);
-      }
+      log_error(_("Modpack install failed: %s"), errmsg);
     }
-
-    close_mpdbs();
   }
+
+  close_mpdbs();
 
   fcmp_deinit();
-  cmdline_option_values_free();
 
   return EXIT_SUCCESS;
 }

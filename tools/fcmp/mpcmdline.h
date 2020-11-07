@@ -13,10 +13,9 @@
 #ifndef FC__MPCMDLINE_H
 #define FC__MPCMDLINE_H
 
+// Forward declarations
+class QCoreApplication;
 
-
-int fcmp_parse_cmdline(int argc, char *argv[]);
-
-
+void fcmp_parse_cmdline(const QCoreApplication &app);
 
 #endif /* FC__MPCMDLINE_H */

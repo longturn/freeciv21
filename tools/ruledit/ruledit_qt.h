@@ -15,7 +15,6 @@
 #define FC__RULEDIT_QT_H
 
 // Qt
-#include <QApplication>
 #include <QLabel>
 #include <QMainWindow>
 #include <QObject>
@@ -48,12 +47,7 @@ class ruledit_main : public QMainWindow {
   Q_OBJECT
 
 public:
-  ruledit_main(QApplication *qapp_in, QWidget *central_in);
-
-private:
-  void popup_quit_dialog();
-  QApplication *qapp;
-  QWidget *central;
+  ruledit_main();
 
 protected:
   void closeEvent(QCloseEvent *cevent);
@@ -90,7 +84,8 @@ class ruledit_gui : public QObject {
   Q_OBJECT
 
 public:
-  void setup(QWidget *central_in);
+  ruledit_gui(ruledit_main *main);
+
   void display_msg(const char *msg);
   requirers_dlg *create_requirers(const char *title);
   void show_required(requirers_dlg *requirers, const char *msg);
@@ -120,7 +115,6 @@ private:
   QLabel *msg_dspl;
   QTabWidget *stack;
   QLineEdit *ruleset_select;
-  QWidget *central;
   QStackedLayout *main_layout;
 
   tab_building *bldg;
@@ -144,7 +138,6 @@ private slots:
   void incoming_rec_vec_change(const requirement_vector *vec);
 };
 
-int ruledit_qt_run(int argc, char **argv);
 void ruledit_qt_display_requirers(const char *msg, void *data);
 
 #endif // FC__RULEDIT_QT_H

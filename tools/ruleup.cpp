@@ -21,8 +21,11 @@
 #include <windows.h>
 #endif
 
+// Qt
+#include <QCommandLineParser>
+#include <QCoreApplication>
+
 /* utility */
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "registry.h"
 #include "string_vector.h"
@@ -43,84 +46,62 @@
 #include "comments.h"
 #include "rulesave.h"
 
-static char *rs_selected = NULL;
-static char *od_selected = NULL;
+static QString rs_selected;
+static QString od_selected;
 static int fatal_assertions = -1;
 
 /**********************************************************************/ /**
    Parse freeciv-ruleup commandline parameters.
  **************************************************************************/
-static void rup_parse_cmdline(int argc, char *argv[])
+static void rup_parse_cmdline(const QCoreApplication &app)
 {
-  int i = 1;
+  QCommandLineParser parser;
+  parser.addHelpOption();
+  parser.addVersionOption();
 
-  while (i < argc) {
-    char *option = NULL;
-
-    if (is_option("--help", argv[i])) {
-      struct cmdhelp *help = cmdhelp_new(argv[0]);
-
-      cmdhelp_add(help, "h", "help", _("Print a summary of the options"));
+  bool ok = parser.addOptions({
 #ifndef FREECIV_NDEBUG
-      cmdhelp_add(help, "F",
-                  /* TRANS: "Fatal" is exactly what user must type, do not
-                     translate. */
-                  _("Fatal [SIGNAL]"),
-                  _("Raise a signal on failed assertion"));
-#endif /* FREECIV_NDEBUG */
-      cmdhelp_add(help, "r",
-                  /* TRANS: "ruleset" is exactly what user must type, do not
-                     translate. */
-                  _("ruleset RULESET"), _("Update RULESET"));
-      cmdhelp_add(help, "o",
-                  /* TRANS: "output" is exactly what user must type, do not
-                     translate. */
-                  _("output DIRECTORY"),
-                  _("Create directory DIRECTORY for output"));
+      {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
+#endif // FREECIV_NDEBUG
+      {{"r", "ruleset"},
+       _("Update RULESET"),
+       // TRANS: Command-line argument
+       _("RULESET")},
+      {{"o", "output"},
+       _("Create directory DIRECTORY for output"),
+       // TRANS: Command-line argument
+       _("DIRECTORY")},
+  });
+  if (!ok) {
+    log_fatal("Adding command line arguments failed");
+    exit(EXIT_FAILURE);
+  }
 
-      /* The function below prints a header and footer for the options.
-       * Furthermore, the options are sorted. */
-      cmdhelp_display(help, TRUE, FALSE, TRUE);
-      cmdhelp_destroy(help);
+  // Parse
+  parser.process(app);
 
-      cmdline_option_values_free();
-
-      exit(EXIT_SUCCESS);
-    } else if ((option =
-                    get_option_malloc("--ruleset", argv, &i, argc, TRUE))) {
-      if (rs_selected != NULL) {
-        fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
-                             "at time supported.\n"));
-      } else {
-        rs_selected = option;
-      }
-    } else if ((option =
-                    get_option_malloc("--output", argv, &i, argc, TRUE))) {
-      if (od_selected != NULL) {
-        fc_fprintf(stderr, _("Multiple output directories given.\n"));
-      } else {
-        od_selected = option;
-      }
+  // Process the parsed options
 #ifndef FREECIV_NDEBUG
-    } else if (is_option("--Fatal", argv[i])) {
-      if (i + 1 >= argc || '-' == argv[i + 1][0]) {
-        fatal_assertions = SIGABRT;
-      } else if (str_to_int(argv[i + 1], &fatal_assertions)) {
-        i++;
-      } else {
-        fc_fprintf(stderr, _("Invalid signal number \"%s\".\n"),
-                   argv[i + 1]);
-        fc_fprintf(stderr, _("Try using --help.\n"));
-        exit(EXIT_FAILURE);
-      }
-#endif /* FREECIV_NDEBUG */
-    } else {
-      fc_fprintf(stderr, _("Unrecognized option: \"%s\"\n"), argv[i]);
-      cmdline_option_values_free();
+  if (parser.isSet("Fatal")) {
+    fatal_assertions = SIGABRT;
+  }
+#endif // FREECIV_NDEBUG
+  if (parser.isSet("ruleset")) {
+    if (parser.values("ruleset").size() >= 1) {
+      fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
+                           "at time supported.\n"));
       exit(EXIT_FAILURE);
+    } else {
+      rs_selected = parser.value("ruleset");
     }
-
-    i++;
+  }
+  if (parser.isSet("output")) {
+    if (parser.values("output").size() > 1) {
+      fc_fprintf(stderr, _("Multiple output directories given.\n"));
+      exit(EXIT_FAILURE);
+    } else {
+      od_selected = parser.value("output");
+    }
   }
 }
 
@@ -147,11 +128,14 @@ int main(int argc, char **argv)
 #endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setApplicationVersion(VERSION_STRING);
+
   init_nls();
 
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
-  rup_parse_cmdline(argc, argv);
+  rup_parse_cmdline(app);
 
   log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
@@ -169,21 +153,21 @@ int main(int argc, char **argv)
   if (rs_selected == NULL) {
     rs_selected = GAME_DEFAULT_RULESETDIR;
   }
-  sz_strlcpy(game.server.rulesetdir, rs_selected);
+  sz_strlcpy(game.server.rulesetdir, qUtf8Printable(rs_selected));
 
   /* Reset aifill to zero */
   game.info.aifill = 0;
 
   if (load_rulesets(NULL, NULL, TRUE, conv_log, FALSE, TRUE, TRUE)) {
     struct rule_data data;
-    char tgt_dir[2048];
+    QString tgt_dir;
 
     data.nationlist = game.server.ruledit.nationlist;
 
-    if (od_selected != NULL) {
-      fc_strlcpy(tgt_dir, od_selected, sizeof(tgt_dir));
+    if (!od_selected.isEmpty()) {
+      tgt_dir = od_selected;
     } else {
-      fc_snprintf(tgt_dir, sizeof(tgt_dir), "%s.ruleup", rs_selected);
+      tgt_dir = rs_selected + ".ruleup";
     }
 
     if (!comments_load()) {
@@ -192,17 +176,16 @@ int main(int argc, char **argv)
       log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
     }
 
-    save_ruleset(tgt_dir, game.control.name, &data);
-    log_normal("Saved %s", tgt_dir);
+    save_ruleset(qPrintable(tgt_dir), game.control.name, &data);
+    log_normal("Saved %s", qPrintable(tgt_dir));
     comments_free();
   } else {
-    log_error(_("Can't load ruleset %s"), rs_selected);
+    log_error(_("Can't load ruleset %s"), qPrintable(rs_selected));
   }
 
   log_close();
   free_libfreeciv();
   free_nls();
-  cmdline_option_values_free();
 
   return EXIT_SUCCESS;
 }
