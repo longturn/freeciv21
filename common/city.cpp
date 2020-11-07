@@ -18,6 +18,7 @@
 #include <math.h> /* pow, sqrt, exp */
 #include <stdlib.h>
 #include <string.h>
+#include <vector>
 
 /* utility */
 #include "distribute.h"
@@ -476,7 +477,7 @@ static void citylog_map_index(enum log_level level)
     return;
   }
   city_map_data = new int[city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
-                            sizeof(*city_map_data)];
+                          sizeof(*city_map_data)];
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)
   {
@@ -494,14 +495,11 @@ static void citylog_map_index(enum log_level level)
  **************************************************************************/
 static void citylog_map_radius_sq(enum log_level level)
 {
-  int *city_map_data = NULL;
-
   if (!log_do_output_for_level(level)) {
     return;
   }
 
-  city_map_data = fc_calloc(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
-                            sizeof(*city_map_data));
+  std::vector<int> city_map_data(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ));
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)
   {
@@ -511,8 +509,7 @@ static void citylog_map_radius_sq(enum log_level level)
   city_map_iterate_end;
 
   log_debug("city map squared radius:");
-  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data);
-  FC_FREE(city_map_data);
+  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data.data());
 }
 #endif /* FREECIV_DEBUG */
 

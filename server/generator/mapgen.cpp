@@ -805,7 +805,7 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
 
   while (TRUE) {
     /* Mark the current tile as river. */
-    privermap->ok.setBit(tile_index(ptile))
+    privermap->ok.setBit(tile_index(ptile));
     log_debug("The tile at (%d, %d) has been marked as river in river_map.",
               TILE_XY(ptile));
 
@@ -1058,7 +1058,6 @@ static void make_rivers(void)
               "iteration_counter: %d",
               current_riverlength, desirable_riverlength, iteration_counter);
   } /* end while; */
-
 
   destroy_placed_map();
 }
