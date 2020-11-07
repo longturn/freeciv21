@@ -13,8 +13,6 @@
 #ifndef FC__MPDB_H
 #define FC__MPDB_H
 
-
-
 /* common */
 #include "fc_types.h"
 
@@ -45,7 +43,5 @@ void close_mpdbs(void);
 bool mpdb_update_modpack(const char *name, enum modpack_type type,
                          const char *version);
 const char *mpdb_installed_version(const char *name, enum modpack_type type);
-
-
 
 #endif /* FC__MPDB_H */

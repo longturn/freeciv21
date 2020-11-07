@@ -13,10 +13,13 @@
 #ifndef FC__MODINST_H
 #define FC__MODINST_H
 
+#include <QString>
+#include <QUrl>
+
 struct fcmp_params {
-  const char *list_url;
-  const char *inst_prefix;
-  const char *autoinstall;
+  QUrl list_url;
+  QString inst_prefix;
+  QString autoinstall;
 };
 
 #if IS_DEVEL_VERSION && !IS_FREEZE_VERSION
