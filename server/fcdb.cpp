@@ -131,9 +131,7 @@ static bool fcdb_load_config(const char *filename)
   {
     if (entry_type_get(pentry) == ENTRY_STR) {
       const char *value;
-#ifndef FREECIV_NDEBUG
       bool entry_str_get_success =
-#endif /* FREECIV_NDEBUG */
           entry_str_get(pentry, &value);
 
       fc_assert(entry_str_get_success);

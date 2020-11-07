@@ -123,13 +123,11 @@ int main(int argc, char *argv[])
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
 #ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
 #endif /* FREECIV_DEBUG */
   }
-#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   if (SIG_ERR == signal(SIGINT, signal_handler)) {
@@ -204,9 +202,7 @@ int main(int argc, char *argv[])
        _("LEVEL")},
       {{"e", "exit-on-end"},
        _("When a game ends, exit instead of restarting")},
-#ifndef FREECIV_NDEBUG
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
-#endif
       {{"f", "file"},
        _("Load saved game"),
        // TRANS: Command-line argument

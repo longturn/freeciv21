@@ -327,13 +327,11 @@ int client_main(int argc, char *argv[])
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
 #ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
 #endif /* FREECIV_DEBUG */
   }
-#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   QApplication app(argc, argv);
@@ -392,9 +390,7 @@ int client_main(int argc, char *argv[])
                           LOG_VERBOSE),
 #endif /* FREECIV_DEBUG */
         _("LEVEL")},
-#ifndef FREECIV_NDEBUG
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
-#endif /* FREECIV_NDEBUG */
        {{"f", "file"}, _("Load saved game FILE"), "FILE"},
 #ifdef FREECIV_DEBUG
        {{"H", "Hackless"},
@@ -441,11 +437,9 @@ int client_main(int argc, char *argv[])
   if (parser.isSet("log")) {
     logfile = parser.value("log");
   }
-#ifndef FREECIV_NDEBUG
   if (parser.isSet("Fatal")) {
     fatal_assertions = SIGABRT;
   }
-#endif /* FREECIV_NDEBUG */
   if (parser.isSet("read")) {
     scriptfile = parser.value("read");
   }

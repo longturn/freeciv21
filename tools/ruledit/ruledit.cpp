@@ -68,13 +68,11 @@ int main(int argc, char **argv)
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
-#ifndef FREECIV_NDEBUG
   if (LoadLibrary("exchndl.dll") == NULL) {
 #ifdef FREECIV_DEBUG
     fprintf(stderr, "exchndl.dll could not be loaded, no crash debugger\n");
 #endif /* FREECIV_DEBUG */
   }
-#endif /* FREECIV_NDEBUG */
 #endif /* FREECIV_MSWINDOWS */
 
   QApplication app(argc, argv);
@@ -144,9 +142,7 @@ static void re_parse_cmdline(const QCoreApplication &app)
   parser.addVersionOption();
 
   bool ok = parser.addOptions({
-#ifndef FREECIV_NDEBUG
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
-#endif // FREECIV_NDEBUG
       {{"r", "ruleset"},
        R__("Ruleset to use as the starting point."),
        // TRANS: Command-line argument
@@ -161,11 +157,9 @@ static void re_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-#ifndef FREECIV_NDEBUG
   if (parser.isSet("Fatal")) {
     fatal_assertions = SIGABRT;
   }
-#endif // FREECIV_NDEBUG
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() >= 1) {
       fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));

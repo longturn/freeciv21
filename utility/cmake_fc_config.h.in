@@ -135,9 +135,6 @@
 
 /***** Previously freeciv_config.h *****/
 
-/* No freeciv specific debugging support at all */
-#cmakedefine FREECIV_NDEBUG
-
 /* libbzip2 is available */
 #cmakedefine FREECIV_HAVE_LIBBZ2
 

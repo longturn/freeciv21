@@ -536,7 +536,6 @@ void fc_assert_set_fatal(int fatal_assertions)
   fc_fatal_assertions = fatal_assertions;
 }
 
-#ifndef FREECIV_NDEBUG
 /**********************************************************************/ /**
    Returns wether the fc_assert* macros should raise a signal on failed
    assertion.
@@ -571,6 +570,7 @@ void fc_assert_fail(const char *file, const char *function, int line,
     raise(fc_fatal_assertions);
   }
 }
+
 void log_time(QString msg, bool log)
 {
   static bool logging;
@@ -581,5 +581,3 @@ void log_time(QString msg, bool log)
     qInfo() << qPrintable(msg);
   }
 }
-
-#endif /* FREECIV_NDEBUG */
