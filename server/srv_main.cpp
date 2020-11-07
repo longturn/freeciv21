@@ -31,7 +31,6 @@
 #include "bitvector.h"
 #include "bugs.h"
 #include "capability.h"
-#include "fc_cmdline.h"
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
@@ -1910,7 +1909,6 @@ void server_quit(void)
   free_libfreeciv();
   free_nls();
   con_log_close();
-  cmdline_option_values_free();
 
   QCoreApplication::exit(EXIT_SUCCESS);
 }

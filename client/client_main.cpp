@@ -34,7 +34,6 @@
 #include "capstr.h"
 #include "dataio.h"
 #include "deprecations.h"
-#include "fc_cmdline.h"
 #include "fcbacktrace.h"
 #include "fciconv.h"
 #include "fcintl.h"
@@ -692,7 +691,6 @@ void client_exit(void)
 
   backtrace_deinit();
   log_close();
-  cmdline_option_values_free();
 
   exit(EXIT_SUCCESS);
 }
