@@ -67,9 +67,20 @@ add_library(
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
 
+# Add backward.hpp to the include path
+set_source_files_properties(
+  fcbacktrace.cpp PROPERTIES
+  INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}/dependencies/backward-cpp-1.5
+  COMPILE_DEFINITIONS BACKWARD_HAS_UNWIND=${BACKWARD_HAS_UNWIND}
+  COMPILE_DEFINITIONS BACKWARD_HAS_BACKTRACE=${BACKWARD_HAS_BACKTRACE}
+  COMPILE_DEFINITIONS BACKWARD_HAS_DW=${BACKWARD_HAS_DW}
+  COMPILE_DEFINITIONS BACKWARD_HAS_BACKTRACE_SYMBOLS=${BACKWARD_HAS_BACKTRACE_SYMBOLS})
+
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(utility PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
 
+target_link_libraries(utility PRIVATE ${STACK_UNWINDING_LIBRARY})
+target_link_libraries(utility PRIVATE ${STACK_SYMBOLS_LIBRARY})
 target_link_libraries(utility PUBLIC Qt5::Core Qt5::Network)
 target_link_libraries(utility PUBLIC Threads::Threads)
 if (WIN32 OR MSYS OR MINGW)
