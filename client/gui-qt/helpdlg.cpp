@@ -245,44 +245,33 @@ void help_dialog::make_tree()
     } else {
       last = dep - 1;
       spite = nullptr;
+      icon = QIcon();
 
       switch (pitem->type) {
       case HELP_EXTRA:
         pextra = extra_type_by_translated_name(s);
         fill_basic_extra_sprite_array(tileset, sprs, pextra);
-        icon = QIcon(*sprs->sprite->pm);
+        spite = sprs->sprite;
         break;
 
       case HELP_GOVERNMENT:
         gov = government_by_translated_name(s);
         spite = get_government_sprite(tileset, gov);
-        if (spite) {
-          icon = QIcon(*spite->pm);
-        }
         break;
 
       case HELP_IMPROVEMENT:
       case HELP_WONDER:
         imp = improvement_by_translated_name(s);
         spite = get_building_sprite(tileset, imp);
-        if (spite) {
-          icon = QIcon(*spite->pm);
-        }
         break;
       case HELP_NATIONS:
         nation = nation_by_translated_plural(s);
         spite = get_nation_flag_sprite(tileset, nation);
-        if (spite) {
-          icon = QIcon(*spite->pm);
-        }
         break;
       case HELP_TECH:
         padvance = advance_by_translated_name(s);
         if (padvance && !is_future_tech(i = advance_number(padvance))) {
           spite = get_tech_sprite(tileset, i);
-          if (spite) {
-            icon = QIcon(*spite->pm);
-          }
         }
         break;
 
@@ -300,15 +289,12 @@ void help_dialog::make_tree()
         if (f_type) {
           spite = get_unittype_sprite(tileset, f_type, direction8_invalid());
         }
-        if (spite) {
-          icon = QIcon(*spite->pm);
-        }
         break;
 
       default:
         break;
       }
-
+      if (spite) icon = QIcon(*spite->pm);
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }
