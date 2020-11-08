@@ -105,13 +105,6 @@ struct unit_type *dai_choose_defender_versus(struct city *pcity,
       loss = (double) defense * punittype->hp * fpdef / (attack * fpatt);
       want = (loss + MAX(0, loss - attacker->hp)) / cost;
 
-#ifdef NEVER
-      CITY_LOG(LOG_DEBUG, pcity, "desire for %s against %s(%d,%d) is %.2f",
-               unit_name_orig(punittype),
-               unit_name_orig(unit_type_get(attacker)),
-               TILE_XY(attacker->tile), want);
-#endif /* NEVER */
-
       if (want > best || (want == best && cost <= best_cost)) {
         best = want;
         bestunit = punittype;
@@ -571,9 +564,6 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
     assess_turns = 6;
   } else {
     assess_turns = 3;
-#ifdef FREECIV_WEB
-    assess_turns = has_handicap(pplayer, H_ASSESS_DANGER_LIMITED) ? 2 : 3;
-#endif
   }
 
   omnimap = !has_handicap(pplayer, H_MAP);
@@ -606,16 +596,6 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
       const struct unit_type *utype = unit_type_get(punit);
       struct unit_type_ai *utai =
           static_cast<unit_type_ai *>(utype_ai_data(utype, ait));
-
-#ifdef FREECIV_WEB
-      int unit_distance = real_map_distance(ptile, unit_tile(punit));
-      if (unit_distance > ASSESS_DANGER_MAX_DISTANCE
-          || (has_handicap(pplayer, H_ASSESS_DANGER_LIMITED)
-              && unit_distance > AI_HANDICAP_DISTANCE_LIMIT)) {
-        /* Too far away. */
-        continue;
-      }
-#endif
 
       if (!utai->carries_occupiers && !utype_acts_hostile(utype)) {
         /* Harmless unit. */

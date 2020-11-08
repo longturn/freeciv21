@@ -567,15 +567,9 @@ extern const int DIR_DY[8];
 /* Size of the map in thousands of tiles. If MAP_MAX_SIZE is increased,
  * MAX_DBV_LENGTH in bitvector.c must be checked; see the static assertion
  * below. */
-#ifdef FREECIV_WEB
-#define MAP_DEFAULT_SIZE 3
-#define MAP_MIN_SIZE 0
-#define MAP_MAX_SIZE 38
-#else /* FREECIV_WEB */
 #define MAP_DEFAULT_SIZE 4
 #define MAP_MIN_SIZE 0
 #define MAP_MAX_SIZE 2048
-#endif /* FREECIV_WEB */
 
 /* We communicate through the network with signed 32-bits integers. */
 FC_STATIC_ASSERT((long unsigned) MAP_MAX_SIZE * 1000 < (long unsigned) 1
@@ -597,12 +591,7 @@ moves. Includes MAP_MAX_LINEAR_SIZE because a map can be non wrapping. */
 #define MAP_DISTANCE_MAX (MAP_MAX_LINEAR_SIZE + MAP_MIN_LINEAR_SIZE)
 
 #define MAP_ORIGINAL_TOPO TF_WRAPX
-#ifdef FREECIV_WEB
-/* Freeciv-web doesn't support isometric maps yet. */
-#define MAP_DEFAULT_TOPO TF_WRAPX
-#else /* FREECIV_WEB */
 #define MAP_DEFAULT_TOPO (TF_WRAPX | TF_ISO | TF_HEX)
-#endif /* FREECIV_WEB */
 
 #define MAP_DEFAULT_SEED 0
 #define MAP_MIN_SEED 0

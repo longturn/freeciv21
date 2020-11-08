@@ -13,14 +13,7 @@
 #ifndef FC__RULESET_H
 #define FC__RULESET_H
 
-
-
-#define RULESET_CAPABILITIES_BASE "+Freeciv-ruleset-Devel-2017.Jan.02"
-#ifdef FREECIV_WEB
-#define RULESET_CAPABILITIES RULESET_CAPABILITIES_BASE " +web-compatible"
-#else /* FREECIV_WEB */
-#define RULESET_CAPABILITIES RULESET_CAPABILITIES_BASE
-#endif /* FREECIV_WEB */
+#define RULESET_CAPABILITIES "+Freeciv-ruleset-Devel-2017.Jan.02"
 /*
  * Ruleset capabilities acceptable to this program:
  *
@@ -89,7 +82,5 @@ char *get_parser_buffer(void);
 
 #define RS_DEFAULT_EXTRA_APPEARANCE 15
 #define RS_DEFAULT_EXTRA_DISAPPEARANCE 15
-
-
 
 #endif /* FC__RULESET_H */

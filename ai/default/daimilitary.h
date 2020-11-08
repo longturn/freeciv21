@@ -20,11 +20,6 @@
 /* server/advisors */
 #include "advchoice.h"
 
-#ifdef FREECIV_WEB
-#define ASSESS_DANGER_MAX_DISTANCE 40
-#define AI_HANDICAP_DISTANCE_LIMIT 6 // TODO: 20 for non-web
-#endif                               /* FREECIV_WEB */
-
 /* When an enemy has this or lower number of cities left, try harder
    to finish him off. */
 #define FINISH_HIM_CITY_COUNT 5

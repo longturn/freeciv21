@@ -156,9 +156,6 @@
 /* C++11 static assert supported */
 #cmakedefine FREECIV_CXX11_STATIC_ASSERT
 
-/* Is this freeciv-web instead of regular build */
-#cmakedefine FREECIV_WEB
-
 /* Testmatic integration enabled */
 #cmakedefine FREECIV_TESTMATIC
 

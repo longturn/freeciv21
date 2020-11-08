@@ -38,15 +38,8 @@ struct data_in;
 #define MAX_LEN_MSG 1536
 #define MAX_LEN_ROUTE 2000 /* MAX_LEN_PACKET / 2 - header */
 
-#ifdef FREECIV_WEB
-#define web_send_packet(packetname, ...)                                    \
-  send_packet_web_##packetname(__VA_ARGS__)
-#define web_lsend_packet(packetname, ...)                                   \
-  lsend_packet_web_##packetname(__VA_ARGS__)
-#else /* FREECIV_WEB */
 #define web_send_packet(packetname, ...)
 #define web_lsend_packet(packetname, ...)
-#endif /* FREECIV_WEB */
 
 /* The size of opaque (void *) data sent in the network packet.  To avoid
  * fragmentation issues, this SHOULD NOT be larger than the standard
