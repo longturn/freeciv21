@@ -53,8 +53,8 @@
 static char *citylog_map_line(int y, int city_radius_sq, int *city_map_data);
 #ifdef FREECIV_DEBUG
 /* only used for debugging */
-static void citylog_map_index(enum log_level level);
-static void citylog_map_radius_sq(enum log_level level);
+static void citylog_map_index(QtMsgType level);
+static void citylog_map_radius_sq(QtMsgType level);
 #endif /* FREECIV_DEBUG */
 
 /* Get city tile informations using the city tile index. */
@@ -403,7 +403,7 @@ static char *citylog_map_line(int y, int city_radius_sq, int *city_map_data)
    requested log level. The size of 'map_data' is defined by
    city_map_tiles(radius_sq).
  **************************************************************************/
-void citylog_map_data(enum log_level level, int radius_sq, int *map_data)
+void citylog_map_data(QtMsgType level, int radius_sq, int *map_data)
 {
   int x, y;
   char line[128], tmp[8];
@@ -438,7 +438,7 @@ void citylog_map_data(enum log_level level, int radius_sq, int *map_data)
 /**********************************************************************/ /**
    Display the location of the workers within the city map of pcity.
  **************************************************************************/
-void citylog_map_workers(enum log_level level, struct city *pcity)
+void citylog_map_workers(QtMsgType level, struct city *pcity)
 {
   int *city_map_data = NULL;
 
@@ -469,7 +469,7 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
 /**********************************************************************/ /**
    Log the index of all tiles of the city map.
  **************************************************************************/
-static void citylog_map_index(enum log_level level)
+static void citylog_map_index(QtMsgType level)
 {
   int *city_map_data = NULL;
 
@@ -493,7 +493,7 @@ static void citylog_map_index(enum log_level level)
 /**********************************************************************/ /**
    Log the radius of all tiles of the city map.
  **************************************************************************/
-static void citylog_map_radius_sq(enum log_level level)
+static void citylog_map_radius_sq(QtMsgType level)
 {
   if (!log_do_output_for_level(level)) {
     return;

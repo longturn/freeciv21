@@ -50,8 +50,8 @@ static int recursion[AIT_LAST];
      2: Polish Romenna(5,35) [s1 d106 u11 g1] must have Archers ...
  **************************************************************************/
 void real_city_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct city *pcity, const char *msg, ...)
+                   QtMsgType level, bool notify, const struct city *pcity,
+                   const char *msg, ...)
 {
   char buffer[500];
   char buffer2[500];
@@ -83,8 +83,8 @@ void real_city_log(const char *file, const char *function, int line,
    {,} contains bodyguard and ferryboat ids.
  **************************************************************************/
 void real_unit_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct unit *punit, const char *msg, ...)
+                   QtMsgType level, bool notify, const struct unit *punit,
+                   const char *msg, ...)
 {
   char buffer[500];
   char buffer2[500];

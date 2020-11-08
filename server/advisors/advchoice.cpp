@@ -175,12 +175,12 @@ void adv_choice_log_info(struct adv_choice *choice, const char *loc1,
   }
 
   if (loc2 != NULL) {
-    log_base(ADV_CHOICE_LOG_LEVEL,
+    log_base(ADV_CHOICE_QtMsgType,
              "Choice at \"%s:%s\": %s, "
              "want " ADV_WANT_PRINTF " as %s (%d)",
              loc1, loc2, name, choice->want, use, choice->type);
   } else {
-    log_base(ADV_CHOICE_LOG_LEVEL,
+    log_base(ADV_CHOICE_QtMsgType,
              "Choice at \"%s\": %s, "
              "want " ADV_WANT_PRINTF " as %s (%d)",
              loc1, name, choice->want, use, choice->type);

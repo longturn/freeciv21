@@ -53,7 +53,7 @@ static int con_dump(enum rfc_status rfc_status, const char *message, ...);
    Function to handle log messages.
    This must match the log_callback_fn typedef signature.
  ************************************************************************/
-static void con_handle_log(enum log_level level, const char *message,
+static void con_handle_log(QtMsgType level, const char *message,
                            bool file_too)
 {
   if (LOG_ERROR == level) {
@@ -143,7 +143,7 @@ static void depr_warn_callback(const char *msg)
 /********************************************************************/ /**
    Initialize logging via console.
  ************************************************************************/
-void con_log_init(const QString &log_filename, enum log_level level,
+void con_log_init(const QString &log_filename, QtMsgType level,
                   int fatal_assertions)
 {
 #ifdef FREECIV_DEBUG

@@ -238,7 +238,7 @@ static int num_types(const struct cm_state *state);
 
 /* debugging functions */
 #ifdef CM_DEBUG
-static void real_print_tile_type(enum log_level level, const char *file,
+static void real_print_tile_type(QtMsgType level, const char *file,
                                  const char *function, int line,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix);
@@ -248,7 +248,7 @@ static void real_print_tile_type(enum log_level level, const char *file,
                          ptype, prefix);                                    \
   }
 
-static void real_print_lattice(enum log_level level, const char *file,
+static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice);
 #define print_lattice(loglevel, lattice)                                    \
@@ -257,8 +257,7 @@ static void real_print_lattice(enum log_level level, const char *file,
                        lattice);                                            \
   }
 
-static void real_print_partial_solution(enum log_level level,
-                                        const char *file,
+static void real_print_partial_solution(QtMsgType level, const char *file,
                                         const char *function, int line,
                                         const struct partial_solution *soln,
                                         const struct cm_state *state);
@@ -2328,7 +2327,7 @@ static void snprint_production(char *buffer, size_t bufsz,
 /************************************************************************/ /**
    Print debugging data about a particular tile type.
  ****************************************************************************/
-static void real_print_tile_type(enum log_level level, const char *file,
+static void real_print_tile_type(QtMsgType level, const char *file,
                                  const char *function, int line,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix)
@@ -2345,7 +2344,7 @@ static void real_print_tile_type(enum log_level level, const char *file,
 /************************************************************************/ /**
    Print debugging data about a whole B&B lattice.
  ****************************************************************************/
-static void real_print_lattice(enum log_level level, const char *file,
+static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice)
 {
@@ -2361,8 +2360,7 @@ static void real_print_lattice(enum log_level level, const char *file,
 /************************************************************************/ /**
    Print debugging data about a partial CM solution.
  ****************************************************************************/
-static void real_print_partial_solution(enum log_level level,
-                                        const char *file,
+static void real_print_partial_solution(QtMsgType level, const char *file,
                                         const char *function, int line,
                                         const struct partial_solution *soln,
                                         const struct cm_state *state)

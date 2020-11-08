@@ -94,7 +94,7 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
    For debugging, print out the parameter.
  ****************************************************************************/
 void caravan_parameter_log_real(const struct caravan_parameter *parameter,
-                                enum log_level level, const char *file,
+                                QtMsgType level, const char *file,
                                 const char *function, int line)
 {
   const char *foreign = "<illegal>";

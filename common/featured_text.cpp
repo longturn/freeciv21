@@ -100,7 +100,6 @@ const struct ft_color ftc_luaconsole_error = FT_COLOR("#FF0000", NULL);
 const struct ft_color ftc_luaconsole_warn = FT_COLOR("#CF2020", NULL);
 const struct ft_color ftc_luaconsole_normal = FT_COLOR("#006400", NULL);
 const struct ft_color ftc_luaconsole_verbose = FT_COLOR("#B8B8B8", NULL);
-const struct ft_color ftc_luaconsole_debug = FT_COLOR("#B87676", NULL);
 
 /**********************************************************************/ /**
    Return the long name of the text tag type.

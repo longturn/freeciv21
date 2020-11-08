@@ -63,7 +63,7 @@ static int fatal_assertions = -1;
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  enum log_level loglevel = LOG_NORMAL;
+  QtMsgType loglevel = LOG_NORMAL;
   int ui_options;
 
   /* Load win32 post-crash debugger */

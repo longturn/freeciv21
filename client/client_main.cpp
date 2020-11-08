@@ -318,7 +318,7 @@ static void client_game_reset(void)
 int client_main(int argc, char *argv[])
 {
   int i;
-  enum log_level loglevel = LOG_NORMAL;
+  QtMsgType loglevel = LOG_NORMAL;
   int ui_options = 0;
   bool ui_separator = FALSE;
   char *option = NULL;
@@ -635,13 +635,25 @@ int client_main(int argc, char *argv[])
 /**********************************************************************/ /**
    Write messages from option saving to the log.
  **************************************************************************/
-static void log_option_save_msg(enum log_level lvl, const char *msg, ...)
+static void log_option_save_msg(QtMsgType lvl, const QString &msg)
 {
-  va_list args;
-
-  va_start(args, msg);
-  log_va_list(lvl, msg, args);
-  va_end(args);
+  switch (lvl) {
+  case QtDebugMsg:
+    qDebug("%s", msg.data());
+    break;
+  case QtInfoMsg:
+    qInfo("%s", msg.data());
+    break;
+  case QtWarningMsg:
+    qWarning("%s", msg.data());
+    break;
+  case QtCriticalMsg:
+    qCritical("%s", msg.data());
+    break;
+  case QtFatalMsg:
+    qFatal("%s", msg.data());
+    break;
+  }
 }
 
 /**********************************************************************/ /**

@@ -71,7 +71,7 @@
 static void script_fcdb_functions_define(void);
 static bool script_fcdb_functions_check(const char *fcdb_luafile);
 
-static void script_fcdb_cmd_reply(struct fc_lua *lfcl, enum log_level level,
+static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
                                   const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
@@ -164,7 +164,7 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
 /*************************************************************************/ /**
    Send the message via cmd_reply().
  *****************************************************************************/
-static void script_fcdb_cmd_reply(struct fc_lua *lfcl, enum log_level level,
+static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
                                   const char *format, ...)
 {
   va_list args;

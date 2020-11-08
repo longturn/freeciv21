@@ -499,7 +499,7 @@ static void tileset_player_free(struct tileset *t, int plrid);
 /************************************************************************/ /**
    Called when ever there's problem in ruleset/tileset compatibility
  ****************************************************************************/
-void tileset_error(enum log_level level, const char *format, ...)
+void tileset_error(QtMsgType level, const char *format, ...)
 {
   char buf[2048];
   va_list args;
@@ -1016,7 +1016,7 @@ static bool check_tilespec_capabilities(struct section_file *file,
                                         const char *us_capstr,
                                         const char *filename, bool verbose)
 {
-  enum log_level level = verbose ? LOG_ERROR : LOG_DEBUG;
+  QtMsgType level = verbose ? LOG_ERROR : LOG_DEBUG;
 
   const char *file_capstr = secfile_lookup_str(file, "%s.options", which);
 
@@ -3334,9 +3334,8 @@ void tileset_load_tiles(struct tileset *t)
    or else return NULL, and emit log message.
  ****************************************************************************/
 struct sprite *tiles_lookup_sprite_tag_alt(struct tileset *t,
-                                           enum log_level level,
-                                           const char *tag, const char *alt,
-                                           const char *what,
+                                           QtMsgType level, const char *tag,
+                                           const char *alt, const char *what,
                                            const char *name, bool scale)
 {
   struct sprite *sp;

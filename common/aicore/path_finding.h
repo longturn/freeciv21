@@ -13,10 +13,8 @@
 #ifndef FC__PATH_FINDING_H
 #define FC__PATH_FINDING_H
 
-
-
 /* utility */
-#include "log.h" /* enum log_level */
+#include "log.h" /* QtMsgType */
 
 /* common */
 #include "map.h"
@@ -493,7 +491,7 @@ struct pf_path *pf_path_concat(struct pf_path *dest_path,
 bool pf_path_advance(struct pf_path *path, struct tile *ptile);
 bool pf_path_backtrack(struct pf_path *path, struct tile *ptile);
 const struct pf_position *pf_path_last_position(const struct pf_path *path);
-void pf_path_print_real(const struct pf_path *path, enum log_level level,
+void pf_path_print_real(const struct pf_path *path, QtMsgType level,
                         const char *file, const char *function, int line);
 #define pf_path_print(path, level)                                          \
   if (log_do_output_for_level(level)) {                                     \
@@ -613,7 +611,5 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
   while (pf_map_iterate(_MY_pf_map_))                                       \
     ;                                                                       \
   }
-
-
 
 #endif /* FC__PATH_FINDING_H */

@@ -16,19 +16,20 @@
 #include <stdarg.h>
 #include <stdlib.h>
 
+// Qt
+#include <QtGlobal>
+
 #include "support.h" /* bool type and fc__attribute */
 
 // Forward declarations
 class QString;
 
-enum log_level {
-  LOG_FATAL = 0,
-  LOG_ERROR, /* non-fatal errors */
-  LOG_WARN,
-  LOG_NORMAL,
-  LOG_VERBOSE, /* not shown by default */
-  LOG_DEBUG    /* suppressed unless DEBUG defined */
-};
+constexpr auto LOG_FATAL = QtFatalMsg;
+constexpr auto LOG_ERROR = QtCriticalMsg;
+constexpr auto LOG_WARN = QtWarningMsg;
+constexpr auto LOG_NORMAL = QtInfoMsg;
+constexpr auto LOG_VERBOSE = QtDebugMsg;
+constexpr auto LOG_DEBUG = QtDebugMsg;
 
 /* If one wants to compare autogames with lots of code changes, the line
  * numbers can cause a lot of noise. In that case set this to a fixed
@@ -40,44 +41,43 @@ extern const char *nologmsg;
 #define NOLOGMSG nologmsg
 
 /* Preparation of the log message, i.e. add a backtrace. */
-typedef void (*log_pre_callback_fn)(enum log_level, bool print_from_where,
+typedef void (*log_pre_callback_fn)(QtMsgType, bool print_from_where,
                                     const char *where, const char *msg);
 
 /* A function type to enable custom output of log messages other than
  * via fputs(stderr).  Eg, to the server console while handling prompts,
  * rfcstyle, client notifications; Eg, to the client window output window?
  */
-typedef void (*log_callback_fn)(enum log_level, const char *, bool file_too);
+typedef void (*log_callback_fn)(QtMsgType, const char *, bool file_too);
 
 /* A function type to generate a custom prefix for the log messages, e.g.
  * add the turn and/or time of the log message. */
 typedef const char *(*log_prefix_fn)(void);
 
-void log_init(const char *filename, enum log_level initial_level,
+void log_init(const char *filename, QtMsgType initial_level,
               log_callback_fn callback, log_prefix_fn prefix,
               int fatal_assertions);
 void log_close(void);
-bool log_parse_level_str(const char *level_str, enum log_level *ret_level);
-bool log_parse_level_str(const QString &level_str,
-                         enum log_level *ret_level);
+bool log_parse_level_str(const char *level_str, QtMsgType *ret_level);
+bool log_parse_level_str(const QString &level_str, QtMsgType *ret_level);
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
 log_callback_fn log_set_callback(log_callback_fn callback);
 log_prefix_fn log_set_prefix(log_prefix_fn prefix);
-void log_set_level(enum log_level level);
-enum log_level log_get_level(void);
-const char *log_level_name(enum log_level lvl);
+void log_set_level(QtMsgType level);
+QtMsgType log_get_level(void);
+const char *QtMsgType_name(QtMsgType lvl);
 #ifdef FREECIV_DEBUG
-bool log_do_output_for_level_at_location(enum log_level level,
-                                         const char *file, int line);
+bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
+                                         int line);
 #endif
 
 void vdo_log(const char *file, const char *function, int line,
-             bool print_from_where, enum log_level level, char *buf,
-             int buflen, const char *message, va_list args);
+             bool print_from_where, QtMsgType level, char *buf, int buflen,
+             const char *message, va_list args);
 void do_log(const char *file, const char *function, int line,
-            bool print_from_where, enum log_level level, const char *message,
-            ...) fc__attribute((__format__(__printf__, 6, 7)));
+            bool print_from_where, QtMsgType level, const char *message, ...)
+    fc__attribute((__format__(__printf__, 6, 7)));
 
 #ifdef FREECIV_DEBUG
 #define log_do_output_for_level(level)                                      \
@@ -92,37 +92,27 @@ void do_log(const char *file, const char *function, int line,
     do_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, level, message,      \
            ##__VA_ARGS__);                                                  \
   }
-/* This one doesn't need check, fatal messages are always displayed. */
-#define log_fatal(message, ...)                                             \
-  do_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, LOG_FATAL, message,    \
-         ##__VA_ARGS__);
-#define log_error(message, ...) log_base(LOG_ERROR, message, ##__VA_ARGS__)
-#define log_warn(message, ...) log_base(LOG_WARN, message, ##__VA_ARGS__)
-#define log_normal(message, ...) log_base(LOG_NORMAL, message, ##__VA_ARGS__)
-#define log_verbose(message, ...)                                           \
-  log_base(LOG_VERBOSE, message, ##__VA_ARGS__)
-#ifdef FREECIV_DEBUG
-#define log_debug(message, ...) log_base(LOG_DEBUG, message, ##__VA_ARGS__)
-#else
-#define log_debug(message, ...) /* Do nothing. */
-#endif                          /* FREECIV_DEBUG */
-#ifdef FREECIV_TESTMATIC
-#define log_testmatic(message, ...)                                         \
-  log_base(LOG_ERROR, message, ##__VA_ARGS__)
-#define log_testmatic_alt(altlvl, message, ...)                             \
-  log_base(LOG_ERROR, message, ##__VA_ARGS__)
-#else                               /* FREECIV_TESTMATIC */
-#define log_testmatic(message, ...) /* Do nothing. */
-#define log_testmatic_alt(altlvl, message, ...)                             \
-  log_base(altlvl, message, ##__VA_ARGS__)
-#endif /* FREECIV_TESTMATIC */
 
-#define log_va_list(level, msg, args)                                       \
-  if (log_do_output_for_level(level)) {                                     \
-    char __buf_[1024];                                                      \
-    vdo_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, level, __buf_,      \
-            sizeof(__buf_), msg, args);                                     \
-  }
+// Have to be ifdef's to report the correct line number.
+#define log_fatal(message, ...) qFatal(message, ##__VA_ARGS__)
+#define log_error(message, ...) qCritical(message, ##__VA_ARGS__)
+#define log_warn(message, ...) qWarning(message, ##__VA_ARGS__)
+#define log_normal(message, ...) qInfo(message, ##__VA_ARGS__)
+#define log_verbose(message, ...) qDebug(message, ##__VA_ARGS__)
+
+#ifdef FREECIV_DEBUG
+#define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
+#else
+#define log_debug(message, ...) 0
+#endif
+
+#ifdef FREECIV_TESTMATIC
+#define log_testmatic(message, ...) qCritical(message, ##__VA_ARGS__)
+#else
+#define log_testmatic(message, ...) 0
+#endif
+
+#define log_testmatic_alt(lvl, ...) log_testmatic(__VA_ARGS__)
 
 /* Used by game debug command */
 #define log_test log_normal

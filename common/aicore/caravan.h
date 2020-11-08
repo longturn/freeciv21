@@ -13,10 +13,8 @@
 #ifndef FC__CARAVAN_H
 #define FC__CARAVAN_H
 
-
-
 /* utility */
-#include "log.h" /* enum log_level */
+#include "log.h" /* QtMsgType */
 #include "shared.h"
 
 /* common */
@@ -125,7 +123,7 @@ void caravan_parameter_init_from_unit(struct caravan_parameter *parameter,
                                       const struct unit *caravan);
 bool caravan_parameter_is_legal(const struct caravan_parameter *parameter);
 void caravan_parameter_log_real(const struct caravan_parameter *parameter,
-                                enum log_level level, const char *file,
+                                QtMsgType level, const char *file,
                                 const char *function, int line);
 #define caravan_parameter_log(parameter, loglevel)                          \
   if (log_do_output_for_level(loglevel)) {                                  \
@@ -150,7 +148,5 @@ void caravan_optimize_allpairs(const struct unit *caravan,
                                const struct caravan_parameter *parameter,
                                struct caravan_result *result,
                                bool omniscient);
-
-
 
 #endif /* FC__CARAVAN_H */

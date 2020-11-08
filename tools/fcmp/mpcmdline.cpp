@@ -82,7 +82,7 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  log_level loglevel;
+  QtMsgType loglevel;
   if (parser.isSet("debug")) {
     if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
       exit(EXIT_FAILURE);

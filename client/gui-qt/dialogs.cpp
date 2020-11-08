@@ -1033,10 +1033,7 @@ void unit_select_dialog_popup(struct tile *ptile)
 /***********************************************************************/ /**
    Update the dialog window to select units on a particular tile.
  ***************************************************************************/
-void unit_select_dialog_update_real(void *unused)
-{
-  update_unit_sel();
-}
+void unit_select_dialog_update_real(void *unused) { update_unit_sel(); }
 
 /***********************************************************************/ /**
    Updates nationset combobox
@@ -3713,7 +3710,7 @@ void show_tileset_error(const char *msg)
                 " ruleset:\n%s"),
               msg);
 
-  if (QCoreApplication::instance() != nullptr) {
+  if (king() != nullptr) {
     QMessageBox *ask = new QMessageBox(king()->central_wdg);
 
     ask->setText(buf);
@@ -3766,7 +3763,6 @@ void popup_upgrade_dialog(struct unit_list *punits)
   });
   ask->show();
 }
-
 
 /***********************************************************************/ /**
    Set current diplo dialog

@@ -111,7 +111,7 @@ static void conv_log(const char *msg) { log_normal("%s", msg); }
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  enum log_level loglevel = LOG_NORMAL;
+  QtMsgType loglevel = LOG_NORMAL;
 
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS

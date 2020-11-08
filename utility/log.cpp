@@ -39,9 +39,9 @@
 
 #define MAX_LEN_LOG_LINE 5120
 
-static void log_write(FILE *fs, enum log_level level, bool print_from_where,
+static void log_write(FILE *fs, QtMsgType level, bool print_from_where,
                       const char *where, const char *message);
-static void log_real(enum log_level level, bool print_from_where,
+static void log_real(QtMsgType level, bool print_from_where,
                      const char *where, const char *msg);
 
 static char *log_filename = NULL;
@@ -52,25 +52,25 @@ static log_prefix_fn log_prefix = NULL;
 static fc_mutex logfile_mutex;
 
 #ifdef FREECIV_DEBUG
-static const enum log_level max_level = LOG_DEBUG;
+static const QtMsgType max_level = LOG_DEBUG;
 #else
-static const enum log_level max_level = LOG_VERBOSE;
+static const QtMsgType max_level = LOG_VERBOSE;
 #endif /* FREECIV_DEBUG */
 
-static enum log_level fc_log_level = LOG_NORMAL;
+static QtMsgType fc_QtMsgType = LOG_NORMAL;
 static int fc_fatal_assertions = -1;
 
 #ifdef FREECIV_DEBUG
 struct log_fileinfo {
   char *name;
-  enum log_level level;
+  QtMsgType level;
   unsigned int min;
   unsigned int max;
 };
 static std::vector<log_fileinfo> log_files;
 #endif /* FREECIV_DEBUG */
 
-static const char *log_level_names[] = {
+static const char *QtMsgType_names[] = {
     "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL};
 
 /* A helper variable to indicate that there is no log message. The '%s' is
@@ -87,9 +87,9 @@ const char *nologmsg = "nologmsg:%s";
    Return in ret_level the requested level only if level_str is a simple
    number (like "0", "1", "2").
 
-   Also sets up the log_files data structure. Does _not_ set fc_log_level.
+   Also sets up the log_files data structure. Does _not_ set fc_QtMsgType.
  **************************************************************************/
-bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
+bool log_parse_level_str(const char *level_str, QtMsgType *ret_level)
 {
   const char *c;
   int n = 0; /* number of filenames */
@@ -116,8 +116,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     /* Global log level. */
     if (!str_to_uint(level_str, &level)) {
       level = LOG_DEBUG + 1;
-      for (ln = 0; log_level_names[ln] != NULL && level > LOG_DEBUG; ln++) {
-        if (!fc_strncasecmp(level_str, log_level_names[ln],
+      for (ln = 0; QtMsgType_names[ln] != NULL && level > LOG_DEBUG; ln++) {
+        if (!fc_strncasecmp(level_str, QtMsgType_names[ln],
                             strlen(level_str))) {
           level = ln;
         }
@@ -133,7 +133,7 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     }
     if (level <= max_level) {
       if (NULL != ret_level) {
-        *ret_level = static_cast<log_level>(level);
+        *ret_level = static_cast<QtMsgType>(level);
       }
       return TRUE;
     } else {
@@ -155,8 +155,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
   c = level_str;
   level = LOG_DEBUG + 1;
   if (first_len > 0) {
-    for (ln = 0; log_level_names[ln] != NULL && level > LOG_DEBUG; ln++) {
-      if (!fc_strncasecmp(level_str, log_level_names[ln], first_len)) {
+    for (ln = 0; QtMsgType_names[ln] != NULL && level > LOG_DEBUG; ln++) {
+      if (!fc_strncasecmp(level_str, QtMsgType_names[ln], first_len)) {
         level = ln;
       }
     }
@@ -192,7 +192,7 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
 
     pfile.min = 0;
     pfile.max = 0;
-    pfile.level = log_level(level);
+    pfile.level = QtMsgType(level);
     if (d) {
       char *pc = d + 1;
 
@@ -244,7 +244,7 @@ out:
 /**********************************************************************/ /**
    Wrapper around log_parse_level_str(const char *)
  **************************************************************************/
-bool log_parse_level_str(const QString &level_str, enum log_level *ret_level)
+bool log_parse_level_str(const QString &level_str, QtMsgType *ret_level)
 {
   return log_parse_level_str(qPrintable(level_str), ret_level);
 }
@@ -255,11 +255,11 @@ bool log_parse_level_str(const QString &level_str, enum log_level *ret_level)
    and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
    signal on failed assertion.
  **************************************************************************/
-void log_init(const char *filename, enum log_level initial_level,
+void log_init(const char *filename, QtMsgType initial_level,
               log_callback_fn callback, log_prefix_fn prefix,
               int fatal_assertions)
 {
-  fc_log_level = initial_level;
+  fc_QtMsgType = initial_level;
   if (log_filename) {
     free(log_filename);
     log_filename = NULL;
@@ -321,23 +321,23 @@ log_prefix_fn log_set_prefix(log_prefix_fn prefix)
 /**********************************************************************/ /**
    Adjust the logging level after initial log_init().
  **************************************************************************/
-void log_set_level(enum log_level level) { fc_log_level = level; }
+void log_set_level(QtMsgType level) { fc_QtMsgType = level; }
 
 /**********************************************************************/ /**
    Returns the current log level.
  **************************************************************************/
-enum log_level log_get_level(void) { return fc_log_level; }
+QtMsgType log_get_level(void) { return fc_QtMsgType; }
 
 /**********************************************************************/ /**
    Return name of the given log level
  **************************************************************************/
-const char *log_level_name(enum log_level lvl)
+const char *QtMsgType_name(QtMsgType lvl)
 {
   if (lvl < LOG_FATAL || lvl > LOG_DEBUG) {
     return NULL;
   }
 
-  return log_level_names[lvl];
+  return QtMsgType_names[lvl];
 }
 
 #ifdef FREECIV_DEBUG
@@ -345,8 +345,8 @@ const char *log_level_name(enum log_level lvl)
    Returns wether we should do an output for this level, in this file,
    at this line.
  **************************************************************************/
-bool log_do_output_for_level_at_location(enum log_level level,
-                                         const char *file, int line)
+bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
+                                         int line)
 {
   auto name = QFileInfo(file).fileName();
   for (const auto &pfile : log_files) {
@@ -356,7 +356,7 @@ bool log_do_output_for_level_at_location(enum log_level level,
       return TRUE;
     }
   }
-  return (fc_log_level >= level);
+  return (fc_QtMsgType >= level);
 }
 #endif /* FREECIV_DEBUG */
 
@@ -364,7 +364,7 @@ bool log_do_output_for_level_at_location(enum log_level level,
    Unconditionally print a simple string.
    Let the callback do its own level formatting and add a '\n' if it wants.
  **************************************************************************/
-static void log_write(FILE *fs, enum log_level level, bool print_from_where,
+static void log_write(FILE *fs, QtMsgType level, bool print_from_where,
                       const char *where, const char *message)
 {
   if (log_filename || (!log_callback)) {
@@ -402,8 +402,8 @@ static void log_write(FILE *fs, enum log_level level, bool print_from_where,
    by do_log_for().
  **************************************************************************/
 void vdo_log(const char *file, const char *function, int line,
-             bool print_from_where, enum log_level level, char *buf,
-             int buflen, const char *message, va_list args)
+             bool print_from_where, QtMsgType level, char *buf, int buflen,
+             const char *message, va_list args)
 {
   char buf_where[MAX_LEN_LOG_LINE];
 
@@ -428,7 +428,7 @@ void vdo_log(const char *file, const char *function, int line,
    at some later time.
    Calls log_callback if non-null, else prints to stderr.
  **************************************************************************/
-static void log_real(enum log_level level, bool print_from_where,
+static void log_real(QtMsgType level, bool print_from_where,
                      const char *where, const char *msg)
 {
   static char last_msg[MAX_LEN_LOG_LINE] = "";
@@ -437,7 +437,7 @@ static void log_real(enum log_level level, bool print_from_where,
   static unsigned int next = 2; /* next total to print update */
   static unsigned int prev = 0; /* total on last update */
   /* only count as repeat if same level */
-  static enum log_level prev_level = static_cast<log_level>(-1);
+  static QtMsgType prev_level = static_cast<QtMsgType>(-1);
   char buf[MAX_LEN_LOG_LINE];
   FILE *fs;
 
@@ -515,8 +515,7 @@ static void log_real(enum log_level level, bool print_from_where,
    Calls log_callback if non-null, else prints to stderr.
  **************************************************************************/
 void do_log(const char *file, const char *function, int line,
-            bool print_from_where, enum log_level level, const char *message,
-            ...)
+            bool print_from_where, QtMsgType level, const char *message, ...)
 {
   char buf[MAX_LEN_LOG_LINE];
   va_list args;
@@ -543,7 +542,7 @@ void fc_assert_set_fatal(int fatal_assertions)
 void fc_assert_fail(const char *file, const char *function, int line,
                     const char *assertion, const char *message, ...)
 {
-  enum log_level level = (0 <= fc_fatal_assertions ? LOG_FATAL : LOG_ERROR);
+  QtMsgType level = (0 <= fc_fatal_assertions ? LOG_FATAL : LOG_ERROR);
 
   if (NULL != assertion) {
     do_log(file, function, line, TRUE, level, "assertion '%s' failed.",

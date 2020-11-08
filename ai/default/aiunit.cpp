@@ -2020,7 +2020,7 @@ static void dai_caravan_goto(struct ai_type *ait, struct player *pplayer,
       unit_do_action(pplayer, punit->id, dest_city->id, 0, "",
                      ACTION_MARKETPLACE);
     } else {
-      enum log_level level = LOG_NORMAL;
+      QtMsgType level = LOG_NORMAL;
 
       if (help_wonder) {
         /* A Caravan ordered to help build wonder may arrive after

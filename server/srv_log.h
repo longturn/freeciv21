@@ -21,8 +21,6 @@
 /* common */
 #include "fc_types.h"
 
-
-
 struct ai_data;
 
 /*
@@ -77,13 +75,13 @@ enum ai_timer {
 enum ai_timer_activity { TIMER_START, TIMER_STOP };
 
 void real_city_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct city *pcity, const char *msg, ...)
+                   QtMsgType level, bool notify, const struct city *pcity,
+                   const char *msg, ...)
     fc__attribute((__format__(__printf__, 7, 8)));
 #define CITY_LOG(loglevel, pcity, msg, ...)                                 \
   {                                                                         \
     bool notify = pcity->server.debug;                                      \
-    enum log_level level =                                                  \
+    QtMsgType level =                                                       \
         (notify ? LOG_AI_TEST : MIN(loglevel, LOGLEVEL_CITY));              \
     if (log_do_output_for_level(level)) {                                   \
       real_city_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,     \
@@ -92,13 +90,13 @@ void real_city_log(const char *file, const char *function, int line,
   }
 
 void real_unit_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct unit *punit, const char *msg, ...)
+                   QtMsgType level, bool notify, const struct unit *punit,
+                   const char *msg, ...)
     fc__attribute((__format__(__printf__, 7, 8)));
 #define UNIT_LOG(loglevel, punit, msg, ...)                                 \
   {                                                                         \
     bool notify = punit->server.debug;                                      \
-    enum log_level level;                                                   \
+    QtMsgType level;                                                        \
     if (notify                                                              \
         || (tile_city(unit_tile(punit))                                     \
             && tile_city(unit_tile(punit))->server.debug)) {                \
@@ -126,7 +124,5 @@ void timing_results_real(void);
 #define TIMING_LOG(timer, activity)
 #define TIMING_RESULTS()
 #endif /* FREECIV_DEBUG */
-
-
 
 #endif /* FC__SRV_LOG_H */

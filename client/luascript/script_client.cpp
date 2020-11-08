@@ -69,7 +69,7 @@ static void script_client_code_free(void);
 static void script_client_code_load(struct section_file *file);
 static void script_client_code_save(struct section_file *file);
 
-static void script_client_output(struct fc_lua *fcl, enum log_level level,
+static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
@@ -233,7 +233,7 @@ bool script_client_init(void)
 /*************************************************************************/ /**
    Ouput a message on the client lua console.
  *****************************************************************************/
-static void script_client_output(struct fc_lua *fcl, enum log_level level,
+static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
 {
   va_list args;
@@ -263,9 +263,6 @@ static void script_client_output(struct fc_lua *fcl, enum log_level level,
     break;
   case LOG_VERBOSE:
     ftc_luaconsole = ftc_luaconsole_verbose;
-    break;
-  case LOG_DEBUG:
-    ftc_luaconsole = ftc_luaconsole_debug;
     break;
   }
 

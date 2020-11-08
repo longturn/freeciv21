@@ -17,7 +17,7 @@
 /* #define ADV_CHOICE_TRACK */
 
 #ifdef ADV_CHOICE_TRACK
-#define ADV_CHOICE_LOG_LEVEL LOG_NORMAL
+#define ADV_CHOICE_QtMsgType LOG_NORMAL
 #endif
 
 enum choice_type {

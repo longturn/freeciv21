@@ -13,8 +13,6 @@
 #ifndef FC__OPTIONS_H
 #define FC__OPTIONS_H
 
-
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -402,8 +400,7 @@ extern struct client_options gui_options;
 struct option;     /* Opaque type. */
 struct option_set; /* Opaque type. */
 
-typedef void (*option_save_log_callback)(enum log_level lvl, const char *msg,
-                                         ...);
+typedef void (*option_save_log_callback)(QtMsgType lvl, const QString &msg);
 
 /* Main functions. */
 void options_init(void);
@@ -612,7 +609,5 @@ struct tileset;
 const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default(void);
-
-
 
 #endif /* FC__OPTIONS_H */

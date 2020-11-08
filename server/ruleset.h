@@ -38,7 +38,7 @@ void send_rulesets(struct conn_list *dest);
 void rulesets_deinit(void);
 
 void ruleset_error_real(const char *file, const char *function, int line,
-                        enum log_level level, const char *format, ...)
+                        QtMsgType level, const char *format, ...)
     fc__attribute((__format__(__printf__, 5, 6)));
 
 #define ruleset_error(level, format, ...)                                   \

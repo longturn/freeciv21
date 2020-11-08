@@ -38,7 +38,7 @@
 
 static log_pre_callback_fn previous = NULL;
 
-static void backtrace_log(enum log_level level, bool print_from_where,
+static void backtrace_log(QtMsgType level, bool print_from_where,
                           const char *where, const char *msg);
 #endif /* BACKTRACE_ACTIVE */
 
@@ -75,7 +75,7 @@ void backtrace_deinit(void)
 /********************************************************************/ /**
    Main backtrace callback called from logging code.
  ************************************************************************/
-static void backtrace_log(enum log_level level, bool print_from_where,
+static void backtrace_log(QtMsgType level, bool print_from_where,
                           const char *where, const char *msg)
 {
   if (previous != NULL) {
@@ -93,7 +93,7 @@ static void backtrace_log(enum log_level level, bool print_from_where,
 /********************************************************************/ /**
    Print backtrace
  ************************************************************************/
-void backtrace_print(enum log_level level)
+void backtrace_print(QtMsgType level)
 {
 #ifdef BACKTRACE_ACTIVE
   using namespace backward;

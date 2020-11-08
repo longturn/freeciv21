@@ -61,7 +61,7 @@ void dai_unit_log(struct ai_type *ait, char *buffer, int buflength,
    Log player tech messages.
  **************************************************************************/
 void real_tech_log(struct ai_type *ait, const char *file,
-                   const char *function, int line, enum log_level level,
+                   const char *function, int line, QtMsgType level,
                    bool send_notify, const struct player *pplayer,
                    struct advance *padvance, const char *msg, ...)
 {
@@ -99,7 +99,7 @@ void real_tech_log(struct ai_type *ait, const char *file,
    where ti is timer, co countdown and lo love for target, who is e.
  **************************************************************************/
 void real_diplo_log(struct ai_type *ait, const char *file,
-                    const char *function, int line, enum log_level level,
+                    const char *function, int line, QtMsgType level,
                     bool send_notify, const struct player *pplayer,
                     const struct player *aplayer, const char *msg, ...)
 {
@@ -136,7 +136,7 @@ void real_diplo_log(struct ai_type *ait, const char *file,
    note that these messages are likely to wrap if long.
  **************************************************************************/
 void real_bodyguard_log(struct ai_type *ait, const char *file,
-                        const char *function, int line, enum log_level level,
+                        const char *function, int line, QtMsgType level,
                         bool send_notify, const struct unit *punit,
                         const char *msg, ...)
 {

@@ -55,7 +55,7 @@ enum rfc_status {
 };
 
 /* initialize logging via console */
-void con_log_init(const QString &log_filename, enum log_level level,
+void con_log_init(const QString &log_filename, QtMsgType level,
                   int fatal_assertions);
 void con_log_close(void);
 

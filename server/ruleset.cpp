@@ -201,7 +201,7 @@ char *parser_buffer = NULL;
    case of internal server crashing.
  **************************************************************************/
 void ruleset_error_real(const char *file, const char *function, int line,
-                        enum log_level level, const char *format, ...)
+                        QtMsgType level, const char *format, ...)
 {
   va_list args;
   char buf[1024];

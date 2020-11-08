@@ -400,8 +400,8 @@ void luascript_destroy(struct fc_lua *fcl)
 /*************************************************************************/ /**
    Print a message to the selected output handle.
  *****************************************************************************/
-void luascript_log(struct fc_lua *fcl, enum log_level level,
-                   const char *format, ...)
+void luascript_log(struct fc_lua *fcl, QtMsgType level, const char *format,
+                   ...)
 {
   va_list args;
 
@@ -413,7 +413,7 @@ void luascript_log(struct fc_lua *fcl, enum log_level level,
 /*************************************************************************/ /**
    Print a message to the selected output handle.
  *****************************************************************************/
-void luascript_log_vargs(struct fc_lua *fcl, enum log_level level,
+void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
                          const char *format, va_list args)
 {
   char buf[1024];

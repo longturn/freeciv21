@@ -258,7 +258,7 @@ bool client_start_server(void)
             << "--saves" << savesdir << "--scenarios" << scensdir << "-A"
             << "none";
   if (logfile.isEmpty()) {
-    enum log_level llvl = log_get_level();
+    QtMsgType llvl = log_get_level();
     dbg_lvl_buf = QString::number(llvl);
     arguments << "--debug" << dbg_lvl_buf << "--log" << logfile;
   }

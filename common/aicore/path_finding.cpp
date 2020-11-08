@@ -3403,7 +3403,7 @@ const struct pf_position *pf_path_last_position(const struct pf_path *path)
    Debug a path. This function shouldn't be called directly, see
    pf_path_print() defined in "path_finding.h".
  ****************************************************************************/
-void pf_path_print_real(const struct pf_path *path, enum log_level level,
+void pf_path_print_real(const struct pf_path *path, QtMsgType level,
                         const char *file, const char *function, int line)
 {
   struct pf_position *pos;

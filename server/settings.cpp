@@ -528,7 +528,7 @@ static const struct sset_val_name *phasemode_name(int phasemode)
    Scorelog level names accessor.
  ****************************************************************************/
 static const struct sset_val_name *
-scoreloglevel_name(enum scorelog_level sl_level)
+scoreloglevel_name(enum scoreQtMsgType sl_level)
 {
   switch (sl_level) {
     NAME_CASE(SL_ALL, "ALL", N_("All players"));
@@ -2156,14 +2156,12 @@ static struct setting settings[] = {
      * (?) These are done when the game starts, so these are historical and
      * fixed after the game has started.
      */
-    GEN_INT("gameseed", game.server.seed_setting, SSET_MAP_ADD,
-            SSET_INTERNAL, SSET_RARE,
-            ALLOW_HACK, ALLOW_HACK,
-            N_("Game random seed"),
-            N_("For zero (the default) a seed will be chosen based "
-               "on the current time."),
-            NULL, NULL, NULL, GAME_MIN_SEED, GAME_MAX_SEED,
-            GAME_DEFAULT_SEED)
+    GEN_INT(
+        "gameseed", game.server.seed_setting, SSET_MAP_ADD, SSET_INTERNAL,
+        SSET_RARE, ALLOW_HACK, ALLOW_HACK, N_("Game random seed"),
+        N_("For zero (the default) a seed will be chosen based "
+           "on the current time."),
+        NULL, NULL, NULL, GAME_MIN_SEED, GAME_MAX_SEED, GAME_DEFAULT_SEED)
 
         GEN_INT("specials", wld.map.server.riches, SSET_MAP_ADD,
                 SSET_GEOLOGY, SSET_VITAL, ALLOW_NONE, ALLOW_BASIC,
@@ -4078,16 +4076,17 @@ static struct setting settings[] = {
                                                                                                 ALLOW_BASIC,
                                                                                                 N_("Maximum distance citizens may migrate"),
                                                                                                 /* TRANS: Do not translate 'migration' setting name. */
-                                                                                                N_("This setting controls how far citizens may look for a "
-                                                                                                   "suitable migration destination when deciding which city "
-                                                                                                   "to migrate to. The value is added to the candidate target "
-                                                                                                   "city's radius and compared to the distance between the "
-                                                                                                   "two cities. If the distance is lower or equal, migration "
-                                                                                                   "is possible. (So with a setting of 0, citizens will only "
-                                                                                                   "consider migrating if their city's center is within the "
-                                                                                                   "destination city's working radius.) This setting has no "
-                                                                                                   "effect unless migration is enabled by the 'migration' "
-                                                                                                   "setting."),
+                                                                                                N_(
+                                                                                                    "This setting controls how far citizens may look for a "
+                                                                                                    "suitable migration destination when deciding which city "
+                                                                                                    "to migrate to. The value is added to the candidate target "
+                                                                                                    "city's radius and compared to the distance between the "
+                                                                                                    "two cities. If the distance is lower or equal, migration "
+                                                                                                    "is possible. (So with a setting of 0, citizens will only "
+                                                                                                    "consider migrating if their city's center is within the "
+                                                                                                    "destination city's working radius.) This setting has no "
+                                                                                                    "effect unless migration is enabled by the 'migration' "
+                                                                                                    "setting."),
                                                                                                 NULL,
                                                                                                 NULL,
                                                                                                 NULL,
@@ -4119,28 +4118,29 @@ static struct setting settings[] = {
                                                                                                 GAME_MAX_MGR_NATIONCHANCE,
                                                                                                 GAME_DEFAULT_MGR_NATIONCHANCE)
 
-                                                                                                GEN_INT("mgr_worldchance",
-                                                                                                        game.server
-                                                                                                            .mgr_worldchance,
-                                                                                                        SSET_RULES_FLEXIBLE,
-                                                                                                        SSET_SOCIOLOGY,
-                                                                                                        SSET_RARE,
-                                                                                                        ALLOW_NONE,
-                                                                                                        ALLOW_BASIC,
-                                                                                                        N_("Percent probability for migration between foreign cities"),
-                                                                                                        /* TRANS: Do not translate 'migration' setting name. */
-                                                                                                        N_("This setting controls how likely it is for migration "
-                                                                                                           "to occur between cities owned by different players. "
-                                                                                                           "Zero indicates migration will never occur, 100 means "
-                                                                                                           "that citizens will always migrate if they find a suitable "
-                                                                                                           "destination. This setting has no effect if migration is "
-                                                                                                           "not enabled by the 'migration' setting."),
-                                                                                                        NULL,
-                                                                                                        NULL,
-                                                                                                        NULL,
-                                                                                                        GAME_MIN_MGR_WORLDCHANCE,
-                                                                                                        GAME_MAX_MGR_WORLDCHANCE,
-                                                                                                        GAME_DEFAULT_MGR_WORLDCHANCE)
+                                                                                                GEN_INT(
+                                                                                                    "mgr_worldchance",
+                                                                                                    game.server
+                                                                                                        .mgr_worldchance,
+                                                                                                    SSET_RULES_FLEXIBLE,
+                                                                                                    SSET_SOCIOLOGY,
+                                                                                                    SSET_RARE,
+                                                                                                    ALLOW_NONE,
+                                                                                                    ALLOW_BASIC,
+                                                                                                    N_("Percent probability for migration between foreign cities"),
+                                                                                                    /* TRANS: Do not translate 'migration' setting name. */
+                                                                                                    N_("This setting controls how likely it is for migration "
+                                                                                                       "to occur between cities owned by different players. "
+                                                                                                       "Zero indicates migration will never occur, 100 means "
+                                                                                                       "that citizens will always migrate if they find a suitable "
+                                                                                                       "destination. This setting has no effect if migration is "
+                                                                                                       "not enabled by the 'migration' setting."),
+                                                                                                    NULL,
+                                                                                                    NULL,
+                                                                                                    NULL,
+                                                                                                    GAME_MIN_MGR_WORLDCHANCE,
+                                                                                                    GAME_MAX_MGR_WORLDCHANCE,
+                                                                                                    GAME_DEFAULT_MGR_WORLDCHANCE)
 
     /* Meta options: these don't affect the internal rules of the game, but
      * do affect players.  Also options which only produce extra server
@@ -4902,8 +4902,7 @@ static struct setting settings[] = {
                                                                                         game.server
                                                                                             .meta_info
                                                                                             .user_message,
-                                                                                        SSET_META,
-                                                                                        SSET_INTERNAL,
+                                                                                        SSET_META, SSET_INTERNAL,
                                                                                         SSET_RARE,
                                                                                         ALLOW_CTRL,
                                                                                         ALLOW_CTRL,

@@ -5879,14 +5879,10 @@ void options_load(void)
 /************************************************************************/ /**
    Write messages from option saving to the output window.
  ****************************************************************************/
-static void option_save_output_window_callback(enum log_level lvl,
-                                               const char *msg, ...)
+static void option_save_output_window_callback(QtMsgType lvl,
+                                               const QString &msg)
 {
-  va_list args;
-
-  va_start(args, msg);
-  output_window_vprintf(ftc_client, msg, args);
-  va_end(args);
+  output_window_append(ftc_client, qUtf8Printable(msg));
 }
 
 /************************************************************************/ /**
@@ -5981,9 +5977,11 @@ void options_save(option_save_log_callback log_cb)
 
   /* save to disk */
   if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
-    log_cb(LOG_ERROR, _("Save failed, cannot write to file %s"), name);
+    log_cb(LOG_ERROR, QString::asprintf(
+                          _("Save failed, cannot write to file %s"), name));
   } else {
-    log_cb(LOG_VERBOSE, _("Saved settings to file %s"), name);
+    log_cb(LOG_VERBOSE,
+           QString::asprintf(_("Saved settings to file %s"), name));
   }
   secfile_destroy(sf);
 }
