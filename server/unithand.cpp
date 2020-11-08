@@ -1538,21 +1538,13 @@ static void explain_why_no_action_enabled(struct unit *punit,
   case ANEK_NO_WAR:
     notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
                   _("You must declare war on %s first.  Try using "
-                    "the Nations report"
-#ifndef FREECIV_WEB
-                    " (F3)"
-#endif /* FREECIV_WEB */
-                    "."),
+                    "the Nations report."),
                   player_name(explnat->no_war_with));
     break;
   case ANEK_PEACE:
     notify_player(pplayer, unit_tile(punit), E_BAD_COMMAND, ftc_server,
                   _("You must break peace with %s first.  Try using"
-                    " the Nations report"
-#ifndef FREECIV_WEB
-                    " (F3)"
-#endif /* FREECIV_WEB */
-                    "."),
+                    " the Nations report."),
                   player_name(explnat->peace_with));
     break;
   case ANEK_DOMESTIC:
@@ -2122,11 +2114,7 @@ void illegal_action_msg(struct player *pplayer, const enum event_type event,
                    * Nations report (F3)." */
                   _("Your %s can't do %s while you"
                     " are at peace with %s. Try using"
-                    " the Nations report"
-#ifndef FREECIV_WEB
-                    " (F3)"
-#endif /* FREECIV_WEB */
-                    "."),
+                    " the Nations report."),
                   unit_name_translation(actor),
                   action_id_name_translation(stopped_action),
                   player_name(explnat->peace_with));
@@ -3462,63 +3450,6 @@ void handle_unit_change_activity(struct player *pplayer, int unit_id,
   } else {
     activity_target = extra_by_number(target_id);
   }
-
-#ifdef FREECIV_WEB
-  /* Web-client is not capable of selecting target, so we do it server side
-   */
-  if (activity_target == NULL) {
-    struct unit *punit = player_unit_by_number(pplayer, unit_id);
-    bool required = TRUE;
-
-    if (punit == NULL) {
-      return;
-    }
-
-    if (activity == ACTIVITY_IRRIGATE) {
-      struct tile *ptile = unit_tile(punit);
-      struct terrain *pterrain = tile_terrain(ptile);
-
-      if (pterrain->irrigation_result != pterrain) {
-        required = FALSE;
-      } else {
-        activity_target =
-            next_extra_for_tile(ptile, EC_IRRIGATION, pplayer, punit);
-      }
-    } else if (activity == ACTIVITY_MINE) {
-      struct tile *ptile = unit_tile(punit);
-      struct terrain *pterrain = tile_terrain(ptile);
-
-      if (pterrain->mining_result != pterrain) {
-        required = FALSE;
-      } else {
-        activity_target =
-            next_extra_for_tile(ptile, EC_MINE, pplayer, punit);
-      }
-    } else if (activity == ACTIVITY_BASE) {
-      struct tile *ptile = unit_tile(punit);
-      struct base_type *pbase =
-          get_base_by_gui_type(BASE_GUI_FORTRESS, punit, ptile);
-
-      if (pbase != NULL) {
-        activity_target = base_extra_get(pbase);
-      }
-
-    } else if (activity == ACTIVITY_POLLUTION) {
-      activity_target = prev_extra_in_tile(
-          unit_tile(punit), ERM_CLEANPOLLUTION, pplayer, punit);
-    } else if (activity == ACTIVITY_FALLOUT) {
-      activity_target = prev_extra_in_tile(unit_tile(punit),
-                                           ERM_CLEANFALLOUT, pplayer, punit);
-    } else {
-      required = FALSE;
-    }
-
-    if (activity_target == NULL && required) {
-      /* Nothing more we can do */
-      return;
-    }
-  }
-#endif /* FREECIV_WEB */
 
   handle_unit_change_activity_real(pplayer, unit_id, activity,
                                    activity_target);

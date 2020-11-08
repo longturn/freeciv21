@@ -18,8 +18,6 @@
 #include "packets.h"
 #include "unitlist.h"
 
-
-
 #define LOG_BUILD_TARGET LOG_DEBUG
 
 #define SPECLIST_TAG traderoute_packet
@@ -53,7 +51,6 @@ void send_city_info_at_tile(struct player *pviewer, struct conn_list *dest,
 void send_all_known_cities(struct conn_list *dest);
 void send_player_cities(struct player *pplayer);
 void package_city(struct city *pcity, struct packet_city_info *packet,
-                  struct packet_web_city_info_addition *web_packet,
                   struct traderoute_packet_list *routes, bool dipl_invest);
 
 void reality_check_city(struct player *pplayer, struct tile *ptile);
@@ -118,7 +115,5 @@ void clear_worker_tasks(struct city *pcity);
 void package_and_send_worker_tasks(struct city *pcity);
 
 int city_production_buy_gold_cost(const struct city *pcity);
-
-
 
 #endif /* FC__CITYTOOLS_H */

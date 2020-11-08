@@ -844,7 +844,6 @@ static bool generator_validate(int value, struct connection *caller,
 /************************************************************************/ /**
    Verify the name for the score log file.
  ****************************************************************************/
-#ifndef FREECIV_WEB
 static bool scorefile_validate(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
@@ -856,7 +855,6 @@ static bool scorefile_validate(const char *value, struct connection *caller,
 
   return TRUE;
 }
-#endif /* !FREECIV_WEB */
 
 /************************************************************************/ /**
    Verify that a given demography string is valid. See
@@ -1239,21 +1237,6 @@ static bool topology_callback(unsigned value, struct connection *caller,
     return FALSE;
   }
 
-#ifdef FREECIV_WEB
-  /* Remember to update the help text too if Freeciv-web gets the ability
-   * to display other map topologies. */
-  if ((value & (TF_WRAPY)) != 0
-      /* Are you removing this because Freeciv-web gained the ability to
-       * display isometric maps? Why don't you remove the Freeciv-web
-       * specific MAP_DEFAULT_TOPO too? */
-      || (value & (TF_ISO)) != 0 || (value & (TF_HEX)) != 0) {
-    /* The Freeciv-web client can't display these topologies yet. */
-    settings_snprintf(reject_msg, reject_msg_len,
-                      _("Freeciv-web doesn't support this topology."));
-    return FALSE;
-  }
-#endif /* FREECIV_WEB */
-
   return TRUE;
 }
 
@@ -1488,15 +1471,6 @@ static struct setting settings[] = {
                                     SSET_MAP_SIZE, SSET_GEOLOGY, SSET_VITAL,
                                     ALLOW_NONE, ALLOW_BASIC,
                                     N_("Map topology"),
-#ifdef FREECIV_WEB
-                                    /* TRANS: Freeciv-web version of the help
-                                       text. */
-                                    N_("Freeciv-web maps are always "
-                                       "two-dimensional. They may wrap "
-                                       "at the east-west directions to form "
-                                       "a flat map or a "
-                                       "cylinder.\n"),
-#else  /* FREECIV_WEB */
                                     /* TRANS: do not edit the ugly ASCII art
                                      */
                                     N_("Freeciv maps are always "
@@ -1538,7 +1512,6 @@ static struct setting settings[] = {
                                        "   \\/\\/\\/\\/\\/\\/"
                                        "             \\_/ \\_/ \\_/ \\_/ "
                                        "\\_/\n"),
-#endif /* FREECIV_WEB */
                                     topology_callback, topology_action,
                                     topology_name, MAP_DEFAULT_TOPO)
 
@@ -2165,13 +2138,8 @@ static struct setting settings[] = {
                                                                                                     SSET_MAP_GEN,
                                                                                                     SSET_INTERNAL,
                                                                                                     SSET_RARE,
-#ifdef FREECIV_WEB
-                                                                                                    ALLOW_NONE,
-                                                                                                    ALLOW_BASIC,
-#else  /* FREECIV_WEB */
                                                                                                     ALLOW_HACK,
                                                                                                     ALLOW_HACK,
-#endif /* FREECIV_WEB */
                                                                                                     N_("Map generation random seed"),
                                                                                                     N_("The same seed will always produce the same map; "
                                                                                                        "for zero (the default) a seed will be chosen based on "
@@ -2190,11 +2158,7 @@ static struct setting settings[] = {
      */
     GEN_INT("gameseed", game.server.seed_setting, SSET_MAP_ADD,
             SSET_INTERNAL, SSET_RARE,
-#ifdef FREECIV_WEB
-            ALLOW_NONE, ALLOW_BASIC,
-#else  /* FREECIV_WEB */
             ALLOW_HACK, ALLOW_HACK,
-#endif /* FREECIV_WEB */
             N_("Game random seed"),
             N_("For zero (the default) a seed will be chosen based "
                "on the current time."),
@@ -4771,13 +4735,8 @@ static struct setting settings[] = {
                                                                     SSET_META,
                                                                     SSET_INTERNAL,
                                                                     SSET_SITUATIONAL,
-#ifdef FREECIV_WEB
-                                                                    ALLOW_NONE,
-                                                                    ALLOW_CTRL,
-#else  /* FREECIV_WEB */
                                                                     ALLOW_HACK,
                                                                     ALLOW_HACK,
-#endif /* FREECIV_WEB */
                                                                     N_("Whet"
                                                                        "her "
                                                                        "to "
@@ -4877,7 +4836,6 @@ static struct setting settings[] = {
                                                                         scoreloglevel_name,
                                                                         GAME_DEFAULT_SCORELOGLEVEL)
 
-#ifndef FREECIV_WEB
                                                                         GEN_STRING(
                                                                             "scorefile",
                                                                             game.server
@@ -4894,7 +4852,6 @@ static struct setting settings[] = {
                                                                             scorefile_validate,
                                                                             NULL,
                                                                             GAME_DEFAULT_SCOREFILE)
-#endif /* !FREECIV_WEB */
 
                                                                             GEN_INT(
                                                                                 "maxconnectionsperhost",

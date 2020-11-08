@@ -66,9 +66,6 @@ static bv_handicap handicap_of_skill_level(enum ai_level level)
     BV_SET(handicap, H_TARGETS);
     BV_SET(handicap, H_HUTS);
     BV_SET(handicap, H_REVOLUTION);
-#ifdef FREECIV_WEB
-    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
-#endif
     BV_SET(handicap, H_PRODCHGPEN);
     break;
   case AI_LEVEL_NOVICE:
@@ -86,9 +83,6 @@ static bv_handicap handicap_of_skill_level(enum ai_level level)
     BV_SET(handicap, H_DANGER);
     BV_SET(handicap, H_CEASEFIRE);
     BV_SET(handicap, H_NOBRIBE_WF);
-#ifdef FREECIV_WEB
-    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
-#endif
     BV_SET(handicap, H_PRODCHGPEN);
     break;
   case AI_LEVEL_EASY:
@@ -103,9 +97,6 @@ static bv_handicap handicap_of_skill_level(enum ai_level level)
     BV_SET(handicap, H_REVOLUTION);
     BV_SET(handicap, H_EXPANSION);
     BV_SET(handicap, H_CEASEFIRE);
-#ifdef FREECIV_WEB
-    BV_SET(handicap, H_ASSESS_DANGER_LIMITED);
-#endif
     BV_SET(handicap, H_NOBRIBE_WF);
     break;
   case AI_LEVEL_NORMAL:

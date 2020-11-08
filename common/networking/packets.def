@@ -671,7 +671,7 @@ end
 
 /************** City packets **********************/
 
-PACKET_CITY_REMOVE = 30; sc, dsend, lsend, cancel(PACKET_CITY_INFO), cancel(PACKET_WEB_CITY_INFO_ADDITION), cancel(PACKET_CITY_SHORT_INFO)
+PACKET_CITY_REMOVE = 30; sc, dsend, lsend, cancel(PACKET_CITY_INFO), cancel(PACKET_CITY_SHORT_INFO)
   CITY city_id;
 end
 
@@ -753,7 +753,7 @@ PACKET_CITY_INFO = 31; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_
   CM_PARAMETER cm_parameter;
 end
 
-PACKET_CITY_SHORT_INFO = 32; sc, lsend, is-game-info, cancel(PACKET_CITY_INFO), cancel(PACKET_WEB_CITY_INFO_ADDITION)
+PACKET_CITY_SHORT_INFO = 32; sc, lsend, is-game-info, cancel(PACKET_CITY_INFO)
   CITY id; key
   TILE tile;
 
@@ -2332,9 +2332,9 @@ PACKET_PLAY_MUSIC = 245; sc, lsend
   STRING tag[MAX_LEN_NAME];
 end
 
-/*************** Webclient specific packets ****************/
-/* Use range 256:511 for these                             */
-
+/************* Packets reserved for freeciv-web ***************/
+/* Not supported. They use range 256:511 */
+/*
 PACKET_WEB_CITY_INFO_ADDITION = 256; sc, lsend, is-game-info, force, cancel(PACKET_CITY_SHORT_INFO)
   CITY id; key
 
@@ -2353,3 +2353,4 @@ PACKET_WEB_RULESET_UNIT_ADDITION = 258; sc, lsend
 
   BV_ACTIONS utype_actions;
 end
+*/

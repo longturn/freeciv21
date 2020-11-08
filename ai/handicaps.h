@@ -13,8 +13,6 @@
 #ifndef FC__HANDICAPS_H
 #define FC__HANDICAPS_H
 
-
-
 /* See handicap_desc() for what these do. */
 enum handicap_type {
   H_DIPLOMAT = 0,
@@ -35,9 +33,6 @@ enum handicap_type {
   H_CEASEFIRE,
   H_NOBRIBE_WF,
   H_PRODCHGPEN,
-#ifdef FREECIV_WEB
-  H_ASSESS_DANGER_LIMITED,
-#endif
   H_LAST
 };
 
@@ -50,7 +45,5 @@ void handicaps_set(struct player *pplayer, bv_handicap handicaps);
 bool has_handicap(const struct player *pplayer, enum handicap_type htype);
 
 const char *handicap_desc(enum handicap_type htype, bool *inverted);
-
-
 
 #endif /* FC__HANDICAPS_H */

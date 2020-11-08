@@ -626,12 +626,7 @@ extern struct world wld;
 
 #define GAME_DEFAULT_AUTOATTACK FALSE
 
-#ifdef FREECIV_WEB
 #define GAME_DEFAULT_RULESETDIR "classic"
-#else /* FREECIV_WEB */
-#define GAME_DEFAULT_RULESETDIR "civ2civ3"
-#endif /* FREECIV_WEB */
-
 #define GAME_DEFAULT_SAVE_NAME "freeciv"
 #define GAME_DEFAULT_SAVETURNS 1
 #define GAME_MIN_SAVETURNS 1
@@ -640,12 +635,8 @@ extern struct world wld;
 #define GAME_MIN_SAVEFREQUENCY 2
 #define GAME_MAX_SAVEFREQUENCY 1440
 
-#ifdef FREECIV_WEB
-#define GAME_DEFAULT_AUTOSAVES 0
-#else /* FREECIV_WEB */
 #define GAME_DEFAULT_AUTOSAVES                                              \
   (1 << AS_TURN | 1 << AS_GAME_OVER | 1 << AS_QUITIDLE | 1 << AS_INTERRUPT)
-#endif /* FREECIV_WEB */
 
 #define GAME_DEFAULT_THREADED_SAVE FALSE
 
