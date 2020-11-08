@@ -47,7 +47,7 @@ jobs:
           - sqlite
           - sdl2
           - sdl2_mixer
-    script:
+    before_script:
       - brew link gettext --force
 
 script:
