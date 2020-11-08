@@ -1470,7 +1470,7 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
   }
 
   log_error("Could not load gfx file \"%s\".", gfx_filename);
-  color *c = color_alloc(255, 0 , 0);
+  color *c = color_alloc(255, 0, 0);
   return create_sprite(20, 20, c);
 }
 
@@ -4734,7 +4734,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
                                            const struct tile *ptile,
                                            const struct city *citymode)
 {
-   const struct city *pcity;
+  const struct city *pcity;
   const struct city *pwork;
   struct unit *psettler;
   struct drawn_sprite *saved_sprs = sprs;
@@ -4761,7 +4761,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
 
   if (pcity && city_base_to_city_map(&city_x, &city_y, pcity, ptile)) {
     /* FIXME: check elsewhere for valid tile (instead of above) */
-     if (!citymode && pcity->client.colored) {
+    if (!citymode && pcity->client.colored) {
       /* Add citymap overlay for a city. */
       int idx = pcity->client.color_index % NUM_CITY_COLORS;
 
@@ -4772,7 +4772,7 @@ static int fill_city_overlays_sprite_array(const struct tileset *t,
       }
     } else if (NULL != pwork && pwork == pcity
                && (citymode || gui_options.draw_city_output
-                || pcity->client.city_opened)) {
+                   || pcity->client.city_opened)) {
       /* Add on the tile output sprites. */
       int food = city_tile_output_now(pcity, ptile, O_FOOD);
       int shields = city_tile_output_now(pcity, ptile, O_SHIELD);
@@ -5224,13 +5224,14 @@ static int fill_grid_sprite_array(
           worked[i] = (NULL != tile_worked(tile));
         }
       }
-        if (tile) {
-          { // Draw city grid for main citymap
-            xcity = find_city_near_tile(tile);
-            if (xcity && xcity->client.city_opened) {
-              ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
-            }
+      if (tile) {
+        { // Draw city grid for main citymap
+          xcity = find_city_near_tile(tile);
+          if (xcity && xcity->client.city_opened
+              && city_base_to_city_map(&dummy_x, &dummy_y, xcity, tile)) {
+            ADD_SPRITE_SIMPLE(t->sprites.grid.selected[pedge->type]);
           }
+        }
       }
     }
     if (mapdeco_is_highlight_set(pedge->tile[0])
