@@ -95,14 +95,14 @@
 #define LOG_PRUNE_BRANCH LOG_DEBUG
 
 #ifdef GATHER_TIME_STATS
+struct one_perf {
+  civtimer *wall_timer;
+  int query_count;
+  int apply_count;
+  const char *name;
+};
 static struct {
-  struct one_perf {
-    civtimer *wall_timer;
-    int query_count;
-    int apply_count;
-    const char *name;
-  } greedy, opt;
-
+  one_perf greedy, opt;
   struct one_perf *current;
 } performance;
 

@@ -14,10 +14,7 @@
 #ifndef FC__THREAD_H
 #define FC__THREAD_H
 
-
-
-/* gen_headers */
-#include "freeciv_config.h"
+#include "fc_config.h"
 
 /* utility */
 #include "support.h" /* bool */
@@ -79,7 +76,5 @@ void fc_thread_cond_wait(fc_thread_cond *cond, fc_mutex *mutex);
 void fc_thread_cond_signal(fc_thread_cond *cond);
 
 bool has_thread_cond_impl(void);
-
-
 
 #endif /* FC__THREAD_H */

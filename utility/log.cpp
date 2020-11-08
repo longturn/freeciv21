@@ -19,9 +19,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
+#include <vector>
 
 // Qt
 #include <QDebug>
+#include <QFileInfo>
 #include <QString>
 
 /* utility */
@@ -65,8 +67,7 @@ struct log_fileinfo {
   unsigned int min;
   unsigned int max;
 };
-static int log_num_files = 0;
-static struct log_fileinfo *log_files = NULL;
+static std::vector<log_fileinfo> log_files;
 #endif /* FREECIV_DEBUG */
 
 static const char *log_level_names[] = {
@@ -96,8 +97,8 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
   int ln;
   int first_len = -1;
 #ifdef FREECIV_DEBUG
-  const char *tok;
-  int i;
+  char *tok;
+  int i = 0;
   char *dupled;
   bool ret = TRUE;
 #endif /* FREECIV_DEBUG */
@@ -174,10 +175,6 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
       return FALSE;
     }
   }
-  i = log_num_files;
-  log_num_files += n;
-  log_files =
-      fc_realloc(log_files, log_num_files * sizeof(struct log_fileinfo));
 
   dupled = fc_strdup(c + 2);
   tok = strtok(dupled, ":");
@@ -189,12 +186,13 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
     goto out;
   }
   do {
-    struct log_fileinfo *pfile = log_files + i;
+    log_files.emplace_back();
+    auto &pfile = log_files.back();
     char *d = strchr(tok, ',');
 
-    pfile->min = 0;
-    pfile->max = 0;
-    pfile->level = level;
+    pfile.min = 0;
+    pfile.max = 0;
+    pfile.level = log_level(level);
     if (d) {
       char *pc = d + 1;
 
@@ -202,12 +200,12 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
       d = strchr(d + 1, ',');
       if (d && *pc != '\0' && d[1] != '\0') {
         d[0] = '\0';
-        if (!str_to_uint(pc, &pfile->min)) {
+        if (!str_to_uint(pc, &pfile.min)) {
           fc_fprintf(stderr, _("Not an unsigned integer: '%s'\n"), pc);
           ret = FALSE;
           goto out;
         }
-        if (!str_to_uint(d + 1, &pfile->max)) {
+        if (!str_to_uint(d + 1, &pfile.max)) {
           fc_fprintf(stderr, _("Not an unsigned integer: '%s'\n"), d + 1);
           ret = FALSE;
           goto out;
@@ -220,12 +218,12 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
       ret = FALSE;
       goto out;
     }
-    pfile->name = fc_strdup(tok);
+    pfile.name = fc_strdup(tok);
     i++;
     tok = strtok(NULL, ":");
   } while (tok);
 
-  if (i != log_num_files) {
+  if (i != log_files.size()) {
     fc_fprintf(stderr, _("Badly formed log level argument \"%s\".\n"),
                level_str);
     ret = FALSE;
@@ -350,13 +348,11 @@ const char *log_level_name(enum log_level lvl)
 bool log_do_output_for_level_at_location(enum log_level level,
                                          const char *file, int line)
 {
-  struct log_fileinfo *pfile;
-  int i;
-
-  for (i = 0, pfile = log_files; i < log_num_files; i++, pfile++) {
-    if (pfile->level >= level && 0 == strcmp(pfile->name, file)
-        && ((0 == pfile->min && 0 == pfile->max)
-            || (pfile->min <= line && pfile->max >= line))) {
+  auto name = QFileInfo(file).fileName();
+  for (const auto &pfile : log_files) {
+    if (pfile.level >= level && name == pfile.name
+        && ((0 == pfile.min && 0 == pfile.max)
+            || (pfile.min <= line && pfile.max >= line))) {
       return TRUE;
     }
   }
@@ -540,7 +536,6 @@ void fc_assert_set_fatal(int fatal_assertions)
   fc_fatal_assertions = fatal_assertions;
 }
 
-#ifndef FREECIV_NDEBUG
 /**********************************************************************/ /**
    Returns wether the fc_assert* macros should raise a signal on failed
    assertion.
@@ -575,6 +570,7 @@ void fc_assert_fail(const char *file, const char *function, int line,
     raise(fc_fatal_assertions);
   }
 }
+
 void log_time(QString msg, bool log)
 {
   static bool logging;
@@ -585,5 +581,3 @@ void log_time(QString msg, bool log)
     qInfo() << qPrintable(msg);
   }
 }
-
-#endif /* FREECIV_NDEBUG */

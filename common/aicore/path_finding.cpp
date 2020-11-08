@@ -1419,7 +1419,7 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 #ifdef PF_DEBUG
   /* Make sure we reached a safe node or the start point */
   fc_assert_ret(!node->is_dangerous
-                || !direction8_is_valid(node->dir_to_here));
+                || !direction8_is_valid(direction8(node->dir_to_here)));
 #endif
 }
 

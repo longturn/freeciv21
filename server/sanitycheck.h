@@ -15,10 +15,7 @@
 
 #include "fc_types.h"
 
-
-
-#if ((IS_BETA_VERSION || IS_DEVEL_VERSION) && !defined(FREECIV_NDEBUG))     \
-    || defined(FREECIV_DEBUG)
+#if (IS_BETA_VERSION || IS_DEVEL_VERSION) || defined(FREECIV_DEBUG)
 #define SANITY_CHECKING
 #endif
 
@@ -44,7 +41,5 @@ void real_sanity_check(const char *file, const char *function, int line);
 #define sanity_check() (void) 0
 
 #endif /* SANITY_CHECKING */
-
-
 
 #endif /* FC__SANITYCHECK_H */

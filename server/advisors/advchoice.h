@@ -75,9 +75,6 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
 }
 #endif /* ADV_CHOICE_TRACK */
 
-#ifdef FREECIV_NDEBUG
-#define ADV_CHOICE_ASSERT(c) /* Do nothing. */
-#else                        /* FREECIV_NDEBUG */
 #define ADV_CHOICE_ASSERT(c)                                                \
   do {                                                                      \
     if ((c).want > 0) {                                                     \
@@ -91,6 +88,5 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
       }                                                                     \
     }                                                                       \
   } while (FALSE);
-#endif /* FREECIV_NDEBUG */
 
 #endif /* FC__ADVCHOICE_H */

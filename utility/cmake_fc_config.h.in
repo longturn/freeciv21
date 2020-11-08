@@ -35,9 +35,6 @@
 /* Release cycle information */
 #cmakedefine IS_DEVEL_VERSION
 
-/* Produce debug version */
-#cmakedefine FREECIV_DEBUG
-
 /* enable audio */
 #cmakedefine AUDIO_SDL
 
@@ -135,3 +132,65 @@
 
 /* Custom path to CA cert bundle */
 #cmakedefine CUSTOM_CACERT_PATH
+
+/***** Previously freeciv_config.h *****/
+
+/* libbzip2 is available */
+#cmakedefine FREECIV_HAVE_LIBBZ2
+
+/* liblzma is available */
+#cmakedefine FREECIV_HAVE_LIBLZMA
+
+/* Location for freeciv to store its information */
+#cmakedefine FREECIV_STORAGE_DIR "${FREECIV_STORAGE_DIR}"
+
+/* Max number of AI modules */
+#cmakedefine FREECIV_AI_MOD_LAST ${FREECIV_AI_MOD_LAST}
+
+/* C11 static assert supported */
+#cmakedefine FREECIV_C11_STATIC_ASSERT
+
+/* strlen() in static assert supported */
+#cmakedefine FREECIV_STATIC_STRLEN
+
+/* C++11 static assert supported */
+#cmakedefine FREECIV_CXX11_STATIC_ASSERT
+
+/* Is this freeciv-web instead of regular build */
+#cmakedefine FREECIV_WEB
+
+/* Testmatic integration enabled */
+#cmakedefine FREECIV_TESTMATIC
+
+/* Metaserver URL */
+#cmakedefine FREECIV_META_URL "${FREECIV_META_URL}"
+
+/* Month next version will be released */
+#cmakedefine FREECIV_RELEASE_MONTH
+
+/* Use C11 threads as thread implementation */
+#cmakedefine FREECIV_HAVE_C11_THREADS
+
+/* Use pthreads as thread implementation */
+#cmakedefine FREECIV_HAVE_PTHREAD
+
+/* Use Windows threads as thread implementation */
+#cmakedefine FREECIV_HAVE_WINTHREADS
+
+/* Use tinycthread as thread implementation */
+#cmakedefine FREECIV_HAVE_TINYCTHR
+
+/* Has thread condition variable implementation */
+#cmakedefine FREECIV_HAVE_THREAD_COND
+
+/* Native language support enabled */
+#cmakedefine FREECIV_ENABLE_NLS
+
+/* libintl.h available */
+#cmakedefine FREECIV_HAVE_LIBINTL_H
+
+/* Readline support */
+#cmakedefine FREECIV_HAVE_LIBREADLINE
+
+/* Windows build */
+#cmakedefine FREECIV_MSWINDOWS 1

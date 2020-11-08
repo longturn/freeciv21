@@ -97,6 +97,9 @@ endif()
 add_subdirectory(dependencies/lua-5.4)
 add_subdirectory(dependencies/tolua-5.2) # Will build the program if not found.
 
+# backward-cpp
+include(FreecivBackward)
+
 # Compression
 find_package(ZLIB REQUIRED)
 

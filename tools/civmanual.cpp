@@ -792,9 +792,7 @@ int main(int argc, char **argv)
 #endif
        // TRANS: Command-line argument
        _("LEVEL")},
-#ifndef FREECIV_NDEBUG
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
-#endif // FREECIV_NDEBUG
       {{"l", "log"},
        _("Use FILE as logfile"),
        // TRANS: Command-line argument
@@ -818,11 +816,9 @@ int main(int argc, char **argv)
       exit(EXIT_FAILURE);
     }
   }
-#ifndef FREECIV_NDEBUG
   if (parser.isSet("Fatal")) {
     srvarg.fatal_assertions = SIGABRT;
   }
-#endif // FREECIV_NDEBUG
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() > 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "

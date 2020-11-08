@@ -15,9 +15,7 @@
 #include <fc_config.h>
 #endif /* HAVE_CONFIG_H */
 
-#ifdef HAVE_EXECINFO_H
-#include <execinfo.h>
-#endif
+#include <backward.hpp>
 
 /* utility */
 #include "log.h"
@@ -26,13 +24,11 @@
 #include "fcbacktrace.h"
 
 /* We don't want backtrace-spam to testmatic logs */
-#if defined(FREECIV_DEBUG) && defined(HAVE_BACKTRACE)                       \
-    && !defined(FREECIV_TESTMATIC)
+#if defined(FREECIV_DEBUG) && !defined(FREECIV_TESTMATIC)
 #define BACKTRACE_ACTIVE 1
 #endif
 
 #ifdef BACKTRACE_ACTIVE
-
 /* We write always in level LOG_NORMAL and not in higher one since those
  * interact badly with server callback to send error messages to local
  * client. */
@@ -42,8 +38,6 @@
 
 static log_pre_callback_fn previous = NULL;
 
-static void write_backtrace_line(enum log_level level, bool print_from_where,
-                                 const char *where, const char *msg);
 static void backtrace_log(enum log_level level, bool print_from_where,
                           const char *where, const char *msg);
 #endif /* BACKTRACE_ACTIVE */
@@ -79,19 +73,6 @@ void backtrace_deinit(void)
 
 #ifdef BACKTRACE_ACTIVE
 /********************************************************************/ /**
-   Write one line of backtrace
- ************************************************************************/
-static void write_backtrace_line(enum log_level level, bool print_from_where,
-                                 const char *where, const char *msg)
-{
-  /* Current behavior of this function is to write to chained callback,
-   * nothing more, nothing less. */
-  if (previous != NULL) {
-    previous(level, print_from_where, where, msg);
-  }
-}
-
-/********************************************************************/ /**
    Main backtrace callback called from logging code.
  ************************************************************************/
 static void backtrace_log(enum log_level level, bool print_from_where,
@@ -115,29 +96,14 @@ static void backtrace_log(enum log_level level, bool print_from_where,
 void backtrace_print(enum log_level level)
 {
 #ifdef BACKTRACE_ACTIVE
-  void *buffer[MAX_NUM_FRAMES];
-  int frames;
-  char **names;
+  using namespace backward;
+  StackTrace st;
+  st.load_here(MAX_NUM_FRAMES);
 
-  frames = backtrace(buffer, ARRAY_SIZE(buffer));
-  names = backtrace_symbols(buffer, frames);
-
-  if (names == NULL) {
-    write_backtrace_line(level, FALSE, NULL, "No backtrace");
-  } else {
-    int i;
-
-    write_backtrace_line(level, FALSE, NULL, "Backtrace:");
-
-    for (i = 0; i < MIN(frames, MAX_NUM_FRAMES); i++) {
-      char linestr[256];
-
-      fc_snprintf(linestr, sizeof(linestr), "%5d: %s", i, names[i]);
-
-      write_backtrace_line(level, FALSE, NULL, linestr);
-    }
-
-    free(names);
-  }
+  Printer p;
+  p.object = false;
+  p.color_mode = ColorMode::automatic;
+  p.address = true;
+  p.print(st, stderr);
 #endif /* BACKTRACE_ACTIVE */
 }

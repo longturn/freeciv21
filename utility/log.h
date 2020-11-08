@@ -132,14 +132,9 @@ void do_log(const char *file, const char *function, int line,
 
 /* Assertions. */
 void fc_assert_set_fatal(int fatal_assertions);
-#ifdef FREECIV_NDEBUG
-/* Disable the assertion failures, but not the tests! */
-#define fc_assert_fail(...) (void) 0
-#else
 void fc_assert_fail(const char *file, const char *function, int line,
                     const char *assertion, const char *message, ...)
     fc__attribute((__format__(__printf__, 5, 6)));
-#endif /* FREECIV_NDEBUG */
 
 #define fc_assert_full(file, function, line, condition, action, message,    \
                        ...)                                                 \
@@ -150,19 +145,6 @@ void fc_assert_fail(const char *file, const char *function, int line,
   }                                                                         \
   (void) 0 /* Force the usage of ';' at the end of the call. */
 
-#ifdef FREECIV_NDEBUG
-/* Disabled. */
-#define fc_assert(...) (void) 0
-#define fc_assert_msg(...) (void) 0
-#define fc_assert_action(...) (void) 0
-#define fc_assert_ret(...) (void) 0
-#define fc_assert_ret_val(...) (void) 0
-#define fc_assert_exit(...) (void) 0
-#define fc_assert_action_msg(...) (void) 0
-#define fc_assert_ret_msg(...) (void) 0
-#define fc_assert_ret_val_msg(...) (void) 0
-#define fc_assert_exit_msg(...) (void) 0
-#else
 /* Like assert(). */
 #define fc_assert(condition)                                                \
   ((condition) ? (void) 0                                                   \
@@ -201,7 +183,6 @@ void fc_assert_fail(const char *file, const char *function, int line,
 #define fc_assert_exit_msg(condition, message, ...)                         \
   fc_assert_action(condition, log_fatal(message, ##__VA_ARGS__);            \
                    exit(EXIT_FAILURE))
-#endif /* FREECIV_NDEBUG */
 
 #ifdef __cplusplus
 #ifdef FREECIV_CXX11_STATIC_ASSERT

@@ -341,11 +341,8 @@ void found_new_tech(struct research *presearch, Tech_type_id tech_found,
   struct city *pcity;
 
   if (!is_future_tech(tech_found)) {
-
-#ifndef FREECIV_NDEBUG
     fc_assert(NULL != vap);
     fc_assert(TECH_KNOWN != research_invention_state(presearch, tech_found));
-#endif /* FREECIV_NDEBUG */
 
     was_first = (!game.info.global_advances[tech_found]);
   }
@@ -1301,13 +1298,11 @@ Tech_type_id steal_a_tech(struct player *pplayer, struct player *victim,
       fc_assert(stolen_tech != A_NONE);
     }
   } else { /* preferred != A_UNSET */
-#ifndef FREECIV_NDEBUG
     if (!is_future_tech(preferred)) {
       fc_assert(NULL != valid_advance_by_number(preferred));
       fc_assert(TECH_KNOWN
                 == research_invention_state(vresearch, preferred));
     }
-#endif /* FREECIV_NDEBUG */
     stolen_tech = preferred;
   }
 
