@@ -1470,7 +1470,8 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
   }
 
   log_error("Could not load gfx file \"%s\".", gfx_filename);
-  return NULL;
+  color *c = color_alloc(255, 0 , 0);
+  return create_sprite(20, 20, c);
 }
 
 /************************************************************************/ /**
