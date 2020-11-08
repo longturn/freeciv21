@@ -2853,7 +2853,7 @@ int city_airlift_max(const struct city *pcity)
     This initializes the prod[] and waste[] arrays.  It assumes that
     the bonus[] and citizen_base[] arrays are alread built.
  **************************************************************************/
-inline void set_city_production(struct city *pcity)
+void set_city_production(struct city *pcity)
 {
   /* Calculate city production!
    *
