@@ -1183,7 +1183,7 @@ Internationalization (I18N)
 
 Messages and text in general which are shown in the GUI should be
 translated by using the "_()" macro. In addition log_normal() and
-some log_warn() messages should be translated. In most cases, the other
+some qWarning() messages should be translated. In most cases, the other
 log levels (qFatal(), qCritical(), log_verbose(), log_debug()) should
 NOT be localised.
 
