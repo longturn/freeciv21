@@ -278,10 +278,10 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   }
   if (num_plugins_used == 1) {
     /* We only have the dummy plugin, skip the code but issue an advertise */
-    log_normal(_("No real audio plugin present."));
-    log_normal(_("Proceeding with sound support disabled."));
-    log_normal(_("For sound support, install SDL2_mixer"));
-    log_normal("http://www.libsdl.org/projects/SDL_mixer/index.html");
+    qInfo(_("No real audio plugin present."));
+    qInfo(_("Proceeding with sound support disabled."));
+    qInfo(_("For sound support, install SDL2_mixer"));
+    qInfo("http://www.libsdl.org/projects/SDL_mixer/index.html");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
@@ -301,10 +301,10 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   if (!ss_filename || !ms_filename) {
     qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
               qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
-    log_normal(_("To get sound you need to download a sound set!"));
-    log_normal(_("Get sound sets from <%s>."),
-               "http://www.freeciv.org/wiki/Sounds");
-    log_normal(_("Proceeding with sound support disabled."));
+    qInfo(_("To get sound you need to download a sound set!"));
+    qInfo(_("Get sound sets from <%s>."),
+          "http://www.freeciv.org/wiki/Sounds");
+    qInfo(_("Proceeding with sound support disabled."));
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
@@ -341,7 +341,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
   if (preferred_plugin_name[0] != '\0') {
     if (!audio_select_plugin(preferred_plugin_name))
-      log_normal(_("Proceeding with sound support disabled."));
+      qInfo(_("Proceeding with sound support disabled."));
     return;
   }
 
@@ -350,10 +350,9 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   if (audio_select_plugin(audio_str))
     return;
 #endif
-  log_normal(_("No real audio subsystem managed to initialize!"));
-  log_normal(
-      _("Perhaps there is some misconfiguration or bad permissions."));
-  log_normal(_("Proceeding with sound support disabled."));
+  qInfo(_("No real audio subsystem managed to initialize!"));
+  qInfo(_("Perhaps there is some misconfiguration or bad permissions."));
+  qInfo(_("Proceeding with sound support disabled."));
 }
 
 /**********************************************************************/ /**

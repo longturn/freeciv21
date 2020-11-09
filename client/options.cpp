@@ -5269,10 +5269,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
-            log_normal(_("Didn't find '%s' option file, "
-                         "loading from '%s' instead."),
-                       get_current_option_file_name() + strlen(name) + 1,
-                       name_buffer + strlen(name) + 1);
+            qInfo(_("Didn't find '%s' option file, "
+                    "loading from '%s' instead."),
+                  get_current_option_file_name() + strlen(name) + 1,
+                  name_buffer + strlen(name) + 1);
           }
 
           return name_buffer;
@@ -5300,10 +5300,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   "%s" DIR_SEPARATOR MID_OPTION_FILE_NAME, name, major,
                   minor);
       if (0 == fc_stat(name_buffer, &buf)) {
-        log_normal(_("Didn't find '%s' option file, "
-                     "loading from '%s' instead."),
-                   get_current_option_file_name() + strlen(name) + 1,
-                   name_buffer + strlen(name) + 1);
+        qInfo(_("Didn't find '%s' option file, "
+                "loading from '%s' instead."),
+              get_current_option_file_name() + strlen(name) + 1,
+              name_buffer + strlen(name) + 1);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
           *allow_digital_boolean = TRUE;
@@ -5316,10 +5316,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     fc_snprintf(name_buffer, sizeof(name_buffer),
                 "%s" DIR_SEPARATOR OLD_OPTION_FILE_NAME, name);
     if (0 == fc_stat(name_buffer, &buf)) {
-      log_normal(_("Didn't find '%s' option file, "
-                   "loading from '%s' instead."),
-                 get_current_option_file_name() + strlen(name) + 1,
-                 OLD_OPTION_FILE_NAME);
+      qInfo(_("Didn't find '%s' option file, "
+              "loading from '%s' instead."),
+            get_current_option_file_name() + strlen(name) + 1,
+            OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = TRUE;
       return name_buffer;
     } else {
@@ -5753,7 +5753,7 @@ void options_load(void)
 
   name = get_last_option_file_name(&allow_digital_boolean);
   if (!name) {
-    log_normal(_("Didn't find the option file. Creating a new one."));
+    qInfo(_("Didn't find the option file. Creating a new one."));
     options_fully_initialized = TRUE;
     create_default_cma_presets();
     gui_options.first_boot = TRUE;
@@ -5773,7 +5773,7 @@ void options_load(void)
     if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
       qCritical(_("Save failed, cannot write to file %s"), name);
     } else {
-      log_normal(_("Saved settings to file %s"), name);
+      qInfo(_("Saved settings to file %s"), name);
     }
     secfile_destroy(sf);
     options_fully_initialized = TRUE;
@@ -6207,9 +6207,9 @@ static void mapimg_changed_callback(struct option *poption)
   if (!mapimg_client_define()) {
     bool success;
 
-    log_normal("Error setting the value for %s (%s). Restoring the default "
-               "value.",
-               option_name(poption), mapimg_error());
+    qInfo("Error setting the value for %s (%s). Restoring the default "
+          "value.",
+          option_name(poption), mapimg_error());
 
     /* Reset the value to the default value. */
     success = option_reset(poption);

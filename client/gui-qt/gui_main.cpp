@@ -79,7 +79,7 @@ int main(int argc, char **argv)
  **************************************************************************/
 static void migrate_options_from_2_5()
 {
-  log_normal(_("Migrating Qt-client options from freeciv-2.5 options."));
+  qInfo(_("Migrating Qt-client options from freeciv-2.5 options."));
 
   gui_options.gui_qt_fullscreen = gui_options.migrate_fullscreen;
 

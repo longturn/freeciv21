@@ -212,8 +212,8 @@ QTcpServer *srv_prepare()
   maybe_automatic_meta_message(default_meta_message_string());
 
   if (!(srvarg.metaserver_no_send)) {
-    log_normal(_("Sending info to metaserver <%s>."),
-               qPrintable(meta_addr_port()));
+    qInfo(_("Sending info to metaserver <%s>."),
+          qPrintable(meta_addr_port()));
     /* Open socket for meta server */
     if (!server_open_meta(srvarg.metaconnection_persistent)
         || !send_server_info_to_metaserver(META_INFO)) {
@@ -548,7 +548,7 @@ void server::input_on_stdin()
       // QSocketNotifier gets mad after EOF. Turn it off.
       m_stdin_notifier->deleteLater();
       m_stdin_notifier = nullptr;
-      log_normal(_("Reached end of standard input."));
+      qInfo(_("Reached end of standard input."));
     } else {
       // Got something to read. Hopefully there's even a complete line and
       // we can process it.
@@ -582,8 +582,7 @@ void server::prepare_game()
     event_cache_clear();
   }
 
-  log_normal(_("Now accepting new client connections on port %d."),
-             srvarg.port);
+  qInfo(_("Now accepting new client connections on port %d."), srvarg.port);
 
   if (game.info.timeout == -1) {
     // Autogame, start as soon as the event loop allows
@@ -816,13 +815,13 @@ void server::update_game_state()
       && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
 
     if (srvarg.exit_on_end) {
-      log_normal(_("Shutting down in %d seconds for lack of players."),
-                 srvarg.quitidle);
+      qInfo(_("Shutting down in %d seconds for lack of players."),
+            srvarg.quitidle);
 
       set_meta_message_string(N_("shutting down soon for lack of players"));
     } else {
-      log_normal(_("Restarting in %d seconds for lack of players."),
-                 srvarg.quitidle);
+      qInfo(_("Restarting in %d seconds for lack of players."),
+            srvarg.quitidle);
 
       set_meta_message_string(N_("restarting soon for lack of players"));
     }
@@ -869,10 +868,10 @@ void server::quit_idle()
   m_quitidle_timer = nullptr;
 
   if (srvarg.exit_on_end) {
-    log_normal(_("Shutting down for lack of players."));
+    qInfo(_("Shutting down for lack of players."));
     set_meta_message_string("shutting down for lack of players");
   } else {
-    log_normal(_("Restarting for lack of players."));
+    qInfo(_("Restarting for lack of players."));
     set_meta_message_string("restarting for lack of players");
   }
 

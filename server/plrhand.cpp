@@ -1766,7 +1766,7 @@ void server_remove_player(struct player *pplayer)
   /* save player slot */
   pslot = pplayer->slot;
 
-  log_normal(_("Removing player %s."), player_name(pplayer));
+  qInfo(_("Removing player %s."), player_name(pplayer));
 
   notify_conn(pplayer->connections, NULL, E_CONNECTION, ftc_server,
               _("You've been removed from the game!"));
@@ -2862,14 +2862,14 @@ struct player *civil_war(struct player *pplayer)
 
   if (normal_player_count() >= MAX_NUM_PLAYERS) {
     /* No space to make additional player */
-    log_normal(_("Could not throw %s into civil war - too many players"),
-               nation_plural_for_player(pplayer));
+    qInfo(_("Could not throw %s into civil war - too many players"),
+          nation_plural_for_player(pplayer));
     return NULL;
   }
   if (normal_player_count() >= server.playable_nations) {
     /* No nation for additional player */
-    log_normal(_("Could not throw %s into civil war - no available nations"),
-               nation_plural_for_player(pplayer));
+    qInfo(_("Could not throw %s into civil war - no available nations"),
+          nation_plural_for_player(pplayer));
     return NULL;
   }
 

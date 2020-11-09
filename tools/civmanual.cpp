@@ -751,7 +751,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     fprintf(doc, "%s", tag_info->tail);
     fclose(doc);
-    log_normal(_("Manual file %s successfully written."), filename);
+    qInfo(_("Manual file %s successfully written."), filename);
   } /* manuals */
 
   return TRUE;

@@ -8618,7 +8618,7 @@ static bool load_rulesetdir(const char *rsdir, bool compat_mode,
   bool ok = TRUE;
   struct rscompat_info compat_info;
 
-  log_normal(_("Loading rulesets."));
+  qInfo(_("Loading rulesets."));
 
   rscompat_init_info(&compat_info);
   compat_info.compat_mode = compat_mode;

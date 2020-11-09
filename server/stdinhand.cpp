@@ -346,7 +346,7 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
 
     if (NULL != caller) {
       /* Echo to the console. */
-      log_normal("%s", line);
+      qInfo("%s", line);
     }
   }
 }
@@ -2749,8 +2749,8 @@ static bool debug_command(struct connection *caller, char *str, bool check)
       units += unit_list_size(plr->units);
     }
     players_iterate_end;
-    log_normal(_("players=%d cities=%d citizens=%d units=%d"), players,
-               cities, citizen_count, units);
+    qInfo(_("players=%d cities=%d citizens=%d units=%d"), players, cities,
+          citizen_count, units);
     notify_conn(game.est_connections, NULL, E_AI_DEBUG, ftc_log,
                 _("players=%d cities=%d citizens=%d units=%d"), players,
                 cities, citizen_count, units);

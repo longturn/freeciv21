@@ -100,7 +100,7 @@ static const char *download_modpack_recursive(const char *URL,
     /* Nothing */
   }
 
-  log_normal(_("Installing modpack %s from %s"), URL + start_idx, URL);
+  qInfo(_("Installing modpack %s from %s"), URL + start_idx, URL);
 
   if (fcmp->inst_prefix == NULL) {
     return _("Cannot install to given directory hierarchy");

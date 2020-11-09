@@ -172,8 +172,8 @@ void establish_new_connection(struct connection *pconn)
    * message option for the client with event */
 
   /* Notify the console that you're here. */
-  log_normal(_("%s has connected from %s."), pconn->username,
-             qUtf8Printable(pconn->addr));
+  qInfo(_("%s has connected from %s."), pconn->username,
+        qUtf8Printable(pconn->addr));
 
   conn_compression_freeze(pconn);
   send_rulesets(dest);
@@ -331,7 +331,7 @@ void reject_new_connection(const char *msg, struct connection *pconn)
   packet.challenge_file[0] = '\0';
   packet.conn_id = -1;
   send_packet_server_join_reply(pconn, &packet);
-  log_normal(_("Client rejected: %s."), conn_description(pconn));
+  qInfo(_("Client rejected: %s."), conn_description(pconn));
   flush_connection_send_buffer_all(pconn);
 }
 
@@ -351,13 +351,13 @@ bool handle_login_request(struct connection *pconn,
     return FALSE;
   }
 
-  log_normal(_("Connection request from %s from %s"), req->username,
-             qUtf8Printable(pconn->addr));
+  qInfo(_("Connection request from %s from %s"), req->username,
+        qUtf8Printable(pconn->addr));
 
   /* print server and client capabilities to console */
-  log_normal(_("%s has client version %d.%d.%d%s"), pconn->username,
-             req->major_version, req->minor_version, req->patch_version,
-             req->version_label);
+  qInfo(_("%s has client version %d.%d.%d%s"), pconn->username,
+        req->major_version, req->minor_version, req->patch_version,
+        req->version_label);
   log_verbose("Client caps: %s", req->capability);
   log_verbose("Server caps: %s", our_capability);
   conn_set_capability(pconn, req->capability);
@@ -373,8 +373,7 @@ bool handle_login_request(struct connection *pconn,
         req->major_version, req->minor_version, req->patch_version,
         req->version_label);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Mismatched capabilities."),
-               req->username);
+    qInfo(_("%s was rejected: Mismatched capabilities."), req->username);
     return FALSE;
   }
 
@@ -389,8 +388,7 @@ bool handle_login_request(struct connection *pconn,
         req->major_version, req->minor_version, req->patch_version,
         req->version_label);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Mismatched capabilities."),
-               req->username);
+    qInfo(_("%s was rejected: Mismatched capabilities."), req->username);
     return FALSE;
   }
 
@@ -417,8 +415,8 @@ bool handle_login_request(struct connection *pconn,
   if (!is_valid_username(req->username)) {
     fc_snprintf(msg, sizeof(msg), _("Invalid username '%s'"), req->username);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Invalid name [%s]."), req->username,
-               qUtf8Printable(pconn->addr));
+    qInfo(_("%s was rejected: Invalid name [%s]."), req->username,
+          qUtf8Printable(pconn->addr));
     return FALSE;
   }
 
@@ -428,9 +426,9 @@ bool handle_login_request(struct connection *pconn,
                   "and cannot reconnect for %d seconds."),
                 kick_time_remaining);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Connection kicked "
-                 "(%d seconds remaining)."),
-               req->username, kick_time_remaining);
+    qInfo(_("%s was rejected: Connection kicked "
+            "(%d seconds remaining)."),
+          req->username, kick_time_remaining);
     return FALSE;
   }
 
@@ -441,8 +439,8 @@ bool handle_login_request(struct connection *pconn,
       fc_snprintf(msg, sizeof(msg), _("'%s' already connected."),
                   req->username);
       reject_new_connection(msg, pconn);
-      log_normal(_("%s was rejected: Duplicate login name [%s]."),
-                 req->username, qUtf8Printable(pconn->addr));
+      qInfo(_("%s was rejected: Duplicate login name [%s]."), req->username,
+            qUtf8Printable(pconn->addr));
       return FALSE;
     }
   }
@@ -485,7 +483,7 @@ void lost_connection_to_client(struct connection *pconn)
 
   fc_assert_ret(TRUE == pconn->server.is_closing);
 
-  log_normal(_("Lost connection: %s."), desc);
+  qInfo(_("Lost connection: %s."), desc);
 
   /* Special color (white on black) for player loss */
   notify_conn(game.est_connections, NULL, E_CONNECTION,

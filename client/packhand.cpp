@@ -362,7 +362,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     client.conn.id = -1; /* not in range of conn_info id */
 
     if (auto_connect) {
-      log_normal(_("You were rejected from the game: %s"), message);
+      qInfo(_("You were rejected from the game: %s"), message);
     }
     server_connect();
 

@@ -94,7 +94,6 @@ void do_log(const char *file, const char *function, int line,
   }
 
 // Have to be ifdef's to report the correct line number.
-#define log_normal(message, ...) qInfo(message, ##__VA_ARGS__)
 #define log_verbose(message, ...) qDebug(message, ##__VA_ARGS__)
 
 #ifdef FREECIV_DEBUG
@@ -112,7 +111,7 @@ void do_log(const char *file, const char *function, int line,
 #define log_testmatic_alt(lvl, ...) log_testmatic(__VA_ARGS__)
 
 /* Used by game debug command */
-#define log_test log_normal
+#define log_test qInfo
 #define log_packet log_verbose
 #define log_packet_detailed log_debug
 #define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
@@ -168,7 +167,7 @@ void fc_assert_fail(const char *file, const char *function, int line,
   fc_assert_action_msg(condition, return val, message, ##__VA_ARGS__)
 /* Exit on failure with extra message. */
 #define fc_assert_exit_msg(condition, message, ...)                         \
-  fc_assert_action(condition, qFatal(message, ##__VA_ARGS__);            \
+  fc_assert_action(condition, qFatal(message, ##__VA_ARGS__);               \
                    exit(EXIT_FAILURE))
 
 #ifdef __cplusplus

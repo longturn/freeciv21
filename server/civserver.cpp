@@ -71,12 +71,12 @@ static void signal_handler(int sig)
       save_and_exit(SIGINT);
     } else {
       if (game.info.timeout == -1) {
-        log_normal(_("Setting timeout to 0. Autogame will stop."));
+        qInfo(_("Setting timeout to 0. Autogame will stop."));
         game.info.timeout = 0;
       }
       if (!timer) {
-        log_normal(_("You must interrupt Freeciv twice "
-                     "within one second to make it exit."));
+        qInfo(_("You must interrupt Freeciv twice "
+                "within one second to make it exit."));
       }
     }
     timer = timer_renew(timer, TIMER_USER, TIMER_ACTIVE);

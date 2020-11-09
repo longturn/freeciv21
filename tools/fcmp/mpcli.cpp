@@ -46,7 +46,7 @@ struct fcmp_params fcmp = {
  **************************************************************************/
 static void msg_callback(const QString &msg)
 {
-  log_normal("%s", msg.toLocal8Bit().data());
+  qInfo("%s", msg.toLocal8Bit().data());
 }
 
 /**********************************************************************/ /**
@@ -80,15 +80,15 @@ static void setup_modpack_list(const char *name, const char *URL,
     inst_str = _("Not installed");
   }
 
-  log_normal("%s", "");
-  log_normal(_("Name=\"%s\""), name);
-  log_normal(_("Version=\"%s\""), version);
-  log_normal(_("Installed=\"%s\""), inst_str);
-  log_normal(_("Type=\"%s\" / \"%s\""), type_str, subtype);
-  log_normal(_("License=\"%s\""), lic_str);
-  log_normal(_("URL=\"%s\""), URL);
+  qInfo("%s", "");
+  qInfo(_("Name=\"%s\""), name);
+  qInfo(_("Version=\"%s\""), version);
+  qInfo(_("Installed=\"%s\""), inst_str);
+  qInfo(_("Type=\"%s\" / \"%s\""), type_str, subtype);
+  qInfo(_("License=\"%s\""), lic_str);
+  qInfo(_("URL=\"%s\""), URL);
   if (notes != NULL) {
-    log_normal(_("Comment=\"%s\""), notes);
+    qInfo(_("Comment=\"%s\""), notes);
   }
 }
 
@@ -109,16 +109,16 @@ int main(int argc, char *argv[])
 
   load_install_info_lists(&fcmp);
 
-  log_normal(_("Freeciv modpack installer (command line version)"));
+  qInfo(_("Freeciv modpack installer (command line version)"));
 
-  log_normal("%s%s", word_version(), VERSION_STRING);
+  qInfo("%s%s", word_version(), VERSION_STRING);
 
   rev_ver = fc_git_revision();
   if (rev_ver != NULL) {
-    log_normal(_("commit: %s"), rev_ver);
+    qInfo(_("commit: %s"), rev_ver);
   }
 
-  log_normal("%s", "");
+  qInfo("%s", "");
 
   if (fcmp.autoinstall == NULL) {
     download_modpack_list(&fcmp, setup_modpack_list, msg_callback);
@@ -129,7 +129,7 @@ int main(int argc, char *argv[])
                               msg_callback, NULL);
 
     if (errmsg == NULL) {
-      log_normal(_("Modpack installed successfully"));
+      qInfo(_("Modpack installed successfully"));
     } else {
       qCritical(_("Modpack install failed: %s"), errmsg);
     }

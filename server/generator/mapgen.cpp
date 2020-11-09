@@ -2155,7 +2155,7 @@ static bool make_island(int islemass, int starters,
 
     /* caveat: this should really be sent to all players */
     if (pstate->totalmass > 3000) {
-      log_normal(_("High landmass - this may take a few seconds."));
+      qInfo(_("High landmass - this may take a few seconds."));
     }
 
     i = river_pct + mountain_pct + desert_pct + forest_pct + swamp_pct;
@@ -2443,7 +2443,7 @@ static void mapgenerator3(void)
   }
 
   if (j == 500) {
-    log_normal(_("Generator 3 didn't place all big islands."));
+    qInfo(_("Generator 3 didn't place all big islands."));
   }
 
   islandmass = (islandmass * 11) / 8;
@@ -2471,7 +2471,7 @@ static void mapgenerator3(void)
   FCPP_FREE(height_map);
 
   if (j == 1500) {
-    log_normal(_("Generator 3 left %li landmass unplaced."), checkmass);
+    qInfo(_("Generator 3 left %li landmass unplaced."), checkmass);
   } else if (checkmass > wld.map.xsize + wld.map.ysize) {
     log_verbose("%ld mass left unplaced", checkmass);
   }

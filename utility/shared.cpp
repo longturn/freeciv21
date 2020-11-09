@@ -1358,7 +1358,7 @@ void switch_lang(const char *lang)
 
   autocap_update();
 
-  log_normal("LANG set to %s", lang);
+  qInfo("LANG set to %s", lang);
 #else  /* FREECIV_ENABLE_NLS */
   fc_assert(FALSE);
 #endif /* FREECIV_ENABLE_NLS */

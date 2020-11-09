@@ -413,9 +413,9 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
     team_placement_state_destroy(pstate);
     if (iter++ >= iter_max) {
-      log_normal(_("Didn't find optimal solution for team placement "
-                   "in %d iterations."),
-                 iter);
+      qInfo(_("Didn't find optimal solution for team placement "
+              "in %d iterations."),
+            iter);
       break;
     }
 

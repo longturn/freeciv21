@@ -1221,7 +1221,7 @@ bool tilespec_reread(const char *new_tileset_name,
   sz_strlcpy(tileset_name, name);
   sz_strlcpy(old_name, tileset->name);
 
-  log_normal(_("Loading tileset \"%s\"."), tileset_name);
+  qInfo(_("Loading tileset \"%s\"."), tileset_name);
 
   /* Step 0:  Record old data.
    *
@@ -1850,9 +1850,9 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   if (!is_view_supported(t->type)) {
     /* TRANS: "Overhead" or "Isometric" */
-    log_normal(_("Client does not support %s tilesets."),
-               _(ts_type_name(t->type)));
-    log_normal(_("Using default tileset instead."));
+    qInfo(_("Client does not support %s tilesets."),
+          _(ts_type_name(t->type)));
+    qInfo(_("Using default tileset instead."));
     fc_assert(tileset_name != NULL);
     goto ON_ERROR;
   }
@@ -5325,9 +5325,9 @@ static int fill_goto_sprite_array(const struct tileset *t,
       static char last_reported[256] = "";
 
       if (0 != strcmp(last_reported, t->name)) {
-        log_normal(_("Tileset \"%s\" doesn't support long goto paths, "
-                     "such as %d. Path not displayed as expected."),
-                   t->name, length);
+        qInfo(_("Tileset \"%s\" doesn't support long goto paths, "
+                "such as %d. Path not displayed as expected."),
+              t->name, length);
         sz_strlcpy(last_reported, t->name);
       }
     }
@@ -5911,9 +5911,9 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
         static char last_reported[256] = "";
 
         if (0 != strcmp(last_reported, t->name)) {
-          log_normal(_("Tileset \"%s\" doesn't support big cities size, "
-                       "such as %d. Size not displayed as expected."),
-                     t->name, size);
+          qInfo(_("Tileset \"%s\" doesn't support big cities size, "
+                  "such as %d. Size not displayed as expected."),
+                t->name, size);
           sz_strlcpy(last_reported, t->name);
         }
       }

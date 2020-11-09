@@ -326,7 +326,7 @@ void attribute_restore(void)
                 "Your citizen governor settings may be broken."));
     break;
   case A_SERIAL_OLD:
-    log_normal(_("Old attributes detected and removed."));
+    qInfo(_("Old attributes detected and removed."));
     break;
   default:
     break;

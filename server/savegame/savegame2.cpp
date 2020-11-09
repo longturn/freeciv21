@@ -2637,14 +2637,13 @@ static void sg_load_players(struct loaddata *loading)
 
     /* print out some informations */
     if (is_ai(pplayer)) {
-      log_normal(_("%s has been added as %s level AI-controlled player "
-                   "(%s)."),
-                 player_name(pplayer),
-                 ai_level_translated_name(pplayer->ai_common.skill_level),
-                 ai_name(pplayer->ai));
+      qInfo(_("%s has been added as %s level AI-controlled player "
+              "(%s)."),
+            player_name(pplayer),
+            ai_level_translated_name(pplayer->ai_common.skill_level),
+            ai_name(pplayer->ai));
     } else {
-      log_normal(_("%s has been added as human player."),
-                 player_name(pplayer));
+      qInfo(_("%s has been added as human player."), player_name(pplayer));
     }
   }
   players_iterate_end;

@@ -2023,8 +2023,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     unsigned char buffer[4096];
     struct raw_data_out dout;
 
-    log_normal(_("Warning: rejecting old client %s"),
-               conn_description(pconn));
+    qInfo(_("Warning: rejecting old client %s"), conn_description(pconn));
 
     dio_output_init(&dout, buffer, sizeof(buffer));
     dio_put_uint16_raw(&dout, 0);
@@ -2495,10 +2494,10 @@ const char *aifill(int amount)
 
     CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
 
-    log_normal(_("%s has been added as %s level AI-controlled player (%s)."),
-               player_name(pplayer),
-               ai_level_translated_name(pplayer->ai_common.skill_level),
-               ai_name(pplayer->ai));
+    qInfo(_("%s has been added as %s level AI-controlled player (%s)."),
+          player_name(pplayer),
+          ai_level_translated_name(pplayer->ai_common.skill_level),
+          ai_name(pplayer->ai));
     notify_conn(
         NULL, NULL, E_SETTING, ftc_server,
         _("%s has been added as %s level AI-controlled player (%s)."),
@@ -2798,8 +2797,8 @@ const char *pick_random_player_name(const struct nation_type *pnation)
  **************************************************************************/
 static void announce_player(struct player *pplayer)
 {
-  log_normal(_("%s rules the %s."), player_name(pplayer),
-             nation_plural_for_player(pplayer));
+  qInfo(_("%s rules the %s."), player_name(pplayer),
+        nation_plural_for_player(pplayer));
 
   notify_conn(game.est_connections, NULL, E_GAME_START, ftc_server,
               _("%s rules the %s."), player_name(pplayer),
@@ -2960,14 +2959,14 @@ void srv_ready()
         fc_assert(wld.map.server.seed_setting == 0);
         if (i == 0) {
           /* We will retry only if max attempts allow it */
-          log_normal(_("Failed to create suitable map, retrying with "
-                       "another mapseed."));
+          qInfo(_("Failed to create suitable map, retrying with "
+                  "another mapseed."));
         } else {
           /* +1 - start human readable count from 1 and not from 0
            * +1 - refers to next round, not to one we just did
            * ==
            * +2 */
-          log_normal(_("Attempt %d/%d"), i + 2, max);
+          qInfo(_("Attempt %d/%d"), i + 2, max);
         }
         wld.map.server.have_resources = FALSE;
 
@@ -3017,8 +3016,8 @@ void srv_ready()
       notify_conn(NULL, NULL, E_SETTING, ftc_server,
                   _("Setting '%s' has been adjusted from %s to %s."),
                   setting_name(pset), mapgen_settings[i].pretty, pretty);
-      log_normal(_("Setting '%s' has been adjusted from %s to %s."),
-                 setting_name(pset), mapgen_settings[i].pretty, pretty);
+      qInfo(_("Setting '%s' has been adjusted from %s to %s."),
+            setting_name(pset), mapgen_settings[i].pretty, pretty);
     }
   }
 

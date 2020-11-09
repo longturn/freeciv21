@@ -578,10 +578,10 @@ int client_main(int argc, char *argv[])
     const char *oldaddr = "http://www.cazfi.net/freeciv/metaserver/";
 
     if (0 == strcmp(gui_options.default_metaserver, oldaddr)) {
-      log_normal(_("Updating old metaserver address \"%s\"."), oldaddr);
+      qInfo(_("Updating old metaserver address \"%s\"."), oldaddr);
       sz_strlcpy(gui_options.default_metaserver, DEFAULT_METASERVER_OPTION);
-      log_normal(_("Default metaserver has been set to value \"%s\"."),
-                 DEFAULT_METASERVER_OPTION);
+      qInfo(_("Default metaserver has been set to value \"%s\"."),
+            DEFAULT_METASERVER_OPTION);
     }
     if (0
         == strcmp(gui_options.default_metaserver,

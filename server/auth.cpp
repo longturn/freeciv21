@@ -95,7 +95,7 @@ bool auth_user(struct connection *pconn, char *username)
       reject_new_connection(_("Guests are not allowed on this server. "
                               "Sorry."),
                             pconn);
-      log_normal(_("%s was rejected: Guests not allowed."), username);
+      qInfo(_("%s was rejected: Guests not allowed."), username);
       return FALSE;
     }
   } else {
@@ -124,9 +124,9 @@ bool auth_user(struct connection *pconn, char *username)
             _("There was an error reading the user database "
               "and guest logins are not allowed. Sorry"),
             pconn);
-        log_normal(_("%s was rejected: Database error and guests not "
-                     "allowed."),
-                   pconn->username);
+        qInfo(_("%s was rejected: Database error and guests not "
+                "allowed."),
+              pconn->username);
         return FALSE;
       }
     } else if (exists) {
@@ -151,8 +151,8 @@ bool auth_user(struct connection *pconn, char *username)
         reject_new_connection(_("This server allows only preregistered "
                                 "users. Sorry."),
                               pconn);
-        log_normal(_("%s was rejected: Only preregistered users allowed."),
-                   pconn->username);
+        qInfo(_("%s was rejected: Only preregistered users allowed."),
+              pconn->username);
 
         return FALSE;
       }
@@ -174,9 +174,9 @@ bool auth_handle_reply(struct connection *pconn, char *password)
     if (!is_good_password(password, msg)) {
       if (pconn->server.auth_tries++ >= MAX_AUTH_TRIES) {
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);
-        log_normal(_("%s was rejected: Too many wrong password "
-                     "verifies for new user."),
-                   pconn->username);
+        qInfo(_("%s was rejected: Too many wrong password "
+                "verifies for new user."),
+              pconn->username);
 
         return FALSE;
       } else {
@@ -231,8 +231,8 @@ void auth_process_status(struct connection *pconn)
       if (pconn->server.auth_tries >= MAX_AUTH_TRIES) {
         pconn->server.status = AS_NOT_ESTABLISHED;
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);
-        log_normal(_("%s was rejected: Too many wrong password tries."),
-                   pconn->username);
+        qInfo(_("%s was rejected: Too many wrong password tries."),
+              pconn->username);
         connection_close_server(pconn, _("auth failed"));
       } else {
         struct packet_authentication_req request;
@@ -251,9 +251,9 @@ void auth_process_status(struct connection *pconn)
     if (time(NULL) >= pconn->server.auth_settime + MAX_WAIT_TIME) {
       pconn->server.status = AS_NOT_ESTABLISHED;
       reject_new_connection(_("Sorry, your connection timed out..."), pconn);
-      log_normal(_("%s was rejected: Connection timeout waiting for "
-                   "password."),
-                 pconn->username);
+      qInfo(_("%s was rejected: Connection timeout waiting for "
+              "password."),
+            pconn->username);
       connection_close_server(pconn, _("auth failed"));
     }
     break;

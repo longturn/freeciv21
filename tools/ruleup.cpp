@@ -104,7 +104,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
 /**********************************************************************/ /**
    Conversion log callback
  **************************************************************************/
-static void conv_log(const char *msg) { log_normal("%s", msg); }
+static void conv_log(const char *msg) { qInfo("%s", msg); }
 
 /**********************************************************************/ /**
    Main entry point for freeciv-ruleup
@@ -171,7 +171,7 @@ int main(int argc, char **argv)
     }
 
     save_ruleset(qPrintable(tgt_dir), game.control.name, &data);
-    log_normal("Saved %s", qPrintable(tgt_dir));
+    qInfo("Saved %s", qPrintable(tgt_dir));
     comments_free();
   } else {
     qCritical(_("Can't load ruleset %s"), qPrintable(rs_selected));

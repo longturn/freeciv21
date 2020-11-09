@@ -638,7 +638,7 @@ static void aifill_action(const struct setting *pset)
 {
   const char *msg = aifill(*pset->integer.pvalue);
   if (msg) {
-    log_normal(_("Warning: aifill not met: %s."), msg);
+    qInfo(_("Warning: aifill not met: %s."), msg);
     notify_conn(NULL, NULL, E_SETTING, ftc_server,
                 _("Warning: aifill not met: %s."), msg);
   }
@@ -6056,9 +6056,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
           || pset->boolean.validate(val, NULL, reject_msg,
                                     sizeof(reject_msg))) {
         *pset->boolean.pvalue = val;
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6073,9 +6072,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                 secfile_error());
     } else if (val != *pset->integer.pvalue) {
       if (setting_int_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6090,9 +6088,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                 secfile_error());
     } else if (0 != strcmp(val, pset->string.value)) {
       if (setting_str_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6112,9 +6109,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
           || pset->enumerator.validate(val, NULL, reject_msg,
                                        sizeof(reject_msg))) {
         set_enum_value(pset, val);
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6134,9 +6130,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
           || pset->bitwise.validate((unsigned) val, NULL, reject_msg,
                                     sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6156,8 +6151,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   if (lock) {
     /* set lock */
     setting_lock_set(pset, lock);
-    log_normal(_("Ruleset: '%s' has been locked by the ruleset."),
-               setting_name(pset));
+    qInfo(_("Ruleset: '%s' has been locked by the ruleset."),
+          setting_name(pset));
   }
 
   return TRUE;
@@ -6443,15 +6438,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->boolean.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->boolean.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6474,15 +6469,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->integer.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->integer.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6502,15 +6497,15 @@ void settings_game_load(struct section_file *file, const char *section)
           if (0 != strcmp(val, pset->string.value)) {
             if (setting_str_set(pset, val, NULL, reject_msg,
                                 sizeof(reject_msg))) {
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6535,15 +6530,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->enumerator.validate(val, NULL, reject_msg,
                                                  sizeof(reject_msg)))) {
               set_enum_value(pset, val);
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6568,15 +6563,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->bitwise.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->bitwise.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }

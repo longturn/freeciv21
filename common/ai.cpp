@@ -83,8 +83,8 @@ void ai_timer_free(void)
     aitimer = aitimers + i;
 
     if (aitimer->timer) {
-      log_normal("AI timer stats: [%15.3f] ---- (AI type: %s)",
-                 timer_read_seconds(aitimer->timer), ai_name(ai));
+      qInfo("AI timer stats: [%15.3f] ---- (AI type: %s)",
+            timer_read_seconds(aitimer->timer), ai_name(ai));
       timer_destroy(aitimer->timer);
     }
 
@@ -92,8 +92,8 @@ void ai_timer_free(void)
       aitimer = aitimer_plrs + j * FREECIV_AI_MOD_LAST + i;
 
       if (aitimer->timer) {
-        log_normal("AI timer stats: [%15.3f] P%03d (AI type: %s)",
-                   timer_read_seconds(aitimer->timer), j, ai_name(ai));
+        qInfo("AI timer stats: [%15.3f] P%03d (AI type: %s)",
+              timer_read_seconds(aitimer->timer), j, ai_name(ai));
         timer_destroy(aitimer->timer);
       }
     }

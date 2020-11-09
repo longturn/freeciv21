@@ -519,9 +519,9 @@ bool create_start_positions(enum map_startpos mode,
     } else {
       data.min_value *= 0.95;
       if (data.min_value <= 10) {
-        log_normal(_("The server appears to have gotten into an infinite "
-                     "loop in the allocation of starting positions.\nMaybe "
-                     "the number of players is too high for this map."));
+        qInfo(_("The server appears to have gotten into an infinite "
+                "loop in the allocation of starting positions.\nMaybe "
+                "the number of players is too high for this map."));
         failure = TRUE;
         break;
       }
