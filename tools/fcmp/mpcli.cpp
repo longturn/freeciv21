@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
     if (errmsg == NULL) {
       log_normal(_("Modpack installed successfully"));
     } else {
-      log_error(_("Modpack install failed: %s"), errmsg);
+      qCritical(_("Modpack install failed: %s"), errmsg);
     }
   }
 

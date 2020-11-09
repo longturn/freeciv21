@@ -71,12 +71,12 @@ static DIO_GET_CONV_FUN get_conv_callback = get_conv;
 #define FIELD_RANGE_TEST(_test_, _action_, _format_, ...)                   \
   fc_assert(!(_test_));                                                     \
   if (_test_) {                                                             \
-    _action_ log_error(_format_, ##__VA_ARGS__);                            \
+    _action_ qCritical(_format_, ##__VA_ARGS__);                            \
   }
 #else /* FIELD_RANGE_ASSERT */
 #define FIELD_RANGE_TEST(_test_, _action_, _format_, ...)                   \
   if (_test_) {                                                             \
-    _action_ log_error(_format_, ##__VA_ARGS__);                            \
+    _action_ qCritical(_format_, ##__VA_ARGS__);                            \
   }
 #endif /* FIELD_RANGE_ASSERT */
 

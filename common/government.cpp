@@ -227,13 +227,13 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 
   if (!formats_match(rule_name_get(&pruler_title->male), "%s")) {
     if (NULL != pruler_title->pnation) {
-      log_error("\"%s\" male ruler title for nation \"%s\" (nb %d) "
+      qCritical("\"%s\" male ruler title for nation \"%s\" (nb %d) "
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
                 nation_rule_name(pruler_title->pnation),
                 nation_number(pruler_title->pnation));
     } else {
-      log_error("\"%s\" male ruler title is not a format. "
+      qCritical("\"%s\" male ruler title is not a format. "
                 "It should match \"%%s\"",
                 rule_name_get(&pruler_title->male));
     }
@@ -242,13 +242,13 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 
   if (!formats_match(rule_name_get(&pruler_title->female), "%s")) {
     if (NULL != pruler_title->pnation) {
-      log_error("\"%s\" female ruler title for nation \"%s\" (nb %d) "
+      qCritical("\"%s\" female ruler title for nation \"%s\" (nb %d) "
                 "is not a format. It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
                 nation_rule_name(pruler_title->pnation),
                 nation_number(pruler_title->pnation));
     } else {
-      log_error("\"%s\" female ruler title is not a format. "
+      qCritical("\"%s\" female ruler title is not a format. "
                 "It should match \"%%s\"",
                 rule_name_get(&pruler_title->female));
     }
@@ -257,14 +257,14 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 
   if (!formats_match(name_translation_get(&pruler_title->male), "%s")) {
     if (NULL != pruler_title->pnation) {
-      log_error("Translation of \"%s\" male ruler title for nation \"%s\" "
+      qCritical("Translation of \"%s\" male ruler title for nation \"%s\" "
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
                 nation_rule_name(pruler_title->pnation),
                 nation_number(pruler_title->pnation),
                 name_translation_get(&pruler_title->male));
     } else {
-      log_error("Translation of \"%s\" male ruler title is not a format "
+      qCritical("Translation of \"%s\" male ruler title is not a format "
                 "(\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->male),
                 name_translation_get(&pruler_title->male));
@@ -274,14 +274,14 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 
   if (!formats_match(name_translation_get(&pruler_title->female), "%s")) {
     if (NULL != pruler_title->pnation) {
-      log_error("Translation of \"%s\" female ruler title for nation \"%s\" "
+      qCritical("Translation of \"%s\" female ruler title for nation \"%s\" "
                 "(nb %d) is not a format (\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
                 nation_rule_name(pruler_title->pnation),
                 nation_number(pruler_title->pnation),
                 name_translation_get(&pruler_title->female));
     } else {
-      log_error("Translation of \"%s\" female ruler title is not a format "
+      qCritical("Translation of \"%s\" female ruler title is not a format "
                 "(\"%s\"). It should match \"%%s\"",
                 rule_name_get(&pruler_title->female),
                 name_translation_get(&pruler_title->female));
@@ -326,12 +326,12 @@ struct ruler_title *government_ruler_title_new(
 
   if (pgovern->ruler_titles->contains(pnation)) {
     if (NULL != pnation) {
-      log_error("Ruler title for government \"%s\" (nb %d) and "
+      qCritical("Ruler title for government \"%s\" (nb %d) and "
                 "nation \"%s\" (nb %d) was set twice.",
                 government_rule_name(pgovern), government_number(pgovern),
                 nation_rule_name(pnation), nation_number(pnation));
     } else {
-      log_error("Default ruler title for government \"%s\" (nb %d) "
+      qCritical("Default ruler title for government \"%s\" (nb %d) "
                 "was set twice.",
                 government_rule_name(pgovern), government_number(pgovern));
     }
@@ -386,7 +386,7 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
   if (!pgovern->ruler_titles->contains(pnation)
       /* Try default rule title. */
       && !pgovern->ruler_titles->contains(nullptr)) {
-    log_error("Missing title for government \"%s\" (nb %d) "
+    qCritical("Missing title for government \"%s\" (nb %d) "
               "nation \"%s\" (nb %d).",
               government_rule_name(pgovern), government_number(pgovern),
               nation_rule_name(pnation), nation_number(pnation));

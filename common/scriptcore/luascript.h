@@ -34,8 +34,7 @@ struct luascript_signal_name_list;
 struct connection;
 struct fc_lua;
 
-typedef void (*luascript_log_func_t)(struct fc_lua *fcl,
-                                     QtMsgType level,
+typedef void (*luascript_log_func_t)(struct fc_lua *fcl, QtMsgType level,
                                      const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
@@ -64,9 +63,8 @@ struct fc_lua *luascript_new(luascript_log_func_t outputfct,
 struct fc_lua *luascript_get_fcl(lua_State *L);
 void luascript_destroy(struct fc_lua *fcl);
 
-void luascript_log(struct fc_lua *fcl, QtMsgType level,
-                   const char *format, ...)
-    fc__attribute((__format__(__printf__, 3, 4)));
+void luascript_log(struct fc_lua *fcl, QtMsgType level, const char *format,
+                   ...) fc__attribute((__format__(__printf__, 3, 4)));
 void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
                          const char *format, va_list args);
 
@@ -114,7 +112,7 @@ const Direction *luascript_dir(enum direction8);
 
 #define LUASCRIPT_CHECK_STATE(L, ...)                                       \
   if (!L) {                                                                 \
-    log_error("No lua state available");                                    \
+    qCritical("No lua state available");                                    \
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 

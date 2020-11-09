@@ -94,7 +94,6 @@ void do_log(const char *file, const char *function, int line,
   }
 
 // Have to be ifdef's to report the correct line number.
-#define log_error(message, ...) qCritical(message, ##__VA_ARGS__)
 #define log_warn(message, ...) qWarning(message, ##__VA_ARGS__)
 #define log_normal(message, ...) qInfo(message, ##__VA_ARGS__)
 #define log_verbose(message, ...) qDebug(message, ##__VA_ARGS__)

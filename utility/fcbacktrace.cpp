@@ -66,7 +66,7 @@ void backtrace_deinit(void)
     /* We were not the active callback!
      * Restore the active callback and log error */
     log_set_pre_callback(active);
-    log_error("Backtrace log (pre)callback cannot be removed");
+    qCritical("Backtrace log (pre)callback cannot be removed");
   }
 #endif /* BACKTRACE_ACTIVE */
 }

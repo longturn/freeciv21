@@ -871,7 +871,7 @@ static const char *dir_get_tileset_name(enum direction8 dir)
   case DIR8_NORTHWEST:
     return "nw";
   }
-  log_error("Wrong direction8 variant: %d.", dir);
+  qCritical("Wrong direction8 variant: %d.", dir);
   return "";
 }
 
@@ -1422,7 +1422,7 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
     }
   }
 
-  log_error("Could not load gfx file \"%s\".", gfx_filename);
+  qCritical("Could not load gfx file \"%s\".", gfx_filename);
   color *c = color_alloc(255, 0, 0);
   return create_sprite(20, 20, c);
 }
@@ -1513,7 +1513,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                  sec_name)
           || !secfile_lookup_int(file, &dx, "%s.dx", sec_name)
           || !secfile_lookup_int(file, &dy, "%s.dy", sec_name)) {
-        log_error("Grid \"%s\" invalid: %s", sec_name, secfile_error());
+        qCritical("Grid \"%s\" invalid: %s", sec_name, secfile_error());
         continue;
       }
 
@@ -1533,7 +1533,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                    sec_name, j)
             || !(tags = secfile_lookup_str_vec(
                      file, &num_tags, "%s.tiles%d.tag", sec_name, j))) {
-          log_error("Small sprite \"%s.tiles%d\" invalid: %s", sec_name, j,
+          qCritical("Small sprite \"%s.tiles%d\" invalid: %s", sec_name, j,
                     secfile_error());
           continue;
         }
@@ -1565,7 +1565,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         if (!duplicates_ok) {
           for (k = 0; k < num_tags; k++) {
             if (t->sprite_hash->contains(tags[k])) {
-              log_error("warning: already have a sprite for \"%s\".",
+              qCritical("warning: already have a sprite for \"%s\".",
                         tags[k]);
             }
             t->sprite_hash->insert(tags[k], ss);
@@ -1597,7 +1597,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
                                         "extra.sprites%d.tag", i))
         || !(filename =
                  secfile_lookup_str(file, "extra.sprites%d.file", i))) {
-      log_error("Extra sprite \"extra.sprites%d\" invalid: %s", i,
+      qCritical("Extra sprite \"extra.sprites%d\" invalid: %s", i,
                 secfile_error());
       continue;
     }
@@ -1617,7 +1617,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
         if (t->sprite_hash->contains(tags[k])) {
-          log_error("warning: already have a sprite for \"%s\".", tags[k]);
+          qCritical("warning: already have a sprite for \"%s\".", tags[k]);
         }
         t->sprite_hash->insert(tags[k], ss);
       }
@@ -1679,7 +1679,7 @@ static int check_sprite_type(const char *sprite_type,
   if (fc_strcasecmp(sprite_type, "whole") == 0) {
     return CELL_WHOLE;
   }
-  log_error("[%s] unknown sprite_type \"%s\".", tile_section, sprite_type);
+  qCritical("[%s] unknown sprite_type \"%s\".", tile_section, sprite_type);
   return CELL_WHOLE;
 }
 
@@ -1714,14 +1714,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   fname = tilespec_fullname(tileset_name);
   if (!fname) {
     if (verbose) {
-      log_error("Can't find tileset \"%s\".", tileset_name);
+      qCritical("Can't find tileset \"%s\".", tileset_name);
     }
     return NULL;
   }
   log_verbose("tilespec file is \"%s\".", fname);
 
   if (!(file = secfile_load(fname, TRUE))) {
-    log_error("Could not open '%s':\n%s", fname, secfile_error());
+    qCritical("Could not open '%s':\n%s", fname, secfile_error());
     delete[] fname;
     return NULL;
   }
@@ -1792,19 +1792,19 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   sz_strlcpy(t->name, tileset_name);
   if (!secfile_lookup_int(file, &t->priority, "tilespec.priority")
       || !secfile_lookup_bool(file, &is_hex, "tilespec.is_hex")) {
-    log_error("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     goto ON_ERROR;
   }
 
   tstr = secfile_lookup_str(file, "tilespec.type");
   if (tstr == NULL) {
-    log_error("Tileset \"%s\": no tileset type", t->name);
+    qCritical("Tileset \"%s\": no tileset type", t->name);
     goto ON_ERROR;
   }
 
   t->type = ts_type_by_name(tstr, fc_strcasecmp);
   if (!ts_type_is_valid(t->type)) {
-    log_error("Tileset \"%s\": unknown tileset type \"%s\"", t->name, tstr);
+    qCritical("Tileset \"%s\": unknown tileset type \"%s\"", t->name, tstr);
     goto ON_ERROR;
   }
 
@@ -1820,7 +1820,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     int hex_side;
 
     if (!secfile_lookup_int(file, &hex_side, "tilespec.hex_side")) {
-      log_error("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+      qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
       goto ON_ERROR;
     }
     hex_side = hex_side * t->scale;
@@ -1884,7 +1884,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                           "tilespec.normal_tile_width")
       || !secfile_lookup_int(file, &t->normal_tile_height,
                              "tilespec.normal_tile_height")) {
-    log_error("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     goto ON_ERROR;
   }
   t->normal_tile_width = ceil(t->scale * t->normal_tile_width);
@@ -1917,7 +1917,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                           "tilespec.small_tile_width")
       || !secfile_lookup_int(file, &t->small_sprite_height,
                              "tilespec.small_tile_height")) {
-    log_error("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     goto ON_ERROR;
   }
   if (t->unit_tile_width != t->full_tile_width && t->scale != 1.0f) {
@@ -1935,32 +1935,32 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   tstr = secfile_lookup_str(file, "tilespec.fog_style");
   if (tstr == NULL) {
-    log_error("Tileset \"%s\": no fog_style", t->name);
+    qCritical("Tileset \"%s\": no fog_style", t->name);
     goto ON_ERROR;
   }
 
   t->fogstyle = fog_style_by_name(tstr, fc_strcasecmp);
   if (!fog_style_is_valid(t->fogstyle)) {
-    log_error("Tileset \"%s\": unknown fog_style \"%s\"", t->name, tstr);
+    qCritical("Tileset \"%s\": unknown fog_style \"%s\"", t->name, tstr);
     goto ON_ERROR;
   }
 
   tstr = secfile_lookup_str(file, "tilespec.darkness_style");
   if (tstr == NULL) {
-    log_error("Tileset \"%s\": no darkness_style", t->name);
+    qCritical("Tileset \"%s\": no darkness_style", t->name);
     goto ON_ERROR;
   }
 
   t->darkness_style = darkness_style_by_name(tstr, fc_strcasecmp);
   if (!darkness_style_is_valid(t->darkness_style)) {
-    log_error("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
+    qCritical("Tileset \"%s\": unknown darkness_style \"%s\"", t->name,
               tstr);
     goto ON_ERROR;
   }
 
   if (t->darkness_style == DARKNESS_ISORECT
       && (t->type == TS_OVERHEAD || t->hex_width > 0 || t->hex_height > 0)) {
-    log_error("Invalid darkness style set in tileset \"%s\".", t->name);
+    qCritical("Invalid darkness style set in tileset \"%s\".", t->name);
     goto ON_ERROR;
   }
 
@@ -2000,7 +2000,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                              "tilespec.occupied_offset_x")
       || !secfile_lookup_int(file, &t->occupied_offset_y,
                              "tilespec.occupied_offset_y")) {
-    log_error("Tileset \"%s\" invalid: %s", t->name, secfile_error());
+    qCritical("Tileset \"%s\" invalid: %s", t->name, secfile_error());
     goto ON_ERROR;
   }
 
@@ -2072,13 +2072,13 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
       /* Check for wrong layer names. */
       if (!mapview_layer_is_valid(layer)) {
-        log_error("layer_order: Invalid layer \"%s\"", layer_order[i]);
+        qCritical("layer_order: Invalid layer \"%s\"", layer_order[i]);
         goto ON_ERROR;
       }
       /* Check for duplicates. */
       for (j = 0; j < i; j++) {
         if (t->layer_order[j] == layer) {
-          log_error("layer_order: Duplicate layer \"%s\"", layer_order[i]);
+          qCritical("layer_order: Duplicate layer \"%s\"", layer_order[i]);
           goto ON_ERROR;
         }
       }
@@ -2098,7 +2098,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
         }
       }
       if (!found) {
-        log_error("layer_order: Missing layer \"%s\"",
+        qCritical("layer_order: Missing layer \"%s\"",
                   mapview_layer_name(static_cast<mapview_layer>(i)));
         goto ON_ERROR;
       }
@@ -2201,7 +2201,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
           }
         }
         if (j >= tslp->match_count) {
-          log_error("[%s] invalid match_type \"%s\".", sec_name, match_type);
+          qCritical("[%s] invalid match_type \"%s\".", sec_name, match_type);
         } else {
           dlp->match_index[dlp->match_indices++] = j;
         }
@@ -2213,16 +2213,16 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
         int j, k;
 
         if (count > MAX_NUM_MATCH_WITH) {
-          log_error("[%s] match_with has too many types (%d, max %d)",
+          qCritical("[%s] match_with has too many types (%d, max %d)",
                     sec_name, (int) count, MAX_NUM_MATCH_WITH);
           count = MAX_NUM_MATCH_WITH;
         }
 
         if (1 < dlp->match_indices) {
-          log_error("[%s] previous match_with ignored.", sec_name);
+          qCritical("[%s] previous match_with ignored.", sec_name);
           dlp->match_indices = 1;
         } else if (1 > dlp->match_indices) {
-          log_error("[%s] missing match_type, using \"%s\".", sec_name,
+          qCritical("[%s] missing match_type, using \"%s\".", sec_name,
                     tslp->match_types[0]);
           dlp->match_index[0] = 0;
           dlp->match_indices = 1;
@@ -2235,14 +2235,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
             }
           }
           if (j >= tslp->match_count) {
-            log_error("[%s] layer%d_match_with: invalid  \"%s\".", sec_name,
+            qCritical("[%s] layer%d_match_with: invalid  \"%s\".", sec_name,
                       l, match_with[k]);
           } else if (1 < count) {
             int m;
 
             for (m = 0; m < dlp->match_indices; m++) {
               if (dlp->match_index[m] == j) {
-                log_error("[%s] layer%d_match_with: duplicate \"%s\".",
+                qCritical("[%s] layer%d_match_with: duplicate \"%s\".",
                           sec_name, l, match_with[k]);
                 break;
               }
@@ -2286,7 +2286,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
         break;
       case CELL_CORNER:
         if (dlp->is_tall || dlp->offset_x > 0 || dlp->offset_y > 0) {
-          log_error("[%s] layer %d: you cannot have tall terrain or\n"
+          qCritical("[%s] layer %d: you cannot have tall terrain or\n"
                     "a sprite offset with a cell-based drawing method.",
                     sec_name, l);
           dlp->is_tall = FALSE;
@@ -2299,7 +2299,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     bool hc = t->tile_hash->contains(draw->name);
     t->tile_hash->insert(draw->name, draw);
     if (hc) {
-      log_error(
+      qCritical(
           "warning: multiple tile sections containing terrain tag \"%s\".",
           draw->name);
       goto ON_ERROR;
@@ -2327,7 +2327,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
     if (t->estyle_hash->contains(extraname)) {
-      log_error("warning: duplicate extrastyle entry [%s].", extraname);
+      qCritical("warning: duplicate extrastyle entry [%s].", extraname);
       goto ON_ERROR;
     }
     t->estyle_hash->insert(extraname, style);
@@ -2336,7 +2336,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   spec_filenames =
       secfile_lookup_str_vec(file, &num_spec_files, "tilespec.files");
   if (NULL == spec_filenames || 0 == num_spec_files) {
-    log_error("No tile graphics files specified in \"%s\"", fname);
+    qCritical("No tile graphics files specified in \"%s\"", fname);
     goto ON_ERROR;
   }
 
@@ -2352,7 +2352,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     dname = fileinfoname(get_data_dirs(), spec_filenames[i]);
     if (!dname) {
       if (verbose) {
-        log_error("Can't find spec file \"%s\".", spec_filenames[i]);
+        qCritical("Can't find spec file \"%s\".", spec_filenames[i]);
       }
       delete sf;
       goto ON_ERROR;
@@ -2419,7 +2419,7 @@ static const char *citizen_rule_name(enum citizen_category citizen)
   default:
     break;
   }
-  log_error("Unknown citizen type: %d.", (int) citizen);
+  qCritical("Unknown citizen type: %d.", (int) citizen);
   return NULL;
 }
 
@@ -3293,7 +3293,7 @@ static bool load_river_sprites(struct tileset *t,
                 dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
     store->outlet[i] = load_sprite(t, buffer, TRUE, TRUE);
     if (store->outlet[i] == NULL) {
-      log_error("Missing \"%s\" for \"%s\".", buffer, tag_pfx);
+      qCritical("Missing \"%s\" for \"%s\".", buffer, tag_pfx);
       return FALSE;
     }
   }
@@ -3973,7 +3973,7 @@ void tileset_setup_tile_type(struct tileset *t,
             sprite_vector_reserve(&dlp->allocated, vec_size + 1);
             dlp->allocated.p[vec_size] = sprite;
           } else {
-            log_error("Terrain graphics sprite for tag \"%s\" missing.",
+            qCritical("Terrain graphics sprite for tag \"%s\" missing.",
                       buffer);
           }
 
@@ -4140,7 +4140,7 @@ static void build_tile_data(const struct tile *ptile,
         textras_near[dir] = *tile_extras(tile1);
         continue;
       }
-      log_error("build_tile_data() tile (%d,%d) has no terrain!",
+      qCritical("build_tile_data() tile (%d,%d) has no terrain!",
                 TILE_XY(tile1));
     }
     /* At the edges of the (known) map, pretend the same terrain continued
@@ -5470,7 +5470,7 @@ int fill_sprite_array(struct tileset *t, struct drawn_sprite *sprs,
         build_tile_data(ptile, pterrain, tterrain_near, textras_near);
       }
     } else {
-      log_error("fill_sprite_array() tile (%d,%d) has no terrain!",
+      qCritical("fill_sprite_array() tile (%d,%d) has no terrain!",
                 TILE_XY(ptile));
     }
   } else {

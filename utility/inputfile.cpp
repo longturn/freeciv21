@@ -260,12 +260,12 @@ static void inf_close_partial(struct inputfile *inf)
   log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
   if (fz_ferror(inf->fp) != 0) {
-    log_error("Error before closing %s: %s", inf_filename(inf),
+    qCritical("Error before closing %s: %s", inf_filename(inf),
               fz_strerror(inf->fp));
     fz_fclose(inf->fp);
     inf->fp = NULL;
   } else if (fz_fclose(inf->fp) != 0) {
-    log_error("Error closing %s", inf_filename(inf));
+    qCritical("Error closing %s", inf_filename(inf));
   }
   if (inf->filename) {
     delete[] inf->filename;
@@ -405,7 +405,7 @@ static bool check_include(struct inputfile *inf)
 
   full_name = inf->datafn(bare_name);
   if (!full_name) {
-    log_error("Could not find included file \"%s\"", bare_name);
+    qCritical("Could not find included file \"%s\"", bare_name);
     free(bare_name);
     return FALSE;
   }
@@ -417,7 +417,7 @@ static bool check_include(struct inputfile *inf)
     struct inputfile *inc = inf;
     do {
       if (inc->filename && strcmp(full_name, inc->filename) == 0) {
-        log_error("Recursion trap on '*include' for \"%s\"", full_name);
+        qCritical("Recursion trap on '*include' for \"%s\"", full_name);
         return FALSE;
       }
     } while ((inc = inc->included_from));
@@ -590,7 +590,7 @@ const char *inf_token(struct inputfile *inf, enum inf_token_type type)
   func = tok_tab[type].func;
 
   if (!func) {
-    log_error("token type %d (%s) not supported yet", type, name);
+    qCritical("token type %d (%s) not supported yet", type, name);
     c = NULL;
   } else {
     while (!have_line(inf) && read_a_line(inf)) {

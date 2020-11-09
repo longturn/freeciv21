@@ -167,14 +167,14 @@ int main(int argc, char **argv)
     if (!comments_load()) {
       /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
        * freeciv version */
-      log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
+      qCritical(R__("Failed to load %s."), COMMENTS_FILE_NAME);
     }
 
     save_ruleset(qPrintable(tgt_dir), game.control.name, &data);
     log_normal("Saved %s", qPrintable(tgt_dir));
     comments_free();
   } else {
-    log_error(_("Can't load ruleset %s"), qPrintable(rs_selected));
+    qCritical(_("Can't load ruleset %s"), qPrintable(rs_selected));
   }
 
   log_close();

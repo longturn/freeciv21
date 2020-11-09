@@ -1242,7 +1242,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
   acity = tile_city(ptile);
 
   if (myunit->id != 0) {
-    log_error("%s(): non-virtual unit!", __FUNCTION__);
+    qCritical("%s(): non-virtual unit!", __FUNCTION__);
     goto cleanup;
   }
 

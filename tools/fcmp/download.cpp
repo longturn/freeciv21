@@ -129,9 +129,9 @@ static const char *download_modpack_recursive(const char *URL,
   }
 
   if (!has_capabilities(MODPACK_CAPSTR, control_capstr)) {
-    log_error("Incompatible control file:");
-    log_error("  control file options: %s", control_capstr);
-    log_error("  supported options:    %s", MODPACK_CAPSTR);
+    qCritical("Incompatible control file:");
+    qCritical("  control file options: %s", control_capstr);
+    qCritical("  supported options:    %s", MODPACK_CAPSTR);
 
     secfile_destroy(control);
 
@@ -406,9 +406,9 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
   }
 
   if (!has_capabilities(MODLIST_CAPSTR, list_capstr)) {
-    log_error("Incompatible modpack list file:");
-    log_error("  list file options: %s", list_capstr);
-    log_error("  supported options: %s", MODLIST_CAPSTR);
+    qCritical("Incompatible modpack list file:");
+    qCritical("  list file options: %s", list_capstr);
+    qCritical("  supported options: %s", MODLIST_CAPSTR);
 
     secfile_destroy(list_file);
 
@@ -450,7 +450,7 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
           modpack_type_by_name(mp_type_str, fc_strcasecmp);
 
       if (!modpack_type_is_valid(type)) {
-        log_error("Illegal modpack type \"%s\"",
+        qCritical("Illegal modpack type \"%s\"",
                   mp_type_str ? mp_type_str : "NULL");
       }
       if (mpver == NULL) {

@@ -84,7 +84,7 @@ static void close_connection(struct connection *pconn)
   }
 
   if (pconn->server.ping_timers != NULL) {
-    while(!pconn->server.ping_timers->isEmpty()) {
+    while (!pconn->server.ping_timers->isEmpty()) {
       timer_destroy(pconn->server.ping_timers->takeFirst());
     }
     delete pconn->server.ping_timers;
@@ -339,7 +339,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       pconn->server.auth_tries = 0;
       pconn->server.auth_settime = 0;
       pconn->server.status = AS_NOT_ESTABLISHED;
-      pconn->server.ping_timers = new QList<civtimer*>;
+      pconn->server.ping_timers = new QList<civtimer *>;
       pconn->server.granted_access_level = pconn->access_level;
       pconn->server.ignore_list =
           conn_pattern_list_new_full(conn_pattern_destroy);
@@ -368,7 +368,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
   }
 
   // Should not happen as per the check earlier in server_attempt_connection
-  log_error("maximum number of connections reached");
+  qCritical("maximum number of connections reached");
   new_sock->deleteLater();
   return -1;
 }
@@ -391,9 +391,9 @@ QTcpServer *server_open_socket()
 
     // TRANS: %1 is a port number, %2 is the error message
     qFatal("%s", qPrintable(QString::fromUtf8(
-                                   _("Server: cannot listen on port %1: %2"))
-                                   .arg(srvarg.port)
-                                   .arg(server->errorString())));
+                                _("Server: cannot listen on port %1: %2"))
+                                .arg(srvarg.port)
+                                .arg(server->errorString())));
 
     return server;
   }
@@ -418,13 +418,13 @@ QTcpServer *server_open_socket()
 
   if (!udp_socket->bind(address_type, SERVER_LAN_PORT,
                         QAbstractSocket::ReuseAddressHint)) {
-    log_error("SO_REUSEADDR failed: %s",
+    qCritical("SO_REUSEADDR failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
     return server;
   }
   auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
-    log_error("Announcement socket binding failed: %s",
+    qCritical("Announcement socket binding failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
   }
 
@@ -505,7 +505,7 @@ void handle_conn_pong(struct connection *pconn)
   civtimer *timer;
 
   if (pconn->server.ping_timers->size() == 0) {
-    log_error("got unexpected pong from %s", conn_description(pconn));
+    qCritical("got unexpected pong from %s", conn_description(pconn));
     return;
   }
 

@@ -412,7 +412,7 @@ void handle_unit_remove(int unit_id)
   bool need_economy_report_update;
 
   if (!punit) {
-    log_error("Server wants us to remove unit id %d, "
+    qCritical("Server wants us to remove unit id %d, "
               "but we don't know about this unit!",
               unit_id);
     return;
@@ -587,7 +587,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   if (!universals_n_is_valid(
           static_cast<universals_n>(packet->production_kind))) {
-    log_error("handle_city_info() bad production_kind %d.",
+    qCritical("handle_city_info() bad production_kind %d.",
               packet->production_kind);
     product.kind = VUT_NONE;
   } else {
@@ -595,7 +595,7 @@ void handle_city_info(const struct packet_city_info *packet)
         static_cast<universals_n>(packet->production_kind),
         packet->production_value);
     if (!universals_n_is_valid(product.kind)) {
-      log_error("handle_city_info() "
+      qCritical("handle_city_info() "
                 "production_kind %d with bad production_value %d.",
                 packet->production_kind, packet->production_value);
       product.kind = VUT_NONE;
@@ -641,11 +641,11 @@ void handle_city_info(const struct packet_city_info *packet)
     idex_register_city(&wld, pcity);
     update_descriptions = TRUE;
   } else if (pcity->id != packet->id) {
-    log_error("handle_city_info() city id %d != id %d.", pcity->id,
+    qCritical("handle_city_info() city id %d != id %d.", pcity->id,
               packet->id);
     return;
   } else if (ptile != pcenter) {
-    log_error("handle_city_info() city tile (%d, %d) != (%d, %d).",
+    qCritical("handle_city_info() city tile (%d, %d) != (%d, %d).",
               TILE_XY(ptile), TILE_XY(pcenter));
     return;
   } else {
@@ -698,7 +698,7 @@ void handle_city_info(const struct packet_city_info *packet)
   specialist_type_iterate_end;
 
   if (city_size_get(pcity) != packet->size) {
-    log_error("handle_city_info() "
+    qCritical("handle_city_info() "
               "%d citizens not equal %d city size in \"%s\".",
               city_size_get(pcity), packet->size, city_name_get(pcity));
     city_size_set(pcity, packet->size);
@@ -788,7 +788,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   if (!universals_n_is_valid(
           static_cast<universals_n>(packet->changed_from_kind))) {
-    log_error("handle_city_info() bad changed_from_kind %d.",
+    qCritical("handle_city_info() bad changed_from_kind %d.",
               packet->changed_from_kind);
     product.kind = VUT_NONE;
   } else {
@@ -796,7 +796,7 @@ void handle_city_info(const struct packet_city_info *packet)
         static_cast<universals_n>(packet->changed_from_kind),
         packet->changed_from_value);
     if (!universals_n_is_valid(product.kind)) {
-      log_error("handle_city_info() bad changed_from_value %d.",
+      qCritical("handle_city_info() bad changed_from_value %d.",
                 packet->changed_from_value);
       product.kind = VUT_NONE;
     }
@@ -1131,11 +1131,11 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
     city_map_radius_sq_set(pcity, radius_sq);
     idex_register_city(&wld, pcity);
   } else if (pcity->id != packet->id) {
-    log_error("handle_city_short_info() city id %d != id %d.", pcity->id,
+    qCritical("handle_city_short_info() city id %d != id %d.", pcity->id,
               packet->id);
     return;
   } else if (city_tile(pcity) != pcenter) {
-    log_error("handle_city_short_info() city tile (%d, %d) != (%d, %d).",
+    qCritical("handle_city_short_info() city tile (%d, %d) != (%d, %d).",
               TILE_XY(city_tile(pcity)), TILE_XY(pcenter));
     return;
   } else {
@@ -1331,7 +1331,7 @@ void handle_start_phase(int phase)
           && phase >= player_count())
       || (game.info.phase_mode == PMT_TEAMS_ALTERNATE
           && phase >= team_count())) {
-    log_error("handle_start_phase() illegal phase %d.", phase);
+    qCritical("handle_start_phase() illegal phase %d.", phase);
     return;
   }
 
@@ -1978,7 +1978,7 @@ void handle_unit_short_info(const struct packet_unit_short_info *packet)
 
     pcity = game_city_by_number(packet->info_city_id);
     if (!pcity) {
-      log_error("Investigate city: unknown city id %d!",
+      qCritical("Investigate city: unknown city id %d!",
                 packet->info_city_id);
       return;
     }
@@ -2013,7 +2013,7 @@ void handle_unit_short_info(const struct packet_unit_short_info *packet)
   }
 
   if (player_by_number(packet->owner) == client.conn.playing) {
-    log_error("handle_unit_short_info() for own unit.");
+    qCritical("handle_unit_short_info() for own unit.");
   }
 
   punit = unpackage_short_unit(packet);
@@ -2118,7 +2118,7 @@ void handle_game_info(const struct packet_game_info *pinfo)
   /* check the values! */
 #define VALIDATE(_count, _maximum, _string)                                 \
   if (game.info._count > _maximum) {                                        \
-    log_error("handle_game_info(): Too many " _string "; using %d of %d",   \
+    qCritical("handle_game_info(): Too many " _string "; using %d of %d",   \
               _maximum, game.info._count);                                  \
     game.info._count = _maximum;                                            \
   }
@@ -2809,7 +2809,7 @@ void handle_achievement_info(int id, bool gained, bool first)
   struct achievement *pach;
 
   if (id < 0 || id >= game.control.num_achievement_types) {
-    log_error("Received illegal achievement info %d", id);
+    qCritical("Received illegal achievement info %d", id);
     return;
   }
 
@@ -2936,7 +2936,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
         tile_set_terrain(ptile, pterrain);
       } else {
         tile_changed = FALSE;
-        log_error("handle_tile_info() unknown terrain (%d, %d).",
+        qCritical("handle_tile_info() unknown terrain (%d, %d).",
                   TILE_XY(ptile));
       }
       break;
@@ -3077,7 +3077,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
     case TILE_UNKNOWN:
       break;
     default:
-      log_error("handle_tile_info() invalid known (%d).", packet->known);
+      qCritical("handle_tile_info() invalid known (%d).", packet->known);
       break;
     };
   }
@@ -3105,7 +3105,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
      * then make an assertion. */
     unit_list_iterate(ptile->units, punit)
     {
-      log_error("%p %d %s at (%d,%d) %s", punit, punit->id,
+      qCritical("%p %d %s at (%d,%d) %s", punit, punit->id,
                 unit_rule_name(punit), TILE_XY(unit_tile(punit)),
                 player_name(unit_owner(punit)));
     }
@@ -3217,7 +3217,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
   /* check the values! */
 #define VALIDATE(_count, _maximum, _string)                                 \
   if (game.control._count > _maximum) {                                     \
-    log_error("handle_ruleset_control(): Too many " _string                 \
+    qCritical("handle_ruleset_control(): Too many " _string                 \
               "; using %d of %d",                                           \
               _maximum, game.control._count);                               \
     game.control._count = _maximum;                                         \
@@ -3850,7 +3850,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   for (j = 0; j < p->num_resources; j++) {
     pterrain->resources[j] = extra_by_number(p->resources[j]);
     if (!pterrain->resources[j]) {
-      log_error("handle_ruleset_terrain() "
+      qCritical("handle_ruleset_terrain() "
                 "Mismatched resource %d for terrain \"%s\".",
                 p->resources[j], terrain_rule_name(pterrain));
     }
@@ -3930,7 +3930,7 @@ void handle_ruleset_resource(const struct packet_ruleset_resource *p)
   struct resource_type *presource;
 
   if (p->id < 0 || p->id > MAX_EXTRA_TYPES) {
-    log_error("Bad resource %d.", p->id);
+    qCritical("Bad resource %d.", p->id);
     return;
   }
 
@@ -4187,7 +4187,7 @@ void handle_ruleset_action(const struct packet_ruleset_action *p)
 
   if (!action_id_exists(p->id)) {
     /* Action id out of range */
-    log_error("handle_ruleset_action() the action id %d is out of range.",
+    qCritical("handle_ruleset_action() the action id %d is out of range.",
               p->id);
 
     return;
@@ -4221,7 +4221,7 @@ void handle_ruleset_action_enabler(
 
   if (!action_id_exists(p->enabled_action)) {
     /* Non existing action */
-    log_error("handle_ruleset_action_enabler() the action %d "
+    qCritical("handle_ruleset_action_enabler() the action %d "
               "doesn't exist.",
               p->enabled_action);
 
@@ -4416,7 +4416,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
     if (NULL != pset) {
       nation_set_list_append(pnation->sets, pset);
     } else {
-      log_error("handle_ruleset_nation() \"%s\" have unknown set %d.",
+      qCritical("handle_ruleset_nation() \"%s\" have unknown set %d.",
                 nation_rule_name(pnation), packet->sets[i]);
     }
   }
@@ -4427,7 +4427,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
     if (NULL != pgroup) {
       nation_group_list_append(pnation->groups, pgroup);
     } else {
-      log_error("handle_ruleset_nation() \"%s\" have unknown group %d.",
+      qCritical("handle_ruleset_nation() \"%s\" have unknown group %d.",
                 nation_rule_name(pnation), packet->groups[i]);
     }
   }
@@ -4686,7 +4686,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
 
   if (ACTION_NONE != action_type && !action_id_exists(action_type)) {
     /* Non existing action */
-    log_error("handle_unit_action_answer() the action %d doesn't exist.",
+    qCritical("handle_unit_action_answer() the action %d doesn't exist.",
               action_type);
 
     if (disturb_player) {
@@ -4719,7 +4719,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
         popup_bribe_dialog(pactor, punit, cost, paction);
       } else {
         /* Not in use (yet). */
-        log_error("Unimplemented: received background unit bribe cost.");
+        qCritical("Unimplemented: received background unit bribe cost.");
       }
     } else {
       log_debug("Bad target %d.", target_id);
@@ -4740,7 +4740,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
         popup_incite_dialog(pactor, pcity, cost, paction);
       } else {
         /* Not in use (yet). */
-        log_error("Unimplemented: received background city incite cost.");
+        qCritical("Unimplemented: received background city incite cost.");
       }
     } else {
       log_debug("Bad target %d.", target_id);
@@ -4760,7 +4760,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
 
       /* Getting unit upgrade cost from the server is currently only used by
        * Freeciv-web.  */
-      log_error("Received upgrade unit price but can't forward it.");
+      qCritical("Received upgrade unit price but can't forward it.");
     }
     break;
   case ACTION_NONE:
@@ -4772,7 +4772,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
     }
     break;
   default:
-    log_error("handle_unit_action_answer() invalid action_type (%d).",
+    qCritical("handle_unit_action_answer() invalid action_type (%d).",
               action_type);
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
@@ -5059,7 +5059,7 @@ void handle_city_sabotage_list(int actor_id, int city_id,
       popup_sabotage_dialog(pactor, pcity, paction);
     } else {
       /* Not in use (yet). */
-      log_error("Unimplemented: received background city building list.");
+      qCritical("Unimplemented: received background city building list.");
     }
   } else {
     log_debug("Can't issue orders");
@@ -5235,7 +5235,7 @@ void handle_edit_startpos(const struct packet_edit_startpos *packet)
 
   /* Check. */
   if (NULL == ptile) {
-    log_error("%s(): invalid tile index %d.", __FUNCTION__, packet->id);
+    qCritical("%s(): invalid tile index %d.", __FUNCTION__, packet->id);
     return;
   }
 
@@ -5273,13 +5273,13 @@ void handle_edit_startpos_full(
 
   /* Check. */
   if (NULL == ptile) {
-    log_error("%s(): invalid tile index %d.", __FUNCTION__, packet->id);
+    qCritical("%s(): invalid tile index %d.", __FUNCTION__, packet->id);
     return;
   }
 
   psp = map_startpos_get(ptile);
   if (NULL == psp) {
-    log_error("%s(): no start position at (%d, %d)", __FUNCTION__,
+    qCritical("%s(): no start position at (%d, %d)", __FUNCTION__,
               TILE_XY(ptile));
     return;
   }

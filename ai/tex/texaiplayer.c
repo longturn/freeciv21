@@ -242,7 +242,7 @@ static enum texai_abort_msg_class texai_check_messages(struct ai_type *ait)
       texai_map_free_recv();
       break;
     default:
-      log_error("Illegal message type %s (%d) for threaded ai!",
+      qCritical("Illegal message type %s (%d) for threaded ai!",
                 texaimsgtype_name(msg->type), msg->type);
       break;
     }

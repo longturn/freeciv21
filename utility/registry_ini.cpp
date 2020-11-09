@@ -1253,7 +1253,7 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
   }
 
   if (psection->special != stype) {
-    log_error("Tried to insert wrong type of entry to section");
+    qCritical("Tried to insert wrong type of entry to section");
     return NULL;
   }
 
@@ -1351,7 +1351,7 @@ struct entry *secfile_insert_filereference(struct section_file *secfile,
   }
 
   if (psection->special != EST_NORMAL) {
-    log_error("Tried to insert normal entry to different kind of section");
+    qCritical("Tried to insert normal entry to different kind of section");
     return NULL;
   }
 
@@ -3491,6 +3491,6 @@ static void entry_from_inf_token(struct section *psection, const char *name,
                                  const char *tok, struct inputfile *inf)
 {
   if (!entry_from_token(psection, name, tok)) {
-    log_error("%s", inf_log_str(inf, "Entry value not recognized: %s", tok));
+    qCritical("%s", inf_log_str(inf, "Entry value not recognized: %s", tok));
   }
 }

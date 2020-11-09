@@ -177,7 +177,7 @@ static bool apply_result_on_server(struct city *pcity,
 
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
-    log_error("apply_result_on_server(city %d=\"%s\") bad result!",
+    qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
               pcity->id, city_name_get(pcity));
     cm_print_city(pcity);
     cm_print_result(result);
@@ -301,7 +301,7 @@ static bool apply_result_on_server(struct city *pcity,
     cm_clear_cache(pcity);
 
 #if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
-    log_error("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
+    qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
               city_name_get(pcity));
 
     log_test("apply_result_on_server(city %d=\"%s\") have:", pcity->id,

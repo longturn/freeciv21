@@ -1321,7 +1321,7 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 
 #ifdef PF_DEBUG
   if (NULL != node1->danger_segment) {
-    log_error("Possible memory leak in pf_danger_map_create_segment().");
+    qCritical("Possible memory leak in pf_danger_map_create_segment().");
   }
 #endif /* PF_DEBUG */
 
@@ -1680,7 +1680,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
     scope = pf_move_scope(node->move_scope);
   }
 
-  log_error("%s(): internal error.", __FUNCTION__);
+  qCritical("%s(): internal error.", __FUNCTION__);
   return FALSE;
 }
 
@@ -2855,7 +2855,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
     scope = pf_move_scope(node->move_scope);
   }
 
-  log_error("%s(): internal error.", __FUNCTION__);
+  qCritical("%s(): internal error.", __FUNCTION__);
   return FALSE;
 }
 
@@ -3053,16 +3053,16 @@ struct pf_map *pf_map_new(const struct pf_parameter *parameter)
 {
   if (parameter->is_pos_dangerous) {
     if (parameter->get_moves_left_req) {
-      log_error("path finding code cannot deal with dangers "
+      qCritical("path finding code cannot deal with dangers "
                 "and fuel together.");
     }
     if (parameter->get_costs) {
-      log_error("jumbo callbacks for danger maps are not yet implemented.");
+      qCritical("jumbo callbacks for danger maps are not yet implemented.");
     }
     return pf_danger_map_new(parameter);
   } else if (parameter->get_moves_left_req) {
     if (parameter->get_costs) {
-      log_error("jumbo callbacks for fuel maps are not yet implemented.");
+      qCritical("jumbo callbacks for fuel maps are not yet implemented.");
     }
     return pf_fuel_map_new(parameter);
   }

@@ -808,7 +808,7 @@ static const char *value_units(int val, const char *uni)
   static char buf[64];
 
   if (fc_snprintf(buf, sizeof(buf), "%s%s", int_to_text(val), uni) == -1) {
-    log_error("String truncated in value_units()!");
+    qCritical("String truncated in value_units()!");
   }
 
   return buf;
@@ -1155,34 +1155,34 @@ static bool scan_score_log(char *id)
       if (feof(score_log->fp) != 0) {
         break;
       }
-      log_error("[%s:-] Can't read scorelog file header!",
+      qCritical("[%s:-] Can't read scorelog file header!",
                 game.server.scorefile);
       return FALSE;
     }
 
     ptr = strchr(line, '\n');
     if (!ptr) {
-      log_error("[%s:%d] Line too long!", game.server.scorefile, line_nr);
+      qCritical("[%s:%d] Line too long!", game.server.scorefile, line_nr);
       return FALSE;
     }
     *ptr = '\0';
 
     if (line_nr == 1) {
       if (strncmp(line, scorelog_magic, strlen(scorelog_magic)) != 0) {
-        log_error("[%s:%d] Bad file magic!", game.server.scorefile, line_nr);
+        qCritical("[%s:%d] Bad file magic!", game.server.scorefile, line_nr);
         return FALSE;
       }
     }
 
     if (strncmp(line, "id ", strlen("id ")) == 0) {
       if (strlen(id) > 0) {
-        log_error("[%s:%d] Multiple ID entries!", game.server.scorefile,
+        qCritical("[%s:%d] Multiple ID entries!", game.server.scorefile,
                   line_nr);
         return FALSE;
       }
       fc_strlcpy(id, line + strlen("id "), MAX_LEN_GAME_IDENTIFIER);
       if (strcmp(id, server.game_identifier) != 0) {
-        log_error("[%s:%d] IDs don't match! game='%s' scorelog='%s'",
+        qCritical("[%s:%d] IDs don't match! game='%s' scorelog='%s'",
                   game.server.scorefile, line_nr, server.game_identifier,
                   id);
         return FALSE;
@@ -1191,7 +1191,7 @@ static bool scan_score_log(char *id)
 
     if (strncmp(line, "turn ", strlen("turn ")) == 0) {
       if (sscanf(line + strlen("turn "), "%d", &turn) != 1) {
-        log_error("[%s:%d] Bad line (turn)!", game.server.scorefile,
+        qCritical("[%s:%d] Bad line (turn)!", game.server.scorefile,
                   line_nr);
         return FALSE;
       }
@@ -1204,7 +1204,7 @@ static bool scan_score_log(char *id)
       if (3
           != sscanf(line + strlen("addplayer "), "%d %d %s", &turn, &plr_no,
                     plr_name)) {
-        log_error("[%s:%d] Bad line (addplayer)!", game.server.scorefile,
+        qCritical("[%s:%d] Bad line (addplayer)!", game.server.scorefile,
                   line_nr);
         return FALSE;
       }
@@ -1223,14 +1223,14 @@ static bool scan_score_log(char *id)
                 line);
 
       if (0 > plr_no || plr_no >= player_slot_count()) {
-        log_error("[%s:%d] Invalid player number: %d!",
+        qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
         return FALSE;
       }
 
       plrdata = score_log->plrdata + plr_no;
       if (plrdata->name != NULL) {
-        log_error("[%s:%d] Two names for one player (id %d)!",
+        qCritical("[%s:%d] Two names for one player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
         return FALSE;
       }
@@ -1241,20 +1241,20 @@ static bool scan_score_log(char *id)
     if (strncmp(line, "delplayer ", strlen("delplayer ")) == 0) {
       if (2
           != sscanf(line + strlen("delplayer "), "%d %d", &turn, &plr_no)) {
-        log_error("[%s:%d] Bad line (delplayer)!", game.server.scorefile,
+        qCritical("[%s:%d] Bad line (delplayer)!", game.server.scorefile,
                   line_nr);
         return FALSE;
       }
 
       if (!(plr_no >= 0 && plr_no < player_slot_count())) {
-        log_error("[%s:%d] Invalid player number: %d!",
+        qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
         return FALSE;
       }
 
       plrdata = score_log->plrdata + plr_no;
       if (plrdata->name == NULL) {
-        log_error("[%s:%d] Trying to remove undefined player (id %d)!",
+        qCritical("[%s:%d] Trying to remove undefined player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
         return FALSE;
       }
@@ -1264,17 +1264,17 @@ static bool scan_score_log(char *id)
   }
 
   if (score_log->last_turn == -1) {
-    log_error("[%s:-] Scorelog contains no turn!", game.server.scorefile);
+    qCritical("[%s:-] Scorelog contains no turn!", game.server.scorefile);
     return FALSE;
   }
 
   if (strlen(id) == 0) {
-    log_error("[%s:-] Scorelog contains no ID!", game.server.scorefile);
+    qCritical("[%s:-] Scorelog contains no ID!", game.server.scorefile);
     return FALSE;
   }
 
   if (score_log->last_turn + 1 != game.info.turn) {
-    log_error("[%s:-] Scorelog doesn't match savegame!",
+    qCritical("[%s:-] Scorelog doesn't match savegame!",
               game.server.scorefile);
     return FALSE;
   }
@@ -1420,7 +1420,7 @@ void log_civ_score_now(void)
     case SL_CREATE:
       score_log->fp = fc_fopen(game.server.scorefile, "w");
       if (!score_log->fp) {
-        log_error("Can't open scorelog file '%s' for creation!",
+        qCritical("Can't open scorelog file '%s' for creation!",
                   game.server.scorefile);
         goto log_civ_score_disable;
       }
@@ -1441,13 +1441,13 @@ void log_civ_score_now(void)
     case SL_APPEND:
       score_log->fp = fc_fopen(game.server.scorefile, "a");
       if (!score_log->fp) {
-        log_error("Can't open scorelog file '%s' for appending!",
+        qCritical("Can't open scorelog file '%s' for appending!",
                   game.server.scorefile);
         goto log_civ_score_disable;
       }
       break;
     default:
-      log_error("[%s] bad operation %d", __FUNCTION__, (int) oper);
+      qCritical("[%s] bad operation %d", __FUNCTION__, (int) oper);
       goto log_civ_score_disable;
     }
   }

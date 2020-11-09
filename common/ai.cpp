@@ -297,7 +297,7 @@ struct ai_type *ai_type_by_name(const char *search)
 struct ai_type *ai_type_alloc(void)
 {
   if (ai_type_count >= FREECIV_AI_MOD_LAST) {
-    log_error(_("Too many AI modules. Max is %d."), FREECIV_AI_MOD_LAST);
+    qCritical(_("Too many AI modules. Max is %d."), FREECIV_AI_MOD_LAST);
 
     return NULL;
   }

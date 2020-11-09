@@ -965,7 +965,7 @@ struct requirement req_from_str(const char *type, const char *range,
   }
 
   if (invalid) {
-    log_error("Invalid requirement %s | %s | %s | %s | %s: %s", type, range,
+    qCritical("Invalid requirement %s | %s | %s | %s | %s: %s", type, range,
               survives ? "survives" : "", present ? "present" : "", value,
               error);
     req.source.kind = universals_n_invalid();
@@ -1246,7 +1246,7 @@ static int num_world_buildings_total(const struct impr_type *building)
                 ? 1
                 : 0);
   } else {
-    log_error("World-ranged requirements are only supported for wonders.");
+    qCritical("World-ranged requirements are only supported for wonders.");
     return 0;
   }
 }
@@ -1259,7 +1259,7 @@ static int num_world_buildings(const struct impr_type *building)
   if (is_great_wonder(building)) {
     return (great_wonder_is_built(building) ? 1 : 0);
   } else {
-    log_error("World-ranged requirements are only supported for wonders.");
+    qCritical("World-ranged requirements are only supported for wonders.");
     return 0;
   }
 }
@@ -1284,7 +1284,7 @@ static bool player_has_ever_built(const struct player *pplayer,
                 ? TRUE
                 : FALSE);
   } else {
-    log_error("Player-ranged requirements are only supported for wonders.");
+    qCritical("Player-ranged requirements are only supported for wonders.");
     return FALSE;
   }
 }
@@ -1298,7 +1298,7 @@ static int num_player_buildings(const struct player *pplayer,
   if (is_wonder(building)) {
     return (wonder_is_built(pplayer, building) ? 1 : 0);
   } else {
-    log_error("Player-ranged requirements are only supported for wonders.");
+    qCritical("Player-ranged requirements are only supported for wonders.");
     return 0;
   }
 }
@@ -1318,7 +1318,7 @@ static int num_continent_buildings(const struct player *pplayer,
       return 1;
     }
   } else {
-    log_error("Island-ranged requirements are only supported for wonders.");
+    qCritical("Island-ranged requirements are only supported for wonders.");
   }
   return 0;
 }
@@ -1390,7 +1390,7 @@ static enum fc_tristate is_building_in_range(
     case REQ_RANGE_CADJACENT:
     case REQ_RANGE_ADJACENT:
       /* There is no sources cache for this. */
-      log_error("Surviving requirements are only supported at "
+      qCritical("Surviving requirements are only supported at "
                 "World/Alliance/Team/Player ranges.");
       return TRI_NO;
     case REQ_RANGE_COUNT:
@@ -2878,7 +2878,7 @@ static enum fc_tristate is_citytile_in_range(const struct tile *target_tile,
       return TRI_MAYBE;
     } else {
       /* Not implemented */
-      log_error("is_req_active(): citytile %d not supported.", citytile);
+      qCritical("is_req_active(): citytile %d not supported.", citytile);
       return TRI_MAYBE;
     }
   } else {
@@ -2929,7 +2929,7 @@ is_citystatus_in_range(const struct city *target_city, enum req_range range,
     return TRI_MAYBE;
   } else {
     /* Not implemented */
-    log_error("is_req_active(): citystatus %d not supported.", citystatus);
+    qCritical("is_req_active(): citystatus %d not supported.", citystatus);
     return TRI_MAYBE;
   }
 }
@@ -3326,7 +3326,7 @@ bool is_req_active(
     }
     break;
   case VUT_COUNT:
-    log_error("is_req_active(): invalid source kind %d.", req->source.kind);
+    qCritical("is_req_active(): invalid source kind %d.", req->source.kind);
     return FALSE;
   }
 
@@ -4437,7 +4437,7 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
     return TRUE;
   }
 
-  log_error("Unhandled item_found value");
+  qCritical("Unhandled item_found value");
   return FALSE;
 }
 

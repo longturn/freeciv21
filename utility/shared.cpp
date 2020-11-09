@@ -615,7 +615,7 @@ char *user_home_dir(void)
       home_dir_user = fc_strdup(env);
       log_verbose("HOME is %s", home_dir_user);
     } else {
-      log_error("Could not find home directory (HOME is not set).");
+      qCritical("Could not find home directory (HOME is not set).");
       home_dir_user = NULL;
     }
   }
@@ -762,7 +762,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
   i = strlen(tok);
   if (tok[0] == '~') {
     if (i > 1 && tok[1] != DIR_SEPARATOR_CHAR) {
-      log_error("For \"%s\" in path cannot expand '~'"
+      qCritical("For \"%s\" in path cannot expand '~'"
                 " except as '~" DIR_SEPARATOR "'; ignoring",
                 tok);
       i = 0; /* skip this one */
@@ -865,7 +865,7 @@ const struct strvec *get_data_dirs(void)
 
     if ((path = getenv(FREECIV_DATA_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_DATA_PATH> configuration error */
-      log_error(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
                   "data directories instead."),
                 FREECIV_DATA_PATH, DEFAULT_DATA_PATH);
       path = NULL;
@@ -904,7 +904,7 @@ const struct strvec *get_save_dirs(void)
 
     if ((path = getenv(FREECIV_SAVE_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_SAVE_PATH> configuration error */
-      log_error(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
                   "save directories instead."),
                 FREECIV_SAVE_PATH, DEFAULT_SAVE_PATH);
       path = NULL;
@@ -944,7 +944,7 @@ const struct strvec *get_scenario_dirs(void)
 
     if ((path = getenv(FREECIV_SCENARIO_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_SCENARIO_PATH> configuration error */
-      log_error(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
                   "scenario directories instead."),
                 FREECIV_SCENARIO_PATH, DEFAULT_SCENARIO_PATH);
       path = NULL;
@@ -2089,7 +2089,7 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
             break;
           };
           if (-2 == j) {
-            log_error("Error: unsupported sequence type: %d.", pseq->type);
+            qCritical("Error: unsupported sequence type: %d.", pseq->type);
             break;
           }
           if (-1 == j) {
@@ -2156,7 +2156,7 @@ int fc_snprintcf(char *buf, size_t buf_len, const char *format, ...)
 
   if (ARRAY_SIZE(sequences) <= sequences_num
       && CF_LAST != va_arg(args, struct cf_sequence).type) {
-    log_error("Too many custom sequences. Maybe did you forget cf_end() "
+    qCritical("Too many custom sequences. Maybe did you forget cf_end() "
               "at the end of the arguments?");
     buf[0] = '\0';
     va_end(args);

@@ -322,7 +322,7 @@ void attribute_restore(void)
   switch (unserialize_hash(attribute_hash, pplayer->attribute_block.data,
                            pplayer->attribute_block.length)) {
   case A_SERIAL_FAIL:
-    log_error(_("There has been a CMA error. "
+    qCritical(_("There has been a CMA error. "
                 "Your citizen governor settings may be broken."));
     break;
   case A_SERIAL_OLD:

@@ -865,13 +865,13 @@ struct city *city_from_wonder(const struct player *pplayer,
     struct city *pcity = player_city_by_number(pplayer, city_id);
 
     if (NULL == pcity) {
-      log_error("Player %s (nb %d) has outdated wonder info for "
+      qCritical("Player %s (nb %d) has outdated wonder info for "
                 "%s (nb %d), it points to city nb %d.",
                 player_name(pplayer), player_number(pplayer),
                 improvement_rule_name(pimprove),
                 improvement_number(pimprove), city_id);
     } else if (!city_has_building(pcity, pimprove)) {
-      log_error("Player %s (nb %d) has outdated wonder info for "
+      qCritical("Player %s (nb %d) has outdated wonder info for "
                 "%s (nb %d), the city %s (nb %d) doesn't have this wonder.",
                 player_name(pplayer), player_number(pplayer),
                 improvement_rule_name(pimprove),
@@ -936,7 +936,7 @@ struct city *city_from_great_wonder(const struct impr_type *pimprove)
     struct city *pcity = city_from_wonder(pplayer, pimprove);
 
     if (is_server() && NULL == pcity) {
-      log_error("Game has outdated wonder info for %s (nb %d), "
+      qCritical("Game has outdated wonder info for %s (nb %d), "
                 "the player %s (nb %d) doesn't have this wonder.",
                 improvement_rule_name(pimprove),
                 improvement_number(pimprove), player_name(pplayer),

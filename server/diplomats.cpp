@@ -1271,7 +1271,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                   improvement_number(ptarget),
                   improvement_rule_name(ptarget));
       } else {
-        log_error("sabotage: random: targeted improvement error!");
+        qCritical("sabotage: random: targeted improvement error!");
       }
     }
   } else if (improvement < 0) {
@@ -1281,7 +1281,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   } else {
     struct impr_type *pimprove = improvement_by_number(improvement);
     if (pimprove == NULL) {
-      log_error("sabotage: requested for invalid improvement %d",
+      qCritical("sabotage: requested for invalid improvement %d",
                 improvement);
       return FALSE;
     }
@@ -2115,7 +2115,7 @@ static void diplomat_escape_full(struct player *pplayer,
     /* being teleported costs all movement */
     if (!teleport_unit_to_city(pdiplomat, spyhome, -1, FALSE)) {
       send_unit_info(NULL, pdiplomat);
-      log_error("Bug in diplomat_escape: Spy can't teleport.");
+      qCritical("Bug in diplomat_escape: Spy can't teleport.");
       return;
     }
 

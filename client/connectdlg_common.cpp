@@ -293,7 +293,7 @@ bool client_start_server(void)
          == -1) {
     fc_usleep(WAIT_BETWEEN_TRIES);
     if (connect_tries++ > NUMBER_OF_TRIES) {
-      log_error("Last error from connect attempts: '%s'", buf);
+      qCritical("Last error from connect attempts: '%s'", buf);
       break;
     }
   }
@@ -303,7 +303,7 @@ bool client_start_server(void)
     /* possible that server is still running. kill it, kill it with Igni */
     client_kill_server(TRUE);
 
-    log_error("Failed to connect to spawned server!");
+    qCritical("Failed to connect to spawned server!");
 #ifdef FREECIV_DEBUG
     log_verbose(
         "Tried with commandline: '%s'",
@@ -402,7 +402,7 @@ void send_client_wants_hack(const char *filename)
     file = secfile_new(FALSE);
     secfile_insert_str(file, req.token, "challenge.token");
     if (!secfile_save(file, challenge_fullname, 0, FZ_PLAIN)) {
-      log_error("Couldn't write token to temporary file: %s",
+      qCritical("Couldn't write token to temporary file: %s",
                 challenge_fullname);
     }
     secfile_destroy(file);
@@ -420,7 +420,7 @@ void handle_single_want_hack_reply(bool you_have_hack)
   /* remove challenge file */
   if (challenge_fullname[0] != '\0') {
     if (fc_remove(challenge_fullname) == -1) {
-      log_error("Couldn't remove temporary file: %s", challenge_fullname);
+      qCritical("Couldn't remove temporary file: %s", challenge_fullname);
     }
     challenge_fullname[0] = '\0';
   }

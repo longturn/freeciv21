@@ -59,7 +59,7 @@ void savegame_load(struct section_file *sfile)
   savefile_options = secfile_lookup_str(sfile, "savefile.options");
 
   if (!savefile_options) {
-    log_error("Missing savefile options. Can not load the savegame.");
+    qCritical("Missing savefile options. Can not load the savegame.");
     return;
   }
 
@@ -72,7 +72,7 @@ void savegame_load(struct section_file *sfile)
     log_verbose("loading savefile in 2.3 - 2.6 format ...");
     savegame2_load(sfile);
   } else {
-    log_error("Too old savegame format not supported any more.");
+    qCritical("Too old savegame format not supported any more.");
     return;
   }
 
@@ -129,7 +129,7 @@ static void save_thread_run(void *arg)
                     stdata->save_compress_level,
                     stdata->save_compress_type)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
-    log_error("Game saving failed: %s", secfile_error());
+    qCritical("Game saving failed: %s", secfile_error());
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning,
                 _("Failed saving game."));
   } else {
@@ -237,7 +237,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     case FZ_PLAIN:
       break;
     default:
-      log_error(_("Unsupported compression type %d."),
+      qCritical(_("Unsupported compression type %d."),
                 stdata->save_compress_type);
       notify_conn(NULL, NULL, E_SETTING, ftc_warning,
                   _("Unsupported compression type %d."),
@@ -290,7 +290,8 @@ void save_game(const char *orig_filename, const char *save_reason,
     save_thread_run(stdata);
   }
 
-  log_time(QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
+  log_time(
+      QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
   timer_destroy(timer_cpu);
 }
 

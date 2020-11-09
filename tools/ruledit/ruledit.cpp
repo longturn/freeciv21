@@ -122,7 +122,7 @@ int main(int argc, char **argv)
   } else {
     /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
      * freeciv version */
-    log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
+    qCritical(R__("Failed to load %s."), COMMENTS_FILE_NAME);
   }
 
   log_close();

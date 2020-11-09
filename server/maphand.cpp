@@ -1617,7 +1617,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
   if (pfrom == pto)
     return;
   if (gives_shared_vision(pfrom, pto)) {
-    log_error("Trying to give shared vision from %s to %s, "
+    qCritical("Trying to give shared vision from %s to %s, "
               "but that vision is already given!",
               player_name(pfrom), player_name(pto));
     return;
@@ -1682,7 +1682,7 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
 
   fc_assert_ret(pfrom != pto);
   if (!gives_shared_vision(pfrom, pto)) {
-    log_error("Tried removing the shared vision from %s to %s, "
+    qCritical("Tried removing the shared vision from %s to %s, "
               "but it did not exist in the first place!",
               player_name(pfrom), player_name(pto));
     return;

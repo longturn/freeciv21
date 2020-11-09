@@ -1947,7 +1947,7 @@ static inline void img_set_pixel(struct img *pimg, const int mindex,
                                  const struct rgbcolor *pcolor)
 {
   if (mindex < 0 || mindex > pimg->imgsize.x * pimg->imgsize.y) {
-    log_error("invalid index: 0 <= %d < %d", mindex,
+    qCritical("invalid index: 0 <= %d < %d", mindex,
               pimg->imgsize.x * pimg->imgsize.y);
     return;
   }

@@ -434,7 +434,7 @@ static void cmd_reply_no_such_player(enum command_id cmd,
     cmd_reply(cmd, caller, C_FAIL,
               _("Unexpected match_result %d (%s) for '%s'."), match_result,
               _(m_pre_description(match_result)), name);
-    log_error("Unexpected match_result %d (%s) for '%s'.", match_result,
+    qCritical("Unexpected match_result %d (%s) for '%s'.", match_result,
               m_pre_description(match_result), name);
   }
 }
@@ -469,7 +469,7 @@ static void cmd_reply_no_such_conn(enum command_id cmd,
     cmd_reply(cmd, caller, C_FAIL,
               _("Unexpected match_result %d (%s) for '%s'."), match_result,
               _(m_pre_description(match_result)), name);
-    log_error("Unexpected match_result %d (%s) for '%s'.", match_result,
+    qCritical("Unexpected match_result %d (%s) for '%s'.", match_result,
               m_pre_description(match_result), name);
   }
 }
@@ -1150,7 +1150,7 @@ static bool read_init_script_real(struct connection *caller,
 
   /* check recursion depth */
   if (read_recursion > GAME_MAX_READ_RECURSION) {
-    log_error("Error: recursive calls to read!");
+    qCritical("Error: recursive calls to read!");
     return FALSE;
   }
 
@@ -1209,7 +1209,7 @@ static bool read_init_script_real(struct connection *caller,
     cmd_reply(CMD_READ_SCRIPT, caller, C_FAIL,
               _("Cannot read command line scriptfile '%s'."), real_filename);
     if (NULL != caller) {
-      log_error(_("Could not read script file '%s'."), real_filename);
+      qCritical(_("Could not read script file '%s'."), real_filename);
     }
     return FALSE;
   }
@@ -1291,7 +1291,7 @@ static void write_init_script(char *script_filename)
     fclose(script_file);
 
   } else {
-    log_error(_("Could not write script file '%s'."), real_filename);
+    qCritical(_("Could not write script file '%s'."), real_filename);
   }
 }
 
@@ -1856,7 +1856,7 @@ static bool explain_option(struct connection *caller, char *str, bool check)
       cmd_reply(CMD_EXPLAIN, caller, C_FAIL, _("Ambiguous option name."));
       return FALSE;
     } else {
-      log_error("Unexpected case %d in %s line %d", cmd, __FILE__,
+      qCritical("Unexpected case %d in %s line %d", cmd, __FILE__,
                 __FC_LINE__);
       return FALSE;
     }
@@ -1946,7 +1946,7 @@ static enum command_id cmd_of_level(enum ai_level level)
   case AI_LEVEL_COUNT:
     return CMD_NORMAL;
   }
-  log_error("Unknown AI level variant: %d.", level);
+  qCritical("Unknown AI level variant: %d.", level);
   return CMD_NORMAL;
 }
 
@@ -3754,7 +3754,7 @@ bool load_command(struct connection *caller, const char *filename,
   /* attempt to parse the file */
 
   if (!(file = secfile_load(arg, FALSE))) {
-    log_error("Error loading savefile '%s': %s", arg, secfile_error());
+    qCritical("Error loading savefile '%s': %s", arg, secfile_error());
     cmd_reply(CMD_LOAD, caller, C_FAIL, _("Could not load savefile: %s"),
               arg);
     dlsend_packet_game_load(game.est_connections, TRUE, arg);
@@ -4633,7 +4633,7 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
     break;
   }
   /* should NEVER happen! */
-  log_error("Unknown command variant: %d.", cmd);
+  qCritical("Unknown command variant: %d.", cmd);
   return FALSE;
 }
 
@@ -5406,7 +5406,7 @@ static bool delegate_command(struct connection *caller, char *arg,
       fc_assert_ret_val(pdelegate != NULL, FALSE);
       if (!connection_delegate_restore(pdelegate)) {
         /* Should never happen. Generic failure message. */
-        log_error(
+        qCritical(
             "Failed to restore %s's connection as %s during "
             "'delegate cancel'.",
             pdelegate->username,
@@ -5485,7 +5485,7 @@ static bool delegate_command(struct connection *caller, char *arg,
 
     if (!connection_delegate_take(caller, dplayer)) {
       /* Should never happen. Generic failure message. */
-      log_error("%s failed to take control of '%s' during 'delegate take'.",
+      qCritical("%s failed to take control of '%s' during 'delegate take'.",
                 caller->username, player_name(dplayer));
       cmd_reply(CMD_DELEGATE, caller, C_FAIL, _("Unexpected failure."));
       ret = FALSE;
@@ -5512,7 +5512,7 @@ static bool delegate_command(struct connection *caller, char *arg,
 
     if (!connection_delegate_restore(caller)) {
       /* Should never happen. Generic failure message. */
-      log_error("Failed to restore %s's connection as %s during "
+      qCritical("Failed to restore %s's connection as %s during "
                 "'delegate restore'.",
                 caller->username,
                 delegate_player_str(caller->server.delegation.playing,
@@ -6127,7 +6127,7 @@ bool start_command(struct connection *caller, bool check, bool notify)
                     _("Cannot start the game: it is already running."));
     return FALSE;
   }
-  log_error("Unknown server state variant: %d.", server_state());
+  qCritical("Unknown server state variant: %d.", server_state());
   return FALSE;
 }
 
@@ -6553,7 +6553,7 @@ static bool show_help(struct connection *caller, char *arg)
   }
 
   /* should have finished by now */
-  log_error("Bug in show_help!");
+  qCritical("Bug in show_help!");
   return FALSE;
 }
 
@@ -7023,7 +7023,7 @@ static bool show_list(struct connection *caller, char *arg)
 
   cmd_reply(CMD_LIST, caller, C_FAIL, "Internal error: ind %d in show_list",
             ind);
-  log_error("Internal error: ind %d in show_list", ind);
+  qCritical("Internal error: ind %d in show_list", ind);
   return FALSE;
 }
 

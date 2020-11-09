@@ -172,7 +172,8 @@ void establish_new_connection(struct connection *pconn)
    * message option for the client with event */
 
   /* Notify the console that you're here. */
-  log_normal(_("%s has connected from %s."), pconn->username, qUtf8Printable(pconn->addr));
+  log_normal(_("%s has connected from %s."), pconn->username,
+             qUtf8Printable(pconn->addr));
 
   conn_compression_freeze(pconn);
   send_rulesets(dest);
@@ -205,7 +206,7 @@ void establish_new_connection(struct connection *pconn)
     } else {
       fc_assert(pdelegate);
       /* This really shouldn't happen. */
-      log_error("Failed to revoke delegate %s's control of %s, so owner %s "
+      qCritical("Failed to revoke delegate %s's control of %s, so owner %s "
                 "can't regain control.",
                 pdelegate->username, player_name(pplayer), pconn->username);
       notify_conn(dest, NULL, E_CONNECTION, ftc_server,
@@ -451,8 +452,7 @@ bool handle_login_request(struct connection *pconn,
   fc_assert_msg(1 == pconn->server.ping_timers->size(),
                 "Ping timer list size %d, should be 1. Have we sent "
                 "a ping to unestablished connection %s?",
-                pconn->server.ping_timers->size(),
-                conn_description(pconn));
+                pconn->server.ping_timers->size(), conn_description(pconn));
 
   civtimer *deltimer = pconn->server.ping_timers->takeFirst();
   timer_destroy(deltimer);

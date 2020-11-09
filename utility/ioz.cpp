@@ -774,7 +774,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     va_end(ap);
 
     if (num == -1) {
-      log_error("Too much data: truncated in fz_fprintf (%u)",
+      qCritical("Too much data: truncated in fz_fprintf (%u)",
                 PLAIN_FILE_BUF_SIZE);
       num = PLAIN_FILE_BUF_SIZE;
     }
@@ -796,7 +796,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     num = fc_vsnprintf(buffer, sizeof(buffer), format, ap);
     va_end(ap);
     if (num == -1) {
-      log_error("Too much data: truncated in fz_fprintf (%lu)",
+      qCritical("Too much data: truncated in fz_fprintf (%lu)",
                 (unsigned long) sizeof(buffer));
     }
     BZ2_bzWrite(&fp->u.bz2.error, fp->u.bz2.file, buffer, strlen(buffer));
@@ -814,7 +814,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     num = fc_vsnprintf(buffer, sizeof(buffer), format, ap);
     va_end(ap);
     if (num == -1) {
-      log_error("Too much data: truncated in fz_fprintf (%lu)",
+      qCritical("Too much data: truncated in fz_fprintf (%lu)",
                 (unsigned long) sizeof(buffer));
     }
     return gzwrite(fp->u.zlib, buffer, (unsigned int) strlen(buffer));

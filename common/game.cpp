@@ -153,7 +153,7 @@ void game_remove_unit(struct world *gworld, struct unit *punit)
               nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               punit->homecity);
   } else {
-    log_error("game_remove_unit() at (%d,%d) unit %d, %s %s home %d invalid",
+    qCritical("game_remove_unit() at (%d,%d) unit %d, %s %s home %d invalid",
               TILE_XY(unit_tile(punit)), punit->id,
               nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               punit->homecity);

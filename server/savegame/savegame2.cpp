@@ -438,7 +438,7 @@ void savegame2_load(struct section_file *file)
   send_city_suppression(was_send_city_suppressed);
 
   if (!sg_success) {
-    log_error("Failure loading savegame!");
+    qCritical("Failure loading savegame!");
     /* Try to get the server back to a vaguely sane state */
     server_game_free();
     server_game_init(FALSE);
@@ -1439,7 +1439,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
       pterr->identifier_load = *iptr;
     } else {
-      log_error("Identifier for unknown terrain type %s.", terr_name);
+      qCritical("Identifier for unknown terrain type %s.", terr_name);
     }
     i++;
   }
@@ -1522,17 +1522,15 @@ static void sg_load_game(struct loaddata *loading)
   if (srvarg.metaserver_addr == QLatin1String(DEFAULT_META_SERVER_ADDR)) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --Metaserver). */
-    srvarg.metaserver_addr = QString::fromUtf8(
-               secfile_lookup_str_default(loading->file,
-                                          DEFAULT_META_SERVER_ADDR,
-                                          "game.meta_server"));
+    srvarg.metaserver_addr = QString::fromUtf8(secfile_lookup_str_default(
+        loading->file, DEFAULT_META_SERVER_ADDR, "game.meta_server"));
   }
 
   if (srvarg.serverid.isEmpty()) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --serverid). */
-    srvarg.serverid = QString::fromUtf8(secfile_lookup_str_default(loading->file, "",
-                                                           "game.serverid"));
+    srvarg.serverid = QString::fromUtf8(
+        secfile_lookup_str_default(loading->file, "", "game.serverid"));
   }
   sz_strlcpy(server.game_identifier,
              secfile_lookup_str_default(loading->file, "", "game.id"));
@@ -2097,7 +2095,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
 
     ptile = native_pos_to_tile(&(wld.map), nat_x, nat_y);
     if (NULL == ptile) {
-      log_error("Start position native coordinates (%d, %d) do not exist "
+      qCritical("Start position native coordinates (%d, %d) do not exist "
                 "in this map. Skipping...",
                 nat_x, nat_y);
       continue;
@@ -3818,7 +3816,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
     if (direction8_is_valid(facing)) {
       punit->facing = facing;
     } else {
-      log_error("Illegal unit orientation '%s'", facing_str);
+      qCritical("Illegal unit orientation '%s'", facing_str);
     }
   }
 
@@ -4947,7 +4945,7 @@ static void sg_load_treaties(struct loaddata *loading)
     p1 = player_by_name(plr1);
 
     if (p0 == NULL || p1 == NULL) {
-      log_error("Treaty between unknown players %s and %s", plr0, plr1);
+      qCritical("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
       struct Treaty *ptreaty = new Treaty;
 
@@ -4963,7 +4961,7 @@ static void sg_load_treaties(struct loaddata *loading)
         const char *plrx;
 
         if (!clause_type_is_valid(type)) {
-          log_error("Invalid clause type \"%s\"", ct);
+          qCritical("Invalid clause type \"%s\"", ct);
         } else {
           struct player *pgiver = NULL;
 
@@ -4975,7 +4973,7 @@ static void sg_load_treaties(struct loaddata *loading)
           } else if (!fc_strcasecmp(plrx, plr1)) {
             pgiver = p1;
           } else {
-            log_error("Clause giver %s is not participant of the treaty"
+            qCritical("Clause giver %s is not participant of the treaty"
                       "between %s and %s",
                       plrx, plr0, plr1);
           }
@@ -5068,7 +5066,7 @@ static void sg_load_mapimg(struct loaddata *loading)
     }
 
     if (!mapimg_define(p, FALSE)) {
-      log_error("Invalid map image definition %4d: %s.", i, p);
+      qCritical("Invalid map image definition %4d: %s.", i, p);
     }
 
     log_verbose("Mapimg %4d loaded.", i);
@@ -5161,7 +5159,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
     whole_map_iterate(&(wld.map), ptile)
     {
       if (loading->worked_tiles[ptile->index] != -1) {
-        log_error("[city id: %d] Unused worked tile at (%d, %d).",
+        qCritical("[city id: %d] Unused worked tile at (%d, %d).",
                   loading->worked_tiles[ptile->index], TILE_XY(ptile));
       }
     }

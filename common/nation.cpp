@@ -379,7 +379,7 @@ nation_city_preference_revert(enum nation_city_preference prefer)
     return NCP_DISLIKE;
   }
 
-  log_error("%s(): Wrong nation_city_preference variant (%d).", __FUNCTION__,
+  qCritical("%s(): Wrong nation_city_preference variant (%d).", __FUNCTION__,
             prefer);
   return NCP_NONE;
 }
@@ -706,7 +706,7 @@ struct nation_set *nation_set_new(const char *set_name,
   struct nation_set *pset;
 
   if (MAX_NUM_NATION_SETS <= num_nation_sets) {
-    log_error("Too many nation sets (%d is the maximum).",
+    qCritical("Too many nation sets (%d is the maximum).",
               MAX_NUM_NATION_SETS);
     return NULL;
   }
@@ -719,12 +719,12 @@ struct nation_set *nation_set_new(const char *set_name,
       "Nation set description \"%s\" too long; truncating.");
 
   if (NULL != nation_set_by_rule_name(rule_name_get(&pset->name))) {
-    log_error("Duplicate nation set name %s.", rule_name_get(&pset->name));
+    qCritical("Duplicate nation set name %s.", rule_name_get(&pset->name));
     return NULL;
   }
 
   if (NULL != nation_group_by_rule_name(rule_name_get(&pset->name))) {
-    log_error("Nation set name %s is already used for a group.",
+    qCritical("Nation set name %s is already used for a group.",
               rule_name_get(&pset->name));
     return NULL;
   }
@@ -939,7 +939,7 @@ struct nation_group *nation_group_new(const char *name)
   struct nation_group *pgroup;
 
   if (MAX_NUM_NATION_GROUPS <= num_nation_groups) {
-    log_error("Too many nation groups (%d is the maximum).",
+    qCritical("Too many nation groups (%d is the maximum).",
               MAX_NUM_NATION_GROUPS);
     return NULL;
   }
@@ -948,13 +948,13 @@ struct nation_group *nation_group_new(const char *name)
   pgroup = nation_groups + num_nation_groups;
   name_set(&pgroup->name, NULL, name);
   if (NULL != nation_group_by_rule_name(rule_name_get(&pgroup->name))) {
-    log_error("Duplicate nation group name %s.",
+    qCritical("Duplicate nation group name %s.",
               rule_name_get(&pgroup->name));
     return NULL;
   }
 
   if (NULL != nation_set_by_rule_name(rule_name_get(&pgroup->name))) {
-    log_error("Nation group name %s is already used for a set.",
+    qCritical("Nation group name %s is already used for a set.",
               rule_name_get(&pgroup->name));
     return NULL;
   }

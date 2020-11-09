@@ -442,7 +442,7 @@ static bool do_expel_unit(struct player *pplayer, struct unit *actor,
 
   /* Being expelled destroys all remaining movement. */
   if (!teleport_unit_to_city(target, pcity, 0, FALSE)) {
-    log_error("Bug in unit expulsion: unit can't teleport.");
+    qCritical("Bug in unit expulsion: unit can't teleport.");
 
     return FALSE;
   }
@@ -2539,7 +2539,7 @@ void handle_unit_action_query(struct connection *pc, const int actor_id,
 
   if (NULL == paction) {
     /* Non existing action */
-    log_error("handle_unit_action_query() the action %d doesn't exist.",
+    qCritical("handle_unit_action_query() the action %d doesn't exist.",
               action_type);
 
     unit_query_impossible(pc, actor_id, target_id, disturb_player);
@@ -2674,7 +2674,7 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
 
   if (!action_id_exists(action_type)) {
     /* Non existing action */
-    log_error("unit_perform_action() the action %d doesn't exist.",
+    qCritical("unit_perform_action() the action %d doesn't exist.",
               action_type);
 
     return FALSE;
@@ -5306,7 +5306,7 @@ void handle_unit_orders(struct player *pplayer,
 
   if (0 > length || MAX_LEN_ROUTE < length) {
     /* Shouldn't happen */
-    log_error("handle_unit_orders() invalid %s (%d) "
+    qCritical("handle_unit_orders() invalid %s (%d) "
               "packet length %d (max %d)",
               unit_rule_name(punit), packet->unit_id, length, MAX_LEN_ROUTE);
     return;
@@ -5333,7 +5333,7 @@ void handle_unit_orders(struct player *pplayer,
   if (length) {
     order_list = create_unit_orders(length, packet->orders);
     if (!order_list) {
-      log_error("received invalid orders from %s for %s (%d).",
+      qCritical("received invalid orders from %s for %s (%d).",
                 player_name(pplayer), unit_rule_name(punit),
                 packet->unit_id);
       return;

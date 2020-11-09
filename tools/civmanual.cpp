@@ -292,7 +292,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     if (!is_reg_file_for_access(filename, TRUE)
         || !(doc = fc_fopen(filename, "w"))) {
-      log_error(_("Could not write manual file %s."), filename);
+      qCritical(_("Could not write manual file %s."), filename);
       return FALSE;
     }
 

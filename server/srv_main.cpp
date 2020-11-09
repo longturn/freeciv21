@@ -1107,7 +1107,7 @@ void begin_turn(bool is_new_turn)
     game.server.num_phases = team_count();
     break;
   default:
-    log_error("Unrecognized phase mode %d in begin_turn().",
+    qCritical("Unrecognized phase mode %d in begin_turn().",
               game.info.phase_mode);
     game.server.num_phases = 1;
     break;
@@ -1913,12 +1913,12 @@ void handle_report_req(struct connection *pconn, enum report_type type)
   struct conn_list *dest = pconn->self;
 
   if (S_S_RUNNING != server_state() && S_S_OVER != server_state()) {
-    log_error("Got a report request %d before game start", type);
+    qCritical("Got a report request %d before game start", type);
     return;
   }
 
   if (NULL == pconn->playing && !pconn->observer) {
-    log_error("Got a report request %d from detached connection", type);
+    qCritical("Got a report request %d from detached connection", type);
     return;
   }
 
@@ -2071,7 +2071,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   }
 
   if (!pconn->established) {
-    log_error("Received game packet %s(%d) from unaccepted connection %s.",
+    qCritical("Received game packet %s(%d) from unaccepted connection %s.",
               packet_name(packet_type(type)), type, conn_description(pconn));
     return TRUE;
   }
@@ -2093,7 +2093,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     }
 
     if (!server_handle_packet(packet_type(type), packet, NULL, pconn)) {
-      log_error("Received unknown packet %d from %s.", type,
+      qCritical("Received unknown packet %d from %s.", type,
                 conn_description(pconn));
     }
     return TRUE;
@@ -2107,7 +2107,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
       return TRUE;
     }
     /* don't support these yet */
-    log_error("Received packet %s(%d) from non-player connection %s.",
+    qCritical("Received packet %s(%d) from non-player connection %s.",
               packet_name(packet_type(type)), type, conn_description(pconn));
     return TRUE;
   }
@@ -2121,7 +2121,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
                 packet_name(packet_type(type)), type,
                 server_states_name(S_S_OVER));
     } else {
-      log_error("Got a packet of type %s(%d) outside %s.",
+      qCritical("Got a packet of type %s(%d) outside %s.",
                 packet_name(packet_type(type)), type,
                 server_states_name(S_S_RUNNING));
     }
@@ -2131,7 +2131,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   pplayer->nturns_idle = 0;
 
   if (!pplayer->is_alive && type != PACKET_REPORT_REQ) {
-    log_error("Got a packet of type %s(%d) from a dead player.",
+    qCritical("Got a packet of type %s(%d) from a dead player.",
               packet_name(packet_type(type)), type);
     return TRUE;
   }
@@ -2140,7 +2140,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   pplayer->current_conn = pconn;
 
   if (!server_handle_packet(packet_type(type), packet, pplayer, pconn)) {
-    log_error("Received unknown packet %d from %s.", type,
+    qCritical("Received unknown packet %d from %s.", type,
               conn_description(pconn));
   }
 
@@ -3251,7 +3251,7 @@ server_setting_id server_ss_by_name(const char *name)
   if (pset) {
     return setting_number(pset);
   } else {
-    log_error("No server setting named %s exists.", name);
+    qCritical("No server setting named %s exists.", name);
     return SERVER_SETTING_NONE;
   }
 }
@@ -3266,7 +3266,7 @@ const char *server_ss_name_get(server_setting_id id)
   if (pset) {
     return setting_name(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return NULL;
   }
 }
@@ -3281,7 +3281,7 @@ enum sset_type server_ss_type_get(server_setting_id id)
   if (pset) {
     return setting_type(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return sset_type_invalid();
   }
 }
@@ -3296,7 +3296,7 @@ bool server_ss_val_bool_get(server_setting_id id)
   if (pset) {
     return setting_bool_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }
@@ -3311,7 +3311,7 @@ int server_ss_val_int_get(server_setting_id id)
   if (pset) {
     return setting_int_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return 0;
   }
 }
@@ -3326,7 +3326,7 @@ unsigned int server_ss_val_bitwise_get(server_setting_id id)
   if (pset) {
     return setting_bitwise_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }

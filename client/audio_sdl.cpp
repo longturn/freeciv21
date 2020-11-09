@@ -84,7 +84,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     /* load music file */
     mus = Mix_LoadMUS(fullpath);
     if (mus == NULL) {
-      log_error("Can't open file \"%s\"", fullpath);
+      qCritical("Can't open file \"%s\"", fullpath);
     }
 
     if (cb == NULL) {
@@ -112,7 +112,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     /* load wave */
     wave = Mix_LoadWAV(fullpath);
     if (wave == NULL) {
-      log_error("Can't open file \"%s\"", fullpath);
+      qCritical("Can't open file \"%s\"", fullpath);
     }
 
     /* play sound sample on first available channel, returns -1 if no
@@ -228,7 +228,7 @@ static bool sdl_audio_init(void)
 
   if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size)
       < 0) {
-    log_error("Error calling Mix_OpenAudio");
+    qCritical("Error calling Mix_OpenAudio");
     /* try something else */
     quit_sdl_audio();
     return FALSE;

@@ -217,7 +217,7 @@ void api_edit_unit_turn(lua_State *L, Unit *punit, Direction dir)
 
     send_unit_info(NULL, punit);
   } else {
-    log_error("Illegal direction %d for unit from lua script", dir);
+    qCritical("Illegal direction %d for unit from lua script", dir);
   }
 }
 

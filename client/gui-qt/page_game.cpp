@@ -52,7 +52,8 @@ static void cycle_enemy_units();
 
 extern void toggle_units_report(bool);
 
-page_game::page_game(QWidget *parent) : QWidget(parent), unit_selector(nullptr)
+page_game::page_game(QWidget *parent)
+    : QWidget(parent), unit_selector(nullptr)
 {
   QGridLayout *page_game_layout;
   QGridLayout *game_layout;
@@ -159,7 +160,7 @@ void page_game::reload_sidebar_icons()
  **************************************************************************/
 void page_game::update_sidebar_position()
 {
-  QGridLayout *l = qobject_cast<QGridLayout*>(layout());
+  QGridLayout *l = qobject_cast<QGridLayout *>(layout());
   l->removeWidget(queen()->sidebar_wdg);
   if (gui_options.gui_qt_sidebar_left) {
     l->addWidget(queen()->sidebar_wdg, 1, 0);
@@ -167,7 +168,6 @@ void page_game::update_sidebar_position()
     l->addWidget(sidebar_wdg, 1, 2);
   }
 }
-
 
 /**********************************************************************/ /**
    Real update, updates only once per 300 ms.
@@ -450,7 +450,8 @@ void cycle_enemy_units()
   }
 }
 
-page_game *queen() {
+page_game *queen()
+{
   return qobject_cast<page_game *>(king()->pages[PAGE_GAME]);
 }
 
@@ -563,7 +564,7 @@ void page_game::gimme_place(QWidget *widget, const QString &str)
     opened_repo_dlgs.insert(str, widget);
     return;
   }
-  log_error("Failed to find place for new tab widget");
+  qCritical("Failed to find place for new tab widget");
   return;
 }
 

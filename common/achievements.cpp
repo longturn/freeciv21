@@ -10,8 +10,8 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#include <vector>
 #include <QBitArray>
+#include <vector>
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -344,7 +344,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     break;
   }
 
-  log_error("achievement_check(): Illegal achievement type %d", ach->type);
+  qCritical("achievement_check(): Illegal achievement type %d", ach->type);
 
   return FALSE;
 }

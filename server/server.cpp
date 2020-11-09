@@ -193,7 +193,7 @@ QTcpServer *srv_prepare()
         fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
     if (testfilename == NULL) {
       qFatal(_("Ruleset directory \"%s\" not found"),
-                qPrintable(srvarg.ruleset));
+             qPrintable(srvarg.ruleset));
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;
     }
@@ -284,7 +284,7 @@ server::server()
           &server::accept_connections);
   connect(m_tcp_server, &QTcpServer::acceptError,
           [](QAbstractSocket::SocketError error) {
-            log_error("Error accepting connection: %d", error);
+            qCritical("Error accepting connection: %d", error);
           });
 
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
@@ -651,7 +651,7 @@ void server::begin_phase()
           mapimg_create(pmapdef, FALSE, game.server.save_name,
                         qUtf8Printable(srvarg.saves_pathname));
         } else {
-          log_error("%s", mapimg_error());
+          qCritical("%s", mapimg_error());
         }
       }
     } else {

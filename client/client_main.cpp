@@ -466,8 +466,7 @@ int client_main(int argc, char *argv[])
     bool conversion_ok;
     server_port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qFatal(_("Invalid port number %s"),
-                qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
@@ -494,7 +493,7 @@ int client_main(int argc, char *argv[])
     } else if (value == QLatin1String("none")) {
       announce = ANNOUNCE_NONE;
     } else {
-      log_error(_("Illegal value \"%s\" for --Announce"),
+      qCritical(_("Illegal value \"%s\" for --Announce"),
                 qPrintable(parser.value("Announce")));
     }
   }
@@ -608,7 +607,7 @@ int client_main(int argc, char *argv[])
   if (!forced_tileset_name.isEmpty()) {
     if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
                            TRUE)) {
-      log_error(_("Can't load requested tileset %s!"),
+      qCritical(_("Can't load requested tileset %s!"),
                 qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
@@ -711,11 +710,11 @@ void client_packet_input(void *packet, int type)
       && PACKET_AUTHENTICATION_REQ != type && PACKET_SERVER_SHUTDOWN != type
       && PACKET_CONNECT_MSG != type && PACKET_EARLY_CHAT_MSG != type
       && PACKET_SERVER_INFO != type) {
-    log_error("Received packet %s (%d) before establishing connection!",
+    qCritical("Received packet %s (%d) before establishing connection!",
               packet_name(static_cast<packet_type>(type)), type);
     disconnect_from_server();
   } else if (!client_handle_packet(static_cast<packet_type>(type), packet)) {
-    log_error("Received unknown packet (type %d) from server!", type);
+    qCritical("Received unknown packet (type %d) from server!", type);
     disconnect_from_server();
   }
 }
@@ -812,7 +811,7 @@ void set_client_state(enum client_states newstate)
 
   switch (newstate) {
   case C_S_INITIAL:
-    log_error("%d is not a valid client state to set.", C_S_INITIAL);
+    qCritical("%d is not a valid client state to set.", C_S_INITIAL);
     break;
 
   case C_S_DISCONNECTED:
@@ -1292,7 +1291,7 @@ static server_setting_id client_ss_by_name(const char *name)
   if (pset) {
     return option_number(pset);
   } else {
-    log_error("No server setting named %s exists.", name);
+    qCritical("No server setting named %s exists.", name);
     return SERVER_SETTING_NONE;
   }
 }
@@ -1307,7 +1306,7 @@ static const char *client_ss_name_get(server_setting_id id)
   if (pset) {
     return option_name(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return NULL;
   }
 }
@@ -1321,7 +1320,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   struct option *pset = optset_option_by_number(server_optset, id);
 
   if (!pset) {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return sset_type_invalid();
   }
 
@@ -1364,7 +1363,7 @@ static bool client_ss_val_bool_get(server_setting_id id)
   if (pset) {
     return option_bool_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }
@@ -1379,7 +1378,7 @@ static int client_ss_val_int_get(server_setting_id id)
   if (pset) {
     return option_int_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return 0;
   }
 }
@@ -1394,7 +1393,7 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
   if (pset) {
     return option_bitwise_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }

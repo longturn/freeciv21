@@ -136,7 +136,7 @@ static void comment_write(struct section_file *sfile, const char *comment,
                           const char *name)
 {
   if (comment == NULL) {
-    log_error("Comment for %s missing.", name);
+    qCritical("Comment for %s missing.", name);
     return;
   }
 

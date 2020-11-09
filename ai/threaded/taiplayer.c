@@ -143,7 +143,7 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
       new_abort = TAI_ABORT_EXIT;
       break;
     default:
-      log_error("Illegal message type %s (%d) for threaded ai!",
+      qCritical("Illegal message type %s (%d) for threaded ai!",
                 taimsgtype_name(msg->type), msg->type);
       break;
     }

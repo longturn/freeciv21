@@ -121,7 +121,7 @@ static bool fcdb_load_config(const char *filename)
   fc_assert_ret_val(NULL != filename, FALSE);
 
   if (!(secfile = secfile_load(filename, FALSE))) {
-    log_error(_("Cannot load fcdb config file '%s':\n%s"), filename,
+    qCritical(_("Cannot load fcdb config file '%s':\n%s"), filename,
               secfile_error());
     return FALSE;
   }
@@ -131,13 +131,12 @@ static bool fcdb_load_config(const char *filename)
   {
     if (entry_type_get(pentry) == ENTRY_STR) {
       const char *value;
-      bool entry_str_get_success =
-          entry_str_get(pentry, &value);
+      bool entry_str_get_success = entry_str_get(pentry, &value);
 
       fc_assert(entry_str_get_success);
       fcdb_set_option(entry_name(pentry), value, AOS_FILE);
     } else {
-      log_error("Value for '%s' in '%s' is not of string type, ignoring",
+      qCritical("Value for '%s' in '%s' is not of string type, ignoring",
                 entry_name(pentry), filename);
     }
   }

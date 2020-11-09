@@ -153,7 +153,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
                  "Invalid savefile format version (%d).", loading->version);
   if (loading->version > compat[compat_current].version) {
     /* Debug build can (TRY TO!) load newer versions but ... */
-    log_error("Savegame version newer than this build found (%d > %d). "
+    qCritical("Savegame version newer than this build found (%d > %d). "
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
@@ -1617,7 +1617,7 @@ static void unit_order_activity_to_action(struct unit *act_unit)
     case ACTIVITY_PATROL_UNUSED:
     case ACTIVITY_LAST:
     case ACTIVITY_UNKNOWN:
-      log_error("Activity %d is not supposed to appear in unit orders",
+      qCritical("Activity %d is not supposed to appear in unit orders",
                 order->activity);
       break;
     }

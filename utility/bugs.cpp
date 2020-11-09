@@ -37,5 +37,5 @@ void bugreport_request(const char *reason_format, ...)
   va_end(args);
 
   /* TRANS: No full stop after the URL, could cause confusion. */
-  log_error(_("Please report this message at %s"), BUG_URL);
+  qCritical(_("Please report this message at %s"), BUG_URL);
 }

@@ -132,7 +132,7 @@ void qtg_options_extra_init()
   if ((poption = optset_option_by_name(client_optset, #var))) {             \
     option_set_changed_callback(poption, callback);                         \
   } else {                                                                  \
-    log_error("Didn't find option %s!", #var);                              \
+    qCritical("Didn't find option %s!", #var);                              \
   }
   option_var_set_callback(gui_qt_font_city_names, apply_font);
   option_var_set_callback(gui_qt_font_city_productions, apply_font);

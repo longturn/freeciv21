@@ -496,7 +496,7 @@ void savegame3_load(struct section_file *file)
   send_city_suppression(was_send_city_suppressed);
 
   if (!sg_success) {
-    log_error("Failure loading savegame!");
+    qCritical("Failure loading savegame!");
     /* Try to get the server back to a vaguely sane state */
     server_game_free();
     server_game_init(FALSE);
@@ -554,7 +554,7 @@ static void savegame3_save_real(struct section_file *file,
   savedata_destroy(saving);
 
   if (!sg_success) {
-    log_error("Failure saving savegame!");
+    qCritical("Failure saving savegame!");
   }
 }
 
@@ -1278,7 +1278,7 @@ static void sg_load_savefile(struct loaddata *loading)
       log_normal(_("Scenario requires ruleset capabilities: %s"), req_caps);
       log_normal(_("Ruleset has capabilities: %s"),
                  game.ruleset_capabilities);
-      log_error(_("Current ruleset not compatible with the scenario."));
+      qCritical(_("Current ruleset not compatible with the scenario."));
       sg_success = FALSE;
       return;
     }
@@ -1303,7 +1303,7 @@ static void sg_load_savefile(struct loaddata *loading)
       }
 
       if (found == NULL) {
-        log_error(_("Can't find scenario luadata file %s.luadata."),
+        qCritical(_("Can't find scenario luadata file %s.luadata."),
                   game.scenario.datafile);
         sg_success = FALSE;
         return;
@@ -1311,7 +1311,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
       secfile = secfile_load(found, FALSE);
       if (secfile == NULL) {
-        log_error(_("Failed to load scenario luadata file %s.luadata"),
+        qCritical(_("Failed to load scenario luadata file %s.luadata"),
                   game.scenario.datafile);
         sg_success = FALSE;
         return;
@@ -1551,7 +1551,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
       pterr->identifier_load = *iptr;
     } else {
-      log_error("Identifier for unknown terrain type %s.", terr_name);
+      qCritical("Identifier for unknown terrain type %s.", terr_name);
     }
     i++;
   }
@@ -1964,12 +1964,12 @@ static void sg_load_game(struct loaddata *loading)
   if (str != NULL) {
     game.info.phase_mode = phase_mode_type_by_name(str, fc_strcasecmp);
     if (!phase_mode_type_is_valid(game.info.phase_mode)) {
-      log_error("Illegal phase mode \"%s\"", str);
+      qCritical("Illegal phase mode \"%s\"", str);
       game.info.phase_mode =
           static_cast<phase_mode_type>(GAME_DEFAULT_PHASE_MODE);
     }
   } else {
-    log_error("Phase mode missing");
+    qCritical("Phase mode missing");
   }
 
   str = secfile_lookup_str_default(loading->file, NULL,
@@ -1979,11 +1979,11 @@ static void sg_load_game(struct loaddata *loading)
         phase_mode_type_by_name(str, fc_strcasecmp);
     if (!phase_mode_type_is_valid(
             static_cast<phase_mode_type>(game.server.phase_mode_stored))) {
-      log_error("Illegal stored phase mode \"%s\"", str);
+      qCritical("Illegal stored phase mode \"%s\"", str);
       game.server.phase_mode_stored = GAME_DEFAULT_PHASE_MODE;
     }
   } else {
-    log_error("Stored phase mode missing");
+    qCritical("Stored phase mode missing");
   }
   game.info.phase =
       secfile_lookup_int_default(loading->file, 0, "game.phase");
@@ -2779,7 +2779,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
 
     ptile = native_pos_to_tile(&(wld.map), nat_x, nat_y);
     if (NULL == ptile) {
-      log_error("Start position native coordinates (%d, %d) do not exist "
+      qCritical("Start position native coordinates (%d, %d) do not exist "
                 "in this map. Skipping...",
                 nat_x, nat_y);
       continue;
@@ -5682,7 +5682,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
     if (direction8_is_valid(facing)) {
       punit->facing = facing;
     } else {
-      log_error("Illegal unit orientation '%s'", facing_str);
+      qCritical("Illegal unit orientation '%s'", facing_str);
     }
   }
 
@@ -7287,7 +7287,7 @@ static void sg_load_treaties(struct loaddata *loading)
     p1 = player_by_name(plr1);
 
     if (p0 == NULL || p1 == NULL) {
-      log_error("Treaty between unknown players %s and %s", plr0, plr1);
+      qCritical("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
       struct Treaty *ptreaty = new Treaty;
 
@@ -7303,7 +7303,7 @@ static void sg_load_treaties(struct loaddata *loading)
         const char *plrx;
 
         if (!clause_type_is_valid(type)) {
-          log_error("Invalid clause type \"%s\"", ct);
+          qCritical("Invalid clause type \"%s\"", ct);
         } else {
           struct player *pgiver = NULL;
 
@@ -7315,7 +7315,7 @@ static void sg_load_treaties(struct loaddata *loading)
           } else if (!fc_strcasecmp(plrx, plr1)) {
             pgiver = p1;
           } else {
-            log_error("Clause giver %s is not participant of the treaty"
+            qCritical("Clause giver %s is not participant of the treaty"
                       "between %s and %s",
                       plrx, plr0, plr1);
           }
@@ -7462,7 +7462,7 @@ static void sg_load_mapimg(struct loaddata *loading)
     }
 
     if (!mapimg_define(p, FALSE)) {
-      log_error("Invalid map image definition %4d: %s.", i, p);
+      qCritical("Invalid map image definition %4d: %s.", i, p);
     }
 
     log_verbose("Mapimg %4d loaded.", i);
@@ -7576,7 +7576,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
     whole_map_iterate(&(wld.map), ptile)
     {
       if (loading->worked_tiles[ptile->index] != -1) {
-        log_error("[city id: %d] Unused worked tile at (%d, %d).",
+        qCritical("[city id: %d] Unused worked tile at (%d, %d).",
                   loading->worked_tiles[ptile->index], TILE_XY(ptile));
       }
     }

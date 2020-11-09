@@ -452,7 +452,7 @@ void auto_arrange_workers(struct city *pcity)
   }
 
   if (city_refresh(pcity)) {
-    log_error("%s radius changed when already arranged workers.",
+    qCritical("%s radius changed when already arranged workers.",
               city_name_get(pcity));
     /* Can't do anything - don't want to enter infinite recursive loop
      * by trying to arrange workers more. */
@@ -1729,7 +1729,7 @@ static bool worklist_item_postpone_req_vec(struct universal *target,
       case VUT_CITYTILE:
       case VUT_CITYSTATUS:
         /* Will only happen with a bogus ruleset. */
-        log_error("worklist_change_build_target() has bogus preq");
+        qCritical("worklist_change_build_target() has bogus preq");
         break;
       case VUT_MINYEAR:
         if (preq->present) {
@@ -2022,7 +2022,7 @@ static bool worklist_change_build_target(struct player *pplayer,
     }
     default:
       /* skip useless target */
-      log_error("worklist_change_build_target() has unrecognized "
+      qCritical("worklist_change_build_target() has unrecognized "
                 "target kind (%d)",
                 target.kind);
       break;

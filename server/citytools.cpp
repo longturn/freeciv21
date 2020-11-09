@@ -869,7 +869,7 @@ struct city *find_closest_city(const struct tile *ptile,
   fc_assert_ret_val(ptile != NULL, NULL);
 
   if (pplayer != NULL && only_player && only_enemy) {
-    log_error("Non of my own cities will be at war with me!");
+    qCritical("Non of my own cities will be at war with me!");
     return NULL;
   }
 
@@ -2277,7 +2277,7 @@ void send_player_cities(struct player *pplayer)
   city_list_iterate(pplayer->cities, pcity)
   {
     if (city_refresh(pcity)) {
-      log_error("%s radius changed while sending to player.",
+      qCritical("%s radius changed while sending to player.",
                 city_name_get(pcity));
 
       /* Make sure that no workers in illegal position outside radius. */
@@ -2503,7 +2503,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
     if (recursion) {
       /* Recursion didn't help. Do not enter infinite recursive loop.
        * Package city as it is. */
-      log_error("Failed to fix inconsistent city size.");
+      qCritical("Failed to fix inconsistent city size.");
       recursion = FALSE;
     } else {
       /* Note: If you get this error and try to debug the cause, you may find
@@ -2513,7 +2513,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
       fc_assert(packet->size == ppl);
 
       /* In all builds have an error message shown. */
-      log_error("City size %d, citizen count %d for %s", packet->size, ppl,
+      qCritical("City size %d, citizen count %d for %s", packet->size, ppl,
                 city_name_get(pcity));
 
       /* Try to fix */
@@ -2661,13 +2661,13 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
     pdcity = vision_site_new_from_city(pcity);
     change_playertile_site(map_get_player_tile(pcenter, pplayer), pdcity);
   } else if (pdcity->location != pcenter) {
-    log_error("Trying to update bad city (wrong location) "
+    qCritical("Trying to update bad city (wrong location) "
               "at %i,%i for player %s",
               TILE_XY(pcity->tile), player_name(pplayer));
     fc_assert(pdcity->location == pcenter);
     pdcity->location = pcenter; /* ?? */
   } else if (pdcity->identity != pcity->id) {
-    log_error("Trying to update old city (wrong identity) "
+    qCritical("Trying to update old city (wrong identity) "
               "at %i,%i for player %s",
               TILE_XY(city_tile(pcity)), player_name(pplayer));
     fc_assert(pdcity->identity == pcity->id);

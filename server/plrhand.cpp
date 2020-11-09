@@ -80,18 +80,18 @@
 
 struct rgbcolor;
 
-static void
-package_player_common(struct player *plr, struct packet_player_info *packet);
+static void package_player_common(struct player *plr,
+                                  struct packet_player_info *packet);
 
 static void
 package_player_diplstate(struct player *plr1, struct player *plr2,
                          struct packet_player_diplstate *packet_ds,
                          struct player *receiver,
                          enum plr_info_level min_info_level);
-static void
-package_player_info(struct player *plr, struct packet_player_info *packet,
-                    struct player *receiver,
-                    enum plr_info_level min_info_level);
+static void package_player_info(struct player *plr,
+                                struct packet_player_info *packet,
+                                struct player *receiver,
+                                enum plr_info_level min_info_level);
 static enum plr_info_level player_info_level(struct player *plr,
                                              struct player *receiver);
 
@@ -294,7 +294,7 @@ void handle_player_rates(struct player *pplayer, int tax, int luxury,
   int maxrate;
 
   if (S_S_RUNNING != server_state()) {
-    log_error("received player_rates packet from %s before start",
+    qCritical("received player_rates packet from %s before start",
               player_name(pplayer));
     notify_player(pplayer, NULL, E_BAD_COMMAND, ftc_server,
                   _("Cannot change rates before game start."));
@@ -1038,8 +1038,7 @@ static void send_player_info_c_real(struct player *src,
       package_player_info(src, &info, pconn->playing, INFO_FULL);
     } else if (NULL != pconn->playing) {
       /* Players (including regular observers) */
-      package_player_info(src, &info, pconn->playing,
-                          INFO_MINIMUM);
+      package_player_info(src, &info, pconn->playing, INFO_MINIMUM);
     } else {
       package_player_info(src, &info, NULL, INFO_MINIMUM);
     }
@@ -1109,8 +1108,8 @@ static void send_player_diplstate_c_real(struct player *plr1,
 /**********************************************************************/ /**
    Package player information that is always sent.
  **************************************************************************/
-static void
-package_player_common(struct player *plr, struct packet_player_info *packet)
+static void package_player_common(struct player *plr,
+                                  struct packet_player_info *packet)
 {
   int i;
   struct music_style *music;
@@ -1167,10 +1166,10 @@ package_player_common(struct player *plr, struct packet_player_info *packet)
    Receiver may be NULL in which cases dummy values are sent for some
    fields.
  **************************************************************************/
-static void
-package_player_info(struct player *plr, struct packet_player_info *packet,
-                    struct player *receiver,
-                    enum plr_info_level min_info_level)
+static void package_player_info(struct player *plr,
+                                struct packet_player_info *packet,
+                                struct player *receiver,
+                                enum plr_info_level min_info_level)
 {
   enum plr_info_level info_level;
   enum plr_info_level highest_team_level;
@@ -1503,7 +1502,7 @@ const struct rgbcolor *player_preferred_color(struct player *pplayer)
       /* These depend on other players and will be assigned at game start. */
       return NULL;
     default:
-      log_error("Invalid value for 'game.server.plrcolormode' (%d)!",
+      qCritical("Invalid value for 'game.server.plrcolormode' (%d)!",
                 game.server.plrcolormode);
       fc__fallthrough; /* no break - using 'PLRCOL_PLR_ORDER' as fallback */
     case PLRCOL_PLR_ORDER: /* player color (ordered) */
@@ -3244,7 +3243,7 @@ void handle_player_multiplier(struct player *pplayer, int count,
   int i;
 
   if (count != multiplier_count()) {
-    log_error("Bad number of multipliers %d from client for %s", count,
+    qCritical("Bad number of multipliers %d from client for %s", count,
               player_name(pplayer));
     return;
   }
@@ -3254,14 +3253,14 @@ void handle_player_multiplier(struct player *pplayer, int count,
 
     if (multiplier_can_be_changed(pmul, pplayer)) {
       if (multipliers[i] < pmul->start || multipliers[i] > pmul->stop) {
-        log_error("Multiplier value %d for %s out of range for %s",
+        qCritical("Multiplier value %d for %s out of range for %s",
                   multipliers[i], multiplier_rule_name(pmul),
                   player_name(pplayer));
       } else {
         rval = (multipliers[i] - pmul->start) / pmul->step * pmul->step
                + pmul->start;
         if (rval != multipliers[i]) {
-          log_error("Multiplier value %d between valid values for %s for %s",
+          qCritical("Multiplier value %d between valid values for %s for %s",
                     multipliers[i], multiplier_rule_name(pmul),
                     player_name(pplayer));
         } else {

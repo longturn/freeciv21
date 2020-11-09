@@ -235,7 +235,7 @@ static void set_sizes(double size, int Xratio, int Yratio)
    * this error is to set the maximum size smaller for all topologies! */
   if (wld.map.server.size * 1000 > size + 900.0) {
     /* Warning when size is set uselessly big */
-    log_error("Requested size of %d is too big for this topology.",
+    qCritical("Requested size of %d is too big for this topology.",
               wld.map.server.size);
   }
 

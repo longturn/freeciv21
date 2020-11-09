@@ -104,7 +104,7 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
     fcmp.inst_prefix = freeciv_storage_dir();
 
     if (fcmp.inst_prefix.isNull()) {
-      log_error("Cannot determine freeciv storage directory");
+      qCritical("Cannot determine freeciv storage directory");
     }
   }
 }

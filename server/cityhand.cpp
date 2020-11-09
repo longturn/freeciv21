@@ -134,12 +134,12 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
   }
 
   if (NULL == ptile) {
-    log_error("handle_city_make_specialist() bad tile number %d.", tile_id);
+    qCritical("handle_city_make_specialist() bad tile number %d.", tile_id);
     return;
   }
 
   if (!city_map_includes_tile(pcity, ptile)) {
-    log_error("handle_city_make_specialist() tile (%d, %d) not in the "
+    qCritical("handle_city_make_specialist() tile (%d, %d) not in the "
               "city map of \"%s\".",
               TILE_XY(ptile), city_name_get(pcity));
     return;
@@ -179,12 +179,12 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   }
 
   if (NULL == ptile) {
-    log_error("handle_city_make_worker() bad tile number %d.", tile_id);
+    qCritical("handle_city_make_worker() bad tile number %d.", tile_id);
     return;
   }
 
   if (!city_map_includes_tile(pcity, ptile)) {
-    log_error("handle_city_make_worker() tile (%d, %d) not in the "
+    qCritical("handle_city_make_worker() tile (%d, %d) not in the "
               "city map of \"%s\".",
               TILE_XY(ptile), city_name_get(pcity));
     return;
@@ -437,14 +437,14 @@ void handle_city_change(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (!universals_n_is_valid(universals_n(production_kind))) {
-    log_error("[%s] bad production_kind %d.", __FUNCTION__, production_kind);
+    qCritical("[%s] bad production_kind %d.", __FUNCTION__, production_kind);
     prod.kind = VUT_NONE;
     return;
   } else {
     prod =
         universal_by_number(universals_n(production_kind), production_value);
     if (!universals_n_is_valid(prod.kind)) {
-      log_error("[%s] production_kind %d with bad production_value %d.",
+      qCritical("[%s] production_kind %d with bad production_value %d.",
                 __FUNCTION__, production_kind, production_value);
       prod.kind = VUT_NONE;
       return;
@@ -536,7 +536,7 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
 
   if (0 > length || MAX_LEN_ROUTE < length) {
     /* Shouldn't happen */
-    log_error("handle_city_rally_point() invalid packet length %d (max %d)",
+    qCritical("handle_city_rally_point() invalid packet length %d (max %d)",
               length, MAX_LEN_ROUTE);
     return;
   }
@@ -554,7 +554,7 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
     checked_orders = create_unit_orders(length, orders);
     if (!checked_orders) {
       pcity->rally_point.length = 0;
-      log_error("invalid rally point orders for city number %d.", city_id);
+      qCritical("invalid rally point orders for city number %d.", city_id);
       return;
     }
 

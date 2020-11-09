@@ -1240,7 +1240,7 @@ class Packet:
         return '''%(send_prototype)s
 {
   if (!pc->used) {
-    log_error("WARNING: trying to send data to the closed connection %%s",
+    qCritical("WARNING: trying to send data to the closed connection %%s",
               conn_description(pc));
     return -1;
   }
@@ -1504,7 +1504,7 @@ def get_packet_handlers_fill_capability(packets):
     %(receive_handler)s
   } else '''%v.__dict__
         body=body+'''{
-    log_error("Unknown %(type)s variant for cap %%s", capability);
+    qCritical("Unknown %(type)s variant for cap %%s", capability);
   }
 '''%v.__dict__
     if len(cs_packets)>0 or len(sc_packets)>0:
@@ -1518,7 +1518,7 @@ def get_packet_handlers_fill_capability(packets):
       %(send_handler)s
     } else '''%v.__dict__
             body=body+'''{
-      log_error("Unknown %(type)s variant for cap %%s", capability);
+      qCritical("Unknown %(type)s variant for cap %%s", capability);
     }
 '''%v.__dict__
         for p in cs_packets:
@@ -1529,7 +1529,7 @@ def get_packet_handlers_fill_capability(packets):
       %(receive_handler)s
     } else '''%v.__dict__
             body=body+'''{
-      log_error("Unknown %(type)s variant for cap %%s", capability);
+      qCritical("Unknown %(type)s variant for cap %%s", capability);
     }
 '''%v.__dict__
         body=body+'''  } else {
@@ -1542,7 +1542,7 @@ def get_packet_handlers_fill_capability(packets):
       %(send_handler)s
     } else '''%v.__dict__
             body=body+'''{
-      log_error("Unknown %(type)s variant for cap %%s", capability);
+      qCritical("Unknown %(type)s variant for cap %%s", capability);
     }
 '''%v.__dict__
         for p in sc_packets:
@@ -1553,7 +1553,7 @@ def get_packet_handlers_fill_capability(packets):
       %(receive_handler)s
     } else '''%v.__dict__
             body=body+'''{
-      log_error("Unknown %(type)s variant for cap %%s", capability);
+      qCritical("Unknown %(type)s variant for cap %%s", capability);
     }
 '''%v.__dict__
         body=body+'''  }

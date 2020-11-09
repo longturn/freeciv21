@@ -13,8 +13,6 @@
 #ifndef FC__RGBCOLOR_H
 #define FC__RGBCOLOR_H
 
-
-
 /* utility */
 #include "shared.h"
 
@@ -50,7 +48,7 @@ struct rgbcolor {
                                                                             \
     _c = CLIP(0, _c, 255);                                                  \
     if (_c != _color_save) {                                                \
-      log_error("Invalid value for '%s' in color definition '%s' (%d). "    \
+      qCritical("Invalid value for '%s' in color definition '%s' (%d). "    \
                 "Setting it to '%d'.",                                      \
                 _colorname, _str, _color_save, _c);                         \
     }                                                                       \
@@ -80,7 +78,5 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
 bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex);
 
 int rgbcolor_brightness_score(struct rgbcolor *prgbcolor);
-
-
 
 #endif /* FC__RGBCOLOR_H */

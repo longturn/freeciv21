@@ -203,7 +203,7 @@ static bool test_wetness(const struct tile *ptile, wetness_c c)
   case WC_NDRY:
     return !map_pos_is_dry(ptile);
   }
-  log_error("Invalid wetness_c %d", c);
+  qCritical("Invalid wetness_c %d", c);
   return FALSE;
 }
 
@@ -220,7 +220,7 @@ static bool test_miscellaneous(const struct tile *ptile, miscellaneous_c c)
   case MC_NLOW:
     return !map_pos_is_low(ptile);
   }
-  log_error("Invalid miscellaneous_c %d", c);
+  qCritical("Invalid miscellaneous_c %d", c);
   return FALSE;
 }
 
@@ -1504,7 +1504,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
         mode = MAPSTARTPOS_VARIABLE;
         break;
       default:
-        log_error(_("The server couldn't allocate starting positions."));
+        qCritical(_("The server couldn't allocate starting positions."));
         destroy_tmap();
         return FALSE;
       }
@@ -1942,7 +1942,7 @@ static bool place_island(struct gen234_state *pstate)
 
         checkmass--;
         if (checkmass <= 0) {
-          log_error("mapgen.c: mass doesn't sum up.");
+          qCritical("mapgen.c: mass doesn't sum up.");
           return i != 0;
         }
 
@@ -2039,7 +2039,7 @@ static bool create_island(int islemass, struct gen234_state *pstate)
     }
   }
   if (tries <= 0) {
-    log_error("create_island ended early with %d/%d.", islemass - i,
+    qCritical("create_island ended early with %d/%d.", islemass - i,
               islemass);
   }
 

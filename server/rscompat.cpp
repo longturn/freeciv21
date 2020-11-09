@@ -99,8 +99,8 @@ int rscompat_check_capabilities(struct section_file *file,
     }
     if (!has_capabilities(datafile_options, RULESET_CAPABILITIES)) {
       qFatal("\"%s\": ruleset datafile claims required option(s)"
-                " that we don't support:",
-                filename);
+             " that we don't support:",
+             filename);
       qFatal("  datafile options: %s", datafile_options);
       qFatal("  supported options: %s", RULESET_CAPABILITIES);
       ruleset_error(LOG_ERROR, "Capability problem");
@@ -110,12 +110,12 @@ int rscompat_check_capabilities(struct section_file *file,
   }
 
   if (!secfile_lookup_int(file, &format, "datafile.format_version")) {
-    log_error("\"%s\": lacking legal format_version field", filename);
+    qCritical("\"%s\": lacking legal format_version field", filename);
     ruleset_error(LOG_ERROR, "%s", secfile_error());
 
     return 0;
   } else if (format == 0) {
-    log_error("\"%s\": Illegal format_version value", filename);
+    qCritical("\"%s\": Illegal format_version value", filename);
     ruleset_error(LOG_ERROR, "Format version error");
   }
 
@@ -146,7 +146,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
     if (problem->num_suggested_solutions == 0) {
       /* Didn't get any suggestions about how to solve this. */
 
-      log_error("Dropping an action enabler for %s."
+      qCritical("Dropping an action enabler for %s."
                 " Don't know how to fix: %s.",
                 action_rule_name(paction), problem->description);
       ae->disabled = TRUE;
@@ -167,7 +167,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
          * it obligatory. In that case the enabler was never in use. The
          * action it self would have blocked it. */
 
-        log_error("While adding hard obligatory reqs to action enabler"
+        qCritical("While adding hard obligatory reqs to action enabler"
                   " for %s: %s Dropping it.",
                   action_rule_name(paction), problem->description);
         ae->disabled = TRUE;
@@ -188,7 +188,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
       if (!req_vec_change_apply(&problem->suggested_solutions[i],
                                 action_enabler_vector_by_number,
                                 new_enabler)) {
-        log_error(
+        qCritical(
             "Failed to apply solution %s for %s to action enabler"
             " for %s. Dropping it.",
             req_vec_change_translation(&problem->suggested_solutions[i],

@@ -158,12 +158,12 @@ bool audio_select_plugin(QString &name)
 
   if (!found) {
     qFatal(_("Plugin '%s' isn't available. Available are %s"),
-              qUtf8Printable(name), audio_get_all_plugin_names());
+           qUtf8Printable(name), audio_get_all_plugin_names());
     exit(EXIT_FAILURE);
   }
 
   if (!plugins[i].init()) {
-    log_error("Plugin %s found, but can't be initialized.",
+    qCritical("Plugin %s found, but can't be initialized.",
               qUtf8Printable(name));
     return FALSE;
   }
@@ -218,7 +218,7 @@ static const char *audiospec_fullname(QString &audioset_name, bool music)
     return NULL;
   }
 
-  log_error("Couldn't find audioset \"%s\", trying \"%s\".",
+  qCritical("Couldn't find audioset \"%s\", trying \"%s\".",
             qUtf8Printable(audioset_name), qUtf8Printable(audioset_default));
 
   return audiospec_fullname(audioset_default, music);
@@ -236,7 +236,7 @@ static bool check_audiofile_capstr(struct section_file *sfile,
   file_capstr = secfile_lookup_str(sfile, "%s", opt_path);
   if (NULL == file_capstr) {
     qFatal("Audio spec-file \"%s\" doesn't have capability string.",
-              filename);
+           filename);
     exit(EXIT_FAILURE);
   }
   if (!has_capabilities(our_cap, file_capstr)) {
@@ -248,7 +248,7 @@ static bool check_audiofile_capstr(struct section_file *sfile,
   }
   if (!has_capabilities(file_capstr, our_cap)) {
     qFatal("Audio spec-file claims required option(s) "
-              "which we don't support:");
+           "which we don't support:");
     qFatal("  file: \"%s\"", filename);
     qFatal("  file options: %s", file_capstr);
     qFatal("  supported options: %s", our_cap);
@@ -299,7 +299,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   ss_filename = audiospec_fullname(soundset_name, FALSE);
   ms_filename = audiospec_fullname(musicset_name, TRUE);
   if (!ss_filename || !ms_filename) {
-    log_error("Cannot find audio spec-file \"%s\" or \"%s\"",
+    qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
               qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
     log_normal(_("To get sound you need to download a sound set!"));
     log_normal(_("Get sound sets from <%s>."),
@@ -311,12 +311,12 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   }
   if (!(ss_tagfile = secfile_load(ss_filename, TRUE))) {
     qFatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
-              secfile_error());
+           secfile_error());
     exit(EXIT_FAILURE);
   }
   if (!(ms_tagfile = secfile_load(ms_filename, TRUE))) {
     qFatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
-              secfile_error());
+           secfile_error());
     exit(EXIT_FAILURE);
   }
 
@@ -466,7 +466,7 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
     } else {
       fullpath = fileinfoname(get_data_dirs(), soundfile);
       if (!fullpath) {
-        log_error("Cannot find audio file %s for tag %s", soundfile, tag);
+        qCritical("Cannot find audio file %s for tag %s", soundfile, tag);
       }
     }
   }

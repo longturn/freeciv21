@@ -3277,7 +3277,7 @@ static const char *client_optset_category_name(int category)
     break;
   }
 
-  log_error("%s: invalid option category number %d.", __FUNCTION__,
+  qCritical("%s: invalid option category number %d.", __FUNCTION__,
             category);
   return NULL;
 }
@@ -5040,7 +5040,7 @@ static void message_options_load(struct section_file *file,
   for (i = 0; i < num_events; i++) {
     p = secfile_lookup_str(file, "messages.event%d.name", i);
     if (NULL == p) {
-      log_error("Corruption in file %s: %s", secfile_name(file),
+      qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
       continue;
     }
@@ -5052,13 +5052,13 @@ static void message_options_load(struct section_file *file,
     }
     event = event_type_by_name(p, strcmp);
     if (!event_type_is_valid(event)) {
-      log_error("Event not supported: %s", p);
+      qCritical("Event not supported: %s", p);
       continue;
     }
 
     if (!secfile_lookup_int(file, &messages_where[event],
                             "messages.event%d.where", i)) {
-      log_error("Corruption in file %s: %s", secfile_name(file),
+      qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
     }
   }
@@ -5200,7 +5200,7 @@ static const char *get_current_option_file_name(void)
 #else
     name = freeciv_storage_dir();
     if (!name) {
-      log_error(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find freeciv storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
@@ -5251,7 +5251,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     name = freeciv_storage_dir();
     if (name == NULL) {
-      log_error(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find freeciv storage directory"));
 
       return NULL;
     }
@@ -5284,7 +5284,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     /* Older versions had options file in user home directory */
     name = user_home_dir();
     if (name == NULL) {
-      log_error(_("Cannot find your home directory"));
+      qCritical(_("Cannot find your home directory"));
 
       return NULL;
     }
@@ -5394,7 +5394,7 @@ static void settable_options_load(struct section_file *sf)
     }
 
     if (NULL == string) {
-      log_error("Entry type variant of \"%s.%s\" is not supported.",
+      qCritical("Entry type variant of \"%s.%s\" is not supported.",
                 section_name(psection), entry_name(pentry));
       continue;
     }
@@ -5486,7 +5486,7 @@ void desired_settable_options_update(void)
     }
 
     if (NULL == value || NULL == def_val) {
-      log_error("Option type %s (%d) not supported for '%s'.",
+      qCritical("Option type %s (%d) not supported for '%s'.",
                 option_type_name(option_type(poption)), option_type(poption),
                 option_name(poption));
       continue;
@@ -5630,7 +5630,7 @@ static void desired_settable_option_send(struct option *poption)
     break;
   }
 
-  log_error("Option type %s (%d) not supported for '%s'.",
+  qCritical("Option type %s (%d) not supported for '%s'.",
             option_type_name(option_type(poption)), option_type(poption),
             option_name(poption));
 }
@@ -5771,7 +5771,7 @@ void options_load(void)
 
     /* FIXME: need better messages */
     if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
-      log_error(_("Save failed, cannot write to file %s"), name);
+      qCritical(_("Save failed, cannot write to file %s"), name);
     } else {
       log_normal(_("Saved settings to file %s"), name);
     }
@@ -6025,7 +6025,7 @@ void options_init(void)
             MAX(MIN(option_int_def(poption), option_int_max(poption)),
                 option_int_min(poption));
 
-        log_error("option %s has default value of %d, which is "
+        qCritical("option %s has default value of %d, which is "
                   "out of its range [%d; %d], changing to %d.",
                   option_name(poption), option_int_def(poption),
                   option_int_min(poption), option_int_max(poption),
@@ -6045,7 +6045,7 @@ void options_init(void)
         const struct strvec *values = option_str_values(poption);
 
         if (NULL == values || strvec_size(values) == 0) {
-          log_error("Invalid NULL default string for option %s.",
+          qCritical("Invalid NULL default string for option %s.",
                     option_name(poption));
         } else {
           *((const char **) &(pcoption->string.def)) = strvec_get(values, 0);
@@ -6328,7 +6328,7 @@ void option_set_default_ts(struct tileset *t)
   opt = optset_option_by_name(client_optset, optname);
 
   if (opt == NULL) {
-    log_error("Unknown option name \"%s\" in option_set_default_ts()",
+    qCritical("Unknown option name \"%s\" in option_set_default_ts()",
               optname);
     return;
   }

@@ -261,7 +261,7 @@ void option_dialog::apply_options()
       option_color_set(poption, ft_color_construct(ba1.data(), ba2.data()));
       break;
     case OT_VIDEO_MODE:
-      log_error("Option type %s (%d) not supported yet.",
+      qCritical("Option type %s (%d) not supported yet.",
                 option_type_name(option_type(poption)),
                 option_type(poption));
       break;
@@ -516,7 +516,7 @@ void option_dialog::option_dialog_refresh(struct option *poption)
     set_color(poption, option_color_get(poption));
     break;
   case OT_VIDEO_MODE:
-    log_error("Option type %s (%d) not supported yet.",
+    qCritical("Option type %s (%d) not supported yet.",
               option_type_name(option_type(poption)), option_type(poption));
     break;
   }
@@ -568,7 +568,7 @@ void option_dialog::option_dialog_reset(struct option *poption)
     set_color(poption, option_color_def(poption));
     break;
   case OT_VIDEO_MODE:
-    log_error("Option type %s (%d) not supported yet.",
+    qCritical("Option type %s (%d) not supported yet.",
               option_type_name(option_type(poption)), option_type(poption));
     break;
   }
@@ -715,7 +715,7 @@ void option_dialog::add_option(struct option *poption)
     break;
 
   case OT_VIDEO_MODE:
-    log_error("Option type %s (%d) not supported yet.",
+    qCritical("Option type %s (%d) not supported yet.",
               option_type_name(option_type(poption)), option_type(poption));
     break;
   }
@@ -864,8 +864,9 @@ void option_gui_update(struct option *poption)
       update_nationset_combo();
     }
     if (strcmp(option_name(poption), "aifill") == 0) {
-      //sveinung
-      //qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
+      // sveinung
+      // qobject_cast<page_pregame
+      // *>(king()->pages[PAGE_START])->pr_options->set_aifill(option_int_get(poption));
     }
   }
 }

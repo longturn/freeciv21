@@ -278,7 +278,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
        * a path-finding bug, but don't make infinite recursion. */
 
       if (!goto_warned) {
-        log_error("No path found to reach the start point.");
+        qCritical("No path found to reach the start point.");
         goto_warned = TRUE;
       }
 
@@ -326,7 +326,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
          * a path-finding bug, but don't make infinite recursion. */
 
         if (!goto_warned) {
-          log_error("No path found to reach the start point.");
+          qCritical("No path found to reach the start point.");
           goto_warned = TRUE;
         }
 
@@ -652,7 +652,7 @@ static int get_activity_time(const struct tile *ptile,
     }
     break;
   default:
-    log_error("Invalid connect activity: %d.", connect_activity);
+    qCritical("Invalid connect activity: %d.", connect_activity);
   }
 
   return activity_mc;
@@ -1756,7 +1756,7 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
         order_recursive_roads(old_tile, tgt, &p, 0);
         break;
       default:
-        log_error("Invalid connect activity: %d.", activity);
+        qCritical("Invalid connect activity: %d.", activity);
         break;
       }
 

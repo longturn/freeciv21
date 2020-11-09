@@ -117,7 +117,7 @@ static void print_landarea_map(struct claim_map *pcmap, int turn)
   player_slots_iterate(pslot)
   {
     if (player_slot_index(pslot) >= 32 && player_slot_is_used(pslot)) {
-      log_error("Debugging not possible! Player slots >= 32 are used.");
+      qCritical("Debugging not possible! Player slots >= 32 are used.");
       return;
     }
   }
@@ -444,7 +444,7 @@ void rank_users(bool interrupt)
 
   /* don't fail silently, at least print an error */
   if (!fp) {
-    log_error("couldn't open ranking log file: \"%s\"",
+    qCritical("couldn't open ranking log file: \"%s\"",
               qUtf8Printable(srvarg.ranklog_filename));
     return;
   }

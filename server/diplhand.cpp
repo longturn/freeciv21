@@ -204,7 +204,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
             || !are_reqs_active(pother, pplayer, NULL, NULL, NULL, NULL,
                                 NULL, NULL, NULL, NULL,
                                 &(info->receiver_reqs), RPT_POSSIBLE)) {
-          log_error(
+          qCritical(
               "Requirements of a clause between %s and %s not fullfilled",
               player_name(pplayer), player_name(pother));
           return;
@@ -215,7 +215,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         switch (pclause->type) {
         case CLAUSE_EMBASSY:
           if (player_has_real_embassy(pother, pplayer)) {
-            log_error("%s tried to give embassy to %s, who already "
+            qCritical("%s tried to give embassy to %s, who already "
                       "has an embassy",
                       player_name(pplayer), player_name(pother));
             return;
@@ -227,7 +227,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                   game.info.tech_trade_allow_holes)) {
             /* It is impossible to give a technology to a civilization that
              * can not possess it (the client should enforce this). */
-            log_error("Treaty: %s can't have tech %s",
+            qCritical("Treaty: %s can't have tech %s",
                       nation_rule_name(nation_of_player(pother)),
                       advance_rule_name(advance_by_number(pclause->value)));
             notify_player(
@@ -239,7 +239,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
           }
           if (research_invention_state(research_get(pplayer), pclause->value)
               != TECH_KNOWN) {
-            log_error("Nation %s try to give unknown tech %s to nation %s.",
+            qCritical("Nation %s try to give unknown tech %s to nation %s.",
                       nation_rule_name(nation_of_player(pplayer)),
                       advance_rule_name(advance_by_number(pclause->value)),
                       nation_rule_name(nation_of_player(pother)));
@@ -549,7 +549,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
         struct city *pcity = game_city_by_number(pclause->value);
 
         if (!pcity) {
-          log_error("Treaty city id %d not found - skipping clause.",
+          qCritical("Treaty city id %d not found - skipping clause.",
                     pclause->value);
           break;
         }

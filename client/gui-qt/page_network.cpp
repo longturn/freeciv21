@@ -273,7 +273,7 @@ void page_network::update_server_list(enum server_scan_type sstype,
 void server_scan_error(struct server_scan *scan, const char *message)
 {
   qtg_version_message(message);
-  log_error("%s", message);
+  qCritical("%s", message);
   qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
       ->destroy_server_scans();
 }
@@ -413,7 +413,7 @@ void page_network::handle_authentication_req(enum authentication_type type,
     return;
   }
 
-  log_error("Unsupported authentication type %d: %s.", type, message);
+  qCritical("Unsupported authentication type %d: %s.", type, message);
 }
 
 /**********************************************************************/ /**
@@ -468,7 +468,7 @@ void page_network::slot_connect()
     return;
   }
 
-  log_error("Unsupported connection status: %d", connection_status);
+  qCritical("Unsupported connection status: %d", connection_status);
 }
 
 /**********************************************************************/ /**

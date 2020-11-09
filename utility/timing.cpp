@@ -20,7 +20,6 @@
 /* utility */
 #include "log.h"
 
-
 enum timer_state { TIMER_STARTED, TIMER_STOPPED };
 
 class civtimer : public QElapsedTimer {
@@ -103,7 +102,7 @@ void timer_start(civtimer *t)
     return;
   }
   if (t->state == TIMER_STARTED) {
-    log_error("tried to start already started timer");
+    qCritical("tried to start already started timer");
     return;
   }
   t->state = TIMER_STARTED;
@@ -124,7 +123,7 @@ void timer_stop(civtimer *t)
     return;
   }
   if (t->state == TIMER_STOPPED) {
-    log_error("tried to stop already stopped timer");
+    qCritical("tried to stop already stopped timer");
     return;
   }
   t->msec = t->elapsed();

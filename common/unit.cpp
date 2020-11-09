@@ -990,7 +990,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
   case ACTIVITY_UNKNOWN:
     break;
   }
-  log_error("can_unit_do_activity_targeted_at() unknown activity %d",
+  qCritical("can_unit_do_activity_targeted_at() unknown activity %d",
             activity);
   return FALSE;
 }
@@ -1175,7 +1175,7 @@ void unit_activity_astr(const struct unit *punit, struct astring *astr)
     break;
   }
 
-  log_error("Unknown unit activity %d for %s (nb %d) in %s()",
+  qCritical("Unknown unit activity %d for %s (nb %d) in %s()",
             punit->activity, unit_rule_name(punit), punit->id, __FUNCTION__);
 }
 

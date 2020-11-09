@@ -670,7 +670,7 @@ void generic_handle_player_attribute_chunk(
       pplayer->attribute_block_buffer.data = NULL;
     }
     pplayer->attribute_block_buffer.length = 0;
-    log_error("Received wrong attribute chunk");
+    qCritical("Received wrong attribute chunk");
     return;
   }
   /* first one in a row */

@@ -5076,7 +5076,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
     return TRUE;
   }
 
-  log_error("Wrong class variant for setting %s (%d): %d.",
+  qCritical("Wrong class variant for setting %s (%d): %d.",
             setting_name(pset), setting_number(pset), pset->sclass);
   settings_snprintf(reject_msg, reject_msg_len, _("Internal error."));
 
@@ -5607,7 +5607,7 @@ int read_enum_value(const struct setting *pset)
     val = *((short *) pset->enumerator.pvalue);
     break;
   default:
-    log_error("Illegal enum store size %d, can't read value",
+    qCritical("Illegal enum store size %d, can't read value",
               pset->enumerator.store_size);
     return 0;
   }
@@ -5636,7 +5636,7 @@ bool setting_enum_set(struct setting *pset, const char *val,
   }
 
   if (!set_enum_value(pset, int_val)) {
-    log_error("Illegal enumerator value size %d for %s",
+    qCritical("Illegal enumerator value size %d for %s",
               pset->enumerator.store_size, val);
     return FALSE;
   }
@@ -5880,7 +5880,7 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return NULL;
 }
@@ -5916,7 +5916,7 @@ const char *setting_default_name(const struct setting *pset, bool pretty,
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return NULL;
 }
@@ -5991,7 +5991,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
       fc_snprintf(path, sizeof(path), "%s.set%d", section, j);
 
       if (!setting_ruleset_one(file, name, path)) {
-        log_error("unknown setting in '%s': %s", secfile_name(file), name);
+        qCritical("unknown setting in '%s': %s", secfile_name(file), name);
       }
     }
   }
@@ -6047,7 +6047,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                  path)) {
       val = (ival != 0);
     } else if (!secfile_lookup_bool(file, &val, "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
       break;
     }
@@ -6060,7 +6060,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                    setting_name(pset),
                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6069,7 +6069,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     int val;
 
     if (!secfile_lookup_int(file, &val, "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != *pset->integer.pvalue) {
       if (setting_int_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
@@ -6077,7 +6077,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                    setting_name(pset),
                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6086,7 +6086,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     const char *val = secfile_lookup_str(file, "%s.value", path);
 
     if (NULL == val) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (0 != strcmp(val, pset->string.value)) {
       if (setting_str_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
@@ -6094,7 +6094,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                    setting_name(pset),
                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6105,7 +6105,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     if (!secfile_lookup_enum_data(file, &val, FALSE,
                                   setting_enum_secfile_str, pset, "%s.value",
                                   path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != read_enum_value(pset)) {
       if (NULL == pset->enumerator.validate
@@ -6116,7 +6116,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                    setting_name(pset),
                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6127,7 +6127,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     if (!secfile_lookup_enum_data(file, &val, TRUE,
                                   setting_bitwise_secfile_str, pset,
                                   "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != *pset->bitwise.pvalue) {
       if (NULL == pset->bitwise.validate
@@ -6138,7 +6138,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                    setting_name(pset),
                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6184,7 +6184,7 @@ bool setting_non_default(const struct setting *pset)
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return FALSE;
 }
@@ -6303,7 +6303,7 @@ static void setting_game_restore(struct setting *pset)
   }
 
   if (!res) {
-    log_error("Error restoring setting '%s' to the value from game start: "
+    qCritical("Error restoring setting '%s' to the value from game start: "
               "%s",
               setting_name(pset), reject_msg);
   }
@@ -6447,7 +6447,7 @@ void settings_game_load(struct section_file *file, const char *section)
                          setting_name(pset),
                          setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
@@ -6478,7 +6478,7 @@ void settings_game_load(struct section_file *file, const char *section)
                          setting_name(pset),
                          setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
@@ -6506,7 +6506,7 @@ void settings_game_load(struct section_file *file, const char *section)
                          setting_name(pset),
                          setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
@@ -6539,7 +6539,7 @@ void settings_game_load(struct section_file *file, const char *section)
                          setting_name(pset),
                          setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
@@ -6572,7 +6572,7 @@ void settings_game_load(struct section_file *file, const char *section)
                          setting_name(pset),
                          setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {

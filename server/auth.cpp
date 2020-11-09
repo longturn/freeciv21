@@ -112,7 +112,7 @@ bool auth_user(struct connection *pconn, char *username)
         get_unique_guest_name(tmpname); /* don't pass pconn->username here */
         sz_strlcpy(pconn->username, tmpname);
 
-        log_error("Error reading database; connection -> guest");
+        qCritical("Error reading database; connection -> guest");
         notify_conn_early(
             pconn->self, NULL, E_CONNECTION, ftc_warning,
             _("There was an error reading the user "
@@ -189,7 +189,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
       notify_conn(pconn->self, NULL, E_CONNECTION, ftc_warning,
                   _("Warning: There was an error in saving to the database. "
                     "Continuing, but your stats will not be saved."));
-      log_error("Error writing to database for: %s", pconn->username);
+      qCritical("Error writing to database for: %s", pconn->username);
     }
 
     establish_new_connection(pconn);

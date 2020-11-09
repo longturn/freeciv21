@@ -179,7 +179,7 @@ void texai_city_info_recv(void *data, enum texaimsgtype msgtype)
     if (pcity != NULL) {
       pcity->owner = pplayer;
     } else {
-      log_error("Tex: requested change on city id %d that's not known.",
+      qCritical("Tex: requested change on city id %d that's not known.",
                 info->id);
     }
   }
@@ -221,7 +221,7 @@ void texai_city_destruction_recv(void *data)
     idex_unregister_city(&texai_world, pcity);
     destroy_city_virtual(pcity);
   } else {
-    log_error("Tex: requested removal of city id %d that's not known.",
+    qCritical("Tex: requested removal of city id %d that's not known.",
               info->id);
   }
 }
@@ -332,7 +332,7 @@ void texai_unit_destruction_recv(void *data)
     idex_unregister_unit(&texai_world, punit);
     unit_virtual_destroy(punit);
   } else {
-    log_error("Tex: requested removal of unit id %d that's not known.",
+    qCritical("Tex: requested removal of unit id %d that's not known.",
               info->id);
   }
 }
@@ -368,7 +368,7 @@ void texai_unit_moved_recv(void *data)
 
     unit_tile_set(punit, ptile);
   } else {
-    log_error("Tex: requested moving of unit id %d that's not known.",
+    qCritical("Tex: requested moving of unit id %d that's not known.",
               info->id);
   }
 }

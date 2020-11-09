@@ -2843,7 +2843,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
   if (verb == VERB_DEFAULT) {
     char text[256];
 
-    log_error("%s requirement %s in range %d is not supported in reqtext.c.",
+    qCritical("%s requirement %s in range %d is not supported in reqtext.c.",
               preq->present ? "Present" : "Absent",
               universal_name_translation(&preq->source, text, sizeof(text)),
               preq->range);

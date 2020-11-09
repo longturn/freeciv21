@@ -77,7 +77,7 @@ enum diplstate_type cancel_pact_result(enum diplstate_type oldstate)
   case DS_TEAM: /* no change */
     return DS_TEAM;
   default:
-    log_error("non-pact diplstate %d in cancel_pact_result", oldstate);
+    qCritical("non-pact diplstate %d in cancel_pact_result", oldstate);
     return DS_WAR; /* arbitrary */
   }
 }

@@ -5222,7 +5222,7 @@ struct act_prob action_prob_unit_vs_tgt(const struct action *paction,
     prob = action_prob_self(act_unit, paction->id);
     break;
   case ATK_COUNT:
-    log_error("Invalid action target kind");
+    qCritical("Invalid action target kind");
     break;
   }
 

@@ -683,7 +683,7 @@ ft_offset_t text_tag_stop_offset(const struct text_tag *ptag)
 const char *text_tag_color_foreground(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
-    log_error("text_tag_color_foreground(): incompatible tag type.");
+    qCritical("text_tag_color_foreground(): incompatible tag type.");
     return NULL;
   }
 
@@ -697,7 +697,7 @@ const char *text_tag_color_foreground(const struct text_tag *ptag)
 const char *text_tag_color_background(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
-    log_error("text_tag_color_background(): incompatible tag type.");
+    qCritical("text_tag_color_background(): incompatible tag type.");
     return NULL;
   }
 
@@ -711,7 +711,7 @@ const char *text_tag_color_background(const struct text_tag *ptag)
 enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
-    log_error("text_tag_link_type(): incompatible tag type.");
+    qCritical("text_tag_link_type(): incompatible tag type.");
     return TLT_INVALID;
   }
 
@@ -726,7 +726,7 @@ enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 int text_tag_link_id(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
-    log_error("text_tag_link_id(): incompatible tag type.");
+    qCritical("text_tag_link_id(): incompatible tag type.");
     return TTT_INVALID;
   }
 

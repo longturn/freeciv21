@@ -110,7 +110,7 @@ static bool calls_are_equal(const struct call *pcall1,
     return TRUE;
   }
 
-  log_error("Unsupported call type %d.", pcall1->type);
+  qCritical("Unsupported call type %d.", pcall1->type);
   return FALSE;
 }
 

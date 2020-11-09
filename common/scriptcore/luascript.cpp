@@ -456,7 +456,7 @@ void luascript_pop_returns(struct fc_lua *fcl, const char *func_name,
 
       *pres = lua_tointegerx(L, -1, &isnum);
       if (!isnum) {
-        log_error("Return value from lua function %s is a %s, want int",
+        qCritical("Return value from lua function %s is a %s, want int",
                   func_name, lua_typename(L, lua_type(L, -1)));
       }
     } break;

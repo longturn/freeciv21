@@ -245,7 +245,7 @@ const char *get_event_message_text(enum event_type event)
     return events[event_to_index[event]].full_descr;
   }
 
-  log_error("unknown event %d", event);
+  qCritical("unknown event %d", event);
   return "UNKNOWN EVENT"; /* FIXME: Should be marked for translation?
                            * we get non-translated in log message. */
 }
@@ -273,7 +273,7 @@ const char *get_event_tag(enum event_type event)
   if (events[event_to_index[event]].event == event) {
     return events[event_to_index[event]].tag_name;
   }
-  log_error("unknown event %d", event);
+  qCritical("unknown event %d", event);
   return NULL;
 }
 

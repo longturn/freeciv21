@@ -58,15 +58,15 @@ void load_install_info_list(const char *filename)
   caps = secfile_lookup_str(file, "info.options");
 
   if (caps == NULL) {
-    log_error("MPDB %s missing capability information", filename);
+    qCritical("MPDB %s missing capability information", filename);
     secfile_destroy(file);
     return;
   }
 
   if (!has_capabilities(MPDB_CAPSTR, caps)) {
-    log_error("Incompatible mpdb file %s:", filename);
-    log_error("  file options:      %s", caps);
-    log_error("  supported options: %s", MPDB_CAPSTR);
+    qCritical("Incompatible mpdb file %s:", filename);
+    qCritical("  file options:      %s", caps);
+    qCritical("  supported options: %s", MPDB_CAPSTR);
 
     secfile_destroy(file);
 
@@ -122,7 +122,7 @@ static int mpdb_query(sqlite3 *handle, const char *query)
   }
 
   if (ret != SQLITE_OK) {
-    log_error("Query \"%s\" failed. (%d)", query, ret);
+    qCritical("Query \"%s\" failed. (%d)", query, ret);
   }
 
   return ret;
@@ -145,7 +145,7 @@ void create_mpdb(const char *filename, bool scenario_db)
   }
   local_name[i] = '\0';
   if (!make_dir(local_name)) {
-    log_error(_("Can't create directory \"%s\" for modpack database."),
+    qCritical(_("Can't create directory \"%s\" for modpack database."),
               local_name);
     return;
   }
@@ -175,7 +175,7 @@ void create_mpdb(const char *filename, bool scenario_db)
   if (ret == SQLITE_OK) {
     log_debug("Created %s", filename);
   } else {
-    log_error(_("Creating \"%s\" failed: %s"), filename,
+    qCritical(_("Creating \"%s\" failed: %s"), filename,
               sqlite3_errstr(ret));
   }
 }
@@ -197,7 +197,7 @@ void open_mpdb(const char *filename, bool scenario_db)
   ret = sqlite3_open_v2(filename, handle, SQLITE_OPEN_READWRITE, NULL);
 
   if (ret != SQLITE_OK) {
-    log_error(_("Opening \"%s\" failed: %s"), filename, sqlite3_errstr(ret));
+    qCritical(_("Opening \"%s\" failed: %s"), filename, sqlite3_errstr(ret));
   }
 }
 
@@ -247,7 +247,7 @@ bool mpdb_update_modpack(const char *name, enum modpack_type type,
   }
 
   if (ret != SQLITE_OK) {
-    log_error(_("Failed to insert modpack '%s' information"), name);
+    qCritical(_("Failed to insert modpack '%s' information"), name);
   }
 
   return ret != SQLITE_OK;

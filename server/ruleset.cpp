@@ -522,7 +522,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
     bonus->flag = unit_type_flag_id_by_name(
         rscompat_utype_flag_name_3_1(compat, flag), fc_strcasecmp);
     if (!unit_type_flag_id_is_valid(bonus->flag)) {
-      log_error("\"%s\": unknown flag name \"%s\" in '%s.%s'.", filename,
+      qCritical("\"%s\": unknown flag name \"%s\" in '%s.%s'.", filename,
                 flag, sec, sub);
       FC_FREE(bonus);
       success = FALSE;
@@ -531,7 +531,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
     type = secfile_lookup_str(file, "%s.%s%d.type", sec, sub, j);
     bonus->type = combat_bonus_type_by_name(type, fc_strcasecmp);
     if (!combat_bonus_type_is_valid(bonus->type)) {
-      log_error("\"%s\": unknown bonus type \"%s\" in '%s.%s'.", filename,
+      qCritical("\"%s\": unknown bonus type \"%s\" in '%s.%s'.", filename,
                 type, sec, sub);
       FC_FREE(bonus);
       success = FALSE;
@@ -539,7 +539,7 @@ static bool lookup_cbonus_list(struct rscompat_info *compat,
     }
     if (!secfile_lookup_int(file, &bonus->value, "%s.%s%d.value", sec, sub,
                             j)) {
-      log_error("\"%s\": failed to get value from '%s.%s%d'.", filename, sec,
+      qCritical("\"%s\": failed to get value from '%s.%s%d'.", filename, sec,
                 sub, j);
       FC_FREE(bonus);
       success = FALSE;
@@ -1677,7 +1677,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
 
 #define rs_sanity_veteran(_path, _entry, _i, _condition, _action)           \
   if (_condition) {                                                         \
-    log_error("Invalid veteran definition '%s.%s[%d]'!", _path, _entry,     \
+    qCritical("Invalid veteran definition '%s.%s[%d]'!", _path, _entry,     \
               _i);                                                          \
     log_debug("Failed check: '%s'. Update value: '%s'.", #_condition,       \
               #_action);                                                    \
@@ -6277,7 +6277,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                     game.info.granary_num_inis, MAX_GRANARY_INIS);
       ok = FALSE;
     } else if (game.info.granary_num_inis == 0) {
-      log_error("No values for granary_food_ini. Using default "
+      qCritical("No values for granary_food_ini. Using default "
                 "value %d.",
                 RS_DEFAULT_GRANARY_FOOD_INI);
       game.info.granary_num_inis = 1;
@@ -6293,7 +6293,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
           } else {
             food_ini[gi] = food_ini[gi - 1];
           }
-          log_error("Bad value for granary_food_ini[%i]. Using %i.", gi,
+          qCritical("Bad value for granary_food_ini[%i]. Using %i.", gi,
                     food_ini[gi]);
         }
         game.info.granary_food_ini[gi] = food_ini[gi];
@@ -6754,11 +6754,11 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     }
     if (game.info.tech_cost_style == TECH_COST_CIV1CIV2
         && game.info.tech_leakage != TECH_LEAKAGE_NONE) {
-      log_error("Only tech_leakage \"%s\" supported with "
+      qCritical("Only tech_leakage \"%s\" supported with "
                 "tech_cost_style \"%s\". ",
                 tech_leakage_style_name(TECH_LEAKAGE_NONE),
                 tech_cost_style_name(TECH_COST_CIV1CIV2));
-      log_error("Switching to tech_leakage \"%s\".",
+      qCritical("Switching to tech_leakage \"%s\".",
                 tech_leakage_style_name(TECH_LEAKAGE_NONE));
       game.info.tech_leakage = TECH_LEAKAGE_NONE;
     }

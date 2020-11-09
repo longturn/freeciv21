@@ -312,8 +312,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qFatal(_("Invalid port number %s"),
-                qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
@@ -330,8 +329,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.quitidle = parser.value("quitidle").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      qFatal(_("Invalid number %s"),
-                qPrintable(parser.value("quitidle")));
+      qFatal(_("Invalid number %s"), qPrintable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }
   }
@@ -383,7 +381,7 @@ int main(int argc, char *argv[])
     } else if (value == QLatin1String("none")) {
       srvarg.announce = ANNOUNCE_NONE;
     } else {
-      log_error(_("Illegal value \"%s\" for --Announce"),
+      qCritical(_("Illegal value \"%s\" for --Announce"),
                 qPrintable(parser.value("Announce")));
     }
   }

@@ -30,7 +30,7 @@ static bool tool_player_tile_vision_get(const struct tile *ptile,
                                         const struct player *pplayer,
                                         enum vision_layer vision)
 {
-  log_error("Assumed unused function %s called.", __FUNCTION__);
+  qCritical("Assumed unused function %s called.", __FUNCTION__);
   return FALSE;
 }
 
@@ -40,7 +40,7 @@ static bool tool_player_tile_vision_get(const struct tile *ptile,
 static int tool_player_tile_city_id_get(const struct tile *ptile,
                                         const struct player *pplayer)
 {
-  log_error("Assumed unused function %s called.", __FUNCTION__);
+  qCritical("Assumed unused function %s called.", __FUNCTION__);
   return IDENTITY_NUMBER_ZERO;
 }
 
@@ -49,7 +49,7 @@ static int tool_player_tile_city_id_get(const struct tile *ptile,
  ***************************************************************************/
 static void tool_gui_color_free(struct color *pcolor)
 {
-  log_error("Assumed unused function %s called.", __FUNCTION__);
+  qCritical("Assumed unused function %s called.", __FUNCTION__);
 }
 
 /***********************************************************************/ /**
