@@ -141,8 +141,7 @@ QTcpServer *srv_prepare()
 
   /* must be before con_log_init() */
   init_connections();
-  con_log_init(srvarg.log_filename, srvarg.loglevel,
-               srvarg.fatal_assertions);
+  con_log_init(srvarg.log_filename, srvarg.fatal_assertions);
   /* logging available after this point */
 
   auto tcp_server = server_open_socket();

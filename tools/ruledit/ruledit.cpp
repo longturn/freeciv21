@@ -63,7 +63,6 @@ static int fatal_assertions = -1;
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  QtMsgType loglevel = LOG_NORMAL;
   int ui_options;
 
   /* Load win32 post-crash debugger */
@@ -89,7 +88,7 @@ int main(int argc, char **argv)
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
 
-  log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
+  log_init(NULL, NULL, NULL, fatal_assertions);
 
   /* Initialize command line arguments. */
   re_parse_cmdline(app);

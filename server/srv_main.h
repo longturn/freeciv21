@@ -36,8 +36,6 @@ struct server_arguments {
   int port;
   /* address to bind when connecting to the metaserver (NULL => bind_addr) */
   QString bind_meta_addr;
-  /* the log level */
-  QtMsgType loglevel;
   /* filenames */
   QString log_filename;
   QString ranklog_filename;

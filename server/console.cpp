@@ -143,14 +143,13 @@ static void depr_warn_callback(const char *msg)
 /********************************************************************/ /**
    Initialize logging via console.
  ************************************************************************/
-void con_log_init(const QString &log_filename, QtMsgType level,
-                  int fatal_assertions)
+void con_log_init(const QString &log_filename, int fatal_assertions)
 {
 #ifdef FREECIV_DEBUG
-  log_init(qUtf8Printable(log_filename), level, con_handle_log, log_prefix,
+  log_init(qUtf8Printable(log_filename), con_handle_log, log_prefix,
            fatal_assertions);
 #else
-  log_init(qUtf8Printable(log_filename), level, con_handle_log, NULL,
+  log_init(qUtf8Printable(log_filename), con_handle_log, NULL,
            fatal_assertions);
 #endif /* FREECIV_DEBUG */
   backtrace_init();

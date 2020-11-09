@@ -54,12 +54,10 @@ typedef void (*log_callback_fn)(QtMsgType, const char *, bool file_too);
  * add the turn and/or time of the log message. */
 typedef const char *(*log_prefix_fn)(void);
 
-void log_init(const char *filename, QtMsgType initial_level,
-              log_callback_fn callback, log_prefix_fn prefix,
-              int fatal_assertions);
+void log_init(const char *filename, log_callback_fn callback,
+              log_prefix_fn prefix, int fatal_assertions);
 void log_close(void);
-bool log_parse_level_str(const char *level_str, QtMsgType *ret_level);
-bool log_parse_level_str(const QString &level_str, QtMsgType *ret_level);
+bool log_parse_level_str(const QString &level_str);
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
 log_callback_fn log_set_callback(log_callback_fn callback);

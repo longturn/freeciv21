@@ -775,22 +775,15 @@ int main(int argc, char **argv)
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
-  /* Set the default log level. */
-  srvarg.loglevel = LOG_NORMAL;
-
   QCommandLineParser parser;
   parser.addHelpOption();
   parser.addVersionOption();
 
   bool ok = parser.addOptions({
-      {{"d", "debug"},
-#ifdef FREECIV_DEBUG
-       _("Set debug log level (one of f,e,w,n,v,d, or d:file1,min,max:...)"),
-#else
-       QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                         LOG_VERBOSE),
-#endif
-       // TRANS: Command-line argument
+      {{"d", _("debug")},
+       // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+       //        "debug". It's exactly what the user must type.
+       _("Set debug log level (fatal/critical/warning/info/debug)"),
        _("LEVEL")},
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
       {{"l", "log"},
@@ -812,7 +805,7 @@ int main(int argc, char **argv)
 
   // Process the parsed options
   if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {
+    if (!log_parse_level_str(parser.value(QStringLiteral("debug")))) {
       exit(EXIT_FAILURE);
     }
   }
@@ -839,8 +832,7 @@ int main(int argc, char **argv)
 
   /* must be before con_log_init() */
   init_connections();
-  con_log_init(srvarg.log_filename, srvarg.loglevel,
-               srvarg.fatal_assertions);
+  con_log_init(srvarg.log_filename, srvarg.fatal_assertions);
   /* logging available after this point */
 
   /* Get common code to treat us as a tool. */

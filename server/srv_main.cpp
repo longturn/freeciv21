@@ -211,8 +211,6 @@ void srv_init(void)
 
   srvarg.port = DEFAULT_SOCK_PORT;
 
-  srvarg.loglevel = LOG_NORMAL;
-
   srvarg.fatal_assertions = -1;
   srvarg.saves_pathname = QString("");
   srvarg.scenarios_pathname = QString("");

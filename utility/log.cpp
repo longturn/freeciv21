@@ -24,6 +24,7 @@
 // Qt
 #include <QDebug>
 #include <QFileInfo>
+#include <QLoggingCategory>
 #include <QString>
 
 /* utility */
@@ -78,175 +79,54 @@ static const char *QtMsgType_names[] = {
 const char *nologmsg = "nologmsg:%s";
 
 /**********************************************************************/ /**
-   level_str should be either "0", "1", "2", "3", "4" or
-   "4:filename" or "4:file1:file2" or "4:filename,100,200" etc
-
-   If everything goes ok, returns TRUE. If there was a parsing problem,
-   prints to stderr, and returns FALSE.
-
-   Return in ret_level the requested level only if level_str is a simple
-   number (like "0", "1", "2").
-
-   Also sets up the log_files data structure. Does _not_ set fc_QtMsgType.
+  Parses a log level string as provided by the user on the command line, and
+  installs the corresponding Qt log filters. Prints a warning and returns
+  false if the log level name isn't known.
  **************************************************************************/
-bool log_parse_level_str(const char *level_str, QtMsgType *ret_level)
+bool log_parse_level_str(const QString &level_str)
 {
-  const char *c;
-  int n = 0; /* number of filenames */
-  unsigned int level;
-  int ln;
-  int first_len = -1;
-#ifdef FREECIV_DEBUG
-  char *tok;
-  int i = 0;
-  char *dupled;
-  bool ret = TRUE;
-#endif /* FREECIV_DEBUG */
-
-  c = level_str;
-  n = 0;
-  while ((c = strchr(c, ':'))) {
-    if (first_len < 0) {
-      first_len = c - level_str;
-    }
-    c++;
-    n++;
+  // Create default filter rules to pass to Qt. We do it this way so the user
+  // can override our simplistic rules with environment variables.
+  if (level_str == QStringLiteral("fatal")) {
+    // Level "fatal" cannot be disabled, so we omit it below.
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = false\n"
+                                                    "*.warning = false\n"
+                                                    "*.info = false\n"
+                                                    "*.debug = false\n"));
+    return true;
+  } else if (level_str == QStringLiteral("critical")) {
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
+                                                    "*.warning = false\n"
+                                                    "*.info = false\n"
+                                                    "*.debug = false\n"));
+    return true;
+  } else if (level_str == QStringLiteral("warning")) {
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
+                                                    "*.warning = true\n"
+                                                    "*.info = false\n"
+                                                    "*.debug = false\n"));
+    return true;
+  } else if (level_str == QStringLiteral("info")) {
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
+                                                    "*.warning = true\n"
+                                                    "*.info = true\n"
+                                                    "*.debug = false\n"));
+    return true;
+  } else if (level_str == QStringLiteral("debug")) {
+    QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
+                                                    "*.warning = true\n"
+                                                    "*.info = true\n"
+                                                    "*.debug = true\n"));
+    return true;
+  } else {
+    // Not a known name
+    // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+    //        "debug". It's exactly what the user must type.
+    qCritical(_("\"%s\" is not a valid log level name (valid names are "
+                "fatal/critical/warning/info/debug)"),
+              qPrintable(level_str));
+    return false;
   }
-  if (n == 0) {
-    /* Global log level. */
-    if (!str_to_uint(level_str, &level)) {
-      level = LOG_DEBUG + 1;
-      for (ln = 0; QtMsgType_names[ln] != NULL && level > LOG_DEBUG; ln++) {
-        if (!fc_strncasecmp(level_str, QtMsgType_names[ln],
-                            strlen(level_str))) {
-          level = ln;
-        }
-      }
-      if (level > LOG_DEBUG) {
-        fc_fprintf(stderr, _("Bad log level \"%s\".\n"), level_str);
-        return FALSE;
-      }
-    } else {
-      log_deprecation(_("Do not provide log level with a numerical value."
-                        " Use one of the levels Fatal, Error, Warning, "
-                        "Normal, Verbose, Debug"));
-    }
-    if (level <= max_level) {
-      if (NULL != ret_level) {
-        *ret_level = static_cast<QtMsgType>(level);
-      }
-      return TRUE;
-    } else {
-      fc_fprintf(stderr, _("Bad log level %d in \"%s\".\n"), level,
-                 level_str);
-#ifndef FREECIV_DEBUG
-      if (level == max_level + 1) {
-        fc_fprintf(stderr,
-                   _("Freeciv must be compiled with the FREECIV_DEBUG flag "
-                     "to use debug level %d.\n"),
-                   max_level + 1);
-      }
-#endif /* FREECIV_DEBUG */
-      return FALSE;
-    }
-  }
-
-#ifdef FREECIV_DEBUG
-  c = level_str;
-  level = LOG_DEBUG + 1;
-  if (first_len > 0) {
-    for (ln = 0; QtMsgType_names[ln] != NULL && level > LOG_DEBUG; ln++) {
-      if (!fc_strncasecmp(level_str, QtMsgType_names[ln], first_len)) {
-        level = ln;
-      }
-    }
-  }
-  if (level > LOG_DEBUG) {
-    level = c[0] - '0';
-    if (c[1] == ':') {
-      if (level > max_level) {
-        fc_fprintf(stderr, _("Bad log level %c in \"%s\".\n"), c[0],
-                   level_str);
-        return FALSE;
-      }
-    } else {
-      fc_fprintf(stderr, _("Badly formed log level argument \"%s\".\n"),
-                 level_str);
-      return FALSE;
-    }
-  }
-
-  dupled = fc_strdup(c + 2);
-  tok = strtok(dupled, ":");
-
-  if (!tok) {
-    fc_fprintf(stderr, _("Badly formed log level argument \"%s\".\n"),
-               level_str);
-    ret = FALSE;
-    goto out;
-  }
-  do {
-    log_files.emplace_back();
-    auto &pfile = log_files.back();
-    char *d = strchr(tok, ',');
-
-    pfile.min = 0;
-    pfile.max = 0;
-    pfile.level = QtMsgType(level);
-    if (d) {
-      char *pc = d + 1;
-
-      d[0] = '\0';
-      d = strchr(d + 1, ',');
-      if (d && *pc != '\0' && d[1] != '\0') {
-        d[0] = '\0';
-        if (!str_to_uint(pc, &pfile.min)) {
-          fc_fprintf(stderr, _("Not an unsigned integer: '%s'\n"), pc);
-          ret = FALSE;
-          goto out;
-        }
-        if (!str_to_uint(d + 1, &pfile.max)) {
-          fc_fprintf(stderr, _("Not an unsigned integer: '%s'\n"), d + 1);
-          ret = FALSE;
-          goto out;
-        }
-      }
-    }
-    if (strlen(tok) == 0) {
-      fc_fprintf(stderr, _("Empty filename in log level argument \"%s\".\n"),
-                 level_str);
-      ret = FALSE;
-      goto out;
-    }
-    pfile.name = fc_strdup(tok);
-    i++;
-    tok = strtok(NULL, ":");
-  } while (tok);
-
-  if (i != log_files.size()) {
-    fc_fprintf(stderr, _("Badly formed log level argument \"%s\".\n"),
-               level_str);
-    ret = FALSE;
-    goto out;
-  }
-
-out:
-  delete[] dupled;
-  return ret;
-#else  /* FREECIV_DEBUG */
-  fc_fprintf(stderr,
-             _("Freeciv must be compiled with the FREECIV_DEBUG flag "
-               "to use advanced log levels based on files.\n"));
-  return FALSE;
-#endif /* FREECIV_DEBUG */
-}
-
-/**********************************************************************/ /**
-   Wrapper around log_parse_level_str(const char *)
- **************************************************************************/
-bool log_parse_level_str(const QString &level_str, QtMsgType *ret_level)
-{
-  return log_parse_level_str(qPrintable(level_str), ret_level);
 }
 
 /**********************************************************************/ /**
@@ -255,11 +135,9 @@ bool log_parse_level_str(const QString &level_str, QtMsgType *ret_level)
    and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
    signal on failed assertion.
  **************************************************************************/
-void log_init(const char *filename, QtMsgType initial_level,
-              log_callback_fn callback, log_prefix_fn prefix,
-              int fatal_assertions)
+void log_init(const char *filename, log_callback_fn callback,
+              log_prefix_fn prefix, int fatal_assertions)
 {
-  fc_QtMsgType = initial_level;
   if (log_filename) {
     free(log_filename);
     log_filename = NULL;

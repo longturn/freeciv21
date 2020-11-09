@@ -111,8 +111,6 @@ static void conv_log(const char *msg) { qInfo("%s", msg); }
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  QtMsgType loglevel = LOG_NORMAL;
-
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
   if (LoadLibrary("exchndl.dll") == NULL) {
@@ -131,7 +129,7 @@ int main(int argc, char **argv)
 
   rup_parse_cmdline(app);
 
-  log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
+  log_init(NULL, NULL, NULL, fatal_assertions);
 
   init_connections();
 

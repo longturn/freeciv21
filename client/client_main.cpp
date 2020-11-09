@@ -318,7 +318,6 @@ static void client_game_reset(void)
 int client_main(int argc, char *argv[])
 {
   int i;
-  QtMsgType loglevel = LOG_NORMAL;
   int ui_options = 0;
   bool ui_separator = FALSE;
   char *option = NULL;
@@ -380,15 +379,9 @@ int client_main(int argc, char *argv[])
         "IPv4"},
        {{"a", "autoconnect"}, _("Skip connect dialog")},
        {{"d", _("debug")},
-#ifdef FREECIV_DEBUG
-        /* TRANS: "debug" do not translate. */
-        _("Set debug log level (one of f,e,w,n,v,d, or "
-          "d:file1,min,max:...)"),
-#else
-        /* TRANS: "debug" do not translate. */
-        QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                          LOG_VERBOSE),
-#endif /* FREECIV_DEBUG */
+        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+        //        "debug". It's exactly what the user must type.
+        _("Set debug log level (fatal/critical/warning/info/debug)"),
         _("LEVEL")},
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
        {{"f", "file"}, _("Load saved game FILE"), "FILE"},
@@ -474,10 +467,7 @@ int client_main(int argc, char *argv[])
     auto_connect = TRUE;
   }
   if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
-      qFatal(
-          _("Invalid debug level \"%s\" specified with --debug option.\n"),
-          qPrintable(parser.value("option")));
+    if (!log_parse_level_str(parser.value("debug"))) {
       exit(EXIT_FAILURE);
     }
   }
@@ -511,7 +501,7 @@ int client_main(int argc, char *argv[])
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
 
-  log_init(qUtf8Printable(logfile), loglevel, NULL, NULL, fatal_assertions);
+  log_init(qUtf8Printable(logfile), NULL, NULL, fatal_assertions);
   backtrace_init();
 
   /* after log_init: */
@@ -638,19 +628,19 @@ static void log_option_save_msg(QtMsgType lvl, const QString &msg)
 {
   switch (lvl) {
   case QtDebugMsg:
-    qDebug("%s", msg.data());
+    qDebug("%s", qPrintable(msg));
     break;
   case QtInfoMsg:
-    qInfo("%s", msg.data());
+    qInfo("%s", qPrintable(msg));
     break;
   case QtWarningMsg:
-    qWarning("%s", msg.data());
+    qWarning("%s", qPrintable(msg));
     break;
   case QtCriticalMsg:
-    qCritical("%s", msg.data());
+    qCritical("%s", qPrintable(msg));
     break;
   case QtFatalMsg:
-    qFatal("%s", msg.data());
+    qFatal("%s", qPrintable(msg));
     break;
   }
 }

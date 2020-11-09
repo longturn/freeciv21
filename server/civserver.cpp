@@ -191,14 +191,10 @@ int main(int argc, char *argv[])
        _("Listen for clients on ADDR"),
        // TRANS: Command-line argument
        _("ADDR")},
-      {{"d", "debug"},
-#ifdef FREECIV_DEBUG
-       _("Set debug log level (one of f,e,w,n,v,d, or d:file1,min,max:...)"),
-#else
-       QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                         LOG_VERBOSE),
-#endif
-       // TRANS: Command-line argument
+      {{"d", _("debug")},
+       // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+       //        "debug". It's exactly what the user must type.
+       _("Set debug log level (fatal/critical/warning/info/debug)"),
        _("LEVEL")},
       {{"e", "exit-on-end"},
        _("When a game ends, exit instead of restarting")},
@@ -341,7 +337,7 @@ int main(int argc, char *argv[])
     log_time("Time tracking enabled", true);
   }
   if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {
+    if (!log_parse_level_str(parser.value(QStringLiteral("debug")))) {
       exit(EXIT_FAILURE);
     }
   }
