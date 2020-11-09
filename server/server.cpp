@@ -192,7 +192,7 @@ QTcpServer *srv_prepare()
     testfilename =
         fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
     if (testfilename == NULL) {
-      log_fatal(_("Ruleset directory \"%s\" not found"),
+      qFatal(_("Ruleset directory \"%s\" not found"),
                 qPrintable(srvarg.ruleset));
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;

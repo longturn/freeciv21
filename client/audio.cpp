@@ -157,7 +157,7 @@ bool audio_select_plugin(QString &name)
   }
 
   if (!found) {
-    log_fatal(_("Plugin '%s' isn't available. Available are %s"),
+    qFatal(_("Plugin '%s' isn't available. Available are %s"),
               qUtf8Printable(name), audio_get_all_plugin_names());
     exit(EXIT_FAILURE);
   }
@@ -235,23 +235,23 @@ static bool check_audiofile_capstr(struct section_file *sfile,
 
   file_capstr = secfile_lookup_str(sfile, "%s", opt_path);
   if (NULL == file_capstr) {
-    log_fatal("Audio spec-file \"%s\" doesn't have capability string.",
+    qFatal("Audio spec-file \"%s\" doesn't have capability string.",
               filename);
     exit(EXIT_FAILURE);
   }
   if (!has_capabilities(our_cap, file_capstr)) {
-    log_fatal("Audio spec-file appears incompatible:");
-    log_fatal("  file: \"%s\"", filename);
-    log_fatal("  file options: %s", file_capstr);
-    log_fatal("  supported options: %s", our_cap);
+    qFatal("Audio spec-file appears incompatible:");
+    qFatal("  file: \"%s\"", filename);
+    qFatal("  file options: %s", file_capstr);
+    qFatal("  supported options: %s", our_cap);
     exit(EXIT_FAILURE);
   }
   if (!has_capabilities(file_capstr, our_cap)) {
-    log_fatal("Audio spec-file claims required option(s) "
+    qFatal("Audio spec-file claims required option(s) "
               "which we don't support:");
-    log_fatal("  file: \"%s\"", filename);
-    log_fatal("  file options: %s", file_capstr);
-    log_fatal("  supported options: %s", our_cap);
+    qFatal("  file: \"%s\"", filename);
+    qFatal("  file options: %s", file_capstr);
+    qFatal("  supported options: %s", our_cap);
     exit(EXIT_FAILURE);
   }
 
@@ -287,11 +287,11 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
     return;
   }
   if (soundset_name.isEmpty()) {
-    log_fatal("No sound spec-file given!");
+    qFatal("No sound spec-file given!");
     exit(EXIT_FAILURE);
   }
   if (musicset_name.isEmpty()) {
-    log_fatal("No music spec-file given!");
+    qFatal("No music spec-file given!");
     exit(EXIT_FAILURE);
   }
   log_verbose("Initializing sound using %s and %s...",
@@ -310,12 +310,12 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
     return;
   }
   if (!(ss_tagfile = secfile_load(ss_filename, TRUE))) {
-    log_fatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
+    qFatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
               secfile_error());
     exit(EXIT_FAILURE);
   }
   if (!(ms_tagfile = secfile_load(ms_filename, TRUE))) {
-    log_fatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
+    qFatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
               secfile_error());
     exit(EXIT_FAILURE);
   }

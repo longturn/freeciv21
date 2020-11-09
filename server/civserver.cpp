@@ -272,7 +272,7 @@ int main(int argc, char *argv[])
 #endif // AI_MODULES
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 
@@ -312,7 +312,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid port number %s"),
+      qFatal(_("Invalid port number %s"),
                 qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
@@ -330,7 +330,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.quitidle = parser.value("quitidle").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid number %s"),
+      qFatal(_("Invalid number %s"),
                 qPrintable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }

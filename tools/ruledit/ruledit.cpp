@@ -149,7 +149,7 @@ static void re_parse_cmdline(const QCoreApplication &app)
        R__("RULESET")},
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 

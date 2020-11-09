@@ -249,7 +249,7 @@ static void script_client_output(struct fc_lua *fcl, QtMsgType level,
       fc_vsnprintf(buf, sizeof(buf), format, args);
       va_end(args);
 
-      log_fatal("%s", buf);
+      qFatal("%s", buf);
     }
     break;
   case LOG_ERROR:

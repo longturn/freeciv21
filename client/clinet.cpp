@@ -391,7 +391,7 @@ double try_to_autoconnect(void)
   count++;
 
   if (count >= MAX_AUTOCONNECT_ATTEMPTS) {
-    log_fatal(_("Failed to contact server \"%s\" at port "
+    qFatal(_("Failed to contact server \"%s\" at port "
                 "%d as \"%s\" after %d attempts"),
               qUtf8Printable(server_host), server_port,
               qUtf8Printable(user_name), count);
@@ -406,7 +406,7 @@ double try_to_autoconnect(void)
     return FC_INFINITY;
   } else {
     // All errors are fatal
-    log_fatal(_("Error contacting server \"%s\" at port %d "
+    qFatal(_("Error contacting server \"%s\" at port %d "
                 "as \"%s\":\n %s\n"),
               qUtf8Printable(server_host), server_port,
               qUtf8Printable(user_name), errbuf);

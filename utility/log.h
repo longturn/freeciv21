@@ -94,7 +94,6 @@ void do_log(const char *file, const char *function, int line,
   }
 
 // Have to be ifdef's to report the correct line number.
-#define log_fatal(message, ...) qFatal(message, ##__VA_ARGS__)
 #define log_error(message, ...) qCritical(message, ##__VA_ARGS__)
 #define log_warn(message, ...) qWarning(message, ##__VA_ARGS__)
 #define log_normal(message, ...) qInfo(message, ##__VA_ARGS__)
@@ -171,7 +170,7 @@ void fc_assert_fail(const char *file, const char *function, int line,
   fc_assert_action_msg(condition, return val, message, ##__VA_ARGS__)
 /* Exit on failure with extra message. */
 #define fc_assert_exit_msg(condition, message, ...)                         \
-  fc_assert_action(condition, log_fatal(message, ##__VA_ARGS__);            \
+  fc_assert_action(condition, qFatal(message, ##__VA_ARGS__);            \
                    exit(EXIT_FAILURE))
 
 #ifdef __cplusplus

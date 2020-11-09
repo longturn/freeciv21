@@ -419,7 +419,7 @@ int client_main(int argc, char *argv[])
        {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
        {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
   parser.process(app);
@@ -466,7 +466,7 @@ int client_main(int argc, char *argv[])
     bool conversion_ok;
     server_port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid port number %s"),
+      qFatal(_("Invalid port number %s"),
                 qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
@@ -476,7 +476,7 @@ int client_main(int argc, char *argv[])
   }
   if (parser.isSet("debug")) {
     if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
-      log_fatal(
+      qFatal(
           _("Invalid debug level \"%s\" specified with --debug option.\n"),
           qPrintable(parser.value("option")));
       exit(EXIT_FAILURE);
@@ -774,14 +774,14 @@ void set_client_state(enum client_states newstate)
     fc_assert(!auto_connect);
     auto_spawn = FALSE;
     if (!client_start_server()) {
-      log_fatal(_("Failed to start local server; aborting."));
+      qFatal(_("Failed to start local server; aborting."));
       exit(EXIT_FAILURE);
     }
   }
 
   if (auto_connect && newstate == C_S_DISCONNECTED) {
     if (oldstate == C_S_DISCONNECTED) {
-      log_fatal(_("There was an error while auto connecting; aborting."));
+      qFatal(_("There was an error while auto connecting; aborting."));
       exit(EXIT_FAILURE);
     } else {
       start_autoconnecting_to_server();

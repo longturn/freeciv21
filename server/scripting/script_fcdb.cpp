@@ -178,7 +178,7 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
   switch (level) {
   case LOG_FATAL:
     /* Special case - will quit the server. */
-    log_fatal("%s", buf);
+    qFatal("%s", buf);
     break;
   case LOG_ERROR:
   case LOG_WARN:

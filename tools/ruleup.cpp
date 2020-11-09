@@ -71,7 +71,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
        _("DIRECTORY")},
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 

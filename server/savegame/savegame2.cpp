@@ -1053,7 +1053,7 @@ static struct terrain *char2terrain(char ch)
   }
   terrain_type_iterate_end;
 
-  log_fatal("Unknown terrain identifier '%c' in savegame.", ch);
+  qFatal("Unknown terrain identifier '%c' in savegame.", ch);
   exit(EXIT_FAILURE);
 }
 
@@ -1522,15 +1522,17 @@ static void sg_load_game(struct loaddata *loading)
   if (srvarg.metaserver_addr == QLatin1String(DEFAULT_META_SERVER_ADDR)) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --Metaserver). */
-    srvarg.metaserver_addr = QString::fromUtf8(secfile_lookup_str_default(
-        loading->file, DEFAULT_META_SERVER_ADDR, "game.meta_server"));
+    srvarg.metaserver_addr = QString::fromUtf8(
+               secfile_lookup_str_default(loading->file,
+                                          DEFAULT_META_SERVER_ADDR,
+                                          "game.meta_server"));
   }
 
   if (srvarg.serverid.isEmpty()) {
     /* Do not overwrite this if the user requested a specific metaserver
      * from the command line (option --serverid). */
-    srvarg.serverid = QString::fromUtf8(
-        secfile_lookup_str_default(loading->file, "", "game.serverid"));
+    srvarg.serverid = QString::fromUtf8(secfile_lookup_str_default(loading->file, "",
+                                                           "game.serverid"));
   }
   sz_strlcpy(server.game_identifier,
              secfile_lookup_str_default(loading->file, "", "game.id"));

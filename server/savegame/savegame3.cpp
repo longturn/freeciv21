@@ -1102,7 +1102,7 @@ static struct terrain *char2terrain(char ch)
   }
   terrain_type_iterate_end;
 
-  log_fatal("Unknown terrain identifier '%c' in savegame.", ch);
+  qFatal("Unknown terrain identifier '%c' in savegame.", ch);
   exit(EXIT_FAILURE);
 }
 
