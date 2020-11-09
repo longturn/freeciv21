@@ -328,18 +328,6 @@ void log_set_level(QtMsgType level) { fc_QtMsgType = level; }
  **************************************************************************/
 QtMsgType log_get_level(void) { return fc_QtMsgType; }
 
-/**********************************************************************/ /**
-   Return name of the given log level
- **************************************************************************/
-const char *QtMsgType_name(QtMsgType lvl)
-{
-  if (lvl < LOG_FATAL || lvl > LOG_DEBUG) {
-    return NULL;
-  }
-
-  return QtMsgType_names[lvl];
-}
-
 #ifdef FREECIV_DEBUG
 /**********************************************************************/ /**
    Returns wether we should do an output for this level, in this file,

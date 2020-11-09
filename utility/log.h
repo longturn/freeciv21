@@ -66,7 +66,6 @@ log_callback_fn log_set_callback(log_callback_fn callback);
 log_prefix_fn log_set_prefix(log_prefix_fn prefix);
 void log_set_level(QtMsgType level);
 QtMsgType log_get_level(void);
-const char *QtMsgType_name(QtMsgType lvl);
 #ifdef FREECIV_DEBUG
 bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
                                          int line);
