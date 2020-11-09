@@ -352,11 +352,10 @@ struct tile *immediate_destination(struct unit *punit,
     }
 
     pf_map_destroy(pfm);
-    log_verbose("Did not find an air-route for "
-                "%s %s[%d] (%d,%d)->(%d,%d)",
-                nation_rule_name(nation_of_unit(punit)),
-                unit_rule_name(punit), punit->id, TILE_XY(unit_tile(punit)),
-                TILE_XY(dest_tile));
+    qDebug("Did not find an air-route for "
+           "%s %s[%d] (%d,%d)->(%d,%d)",
+           nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+           punit->id, TILE_XY(unit_tile(punit)), TILE_XY(dest_tile));
     /* Prevent take off */
     return unit_tile(punit);
   }

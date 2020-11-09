@@ -2467,9 +2467,9 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
                   city_link(pcity), utype_name_translation(utype));
 
     /* Log before signal emitting, so pointers are certainly valid */
-    log_verbose("%s %s tried to build %s, which is not available.",
-                nation_rule_name(nation_of_city(pcity)),
-                city_name_get(pcity), utype_rule_name(utype));
+    qDebug("%s %s tried to build %s, which is not available.",
+           nation_rule_name(nation_of_city(pcity)), city_name_get(pcity),
+           utype_rule_name(utype));
     script_server_signal_emit("unit_cant_be_built", utype, pcity,
                               "unavailable");
     return city_exist(saved_city_id);

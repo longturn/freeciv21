@@ -982,7 +982,7 @@ void handle_event(const char *featured_text, struct tile *ptile,
 
   if (!event_type_is_valid(event)) {
     /* Server may have added a new event; leave as MW_OUTPUT */
-    log_verbose("Unknown event type %d!", event);
+    qDebug("Unknown event type %d!", event);
   } else {
     where = messages_where[event];
   }

@@ -613,7 +613,7 @@ char *user_home_dir(void)
 
     if (env) {
       home_dir_user = fc_strdup(env);
-      log_verbose("HOME is %s", home_dir_user);
+      qDebug("HOME is %s", home_dir_user);
     } else {
       qCritical("Could not find home directory (HOME is not set).");
       home_dir_user = NULL;
@@ -649,7 +649,7 @@ char *freeciv_storage_dir(void)
 
     storage_dir_freeciv = expand_dir(storage_dir_freeciv, TRUE);
 
-    log_verbose(_("Storage dir is \"%s\"."), storage_dir_freeciv);
+    qDebug(_("Storage dir is \"%s\"."), storage_dir_freeciv);
   }
 
   return storage_dir_freeciv;
@@ -688,7 +688,7 @@ char *user_username(char *buf, size_t bufsz)
     if (env) {
       fc_strlcpy(buf, env, bufsz);
       if (is_ascii_name(buf)) {
-        log_verbose("USER username is %s", buf);
+        qDebug("USER username is %s", buf);
         return buf;
       }
     }
@@ -703,7 +703,7 @@ char *user_username(char *buf, size_t bufsz)
     if (pwent) {
       fc_strlcpy(buf, pwent->pw_name, bufsz);
       if (is_ascii_name(buf)) {
-        log_verbose("getpwuid username is %s", buf);
+        qDebug("getpwuid username is %s", buf);
         return buf;
       }
     }
@@ -719,7 +719,7 @@ char *user_username(char *buf, size_t bufsz)
     if (GetUserName(name, &length)) {
       fc_strlcpy(buf, name, bufsz);
       if (is_ascii_name(buf)) {
-        log_verbose("GetUserName username is %s", buf);
+        qDebug("GetUserName username is %s", buf);
         return buf;
       }
     }
@@ -731,7 +731,7 @@ char *user_username(char *buf, size_t bufsz)
 #else
   fc_snprintf(buf, bufsz, "name%d", (int) getuid());
 #endif
-  log_verbose("fake username is %s", buf);
+  qDebug("fake username is %s", buf);
   fc_assert(is_ascii_name(buf));
   return buf;
 }
@@ -770,7 +770,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
       char *home = user_home_dir();
 
       if (!home) {
-        log_verbose("No HOME, skipping path component %s", tok);
+        qDebug("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
         int len = strlen(home) + i; /* +1 -1 */
@@ -875,7 +875,7 @@ const struct strvec *get_data_dirs(void)
                             strcmp); /* Don't set a path both. */
     strvec_iterate(data_dir_names, dirname)
     {
-      log_verbose("Data path component: %s", dirname);
+      qDebug("Data path component: %s", dirname);
     }
     strvec_iterate_end;
   }
@@ -914,7 +914,7 @@ const struct strvec *get_save_dirs(void)
                             strcmp); /* Don't set a path both. */
     strvec_iterate(save_dir_names, dirname)
     {
-      log_verbose("Save path component: %s", dirname);
+      qDebug("Save path component: %s", dirname);
     }
     strvec_iterate_end;
   }
@@ -955,7 +955,7 @@ const struct strvec *get_scenario_dirs(void)
                             strcmp); /* Don't set a path both. */
     strvec_iterate(scenario_dir_names, dirname)
     {
-      log_verbose("Scenario path component: %s", dirname);
+      qDebug("Scenario path component: %s", dirname);
     }
     strvec_iterate_end;
   }
@@ -990,7 +990,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
     QDir dir(QString::fromUtf8(dirname));
 
     if (!dir.exists()) {
-      log_verbose("Skipping non-existing data directory %s.", dirname);
+      qDebug("Skipping non-existing data directory %s.", dirname);
       continue;
     }
 
@@ -1079,7 +1079,7 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
   }
   strvec_iterate_end;
 
-  log_verbose("Could not find readable file \"%s\" in data path.", filename);
+  qDebug("Could not find readable file \"%s\" in data path.", filename);
 
   return NULL;
 }

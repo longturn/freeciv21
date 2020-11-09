@@ -169,7 +169,7 @@ bool audio_select_plugin(QString &name)
   }
 
   selected_plugin = i;
-  log_verbose("Plugin '%s' is now selected", plugins[selected_plugin].name);
+  qDebug("Plugin '%s' is now selected", plugins[selected_plugin].name);
 
   plugins[selected_plugin].set_volume(gui_options.sound_effects_volume
                                       / 100.0);
@@ -271,7 +271,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
   if (preferred_plugin_name == "none") {
     /* We explicitly choose none plugin, silently skip the code below */
-    log_verbose("Proceeding with sound support disabled.");
+    qDebug("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
@@ -294,8 +294,8 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
     qFatal("No music spec-file given!");
     exit(EXIT_FAILURE);
   }
-  log_verbose("Initializing sound using %s and %s...",
-              qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
+  qDebug("Initializing sound using %s and %s...",
+         qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
   ss_filename = audiospec_fullname(soundset_name, FALSE);
   ms_filename = audiospec_fullname(musicset_name, TRUE);
   if (!ss_filename || !ms_filename) {
@@ -461,7 +461,7 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
       }
     }
     if (NULL == soundfile) {
-      log_verbose("No sound file for tag %s", tag);
+      qDebug("No sound file for tag %s", tag);
     } else {
       fullpath = fileinfoname(get_data_dirs(), soundfile);
       if (!fullpath) {
@@ -508,7 +508,7 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
     /* try playing primary tag first, if not go to alternative tag */
     if (!audio_play_sound_tag(tag, FALSE)
         && !audio_play_sound_tag(alt_tag, FALSE)) {
-      log_verbose("Neither of tags %s or %s found", tag, pretty_alt_tag);
+      qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
     }
   }
 }
@@ -533,7 +533,7 @@ static void real_audio_play_music(const char *const tag, char *const alt_tag,
     current_track = audio_play_music_tag(alt_tag, TRUE, keepstyle);
 
     if (current_track < 0) {
-      log_verbose("Neither of tags %s or %s found", tag, pretty_alt_tag);
+      qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
     }
   }
 }

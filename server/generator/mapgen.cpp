@@ -1259,31 +1259,29 @@ static void print_mapgen_map(void)
   }
   whole_map_iterate_end;
 
-  log_verbose("map settings:");
-  log_verbose("  %-20s :      %5d%%", "mountain_pct", mountain_pct);
-  log_verbose("  %-20s :      %5d%%", "desert_pct", desert_pct);
-  log_verbose("  %-20s :      %5d%%", "forest_pct", forest_pct);
-  log_verbose("  %-20s :      %5d%%", "jungle_pct", jungle_pct);
-  log_verbose("  %-20s :      %5d%%", "swamp_pct", swamp_pct);
+  qDebug("map settings:");
+  qDebug("  %-20s :      %5d%%", "mountain_pct", mountain_pct);
+  qDebug("  %-20s :      %5d%%", "desert_pct", desert_pct);
+  qDebug("  %-20s :      %5d%%", "forest_pct", forest_pct);
+  qDebug("  %-20s :      %5d%%", "jungle_pct", jungle_pct);
+  qDebug("  %-20s :      %5d%%", "swamp_pct", swamp_pct);
 
-  log_verbose("map statistics:");
+  qDebug("map statistics:");
   terrain_type_iterate(pterrain)
   {
     if (is_ocean(pterrain)) {
-      log_verbose(
-          "  %-20s : %6d %5.1f%% (ocean: %5.1f%%)",
-          terrain_rule_name(pterrain),
-          terrain_counts[terrain_index(pterrain)],
-          (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
-          (float) terrain_counts[terrain_index(pterrain)] * 100 / ocean);
+      qDebug("  %-20s : %6d %5.1f%% (ocean: %5.1f%%)",
+             terrain_rule_name(pterrain),
+             terrain_counts[terrain_index(pterrain)],
+             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
+             (float) terrain_counts[terrain_index(pterrain)] * 100 / ocean);
     } else {
-      log_verbose("  %-20s : %6d %5.1f%% (land:  %5.1f%%)",
-                  terrain_rule_name(pterrain),
-                  terrain_counts[terrain_index(pterrain)],
-                  (float) terrain_counts[terrain_index(pterrain)] * 100
-                      / total,
-                  (float) terrain_counts[terrain_index(pterrain)] * 100
-                      / (total - ocean));
+      qDebug("  %-20s : %6d %5.1f%% (land:  %5.1f%%)",
+             terrain_rule_name(pterrain),
+             terrain_counts[terrain_index(pterrain)],
+             (float) terrain_counts[terrain_index(pterrain)] * 100 / total,
+             (float) terrain_counts[terrain_index(pterrain)] * 100
+                 / (total - ocean));
     }
   }
   terrain_type_iterate_end;
@@ -1456,7 +1454,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
       break;
     case MAPGEN_FRACTAL:
       if (wld.map.server.startpos == MAPSTARTPOS_DEFAULT) {
-        log_verbose("Map generator chose startpos=ALL");
+        qDebug("Map generator chose startpos=ALL");
         mode = MAPSTARTPOS_ALL;
       } else {
         mode = wld.map.server.startpos;
@@ -1466,13 +1464,13 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
       switch (wld.map.server.startpos) {
       case MAPSTARTPOS_DEFAULT:
       case MAPSTARTPOS_VARIABLE:
-        log_verbose("Map generator chose startpos=SINGLE");
+        qDebug("Map generator chose startpos=SINGLE");
         /* fallthrough */
       case MAPSTARTPOS_SINGLE:
         mode = MAPSTARTPOS_SINGLE;
         break;
       default:
-        log_verbose("Map generator chose startpos=2or3");
+        qDebug("Map generator chose startpos=2or3");
         /* fallthrough */
       case MAPSTARTPOS_2or3:
         mode = MAPSTARTPOS_2or3;
@@ -1492,15 +1490,15 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
 
       switch (mode) {
       case MAPSTARTPOS_SINGLE:
-        log_verbose("Falling back to startpos=2or3");
+        qDebug("Falling back to startpos=2or3");
         mode = MAPSTARTPOS_2or3;
         continue;
       case MAPSTARTPOS_2or3:
-        log_verbose("Falling back to startpos=ALL");
+        qDebug("Falling back to startpos=ALL");
         mode = MAPSTARTPOS_ALL;
         break;
       case MAPSTARTPOS_ALL:
-        log_verbose("Falling back to startpos=VARIABLE");
+        qDebug("Falling back to startpos=VARIABLE");
         mode = MAPSTARTPOS_VARIABLE;
         break;
       default:
@@ -2191,7 +2189,7 @@ static bool make_island(int islemass, int starters,
       return FALSE;
     }
     fc_assert_ret_val(starters >= 0, FALSE);
-    log_verbose("island %i", pstate->isleindex);
+    qDebug("island %i", pstate->isleindex);
 
     /* keep trying to place an island, and decrease the size of
      * the island we're trying to create until we succeed.
@@ -2210,8 +2208,8 @@ static bool make_island(int islemass, int starters,
       balance = 0;
     }
 
-    log_verbose("ini=%d, plc=%d, bal=%ld, tot=%ld", islemass, i, balance,
-                checkmass);
+    qDebug("ini=%d, plc=%d, bal=%ld, tot=%ld", islemass, i, balance,
+           checkmass);
 
     i *= tilefactor;
 
@@ -2300,7 +2298,7 @@ static void mapgenerator2(void)
   int bigfrac = 70, midfrac = 20, smallfrac = 10;
 
   if (wld.map.server.landpercent > 85) {
-    log_verbose("ISLAND generator: falling back to RANDOM generator");
+    qDebug("ISLAND generator: falling back to RANDOM generator");
     wld.map.server.generator = MAPGEN_RANDOM;
     return;
   }
@@ -2336,8 +2334,8 @@ static void mapgenerator2(void)
          * Note that the big islands can get very small if necessary, and
          * the smaller islands will not exist if we can't place them
          * easily. */
-        log_verbose("Island too small, trying again with all smaller "
-                    "islands.");
+        qDebug("Island too small, trying again with all smaller "
+               "islands.");
         midfrac += bigfrac * 0.01;
         smallfrac += bigfrac * 0.04;
         bigfrac *= 0.95;
@@ -2349,7 +2347,7 @@ static void mapgenerator2(void)
 
   if (bigfrac <= midfrac) {
     /* We could never make adequately big islands. */
-    log_verbose("ISLAND generator: falling back to RANDOM generator");
+    qDebug("ISLAND generator: falling back to RANDOM generator");
     wld.map.server.generator = MAPGEN_RANDOM;
 
     /* init world created this map, destroy it before abort */
@@ -2373,7 +2371,7 @@ static void mapgenerator2(void)
   FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
-    log_verbose("%ld mass left unplaced", checkmass);
+    qDebug("%ld mass left unplaced", checkmass);
   }
 }
 
@@ -2392,15 +2390,15 @@ static void mapgenerator3(void)
   struct gen234_state *pstate = &state;
 
   if (wld.map.server.landpercent > 80) {
-    log_verbose("ISLAND generator: falling back to FRACTAL generator due "
-                "to landpercent > 80.");
+    qDebug("ISLAND generator: falling back to FRACTAL generator due "
+           "to landpercent > 80.");
     wld.map.server.generator = MAPGEN_FRACTAL;
     return;
   }
 
   if (wld.map.xsize < 40 || wld.map.ysize < 40) {
-    log_verbose("ISLAND generator: falling back to FRACTAL generator due "
-                "to unsupported map size.");
+    qDebug("ISLAND generator: falling back to FRACTAL generator due "
+           "to unsupported map size.");
     wld.map.server.generator = MAPGEN_FRACTAL;
     return;
   }
@@ -2473,7 +2471,7 @@ static void mapgenerator3(void)
   if (j == 1500) {
     qInfo(_("Generator 3 left %li landmass unplaced."), checkmass);
   } else if (checkmass > wld.map.xsize + wld.map.ysize) {
-    log_verbose("%ld mass left unplaced", checkmass);
+    qDebug("%ld mass left unplaced", checkmass);
   }
 }
 
@@ -2492,7 +2490,7 @@ static void mapgenerator4(void)
   /* no islands with mass >> sqr(min(xsize,ysize)) */
 
   if (player_count() < 2 || wld.map.server.landpercent > 80) {
-    log_verbose("ISLAND generator: falling back to startpos=SINGLE");
+    qDebug("ISLAND generator: falling back to startpos=SINGLE");
     wld.map.server.startpos = MAPSTARTPOS_SINGLE;
     return;
   }
@@ -2539,7 +2537,7 @@ static void mapgenerator4(void)
   FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
-    log_verbose("%ld mass left unplaced", checkmass);
+    qDebug("%ld mass left unplaced", checkmass);
   }
 }
 
@@ -3548,7 +3546,7 @@ static bool map_generate_fair_islands(void)
     islandmass3 = min_island_size;
   }
 
-  log_verbose("Creating a map with fair island generator");
+  qDebug("Creating a map with fair island generator");
   log_debug("max iterations=%d", iter);
   log_debug("players_per_island=%d", players_per_island);
   log_debug("team_placement=%s",
@@ -3665,14 +3663,14 @@ static bool map_generate_fair_islands(void)
         team_id = team_number(pteam);
 
         NATIVE_TO_MAP_POS(&x, &y, start_x[j], start_y[j]);
-        log_verbose("Team %d (%s) will start on (%d, %d)", team_id,
-                    team_rule_name(pteam), x, y);
+        qDebug("Team %d (%s) will start on (%d, %d)", team_id,
+               team_rule_name(pteam), x, y);
 
         for (k = 0; k < members_count; k += players_per_island) {
           if (!fair_map_place_island_team(pmap, x, y, pisland,
                                           outwards_indices, team_id)) {
-            log_verbose("Failed to place island number %d for team %d (%s).",
-                        k, team_id, team_rule_name(pteam));
+            qDebug("Failed to place island number %d for team %d (%s).", k,
+                   team_id, team_rule_name(pteam));
             done = FALSE;
             break;
           }
@@ -3692,7 +3690,7 @@ static bool map_generate_fair_islands(void)
       /* Place last player islands. */
       for (; i < player_count(); i += players_per_island) {
         if (!fair_map_place_island_rand(pmap, pisland)) {
-          log_verbose("Failed to place island number %d.", i);
+          qDebug("Failed to place island number %d.", i);
           done = FALSE;
           break;
         }
@@ -3706,7 +3704,7 @@ static bool map_generate_fair_islands(void)
       for (i = 0; i < player_count(); i++) {
         pisland = fair_map_island_new(islandmass2, 0);
         if (!fair_map_place_island_rand(pmap, pisland)) {
-          log_verbose("Failed to place small island2 number %d.", i);
+          qDebug("Failed to place small island2 number %d.", i);
           done = FALSE;
           fair_map_destroy(pisland);
           break;
@@ -3718,7 +3716,7 @@ static bool map_generate_fair_islands(void)
       for (i = 0; i < player_count(); i++) {
         pisland = fair_map_island_new(islandmass3, 0);
         if (!fair_map_place_island_rand(pmap, pisland)) {
-          log_verbose("Failed to place small island3 number %d.", i);
+          qDebug("Failed to place small island3 number %d.", i);
           done = FALSE;
           fair_map_destroy(pisland);
           break;
@@ -3750,7 +3748,7 @@ static bool map_generate_fair_islands(void)
   }
 
   if (!done) {
-    log_verbose("Failed to create map after %d iterations.", iter);
+    qDebug("Failed to create map after %d iterations.", iter);
     wld.map.server.generator = MAPGEN_ISLAND;
     return FALSE;
   }
@@ -3800,6 +3798,6 @@ static bool map_generate_fair_islands(void)
 
   fair_map_destroy(pmap);
 
-  log_verbose("Fair island map created with success!");
+  qDebug("Fair island map created with success!");
   return TRUE;
 }

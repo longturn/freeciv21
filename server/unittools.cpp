@@ -290,10 +290,9 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
   get_modified_firepower(attacker, defender, &attack_firepower,
                          &defense_firepower);
 
-  log_verbose("attack:%d, defense:%d, attack firepower:%d, "
-              "defense firepower:%d",
-              attackpower, defensepower, attack_firepower,
-              defense_firepower);
+  qDebug("attack:%d, defense:%d, attack firepower:%d, "
+         "defense firepower:%d",
+         attackpower, defensepower, attack_firepower, defense_firepower);
 
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
@@ -343,10 +342,9 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
   get_modified_firepower(attacker, defender, &attack_firepower,
                          &defense_firepower);
 
-  log_verbose("attack:%d, defense:%d, attack firepower:%d, "
-              "defense firepower:%d",
-              attackpower, defensepower, attack_firepower,
-              defense_firepower);
+  qDebug("attack:%d, defense:%d, attack firepower:%d, "
+         "defense firepower:%d",
+         attackpower, defensepower, attack_firepower, defense_firepower);
 
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
@@ -1209,10 +1207,9 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
   struct tile *src_tile = unit_tile(punit), *dst_tile = pcity->tile;
 
   if (city_owner(pcity) == unit_owner(punit)) {
-    log_verbose("Teleported %s %s from (%d,%d) to %s",
-                nation_rule_name(nation_of_unit(punit)),
-                unit_rule_name(punit), TILE_XY(src_tile),
-                city_name_get(pcity));
+    qDebug("Teleported %s %s from (%d,%d) to %s",
+           nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+           TILE_XY(src_tile), city_name_get(pcity));
     if (verbose) {
       notify_player(unit_owner(punit), city_tile(pcity), E_UNIT_RELOCATED,
                     ftc_server, _("Teleported your %s to %s."),

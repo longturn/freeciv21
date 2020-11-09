@@ -65,11 +65,11 @@ void savegame_load(struct section_file *sfile)
 
   if (has_capabilities("+version3", savefile_options)) {
     /* load new format (freeciv 3.0.x and newer) */
-    log_verbose("loading savefile in 3.0+ format ...");
+    qDebug("loading savefile in 3.0+ format ...");
     savegame3_load(sfile);
   } else if (has_capabilities("+version2", savefile_options)) {
     /* load old format (freeciv 2.3 - 2.6) */
-    log_verbose("loading savefile in 2.3 - 2.6 format ...");
+    qDebug("loading savefile in 2.3 - 2.6 format ...");
     savegame2_load(sfile);
   } else {
     qCritical("Too old savegame format not supported any more.");

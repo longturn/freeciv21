@@ -257,7 +257,7 @@ void mpgui::display_msg(const QString &msg)
 {
   QByteArray msg_bytes = msg.toLocal8Bit();
 
-  log_verbose("%s", msg_bytes.data());
+  qDebug("%s", msg_bytes.data());
   msg_dspl->setText(msg);
 }
 

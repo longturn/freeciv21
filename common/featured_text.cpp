@@ -38,7 +38,7 @@
 #define SEQ_END '/'
 
 #define MAX_LEN_STR 32
-#define log_featured_text log_verbose
+#define log_featured_text qDebug
 
 #define text_tag_list_rev_iterate(tags, ptag)                               \
   TYPED_LIST_ITERATE_REV(struct text_tag, tags, ptag)

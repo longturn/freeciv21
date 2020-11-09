@@ -265,9 +265,9 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
     const char *my_comparable = fc_comparable_version();
     char vertext[2048];
 
-    log_verbose("Metaserver says latest '" FOLLOWTAG
-                "' version is '%s'; we have '%s'",
-                latest_ver, my_comparable);
+    qDebug("Metaserver says latest '" FOLLOWTAG
+           "' version is '%s'; we have '%s'",
+           latest_ver, my_comparable);
     if (cvercmp_greater(latest_ver, my_comparable)) {
       const char *const followtag = "?vertag:" FOLLOWTAG;
       fc_snprintf(vertext, sizeof(vertext),
@@ -288,7 +288,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   }
 
   if (comment != NULL) {
-    log_verbose("Mesaserver comment about '" FOLLOWTAG "': %s", comment);
+    qDebug("Mesaserver comment about '" FOLLOWTAG "': %s", comment);
     version_message(comment);
   }
 
@@ -531,7 +531,7 @@ struct server_scan *server_scan_begin(enum server_scan_type type,
   switch (type) {
   case SERVER_SCAN_GLOBAL:
     metaserver_scan(scan);
-  break;
+    break;
   case SERVER_SCAN_LOCAL:
     fcUdpScan::i()->begin_scan(scan);
     break;

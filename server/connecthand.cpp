@@ -233,7 +233,7 @@ void establish_new_connection(struct connection *pconn)
         } else {
           notify_conn(dest, NULL, E_CONNECTION, ftc_server,
                       _("Couldn't attach your connection to new player."));
-          log_verbose("%s is not attached to a player", pconn->username);
+          qDebug("%s is not attached to a player", pconn->username);
         }
       }
       send_player_info_c(NULL, dest);
@@ -358,8 +358,8 @@ bool handle_login_request(struct connection *pconn,
   qInfo(_("%s has client version %d.%d.%d%s"), pconn->username,
         req->major_version, req->minor_version, req->patch_version,
         req->version_label);
-  log_verbose("Client caps: %s", req->capability);
-  log_verbose("Server caps: %s", our_capability);
+  qDebug("Client caps: %s", req->capability);
+  qDebug("Server caps: %s", our_capability);
   conn_set_capability(pconn, req->capability);
 
   /* Make sure the server has every capability the client needs */
@@ -822,7 +822,7 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
            * client to display player information.
            * See establish_new_connection().
            */
-          log_verbose("connection_detach() calls send_player_info_c()");
+          qDebug("connection_detach() calls send_player_info_c()");
           send_player_info_c(pplayer, NULL);
 
           reset_all_start_commands(TRUE);

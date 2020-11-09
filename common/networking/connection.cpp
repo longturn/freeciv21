@@ -245,16 +245,16 @@ bool connection_send_data(struct connection *pconn,
   if (0 < pconn->send_buffer->do_buffer_sends) {
     flush_connection_send_buffer_packets(pconn);
     if (!add_connection_data(pconn, data, len)) {
-      log_verbose("cut connection %s due to huge send buffer (1)",
-                  conn_description(pconn));
+      qDebug("cut connection %s due to huge send buffer (1)",
+             conn_description(pconn));
       return FALSE;
     }
     flush_connection_send_buffer_packets(pconn);
   } else {
     flush_connection_send_buffer_all(pconn);
     if (!add_connection_data(pconn, data, len)) {
-      log_verbose("cut connection %s due to huge send buffer (2)",
-                  conn_description(pconn));
+      qDebug("cut connection %s due to huge send buffer (2)",
+             conn_description(pconn));
       return FALSE;
     }
     flush_connection_send_buffer_all(pconn);

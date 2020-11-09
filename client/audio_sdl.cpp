@@ -93,7 +93,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
       Mix_PlayMusic(mus, 0);
       Mix_HookMusicFinished(cb);
     }
-    log_verbose("Playing file \"%s\" on music channel", fullpath);
+    qDebug("Playing file \"%s\" on music channel", fullpath);
     /* in case we did a sdl_audio_stop() recently; add volume controls later
      */
     Mix_VolumeMusic(sdl_audio_volume * MIX_MAX_VOLUME);
@@ -119,11 +119,11 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
        channel found */
     i = Mix_PlayChannel(-1, wave, 0);
     if (i < 0) {
-      log_verbose("No available sound channel to play %s.", tag);
+      qDebug("No available sound channel to play %s.", tag);
       Mix_FreeChunk(wave);
       return FALSE;
     }
-    log_verbose("Playing file \"%s\" on channel %d", fullpath, i);
+    qDebug("Playing file \"%s\" on channel %d", fullpath, i);
     /* free previous sample on this channel. it will by definition no
        longer be playing by the time we get here */
     if (samples[i].wave) {

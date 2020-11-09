@@ -271,8 +271,8 @@ static inline void package_research_info(struct packet_research_info *packet,
   packet->inventions[advance_count()] = '\0';
   packet->tech_goal = presearch->tech_goal;
 #ifdef FREECIV_DEBUG
-  log_verbose("Research nb %d inventions: %s", research_number(presearch),
-              packet->inventions);
+  qDebug("Research nb %d inventions: %s", research_number(presearch),
+         packet->inventions);
 #endif /* FREECIV_DEBUG */
 }
 

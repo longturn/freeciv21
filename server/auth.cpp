@@ -206,7 +206,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
           time(NULL) + auth_fail_wait[pconn->server.auth_tries];
     }
   } else {
-    log_verbose("%s is sending unrequested auth packets", pconn->username);
+    qDebug("%s is sending unrequested auth packets", pconn->username);
     return FALSE;
   }
 

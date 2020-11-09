@@ -325,7 +325,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
   if (you_can_join) {
     struct packet_client_info client_info;
 
-    log_verbose("join game accept:%s", message);
+    qDebug("join game accept:%s", message);
     client.conn.established = TRUE;
     client.conn.id = conn_id;
 
@@ -1473,11 +1473,11 @@ void handle_server_info(const char *version_label, int major_version,
                         int emerg_version)
 {
   if (emerg_version > 0) {
-    log_verbose("Server has version %d.%d.%d.%d%s", major_version,
-                minor_version, patch_version, emerg_version, version_label);
+    qDebug("Server has version %d.%d.%d.%d%s", major_version, minor_version,
+           patch_version, emerg_version, version_label);
   } else {
-    log_verbose("Server has version %d.%d.%d%s", major_version,
-                minor_version, patch_version, version_label);
+    qDebug("Server has version %d.%d.%d%s", major_version, minor_version,
+           patch_version, version_label);
   }
 }
 
@@ -2497,8 +2497,7 @@ void handle_research_info(const struct packet_research_info *packet)
   enum tech_state newstate, oldstate;
 
 #ifdef FREECIV_DEBUG
-  log_verbose("Research nb %d inventions: %s", packet->id,
-              packet->inventions);
+  qDebug("Research nb %d inventions: %s", packet->id, packet->inventions);
 #endif
   presearch = research_by_number(packet->id);
   fc_assert_ret(NULL != presearch);
@@ -2689,7 +2688,7 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
   if (!pinfo->used) {
     /* Forget the connection */
     if (!pconn) {
-      log_verbose("Server removed unknown connection %d", pinfo->id);
+      qDebug("Server removed unknown connection %d", pinfo->id);
       return;
     }
     client_remove_cli_conn(pconn);
@@ -2703,8 +2702,8 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
     }
 
     if (!pconn) {
-      log_verbose("Server reports new connection %d %s", pinfo->id,
-                  pinfo->username);
+      qDebug("Server reports new connection %d %s", pinfo->id,
+             pinfo->username);
 
       pconn = new connection{};
       pconn->buffer = NULL;
@@ -5204,7 +5203,7 @@ void handle_conn_ping(void) { send_packet_conn_pong(&client.conn); }
 /************************************************************************/ /**
    Handle server shutdown.
  ****************************************************************************/
-void handle_server_shutdown(void) { log_verbose("server shutdown"); }
+void handle_server_shutdown(void) { qDebug("server shutdown"); }
 
 /************************************************************************/ /**
    Add effect data to ruleset cache.

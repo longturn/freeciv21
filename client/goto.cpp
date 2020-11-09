@@ -1445,8 +1445,8 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
        * cities. Some actions causes the actor to enter the target tile but
        * that is a part of the action it self, not a regular pre action
        * move. */
-      log_verbose("unit or city blocks the path of your %s",
-                  unit_rule_name(punit));
+      qDebug("unit or city blocks the path of your %s",
+             unit_rule_name(punit));
     }
   }
 

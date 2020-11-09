@@ -459,8 +459,8 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
   struct nation_type *pnation = nation_of_player(pplayer);
   const char *name;
 
-  log_verbose("Suggesting city name for %s at (%d,%d)", player_name(pplayer),
-              TILE_XY(ptile));
+  qDebug("Suggesting city name for %s at (%d,%d)", player_name(pplayer),
+         TILE_XY(ptile));
 
   /* First try default city names. */
   name = search_for_city_name(ptile, nation_cities(pnation), pplayer);
@@ -606,9 +606,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
 
   if (from_player == to_player) {
     fc_assert_ret(rehome);
-    log_verbose("Changed homecity of %s %s to %s",
-                nation_rule_name(nation_of_player(from_player)),
-                unit_rule_name(punit), city_name_get(tocity));
+    qDebug("Changed homecity of %s %s to %s",
+           nation_rule_name(nation_of_player(from_player)),
+           unit_rule_name(punit), city_name_get(tocity));
     if (verbose) {
       notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                     ftc_server, _("Changed homecity of %s to %s."),
@@ -650,10 +650,10 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
     }
 
     if (in_city) {
-      log_verbose("Transferred %s in %s from %s to %s",
-                  unit_rule_name(punit), city_name_get(in_city),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Transferred %s in %s from %s to %s", unit_rule_name(punit),
+             city_name_get(in_city),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                       ftc_server, _("Transferred %s in %s from %s to %s."),
@@ -662,9 +662,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
                       nation_plural_for_player(to_player));
       }
     } else if (can_unit_exist_at_tile(&(wld.map), punit, tocity->tile)) {
-      log_verbose("Transferred %s from %s to %s", unit_rule_name(punit),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Transferred %s from %s to %s", unit_rule_name(punit),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                       ftc_server, _("Transferred %s from %s to %s."),
@@ -673,10 +673,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
                       nation_plural_for_player(to_player));
       }
     } else {
-      log_verbose("Could not transfer %s from %s to %s",
-                  unit_rule_name(punit),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Could not transfer %s from %s to %s", unit_rule_name(punit),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(
             from_player, unit_tile(punit), E_UNIT_LOST_MISC, ftc_server,
@@ -807,9 +806,9 @@ void transfer_city_units(struct player *pplayer, struct player *pvictim,
     } else {
       /* The unit is lost.  Call notify_player (in all other cases it is
        * called automatically). */
-      log_verbose("Lost %s %s at (%d,%d) when %s was lost.",
-                  nation_rule_name(nation_of_unit(vunit)),
-                  unit_rule_name(vunit), TILE_XY(unit_tile(vunit)), name);
+      qDebug("Lost %s %s at (%d,%d) when %s was lost.",
+             nation_rule_name(nation_of_unit(vunit)), unit_rule_name(vunit),
+             TILE_XY(unit_tile(vunit)), name);
       if (verbose) {
         notify_player(unit_owner(vunit), unit_tile(vunit), E_UNIT_LOST_MISC,
                       ftc_server, _("%s lost along with control of %s."),

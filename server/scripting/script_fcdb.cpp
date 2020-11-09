@@ -148,9 +148,9 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
     strvec_iterate_end;
     strvec_iterate(missing_func_optional, func_name)
     {
-      log_verbose("Database script '%s' does not define the optional "
-                  "function '%s'.",
-                  fcdb_luafile, func_name);
+      qDebug("Database script '%s' does not define the optional "
+             "function '%s'.",
+             fcdb_luafile, func_name);
     }
     strvec_iterate_end;
   }

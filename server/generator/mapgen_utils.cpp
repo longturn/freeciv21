@@ -367,10 +367,9 @@ void regenerate_lakes(void)
         if (num_laketypes[frozen] < ARRAY_SIZE(lakes[frozen])) {
           lakes[frozen][num_laketypes[frozen]++] = pterr;
         } else {
-          log_verbose("Ruleset has more than %d %s lake types, ignoring %s",
-                      (int) ARRAY_SIZE(lakes[frozen]),
-                      frozen ? "frozen" : "unfrozen",
-                      terrain_rule_name(pterr));
+          qDebug("Ruleset has more than %d %s lake types, ignoring %s",
+                 (int) ARRAY_SIZE(lakes[frozen]),
+                 frozen ? "frozen" : "unfrozen", terrain_rule_name(pterr));
         }
       }
     }
@@ -497,8 +496,8 @@ void assign_continent_numbers(void)
 
   recalculate_lake_surrounders();
 
-  log_verbose("Map has %d continents and %d oceans", wld.map.num_continents,
-              wld.map.num_oceans);
+  qDebug("Map has %d continents and %d oceans", wld.map.num_continents,
+         wld.map.num_oceans);
 }
 
 /**********************************************************************/ /**

@@ -190,15 +190,13 @@ void kill_player(struct player *pplayer)
   if (game.info.gameloss_style & GAMELOSS_STYLE_CWAR) {
     if (city_list_size(pplayer->cities)
         >= 2 + MIN(GAME_MIN_CIVILWARSIZE, 2)) {
-      log_verbose("Civil war strikes the remaining empire of %s",
-                  pplayer->name);
+      qDebug("Civil war strikes the remaining empire of %s", pplayer->name);
       /* out of sheer cruelty we reanimate the player
        * so he can behold what happens to his empire */
       pplayer->is_alive = TRUE;
       (void) civil_war(pplayer);
     } else {
-      log_verbose("The empire of %s is too small for civil war.",
-                  pplayer->name);
+      qDebug("The empire of %s is too small for civil war.", pplayer->name);
     }
   }
   pplayer->is_alive = FALSE;
@@ -216,7 +214,7 @@ void kill_player(struct player *pplayer)
 
     game.server.savepalace = FALSE;
 
-    log_verbose("Barbarians take the empire of %s", pplayer->name);
+    qDebug("Barbarians take the empire of %s", pplayer->name);
     adv_data_phase_init(barbarians, TRUE);
 
     /* Transfer any remaining cities */
@@ -1599,8 +1597,8 @@ void assign_player_colors(void)
             || game.server.plrcolormode == PLRCOL_NATION_ORDER);
 
   if (needed > rgbcolor_list_size(spare_colors)) {
-    log_verbose("Not enough unique colors for all players; there will be "
-                "duplicates");
+    qDebug("Not enough unique colors for all players; there will be "
+           "duplicates");
     /* Fallback: start again from full set of ruleset colors.
      * No longer attempt to avoid clashes with explicitly assigned colors. */
     rgbcolor_list_destroy(spare_colors);
@@ -2018,8 +2016,8 @@ bool server_player_set_name_full(const struct connection *caller,
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
       return TRUE; /* Success! */
     } else {
-      log_verbose("Failed to set the name of the player nb %d to \"%s\": %s",
-                  player_number(pplayer), real_name, error_buf);
+      qDebug("Failed to set the name of the player nb %d to \"%s\": %s",
+             player_number(pplayer), real_name, error_buf);
       /* Fallthrough. */
     }
   }
@@ -2038,8 +2036,8 @@ bool server_player_set_name_full(const struct connection *caller,
       fc_snprintf(test, sizeof(test), "%s%d", real_name, i);
       if (server_player_name_is_allowed(caller, pplayer, pnation, test,
                                         error_buf, error_buf_len)) {
-        log_verbose("Name of player nb %d set to \"%s\" instead.",
-                    player_number(pplayer), test);
+        qDebug("Name of player nb %d set to \"%s\" instead.",
+               player_number(pplayer), test);
         fc_strlcpy(pplayer->name, test, sizeof(pplayer->name));
         return TRUE;
       } else {
@@ -2054,8 +2052,8 @@ bool server_player_set_name_full(const struct connection *caller,
               player_number(pplayer));
   if (server_player_name_is_allowed(caller, pplayer, pnation, real_name,
                                     error_buf, error_buf_len)) {
-    log_verbose("Name of player nb %d set to \"%s\".",
-                player_number(pplayer), real_name);
+    qDebug("Name of player nb %d set to \"%s\".", player_number(pplayer),
+           real_name);
     fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
     return TRUE;
   } else {
@@ -2068,8 +2066,8 @@ bool server_player_set_name_full(const struct connection *caller,
     fc_snprintf(real_name, sizeof(real_name), _("Player no. %d"), i);
     if (server_player_name_is_allowed(caller, pplayer, pnation, real_name,
                                       error_buf, error_buf_len)) {
-      log_verbose("Name of player nb %d to \"%s\".", player_number(pplayer),
-                  real_name);
+      qDebug("Name of player nb %d to \"%s\".", player_number(pplayer),
+             real_name);
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
       return TRUE;
     } else {
@@ -2405,7 +2403,7 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
     }
   }
 
-  log_verbose("No nation found!");
+  qDebug("No nation found!");
 
   return NO_NATION_SELECTED;
 }
@@ -2533,9 +2531,9 @@ void fit_nationset_to_players(void)
     }
     fc_assert(least_misfits >= 0);
 
-    log_verbose("Current nationset \"%s\" doesn't fit all existing players.",
-                nation_set_rule_name(current_nationset()));
-    log_verbose("Selected nationset \"%s\".", nation_set_rule_name(best));
+    qDebug("Current nationset \"%s\" doesn't fit all existing players.",
+           nation_set_rule_name(current_nationset()));
+    qDebug("Selected nationset \"%s\".", nation_set_rule_name(best));
     fc_strlcpy(game.server.nationset, nation_set_rule_name(best),
                sizeof(game.server.nationset));
     count_playable_nations();
@@ -2550,10 +2548,9 @@ void fit_nationset_to_players(void)
   {
     if (pplayer->nation != NO_NATION_SELECTED
         && !nation_is_in_current_set(pplayer->nation)) {
-      log_verbose(
-          "Nation %s of player %s not in nationset \"%s\", unsetting.",
-          nation_plural_for_player(pplayer), player_name(pplayer),
-          nation_set_rule_name(current_nationset()));
+      qDebug("Nation %s of player %s not in nationset \"%s\", unsetting.",
+             nation_plural_for_player(pplayer), player_name(pplayer),
+             nation_set_rule_name(current_nationset()));
       player_set_nation(pplayer, NO_NATION_SELECTED);
     }
   }
@@ -2813,8 +2810,8 @@ bool civil_war_triggered(struct player *pplayer)
   }
   city_list_iterate_end;
 
-  log_verbose("Civil war chance for %s: prob %d, dice %d",
-              player_name(pplayer), prob, dice);
+  qDebug("Civil war chance for %s: prob %d, dice %d", player_name(pplayer),
+         prob, dice);
 
   return (dice < prob);
 }
@@ -2906,8 +2903,8 @@ struct player *civil_war(struct player *pplayer)
   city_list_iterate_end;
 
   if (city_list_size(defector_candidates) == 0) {
-    log_verbose(_("Could not throw %s into civil war - no available cities"),
-                nation_plural_for_player(pplayer));
+    qDebug(_("Could not throw %s into civil war - no available cities"),
+           nation_plural_for_player(pplayer));
     city_list_destroy(defector_candidates);
     return NULL;
   }
@@ -2935,9 +2932,9 @@ struct player *civil_war(struct player *pplayer)
 
   /* Now split the empire */
 
-  log_verbose("%s civil war; created AI %s",
-              nation_rule_name(nation_of_player(pplayer)),
-              nation_rule_name(nation_of_player(cplayer)));
+  qDebug("%s civil war; created AI %s",
+         nation_rule_name(nation_of_player(pplayer)),
+         nation_rule_name(nation_of_player(cplayer)));
   notify_player(pplayer, NULL, E_CIVIL_WAR, ftc_server,
                 _("Your nation is thrust into civil war."));
 
@@ -2961,9 +2958,8 @@ struct player *civil_war(struct player *pplayer)
        * resolved stack conflicts for each city we would teleport the first
        * of the units we met since the other would have another owner. */
       if (transfer_city(cplayer, pcity, -1, FALSE, FALSE, FALSE, FALSE)) {
-        log_verbose("%s declares allegiance to the %s.",
-                    city_name_get(pcity),
-                    nation_rule_name(nation_of_player(cplayer)));
+        qDebug("%s declares allegiance to the %s.", city_name_get(pcity),
+               nation_rule_name(nation_of_player(cplayer)));
         notify_player(pplayer, pcity->tile, E_CITY_LOST, ftc_server,
                       /* TRANS: <city> ... the Poles. */
                       _("%s declares allegiance to the %s."),

@@ -232,7 +232,7 @@ static const char *valid_ruleset_filename(const char *subdir,
 
   fc_snprintf(filename, sizeof(filename), "%s" DIR_SEPARATOR "%s.%s", subdir,
               name, extension);
-  log_verbose("Trying \"%s\".", filename);
+  qDebug("Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (dfilename) {
     return dfilename;
@@ -240,7 +240,7 @@ static const char *valid_ruleset_filename(const char *subdir,
 
   fc_snprintf(filename, sizeof(filename), "default" DIR_SEPARATOR "%s.%s",
               name, extension);
-  log_verbose("Trying \"%s\": default ruleset directory.", filename);
+  qDebug("Trying \"%s\": default ruleset directory.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (dfilename) {
     return dfilename;
@@ -248,8 +248,7 @@ static const char *valid_ruleset_filename(const char *subdir,
 
   fc_snprintf(filename, sizeof(filename), "%s_%s.%s", subdir, name,
               extension);
-  log_verbose("Trying \"%s\": alternative ruleset filename syntax.",
-              filename);
+  qDebug("Trying \"%s\": alternative ruleset filename syntax.", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (dfilename) {
     return dfilename;
@@ -1208,7 +1207,7 @@ static bool load_tech_names(struct section_file *file,
       ruleset_error(LOG_ERROR, "\"%s\": No Advances?!?", filename);
       ok = FALSE;
     } else {
-      log_verbose("%d advances (including possibly unused)", num_techs);
+      qDebug("%d advances (including possibly unused)", num_techs);
       if (num_techs + A_FIRST > A_LAST) {
         ruleset_error(LOG_ERROR, "\"%s\": Too many advances (%d, max %d)",
                       filename, num_techs, A_LAST - A_FIRST);
@@ -1556,7 +1555,7 @@ static bool load_unit_names(struct section_file *file,
       ruleset_error(LOG_ERROR, "\"%s\": No unit classes?!?", filename);
       ok = FALSE;
     } else {
-      log_verbose("%d unit classes", nval);
+      qDebug("%d unit classes", nval);
       if (nval > UCL_LAST) {
         ruleset_error(LOG_ERROR,
                       "\"%s\": Too many unit classes (%d, max %d)", filename,
@@ -1591,7 +1590,7 @@ static bool load_unit_names(struct section_file *file,
       ruleset_error(LOG_ERROR, "\"%s\": No unit types?!?", filename);
       ok = FALSE;
     } else {
-      log_verbose("%d unit types (including possibly unused)", nval);
+      qDebug("%d unit types (including possibly unused)", nval);
       if (nval > U_LAST) {
         ruleset_error(LOG_ERROR, "\"%s\": Too many unit types (%d, max %d)",
                       filename, nval, U_LAST);
@@ -2334,7 +2333,7 @@ static bool load_building_names(struct section_file *file,
     ruleset_error(LOG_ERROR, "\"%s\": No improvements?!?", filename);
     ok = FALSE;
   } else {
-    log_verbose("%d improvement types (including possibly unused)", nval);
+    qDebug("%d improvement types (including possibly unused)", nval);
     if (nval > B_LAST) {
       ruleset_error(LOG_ERROR, "\"%s\": Too many improvements (%d, max %d)",
                     filename, nval, B_LAST);
@@ -4843,8 +4842,8 @@ static bool load_ruleset_nations(struct section_file *file,
            * But it can happen normally. The civ1 compatibility ruleset only
            * uses the nations that were in civ1, so not all of the links will
            * exist. */
-          log_verbose("Nation %s: Unknown set/group \"%s\".",
-                      nation_rule_name(pnation), vec[j]);
+          qDebug("Nation %s: Unknown set/group \"%s\".",
+                 nation_rule_name(pnation), vec[j]);
         }
       }
       if (NULL != vec) {
@@ -4876,8 +4875,8 @@ static bool load_ruleset_nations(struct section_file *file,
            * But it can happen normally. The civ1 compatibility ruleset only
            * uses the nations that were in civ1, so not all of the links will
            * exist. */
-          log_verbose("Nation %s: conflicts_with nation \"%s\" is unknown.",
-                      nation_rule_name(pnation), vec[j]);
+          qDebug("Nation %s: conflicts_with nation \"%s\" is unknown.",
+                 nation_rule_name(pnation), vec[j]);
         }
       }
       if (NULL != vec) {
@@ -5119,9 +5118,9 @@ static bool load_ruleset_nations(struct section_file *file,
           ok = FALSE;
           break;
         } else {
-          log_verbose("Nation %s: style \"%s\" not supported in this "
-                      "ruleset; using default.",
-                      nation_rule_name(pnation), name);
+          qDebug("Nation %s: style \"%s\" not supported in this "
+                 "ruleset; using default.",
+                 nation_rule_name(pnation), name);
           pnation->style = style_by_number(0);
         }
       }
@@ -5148,8 +5147,8 @@ static bool load_ruleset_nations(struct section_file *file,
            * But it can happen normally. The civ1 compatability ruleset only
            * uses the nations that were in civ1, so not all of the links will
            * exist. */
-          log_verbose("Nation %s: civil war nation \"%s\" is unknown.",
-                      nation_rule_name(pnation), vec[j]);
+          qDebug("Nation %s: civil war nation \"%s\" is unknown.",
+                 nation_rule_name(pnation), vec[j]);
         }
       }
       if (NULL != vec) {

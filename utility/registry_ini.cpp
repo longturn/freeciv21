@@ -324,9 +324,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   astring_vector_init(&columns);
 
   if (filename) {
-    log_verbose("Reading registry from \"%s\"", filename);
+    qDebug("Reading registry from \"%s\"", filename);
   } else {
-    log_verbose("Reading registry");
+    qDebug("Reading registry");
   }
 
   while (!inf_at_eof(inf)) {
@@ -876,7 +876,7 @@ void secfile_check_unused(const struct section_file *secfile)
     {
       if (!entry_used(pentry)) {
         if (!any && secfile->name) {
-          log_verbose("Unused entries in file %s:", secfile->name);
+          qDebug("Unused entries in file %s:", secfile->name);
           any = TRUE;
         }
         if (are_deprecation_warnings_enabled()) {
@@ -890,8 +890,8 @@ void secfile_check_unused(const struct section_file *secfile)
                         secfile->name != NULL ? secfile->name : "nameless",
                         section_name(psection), entry_name(pentry));
 #else  /* FREECIV_TESTMATIC */
-          log_verbose("  unused entry: %s.%s", section_name(psection),
-                      entry_name(pentry));
+          qDebug("  unused entry: %s.%s", section_name(psection),
+                 entry_name(pentry));
 #endif /* FREECIV_TESTMATIC */
         }
       }

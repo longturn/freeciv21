@@ -1158,7 +1158,7 @@ struct action *action_by_number(action_id act_id)
   if (!action_id_exists(act_id)) {
     /* Nothing to return. */
 
-    log_verbose("Asked for non existing action numbered %d", act_id);
+    qDebug("Asked for non existing action numbered %d", act_id);
 
     return NULL;
   }
@@ -1181,7 +1181,7 @@ struct action *action_by_rule_name(const char *name)
   if (!action_id_exists(act_id)) {
     /* Nothing to return. */
 
-    log_verbose("Asked for non existing action named %s", name);
+    qDebug("Asked for non existing action named %s", name);
 
     return NULL;
   }

@@ -3799,14 +3799,14 @@ bool load_command(struct connection *caller, const char *filename,
   secfile_check_unused(file);
   secfile_destroy(file);
 
-  log_verbose("Load time: %g seconds (%g apparent)",
-              timer_read_seconds(loadtimer), timer_read_seconds(uloadtimer));
+  qDebug("Load time: %g seconds (%g apparent)",
+         timer_read_seconds(loadtimer), timer_read_seconds(uloadtimer));
   timer_destroy(loadtimer);
   timer_destroy(uloadtimer);
 
   sanity_check();
 
-  log_verbose("load_command() does send_rulesets()");
+  qDebug("load_command() does send_rulesets()");
   conn_list_compression_freeze(game.est_connections);
   send_rulesets(game.est_connections);
   send_server_settings(game.est_connections);
@@ -3924,7 +3924,7 @@ static bool set_rulesetdir(struct connection *caller, char *str, bool check,
     char old[512];
 
     sz_strlcpy(old, game.server.rulesetdir);
-    log_verbose("set_rulesetdir() does load_rulesets() with \"%s\"", str);
+    qDebug("set_rulesetdir() does load_rulesets() with \"%s\"", str);
     sz_strlcpy(game.server.rulesetdir, str);
 
     /* load the ruleset (and game settings defined in the ruleset) */
@@ -6021,9 +6021,9 @@ bool start_command(struct connection *caller, bool check, bool notify)
          * to increase the number of players beyond the number supported by
          * the scenario. The solution is a hack: cut the extra players
          * when the game starts. */
-        log_verbose("Reduced maxplayers from %d to %d to fit "
-                    "to the number of start positions.",
-                    game.server.max_players, map_startpos_count());
+        qDebug("Reduced maxplayers from %d to %d to fit "
+               "to the number of start positions.",
+               game.server.max_players, map_startpos_count());
         game.server.max_players = map_startpos_count();
       }
 
@@ -6041,10 +6041,10 @@ bool start_command(struct connection *caller, bool check, bool notify)
           }
         }
 
-        log_verbose("Had to cut down the number of players to the "
-                    "number of map start positions, there must be "
-                    "something wrong with the savegame or you "
-                    "adjusted the maxplayers value.");
+        qDebug("Had to cut down the number of players to the "
+               "number of map start positions, there must be "
+               "something wrong with the savegame or you "
+               "adjusted the maxplayers value.");
       }
     }
 

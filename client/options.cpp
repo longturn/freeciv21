@@ -5208,7 +5208,7 @@ static const char *get_current_option_file_name(void)
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
 #endif /* OPTION_FILE_NAME */
   }
-  log_verbose("settings file is %s", name_buffer);
+  qDebug("settings file is %s", name_buffer);
   return name_buffer;
 }
 
@@ -5327,7 +5327,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 #endif /* OPTION_FILE_NAME */
   }
-  log_verbose("settings file is %s", name_buffer);
+  qDebug("settings file is %s", name_buffer);
   return name_buffer;
 }
 #undef OLD_OPTION_FILE_NAME

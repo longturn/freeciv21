@@ -93,9 +93,6 @@ void do_log(const char *file, const char *function, int line,
            ##__VA_ARGS__);                                                  \
   }
 
-// Have to be ifdef's to report the correct line number.
-#define log_verbose(message, ...) qDebug(message, ##__VA_ARGS__)
-
 #ifdef FREECIV_DEBUG
 #define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
 #else
@@ -112,7 +109,7 @@ void do_log(const char *file, const char *function, int line,
 
 /* Used by game debug command */
 #define log_test qInfo
-#define log_packet log_verbose
+#define log_packet qDebug
 #define log_packet_detailed log_debug
 #define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
 

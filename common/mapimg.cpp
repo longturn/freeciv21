@@ -2258,7 +2258,7 @@ static bool img_save_magickwand(const struct img *pimg,
     MAPIMG_LOG(_("error saving map image '%s'"), imagefile);
     ret = FALSE;
   } else {
-    log_verbose("Map image saved as '%s'.", imagefile);
+    qDebug("Map image saved as '%s'.", imagefile);
   }
 
   DestroyDrawingWand(dw);
@@ -2345,7 +2345,7 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
     }
   }
 
-  log_verbose("Map image saved as '%s'.", ppmname);
+  qDebug("Map image saved as '%s'.", ppmname);
   fclose(fp);
 
   return TRUE;

@@ -5981,8 +5981,8 @@ bool settings_ruleset(struct section_file *file, const char *section,
   /* settings */
   if (NULL == secfile_section_by_name(file, section)) {
     /* no settings in ruleset file */
-    log_verbose("no [%s] section for game settings in %s", section,
-                secfile_name(file));
+    qDebug("no [%s] section for game settings in %s", section,
+           secfile_name(file));
   } else {
     for (j = 0; (name = secfile_lookup_str_default(
                      file, NULL, "%s.set%d.name", section, j));
@@ -6403,7 +6403,7 @@ void settings_game_load(struct section_file *file, const char *section)
 
   if (!secfile_lookup_int(file, &set_count, "%s.set_count", section)) {
     /* Old savegames and scenarios doesn't contain this, not an error. */
-    log_verbose("Can't read the number of settings in the save file.");
+    qDebug("Can't read the number of settings in the save file.");
     return;
   }
 
@@ -6426,8 +6426,8 @@ void settings_game_load(struct section_file *file, const char *section)
         bool val;
 
         if (!secfile_lookup_bool(file, &val, "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6457,8 +6457,8 @@ void settings_game_load(struct section_file *file, const char *section)
         int val;
 
         if (!secfile_lookup_int(file, &val, "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6489,8 +6489,8 @@ void settings_game_load(struct section_file *file, const char *section)
             secfile_lookup_str(file, "%s.set%d.value", section, i);
 
         if (NULL == val) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6518,8 +6518,8 @@ void settings_game_load(struct section_file *file, const char *section)
         if (!secfile_lookup_enum_data(file, &val, FALSE,
                                       setting_enum_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6551,8 +6551,8 @@ void settings_game_load(struct section_file *file, const char *section)
         if (!secfile_lookup_enum_data(file, &val, TRUE,
                                       setting_bitwise_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 

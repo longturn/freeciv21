@@ -273,7 +273,7 @@ void log_init(const char *filename, QtMsgType initial_level,
   log_prefix = prefix;
   fc_fatal_assertions = fatal_assertions;
   fc_init_mutex(&logfile_mutex);
-  log_verbose("log started");
+  qDebug("log started");
   log_debug("LOG_DEBUG test");
 }
 

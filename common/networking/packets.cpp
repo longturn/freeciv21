@@ -395,8 +395,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
   }
 
   if (whole_packet_len < header_size) {
-    log_verbose("The packet size is reported to be less than header alone. "
-                "The connection will be closed now.");
+    qDebug("The packet size is reported to be less than header alone. "
+           "The connection will be closed now.");
     connection_close(pc, _("illegal packet size"));
 
     return NULL;
@@ -426,8 +426,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
       if (error != Z_OK) {
         if (error != Z_DATA_ERROR || decompress_factor > MAX_DECOMPRESSION) {
-          log_verbose("Uncompressing of the packet stream failed. "
-                      "The connection will be closed now.");
+          qDebug("Uncompressing of the packet stream failed. "
+                 "The connection will be closed now.");
           connection_close(pc, _("decoding error"));
           free(decompressed);
           return NULL;
@@ -477,8 +477,8 @@ void *get_packet_from_connection_raw(struct connection *pc,
   if (whole_packet_len
       < (data_type_size(data_type(pc->packet_header.length))
          + data_type_size(data_type(pc->packet_header.type)))) {
-    log_verbose("The packet stream is corrupt. The connection "
-                "will be closed now.");
+    qDebug("The packet stream is corrupt. The connection "
+           "will be closed now.");
     connection_close(pc, _("decoding error"));
     return NULL;
   }
@@ -488,9 +488,9 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
   if (utype.type >= PACKET_LAST
       || (receive_handler = pc->phs.handlers->receive[utype.type]) == NULL) {
-    log_verbose("Received unsupported packet type %d (%s). The connection "
-                "will be closed now.",
-                utype.type, packet_name(utype.type));
+    qDebug("Received unsupported packet type %d (%s). The connection "
+           "will be closed now.",
+           utype.type, packet_name(utype.type));
     connection_close(pc, _("unsupported packet type"));
     return NULL;
   }

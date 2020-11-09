@@ -374,9 +374,9 @@ void server::accept_connections()
 
     // Reject the connection if we have reached the hard-coded limit
     if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
-      log_verbose("Rejecting new connection from %s: maximum number of "
-                  "connections exceeded (%d).",
-                  qUtf8Printable(remote), MAX_NUM_CONNECTIONS);
+      qDebug("Rejecting new connection from %s: maximum number of "
+             "connections exceeded (%d).",
+             qUtf8Printable(remote), MAX_NUM_CONNECTIONS);
       socket->deleteLater();
       continue;
     }
@@ -396,10 +396,9 @@ void server::accept_connections()
           continue;
         }
         if (++count >= game.server.maxconnectionsperhost) {
-          log_verbose("Rejecting new connection from %s: maximum number of "
-                      "connections for this address exceeded (%d).",
-                      qUtf8Printable(remote),
-                      game.server.maxconnectionsperhost);
+          qDebug("Rejecting new connection from %s: maximum number of "
+                 "connections for this address exceeded (%d).",
+                 qUtf8Printable(remote), game.server.maxconnectionsperhost);
 
           success = false;
           socket->deleteLater();
@@ -454,11 +453,11 @@ void server::send_pings()
           || pconn->ping_time > game.server.pingtimeout) {
         // cut mute players, except for hack-level ones
         if (pconn->access_level == ALLOW_HACK) {
-          log_verbose("connection (%s) [hack-level] ping timeout ignored",
-                      conn_description(pconn));
+          qDebug("connection (%s) [hack-level] ping timeout ignored",
+                 conn_description(pconn));
         } else {
-          log_verbose("connection (%s) cut due to ping timeout",
-                      conn_description(pconn));
+          qDebug("connection (%s) cut due to ping timeout",
+                 conn_description(pconn));
           connection_close_server(pconn, _("ping timeout"));
         }
       } else if (pconn->established) {

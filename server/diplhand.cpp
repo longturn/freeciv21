@@ -482,11 +482,11 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
 
         if (research_invention_state(presearch, pclause->value)
             == TECH_KNOWN) {
-          log_verbose("Nation %s already know tech %s, "
-                      "that %s want to give them.",
-                      nation_rule_name(nation_of_player(pdest)),
-                      advance_rule_name(advance_by_number(pclause->value)),
-                      nation_rule_name(nation_of_player(pgiver)));
+          qDebug("Nation %s already know tech %s, "
+                 "that %s want to give them.",
+                 nation_rule_name(nation_of_player(pdest)),
+                 advance_rule_name(advance_by_number(pclause->value)),
+                 nation_rule_name(nation_of_player(pgiver)));
           break;
         }
         advance_name =

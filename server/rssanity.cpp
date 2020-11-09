@@ -1466,8 +1466,8 @@ bool autoadjust_ruleset_data(void)
         action_by_result_iterate(blocker, blocked_id, blocker_result)
         {
           if (!action_would_be_blocked_by(blocked, blocker)) {
-            log_verbose("Autoblocking %s with %s", action_rule_name(blocked),
-                        action_rule_name(blocker));
+            qDebug("Autoblocking %s with %s", action_rule_name(blocked),
+                   action_rule_name(blocker));
             BV_SET(blocked->blocked_by, blocker->id);
           }
         }

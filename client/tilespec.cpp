@@ -1181,7 +1181,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
                     _("No usable default tileset found, aborting!"));
     }
 
-    log_verbose("Trying tileset \"%s\".", tileset->name);
+    qDebug("Trying tileset \"%s\".", tileset->name);
   } else {
     original = TRUE;
   }
@@ -1718,7 +1718,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     }
     return NULL;
   }
-  log_verbose("tilespec file is \"%s\".", fname);
+  qDebug("tilespec file is \"%s\".", fname);
 
   if (!(file = secfile_load(fname, TRUE))) {
     qCritical("Could not open '%s':\n%s", fname, secfile_error());
@@ -1928,10 +1928,9 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
   t->small_sprite_width = t->small_sprite_width * t->scale;
   t->small_sprite_height = t->small_sprite_height * t->scale;
-  log_verbose("tile sizes %dx%d, %d%d unit, %d%d small",
-              t->normal_tile_width, t->normal_tile_height,
-              t->full_tile_width, t->full_tile_height, t->small_sprite_width,
-              t->small_sprite_height);
+  qDebug("tile sizes %dx%d, %d%d unit, %d%d small", t->normal_tile_width,
+         t->normal_tile_height, t->full_tile_width, t->full_tile_height,
+         t->small_sprite_width, t->small_sprite_height);
 
   tstr = secfile_lookup_str(file, "tilespec.fog_style");
   if (tstr == NULL) {
@@ -2385,7 +2384,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   secfile_check_unused(file);
   secfile_destroy(file);
-  log_verbose("finished reading \"%s\".", fname);
+  qDebug("finished reading \"%s\".", fname);
   delete[] fname;
 
   return t;
@@ -3352,9 +3351,9 @@ struct sprite *tiles_lookup_sprite_tag_alt(struct tileset *t,
 
   sp = load_sprite(t, alt, scale, TRUE);
   if (sp) {
-    log_verbose("Using alternate graphic \"%s\" "
-                "(instead of \"%s\") for %s \"%s\".",
-                alt, tag, what, name);
+    qDebug("Using alternate graphic \"%s\" "
+           "(instead of \"%s\") for %s \"%s\".",
+           alt, tag, what, name);
     return sp;
   }
 
@@ -3530,10 +3529,10 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
         tileset_error(LOG_FATAL, _("No extra style for \"%s\" or \"%s\"."),
                       pextra->graphic_str, pextra->graphic_alt);
       } else {
-        log_verbose("Using alternate graphic \"%s\" "
-                    "(instead of \"%s\") for extra \"%s\".",
-                    pextra->graphic_alt, pextra->graphic_str,
-                    extra_rule_name(pextra));
+        qDebug("Using alternate graphic \"%s\" "
+               "(instead of \"%s\") for extra \"%s\".",
+               pextra->graphic_alt, pextra->graphic_str,
+               extra_rule_name(pextra));
       }
     }
     extrastyle = t->estyle_hash->value(tag);
@@ -6647,8 +6646,8 @@ void tileset_use_preferred_theme(const struct tileset *t)
       }
     }
   }
-  log_verbose("The tileset doesn't specify preferred themes or none of its "
-              "preferred themes can be used. Using system default.");
+  qDebug("The tileset doesn't specify preferred themes or none of its "
+         "preferred themes can be used. Using system default.");
   gui_clear_theme();
 }
 

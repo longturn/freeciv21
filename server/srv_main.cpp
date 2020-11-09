@@ -3134,7 +3134,7 @@ void srv_ready()
 
   CALL_FUNC_EACH_AI(game_start);
 
-  log_verbose("srv_running() mostly redundant send_server_settings()");
+  qDebug("srv_running() mostly redundant send_server_settings()");
   send_server_settings(NULL);
 
   if (game.server.autosaves & (1 << AS_TIMER)) {

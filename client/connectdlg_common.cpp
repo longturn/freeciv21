@@ -305,9 +305,8 @@ bool client_start_server(void)
 
     qCritical("Failed to connect to spawned server!");
 #ifdef FREECIV_DEBUG
-    log_verbose(
-        "Tried with commandline: '%s'",
-        QString(trueFcser + arguments.join(" ")).toLocal8Bit().data());
+    qDebug("Tried with commandline: '%s'",
+           QString(trueFcser + arguments.join(" ")).toLocal8Bit().data());
 #endif
     output_window_append(ftc_client, _("Couldn't connect to the server."));
     output_window_append(ftc_client,

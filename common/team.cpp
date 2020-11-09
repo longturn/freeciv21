@@ -216,8 +216,8 @@ static inline void team_slot_create_default_name(struct team_slot *tslot)
   tslot->name_translation = fc_strdup(buf);
 #endif /* FREECIV_ENABLE_NLS */
 
-  log_verbose("No name defined for team %d! Creating a default name: %s.",
-              team_slot_index(tslot), tslot->rule_name);
+  qDebug("No name defined for team %d! Creating a default name: %s.",
+         team_slot_index(tslot), tslot->rule_name);
 }
 
 /************************************************************************/ /**

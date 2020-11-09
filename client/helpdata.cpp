@@ -1102,7 +1102,7 @@ void boot_help_texts(void)
   secfile_check_unused(sf);
   secfile_destroy(sf);
   booted = TRUE;
-  log_verbose("Booted help texts ok");
+  qDebug("Booted help texts ok");
 }
 
 /****************************************************************************

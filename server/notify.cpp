@@ -780,7 +780,7 @@ void event_cache_load(struct section_file *file, const char *section)
   const char *p, *q;
 
   event_count = secfile_lookup_int_default(file, 0, "%s.count", section);
-  log_verbose("Saved events: %d.", event_count);
+  qDebug("Saved events: %d.", event_count);
 
   if (0 >= event_count) {
     return;
@@ -800,18 +800,18 @@ void event_cache_load(struct section_file *file, const char *section)
 
     p = secfile_lookup_str(file, "%s.events%d.event", section, i);
     if (NULL == p) {
-      log_verbose("[Event cache %4d] Missing event type.", i);
+      qDebug("[Event cache %4d] Missing event type.", i);
       continue;
     }
     packet.event = event_type_by_name(p, fc_strcasecmp);
     if (!event_type_is_valid(packet.event)) {
-      log_verbose("[Event cache %4d] Not supported event type: %s", i, p);
+      qDebug("[Event cache %4d] Not supported event type: %s", i, p);
       continue;
     }
 
     p = secfile_lookup_str(file, "%s.events%d.message", section, i);
     if (NULL == p) {
-      log_verbose("[Event cache %4d] Missing message.", i);
+      qDebug("[Event cache %4d] Missing message.", i);
       continue;
     }
     sz_strlcpy(packet.message, p);
@@ -830,18 +830,18 @@ void event_cache_load(struct section_file *file, const char *section)
 
     p = secfile_lookup_str(file, "%s.events%d.server_state", section, i);
     if (NULL == p) {
-      log_verbose("[Event cache %4d] Missing server state info.", i);
+      qDebug("[Event cache %4d] Missing server state info.", i);
       continue;
     }
     server_status = server_states_by_name(p, fc_strcasecmp);
     if (!server_states_is_valid(server_status)) {
-      log_verbose("[Event cache %4d] Server state no supported: %s", i, p);
+      qDebug("[Event cache %4d] Server state no supported: %s", i, p);
       continue;
     }
 
     p = secfile_lookup_str(file, "%s.events%d.target", section, i);
     if (NULL == p) {
-      log_verbose("[Event cache %4d] Missing target info.", i);
+      qDebug("[Event cache %4d] Missing target info.", i);
       continue;
     } else if (0 == fc_strcasecmp(p, "All")) {
       target_type = ECT_ALL;
@@ -867,7 +867,7 @@ void event_cache_load(struct section_file *file, const char *section)
       players_iterate_end;
 
       if (!valid && NULL == players) {
-        log_verbose("[Event cache %4d] invalid target bitmap: %s", i, p);
+        qDebug("[Event cache %4d] invalid target bitmap: %s", i, p);
         if (NULL != players) {
           FC_FREE(players);
         }
@@ -883,7 +883,7 @@ void event_cache_load(struct section_file *file, const char *section)
       FC_FREE(players);
     }
 
-    log_verbose("Event %4d loaded.", i);
+    qDebug("Event %4d loaded.", i);
   }
 }
 
@@ -951,7 +951,7 @@ void event_cache_save(struct section_file *file, const char *section)
     secfile_insert_str(file, pdata->packet.message, "%s.events%d.message",
                        section, event_count);
 
-    log_verbose("Event %4d saved.", event_count);
+    qDebug("Event %4d saved.", event_count);
 
     event_count++;
   }
@@ -960,7 +960,7 @@ void event_cache_save(struct section_file *file, const char *section)
   /* save the number of events in the event cache */
   secfile_insert_int(file, event_count, "%s.count", section);
 
-  log_verbose("Events saved: %d.", event_count);
+  qDebug("Events saved: %d.", event_count);
 
   event_cache_status = TRUE;
 }

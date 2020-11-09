@@ -224,14 +224,14 @@ extern bool sg_success;
       if (NULL == _line) {                                                  \
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
-        log_verbose("Line not found='%s'", buf);                            \
+        qDebug("Line not found='%s'", buf);                                 \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       } else if (strlen(_line) != wld.map.xsize) {                          \
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
-        log_verbose("Line too short (expected %d got %lu)='%s'",            \
-                    wld.map.xsize, (unsigned long) strlen(_line), buf);     \
+        qDebug("Line too short (expected %d got %lu)='%s'", wld.map.xsize,  \
+               (unsigned long) strlen(_line), buf);                         \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       }                                                                     \
@@ -422,7 +422,7 @@ void savegame3_save(struct section_file *sfile, const char *save_reason,
   timer_start(savetimer);
 #endif
 
-  log_verbose("saving game in new format ...");
+  qDebug("saving game in new format ...");
   savegame3_save_real(sfile, save_reason, scenario);
 
 #ifdef DEBUG_TIMERS
@@ -1231,8 +1231,8 @@ static void sg_load_savefile(struct loaddata *loading)
        * Saving happens with real ruleset name, so savegames containing this
        * are special scenarios. */
       sz_strlcpy(game.server.rulesetdir, GAME_DEFAULT_RULESETDIR);
-      log_verbose("Savegame specified ruleset '%s'. Really loading '%s'.",
-                  ruleset, game.server.rulesetdir);
+      qDebug("Savegame specified ruleset '%s'. Really loading '%s'.",
+             ruleset, game.server.rulesetdir);
     }
 
     alt_dir = secfile_lookup_str_default(loading->file, NULL,
@@ -1415,9 +1415,9 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
-        log_verbose("Multiplier \"%s\" in savegame but not in ruleset, "
-                    "discarding",
-                    modname[j]);
+        qDebug("Multiplier \"%s\" in savegame but not in ruleset, "
+               "discarding",
+               modname[j]);
       }
     }
     delete[] modname;
@@ -2810,7 +2810,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
             startpos_allow(psp, pnation);
           }
         } else {
-          log_verbose("Missing nation \"%s\".", start);
+          qDebug("Missing nation \"%s\".", start);
         }
       }
     }
@@ -2818,9 +2818,9 @@ static void sg_load_map_startpos(struct loaddata *loading)
 
   if (0 < map_startpos_count() && loading->server_state == S_S_INITIAL
       && map_startpos_count() < game.server.max_players) {
-    log_verbose("Number of starts (%d) are lower than rules.max_players "
-                "(%d), lowering rules.max_players.",
-                map_startpos_count(), game.server.max_players);
+    qDebug("Number of starts (%d) are lower than rules.max_players "
+           "(%d), lowering rules.max_players.",
+           map_startpos_count(), game.server.max_players);
     game.server.max_players = map_startpos_count();
   }
 
@@ -3423,7 +3423,7 @@ static void sg_load_players_basic(struct loaddata *loading)
                pslot_id);
         /* This will be fixed up later */
       } else {
-        log_verbose("No color defined for player %d.", pslot_id);
+        qDebug("No color defined for player %d.", pslot_id);
         /* Colors will be assigned on game start, or at end of savefile
          * loading if game has already started */
       }
@@ -3465,9 +3465,9 @@ static void sg_load_players_basic(struct loaddata *loading)
                    + pmul->start;
 
         if (rval != val) {
-          log_verbose("Player %d had illegal value for multiplier \"%s\": "
-                      "was %d, clamped to %d",
-                      pslot_id, multiplier_rule_name(pmul), val, rval);
+          qDebug("Player %d had illegal value for multiplier \"%s\": "
+                 "was %d, clamped to %d",
+                 pslot_id, multiplier_rule_name(pmul), val, rval);
         }
         pplayer->multipliers[idx] = rval;
 
@@ -3480,9 +3480,9 @@ static void sg_load_players_basic(struct loaddata *loading)
                + pmul->start;
 
         if (rval != val) {
-          log_verbose("Player %d had illegal value for multiplier_target "
-                      " \"%s\": was %d, clamped to %d",
-                      pslot_id, multiplier_rule_name(pmul), val, rval);
+          qDebug("Player %d had illegal value for multiplier_target "
+                 " \"%s\": was %d, clamped to %d",
+                 pslot_id, multiplier_rule_name(pmul), val, rval);
         }
         pplayer->multipliers_target[idx] = rval;
       } /* else silently discard multiplier not in current ruleset */
@@ -7444,7 +7444,7 @@ static void sg_load_mapimg(struct loaddata *loading)
 
   mapdef_count =
       secfile_lookup_int_default(loading->file, 0, "mapimg.count");
-  log_verbose("Saved map image definitions: %d.", mapdef_count);
+  qDebug("Saved map image definitions: %d.", mapdef_count);
 
   if (0 >= mapdef_count) {
     return;
@@ -7455,7 +7455,7 @@ static void sg_load_mapimg(struct loaddata *loading)
 
     p = secfile_lookup_str(loading->file, "mapimg.mapdef%d", i);
     if (NULL == p) {
-      log_verbose("[Mapimg %4d] Missing definition.", i);
+      qDebug("[Mapimg %4d] Missing definition.", i);
       continue;
     }
 
@@ -7463,7 +7463,7 @@ static void sg_load_mapimg(struct loaddata *loading)
       qCritical("Invalid map image definition %4d: %s.", i, p);
     }
 
-    log_verbose("Mapimg %4d loaded.", i);
+    qDebug("Mapimg %4d loaded.", i);
   }
 }
 
@@ -7511,7 +7511,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
    * fix. */
   players = normal_player_count();
   if (game.server.max_players < players) {
-    log_verbose("Max players lower than current players, fixing");
+    qDebug("Max players lower than current players, fixing");
     game.server.max_players = players;
   }
 

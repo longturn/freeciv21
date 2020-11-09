@@ -807,8 +807,8 @@ void handle_vote_submit(struct connection *pconn, int vote_no, int value)
   if (pvote == NULL) {
     /* The client is out of synchronization: this vote is probably just
      * resolved or cancelled. Not an error, let's just ignore the packet. */
-    log_verbose("Submit request for unknown vote_no %d from %s ignored.",
-                vote_no, conn_description(pconn));
+    qDebug("Submit request for unknown vote_no %d from %s ignored.", vote_no,
+           conn_description(pconn));
     return;
   }
 

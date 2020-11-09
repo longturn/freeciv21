@@ -288,7 +288,7 @@ static bool apply_result_on_server(struct city *pcity,
 
     wait_for_requests("CMA", first_request_id, last_request_id);
     if (pcity != check_city(city_id, NULL)) {
-      log_verbose("apply_result_on_server(city %d) !check_city()!", city_id);
+      qDebug("apply_result_on_server(city %d) !check_city()!", city_id);
       return FALSE;
     }
   }
