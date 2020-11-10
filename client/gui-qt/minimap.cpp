@@ -147,7 +147,7 @@ void minimap_view::scale_point(int &x, int &y)
   int dx, dy;
 
   gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
-                  mapview.gui_y0 + mapview.height / 2);
+                      mapview.gui_y0 + mapview.height / 2);
   x = qRound(x * scale_factor);
   y = qRound(y * scale_factor);
   dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
@@ -272,7 +272,8 @@ void minimap_view::update_image()
   if (isHidden()) {
     return;
   }
-  thread.render(scale_factor, width(), height());
+  QTimer::singleShot(
+      10, [this] { thread.render(scale_factor, width(), height()); });
 }
 
 /**********************************************************************/ /**

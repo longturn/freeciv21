@@ -475,6 +475,7 @@ void refresh_tile_mapcanvas(struct tile *ptile, bool full_refresh,
   }
   if (write_to_screen) {
     unqueue_mapview_updates(TRUE);
+    flush_dirty_overview();
   }
 }
 
@@ -513,6 +514,7 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
   }
   if (write_to_screen) {
     unqueue_mapview_updates(TRUE);
+    flush_dirty_overview();
   }
 }
 
@@ -999,6 +1001,7 @@ void set_mapview_origin(float gui_x0, float gui_y0)
       anim_timer->start();
 
       unqueue_mapview_updates(TRUE);
+      flush_dirty_overview();
 
       do {
         double mytime;
@@ -2656,6 +2659,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   set_units_in_combat(NULL, NULL);
   refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, FALSE);
   refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, FALSE);
+  flush_dirty_overview();
 }
 
 /************************************************************************/ /**
@@ -3163,7 +3167,6 @@ void unqueue_mapview_updates(bool write_to_screen)
 
   if (write_to_screen) {
     flush_dirty();
-    flush_dirty_overview();
   }
 }
 
@@ -3662,7 +3665,7 @@ bool map_canvas_resized(int width, int height)
       update_map_canvas_scrollbars();
     }
   }
-
+  flush_dirty_overview();
   mapview.can_do_cached_drawing = can_do_cached_drawing();
 
   return redrawn;
