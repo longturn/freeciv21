@@ -20,7 +20,7 @@ if (NOT CAN_UNWIND_STACK)
   find_package(PkgConfig)
   if (PKG_CONFIG_FOUND)
     pkg_search_module(unwind IMPORTED_TARGET libunwind)
-    if (UNWIND_FOUND)
+    if (unwind_FOUND)
       message(STATUS "Using libunwind for stack unwinding. "
                      "This is the preferred option.")
       set(CAN_UNWIND_STACK TRUE)
@@ -65,7 +65,7 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
     find_package(PkgConfig)
     if (PKG_CONFIG_FOUND)
       pkg_search_module(dw IMPORTED_TARGET libdw)
-      if (DW_FOUND)
+      if (dw_FOUND)
         message(STATUS "Using libdw to retrieve stack symbols. "
                        "This is the preferred option.")
         set(CAN_RETRIEVE_SYMBOLS TRUE)
