@@ -49,13 +49,7 @@ static void meswin_dialog_update(void)
   if (!can_client_change_view()) {
     return;
   }
-
-  if (meswin_dialog_is_open()) {
-    update_queue_add(real_meswin_dialog_update, NULL);
-  } else if (0 < messages_total
-             && (!client_has_player() || is_human(client.conn.playing))) {
-    meswin_dialog_popup(FALSE);
-  }
+  update_queue_add(real_meswin_dialog_update, NULL);
 }
 
 /************************************************************************/ /**

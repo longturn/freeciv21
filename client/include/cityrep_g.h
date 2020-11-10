@@ -23,9 +23,6 @@ GUI_FUNC_PROTO(void, city_report_dialog_popup, bool raise)
 GUI_FUNC_PROTO(void, real_city_report_dialog_update, void *unused)
 GUI_FUNC_PROTO(void, real_city_report_update_city, struct city *pcity)
 
-/* Area Selection on canvas */
-GUI_FUNC_PROTO(void, hilite_cities_from_canvas, void)
-GUI_FUNC_PROTO(void, toggle_city_hilite, struct city *pcity, bool on_off)
 
 /* Actually defined in update_queue.c */
 void city_report_dialog_update_city(struct city *pcity);

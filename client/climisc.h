@@ -111,7 +111,6 @@ void create_event(struct tile *ptile, enum event_type event,
 struct city *get_nearest_city(const struct unit *punit, int *sq_dist);
 
 void cityrep_buy(struct city *pcity);
-void common_taxrates_callback(int i);
 
 bool can_units_do_connect(struct unit_list *punits,
                           enum unit_activity activity,
@@ -129,7 +128,6 @@ enum unit_bg_color_type {
 
 enum unit_bg_color_type unit_color_type(const struct unit_type *punittype);
 
-void buy_production_in_selected_cities(void);
 
 void unit_focus_set_status(struct player *pplayer);
 

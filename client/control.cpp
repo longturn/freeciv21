@@ -3060,7 +3060,6 @@ void do_unit_connect(struct tile *ptile, enum unit_activity activity,
 void key_cancel_action(void)
 {
   struct unit_list *punits = get_units_in_focus();
-  cancel_tile_hiliting();
 
   switch (hover_state) {
   case HOVER_GOTO_SEL_TGT:
