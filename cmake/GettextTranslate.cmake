@@ -186,7 +186,7 @@ macro(GettextTranslate)
   #  ${TEMPLATE_FILE_ABS}
   #)
 
-  add_custom_target(${MAKEVAR_DOMAIN}.pot-update
+  add_custom_command(OUTPUT ${TEMPLATE_FILE_ABS}
     COMMAND ${GettextTranslate_XGETTEXT_EXECUTABLE} ${XGETTEXT_OPTS}
       -o ${TEMPLATE_FILE_ABS}
       --default-domain=${MAKEVAR_DOMAIN}
@@ -200,6 +200,10 @@ macro(GettextTranslate)
     DEPENDS ${source_translatable}
     ${CMAKE_CURRENT_SOURCE_DIR}/POTFILES.in
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+  )
+
+  add_custom_target(${MAKEVAR_DOMAIN}.pot-update
+    DEPENDS ${TEMPLATE_FILE_ABS}
   )
 
   #add_custom_command(OUTPUT ${TEMPLATE_FILE_ABS}
@@ -269,10 +273,14 @@ macro(GettextTranslate)
 
     endif()
 
-    add_custom_target(${GMO_TARGET}
+    add_custom_command(OUTPUT ${GMO_FILE_NAME}
       COMMAND ${GettextTranslate_MSGFMT_EXECUTABLE} -c --statistics --verbose
         -o ${GMO_FILE_NAME} ${PO_FILE_NAME}
-        DEPENDS ${PO_TARGET}
+       DEPENDS ${PO_TARGET}
+    )
+
+    add_custom_target(${GMO_TARGET}
+       DEPENDS ${GMO_FILE_NAME}
     )
 
     add_dependencies(${PO_TARGET} ${MAKEVAR_DOMAIN}.pot-update)
