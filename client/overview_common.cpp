@@ -178,21 +178,6 @@ static struct color *overview_tile_color(struct tile *ptile)
 }
 
 /************************************************************************/ /**
-   Copies the current centred image + viewrect unchanged to the client's
-   overview window (for expose events etc).
- ****************************************************************************/
-void refresh_overview_from_canvas(void)
-{
-  struct canvas *dest = get_overview_window();
-
-  if (!dest) {
-    return;
-  }
-  canvas_copy(dest, gui_options.overview.window, 0, 0, 0, 0,
-              gui_options.overview.width, gui_options.overview.height);
-}
-
-/************************************************************************/ /**
    Copies the overview image from the backing store to the window and
    draws the viewrect on top of it.
  ****************************************************************************/
@@ -237,7 +222,7 @@ static void redraw_overview(void)
                     src_x, src_y, dst_x - src_x, dst_y - src_y);
   }
 
-  refresh_overview_from_canvas();
+  update_minimap();
 
   overview_dirty = FALSE;
 }
@@ -304,7 +289,6 @@ void center_tile_overviewcanvas(void)
   redraw_overview();
 
   gui_to_overview_pos(tileset, &ox, &oy, mapview.gui_x0, mapview.gui_y0);
-  update_overview_scroll_window_pos(ox, oy);
 }
 
 /************************************************************************/ /**
@@ -452,10 +436,8 @@ void calculate_overview_dimensions(void)
     return;
   }
   recursion++;
-
-  get_overview_area_dimensions(&w, &h);
-  get_overview_area_dimensions(&w, &h);
-
+  w = 0;
+  h = 0;
   /* Set the scale of the overview map.  This attempts to limit the
    * overview to the size of the area available.
    *
@@ -485,9 +467,7 @@ void calculate_overview_dimensions(void)
       0, 0, gui_options.overview.width, gui_options.overview.height);
   update_map_canvas_scrollbars_size();
 
-  /* Call gui specific function. */
-  overview_size_changed();
-
+  update_minimap();
   if (can_client_change_view()) {
     refresh_overview_canvas();
   }

@@ -34,6 +34,7 @@ public:
   static mr_idle *idlecb();
   static void drop();
   void add_callback(call_me_back *cb);
+  void run_now();
 private slots:
   void idling();
 

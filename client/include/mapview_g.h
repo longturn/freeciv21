@@ -39,10 +39,7 @@ GUI_FUNC_PROTO(void, set_indicator_icons, struct sprite *bulb,
 
 GUI_FUNC_PROTO(void, start_turn, void)
 
-GUI_FUNC_PROTO(void, overview_size_changed, void)
-GUI_FUNC_PROTO(void, update_overview_scroll_window_pos, int x, int y)
-GUI_FUNC_PROTO(void, get_overview_area_dimensions, int *width, int *height)
-GUI_FUNC_PROTO(struct canvas *, get_overview_window, void)
+GUI_FUNC_PROTO(void, update_minimap, void)
 
 GUI_FUNC_PROTO(void, dirty_rect, int canvas_x, int canvas_y, int pixel_width,
                int pixel_height)

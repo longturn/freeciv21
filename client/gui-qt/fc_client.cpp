@@ -230,7 +230,7 @@ void fc_client::switch_page(int new_pg)
     voteinfo_gui_update();
     update_info_label();
     queen()->minimapview_wdg->reset();
-    overview_size_changed();
+    update_minimap();
     queen()->update_sidebar_tooltips();
     real_science_report_dialog_update(nullptr);
     show_new_turn_info();
