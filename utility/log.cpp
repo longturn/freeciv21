@@ -110,13 +110,16 @@ bool log_parse_level_str(const QString &level_str)
     QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
                                                     "*.warning = true\n"
                                                     "*.info = true\n"
-                                                    "*.debug = false\n"));
+                                                    "*.debug = false\n"
+                                                    "qt.*.info = false\n"));
     return true;
   } else if (level_str == QStringLiteral("debug")) {
     QLoggingCategory::setFilterRules(QStringLiteral("*.critical = true\n"
                                                     "*.warning = true\n"
                                                     "*.info = true\n"
-                                                    "*.debug = true\n"));
+                                                    "*.debug = true\n"
+                                                    "qt.*.info = false\n"
+                                                    "qt.*.debug = false\n"));
     return true;
   } else {
     // Not a known name
