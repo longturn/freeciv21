@@ -195,7 +195,8 @@ int main(int argc, char *argv[])
        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
        //        "debug". It's exactly what the user must type.
        _("Set debug log level (fatal/critical/warning/info/debug)"),
-       _("LEVEL")},
+       _("LEVEL"),
+       QStringLiteral("info")},
       {{"e", "exit-on-end"},
        _("When a game ends, exit instead of restarting")},
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
@@ -276,6 +277,9 @@ int main(int argc, char *argv[])
   parser.process(app);
 
   // Process the parsed options
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
+  }
   if (parser.isSet("file")) {
     srvarg.load_filename = parser.value("file");
   }
@@ -335,11 +339,6 @@ int main(int argc, char *argv[])
   if (parser.isSet("timetrack")) {
     srvarg.timetrack = true;
     log_time("Time tracking enabled", true);
-  }
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value(QStringLiteral("debug")))) {
-      exit(EXIT_FAILURE);
-    }
   }
 #ifdef HAVE_FCDB
   if (parser.isSet("Database")) {

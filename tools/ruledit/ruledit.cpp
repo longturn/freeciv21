@@ -77,6 +77,8 @@ int main(int argc, char **argv)
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
+  log_init();
+
   init_nls();
 
 #ifdef ENABLE_NLS

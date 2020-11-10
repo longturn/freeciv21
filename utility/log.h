@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 // Qt
+#include <QString>
 #include <QtGlobal>
 
 #include "support.h" /* bool type and fc__attribute */
@@ -57,7 +58,7 @@ typedef const char *(*log_prefix_fn)(void);
 void log_init(const char *filename, log_callback_fn callback,
               log_prefix_fn prefix, int fatal_assertions);
 void log_close(void);
-bool log_parse_level_str(const QString &level_str);
+bool log_init(const QString &level_str = QStringLiteral("info"));
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
 log_callback_fn log_set_callback(log_callback_fn callback);

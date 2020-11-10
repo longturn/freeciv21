@@ -83,7 +83,7 @@ const char *nologmsg = "nologmsg:%s";
   installs the corresponding Qt log filters. Prints a warning and returns
   false if the log level name isn't known.
  **************************************************************************/
-bool log_parse_level_str(const QString &level_str)
+bool log_init(const QString &level_str)
 {
   // Create default filter rules to pass to Qt. We do it this way so the user
   // can override our simplistic rules with environment variables.

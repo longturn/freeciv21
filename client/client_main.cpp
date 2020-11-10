@@ -382,7 +382,8 @@ int client_main(int argc, char *argv[])
         // TRANS: Do not translate "fatal", "critical", "warning", "info" or
         //        "debug". It's exactly what the user must type.
         _("Set debug log level (fatal/critical/warning/info/debug)"),
-        _("LEVEL")},
+        _("LEVEL"),
+        QStringLiteral("info")},
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
        {{"f", "file"}, _("Load saved game FILE"), "FILE"},
 #ifdef FREECIV_DEBUG
@@ -418,6 +419,9 @@ int client_main(int argc, char *argv[])
   parser.process(app);
 
   // Process the parsed options
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
+  }
   if (parser.isSet("version")) {
     fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
     exit(EXIT_SUCCESS);
@@ -465,11 +469,6 @@ int client_main(int argc, char *argv[])
   }
   if (parser.isSet("autoconnect")) {
     auto_connect = TRUE;
-  }
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"))) {
-      exit(EXIT_FAILURE);
-    }
   }
   if (parser.isSet("tiles")) {
     forced_tileset_name = parser.value("tiles");

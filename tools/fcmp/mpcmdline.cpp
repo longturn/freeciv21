@@ -51,12 +51,12 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.addVersionOption();
 
   bool ok = parser.addOptions(
-      {{{"d", "debug"},
+      {{{"d", _("debug")},
         // TRANS: Do not translate "fatal", "critical", "warning", "info" or
         //        "debug". It's exactly what the user must type.
         _("Set debug log level (fatal/critical/warning/info/debug)"),
-        // TRANS: Command-line argument
-        _("LEVEL")},
+        _("LEVEL"),
+        QStringLiteral("info")},
        {{"i", "install"},
         _("Automatically install modpack from a given URL"),
         // TRANS: Command line argument
@@ -78,10 +78,8 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value(QStringLiteral("debug")))) {
-      exit(EXIT_FAILURE);
-    }
+  if (log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
   }
   if (parser.isSet("List")) {
     fcmp.list_url = QUrl::fromUserInput(parser.value("List"));

@@ -123,6 +123,8 @@ int main(int argc, char **argv)
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
+  log_init();
+
   init_nls();
 
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
