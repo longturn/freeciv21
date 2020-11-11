@@ -35,6 +35,7 @@
 #include "unitlist.h"
 
 /* client/include */
+#include "citydlg_g.h"
 #include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapctrl_g.h"
@@ -1290,7 +1291,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
  ****************************************************************************/
 void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
                        int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog)
+                       bool fog, bool city_dialog)
 {
   int i;
 
@@ -1299,8 +1300,12 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
       /* This can happen, although it should probably be avoided. */
       continue;
     }
-
-    if (fog && pdrawn[i].foggable) {
+    if (city_dialog) {
+      canvas_put_sprite_citymode(pcanvas,
+                                 canvas_x / zoom + pdrawn[i].offset_x,
+                                 canvas_y / zoom + pdrawn[i].offset_y,
+                                 pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+    } else if (fog && pdrawn[i].foggable) {
       canvas_put_sprite_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
                                canvas_y / zoom + pdrawn[i].offset_y,
                                pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
@@ -1314,7 +1319,7 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
     }
   }
 }
-
+#include <QDebug>
 /************************************************************************/ /**
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
@@ -1328,14 +1333,25 @@ void put_one_element(struct canvas *pcanvas, float zoom,
                      const struct unit_type *putype)
 {
   struct drawn_sprite tile_sprs[80];
+  bool city_mode = false;
   int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
                                 pcorner, punit, pcity, citymode, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
-
+  if (ptile) {
+    struct city *xcity = is_any_city_dialog_open();
+    if (xcity) {
+      int dummy_x, dummy_y;
+      //struct city *xcity = find_city_near_tile(ptile);
+      if (xcity
+          && !city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
+        city_mode = true;
+      }
+    }
+  }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs,
-                    fog);
+  put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs, fog,
+                    city_mode);
 }
 
 /************************************************************************/ /**

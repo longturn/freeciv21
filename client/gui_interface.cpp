@@ -220,6 +220,14 @@ void canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
                                  fog_x, fog_y);
 }
 
+void canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
+                              int canvas_y, struct sprite *psprite, bool fog,
+                              int fog_x, int fog_y)
+{
+  funcs.canvas_put_sprite_citymode(pcanvas, canvas_x, canvas_y, psprite, fog,
+                                 fog_x, fog_y);
+}
+
 /**********************************************************************/ /**
    Call canvas_put_rectangle callback
  **************************************************************************/

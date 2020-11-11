@@ -292,7 +292,7 @@ void put_one_element(struct canvas *pcanvas, float zoom,
 
 void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
                        int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog);
+                       bool fog, bool citydialog = false);
 
 void update_map_canvas(int canvas_x, int canvas_y, int width, int height);
 void update_map_canvas_visible(void);

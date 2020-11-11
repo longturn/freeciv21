@@ -39,8 +39,9 @@
 #include "climisc.h"
 #include "control.h"
 #include "global_worklist.h"
-#include "mapview_common.h"
 #include "mapctrl_common.h"
+#include "mapview_common.h"
+#include "mapview_g.h"
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
@@ -511,7 +512,7 @@ void impr_info::update_buildings()
     h = ui->height();
     layout->addWidget(ui, 0, Qt::AlignVCenter);
   }
-  layout->setContentsMargins(0,0,0,0);
+  layout->setContentsMargins(0, 0, 0, 0);
   if (impr_list.count() > 0) {
     parentWidget()->parentWidget()->setFixedHeight(h + 12);
   } else {
@@ -974,11 +975,10 @@ void unit_info::update_units()
     ui = unit_list[j];
     layout->addWidget(ui, 0, Qt::AlignVCenter);
   }
-  layout->setContentsMargins(0,0,0,0);
+  layout->setContentsMargins(0, 0, 0, 0);
 
   if (unit_list.count() > 0) {
-    parentWidget()->parentWidget()->setFixedHeight(
-        ui->height() + 12);
+    parentWidget()->parentWidget()->setFixedHeight(ui->height() + 12);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
   }
@@ -1022,10 +1022,7 @@ city_label::city_label(QWidget *parent) : QLabel(parent), pcity(nullptr)
   type = FEELING_FINAL;
 }
 
-void city_label::set_type(int x)
-{
-  type = x;
-}
+void city_label::set_type(int x) { type = x; }
 /************************************************************************/ /**
    Mouse handler for city_label
  ****************************************************************************/
@@ -1035,7 +1032,8 @@ void city_label::mousePressEvent(QMouseEvent *event)
   int w = tileset_small_sprite_width(tileset) / king()->map_scale;
   int num_citizens;
 
-  if (!pcity) return;
+  if (!pcity)
+    return;
   if (cma_is_city_under_agent(pcity, NULL)) {
     return;
   }
@@ -1721,7 +1719,6 @@ void city_dialog::city_rename()
   ask->show();
 }
 
-
 /************************************************************************/ /**
    Save cma dialog input
  ****************************************************************************/
@@ -1740,7 +1737,8 @@ void city_dialog::save_cma()
       param.allow_disorder = false;
       param.allow_specialists = true;
       param.require_happy = ui.qsliderbox->cma_celeb_checkbox->isChecked();
-      param.happy_factor = ui.qsliderbox->slider_tab[2 * O_LAST + 1]->value();
+      param.happy_factor =
+          ui.qsliderbox->slider_tab[2 * O_LAST + 1]->value();
 
       for (int i = O_FOOD; i < O_LAST; i++) {
         param.minimal_surplus[i] = ui.qsliderbox->slider_tab[2 * i]->value();
@@ -1928,7 +1926,6 @@ void city_dialog::cma_remove()
   });
   ask->show();
 }
-
 
 /************************************************************************/ /**
    Received signal about changed qcheckbox - allow disbanding city
@@ -2337,6 +2334,8 @@ void city_dialog::drop()
     m_instance = 0;
   }
 }
+
+bool city_dialog::exist() { return m_instance ? true : false; }
 
 /************************************************************************/ /**
    Removes selected item from city worklist
@@ -2894,6 +2893,8 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   city_dialog::instance()->show();
   city_dialog::instance()->activateWindow();
   city_dialog::instance()->raise();
+  dirty_all();
+  flush_dirty();
 }
 
 /************************************************************************/ /**
@@ -2965,12 +2966,32 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
   qtg_real_city_dialog_refresh(pcity_pre);
 }
 
+struct city *is_any_city_dialog_open()
+{
+  // some checks not to iterate cities
+  if (!city_dialog::exist())
+    return nullptr;
+  if (!city_dialog::instance()->isVisible())
+    return nullptr;
+  if (client_is_global_observer() || client_is_observer())
+    return nullptr;
+
+  city_list_iterate(client.conn.playing->cities, pcity)
+  {
+    if (qtg_city_dialog_is_open(pcity))
+      return pcity;
+  }
+  city_list_iterate_end;
+  return nullptr;
+}
+
 /************************************************************************/ /**
    Return whether the dialog for the given city is open.
  ****************************************************************************/
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
-
+  if (!city_dialog::exist())
+    return false;
   if (city_dialog::instance()->pcity == pcity
       && city_dialog::instance()->isVisible()) {
     return true;

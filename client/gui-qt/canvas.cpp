@@ -166,6 +166,37 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
   p.end();
 }
 
+void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
+                                  int canvas_y, struct sprite *psprite,
+                                  bool fog, int fog_x, int fog_y)
+{
+  QPainter p;
+
+  p.begin(&pcanvas->map_pixmap);
+  p.setCompositionMode(QPainter::CompositionMode_Difference);
+  p.setOpacity(0.5);
+  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.end();
+  // QPainter p, q;
+  // QPixmap pix(psprite->pm->width(), psprite->pm->height());
+  // pix.fill(Qt::transparent);
+  // pix = psprite->pm->copy();
+
+  // q.begin(&pix);
+  // q.setCompositionMode(QPainter::RasterOp_NotSourceOrNotDestination);
+  // q.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // q.end();
+
+  // p.begin(&pcanvas->map_pixmap);
+  // p.setOpacity(0.8);
+  // //p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+  // p.drawPixmap(canvas_x, canvas_y, pix);
+  // p.setOpacity(0.5);
+  // p.setCompositionMode(QPainter::CompositionMode_Lighten);
+  // p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // p.end();
+}
+
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
  ****************************************************************************/
