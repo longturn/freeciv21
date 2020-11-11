@@ -1291,7 +1291,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
  ****************************************************************************/
 void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
                        int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog, bool city_dialog)
+                       bool fog, bool city_dialog, bool city_unit)
 {
   int i;
 
@@ -1300,7 +1300,13 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
       /* This can happen, although it should probably be avoided. */
       continue;
     }
-    if (city_dialog) {
+    if (city_unit
+        && (i == LAYER_CATEGORY_TILE || i == LAYER_UNIT
+            || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
+      canvas_put_unit_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
+                             canvas_y / zoom + pdrawn[i].offset_y,
+                             pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+    } else if (city_dialog) {
       canvas_put_sprite_citymode(pcanvas,
                                  canvas_x / zoom + pdrawn[i].offset_x,
                                  canvas_y / zoom + pdrawn[i].offset_y,
@@ -1334,6 +1340,8 @@ void put_one_element(struct canvas *pcanvas, float zoom,
 {
   struct drawn_sprite tile_sprs[80];
   bool city_mode = false;
+  bool city_unit = false;
+  int dummy_x, dummy_y;
   int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
                                 pcorner, punit, pcity, citymode, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
@@ -1341,16 +1349,22 @@ void put_one_element(struct canvas *pcanvas, float zoom,
   if (ptile) {
     struct city *xcity = is_any_city_dialog_open();
     if (xcity) {
-      // Attack of dummies !
-      int dummy_x, dummy_y;
       if (!city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
         city_mode = true;
       }
     }
   }
+  if (punit) {
+    struct city *xcity = is_any_city_dialog_open();
+    if (xcity) {
+      if (city_base_to_city_map(&dummy_x, &dummy_y, xcity, punit->tile)) {
+        city_unit = true;
+      }
+    }
+  }
   /*** Draw terrain and specials ***/
   put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs, fog,
-                    city_mode);
+                    city_mode, city_unit);
 }
 
 /************************************************************************/ /**

@@ -196,12 +196,27 @@ void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
   QPainter p;
 
   p.begin(&pcanvas->map_pixmap);
-  p.setCompositionMode(QPainter::CompositionMode_HardLight);
-  p.setOpacity(0.7);
+  p.setCompositionMode(QPainter::CompositionMode_Difference);
+  p.setOpacity(0.5);
   p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
   p.end();
 }
 
+/*****************************************************************************
+   Put unit in city area when city dialog is open
+ ****************************************************************************/
+void canvas_put_unit_fogged(struct canvas *pcanvas,
+               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int fog_x, int fog_y)
+{
+  QPainter p;
+
+  p.begin(&pcanvas->map_pixmap);
+  p.setOpacity(0.7);
+  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.end();
+
+}
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
  ****************************************************************************/
