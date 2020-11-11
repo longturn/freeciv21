@@ -12,7 +12,8 @@
 ***********************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
+// Qt
+#include <QLoggingCategory>
 
 /* Undefine this if you don't want timing measurements to appear in logs.
    This is useful if you want to compare logs of two freeciv runs and
@@ -26,6 +27,7 @@
    checks against that single macro instead of two separate. */
 #if defined(LOG_TIMERS) && defined(FREECIV_DEBUG)
 #define DEBUG_TIMERS
+Q_DECLARE_LOGGING_CATEGORY(timers_category)
 #endif
 
 enum timer_timetype {
@@ -55,7 +57,7 @@ class civtimer;
 
 civtimer *timer_new(enum timer_timetype type, enum timer_use use);
 civtimer *timer_renew(civtimer *t, enum timer_timetype type,
-                          enum timer_use use);
+                      enum timer_use use);
 
 void timer_destroy(civtimer *t);
 bool timer_in_use(civtimer *t);

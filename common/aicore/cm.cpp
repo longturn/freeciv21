@@ -18,9 +18,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Qt
+#include <QLoggingCategory>
+
 /* utility */
 #include "fcintl.h"
-#include "log.h"
 #include "mem.h"
 #include "shared.h"
 #include "support.h"
@@ -71,12 +73,14 @@
   Defines, structs, globals, forward declarations
 *****************************************************************************/
 
+Q_LOGGING_CATEGORY(cm_category, "freeciv.cm")
+
 /* Maximal iterations before the search loop is stoped. */
 #define CM_MAX_LOOP 25000
 
 #define CPUHOG_CM_MAX_LOOP (CM_MAX_LOOP * 4)
 
-#ifdef DEBUG_TIMERS
+#ifdef FREECIV_DEBUG
 #define GATHER_TIME_STATS
 #endif
 
@@ -2097,8 +2101,9 @@ static void cm_find_best_solution(struct cm_state *state,
     loop_count++;
 
     if (loop_count > max_count) {
-      qWarning("Did not find a cm solution in %d iterations for %s.",
-               max_count, city_name_get(state->pcity));
+      qCWarning(cm_category,
+                "Did not find a cm solution in %d iterations for %s.",
+                max_count, city_name_get(state->pcity));
       result->aborted = TRUE;
       break;
     }
@@ -2332,10 +2337,9 @@ static void real_print_tile_type(QtMsgType level, const char *file,
   char prodstr[256];
 
   snprint_production(prodstr, sizeof(prodstr), ptype->production);
-  do_log(file, function, line, FALSE, level,
-         "%s%s fitness %g depth %d, idx %d; %d tiles", prefix, prodstr,
-         ptype->estimated_fitness, ptype->lattice_depth,
-         ptype->lattice_index, tile_type_num_tiles(ptype));
+  qCDebug(cm_category, "%s%s fitness %g depth %d, idx %d; %d tiles", prefix,
+          prodstr, ptype->estimated_fitness, ptype->lattice_depth,
+          ptype->lattice_index, tile_type_num_tiles(ptype));
 }
 
 /************************************************************************/ /**
@@ -2345,8 +2349,8 @@ static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice)
 {
-  do_log(file, function, line, FALSE, level, "lattice has %u terrain types",
-         (unsigned) lattice->size);
+  qCDebug(cm_category, "lattice has %u terrain types",
+          (unsigned) lattice->size);
   tile_type_vector_iterate(lattice, ptype)
   {
     real_print_tile_type(level, file, function, line, ptype, "  ");
@@ -2367,16 +2371,16 @@ static void real_print_partial_solution(QtMsgType level, const char *file,
   char buf[256];
 
   if (soln->idle != 0) {
-    do_log(file, function, line, FALSE, level,
-           "** partial solution has %d idle workers", soln->idle);
+    qCDebug(cm_category, "** partial solution has %d idle workers",
+            soln->idle);
   } else {
-    do_log(file, function, line, FALSE, level, "** completed solution:");
+    qCDebug(cm_category, "** completed solution:");
   }
 
   snprint_production(buf, sizeof(buf), soln->production);
-  do_log(file, function, line, FALSE, level, "production: %s", buf);
+  qCDebug(cm_category, "production: %s", buf);
 
-  do_log(file, function, line, FALSE, level, "tiles used:");
+  qCDebug(cm_category, "tiles used:");
   for (i = 0; i < num_types(state); i++) {
     if (soln->worker_counts[i] != 0) {
       fc_snprintf(buf, sizeof(buf), "  %d tiles of type ",
@@ -2392,7 +2396,7 @@ static void real_print_partial_solution(QtMsgType level, const char *file,
     }
   }
 
-  do_log(file, function, line, FALSE, level, "tiles available:");
+  qCDebug(cm_category, "tiles available:");
   for (i = last_type; i < num_types(state); i++) {
     const struct cm_tile_type *ptype = tile_type_get(state, i);
 
@@ -2424,9 +2428,9 @@ static void print_performance(struct one_perf *counts)
 
   applies = counts->apply_count;
 
-  log_base(LOG_TIME_STATS,
-           "CM-%s: overall=%fs queries=%d %fms / query, %d applies",
-           counts->name, s, queries, ms / q, applies);
+  qCDebug(timers_category,
+          "CM-%s: overall=%fs queries=%d %fms / query, %d applies",
+          counts->name, s, queries, ms / q, applies);
 }
 #endif /* GATHER_TIME_STATS */
 

@@ -20,6 +20,8 @@
 /* utility */
 #include "log.h"
 
+Q_LOGGING_CATEGORY(timers_category, "freeciv.timers")
+
 enum timer_state { TIMER_STARTED, TIMER_STOPPED };
 
 class civtimer : public QElapsedTimer {
