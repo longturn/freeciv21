@@ -1503,7 +1503,7 @@ void handle_page_msg(const char *caption, const char *headline,
     page_msg_report.caption = fc_strdup(caption);
     page_msg_report.headline = fc_strdup(headline);
     page_msg_report.parts = parts;
-    page_msg_report.lines = static_cast<char *>(fc_malloc(len + 1));
+    page_msg_report.lines = new char[len + 1];
     page_msg_report.lines[0] = '\0';
 
     if (parts == 0) {
@@ -1531,9 +1531,9 @@ void handle_page_msg_part(const char *lines)
                           page_msg_report.lines);
       play_sound_for_event(page_msg_report.event);
 
-      free(page_msg_report.caption);
-      free(page_msg_report.headline);
-      free(page_msg_report.lines);
+      delete[] page_msg_report.caption;
+      delete[] page_msg_report.headline;
+      delete[] page_msg_report.lines;
       page_msg_report.lines = NULL;
     }
   }

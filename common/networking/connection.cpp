@@ -402,7 +402,7 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
     if (buf->data) {
       free(buf->data);
     }
-    free(buf);
+    delete buf;
   }
 }
 

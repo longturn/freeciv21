@@ -886,8 +886,7 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
  ****************************************************************************/
 static struct tileset *tileset_new(void)
 {
-  struct tileset *t =
-      static_cast<struct tileset *>(fc_calloc(1, sizeof(*t)));
+  struct tileset *t = new struct tileset[1]();
 
   t->specfiles = specfile_list_new();
   t->small_sprites = small_sprite_list_new();
@@ -1141,8 +1140,7 @@ static void tileset_free_toplevel(struct tileset *t)
       for (j = 0; j < tslp->match_count; j++) {
         delete[] tslp->match_types[j];
       }
-      delete[] tslp->match_types;
-      tslp->match_types = NULL;
+      FCPP_FREE(tslp->match_types);
     }
   }
 
@@ -1152,15 +1150,15 @@ static void tileset_free_toplevel(struct tileset *t)
   }
 
   if (t->summary != NULL) {
-    free(t->summary);
+    delete[] t->summary;
     t->summary = NULL;
   }
   if (t->description != NULL) {
-    free(t->description);
+    delete[] t->description;
     t->description = NULL;
   }
   if (t->for_ruleset != NULL) {
-    free(t->for_ruleset);
+    delete[] t->for_ruleset;
     t->for_ruleset = NULL;
   }
 }
@@ -1179,7 +1177,7 @@ void tileset_free(struct tileset *t)
   }
   specfile_list_destroy(t->specfiles);
   small_sprite_list_destroy(t->small_sprites);
-  free(t);
+  delete[] t;
 }
 
 /************************************************************************/ /**
@@ -1802,7 +1800,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset summary found */
     len = strlen(tstr);
-    t->summary = static_cast<char *>(fc_malloc(len + 1));
+    t->summary = new char[len + 1];
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
     /* No summary */
@@ -2435,8 +2433,8 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
 ON_ERROR:
   secfile_destroy(file);
-  delete fname;
-  tileset_free(t);
+  delete[] fname;
+  delete[] t;
   if (NULL != sections) {
     section_list_destroy(sections);
   }
