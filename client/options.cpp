@@ -3651,11 +3651,11 @@ static bool client_option_color_set(struct option *poption,
     }                                                                       \
   } else {                                                                  \
     if (NULL == color) {                                                    \
-      free((void *) color_tgt);                                             \
+      delete[] color_tgt;                                                   \
       color_tgt = NULL;                                                     \
       changed = TRUE;                                                       \
     } else if (0 != strcmp(color_tgt, color)) {                             \
-      free((void *) color_tgt);                                             \
+      delete[] color_tgt;                                                   \
       color_tgt = fc_strdup(color);                                         \
       changed = TRUE;                                                       \
     }                                                                       \

@@ -587,7 +587,7 @@ static void drawing_data_destroy(struct drawing_data *draw)
   fc_assert_ret(NULL != draw);
 
   if (draw->name != NULL) {
-    free(draw->name);
+    delete[] draw->name;
   }
   for (i = 0; i < 4; i++) {
     if (draw->blend[i]) {
@@ -1102,8 +1102,7 @@ static void tileset_free_toplevel(struct tileset *t)
   int i, j;
 
   if (t->main_intro_filename) {
-    free(t->main_intro_filename);
-    t->main_intro_filename = NULL;
+    FCPP_FREE(t->main_intro_filename);
   }
 
   if (t->preferred_themes) {
@@ -1140,9 +1139,9 @@ static void tileset_free_toplevel(struct tileset *t)
 
     if (tslp->match_types) {
       for (j = 0; j < tslp->match_count; j++) {
-        free(tslp->match_types[j]);
+        delete[] tslp->match_types[j];
       }
-      free(tslp->match_types);
+      delete[] tslp->match_types;
       tslp->match_types = NULL;
     }
   }
@@ -2301,8 +2300,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
             dlp->match_index[dlp->match_indices++] = j;
           }
         }
-        free(match_with);
-        match_with = NULL;
+        FCPP_FREE(match_with);
       }
 
       /* Check match_indices */
@@ -2407,7 +2405,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     specfile_list_prepend(t->specfiles, sf);
   }
-  free(spec_filenames);
+  delete[] spec_filenames;
 
   t->color_system = color_system_read(file);
 
@@ -2431,7 +2429,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   secfile_check_unused(file);
   secfile_destroy(file);
   log_verbose("finished reading \"%s\".", fname);
-  delete fname;
+  delete[] fname;
 
   return t;
 
@@ -6254,7 +6252,7 @@ void tileset_free_tiles(struct tileset *t)
   {
     small_sprite_list_remove(t->small_sprites, ss);
     if (ss->file) {
-      free(ss->file);
+      delete[] ss->file;
     }
     fc_assert(ss->sprite == NULL);
     free(ss);
@@ -6264,7 +6262,7 @@ void tileset_free_tiles(struct tileset *t)
   specfile_list_iterate(t->specfiles, sf)
   {
     specfile_list_remove(t->specfiles, sf);
-    free(sf->file_name);
+    delete[] sf->file_name;
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;

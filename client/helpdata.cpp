@@ -114,9 +114,9 @@ void free_help_texts(void)
   check_help_nodes_init();
   help_list_iterate(help_nodes, ptmp)
   {
-    free(ptmp->topic);
-    free(ptmp->text);
-    free(ptmp);
+    delete[] ptmp->topic;
+    delete[] ptmp->text;
+    delete ptmp;
   }
   help_list_iterate_end;
   help_list_clear(help_nodes);
@@ -678,9 +678,7 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
  ****************************************************************************/
 static struct help_item *new_help_item(int type)
 {
-  struct help_item *pitem;
-
-  pitem = static_cast<help_item *>(fc_malloc(sizeof(struct help_item)));
+  struct help_item *pitem = new help_item;
   pitem->topic = NULL;
   pitem->text = NULL;
   pitem->type = static_cast<help_page_type>(type);
@@ -876,7 +874,7 @@ void boot_help_texts(void)
               help_list_append(category_nodes, pitem);
             }
             extra_type_iterate_end;
-            FC_FREE(cats);
+            FCPP_FREE(cats);
           } break;
           case HELP_GOODS:
             goods_type_iterate(pgood)
@@ -973,7 +971,7 @@ void boot_help_texts(void)
                 len = strlen(_(game.control.name)) + strlen("\n\n")
                       + strlen(_(game.ruleset_summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
                             _(game.control.name), _(game.ruleset_summary));
               }
@@ -1027,14 +1025,14 @@ void boot_help_texts(void)
                 len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
                       + strlen("\n\n") + strlen(_(summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, _(summary));
               } else {
                 len = strlen(_(ts_name)) + strlen("\n\n")
                       + strlen(_(summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
                             _(summary));
               }
@@ -1045,14 +1043,14 @@ void boot_help_texts(void)
                 len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
                       + strlen("\n\n") + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, nodesc);
               } else {
                 len =
                     strlen(_(ts_name)) + strlen("\n\n") + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
                             nodesc);
               }
