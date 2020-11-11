@@ -2988,8 +2988,8 @@ void srv_ready()
       }
     }
     if (!created) {
-      bugreport_request(
-          _("Cannot create suitable map with given settings."));
+      qCCritical(bugs_category,
+                 _("Cannot create suitable map with given settings."));
 
       exit(EXIT_FAILURE);
     }

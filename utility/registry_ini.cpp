@@ -775,7 +775,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
                  * FIXME: If the first row is missing some entries that the
                  * second or later row has, then we'll drop out of tabular
                  * format without an error message. */
-                bugreport_request(
+                qCCritical(
+                    bugs_category,
                     "In file %s, there is no entry in the registry for\n"
                     "%s.%s (or the entries are out of order). This means\n"
                     "a less efficient non-tabular format will be used.\n"

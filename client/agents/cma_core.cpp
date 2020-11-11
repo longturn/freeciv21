@@ -424,8 +424,9 @@ static void handle_city(struct city *pcity)
 
     cma_release_city(pcity);
 
-    bugreport_request("handle_city() CMA: %s has changed multiple times.",
-                      city_name_get(pcity));
+    qCInfo(bugs_category,
+           "handle_city() CMA: %s has changed multiple times.",
+           city_name_get(pcity));
   }
 
   log_handle_city2("END handle city=(%d)", city_id);
