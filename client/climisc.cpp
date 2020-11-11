@@ -1196,39 +1196,6 @@ void cityrep_buy(struct city *pcity)
 }
 
 /**********************************************************************/ /**
-   Switch between tax/sci/lux at given slot.
- **************************************************************************/
-void common_taxrates_callback(int i)
-{
-  int lux_end, sci_end, tax, lux, sci;
-  int delta = 10;
-
-  if (!can_client_issue_orders()) {
-    return;
-  }
-
-  lux_end = client.conn.playing->economic.luxury;
-  sci_end = lux_end + client.conn.playing->economic.science;
-
-  lux = client.conn.playing->economic.luxury;
-  sci = client.conn.playing->economic.science;
-  tax = client.conn.playing->economic.tax;
-
-  i *= 10;
-  if (i < lux_end) {
-    lux -= delta;
-    sci += delta;
-  } else if (i < sci_end) {
-    sci -= delta;
-    tax += delta;
-  } else {
-    tax -= delta;
-    lux += delta;
-  }
-  dsend_packet_player_rates(&client.conn, tax, lux, sci);
-}
-
-/**********************************************************************/ /**
    Returns TRUE if any of the units can do the connect activity.
  **************************************************************************/
 bool can_units_do_connect(struct unit_list *punits,
@@ -1257,99 +1224,6 @@ void client_unit_init_act_prob_cache(struct unit *punit)
 
   punit->client.act_prob_cache = (struct act_prob *) fc_malloc(
       NUM_ACTIONS * sizeof(*punit->client.act_prob_cache));
-}
-
-/**********************************************************************/ /**
-   Determines which color type should be used for unit background.
-   This is only guesswork based on unit properties. One should not
-   take UNIT_BG_FLYING seriously meaning that unit can fly - custom
-   ruleset might have units with similar properties but explains these
-   properties by some other means than by flying.
- **************************************************************************/
-enum unit_bg_color_type unit_color_type(const struct unit_type *punittype)
-{
-  struct unit_class *pclass = utype_class(punittype);
-
-  if (pclass->hp_loss_pct > 0) {
-    return UNIT_BG_HP_LOSS;
-  }
-
-  if (pclass->move_type == UMT_LAND) {
-    return UNIT_BG_LAND;
-  }
-  if (pclass->move_type == UMT_SEA) {
-    return UNIT_BG_SEA;
-  }
-
-  fc_assert(pclass->move_type == UMT_BOTH);
-
-  if (uclass_has_flag(pclass, UCF_TERRAIN_SPEED)) {
-    /* Unit moves on both sea and land by speed determined by terrain */
-    return UNIT_BG_AMPHIBIOUS;
-  }
-
-  return UNIT_BG_FLYING;
-}
-
-/**********************************************************************/ /**
-   Comparison function used by qsort in buy_production_in_selected_cities().
- **************************************************************************/
-static int city_buy_cost_compare(const void *a, const void *b)
-{
-  const struct city *ca, *cb;
-
-  ca = *((const struct city **) a);
-  cb = *((const struct city **) b);
-
-  return ca->client.buy_cost - cb->client.buy_cost;
-}
-
-/**********************************************************************/ /**
-   For each selected city, buy the current production. The selected cities
-   are sorted so production is bought in the cities with lowest cost first.
- **************************************************************************/
-void buy_production_in_selected_cities(void)
-{
-  const struct player *pplayer = client_player();
-  struct connection *pconn;
-
-  if (!pplayer || !pplayer->cities || city_list_size(pplayer->cities) < 1) {
-    return;
-  }
-
-  int gold = pplayer->economic.gold;
-  if (gold < 1) {
-    return;
-  }
-
-  const int n = city_list_size(pplayer->cities);
-  struct city *cities[n];
-  int i, count = 0;
-
-  city_list_iterate(pplayer->cities, pcity)
-  {
-    if (!is_city_hilited(pcity) || !city_can_buy(pcity)) {
-      continue;
-    }
-    cities[count++] = pcity;
-  }
-  city_list_iterate_end;
-
-  if (count < 1) {
-    return;
-  }
-
-  qsort(cities, count, sizeof(*cities), city_buy_cost_compare);
-
-  pconn = &client.conn;
-  connection_do_buffer(pconn);
-
-  for (i = 0; i < count && gold > 0; i++) {
-    gold -= cities[i]->client.buy_cost;
-    city_buy_production(cities[i]);
-  }
-
-  connection_do_unbuffer(pconn);
 }
 
 /**********************************************************************/ /**

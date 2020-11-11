@@ -38,11 +38,6 @@ void update_selection_rectangle(float canvas_x, float canvas_y);
 void redraw_selection_rectangle(void);
 void cancel_selection_rectangle(void);
 
-bool is_city_hilited(struct city *pcity);
-
-void cancel_tile_hiliting(void);
-void toggle_tile_hilite(struct tile *ptile);
-
 void key_city_overlay(int canvas_x, int canvas_y);
 void key_city_show_open(struct city *pcity);
 void key_city_hide_open(struct city *pcity);

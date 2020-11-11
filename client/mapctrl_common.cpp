@@ -122,10 +122,6 @@ static void define_tiles_within_rectangle(bool append)
   const struct city *pcity;
   bool found_any_cities = FALSE;
 
-  if (!append) {
-    cancel_tile_hiliting();
-  }
-
   y = rec_corner_y;
   for (yy = 0; yy <= segments_y; yy++, y += inc_y) {
     x = rec_corner_x;
@@ -185,10 +181,6 @@ static void define_tiles_within_rectangle(bool append)
   /* Clear previous rectangle. */
   draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
 
-  /* Hilite in City List Window */
-  if (tiles_hilited_cities) {
-    hilite_cities_from_canvas(); /* cityrep.c */
-  }
 }
 
 /**********************************************************************/ /**
@@ -294,25 +286,6 @@ void cancel_selection_rectangle(void)
 }
 
 /**********************************************************************/ /**
-   Is city highlighted
- **************************************************************************/
-bool is_city_hilited(struct city *pcity)
-{
-  return pcity && mapdeco_is_highlight_set(city_tile(pcity));
-}
-
-/**********************************************************************/ /**
-   Remove hiliting from all tiles, but not from rows in the City List window.
- **************************************************************************/
-void cancel_tile_hiliting(void)
-{
-  if (tiles_hilited_cities) {
-    tiles_hilited_cities = FALSE;
-    mapdeco_clear_highlights();
-  }
-}
-
-/**********************************************************************/ /**
    Action depends on whether the mouse pointer moved
    a tile between press and release.
  **************************************************************************/
@@ -321,32 +294,10 @@ void release_right_button(int canvas_x, int canvas_y, bool shift)
   if (rectangle_active) {
     define_tiles_within_rectangle(shift);
   } else {
-    cancel_tile_hiliting();
     recenter_button_pressed(canvas_x, canvas_y);
   }
   rectangle_active = FALSE;
   rbutton_down = FALSE;
-}
-
-/**********************************************************************/ /**
-   Left Mouse Button in Area Selection mode.
- **************************************************************************/
-void toggle_tile_hilite(struct tile *ptile)
-{
-  struct city *pcity = tile_city(ptile);
-
-  if (mapdeco_is_highlight_set(ptile)) {
-    mapdeco_set_highlight(ptile, FALSE);
-    if (pcity) {
-      toggle_city_hilite(pcity, FALSE); /* cityrep.c */
-    }
-  } else if (NULL != pcity && city_owner(pcity) == client.conn.playing) {
-    mapdeco_set_highlight(ptile, TRUE);
-    tiles_hilited_cities = TRUE;
-    toggle_city_hilite(pcity, TRUE);
-  } else {
-    return;
-  }
 }
 
 /**********************************************************************/ /**
@@ -452,16 +403,6 @@ void clipboard_paste_production(struct city *pcity)
       clipboard_send_production_packet(pcity);
     }
     return;
-  } else {
-    connection_do_buffer(&client.conn);
-    city_list_iterate(client.conn.playing->cities, hilicity)
-    {
-      if (is_city_hilited(hilicity)) {
-        clipboard_send_production_packet(hilicity);
-      }
-    }
-    city_list_iterate_end;
-    connection_do_unbuffer(&client.conn);
   }
 }
 

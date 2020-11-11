@@ -18,7 +18,6 @@
 #include "gui_proto_constructor.h"
 
 GUI_FUNC_PROTO(void, close_intel_dialog, struct player *p)
-GUI_FUNC_PROTO(void, popup_intel_dialog, struct player *p)
 GUI_FUNC_PROTO(void, update_intel_dialog, struct player *p)
 
 #endif /* FC__INTELDLG_G_H */
