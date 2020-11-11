@@ -86,10 +86,25 @@ void do_log(const char *file, const char *function, int line,
 
 /* The log macros */
 #define log_base(level, message, ...)                                       \
-  if (log_do_output_for_level(level)) {                                     \
-    do_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, level, message,      \
-           ##__VA_ARGS__);                                                  \
-  }
+  do {                                                                      \
+    switch (level) {                                                        \
+    case QtFatalMsg:                                                        \
+      qFatal(message, ##__VA_ARGS__);                                       \
+      break;                                                                \
+    case QtCriticalMsg:                                                     \
+      qCritical(message, ##__VA_ARGS__);                                    \
+      break;                                                                \
+    case QtWarningMsg:                                                      \
+      qWarning(message, ##__VA_ARGS__);                                     \
+      break;                                                                \
+    case QtInfoMsg:                                                         \
+      qInfo(message, ##__VA_ARGS__);                                        \
+      break;                                                                \
+    case QtDebugMsg:                                                        \
+      qDebug(message, ##__VA_ARGS__);                                       \
+      break;                                                                \
+    }                                                                       \
+  } while (false)
 
 #ifdef FREECIV_DEBUG
 #define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
