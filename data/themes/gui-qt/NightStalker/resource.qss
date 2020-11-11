@@ -36,6 +36,14 @@ QMainWindow {
 *[themed_border="true"] {
   border: 2px solid #3399FF;
 }
+/* color of border only - set the same as background */
+*[messagewindow="true"] {
+  color: #00002f;
+}
+/* color of border only*/
+*[sidebar="true"] {
+  color: #000000;
+}
 
 
 *[city_scroll="true"] {

@@ -464,6 +464,7 @@ fc_sidebar::fc_sidebar()
   layout->setContentsMargins(0, 0, 0, 0);
   setLayout(layout);
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Ignored);
+  setProperty("sidebar", true);
 }
 
 /***********************************************************************/ /**

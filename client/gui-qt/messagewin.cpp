@@ -35,6 +35,8 @@ info_tab::info_tab(QWidget *parent)
   msgwdg = new messagewdg(this);
   layout->addWidget(msgwdg, 0, 0);
   chtwdg = new chatwdg(this);
+  chtwdg->setProperty("messagewindow", true);
+  msgwdg->setProperty("messagewindow", true);
   layout->addWidget(chtwdg, 1, 0);
   layout->setHorizontalSpacing(0);
   layout->setVerticalSpacing(0);
