@@ -919,7 +919,7 @@ static void init_datum_string(struct datum *dat, const char *left,
   int len = right - left;
 
   dat->is_numeric = FALSE;
-  dat->val.string_value = static_cast<char *>(fc_malloc(len + 1));
+  dat->val.string_value = new char[len + 1];
   memcpy(dat->val.string_value, left, len);
   dat->val.string_value[len] = 0;
 }

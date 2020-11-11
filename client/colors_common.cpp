@@ -44,8 +44,7 @@ struct color_system {
  ****************************************************************************/
 struct color_system *color_system_read(struct section_file *file)
 {
-  struct color_system *colors =
-      static_cast<color_system *>(fc_malloc(sizeof(*colors)));
+  struct color_system *colors = new color_system;
   enum color_std stdcolor;
 
   colors->stdcolors = static_cast<rgbcolor **>(

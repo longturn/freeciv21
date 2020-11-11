@@ -488,7 +488,7 @@ struct city_sum {
  **************************************************************************/
 static struct city_sum *city_sum_new(const char *format)
 {
-  struct city_sum *sum = new city_sum;
+  struct city_sum *sum = new city_sum();
 
   sum->format = format;
   sum->n = 0;

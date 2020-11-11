@@ -963,7 +963,7 @@ void boot_help_texts(void)
                       + strlen(game.control.version) + strlen("\n\n")
                       + strlen(_(game.ruleset_summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             _(game.ruleset_summary));
@@ -983,7 +983,7 @@ void boot_help_texts(void)
                       + strlen(game.control.version) + strlen("\n\n")
                       + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             nodesc);
@@ -991,7 +991,7 @@ void boot_help_texts(void)
                 len = strlen(_(game.control.name)) + strlen("\n\n")
                       + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
                             _(game.control.name), nodesc);
               }
@@ -2912,7 +2912,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           /* action name alone can be MAX_LEN_NAME, leave space for extra
            * characters */
           int maxlen = MAX_LEN_NAME + 16;
-          char *quoted = static_cast<char *>(fc_malloc(maxlen));
+          char *quoted = new char[maxlen];
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */

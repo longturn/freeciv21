@@ -149,8 +149,7 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   }
   va_end(ap);
 
-  pcall2 = static_cast<call *>(fc_malloc(sizeof(struct call)));
-
+  pcall2 = new call;
   pcall2->agent = agent;
   pcall2->type = type;
   pcall2->cb_type = cb_type;

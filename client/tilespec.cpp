@@ -1592,7 +1592,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         xr = x_top_left + (dx + pixel_border_x) * column;
         yb = y_top_left + (dy + pixel_border_y) * row;
 
-        ss = static_cast<small_sprite *>(fc_malloc(sizeof(*ss)));
+        ss = new small_sprite;
         ss->ref_count = 0;
         ss->file = NULL;
         ss->x = xr;
@@ -1647,7 +1647,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     hot_x = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_x", i);
     hot_y = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_y", i);
 
-    ss = static_cast<small_sprite *>(fc_malloc(sizeof(*ss)));
+    ss = new small_sprite;
     ss->ref_count = 0;
     ss->file = fc_strdup(filename);
     ss->sf = NULL;
@@ -1686,14 +1686,13 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char *full_name =
-        static_cast<char *>(fc_malloc(strlen(gfx_filename) + strlen(".")
-                                      + strlen(gfx_current_fileext) + 1));
+    char *full_name = new char[strlen(gfx_filename) + strlen(".")
+                               + strlen(gfx_current_fileext) + 1];
 
     sprintf(full_name, "%s.%s", gfx_filename, gfx_current_fileext);
 
     real_full_name = fileinfoname(get_data_dirs(), full_name);
-    free(full_name);
+    delete[] full_name;
     if (real_full_name) {
       return fc_strdup(real_full_name);
     }
@@ -1816,7 +1815,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset description found */
     len = strlen(tstr);
-    t->description = static_cast<char *>(fc_malloc(len + 1));
+    t->description = new char[len + 1];
     fc_strlcpy(t->description, tstr, len + 1);
   } else {
     /* No description */
@@ -2384,7 +2383,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   fc_assert(t->sprite_hash == NULL);
   t->sprite_hash = sprite_hash_new();
   for (i = 0; i < num_spec_files; i++) {
-    struct specfile *sf = static_cast<specfile *>(fc_malloc(sizeof(*sf)));
+    struct specfile *sf = new specfile();
     const char *dname;
 
     log_debug("spec file %s", spec_filenames[i]);
@@ -2857,16 +2856,14 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
 static struct city_sprite *load_city_sprite(struct tileset *t,
                                             const char *tag)
 {
-  struct city_sprite *city_sprite =
-      static_cast<struct city_sprite *>(fc_malloc(sizeof(*city_sprite)));
+  struct city_sprite *city_sprite = new struct city_sprite;
   int style;
 
   /* Store number of styles we have allocated memory for.
    * game.control.styles_count might change if client disconnects from
    * server and connects new one. */
   city_sprite->num_styles = game.control.styles_count;
-  city_sprite->styles = static_cast<styles *>(
-      fc_malloc(city_sprite->num_styles * sizeof(*city_sprite->styles)));
+  city_sprite->styles = new styles[city_sprite->num_styles]();
 
   for (style = 0; style < city_sprite->num_styles; style++) {
     city_sprite->styles[style].land_num_thresholds =

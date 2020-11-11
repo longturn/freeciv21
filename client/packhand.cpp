@@ -251,8 +251,8 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
       fc_assert(packet->orders[i].order != ORDER_PERFORM_ACTION
                 || action_id_exists(packet->orders[i].action));
     }
-    punit->orders.list = static_cast<unit_order *>(
-        fc_malloc(punit->orders.length * sizeof(*punit->orders.list)));
+
+    punit->orders.list = new unit_order[punit->orders.length]();
     memcpy(punit->orders.list, packet->orders,
            punit->orders.length * sizeof(*punit->orders.list));
   }
@@ -1042,8 +1042,7 @@ void handle_traderoute_info(const struct packet_traderoute_info *packet)
   if (proute == NULL) {
     fc_assert(trade_route_list_size(pcity->routes) == packet->index);
 
-    proute =
-        static_cast<trade_route *>(fc_malloc(sizeof(struct trade_route)));
+    proute = new trade_route();
     trade_route_list_append(pcity->routes, proute);
     city_changed = TRUE;
   }
@@ -1233,8 +1232,7 @@ void handle_worker_task(const struct packet_worker_task *packet)
     if (packet->activity == ACTIVITY_LAST) {
       return;
     } else {
-      ptask =
-          static_cast<worker_task *>(fc_malloc(sizeof(struct worker_task)));
+      ptask = new worker_task();
       worker_task_list_append(pcity->task_reqs, ptask);
     }
   } else {
@@ -3252,8 +3250,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
   music_styles_alloc(game.control.num_music_styles);
 
   if (game.control.desc_length > 0) {
-    game.ruleset_description =
-        static_cast<char *>(fc_malloc(game.control.desc_length + 1));
+    game.ruleset_description = new char[game.control.desc_length + 1];
     game.ruleset_description[0] = '\0';
   }
 
@@ -3309,7 +3306,7 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
 
   len = strlen(packet->text);
 
-  game.ruleset_summary = static_cast<char *>(fc_malloc(len + 1));
+  game.ruleset_summary = new char[len + 1];
 
   fc_strlcpy(game.ruleset_summary, packet->text, len + 1);
 }
@@ -3496,7 +3493,7 @@ void handle_ruleset_unit_bonus(const struct packet_ruleset_unit_bonus *p)
 
   fc_assert_ret_msg(NULL != u, "Bad unit_type %d.", p->unit);
 
-  bonus = static_cast<combat_bonus *>(malloc(sizeof(*bonus)));
+  bonus = new combat_bonus;
 
   bonus->flag = p->flag;
   bonus->type = p->type;
@@ -4385,7 +4382,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
 
   if (packet->translation_domain[0] != '\0') {
     size_t len = strlen(packet->translation_domain) + 1;
-    pnation->translation_domain = static_cast<char *>(fc_malloc(len));
+    pnation->translation_domain = new char[len];
     fc_strlcpy(pnation->translation_domain, packet->translation_domain, len);
   } else {
     pnation->translation_domain = NULL;
