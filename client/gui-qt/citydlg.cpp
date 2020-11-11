@@ -1622,6 +1622,7 @@ void city_dialog::hideEvent(QHideEvent *event)
 {
   if (pcity) {
     key_city_hide_open(pcity);
+    map_canvas_resized(mapview.width, mapview.height);
   }
   king()->qt_settings.city_geometry = saveGeometry();
 }
@@ -1641,6 +1642,7 @@ void city_dialog::showEvent(QShowEvent *event)
   }
   if (pcity) {
     key_city_show_open(pcity);
+    map_canvas_resized(mapview.width, mapview.height);
   }
 }
 
@@ -2893,7 +2895,6 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   city_dialog::instance()->show();
   city_dialog::instance()->activateWindow();
   city_dialog::instance()->raise();
-  map_canvas_resized(mapview.width, mapview.height);
 }
 
 /************************************************************************/ /**
@@ -2912,7 +2913,6 @@ void destroy_city_dialog()
 void qtg_popdown_city_dialog(struct city *pcity)
 {
   city_dialog::instance()->hide();
-  map_canvas_resized(mapview.width, mapview.height);
 }
 
 /************************************************************************/ /**
@@ -2921,7 +2921,6 @@ void qtg_popdown_city_dialog(struct city *pcity)
 void qtg_popdown_all_city_dialogs()
 {
   destroy_city_dialog();
-  map_canvas_resized(mapview.width, mapview.height);
 }
 
 /************************************************************************/ /**
