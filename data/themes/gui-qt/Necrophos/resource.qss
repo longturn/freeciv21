@@ -31,6 +31,22 @@ QMainWindow {
   border: 1px solid #c3b48e;
 }
 
+/* Help dialog tile output 3 labels */
+*[foodlab="true"] {
+  background:#00ee01;
+  color: black;
+}
+
+*[shieldlab="true"] {
+  background: #e4e4e4;
+  color: black;
+}
+
+*[ecolab="true"] {
+  background: #eeee12;
+  color: black;
+}
+
 /* color of border only - set the same as background */
 *[messagewindow="true"] {
   color: #000000;
