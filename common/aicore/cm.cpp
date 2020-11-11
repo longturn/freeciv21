@@ -79,9 +79,6 @@
 #ifdef DEBUG_TIMERS
 #define GATHER_TIME_STATS
 #endif
-#ifdef FREECIV_DEBUG
-#define CM_DEBUG
-#endif
 
 /* Whether to print every query, or just at cm_free ; matters only
    if GATHER_TIME_STATS is on */
@@ -237,7 +234,7 @@ struct cm_state {
 static int num_types(const struct cm_state *state);
 
 /* debugging functions */
-#ifdef CM_DEBUG
+#ifdef FREECIV_DEBUG
 static void real_print_tile_type(QtMsgType level, const char *file,
                                  const char *function, int line,
                                  const struct cm_tile_type *ptype,
@@ -271,7 +268,7 @@ static void real_print_partial_solution(QtMsgType level, const char *file,
 #define print_tile_type(loglevel, ptype, prefix)
 #define print_lattice(loglevel, lattice)
 #define print_partial_solution(loglevel, soln, state)
-#endif /* CM_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 static void cm_result_copy(struct cm_result *result,
                            const struct city *pcity, bool *workers_map);
@@ -2315,7 +2312,7 @@ static void cm_result_copy(struct cm_result *result,
 /************************************************************************/ /**
    Debugging routines.
  ****************************************************************************/
-#ifdef CM_DEBUG
+#ifdef FREECIV_DEBUG
 static void snprint_production(char *buffer, size_t bufsz,
                                const int production[])
 {
@@ -2407,7 +2404,7 @@ static void real_print_partial_solution(QtMsgType level, const char *file,
   }
 }
 
-#endif /* CM_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 #ifdef GATHER_TIME_STATS
 /************************************************************************/ /**
