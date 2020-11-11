@@ -30,6 +30,10 @@
 /* common/aicore */
 #include "pf_tools.h"
 
+// Qt
+#include <QDebug>
+#include <QString>
+
 #include "path_finding.h"
 
 /* For explanations on how to use this module, see "path_finding.h". */
@@ -3400,31 +3404,30 @@ const struct pf_position *pf_path_last_position(const struct pf_path *path)
 }
 
 /************************************************************************/ /**
-   Debug a path. This function shouldn't be called directly, see
-   pf_path_print() defined in "path_finding.h".
+   Debug a path.
  ****************************************************************************/
-void pf_path_print_real(const struct pf_path *path, QtMsgType level,
-                        const char *file, const char *function, int line)
+QDebug &operator<<(QDebug &logger, const pf_path *path)
 {
   struct pf_position *pos;
   int i;
 
   if (path) {
-    do_log(file, function, line, TRUE, level,
-           "PF: path (at %p) consists of %d positions:", (void *) path,
-           path->length);
+    logger << QString::asprintf(
+        "PF: path (at %p) consists of %d positions:\n", (void *) path,
+        path->length);
   } else {
-    do_log(file, function, line, TRUE, level, "PF: path is NULL");
-    return;
+    logger << "PF: path is NULL";
+    return logger;
   }
 
   for (i = 0, pos = path->positions; i < path->length; i++, pos++) {
-    do_log(file, function, line, FALSE, level,
-           "PF:   %2d/%2d: (%2d,%2d) dir=%-2s cost=%2d (%2d, %d) EC=%d",
-           i + 1, path->length, TILE_XY(pos->tile),
-           dir_get_name(pos->dir_to_next_pos), pos->total_MC, pos->turn,
-           pos->moves_left, pos->total_EC);
+    logger << QString::asprintf(
+        "PF:   %2d/%2d: (%2d,%2d) dir=%-2s cost=%2d (%2d, %d) EC=%d\n",
+        i + 1, path->length, TILE_XY(pos->tile),
+        dir_get_name(pos->dir_to_next_pos), pos->total_MC, pos->turn,
+        pos->moves_left, pos->total_EC);
   }
+  return logger;
 }
 
 /* ===================== pf_reverse_map functions ======================== */
