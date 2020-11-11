@@ -51,10 +51,8 @@ void savegame_load(struct section_file *sfile)
 
   fc_assert_ret(sfile != NULL);
 
-#ifdef DEBUG_TIMERS
   civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(loadtimer);
-#endif
 
   savefile_options = secfile_lookup_str(sfile, "savefile.options");
 
@@ -94,12 +92,10 @@ void savegame_load(struct section_file *sfile)
   }
   players_iterate_end;
 
-#ifdef DEBUG_TIMERS
   timer_stop(loadtimer);
-  log_debug("Loading secfile in %.3f seconds.",
-            timer_read_seconds(loadtimer));
+  qCDebug(timers_category, "Loading secfile in %.3f seconds.",
+          timer_read_seconds(loadtimer));
   timer_destroy(loadtimer);
-#endif /* DEBUG_TIMERS */
 }
 
 /************************************************************************/ /**

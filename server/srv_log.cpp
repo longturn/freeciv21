@@ -153,26 +153,14 @@ void timing_results_real(void)
 {
   char buf[200];
 
-#ifdef LOG_TIMERS
-
 #define AILOG_OUT(text, which)                                              \
   fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text,     \
               timer_read_seconds(aitimer[which][0]),                        \
               timer_read_seconds(aitimer[which][1]));                       \
-  log_test("%s", buf);                                                      \
+  qCInfo(timers_category, "%s", buf);                                       \
   notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
 
-  log_test("  --- AI timing results ---");
-
-#else /* LOG_TIMERS */
-
-#define AILOG_OUT(text, which)                                              \
-  fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text,     \
-              timer_read_seconds(aitimer[which][0]),                        \
-              timer_read_seconds(aitimer[which][1]));                       \
-  notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
-
-#endif /* LOG_TIMERS */
+  qCInfo(timers_category, "  --- AI timing results ---");
 
   notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log,
               "  --- AI timing results ---");

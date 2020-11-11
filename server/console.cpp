@@ -114,7 +114,7 @@ static const char *log_prefix(void)
 {
   static char buf[128];
 
-#ifdef LOG_TIMERS
+#if 1 // was ifdef LOG_TIMERS
   char timestr[32];
   time_t timestamp;
 

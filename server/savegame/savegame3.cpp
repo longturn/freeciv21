@@ -417,20 +417,16 @@ void savegame3_save(struct section_file *sfile, const char *save_reason,
 {
   fc_assert_ret(sfile != NULL);
 
-#ifdef DEBUG_TIMERS
   civtimer *savetimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(savetimer);
-#endif
 
   qDebug("saving game in new format ...");
   savegame3_save_real(sfile, save_reason, scenario);
 
-#ifdef DEBUG_TIMERS
   timer_stop(savetimer);
-  log_debug("Creating secfile in %.3f seconds.",
-            timer_read_seconds(savetimer));
+  qCDebug(timers_category, "Creating secfile in %.3f seconds.",
+          timer_read_seconds(savetimer));
   timer_destroy(savetimer);
-#endif /* DEBUG_TIMERS */
 }
 
 /* =======================================================================
