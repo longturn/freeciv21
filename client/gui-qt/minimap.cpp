@@ -147,7 +147,7 @@ void minimap_view::scale_point(int &x, int &y)
   int dx, dy;
 
   gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
-                  mapview.gui_y0 + mapview.height / 2);
+                      mapview.gui_y0 + mapview.height / 2);
   x = qRound(x * scale_factor);
   y = qRound(y * scale_factor);
   dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
@@ -272,6 +272,8 @@ void minimap_view::update_image()
   if (isHidden()) {
     return;
   }
+  // There might be some map updates lurking around
+  mr_idle::idlecb()->run_now();
   thread.render(scale_factor, width(), height());
 }
 
@@ -296,7 +298,7 @@ void minimap_view::paint(QPainter *painter, QPaintEvent *event)
     painter->drawPixmap(0, 0, *pix, x, y, ix, iy);
   }
   painter->setPen(QColor(palette().color(QPalette::Highlight)));
-  painter->drawRect(0, 0, width() - 1, height() - 1);
+  painter->drawRect(1, 1, width() - 1, height() - 1);
   draw_viewport(painter);
   rw->put_to_corner();
 }
@@ -419,20 +421,9 @@ void minimap_view::mouseReleaseEvent(QMouseEvent *event)
 /**********************************************************************/ /**
    Return a canvas that is the overview window.
  **************************************************************************/
-struct canvas *get_overview_window(void)
+void update_minimap()
 {
   queen()->minimapview_wdg->update_image();
-  return NULL;
-}
-
-/**********************************************************************/ /**
-   Return the dimensions of the area (container widget; maximum size) for
-   the overview.
- **************************************************************************/
-void get_overview_area_dimensions(int *width, int *height)
-{
-  *width = 0;
-  *height = 0;
 }
 
 /**********************************************************************/ /**
@@ -453,8 +444,3 @@ void overview_size_changed(void)
       king()->qt_settings.minimap_width * mapview.width,
       king()->qt_settings.minimap_height * mapview.height);
 }
-
-/**********************************************************************/ /**
-   Sets the position of the overview scroll window based on mapview position.
- **************************************************************************/
-void update_overview_scroll_window_pos(int x, int y) {}

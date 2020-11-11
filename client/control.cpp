@@ -546,6 +546,7 @@ void unit_focus_set(struct unit *punit)
     clear_hover_state();
     focus_units_changed();
   }
+  flush_dirty_overview();
 }
 
 /**********************************************************************/ /**
@@ -2749,6 +2750,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
   if (in_focus) {
     menus_update();
   }
+  flush_dirty_overview();
 }
 
 /**********************************************************************/ /**

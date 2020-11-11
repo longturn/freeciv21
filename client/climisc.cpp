@@ -65,6 +65,7 @@
 #include "repodlgs_common.h"
 #include "tilespec.h"
 
+extern void flush_dirty_overview();
 /**********************************************************************/ /**
    Remove unit, client end version
  **************************************************************************/
@@ -128,6 +129,7 @@ void client_remove_unit(struct unit *punit)
   }
 
   refresh_unit_mapcanvas(&old_unit, ptile, TRUE, FALSE);
+  flush_dirty_overview();
 }
 
 /**********************************************************************/ /**
