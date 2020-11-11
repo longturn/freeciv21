@@ -268,9 +268,6 @@ bool client_start_server(void)
   if (savefile.isEmpty()) {
     arguments << "--file" << savefile;
   }
-  if (are_deprecation_warnings_enabled()) {
-    arguments << "--warnings";
-  }
   if (ruleset != NULL) {
     arguments << "--ruleset" << ruleset;
   }

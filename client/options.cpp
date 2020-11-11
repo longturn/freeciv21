@@ -5046,8 +5046,8 @@ static void message_options_load(struct section_file *file,
     }
     /* Compatibility: Before 3.0 E_UNIT_WIN_DEF was called E_UNIT_WIN. */
     if (!fc_strcasecmp("E_UNIT_WIN", p)) {
-      log_deprecation(
-          _("Deprecated event type E_UNIT_WIN in client options."));
+      qCWarning(deprecations_category,
+                _("Deprecated event type E_UNIT_WIN in client options."));
       p = "E_UNIT_WIN_DEF";
     }
     event = event_type_by_name(p, strcmp);

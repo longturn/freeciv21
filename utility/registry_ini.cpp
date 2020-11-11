@@ -880,21 +880,9 @@ void secfile_check_unused(const struct section_file *secfile)
           qDebug("Unused entries in file %s:", secfile->name);
           any = TRUE;
         }
-        if (are_deprecation_warnings_enabled()) {
-          log_deprecation_always("%s: unused entry: %s.%s",
-                                 secfile->name != NULL ? secfile->name
-                                                       : "nameless",
-                                 section_name(psection), entry_name(pentry));
-        } else {
-#ifdef FREECIV_TESTMATIC
-          log_testmatic("%s: unused entry: %s.%s",
-                        secfile->name != NULL ? secfile->name : "nameless",
-                        section_name(psection), entry_name(pentry));
-#else  /* FREECIV_TESTMATIC */
-          qDebug("  unused entry: %s.%s", section_name(psection),
-                 entry_name(pentry));
-#endif /* FREECIV_TESTMATIC */
-        }
+        qCWarning(deprecations_category, "%s: unused entry: %s.%s",
+                  secfile->name != NULL ? secfile->name : "nameless",
+                  section_name(psection), entry_name(pentry));
       }
     }
     entry_list_iterate_end;

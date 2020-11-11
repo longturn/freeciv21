@@ -381,7 +381,9 @@ int main(int argc, char *argv[])
     }
   }
   if (parser.isSet("warnings")) {
-    deprecation_warnings_enable();
+    qCWarning(deprecations_category,
+              // TRANS: Do not translate --warnings
+              _("The --warnings option is deprecated."));
   }
 #ifdef AI_MODULES
   if (parser.isSet("LoadAI")) {

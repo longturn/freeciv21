@@ -2372,9 +2372,9 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     t->preferred_themes = (char **) secfile_lookup_str_vec(
         file, &num_preferred_themes, "tilespec.prefered_themes");
     if (num_preferred_themes > 0) {
-      log_deprecation(
-          "Entry tilespec.prefered_themes in tilespec."
-          " Use correct spelling tilespec.preferred_themes instead");
+      qCWarning(deprecations_category,
+                "Entry tilespec.prefered_themes in tilespec."
+                " Use correct spelling tilespec.preferred_themes instead");
     }
   }
   t->num_preferred_themes = num_preferred_themes;
