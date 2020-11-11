@@ -71,6 +71,7 @@ void setup_gui_funcs(void)
   funcs->canvas_put_sprite = gui_canvas_put_sprite;
   funcs->canvas_put_sprite_full = gui_canvas_put_sprite_full;
   funcs->canvas_put_sprite_fogged = gui_canvas_put_sprite_fogged;
+  funcs->canvas_put_sprite_citymode = gui_canvas_put_sprite_citymode;
   funcs->canvas_put_rectangle = gui_canvas_put_rectangle;
   funcs->canvas_fill_sprite_area = gui_canvas_fill_sprite_area;
   funcs->canvas_put_line = gui_canvas_put_line;

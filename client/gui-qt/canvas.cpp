@@ -158,6 +158,26 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
                                   bool fog, int fog_x, int fog_y)
 {
   QPainter p;
+  /* TODO make proper fog from this, just guess good compositions :D,
+   * probably use original black pixmap */
+  // QPainter p, q;
+  // QPixmap pix(psprite->pm->width(), psprite->pm->height());
+  // pix.fill(Qt::transparent);
+  // pix = psprite->pm->copy();
+
+  // q.begin(&pix);
+  // q.setCompositionMode(QPainter::RasterOp_NotSourceOrNotDestination);
+  // q.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // q.end();
+
+  // p.begin(&pcanvas->map_pixmap);
+  // p.setOpacity(0.8);
+  // //p.setCompositionMode(QPainter::CompositionMode_SourceIn);
+  // p.drawPixmap(canvas_x, canvas_y, pix);
+  // p.setOpacity(0.5);
+  // p.setCompositionMode(QPainter::CompositionMode_Lighten);
+  // p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  // p.end();
 
   p.begin(&pcanvas->map_pixmap);
   p.setCompositionMode(QPainter::CompositionMode_Difference);
@@ -166,6 +186,37 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
   p.end();
 }
 
+/*****************************************************************************
+   Draw fog outside city map when city is opened
+ ****************************************************************************/
+void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
+                                    int canvas_y, struct sprite *psprite,
+                                    bool fog, int fog_x, int fog_y)
+{
+  QPainter p;
+
+  p.begin(&pcanvas->map_pixmap);
+  p.setCompositionMode(QPainter::CompositionMode_Difference);
+  p.setOpacity(0.5);
+  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.end();
+}
+
+/*****************************************************************************
+   Put unit in city area when city dialog is open
+ ****************************************************************************/
+void canvas_put_unit_fogged(struct canvas *pcanvas,
+               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int fog_x, int fog_y)
+{
+  QPainter p;
+
+  p.begin(&pcanvas->map_pixmap);
+  p.setOpacity(0.7);
+  p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
+  p.end();
+
+}
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
  ****************************************************************************/

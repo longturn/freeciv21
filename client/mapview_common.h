@@ -14,8 +14,6 @@
 #ifndef FC__MAPVIEW_COMMON_H
 #define FC__MAPVIEW_COMMON_H
 
-
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -292,7 +290,8 @@ void put_one_element(struct canvas *pcanvas, float zoom,
 
 void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
                        int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog);
+                       bool fog, bool citydialog = false,
+                       bool city_unit = false);
 
 void update_map_canvas(int canvas_x, int canvas_y, int width, int height);
 void update_map_canvas_visible(void);
@@ -361,7 +360,5 @@ void animations_init(void);
 void animations_free(void);
 void set_frame_by_frame_animation(void);
 void update_animation(void);
-
-
 
 #endif /* FC__MAPVIEW_COMMON_H */

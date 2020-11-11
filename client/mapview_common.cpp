@@ -35,6 +35,7 @@
 #include "unitlist.h"
 
 /* client/include */
+#include "citydlg_g.h"
 #include "graphics_g.h"
 #include "gui_main_g.h"
 #include "mapctrl_g.h"
@@ -1293,7 +1294,7 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
  ****************************************************************************/
 void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
                        int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog)
+                       bool fog, bool city_dialog, bool city_unit)
 {
   int i;
 
@@ -1302,8 +1303,18 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
       /* This can happen, although it should probably be avoided. */
       continue;
     }
-
-    if (fog && pdrawn[i].foggable) {
+    if (city_unit
+        && (i == LAYER_CATEGORY_TILE || i == LAYER_UNIT
+            || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
+      canvas_put_unit_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
+                             canvas_y / zoom + pdrawn[i].offset_y,
+                             pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+    } else if (city_dialog) {
+      canvas_put_sprite_citymode(pcanvas,
+                                 canvas_x / zoom + pdrawn[i].offset_x,
+                                 canvas_y / zoom + pdrawn[i].offset_y,
+                                 pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+    } else if (fog && pdrawn[i].foggable) {
       canvas_put_sprite_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
                                canvas_y / zoom + pdrawn[i].offset_y,
                                pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
@@ -1331,14 +1342,32 @@ void put_one_element(struct canvas *pcanvas, float zoom,
                      const struct unit_type *putype)
 {
   struct drawn_sprite tile_sprs[80];
+  bool city_mode = false;
+  bool city_unit = false;
+  int dummy_x, dummy_y;
   int count = fill_sprite_array(tileset, tile_sprs, layer, ptile, pedge,
                                 pcorner, punit, pcity, citymode, putype);
   bool fog = (ptile && gui_options.draw_fog_of_war
               && TILE_KNOWN_UNSEEN == client_tile_get_known(ptile));
-
+  if (ptile) {
+    struct city *xcity = is_any_city_dialog_open();
+    if (xcity) {
+      if (!city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
+        city_mode = true;
+      }
+    }
+  }
+  if (punit) {
+    struct city *xcity = is_any_city_dialog_open();
+    if (xcity) {
+      if (city_base_to_city_map(&dummy_x, &dummy_y, xcity, punit->tile)) {
+        city_unit = true;
+      }
+    }
+  }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs,
-                    fog);
+  put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs, fog,
+                    city_mode, city_unit);
 }
 
 /************************************************************************/ /**
@@ -3607,11 +3636,9 @@ bool map_canvas_resized(int width, int height)
   mapview.store_width = full_width;
   mapview.store_height = full_height;
 
-  /* Check for what's changed. */
-  tile_size_changed =
-      (tile_width != old_tile_width || tile_height != old_tile_height);
-  size_changed = (width != old_width || height != old_height);
-
+  /* use that function to clear cache */
+  tile_size_changed = true;
+  size_changed = true;
   /* If the tile size has changed, resize the canvas. */
   if (tile_size_changed) {
     if (mapview.store) {

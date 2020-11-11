@@ -75,6 +75,9 @@ struct gui_funcs {
   void (*canvas_put_sprite_fogged)(struct canvas *pcanvas, int canvas_x,
                                    int canvas_y, struct sprite *psprite,
                                    bool fog, int fog_x, int fog_y);
+  void (*canvas_put_sprite_citymode)(struct canvas *pcanvas, int canvas_x,
+                                   int canvas_y, struct sprite *psprite,
+                                   bool fog, int fog_x, int fog_y);
   void (*canvas_put_rectangle)(struct canvas *pcanvas, struct color *pcolor,
                                int canvas_x, int canvas_y, int width,
                                int height);

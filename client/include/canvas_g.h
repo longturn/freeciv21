@@ -43,6 +43,9 @@ GUI_FUNC_PROTO(void, canvas_put_sprite_full, struct canvas *pcanvas,
 GUI_FUNC_PROTO(void, canvas_put_sprite_fogged, struct canvas *pcanvas,
                int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
                int fog_x, int fog_y)
+GUI_FUNC_PROTO(void, canvas_put_sprite_citymode, struct canvas *pcanvas,
+               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int fog_x, int fog_y)
 GUI_FUNC_PROTO(void, canvas_put_rectangle, struct canvas *pcanvas,
                struct color *pcolor, int canvas_x, int canvas_y, int width,
                int height)
@@ -55,7 +58,9 @@ GUI_FUNC_PROTO(void, canvas_put_line, struct canvas *pcanvas,
 GUI_FUNC_PROTO(void, canvas_put_curved_line, struct canvas *pcanvas,
                struct color *pcolor, enum line_type ltype, int start_x,
                int start_y, int dx, int dy)
-
+void canvas_put_unit_fogged(struct canvas *pcanvas,
+               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
+               int fog_x, int fog_y);
 /* Text drawing functions */
 enum client_font {
   FONT_CITY_NAME,

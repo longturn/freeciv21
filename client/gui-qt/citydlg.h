@@ -367,6 +367,7 @@ public:
   void setup_ui(struct city *qcity);
   void refresh();
   void cma_check_agent();
+  static bool exist();
   struct city *pcity;
   int scroll_height;
 
