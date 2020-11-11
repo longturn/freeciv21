@@ -2893,8 +2893,7 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   city_dialog::instance()->show();
   city_dialog::instance()->activateWindow();
   city_dialog::instance()->raise();
-  dirty_all();
-  flush_dirty();
+  map_canvas_resized(mapview.width, mapview.height);
 }
 
 /************************************************************************/ /**
@@ -2913,12 +2912,17 @@ void destroy_city_dialog()
 void qtg_popdown_city_dialog(struct city *pcity)
 {
   city_dialog::instance()->hide();
+  map_canvas_resized(mapview.width, mapview.height);
 }
 
 /************************************************************************/ /**
    Close the dialogs for all cities.
  ****************************************************************************/
-void qtg_popdown_all_city_dialogs() { destroy_city_dialog(); }
+void qtg_popdown_all_city_dialogs()
+{
+  destroy_city_dialog();
+  map_canvas_resized(mapview.width, mapview.height);
+}
 
 /************************************************************************/ /**
    Refresh (update) all data for the given city's dialog.

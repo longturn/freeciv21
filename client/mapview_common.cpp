@@ -1319,7 +1319,7 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
     }
   }
 }
-#include <QDebug>
+
 /************************************************************************/ /**
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
@@ -1341,10 +1341,9 @@ void put_one_element(struct canvas *pcanvas, float zoom,
   if (ptile) {
     struct city *xcity = is_any_city_dialog_open();
     if (xcity) {
+      // Attack of dummies !
       int dummy_x, dummy_y;
-      //struct city *xcity = find_city_near_tile(ptile);
-      if (xcity
-          && !city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
+      if (!city_base_to_city_map(&dummy_x, &dummy_y, xcity, ptile)) {
         city_mode = true;
       }
     }
@@ -3620,11 +3619,9 @@ bool map_canvas_resized(int width, int height)
   mapview.store_width = full_width;
   mapview.store_height = full_height;
 
-  /* Check for what's changed. */
-  tile_size_changed =
-      (tile_width != old_tile_width || tile_height != old_tile_height);
-  size_changed = (width != old_width || height != old_height);
-
+  /* use that function to clear cache */
+  tile_size_changed = true;
+  size_changed = true;
   /* If the tile size has changed, resize the canvas. */
   if (tile_size_changed) {
     if (mapview.store) {
