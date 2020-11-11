@@ -1622,7 +1622,7 @@ void city_dialog::hideEvent(QHideEvent *event)
 {
   if (pcity) {
     key_city_hide_open(pcity);
-    key_recall_previous_focus_unit();
+    unit_focus_update();
     map_canvas_resized(mapview.width, mapview.height);
   }
   king()->qt_settings.city_geometry = saveGeometry();
