@@ -21,7 +21,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h"
 #include "mem.h"
 #include "support.h"
 
@@ -53,40 +52,26 @@ static struct nation_group nation_groups[MAX_NUM_NATION_GROUPS];
 ****************************************************************************/
 #ifdef FREECIV_DEBUG
 #define NATION_CHECK(pnation, action)                                       \
-  fc_assert_action(nation_check(pnation,                                    \
-                                log_do_output_for_level(LOG_ERROR),         \
-                                __FILE__, __FUNCTION__, __FC_LINE__),       \
-                   action)
+  fc_assert_action(nation_check(pnation), action)
 
 /************************************************************************/ /**
    Returns TRUE if the nation is valid, else, print an error message and
    returns FALSE.
  ****************************************************************************/
-static inline bool nation_check(const struct nation_type *pnation,
-                                bool do_output, const char *file,
-                                const char *function, int line)
+static bool nation_check(const nation_type *pnation)
 {
   if (0 == nation_count()) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "Function called before nations setup.");
-    }
+    qCritical("Function called before nations setup.");
     return FALSE;
   }
   if (NULL == pnation) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "This function has NULL nation argument.");
-    }
+    qCritical("This function has NULL nation argument.");
     return FALSE;
   }
   if (pnation->item_number < 0 || pnation->item_number >= nation_count()
       || &nations[nation_index(pnation)] != pnation) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "This function has bad nation number %d (count %d).",
-             pnation->item_number, nation_count());
-    }
+    qCritical("This function has bad nation number %d (count %d).",
+              pnation->item_number, nation_count());
     return FALSE;
   }
   return TRUE;
