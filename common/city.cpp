@@ -3319,8 +3319,7 @@ void city_styles_alloc(int num)
 {
   int i;
 
-  city_styles =
-      static_cast<citystyle *>(fc_calloc(num, sizeof(*city_styles)));
+  city_styles = new citystyle[num]();
   game.control.styles_count = num;
 
   for (i = 0; i < game.control.styles_count; i++) {

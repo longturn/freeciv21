@@ -55,8 +55,7 @@ void team_slots_init(void)
   int i;
 
   /* Init team slots and names. */
-  team_slots.tslots = static_cast<team_slot *>(
-      fc_calloc(team_slot_count(), sizeof(*team_slots.tslots)));
+  team_slots.tslots = new team_slot[team_slot_count()]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < team_slot_count(); i++) {
@@ -361,6 +360,7 @@ void team_destroy(struct team *pteam)
 
   player_list_destroy(pteam->plrlist);
   FCPP_FREE(pteam);
+  tslot->team = NULL;
   team_slots.used_slots--;
 }
 

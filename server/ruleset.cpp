@@ -2946,8 +2946,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate_end;
 
       res = secfile_lookup_str_vec(file, &nval, "%s.resources", tsection);
-      pterrain->resources = static_cast<extra_type **>(
-          fc_calloc(nval + 1, sizeof(*pterrain->resources)));
+      pterrain->resources = new extra_type *[nval + 1]();
       for (j = 0; j < nval; j++) {
         pterrain->resources[j] = lookup_resource(filename, res[j], tsection);
         if (pterrain->resources[j] == NULL) {
