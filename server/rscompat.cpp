@@ -23,7 +23,6 @@
 /* utility */
 #include "capability.h"
 #include "fcintl.h"
-#include "log.h"
 #include "registry.h"
 
 /* common */
@@ -71,8 +70,9 @@ int rscompat_check_capabilities(struct section_file *file,
   int format;
 
   if (!(datafile_options = secfile_lookup_str(file, "datafile.options"))) {
-    qFatal("\"%s\": ruleset capability problem:", filename);
-    ruleset_error(LOG_ERROR, "%s", secfile_error());
+    qCCritical(ruleset_category,
+               "\"%s\": ruleset capability problem:", filename);
+    qCCritical(ruleset_category, "%s", secfile_error());
 
     return 0;
   }
@@ -90,20 +90,26 @@ int rscompat_check_capabilities(struct section_file *file,
 
   if (!ok) {
     if (!has_capabilities(RULESET_CAPABILITIES, datafile_options)) {
-      qFatal("\"%s\": ruleset datafile appears incompatible:", filename);
-      qFatal("  datafile options: %s", datafile_options);
-      qFatal("  supported options: %s", RULESET_CAPABILITIES);
-      ruleset_error(LOG_ERROR, "Capability problem");
+      qCCritical(ruleset_category,
+                 "\"%s\": ruleset datafile appears incompatible:", filename);
+      qCCritical(ruleset_category, "  datafile options: %s",
+                 datafile_options);
+      qCCritical(ruleset_category, "  supported options: %s",
+                 RULESET_CAPABILITIES);
+      qCCritical(ruleset_category, "Capability problem");
 
       return 0;
     }
     if (!has_capabilities(datafile_options, RULESET_CAPABILITIES)) {
-      qFatal("\"%s\": ruleset datafile claims required option(s)"
-             " that we don't support:",
-             filename);
-      qFatal("  datafile options: %s", datafile_options);
-      qFatal("  supported options: %s", RULESET_CAPABILITIES);
-      ruleset_error(LOG_ERROR, "Capability problem");
+      qCCritical(ruleset_category,
+                 "\"%s\": ruleset datafile claims required option(s)"
+                 " that we don't support:",
+                 filename);
+      qCCritical(ruleset_category, "  datafile options: %s",
+                 datafile_options);
+      qCCritical(ruleset_category, "  supported options: %s",
+                 RULESET_CAPABILITIES);
+      qCCritical(ruleset_category, "Capability problem");
 
       return 0;
     }
@@ -111,12 +117,12 @@ int rscompat_check_capabilities(struct section_file *file,
 
   if (!secfile_lookup_int(file, &format, "datafile.format_version")) {
     qCritical("\"%s\": lacking legal format_version field", filename);
-    ruleset_error(LOG_ERROR, "%s", secfile_error());
+    qCCritical(ruleset_category, "%s", secfile_error());
 
     return 0;
   } else if (format == 0) {
     qCritical("\"%s\": Illegal format_version value", filename);
-    ruleset_error(LOG_ERROR, "Format version error");
+    qCCritical(ruleset_category, "Format version error");
   }
 
   return format;
@@ -372,19 +378,19 @@ bool rscompat_names(struct rscompat_info *info)
     for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
       if (UTYF_USER_FLAG_1 + MAX_NUM_USER_UNIT_FLAGS <= first_free + i) {
         /* Can't add the user unit type flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free unit type "
-                      "user flags to add user flags for the unit type flags "
-                      "that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free unit type "
+                   "user flags to add user flags for the unit type flags "
+                   "that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
       if (unit_type_flag_id_by_name(new_flags_31[i].name, fc_strcasecmp)
           != unit_type_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user unit type flag '%s'",
-                      new_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user unit type flag '%s'",
+                   new_flags_31[i].name);
         return FALSE;
       }
       set_user_unit_type_flag_name(unit_type_flag_id(first_free + i),
@@ -398,10 +404,10 @@ bool rscompat_names(struct rscompat_info *info)
     for (i = 0; i < ARRAY_SIZE(new_class_flags_31); i++) {
       if (UCF_USER_FLAG_1 + MAX_NUM_USER_UCLASS_FLAGS <= first_free + i) {
         /* Can't add the user unit type class flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free unit "
-                      "type class user flags to add user flags for the "
-                      "unit type class flags that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free unit "
+                   "type class user flags to add user flags for the "
+                   "unit type class flags that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
@@ -409,9 +415,9 @@ bool rscompat_names(struct rscompat_info *info)
       if (unit_class_flag_id_by_name(new_class_flags_31[i].name,
                                      fc_strcasecmp)
           != unit_class_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user unit class flag '%s'",
-                      new_class_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user unit class flag '%s'",
+                   new_class_flags_31[i].name);
         return FALSE;
       }
       set_user_unit_class_flag_name(unit_class_flag_id(first_free + i),
@@ -443,19 +449,19 @@ bool rscompat_names(struct rscompat_info *info)
     for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
       if (TER_USER_1 + MAX_NUM_USER_TER_FLAGS <= first_free + i) {
         /* Can't add the user terrain flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free terrain "
-                      "user flags to add user flags for the terrain flags "
-                      "that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free terrain "
+                   "user flags to add user flags for the terrain flags "
+                   "that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
       if (terrain_flag_id_by_name(new_flags_31[i].name, fc_strcasecmp)
           != terrain_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user terrain flag '%s'",
-                      new_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user terrain flag '%s'",
+                   new_flags_31[i].name);
         return FALSE;
       }
       set_user_terrain_flag_name(terrain_flag_id(first_free + i),
