@@ -20,6 +20,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Qt
+#include <QCoreApplication>
+
 #ifdef FREECIV_HAVE_LIBREADLINE
 #include <readline/readline.h>
 #endif
@@ -4333,7 +4336,7 @@ static bool quit_game(struct connection *caller, bool check)
 {
   if (!check) {
     cmd_reply(CMD_QUIT, caller, C_OK, _("Goodbye."));
-    server_quit();
+    QCoreApplication::quit();
   }
   return TRUE;
 }

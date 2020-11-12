@@ -323,6 +323,7 @@ server::~server()
   if (m_between_turns_timer != nullptr) {
     timer_destroy(m_between_turns_timer);
   }
+  server_quit();
 }
 
 /*************************************************************************/ /**
@@ -845,7 +846,7 @@ bool server::shut_game_down()
 
   if (game.info.timeout == -1 || srvarg.exit_on_end) {
     /* For autogames or if the -e option is specified, exit the server. */
-    server_quit();
+    deleteLater();
     return false;
   }
 
@@ -881,7 +882,7 @@ void server::quit_idle()
 
   if (srvarg.exit_on_end) {
     // No need for anything more; just quit.
-    server_quit();
+    deleteLater();
   } else {
     force_end_of_sniff = true;
     update_game_state();
