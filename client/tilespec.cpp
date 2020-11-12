@@ -1770,7 +1770,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   if (!check_tilespec_capabilities(file, "tilespec", TILESPEC_CAPSTR, fname,
                                    verbose)) {
     secfile_destroy(file);
-    delete fname;
+    delete[] fname;
     return NULL;
   }
 

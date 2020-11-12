@@ -1127,7 +1127,6 @@ void boot_help_texts(void)
             help_list_append(help_nodes, ptmp);
           }
           help_list_iterate_end;
-          help_list_destroy(category_nodes);
           continue;
         }
       }

@@ -1700,8 +1700,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     i = 0;
 
-    modname = static_cast<const char **>(
-        fc_calloc(ACTIVITY_LAST, sizeof(*modname)));
+    modname = new const char *[ACTIVITY_LAST]();
 
     for (j = 0; j < ACTIVITY_LAST; j++) {
       modname[i++] = unit_activity_name(static_cast<unit_activity>(j));
@@ -1717,10 +1716,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.specialists_size");
   {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(specialist_count(), sizeof(*modname)));
+    modname = new const char *[specialist_count()]();
 
     specialist_type_iterate(sp)
     {
@@ -1759,10 +1756,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.extras_size");
   if (game.control.num_extra_types > 0) {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(game.control.num_extra_types, sizeof(*modname)));
+    modname = new const char *[game.control.num_extra_types]();
 
     extra_type_iterate(pextra) { modname[i++] = extra_rule_name(pextra); }
     extra_type_iterate_end;
@@ -1778,10 +1773,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.multipliers_size");
   if (multiplier_count() > 0) {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(multiplier_count(), sizeof(*modname)));
+    modname = new const char *[multiplier_count()]();
 
     multipliers_iterate(pmul)
     {
@@ -1859,8 +1852,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(ACT_DEC_COUNT, sizeof(*modname)));
+    modname = new const char *[ACT_DEC_COUNT]();
 
     for (j = 0; j < ACT_DEC_COUNT; j++) {
       modname[i++] = action_decision_name(static_cast<action_decision>(j));
@@ -3355,8 +3347,7 @@ static void sg_save_map_known(struct savedata *saving)
                         "game.save_known");
     if (game.server.save_options.save_known) {
       int j, p, l, i;
-      unsigned int *known = static_cast<unsigned int *>(
-          fc_calloc(lines * MAP_INDEX_SIZE, sizeof(*known)));
+      unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
 
       /* HACK: we convert the data into a 32-bit integer, and then save it as
        * hex. */
@@ -3395,7 +3386,7 @@ static void sg_save_map_known(struct savedata *saving)
         }
       }
 
-      FC_FREE(known);
+      FCPP_FREE(known);
     }
   }
 }

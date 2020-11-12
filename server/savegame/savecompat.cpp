@@ -1063,9 +1063,7 @@ static void compat_load_020600(struct loaddata *loading,
     const char **modname;
     int i = 0;
 
-    modname = static_cast<const char **>(
-        fc_calloc(specialist_count(), sizeof(*modname)));
-
+    modname = new const char *[specialist_count()]();
     specialist_type_iterate(sp)
     {
       modname[i++] = specialist_rule_name(specialist_by_number(sp));

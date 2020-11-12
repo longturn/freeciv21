@@ -2305,8 +2305,7 @@ static void sg_load_map_known(struct loaddata *loading)
 
   if (secfile_lookup_bool_default(loading->file, TRUE, "game.save_known")) {
     int lines = player_slot_max_used_number() / 32 + 1, j, p, l, i;
-    unsigned int *known = static_cast<unsigned int *>(
-        fc_calloc(lines * MAP_INDEX_SIZE, sizeof(*known)));
+    unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
 
     for (l = 0; l < lines; l++) {
       for (j = 0; j < 8; j++) {
@@ -2345,7 +2344,7 @@ static void sg_load_map_known(struct loaddata *loading)
     }
     whole_map_iterate_end;
 
-    FC_FREE(known);
+    FCPP_FREE(known);
   }
 }
 

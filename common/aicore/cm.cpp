@@ -635,10 +635,9 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
 static void init_partial_solution(struct partial_solution *into, int ntypes,
                                   int idle, bool negative_ok)
 {
-  into->worker_counts =
-      static_cast<int *>(fc_calloc(ntypes, sizeof(*into->worker_counts)));
-  into->prereqs_filled =
-      static_cast<int *>(fc_calloc(ntypes, sizeof(*into->prereqs_filled)));
+  into->worker_counts = new int[ntypes]();
+  into->prereqs_filled = new int[ntypes]();
+
   if (negative_ok) {
     output_type_iterate(otype) { into->production[otype] = -FC_INFINITY; }
     output_type_iterate_end;

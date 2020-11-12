@@ -812,7 +812,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 '''
             pre2='''
   if (real_packet != packet) {
-    free((void *) real_packet);
+    delete (decltype(real_packet)) real_packet;
   }
 '''
         else:

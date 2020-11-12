@@ -388,7 +388,7 @@ struct socket_packet_buffer *new_socket_packet_buffer(void)
   buf->ndata = 0;
   buf->do_buffer_sends = 0;
   buf->nsize = 10 * MAX_LEN_PACKET;
-  buf->data = new unsigned char[buf->nsize];
+  buf->data = (unsigned char *) fc_malloc(buf->nsize);
 
   return buf;
 }
@@ -400,7 +400,7 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
 {
   if (buf) {
     if (buf->data) {
-      delete[] buf->data;
+      free(buf->data);
     }
     delete buf;
   }

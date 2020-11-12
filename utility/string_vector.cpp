@@ -89,10 +89,10 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     return;
   } else if (!psv->vec) {
     /* Initial reserve */
-    psv->vec = new char *[reserve]{};
+    psv->vec = new char *[reserve] {};
   } else if (reserve > psv->size) {
     /* Expand the vector. */
-    auto expanded = new char *[reserve]{};
+    auto expanded = new char *[reserve] {};
     std::move(psv->vec, psv->vec + psv->size, expanded);
     delete[] psv->vec;
     psv->vec = expanded;
@@ -103,7 +103,7 @@ void strvec_reserve(struct strvec *psv, size_t reserve)
     for (i = psv->size - 1; i >= reserve; i--) {
       string_free(psv->vec[i]);
     }
-    auto shrunk = new char *[reserve]{};
+    auto shrunk = new char *[reserve] {};
     std::move(psv->vec, psv->vec + reserve, shrunk);
     delete[] psv->vec;
     psv->vec = shrunk;
@@ -148,7 +148,7 @@ void strvec_from_str(struct strvec *psv, char separator, const char *str)
 
   strvec_clear(psv);
   while ((p = strchr(str, separator))) {
-    new_str = static_cast<char *>(fc_malloc(p - str + 1));
+    new_str = new char[p - str + 1];
     memcpy(new_str, str, p - str);
     new_str[p - str] = '\0';
     psv->size++;

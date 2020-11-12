@@ -128,12 +128,10 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   const struct tile *ptile;
   bool added = FALSE;
 
-  va_start(ap, agent);
-
   if (client_is_observer()) {
     return;
   }
-
+  va_start(ap, agent);
   switch (type) {
   case OCT_UNIT:
   case OCT_CITY:

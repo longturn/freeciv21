@@ -710,7 +710,7 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   fc_vsnprintf(buf + strlen(buf), bufsz - strlen(buf), totalfmt, args);
   va_end(args);
 
-  FC_FREE(sum->sums);
+  free(sum->sums);
   FC_FREE(sum);
 }
 
