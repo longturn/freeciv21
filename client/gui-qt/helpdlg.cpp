@@ -294,7 +294,8 @@ void help_dialog::make_tree()
       default:
         break;
       }
-      if (spite) icon = QIcon(*spite->pm);
+      if (spite)
+        icon = QIcon(*spite->pm);
       if (!icon.isNull()) {
         item->setIcon(0, icon);
       }
@@ -1200,18 +1201,73 @@ canvas *terrain_canvas(struct terrain *terrain,
   return canvas;
 }
 
-/**********************************************************************/ /**
+// helper for create_terrain_widget
+static QLabel *make_helplabel(QString title, const QString &tooltip,
+                              QHBoxLayout *layout)
+{
+  QLabel *label;
+  QFont f;
+  QFontMetrics *fm;
+  int isize;
+
+  label = new QLabel(title);
+  f = *fc_font::instance()->get_font(fonts::help_text);
+  fm = new QFontMetrics(f);
+  isize = fm->height() * 2 / 3;
+  label->setFixedHeight(isize + 4);
+  layout->addWidget(label, Qt::AlignVCenter);
+  label->setProperty(fonts::default_font, "true");
+  label->setToolTip(tooltip);
+  return label;
+}
+
+// helper for create_terrain_widget, creates label from sprite
+static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
+                              QHBoxLayout *layout)
+{
+  QLabel *label;
+  QImage img;
+  QImage cropped_img;
+  QRect crop;
+  QPixmap pix;
+  QFont f;
+  QFontMetrics *fm;
+  int isize;
+
+  img = spr->pm->toImage();
+  crop = zealous_crop_rect(img);
+  cropped_img = img.copy(crop);
+  pix = QPixmap::fromImage(cropped_img);
+  f = *fc_font::instance()->get_font(fonts::help_text);
+  fm = new QFontMetrics(f);
+  isize = fm->height() * 2 / 3;
+  label = new QLabel();
+  label->setPixmap(pix.scaledToHeight(isize));
+  label->setFixedHeight(isize + 4);
+  layout->addWidget(label, Qt::AlignVCenter);
+  label->setProperty(fonts::help_label, "true");
+  label->setToolTip(tooltip);
+}
+
+/***************************************************************************
    Creates a terrain widget with title, terrain image, legend. An optional
    tooltip can be given to explain the legend.
  **************************************************************************/
 QLayout *help_widget::create_terrain_widget(const QString &title,
                                             const struct canvas *image,
-                                            const QString &legend,
+                                            const int &food, const int &sh,
+                                            const int &eco,
                                             const QString &tooltip)
 {
   QGraphicsDropShadowEffect *effect;
   QLabel *label;
-  QGridLayout *layout = new QGridLayout();
+  struct sprite *spr;
+  QHBoxLayout *layout = new QHBoxLayout();
+  QHBoxLayout *layout1 = new QHBoxLayout();
+  QHBoxLayout *layout2 = new QHBoxLayout();
+  QWidget *w1, *w2;
+  w1 = new QWidget();
+  w2 = new QWidget();
 
   label = new QLabel();
   effect = new QGraphicsDropShadowEffect(label);
@@ -1219,26 +1275,31 @@ QLayout *help_widget::create_terrain_widget(const QString &title,
   effect->setOffset(0, 2);
   label->setGraphicsEffect(effect);
   label->setPixmap(image->map_pixmap);
-  layout->addWidget(label, 0, 0, 2, 1);
+  layout1->addWidget(label, Qt::AlignVCenter);
+  w1->setLayout(layout1);
 
-  label = new QLabel(title);
-  label->setTextFormat(Qt::PlainText);
-  layout->addWidget(label, 0, 1, Qt::AlignBottom);
-  label->setProperty(fonts::default_font, "true");
+  make_helplabel(title, tooltip, layout2);
+  make_helplabel((".:. "), tooltip, layout2);
+  make_helplabel(_("Output becomes: "), tooltip, layout2);
+  make_helplabel(QString::number(food), tooltip, layout2)
+      ->setProperty("foodlab", "true");
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
+                                    "citybar.food", "", "", false);
+  make_helppiclabel(spr, tooltip, layout2);
+  make_helplabel(QString::number(sh), tooltip, layout2)
+      ->setProperty("shieldlab", "true");
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.shields",
+                                    "upkeep.shield", "", "", false);
+  make_helppiclabel(spr, tooltip, layout2);
+  make_helplabel(QString::number(eco), tooltip, layout2)
+      ->setProperty("ecolab", "true");
+  spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.trade",
+                                    "upkeep.gold", "", "", false);
+  make_helppiclabel(spr, tooltip, layout2);
+  w2->setLayout(layout2);
 
-  label = new QLabel(legend);
-  label->setTextFormat(Qt::PlainText);
-  layout->addWidget(label, 1, 1, Qt::AlignTop);
-  label->setProperty(fonts::help_label, "true");
-
-  if (!tooltip.isEmpty()) {
-    label->setToolTip(tooltip);
-    label->setCursor(Qt::WhatsThisCursor);
-  }
-
-  layout->setColumnStretch(0, 0);
-  layout->setColumnStretch(1, 100);
-
+  layout->addWidget(w1, Qt::AlignVCenter);
+  layout->addWidget(w2, Qt::AlignVCenter);
   return layout;
 }
 
@@ -1407,14 +1468,10 @@ void help_widget::set_topic_terrain(const help_item *topic,
         canvas = terrain_canvas(pterrain, *r);
         vbox->addLayout(create_terrain_widget(
             extra_name_translation(*r), canvas,
-            // TRANS: %1 food, %2 shields, %3 trade
-            QString(_("Tile output becomes %1, %2, %3."))
-                .arg(pterrain->output[O_FOOD]
-                     + (*r)->data.resource->output[O_FOOD])
-                .arg(pterrain->output[O_SHIELD]
-                     + (*r)->data.resource->output[O_SHIELD])
-                .arg(pterrain->output[O_TRADE]
-                     + (*r)->data.resource->output[O_TRADE]),
+            pterrain->output[O_FOOD] + (*r)->data.resource->output[O_FOOD],
+            pterrain->output[O_SHIELD]
+                + (*r)->data.resource->output[O_SHIELD],
+            pterrain->output[O_TRADE] + (*r)->data.resource->output[O_TRADE],
             // TRANS: Tooltip decorating strings like "1, 2, 3".
             _("Output (Food, Shields, Trade) of a tile where the resource "
               "is "
