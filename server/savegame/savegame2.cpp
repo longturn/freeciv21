@@ -1219,8 +1219,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = static_cast<extra_type **>(
-        fc_calloc(nmod, sizeof(*loading->extra.order)));
+    loading->extra.order = new extra_type*[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1244,8 +1243,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = static_cast<multiplier **>(fc_calloc(
-        loading->multiplier.size, sizeof(*loading->multiplier.order)));
+    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -1281,8 +1279,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * that old S_LAST to current S_LAST, just like any real special within
      * special.size gets mapped. */
     nmod = loading->special.size + (4 - (loading->special.size % 4));
-    loading->special.order = static_cast<tile_special_type *>(
-        fc_calloc(nmod, sizeof(*loading->special.order)));
+    loading->special.order = new tile_special_type[nmod]();
     for (j = 0; j < loading->special.size; j++) {
       if (!strcasecmp("Road", modname[j])) {
         loading->special.order[j] = S_OLD_ROAD;
@@ -1314,8 +1311,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    secfile_error());
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->base.size + 3) / 4);
-    loading->base.order = static_cast<base_type **>(
-        fc_calloc(nmod, sizeof(*loading->base.order)));
+    loading->base.order = new base_type *[nmod]();
     for (j = 0; j < loading->base.size; j++) {
       struct extra_type *pextra = extra_type_by_rule_name(modname[j]);
 
@@ -1354,8 +1350,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_road_types, (int) loading->road.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->road.size + 3) / 4);
-    loading->road.order = static_cast<road_type **>(
-        fc_calloc(nmod, sizeof(*loading->road.order)));
+    loading->road.order = new road_type *[nmod]();
     for (j = 0; j < loading->road.size; j++) {
       struct extra_type *pextra = extra_type_by_rule_name(modname[j]);
 
@@ -1394,8 +1389,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * way for consistency with other types, and to be prepared for the time
      * it needs to be this way. */
     nmod = 4 * ((loading->specialist.size + 3) / 4);
-    loading->specialist.order = static_cast<specialist **>(
-        fc_calloc(nmod, sizeof(*loading->specialist.order)));
+    loading->specialist.order = new specialist *[nmod]();
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
@@ -1420,8 +1414,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->ds_t.size,
                                      "savefile.diplstate_type_vector");
 
-    loading->ds_t.order = static_cast<diplstate_type *>(
-        fc_calloc(loading->ds_t.size, sizeof(*loading->ds_t.order)));
+    loading->ds_t.order = new diplstate_type[loading->ds_t.size]();
 
     for (j = 0; j < loading->ds_t.size; j++) {
       loading->ds_t.order[j] =

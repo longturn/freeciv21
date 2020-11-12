@@ -1421,8 +1421,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = static_cast<extra_type **>(
-        fc_calloc(nmod, sizeof(*loading->extra.order)));
+    loading->extra.order = new extra_type*[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1446,8 +1445,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = static_cast<multiplier **>(fc_calloc(
-        loading->multiplier.size, sizeof(*loading->multiplier.order)));
+    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -1482,8 +1480,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * way for consistency with other types, and to be prepared for the time
      * it needs to be this way. */
     nmod = 4 * ((loading->specialist.size + 3) / 4);
-    loading->specialist.order = static_cast<specialist **>(
-        fc_calloc(nmod, sizeof(*loading->specialist.order)));
+    loading->specialist.order = new specialist *[nmod]();
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
@@ -1507,8 +1504,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->action.size,
                                      "savefile.action_vector");
 
-    loading->action.order = static_cast<action_id *>(
-        fc_calloc(loading->action.size, sizeof(*loading->action.order)));
+    loading->action.order = new action_id[loading->action.size]();
 
     for (j = 0; j < loading->action.size; j++) {
       struct action *real_action = action_by_rule_name(modname[j]);
@@ -1539,8 +1535,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->act_dec.size,
                                      "savefile.action_decision_vector");
 
-    loading->act_dec.order = static_cast<action_decision *>(
-        fc_calloc(loading->act_dec.size, sizeof(*loading->act_dec.order)));
+    loading->act_dec.order = new action_decision[loading->act_dec.size]();
 
     for (j = 0; j < loading->act_dec.size; j++) {
       loading->act_dec.order[j] =
@@ -1564,9 +1559,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
     modname = secfile_lookup_str_vec(loading->file, &loading->ssa.size,
                                      "savefile.server_side_agent_list");
-
-    loading->ssa.order = static_cast<server_side_agent *>(
-        fc_calloc(loading->ssa.size, sizeof(*loading->ssa.order)));
+    loading->ssa.order = new server_side_agent[loading->ssa.size]();
 
     for (j = 0; j < loading->ssa.size; j++) {
       loading->ssa.order[j] =
@@ -1738,8 +1731,7 @@ static void sg_save_savefile(struct savedata *saving)
     enum trait tr;
     int j;
 
-    modname =
-        static_cast<const char **>(fc_calloc(TRAIT_COUNT, sizeof(*modname)));
+    modname = new const char *[TRAIT_COUNT]();
 
     for (tr = trait_begin(), j = 0; tr != trait_end();
          tr = trait_next(tr), j++) {
@@ -1794,8 +1786,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(DS_LAST, sizeof(*modname)));
+    modname = new const char *[DS_LAST]();
 
     for (j = 0; j < DS_LAST; j++) {
       modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
@@ -1813,8 +1804,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(CITYO_LAST, sizeof(*modname)));
+    modname = new const char *[CITYO_LAST]();
 
     for (j = 0; j < CITYO_LAST; j++) {
       modname[i++] = city_options_name(static_cast<city_options>(j));
@@ -1832,8 +1822,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(NUM_ACTIONS, sizeof(*modname)));
+    modname = new const char *[NUM_ACTIONS]();
 
     for (j = 0; j < NUM_ACTIONS; j++) {
       modname[i++] = action_id_rule_name(j);
@@ -1871,8 +1860,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(SSA_COUNT, sizeof(*modname)));
+    modname = new const char *[SSA_COUNT]();
 
     for (j = 0; j < SSA_COUNT; j++) {
       modname[i++] =
@@ -5135,8 +5123,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     bool enabled = secfile_lookup_bool_default(loading->file, FALSE,
                                                "%s.cma_enabled", citystr);
     if (enabled) {
-      struct cm_parameter *param = static_cast<cm_parameter *>(
-          fc_calloc(1, sizeof(struct cm_parameter)));
+      struct cm_parameter *param = new cm_parameter[1]();
 
       for (i = 0; i < O_LAST; i++) {
         param->minimal_surplus[i] = secfile_lookup_int_default(

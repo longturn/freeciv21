@@ -1215,8 +1215,7 @@ static void compat_load_020600(struct loaddata *loading,
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(DS_LAST, sizeof(*modname)));
+    modname = new const char*[DS_LAST]();
 
     for (j = 0; j < DS_LAST; j++) {
       modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
@@ -1438,8 +1437,7 @@ static void insert_server_side_agent(struct loaddata *loading,
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(SSA_COUNT, sizeof(*modname)));
+    modname = new const char*[SSA_COUNT]();
 
     for (j = 0; j < SSA_COUNT; j++) {
       modname[i++] =

@@ -1134,8 +1134,7 @@ cleanup:
  **************************************************************************/
 void dai_city_alloc(struct ai_type *ait, struct city *pcity)
 {
-  struct ai_city *city_data =
-      static_cast<ai_city *>(fc_calloc(1, sizeof(struct ai_city)));
+  struct ai_city *city_data = new ai_city[1]();
 
   city_data->building_wait = BUILDING_WAIT_MINIMUM;
   adv_init_choice(&(city_data->choice));

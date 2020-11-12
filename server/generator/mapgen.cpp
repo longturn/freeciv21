@@ -2594,16 +2594,6 @@ struct fair_geometry_data {
 };
 
 /**********************************************************************/ /**
-   Create a map. Note that all maps have the same dimensions, to be able to
-   call map utilities.
- **************************************************************************/
-static inline struct fair_tile *fair_map_new(void)
-{
-  return static_cast<fair_tile *>(
-      fc_calloc(MAP_INDEX_SIZE, sizeof(struct fair_tile)));
-}
-
-/**********************************************************************/ /**
    Free a map.
  **************************************************************************/
 static inline void fair_map_destroy(struct fair_tile *pmap) { free(pmap); }
@@ -3150,7 +3140,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
 
   size = CLIP(startpos_num, size, ARRAY_SIZE(land_tiles));
   fantasy = (size * 2) / 5;
-  pisland = fair_map_new();
+  pisland = new fair_tile[MAP_INDEX_SIZE]();
   pftile = fair_map_pos_tile(pisland, wld.map.xsize / 2, wld.map.ysize / 2);
   fc_assert(!fair_map_tile_border(pisland, pftile, sea_around_island));
   pftile->flags = static_cast<fair_tile_flag>(pftile->flags | FTF_ASSIGNED);
@@ -3572,7 +3562,7 @@ static bool map_generate_fair_islands(void)
   log_debug("playermass=%d, islandmass1=%d, islandmass2=%d, islandmass3=%d",
             playermass, islandmass1, islandmass2, islandmass3);
 
-  pmap = fair_map_new();
+  pmap = new fair_tile[MAP_INDEX_SIZE]();
 
   while (--iter >= 0) {
     done = TRUE;
@@ -3746,7 +3736,7 @@ static bool map_generate_fair_islands(void)
     }
 
     fair_map_destroy(pmap);
-    pmap = fair_map_new();
+    pmap = new fair_tile[MAP_INDEX_SIZE]();
 
     /* Decrease land mass, for better chances. */
     islandmass1 = (islandmass1 * 99) / 100;

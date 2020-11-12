@@ -3277,9 +3277,9 @@ void dai_units_ruleset_close(struct ai_type *ait)
 void dai_unit_init(struct ai_type *ait, struct unit *punit)
 {
   /* Make sure that contents of unit_ai structure are correctly initialized,
-   * if you ever allocate it by some other mean than fc_calloc() */
-  struct unit_ai *unit_data =
-      static_cast<unit_ai *>(fc_calloc(1, sizeof(struct unit_ai)));
+   * if you ever allocate it by some other mean than new */
+
+  struct unit_ai *unit_data = new unit_ai[1]();
 
   unit_data->done = FALSE;
   unit_data->cur_pos = NULL;

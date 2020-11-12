@@ -65,8 +65,7 @@ void dai_data_init(struct ai_type *ait, struct player *pplayer)
   ai->last_num_oceans = -1;
 
   ai->diplomacy.player_intel_slots =
-      static_cast<const ai_dip_intel **>(fc_calloc(
-          player_slot_count(), sizeof(*ai->diplomacy.player_intel_slots)));
+      new const ai_dip_intel *[player_slot_count()]();
   player_slots_iterate(pslot)
   {
     const struct ai_dip_intel **player_intel_slot =
@@ -211,10 +210,9 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
 
   /*** Statistics ***/
 
-  ai->stats.workers =
-      static_cast<int *>(fc_calloc(adv->num_continents + 1, sizeof(int)));
-  ai->stats.ocean_workers =
-      static_cast<int *>(fc_calloc(adv->num_oceans + 1, sizeof(int)));
+  ai->stats.workers = new int[adv->num_continents + 1]();
+  ai->stats.ocean_workers = new int[adv->num_oceans + 1]();
+
   unit_list_iterate(pplayer->units, punit)
   {
     struct tile *ptile = unit_tile(punit);
@@ -375,8 +373,7 @@ static void dai_diplomacy_new(struct ai_type *ait, const struct player *plr1,
 
   fc_assert_ret(*player_intel_slot == NULL);
 
-  player_intel =
-      static_cast<ai_dip_intel *>(fc_calloc(1, sizeof(*player_intel)));
+  player_intel = new ai_dip_intel[1]();
   *player_intel_slot = player_intel;
 }
 
