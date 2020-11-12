@@ -275,6 +275,7 @@ static void client_game_free(void)
   link_marks_free();
   control_free();
   free_help_texts();
+  helpdata_done();
   attribute_free();
   agents_free();
   game.client.ruleset_init = FALSE;
@@ -676,7 +677,6 @@ void client_exit(void)
     client_game_free();
   }
 
-  helpdata_done(); /* client_exit() unlinks help text list */
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 

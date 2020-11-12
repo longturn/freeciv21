@@ -77,7 +77,7 @@ static const char *const help_type_names[] = {
 
 static const struct help_list_link *help_nodes_iterator;
 static struct help_list *help_nodes;
-struct help_list *category_nodes;
+static struct help_list *category_nodes;
 static bool help_nodes_init = FALSE;
 /* help_nodes_init is not quite the same as booted in boot_help_texts();
    latter can be FALSE even after call, eg if couldn't find helpdata.txt.
