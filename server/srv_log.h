@@ -13,13 +13,19 @@
 #ifndef FC__SRV_LOG_H
 #define FC__SRV_LOG_H
 
+// Qt
+#include <QString>
+#include <QtGlobal>
+
 /* utility */
 #include "bitvector.h"
-#include "log.h"
 #include "support.h"
 
 /* common */
 #include "fc_types.h"
+
+// server
+#include "notify.h"
 
 struct ai_data;
 
@@ -74,40 +80,35 @@ enum ai_timer {
 
 enum ai_timer_activity { TIMER_START, TIMER_STOP };
 
-void real_city_log(const char *file, const char *function, int line,
-                   QtMsgType level, bool notify, const struct city *pcity,
-                   const char *msg, ...)
-    fc__attribute((__format__(__printf__, 7, 8)));
-#define CITY_LOG(loglevel, pcity, msg, ...)                                 \
+QString city_log_prefix(const city *pcity);
+#define CITY_LOG(_, pcity, msg, ...)                                        \
   {                                                                         \
     bool notify = pcity->server.debug;                                      \
-    QtMsgType level =                                                       \
-        (notify ? LOG_AI_TEST : MIN(loglevel, LOGLEVEL_CITY));              \
-    if (log_do_output_for_level(level)) {                                   \
-      real_city_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,     \
-                    pcity, msg, ##__VA_ARGS__);                             \
+    QString message = city_log_prefix(pcity) + QStringLiteral(" ")          \
+                      + QString::asprintf(msg, ##__VA_ARGS__);              \
+    if (notify) {                                                           \
+      qInfo().noquote() << message;                                         \
+      notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
+                  qPrintable(message));                                     \
+    } else {                                                                \
+      qDebug().noquote() << message;                                        \
     }                                                                       \
   }
 
-void real_unit_log(const char *file, const char *function, int line,
-                   QtMsgType level, bool notify, const struct unit *punit,
-                   const char *msg, ...)
-    fc__attribute((__format__(__printf__, 7, 8)));
-#define UNIT_LOG(loglevel, punit, msg, ...)                                 \
+QString unit_log_prefix(const unit *punit);
+#define UNIT_LOG(_, punit, msg, ...)                                        \
   {                                                                         \
-    bool notify = punit->server.debug;                                      \
-    QtMsgType level;                                                        \
-    if (notify                                                              \
-        || (tile_city(unit_tile(punit))                                     \
-            && tile_city(unit_tile(punit))->server.debug)) {                \
-      level = LOG_AI_TEST;                                                  \
-      notify = TRUE;                                                        \
+    bool notify = punit->server.debug                                       \
+                  || (tile_city(unit_tile(punit))                           \
+                      && tile_city(unit_tile(punit))->server.debug);        \
+    QString message = unit_log_prefix(punit) + QStringLiteral(" ")          \
+                      + QString::asprintf(msg, ##__VA_ARGS__);              \
+    if (notify) {                                                           \
+      qInfo().noquote() << message;                                         \
+      notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s",                    \
+                  qPrintable(message));                                     \
     } else {                                                                \
-      level = loglevel;                                                     \
-    }                                                                       \
-    if (log_do_output_for_level(level)) {                                   \
-      real_unit_log(__FILE__, __FUNCTION__, __FC_LINE__, level, notify,     \
-                    punit, msg, ##__VA_ARGS__);                             \
+      qDebug().noquote() << message;                                        \
     }                                                                       \
   }
 
