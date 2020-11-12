@@ -35,10 +35,6 @@ constexpr auto LOG_DEBUG = QtDebugMsg;
  * value. */
 #define __FC_LINE__ __LINE__
 
-/* Dummy log message. */
-extern const char *nologmsg;
-#define NOLOGMSG nologmsg
-
 /* Preparation of the log message, i.e. add a backtrace. */
 typedef void (*log_pre_callback_fn)(QtMsgType, bool print_from_where,
                                     const char *where, const char *msg);
@@ -67,13 +63,6 @@ QtMsgType log_get_level(void);
 bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
                                          int line);
 #endif
-
-void vdo_log(const char *file, const char *function, int line,
-             bool print_from_where, QtMsgType level, char *buf, int buflen,
-             const char *message, va_list args);
-void do_log(const char *file, const char *function, int line,
-            bool print_from_where, QtMsgType level, const char *message, ...)
-    fc__attribute((__format__(__printf__, 6, 7)));
 
 #ifdef FREECIV_DEBUG
 #define log_do_output_for_level(level)                                      \

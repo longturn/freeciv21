@@ -40,13 +40,8 @@
 
 #define MAX_LEN_LOG_LINE 5120
 
-static void log_write(FILE *fs, QtMsgType level, bool print_from_where,
-                      const char *where, const char *message);
-static void log_real(QtMsgType level, bool print_from_where,
-                     const char *where, const char *msg);
-
 static char *log_filename = NULL;
-static log_pre_callback_fn log_pre_callback = log_real;
+static log_pre_callback_fn log_pre_callback = nullptr;
 static log_callback_fn log_callback = NULL;
 static log_prefix_fn log_prefix = NULL;
 
@@ -73,10 +68,6 @@ static std::vector<log_fileinfo> log_files;
 
 static const char *QtMsgType_names[] = {
     "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL};
-
-/* A helper variable to indicate that there is no log message. The '%s' is
- * added to use it as format string as well as the argument. */
-const char *nologmsg = "nologmsg:%s";
 
 /**********************************************************************/ /**
   Parses a log level string as provided by the user on the command line, and
@@ -228,172 +219,6 @@ bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
   return (fc_QtMsgType >= level);
 }
 #endif /* FREECIV_DEBUG */
-
-/**********************************************************************/ /**
-   Unconditionally print a simple string.
-   Let the callback do its own level formatting and add a '\n' if it wants.
- **************************************************************************/
-static void log_write(FILE *fs, QtMsgType level, bool print_from_where,
-                      const char *where, const char *message)
-{
-  if (log_filename || (!log_callback)) {
-    char prefix[128];
-
-    if (log_prefix) {
-      /* Get the log prefix. */
-      fc_snprintf(prefix, sizeof(prefix), "[%s] ", log_prefix());
-    } else {
-      prefix[0] = '\0';
-    }
-
-    if (log_filename || (print_from_where && where)) {
-      fc_fprintf(fs, "%d: %s%s%s\n", level, prefix, where, message);
-    } else {
-      fc_fprintf(fs, "%d: %s%s\n", level, prefix, message);
-    }
-    fflush(fs);
-  }
-
-  if (log_callback) {
-    if (print_from_where) {
-      char buf[MAX_LEN_LOG_LINE];
-
-      fc_snprintf(buf, sizeof(buf), "%s%s", where, message);
-      log_callback(level, buf, log_filename != NULL);
-    } else {
-      log_callback(level, message, log_filename != NULL);
-    }
-  }
-}
-
-/**********************************************************************/ /**
-   Unconditionally print a log message. This function is usually protected
-   by do_log_for().
- **************************************************************************/
-void vdo_log(const char *file, const char *function, int line,
-             bool print_from_where, QtMsgType level, char *buf, int buflen,
-             const char *message, va_list args)
-{
-  char buf_where[MAX_LEN_LOG_LINE];
-
-  /* There used to be check against recursive logging here, but
-   * the way it worked prevented any kind of simultaneous logging,
-   * not just recursive. Multiple threads should be able to log
-   * simultaneously. */
-
-  fc_vsnprintf(buf, buflen, message, args);
-  fc_snprintf(buf_where, sizeof(buf_where), "in %s() [%s::%d]: ", function,
-              file, line);
-
-  /* In the default configuration log_pre_callback is equal to log_real(). */
-  if (log_pre_callback) {
-    log_pre_callback(level, print_from_where, buf_where, buf);
-  }
-}
-
-/**********************************************************************/ /**
-   Really print a log message.
-   For repeat message, may wait and print instead "last message repeated ..."
-   at some later time.
-   Calls log_callback if non-null, else prints to stderr.
- **************************************************************************/
-static void log_real(QtMsgType level, bool print_from_where,
-                     const char *where, const char *msg)
-{
-  static char last_msg[MAX_LEN_LOG_LINE] = "";
-  static unsigned int repeated =
-      0;                        /* total times current message repeated */
-  static unsigned int next = 2; /* next total to print update */
-  static unsigned int prev = 0; /* total on last update */
-  /* only count as repeat if same level */
-  static QtMsgType prev_level = static_cast<QtMsgType>(-1);
-  char buf[MAX_LEN_LOG_LINE];
-  FILE *fs;
-
-  if (log_filename) {
-    fc_allocate_mutex(&logfile_mutex);
-    if (!(fs = fc_fopen(log_filename, "a"))) {
-      fc_fprintf(stderr,
-                 _("Couldn't open logfile: %s for appending \"%s\".\n"),
-                 log_filename, msg);
-      exit(EXIT_FAILURE);
-    }
-  } else {
-    fs = stderr;
-  }
-
-  if (level == prev_level
-      && 0 == strncmp(msg, last_msg, MAX_LEN_LOG_LINE - 1)) {
-    repeated++;
-    if (repeated == next) {
-      fc_snprintf(buf, sizeof(buf),
-                  PL_("last message repeated %d time",
-                      "last message repeated %d times", repeated - prev),
-                  repeated - prev);
-      if (repeated > 2) {
-        cat_snprintf(
-            buf, sizeof(buf),
-            /* TRANS: preserve leading space */
-            PL_(" (total %d repeat)", " (total %d repeats)", repeated),
-            repeated);
-      }
-      log_write(fs, prev_level, print_from_where, where, buf);
-      prev = repeated;
-      next *= 2;
-    }
-  } else {
-    if (repeated > 0 && repeated != prev) {
-      if (repeated == 1) {
-        /* just repeat the previous message: */
-        log_write(fs, prev_level, print_from_where, where, last_msg);
-      } else {
-        fc_snprintf(buf, sizeof(buf),
-                    PL_("last message repeated %d time",
-                        "last message repeated %d times", repeated - prev),
-                    repeated - prev);
-        if (repeated > 2) {
-          cat_snprintf(
-              buf, sizeof(buf),
-              PL_(" (total %d repeat)", " (total %d repeats)", repeated),
-              repeated);
-        }
-        log_write(fs, prev_level, print_from_where, where, buf);
-      }
-    }
-    prev_level = level;
-    repeated = 0;
-    next = 2;
-    prev = 0;
-    log_write(fs, level, print_from_where, where, msg);
-  }
-  /* Save last message. */
-  sz_strlcpy(last_msg, msg);
-
-  fflush(fs);
-  if (log_filename) {
-    fclose(fs);
-    fc_release_mutex(&logfile_mutex);
-  }
-}
-
-/**********************************************************************/ /**
-   Unconditionally print a log message. This function is usually protected
-   by do_log_for().
-   For repeat message, may wait and print instead
-   "last message repeated ..." at some later time.
-   Calls log_callback if non-null, else prints to stderr.
- **************************************************************************/
-void do_log(const char *file, const char *function, int line,
-            bool print_from_where, QtMsgType level, const char *message, ...)
-{
-  char buf[MAX_LEN_LOG_LINE];
-  va_list args;
-
-  va_start(args, message);
-  vdo_log(file, function, line, print_from_where, level, buf,
-          MAX_LEN_LOG_LINE, message, args);
-  va_end(args);
-}
 
 /**********************************************************************/ /**
    Set what signal the fc_assert* macros should raise on failed assertion
