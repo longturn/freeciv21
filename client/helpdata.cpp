@@ -805,8 +805,9 @@ void boot_help_texts(void)
             /* Avoid warnings about entries unused on this round,
              * when the entries in question are valid once help system has
              * been booted */
-            (void) secfile_lookup_str_vec(sf, &ncats, "%s.categories",
-                                          sec_name);
+            const char **delete_me_pls = secfile_lookup_str_vec(
+                sf, &ncats, "%s.categories", sec_name);
+            delete[] delete_me_pls;
           }
           continue; /* on initial boot data tables are empty */
         }
