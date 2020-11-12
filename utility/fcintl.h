@@ -13,12 +13,12 @@
 #ifndef FC__FCINTL_H
 #define FC__FCINTL_H
 
-
 #include "freeciv_config.h"
 
 #include <locale.h>
 
 #include "shared.h" /* bool */
+#include "support.h" /* fc__attribute */
 
 #ifdef FREECIV_ENABLE_NLS
 
@@ -77,6 +77,5 @@ void capitalization_opt_in(bool opt_in);
 bool is_capitalization_enabled(void);
 
 const char *get_locale_dir(void);
-
 
 #endif /* FC__FCINTL_H */

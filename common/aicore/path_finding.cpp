@@ -238,17 +238,13 @@ struct pf_normal_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_normal_map *pf_normal_map_check(struct pf_map *pfm,
-                                                        const char *file,
-                                                        const char *function,
-                                                        int line)
+static inline pf_normal_map *pf_normal_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_NORMAL == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_normal_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_NORMAL == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_normal_map conversion.");
   return (struct pf_normal_map *) pfm;
 }
-#define PF_NORMAL_MAP(pfm)                                                  \
-  pf_normal_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_NORMAL_MAP(pfm) pf_normal_map_check(pfm)
 #else
 #define PF_NORMAL_MAP(pfm) ((struct pf_normal_map *) (pfm))
 #endif /* PF_DEBUG */
@@ -963,17 +959,13 @@ struct pf_danger_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_danger_map *pf_danger_map_check(struct pf_map *pfm,
-                                                        const char *file,
-                                                        const char *function,
-                                                        int line)
+static inline pf_danger_map *pf_danger_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_DANGER == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_danger_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_DANGER == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_danger_map conversion.");
   return (struct pf_danger_map *) pfm;
 }
-#define PF_DANGER_MAP(pfm)                                                  \
-  pf_danger_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_DANGER_MAP(pfm) pf_danger_map_check(pfm)
 #else
 #define PF_DANGER_MAP(pfm) ((struct pf_danger_map *) (pfm))
 #endif /* PF_DEBUG */
@@ -1943,17 +1935,13 @@ struct pf_fuel_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_fuel_map *pf_fuel_map_check(struct pf_map *pfm,
-                                                    const char *file,
-                                                    const char *function,
-                                                    int line)
+static inline pf_fuel_map *pf_fuel_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_FUEL == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_fuel_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_FUEL == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_fuel_map conversion.");
   return (struct pf_fuel_map *) pfm;
 }
-#define PF_FUEL_MAP(pfm)                                                    \
-  pf_fuel_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_FUEL_MAP(pfm) pf_fuel_map_check(pfm)
 #else
 #define PF_FUEL_MAP(pfm) ((struct pf_fuel_map *) (pfm))
 #endif /* PF_DEBUG */

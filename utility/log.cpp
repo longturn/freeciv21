@@ -405,39 +405,9 @@ void fc_assert_set_fatal(int fatal_assertions)
 }
 
 /**********************************************************************/ /**
-   Returns wether the fc_assert* macros should raise a signal on failed
-   assertion.
+   Checks whether the fc_assert* macros should raise on failed assertion.
  **************************************************************************/
-void fc_assert_fail(const char *file, const char *function, int line,
-                    const char *assertion, const char *message, ...)
-{
-  QtMsgType level = (0 <= fc_fatal_assertions ? LOG_FATAL : LOG_ERROR);
-
-  if (NULL != assertion) {
-    do_log(file, function, line, TRUE, level, "assertion '%s' failed.",
-           assertion);
-  }
-
-  if (NULL != message && NOLOGMSG != message) {
-    /* Additional message. */
-    char buf[MAX_LEN_LOG_LINE];
-    va_list args;
-
-    va_start(args, message);
-    vdo_log(file, function, line, FALSE, level, buf, MAX_LEN_LOG_LINE,
-            message, args);
-    va_end(args);
-  }
-
-  do_log(file, function, line, FALSE, level,
-         /* TRANS: No full stop after the URL, could cause confusion. */
-         _("Please report this message at %s"), BUG_URL);
-
-  if (0 <= fc_fatal_assertions) {
-    /* Emit a signal. */
-    raise(fc_fatal_assertions);
-  }
-}
+bool fc_assert_are_fatal() { return fc_fatal_assertions >= 0; }
 
 void log_time(QString msg, bool log)
 {

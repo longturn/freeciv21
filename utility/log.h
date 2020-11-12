@@ -17,13 +17,11 @@
 #include <stdlib.h>
 
 // Qt
+#include <QDebug>
 #include <QString>
 #include <QtGlobal>
 
-#include "support.h" /* bool type and fc__attribute */
-
-// Forward declarations
-class QString;
+#include "fcintl.h"
 
 constexpr auto LOG_FATAL = QtFatalMsg;
 constexpr auto LOG_ERROR = QtCriticalMsg;
@@ -128,34 +126,49 @@ void do_log(const char *file, const char *function, int line,
 
 /* Assertions. */
 void fc_assert_set_fatal(int fatal_assertions);
-void fc_assert_fail(const char *file, const char *function, int line,
-                    const char *assertion, const char *message, ...)
-    fc__attribute((__format__(__printf__, 5, 6)));
-
-#define fc_assert_full(file, function, line, condition, action, message,    \
-                       ...)                                                 \
-  if (!(condition)) {                                                       \
-    fc_assert_fail(file, function, line, #condition, message,               \
-                   ##__VA_ARGS__);                                          \
-    action;                                                                 \
-  }                                                                         \
-  (void) 0 /* Force the usage of ';' at the end of the call. */
+bool fc_assert_are_fatal();
 
 /* Like assert(). */
+// The lambda below is used to allow returning a value from a multi-line
+// macro. We need a macro for line number reporting to work.
 #define fc_assert(condition)                                                \
-  ((condition) ? (void) 0                                                   \
-               : fc_assert_fail(__FILE__, __FUNCTION__, __FC_LINE__,        \
-                                #condition, NOLOGMSG, NOLOGMSG))
+  [&] {                                                                     \
+    if (!(condition)) {                                                     \
+      qCritical("Assertion %s failed", #condition);                         \
+      qCritical().noquote()                                                 \
+          /* TRANS: No full stop after the URL, could cause confusion. */   \
+          << QString(_("Please report this message at %1")).arg(BUG_URL);   \
+      if (fc_assert_are_fatal()) {                                          \
+        qFatal("%s", _("Assertion failed"));                                \
+      }                                                                     \
+      return false;                                                         \
+    }                                                                       \
+    return true;                                                            \
+  }() // Forces the usage of ';' at the end of the call.
+
 /* Like assert() with extra message. */
 #define fc_assert_msg(condition, message, ...)                              \
-  ((condition) ? (void) 0                                                   \
-               : fc_assert_fail(__FILE__, __FUNCTION__, __FC_LINE__,        \
-                                #condition, message, ##__VA_ARGS__))
+  [&] {                                                                     \
+    if (!(condition)) {                                                     \
+      qCritical("Assertion %s failed", #condition);                         \
+      qCritical(message, ##__VA_ARGS__);                                    \
+      qCritical().noquote()                                                 \
+          /* TRANS: No full stop after the URL, could cause confusion. */   \
+          << QString(_("Please report this message at %1")).arg(BUG_URL);   \
+      if (fc_assert_are_fatal()) {                                          \
+        qFatal("%s", _("Assertion failed"));                                \
+      }                                                                     \
+      return false;                                                         \
+    }                                                                       \
+    return true;                                                            \
+  }() // Forces the usage of ';' at the end of the call.
 
 /* Do action on failure. */
 #define fc_assert_action(condition, action)                                 \
-  fc_assert_full(__FILE__, __FUNCTION__, __FC_LINE__, condition, action,    \
-                 NOLOGMSG, NOLOGMSG)
+  if (!fc_assert(condition)) {                                              \
+    action;                                                                 \
+  }
+
 /* Return on failure. */
 #define fc_assert_ret(condition) fc_assert_action(condition, return )
 /* Return a value on failure. */
@@ -167,8 +180,9 @@ void fc_assert_fail(const char *file, const char *function, int line,
 
 /* Do action on failure with extra message. */
 #define fc_assert_action_msg(condition, action, message, ...)               \
-  fc_assert_full(__FILE__, __FUNCTION__, __FC_LINE__, condition, action,    \
-                 message, ##__VA_ARGS__)
+  if (!fc_assert_msg(condition, message, ##__VA_ARGS__)) {                  \
+    action;                                                                 \
+  }
 /* Return on failure with extra message. */
 #define fc_assert_ret_msg(condition, message, ...)                          \
   fc_assert_action_msg(condition, return, message, ##__VA_ARGS__)

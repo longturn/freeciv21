@@ -44,20 +44,17 @@
 
 #ifdef SANITY_CHECKING
 
-#define SANITY_FAIL(format, ...)                                            \
-  fc_assert_fail(file, function, line, NULL, format, ##__VA_ARGS__)
+#define SANITY_FAIL(format, ...) fc_assert_msg(false, format, ##__VA_ARGS__)
 
-#define SANITY_CHECK(check)                                                 \
-  fc_assert_full(file, function, line, check, , NOLOGMSG, NOLOGMSG)
+#define SANITY_CHECK(check) fc_assert(check)
 
 #define SANITY_CITY(_city, check)                                           \
-  fc_assert_full(file, function, line, check, , "(%4d, %4d) in \"%s\"[%d]", \
-                 TILE_XY((_city)->tile), city_name_get(_city),              \
-                 city_size_get(_city))
+  fc_assert_msg(check, "(%4d, %4d) in \"%s\"[%d]", TILE_XY((_city)->tile),  \
+                city_name_get(_city), city_size_get(_city))
 
 #define SANITY_TERRAIN(_tile, check)                                        \
-  fc_assert_full(file, function, line, check, , "(%4d, %4d) at \"%s\"",     \
-                 TILE_XY(_tile), terrain_rule_name(tile_terrain(_tile)))
+  fc_assert_msg(check, "(%4d, %4d) at \"%s\"", TILE_XY(_tile),              \
+                terrain_rule_name(tile_terrain(_tile)))
 
 #define SANITY_TILE(_tile, check)                                           \
   do {                                                                      \
