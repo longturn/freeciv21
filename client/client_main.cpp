@@ -206,7 +206,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 
   memcpy(dst, out, len);
   dst[len] = '\0';
-  free(out);
+  delete[] out;
 
   return ret;
 }
@@ -955,7 +955,7 @@ void client_remove_cli_conn(struct connection *pconn)
   conn_list_remove(game.all_connections, pconn);
   conn_list_remove(game.est_connections, pconn);
   fc_assert_ret(pconn != &client.conn);
-  free(pconn);
+  delete pconn;
 }
 
 /**********************************************************************/ /**

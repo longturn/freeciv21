@@ -70,11 +70,10 @@ void meswin_clear_older(int turn, int phase)
                       || (messages[i]->turn == turn
                           && messages[i]->phase < phase)));
        i++) {
-    free(messages[i]->descr);
+    delete[] messages[i]->descr;
 
     text_tag_list_destroy(messages[i]->tags);
-    free(messages[i]);
-    messages[i] = NULL;
+    FCPP_FREE(messages[i]);
   }
 
   if (i != 0) {

@@ -158,8 +158,8 @@ void cmafec_preset_remove(int idx)
   ppreset = preset_list_get(preset_list, idx);
   preset_list_remove(preset_list, ppreset);
 
-  free(ppreset->descr);
-  free(ppreset);
+  delete[] ppreset->descr;
+  delete ppreset;
 }
 
 /**********************************************************************/ /**

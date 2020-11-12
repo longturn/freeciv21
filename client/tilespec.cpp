@@ -569,8 +569,7 @@ void tileset_error(enum log_level level, const char *format, ...)
  ****************************************************************************/
 static struct drawing_data *drawing_data_new(void)
 {
-  struct drawing_data *draw =
-      static_cast<drawing_data *>(fc_calloc(1, sizeof(*draw)));
+  struct drawing_data *draw = new drawing_data[1]();
 
   draw->name = NULL;
 
@@ -604,9 +603,9 @@ static void drawing_data_destroy(struct drawing_data *draw)
 
     sprite_vector_free(&draw->layer[i].base);
     sprite_vector_free(&draw->layer[i].allocated);
-    free(draw->layer[i].cells);
+    delete[] draw->layer[i].cells;
   }
-  free(draw);
+  delete[] draw;
 }
 
 /************************************************************************/ /**
@@ -1106,9 +1105,9 @@ static void tileset_free_toplevel(struct tileset *t)
 
   if (t->preferred_themes) {
     for (i = 0; i < t->num_preferred_themes; i++) {
-      free(t->preferred_themes[i]);
+      delete[] t->preferred_themes[i];
     }
-    free(t->preferred_themes);
+    delete[] t->preferred_themes;
     t->preferred_themes = NULL;
   }
   t->num_preferred_themes = 0;
@@ -1804,7 +1803,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   } else {
     /* No summary */
     if (t->summary != NULL) {
-      free(t->summary);
+      delete[] t->summary;
       t->summary = NULL;
     }
   }
@@ -1820,8 +1819,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   } else {
     /* No description */
     if (t->description != NULL) {
-      free(t->description);
-      t->description = NULL;
+      FCPP_FREE(t->description);
     }
   }
 
@@ -2394,7 +2392,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       if (verbose) {
         log_error("Can't find spec file \"%s\".", spec_filenames[i]);
       }
-      free(sf);
+      delete[] sf;
       goto ON_ERROR;
     }
     sf->file_name = fc_strdup(dname);
@@ -2828,6 +2826,7 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
     fc_snprintf(buffer, sizeof(buffer), "%s_%s_%d", gfx_in_use, tag, size);
     if ((sprite = load_sprite(t, buffer, TRUE, TRUE))) {
       num_thresholds++;
+
       *thresholds = static_cast<city_style_threshold *>(
           fc_realloc(*thresholds, num_thresholds * sizeof(**thresholds)));
       (*thresholds)[num_thresholds - 1].sprite = sprite;
@@ -2893,8 +2892,8 @@ static void free_city_sprite(struct city_sprite *city_sprite)
       free(city_sprite->styles[style].land_thresholds);
     }
   }
-  free(city_sprite->styles);
-  free(city_sprite);
+  delete[] city_sprite->styles;
+  delete city_sprite;
 }
 
 /************************************************************************/ /**
@@ -3911,8 +3910,7 @@ void tileset_setup_tile_type(struct tileset *t,
         break;
       };
 
-      dlp->cells = static_cast<struct sprite **>(
-          fc_calloc(number, sizeof(*dlp->cells)));
+      dlp->cells = new struct sprite*[number]();
 
       for (i = 0; i < number; i++) {
         enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
@@ -6250,7 +6248,7 @@ void tileset_free_tiles(struct tileset *t)
       delete[] ss->file;
     }
     fc_assert(ss->sprite == NULL);
-    free(ss);
+    delete ss;
   }
   small_sprite_list_iterate_end;
 
@@ -6262,7 +6260,7 @@ void tileset_free_tiles(struct tileset *t)
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
     }
-    free(sf);
+    delete sf;
   }
   specfile_list_iterate_end;
 

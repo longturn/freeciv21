@@ -161,7 +161,7 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   {
     if (calls_are_equal(pcall, pcall2)) {
       /* Already got one like this, discard duplicate. */
-      free(pcall2);
+      delete[] pcall2;
       return;
     }
     if (pcall->agent->agent.level - pcall2->agent->agent.level > 0) {
@@ -255,7 +255,7 @@ static void call_handle_methods(void)
     }
 
     execute_call(pcall);
-    free(pcall);
+    delete[] pcall;
   }
 
   currently_running = FALSE;
@@ -361,7 +361,7 @@ void agents_free(void)
       break;
     }
 
-    free(pcall);
+    delete pcall;
   }
 
   for (i = 0; i < agents.entries_used; i++) {

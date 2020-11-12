@@ -259,7 +259,7 @@ void editor_free(void)
   if (editor != NULL) {
     edit_buffer_free(editor->copybuf);
     tile_hash_destroy(editor->selected_tile_table);
-    free(editor);
+    delete editor;
     editor = NULL;
   }
 }
@@ -1467,7 +1467,7 @@ void edit_buffer_free(struct edit_buffer *ebuf)
     tile_list_destroy(ebuf->vtiles);
     ebuf->vtiles = NULL;
   }
-  free(ebuf);
+  delete[] ebuf;
 }
 
 /************************************************************************/ /**

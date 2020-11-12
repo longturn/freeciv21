@@ -941,7 +941,7 @@ static void init_datum_number(struct datum *dat, float val)
 static void free_datum(struct datum *dat)
 {
   if (!dat->is_numeric) {
-    free(dat->val.string_value);
+    delete[] dat->val.string_value;
   }
 }
 

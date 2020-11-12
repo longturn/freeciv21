@@ -47,8 +47,8 @@ struct color_system *color_system_read(struct section_file *file)
   struct color_system *colors = new color_system;
   enum color_std stdcolor;
 
-  colors->stdcolors = static_cast<rgbcolor **>(
-      fc_calloc(COLOR_LAST, sizeof(*colors->stdcolors)));
+
+  colors->stdcolors = new rgbcolor*[COLOR_LAST]();
 
   for (stdcolor = color_std_begin(); stdcolor != color_std_end();
        stdcolor = color_std_next(stdcolor)) {
@@ -78,9 +78,9 @@ void color_system_free(struct color_system *colors)
     rgbcolor_destroy(*(colors->stdcolors + stdcolor));
   }
 
-  free(colors->stdcolors);
+  delete[] colors->stdcolors;
 
-  free(colors);
+  delete colors;
 }
 
 /************************************************************************/ /**

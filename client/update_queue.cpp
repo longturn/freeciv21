@@ -119,7 +119,7 @@ static void update_queue_data_destroy(struct update_queue_data *uq_data)
   if (NULL != uq_data->free_data_func) {
     uq_data->free_data_func(uq_data->data);
   }
-  free(uq_data);
+  delete uq_data;
 }
 
 /************************************************************************/ /**
@@ -146,7 +146,7 @@ static void waiting_queue_data_destroy(struct waiting_queue_data *wq_data)
     /* May be NULL, see waiting_queue_data_extract(). */
     update_queue_data_destroy(wq_data->uq_data);
   }
-  free(wq_data);
+  delete wq_data;
 }
 
 /************************************************************************/ /**

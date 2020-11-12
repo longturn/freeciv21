@@ -113,7 +113,7 @@ void voteinfo_queue_remove(int vote_no)
   }
 
   voteinfo_list_remove(voteinfo_queue, vi);
-  free(vi);
+  delete vi;
 }
 
 /**********************************************************************/ /**
@@ -186,7 +186,7 @@ void voteinfo_queue_free(void)
   voteinfo_list_iterate(voteinfo_queue, vi)
   {
     if (vi != NULL) {
-      free(vi);
+      delete vi;
     }
   }
   voteinfo_list_iterate_end;

@@ -1238,8 +1238,7 @@ void handle_worker_task(const struct packet_worker_task *packet)
   } else {
     if (packet->activity == ACTIVITY_LAST) {
       worker_task_list_remove(pcity->task_reqs, ptask);
-      free(ptask);
-      ptask = NULL;
+      FC_FREE(ptask);
     }
   }
 
@@ -1492,9 +1491,9 @@ void handle_page_msg(const char *caption, const char *headline,
       || event != E_BROADCAST_REPORT) {
     if (page_msg_report.parts > 0) {
       /* Previous one was never finished */
-      free(page_msg_report.caption);
-      free(page_msg_report.headline);
-      free(page_msg_report.lines);
+      delete[] page_msg_report.caption;
+      delete[] page_msg_report.headline;
+      delete[] page_msg_report.lines;
     }
     page_msg_report.len = len;
     page_msg_report.event = event;
@@ -1689,7 +1688,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
       /* We cheat by just stealing the packet unit's list. */
       if (punit->orders.list) {
-        free(punit->orders.list);
+        delete[] punit->orders.list;
       }
       punit->orders.list = packet_unit->orders.list;
       packet_unit->orders.list = NULL;
@@ -3088,14 +3087,14 @@ void handle_tile_info(const struct packet_tile_info *packet)
     if (!ptile->spec_sprite
         || strcmp(ptile->spec_sprite, packet->spec_sprite) != 0) {
       if (ptile->spec_sprite) {
-        free(ptile->spec_sprite);
+        delete ptile->spec_sprite;
       }
       ptile->spec_sprite = fc_strdup(packet->spec_sprite);
       tile_changed = TRUE;
     }
   } else {
     if (ptile->spec_sprite) {
-      free(ptile->spec_sprite);
+      delete ptile->spec_sprite;
       ptile->spec_sprite = NULL;
       tile_changed = TRUE;
     }
@@ -3301,7 +3300,7 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
   int len;
 
   if (game.ruleset_summary != NULL) {
-    free(game.ruleset_summary);
+    delete[] game.ruleset_summary;
   }
 
   len = strlen(packet->text);
@@ -3844,7 +3843,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   output_type_iterate_end;
 
   if (pterrain->resources != NULL) {
-    free(pterrain->resources);
+    delete[] pterrain->resources;
   }
   pterrain->resources = static_cast<extra_type **>(
       fc_calloc(p->num_resources + 1, sizeof(*pterrain->resources)));

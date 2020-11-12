@@ -413,7 +413,7 @@ void update_animation(void)
                           anim->height);
       }
       animation_list_remove(animations, anim);
-      free(anim);
+      delete anim;
 
       if (animation_list_size(animations) > 0) {
         /* Start next */
@@ -460,7 +460,7 @@ static inline struct gotoline_counter *gotoline_counter_new(void)
 static void gotoline_counter_destroy(struct gotoline_counter *pglc)
 {
   fc_assert_ret(NULL != pglc);
-  free(pglc);
+  delete pglc;
 }
 
 /************************************************************************/ /**

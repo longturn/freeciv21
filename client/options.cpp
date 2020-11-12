@@ -4284,13 +4284,13 @@ void handle_server_setting_str(
     if (NULL == psoption->string.value) {
       psoption->string.value = fc_strdup(packet->val);
     } else if (0 != strcmp(packet->val, psoption->string.value)) {
-      free(psoption->string.value);
+      delete[] psoption->string.value;
       psoption->string.value = fc_strdup(packet->val);
     }
     if (NULL == psoption->string.def) {
       psoption->string.def = fc_strdup(packet->default_val);
     } else if (0 != strcmp(packet->default_val, psoption->string.def)) {
-      free(psoption->string.def);
+      delete[] psoption->string.def;
       psoption->string.def = fc_strdup(packet->default_val);
     }
   }

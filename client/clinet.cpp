@@ -303,7 +303,7 @@ void input_from_server(QTcpSocket *sock)
 
       if (NULL != packet) {
         client_packet_input(packet, type);
-        delete packet;
+        delete (decltype(packet)) packet;
       } else {
         break;
       }

@@ -437,20 +437,20 @@ void destroy_reqtree(struct reqtree *tree)
   int i;
 
   for (i = 0; i < tree->num_nodes; i++) {
-    free(tree->nodes[i]->require);
-    free(tree->nodes[i]->provide);
-    free(tree->nodes[i]);
+    delete[] tree->nodes[i]->require;
+    delete[] tree->nodes[i]->provide;
+    delete[] tree->nodes[i];
   }
-  free(tree->nodes);
+  delete[] tree->nodes;
   if (tree->layers) {
     for (i = 0; i < tree->num_layers; i++) {
-      free(tree->layers[i]);
+      delete[] tree->layers[i];
     }
     if (tree->layer_size) {
-      free(tree->layer_size);
+      delete[] tree->layer_size;
     }
   }
-  free(tree);
+  delete tree;
 }
 
 /*********************************************************************/ /**

@@ -1887,7 +1887,7 @@ static void client_disband_unit_data_destroy(void *p)
   struct client_disband_unit_data *data =
       static_cast<client_disband_unit_data *>(p);
 
-  free(data);
+  delete data;
 }
 
 /**********************************************************************/ /**

@@ -79,7 +79,7 @@ void init_themes(void)
     directories[i].themes = get_useable_themes_in_directory(
         directories[i].path, &(directories[i].num_themes));
   }
-  free(gui_directories);
+  delete[] gui_directories;
 }
 
 /************************************************************************/ /**
