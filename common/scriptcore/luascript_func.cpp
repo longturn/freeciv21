@@ -143,10 +143,8 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
                   func_name);
     return;
   }
-  parg_types =
-      static_cast<api_types *>(fc_calloc(nargs, sizeof(*parg_types)));
-  pret_types =
-      static_cast<api_types *>(fc_calloc(nreturns, sizeof(*pret_types)));
+  parg_types = new api_types[nargs]();
+  pret_types = new api_types[nreturns]();
 
   for (i = 0; i < nargs; i++) {
     *(parg_types + i) = api_types(va_arg(args, int));

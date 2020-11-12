@@ -305,7 +305,7 @@ static enum attribute_serial unserialize_hash(struct attribute_hash *hash,
        * to delete all attributes. Another symptom of the bug is the
        * value_length (above) is set to a random value, which can also
        * cause a bug. */
-      delete[] pvalue;
+      ::operator delete[](pvalue);
       attribute_hash_clear(hash);
       return A_SERIAL_FAIL;
     }

@@ -90,7 +90,9 @@ static void close_connection(struct connection *pconn)
     delete pconn->server.ping_timers;
     pconn->server.ping_timers = NULL;
   }
-
+  conn_list_iterate(game.all_connections, xconn) {
+    xconn->sock->disconnect();
+  } conn_list_iterate_end;
   conn_pattern_list_destroy(pconn->server.ignore_list);
   pconn->server.ignore_list = NULL;
 

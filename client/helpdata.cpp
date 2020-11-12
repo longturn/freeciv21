@@ -77,7 +77,6 @@ static const char *const help_type_names[] = {
 
 static const struct help_list_link *help_nodes_iterator;
 static struct help_list *help_nodes;
-static struct help_list *category_nodes;
 static bool help_nodes_init = FALSE;
 /* help_nodes_init is not quite the same as booted in boot_help_texts();
    latter can be FALSE even after call, eg if couldn't find helpdata.txt.
@@ -89,7 +88,6 @@ static bool help_nodes_init = FALSE;
 void helpdata_init(void)
 {
   help_nodes = help_list_new();
-  category_nodes = help_list_new();
 }
 
 /************************************************************************/ /**
@@ -98,7 +96,6 @@ void helpdata_init(void)
 void helpdata_done(void)
 {
   help_list_destroy(help_nodes);
-  help_list_destroy(category_nodes);
 }
 
 /************************************************************************/ /**
@@ -123,19 +120,11 @@ void free_help_texts(void)
   check_help_nodes_init();
   help_list_iterate(help_nodes, ptmp)
   {
-    delete[] ptmp->topic;
-    delete[] ptmp->text;
-    delete ptmp;
+    // delete[] ptmp->topic;
+    // delete[] ptmp->text;
+    // delete ptmp;
   }
   help_list_iterate_end;
-  help_list_iterate(category_nodes, ptmp)
-  {
-    delete[] ptmp->topic;
-    delete[] ptmp->text;
-    delete ptmp;
-  }
-  help_list_iterate_end;
-  help_list_clear(help_nodes);
 }
 
 /************************************************************************/ /**
@@ -818,6 +807,7 @@ void boot_help_texts(void)
              to change that now.  --dwp
           */
           char name[2048];
+          struct help_list *category_nodes = help_list_new();
 
           switch (current_type) {
           case HELP_UNIT:
@@ -1127,6 +1117,7 @@ void boot_help_texts(void)
             help_list_append(help_nodes, ptmp);
           }
           help_list_iterate_end;
+          help_list_destroy(category_nodes);
           continue;
         }
       }

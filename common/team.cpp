@@ -332,7 +332,7 @@ struct team *team_new(struct team_slot *tslot)
 
   /* Now create the team. */
   log_debug("Create team for slot %d.", team_slot_index(tslot));
-  pteam = static_cast<team *>(fc_calloc(1, sizeof(*pteam)));
+  pteam = new team[1]();
   pteam->slot = tslot;
   tslot->team = pteam;
 
@@ -360,7 +360,7 @@ void team_destroy(struct team *pteam)
   fc_assert(tslot->team == pteam);
 
   player_list_destroy(pteam->plrlist);
-  FC_FREE(pteam);
+  FCPP_FREE(pteam);
   team_slots.used_slots--;
 }
 

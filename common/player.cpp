@@ -260,8 +260,7 @@ static void player_diplstate_new(const struct player *plr1,
 
   fc_assert_ret(*diplstate_slot == NULL);
 
-  diplstate =
-      static_cast<player_diplstate *>(fc_calloc(1, sizeof(*diplstate)));
+  diplstate = new player_diplstate[1]();
   *diplstate_slot = diplstate;
 }
 
@@ -328,8 +327,7 @@ void player_slots_init(void)
   int i;
 
   /* Init player slots. */
-  player_slots.pslots = static_cast<player_slot *>(
-      fc_calloc(player_slot_count(), sizeof(*player_slots.pslots)));
+  player_slots.pslots = new player_slot[player_slot_count()]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < player_slot_count(); i++) {
@@ -471,12 +469,11 @@ struct player *player_new(struct player_slot *pslot)
 
   /* Now create the player. */
   log_debug("Create player for slot %d.", player_slot_index(pslot));
-  pplayer = static_cast<player *>(fc_calloc(1, sizeof(*pplayer)));
+  pplayer = new player[1]();
   pplayer->slot = pslot;
   pslot->player = pplayer;
+  pplayer->diplstates = new const player_diplstate *[player_slot_count()]();
 
-  pplayer->diplstates = static_cast<const player_diplstate **>(
-      fc_calloc(player_slot_count(), sizeof(*pplayer->diplstates)));
   player_slots_iterate(dslot)
   {
     const struct player_diplstate **diplstate_slot =
@@ -752,7 +749,7 @@ void player_destroy(struct player *pplayer)
     rgbcolor_destroy(pplayer->rgb);
   }
 
-  delete pplayer;
+  delete[] pplayer;
   pslot->player = NULL;
   player_slots.used_slots--;
 }

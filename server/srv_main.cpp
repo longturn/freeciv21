@@ -1875,7 +1875,7 @@ void server_quit(void)
   }
   set_server_state(S_S_OVER);
   mapimg_free();
-  server_game_free();
+  //server_game_free();  double delete ?
   diplhand_free();
   voting_free();
   adv_settlers_free();
