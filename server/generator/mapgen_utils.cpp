@@ -45,7 +45,7 @@ bool placed_map_is_initialized(void) { return placed_map != NULL; }
 void create_placed_map(void)
 {
   fc_assert_ret(!placed_map_is_initialized());
-  placed_map = static_cast<bool *>(fc_malloc(sizeof(bool) * MAP_INDEX_SIZE));
+  placed_map = new bool[MAP_INDEX_SIZE];
   INITIALIZE_ARRAY(placed_map, MAP_INDEX_SIZE, FALSE);
 }
 
@@ -55,7 +55,7 @@ void create_placed_map(void)
 void destroy_placed_map(void)
 {
   fc_assert_ret(placed_map_is_initialized());
-  free(placed_map);
+  delete[] placed_map;
   placed_map = NULL;
 }
 

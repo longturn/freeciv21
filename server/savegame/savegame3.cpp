@@ -869,7 +869,7 @@ static enum unit_activity char2activity(char activity)
  ****************************************************************************/
 static char *quote_block(const void *const data, int length)
 {
-  char *buffer = static_cast<char *>(fc_malloc(length * 3 + 10));
+  char *buffer = new char[length * 3 + 10];
   size_t offset;
   int i;
 
@@ -3196,8 +3196,7 @@ static void sg_load_map_worked(struct loaddata *loading)
   sg_failure_ret(loading->worked_tiles == NULL,
                  "City worked map not loaded!");
 
-  loading->worked_tiles = static_cast<int *>(
-      fc_malloc(MAP_INDEX_SIZE * sizeof(*loading->worked_tiles)));
+  loading->worked_tiles = new int[MAP_INDEX_SIZE];
 
   for (y = 0; y < wld.map.ysize; y++) {
     const char *buffer =
@@ -4739,8 +4738,7 @@ static void sg_load_player_cities(struct loaddata *loading,
     if (pcity != NULL) {
       const char *str;
       int nat_x, nat_y;
-      struct worker_task *ptask =
-          static_cast<worker_task *>(fc_malloc(sizeof(struct worker_task)));
+      struct worker_task *ptask = new worker_task;
 
       nat_x = secfile_lookup_int_default(loading->file, -1,
                                          "player%d.task%d.x", plrno, i);
@@ -4846,8 +4844,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
                                          citystr, i);
 
     if (partner != 0) {
-      struct trade_route *proute =
-          static_cast<trade_route *>(fc_malloc(sizeof(struct trade_route)));
+      struct trade_route *proute = new trade_route();
       const char *dir;
       const char *good_str;
 
@@ -5061,8 +5058,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     if (len > 0) {
       const char *rally_orders, *rally_dirs, *rally_activities;
 
-      pcity->rally_point.orders = static_cast<unit_order *>(
-          fc_malloc(len * sizeof(*(pcity->rally_point.orders))));
+      pcity->rally_point.orders = new unit_order[len];
       pcity->rally_point.persistent = secfile_lookup_bool_default(
           loading->file, FALSE, "%s.rally_point_persistent", citystr);
       pcity->rally_point.vigilant = secfile_lookup_bool_default(
@@ -6018,8 +6014,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
     if (len > 0) {
       const char *orders_unitstr, *dir_unitstr, *act_unitstr;
 
-      punit->orders.list = static_cast<unit_order *>(
-          fc_malloc(len * sizeof(*(punit->orders.list))));
+      punit->orders.list = new unit_order[len];
       punit->orders.length = len;
       punit->orders.index = secfile_lookup_int_default(
           loading->file, 0, "%s.orders_index", unitstr);
@@ -6537,7 +6532,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
                                       plrno),
                    "%s", secfile_error());
 
-    quoted = static_cast<char *>(fc_malloc(quoted_length + 1));
+    quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
     plr->attribute_block.data = fc_malloc(plr->attribute_block.length);
     for (part_nr = 0; part_nr < parts; part_nr++) {
@@ -7342,8 +7337,7 @@ static void sg_load_treaties(struct loaddata *loading)
     if (p0 == NULL || p1 == NULL) {
       log_error("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
-      struct Treaty *ptreaty =
-          static_cast<Treaty *>(fc_malloc(sizeof(*ptreaty)));
+      struct Treaty *ptreaty = new Treaty;
 
       init_treaty(ptreaty, p0, p1);
       treaty_list_prepend(treaties, ptreaty);

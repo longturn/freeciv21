@@ -1675,8 +1675,7 @@ static struct terrain_select *tersel_new(int weight,
                                          int temp_condition,
                                          int wet_condition)
 {
-  struct terrain_select *ptersel =
-      static_cast<terrain_select *>(fc_malloc(sizeof(*ptersel)));
+  struct terrain_select *ptersel = new terrain_select;
 
   ptersel->weight = weight;
   ptersel->target = target;
@@ -2251,8 +2250,8 @@ static void initworld(struct gen234_state *pstate)
       pick_ocean(TERRAIN_OCEAN_DEPTH_MAXIMUM, FALSE);
 
   fc_assert(NULL != deepest_ocean);
-  height_map =
-      static_cast<int *>(fc_malloc(MAP_INDEX_SIZE * sizeof(*height_map)));
+  height_map = new int[MAP_INDEX_SIZE];
+
   create_placed_map(); /* land tiles which aren't placed yet */
 
   whole_map_iterate(&(wld.map), ptile)

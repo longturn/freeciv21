@@ -149,9 +149,7 @@ void save_game(const char *orig_filename, const char *save_reason,
 {
   char *dot, *filename;
   civtimer *timer_cpu, *timer_user;
-  struct save_thread_data *stdata;
-
-  stdata = static_cast<save_thread_data *>(fc_malloc(sizeof(*stdata)));
+  struct save_thread_data *stdata = new save_thread_data();
 
   stdata->save_compress_type = game.server.save_compress_type;
   stdata->save_compress_level = game.server.save_compress_level;
@@ -283,7 +281,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       save_thread = NULL;
     }
   } else if (game.server.threaded_save) {
-    save_thread = static_cast<pthread_t *>(fc_malloc(sizeof(save_thread)));
+    save_thread = new pthread_t;
   }
 
   if (save_thread != NULL) {

@@ -279,11 +279,8 @@ static int compare_islands(const void *A_, const void *B_)
 static void initialize_isle_data(void)
 {
   int nr;
-
-  islands = static_cast<islands_data_type *>(
-      fc_malloc((wld.map.num_continents + 1) * sizeof(*islands)));
-  islands_index = static_cast<int *>(
-      fc_malloc((wld.map.num_continents + 1) * sizeof(*islands_index)));
+  islands = new islands_data_type[wld.map.num_continents + 1];
+  islands_index = new int[wld.map.num_continents + 1];
 
   /* islands[0] is unused. */
   for (nr = 1; nr <= wld.map.num_continents; nr++) {

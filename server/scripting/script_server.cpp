@@ -138,8 +138,7 @@ bool script_server_load_file(const char *filename, char **buf)
   if (ffile != NULL) {
     int len;
 
-    buffer = static_cast<char *>(fc_malloc(stats.st_size + 1));
-
+    buffer = new char[stats.st_size + 1];
     len = fread(buffer, 1, stats.st_size, ffile);
 
     if (len == stats.st_size) {
@@ -147,7 +146,7 @@ bool script_server_load_file(const char *filename, char **buf)
 
       *buf = buffer;
     } else {
-      free(buffer);
+      delete[] buffer;
     }
     fclose(ffile);
   }

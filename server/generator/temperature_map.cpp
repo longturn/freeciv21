@@ -124,8 +124,7 @@ void create_tmap(bool real)
   /* to debug, never load a this time */
   fc_assert_ret(NULL == temperature_map);
 
-  temperature_map = static_cast<int *>(
-      fc_malloc(sizeof(*temperature_map) * MAP_INDEX_SIZE));
+  temperature_map = new int[MAP_INDEX_SIZE];
   whole_map_iterate(&(wld.map), ptile)
   {
     /* the base temperature is equal to base map_colatitude */
