@@ -53,6 +53,7 @@
 #include "effects.h"
 #include "events.h"
 #include "fc_interface.h"
+#include "game.h"
 #include "government.h"
 #include "map.h"
 #include "mapimg.h"
@@ -213,8 +214,8 @@ void srv_init(void)
   srvarg.loglevel = LOG_NORMAL;
 
   srvarg.fatal_assertions = -1;
-  srvarg.saves_pathname = strdup("");
-  srvarg.scenarios_pathname = strdup("");
+  srvarg.saves_pathname = QString("");
+  srvarg.scenarios_pathname = QString("");
 
   srvarg.quitidle = 0;
 
@@ -1875,19 +1876,11 @@ void server_quit(void)
   }
   set_server_state(S_S_OVER);
   mapimg_free();
-  //server_game_free();  double delete ?
+  //server_game_free();//  double delete ?
   diplhand_free();
   voting_free();
   adv_settlers_free();
   ai_timer_free();
-  if (game.server.phase_timer != NULL) {
-    timer_destroy(game.server.phase_timer);
-    game.server.phase_timer = NULL;
-  }
-  if (game.server.save_timer != NULL) {
-    timer_destroy(game.server.save_timer);
-    game.server.save_timer = NULL;
-  }
 
 #ifdef HAVE_FCDB
   if (srvarg.fcdb_enabled) {
@@ -1899,7 +1892,6 @@ void server_quit(void)
   settings_free();
   stdinhand_free();
   edithand_free();
-  voting_free();
   generator_free();
   close_connections_and_socket();
   rulesets_deinit();
