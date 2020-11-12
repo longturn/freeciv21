@@ -75,7 +75,7 @@ void adv_free_choice(struct adv_choice *choice)
     free(choice->use);
   }
 #endif /* ADV_CHOICE_TRACK */
-  free(choice);
+  delete choice;
 }
 
 /**********************************************************************/ /**

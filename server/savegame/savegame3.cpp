@@ -6558,7 +6558,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
     actual_length = unquote_block(quoted, plr->attribute_block.data,
                                   plr->attribute_block.length);
     fc_assert(actual_length == plr->attribute_block.length);
-    free(quoted);
+    delete[] quoted;
   }
 }
 
@@ -6638,7 +6638,7 @@ static void sg_save_player_attributes(struct savedata *saving,
       quoted_at = &quoted_at[size_of_current_part];
     }
     fc_assert(bytes_left == 0);
-    free(quoted);
+    delete[] quoted;
   }
 #undef PART_ADJUST
 #undef PART_SIZE

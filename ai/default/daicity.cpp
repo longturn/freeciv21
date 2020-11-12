@@ -275,7 +275,7 @@ static void dai_city_choose_build(struct ai_type *ait,
       newchoice = domestic_advisor_choose_build(ait, pplayer, pcity);
       adv_choice_copy(&(city_data->choice),
                       adv_better_choice(&(city_data->choice), newchoice));
-      adv_free_choice(newchoice);
+      delete newchoice;
     }
   }
 

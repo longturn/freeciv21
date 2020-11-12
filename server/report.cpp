@@ -1105,8 +1105,7 @@ static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
 {
   fc_assert_ret(plrdata->name == NULL);
 
-  plrdata->name =
-      static_cast<char *>(fc_calloc(MAX_LEN_NAME, sizeof(plrdata->name)));
+  plrdata->name = new char[MAX_LEN_NAME]();
   plrdata_slot_replace(plrdata, name);
 }
 

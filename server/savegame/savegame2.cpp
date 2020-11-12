@@ -4486,7 +4486,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
     actual_length = unquote_block(quoted, plr->attribute_block.data,
                                   plr->attribute_block.length);
     fc_assert(actual_length == plr->attribute_block.length);
-    free(quoted);
+    delete[] quoted;
   }
 }
 

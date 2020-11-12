@@ -1085,7 +1085,6 @@ static bool load_game_names(struct section_file *file,
 
         ruleset_error(LOG_ERROR, "\"%s\": Too many goods types (%d, max %d)",
                       filename, num, MAX_GOODS_TYPES);
-        section_list_destroy(sec);
         ok = FALSE;
       } else if (nval < 1) {
         ruleset_error(LOG_ERROR, "\"%s\": At least one goods type needed",
@@ -1180,7 +1179,6 @@ static bool load_tech_names(struct section_file *file,
 
       ruleset_error(LOG_ERROR, "\"%s\": Too many tech classes (%d, max %d)",
                     filename, num, MAX_NUM_TECH_CLASSES);
-      section_list_destroy(sec);
       ok = FALSE;
     } else {
       game.control.num_tech_classes = nval;

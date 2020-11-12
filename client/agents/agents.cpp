@@ -159,7 +159,7 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   {
     if (calls_are_equal(pcall, pcall2)) {
       /* Already got one like this, discard duplicate. */
-      delete[] pcall2;
+      delete pcall2;
       return;
     }
     if (pcall->agent->agent.level - pcall2->agent->agent.level > 0) {

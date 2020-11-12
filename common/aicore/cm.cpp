@@ -1939,8 +1939,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   state->choice.size = 0;
 
   /* Initialize workers map */
-  state->workers_map = static_cast<bool *>(fc_calloc(
-      city_map_tiles_from_city(state->pcity), sizeof(state->workers_map)));
+  state->workers_map = new bool[city_map_tiles_from_city(state->pcity)]();
 
   return state;
 }
