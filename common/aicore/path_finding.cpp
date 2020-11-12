@@ -846,9 +846,9 @@ static void pf_normal_map_destroy(struct pf_map *pfm)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
 
-  free(pfnm->lattice);
+  delete[] pfnm->lattice;
   map_index_pq_destroy(pfnm->queue);
-  free(pfnm);
+  delete pfnm;
 }
 
 /************************************************************************/ /**
@@ -1618,7 +1618,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
             node1->dir_to_here = dir;
             if (NULL != node1->danger_segment) {
               /* Clear the previously recorded path back. */
-              free(node1->danger_segment);
+              delete node1->danger_segment;
               node1->danger_segment = NULL;
             }
             if (node->is_dangerous) {
@@ -1849,13 +1849,13 @@ static void pf_danger_map_destroy(struct pf_map *pfm)
   /* Need to clean up the dangling danger segments. */
   for (i = 0, node = pfdm->lattice; i < MAP_INDEX_SIZE; i++, node++) {
     if (node->danger_segment) {
-      free(node->danger_segment);
+      delete node->danger_segment;
     }
   }
-  free(pfdm->lattice);
+  delete pfdm->lattice;
   map_index_pq_destroy(pfdm->queue);
   map_index_pq_destroy(pfdm->danger_queue);
-  free(pfdm);
+  delete pfdm;
 }
 
 /************************************************************************/ /**
@@ -2239,7 +2239,7 @@ static inline void pf_fuel_pos_unref(struct pf_fuel_pos *pos)
   while (NULL != pos && 0 == --pos->ref_count) {
     struct pf_fuel_pos *prev = pos->prev;
 
-    free(pos);
+    delete pos;
     pos = prev;
   }
 }
@@ -3062,10 +3062,10 @@ static void pf_fuel_map_destroy(struct pf_map *pfm)
     pf_fuel_pos_unref(node->pos);
     pf_fuel_pos_unref(node->segment);
   }
-  free(pffm->lattice);
+  delete pffm->lattice;
   map_index_pq_destroy(pffm->queue);
   map_index_pq_destroy(pffm->waited_queue);
-  free(pffm);
+  delete pffm;
 }
 
 /************************************************************************/ /**
@@ -3450,7 +3450,7 @@ bool pf_path_advance(struct pf_path *path, struct tile *ptile)
   new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions + i,
          path->length * sizeof(*path->positions));
-  free(path->positions);
+  delete[] path->positions;
   path->positions = new_positions;
 
   return TRUE;
@@ -3482,7 +3482,7 @@ bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
   new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions,
          path->length * sizeof(*path->positions));
-  free(path->positions);
+  delete[] path->positions;
   path->positions = new_positions;
 
   return TRUE;
@@ -3632,7 +3632,7 @@ static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
  ****************************************************************************/
 static void pf_reverse_map_destroy_pos(struct pf_position *pos)
 {
-  free(pos);
+  delete pos;
 }
 
 /************************************************************************/ /**
@@ -3640,7 +3640,7 @@ static void pf_reverse_map_destroy_pos(struct pf_position *pos)
  ****************************************************************************/
 static void pf_reverse_map_destroy_param(struct pf_parameter *param)
 {
-  free(param);
+  delete param;
 }
 
 /************************************************************************/ /**

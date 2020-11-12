@@ -889,7 +889,7 @@ void set_user_extra_flag_name(enum extra_flag_id id, const char *name,
   }
 
   if (user_extra_flags[efid].helptxt != NULL) {
-    free(user_extra_flags[efid].helptxt);
+    delete[] user_extra_flags[efid].helptxt;
     user_extra_flags[efid].helptxt = NULL;
   }
 

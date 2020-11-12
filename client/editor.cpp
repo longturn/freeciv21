@@ -193,8 +193,7 @@ void editor_init(void)
 {
   fc_assert(editor == NULL);
 
-  editor =
-      static_cast<editor_state *>(fc_calloc(1, sizeof(struct editor_state)));
+  editor = new editor_state[1]();
 
   tool_init(ETT_TERRAIN, _("Terrain"), ETF_HAS_VALUE | ETF_HAS_SIZE,
             _("Change tile terrain.\nShortcut: t\n"
@@ -259,7 +258,7 @@ void editor_free(void)
   if (editor != NULL) {
     edit_buffer_free(editor->copybuf);
     tile_hash_destroy(editor->selected_tile_table);
-    delete editor;
+    delete[] editor;
     editor = NULL;
   }
 }
@@ -1445,7 +1444,7 @@ struct edit_buffer *edit_buffer_new(int type_flags)
     return NULL;
   }
 
-  ebuf = static_cast<edit_buffer *>(fc_calloc(1, sizeof(*ebuf)));
+  ebuf = new edit_buffer[1]();
   ebuf->type_flags = type_flags;
   ebuf->vtiles = tile_list_new();
 

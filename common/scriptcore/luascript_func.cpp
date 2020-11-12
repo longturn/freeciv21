@@ -81,8 +81,8 @@ static struct luascript_func *func_new(bool required, int nargs,
 static void func_destroy(struct luascript_func *pfunc)
 {
   if (pfunc->arg_types) {
-    free(pfunc->arg_types);
-    free(pfunc->return_types);
+    delete[] pfunc->arg_types;
+    delete[] pfunc->return_types;
   }
   delete pfunc;
 }

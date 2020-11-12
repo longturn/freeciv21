@@ -60,8 +60,7 @@ void citizens_free(struct city *pcity)
   fc_assert_ret(pcity);
 
   if (pcity->nationality) {
-    free(pcity->nationality);
-    pcity->nationality = NULL;
+    FCPP_FREE(pcity->nationality);
   }
 }
 

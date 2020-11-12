@@ -3339,8 +3339,7 @@ void city_styles_free(void)
     requirement_vector_free(&city_styles[i].reqs);
   }
 
-  free(city_styles);
-  city_styles = NULL;
+  FCPP_FREE(city_styles);
   game.control.styles_count = 0;
 }
 
@@ -3431,18 +3430,18 @@ void destroy_city_virtual(struct city *pcity)
 
     worker_task_list_remove(pcity->task_reqs, ptask);
 
-    free(ptask);
+    delete ptask;
   }
   worker_task_list_destroy(pcity->task_reqs);
 
   unit_list_destroy(pcity->units_supported);
   trade_route_list_destroy(pcity->routes);
   if (pcity->tile_cache != NULL) {
-    free(pcity->tile_cache);
+    delete[] pcity->tile_cache;
   }
 
   if (pcity->cm_parameter) {
-    free(pcity->cm_parameter);
+    delete[] pcity->cm_parameter;
   }
 
   if (!is_server()) {
@@ -3459,7 +3458,7 @@ void destroy_city_virtual(struct city *pcity)
   }
 
   memset(pcity, 0, sizeof(*pcity)); /* ensure no pointers remain */
-  free(pcity);
+  delete pcity;
 }
 
 /**********************************************************************/ /**

@@ -147,7 +147,7 @@ static struct signal *signal_new(int nargs, enum api_types *parg_types)
 static void signal_destroy(struct signal *psignal)
 {
   if (psignal->arg_types) {
-    free(psignal->arg_types);
+    delete[] psignal->arg_types;
   }
   if (psignal->depr_msg) {
     delete[] psignal->depr_msg;
@@ -220,8 +220,7 @@ static struct signal *luascript_signal_create_valist(struct fc_lua *fcl,
                   signal_name);
     return NULL;
   } else {
-    enum api_types *parg_types =
-        static_cast<api_types *>(fc_calloc(nargs, sizeof(*parg_types)));
+    enum api_types *parg_types = new api_types[nargs]();
     int i;
     char *sn = new char[strlen(signal_name) + 1];
     struct signal *created;

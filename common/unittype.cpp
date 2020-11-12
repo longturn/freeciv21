@@ -1630,7 +1630,7 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
   }
 
   if (user_type_flags[ufid].helptxt != NULL) {
-    free(user_type_flags[ufid].helptxt);
+    delete[] user_type_flags[ufid].helptxt;
     user_type_flags[ufid].helptxt = NULL;
   }
 
@@ -2383,9 +2383,9 @@ void veteran_system_destroy(struct veteran_system *vsystem)
 {
   if (vsystem) {
     if (vsystem->definitions) {
-      free(vsystem->definitions);
+      delete[] vsystem->definitions;
     }
-    free(vsystem);
+    delete vsystem;
   }
 }
 

@@ -35,7 +35,7 @@ struct rgbcolor *rgbcolor_new(int r, int g, int b)
 {
   struct rgbcolor *prgbcolor;
 
-  prgbcolor = static_cast<rgbcolor *>(fc_calloc(1, sizeof(*prgbcolor)));
+  prgbcolor = new rgbcolor[1]();
   prgbcolor->r = r;
   prgbcolor->g = g;
   prgbcolor->b = b;
@@ -81,7 +81,7 @@ void rgbcolor_destroy(struct rgbcolor *prgbcolor)
   if (prgbcolor->color) {
     fc_funcs->gui_color_free(prgbcolor->color);
   }
-  free(prgbcolor);
+  delete[] prgbcolor;
 }
 
 /************************************************************************/ /**

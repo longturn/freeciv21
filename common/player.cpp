@@ -314,7 +314,7 @@ static void player_diplstate_destroy(const struct player *plr1,
       plr1->diplstates + player_index(plr2);
 
   if (*diplstate_slot != NULL) {
-    free(player_diplstate_get(plr1, plr2));
+    delete[] player_diplstate_get(plr1, plr2);
   }
 
   *diplstate_slot = NULL;
@@ -350,7 +350,7 @@ void player_slots_free(void)
 {
   players_iterate(pplayer) { player_destroy(pplayer); }
   players_iterate_end;
-  free(player_slots.pslots);
+  delete[] player_slots.pslots;
   player_slots.pslots = NULL;
   player_slots.used_slots = 0;
 }
@@ -635,7 +635,7 @@ void player_clear(struct player *pplayer, bool full)
   }
 
   if (pplayer->savegame_ai_type_name != NULL) {
-    free(pplayer->savegame_ai_type_name);
+    delete[] pplayer->savegame_ai_type_name;
     pplayer->savegame_ai_type_name = NULL;
   }
 
@@ -745,14 +745,14 @@ void player_destroy(struct player *pplayer)
     }
   }
   players_iterate_end;
-  free(pplayer->diplstates);
+  delete[] pplayer->diplstates;
 
   /* Clear player color. */
   if (pplayer->rgb) {
     rgbcolor_destroy(pplayer->rgb);
   }
 
-  free(pplayer);
+  delete pplayer;
   pslot->player = NULL;
   player_slots.used_slots--;
 }
@@ -1615,8 +1615,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   int j;
 
   /* Storage for the mutually exclusive requirement sets. */
-  bv_diplrel_all_reqs *mess = static_cast<bv_diplrel_all_reqs *>(
-      fc_malloc(DIPLREL_MESS_SIZE * sizeof(bv_diplrel_all_reqs)));
+  bv_diplrel_all_reqs *mess = new bv_diplrel_all_reqs[DIPLREL_MESS_SIZE];
 
   /* Position in mess. */
   int mess_pos = 0;
@@ -1715,8 +1714,7 @@ static bv_diplrel_all_reqs *diplrel_mess_get(void)
 void diplrel_mess_close(void)
 {
   if (diplrel_mess != NULL) {
-    free(diplrel_mess);
-    diplrel_mess = NULL;
+    FCPP_FREE(diplrel_mess);
   }
 }
 

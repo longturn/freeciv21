@@ -51,7 +51,7 @@ void vision_free(struct vision *vision)
   fc_assert(-1 == vision->radius_sq[V_MAIN]);
   fc_assert(-1 == vision->radius_sq[V_INVIS]);
   fc_assert(-1 == vision->radius_sq[V_SUBSURFACE]);
-  free(vision);
+  delete vision;
 }
 
 /************************************************************************/ /**

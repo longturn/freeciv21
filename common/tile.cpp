@@ -1114,7 +1114,7 @@ void tile_virtual_destroy(struct tile *vtile)
     tile_set_worked(vtile, NULL);
   }
 
-  free(vtile);
+  delete[] vtile;
 }
 
 /************************************************************************/ /**

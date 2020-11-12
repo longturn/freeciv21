@@ -345,8 +345,8 @@ struct cm_result *cm_result_new(struct city *pcity)
   result = new cm_result[1]();
   result->city_radius_sq =
       pcity ? city_map_radius_sq_get(pcity) : CITY_MAP_MAX_RADIUS_SQ;
-  result->worker_positions = new bool[city_map_tiles(result->city_radius_sq),
-                                      sizeof(*result->worker_positions)]();
+  result->worker_positions =
+      new bool[city_map_tiles(result->city_radius_sq)]();
 
   /* test if the city pointer is valid; the cm_result struct can be
    * returned as it uses the maximal possible value for the size of
@@ -422,7 +422,7 @@ static void tile_type_vector_free_all(struct tile_type_vector *vec)
   {
     /* Destroy all data in the type, and free the type itself. */
     tile_type_destroy(type);
-    free(type);
+    delete type;
   }
   tile_type_vector_iterate_end;
 
@@ -654,8 +654,8 @@ static void init_partial_solution(struct partial_solution *into, int ntypes,
  ****************************************************************************/
 static void destroy_partial_solution(struct partial_solution *into)
 {
-  free(into->worker_counts);
-  free(into->prereqs_filled);
+  delete[] into->worker_counts;
+  delete[] into->prereqs_filled;
 }
 
 /************************************************************************/ /**
