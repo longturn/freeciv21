@@ -745,7 +745,9 @@ void adv_data_default(struct player *pplayer)
   fc_assert_ret(adv != NULL);
 
   adv->govt_reeval = 0;
-  adv->government_want = new adv_want[government_count() + 1]();
+  if (!adv->government_want) {
+    adv->government_want = new adv_want[government_count() + 1]();
+  }
 
   adv->wonder_city = 0;
 

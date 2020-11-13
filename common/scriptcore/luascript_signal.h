@@ -13,14 +13,26 @@
 #ifndef FC__LUASCRIPT_SIGNAL_H
 #define FC__LUASCRIPT_SIGNAL_H
 
-
-
 /* utility */
 #include "support.h"
 
+#include "luascript_types.h"
 struct fc_lua;
 
 typedef char *signal_deprecator;
+
+/* Signal datastructure. */
+struct signal {
+  int nargs;                              /* number of arguments to pass */
+  enum api_types *arg_types;              /* argument types */
+  struct signal_callback_list *callbacks; /* connected callbacks */
+  char *depr_msg; /* deprecation message to show if handler added */
+};
+
+/* Signal callback datastructure. */
+struct signal_callback {
+  char *name; /* callback function name */
+};
 
 void luascript_signal_init(struct fc_lua *fcl);
 void luascript_signal_free(struct fc_lua *fcl);
@@ -39,8 +51,8 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *signal_name,
                                        const char *callback_name);
 
-const char *luascript_signal_by_index(struct fc_lua *fcl, int sindex);
-const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
+const QString& luascript_signal_by_index(struct fc_lua *fcl, int sindex);
+const char * luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);
 
