@@ -3457,7 +3457,7 @@ void destroy_city_virtual(struct city *pcity)
   }
 
   memset(pcity, 0, sizeof(*pcity)); /* ensure no pointers remain */
-  delete pcity;
+  delete[] pcity;
 }
 
 /**********************************************************************/ /**

@@ -69,7 +69,7 @@ bool vision_reveal_tiles(struct vision *vision, bool reveal_tiles)
 /************************************************************************/ /**
    Frees vision site structure.
  ****************************************************************************/
-void vision_site_destroy(struct vision_site *psite) { free(psite); }
+void vision_site_destroy(struct vision_site *psite) { delete[] psite; }
 
 /************************************************************************/ /**
    Returns the basic structure.

@@ -493,7 +493,7 @@ tile_data_cache_copy(const struct tile_data_cache *ptdc)
 static void tile_data_cache_destroy(struct tile_data_cache *ptdc)
 {
   if (ptdc) {
-    delete ptdc;
+    delete[] ptdc;
   }
 }
 

@@ -1258,7 +1258,7 @@ static void clear_old_treaty(struct player *pplayer, struct player *aplayer)
       dlsend_packet_diplomacy_remove_clause(
           aplayer->connections, player_number(pplayer),
           player_number(pclause->from), pclause->type, pclause->value);
-      delete[] pclause;
+      delete pclause;
     }
     clause_list_iterate_end;
     clause_list_destroy(old_treaty->clauses);

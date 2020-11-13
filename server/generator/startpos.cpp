@@ -529,8 +529,8 @@ bool create_start_positions(enum map_startpos mode,
     }
   }
 
-  free(islands);
-  free(islands_index);
+  delete[] islands;
+  delete[] islands_index;
   islands = NULL;
   islands_index = NULL;
 

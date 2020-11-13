@@ -137,7 +137,7 @@ static void save_thread_run(void *arg)
   }
 
   secfile_destroy(stdata->sfile);
-  free(arg);
+  delete arg;
 }
 
 /************************************************************************/ /**
@@ -277,7 +277,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     fc_thread_wait(save_thread);
     if (!game.server.threaded_save) {
       /* Setting has changed since the last save */
-      free(save_thread);
+      delete save_thread;
       save_thread = NULL;
     }
   } else if (game.server.threaded_save) {
@@ -301,7 +301,6 @@ void save_system_close(void)
 {
   if (save_thread != NULL) {
     fc_thread_wait(save_thread);
-    free(save_thread);
-    save_thread = NULL;
+    FC_FREE(save_thread);
   }
 }
