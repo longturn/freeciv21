@@ -339,6 +339,9 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
+  for (auto vw : fcl->signals_hash->values()) {
+    signal_destroy(vw);
+  }
   NFC_FREE(fcl->signals_hash);
   NFC_FREE(fcl->signal_names);
   fcl->signals_hash = NULL;
@@ -347,7 +350,7 @@ void luascript_signal_free(struct fc_lua *fcl)
 /*************************************************************************/ /**
    Return the name of the signal with the given index.
  *****************************************************************************/
-const QString& luascript_signal_by_index(struct fc_lua *fcl, int sindex)
+const QString &luascript_signal_by_index(struct fc_lua *fcl, int sindex)
 {
   fc_assert_ret_val(fcl != NULL, NULL);
   fc_assert_ret_val(fcl->signal_names != NULL, NULL);

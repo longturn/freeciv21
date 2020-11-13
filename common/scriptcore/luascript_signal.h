@@ -10,9 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifndef FC__LUASCRIPT_SIGNAL_H
-#define FC__LUASCRIPT_SIGNAL_H
-
+#pragma once
 /* utility */
 #include "support.h"
 
@@ -55,7 +53,3 @@ const QString& luascript_signal_by_index(struct fc_lua *fcl, int sindex);
 const char * luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);
-
-
-
-#endif /* FC__LUASCRIPT_SIGNAL_H */
