@@ -397,6 +397,8 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
     }
   } else {
     pruler_title = pgovern->ruler_titles->value(pnation);
+    if (!pruler_title)
+      pruler_title = pgovern->ruler_titles->value(nullptr);
     fc_snprintf(buf, buf_len,
                 name_translation_get(pplayer->is_male
                                          ? &pruler_title->male
