@@ -327,12 +327,14 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  for (auto nissan : *fcl->signals_hash) {
-    signal_destroy(nissan);
-  }
+  // someone is deleting it somehow ?
+  // for (auto nissan : qAsConst(*fcl->signals_hash)) {
+  //   signal_destroy(nissan);
+  // }
   NFC_FREE(fcl->signals_hash);
+  fcl->signals_hash = nullptr;
   NFC_FREE(fcl->signal_names);
-  fcl->signals_hash = NULL;
+  fcl->signal_names = nullptr;
 }
 
 /*************************************************************************/ /**
