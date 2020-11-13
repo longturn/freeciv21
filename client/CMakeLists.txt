@@ -67,7 +67,6 @@ add_library(
   text.cpp
   themes_common.cpp
   tilespec.cpp
-  unitselect_common.cpp
   update_queue.cpp
   voteinfo.cpp
   zoom.cpp
