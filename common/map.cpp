@@ -497,8 +497,7 @@ void map_allocate(struct civ_map *amap)
             amap->xsize, amap->ysize);
 
   fc_assert_ret(NULL == amap->tiles);
-  amap->tiles =
-      static_cast<tile *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*amap->tiles)));
+  amap->tiles = new tile[MAP_INDEX_SIZE]();
 
   /* Note this use of whole_map_iterate may be a bit sketchy, since the
    * tile values (ptile->index, etc.) haven't been set yet.  It might be

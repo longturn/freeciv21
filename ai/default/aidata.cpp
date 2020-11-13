@@ -125,7 +125,7 @@ void dai_data_close(struct ai_type *ait, struct player *pplayer)
       }
     }
     players_iterate_end;
-    free(ai->diplomacy.player_intel_slots);
+    delete[] ai->diplomacy.player_intel_slots;
   }
 }
 
@@ -295,10 +295,10 @@ void dai_data_phase_finished(struct ai_type *ait, struct player *pplayer)
     return;
   }
 
-  free(ai->stats.workers);
+  delete[] ai->stats.workers;
   ai->stats.workers = NULL;
 
-  free(ai->stats.ocean_workers);
+  delete[] ai->stats.ocean_workers;
   ai->stats.ocean_workers = NULL;
 
   ai->phase_initialized = FALSE;
@@ -434,7 +434,7 @@ static void dai_diplomacy_destroy(struct ai_type *ait,
       + player_index(plr2);
 
   if (*player_intel_slot != NULL) {
-    free(dai_diplomacy_get(ait, plr1, plr2));
+    delete[] dai_diplomacy_get(ait, plr1, plr2);
   }
 
   *player_intel_slot = NULL;

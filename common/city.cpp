@@ -3355,7 +3355,7 @@ struct city *create_city_virtual(struct player *pplayer, struct tile *ptile,
 
   /* Make sure that contents of city structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
-  struct city *pcity = static_cast<city *>(fc_calloc(1, sizeof(*pcity)));
+  struct city *pcity = new city[1]();
 
   fc_assert_ret_val(NULL != name, NULL); /* No unnamed cities! */
   sz_strlcpy(pcity->name, name);

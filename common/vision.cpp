@@ -77,8 +77,7 @@ void vision_site_destroy(struct vision_site *psite) { free(psite); }
 struct vision_site *vision_site_new(int identity, struct tile *location,
                                     struct player *owner)
 {
-  vision_site *psite =
-      static_cast<vision_site *>(fc_calloc(1, sizeof(*psite)));
+  vision_site *psite = new vision_site[1]();
 
   psite->identity = identity;
   psite->location = location;

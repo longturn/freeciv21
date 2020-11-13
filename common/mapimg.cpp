@@ -1921,8 +1921,7 @@ static struct img *img_new(struct mapdef *mapdef, int topo, int xsize,
   }
 
   /* Here the map image is saved as an array of RGB color values. */
-  pimg->map = static_cast<const rgbcolor **>(
-      fc_calloc(pimg->imgsize.x * pimg->imgsize.y, sizeof(*pimg->map)));
+  pimg->map = new const rgbcolor *[pimg->imgsize.x * pimg->imgsize.y]();
   /* Initialise map. */
   memset(pimg->map, 0, pimg->imgsize.x * pimg->imgsize.y);
 

@@ -3154,8 +3154,7 @@ void dai_units_ruleset_init(struct ai_type *ait)
 
   unit_type_iterate(ptype)
   {
-    struct unit_type_ai *utai =
-        static_cast<unit_type_ai *>(fc_malloc(sizeof(*utai)));
+    struct unit_type_ai *utai = new unit_type_ai;
 
     utai->firepower1 = FALSE;
     utai->ferry = FALSE;
@@ -3266,7 +3265,7 @@ void dai_units_ruleset_close(struct ai_type *ait)
     utype_set_ai_data(ptype, ait, NULL);
 
     unit_type_list_destroy(utai->potential_charges);
-    free(utai);
+    delete utai;
   }
   unit_type_iterate_end;
 }
@@ -3320,7 +3319,7 @@ void dai_unit_close(struct ai_type *ait, struct unit *punit)
 
   if (unit_data != NULL) {
     unit_set_ai_data(punit, ait, NULL);
-    FC_FREE(unit_data);
+    FCPP_FREE(unit_data);
   }
 }
 

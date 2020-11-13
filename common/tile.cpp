@@ -1036,7 +1036,7 @@ struct tile *tile_virtual_new(const struct tile *ptile)
 {
   struct tile *vtile;
 
-  vtile = static_cast<tile *>(fc_calloc(1, sizeof(*vtile)));
+  vtile = new tile[1]();
 
   /* initialise some values */
   vtile->index = TILE_INDEX_NONE;

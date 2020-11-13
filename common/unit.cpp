@@ -1504,7 +1504,7 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
 {
   /* Make sure that contents of unit structure are correctly initialized,
    * if you ever allocate it by some other mean than fc_calloc() */
-  struct unit *punit = static_cast<unit *>(fc_calloc(1, sizeof(*punit)));
+  struct unit *punit = new unit[1]();
   int max_vet_lvl;
 
   /* It does not register the unit so the id is set to 0. */
@@ -1577,8 +1577,7 @@ struct unit *unit_virtual_create(struct player *pplayer, struct city *pcity,
     punit->server.action_turn = -2;
     /* punit->server.moving = NULL; set by fc_calloc(). */
 
-    punit->server.adv =
-        static_cast<unit_adv *>(fc_calloc(1, sizeof(*punit->server.adv)));
+    punit->server.adv = new unit_adv[1]();
 
     CALL_FUNC_EACH_AI(unit_alloc, punit);
   } else {
@@ -1621,10 +1620,10 @@ void unit_virtual_destroy(struct unit *punit)
   CALL_FUNC_EACH_AI(unit_free, punit);
 
   if (is_server() && punit->server.adv) {
-    FC_FREE(punit->server.adv);
+    FCPP_FREE(punit->server.adv);
   } else {
     if (punit->client.act_prob_cache) {
-      FC_FREE(punit->client.act_prob_cache);
+      FCPP_FREE(punit->client.act_prob_cache);
     }
   }
 

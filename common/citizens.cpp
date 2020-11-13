@@ -43,8 +43,7 @@ void citizens_init(struct city *pcity)
    * per nation as well as the timer for a nationality change. */
   if (pcity->nationality == NULL) {
     /* Allocate the memory*/
-    pcity->nationality = static_cast<citizens *>(
-        fc_calloc(MAX_NUM_PLAYER_SLOTS, sizeof(*pcity->nationality)));
+    pcity->nationality = new citizens[MAX_NUM_PLAYER_SLOTS]();
   } else {
     /* Reset the nationality information. */
     memset(pcity->nationality, 0,

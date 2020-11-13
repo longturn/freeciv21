@@ -255,7 +255,7 @@ static void cityresult_destroy(struct cityresult *result)
     if (result->tdc_hash != NULL) {
       tile_data_cache_hash_destroy(result->tdc_hash);
     }
-    free(result);
+    delete[] result;
   }
 }
 
@@ -493,7 +493,7 @@ tile_data_cache_copy(const struct tile_data_cache *ptdc)
 static void tile_data_cache_destroy(struct tile_data_cache *ptdc)
 {
   if (ptdc) {
-    free(ptdc);
+    delete ptdc;
   }
 }
 
@@ -673,10 +673,10 @@ static void print_cityresult(struct player *pplayer,
            TILE_XY(cr->tile), cr->city_radius_sq);
   citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_trade);
 
-  free(city_map_reserved);
-  free(city_map_food);
-  free(city_map_shield);
-  free(city_map_trade);
+  delete[] city_map_reserved;
+  delete[] city_map_food;
+  delete[] city_map_shield;
+  delete[] city_map_trade;
 
   log_test("city center (%d, %d) %d + best other (abs: %d, %d)"
            " (cindex: %d) %d",
