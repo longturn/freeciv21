@@ -19,17 +19,17 @@ struct fc_lua;
 
 typedef char *signal_deprecator;
 
+/* Signal callback datastructure. */
+struct signal_callback {
+  char *name; /* callback function name */
+};
+
 /* Signal datastructure. */
 struct signal {
   int nargs;                              /* number of arguments to pass */
   enum api_types *arg_types;              /* argument types */
-  struct signal_callback_list *callbacks; /* connected callbacks */
+  QList<signal_callback*> *callbacks;            /* connected callbacks */
   char *depr_msg; /* deprecation message to show if handler added */
-};
-
-/* Signal callback datastructure. */
-struct signal_callback {
-  char *name; /* callback function name */
 };
 
 void luascript_signal_init(struct fc_lua *fcl);

@@ -50,10 +50,6 @@
 #define SPECLIST_TYPE struct signal_callback
 #include "speclist.h"
 
-#define signal_callback_list_iterate(list, pcallback)                       \
-  TYPED_LIST_ITERATE(struct signal_callback, list, pcallback)
-#define signal_callback_list_iterate_end LIST_ITERATE_END
-
 static struct signal_callback *signal_callback_new(const char *name);
 static void signal_callback_destroy(struct signal_callback *pcallback);
 static struct signal *signal_new(int nargs, enum api_types *parg_types);
@@ -88,9 +84,8 @@ static struct signal *signal_new(int nargs, enum api_types *parg_types)
 
   psignal->nargs = nargs;
   psignal->arg_types = parg_types;
-  psignal->callbacks =
-      signal_callback_list_new_full(signal_callback_destroy);
-  psignal->depr_msg = NULL;
+  psignal->callbacks = new QList<signal_callback *>;
+  psignal->depr_msg = nullptr;
 
   return psignal;
 }
@@ -106,7 +101,7 @@ static void signal_destroy(struct signal *psignal)
   if (psignal->depr_msg) {
     delete[] psignal->depr_msg;
   }
-  signal_callback_list_destroy(psignal->callbacks);
+  delete psignal->callbacks;
   delete psignal;
 }
 
@@ -123,8 +118,7 @@ void luascript_signal_emit_valist(struct fc_lua *fcl,
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
-    signal_callback_list_iterate(psignal->callbacks, pcallback)
-    {
+    for (auto pcallback : qAsConst(*psignal->callbacks)) {
       va_list args_cb;
 
       va_copy(args_cb, args);
@@ -135,7 +129,6 @@ void luascript_signal_emit_valist(struct fc_lua *fcl,
       }
       va_end(args_cb);
     }
-    signal_callback_list_iterate_end;
   } else {
     luascript_log(fcl, LOG_ERROR,
                   "Signal \"%s\" does not exist, so cannot "
@@ -254,14 +247,12 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
     /* check for a duplicate callback */
-    signal_callback_list_iterate(psignal->callbacks, pcallback)
-    {
+    for (auto pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         pcallback_found = pcallback;
         break;
       }
     }
-    signal_callback_list_iterate_end;
 
     if (psignal->depr_msg != NULL) {
       log_deprecation("%s", psignal->depr_msg);
@@ -274,12 +265,11 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
                         "called \"%s\".",
                         signal_name, callback_name);
       } else {
-        signal_callback_list_append(psignal->callbacks,
-                                    signal_callback_new(callback_name));
+        psignal->callbacks->append(signal_callback_new(callback_name));
       }
     } else {
       if (pcallback_found) {
-        signal_callback_list_remove(psignal->callbacks, pcallback_found);
+        psignal->callbacks->removeAll(pcallback_found);
       }
     }
   } else {
@@ -303,13 +293,11 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
     /* check for a duplicate callback */
-    signal_callback_list_iterate(psignal->callbacks, pcallback)
-    {
+    for (auto pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
         return TRUE;
       }
     }
-    signal_callback_list_iterate_end;
   }
 
   return FALSE;
@@ -339,8 +327,8 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  for (auto vw : fcl->signals_hash->values()) {
-    signal_destroy(vw);
+  for (auto nissan : *fcl->signals_hash) {
+    signal_destroy(nissan);
   }
   NFC_FREE(fcl->signals_hash);
   NFC_FREE(fcl->signal_names);
@@ -373,12 +361,10 @@ const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
-    struct signal_callback *pcallback =
-        signal_callback_list_get(psignal->callbacks, sindex);
+    struct signal_callback *pcallback = psignal->callbacks->at(sindex);
     if (pcallback) {
       return pcallback->name;
     }
   }
-
   return NULL;
 }
