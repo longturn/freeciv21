@@ -252,8 +252,7 @@ static void script_server_code_init(void) { script_server_code = NULL; }
 static void script_server_code_free(void)
 {
   if (script_server_code) {
-    free(script_server_code);
-    script_server_code = NULL;
+    FCPP_FREE(script_server_code);
   }
 }
 

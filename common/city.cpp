@@ -3436,7 +3436,7 @@ void destroy_city_virtual(struct city *pcity)
   unit_list_destroy(pcity->units_supported);
   trade_route_list_destroy(pcity->routes);
   if (pcity->tile_cache != NULL) {
-    delete[] pcity->tile_cache;
+    free(pcity->tile_cache); //realloc
   }
 
   if (pcity->cm_parameter) {

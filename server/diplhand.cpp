@@ -109,7 +109,7 @@ void free_treaties(void)
   treaty_list_iterate(treaties, pt)
   {
     clear_treaty(pt);
-    free(pt);
+    delete pt;
   }
   treaty_list_iterate_end;
 
@@ -694,7 +694,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
   cleanup:
     treaty_list_remove(treaties, ptreaty);
     clear_treaty(ptreaty);
-    free(ptreaty);
+    delete ptreaty;
     send_player_all_c(pplayer, NULL);
     send_player_all_c(pother, NULL);
   }
@@ -814,7 +814,7 @@ static void really_diplomacy_cancel_meeting(struct player *pplayer,
                   _("Meeting with %s canceled."), player_name(pother));
     treaty_list_remove(treaties, ptreaty);
     clear_treaty(ptreaty);
-    free(ptreaty);
+    delete ptreaty;
   }
 }
 

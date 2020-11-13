@@ -1404,7 +1404,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
         || MAPGEN_FRACTURE == wld.map.server.generator) {
 
       make_land();
-      free(height_map);
+      delete[] height_map;
       height_map = NULL;
     }
     if (!wld.map.server.tinyisles) {
@@ -2354,8 +2354,7 @@ static void mapgenerator2(void)
 
     /* init world created this map, destroy it before abort */
     destroy_placed_map();
-    free(height_map);
-    height_map = NULL;
+    FCPP_FREE(height_map);
     return;
   }
 
@@ -2371,8 +2370,7 @@ static void mapgenerator2(void)
 
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     log_verbose("%ld mass left unplaced", checkmass);
@@ -2470,8 +2468,7 @@ static void mapgenerator3(void)
 
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (j == 1500) {
     log_normal(_("Generator 3 left %li landmass unplaced."), checkmass);
@@ -2539,8 +2536,7 @@ static void mapgenerator4(void)
   }
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     log_verbose("%ld mass left unplaced", checkmass);
@@ -2596,7 +2592,7 @@ struct fair_geometry_data {
 /**********************************************************************/ /**
    Free a map.
  **************************************************************************/
-static inline void fair_map_destroy(struct fair_tile *pmap) { free(pmap); }
+static inline void fair_map_destroy(struct fair_tile *pmap) { delete[] pmap; }
 
 /**********************************************************************/ /**
    Get the coordinates of tile 'ptile'.

@@ -2062,8 +2062,8 @@ static void cm_state_free(struct cm_state *state)
   destroy_partial_solution(&state->best);
   destroy_partial_solution(&state->current);
 
-  FC_FREE(state->choice.stack);
-  FC_FREE(state->workers_map);
+  FCPP_FREE(state->choice.stack);
+  FCPP_FREE(state->workers_map);
   FC_FREE(state);
 }
 

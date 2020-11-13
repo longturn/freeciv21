@@ -1628,7 +1628,7 @@ void unit_virtual_destroy(struct unit *punit)
   }
 
   if (--punit->refcount <= 0) {
-    FC_FREE(punit);
+    FCPP_FREE(punit);
   }
 }
 

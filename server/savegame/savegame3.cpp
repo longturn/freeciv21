@@ -562,8 +562,7 @@ static void savegame3_save_real(struct section_file *file,
  ****************************************************************************/
 static struct loaddata *loaddata_new(struct section_file *file)
 {
-  struct loaddata *loading =
-      static_cast<loaddata *>(calloc(1, sizeof(*loading)));
+  struct loaddata *loading = new loaddata[1]();
   loading->file = file;
   loading->secfile_options = NULL;
 
@@ -600,51 +599,18 @@ static struct loaddata *loaddata_new(struct section_file *file)
  ****************************************************************************/
 static void loaddata_destroy(struct loaddata *loading)
 {
-  if (loading->improvement.order != NULL) {
-    free(loading->improvement.order);
-  }
-
-  if (loading->technology.order != NULL) {
-    free(loading->technology.order);
-  }
-
-  if (loading->activities.order != NULL) {
-    free(loading->activities.order);
-  }
-
-  if (loading->trait.order != NULL) {
-    free(loading->trait.order);
-  }
-
-  if (loading->extra.order != NULL) {
-    free(loading->extra.order);
-  }
-
-  if (loading->multiplier.order != NULL) {
-    free(loading->multiplier.order);
-  }
-
-  if (loading->specialist.order != NULL) {
-    free(loading->specialist.order);
-  }
-
-  if (loading->action.order != NULL) {
-    free(loading->action.order);
-  }
-
-  if (loading->act_dec.order != NULL) {
-    free(loading->act_dec.order);
-  }
-
-  if (loading->ssa.order != NULL) {
-    free(loading->ssa.order);
-  }
-
-  if (loading->worked_tiles != NULL) {
-    free(loading->worked_tiles);
-  }
-
-  free(loading);
+  NFCPP_FREE(loading->improvement.order);
+  NFCPP_FREE(loading->technology.order);
+  NFCPP_FREE(loading->activities.order);
+  NFCPP_FREE(loading->trait.order);
+  NFCPP_FREE(loading->extra.order);
+  NFCPP_FREE(loading->multiplier.order);
+  NFCPP_FREE(loading->specialist.order);
+  NFCPP_FREE(loading->action.order);
+  NFCPP_FREE(loading->act_dec.order);
+  NFCPP_FREE(loading->ssa.order);
+  NFCPP_FREE(loading->worked_tiles);
+  delete[] loading;
 }
 
 /************************************************************************/ /**

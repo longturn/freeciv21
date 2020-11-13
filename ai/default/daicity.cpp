@@ -1152,7 +1152,7 @@ void dai_city_free(struct ai_type *ait, struct city *pcity)
   if (city_data != NULL) {
     adv_deinit_choice(&(city_data->choice));
     city_set_ai_data(pcity, ait, NULL);
-    FC_FREE(city_data);
+    FCPP_FREE(city_data);
   }
 }
 

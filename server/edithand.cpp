@@ -101,7 +101,7 @@ void edithand_free(void)
   }
 
   if (unfogged_players != NULL) {
-    free(unfogged_players);
+    delete[] unfogged_players;
     unfogged_players = NULL;
   }
 }

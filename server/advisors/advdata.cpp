@@ -589,23 +589,12 @@ void adv_data_phase_done(struct player *pplayer)
     return;
   }
 
-  free(adv->explore.ocean);
-  adv->explore.ocean = NULL;
-
-  free(adv->explore.continent);
-  adv->explore.continent = NULL;
-
-  free(adv->threats.continent);
-  adv->threats.continent = NULL;
-
-  free(adv->threats.ocean);
-  adv->threats.ocean = NULL;
-
-  free(adv->stats.cities);
-  adv->stats.cities = NULL;
-
-  free(adv->stats.ocean_cities);
-  adv->stats.ocean_cities = NULL;
+  FCPP_FREE(adv->explore.ocean);
+  FCPP_FREE(adv->explore.continent);
+  FCPP_FREE(adv->threats.continent);
+  FCPP_FREE(adv->threats.ocean);
+  FCPP_FREE(adv->stats.cities);
+  FCPP_FREE(adv->stats.ocean_cities);
 
   adv->num_continents = 0;
   adv->num_oceans = 0;
@@ -743,7 +732,7 @@ void adv_data_init(struct player *pplayer)
   players_iterate_end;
 
   // It was initialized in 3 places ?
-  //adv_data_default(pplayer);
+  adv_data_default(pplayer); // triple free???
 }
 
 /**********************************************************************/ /**

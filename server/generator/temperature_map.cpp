@@ -106,8 +106,7 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
 void destroy_tmap(void)
 {
   fc_assert_ret(NULL != temperature_map);
-  free(temperature_map);
-  temperature_map = NULL;
+  FCPP_FREE(temperature_map);
 }
 
 /**********************************************************************/ /**

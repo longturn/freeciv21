@@ -1460,7 +1460,7 @@ void server_player_init(struct player *pplayer, bool initmap,
     pplayer->economic = player_limit_to_max_rates(pplayer);
   }
 
-  //adv_data_default(pplayer);
+  adv_data_default(pplayer); //triple free
 
   /* We don't push this in calc_civ_score(), or it will be reset
    * every turn. */
