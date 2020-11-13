@@ -48,7 +48,7 @@ struct fc_lua {
 
   struct luascript_func_hash *funcs;
 
-  QHash<QString, signal*> *signals_hash;
+  QHash<QString, struct signal*> *signals_hash;
   QVector<QString> *signal_names;
 };
 

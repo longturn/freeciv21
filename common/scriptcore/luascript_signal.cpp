@@ -317,7 +317,7 @@ void luascript_signal_init(struct fc_lua *fcl)
   fc_assert_ret(fcl != NULL);
 
   if (NULL == fcl->signals_hash) {
-    fcl->signals_hash = new QHash<QString, signal *>;
+    fcl->signals_hash = new QHash<QString, struct signal *>;
     fcl->signal_names = new QVector<QString>;
   }
 }

@@ -731,8 +731,7 @@ void adv_data_init(struct player *pplayer)
   }
   players_iterate_end;
 
-  // It was initialized in 3 places ?
-  adv_data_default(pplayer); // triple free???
+  adv_data_default(pplayer);
 }
 
 /**********************************************************************/ /**
