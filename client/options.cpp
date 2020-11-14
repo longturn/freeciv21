@@ -68,8 +68,8 @@
 
 #include "options.h"
 
-typedef QHash<const char*, const char*> optionsHash;
-
+typedef QHash<const char *, const char *> optionsHash;
+typedef QHash<const char *, intptr_t> dialOptionsHash;
 struct client_options gui_options = {
     /** Defaults for options normally on command line **/
     "\0",                      // default_user_name
@@ -5399,7 +5399,7 @@ static void settable_options_load(struct section_file *sf)
       continue;
     }
 
-    settable_options->insert(entry_name(pentry),string);
+    settable_options->insert(entry_name(pentry), string);
   }
   entry_list_iterate_end;
 }
@@ -5630,20 +5630,7 @@ static void desired_settable_option_send(struct option *poption)
             option_name(poption));
 }
 
-/****************************************************************************
-  City and player report dialog options.
-****************************************************************************/
-#define SPECHASH_TAG dialog_options
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE bool
-#define SPECHASH_UDATA_TO_IDATA FC_INT_TO_PTR
-#define SPECHASH_IDATA_TO_UDATA FC_PTR_TO_INT
-#include "spechash.h"
-#define dialog_options_hash_iterate(hash, column, visible)                  \
-  TYPED_HASH_ITERATE(const char *, intptr_t, hash, column, visible)
-#define dialog_options_hash_iterate_end HASH_ITERATE_END
-
-static struct dialog_options_hash *dialog_options_hash = NULL;
+Q_GLOBAL_STATIC(dialOptionsHash, dialog_options)
 
 /************************************************************************/ /**
    Load the city and player report dialog options.
@@ -5655,8 +5642,6 @@ static void options_dialogs_load(struct section_file *sf)
   const char **prefix;
   bool visible;
 
-  fc_assert_ret(NULL != dialog_options_hash);
-
   entries = section_entries(secfile_section_by_name(sf, "client"));
 
   if (NULL != entries) {
@@ -5666,8 +5651,7 @@ static void options_dialogs_load(struct section_file *sf)
         if (0 == strncmp(*prefix, entry_name(pentry), strlen(*prefix))
             && secfile_lookup_bool(sf, &visible, "client.%s",
                                    entry_name(pentry))) {
-          dialog_options_hash_replace(dialog_options_hash,
-                                      entry_name(pentry), visible);
+          dialog_options->insert(entry_name(pentry), visible);
           break;
         }
       }
@@ -5681,14 +5665,14 @@ static void options_dialogs_load(struct section_file *sf)
  ****************************************************************************/
 static void options_dialogs_save(struct section_file *sf)
 {
-  fc_assert_ret(NULL != dialog_options_hash);
+  fc_assert_ret(NULL != dialog_options);
 
   options_dialogs_update();
-  dialog_options_hash_iterate(dialog_options_hash, column, visible)
-  {
-    secfile_insert_bool(sf, visible, "client.%s", column);
+  dialOptionsHash::const_iterator it = dialog_options->constBegin();
+  while (it != dialog_options->constEnd()) {
+    secfile_insert_bool(sf, it.value(), "client.%s", it.key());
+    it++;
   }
-  dialog_options_hash_iterate_end;
 }
 
 /************************************************************************/ /**
@@ -5701,22 +5685,20 @@ void options_dialogs_update(void)
   char buf[64];
   int i;
 
-  fc_assert_ret(NULL != dialog_options_hash);
+  fc_assert_ret(NULL != dialog_options);
 
   /* Player report dialog options. */
   for (i = 1; i < num_player_dlg_columns; i++) {
     fc_snprintf(buf, sizeof(buf), "player_dlg_%s",
                 player_dlg_columns[i].tagname);
-    dialog_options_hash_replace(dialog_options_hash, buf,
-                                player_dlg_columns[i].show);
+    dialog_options->insert(buf, player_dlg_columns[i].show);
   }
 
   /* City report dialog options. */
   for (i = 0; i < num_city_report_spec(); i++) {
     fc_snprintf(buf, sizeof(buf), "city_report_%s",
                 city_report_spec_tagname(i));
-    dialog_options_hash_replace(dialog_options_hash, buf,
-                                *city_report_spec_show_ptr(i));
+    dialog_options->insert(buf, *city_report_spec_show_ptr(i));
   }
 }
 
@@ -5727,17 +5709,14 @@ void options_dialogs_update(void)
 void options_dialogs_set(void)
 {
   char buf[64];
-  bool visible;
   int i;
-
-  fc_assert_ret(NULL != dialog_options_hash);
 
   /* Player report dialog options. */
   for (i = 1; i < num_player_dlg_columns; i++) {
     fc_snprintf(buf, sizeof(buf), "player_dlg_%s",
                 player_dlg_columns[i].tagname);
-    if (dialog_options_hash_lookup(dialog_options_hash, buf, &visible)) {
-      player_dlg_columns[i].show = visible;
+    if (dialog_options->contains(buf)) {
+      player_dlg_columns[i].show = dialog_options->value(buf);
     }
   }
 
@@ -5745,8 +5724,8 @@ void options_dialogs_set(void)
   for (i = 0; i < num_city_report_spec(); i++) {
     fc_snprintf(buf, sizeof(buf), "city_report_%s",
                 city_report_spec_tagname(i));
-    if (dialog_options_hash_lookup(dialog_options_hash, buf, &visible)) {
-      *city_report_spec_show_ptr(i) = visible;
+    if (dialog_options->contains(buf)) {
+      *city_report_spec_show_ptr(i) = dialog_options->value(buf);
     }
   }
 }
@@ -6030,8 +6009,6 @@ void options_init(void)
   options_extra_init();
   global_worklists_init();
 
-  dialog_options_hash = dialog_options_hash_new();
-
   client_options_iterate_all(poption)
   {
     struct client_option *pcoption = CLIENT_OPTION(poption);
@@ -6156,11 +6133,7 @@ void options_free(void)
   client_options_iterate_all_end;
 
   settable_options->clear();
-
-  if (NULL != dialog_options_hash) {
-    dialog_options_hash_destroy(dialog_options_hash);
-    dialog_options_hash = NULL;
-  }
+  dialog_options->clear();
 
   message_options_free();
   global_worklists_free();
