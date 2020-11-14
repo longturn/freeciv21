@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QHash>
 #include <stdio.h>
 #include <string.h>
 
@@ -132,15 +133,9 @@ struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc);
 static void tile_data_cache_destroy(struct tile_data_cache *ptdc);
 
-/* struct tdcache_hash. */
-#define SPECHASH_TAG tile_data_cache
-#define SPECHASH_INT_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct tile_data_cache *
-#define SPECHASH_IDATA_FREE tile_data_cache_destroy
-#include "spechash.h"
 
 struct ai_settler {
-  struct tile_data_cache_hash *tdc_hash;
+  QHash<int, const struct tile_data_cache *> *tdc_hash;
 
 #ifdef FREECIV_DEBUG
   struct {
@@ -176,7 +171,7 @@ struct cityresult {
   int remaining; /* value of all other tiles */
 
   /* Save the result for print_citymap(). */
-  struct tile_data_cache_hash *tdc_hash;
+  QHash<int, const struct tile_data_cache *> *tdc_hash;
 
   int city_radius_sq; /* current squared radius of the city */
 };
@@ -240,7 +235,7 @@ static struct cityresult *cityresult_new(struct tile *ptile)
   result->best_other.cindex = 0;
 
   result->remaining = 0;
-  result->tdc_hash = tile_data_cache_hash_new();
+  result->tdc_hash = new QHash<int, const struct tile_data_cache *>;
   result->city_radius_sq = game.info.init_city_radius_sq;
 
   return result;
@@ -253,7 +248,7 @@ static void cityresult_destroy(struct cityresult *result)
 {
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
-      tile_data_cache_hash_destroy(result->tdc_hash);
+      delete result->tdc_hash;
     }
     free(result);
   }
@@ -382,7 +377,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
       result->remaining += ptdc->sum / GROWTH_POTENTIAL_DEEMPHASIS;
     }
 
-    tile_data_cache_hash_replace(result->tdc_hash, cindex, ptdc);
+    result->tdc_hash->insert(cindex, ptdc);
   }
   city_tile_iterate_index_end;
 
@@ -510,9 +505,9 @@ tdc_plr_get(struct ai_type *ait, struct player *plr, int tindex)
   fc_assert_ret_val(ai->settler != NULL, NULL);
   fc_assert_ret_val(ai->settler->tdc_hash != NULL, NULL);
 
-  struct tile_data_cache *ptdc;
+  const struct tile_data_cache *ptdc;
 
-  tile_data_cache_hash_lookup(ai->settler->tdc_hash, tindex, &ptdc);
+  ptdc = ai->settler->tdc_hash->value(tindex, nullptr);
 
   if (!ptdc) {
 #ifdef FREECIV_DEBUG
@@ -549,7 +544,7 @@ static void tdc_plr_set(struct ai_type *ait, struct player *plr, int tindex,
   ai->settler->cache.save++;
 #endif /* FREECIV_DEBUG */
 
-  tile_data_cache_hash_replace(ai->settler->tdc_hash, tindex, ptdc);
+  ai->settler->tdc_hash->insert(tindex, ptdc);
 }
 
 /*************************************************************************/ /**
@@ -633,7 +628,7 @@ static void print_cityresult(struct player *pplayer,
 {
   int *city_map_reserved, *city_map_food, *city_map_shield, *city_map_trade;
   int tiles = city_map_tiles(cr->city_radius_sq);
-  struct tile_data_cache *ptdc;
+  const struct tile_data_cache *ptdc;
 
   fc_assert_ret(cr->tdc_hash != NULL);
   fc_assert_ret(tiles > 0);
@@ -649,7 +644,7 @@ static void print_cityresult(struct player *pplayer,
 
   city_map_iterate(cr->city_radius_sq, cindex, x, y)
   {
-    tile_data_cache_hash_lookup(cr->tdc_hash, cindex, &ptdc);
+    ptdc = cr->tdc_hash->value(cindex, nullptr);
     fc_assert_ret(ptdc);
     city_map_reserved[cindex] = ptdc->reserved;
     city_map_food[cindex] = ptdc->reserved;
@@ -1011,7 +1006,7 @@ void dai_auto_settler_init(struct ai_plr *ai)
 
   ai->settler =
       static_cast<ai_settler *>(fc_calloc(1, sizeof(*ai->settler)));
-  ai->settler->tdc_hash = tile_data_cache_hash_new();
+  ai->settler->tdc_hash = new QHash<int, const struct tile_data_cache *>;
 
 #ifdef FREECIV_DEBUG
   ai->settler->cache.hit = 0;
@@ -1220,7 +1215,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   ai->settler->cache.save = 0;
 #endif /* FREECIV_DEBUG */
 
-  tile_data_cache_hash_clear(ai->settler->tdc_hash);
+  ai->settler->tdc_hash->clear();
 
   if (caller_closes) {
     dai_data_phase_finished(ait, pplayer);
@@ -1236,7 +1231,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
 
   if (ai->settler) {
     if (ai->settler->tdc_hash) {
-      tile_data_cache_hash_destroy(ai->settler->tdc_hash);
+      delete ai->settler->tdc_hash;
     }
     free(ai->settler);
   }
