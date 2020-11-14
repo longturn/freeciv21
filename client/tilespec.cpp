@@ -393,29 +393,8 @@ struct small_sprite {
   TYPED_LIST_ITERATE(struct small_sprite, list, pitem)
 #define small_sprite_list_iterate_end LIST_ITERATE_END
 
-/* 'struct sprite_hash' and related functions. */
-#define SPECHASH_TAG sprite
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct small_sprite *
-#include "spechash.h"
-#define sprite_hash_iterate(hash, tag_name, sprite)                         \
-  TYPED_HASH_ITERATE(const char *, struct small_sprite *, hash, tag_name,   \
-                     sprite)
-#define sprite_hash_iterate_end HASH_ITERATE_END
 
-/* 'struct drawing_hash' and related functions. */
 static void drawing_data_destroy(struct drawing_data *draw);
-
-#define SPECHASH_TAG drawing
-#define SPECHASH_CSTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct drawing_data *
-#define SPECHASH_IDATA_FREE drawing_data_destroy
-#include "spechash.h"
-
-#define SPECHASH_TAG estyle
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_INT_DATA_TYPE extrastyle_id
-#include "spechash.h"
 
 struct tileset_layer {
   char **match_types;
@@ -483,7 +462,7 @@ struct tileset {
   struct small_sprite_list *small_sprites;
 
   /* This hash table maps tilespec tags to struct small_sprites. */
-  struct sprite_hash *sprite_hash;
+  QHash<QString, struct small_sprite*> *sprite_hash;
 
   /* This hash table maps terrain graphic strings to drawing data. */
   QHash<QString, drawing_data*> *tile_hash;
@@ -1613,14 +1592,15 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
 
         if (!duplicates_ok) {
           for (k = 0; k < num_tags; k++) {
-            if (!sprite_hash_insert(t->sprite_hash, tags[k], ss)) {
+            if (t->sprite_hash->contains(tags[k])) {
               log_error("warning: already have a sprite for \"%s\".",
                         tags[k]);
             }
+            t->sprite_hash->insert(tags[k], ss);
           }
         } else {
           for (k = 0; k < num_tags; k++) {
-            (void) sprite_hash_replace(t->sprite_hash, tags[k], ss);
+            t->sprite_hash->insert(tags[k], ss);
           }
         }
 
@@ -1664,13 +1644,14 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
 
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
-        if (!sprite_hash_insert(t->sprite_hash, tags[k], ss)) {
+        if (t->sprite_hash->contains(tags[k])) {
           log_error("warning: already have a sprite for \"%s\".", tags[k]);
         }
+        t->sprite_hash->insert(tags[k], ss);
       }
     } else {
       for (k = 0; k < num_tags; k++) {
-        (void) sprite_hash_replace(t->sprite_hash, tags[k], ss);
+        t->sprite_hash->insert(tags[k], ss);
       }
     }
     delete[] tags;
@@ -2392,7 +2373,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   fc_assert(t->sprite_hash == NULL);
-  t->sprite_hash = sprite_hash_new();
+  t->sprite_hash = new QHash<QString, struct small_sprite*>;
   for (i = 0; i < num_spec_files; i++) {
     struct specfile *sf = static_cast<specfile *>(fc_malloc(sizeof(*sf)));
     const char *dname;
@@ -2530,7 +2511,7 @@ static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
 
   log_debug("load_sprite(tag='%s')", tag_name);
   /* Lookup information about where the sprite is found. */
-  if (!sprite_hash_lookup(t->sprite_hash, tag_name, &ss)) {
+  if (!(ss = t->sprite_hash->value(tag_name, nullptr))) {
     return NULL;
   }
 
@@ -2608,11 +2589,9 @@ static struct sprite *create_plr_sprite(struct color *pcolor)
    Unloads the sprite. Decrease the reference counter. If the last
    reference is removed the sprite is freed.
  ****************************************************************************/
-static void unload_sprite(struct tileset *t, const char *tag_name)
+static void unload_sprite(struct tileset *t, QString tag_name)
 {
-  struct small_sprite *ss;
-
-  sprite_hash_lookup(t->sprite_hash, tag_name, &ss);
+  struct small_sprite *ss = t->sprite_hash->value(tag_name);
   fc_assert_ret(ss);
   fc_assert_ret(ss->ref_count >= 1);
   fc_assert_ret(ss->sprite);
@@ -2622,7 +2601,7 @@ static void unload_sprite(struct tileset *t, const char *tag_name)
   if (ss->ref_count == 0) {
     /* Nobody's using the sprite anymore, so we should free it.  We know
      * where to find it if we need it again. */
-    log_debug("freeing sprite '%s'.", tag_name);
+    //log_debug("freeing sprite '%s'.", tag_name);
     free_sprite(ss->sprite);
     ss->sprite = NULL;
   }
@@ -2635,7 +2614,7 @@ static void unload_sprite(struct tileset *t, const char *tag_name)
 static bool sprite_exists(const struct tileset *t, const char *tag_name)
 {
   /* Lookup information about where the sprite is found. */
-  return sprite_hash_lookup(t->sprite_hash, tag_name, NULL);
+  return t->sprite_hash->contains(tag_name);
 }
 
 /* Not very safe, but convenient: */
@@ -2974,7 +2953,8 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       fc_assert(ARRAY_SIZE(names) == CURSOR_LAST);
       fc_snprintf(buffer, sizeof(buffer), "cursor.%s%d", names[i], f);
       SET_SPRITE(cursor[i].frame[f], buffer);
-      if (sprite_hash_lookup(t->sprite_hash, buffer, &ss)) {
+      ss = t->sprite_hash->value(buffer, nullptr);
+      if (ss) {
         t->sprites.cursor[i].hot_x = ss->hot_x;
         t->sprites.cursor[i].hot_y = ss->hot_y;
       }
@@ -6220,13 +6200,14 @@ struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile,
 static void unload_all_sprites(struct tileset *t)
 {
   if (t->sprite_hash) {
-    sprite_hash_iterate(t->sprite_hash, tag_name, ss)
-    {
-      while (ss->ref_count > 0) {
-        unload_sprite(t, tag_name);
+      QHash<QString, small_sprite*>::const_iterator i = t->sprite_hash->constBegin();
+      while (i != t->sprite_hash->constEnd()) {
+      QByteArray qba = i.key().toLocal8Bit();
+      while (i.value()->ref_count > 0) {
+       unload_sprite(t, qba.data());
       }
+      i++;
     }
-    sprite_hash_iterate_end;
   }
 }
 
@@ -6255,7 +6236,7 @@ void tileset_free_tiles(struct tileset *t)
   t->sprites.city.occupied = NULL;
 
   if (t->sprite_hash) {
-    sprite_hash_destroy(t->sprite_hash);
+    delete t->sprite_hash;
     t->sprite_hash = NULL;
   }
 
