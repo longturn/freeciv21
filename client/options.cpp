@@ -68,8 +68,8 @@
 
 #include "options.h"
 
-typedef QHash<const char *, const char *> optionsHash;
-typedef QHash<const char *, intptr_t> dialOptionsHash;
+typedef QHash<QString, const char *> optionsHash;
+typedef QHash<QString, intptr_t> dialOptionsHash;
 struct client_options gui_options = {
     /** Defaults for options normally on command line **/
     "\0",                      // default_user_name
@@ -5411,12 +5411,12 @@ static void settable_options_save(struct section_file *sf)
 {
   optionsHash::const_iterator it = settable_options->constBegin();
   while (it != settable_options->constEnd()) {
-    if (!fc_strcasecmp(it.key(), "gameseed")
-        || !fc_strcasecmp(it.key(), "mapseed")) {
+    if (!it.key().compare("gameseed")
+        || !it.key().compare("mapseed")) {
       /* Do not save mapseed or gameseed. */
       continue;
     }
-    if (!fc_strcasecmp(it.key(), "topology")) {
+    if (!it.key().compare("topology")) {
       /* client_start_server() sets topology based on tileset. Don't store
        * its choice. The tileset is already stored. Storing topology leads
        * to all sort of breakage:
@@ -5429,7 +5429,8 @@ static void settable_options_save(struct section_file *sf)
        */
       continue;
     }
-    secfile_insert_str(sf, it.value(), "server.%s", it.key());
+    QByteArray qba = it.key().toLocal8Bit();
+    secfile_insert_str(sf, it.value(), "server.%s", qba.data());
     it++; // IT comes 4 U
   }
 }
@@ -5670,7 +5671,8 @@ static void options_dialogs_save(struct section_file *sf)
   options_dialogs_update();
   dialOptionsHash::const_iterator it = dialog_options->constBegin();
   while (it != dialog_options->constEnd()) {
-    secfile_insert_bool(sf, it.value(), "client.%s", it.key());
+    QByteArray qba = it.key().toLocal8Bit();
+    secfile_insert_bool(sf, (bool)it.value(), "client.%s", qba.data());
     it++;
   }
 }
