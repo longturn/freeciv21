@@ -55,8 +55,7 @@ void team_slots_init(void)
   int i;
 
   /* Init team slots and names. */
-  team_slots.tslots = static_cast<team_slot *>(
-      fc_calloc(team_slot_count(), sizeof(*team_slots.tslots)));
+  team_slots.tslots = new team_slot[team_slot_count()]();
   /* Can't use the defined functions as the needed data will be
    * defined here. */
   for (i = 0; i < team_slot_count(); i++) {
@@ -88,19 +87,19 @@ void team_slots_free(void)
       team_destroy(tslot->team);
     }
     if (NULL != tslot->defined_name) {
-      free(tslot->defined_name);
+      delete[] tslot->defined_name;
     }
     if (NULL != tslot->rule_name) {
-      free(tslot->rule_name);
+      delete[] tslot->rule_name;
     }
 #ifdef FREECIV_ENABLE_NLS
     if (NULL != tslot->name_translation) {
-      free(tslot->name_translation);
+      delete[] tslot->name_translation;
     }
 #endif /* FREECIV_ENABLE_NLS */
   }
   team_slots_iterate_end;
-  free(team_slots.tslots);
+  delete[] team_slots.tslots;
   team_slots.tslots = NULL;
 
   team_slots.used_slots = 0;
@@ -288,18 +287,18 @@ void team_slot_set_defined_name(struct team_slot *tslot,
   fc_assert_ret(NULL != team_name);
 
   if (NULL != tslot->defined_name) {
-    free(tslot->defined_name);
+    delete[] tslot->defined_name;
   }
   tslot->defined_name = fc_strdup(team_name);
 
   if (NULL != tslot->rule_name) {
-    free(tslot->rule_name);
+    delete[] tslot->rule_name;
   }
   tslot->rule_name = fc_strdup(Qn_(team_name));
 
 #ifdef FREECIV_ENABLE_NLS
   if (NULL != tslot->name_translation) {
-    free(tslot->name_translation);
+    delete[] tslot->name_translation;
   }
   tslot->name_translation = fc_strdup(Q_(team_name));
 #endif /* FREECIV_ENABLE_NLS */
@@ -332,7 +331,7 @@ struct team *team_new(struct team_slot *tslot)
 
   /* Now create the team. */
   log_debug("Create team for slot %d.", team_slot_index(tslot));
-  pteam = static_cast<team *>(fc_calloc(1, sizeof(*pteam)));
+  pteam = new team[1]();
   pteam->slot = tslot;
   tslot->team = pteam;
 
@@ -360,7 +359,7 @@ void team_destroy(struct team *pteam)
   fc_assert(tslot->team == pteam);
 
   player_list_destroy(pteam->plrlist);
-  free(pteam);
+  FCPP_FREE(pteam);
   tslot->team = NULL;
   team_slots.used_slots--;
 }

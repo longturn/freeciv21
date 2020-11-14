@@ -202,13 +202,12 @@ static const char *audiospec_fullname(QString &audioset_name, bool music)
   const char *suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
       music ? QString("stdmusic") : QString("stdsounds");
-  char *fname = static_cast<char *>(
-      fc_malloc(audioset_name.size() + strlen(suffix) + 1));
+  char *fname = new char[audioset_name.size() + strlen(suffix) + 1];
   const char *dname;
 
   sprintf(fname, "%s%s", qUtf8Printable(audioset_name), suffix);
   dname = fileinfoname(get_data_dirs(), fname);
-  free(fname);
+  delete[] fname;
 
   if (dname) {
     return fc_strdup(dname);
@@ -324,12 +323,12 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   check_audiofile_capstr(ss_tagfile, ss_filename, us_ss_capstr,
                          "soundspec.options");
 
-  free((void *) ss_filename);
+  delete[] ss_filename;
 
   check_audiofile_capstr(ms_tagfile, ms_filename, us_ms_capstr,
                          "musicspec.options");
 
-  free((void *) ms_filename);
+  delete[] ms_filename;
 
   {
     static bool atexit_set = FALSE;

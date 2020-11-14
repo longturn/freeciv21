@@ -95,7 +95,7 @@ void handle_readline_input_callback(char *line)
   con_prompt_enter(); /* just got an 'Enter' hit */
   auto line_internal = local_to_internal_string_malloc(line);
   (void) handle_stdin_input(NULL, line_internal);
-  free(line_internal);
+  delete[] line_internal;
   free(line);
 }
 

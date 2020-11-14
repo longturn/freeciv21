@@ -76,10 +76,11 @@ private slots:
 
 public:
   explicit chat_input(QWidget *parent = nullptr);
-
+  ~chat_input();
   virtual void chat_word_list_changed(const QStringList &);
-
   bool event(QEvent *event);
+private:
+  QCompleter *cmplt;
 };
 
 /***************************************************************************

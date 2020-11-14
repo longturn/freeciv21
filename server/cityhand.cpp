@@ -590,8 +590,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
   }
 
   if (!pcity->cm_parameter) {
-    pcity->cm_parameter =
-        (cm_parameter *) fc_calloc(1, sizeof(struct cm_parameter));
+    pcity->cm_parameter = new cm_parameter[1]();
   }
 
   cm_copy_parameter(pcity->cm_parameter, &parameter);

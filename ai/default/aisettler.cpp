@@ -222,7 +222,7 @@ static struct cityresult *cityresult_new(struct tile *ptile)
 
   fc_assert_ret_val(ptile != NULL, NULL);
 
-  result = static_cast<cityresult *>(fc_calloc(1, sizeof(*result)));
+  result = new cityresult[1]();
   result->tile = ptile;
   result->total = 0;
   result->result = -666;
@@ -255,7 +255,7 @@ static void cityresult_destroy(struct cityresult *result)
     if (result->tdc_hash != NULL) {
       tile_data_cache_hash_destroy(result->tdc_hash);
     }
-    free(result);
+    delete[] result;
   }
 }
 
@@ -458,8 +458,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
  *****************************************************************************/
 struct tile_data_cache *tile_data_cache_new(void)
 {
-  struct tile_data_cache *ptdc_copy =
-      static_cast<tile_data_cache *>(fc_calloc(1, sizeof(*ptdc_copy)));
+  struct tile_data_cache *ptdc_copy = new tile_data_cache[1]();
 
   /* Set the turn the tile data cache was created. */
   ptdc_copy->turn = game.info.turn;
@@ -494,7 +493,7 @@ tile_data_cache_copy(const struct tile_data_cache *ptdc)
 static void tile_data_cache_destroy(struct tile_data_cache *ptdc)
 {
   if (ptdc) {
-    free(ptdc);
+    delete[] ptdc;
   }
 }
 
@@ -638,14 +637,10 @@ static void print_cityresult(struct player *pplayer,
   fc_assert_ret(cr->tdc_hash != NULL);
   fc_assert_ret(tiles > 0);
 
-  city_map_reserved =
-      static_cast<int *>(fc_calloc(tiles, sizeof(*city_map_reserved)));
-  city_map_food =
-      static_cast<int *>(fc_calloc(tiles, sizeof(*city_map_food)));
-  city_map_shield =
-      static_cast<int *>(fc_calloc(tiles, sizeof(*city_map_shield)));
-  city_map_trade =
-      static_cast<int *>(fc_calloc(tiles, sizeof(*city_map_trade)));
+  city_map_reserved = new int[tiles]();
+  city_map_food = new int[tiles]();
+  city_map_shield = new int[tiles]();
+  city_map_trade = new int[tiles]();
 
   city_map_iterate(cr->city_radius_sq, cindex, x, y)
   {
@@ -678,10 +673,10 @@ static void print_cityresult(struct player *pplayer,
            TILE_XY(cr->tile), cr->city_radius_sq);
   citylog_map_data(LOG_TEST, cr->city_radius_sq, city_map_trade);
 
-  free(city_map_reserved);
-  free(city_map_food);
-  free(city_map_shield);
-  free(city_map_trade);
+  delete[] city_map_reserved;
+  delete[] city_map_food;
+  delete[] city_map_shield;
+  delete[] city_map_trade;
 
   log_test("city center (%d, %d) %d + best other (abs: %d, %d)"
            " (cindex: %d) %d",
@@ -1009,8 +1004,7 @@ void dai_auto_settler_init(struct ai_plr *ai)
   fc_assert_ret(ai != NULL);
   fc_assert_ret(ai->settler == NULL);
 
-  ai->settler =
-      static_cast<ai_settler *>(fc_calloc(1, sizeof(*ai->settler)));
+  ai->settler = new ai_settler[1]();
   ai->settler->tdc_hash = tile_data_cache_hash_new();
 
 #ifdef FREECIV_DEBUG
@@ -1238,7 +1232,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
     if (ai->settler->tdc_hash) {
       tile_data_cache_hash_destroy(ai->settler->tdc_hash);
     }
-    free(ai->settler);
+    delete[] ai->settler;
   }
   ai->settler = NULL;
 }

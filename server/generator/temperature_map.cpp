@@ -106,8 +106,7 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
 void destroy_tmap(void)
 {
   fc_assert_ret(NULL != temperature_map);
-  free(temperature_map);
-  temperature_map = NULL;
+  FCPP_FREE(temperature_map);
 }
 
 /**********************************************************************/ /**
@@ -124,8 +123,7 @@ void create_tmap(bool real)
   /* to debug, never load a this time */
   fc_assert_ret(NULL == temperature_map);
 
-  temperature_map = static_cast<int *>(
-      fc_malloc(sizeof(*temperature_map) * MAP_INDEX_SIZE));
+  temperature_map = new int[MAP_INDEX_SIZE];
   whole_map_iterate(&(wld.map), ptile)
   {
     /* the base temperature is equal to base map_colatitude */

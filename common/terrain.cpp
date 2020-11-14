@@ -66,7 +66,7 @@ void terrains_free(void)
     if (pterrain->resources != NULL) {
       /* Server allocates this on ruleset loading, client when
        * ruleset packet is received. */
-      free(pterrain->resources);
+      delete[] pterrain->resources;
       pterrain->resources = NULL;
     }
     if (pterrain->rgb != NULL) {

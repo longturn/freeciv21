@@ -285,11 +285,6 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
     if (TB_IGNORE == node->behavior && params->start_tile != ptile) {
       return FALSE;
     }
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* The default. */
-    node->behavior = TB_NORMAL;
-#endif
   }
 
   if (TILE_UNKNOWN != node_known_type) {
@@ -325,12 +320,6 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
         node->behavior = TB_DONT_LEAVE;
       }
       node->action = action;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    } else {
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->action = PF_ACTION_NONE;
-#endif
     }
 
     /* Test the possibility to move from/to 'ptile'. */
@@ -359,30 +348,14 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
         && !params->get_zoc(params->owner, ptile, params->map)) {
       node->zoc_number =
           (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    } else {
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->zoc_number = ZOC_MINE;
-#endif
     }
   } else {
     node->move_scope = PF_MS_NATIVE;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    /* Nodes are allocated by fc_calloc(), so  should be already set to 0. */
-    node->action = PF_ACTION_NONE;
-    node->zoc_number = ZOC_MINE;
-#endif
   }
 
   /* Evaluate the extra cost of the destination */
   if (NULL != params->get_EC) {
     node->extra_tile = params->get_EC(ptile, node_known_type, params);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* Nodes are allocated by fc_calloc(), so  should be already set to 0. */
-    node->extra_tile = 0;
-#endif
   }
 
   return TRUE;
@@ -846,9 +819,9 @@ static void pf_normal_map_destroy(struct pf_map *pfm)
 {
   struct pf_normal_map *pfnm = PF_NORMAL_MAP(pfm);
 
-  free(pfnm->lattice);
+  delete[] pfnm->lattice;
   map_index_pq_destroy(pfnm->queue);
-  free(pfnm);
+  delete pfnm;
 }
 
 /************************************************************************/ /**
@@ -870,8 +843,7 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pfnm->lattice = static_cast<pf_normal_node *>(
-      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_normal_node)));
+  pfnm->lattice = new pf_normal_node[MAP_INDEX_SIZE]();
   pfnm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
   if (NULL == parameter->get_costs) {
@@ -1038,11 +1010,6 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
     if (TB_IGNORE == node->behavior && params->start_tile != ptile) {
       return FALSE;
     }
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* The default. */
-    node->behavior = TB_NORMAL;
-#endif
   }
 
   if (TILE_UNKNOWN != node_known_type) {
@@ -1078,12 +1045,6 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
         node->behavior = TB_DONT_LEAVE;
       }
       node->action = action;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    } else {
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->action = PF_ACTION_NONE;
-#endif
     }
 
     /* Test the possibility to move from/to 'ptile'. */
@@ -1112,37 +1073,15 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
         && !params->get_zoc(params->owner, ptile, params->map)) {
       node->zoc_number =
           (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    } else {
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->zoc_number = ZOC_MINE;
-#endif
     }
   } else {
     node->move_scope = PF_MS_NATIVE;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    /* Nodes are allocated by fc_calloc(), so  should be already set to 0. */
-    node->action = PF_ACTION_NONE;
-    node->zoc_number = ZOC_MINE;
-#endif
   }
 
   /* Evaluate the extra cost of the destination. */
   if (NULL != params->get_EC) {
     node->extra_tile = params->get_EC(ptile, node_known_type, params);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* Nodes are allocated by fc_calloc(), so should be already set to 0. */
-    node->extra_tile = 0;
-#endif
   }
-
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  /* Nodes are allocated by fc_calloc(), so should be already set to
-   * FALSE. */
-  node->waited = FALSE;
-#endif
 
   node->is_dangerous =
       params->is_pos_dangerous(ptile, node_known_type, params);
@@ -1618,7 +1557,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
             node1->dir_to_here = dir;
             if (NULL != node1->danger_segment) {
               /* Clear the previously recorded path back. */
-              free(node1->danger_segment);
+              delete node1->danger_segment;
               node1->danger_segment = NULL;
             }
             if (node->is_dangerous) {
@@ -1849,13 +1788,13 @@ static void pf_danger_map_destroy(struct pf_map *pfm)
   /* Need to clean up the dangling danger segments. */
   for (i = 0, node = pfdm->lattice; i < MAP_INDEX_SIZE; i++, node++) {
     if (node->danger_segment) {
-      free(node->danger_segment);
+      delete node->danger_segment;
     }
   }
-  free(pfdm->lattice);
+  delete pfdm->lattice;
   map_index_pq_destroy(pfdm->queue);
   map_index_pq_destroy(pfdm->danger_queue);
-  free(pfdm);
+  delete pfdm;
 }
 
 /************************************************************************/ /**
@@ -1877,8 +1816,7 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pfdm->lattice = static_cast<pf_danger_node *>(
-      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_danger_node)));
+  pfdm->lattice = new pf_danger_node[MAP_INDEX_SIZE]();
   pfdm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pfdm->danger_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -2069,11 +2007,6 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
     if (TB_IGNORE == node->behavior && params->start_tile != ptile) {
       return FALSE;
     }
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* The default. */
-    node->behavior = TB_NORMAL;
-#endif
   }
 
   if (TILE_UNKNOWN != node_known_type) {
@@ -2110,15 +2043,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
         node->behavior = TB_DONT_LEAVE;
       }
       node->action = action;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-      node->moves_left_req = 0; /* Attack is always possible theorically. */
-#endif
     } else {
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->action = PF_ACTION_NONE;
-#endif
       node->moves_left_req =
           params->get_moves_left_req(ptile, node_known_type, params);
       if (PF_IMPOSSIBLE_MC == node->moves_left_req) {
@@ -2158,12 +2083,6 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
         && !params->get_zoc(params->owner, ptile, params->map)) {
       node->zoc_number =
           (0 < unit_list_size(ptile->units) ? ZOC_ALLIED : ZOC_NO);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    } else {
-      /* Nodes are allocated by fc_calloc(), so should be already set to
-       * 0. */
-      node->zoc_number = ZOC_MINE;
-#endif
     }
   } else {
     node->moves_left_req =
@@ -2179,28 +2098,12 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
     }
 
     node->move_scope = PF_MS_NATIVE;
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-    /* Nodes are allocated by fc_calloc(), so  should be already set to 0. */
-    node->action = PF_ACTION_NONE;
-    node->zoc_number = ZOC_MINE;
-#endif
   }
 
   /* Evaluate the extra cost of the destination. */
   if (NULL != params->get_EC) {
     node->extra_tile = params->get_EC(ptile, node_known_type, params);
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  } else {
-    /* Nodes are allocated by fc_calloc(), so should be already set to 0. */
-    node->extra_tile = 0;
-#endif
   }
-
-#ifdef ZERO_VARIABLES_FOR_SEARCHING
-  /* Nodes are allocated by fc_calloc(), so should be already set to 0. */
-  node->pos = NULL;
-  node->segment = NULL;
-#endif
 
   return TRUE;
 }
@@ -2239,7 +2142,7 @@ static inline void pf_fuel_pos_unref(struct pf_fuel_pos *pos)
   while (NULL != pos && 0 == --pos->ref_count) {
     struct pf_fuel_pos *prev = pos->prev;
 
-    free(pos);
+    delete pos;
     pos = prev;
   }
 }
@@ -3062,10 +2965,10 @@ static void pf_fuel_map_destroy(struct pf_map *pfm)
     pf_fuel_pos_unref(node->pos);
     pf_fuel_pos_unref(node->segment);
   }
-  free(pffm->lattice);
+  delete pffm->lattice;
   map_index_pq_destroy(pffm->queue);
   map_index_pq_destroy(pffm->waited_queue);
-  free(pffm);
+  delete pffm;
 }
 
 /************************************************************************/ /**
@@ -3087,8 +2990,7 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
 #endif /* PF_DEBUG */
 
   /* Allocate the map. */
-  pffm->lattice = static_cast<pf_fuel_node *>(
-      fc_calloc(MAP_INDEX_SIZE, sizeof(struct pf_fuel_node)));
+  pffm->lattice = new pf_fuel_node[MAP_INDEX_SIZE]();
   pffm->queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
   pffm->waited_queue = map_index_pq_new(INITIAL_QUEUE_SIZE);
 
@@ -3450,7 +3352,7 @@ bool pf_path_advance(struct pf_path *path, struct tile *ptile)
   new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions + i,
          path->length * sizeof(*path->positions));
-  free(path->positions);
+  delete[] path->positions;
   path->positions = new_positions;
 
   return TRUE;
@@ -3482,7 +3384,7 @@ bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
   new_positions = new pf_position[path->length];
   memcpy(new_positions, path->positions,
          path->length * sizeof(*path->positions));
-  free(path->positions);
+  delete[] path->positions;
   path->positions = new_positions;
 
   return TRUE;
@@ -3632,7 +3534,7 @@ static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
  ****************************************************************************/
 static void pf_reverse_map_destroy_pos(struct pf_position *pos)
 {
-  free(pos);
+  delete pos;
 }
 
 /************************************************************************/ /**
@@ -3640,7 +3542,7 @@ static void pf_reverse_map_destroy_pos(struct pf_position *pos)
  ****************************************************************************/
 static void pf_reverse_map_destroy_param(struct pf_parameter *param)
 {
-  free(param);
+  delete param;
 }
 
 /************************************************************************/ /**

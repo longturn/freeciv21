@@ -562,8 +562,7 @@ static void savegame3_save_real(struct section_file *file,
  ****************************************************************************/
 static struct loaddata *loaddata_new(struct section_file *file)
 {
-  struct loaddata *loading =
-      static_cast<loaddata *>(calloc(1, sizeof(*loading)));
+  struct loaddata *loading = new loaddata[1]();
   loading->file = file;
   loading->secfile_options = NULL;
 
@@ -600,51 +599,18 @@ static struct loaddata *loaddata_new(struct section_file *file)
  ****************************************************************************/
 static void loaddata_destroy(struct loaddata *loading)
 {
-  if (loading->improvement.order != NULL) {
-    free(loading->improvement.order);
-  }
-
-  if (loading->technology.order != NULL) {
-    free(loading->technology.order);
-  }
-
-  if (loading->activities.order != NULL) {
-    free(loading->activities.order);
-  }
-
-  if (loading->trait.order != NULL) {
-    free(loading->trait.order);
-  }
-
-  if (loading->extra.order != NULL) {
-    free(loading->extra.order);
-  }
-
-  if (loading->multiplier.order != NULL) {
-    free(loading->multiplier.order);
-  }
-
-  if (loading->specialist.order != NULL) {
-    free(loading->specialist.order);
-  }
-
-  if (loading->action.order != NULL) {
-    free(loading->action.order);
-  }
-
-  if (loading->act_dec.order != NULL) {
-    free(loading->act_dec.order);
-  }
-
-  if (loading->ssa.order != NULL) {
-    free(loading->ssa.order);
-  }
-
-  if (loading->worked_tiles != NULL) {
-    free(loading->worked_tiles);
-  }
-
-  free(loading);
+  NFCPP_FREE(loading->improvement.order);
+  NFCPP_FREE(loading->technology.order);
+  NFCPP_FREE(loading->activities.order);
+  NFCPP_FREE(loading->trait.order);
+  NFCPP_FREE(loading->extra.order);
+  NFCPP_FREE(loading->multiplier.order);
+  NFCPP_FREE(loading->specialist.order);
+  NFCPP_FREE(loading->action.order);
+  NFCPP_FREE(loading->act_dec.order);
+  NFCPP_FREE(loading->ssa.order);
+  NFCPP_FREE(loading->worked_tiles);
+  delete[] loading;
 }
 
 /************************************************************************/ /**
@@ -869,7 +835,7 @@ static enum unit_activity char2activity(char activity)
  ****************************************************************************/
 static char *quote_block(const void *const data, int length)
 {
-  char *buffer = static_cast<char *>(fc_malloc(length * 3 + 10));
+  char *buffer = new char[length * 3 + 10];
   size_t offset;
   int i;
 
@@ -1421,8 +1387,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = static_cast<extra_type **>(
-        fc_calloc(nmod, sizeof(*loading->extra.order)));
+    loading->extra.order = new extra_type*[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1446,8 +1411,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = static_cast<multiplier **>(fc_calloc(
-        loading->multiplier.size, sizeof(*loading->multiplier.order)));
+    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -1482,8 +1446,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * way for consistency with other types, and to be prepared for the time
      * it needs to be this way. */
     nmod = 4 * ((loading->specialist.size + 3) / 4);
-    loading->specialist.order = static_cast<specialist **>(
-        fc_calloc(nmod, sizeof(*loading->specialist.order)));
+    loading->specialist.order = new specialist *[nmod]();
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
@@ -1507,8 +1470,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->action.size,
                                      "savefile.action_vector");
 
-    loading->action.order = static_cast<action_id *>(
-        fc_calloc(loading->action.size, sizeof(*loading->action.order)));
+    loading->action.order = new action_id[loading->action.size]();
 
     for (j = 0; j < loading->action.size; j++) {
       struct action *real_action = action_by_rule_name(modname[j]);
@@ -1539,8 +1501,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->act_dec.size,
                                      "savefile.action_decision_vector");
 
-    loading->act_dec.order = static_cast<action_decision *>(
-        fc_calloc(loading->act_dec.size, sizeof(*loading->act_dec.order)));
+    loading->act_dec.order = new action_decision[loading->act_dec.size]();
 
     for (j = 0; j < loading->act_dec.size; j++) {
       loading->act_dec.order[j] =
@@ -1564,9 +1525,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
     modname = secfile_lookup_str_vec(loading->file, &loading->ssa.size,
                                      "savefile.server_side_agent_list");
-
-    loading->ssa.order = static_cast<server_side_agent *>(
-        fc_calloc(loading->ssa.size, sizeof(*loading->ssa.order)));
+    loading->ssa.order = new server_side_agent[loading->ssa.size]();
 
     for (j = 0; j < loading->ssa.size; j++) {
       loading->ssa.order[j] =
@@ -1700,8 +1659,7 @@ static void sg_save_savefile(struct savedata *saving)
 
     i = 0;
 
-    modname = static_cast<const char **>(
-        fc_calloc(ACTIVITY_LAST, sizeof(*modname)));
+    modname = new const char *[ACTIVITY_LAST]();
 
     for (j = 0; j < ACTIVITY_LAST; j++) {
       modname[i++] = unit_activity_name(static_cast<unit_activity>(j));
@@ -1717,10 +1675,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.specialists_size");
   {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(specialist_count(), sizeof(*modname)));
+    modname = new const char *[specialist_count()]();
 
     specialist_type_iterate(sp)
     {
@@ -1741,8 +1697,7 @@ static void sg_save_savefile(struct savedata *saving)
     enum trait tr;
     int j;
 
-    modname =
-        static_cast<const char **>(fc_calloc(TRAIT_COUNT, sizeof(*modname)));
+    modname = new const char *[TRAIT_COUNT]();
 
     for (tr = trait_begin(), j = 0; tr != trait_end();
          tr = trait_next(tr), j++) {
@@ -1759,10 +1714,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.extras_size");
   if (game.control.num_extra_types > 0) {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(game.control.num_extra_types, sizeof(*modname)));
+    modname = new const char *[game.control.num_extra_types]();
 
     extra_type_iterate(pextra) { modname[i++] = extra_rule_name(pextra); }
     extra_type_iterate_end;
@@ -1778,10 +1731,8 @@ static void sg_save_savefile(struct savedata *saving)
                      "savefile.multipliers_size");
   if (multiplier_count() > 0) {
     const char **modname;
-
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(multiplier_count(), sizeof(*modname)));
+    modname = new const char *[multiplier_count()]();
 
     multipliers_iterate(pmul)
     {
@@ -1801,8 +1752,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(DS_LAST, sizeof(*modname)));
+    modname = new const char *[DS_LAST]();
 
     for (j = 0; j < DS_LAST; j++) {
       modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
@@ -1820,8 +1770,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(CITYO_LAST, sizeof(*modname)));
+    modname = new const char *[CITYO_LAST]();
 
     for (j = 0; j < CITYO_LAST; j++) {
       modname[i++] = city_options_name(static_cast<city_options>(j));
@@ -1839,8 +1788,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(NUM_ACTIONS, sizeof(*modname)));
+    modname = new const char *[NUM_ACTIONS]();
 
     for (j = 0; j < NUM_ACTIONS; j++) {
       modname[i++] = action_id_rule_name(j);
@@ -1859,8 +1807,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname = static_cast<const char **>(
-        fc_calloc(ACT_DEC_COUNT, sizeof(*modname)));
+    modname = new const char *[ACT_DEC_COUNT]();
 
     for (j = 0; j < ACT_DEC_COUNT; j++) {
       modname[i++] = action_decision_name(static_cast<action_decision>(j));
@@ -1879,8 +1826,7 @@ static void sg_save_savefile(struct savedata *saving)
     int j;
 
     i = 0;
-    modname =
-        static_cast<const char **>(fc_calloc(SSA_COUNT, sizeof(*modname)));
+    modname = new const char *[SSA_COUNT]();
 
     for (j = 0; j < SSA_COUNT; j++) {
       modname[i++] =
@@ -3204,8 +3150,7 @@ static void sg_load_map_worked(struct loaddata *loading)
   sg_failure_ret(loading->worked_tiles == NULL,
                  "City worked map not loaded!");
 
-  loading->worked_tiles = static_cast<int *>(
-      fc_malloc(MAP_INDEX_SIZE * sizeof(*loading->worked_tiles)));
+  loading->worked_tiles = new int[MAP_INDEX_SIZE];
 
   for (y = 0; y < wld.map.ysize; y++) {
     const char *buffer =
@@ -3355,8 +3300,7 @@ static void sg_save_map_known(struct savedata *saving)
                         "game.save_known");
     if (game.server.save_options.save_known) {
       int j, p, l, i;
-      unsigned int *known = static_cast<unsigned int *>(
-          fc_calloc(lines * MAP_INDEX_SIZE, sizeof(*known)));
+      unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
 
       /* HACK: we convert the data into a 32-bit integer, and then save it as
        * hex. */
@@ -3395,7 +3339,7 @@ static void sg_save_map_known(struct savedata *saving)
         }
       }
 
-      FC_FREE(known);
+      FCPP_FREE(known);
     }
   }
 }
@@ -4748,8 +4692,7 @@ static void sg_load_player_cities(struct loaddata *loading,
     if (pcity != NULL) {
       const char *str;
       int nat_x, nat_y;
-      struct worker_task *ptask =
-          static_cast<worker_task *>(fc_malloc(sizeof(struct worker_task)));
+      struct worker_task *ptask = new worker_task;
 
       nat_x = secfile_lookup_int_default(loading->file, -1,
                                          "player%d.task%d.x", plrno, i);
@@ -4855,8 +4798,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
                                          citystr, i);
 
     if (partner != 0) {
-      struct trade_route *proute =
-          static_cast<trade_route *>(fc_malloc(sizeof(struct trade_route)));
+      struct trade_route *proute = new trade_route();
       const char *dir;
       const char *good_str;
 
@@ -5070,8 +5012,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     if (len > 0) {
       const char *rally_orders, *rally_dirs, *rally_activities;
 
-      pcity->rally_point.orders = static_cast<unit_order *>(
-          fc_malloc(len * sizeof(*(pcity->rally_point.orders))));
+      pcity->rally_point.orders = new unit_order[len];
       pcity->rally_point.persistent = secfile_lookup_bool_default(
           loading->file, FALSE, "%s.rally_point_persistent", citystr);
       pcity->rally_point.vigilant = secfile_lookup_bool_default(
@@ -5148,8 +5089,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
     bool enabled = secfile_lookup_bool_default(loading->file, FALSE,
                                                "%s.cma_enabled", citystr);
     if (enabled) {
-      struct cm_parameter *param = static_cast<cm_parameter *>(
-          fc_calloc(1, sizeof(struct cm_parameter)));
+      struct cm_parameter *param = new cm_parameter[1]();
 
       for (i = 0; i < O_LAST; i++) {
         param->minimal_surplus[i] = secfile_lookup_int_default(
@@ -6027,8 +5967,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
     if (len > 0) {
       const char *orders_unitstr, *dir_unitstr, *act_unitstr;
 
-      punit->orders.list = static_cast<unit_order *>(
-          fc_malloc(len * sizeof(*(punit->orders.list))));
+      punit->orders.list = new unit_order[len];
       punit->orders.length = len;
       punit->orders.index = secfile_lookup_int_default(
           loading->file, 0, "%s.orders_index", unitstr);
@@ -6546,7 +6485,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
                                       plrno),
                    "%s", secfile_error());
 
-    quoted = static_cast<char *>(fc_malloc(quoted_length + 1));
+    quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
     plr->attribute_block.data = fc_malloc(plr->attribute_block.length);
     for (part_nr = 0; part_nr < parts; part_nr++) {
@@ -6572,7 +6511,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
     actual_length = unquote_block(quoted, plr->attribute_block.data,
                                   plr->attribute_block.length);
     fc_assert(actual_length == plr->attribute_block.length);
-    free(quoted);
+    delete[] quoted;
   }
 }
 
@@ -6652,7 +6591,7 @@ static void sg_save_player_attributes(struct savedata *saving,
       quoted_at = &quoted_at[size_of_current_part];
     }
     fc_assert(bytes_left == 0);
-    free(quoted);
+    delete[] quoted;
   }
 #undef PART_ADJUST
 #undef PART_SIZE
@@ -7351,8 +7290,7 @@ static void sg_load_treaties(struct loaddata *loading)
     if (p0 == NULL || p1 == NULL) {
       log_error("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
-      struct Treaty *ptreaty =
-          static_cast<Treaty *>(fc_malloc(sizeof(*ptreaty)));
+      struct Treaty *ptreaty = new Treaty;
 
       init_treaty(ptreaty, p0, p1);
       treaty_list_prepend(treaties, ptreaty);

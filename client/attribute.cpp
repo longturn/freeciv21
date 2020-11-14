@@ -90,8 +90,7 @@ static bool attr_key_comp(const struct attr_key *pkey1,
  ****************************************************************************/
 static struct attr_key *attr_key_dup(const struct attr_key *pkey)
 {
-  struct attr_key *pnew_key =
-      static_cast<attr_key *>(fc_malloc(sizeof(*pnew_key)));
+  struct attr_key *pnew_key = new attr_key();
 
   *pnew_key = *pkey;
   return pnew_key;
@@ -103,7 +102,7 @@ static struct attr_key *attr_key_dup(const struct attr_key *pkey)
 static void attr_key_destroy(struct attr_key *pkey)
 {
   fc_assert_ret(NULL != pkey);
-  free(pkey);
+  delete pkey;
 }
 
 /************************************************************************/ /**
@@ -177,7 +176,7 @@ serialize_hash(const struct attribute_hash *hash, void **pdata,
   /*
    * Step 2: allocate memory.
    */
-  result = fc_malloc(total_length);
+  result = new char[total_length];
   dio_output_init(&dout, result, total_length);
 
   /*
@@ -290,7 +289,7 @@ static enum attribute_serial unserialize_hash(struct attribute_hash *hash,
                   "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
     }
-    pvalue = fc_malloc(value_length + 4);
+    pvalue = new char[value_length + 4];
 
     dio_output_init(&dout, pvalue, value_length + 4);
     dio_put_uint32_raw(&dout, value_length);
@@ -306,7 +305,7 @@ static enum attribute_serial unserialize_hash(struct attribute_hash *hash,
        * to delete all attributes. Another symptom of the bug is the
        * value_length (above) is set to a random value, which can also
        * cause a bug. */
-      free(pvalue);
+      ::operator delete[](pvalue);
       attribute_hash_clear(hash);
       return A_SERIAL_FAIL;
     }
@@ -395,7 +394,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
   fc_assert_ret(NULL != attribute_hash);
 
   if (0 != data_length) {
-    void *pvalue = fc_malloc(data_length + 4);
+    void *pvalue = new char[data_length + 4];
     struct raw_data_out dout;
 
     dio_output_init(&dout, pvalue, data_length + 4);

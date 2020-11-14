@@ -275,7 +275,7 @@ static void dai_city_choose_build(struct ai_type *ait,
       newchoice = domestic_advisor_choose_build(ait, pplayer, pcity);
       adv_choice_copy(&(city_data->choice),
                       adv_better_choice(&(city_data->choice), newchoice));
-      adv_free_choice(newchoice);
+      delete newchoice;
     }
   }
 
@@ -1134,8 +1134,7 @@ cleanup:
  **************************************************************************/
 void dai_city_alloc(struct ai_type *ait, struct city *pcity)
 {
-  struct ai_city *city_data =
-      static_cast<ai_city *>(fc_calloc(1, sizeof(struct ai_city)));
+  struct ai_city *city_data = new ai_city[1]();
 
   city_data->building_wait = BUILDING_WAIT_MINIMUM;
   adv_init_choice(&(city_data->choice));
@@ -1153,7 +1152,7 @@ void dai_city_free(struct ai_type *ait, struct city *pcity)
   if (city_data != NULL) {
     adv_deinit_choice(&(city_data->choice));
     city_set_ai_data(pcity, ait, NULL);
-    FC_FREE(city_data);
+    FCPP_FREE(city_data);
   }
 }
 

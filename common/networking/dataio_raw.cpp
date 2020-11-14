@@ -483,7 +483,7 @@ void dio_put_string_raw(struct raw_data_out *dout, const char *value)
 
     if ((buffer = (*put_conv_callback)(value, &length))) {
       dio_put_memory_raw(dout, buffer, length + 1);
-      free(buffer);
+      delete[] buffer;
     }
   } else {
     dio_put_memory_raw(dout, value, strlen(value) + 1);

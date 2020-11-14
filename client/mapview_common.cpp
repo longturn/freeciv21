@@ -413,7 +413,7 @@ void update_animation(void)
                           anim->height);
       }
       animation_list_remove(animations, anim);
-      free(anim);
+      delete anim;
 
       if (animation_list_size(animations) > 0) {
         /* Start next */
@@ -460,7 +460,7 @@ static inline struct gotoline_counter *gotoline_counter_new(void)
 static void gotoline_counter_destroy(struct gotoline_counter *pglc)
 {
   fc_assert_ret(NULL != pglc);
-  free(pglc);
+  delete pglc;
 }
 
 /************************************************************************/ /**
@@ -1533,8 +1533,7 @@ void put_nuke_mushroom_pixmaps(struct tile *ptile)
   get_sprite_dimensions(mysprite, &width, &height);
 
   if (frame_by_frame_animation) {
-    struct animation *anim =
-        static_cast<animation *>(fc_malloc(sizeof(struct animation)));
+    struct animation *anim = new animation();
 
     anim->type = ANIM_NUKE;
     anim->id = -1;
@@ -2586,8 +2585,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
   unqueue_mapview_updates(TRUE);
 
   if (frame_by_frame_animation) {
-    struct animation *anim =
-        static_cast<animation *>(fc_malloc(sizeof(struct animation)));
+    struct animation *anim = new animation();
     struct unit *winning_unit;
     int winner_end_hp;
 
@@ -2618,7 +2616,7 @@ void decrease_unit_hp_smooth(struct unit *punit0, int hp0,
         MAX(losing_unit->hp, anim->battle.winner_hp_start - winner_end_hp);
     animation_add(anim);
 
-    anim = static_cast<animation *>(fc_malloc(sizeof(struct animation)));
+    anim = new animation();
     anim->type = ANIM_EXPL;
     anim->id = winning_unit->id;
     anim->expl.tile = losing_unit->tile;
@@ -2744,8 +2742,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
     tuh = tileset_unit_height(tileset) * map_zoom;
 
     if (frame_by_frame_animation) {
-      struct animation *anim =
-          static_cast<animation *>(fc_malloc(sizeof(struct animation)));
+      struct animation *anim = new animation();
 
       anim->type = ANIM_MOVEMENT;
       anim->id = punit->id;
@@ -3840,8 +3837,7 @@ static struct link_mark *link_mark_find(enum text_link_type type, int id)
 static struct link_mark *link_mark_new(enum text_link_type type, int id,
                                        int turns)
 {
-  struct link_mark *pmark =
-      static_cast<link_mark *>(fc_malloc(sizeof(struct link_mark)));
+  struct link_mark *pmark = new link_mark();
 
   pmark->type = type;
   pmark->id = id;

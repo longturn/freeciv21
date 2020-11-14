@@ -103,8 +103,7 @@ static inline void update_queue_push(uq_callback_t callback,
 static inline struct update_queue_data *
 update_queue_data_new(void *data, uq_free_fn_t free_data_func)
 {
-  struct update_queue_data *uq_data =
-      static_cast<update_queue_data *>(fc_malloc(sizeof(*uq_data)));
+  struct update_queue_data *uq_data = new update_queue_data();
 
   uq_data->data = data;
   uq_data->free_data_func = free_data_func;
@@ -120,7 +119,7 @@ static void update_queue_data_destroy(struct update_queue_data *uq_data)
   if (NULL != uq_data->free_data_func) {
     uq_data->free_data_func(uq_data->data);
   }
-  free(uq_data);
+  delete uq_data;
 }
 
 /************************************************************************/ /**
@@ -130,8 +129,7 @@ static inline struct waiting_queue_data *
 waiting_queue_data_new(uq_callback_t callback, void *data,
                        uq_free_fn_t free_data_func)
 {
-  struct waiting_queue_data *wq_data =
-      static_cast<waiting_queue_data *>(fc_malloc(sizeof(*wq_data)));
+  struct waiting_queue_data *wq_data = new waiting_queue_data;
 
   wq_data->callback = callback;
   wq_data->uq_data = update_queue_data_new(data, free_data_func);
@@ -148,7 +146,7 @@ static void waiting_queue_data_destroy(struct waiting_queue_data *wq_data)
     /* May be NULL, see waiting_queue_data_extract(). */
     update_queue_data_destroy(wq_data->uq_data);
   }
-  free(wq_data);
+  delete wq_data;
 }
 
 /************************************************************************/ /**

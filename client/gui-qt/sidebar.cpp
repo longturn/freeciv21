@@ -62,10 +62,6 @@ fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
       def_pixmap(pix), desc(label)
 {
-  if (pix == nullptr) {
-    pix = new QPixmap(12, 12);
-    pix->fill(Qt::black);
-  }
   if (def_pixmap == nullptr)  { def_pixmap = new QPixmap(5,5); }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;

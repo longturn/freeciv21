@@ -577,7 +577,7 @@ void texai_req_worker_task_rcv(struct texai_req *req)
     package_and_send_worker_tasks(pcity);
   }
 
-  free(data);
+  delete[] data;
 }
 
 /**********************************************************************/ /**

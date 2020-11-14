@@ -96,7 +96,7 @@ static void sha_unit_remove(int id)
   unit_list_remove(previous_units, pold_unit);
   /* list pointers were struct copied, cannot unit_virtual_destroy() */
   memset(pold_unit, 0, sizeof(*pold_unit)); /* ensure no pointers remain */
-  free(pold_unit);
+  delete pold_unit;
 }
 
 /**********************************************************************/ /**
@@ -106,8 +106,7 @@ void simple_historian_init(void)
 {
   struct agent self;
 
-  previous_tiles = static_cast<tile *>(
-      fc_malloc(MAP_INDEX_SIZE * sizeof(*previous_tiles)));
+  previous_tiles = new tile[MAP_INDEX_SIZE];
   memset(previous_tiles, 0, MAP_INDEX_SIZE * sizeof(*previous_tiles));
 
   previous_units = unit_list_new();

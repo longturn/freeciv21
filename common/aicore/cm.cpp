@@ -346,8 +346,7 @@ struct cm_result *cm_result_new(struct city *pcity)
   result->city_radius_sq =
       pcity ? city_map_radius_sq_get(pcity) : CITY_MAP_MAX_RADIUS_SQ;
   result->worker_positions =
-      static_cast<bool *>(fc_calloc(city_map_tiles(result->city_radius_sq),
-                                    sizeof(*result->worker_positions)));
+      new bool[city_map_tiles(result->city_radius_sq)]();
 
   /* test if the city pointer is valid; the cm_result struct can be
    * returned as it uses the maximal possible value for the size of
@@ -364,7 +363,7 @@ void cm_result_destroy(struct cm_result *result)
 {
   if (result != NULL) {
     if (result->worker_positions != NULL) {
-      FC_FREE(result->worker_positions);
+      FCPP_FREE(result->worker_positions);
     }
     FCPP_FREE(result);
   }
@@ -423,7 +422,7 @@ static void tile_type_vector_free_all(struct tile_type_vector *vec)
   {
     /* Destroy all data in the type, and free the type itself. */
     tile_type_destroy(type);
-    free(type);
+    delete type;
   }
   tile_type_vector_iterate_end;
 
@@ -636,10 +635,9 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
 static void init_partial_solution(struct partial_solution *into, int ntypes,
                                   int idle, bool negative_ok)
 {
-  into->worker_counts =
-      static_cast<int *>(fc_calloc(ntypes, sizeof(*into->worker_counts)));
-  into->prereqs_filled =
-      static_cast<int *>(fc_calloc(ntypes, sizeof(*into->prereqs_filled)));
+  into->worker_counts = new int[ntypes]();
+  into->prereqs_filled = new int[ntypes]();
+
   if (negative_ok) {
     output_type_iterate(otype) { into->production[otype] = -FC_INFINITY; }
     output_type_iterate_end;
@@ -655,8 +653,8 @@ static void init_partial_solution(struct partial_solution *into, int ntypes,
  ****************************************************************************/
 static void destroy_partial_solution(struct partial_solution *into)
 {
-  free(into->worker_counts);
-  free(into->prereqs_filled);
+  delete[] into->worker_counts;
+  delete[] into->prereqs_filled;
 }
 
 /************************************************************************/ /**
@@ -1941,8 +1939,7 @@ static struct cm_state *cm_state_init(struct city *pcity, bool negative_ok)
   state->choice.size = 0;
 
   /* Initialize workers map */
-  state->workers_map = static_cast<bool *>(fc_calloc(
-      city_map_tiles_from_city(state->pcity), sizeof(state->workers_map)));
+  state->workers_map = new bool[city_map_tiles_from_city(state->pcity)]();
 
   return state;
 }
@@ -2065,8 +2062,8 @@ static void cm_state_free(struct cm_state *state)
   destroy_partial_solution(&state->best);
   destroy_partial_solution(&state->current);
 
-  FC_FREE(state->choice.stack);
-  FC_FREE(state->workers_map);
+  FCPP_FREE(state->choice.stack);
+  FCPP_FREE(state->workers_map);
   FC_FREE(state);
 }
 

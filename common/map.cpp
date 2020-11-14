@@ -482,7 +482,7 @@ static void tile_free(struct tile *ptile)
   }
 
   if (ptile->label) {
-    FC_FREE(ptile->label);
+    FCPP_FREE(ptile->label);
     ptile->label = NULL;
   }
 }
@@ -497,8 +497,7 @@ void map_allocate(struct civ_map *amap)
             amap->xsize, amap->ysize);
 
   fc_assert_ret(NULL == amap->tiles);
-  amap->tiles =
-      static_cast<tile *>(fc_calloc(MAP_INDEX_SIZE, sizeof(*amap->tiles)));
+  amap->tiles = new tile[MAP_INDEX_SIZE]();
 
   /* Note this use of whole_map_iterate may be a bit sketchy, since the
    * tile values (ptile->index, etc.) haven't been set yet.  It might be
@@ -539,15 +538,14 @@ void map_free(struct civ_map *fmap)
     whole_map_iterate(fmap, ptile) { tile_free(ptile); }
     whole_map_iterate_end;
 
-    free(fmap->tiles);
-    fmap->tiles = NULL;
+    FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
       startpos_hash_destroy(fmap->startpos_table);
       fmap->startpos_table = NULL;
     }
 
-    FC_FREE(fmap->iterate_outwards_indices);
+    FCPP_FREE(fmap->iterate_outwards_indices);
   }
 }
 

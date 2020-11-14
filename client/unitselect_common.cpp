@@ -84,7 +84,7 @@ static void usdata_destroy(struct usdata *data)
         }
       }
     }
-    free(data);
+    delete[] data;
   }
 }
 

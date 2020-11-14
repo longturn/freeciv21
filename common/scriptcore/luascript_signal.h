@@ -10,17 +10,27 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifndef FC__LUASCRIPT_SIGNAL_H
-#define FC__LUASCRIPT_SIGNAL_H
-
-
-
+#pragma once
 /* utility */
 #include "support.h"
 
+#include "luascript_types.h"
 struct fc_lua;
 
 typedef char *signal_deprecator;
+
+/* Signal callback datastructure. */
+struct signal_callback {
+  char *name; /* callback function name */
+};
+
+/* Signal datastructure. */
+struct signal {
+  int nargs;                              /* number of arguments to pass */
+  enum api_types *arg_types;              /* argument types */
+  QList<signal_callback*> *callbacks;            /* connected callbacks */
+  char *depr_msg; /* deprecation message to show if handler added */
+};
 
 void luascript_signal_init(struct fc_lua *fcl);
 void luascript_signal_free(struct fc_lua *fcl);
@@ -39,11 +49,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *signal_name,
                                        const char *callback_name);
 
-const char *luascript_signal_by_index(struct fc_lua *fcl, int sindex);
-const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
+const QString& luascript_signal_by_index(struct fc_lua *fcl, int sindex);
+const char * luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);
-
-
-
-#endif /* FC__LUASCRIPT_SIGNAL_H */

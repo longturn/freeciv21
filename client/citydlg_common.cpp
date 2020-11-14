@@ -488,7 +488,7 @@ struct city_sum {
  **************************************************************************/
 static struct city_sum *city_sum_new(const char *format)
 {
-  struct city_sum *sum = new city_sum;
+  struct city_sum *sum = new city_sum();
 
   sum->format = format;
   sum->n = 0;
@@ -710,7 +710,7 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   fc_vsnprintf(buf + strlen(buf), bufsz - strlen(buf), totalfmt, args);
   va_end(args);
 
-  FC_FREE(sum->sums);
+  free(sum->sums);
   FC_FREE(sum);
 }
 

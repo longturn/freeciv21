@@ -1085,7 +1085,6 @@ static bool load_game_names(struct section_file *file,
 
         ruleset_error(LOG_ERROR, "\"%s\": Too many goods types (%d, max %d)",
                       filename, num, MAX_GOODS_TYPES);
-        section_list_destroy(sec);
         ok = FALSE;
       } else if (nval < 1) {
         ruleset_error(LOG_ERROR, "\"%s\": At least one goods type needed",
@@ -1180,7 +1179,6 @@ static bool load_tech_names(struct section_file *file,
 
       ruleset_error(LOG_ERROR, "\"%s\": Too many tech classes (%d, max %d)",
                     filename, num, MAX_NUM_TECH_CLASSES);
-      section_list_destroy(sec);
       ok = FALSE;
     } else {
       game.control.num_tech_classes = nval;
@@ -2948,8 +2946,7 @@ static bool load_ruleset_terrain(struct section_file *file,
       output_type_iterate_end;
 
       res = secfile_lookup_str_vec(file, &nval, "%s.resources", tsection);
-      pterrain->resources = static_cast<extra_type **>(
-          fc_calloc(nval + 1, sizeof(*pterrain->resources)));
+      pterrain->resources = new extra_type *[nval + 1]();
       for (j = 0; j < nval; j++) {
         pterrain->resources[j] = lookup_resource(filename, res[j], tsection);
         if (pterrain->resources[j] == NULL) {

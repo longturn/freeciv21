@@ -13,6 +13,8 @@
 #ifndef FC__LUASCRIPT_H
 #define FC__LUASCRIPT_H
 
+#include <QHash>
+#include <QVector>
 /* dependencies/tolua */
 #include "tolua.h"
 
@@ -46,8 +48,8 @@ struct fc_lua {
 
   struct luascript_func_hash *funcs;
 
-  struct luascript_signal_hash *signals_hash;
-  struct luascript_signal_name_list *signal_names;
+  QHash<QString, struct signal*> *signals_hash;
+  QVector<QString> *signal_names;
 };
 
 /* Error functions for lua scripts. */

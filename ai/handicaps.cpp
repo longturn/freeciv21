@@ -32,7 +32,7 @@ void handicaps_init(struct player *pplayer)
     return;
   }
 
-  pplayer->ai_common.handicaps = fc_malloc(sizeof(bv_handicap));
+  pplayer->ai_common.handicaps = new bv_handicap;
   BV_CLR_ALL(*((bv_handicap *) pplayer->ai_common.handicaps));
 }
 
@@ -45,7 +45,7 @@ void handicaps_close(struct player *pplayer)
     return;
   }
 
-  free(pplayer->ai_common.handicaps);
+  ::operator delete(pplayer->ai_common.handicaps);
   pplayer->ai_common.handicaps = NULL;
 }
 

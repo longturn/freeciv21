@@ -1630,7 +1630,7 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
   }
 
   if (user_type_flags[ufid].helptxt != NULL) {
-    free(user_type_flags[ufid].helptxt);
+    delete[] user_type_flags[ufid].helptxt;
     user_type_flags[ufid].helptxt = NULL;
   }
 
@@ -2368,10 +2368,9 @@ struct veteran_system *veteran_system_new(int count)
   /* There must be at least one level. */
   fc_assert_ret_val(count > 0, NULL);
 
-  vsystem = static_cast<veteran_system *>(fc_calloc(1, sizeof(*vsystem)));
+  vsystem = new veteran_system[1]();
   vsystem->levels = count;
-  vsystem->definitions = static_cast<veteran_level *>(
-      fc_calloc(vsystem->levels, sizeof(*vsystem->definitions)));
+  vsystem->definitions = new veteran_level[vsystem->levels]();
 
   return vsystem;
 }
@@ -2383,9 +2382,9 @@ void veteran_system_destroy(struct veteran_system *vsystem)
 {
   if (vsystem) {
     if (vsystem->definitions) {
-      free(vsystem->definitions);
+      delete[] vsystem->definitions;
     }
-    free(vsystem);
+    delete[] vsystem;
   }
 }
 

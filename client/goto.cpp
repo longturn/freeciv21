@@ -108,8 +108,7 @@ static struct tile *goto_destination = NULL;
  ****************************************************************************/
 static struct goto_map *goto_map_new(struct unit *punit)
 {
-  struct goto_map *goto_map =
-      static_cast<struct goto_map *>(fc_malloc(sizeof(*goto_map)));
+  struct goto_map *goto_map = new struct goto_map();
 
   goto_map->focus = punit;
   goto_map->parts = NULL;

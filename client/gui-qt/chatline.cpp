@@ -195,6 +195,10 @@ chat_input::chat_input(QWidget *parent) : QLineEdit(parent)
   chat_listener::listen();
 }
 
+chat_input::~chat_input()
+{
+  delete cmplt;
+}
 /***********************************************************************/ /**
    Sends the content of the input box
  ***************************************************************************/
@@ -209,7 +213,7 @@ void chat_input::send()
  ***************************************************************************/
 void chat_input::chat_word_list_changed(const QStringList &word_list)
 {
-  QCompleter *cmplt = completer();
+  cmplt = completer();
 
   if (cmplt != nullptr) {
     delete cmplt;

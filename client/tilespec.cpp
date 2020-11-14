@@ -569,8 +569,7 @@ void tileset_error(enum log_level level, const char *format, ...)
  ****************************************************************************/
 static struct drawing_data *drawing_data_new(void)
 {
-  struct drawing_data *draw =
-      static_cast<drawing_data *>(fc_calloc(1, sizeof(*draw)));
+  struct drawing_data *draw = new drawing_data[1]();
 
   draw->name = NULL;
 
@@ -587,7 +586,7 @@ static void drawing_data_destroy(struct drawing_data *draw)
   fc_assert_ret(NULL != draw);
 
   if (draw->name != NULL) {
-    free(draw->name);
+    delete[] draw->name;
   }
   for (i = 0; i < 4; i++) {
     if (draw->blend[i]) {
@@ -604,9 +603,9 @@ static void drawing_data_destroy(struct drawing_data *draw)
 
     sprite_vector_free(&draw->layer[i].base);
     sprite_vector_free(&draw->layer[i].allocated);
-    free(draw->layer[i].cells);
+    delete[] draw->layer[i].cells;
   }
-  free(draw);
+  delete[] draw;
 }
 
 /************************************************************************/ /**
@@ -886,8 +885,7 @@ bool tileset_use_hard_coded_fog(const struct tileset *t)
  ****************************************************************************/
 static struct tileset *tileset_new(void)
 {
-  struct tileset *t =
-      static_cast<struct tileset *>(fc_calloc(1, sizeof(*t)));
+  struct tileset *t = new struct tileset[1]();
 
   t->specfiles = specfile_list_new();
   t->small_sprites = small_sprite_list_new();
@@ -1102,15 +1100,14 @@ static void tileset_free_toplevel(struct tileset *t)
   int i, j;
 
   if (t->main_intro_filename) {
-    free(t->main_intro_filename);
-    t->main_intro_filename = NULL;
+    FCPP_FREE(t->main_intro_filename);
   }
 
   if (t->preferred_themes) {
     for (i = 0; i < t->num_preferred_themes; i++) {
-      free(t->preferred_themes[i]);
+      delete[] t->preferred_themes[i];
     }
-    free(t->preferred_themes);
+    delete[] t->preferred_themes;
     t->preferred_themes = NULL;
   }
   t->num_preferred_themes = 0;
@@ -1140,10 +1137,9 @@ static void tileset_free_toplevel(struct tileset *t)
 
     if (tslp->match_types) {
       for (j = 0; j < tslp->match_count; j++) {
-        free(tslp->match_types[j]);
+        delete[] tslp->match_types[j];
       }
-      free(tslp->match_types);
-      tslp->match_types = NULL;
+      FCPP_FREE(tslp->match_types);
     }
   }
 
@@ -1153,15 +1149,15 @@ static void tileset_free_toplevel(struct tileset *t)
   }
 
   if (t->summary != NULL) {
-    free(t->summary);
+    delete[] t->summary;
     t->summary = NULL;
   }
   if (t->description != NULL) {
-    free(t->description);
+    delete[] t->description;
     t->description = NULL;
   }
   if (t->for_ruleset != NULL) {
-    free(t->for_ruleset);
+    delete[] t->for_ruleset;
     t->for_ruleset = NULL;
   }
 }
@@ -1180,7 +1176,7 @@ void tileset_free(struct tileset *t)
   }
   specfile_list_destroy(t->specfiles);
   small_sprite_list_destroy(t->small_sprites);
-  free(t);
+  delete[] t;
 }
 
 /************************************************************************/ /**
@@ -1595,7 +1591,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         xr = x_top_left + (dx + pixel_border_x) * column;
         yb = y_top_left + (dy + pixel_border_y) * row;
 
-        ss = static_cast<small_sprite *>(fc_malloc(sizeof(*ss)));
+        ss = new small_sprite;
         ss->ref_count = 0;
         ss->file = NULL;
         ss->x = xr;
@@ -1650,7 +1646,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     hot_x = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_x", i);
     hot_y = secfile_lookup_int_default(file, 0, "extra.sprites%d.hot_y", i);
 
-    ss = static_cast<small_sprite *>(fc_malloc(sizeof(*ss)));
+    ss = new small_sprite;
     ss->ref_count = 0;
     ss->file = fc_strdup(filename);
     ss->sf = NULL;
@@ -1689,14 +1685,13 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char *full_name =
-        static_cast<char *>(fc_malloc(strlen(gfx_filename) + strlen(".")
-                                      + strlen(gfx_current_fileext) + 1));
+    char *full_name = new char[strlen(gfx_filename) + strlen(".")
+                               + strlen(gfx_current_fileext) + 1];
 
     sprintf(full_name, "%s.%s", gfx_filename, gfx_current_fileext);
 
     real_full_name = fileinfoname(get_data_dirs(), full_name);
-    free(full_name);
+    delete[] full_name;
     if (real_full_name) {
       return fc_strdup(real_full_name);
     }
@@ -1775,7 +1770,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   if (!check_tilespec_capabilities(file, "tilespec", TILESPEC_CAPSTR, fname,
                                    verbose)) {
     secfile_destroy(file);
-    delete fname;
+    delete[] fname;
     return NULL;
   }
 
@@ -1803,12 +1798,12 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset summary found */
     len = strlen(tstr);
-    t->summary = static_cast<char *>(fc_malloc(len + 1));
+    t->summary = new char[len + 1];
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
     /* No summary */
     if (t->summary != NULL) {
-      free(t->summary);
+      delete[] t->summary;
       t->summary = NULL;
     }
   }
@@ -1819,13 +1814,12 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     /* Tileset description found */
     len = strlen(tstr);
-    t->description = static_cast<char *>(fc_malloc(len + 1));
+    t->description = new char[len + 1];
     fc_strlcpy(t->description, tstr, len + 1);
   } else {
     /* No description */
     if (t->description != NULL) {
-      free(t->description);
-      t->description = NULL;
+      FCPP_FREE(t->description);
     }
   }
 
@@ -2301,8 +2295,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
             dlp->match_index[dlp->match_indices++] = j;
           }
         }
-        free(match_with);
-        match_with = NULL;
+        FCPP_FREE(match_with);
       }
 
       /* Check match_indices */
@@ -2388,7 +2381,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   fc_assert(t->sprite_hash == NULL);
   t->sprite_hash = sprite_hash_new();
   for (i = 0; i < num_spec_files; i++) {
-    struct specfile *sf = static_cast<specfile *>(fc_malloc(sizeof(*sf)));
+    struct specfile *sf = new specfile();
     const char *dname;
 
     log_debug("spec file %s", spec_filenames[i]);
@@ -2399,7 +2392,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       if (verbose) {
         log_error("Can't find spec file \"%s\".", spec_filenames[i]);
       }
-      free(sf);
+      delete sf;
       goto ON_ERROR;
     }
     sf->file_name = fc_strdup(dname);
@@ -2407,7 +2400,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
     specfile_list_prepend(t->specfiles, sf);
   }
-  free(spec_filenames);
+  delete[] spec_filenames;
 
   t->color_system = color_system_read(file);
 
@@ -2431,14 +2424,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   secfile_check_unused(file);
   secfile_destroy(file);
   log_verbose("finished reading \"%s\".", fname);
-  delete fname;
+  delete[] fname;
 
   return t;
 
 ON_ERROR:
   secfile_destroy(file);
-  delete fname;
-  tileset_free(t);
+  delete[] fname;
+  delete[] t;
   if (NULL != sections) {
     section_list_destroy(sections);
   }
@@ -2833,6 +2826,7 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
     fc_snprintf(buffer, sizeof(buffer), "%s_%s_%d", gfx_in_use, tag, size);
     if ((sprite = load_sprite(t, buffer, TRUE, TRUE))) {
       num_thresholds++;
+
       *thresholds = static_cast<city_style_threshold *>(
           fc_realloc(*thresholds, num_thresholds * sizeof(**thresholds)));
       (*thresholds)[num_thresholds - 1].sprite = sprite;
@@ -2861,16 +2855,14 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
 static struct city_sprite *load_city_sprite(struct tileset *t,
                                             const char *tag)
 {
-  struct city_sprite *city_sprite =
-      static_cast<struct city_sprite *>(fc_malloc(sizeof(*city_sprite)));
+  struct city_sprite *city_sprite = new struct city_sprite;
   int style;
 
   /* Store number of styles we have allocated memory for.
    * game.control.styles_count might change if client disconnects from
    * server and connects new one. */
   city_sprite->num_styles = game.control.styles_count;
-  city_sprite->styles = static_cast<styles *>(
-      fc_malloc(city_sprite->num_styles * sizeof(*city_sprite->styles)));
+  city_sprite->styles = new styles[city_sprite->num_styles]();
 
   for (style = 0; style < city_sprite->num_styles; style++) {
     city_sprite->styles[style].land_num_thresholds =
@@ -2900,8 +2892,8 @@ static void free_city_sprite(struct city_sprite *city_sprite)
       free(city_sprite->styles[style].land_thresholds);
     }
   }
-  free(city_sprite->styles);
-  free(city_sprite);
+  delete[] city_sprite->styles;
+  delete city_sprite;
 }
 
 /************************************************************************/ /**
@@ -3918,8 +3910,7 @@ void tileset_setup_tile_type(struct tileset *t,
         break;
       };
 
-      dlp->cells = static_cast<struct sprite **>(
-          fc_calloc(number, sizeof(*dlp->cells)));
+      dlp->cells = new struct sprite*[number]();
 
       for (i = 0; i < number; i++) {
         enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
@@ -6254,22 +6245,22 @@ void tileset_free_tiles(struct tileset *t)
   {
     small_sprite_list_remove(t->small_sprites, ss);
     if (ss->file) {
-      free(ss->file);
+      delete[] ss->file;
     }
     fc_assert(ss->sprite == NULL);
-    free(ss);
+    delete ss;
   }
   small_sprite_list_iterate_end;
 
   specfile_list_iterate(t->specfiles, sf)
   {
     specfile_list_remove(t->specfiles, sf);
-    free(sf->file_name);
+    delete[] sf->file_name;
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
     }
-    free(sf);
+    delete sf;
   }
   specfile_list_iterate_end;
 

@@ -3651,11 +3651,11 @@ static bool client_option_color_set(struct option *poption,
     }                                                                       \
   } else {                                                                  \
     if (NULL == color) {                                                    \
-      free((void *) color_tgt);                                             \
+      delete[] color_tgt;                                                   \
       color_tgt = NULL;                                                     \
       changed = TRUE;                                                       \
     } else if (0 != strcmp(color_tgt, color)) {                             \
-      free((void *) color_tgt);                                             \
+      delete[] color_tgt;                                                   \
       color_tgt = fc_strdup(color);                                         \
       changed = TRUE;                                                       \
     }                                                                       \
@@ -4284,13 +4284,13 @@ void handle_server_setting_str(
     if (NULL == psoption->string.value) {
       psoption->string.value = fc_strdup(packet->val);
     } else if (0 != strcmp(packet->val, psoption->string.value)) {
-      free(psoption->string.value);
+      delete[] psoption->string.value;
       psoption->string.value = fc_strdup(packet->val);
     }
     if (NULL == psoption->string.def) {
       psoption->string.def = fc_strdup(packet->default_val);
     } else if (0 != strcmp(packet->default_val, psoption->string.def)) {
-      free(psoption->string.def);
+      delete[] psoption->string.def;
       psoption->string.def = fc_strdup(packet->default_val);
     }
   }

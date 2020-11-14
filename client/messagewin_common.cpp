@@ -70,11 +70,10 @@ void meswin_clear_older(int turn, int phase)
                       || (messages[i]->turn == turn
                           && messages[i]->phase < phase)));
        i++) {
-    free(messages[i]->descr);
+    delete[] messages[i]->descr;
 
     text_tag_list_destroy(messages[i]->tags);
-    free(messages[i]);
-    messages[i] = NULL;
+    FCPP_FREE(messages[i]);
   }
 
   if (i != 0) {
@@ -97,7 +96,8 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
 {
   const size_t min_msg_len = 50;
   size_t msg_len = strlen(message);
-  char *s = static_cast<char *>(fc_malloc(MAX(msg_len, min_msg_len) + 1));
+
+  char *s = new char[MAX(msg_len, min_msg_len) + 1];
   int i, nspc;
   struct message *msg;
 
@@ -107,7 +107,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
         fc_realloc(messages, messages_alloc * sizeof(struct message *)));
   }
 
-  msg = static_cast<struct message *>(fc_malloc(sizeof(struct message)));
+  msg = new struct message();
   strcpy(s, message);
 
   nspc = min_msg_len - strlen(s);

@@ -1592,7 +1592,7 @@ struct terrain *help_widget::terrain_max_values()
 {
   Terrain_type_id i, count;
   struct terrain *terrain;
-  struct terrain *max = new struct terrain;
+  struct terrain *max = new struct terrain();
   max->base_time = 0;
   max->clean_fallout_time = 0;
   max->clean_pollution_time = 0;
@@ -1661,7 +1661,7 @@ struct terrain *help_widget::terrain_max_values()
  **************************************************************************/
 struct unit_type *help_widget::uclass_max_values(struct unit_class *uclass)
 {
-  struct unit_type *max = new struct unit_type;
+  struct unit_type *max = new struct unit_type();
   max->uclass = uclass;
   max->attack_strength = 0;
   max->bombard_rate = 0;

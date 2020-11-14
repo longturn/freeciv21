@@ -206,7 +206,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 
   memcpy(dst, out, len);
   dst[len] = '\0';
-  free(out);
+  delete[] out;
 
   return ret;
 }
@@ -275,6 +275,7 @@ static void client_game_free(void)
   link_marks_free();
   control_free();
   free_help_texts();
+  helpdata_done();
   attribute_free();
   agents_free();
   game.client.ruleset_init = FALSE;
@@ -676,7 +677,6 @@ void client_exit(void)
     client_game_free();
   }
 
-  helpdata_done(); /* client_exit() unlinks help text list */
   conn_list_destroy(game.all_connections);
   conn_list_destroy(game.est_connections);
 
@@ -955,7 +955,7 @@ void client_remove_cli_conn(struct connection *pconn)
   conn_list_remove(game.all_connections, pconn);
   conn_list_remove(game.est_connections, pconn);
   fc_assert_ret(pconn != &client.conn);
-  free(pconn);
+  delete pconn;
 }
 
 /**********************************************************************/ /**
