@@ -19,6 +19,7 @@
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QGlobalStatic>
+#include <QHash>
 #include <QSet>
 #include <QTimer>
 
@@ -55,8 +56,8 @@
 
 #include "mapview_common.h"
 
-Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_highlight_table)
-Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_crosshair_table)
+Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_highlight_set)
+Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_crosshair_set)
 
 struct gotoline_counter {
   int line_count[DIR8_MAGIC_MAX];
@@ -64,19 +65,8 @@ struct gotoline_counter {
 
 static inline struct gotoline_counter *gotoline_counter_new(void);
 static void gotoline_counter_destroy(struct gotoline_counter *pglc);
-
-#define SPECHASH_TAG gotoline
-#define SPECHASH_IKEY_TYPE struct tile *
-#define SPECHASH_IDATA_TYPE struct gotoline_counter *
-#define SPECHASH_IDATA_FREE gotoline_counter_destroy
-#include "spechash.h"
-#define gotoline_hash_iterate(hash, ptile, pglc)                            \
-  TYPED_HASH_ITERATE(struct tile *, struct gotoline_counter *, hash, ptile, \
-                     pglc)
-#define gotoline_hash_iterate_end HASH_ITERATE_END
-
-struct gotoline_hash *mapdeco_gotoline_table;
-
+typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
+Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
 bool can_slide = TRUE;
 
@@ -3330,7 +3320,6 @@ void mapdeco_init(void)
 
   mapdeco_free();
   // Q_GLOB_STAT is allocated automatically
-  mapdeco_gotoline_table = gotoline_hash_new();
 }
 
 /************************************************************************/ /**
@@ -3338,11 +3327,9 @@ void mapdeco_init(void)
  ****************************************************************************/
 void mapdeco_free(void)
 {
-  // Q_GLOB_STATIC deleted automatically
-  if (mapdeco_gotoline_table) {
-    gotoline_hash_destroy(mapdeco_gotoline_table);
-    mapdeco_gotoline_table = NULL;
-  }
+  mapdeco_gotoline->clear();
+  mapdeco_highlight_set->clear();
+  mapdeco_crosshair_set->clear();
 }
 
 /************************************************************************/ /**
@@ -3357,11 +3344,11 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
     return;
   }
 
-  changed = mapdeco_highlight_table->contains(ptile);
+  changed = mapdeco_highlight_set->contains(ptile);
   if (highlight) {
-    mapdeco_highlight_table->insert(ptile);
+    mapdeco_highlight_set->insert(ptile);
   } else {
-    mapdeco_highlight_table->remove(ptile);
+    mapdeco_highlight_set->remove(ptile);
   }
 
   if (changed) {
@@ -3378,7 +3365,7 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
   if (!ptile) {
     return FALSE;
   }
-  return mapdeco_highlight_table->contains(ptile);
+  return mapdeco_highlight_set->contains(ptile);
 }
 
 /************************************************************************/ /**
@@ -3387,10 +3374,10 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_highlights(void)
 {
-  for (auto ptile : mapdeco_highlight_table->values()) {
+  for (auto ptile : mapdeco_highlight_set->values()) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), TRUE, FALSE);
   }
-  mapdeco_highlight_table->clear();
+  mapdeco_highlight_set->clear();
 }
 
 /************************************************************************/ /**
@@ -3404,11 +3391,11 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
     return;
   }
 
-  changed = mapdeco_crosshair_table->contains(ptile);
+  changed = mapdeco_crosshair_set->contains(ptile);
   if (crosshair) {
-    mapdeco_crosshair_table->insert(ptile);
+    mapdeco_crosshair_set->insert(ptile);
   } else {
-    mapdeco_crosshair_table->remove(ptile);
+    mapdeco_crosshair_set->remove(ptile);
   }
 
   if (changed) {
@@ -3422,10 +3409,10 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
  ****************************************************************************/
 bool mapdeco_is_crosshair_set(const struct tile *ptile)
 {
-  if (!mapdeco_crosshair_table || !ptile) {
+  if (!mapdeco_crosshair_set || !ptile) {
     return FALSE;
   }
-  return mapdeco_crosshair_table->contains(ptile);
+  return mapdeco_crosshair_set->contains(ptile);
 }
 
 /************************************************************************/ /**
@@ -3434,10 +3421,10 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_crosshairs(void)
 {
-  for (auto ptile : mapdeco_crosshair_table->values()) {
+  for (auto ptile : mapdeco_crosshair_set->values()) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), FALSE, FALSE);
   }
-  mapdeco_crosshair_table->clear();
+  mapdeco_crosshair_set->clear();
 }
 
 /************************************************************************/ /**
@@ -3451,7 +3438,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
   const struct tile *ptile_dest;
   bool changed;
 
-  if (!mapdeco_gotoline_table || !ptile || !(dir <= direction8_max())) {
+  if (!mapdeco_gotoline || !ptile || !(dir <= direction8_max())) {
     return;
   }
   ptile_dest = mapstep(&(wld.map), ptile, dir);
@@ -3459,9 +3446,9 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
     return;
   }
 
-  if (!gotoline_hash_lookup(mapdeco_gotoline_table, ptile, &pglc)) {
+  if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
     pglc = gotoline_counter_new();
-    gotoline_hash_insert(mapdeco_gotoline_table, ptile, pglc);
+    mapdeco_gotoline->insert(ptile, pglc);
   }
   changed = (pglc->line_count[dir] < 1);
   pglc->line_count[dir]++;
@@ -3483,11 +3470,11 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
   struct gotoline_counter *pglc;
   bool changed = FALSE;
 
-  if (!mapdeco_gotoline_table || !ptile || !(dir <= direction8_max())) {
+  if (!mapdeco_gotoline || !ptile || !(dir <= direction8_max())) {
     return;
   }
 
-  if (!gotoline_hash_lookup(mapdeco_gotoline_table, ptile, &pglc)) {
+  if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
     return;
   }
 
@@ -3551,11 +3538,11 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
 {
   struct gotoline_counter *pglc;
 
-  if (!ptile || !(dir <= direction8_max()) || !mapdeco_gotoline_table) {
+  if (!ptile || !(dir <= direction8_max()) || !mapdeco_gotoline) {
     return FALSE;
   }
 
-  if (!gotoline_hash_lookup(mapdeco_gotoline_table, ptile, &pglc)) {
+  if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
     return FALSE;
   }
 
@@ -3568,23 +3555,23 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
  ****************************************************************************/
 void mapdeco_clear_gotoroutes(void)
 {
-  if (!mapdeco_gotoline_table) {
+  if (!mapdeco_gotoline) {
     return;
   }
 
-  gotoline_hash_iterate(mapdeco_gotoline_table, ptile, pglc)
-  {
-    refresh_tile_mapcanvas(ptile, FALSE, FALSE);
-    adjc_dir_iterate(&(wld.map), ptile, ptile_dest, dir)
+  gotohash::const_iterator i = mapdeco_gotoline->constBegin();
+  while (i != mapdeco_gotoline->constEnd()) {
+    refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), FALSE, FALSE);
+    adjc_dir_iterate(&(wld.map), i.key(), ptile_dest, dir)
     {
-      if (pglc->line_count[dir] > 0) {
+      if (i.value()->line_count[dir] > 0) {
         refresh_tile_mapcanvas(ptile_dest, FALSE, FALSE);
       }
     }
     adjc_dir_iterate_end;
+    ++i;
   }
-  gotoline_hash_iterate_end;
-  gotoline_hash_clear(mapdeco_gotoline_table);
+  mapdeco_gotoline->clear();
 }
 
 /************************************************************************/ /**
