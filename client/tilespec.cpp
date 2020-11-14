@@ -487,8 +487,9 @@ struct tileset {
 
   /* This hash table maps terrain graphic strings to drawing data. */
   QHash<QString, drawing_data*> *tile_hash;
-
-  struct estyle_hash *estyle_hash;
+  // I have no clue how hash above works only qith QString and bottom
+  // one with char* only
+  QHash<const char*, int> *estyle_hash;
 
   struct named_sprites sprites;
 
@@ -1121,7 +1122,7 @@ static void tileset_free_toplevel(struct tileset *t)
     t->tile_hash = NULL; /* Helpful for sanity. */
   }
   if (t->estyle_hash) {
-    estyle_hash_destroy(t->estyle_hash);
+    delete t->estyle_hash;
     t->estyle_hash = NULL;
   }
   for (i = 0; i < ESTYLE_COUNT; i++) {
@@ -2358,7 +2359,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   section_list_destroy(sections);
   sections = NULL;
 
-  t->estyle_hash = estyle_hash_new();
+  t->estyle_hash = new QHash<const char*, int>;
 
   for (i = 0; i < ESTYLE_COUNT; i++) {
     t->style_lists[i] = extra_type_list_new();
@@ -2375,10 +2376,12 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                             "extras.styles%d.style", i);
     style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
-    if (!estyle_hash_insert(t->estyle_hash, extraname, style)) {
+
+    if (t->estyle_hash->contains(extraname)) {
       log_error("warning: duplicate extrastyle entry [%s].", extraname);
       goto ON_ERROR;
     }
+    t->estyle_hash->insert(extraname, style);
   }
 
   spec_filenames =
@@ -3577,9 +3580,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     const char *tag;
 
     tag = pextra->graphic_str;
-    if (!estyle_hash_lookup(t->estyle_hash, tag, &extrastyle)) {
+    if ((extrastyle = t->estyle_hash->value(tag, -5))>= -4) {
       tag = pextra->graphic_alt;
-      if (!estyle_hash_lookup(t->estyle_hash, tag, &extrastyle)) {
+      if (!(extrastyle = t->estyle_hash->value(tag, -5))>= -4) {
         tileset_error(LOG_FATAL, _("No extra style for \"%s\" or \"%s\"."),
                       pextra->graphic_str, pextra->graphic_alt);
       } else {
