@@ -2649,7 +2649,8 @@ static void generate_players(void)
     /* We're running a scenario game with specified start positions.
      * Prefer nations assigned to those positions (but we can fall back
      * to others, even if game.scenario.startpos_nations is set). */
-    struct startpos_hash *hash = startpos_hash_new();
+    QHash<struct startpos *, int> hash;
+    QHash<struct startpos *, int>::const_iterator it;
     struct nation_type *picked;
     int c, max = -1;
     int i, min;
@@ -2673,7 +2674,7 @@ static void generate_players(void)
       }
       players_iterate_end;
 
-      startpos_hash_insert(hash, psp, c);
+      hash.insert(psp, c);
       if (c > max) {
         max = c;
       }
@@ -2700,25 +2701,25 @@ static void generate_players(void)
           continue;
         }
 
-        startpos_hash_iterate(hash, psp, val)
-        {
-          if (!startpos_nation_allowed(psp, pnation)) {
+        it = hash.constBegin();
+        while (it != hash.constEnd()) {
+          if (!startpos_nation_allowed(it.key(), pnation)) {
             continue;
           }
 
-          if (val < min) {
+          if (it.value() < min) {
             /* Pick this nation, as fewer nations already in the game
              * can use this start position. */
             picked = pnation;
-            min = val;
+            min = it.value();
             i = 1;
-          } else if (val == min && 0 == fc_rand(++i)) {
+          } else if (it.value() == min && 0 == fc_rand(++i)) {
             /* More than one nation is equally desirable. Pick one at
              * random. */
             picked = pnation;
           }
+          ++it;
         }
-        startpos_hash_iterate_end;
       }
       allowed_nations_iterate_end;
 
@@ -2727,13 +2728,13 @@ static void generate_players(void)
         nations_to_assign--;
         announce_player(pplayer);
         /* Update the counts for the newly assigned nation. */
-        startpos_hash_iterate(hash, psp, val)
-        {
-          if (startpos_nation_allowed(psp, picked)) {
-            startpos_hash_replace(hash, psp, val + 1);
+        it = hash.constBegin();
+        while (it != hash.constEnd()) {
+          if (startpos_nation_allowed(it.key(), picked)) {
+            hash.insert(it.key(), it.value() + 1);
           }
+          ++it;
         }
-        startpos_hash_iterate_end;
       } else {
         /* No need to continue; we failed to pick a nation this time,
          * so we're not going to succeed next time. Fall back to
@@ -2742,8 +2743,6 @@ static void generate_players(void)
       }
     }
     players_iterate_end;
-
-    startpos_hash_destroy(hash);
   }
 
   if (0 < nations_to_assign) {
