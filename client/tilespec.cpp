@@ -22,6 +22,7 @@ publishedtileset_layer by the Free Software Foundation; either version 2, or
 #endif
 
 #include <QHash>
+#include <QSet>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> /* exit */
@@ -385,15 +386,6 @@ struct small_sprite {
   struct sprite *sprite;
 };
 
-/* 'struct small_sprite_list' and related functions. */
-#define SPECLIST_TAG small_sprite
-#define SPECLIST_TYPE struct small_sprite
-#include "speclist.h"
-#define small_sprite_list_iterate(list, pitem)                              \
-  TYPED_LIST_ITERATE(struct small_sprite, list, pitem)
-#define small_sprite_list_iterate_end LIST_ITERATE_END
-
-
 static void drawing_data_destroy(struct drawing_data *draw);
 
 struct tileset_layer {
@@ -457,7 +449,7 @@ struct tileset {
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
   struct tileset_layer layers[MAX_NUM_LAYERS];
   struct specfile_list *specfiles;
-  struct small_sprite_list *small_sprites;
+  QSet<struct small_sprite*> *small_sprites;
   /* This hash table maps tilespec tags to struct small_sprites. */
   QHash<QString, struct small_sprite*> *sprite_hash;
   /* This hash table maps terrain graphic strings to drawing data. */
@@ -861,7 +853,7 @@ static struct tileset *tileset_new(void)
       static_cast<struct tileset *>(fc_calloc(1, sizeof(*t)));
 
   t->specfiles = specfile_list_new();
-  t->small_sprites = small_sprite_list_new();
+  t->small_sprites = new QSet<struct small_sprite*>;
   return t;
 }
 
@@ -1150,7 +1142,7 @@ void tileset_free(struct tileset *t)
     tileset_player_free(t, i);
   }
   specfile_list_destroy(t->specfiles);
-  small_sprite_list_destroy(t->small_sprites);
+  delete t->small_sprites;
   free(t);
 }
 
@@ -1578,7 +1570,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
         ss->hot_x = hot_x;
         ss->hot_y = hot_y;
 
-        small_sprite_list_prepend(t->small_sprites, ss);
+        t->small_sprites->insert(ss);
 
         if (!duplicates_ok) {
           for (k = 0; k < num_tags; k++) {
@@ -1630,7 +1622,7 @@ static void scan_specfile(struct tileset *t, struct specfile *sf,
     ss->hot_x = hot_x;
     ss->hot_y = hot_y;
 
-    small_sprite_list_prepend(t->small_sprites, ss);
+    t->small_sprites->insert(ss);
 
     if (!duplicates_ok) {
       for (k = 0; k < num_tags; k++) {
@@ -6231,16 +6223,15 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = NULL;
   }
 
-  small_sprite_list_iterate(t->small_sprites, ss)
+  for (auto ss : t->small_sprites->values())
   {
-    small_sprite_list_remove(t->small_sprites, ss);
+    t->small_sprites->remove(ss);
     if (ss->file) {
       free(ss->file);
     }
     fc_assert(ss->sprite == NULL);
     free(ss);
   }
-  small_sprite_list_iterate_end;
 
   specfile_list_iterate(t->specfiles, sf)
   {
