@@ -455,27 +455,17 @@ struct tileset {
   int num_valid_tileset_dirs, num_cardinal_tileset_dirs;
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
-
   struct tileset_layer layers[MAX_NUM_LAYERS];
-
   struct specfile_list *specfiles;
   struct small_sprite_list *small_sprites;
-
   /* This hash table maps tilespec tags to struct small_sprites. */
   QHash<QString, struct small_sprite*> *sprite_hash;
-
   /* This hash table maps terrain graphic strings to drawing data. */
   QHash<QString, drawing_data*> *tile_hash;
-  // I have no clue how hash above works only qith QString and bottom
-  // one with char* only
-  QHash<const char*, int> *estyle_hash;
-
+  QHash<QString, int> *estyle_hash;
   struct named_sprites sprites;
-
   struct color_system *color_system;
-
   struct extra_type_list *style_lists[ESTYLE_COUNT];
-
   struct extra_type_list *flagged_bases_list;
 
   int num_preferred_themes;
@@ -2340,7 +2330,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   section_list_destroy(sections);
   sections = NULL;
 
-  t->estyle_hash = new QHash<const char*, int>;
+  t->estyle_hash = new QHash<QString, int>;
 
   for (i = 0; i < ESTYLE_COUNT; i++) {
     t->style_lists[i] = extra_type_list_new();
@@ -3560,9 +3550,9 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
     const char *tag;
 
     tag = pextra->graphic_str;
-    if ((extrastyle = t->estyle_hash->value(tag, -5))>= -4) {
+    if (!t->estyle_hash->contains(tag)) {
       tag = pextra->graphic_alt;
-      if (!(extrastyle = t->estyle_hash->value(tag, -5))>= -4) {
+      if (!t->estyle_hash->contains(tag)) {
         tileset_error(LOG_FATAL, _("No extra style for \"%s\" or \"%s\"."),
                       pextra->graphic_str, pextra->graphic_alt);
       } else {
@@ -3572,6 +3562,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
                     extra_rule_name(pextra));
       }
     }
+    extrastyle = t->estyle_hash->value(tag);
 
     t->sprites.extras[id].extrastyle = extrastyle;
 
