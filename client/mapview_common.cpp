@@ -19,6 +19,7 @@
 #include <QElapsedTimer>
 #include <QEventLoop>
 #include <QGlobalStatic>
+#include <QSet>
 #include <QTimer>
 
 /* utility */
@@ -54,8 +55,8 @@
 
 #include "mapview_common.h"
 
-struct tile_hash *mapdeco_highlight_table;
-struct tile_hash *mapdeco_crosshair_table;
+Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_highlight_table)
+Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_crosshair_table)
 
 struct gotoline_counter {
   int line_count[DIR8_MAGIC_MAX];
@@ -3328,8 +3329,7 @@ void mapdeco_init(void)
   mapview.can_do_cached_drawing = can_do_cached_drawing();
 
   mapdeco_free();
-  mapdeco_highlight_table = tile_hash_new();
-  mapdeco_crosshair_table = tile_hash_new();
+  // Q_GLOB_STAT is allocated automatically
   mapdeco_gotoline_table = gotoline_hash_new();
 }
 
@@ -3338,14 +3338,7 @@ void mapdeco_init(void)
  ****************************************************************************/
 void mapdeco_free(void)
 {
-  if (mapdeco_highlight_table) {
-    tile_hash_destroy(mapdeco_highlight_table);
-    mapdeco_highlight_table = NULL;
-  }
-  if (mapdeco_crosshair_table) {
-    tile_hash_destroy(mapdeco_crosshair_table);
-    mapdeco_crosshair_table = NULL;
-  }
+  // Q_GLOB_STATIC deleted automatically
   if (mapdeco_gotoline_table) {
     gotoline_hash_destroy(mapdeco_gotoline_table);
     mapdeco_gotoline_table = NULL;
@@ -3360,14 +3353,15 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
 {
   bool changed = FALSE;
 
-  if (!ptile || !mapdeco_highlight_table) {
+  if (!ptile) {
     return;
   }
 
+  changed = mapdeco_highlight_table->contains(ptile);
   if (highlight) {
-    changed = tile_hash_insert(mapdeco_highlight_table, ptile, NULL);
+    mapdeco_highlight_table->insert(ptile);
   } else {
-    changed = tile_hash_remove(mapdeco_highlight_table, ptile);
+    mapdeco_highlight_table->remove(ptile);
   }
 
   if (changed) {
@@ -3381,10 +3375,10 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
  ****************************************************************************/
 bool mapdeco_is_highlight_set(const struct tile *ptile)
 {
-  if (!ptile || !mapdeco_highlight_table) {
+  if (!ptile) {
     return FALSE;
   }
-  return tile_hash_lookup(mapdeco_highlight_table, ptile, NULL);
+  return mapdeco_highlight_table->contains(ptile);
 }
 
 /************************************************************************/ /**
@@ -3393,17 +3387,10 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_highlights(void)
 {
-  if (!mapdeco_highlight_table) {
-    return;
+  for (auto ptile : mapdeco_highlight_table->values()) {
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), TRUE, FALSE);
   }
-
-  tile_hash_iterate(mapdeco_highlight_table, ptile)
-  {
-    refresh_tile_mapcanvas(ptile, TRUE, FALSE);
-  }
-  tile_hash_iterate_end;
-
-  tile_hash_clear(mapdeco_highlight_table);
+  mapdeco_highlight_table->clear();
 }
 
 /************************************************************************/ /**
@@ -3413,14 +3400,15 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
 {
   bool changed;
 
-  if (!mapdeco_crosshair_table || !ptile) {
+  if (!ptile) {
     return;
   }
 
+  changed = mapdeco_crosshair_table->contains(ptile);
   if (crosshair) {
-    changed = tile_hash_insert(mapdeco_crosshair_table, ptile, NULL);
+    mapdeco_crosshair_table->insert(ptile);
   } else {
-    changed = tile_hash_remove(mapdeco_crosshair_table, ptile);
+    mapdeco_crosshair_table->remove(ptile);
   }
 
   if (changed) {
@@ -3437,7 +3425,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
   if (!mapdeco_crosshair_table || !ptile) {
     return FALSE;
   }
-  return tile_hash_lookup(mapdeco_crosshair_table, ptile, NULL);
+  return mapdeco_crosshair_table->contains(ptile);
 }
 
 /************************************************************************/ /**
@@ -3446,17 +3434,10 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_crosshairs(void)
 {
-  if (!mapdeco_crosshair_table) {
-    return;
+  for (auto ptile : mapdeco_crosshair_table->values()) {
+    refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), FALSE, FALSE);
   }
-
-  tile_hash_iterate(mapdeco_crosshair_table, ptile)
-  {
-    refresh_tile_mapcanvas(ptile, FALSE, FALSE);
-  }
-  tile_hash_iterate_end;
-
-  tile_hash_clear(mapdeco_crosshair_table);
+  mapdeco_crosshair_table->clear();
 }
 
 /************************************************************************/ /**
