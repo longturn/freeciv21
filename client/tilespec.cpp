@@ -357,14 +357,6 @@ struct specfile {
   char *file_name;
 };
 
-#define SPECLIST_TAG specfile
-#define SPECLIST_TYPE struct specfile
-#include "speclist.h"
-
-#define specfile_list_iterate(list, pitem)                                  \
-  TYPED_LIST_ITERATE(struct specfile, list, pitem)
-#define specfile_list_iterate_end LIST_ITERATE_END
-
 /*
  * Information about an individual sprite. All fields except 'sprite' are
  * filled at the time of the scan of the specfile. 'Sprite' is
@@ -448,12 +440,12 @@ struct tileset {
   int num_index_valid, num_index_cardinal;
   enum direction8 valid_tileset_dirs[8], cardinal_tileset_dirs[8];
   struct tileset_layer layers[MAX_NUM_LAYERS];
-  struct specfile_list *specfiles;
-  QSet<struct small_sprite*> *small_sprites;
+  QSet<specfile *> *specfiles;
+  QSet<struct small_sprite *> *small_sprites;
   /* This hash table maps tilespec tags to struct small_sprites. */
-  QHash<QString, struct small_sprite*> *sprite_hash;
+  QHash<QString, struct small_sprite *> *sprite_hash;
   /* This hash table maps terrain graphic strings to drawing data. */
-  QHash<QString, drawing_data*> *tile_hash;
+  QHash<QString, drawing_data *> *tile_hash;
   QHash<QString, int> *estyle_hash;
   struct named_sprites sprites;
   struct color_system *color_system;
@@ -852,8 +844,8 @@ static struct tileset *tileset_new(void)
   struct tileset *t =
       static_cast<struct tileset *>(fc_calloc(1, sizeof(*t)));
 
-  t->specfiles = specfile_list_new();
-  t->small_sprites = new QSet<struct small_sprite*>;
+  t->specfiles = new QSet<specfile *>;
+  t->small_sprites = new QSet<struct small_sprite *>;
   return t;
 }
 
@@ -1141,7 +1133,7 @@ void tileset_free(struct tileset *t)
   for (i = 0; i < ARRAY_SIZE(t->sprites.player); i++) {
     tileset_player_free(t, i);
   }
-  specfile_list_destroy(t->specfiles);
+  delete t->specfiles;
   delete t->small_sprites;
   free(t);
 }
@@ -2154,7 +2146,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   fc_assert(t->tile_hash == NULL);
-  t->tile_hash = new QHash<QString, drawing_data*>;
+  t->tile_hash = new QHash<QString, drawing_data *>;
 
   section_list_iterate(sections, psection)
   {
@@ -2339,7 +2331,6 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
                                             "extras.styles%d.style", i);
     style = extrastyle_id_by_name(style_name, fc_strcasecmp);
 
-
     if (t->estyle_hash->contains(extraname)) {
       log_error("warning: duplicate extrastyle entry [%s].", extraname);
       goto ON_ERROR;
@@ -2355,7 +2346,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   fc_assert(t->sprite_hash == NULL);
-  t->sprite_hash = new QHash<QString, struct small_sprite*>;
+  t->sprite_hash = new QHash<QString, struct small_sprite *>;
   for (i = 0; i < num_spec_files; i++) {
     struct specfile *sf = static_cast<specfile *>(fc_malloc(sizeof(*sf)));
     const char *dname;
@@ -2374,7 +2365,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     sf->file_name = fc_strdup(dname);
     scan_specfile(t, sf, duplicates_ok);
 
-    specfile_list_prepend(t->specfiles, sf);
+    t->specfiles->insert(sf);
   }
   free(spec_filenames);
 
@@ -2583,7 +2574,7 @@ static void unload_sprite(struct tileset *t, QString tag_name)
   if (ss->ref_count == 0) {
     /* Nobody's using the sprite anymore, so we should free it.  We know
      * where to find it if we need it again. */
-    //log_debug("freeing sprite '%s'.", tag_name);
+    // log_debug("freeing sprite '%s'.", tag_name);
     free_sprite(ss->sprite);
     ss->sprite = NULL;
   }
@@ -3324,14 +3315,13 @@ static bool load_river_sprites(struct tileset *t,
  ****************************************************************************/
 void finish_loading_sprites(struct tileset *t)
 {
-  specfile_list_iterate(t->specfiles, sf)
+  for(auto sf : t->specfiles->values())
   {
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
     }
   }
-  specfile_list_iterate_end;
 }
 
 /************************************************************************/ /**
@@ -6183,11 +6173,12 @@ struct unit *get_drawable_unit(const struct tileset *t, struct tile *ptile,
 static void unload_all_sprites(struct tileset *t)
 {
   if (t->sprite_hash) {
-      QHash<QString, small_sprite*>::const_iterator i = t->sprite_hash->constBegin();
-      while (i != t->sprite_hash->constEnd()) {
+    QHash<QString, small_sprite *>::const_iterator i =
+        t->sprite_hash->constBegin();
+    while (i != t->sprite_hash->constEnd()) {
       QByteArray qba = i.key().toLocal8Bit();
       while (i.value()->ref_count > 0) {
-       unload_sprite(t, qba.data());
+        unload_sprite(t, qba.data());
       }
       i++;
     }
@@ -6223,8 +6214,7 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = NULL;
   }
 
-  for (auto ss : t->small_sprites->values())
-  {
+  for (auto ss : t->small_sprites->values()) {
     t->small_sprites->remove(ss);
     if (ss->file) {
       free(ss->file);
@@ -6233,9 +6223,9 @@ void tileset_free_tiles(struct tileset *t)
     free(ss);
   }
 
-  specfile_list_iterate(t->specfiles, sf)
+  for(auto sf : t->specfiles->values())
   {
-    specfile_list_remove(t->specfiles, sf);
+    t->specfiles->remove(sf);
     free(sf->file_name);
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
@@ -6243,7 +6233,6 @@ void tileset_free_tiles(struct tileset *t)
     }
     free(sf);
   }
-  specfile_list_iterate_end;
 
   sprite_vector_iterate(&t->sprites.city.worked_tile_overlay, psprite)
   {
