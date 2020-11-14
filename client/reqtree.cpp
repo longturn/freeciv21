@@ -93,8 +93,7 @@ static void add_requirement(struct tree_node *node, struct tree_node *req)
  *************************************************************************/
 static struct tree_node *new_tree_node(void)
 {
-  struct tree_node *node =
-      static_cast<tree_node *>(fc_malloc(sizeof(*node)));
+  struct tree_node *node = new tree_node();
 
   node->nrequire = 0;
   node->nprovide = 0;
@@ -351,7 +350,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
                                             bool show_all)
 {
   const struct research *presearch = research_get(pplayer);
-  struct reqtree *tree = static_cast<reqtree *>(fc_malloc(sizeof(*tree)));
+  struct reqtree *tree = new reqtree();
   int j;
   struct tree_node *nodes[advance_count()];
 
@@ -438,20 +437,20 @@ void destroy_reqtree(struct reqtree *tree)
   int i;
 
   for (i = 0; i < tree->num_nodes; i++) {
-    free(tree->nodes[i]->require);
-    free(tree->nodes[i]->provide);
-    free(tree->nodes[i]);
+    delete[] tree->nodes[i]->require;
+    delete[] tree->nodes[i]->provide;
+    delete[] tree->nodes[i];
   }
-  free(tree->nodes);
+  delete[] tree->nodes;
   if (tree->layers) {
     for (i = 0; i < tree->num_layers; i++) {
-      free(tree->layers[i]);
+      delete[] tree->layers[i];
     }
     if (tree->layer_size) {
-      free(tree->layer_size);
+      delete[] tree->layer_size;
     }
   }
-  free(tree);
+  delete tree;
 }
 
 /*********************************************************************/ /**
@@ -527,9 +526,8 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   }
 
   /* create new tree */
-  new_tree = static_cast<reqtree *>(fc_malloc(sizeof(*new_tree)));
-  new_tree->nodes = static_cast<tree_node **>(fc_malloc(
-      sizeof(new_tree->nodes) * (tree->num_nodes + num_dummy_nodes)));
+  new_tree = new reqtree();
+  new_tree->nodes = new tree_node *[tree->num_nodes + num_dummy_nodes];
   new_tree->num_nodes = tree->num_nodes + num_dummy_nodes;
 
   /* copy normal nodes */
@@ -615,10 +613,8 @@ static void set_layers(struct reqtree *tree)
     /* Counters for order - order number for the next node in the layer */
     int T[num_layers];
 
-    tree->layers = static_cast<tree_node ***>(
-        fc_malloc(sizeof(*tree->layers) * num_layers));
-    tree->layer_size =
-        static_cast<int *>(malloc(sizeof(*tree->layer_size) * num_layers));
+    tree->layers = new tree_node **[num_layers];
+    tree->layer_size = new int[num_layers];
     for (i = 0; i < num_layers; i++) {
       T[i] = 0;
       tree->layer_size[i] = 0;
@@ -628,8 +624,7 @@ static void set_layers(struct reqtree *tree)
     }
 
     for (i = 0; i < num_layers; i++) {
-      tree->layers[i] = static_cast<tree_node **>(
-          fc_malloc(sizeof(*tree->layers[i]) * tree->layer_size[i]));
+      tree->layers[i] = new tree_node *[tree->layer_size[i]];
     }
     for (i = 0; i < tree->num_nodes; i++) {
       struct tree_node *node = tree->nodes[i];

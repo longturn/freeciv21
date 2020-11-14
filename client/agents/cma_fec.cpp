@@ -134,15 +134,14 @@ void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest)
  **************************************************************************/
 void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam)
 {
-  struct cma_preset *ppreset =
-      static_cast<cma_preset *>(fc_malloc(sizeof(struct cma_preset)));
+  struct cma_preset *ppreset = new cma_preset;
 
   if (preset_list == NULL) {
     preset_list = preset_list_new();
   }
 
   cm_copy_parameter(&ppreset->parameter, pparam);
-  ppreset->descr = static_cast<char *>(fc_malloc(MAX_LEN_PRESET_NAME));
+  ppreset->descr = new char[MAX_LEN_PRESET_NAME];
   (void) fc_strlcpy(ppreset->descr, descr_name, MAX_LEN_PRESET_NAME);
   preset_list_prepend(preset_list, ppreset);
 }
@@ -159,8 +158,8 @@ void cmafec_preset_remove(int idx)
   ppreset = preset_list_get(preset_list, idx);
   preset_list_remove(preset_list, ppreset);
 
-  free(ppreset->descr);
-  free(ppreset);
+  delete[] ppreset->descr;
+  delete ppreset;
 }
 
 /**********************************************************************/ /**

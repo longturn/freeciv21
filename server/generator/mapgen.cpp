@@ -1404,7 +1404,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
         || MAPGEN_FRACTURE == wld.map.server.generator) {
 
       make_land();
-      free(height_map);
+      delete[] height_map;
       height_map = NULL;
     }
     if (!wld.map.server.tinyisles) {
@@ -1675,8 +1675,7 @@ static struct terrain_select *tersel_new(int weight,
                                          int temp_condition,
                                          int wet_condition)
 {
-  struct terrain_select *ptersel =
-      static_cast<terrain_select *>(fc_malloc(sizeof(*ptersel)));
+  struct terrain_select *ptersel = new terrain_select;
 
   ptersel->weight = weight;
   ptersel->target = target;
@@ -2251,8 +2250,8 @@ static void initworld(struct gen234_state *pstate)
       pick_ocean(TERRAIN_OCEAN_DEPTH_MAXIMUM, FALSE);
 
   fc_assert(NULL != deepest_ocean);
-  height_map =
-      static_cast<int *>(fc_malloc(MAP_INDEX_SIZE * sizeof(*height_map)));
+  height_map = new int[MAP_INDEX_SIZE];
+
   create_placed_map(); /* land tiles which aren't placed yet */
 
   whole_map_iterate(&(wld.map), ptile)
@@ -2355,8 +2354,7 @@ static void mapgenerator2(void)
 
     /* init world created this map, destroy it before abort */
     destroy_placed_map();
-    free(height_map);
-    height_map = NULL;
+    FCPP_FREE(height_map);
     return;
   }
 
@@ -2372,8 +2370,7 @@ static void mapgenerator2(void)
 
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     log_verbose("%ld mass left unplaced", checkmass);
@@ -2471,8 +2468,7 @@ static void mapgenerator3(void)
 
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (j == 1500) {
     log_normal(_("Generator 3 left %li landmass unplaced."), checkmass);
@@ -2540,8 +2536,7 @@ static void mapgenerator4(void)
   }
   make_plains();
   destroy_placed_map();
-  free(height_map);
-  height_map = NULL;
+  FCPP_FREE(height_map);
 
   if (checkmass > wld.map.xsize + wld.map.ysize + totalweight) {
     log_verbose("%ld mass left unplaced", checkmass);
@@ -2595,19 +2590,9 @@ struct fair_geometry_data {
 };
 
 /**********************************************************************/ /**
-   Create a map. Note that all maps have the same dimensions, to be able to
-   call map utilities.
- **************************************************************************/
-static inline struct fair_tile *fair_map_new(void)
-{
-  return static_cast<fair_tile *>(
-      fc_calloc(MAP_INDEX_SIZE, sizeof(struct fair_tile)));
-}
-
-/**********************************************************************/ /**
    Free a map.
  **************************************************************************/
-static inline void fair_map_destroy(struct fair_tile *pmap) { free(pmap); }
+static inline void fair_map_destroy(struct fair_tile *pmap) { delete[] pmap; }
 
 /**********************************************************************/ /**
    Get the coordinates of tile 'ptile'.
@@ -3151,7 +3136,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
 
   size = CLIP(startpos_num, size, ARRAY_SIZE(land_tiles));
   fantasy = (size * 2) / 5;
-  pisland = fair_map_new();
+  pisland = new fair_tile[MAP_INDEX_SIZE]();
   pftile = fair_map_pos_tile(pisland, wld.map.xsize / 2, wld.map.ysize / 2);
   fc_assert(!fair_map_tile_border(pisland, pftile, sea_around_island));
   pftile->flags = static_cast<fair_tile_flag>(pftile->flags | FTF_ASSIGNED);
@@ -3573,7 +3558,7 @@ static bool map_generate_fair_islands(void)
   log_debug("playermass=%d, islandmass1=%d, islandmass2=%d, islandmass3=%d",
             playermass, islandmass1, islandmass2, islandmass3);
 
-  pmap = fair_map_new();
+  pmap = new fair_tile[MAP_INDEX_SIZE]();
 
   while (--iter >= 0) {
     done = TRUE;
@@ -3747,7 +3732,7 @@ static bool map_generate_fair_islands(void)
     }
 
     fair_map_destroy(pmap);
-    pmap = fair_map_new();
+    pmap = new fair_tile[MAP_INDEX_SIZE]();
 
     /* Decrease land mass, for better chances. */
     islandmass1 = (islandmass1 * 99) / 100;

@@ -138,8 +138,7 @@ bool script_server_load_file(const char *filename, char **buf)
   if (ffile != NULL) {
     int len;
 
-    buffer = static_cast<char *>(fc_malloc(stats.st_size + 1));
-
+    buffer = new char[stats.st_size + 1];
     len = fread(buffer, 1, stats.st_size, ffile);
 
     if (len == stats.st_size) {
@@ -147,7 +146,7 @@ bool script_server_load_file(const char *filename, char **buf)
 
       *buf = buffer;
     } else {
-      free(buffer);
+      delete[] buffer;
     }
     fclose(ffile);
   }
@@ -253,8 +252,7 @@ static void script_server_code_init(void) { script_server_code = NULL; }
 static void script_server_code_free(void)
 {
   if (script_server_code) {
-    free(script_server_code);
-    script_server_code = NULL;
+    FCPP_FREE(script_server_code);
   }
 }
 

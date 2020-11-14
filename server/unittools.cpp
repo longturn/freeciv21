@@ -3156,7 +3156,7 @@ void unit_transport_unload_send(struct unit *punit)
  **************************************************************************/
 static void autoattack_prob_free(struct autoattack_prob *prob)
 {
-  free(prob);
+  delete prob;
 }
 
 /**********************************************************************/ /**
@@ -3670,7 +3670,7 @@ static void unit_move_data_unref(struct unit_move_data *pdata)
       fc_assert(pdata->punit->server.moving == pdata);
       pdata->punit->server.moving = NULL;
     }
-    free(pdata);
+    delete pdata;
   }
 }
 

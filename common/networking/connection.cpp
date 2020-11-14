@@ -402,7 +402,7 @@ static void free_socket_packet_buffer(struct socket_packet_buffer *buf)
     if (buf->data) {
       free(buf->data);
     }
-    free(buf);
+    delete buf;
   }
 }
 
@@ -522,7 +522,7 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.sent[i]);
       }
     }
-    free(pc->phs.sent);
+    delete[] pc->phs.sent;
     pc->phs.sent = NULL;
   }
 
@@ -532,7 +532,7 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.received[i]);
       }
     }
-    free(pc->phs.received);
+    delete[] pc->phs.received;
     pc->phs.received = NULL;
   }
 }
@@ -727,8 +727,8 @@ struct conn_pattern *conn_pattern_new(enum conn_pattern_type type,
 void conn_pattern_destroy(struct conn_pattern *ppattern)
 {
   fc_assert_ret(NULL != ppattern);
-  free(ppattern->wildcard);
-  free(ppattern);
+  delete ppattern->wildcard;
+  delete ppattern;
 }
 
 /**********************************************************************/ /**

@@ -128,12 +128,10 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   const struct tile *ptile;
   bool added = FALSE;
 
-  va_start(ap, agent);
-
   if (client_is_observer()) {
     return;
   }
-
+  va_start(ap, agent);
   switch (type) {
   case OCT_UNIT:
   case OCT_CITY:
@@ -149,8 +147,7 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   }
   va_end(ap);
 
-  pcall2 = static_cast<call *>(fc_malloc(sizeof(struct call)));
-
+  pcall2 = new call;
   pcall2->agent = agent;
   pcall2->type = type;
   pcall2->cb_type = cb_type;
@@ -162,7 +159,7 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   {
     if (calls_are_equal(pcall, pcall2)) {
       /* Already got one like this, discard duplicate. */
-      free(pcall2);
+      delete pcall2;
       return;
     }
     if (pcall->agent->agent.level - pcall2->agent->agent.level > 0) {
@@ -256,7 +253,7 @@ static void call_handle_methods(void)
     }
 
     execute_call(pcall);
-    free(pcall);
+    delete[] pcall;
   }
 
   currently_running = FALSE;
@@ -362,7 +359,7 @@ void agents_free(void)
       break;
     }
 
-    free(pcall);
+    delete pcall;
   }
 
   for (i = 0; i < agents.entries_used; i++) {

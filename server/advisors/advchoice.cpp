@@ -58,8 +58,7 @@ void adv_deinit_choice(struct adv_choice *choice)
  **************************************************************************/
 struct adv_choice *adv_new_choice(void)
 {
-  struct adv_choice *choice =
-      static_cast<adv_choice *>(fc_malloc(sizeof(*choice)));
+  struct adv_choice *choice = new adv_choice();
 
   adv_init_choice(choice);
 
@@ -76,7 +75,7 @@ void adv_free_choice(struct adv_choice *choice)
     free(choice->use);
   }
 #endif /* ADV_CHOICE_TRACK */
-  free(choice);
+  delete choice;
 }
 
 /**********************************************************************/ /**

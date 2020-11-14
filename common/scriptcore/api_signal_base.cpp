@@ -10,11 +10,6 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 /* common/scriptcore */
 #include "luascript.h"
 #include "luascript_signal.h"
@@ -109,6 +104,6 @@ const char *api_signal_by_index(lua_State *L, int sindex)
   fcl = luascript_get_fcl(L);
 
   LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!", NULL);
-
-  return luascript_signal_by_index(fcl, sindex);
+  QByteArray ba = luascript_signal_by_index(fcl, sindex).toLocal8Bit();
+  return ba.data();
 }

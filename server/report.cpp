@@ -1105,8 +1105,7 @@ static void plrdata_slot_init(struct plrdata_slot *plrdata, const char *name)
 {
   fc_assert_ret(plrdata->name == NULL);
 
-  plrdata->name =
-      static_cast<char *>(fc_calloc(MAX_LEN_NAME, sizeof(plrdata->name)));
+  plrdata->name = new char[MAX_LEN_NAME]();
   plrdata_slot_replace(plrdata, name);
 }
 
@@ -1292,12 +1291,10 @@ void log_civ_score_init(void)
     return;
   }
 
-  score_log =
-      static_cast<logging_civ_score *>(fc_calloc(1, sizeof(*score_log)));
+  score_log = new logging_civ_score[1]();
   score_log->fp = NULL;
   score_log->last_turn = -1;
-  score_log->plrdata = static_cast<plrdata_slot *>(
-      fc_calloc(player_slot_count(), sizeof(*score_log->plrdata)));
+  score_log->plrdata = new plrdata_slot[player_slot_count()]();
   player_slots_iterate(pslot)
   {
     struct plrdata_slot *plrdata =

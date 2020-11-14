@@ -44,7 +44,7 @@ const char **gfx_fileextensions(void)
     char *ext;
 
     cp = gfx_ext.takeFirst();
-    ext = static_cast<char *>(fc_malloc(sizeof(cp.data())));
+    ext = new char[sizeof(cp.data())];
     strncpy(ext, cp.data(), sizeof(cp));
     gfx_array_extensions[j] = ext;
     j++;

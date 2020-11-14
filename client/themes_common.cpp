@@ -70,8 +70,7 @@ void init_themes(void)
   char **gui_directories =
       get_gui_specific_themes_directories(&num_directories);
 
-  directories = static_cast<theme_directory *>(
-      fc_malloc(sizeof(struct theme_directory) * num_directories));
+  directories = new theme_directory[num_directories];
 
   for (i = 0; i < num_directories; i++) {
     directories[i].path = gui_directories[i];
@@ -80,7 +79,7 @@ void init_themes(void)
     directories[i].themes = get_useable_themes_in_directory(
         directories[i].path, &(directories[i].num_themes));
   }
-  free(gui_directories);
+  delete[] gui_directories;
 }
 
 /************************************************************************/ /**

@@ -85,12 +85,18 @@ static bool help_nodes_init = FALSE;
 /************************************************************************/ /**
    Initialize.
  ****************************************************************************/
-void helpdata_init(void) { help_nodes = help_list_new(); }
+void helpdata_init(void)
+{
+  help_nodes = help_list_new();
+}
 
 /************************************************************************/ /**
    Clean up.
  ****************************************************************************/
-void helpdata_done(void) { help_list_destroy(help_nodes); }
+void helpdata_done(void)
+{
+  help_list_destroy(help_nodes);
+}
 
 /************************************************************************/ /**
    Make sure help_nodes is initialised.
@@ -114,12 +120,11 @@ void free_help_texts(void)
   check_help_nodes_init();
   help_list_iterate(help_nodes, ptmp)
   {
-    free(ptmp->topic);
-    free(ptmp->text);
-    free(ptmp);
+    // delete[] ptmp->topic;
+    // delete[] ptmp->text;
+    // delete ptmp;
   }
   help_list_iterate_end;
-  help_list_clear(help_nodes);
 }
 
 /************************************************************************/ /**
@@ -678,9 +683,7 @@ static void insert_allows(struct universal *psource, char *buf, size_t bufsz,
  ****************************************************************************/
 static struct help_item *new_help_item(int type)
 {
-  struct help_item *pitem;
-
-  pitem = static_cast<help_item *>(fc_malloc(sizeof(struct help_item)));
+  struct help_item *pitem = new help_item;
   pitem->topic = NULL;
   pitem->text = NULL;
   pitem->type = static_cast<help_page_type>(type);
@@ -727,8 +730,10 @@ void boot_help_texts(void)
   struct section_list *sec;
   const char **paras;
   size_t npara;
+  char empty[1];
   char long_buffer[64000]; /* HACK: this may be overrun. */
 
+  empty[0] = '\0';
   check_help_nodes_init();
 
   /* need to do something like this or bad things happen */
@@ -789,8 +794,9 @@ void boot_help_texts(void)
             /* Avoid warnings about entries unused on this round,
              * when the entries in question are valid once help system has
              * been booted */
-            (void) secfile_lookup_str_vec(sf, &ncats, "%s.categories",
-                                          sec_name);
+            const char **delete_me_pls = secfile_lookup_str_vec(
+                sf, &ncats, "%s.categories", sec_name);
+            delete[] delete_me_pls;
           }
           continue; /* on initial boot data tables are empty */
         }
@@ -810,8 +816,8 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           utype_name_translation(punittype));
-              pitem->topic = fc_strdup(name);
-              pitem->text = fc_strdup("");
+              pitem->topic = qstrdup(name);
+              pitem->text = qstrdup(empty);
               help_list_append(category_nodes, pitem);
             }
             unit_type_iterate_end;
@@ -824,8 +830,8 @@ void boot_help_texts(void)
                 fc_snprintf(
                     name, sizeof(name), "%*s%s", level, "",
                     advance_name_translation(advance_by_number(advi)));
-                pitem->topic = fc_strdup(name);
-                pitem->text = fc_strdup("");
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
                 help_list_append(category_nodes, pitem);
               }
             }
@@ -838,8 +844,8 @@ void boot_help_texts(void)
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             terrain_name_translation(pterrain));
-                pitem->topic = fc_strdup(name);
-                pitem->text = fc_strdup("");
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
                 help_list_append(category_nodes, pitem);
               }
             }
@@ -871,12 +877,12 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           extra_name_translation(pextra));
-              pitem->topic = fc_strdup(name);
-              pitem->text = fc_strdup("");
+              pitem->topic = qstrdup(name);
+              pitem->text = qstrdup(empty);
               help_list_append(category_nodes, pitem);
             }
             extra_type_iterate_end;
-            FC_FREE(cats);
+            FCPP_FREE(cats);
           } break;
           case HELP_GOODS:
             goods_type_iterate(pgood)
@@ -884,8 +890,8 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           goods_name_translation(pgood));
-              pitem->topic = fc_strdup(name);
-              pitem->text = fc_strdup("");
+              pitem->topic = qstrdup(name);
+              pitem->text = qstrdup(empty);
               help_list_append(category_nodes, pitem);
             }
             goods_type_iterate_end;
@@ -898,8 +904,8 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           specialist_plural_translation(pspec));
-              pitem->topic = fc_strdup(name);
-              pitem->text = fc_strdup("");
+              pitem->topic = qstrdup(name);
+              pitem->text = qstrdup(empty);
               help_list_append(category_nodes, pitem);
             }
             specialist_type_iterate_end;
@@ -910,8 +916,8 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           government_name_translation(gov));
-              pitem->topic = fc_strdup(name);
-              pitem->text = fc_strdup("");
+              pitem->topic = qstrdup(name);
+              pitem->text = qstrdup(empty);
               help_list_append(category_nodes, pitem);
             }
             governments_iterate_end;
@@ -924,8 +930,8 @@ void boot_help_texts(void)
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             improvement_name_translation(pimprove));
-                pitem->topic = fc_strdup(name);
-                pitem->text = fc_strdup("");
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
                 help_list_append(category_nodes, pitem);
               }
             }
@@ -938,8 +944,8 @@ void boot_help_texts(void)
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             improvement_name_translation(pimprove));
-                pitem->topic = fc_strdup(name);
-                pitem->text = fc_strdup("");
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
                 help_list_append(category_nodes, pitem);
               }
             }
@@ -950,10 +956,10 @@ void boot_help_texts(void)
             int len;
 
             pitem = new_help_item(HELP_RULESET);
-            /*           pitem->topic = fc_strdup(_(game.control.name)); */
+            /*           pitem->topic = qstrdup(_(game.control.name)); */
             fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                         Q_(HELP_RULESET_ITEM));
-            pitem->topic = fc_strdup(name);
+            pitem->topic = qstrdup(name);
             if (game.ruleset_description != NULL) {
               desc_len = strlen("\n\n") + strlen(game.ruleset_description);
             } else {
@@ -965,7 +971,7 @@ void boot_help_texts(void)
                       + strlen(game.control.version) + strlen("\n\n")
                       + strlen(_(game.ruleset_summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             _(game.ruleset_summary));
@@ -973,7 +979,7 @@ void boot_help_texts(void)
                 len = strlen(_(game.control.name)) + strlen("\n\n")
                       + strlen(_(game.ruleset_summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
                             _(game.control.name), _(game.ruleset_summary));
               }
@@ -985,7 +991,7 @@ void boot_help_texts(void)
                       + strlen(game.control.version) + strlen("\n\n")
                       + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             nodesc);
@@ -993,7 +999,7 @@ void boot_help_texts(void)
                 len = strlen(_(game.control.name)) + strlen("\n\n")
                       + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
                             _(game.control.name), nodesc);
               }
@@ -1016,7 +1022,7 @@ void boot_help_texts(void)
             pitem = new_help_item(HELP_TILESET);
             fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                         Q_(HELP_TILESET_ITEM));
-            pitem->topic = fc_strdup(name);
+            pitem->topic = qstrdup(name);
             if (description != NULL) {
               desc_len = strlen("\n\n") + strlen(description);
             } else {
@@ -1027,14 +1033,14 @@ void boot_help_texts(void)
                 len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
                       + strlen("\n\n") + strlen(_(summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, _(summary));
               } else {
                 len = strlen(_(ts_name)) + strlen("\n\n")
                       + strlen(_(summary)) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
                             _(summary));
               }
@@ -1045,14 +1051,14 @@ void boot_help_texts(void)
                 len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
                       + strlen("\n\n") + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, nodesc);
               } else {
                 len =
                     strlen(_(ts_name)) + strlen("\n\n") + strlen(nodesc) + 1;
 
-                pitem->text = static_cast<char *>(fc_malloc(len + desc_len));
+                pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
                             nodesc);
               }
@@ -1071,8 +1077,8 @@ void boot_help_texts(void)
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             nation_plural_translation(pnation));
-                pitem->topic = fc_strdup(name);
-                pitem->text = fc_strdup("");
+                pitem->topic = qstrdup(name);
+                pitem->text = qstrdup(empty);
                 help_list_append(category_nodes, pitem);
               }
             }
@@ -1085,7 +1091,7 @@ void boot_help_texts(void)
               pitem = new_help_item(current_type);
               fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                           name_translation_get(&pmul->name));
-              pitem->topic = fc_strdup(name);
+              pitem->topic = qstrdup(name);
               if (pmul->helptext) {
                 const char *sep = "";
                 strvec_iterate(pmul->helptext, text)
@@ -1096,7 +1102,7 @@ void boot_help_texts(void)
                 }
                 strvec_iterate_end;
               }
-              pitem->text = fc_strdup(help_text_buffer);
+              pitem->text = qstrdup(help_text_buffer);
               help_list_append(help_nodes, pitem);
             }
             multipliers_iterate_end;
@@ -1120,7 +1126,7 @@ void boot_help_texts(void)
 
       pitem = new_help_item(HELP_TEXT);
       pitem->topic =
-          fc_strdup(Q_(secfile_lookup_str(sf, "%s.name", sec_name)));
+          qstrdup(Q_(secfile_lookup_str(sf, "%s.name", sec_name)));
 
       paras = secfile_lookup_str_vec(sf, &npara, "%s.text", sec_name);
 
@@ -1140,9 +1146,8 @@ void boot_help_texts(void)
           sz_strlcat(long_buffer, "\n\n");
         }
       }
-      delete[] paras;
-      paras = NULL;
-      pitem->text = fc_strdup(long_buffer);
+      FCPP_FREE(paras);
+      pitem->text = qstrdup(long_buffer);
       help_list_append(help_nodes, pitem);
     }
     section_list_iterate_end;
@@ -2914,7 +2919,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           /* action name alone can be MAX_LEN_NAME, leave space for extra
            * characters */
           int maxlen = MAX_LEN_NAME + 16;
-          char *quoted = static_cast<char *>(fc_malloc(maxlen));
+          char *quoted = new char[maxlen];
 
           fc_snprintf(quoted, maxlen,
                       /* TRANS: %s is an action that can block another. */
@@ -4829,11 +4834,13 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
 char *helptext_unit_upkeep_str(const struct unit_type *utype)
 {
   static char buf[128];
+  char *empty = new char;
   int any = 0;
+  empty[0] = '\0';
 
   if (!utype) {
     log_error("Unknown unit!");
-    return "";
+    return empty;
   }
 
   buf[0] = '\0';

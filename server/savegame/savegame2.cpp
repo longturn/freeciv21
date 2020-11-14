@@ -1219,8 +1219,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = static_cast<extra_type **>(
-        fc_calloc(nmod, sizeof(*loading->extra.order)));
+    loading->extra.order = new extra_type*[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1244,8 +1243,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = static_cast<multiplier **>(fc_calloc(
-        loading->multiplier.size, sizeof(*loading->multiplier.order)));
+    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -1281,8 +1279,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * that old S_LAST to current S_LAST, just like any real special within
      * special.size gets mapped. */
     nmod = loading->special.size + (4 - (loading->special.size % 4));
-    loading->special.order = static_cast<tile_special_type *>(
-        fc_calloc(nmod, sizeof(*loading->special.order)));
+    loading->special.order = new tile_special_type[nmod]();
     for (j = 0; j < loading->special.size; j++) {
       if (!strcasecmp("Road", modname[j])) {
         loading->special.order[j] = S_OLD_ROAD;
@@ -1314,8 +1311,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    secfile_error());
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->base.size + 3) / 4);
-    loading->base.order = static_cast<base_type **>(
-        fc_calloc(nmod, sizeof(*loading->base.order)));
+    loading->base.order = new base_type *[nmod]();
     for (j = 0; j < loading->base.size; j++) {
       struct extra_type *pextra = extra_type_by_rule_name(modname[j]);
 
@@ -1354,8 +1350,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_road_types, (int) loading->road.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->road.size + 3) / 4);
-    loading->road.order = static_cast<road_type **>(
-        fc_calloc(nmod, sizeof(*loading->road.order)));
+    loading->road.order = new road_type *[nmod]();
     for (j = 0; j < loading->road.size; j++) {
       struct extra_type *pextra = extra_type_by_rule_name(modname[j]);
 
@@ -1394,8 +1389,7 @@ static void sg_load_savefile(struct loaddata *loading)
      * way for consistency with other types, and to be prepared for the time
      * it needs to be this way. */
     nmod = 4 * ((loading->specialist.size + 3) / 4);
-    loading->specialist.order = static_cast<specialist **>(
-        fc_calloc(nmod, sizeof(*loading->specialist.order)));
+    loading->specialist.order = new specialist *[nmod]();
     for (j = 0; j < loading->specialist.size; j++) {
       loading->specialist.order[j] = specialist_by_rule_name(modname[j]);
     }
@@ -1420,8 +1414,7 @@ static void sg_load_savefile(struct loaddata *loading)
     modname = secfile_lookup_str_vec(loading->file, &loading->ds_t.size,
                                      "savefile.diplstate_type_vector");
 
-    loading->ds_t.order = static_cast<diplstate_type *>(
-        fc_calloc(loading->ds_t.size, sizeof(*loading->ds_t.order)));
+    loading->ds_t.order = new diplstate_type[loading->ds_t.size]();
 
     for (j = 0; j < loading->ds_t.size; j++) {
       loading->ds_t.order[j] =
@@ -2255,8 +2248,7 @@ static void sg_load_map_worked(struct loaddata *loading)
   sg_failure_ret(loading->worked_tiles == NULL,
                  "City worked map not loaded!");
 
-  loading->worked_tiles = static_cast<int *>(
-      fc_malloc(MAP_INDEX_SIZE * sizeof(*loading->worked_tiles)));
+  loading->worked_tiles = new int[MAP_INDEX_SIZE];
 
   for (y = 0; y < wld.map.ysize; y++) {
     const char *buffer =
@@ -2305,8 +2297,7 @@ static void sg_load_map_known(struct loaddata *loading)
 
   if (secfile_lookup_bool_default(loading->file, TRUE, "game.save_known")) {
     int lines = player_slot_max_used_number() / 32 + 1, j, p, l, i;
-    unsigned int *known = static_cast<unsigned int *>(
-        fc_calloc(lines * MAP_INDEX_SIZE, sizeof(*known)));
+    unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
 
     for (l = 0; l < lines; l++) {
       for (j = 0; j < 8; j++) {
@@ -2345,7 +2336,7 @@ static void sg_load_map_known(struct loaddata *loading)
     }
     whole_map_iterate_end;
 
-    FC_FREE(known);
+    FCPP_FREE(known);
   }
 }
 
@@ -3359,8 +3350,7 @@ static void sg_load_player_cities(struct loaddata *loading,
     if (pcity != NULL) {
       const char *str;
       int nat_x, nat_y;
-      struct worker_task *ptask =
-          static_cast<worker_task *>(fc_malloc(sizeof(struct worker_task)));
+      struct worker_task *ptask = new worker_task();
 
       nat_x = secfile_lookup_int_default(loading->file, -1,
                                          "player%d.task%d.x", plrno, i);
@@ -3459,8 +3449,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
                                              "%s.traderoute%d", citystr, i);
 
     if (partner != 0) {
-      struct trade_route *proute =
-          static_cast<trade_route *>(fc_malloc(sizeof(struct trade_route)));
+      struct trade_route *proute = new trade_route();
 
       proute->partner = partner;
       proute->dir = RDIR_BIDIRECTIONAL;
@@ -4230,8 +4219,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
       int road_idx = road_number(road_by_compat_special(ROCO_ROAD));
       int rail_idx = road_number(road_by_compat_special(ROCO_RAILROAD));
 
-      punit->orders.list = static_cast<unit_order *>(
-          fc_malloc(len * sizeof(*(punit->orders.list))));
+      punit->orders.list = new unit_order[len];
       punit->orders.length = len;
       punit->orders.index = secfile_lookup_int_default(
           loading->file, 0, "%s.orders_index", unitstr);
@@ -4465,7 +4453,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
                                       plrno),
                    "%s", secfile_error());
 
-    quoted = static_cast<char *>(fc_malloc(quoted_length + 1));
+    quoted = new char[quoted_length + 1];
     quoted[0] = '\0';
     plr->attribute_block.data = fc_malloc(plr->attribute_block.length);
     for (part_nr = 0; part_nr < parts; part_nr++) {
@@ -4491,7 +4479,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
     actual_length = unquote_block(quoted, plr->attribute_block.data,
                                   plr->attribute_block.length);
     fc_assert(actual_length == plr->attribute_block.length);
-    free(quoted);
+    delete[] quoted;
   }
 }
 
@@ -4959,8 +4947,7 @@ static void sg_load_treaties(struct loaddata *loading)
     if (p0 == NULL || p1 == NULL) {
       log_error("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
-      struct Treaty *ptreaty =
-          static_cast<Treaty *>(fc_malloc(sizeof(*ptreaty)));
+      struct Treaty *ptreaty = new Treaty;
 
       init_treaty(ptreaty, p0, p1);
       treaty_list_prepend(treaties, ptreaty);

@@ -251,8 +251,8 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
       fc_assert(packet->orders[i].order != ORDER_PERFORM_ACTION
                 || action_id_exists(packet->orders[i].action));
     }
-    punit->orders.list = static_cast<unit_order *>(
-        fc_malloc(punit->orders.length * sizeof(*punit->orders.list)));
+
+    punit->orders.list = new unit_order[punit->orders.length]();
     memcpy(punit->orders.list, packet->orders,
            punit->orders.length * sizeof(*punit->orders.list));
   }
@@ -1042,8 +1042,7 @@ void handle_traderoute_info(const struct packet_traderoute_info *packet)
   if (proute == NULL) {
     fc_assert(trade_route_list_size(pcity->routes) == packet->index);
 
-    proute =
-        static_cast<trade_route *>(fc_malloc(sizeof(struct trade_route)));
+    proute = new trade_route();
     trade_route_list_append(pcity->routes, proute);
     city_changed = TRUE;
   }
@@ -1233,15 +1232,13 @@ void handle_worker_task(const struct packet_worker_task *packet)
     if (packet->activity == ACTIVITY_LAST) {
       return;
     } else {
-      ptask =
-          static_cast<worker_task *>(fc_malloc(sizeof(struct worker_task)));
+      ptask = new worker_task();
       worker_task_list_append(pcity->task_reqs, ptask);
     }
   } else {
     if (packet->activity == ACTIVITY_LAST) {
       worker_task_list_remove(pcity->task_reqs, ptask);
-      free(ptask);
-      ptask = NULL;
+      FC_FREE(ptask);
     }
   }
 
@@ -1494,16 +1491,16 @@ void handle_page_msg(const char *caption, const char *headline,
       || event != E_BROADCAST_REPORT) {
     if (page_msg_report.parts > 0) {
       /* Previous one was never finished */
-      free(page_msg_report.caption);
-      free(page_msg_report.headline);
-      free(page_msg_report.lines);
+      delete[] page_msg_report.caption;
+      delete[] page_msg_report.headline;
+      delete[] page_msg_report.lines;
     }
     page_msg_report.len = len;
     page_msg_report.event = event;
     page_msg_report.caption = fc_strdup(caption);
     page_msg_report.headline = fc_strdup(headline);
     page_msg_report.parts = parts;
-    page_msg_report.lines = static_cast<char *>(fc_malloc(len + 1));
+    page_msg_report.lines = new char[len + 1];
     page_msg_report.lines[0] = '\0';
 
     if (parts == 0) {
@@ -1531,9 +1528,9 @@ void handle_page_msg_part(const char *lines)
                           page_msg_report.lines);
       play_sound_for_event(page_msg_report.event);
 
-      free(page_msg_report.caption);
-      free(page_msg_report.headline);
-      free(page_msg_report.lines);
+      delete[] page_msg_report.caption;
+      delete[] page_msg_report.headline;
+      delete[] page_msg_report.lines;
       page_msg_report.lines = NULL;
     }
   }
@@ -1691,7 +1688,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
       /* We cheat by just stealing the packet unit's list. */
       if (punit->orders.list) {
-        free(punit->orders.list);
+        delete[] punit->orders.list;
       }
       punit->orders.list = packet_unit->orders.list;
       packet_unit->orders.list = NULL;
@@ -3090,14 +3087,14 @@ void handle_tile_info(const struct packet_tile_info *packet)
     if (!ptile->spec_sprite
         || strcmp(ptile->spec_sprite, packet->spec_sprite) != 0) {
       if (ptile->spec_sprite) {
-        free(ptile->spec_sprite);
+        delete ptile->spec_sprite;
       }
       ptile->spec_sprite = fc_strdup(packet->spec_sprite);
       tile_changed = TRUE;
     }
   } else {
     if (ptile->spec_sprite) {
-      free(ptile->spec_sprite);
+      delete ptile->spec_sprite;
       ptile->spec_sprite = NULL;
       tile_changed = TRUE;
     }
@@ -3252,8 +3249,7 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
   music_styles_alloc(game.control.num_music_styles);
 
   if (game.control.desc_length > 0) {
-    game.ruleset_description =
-        static_cast<char *>(fc_malloc(game.control.desc_length + 1));
+    game.ruleset_description = new char[game.control.desc_length + 1];
     game.ruleset_description[0] = '\0';
   }
 
@@ -3304,12 +3300,12 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
   int len;
 
   if (game.ruleset_summary != NULL) {
-    free(game.ruleset_summary);
+    delete[] game.ruleset_summary;
   }
 
   len = strlen(packet->text);
 
-  game.ruleset_summary = static_cast<char *>(fc_malloc(len + 1));
+  game.ruleset_summary = new char[len + 1];
 
   fc_strlcpy(game.ruleset_summary, packet->text, len + 1);
 }
@@ -3496,7 +3492,7 @@ void handle_ruleset_unit_bonus(const struct packet_ruleset_unit_bonus *p)
 
   fc_assert_ret_msg(NULL != u, "Bad unit_type %d.", p->unit);
 
-  bonus = static_cast<combat_bonus *>(malloc(sizeof(*bonus)));
+  bonus = new combat_bonus;
 
   bonus->flag = p->flag;
   bonus->type = p->type;
@@ -3847,7 +3843,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   output_type_iterate_end;
 
   if (pterrain->resources != NULL) {
-    free(pterrain->resources);
+    delete[] pterrain->resources;
   }
   pterrain->resources = static_cast<extra_type **>(
       fc_calloc(p->num_resources + 1, sizeof(*pterrain->resources)));
@@ -4385,7 +4381,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
 
   if (packet->translation_domain[0] != '\0') {
     size_t len = strlen(packet->translation_domain) + 1;
-    pnation->translation_domain = static_cast<char *>(fc_malloc(len));
+    pnation->translation_domain = new char[len];
     fc_strlcpy(pnation->translation_domain, packet->translation_domain, len);
   } else {
     pnation->translation_domain = NULL;

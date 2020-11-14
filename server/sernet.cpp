@@ -90,7 +90,9 @@ static void close_connection(struct connection *pconn)
     delete pconn->server.ping_timers;
     pconn->server.ping_timers = NULL;
   }
-
+  conn_list_iterate(game.all_connections, xconn) {
+    xconn->sock->disconnect();
+  } conn_list_iterate_end;
   conn_pattern_list_destroy(pconn->server.ignore_list);
   pconn->server.ignore_list = NULL;
 
@@ -263,7 +265,7 @@ void incoming_client_packets(struct connection *pconn)
     start_processing_request(pconn, pconn->server.last_request_id_seen);
 
     command_ok = server_packet_input(pconn, packet.data, packet.type);
-    free(packet.data);
+    ::operator delete (packet.data);
 
     finish_processing_request(pconn);
     connection_do_unbuffer(pconn);

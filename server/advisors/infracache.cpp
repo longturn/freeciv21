@@ -501,9 +501,7 @@ void adv_city_update(struct city *pcity)
  **************************************************************************/
 void adv_city_alloc(struct city *pcity)
 {
-  pcity->server.adv =
-      static_cast<adv_city *>(fc_calloc(1, sizeof(*pcity->server.adv)));
-
+  pcity->server.adv = new adv_city[1]();
   pcity->server.adv->act_cache = NULL;
   pcity->server.adv->act_cache_radius_sq = -1;
   /* allocate memory for pcity->ai->act_cache */
@@ -519,8 +517,9 @@ void adv_city_free(struct city *pcity)
 
   if (pcity->server.adv) {
     if (pcity->server.adv->act_cache) {
-      FC_FREE(pcity->server.adv->act_cache);
+      free(pcity->server.adv->act_cache); //realloc
+      pcity->server.adv->act_cache = nullptr;
     }
-    FC_FREE(pcity->server.adv);
+    FCPP_FREE(pcity->server.adv);
   }
 }

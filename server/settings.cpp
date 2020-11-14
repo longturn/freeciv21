@@ -1330,7 +1330,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    scateg,                                                                  \
    slevel,                                                                  \
    INIT_BRACE_BEGIN.string = {value, _default, sizeof(value),               \
-                              func_validate, strdup("")} INIT_BRACE_END,    \
+                              func_validate, ""} INIT_BRACE_END,   \
    func_action,                                                             \
    FALSE},
 

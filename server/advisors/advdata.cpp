@@ -301,10 +301,10 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   adv->num_continents = wld.map.num_continents;
   adv->num_oceans = wld.map.num_oceans;
-  adv->threats.continent = new bool[adv->num_continents + 1]{};
+  adv->threats.continent = new bool[adv->num_continents + 1]();
   adv->threats.invasions = FALSE;
   adv->threats.nuclear = 0; /* none */
-  adv->threats.ocean = new bool[adv->num_oceans + 1]{};
+  adv->threats.ocean = new bool[adv->num_oceans + 1]();
   adv->threats.igwall = FALSE;
 
   players_iterate(aplayer)
@@ -421,8 +421,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   adv->explore.land_done = TRUE;
   adv->explore.sea_done = TRUE;
-  adv->explore.continent = new bool[adv->num_continents + 1]{};
-  adv->explore.ocean = new bool[adv->num_oceans + 1]{};
+  adv->explore.continent = new bool[adv->num_continents + 1]();
+  adv->explore.ocean = new bool[adv->num_oceans + 1]();
 
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -459,8 +459,8 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
 
   /*** Statistics ***/
 
-  adv->stats.cities = new int[adv->num_continents + 1]{};
-  adv->stats.ocean_cities = new int[adv->num_oceans + 1]{};
+  adv->stats.cities = new int[adv->num_continents + 1]();
+  adv->stats.ocean_cities = new int[adv->num_oceans + 1]();
   adv->stats.average_production = 0;
   city_list_iterate(pplayer->cities, pcity)
   {
@@ -589,23 +589,12 @@ void adv_data_phase_done(struct player *pplayer)
     return;
   }
 
-  free(adv->explore.ocean);
-  adv->explore.ocean = NULL;
-
-  free(adv->explore.continent);
-  adv->explore.continent = NULL;
-
-  free(adv->threats.continent);
-  adv->threats.continent = NULL;
-
-  free(adv->threats.ocean);
-  adv->threats.ocean = NULL;
-
-  free(adv->stats.cities);
-  adv->stats.cities = NULL;
-
-  free(adv->stats.ocean_cities);
-  adv->stats.ocean_cities = NULL;
+  FCPP_FREE(adv->explore.ocean);
+  FCPP_FREE(adv->explore.continent);
+  FCPP_FREE(adv->threats.continent);
+  FCPP_FREE(adv->threats.ocean);
+  FCPP_FREE(adv->stats.cities);
+  FCPP_FREE(adv->stats.ocean_cities);
 
   adv->num_continents = 0;
   adv->num_oceans = 0;
@@ -718,13 +707,13 @@ void adv_data_init(struct player *pplayer)
   struct adv_data *adv;
 
   if (pplayer->server.adv == NULL) {
-    pplayer->server.adv = new adv_data{};
+    pplayer->server.adv = new adv_data();
   }
   adv = pplayer->server.adv;
 
   adv->government_want = NULL;
 
-  adv->dipl.adv_dipl_slots = new adv_dipl *[player_slot_count()]{};
+  adv->dipl.adv_dipl_slots = new adv_dipl *[player_slot_count()]();
   player_slots_iterate(pslot)
   {
     struct adv_dipl **dip_slot =
@@ -755,7 +744,9 @@ void adv_data_default(struct player *pplayer)
   fc_assert_ret(adv != NULL);
 
   adv->govt_reeval = 0;
-  adv->government_want = new adv_want[government_count() + 1]{};
+  if (!adv->government_want) {
+    adv->government_want = new adv_want[government_count() + 1]();
+  }
 
   adv->wonder_city = 0;
 
@@ -807,7 +798,7 @@ static void adv_dipl_new(const struct player *plr1,
   struct adv_dipl **dip_slot =
       plr1->server.adv->dipl.adv_dipl_slots + player_index(plr2);
 
-  *dip_slot = new adv_dipl{};
+  *dip_slot = new adv_dipl();
 }
 
 /**********************************************************************/ /**

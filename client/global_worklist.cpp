@@ -131,8 +131,8 @@ void global_worklists_build(void)
       /* Now the worklist is built, change status. */
       for (i = 0; i < pgwl->unbuilt.length; i++) {
         puni_name = pgwl->unbuilt.entries + i;
-        free(puni_name->kind);
-        free(puni_name->name);
+        delete[] puni_name->kind;
+        delete[] puni_name->name;
       }
       pgwl->status = STATUS_WORKLIST;
       worklist_copy(&pgwl->worklist, &worklist);
@@ -191,8 +191,7 @@ static struct global_worklist *
 global_worklist_alloc(enum global_worklist_status type)
 {
   static int last_id = 0;
-  struct global_worklist *pgwl = static_cast<global_worklist *>(
-      fc_calloc(1, sizeof(struct global_worklist)));
+  struct global_worklist *pgwl = new global_worklist[1]();
 
   pgwl->id = ++last_id;
   pgwl->status = type;
@@ -231,15 +230,15 @@ void global_worklist_destroy(struct global_worklist *pgwl)
       puni_name = pgwl->unbuilt.entries + i;
       puni_name->kind = pgwl->unbuilt.entries[i].kind;
       puni_name->name = pgwl->unbuilt.entries[i].name;
-      free(puni_name->kind);
-      free(puni_name->name);
+      delete[] puni_name->kind;
+      delete[] puni_name->name;
     }
   } break;
   case STATUS_WORKLIST:
     break;
   }
 
-  free(pgwl);
+  delete[] pgwl;
 }
 
 /*******************************************************************/ /**

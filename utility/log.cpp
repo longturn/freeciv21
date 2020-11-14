@@ -231,7 +231,7 @@ bool log_parse_level_str(const char *level_str, enum log_level *ret_level)
   }
 
 out:
-  free(dupled);
+  delete[] dupled;
   return ret;
 #else  /* FREECIV_DEBUG */
   fc_fprintf(stderr,

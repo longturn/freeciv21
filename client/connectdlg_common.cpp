@@ -474,7 +474,7 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
   set_rulesets(packet->ruleset_count, rulesets);
 
   for (i = 0; i < packet->ruleset_count; i++) {
-    free(rulesets[i]);
+    delete[] rulesets[i];
   }
 }
 

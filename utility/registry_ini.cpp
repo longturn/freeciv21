@@ -2445,7 +2445,7 @@ int *secfile_lookup_bitwise_enum_vec_full(
     return NULL;
   }
 
-  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
+  vec = new int[i];
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_bitwise_enum_full(secfile, vec + i, is_valid_fn,
                                           by_name_fn, "%s,%d", fullpath,
@@ -2661,7 +2661,7 @@ int *secfile_lookup_enum_vec_data(const struct section_file *secfile,
     return NULL;
   }
 
-  vec = static_cast<int *>(fc_malloc(i * sizeof(int)));
+  vec = new int[i];
   for (i = 0; i < *dim; i++) {
     if (!secfile_lookup_enum_data(secfile, vec + i, bitwise, name_fn, data,
                                   "%s,%d", fullpath, (int) i)) {

@@ -1878,7 +1878,7 @@ static void client_disband_unit_data_destroy(void *p)
   struct client_disband_unit_data *data =
       static_cast<client_disband_unit_data *>(p);
 
-  free(data);
+  delete data;
 }
 
 /**********************************************************************/ /**
@@ -1917,8 +1917,7 @@ static void do_disband_alternative(void *p)
   act = disband_unit_alternatives[data->alt];
 
   /* Prepare the data for the next try in case this try fails. */
-  next = static_cast<client_disband_unit_data *>(
-      fc_malloc(sizeof(struct client_disband_unit_data)));
+  next = new client_disband_unit_data();
   next->unit_id = data->unit_id;
   next->alt = data->alt - 1;
 
@@ -1987,8 +1986,7 @@ void request_unit_disband(struct unit *punit)
   struct client_disband_unit_data *data;
 
   /* Set up disband data. Start at the end of the array. */
-  data = static_cast<client_disband_unit_data *>(
-      fc_malloc(sizeof(struct client_disband_unit_data)));
+  data = new client_disband_unit_data();
   data->unit_id = punit->id;
   data->alt = 2;
 

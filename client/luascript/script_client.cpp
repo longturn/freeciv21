@@ -156,7 +156,7 @@ static void script_client_code_init(void) { script_client_code = NULL; }
 static void script_client_code_free(void)
 {
   if (script_client_code) {
-    free(script_client_code);
+    delete script_client_code;
     script_client_code = NULL;
   }
 }

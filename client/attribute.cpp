@@ -132,7 +132,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
   /*
    * Step 2: allocate memory.
    */
-  result = fc_malloc(total_length);
+  result = new char[total_length];
   dio_output_init(&dout, result, total_length);
 
   /*
@@ -246,7 +246,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
                   "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
     }
-    pvalue = fc_malloc(value_length + 4);
+    pvalue = new char[value_length + 4];
 
     dio_output_init(&dout, pvalue, value_length + 4);
     dio_put_uint32_raw(&dout, value_length);
@@ -262,7 +262,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
        * to delete all attributes. Another symptom of the bug is the
        * value_length (above) is set to a random value, which can also
        * cause a bug. */
-      free(pvalue);
+      ::operator delete[](pvalue);
       hash->clear();
       return A_SERIAL_FAIL;
     }
@@ -349,7 +349,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
   fc_assert_ret(NULL != attribute_hash);
 
   if (0 != data_length) {
-    void *pvalue = fc_malloc(data_length + 4);
+    void *pvalue = new char[data_length + 4];
     struct raw_data_out dout;
 
     dio_output_init(&dout, pvalue, data_length + 4);

@@ -114,8 +114,7 @@ void qtg_gui_clear_theme()
 char **qtg_get_gui_specific_themes_directories(int *count)
 {
   const struct strvec *data_dirs = get_data_dirs();
-  char **directories =
-      (char **) fc_malloc(strvec_size(data_dirs) * sizeof(char *));
+  char **directories = new char *[strvec_size(data_dirs)];
   int i = 0;
 
   *count = strvec_size(data_dirs);
