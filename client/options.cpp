@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QHash>
 #include <stdarg.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -66,6 +67,8 @@
 #include "tilespec.h"
 
 #include "options.h"
+
+typedef QHash<const char*, const char*> optionsHash;
 
 struct client_options gui_options = {
     /** Defaults for options normally on command line **/
@@ -5336,18 +5339,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 #undef FIRST_MINOR_MID_OPTION_FILE_NAME
 #undef FIRST_MINOR_NEW_BOOLEAN
 
-/****************************************************************************
-  Desired settable options.
-****************************************************************************/
-#define SPECHASH_TAG settable_options
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_ASTR_DATA_TYPE
-#include "spechash.h"
-#define settable_options_hash_iterate(hash, name, value)                    \
-  TYPED_HASH_ITERATE(const char *, const char *, hash, name, value)
-#define settable_options_hash_iterate_end HASH_ITERATE_END
-
-static struct settable_options_hash *settable_options_hash = NULL;
+Q_GLOBAL_STATIC(optionsHash, settable_options)
 
 /************************************************************************/ /**
    Load the server options.
@@ -5361,9 +5353,7 @@ static void settable_options_load(struct section_file *sf)
   bool bval;
   int ival;
 
-  fc_assert_ret(NULL != settable_options_hash);
-
-  settable_options_hash_clear(settable_options_hash);
+  settable_options->clear();
 
   psection = secfile_section_by_name(sf, "server");
   if (NULL == psection) {
@@ -5409,8 +5399,7 @@ static void settable_options_load(struct section_file *sf)
       continue;
     }
 
-    settable_options_hash_insert(settable_options_hash, entry_name(pentry),
-                                 string);
+    settable_options->insert(entry_name(pentry),string);
   }
   entry_list_iterate_end;
 }
@@ -5420,16 +5409,14 @@ static void settable_options_load(struct section_file *sf)
  ****************************************************************************/
 static void settable_options_save(struct section_file *sf)
 {
-  fc_assert_ret(NULL != settable_options_hash);
-
-  settable_options_hash_iterate(settable_options_hash, name, value)
-  {
-    if (!fc_strcasecmp(name, "gameseed")
-        || !fc_strcasecmp(name, "mapseed")) {
+  optionsHash::const_iterator it = settable_options->constBegin();
+  while (it != settable_options->constEnd()) {
+    if (!fc_strcasecmp(it.key(), "gameseed")
+        || !fc_strcasecmp(it.key(), "mapseed")) {
       /* Do not save mapseed or gameseed. */
       continue;
     }
-    if (!fc_strcasecmp(name, "topology")) {
+    if (!fc_strcasecmp(it.key(), "topology")) {
       /* client_start_server() sets topology based on tileset. Don't store
        * its choice. The tileset is already stored. Storing topology leads
        * to all sort of breakage:
@@ -5442,9 +5429,9 @@ static void settable_options_save(struct section_file *sf)
        */
       continue;
     }
-    secfile_insert_str(sf, value, "server.%s", name);
+    secfile_insert_str(sf, it.value(), "server.%s", it.key());
+    it++; // IT comes 4 U
   }
-  settable_options_hash_iterate_end;
 }
 
 /************************************************************************/ /**
@@ -5455,8 +5442,6 @@ void desired_settable_options_update(void)
 {
   char val_buf[1024], def_buf[1024];
   const char *value, *def_val;
-
-  fc_assert_ret(NULL != settable_options_hash);
 
   options_iterate(server_optset, poption)
   {
@@ -5505,12 +5490,10 @@ void desired_settable_options_update(void)
 
     if (0 == strcmp(value, def_val)) {
       /* Not set, using default... */
-      settable_options_hash_remove(settable_options_hash,
-                                   option_name(poption));
+      settable_options->remove(option_name(poption));
     } else {
       /* Really desired. */
-      settable_options_hash_replace(settable_options_hash,
-                                    option_name(poption), value);
+      settable_options->insert(option_name(poption), value);
     }
   }
   options_iterate_end;
@@ -5523,13 +5506,7 @@ void desired_settable_options_update(void)
 void desired_settable_option_update(const char *op_name,
                                     const char *op_value, bool allow_replace)
 {
-  fc_assert_ret(NULL != settable_options_hash);
-
-  if (allow_replace) {
-    settable_options_hash_replace(settable_options_hash, op_name, op_value);
-  } else {
-    settable_options_hash_insert(settable_options_hash, op_name, op_value);
-  }
+  settable_options->insert(op_name, op_value);
 }
 
 /************************************************************************/ /**
@@ -5578,17 +5555,14 @@ static bool settable_option_upgrade_value(const struct option *poption,
  ****************************************************************************/
 static void desired_settable_option_send(struct option *poption)
 {
-  char *desired;
+  const char *desired;
   int value;
 
-  fc_assert_ret(NULL != settable_options_hash);
-
-  if (!settable_options_hash_lookup(settable_options_hash,
-                                    option_name(poption), &desired)) {
+  if (!settable_options->contains(option_name(poption))) {
     /* No change explicitly  desired. */
     return;
   }
-
+  desired = settable_options->value(option_name(poption));
   switch (option_type(poption)) {
   case OT_BOOLEAN:
     if ((0 == fc_strcasecmp("enabled", desired)
@@ -6056,7 +6030,6 @@ void options_init(void)
   options_extra_init();
   global_worklists_init();
 
-  settable_options_hash = settable_options_hash_new();
   dialog_options_hash = dialog_options_hash_new();
 
   client_options_iterate_all(poption)
@@ -6182,10 +6155,7 @@ void options_free(void)
   }
   client_options_iterate_all_end;
 
-  if (NULL != settable_options_hash) {
-    settable_options_hash_destroy(settable_options_hash);
-    settable_options_hash = NULL;
-  }
+  settable_options->clear();
 
   if (NULL != dialog_options_hash) {
     dialog_options_hash_destroy(dialog_options_hash);
