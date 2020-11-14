@@ -46,7 +46,7 @@ struct fc_lua {
   /* This is needed for server 'lua' and 'luafile' commands. */
   struct connection *caller;
 
-  struct luascript_func_hash *funcs;
+  QHash<QString, struct luascript_func*> *funcs;
 
   QHash<QString, struct signal*> *signals_hash;
   QVector<QString> *signal_names;

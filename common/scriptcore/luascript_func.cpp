@@ -46,16 +46,6 @@ struct luascript_func {
   enum api_types *return_types; /* return types */
 };
 
-#define SPECHASH_TAG luascript_func
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct luascript_func *
-#define SPECHASH_IDATA_FREE func_destroy
-#include "spechash.h"
-
-#define luascript_func_hash_keys_iterate(phash, key)                        \
-  TYPED_HASH_KEYS_ITERATE(char *, phash, key)
-#define luascript_func_hash_keys_iterate_end HASH_KEYS_ITERATE_END
-
 /*************************************************************************/ /**
    Create a new function definition.
  *****************************************************************************/
@@ -101,13 +91,14 @@ bool luascript_func_check(struct fc_lua *fcl,
   fc_assert_ret_val(fcl, FALSE);
   fc_assert_ret_val(fcl->funcs, FALSE);
 
-  luascript_func_hash_keys_iterate(fcl->funcs, func_name)
+  for (auto qfunc_name : fcl->funcs->keys())
   {
+    char *func_name = qfunc_name.toLocal8Bit().data();
     if (!luascript_check_function(fcl, func_name)) {
       struct luascript_func *pfunc;
 
       fc_assert_ret_val(
-          luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc), FALSE);
+          fcl->funcs->contains(func_name), FALSE);
 
       if (pfunc->required) {
         strvec_append(missing_func_required, func_name);
@@ -118,7 +109,6 @@ bool luascript_func_check(struct fc_lua *fcl,
       ret = FALSE;
     }
   }
-  luascript_func_hash_keys_iterate_end;
 
   return ret;
 }
@@ -138,11 +128,12 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
   fc_assert_ret(fcl);
   fc_assert_ret(fcl->funcs);
 
-  if (luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc)) {
+  if (fcl->funcs->contains(func_name)) {
     luascript_log(fcl, LOG_ERROR, "Function '%s' was already created.",
                   func_name);
     return;
   }
+  pfunc = fcl->funcs->value(func_name);
   parg_types = new api_types[nargs]();
   pret_types = new api_types[nreturns]();
 
@@ -155,7 +146,7 @@ void luascript_func_add_valist(struct fc_lua *fcl, const char *func_name,
   }
 
   pfunc = func_new(required, nargs, parg_types, nreturns, pret_types);
-  luascript_func_hash_insert(fcl->funcs, func_name, pfunc);
+  fcl->funcs->insert(func_name, pfunc);
 }
 
 /*************************************************************************/ /**
@@ -177,7 +168,7 @@ void luascript_func_add(struct fc_lua *fcl, const char *func_name,
 void luascript_func_free(struct fc_lua *fcl)
 {
   if (fcl && fcl->funcs) {
-    luascript_func_hash_destroy(fcl->funcs);
+    delete fcl->funcs;
     fcl->funcs = NULL;
   }
 }
@@ -191,7 +182,7 @@ void luascript_func_init(struct fc_lua *fcl)
 
   if (fcl->funcs == NULL) {
     /* Define the prototypes for the needed lua functions. */
-    fcl->funcs = luascript_func_hash_new();
+    fcl->funcs = new QHash<QString, luascript_func*>;
   }
 }
 
@@ -212,14 +203,14 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
   fc_assert_ret_val(fcl->state, FALSE);
   fc_assert_ret_val(fcl->funcs, FALSE);
 
-  if (!luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc)) {
+  if (!(fcl->funcs->contains(func_name))) {
     luascript_log(fcl, LOG_ERROR,
                   "Lua function '%s' does not exist, "
                   "so cannot be invoked.",
                   func_name);
     return FALSE;
   }
-
+  pfunc = fcl->funcs->value(func_name);
   /* The function name */
   lua_getglobal(fcl->state, func_name);
 
@@ -276,11 +267,11 @@ bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name)
   fc_assert_ret_val(fcl->state, FALSE);
   fc_assert_ret_val(fcl->funcs, FALSE);
 
-  if (!luascript_func_hash_lookup(fcl->funcs, func_name, &pfunc)) {
+  if (!fcl->funcs->contains(func_name)) {
     luascript_log(fcl, LOG_ERROR, "Lua function '%s' does not exist.",
                   func_name);
     return FALSE;
   }
-
+  pfunc = fcl->funcs->value(func_name);
   return pfunc->required;
 }
