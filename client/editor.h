@@ -137,7 +137,6 @@ void editor_selection_add(const struct tile *ptile);
 void editor_selection_remove(const struct tile *ptile);
 bool editor_tile_is_selected(const struct tile *ptile);
 void editor_apply_tool_to_selection(void);
-int editor_selection_count(void);
 const struct tile *editor_get_selection_center(void);
 
 struct unit *editor_unit_virtual_create(void);
