@@ -21,6 +21,7 @@ publishedtileset_layer by the Free Software Foundation; either version 2, or
 #include <fc_config.h>
 #endif
 
+#include <QHash>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> /* exit */
@@ -485,7 +486,7 @@ struct tileset {
   struct sprite_hash *sprite_hash;
 
   /* This hash table maps terrain graphic strings to drawing data. */
-  struct drawing_hash *tile_hash;
+  QHash<QString, drawing_data*> *tile_hash;
 
   struct estyle_hash *estyle_hash;
 
@@ -1116,7 +1117,7 @@ static void tileset_free_toplevel(struct tileset *t)
   t->num_preferred_themes = 0;
 
   if (t->tile_hash) {
-    drawing_hash_destroy(t->tile_hash);
+    delete t->tile_hash;
     t->tile_hash = NULL; /* Helpful for sanity. */
   }
   if (t->estyle_hash) {
@@ -2189,7 +2190,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   }
 
   fc_assert(t->tile_hash == NULL);
-  t->tile_hash = drawing_hash_new();
+  t->tile_hash = new QHash<QString, drawing_data*>;
 
   section_list_iterate(sections, psection)
   {
@@ -2344,7 +2345,9 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
       };
     }
 
-    if (!drawing_hash_insert(t->tile_hash, draw->name, draw)) {
+    bool hc = t->tile_hash->contains(draw->name);
+    t->tile_hash->insert(draw->name, draw);
+    if (hc) {
       log_error(
           "warning: multiple tile sections containing terrain tag \"%s\".",
           draw->name);
@@ -3837,14 +3840,17 @@ void tileset_setup_tile_type(struct tileset *t,
   char buffer[MAX_LEN_NAME + 20];
   int i, l;
 
-  if (!drawing_hash_lookup(t->tile_hash, pterrain->graphic_str, &draw)
-      && !drawing_hash_lookup(t->tile_hash, pterrain->graphic_alt, &draw)) {
+  if (!t->tile_hash->contains(pterrain->graphic_str)
+      && !t->tile_hash->contains(pterrain->graphic_alt)) {
     tileset_error(LOG_FATAL,
                   _("Terrain \"%s\": no graphic tile \"%s\" or \"%s\"."),
                   terrain_rule_name(pterrain), pterrain->graphic_str,
                   pterrain->graphic_alt);
   }
-
+  draw = t->tile_hash->value(pterrain->graphic_str);
+  if (!draw) {
+    draw = t->tile_hash->value(pterrain->graphic_alt);
+  }
   if (draw->init) {
     t->sprites.drawing[terrain_index(pterrain)] = draw;
     return;
