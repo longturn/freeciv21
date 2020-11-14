@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QSet>
 #include <QTimer>
 /* utility */
 #include "astring.h"
@@ -1615,9 +1616,9 @@ void request_unit_select(struct unit_list *punits,
   const struct player *pplayer;
   const struct tile *ptile;
   struct unit *punit_first;
-  struct tile_hash *tile_table;
-  struct unit_type_hash *type_table;
-  struct continent_hash *cont_table;
+  QSet<const struct tile *> tile_table;
+  QSet<const struct unit_type *> type_table;
+  QSet<Continent_id> cont_table;
 
   if (!can_client_change_view() || !punits || unit_list_size(punits) < 1) {
     return;
@@ -1631,52 +1632,46 @@ void request_unit_select(struct unit_list *punits,
   }
 
   pplayer = unit_owner(punit_first);
-  tile_table = tile_hash_new();
-  type_table = unit_type_hash_new();
-  cont_table = continent_hash_new();
 
   unit_list_iterate(punits, punit)
   {
     if (seltype == SELTYPE_SAME) {
-      unit_type_hash_insert(type_table, unit_type_get(punit), NULL);
+      type_table.insert(unit_type_get(punit));
     }
 
     ptile = unit_tile(punit);
     if (selloc == SELLOC_TILE) {
-      tile_hash_insert(tile_table, ptile, NULL);
+      tile_table.insert(ptile);
     } else if (selloc == SELLOC_CONT) {
-      continent_hash_insert(cont_table, tile_continent(ptile), NULL);
+      cont_table.insert(tile_continent(ptile));
     }
   }
   unit_list_iterate_end;
 
+
   if (selloc == SELLOC_TILE) {
-    tile_hash_iterate(tile_table, hash_tile)
-    {
+    for (auto hash_tile : tile_table) {
       unit_list_iterate(hash_tile->units, punit)
       {
         if (unit_owner(punit) != pplayer) {
           continue;
         }
         if (seltype == SELTYPE_SAME
-            && !unit_type_hash_lookup(type_table, unit_type_get(punit),
-                                      NULL)) {
+            && !type_table.contains(unit_type_get(punit))) {
           continue;
         }
         unit_focus_add(punit);
       }
       unit_list_iterate_end;
     }
-    tile_hash_iterate_end;
   } else {
     unit_list_iterate(pplayer->units, punit)
     {
       ptile = unit_tile(punit);
       if ((seltype == SELTYPE_SAME
-           && !unit_type_hash_lookup(type_table, unit_type_get(punit), NULL))
+           && !type_table.contains(unit_type_get(punit)))
           || (selloc == SELLOC_CONT
-              && !continent_hash_lookup(cont_table, tile_continent(ptile),
-                                        NULL))) {
+              && !cont_table.contains(tile_continent(ptile)))) {
         continue;
       }
 
@@ -1684,10 +1679,6 @@ void request_unit_select(struct unit_list *punits,
     }
     unit_list_iterate_end;
   }
-
-  tile_hash_destroy(tile_table);
-  unit_type_hash_destroy(type_table);
-  continent_hash_destroy(cont_table);
 }
 
 /**********************************************************************/ /**
