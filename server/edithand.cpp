@@ -111,7 +111,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   }
 
   /* Send map start positions. */
-  map_startpos_iterate(psp)
+  for (auto psp : wld.map.startpos_table->values())
   {
     startpos.id = tile_index(startpos_tile(psp));
     startpos.removal = FALSE;
@@ -128,7 +128,6 @@ void edithand_send_initial_packets(struct conn_list *dest)
     }
     conn_list_iterate_end;
   }
-  map_startpos_iterate_end;
 }
 
 /************************************************************************/ /**

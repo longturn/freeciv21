@@ -2849,7 +2849,7 @@ static void sg_save_map_startpos(struct savedata *saving)
   secfile_insert_int(saving->file, map_startpos_count(),
                      "map.startpos_count");
 
-  map_startpos_iterate(psp)
+  for (auto psp : wld.map.startpos_table->values())
   {
     int nat_x, nat_y;
 
@@ -2884,7 +2884,6 @@ static void sg_save_map_startpos(struct savedata *saving)
     }
     i++;
   }
-  map_startpos_iterate_end;
 
   fc_assert(map_startpos_count() == i);
 }

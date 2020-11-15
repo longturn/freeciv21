@@ -453,7 +453,7 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  map_startpos_iterate(psp)
+  for (auto psp : wld.map.startpos_table->values())
   {
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
@@ -461,7 +461,6 @@ void init_new_game(void)
       startpos_list_append(targeted_list, psp);
     }
   }
-  map_startpos_iterate_end;
 
   fc_assert(startpos_list_size(targeted_list)
                 + startpos_list_size(flexible_list)

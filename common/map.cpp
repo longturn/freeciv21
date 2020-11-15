@@ -511,9 +511,9 @@ void map_allocate(struct civ_map *amap)
   whole_map_iterate_end;
 
   if (amap->startpos_table != NULL) {
-    startpos_hash_destroy(amap->startpos_table);
+    delete amap->startpos_table;
   }
-  amap->startpos_table = startpos_hash_new();
+  amap->startpos_table = new QHash<struct tile *, struct startpos *>;
 }
 
 /*******************************************************************/ /**
@@ -541,7 +541,7 @@ void map_free(struct civ_map *fmap)
     FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
-      startpos_hash_destroy(fmap->startpos_table);
+      delete fmap->startpos_table;
       fmap->startpos_table = NULL;
     }
 
@@ -1713,7 +1713,7 @@ struct iterator *startpos_iter_init(struct startpos_iter *iter,
 int map_startpos_count(void)
 {
   if (NULL != wld.map.startpos_table) {
-    return startpos_hash_size(wld.map.startpos_table);
+    return wld.map.startpos_table->size();
   } else {
     return 0;
   }
@@ -1731,8 +1731,7 @@ struct startpos *map_startpos_new(struct tile *ptile)
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
   psp = startpos_new(ptile);
-  startpos_hash_replace(wld.map.startpos_table,
-                        static_cast<tile *>(tile_hash_key(ptile)), psp);
+  wld.map.startpos_table->insert(static_cast<tile *>(tile_hash_key(ptile)), psp);
 
   return psp;
 }
@@ -1748,8 +1747,7 @@ struct startpos *map_startpos_get(const struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, NULL);
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
-  startpos_hash_lookup(wld.map.startpos_table,
-                       static_cast<tile *>(tile_hash_key(ptile)), &psp);
+  psp = wld.map.startpos_table->value(static_cast<tile *>(tile_hash_key(ptile)), nullptr);
 
   return psp;
 }
@@ -1760,28 +1758,16 @@ struct startpos *map_startpos_get(const struct tile *ptile)
  ***********************************************************************/
 bool map_startpos_remove(struct tile *ptile)
 {
+  bool ret;
+  struct tile *prtile = static_cast<tile *>(tile_hash_key(ptile));
   fc_assert_ret_val(NULL != ptile, FALSE);
   fc_assert_ret_val(NULL != wld.map.startpos_table, FALSE);
+  ret = wld.map.startpos_table->contains(prtile);
+  wld.map.startpos_table->remove(prtile);
 
-  return startpos_hash_remove(wld.map.startpos_table,
-                              static_cast<tile *>(tile_hash_key(ptile)));
+  return ret;
 }
 
-/*******************************************************************/ /**
-   Implementation of iterator sizeof function.
-   NB: map_sp_iter just wraps startpos_hash_iter.
- ***********************************************************************/
-size_t map_startpos_iter_sizeof(void) { return startpos_hash_iter_sizeof(); }
-
-/*******************************************************************/ /**
-   Implementation of iterator init function.
-   NB: map_sp_iter just wraps startpos_hash_iter.
- ***********************************************************************/
-struct iterator *map_startpos_iter_init(struct map_startpos_iter *iter)
-{
-  return startpos_hash_value_iter_init((struct startpos_hash_iter *) iter,
-                                       wld.map.startpos_table);
-}
 
 /*******************************************************************/ /**
    Return random direction that is valid in current map.

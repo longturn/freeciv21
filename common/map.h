@@ -13,8 +13,6 @@
 #ifndef FC__MAP_H
 #define FC__MAP_H
 
-
-
 #include <math.h> /* sqrt */
 
 /* utility */
@@ -109,18 +107,6 @@ int map_startpos_count(void);
 struct startpos *map_startpos_new(struct tile *ptile);
 struct startpos *map_startpos_get(const struct tile *ptile);
 bool map_startpos_remove(struct tile *ptile);
-
-/****************************************************************************
-  Iterate over all start positions placed on the map.
-****************************************************************************/
-struct map_startpos_iter;
-size_t map_startpos_iter_sizeof(void);
-struct iterator *map_startpos_iter_init(struct map_startpos_iter *iter);
-
-#define map_startpos_iterate(NAME_psp)                                      \
-  generic_iterate(struct map_startpos_iter, struct startpos *, NAME_psp,    \
-                  map_startpos_iter_sizeof, map_startpos_iter_init)
-#define map_startpos_iterate_end generic_iterate_end
 
 /* Number of index coordinates (for sanity checks and allocations) */
 #define MAP_INDEX_SIZE (wld.map.xsize * wld.map.ysize)
@@ -699,7 +685,5 @@ static inline bool is_border_tile(const struct tile *ptile, int dist)
 
 enum direction8 rand_direction(void);
 enum direction8 opposite_direction(enum direction8 dir);
-
-
 
 #endif /* FC__MAP_H */

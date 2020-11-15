@@ -245,8 +245,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
   /* Don't start too close to someone else. */
   cont_size = get_continent_size(cont);
   island = islands + islands_index[cont];
-  map_startpos_iterate(psp)
-  {
+  for (auto psp : wld.map.startpos_table->values()) {
     struct tile *tile1 = startpos_tile(psp);
 
     if ((tile_continent(ptile) == tile_continent(tile1)
@@ -256,7 +255,6 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
       return FALSE;
     }
   }
-  map_startpos_iterate_end;
   return TRUE;
 }
 

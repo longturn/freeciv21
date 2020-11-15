@@ -13,7 +13,7 @@
 #ifndef FC__MAP_TYPES_H
 #define FC__MAP_TYPES_H
 
-
+#include <QHash>
 
 /* common */
 #include "fc_types.h"
@@ -28,7 +28,6 @@ struct nation_hash;
 struct nation_type;
 struct packet_edit_startpos_full;
 struct startpos;
-struct startpos_hash;
 
 enum mapsize_type {
   MAPSIZE_FULLSIZE = 0, /* Using the number of tiles / 1000. */
@@ -73,7 +72,7 @@ struct civ_map {
   int num_continents;
   int num_oceans; /* not updated at the client */
   struct tile *tiles;
-  struct startpos_hash *startpos_table;
+  QHash<struct tile *, struct startpos *> *startpos_table;
 
   union {
     struct {

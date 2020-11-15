@@ -2255,7 +2255,7 @@ void update_nations_with_startpos(void)
          * If there are no start positions for a nation, remove it from the
          * available set. */
         pnation->server.no_startpos = TRUE;
-        map_startpos_iterate(psp)
+        for (auto psp : wld.map.startpos_table->values())
         {
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
@@ -2268,7 +2268,6 @@ void update_nations_with_startpos(void)
             break;
           }
         }
-        map_startpos_iterate_end;
       }
     }
     nations_iterate_end;
@@ -2512,16 +2511,6 @@ const char *aifill(int amount)
   return limitreason;
 }
 
-/**********************************************************************/ /**
-   Tool for generate_players().
- **************************************************************************/
-#define SPECHASH_TAG startpos
-#define SPECHASH_IKEY_TYPE struct startpos *
-#define SPECHASH_INT_DATA_TYPE
-#include "spechash.h"
-#define startpos_hash_iterate(hash, psp, c)                                 \
-  TYPED_HASH_ITERATE(struct startpos *, intptr_t, hash, psp, c)
-#define startpos_hash_iterate_end HASH_ITERATE_END
 
 /**********************************************************************/ /**
    Tool for generate_players().
@@ -2648,7 +2637,7 @@ static void generate_players(void)
     int i, min;
 
     /* Initialization. */
-    map_startpos_iterate(psp)
+    for (auto psp : wld.map.startpos_table->values())
     {
       if (startpos_allows_all(psp)) {
         continue;
@@ -2671,7 +2660,6 @@ static void generate_players(void)
         max = c;
       }
     }
-    map_startpos_iterate_end;
 
     /* Try to assign nations with start positions to the unassigned
      * players, preferring nations whose start positions aren't usable
