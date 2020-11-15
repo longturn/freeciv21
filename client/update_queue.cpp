@@ -291,13 +291,18 @@ static void update_unqueue(void *data)
 
 /************************************************************************/ /**
    Add a callback to the update queue. NB: you can only set a callback
-   once. Setting a callback twice will overwrite the previous.
+   once. Setting a callback twice will put new callback at end.
  ****************************************************************************/
 static inline void update_queue_push(uq_callback_t callback,
                                      struct update_queue_data *uq_data)
 {
-  auto pr = qMakePair(callback, uq_data);
-  update_queue->removeAll(pr);
+  struct update_queue_data *uqr_data = nullptr;
+  for (auto p : update_queue->toVector()) {
+    if (p.first == callback)
+      uqr_data = p.second;
+  }
+  auto pr = qMakePair(callback, uqr_data);
+  int i = update_queue->removeAll(pr);
   update_queue->enqueue(qMakePair(callback, uq_data));
 
   if (!update_queue_has_idle_callback && !update_queue_is_frozen()) {
