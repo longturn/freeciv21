@@ -3348,7 +3348,7 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
     mapdeco_highlight_set->remove(ptile);
   }
 
-  if (changed) {
+  if (!changed) {
     /* FIXME: Remove the cast. */
     refresh_tile_mapcanvas((struct tile *) ptile, TRUE, FALSE);
   }
@@ -3395,7 +3395,7 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
     mapdeco_crosshair_set->remove(ptile);
   }
 
-  if (changed) {
+  if (!changed) {
     /* FIXME: Remove the cast. */
     refresh_tile_mapcanvas((struct tile *) ptile, FALSE, FALSE);
   }
