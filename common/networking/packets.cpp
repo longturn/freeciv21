@@ -65,13 +65,8 @@
 
 extern const char *const packet_functional_capability;
 
-#define SPECHASH_TAG packet_handler
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct packet_handlers *
-#define SPECHASH_IDATA_FREE (packet_handler_hash_data_free_fn_t) free
-#include "spechash.h"
-
-static struct packet_handler_hash *packet_handlers = NULL;
+typedef QHash<QString, struct packet_handlers *> packetsHash;
+Q_GLOBAL_STATIC(packetsHash, packet_handlers_hash)
 
 static int stat_size_alone = 0;
 static int stat_size_uncompressed = 0;
@@ -770,13 +765,7 @@ void pre_send_packet_player_attribute_chunk(
 /**********************************************************************/ /**
    Destroy the packet handler hash table.
  **************************************************************************/
-static void packet_handlers_free(void)
-{
-  if (packet_handlers != NULL) {
-    packet_handler_hash_destroy(packet_handlers);
-    packet_handlers = NULL;
-  }
-}
+static void packet_handlers_free(void) {}
 
 /**********************************************************************/ /**
    Returns the packet handlers variant with no special capability.
@@ -822,21 +811,14 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   }
   free_tokens(tokens, tokens_num);
 
-  /* Ensure the hash table is created. */
-  if (packet_handlers == NULL) {
-    packet_handlers = packet_handler_hash_new();
-  }
-
   /* Lookup handlers for the capabilities or create new handlers. */
-  if (!packet_handler_hash_lookup(packet_handlers, functional_capability,
-                                  &phandlers)) {
+  if (!packet_handlers_hash->contains(functional_capability)) {
     phandlers = new struct packet_handlers;
     memcpy(phandlers, packet_handlers_initial(), sizeof(*phandlers));
     packet_handlers_fill_capability(phandlers, functional_capability);
-    packet_handler_hash_insert(packet_handlers, functional_capability,
-                               phandlers);
+    packet_handlers_hash->insert(functional_capability, phandlers);
   }
-
+  phandlers = packet_handlers_hash->value(functional_capability);
   fc_assert(phandlers != NULL);
   return phandlers;
 }
