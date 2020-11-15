@@ -3439,14 +3439,12 @@ static void pf_reverse_map_destroy_param(struct pf_parameter *param);
 static const enum unit_type_flag_id signifiant_flags[3] = {
     UTYF_IGTER, UTYF_CIVILIAN, UTYF_COAST_STRICT};
 
-inline bool operator==(const pf_parameter &e1,
-                       const pf_parameter &e2)
+inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 {
   size_t i;
   static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
-  if (e1.start_tile != e2.start_tile
-      || e1.move_rate != e2.move_rate) {
+  if (e1.start_tile != e2.start_tile || e1.move_rate != e2.move_rate) {
     return FALSE;
   }
 
@@ -3463,8 +3461,7 @@ inline bool operator==(const pf_parameter &e1,
 #ifdef PF_DEBUG
     fc_assert(e2.omniscience == FALSE);
 #endif
-    if (e1.utype->unknown_move_cost
-        != e2.utype->unknown_move_cost) {
+    if (e1.utype->unknown_move_cost != e2.utype->unknown_move_cost) {
       return FALSE;
     }
   }
@@ -3483,7 +3480,7 @@ inline uint qHash(const pf_parameter &key, uint seed)
 {
   uint result;
   size_t b, i;
-static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
+  static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
   for (i = 0, b = sizeof(result) * 8 - 1; i < signifiant_flags_num;
        i++, b--) {
@@ -3492,8 +3489,7 @@ static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
     }
   }
 
-  result += (uclass_number(utype_class(key.utype))
-             + (key.move_rate << 5)
+  result += (uclass_number(utype_class(key.utype)) + (key.move_rate << 5)
              + (tile_index(key.start_tile) << 11));
   if (!key.omniscience) {
     result += key.utype->unknown_move_cost << 23;
@@ -3573,7 +3569,12 @@ pf_reverse_map_new_for_city(const struct city *pcity,
 void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
 {
   fc_assert_ret(NULL != pfrm);
-
+  for (auto a : pfrm->hash->values()) {
+    delete a;
+  }
+  for (auto a : pfrm->hash->keys()) {
+    delete a;
+  }
   delete pfrm->hash;
   delete pfrm;
 }

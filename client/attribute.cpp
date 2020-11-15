@@ -63,12 +63,6 @@ inline uint qHash(const attr_key &pkey, uint seed)
   return qHash(pkey.id, seed) ^ pkey.x ^ pkey.y ^ pkey.key;
 }
 
-static genhash_val_t attr_key_val(const struct attr_key *pkey);
-static bool attr_key_comp(const struct attr_key *pkey1,
-                          const struct attr_key *pkey2);
-static struct attr_key *attr_key_dup(const struct attr_key *pkey);
-static void attr_key_destroy(struct attr_key *pkey);
-
 typedef QHash<attr_key, void *> attributeHash;
 Q_GLOBAL_STATIC(attributeHash, attribute_hash)
 
@@ -80,7 +74,13 @@ void attribute_init(void) {}
 /************************************************************************/ /**
    Frees the attribute module.
  ****************************************************************************/
-void attribute_free(void) { attribute_hash->clear(); }
+void attribute_free(void)
+{
+  for (auto at : attribute_hash->values()) {
+    delete at;
+  }
+  attribute_hash->clear();
+}
 
 /************************************************************************/ /**
    Serialize an attribute hash for network/storage.

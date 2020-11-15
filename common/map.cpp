@@ -45,13 +45,6 @@
 static struct startpos *startpos_new(struct tile *ptile);
 static void startpos_destroy(struct startpos *psp);
 
-/* struct startpos_hash and related functions. */
-#define SPECHASH_TAG startpos
-#define SPECHASH_IKEY_TYPE struct tile *
-#define SPECHASH_IDATA_TYPE struct startpos *
-#define SPECHASH_IDATA_FREE startpos_destroy
-#include "spechash.h"
-
 /* these are initialized from the terrain ruleset */
 struct terrain_misc terrain_control;
 

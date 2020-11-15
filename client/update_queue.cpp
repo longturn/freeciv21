@@ -72,13 +72,6 @@ struct waiting_queue_data {
   TYPED_LIST_ITERATE(struct waiting_queue_data, list, data)
 #define waiting_queue_list_iterate_end LIST_ITERATE_END
 
-/* 'struct waiting_queue_hash' and related functions. */
-#define SPECHASH_TAG waiting_queue
-#define SPECHASH_INT_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct waiting_queue_list *
-#define SPECHASH_IDATA_FREE waiting_queue_list_destroy
-#include "spechash.h"
-
 typedef QPair<uq_callback_t, struct update_queue_data *> updatePair;
 Q_GLOBAL_STATIC(QQueue<updatePair>, update_queue)
 typedef QHash<int, struct waiting_queue_list *> waitingQueue;
@@ -268,8 +261,8 @@ static void update_unqueue(void *data)
     auto callback = pair.first;
     auto uq_data = pair.second;
     callback(uq_data->data);
+    delete uq_data;
   }
-  // destroy
   update_queue->clear();
 }
 

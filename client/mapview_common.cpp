@@ -3324,6 +3324,9 @@ void mapdeco_init(void)
  ****************************************************************************/
 void mapdeco_free(void)
 {
+  for (auto a : mapdeco_gotoline->values()) {
+    delete a;
+  }
   mapdeco_gotoline->clear();
   mapdeco_highlight_set->clear();
   mapdeco_crosshair_set->clear();
@@ -3567,6 +3570,9 @@ void mapdeco_clear_gotoroutes(void)
     }
     adjc_dir_iterate_end;
     ++i;
+  }
+  for (auto a : mapdeco_gotoline->values()) {
+    delete a;
   }
   mapdeco_gotoline->clear();
 }

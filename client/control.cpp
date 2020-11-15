@@ -1593,19 +1593,6 @@ void request_unit_wakeup(struct unit *punit)
   wakeup_sentried_units(unit_tile(punit));
 }
 
-/**************************************************************************
-  Defines specific hash tables needed for request_unit_select().
-**************************************************************************/
-#define SPECHASH_TAG unit_type
-#define SPECHASH_IKEY_TYPE struct unit_type *
-#define SPECHASH_IDATA_TYPE void *
-#include "spechash.h"
-
-#define SPECHASH_TAG continent
-#define SPECHASH_INT_KEY_TYPE
-#define SPECHASH_IDATA_TYPE void *
-#include "spechash.h"
-
 /**********************************************************************/ /**
    Select all units based on the given list of units and the selection modes.
  **************************************************************************/
@@ -1679,6 +1666,7 @@ void request_unit_select(struct unit_list *punits,
     }
     unit_list_iterate_end;
   }
+
 }
 
 /**********************************************************************/ /**

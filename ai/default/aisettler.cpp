@@ -131,8 +131,6 @@ struct tile_data_cache {
 struct tile_data_cache *tile_data_cache_new(void);
 struct tile_data_cache *
 tile_data_cache_copy(const struct tile_data_cache *ptdc);
-static void tile_data_cache_destroy(struct tile_data_cache *ptdc);
-
 
 struct ai_settler {
   QHash<int, const struct tile_data_cache *> *tdc_hash;
@@ -248,6 +246,9 @@ static void cityresult_destroy(struct cityresult *result)
 {
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
+      for (auto ptdc: result->tdc_hash->values()){
+        NFCPP_FREE(ptdc)
+      }
       delete result->tdc_hash;
     }
     delete[] result;
@@ -480,16 +481,6 @@ tile_data_cache_copy(const struct tile_data_cache *ptdc)
   ptdc_copy->turn = ptdc->turn;
 
   return ptdc_copy;
-}
-
-/*************************************************************************/ /**
-   Free resources allocated for tile data cache
- *****************************************************************************/
-static void tile_data_cache_destroy(struct tile_data_cache *ptdc)
-{
-  if (ptdc) {
-    delete[] ptdc;
-  }
 }
 
 /*************************************************************************/ /**
