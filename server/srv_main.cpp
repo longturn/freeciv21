@@ -2257,6 +2257,7 @@ void update_nations_with_startpos(void)
         pnation->server.no_startpos = TRUE;
         for (auto psp : wld.map.startpos_table->values())
         {
+          if (psp->exclude) continue;
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
              * so allow it to be picked.
@@ -2639,6 +2640,7 @@ static void generate_players(void)
     /* Initialization. */
     for (auto psp : wld.map.startpos_table->values())
     {
+      if (psp->exclude) continue;
       if (startpos_allows_all(psp)) {
         continue;
       }

@@ -455,6 +455,7 @@ void init_new_game(void)
 
   for (auto psp : wld.map.startpos_table->values())
   {
+    if (psp->exclude) continue;
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {

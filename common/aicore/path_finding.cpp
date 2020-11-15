@@ -19,6 +19,7 @@
 #include "bitvector.h"
 #include "log.h"
 #include "mem.h"
+#include "genhash.h"
 #include "support.h"
 
 /* common */

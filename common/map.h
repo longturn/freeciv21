@@ -84,23 +84,7 @@ bool startpos_unpack(struct startpos *psp,
 
 /* See comment in "common/map.c". */
 bool startpos_is_excluding(const struct startpos *psp);
-const struct nation_hash *startpos_raw_nations(const struct startpos *psp);
-
-/****************************************************************************
-  Iterate over all nations at the start position for which the function
-  startpos_nation_allowed() would return TRUE. This automatically takes into
-  account the value of startpos_is_excluding() and startpos_allows_all() to
-  iterate over the correct set of nations.
-****************************************************************************/
-struct startpos_iter;
-size_t startpos_iter_sizeof(void);
-struct iterator *startpos_iter_init(struct startpos_iter *it,
-                                    const struct startpos *psp);
-#define startpos_nations_iterate(ARG_psp, NAME_pnation)                     \
-  generic_iterate(struct startpos_iter, const struct nation_type *,         \
-                  NAME_pnation, startpos_iter_sizeof, startpos_iter_init,   \
-                  (ARG_psp))
-#define startpos_nations_iterate_end generic_iterate_end
+QSet<const struct nation_type *> *startpos_raw_nations(const struct startpos *psp);
 
 /* General map start positions functions. */
 int map_startpos_count(void);

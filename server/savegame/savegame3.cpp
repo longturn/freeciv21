@@ -66,6 +66,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QSet>
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -2852,7 +2853,7 @@ static void sg_save_map_startpos(struct savedata *saving)
   for (auto psp : wld.map.startpos_table->values())
   {
     int nat_x, nat_y;
-
+    if (psp->exclude) continue;
     ptile = startpos_tile(psp);
 
     index_to_native_pos(&nat_x, &nat_y, tile_index(ptile));
@@ -2864,11 +2865,11 @@ static void sg_save_map_startpos(struct savedata *saving)
     if (startpos_allows_all(psp)) {
       secfile_insert_str(saving->file, "", "map.startpos%d.nations", i);
     } else {
-      const struct nation_hash *nations = startpos_raw_nations(psp);
-      char nation_names[MAX_LEN_NAME * nation_hash_size(nations)];
+      QSet<const nation_type*> *nations = startpos_raw_nations(psp);
+      char nation_names[MAX_LEN_NAME * nations->size()];
 
       nation_names[0] = '\0';
-      nation_hash_iterate(nations, pnation)
+      for (auto pnation : nations->values())
       {
         if ('\0' == nation_names[0]) {
           fc_strlcpy(nation_names, nation_rule_name(pnation),
@@ -2878,7 +2879,6 @@ static void sg_save_map_startpos(struct savedata *saving)
                        nation_rule_name(pnation));
         }
       }
-      nation_hash_iterate_end;
       secfile_insert_str(saving->file, nation_names,
                          "map.startpos%d.nations", i);
     }

@@ -16,6 +16,7 @@
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif
+#include <QSet>
 #include <string.h> /* strlen */
 
 /* utility */
@@ -40,11 +41,6 @@
 
 #include "map.h"
 
-struct startpos {
-  struct tile *location;
-  bool exclude;
-  struct nation_hash *nations;
-};
 
 static struct startpos *startpos_new(struct tile *ptile);
 static void startpos_destroy(struct startpos *psp);
@@ -55,16 +51,6 @@ static void startpos_destroy(struct startpos *psp);
 #define SPECHASH_IDATA_TYPE struct startpos *
 #define SPECHASH_IDATA_FREE startpos_destroy
 #include "spechash.h"
-
-/* Srart position iterator. */
-struct startpos_iter {
-  struct iterator vtable;
-  const struct startpos *psp;
-  /* 'struct nation_iter' really. See startpos_iter_sizeof(). */
-  struct iterator nation_iter;
-};
-
-#define STARTPOS_ITER(p) ((struct startpos_iter *) (p))
 
 /* these are initialized from the terrain ruleset */
 struct terrain_misc terrain_control;
@@ -1456,7 +1442,7 @@ static struct startpos *startpos_new(struct tile *ptile)
 
   psp->location = ptile;
   psp->exclude = FALSE;
-  psp->nations = nation_hash_new();
+  psp->nations = new QSet<const struct nation_type *>;
 
   return psp;
 }
@@ -1467,7 +1453,7 @@ static struct startpos *startpos_new(struct tile *ptile)
 static void startpos_destroy(struct startpos *psp)
 {
   fc_assert_ret(NULL != psp);
-  nation_hash_destroy(psp->nations);
+  delete psp->nations;
   delete psp;
 }
 
@@ -1497,13 +1483,13 @@ bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
 {
   fc_assert_ret_val(NULL != psp, FALSE);
   fc_assert_ret_val(NULL != pnation, FALSE);
-
-  if (0 == nation_hash_size(psp->nations) || !psp->exclude) {
+  bool ret = psp->nations->contains(pnation);
+  psp->nations->remove(pnation);
+  if (0 == psp->nations->size() || !psp->exclude) {
     psp->exclude = FALSE; /* Disable "excluding" mode. */
-    return nation_hash_insert(psp->nations, pnation, NULL);
-  } else {
-    return nation_hash_remove(psp->nations, pnation);
+    psp->nations->insert(pnation);
   }
+  return ret;
 }
 
 /*******************************************************************/ /**
@@ -1514,13 +1500,14 @@ bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
 {
   fc_assert_ret_val(NULL != psp, FALSE);
   fc_assert_ret_val(NULL != pnation, FALSE);
-
-  if (0 == nation_hash_size(psp->nations) || psp->exclude) {
+  bool ret = psp->nations->contains(pnation);
+  psp->nations->remove(pnation);
+  if (0 == psp->nations->size() || psp->exclude) {
     psp->exclude = TRUE; /* Enable "excluding" mode. */
-    return nation_hash_remove(psp->nations, pnation);
   } else {
-    return nation_hash_insert(psp->nations, pnation, NULL);
+    psp->nations->insert(pnation);
   }
+  return ret;
 }
 
 /*******************************************************************/ /**
@@ -1540,7 +1527,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
 {
   fc_assert_ret_val(NULL != psp, FALSE);
   fc_assert_ret_val(NULL != pnation, FALSE);
-  return XOR(psp->exclude, nation_hash_lookup(psp->nations, pnation, NULL));
+  return XOR(psp->exclude, psp->nations->contains(pnation));
 }
 
 /*******************************************************************/ /**
@@ -1549,7 +1536,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
 bool startpos_allows_all(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, FALSE);
-  return (0 == nation_hash_size(psp->nations));
+  return (0 == psp->nations->size());
 }
 
 /*******************************************************************/ /**
@@ -1566,11 +1553,10 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  nation_hash_iterate(psp->nations, pnation)
+  for (auto pnation : psp->nations->values())
   {
     BV_SET(packet->nations, nation_number(pnation));
   }
-  nation_hash_iterate_end;
   return TRUE;
 }
 
@@ -1586,14 +1572,14 @@ bool startpos_unpack(struct startpos *psp,
 
   psp->exclude = packet->exclude;
 
-  nation_hash_clear(psp->nations);
+  psp->nations->clear();
   if (!BV_ISSET_ANY(packet->nations)) {
     return TRUE;
   }
   nations_iterate(pnation)
   {
     if (BV_ISSET(packet->nations, nation_number(pnation))) {
-      nation_hash_insert(psp->nations, pnation, NULL);
+      psp->nations->insert(pnation);
     }
   }
   nations_iterate_end;
@@ -1619,92 +1605,10 @@ bool startpos_is_excluding(const struct startpos *psp)
    FIXME: This function exposes the internal implementation and should be
    removed when no longer needed by the property editor system.
  ***********************************************************************/
-const struct nation_hash *startpos_raw_nations(const struct startpos *psp)
+QSet<const struct nation_type *> *startpos_raw_nations(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, nullptr);
   return psp->nations;
-}
-
-/*******************************************************************/ /**
-   Implementation of iterator 'sizeof' function.
-
-   struct startpos_iter can be either a 'struct nation_hash_iter', a 'struct
-   nation_iter' or 'struct startpos_iter'.
- ***********************************************************************/
-size_t startpos_iter_sizeof(void)
-{
-  return MAX(sizeof(struct startpos_iter) + nation_iter_sizeof()
-                 - sizeof(struct iterator),
-             nation_hash_iter_sizeof());
-}
-
-/*******************************************************************/ /**
-   Implementation of iterator 'next' function.
-
-   NB: This is only used for the case where 'exclude' is set in the start
-   position.
- ***********************************************************************/
-static void startpos_exclude_iter_next(struct iterator *startpos_iter)
-{
-  struct startpos_iter *iter = STARTPOS_ITER(startpos_iter);
-
-  do {
-    iterator_next(&iter->nation_iter);
-  } while (iterator_valid(&iter->nation_iter)
-           || !nation_hash_lookup(iter->psp->nations,
-                                  static_cast<const nation_type *>(
-                                      iterator_get(&iter->nation_iter)),
-                                  NULL));
-}
-
-/*******************************************************************/ /**
-   Implementation of iterator 'get' function. Returns a struct nation_type
-   pointer.
-
-   NB: This is only used for the case where 'exclude' is set in the start
-   position.
- ***********************************************************************/
-static void *startpos_exclude_iter_get(const struct iterator *startpos_iter)
-{
-  struct startpos_iter *iter = STARTPOS_ITER(startpos_iter);
-  return iterator_get(&iter->nation_iter);
-}
-
-/*******************************************************************/ /**
-   Implementation of iterator 'valid' function.
- ***********************************************************************/
-static bool startpos_exclude_iter_valid(const struct iterator *startpos_iter)
-{
-  struct startpos_iter *iter = STARTPOS_ITER(startpos_iter);
-  return iterator_valid(&iter->nation_iter);
-}
-
-/*******************************************************************/ /**
-   Initialize and return an iterator for the nations at this start position.
- ***********************************************************************/
-struct iterator *startpos_iter_init(struct startpos_iter *iter,
-                                    const struct startpos *psp)
-{
-  if (!psp) {
-    return invalid_iter_init(ITERATOR(iter));
-  }
-
-  if (startpos_allows_all(psp)) {
-    return nation_iter_init((struct nation_iter *) iter);
-  }
-
-  if (!psp->exclude) {
-    return nation_hash_key_iter_init((struct nation_hash_iter *) iter,
-                                     psp->nations);
-  }
-
-  iter->vtable.next = startpos_exclude_iter_next;
-  iter->vtable.get = startpos_exclude_iter_get;
-  iter->vtable.valid = startpos_exclude_iter_valid;
-  iter->psp = psp;
-  (void) nation_iter_init((struct nation_iter *) &iter->nation_iter);
-
-  return ITERATOR(iter);
 }
 
 /*******************************************************************/ /**

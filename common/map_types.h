@@ -27,7 +27,12 @@
 struct nation_hash;
 struct nation_type;
 struct packet_edit_startpos_full;
-struct startpos;
+
+struct startpos {
+  struct tile *location;
+  bool exclude;
+  QSet<const struct nation_type *> *nations;
+};
 
 enum mapsize_type {
   MAPSIZE_FULLSIZE = 0, /* Using the number of tiles / 1000. */
