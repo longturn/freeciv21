@@ -147,15 +147,6 @@
   - The number of entries is fixed when the hash table is built.
   - Now uses hash.c
 **************************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
-
 /* utility */
 #include "astring.h"
 #include "bugs.h"
@@ -264,8 +255,9 @@ static bool secfile_hash_insert(struct section_file *secfile,
   }
 
   entry_path(pentry, buf, sizeof(buf));
-  if (entry_hash_replace_full(secfile->hash.entries, buf, pentry, NULL,
-                              &hentry)) {
+
+  hentry = secfile->hash.entries->value(buf, nullptr);
+  if (hentry) {
     entry_use(hentry);
     if (!secfile->allow_duplicates) {
       SECFILE_LOG(secfile, entry_section(hentry),
@@ -273,7 +265,7 @@ static bool secfile_hash_insert(struct section_file *secfile,
       return FALSE;
     }
   }
-
+  secfile->hash.entries->insert(buf, pentry);
   return TRUE;
 }
 
@@ -292,7 +284,8 @@ static bool secfile_hash_delete(struct section_file *secfile,
   }
 
   entry_path(pentry, buf, sizeof(buf));
-  return entry_hash_remove(secfile->hash.entries, buf);
+  secfile->hash.entries->remove(buf);
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -554,8 +547,7 @@ END:
   if (!error) {
     /* Build the entry hash table. */
     secfile->allow_duplicates = allow_duplicates;
-    secfile->hash.entries = entry_hash_new_nentries(secfile->num_entries);
-
+    secfile->hash.entries = new QMultiHash<QString, struct entry*>;
     section_list_iterate(secfile->sections, hashing_section)
     {
       entry_list_iterate(section_entries(hashing_section), pentry)
@@ -1722,9 +1714,9 @@ struct entry *secfile_entry_by_path(const struct section_file *secfile,
   }
 
   if (NULL != secfile->hash.entries) {
-    struct entry *pentry;
+    struct entry *pentry = secfile->hash.entries->value(fullpath, nullptr);
 
-    if (entry_hash_lookup(secfile->hash.entries, fullpath, &pentry)) {
+    if (pentry) {
       entry_use(pentry);
     }
     return pentry;
@@ -2795,7 +2787,7 @@ struct section *secfile_section_new(struct section_file *secfile,
   section_list_append(secfile->sections, psection);
 
   if (NULL != secfile->hash.sections) {
-    section_hash_insert(secfile->hash.sections, psection->name, psection);
+    secfile->hash.sections->insert(psection->name, psection);
   }
 
   return psection;
@@ -2819,7 +2811,7 @@ void section_destroy(struct section *psection)
       return;
     }
     if (NULL != secfile->hash.sections) {
-      section_hash_remove(secfile->hash.sections, psection->name);
+      secfile->hash.sections->remove(psection->name);
     }
   }
 
@@ -2879,7 +2871,7 @@ bool section_set_name(struct section *psection, const char *name)
 
   /* Remove old references in the hash tables. */
   if (NULL != secfile->hash.sections) {
-    section_hash_remove(secfile->hash.sections, psection->name);
+    secfile->hash.sections->remove(psection->name);
   }
   if (NULL != secfile->hash.entries) {
     entry_list_iterate(psection->entries, pentry)
@@ -2895,7 +2887,7 @@ bool section_set_name(struct section *psection, const char *name)
 
   /* Reinsert new references into the hash tables. */
   if (NULL != secfile->hash.sections) {
-    section_hash_insert(secfile->hash.sections, psection->name, psection);
+    secfile->hash.sections->insert(psection->name, psection);
   }
   if (NULL != secfile->hash.entries) {
     entry_list_iterate(psection->entries, pentry)

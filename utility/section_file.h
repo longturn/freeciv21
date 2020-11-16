@@ -10,14 +10,12 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__SECTION_FILE_H
-#define FC__SECTION_FILE_H
+#pragma once
 
+#include <QMultiHash>
 /* This header contains internals of section_file that its users should
- * not care about. This header should be included by soruce files
+ * not care about. This header should be included by source files
  * implementing registry itself. */
-
-
 
 /* utility */
 #include "support.h"
@@ -43,8 +41,8 @@ struct section_file {
   bool allow_duplicates;
   bool allow_digital_boolean;
   struct {
-    struct section_hash *sections;
-    struct entry_hash *entries;
+    QMultiHash<QString, struct section*> *sections;
+    QMultiHash<QString, struct entry*> *entries;
   } hash;
 };
 
@@ -67,19 +65,6 @@ void secfile_log(const struct section_file *secfile,
     return value;                                                           \
   }
 
-#define SPECHASH_TAG section
-#define SPECHASH_CSTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct section *
-#include "spechash.h"
-
-#define SPECHASH_TAG entry
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct entry *
-#include "spechash.h"
-
 bool entry_from_token(struct section *psection, const char *name,
                       const char *tok);
 
-
-
-#endif /* FC__SECTION_FILE_H */
