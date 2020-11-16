@@ -1068,8 +1068,10 @@ static void tileset_free_toplevel(struct tileset *t)
   t->num_preferred_themes = 0;
 
   if (t->tile_hash) {
-    delete t->tile_hash;
-    t->tile_hash = NULL; /* Helpful for sanity. */
+    for (auto a : t->tile_hash->values()) {
+      drawing_data_destroy(a);
+    }
+    FC_FREE(t->tile_hash);
   }
   if (t->estyle_hash) {
     delete t->estyle_hash;
@@ -3307,8 +3309,7 @@ static bool load_river_sprites(struct tileset *t,
  ****************************************************************************/
 void finish_loading_sprites(struct tileset *t)
 {
-  for(auto sf : t->specfiles->values())
-  {
+  for (auto sf : t->specfiles->values()) {
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
@@ -3872,7 +3873,7 @@ void tileset_setup_tile_type(struct tileset *t,
         break;
       };
 
-      dlp->cells = new struct sprite*[number]();
+      dlp->cells = new struct sprite *[number]();
 
       for (i = 0; i < number; i++) {
         enum direction4 dir = static_cast<direction4>(i % NUM_CORNER_DIRS);
@@ -6214,8 +6215,7 @@ void tileset_free_tiles(struct tileset *t)
     delete ss;
   }
 
-  for(auto sf : t->specfiles->values())
-  {
+  for (auto sf : t->specfiles->values()) {
     t->specfiles->remove(sf);
     delete[] sf->file_name;
     if (sf->big_sprite) {

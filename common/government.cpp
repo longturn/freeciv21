@@ -484,8 +484,10 @@ static inline void government_init(struct government *pgovern)
  **************************************************************************/
 static inline void government_free(struct government *pgovern)
 {
-  delete pgovern->ruler_titles;
-  pgovern->ruler_titles = NULL;
+  for (auto a : pgovern->ruler_titles->values()) {
+    delete a;
+  }
+  FC_FREE(pgovern->ruler_titles);
 
   if (NULL != pgovern->helptext) {
     strvec_destroy(pgovern->helptext);

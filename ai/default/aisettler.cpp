@@ -246,7 +246,7 @@ static void cityresult_destroy(struct cityresult *result)
 {
   if (result != NULL) {
     if (result->tdc_hash != NULL) {
-      for (auto ptdc: result->tdc_hash->values()){
+      for (auto ptdc : result->tdc_hash->values()) {
         NFCPP_FREE(ptdc)
       }
       delete result->tdc_hash;
@@ -378,6 +378,9 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
       result->remaining += ptdc->sum / GROWTH_POTENTIAL_DEEMPHASIS;
     }
 
+    if (result->tdc_hash->contains(cindex)) {
+      NFCPP_FREE(result->tdc_hash->value(cindex));
+    }
     result->tdc_hash->insert(cindex, ptdc);
   }
   city_tile_iterate_index_end;
@@ -534,6 +537,9 @@ static void tdc_plr_set(struct ai_type *ait, struct player *plr, int tindex,
   ai->settler->cache.save++;
 #endif /* FREECIV_DEBUG */
 
+  if (ai->settler->tdc_hash->contains(tindex)) {
+    NFCPP_FREE(ai->settler->tdc_hash->value(tindex));
+  }
   ai->settler->tdc_hash->insert(tindex, ptdc);
 }
 
@@ -1200,6 +1206,9 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   ai->settler->cache.save = 0;
 #endif /* FREECIV_DEBUG */
 
+  for (auto ptdc : ai->settler->tdc_hash->values()) {
+    NFCPP_FREE(ptdc)
+  }
   ai->settler->tdc_hash->clear();
 
   if (caller_closes) {

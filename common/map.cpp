@@ -41,7 +41,6 @@
 
 #include "map.h"
 
-
 static struct startpos *startpos_new(struct tile *ptile);
 static void startpos_destroy(struct startpos *psp);
 
@@ -488,10 +487,7 @@ void map_allocate(struct civ_map *amap)
     tile_init(ptile);
   }
   whole_map_iterate_end;
-
-  if (amap->startpos_table != NULL) {
-    delete amap->startpos_table;
-  }
+  NFC_FREE(amap->startpos_table);
   amap->startpos_table = new QHash<struct tile *, struct startpos *>;
 }
 
@@ -520,8 +516,10 @@ void map_free(struct civ_map *fmap)
     FCPP_FREE(fmap->tiles);
 
     if (fmap->startpos_table) {
-      delete fmap->startpos_table;
-      fmap->startpos_table = NULL;
+      for (auto a : fmap->startpos_table->values()) {
+        startpos_destroy(a);
+      }
+      FC_FREE(fmap->startpos_table);
     }
 
     FCPP_FREE(fmap->iterate_outwards_indices);
@@ -1546,8 +1544,7 @@ bool startpos_pack(const struct startpos *psp,
   packet->exclude = psp->exclude;
   BV_CLR_ALL(packet->nations);
 
-  for (auto pnation : psp->nations->values())
-  {
+  for (auto pnation : psp->nations->values()) {
     BV_SET(packet->nations, nation_number(pnation));
   }
   return TRUE;
@@ -1598,7 +1595,8 @@ bool startpos_is_excluding(const struct startpos *psp)
    FIXME: This function exposes the internal implementation and should be
    removed when no longer needed by the property editor system.
  ***********************************************************************/
-QSet<const struct nation_type *> *startpos_raw_nations(const struct startpos *psp)
+QSet<const struct nation_type *> *
+startpos_raw_nations(const struct startpos *psp)
 {
   fc_assert_ret_val(NULL != psp, nullptr);
   return psp->nations;
@@ -1628,7 +1626,8 @@ struct startpos *map_startpos_new(struct tile *ptile)
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
   psp = startpos_new(ptile);
-  wld.map.startpos_table->insert(static_cast<tile *>(tile_hash_key(ptile)), psp);
+  wld.map.startpos_table->insert(static_cast<tile *>(tile_hash_key(ptile)),
+                                 psp);
 
   return psp;
 }
@@ -1644,7 +1643,8 @@ struct startpos *map_startpos_get(const struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, NULL);
   fc_assert_ret_val(NULL != wld.map.startpos_table, NULL);
 
-  psp = wld.map.startpos_table->value(static_cast<tile *>(tile_hash_key(ptile)), nullptr);
+  psp = wld.map.startpos_table->value(
+      static_cast<tile *>(tile_hash_key(ptile)), nullptr);
 
   return psp;
 }
@@ -1660,11 +1660,12 @@ bool map_startpos_remove(struct tile *ptile)
   fc_assert_ret_val(NULL != ptile, FALSE);
   fc_assert_ret_val(NULL != wld.map.startpos_table, FALSE);
   ret = wld.map.startpos_table->contains(prtile);
-  wld.map.startpos_table->remove(prtile);
+  if (ret) {
+    startpos_destroy(wld.map.startpos_table->take(prtile));
+  }
 
   return ret;
 }
-
 
 /*******************************************************************/ /**
    Return random direction that is valid in current map.

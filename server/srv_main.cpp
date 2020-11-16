@@ -2255,9 +2255,9 @@ void update_nations_with_startpos(void)
          * If there are no start positions for a nation, remove it from the
          * available set. */
         pnation->server.no_startpos = TRUE;
-        for (auto psp : wld.map.startpos_table->values())
-        {
-          if (psp->exclude) continue;
+        for (auto psp : wld.map.startpos_table->values()) {
+          if (psp->exclude)
+            continue;
           if (startpos_nation_allowed(psp, pnation)) {
             /* There is at least one start position that allows this nation,
              * so allow it to be picked.
@@ -2512,7 +2512,6 @@ const char *aifill(int amount)
   return limitreason;
 }
 
-
 /**********************************************************************/ /**
    Tool for generate_players().
  **************************************************************************/
@@ -2638,9 +2637,9 @@ static void generate_players(void)
     int i, min;
 
     /* Initialization. */
-    for (auto psp : wld.map.startpos_table->values())
-    {
-      if (psp->exclude) continue;
+    for (auto psp : wld.map.startpos_table->values()) {
+      if (psp->exclude)
+        continue;
       if (startpos_allows_all(psp)) {
         continue;
       }
@@ -2725,6 +2724,9 @@ static void generate_players(void)
       }
     }
     players_iterate_end;
+    for (auto a : hash.keys()) {
+      delete a;
+    }
   }
 
   if (0 < nations_to_assign) {

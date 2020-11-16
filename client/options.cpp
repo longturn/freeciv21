@@ -68,7 +68,7 @@
 
 #include "options.h"
 
-typedef QHash<QString, const char *> optionsHash;
+typedef QHash<QString, QString> optionsHash;
 typedef QHash<QString, intptr_t> dialOptionsHash;
 struct client_options gui_options = {
     /** Defaults for options normally on command line **/
@@ -5429,8 +5429,9 @@ static void settable_options_save(struct section_file *sf)
        */
       continue;
     }
-    QByteArray qba = it.key().toLocal8Bit();
-    secfile_insert_str(sf, it.value(), "server.%s", qba.data());
+    QByteArray qkey = it.key().toLocal8Bit();
+    QByteArray qval = it.value().toLocal8Bit();
+    secfile_insert_str(sf, qval.data(), "server.%s", qkey.data());
     it++; // IT comes 4 U
   }
 }
@@ -5563,7 +5564,8 @@ static void desired_settable_option_send(struct option *poption)
     /* No change explicitly  desired. */
     return;
   }
-  desired = settable_options->value(option_name(poption));
+  QByteArray qval = settable_options->value(option_name(poption)).toLocal8Bit();
+  desired = qval.data();
   switch (option_type(poption)) {
   case OT_BOOLEAN:
     if ((0 == fc_strcasecmp("enabled", desired)
