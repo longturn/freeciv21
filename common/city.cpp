@@ -408,10 +408,6 @@ void citylog_map_data(QtMsgType level, int radius_sq, int *map_data)
   int x, y;
   char line[128], tmp[8];
 
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
-
   log_base(level, "(max squared city radius = %d)", CITY_MAP_MAX_RADIUS_SQ);
 
   /* print x coordinates (absolut) */
@@ -444,10 +440,6 @@ void citylog_map_workers(QtMsgType level, struct city *pcity)
 
   fc_assert_ret(pcity != NULL);
 
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
-
   city_map_data = new int[city_map_tiles(city_map_radius_sq_get(pcity))]();
 
   city_map_iterate(city_map_radius_sq_get(pcity), cindex, x, y)
@@ -473,9 +465,6 @@ static void citylog_map_index(QtMsgType level)
 {
   int *city_map_data = NULL;
 
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
   city_map_data = new int[city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
                           sizeof(*city_map_data)];
 
@@ -495,10 +484,6 @@ static void citylog_map_index(QtMsgType level)
  **************************************************************************/
 static void citylog_map_radius_sq(QtMsgType level)
 {
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
-
   std::vector<int> city_map_data(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ));
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)

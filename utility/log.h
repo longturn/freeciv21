@@ -50,26 +50,14 @@ typedef void (*log_callback_fn)(QtMsgType, const char *, bool file_too);
 typedef const char *(*log_prefix_fn)(void);
 
 void log_init(const char *filename, log_callback_fn callback,
-              log_prefix_fn prefix, int fatal_assertions);
+              log_prefix_fn prefix, bool fatal_assertions);
 void log_close(void);
 bool log_init(const QString &level_str = QStringLiteral("info"));
+const QString &log_get_level();
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
 log_callback_fn log_set_callback(log_callback_fn callback);
 log_prefix_fn log_set_prefix(log_prefix_fn prefix);
-void log_set_level(QtMsgType level);
-QtMsgType log_get_level(void);
-#ifdef FREECIV_DEBUG
-bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
-                                         int line);
-#endif
-
-#ifdef FREECIV_DEBUG
-#define log_do_output_for_level(level)                                      \
-  log_do_output_for_level_at_location(level, __FILE__, __FC_LINE__)
-#else
-#define log_do_output_for_level(level) (log_get_level() >= level)
-#endif /* FREECIV_DEBUG */
 
 /* The log macros */
 #define log_base(level, message, ...)                                       \
@@ -124,8 +112,8 @@ bool fc_assert_are_fatal();
   [&] {                                                                     \
     if (!(condition)) {                                                     \
       qCritical("Assertion %s failed", #condition);                         \
-      qCritical().noquote()                                                 \
-          /* TRANS: No full stop after the URL, could cause confusion. */   \
+      qCritical().noquote() /* TRANS: No full stop after the URL, could     \
+                               cause confusion. */                          \
           << QString(_("Please report this message at %1")).arg(BUG_URL);   \
       if (fc_assert_are_fatal()) {                                          \
         qFatal("%s", _("Assertion failed"));                                \
@@ -141,8 +129,8 @@ bool fc_assert_are_fatal();
     if (!(condition)) {                                                     \
       qCritical("Assertion %s failed", #condition);                         \
       qCritical(message, ##__VA_ARGS__);                                    \
-      qCritical().noquote()                                                 \
-          /* TRANS: No full stop after the URL, could cause confusion. */   \
+      qCritical().noquote() /* TRANS: No full stop after the URL, could     \
+                               cause confusion. */                          \
           << QString(_("Please report this message at %1")).arg(BUG_URL);   \
       if (fc_assert_are_fatal()) {                                          \
         qFatal("%s", _("Assertion failed"));                                \
@@ -187,7 +175,7 @@ bool fc_assert_are_fatal();
 #ifdef FREECIV_CXX11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) static_assert(cond, #tag)
 #endif /* FREECIV_CXX11_STATIC_ASSERT */
-#else  /* __cplusplus */
+#else /* __cplusplus */
 #ifdef FREECIV_C11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) _Static_assert(cond, #tag)
 #endif /* FREECIV_C11_STATIC_ASSERT */

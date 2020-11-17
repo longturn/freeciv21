@@ -244,29 +244,22 @@ static void real_print_tile_type(QtMsgType level, const char *file,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix);
 #define print_tile_type(loglevel, ptype, prefix)                            \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_tile_type(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,     \
-                         ptype, prefix);                                    \
-  }
+  real_print_tile_type(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,       \
+                       ptype, prefix);
 
 static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice);
 #define print_lattice(loglevel, lattice)                                    \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_lattice(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,       \
-                       lattice);                                            \
-  }
+  real_print_lattice(loglevel, __FILE__, __FUNCTION__, __FC_LINE__, lattice);
 
 static void real_print_partial_solution(QtMsgType level, const char *file,
                                         const char *function, int line,
                                         const struct partial_solution *soln,
                                         const struct cm_state *state);
 #define print_partial_solution(loglevel, soln, state)                       \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_partial_solution(loglevel, __FILE__, __FUNCTION__,           \
-                                __FC_LINE__, soln, state);                  \
-  }
+  real_print_partial_solution(loglevel, __FILE__, __FUNCTION__,             \
+                              __FC_LINE__, soln, state);
 
 #else
 #define print_tile_type(loglevel, ptype, prefix)

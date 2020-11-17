@@ -47,27 +47,8 @@ static log_prefix_fn log_prefix = NULL;
 
 static fc_mutex logfile_mutex;
 
-#ifdef FREECIV_DEBUG
-static const QtMsgType max_level = LOG_DEBUG;
-#else
-static const QtMsgType max_level = LOG_VERBOSE;
-#endif /* FREECIV_DEBUG */
-
-static QtMsgType fc_QtMsgType = LOG_NORMAL;
-static int fc_fatal_assertions = -1;
-
-#ifdef FREECIV_DEBUG
-struct log_fileinfo {
-  char *name;
-  QtMsgType level;
-  unsigned int min;
-  unsigned int max;
-};
-static std::vector<log_fileinfo> log_files;
-#endif /* FREECIV_DEBUG */
-
-static const char *QtMsgType_names[] = {
-    "Fatal", "Error", "Warning", "Normal", "Verbose", "Debug", NULL};
+static QString fc_log_level = QStringLiteral();
+static bool fc_fatal_assertions = false;
 
 /**********************************************************************/ /**
   Parses a log level string as provided by the user on the command line, and
@@ -76,6 +57,9 @@ static const char *QtMsgType_names[] = {
  **************************************************************************/
 bool log_init(const QString &level_str)
 {
+  // Even if it's invalid.
+  fc_log_level = level_str;
+
   // Create default filter rules to pass to Qt. We do it this way so the user
   // can override our simplistic rules with environment variables.
   if (level_str == QStringLiteral("fatal")) {
@@ -124,13 +108,20 @@ bool log_init(const QString &level_str)
 }
 
 /**********************************************************************/ /**
+   Retrieves the log level passed to log_init (even if log_init failed).
+   This can be overridden from the environment, so it's only useful when
+   passing it to the server from the client.
+ **************************************************************************/
+const QString &log_get_level() { return fc_log_level; }
+
+/**********************************************************************/ /**
    Initialise the log module. Either 'filename' or 'callback' may be NULL.
    If both are NULL, print to stderr. If both are non-NULL, both callback,
    and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
    signal on failed assertion.
  **************************************************************************/
 void log_init(const char *filename, log_callback_fn callback,
-              log_prefix_fn prefix, int fatal_assertions)
+              log_prefix_fn prefix, bool fatal_assertions)
 {
   if (log_filename) {
     free(log_filename);
@@ -191,40 +182,10 @@ log_prefix_fn log_set_prefix(log_prefix_fn prefix)
 }
 
 /**********************************************************************/ /**
-   Adjust the logging level after initial log_init().
- **************************************************************************/
-void log_set_level(QtMsgType level) { fc_QtMsgType = level; }
-
-/**********************************************************************/ /**
-   Returns the current log level.
- **************************************************************************/
-QtMsgType log_get_level(void) { return fc_QtMsgType; }
-
-#ifdef FREECIV_DEBUG
-/**********************************************************************/ /**
-   Returns wether we should do an output for this level, in this file,
-   at this line.
- **************************************************************************/
-bool log_do_output_for_level_at_location(QtMsgType level, const char *file,
-                                         int line)
-{
-  auto name = QFileInfo(file).fileName();
-  for (const auto &pfile : log_files) {
-    if (pfile.level >= level && name == pfile.name
-        && ((0 == pfile.min && 0 == pfile.max)
-            || (pfile.min <= line && pfile.max >= line))) {
-      return TRUE;
-    }
-  }
-  return (fc_QtMsgType >= level);
-}
-#endif /* FREECIV_DEBUG */
-
-/**********************************************************************/ /**
    Set what signal the fc_assert* macros should raise on failed assertion
    (-1 to disable).
  **************************************************************************/
-void fc_assert_set_fatal(int fatal_assertions)
+void fc_assert_set_fatal(bool fatal_assertions)
 {
   fc_fatal_assertions = fatal_assertions;
 }
@@ -232,7 +193,7 @@ void fc_assert_set_fatal(int fatal_assertions)
 /**********************************************************************/ /**
    Checks whether the fc_assert* macros should raise on failed assertion.
  **************************************************************************/
-bool fc_assert_are_fatal() { return fc_fatal_assertions >= 0; }
+bool fc_assert_are_fatal() { return fc_fatal_assertions; }
 
 void log_time(QString msg, bool log)
 {

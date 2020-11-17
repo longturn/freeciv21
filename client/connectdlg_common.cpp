@@ -257,10 +257,8 @@ bool client_start_server(void)
             << "-e"
             << "--saves" << savesdir << "--scenarios" << scensdir << "-A"
             << "none";
-  if (logfile.isEmpty()) {
-    QtMsgType llvl = log_get_level();
-    dbg_lvl_buf = QString::number(llvl);
-    arguments << "--debug" << dbg_lvl_buf << "--log" << logfile;
+  if (!logfile.isEmpty()) {
+    arguments << "--debug" << log_get_level() << "--log" << logfile;
   }
   if (scriptfile.isEmpty()) {
     arguments << "--read" << scriptfile;
