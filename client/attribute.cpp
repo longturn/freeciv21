@@ -372,7 +372,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
 size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
                      void *data)
 {
-  struct attr_key akey = {.key = key, .id = id, .x = x, .y = y};
+  attr_key akey(key, id, x, y);
   void *pvalue;
   int length;
   struct data_in din;
