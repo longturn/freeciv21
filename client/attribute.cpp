@@ -77,7 +77,7 @@ void attribute_init(void) {}
 void attribute_free(void)
 {
   for (auto at : attribute_hash->values()) {
-    delete at;
+    ::operator delete(at);
   }
   attribute_hash->clear();
 }
