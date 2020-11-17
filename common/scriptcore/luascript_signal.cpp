@@ -45,11 +45,6 @@
 
 #include "luascript_signal.h"
 
-/* get 'struct signal_callback_list' and related functions: */
-#define SPECLIST_TAG signal_callback
-#define SPECLIST_TYPE struct signal_callback
-#include "speclist.h"
-
 static struct signal_callback *signal_callback_new(const char *name);
 static void signal_callback_destroy(struct signal_callback *pcallback);
 static struct signal *signal_new(int nargs, enum api_types *parg_types);
@@ -101,6 +96,10 @@ static void signal_destroy(struct signal *psignal)
   if (psignal->depr_msg) {
     delete[] psignal->depr_msg;
   }
+  while (!psignal->callbacks->isEmpty()) {
+    signal_callback_destroy(psignal->callbacks->takeFirst());
+  }
+
   delete psignal->callbacks;
   delete psignal;
 }
@@ -304,12 +303,6 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
 }
 
 /*************************************************************************/ /**
-   Callback for freeing memory where luascript_signal_name_list has signal
-   name.
- *****************************************************************************/
-static void sn_free(char *name) { delete[] name; }
-
-/*************************************************************************/ /**
    Initialize script signals and callbacks.
  *****************************************************************************/
 void luascript_signal_init(struct fc_lua *fcl)
@@ -327,10 +320,10 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  // someone is deleting it somehow ?
-  // for (auto nissan : qAsConst(*fcl->signals_hash)) {
-  //   signal_destroy(nissan);
-  // }
+  if (!fcl || !fcl->signals_hash) return;
+  for (auto nissan : fcl->signals_hash->values()) {
+    signal_destroy(nissan);
+  }
   NFC_FREE(fcl->signals_hash);
   fcl->signals_hash = nullptr;
   NFC_FREE(fcl->signal_names);

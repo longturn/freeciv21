@@ -10,11 +10,9 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__GOVERNMENT_H
-#define FC__GOVERNMENT_H
+#pragma once
 
-
-
+#include <QHash>
 /* utility */
 #include "shared.h"
 
@@ -26,16 +24,6 @@
 struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 struct ruler_title; /* Opaque type. */
-
-/* 'struct ruler_title_hash' and related functions. */
-#define SPECHASH_TAG ruler_title
-#define SPECHASH_IKEY_TYPE struct nation_type *
-#define SPECHASH_IDATA_TYPE struct ruler_title *
-#include "spechash.h"
-#define ruler_titles_iterate(ARG_hash, NAME_rule_title)                     \
-  TYPED_HASH_DATA_ITERATE(const struct ruler_title *, ARG_hash,             \
-                          NAME_rule_title)
-#define ruler_titles_iterate_end HASH_DATA_ITERATE_END
 
 /* G_LAST is a value guaranteed to be larger than any valid
  * Government_type_id. It defines the maximum number of governments
@@ -53,7 +41,7 @@ struct government {
   char graphic_str[MAX_LEN_NAME];
   char graphic_alt[MAX_LEN_NAME];
   struct requirement_vector reqs;
-  struct ruler_title_hash *ruler_titles;
+  QHash<const struct nation_type *, struct ruler_title *> *ruler_titles;
   int changed_to_times;
   struct strvec *helptext;
 
@@ -80,7 +68,7 @@ const char *government_name_translation(const struct government *pgovern);
 const char *government_name_for_player(const struct player *pplayer);
 
 /* Ruler titles. */
-const struct ruler_title_hash *
+QHash<const struct nation_type *, struct ruler_title *> *
 government_ruler_titles(const struct government *pgovern);
 struct ruler_title *government_ruler_title_new(
     struct government *pgovern, const struct nation_type *pnation,
@@ -125,6 +113,3 @@ struct iterator *government_iter_init(struct government_iter *it);
   governments_iterate_end;
 
 bool untargeted_revolution_allowed(void);
-
-
-#endif /* FC__GOVERNMENT_H */

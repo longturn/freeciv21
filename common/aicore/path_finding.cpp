@@ -17,6 +17,7 @@
 
 /* utility */
 #include "bitvector.h"
+#include "genhash.h"
 #include "log.h"
 #include "mem.h"
 #include "support.h"
@@ -3432,102 +3433,79 @@ void pf_path_print_real(const struct pf_path *path, enum log_level level,
  * units needs to reach the start tile. It stores a pf_map for every unit
  * type. */
 
-static genhash_val_t pf_pos_hash_val(const struct pf_parameter *parameter);
-static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
-                            const struct pf_parameter *parameter2);
 static void pf_reverse_map_destroy_pos(struct pf_position *pos);
 static void pf_reverse_map_destroy_param(struct pf_parameter *param);
 
-#define SPECHASH_TAG pf_pos
-#define SPECHASH_IKEY_TYPE struct pf_parameter *
-#define SPECHASH_IDATA_TYPE struct pf_position *
-#define SPECHASH_IKEY_VAL pf_pos_hash_val
-#define SPECHASH_IKEY_COMP pf_pos_hash_cmp
-#define SPECHASH_IKEY_FREE pf_reverse_map_destroy_param
-#define SPECHASH_IDATA_FREE pf_reverse_map_destroy_pos
-#include "spechash.h"
-
-/* The reverse map structure. */
-struct pf_reverse_map {
-  struct tile *target_tile; /* Where we want to go. */
-  int max_turns;            /* The maximum of turns. */
-  struct pf_parameter
-      template_params;      /* Keep a parameter ready for usage. */
-  struct pf_pos_hash *hash; /* A hash where pf_position are stored. */
-};
-
-/* Here goes all unit type flags which affect the move rules handled by
- * the reverse map. */
-static const enum unit_type_flag_id signifiant_flags[] = {
+static const enum unit_type_flag_id signifiant_flags[3] = {
     UTYF_IGTER, UTYF_CIVILIAN, UTYF_COAST_STRICT};
-static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
-/************************************************************************/ /**
-   Hash function for pf_parameter key.
- ****************************************************************************/
-static genhash_val_t pf_pos_hash_val(const struct pf_parameter *parameter)
-{
-  genhash_val_t result = 0;
-  size_t b, i;
-
-  for (i = 0, b = sizeof(result) * 8 - 1; i < signifiant_flags_num;
-       i++, b--) {
-    if (utype_has_flag(parameter->utype, signifiant_flags[i])) {
-      result |= (1u << b);
-    }
-  }
-
-  result += (uclass_number(utype_class(parameter->utype))
-             + (parameter->move_rate << 5)
-             + (tile_index(parameter->start_tile) << 11));
-  if (!parameter->omniscience) {
-    result += parameter->utype->unknown_move_cost << 23;
-  }
-
-  return result;
-}
-
-/************************************************************************/ /**
-   Comparison function for pf_parameter hash key.
- ****************************************************************************/
-static bool pf_pos_hash_cmp(const struct pf_parameter *parameter1,
-                            const struct pf_parameter *parameter2)
+inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 {
   size_t i;
+  static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
-  if (parameter1->start_tile != parameter2->start_tile
-      || parameter1->move_rate != parameter2->move_rate) {
+  if (e1.start_tile != e2.start_tile || e1.move_rate != e2.move_rate) {
     return FALSE;
   }
 
-  if (parameter1->utype == parameter2->utype) {
+  if (e1.utype == e2.utype) {
     /* Short test. */
     return TRUE;
   }
 
-  if (utype_class(parameter1->utype) != utype_class(parameter2->utype)) {
+  if (utype_class(e1.utype) != utype_class(e2.utype)) {
     return FALSE;
   }
 
-  if (!parameter1->omniscience) {
+  if (!e1.omniscience) {
 #ifdef PF_DEBUG
-    fc_assert(parameter2->omniscience == FALSE);
+    fc_assert(e2.omniscience == FALSE);
 #endif
-    if (parameter1->utype->unknown_move_cost
-        != parameter2->utype->unknown_move_cost) {
+    if (e1.utype->unknown_move_cost != e2.utype->unknown_move_cost) {
       return FALSE;
     }
   }
 
   for (i = 0; i < signifiant_flags_num; i++) {
-    if (utype_has_flag(parameter1->utype, signifiant_flags[i])
-        != utype_has_flag(parameter2->utype, signifiant_flags[i])) {
+    if (utype_has_flag(e1.utype, signifiant_flags[i])
+        != utype_has_flag(e2.utype, signifiant_flags[i])) {
       return FALSE;
     }
   }
 
   return TRUE;
 }
+
+inline uint qHash(const pf_parameter &key, uint seed)
+{
+  uint result;
+  size_t b, i;
+  static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
+
+  for (i = 0, b = sizeof(result) * 8 - 1; i < signifiant_flags_num;
+       i++, b--) {
+    if (utype_has_flag(key.utype, signifiant_flags[i])) {
+      result |= (1u << b);
+    }
+  }
+
+  result += (uclass_number(utype_class(key.utype)) + (key.move_rate << 5)
+             + (tile_index(key.start_tile) << 11));
+  if (!key.omniscience) {
+    result += key.utype->unknown_move_cost << 23;
+  }
+  return result;
+}
+
+/* The reverse map structure. */
+struct pf_reverse_map {
+  struct tile *target_tile; /* Where we want to go. */
+  int max_turns;            /* The maximum of turns. */
+  struct pf_parameter
+      template_params; /* Keep a parameter ready for usage. */
+  QHash<const pf_parameter *, struct pf_position *>
+      *hash; /* A hash where pf_position are stored. */
+};
 
 /************************************************************************/ /**
    Destroy the position if not NULL.
@@ -3567,7 +3545,7 @@ struct pf_reverse_map *pf_reverse_map_new(const struct player *pplayer,
   param->map = map;
 
   /* Initialize the map hash. */
-  pfrm->hash = pf_pos_hash_new();
+  pfrm->hash = new QHash<const pf_parameter *, struct pf_position *>;
 
   return pfrm;
 }
@@ -3591,8 +3569,13 @@ pf_reverse_map_new_for_city(const struct city *pcity,
 void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
 {
   fc_assert_ret(NULL != pfrm);
-
-  pf_pos_hash_destroy(pfrm->hash);
+  for (auto a : pfrm->hash->values()) {
+    delete a;
+  }
+  for (auto a : pfrm->hash->keys()) {
+    delete a;
+  }
+  delete pfrm->hash;
   delete pfrm;
 }
 
@@ -3612,7 +3595,8 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
   int max_cost;
 
   /* Check if we already processed something similar. */
-  if (pf_pos_hash_lookup(pfrm->hash, param, &pos)) {
+  if (pfrm->hash->contains(param)) {
+    pos = pfrm->hash->value(param);
     return pos;
   }
 
@@ -3631,7 +3615,7 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
         pf_normal_map_fill_position(PF_NORMAL_MAP(pfm), target_tile, pos);
         copy = new pf_parameter;
         *copy = *param;
-        pf_pos_hash_insert(pfrm->hash, copy, pos);
+        pfrm->hash->insert(copy, pos);
         pf_map_destroy(pfm);
         return pos;
       }
@@ -3645,7 +3629,7 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
         pf_normal_map_fill_position(PF_NORMAL_MAP(pfm), target_tile, pos);
         copy = new pf_parameter;
         *copy = *param;
-        pf_pos_hash_insert(pfrm->hash, copy, pos);
+        pfrm->hash->insert(copy, pos);
         pf_map_destroy(pfm);
         return pos;
       }
@@ -3657,7 +3641,7 @@ pf_reverse_map_pos(struct pf_reverse_map *pfrm,
    * the map again. */
   copy = new pf_parameter;
   *copy = *param;
-  pf_pos_hash_insert(pfrm->hash, copy, NULL);
+  pfrm->hash->insert(copy, NULL);
   return NULL;
 }
 

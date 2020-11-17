@@ -267,7 +267,12 @@ qfc_dialog::qfc_dialog(QWidget *parent)
   titlebar_height = 0;
   moving_now = false;
   setSizeGripEnabled(true);
-  close_pix = *fc_icons::instance()->get_pixmap("cclose");
+  close_pix = fc_icons::instance()->get_pixmap("cclose");
+}
+
+qfc_dialog::~qfc_dialog()
+{
+  delete close_pix;
 }
 
 /***********************************************************************/ /**
@@ -289,11 +294,13 @@ void qfc_dialog::paintEvent(QPaintEvent *event)
   tbar_opt.initFrom(this);
   titlebar_height =
       style->pixelMetric(QStyle::PM_TitleBarHeight, &tbar_opt, this) + 2;
-  close_pix = close_pix.scaledToHeight(titlebar_height);
+  QPixmap *old = close_pix;
+  close_pix = new QPixmap(close_pix->scaledToHeight(titlebar_height));
+  delete old;
   tbar_opt.rect = QRect(0, 0, this->width(), titlebar_height);
   text_rect =
-      QRect(0, 0, this->width() - close_pix.width(), titlebar_height);
-  close_rect = QRect(this->width() - close_pix.width(), 0, this->width(),
+      QRect(0, 0, this->width() - close_pix->width(), titlebar_height);
+  close_rect = QRect(this->width() - close_pix->width(), 0, this->width(),
                      titlebar_height);
   tbar_opt.titleBarState = this->windowState();
   tbar_opt.text = tbar_opt.fontMetrics.elidedText(
@@ -302,7 +309,7 @@ void qfc_dialog::paintEvent(QPaintEvent *event)
   style->drawItemText(&p, text_rect, Qt::AlignCenter, qpal, true,
                       tbar_opt.text, QPalette::ToolTipText);
   style->drawItemPixmap(&p, close_rect, Qt::AlignLeft,
-                        close_pix.scaledToHeight(titlebar_height));
+                        close_pix->scaledToHeight(titlebar_height));
 
   active_area.setTopLeft(QPoint(0, titlebar_height));
   this->setContentsMargins(0, titlebar_height, 0, 0);
@@ -327,12 +334,12 @@ void qfc_dialog::mouseMoveEvent(QMouseEvent *event)
 void qfc_dialog::mousePressEvent(QMouseEvent *event)
 {
   if (event->pos().y() <= titlebar_height
-      && event->pos().x() <= width() - close_pix.width()) {
+      && event->pos().x() <= width() - close_pix->width()) {
     point = event->globalPos() - geometry().topLeft();
     moving_now = true;
     setCursor(Qt::SizeAllCursor);
   } else if (event->pos().y() <= titlebar_height
-             && event->pos().x() > width() - close_pix.width()) {
+             && event->pos().x() > width() - close_pix->width()) {
     close();
   }
 }

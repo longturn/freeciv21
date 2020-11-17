@@ -70,14 +70,6 @@ struct tile {
   TYPED_LIST_ITERATE(struct tile, tile_list, ptile)
 #define tile_list_iterate_end LIST_ITERATE_END
 
-/* 'struct tile_hash' and related functions. */
-#define SPECHASH_TAG tile
-#define SPECHASH_IKEY_TYPE struct tile *
-#define SPECHASH_IDATA_TYPE void *
-#include "spechash.h"
-#define tile_hash_iterate(hash, ptile)                                      \
-  TYPED_HASH_KEYS_ITERATE(struct tile *, hash, ptile)
-#define tile_hash_iterate_end HASH_KEYS_ITERATE_END
 
 /* Tile accessor functions. */
 #define tile_index(_pt_) (_pt_)->index

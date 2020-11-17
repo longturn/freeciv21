@@ -194,23 +194,6 @@ struct ruler_title {
 };
 
 /**********************************************************************/ /**
-   Hash function.
- **************************************************************************/
-static genhash_val_t nation_hash_val(const struct nation_type *pnation)
-{
-  return NULL != pnation ? nation_number(pnation) : nation_count();
-}
-
-/**********************************************************************/ /**
-   Hash function.
- **************************************************************************/
-static bool nation_hash_comp(const struct nation_type *pnation1,
-                             const struct nation_type *pnation2)
-{
-  return pnation1 == pnation2;
-}
-
-/**********************************************************************/ /**
    Create a new ruler title.
  **************************************************************************/
 static struct ruler_title *ruler_title_new(const struct nation_type *pnation,
@@ -312,7 +295,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
 /**********************************************************************/ /**
    Returns all ruler titles for a government type.
  **************************************************************************/
-const struct ruler_title_hash *
+QHash<const struct nation_type *, struct ruler_title *> *
 government_ruler_titles(const struct government *pgovern)
 {
   fc_assert_ret_val(NULL != pgovern, NULL);
@@ -341,8 +324,7 @@ struct ruler_title *government_ruler_title_new(
     return NULL;
   }
 
-  if (ruler_title_hash_replace(pgovern->ruler_titles, pnation,
-                               pruler_title)) {
+  if (pgovern->ruler_titles->contains(pnation)) {
     if (NULL != pnation) {
       log_error("Ruler title for government \"%s\" (nb %d) and "
                 "nation \"%s\" (nb %d) was set twice.",
@@ -353,6 +335,8 @@ struct ruler_title *government_ruler_title_new(
                 "was set twice.",
                 government_rule_name(pgovern), government_number(pgovern));
     }
+  } else {
+    pgovern->ruler_titles->insert(pnation, pruler_title);
   }
 
   return pruler_title;
@@ -399,10 +383,9 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
   fc_assert_ret_val(0 < buf_len, NULL);
 
   /* Try specific nation rule title. */
-  if (!ruler_title_hash_lookup(pgovern->ruler_titles, pnation, &pruler_title)
+  if (!pgovern->ruler_titles->contains(pnation)
       /* Try default rule title. */
-      && !ruler_title_hash_lookup(pgovern->ruler_titles, NULL,
-                                  &pruler_title)) {
+      && !pgovern->ruler_titles->contains(nullptr)) {
     log_error("Missing title for government \"%s\" (nb %d) "
               "nation \"%s\" (nb %d).",
               government_rule_name(pgovern), government_number(pgovern),
@@ -413,6 +396,9 @@ const char *ruler_title_for_player(const struct player *pplayer, char *buf,
       fc_snprintf(buf, buf_len, _("Ms. %s"), player_name(pplayer));
     }
   } else {
+    pruler_title = pgovern->ruler_titles->value(pnation);
+    if (!pruler_title)
+      pruler_title = pgovern->ruler_titles->value(nullptr);
     fc_snprintf(buf, buf_len,
                 name_translation_get(pplayer->is_male
                                          ? &pruler_title->male
@@ -487,8 +473,7 @@ static inline void government_init(struct government *pgovern)
 
   pgovern->item_number = pgovern - governments;
   pgovern->ruler_titles =
-      ruler_title_hash_new_full(nation_hash_val, nation_hash_comp, NULL,
-                                NULL, NULL, ruler_title_destroy);
+      new QHash<const struct nation_type *, struct ruler_title *>;
   requirement_vector_init(&pgovern->reqs);
   pgovern->changed_to_times = 0;
   pgovern->ruledit_disabled = FALSE;
@@ -499,8 +484,10 @@ static inline void government_init(struct government *pgovern)
  **************************************************************************/
 static inline void government_free(struct government *pgovern)
 {
-  ruler_title_hash_destroy(pgovern->ruler_titles);
-  pgovern->ruler_titles = NULL;
+  for (auto a : pgovern->ruler_titles->values()) {
+    delete a;
+  }
+  FC_FREE(pgovern->ruler_titles);
 
   if (NULL != pgovern->helptext) {
     strvec_destroy(pgovern->helptext);

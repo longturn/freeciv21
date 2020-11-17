@@ -100,19 +100,9 @@ static enum cmdlevel first_access_level = ALLOW_BASIC;
 
 static time_t *time_duplicate(const time_t *t);
 
-/* 'struct kick_hash' and related functions. */
-#define SPECHASH_TAG kick
-#define SPECHASH_ASTR_KEY_TYPE
-#define SPECHASH_IDATA_TYPE time_t *
-#define SPECHASH_UDATA_TYPE time_t
-#define SPECHASH_IDATA_COPY time_duplicate
-#define SPECHASH_IDATA_FREE (kick_hash_data_free_fn_t) free
-#define SPECHASH_UDATA_TO_IDATA(t) (&(t))
-#define SPECHASH_IDATA_TO_UDATA(p) (NULL != p ? *p : 0)
-#include "spechash.h"
-
-static struct kick_hash *kick_table_by_addr = NULL;
-static struct kick_hash *kick_table_by_user = NULL;
+typedef QHash<QString, time_t> kickhash;
+Q_GLOBAL_STATIC(kickhash, kick_table_by_addr)
+Q_GLOBAL_STATIC(kickhash, kick_table_by_user)
 
 static bool cut_client_connection(struct connection *caller, char *name,
                                   bool check);
@@ -242,11 +232,6 @@ static enum command_id command_named(const char *token,
  **************************************************************************/
 void stdinhand_init(void)
 {
-  fc_assert(NULL == kick_table_by_addr);
-  kick_table_by_addr = kick_hash_new();
-
-  fc_assert(NULL == kick_table_by_user);
-  kick_table_by_user = kick_hash_new();
 }
 
 /**********************************************************************/ /**
@@ -262,17 +247,8 @@ void stdinhand_turn(void)
  **************************************************************************/
 void stdinhand_free(void)
 {
-  fc_assert(NULL != kick_table_by_addr);
-  if (NULL != kick_table_by_addr) {
-    kick_hash_destroy(kick_table_by_addr);
-    kick_table_by_addr = NULL;
-  }
-
-  fc_assert(NULL != kick_table_by_user);
-  if (NULL != kick_table_by_user) {
-    kick_hash_destroy(kick_table_by_user);
-    kick_table_by_user = NULL;
-  }
+  kick_table_by_addr->clear();
+  kick_table_by_user->clear();
 }
 
 /**********************************************************************/ /**
@@ -6213,14 +6189,15 @@ bool conn_is_kicked(struct connection *pconn, int *time_remaining)
   fc_assert_ret_val(NULL != kick_table_by_user, FALSE);
   fc_assert_ret_val(NULL != pconn, FALSE);
 
-  if (kick_hash_lookup(kick_table_by_addr, pconn->server.ipaddr,
-                       &time_of_addr_kick)) {
+  if (kick_table_by_addr->contains(pconn->server.ipaddr)) {
+    time_of_addr_kick = kick_table_by_addr->value(pconn->server.ipaddr);
     time_of_kick = time_of_addr_kick;
   }
-  if (kick_hash_lookup(kick_table_by_user, pconn->username,
-                       &time_of_user_kick)
-      && time_of_user_kick > time_of_kick) {
-    time_of_kick = time_of_user_kick;
+  if (kick_table_by_user->contains(pconn->username)) {
+    time_of_user_kick = kick_table_by_user->value(pconn->username);
+    if (time_of_user_kick > time_of_kick) {
+      time_of_kick = time_of_user_kick;
+    }
   }
 
   if (0 == time_of_kick) {
@@ -6231,10 +6208,10 @@ bool conn_is_kicked(struct connection *pconn, int *time_remaining)
   if (now - time_of_kick > game.server.kick_time) {
     /* Kick timeout expired. */
     if (0 != time_of_addr_kick) {
-      kick_hash_remove(kick_table_by_addr, pconn->server.ipaddr);
+      kick_table_by_addr->remove(pconn->server.ipaddr);
     }
     if (0 != time_of_user_kick) {
-      kick_hash_remove(kick_table_by_user, pconn->username);
+      kick_table_by_user->remove(pconn->username);
     }
     return FALSE;
   }
@@ -6306,7 +6283,7 @@ static bool kick_command(struct connection *caller, char *name, bool check)
 
   sz_strlcpy(ipaddr, pconn->server.ipaddr);
   now = time(NULL);
-  kick_hash_replace(kick_table_by_addr, ipaddr, now);
+  kick_table_by_addr->insert(ipaddr, now);
 
   conn_list_iterate(game.all_connections, aconn)
   {
@@ -6320,7 +6297,7 @@ static bool kick_command(struct connection *caller, char *name, bool check)
       aconn->playing->unassigned_user = TRUE;
     }
 
-    kick_hash_replace(kick_table_by_user, aconn->username, now);
+    kick_table_by_user->insert(aconn->username, now);
 
     connection_close_server(aconn, _("kicked"));
   }

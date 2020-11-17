@@ -43,8 +43,8 @@
  **************************************************************************/
 void idex_init(struct world *iworld)
 {
-  iworld->cities = city_hash_new();
-  iworld->units = unit_hash_new();
+  iworld->cities = new QHash<int, const struct city *>;
+  iworld->units = new QHash<int, const struct unit *>;
 }
 
 /**********************************************************************/ /**
@@ -52,10 +52,10 @@ void idex_init(struct world *iworld)
  **************************************************************************/
 void idex_free(struct world *iworld)
 {
-  city_hash_destroy(iworld->cities);
+  delete iworld->cities;
   iworld->cities = NULL;
 
-  unit_hash_destroy(iworld->units);
+  delete iworld->units;
   iworld->units = NULL;
 }
 
@@ -65,13 +65,16 @@ void idex_free(struct world *iworld)
  **************************************************************************/
 void idex_register_city(struct world *iworld, struct city *pcity)
 {
-  struct city *old;
+  const struct city *old;
 
-  city_hash_replace_full(iworld->cities, pcity->id, pcity, NULL, &old);
-  fc_assert_ret_msg(NULL == old,
-                    "IDEX: city collision: new %d %p %s, old %d %p %s",
-                    pcity->id, (void *) pcity, city_name_get(pcity), old->id,
-                    (void *) old, city_name_get(old));
+  if (iworld->cities->contains(pcity->id)) {
+    old = iworld->cities->value(pcity->id);
+    fc_assert_ret_msg(NULL == old,
+                      "IDEX: city collision: new %d %p %s, old %d %p %s",
+                      pcity->id, (void *) pcity, city_name_get(pcity),
+                      old->id, (void *) old, city_name_get(old));
+  }
+  iworld->cities->insert(pcity->id, pcity);
 }
 
 /**********************************************************************/ /**
@@ -80,13 +83,16 @@ void idex_register_city(struct world *iworld, struct city *pcity)
  **************************************************************************/
 void idex_register_unit(struct world *iworld, struct unit *punit)
 {
-  struct unit *old;
+  const struct unit *old;
 
-  unit_hash_replace_full(iworld->units, punit->id, punit, NULL, &old);
-  fc_assert_ret_msg(NULL == old,
-                    "IDEX: unit collision: new %d %p %s, old %d %p %s",
-                    punit->id, (void *) punit, unit_rule_name(punit),
-                    old->id, (void *) old, unit_rule_name(old));
+  if (iworld->units->contains(punit->id)) {
+    old = iworld->units->value(punit->id);
+    fc_assert_ret_msg(NULL == old,
+                      "IDEX: unit collision: new %d %p %s, old %d %p %s",
+                      punit->id, (void *) punit, unit_rule_name(punit),
+                      old->id, (void *) old, unit_rule_name(old));
+  }
+  iworld->units->insert(punit->id, punit);
 }
 
 /**********************************************************************/ /**
@@ -95,16 +101,19 @@ void idex_register_unit(struct world *iworld, struct unit *punit)
  **************************************************************************/
 void idex_unregister_city(struct world *iworld, struct city *pcity)
 {
-  struct city *old;
+  const struct city *old;
 
-  city_hash_remove_full(iworld->cities, pcity->id, NULL, &old);
-  fc_assert_ret_msg(NULL != old, "IDEX: city unreg missing: %d %p %s",
-                    pcity->id, (void *) pcity, city_name_get(pcity));
-  fc_assert_ret_msg(old == pcity,
-                    "IDEX: city unreg mismatch: "
-                    "unreg %d %p %s, old %d %p %s",
-                    pcity->id, (void *) pcity, city_name_get(pcity), old->id,
-                    (void *) old, city_name_get(old));
+  if (!iworld->units->contains(pcity->id)) {
+    old = pcity;
+    fc_assert_ret_msg(NULL != old, "IDEX: city unreg missing: %d %p %s",
+                      pcity->id, (void *) pcity, city_name_get(pcity));
+    fc_assert_ret_msg(old == pcity,
+                      "IDEX: city unreg mismatch: "
+                      "unreg %d %p %s, old %d %p %s",
+                      pcity->id, (void *) pcity, city_name_get(pcity),
+                      old->id, (void *) old, city_name_get(old));
+  }
+  iworld->cities->remove(pcity->id);
 }
 
 /**********************************************************************/ /**
@@ -113,16 +122,19 @@ void idex_unregister_city(struct world *iworld, struct city *pcity)
  **************************************************************************/
 void idex_unregister_unit(struct world *iworld, struct unit *punit)
 {
-  struct unit *old;
+  const struct unit *old;
 
-  unit_hash_remove_full(iworld->units, punit->id, NULL, &old);
-  fc_assert_ret_msg(NULL != old, "IDEX: unit unreg missing: %d %p %s",
-                    punit->id, (void *) punit, unit_rule_name(punit));
-  fc_assert_ret_msg(old == punit,
-                    "IDEX: unit unreg mismatch: "
-                    "unreg %d %p %s, old %d %p %s",
-                    punit->id, (void *) punit, unit_rule_name(punit),
-                    old->id, (void *) old, unit_rule_name(old));
+  if (!iworld->units->contains(punit->id)) {
+    old = punit;
+    fc_assert_ret_msg(NULL != old, "IDEX: unit unreg missing: %d %p %s",
+                      punit->id, (void *) punit, unit_rule_name(punit));
+    fc_assert_ret_msg(old == punit,
+                      "IDEX: unit unreg mismatch: "
+                      "unreg %d %p %s, old %d %p %s",
+                      punit->id, (void *) punit, unit_rule_name(punit),
+                      old->id, (void *) old, unit_rule_name(old));
+  }
+  iworld->units->remove(punit->id);
 }
 
 /**********************************************************************/ /**
@@ -131,11 +143,11 @@ void idex_unregister_unit(struct world *iworld, struct unit *punit)
  **************************************************************************/
 struct city *idex_lookup_city(struct world *iworld, int id)
 {
-  struct city *pcity;
+  const struct city *pcity;
 
-  city_hash_lookup(iworld->cities, id, &pcity);
+  pcity = iworld->cities->value(id);
 
-  return pcity;
+  return const_cast<struct city *>(pcity);
 }
 
 /**********************************************************************/ /**
@@ -144,9 +156,9 @@ struct city *idex_lookup_city(struct world *iworld, int id)
  **************************************************************************/
 struct unit *idex_lookup_unit(struct world *iworld, int id)
 {
-  struct unit *punit;
+  const struct unit *punit;
 
-  unit_hash_lookup(iworld->units, id, &punit);
+  punit = iworld->units->value(id);
 
-  return punit;
+  return const_cast<struct unit *>(punit);
 }

@@ -10,18 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
-#include <stdarg.h>
-
 /* utility */
-#include "mem.h"
 #include "registry.h"
-
 #include "section_file.h"
+
 
 #define MAX_LEN_ERRORBUF 1024
 
@@ -78,7 +70,7 @@ struct section_file *secfile_new(bool allow_duplicates)
   secfile->allow_duplicates = allow_duplicates;
   secfile->allow_digital_boolean = FALSE; /* Default */
 
-  secfile->hash.sections = section_hash_new();
+  secfile->hash.sections = new QMultiHash<QString, struct section*>;
   /* Maybe allocated later. */
   secfile->hash.entries = NULL;
 
@@ -92,12 +84,12 @@ void secfile_destroy(struct section_file *secfile)
 {
   SECFILE_RETURN_IF_FAIL(secfile, NULL, secfile != NULL);
 
-  section_hash_destroy(secfile->hash.sections);
+  delete secfile->hash.sections;
   /* Mark it NULL to be sure to don't try to make operations when
    * deleting the entries. */
   secfile->hash.sections = NULL;
   if (NULL != secfile->hash.entries) {
-    entry_hash_destroy(secfile->hash.entries);
+    delete secfile->hash.entries;
     /* Mark it NULL to be sure to don't try to make operations when
      * deleting the entries. */
     secfile->hash.entries = NULL;

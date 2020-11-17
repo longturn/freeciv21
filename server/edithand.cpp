@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QSet>
 #include <limits.h> /* USHRT_MAX */
 
 /* utility */
@@ -65,8 +66,7 @@ static bool need_continents_reassigned = FALSE;
 /* Hold pointers to tiles which were changed during the edit sequence,
  * so that they can be sanity-checked when the sequence is complete
  * and final global fix-ups have been done. */
-static struct tile_hash *modified_tile_table = NULL;
-
+Q_GLOBAL_STATIC(QSet<const struct tile *>, modified_tile_table)
 /* Array of size player_slot_count() indexed by player
  * number to tell whether a given player has fog of war
  * disabled in edit mode. */
@@ -77,10 +77,7 @@ static bool *unfogged_players;
  ****************************************************************************/
 void edithand_init(void)
 {
-  if (NULL != modified_tile_table) {
-    tile_hash_destroy(modified_tile_table);
-  }
-  modified_tile_table = tile_hash_new();
+  modified_tile_table->clear();
 
   need_continents_reassigned = FALSE;
 
@@ -95,11 +92,6 @@ void edithand_init(void)
  ****************************************************************************/
 void edithand_free(void)
 {
-  if (NULL != modified_tile_table) {
-    tile_hash_destroy(modified_tile_table);
-    modified_tile_table = NULL;
-  }
-
   if (unfogged_players != NULL) {
     delete[] unfogged_players;
     unfogged_players = NULL;
@@ -119,8 +111,9 @@ void edithand_send_initial_packets(struct conn_list *dest)
   }
 
   /* Send map start positions. */
-  map_startpos_iterate(psp)
+  for (auto psp : wld.map.startpos_table->values())
   {
+    if (psp->exclude) continue;
     startpos.id = tile_index(startpos_tile(psp));
     startpos.removal = FALSE;
     startpos.tag = 0;
@@ -136,7 +129,6 @@ void edithand_send_initial_packets(struct conn_list *dest)
     }
     conn_list_iterate_end;
   }
-  map_startpos_iterate_end;
 }
 
 /************************************************************************/ /**
@@ -152,10 +144,11 @@ static void check_edited_tile_terrains(void)
   }
 
 #ifdef SANITY_CHECKING
-  tile_hash_iterate(modified_tile_table, ptile) { sanity_check_tile(ptile); }
-  tile_hash_iterate_end;
+  for (auto ptile : modified_tile_table->values()) {
+    sanity_check_tile(const_cast<struct tile *>(ptile));
+  }
 #endif /* SANITY_CHECKING */
-  tile_hash_clear(modified_tile_table);
+  modified_tile_table->clear();
 }
 
 /************************************************************************/ /**
@@ -235,7 +228,7 @@ static bool edit_tile_terrain_handling(struct tile *ptile,
 
   tile_change_terrain(ptile, pterrain);
   fix_tile_on_terrain_change(ptile, old_terrain, FALSE);
-  tile_hash_insert(modified_tile_table, ptile, NULL);
+  modified_tile_table->insert(ptile);
   if (need_to_reassign_continents(old_terrain, pterrain)) {
     need_continents_reassigned = TRUE;
   }

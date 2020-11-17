@@ -120,9 +120,9 @@ void free_help_texts(void)
   check_help_nodes_init();
   help_list_iterate(help_nodes, ptmp)
   {
-    // delete[] ptmp->topic;
-    // delete[] ptmp->text;
-    // delete ptmp;
+    NFCPP_FREE(ptmp->topic);
+    NFCPP_FREE(ptmp->text);
+    NFC_FREE(ptmp);
   }
   help_list_iterate_end;
 }
@@ -743,7 +743,8 @@ void boot_help_texts(void)
     log_verbose("Booting help texts");
   } else {
     /* free memory allocated last time booted */
-    free_help_texts();
+    // this wont go well so I commented out - Terminator
+    // free_help_texts();
     log_verbose("Rebooting help texts");
   }
 
@@ -2875,6 +2876,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         }
 
         strvec_destroy(extras_vec);
+        astr_free(&extras_and);
       } break;
       case ACTRES_FORTIFY: {
         struct universal uni_cazfi = {.value = {.utype = utype},
@@ -4866,6 +4868,7 @@ char *helptext_unit_upkeep_str(const struct unit_type *utype)
     /* strcpy(buf, _("None")); */
     fc_snprintf(buf, sizeof(buf), "%d", 0);
   }
+  delete empty;
   return buf;
 }
 

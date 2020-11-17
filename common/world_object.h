@@ -10,32 +10,15 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__WORLD_OBJECT_H
-#define FC__WORLD_OBJECT_H
+#pragma once
 
-
+#include <QHash>
 
 /* common */
 #include "map_types.h"
 
-/* struct city_hash. */
-#define SPECHASH_TAG city
-#define SPECHASH_INT_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct city *
-#include "spechash.h"
-
-/* struct unit_hash. */
-#define SPECHASH_TAG unit
-#define SPECHASH_INT_KEY_TYPE
-#define SPECHASH_IDATA_TYPE struct unit *
-#include "spechash.h"
-
 struct world {
   struct civ_map map;
-  struct city_hash *cities;
-  struct unit_hash *units;
+  QHash<int, const struct city*> *cities;
+  QHash<int, const struct unit*> *units;
 };
-
-
-
-#endif /* FC__WORLD_OBJECT_H */

@@ -68,12 +68,13 @@ class qfc_dialog : public QDialog {
   Q_OBJECT
 public:
   qfc_dialog(QWidget *parent);
+  ~qfc_dialog();
 
 private:
   int titlebar_height;
   QPoint point;
   bool moving_now;
-  QPixmap close_pix;
+  QPixmap *close_pix;
 
 protected:
   void paintEvent(QPaintEvent *event);
