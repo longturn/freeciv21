@@ -243,7 +243,9 @@ void gov_menu::update()
 /**********************************************************************/ /**
    Shows the dialog asking for confirmation before starting a revolution.
  **************************************************************************/
-void gov_menu::revolution() { popup_revolution_dialog(); }
+void gov_menu::revolution() {
+  popup_revolution_dialog(game.government_during_revolution);
+}
 
 /**********************************************************************/ /**
    Shows the dialog asking for confirmation before starting a revolution.
