@@ -243,30 +243,6 @@ log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback)
 }
 
 /**********************************************************************/ /**
-   Adjust the callback function after initial log_init().
- **************************************************************************/
-log_callback_fn log_set_callback(log_callback_fn callback)
-{
-  log_callback_fn old = log_callback;
-
-  log_callback = callback;
-
-  return old;
-}
-
-/**********************************************************************/ /**
-   Adjust the prefix callback function after initial log_init().
- **************************************************************************/
-log_prefix_fn log_set_prefix(log_prefix_fn prefix)
-{
-  log_prefix_fn old = log_prefix;
-
-  log_prefix = prefix;
-
-  return old;
-}
-
-/**********************************************************************/ /**
    Set what signal the fc_assert* macros should raise on failed assertion
    (-1 to disable).
  **************************************************************************/

@@ -56,9 +56,6 @@ bool log_init(const QString &level_str = QStringLiteral("info"));
 void log_set_file(const QString &path);
 const QString &log_get_level();
 
-log_callback_fn log_set_callback(log_callback_fn callback);
-log_prefix_fn log_set_prefix(log_prefix_fn prefix);
-
 /* The log macros */
 #define log_base(level, message, ...)                                       \
   do {                                                                      \
