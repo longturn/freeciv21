@@ -286,9 +286,7 @@ int main(int argc, char *argv[])
   if (parser.isSet("log")) {
     srvarg.log_filename = parser.value("log");
   }
-  if (parser.isSet("Fatal")) {
-    srvarg.fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("Ranklog")) {
     srvarg.ranklog_filename = parser.value("Ranklog");
   }

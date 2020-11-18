@@ -166,7 +166,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else  /* FREECIV_TESTMATIC */
+#else /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -211,9 +211,8 @@ void srv_init(void)
 
   srvarg.port = DEFAULT_SOCK_PORT;
 
-  srvarg.fatal_assertions = -1;
-  srvarg.saves_pathname = QString("");
-  srvarg.scenarios_pathname = QString("");
+  srvarg.saves_pathname = QStringLiteral("");
+  srvarg.scenarios_pathname = QStringLiteral("");
 
   srvarg.quitidle = 0;
 

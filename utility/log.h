@@ -35,22 +35,6 @@ constexpr auto LOG_DEBUG = QtDebugMsg;
  * value. */
 #define __FC_LINE__ __LINE__
 
-/* Preparation of the log message, i.e. add a backtrace. */
-typedef void (*log_pre_callback_fn)(QtMsgType, bool print_from_where,
-                                    const char *where, const char *msg);
-
-/* A function type to enable custom output of log messages other than
- * via fputs(stderr).  Eg, to the server console while handling prompts,
- * rfcstyle, client notifications; Eg, to the client window output window?
- */
-typedef void (*log_callback_fn)(QtMsgType, const char *, bool file_too);
-
-/* A function type to generate a custom prefix for the log messages, e.g.
- * add the turn and/or time of the log message. */
-typedef const char *(*log_prefix_fn)(void);
-
-void log_init(const char *filename, log_callback_fn callback,
-              log_prefix_fn prefix, bool fatal_assertions);
 void log_close(void);
 bool log_init(const QString &level_str = QStringLiteral("info"));
 void log_set_file(const QString &path);
@@ -99,7 +83,7 @@ const QString &log_get_level();
 #define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
 
 /* Assertions. */
-void fc_assert_set_fatal(int fatal_assertions);
+void fc_assert_set_fatal(bool fatal_assertions);
 bool fc_assert_are_fatal();
 
 /* Like assert(). */

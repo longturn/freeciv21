@@ -91,8 +91,6 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
     fcmp.autoinstall = parser.value("install");
   }
 
-  log_init(NULL, NULL, NULL, -1);
-
   if (fcmp.inst_prefix.isNull()) {
     fcmp.inst_prefix = freeciv_storage_dir();
 

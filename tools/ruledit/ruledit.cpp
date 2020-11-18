@@ -56,8 +56,6 @@ static void re_parse_cmdline(const QCoreApplication &app);
 
 struct ruledit_arguments reargs;
 
-static int fatal_assertions = -1;
-
 /**********************************************************************/ /**
    Main entry point for freeciv-ruledit
  **************************************************************************/
@@ -89,8 +87,6 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
-
-  log_init(NULL, NULL, NULL, fatal_assertions);
 
   /* Initialize command line arguments. */
   re_parse_cmdline(app);
@@ -158,9 +154,7 @@ static void re_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() >= 1) {
       fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));

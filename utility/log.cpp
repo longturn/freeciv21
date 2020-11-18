@@ -43,17 +43,10 @@
 
 #define MAX_LEN_LOG_LINE 5120
 
-static char *log_filename = NULL;
-static log_pre_callback_fn log_pre_callback = nullptr;
-static log_callback_fn log_callback = NULL;
-static log_prefix_fn log_prefix = NULL;
-
-static fc_mutex logfile_mutex;
-
-static QString fc_log_level = QStringLiteral();
-static bool fc_fatal_assertions = false;
-
 namespace {
+static QString log_level = QStringLiteral();
+static bool fatal_assertions = false;
+
 static QBasicMutex mutex;
 static void handle_message(QtMsgType type, const QMessageLogContext &context,
                            const QString &message);
@@ -69,7 +62,7 @@ static QFile *log_file = nullptr;
 bool log_init(const QString &level_str)
 {
   // Even if it's invalid.
-  fc_log_level = level_str;
+  log_level = level_str;
 
   // Install our handler
   original_handler = qInstallMessageHandler(&handle_message);
@@ -183,41 +176,13 @@ void log_set_file(const QString &path)
    This can be overridden from the environment, so it's only useful when
    passing it to the server from the client.
  **************************************************************************/
-const QString &log_get_level() { return fc_log_level; }
-
-/**********************************************************************/ /**
-   Initialise the log module. Either 'filename' or 'callback' may be NULL.
-   If both are NULL, print to stderr. If both are non-NULL, both callback,
-   and fprintf to file.  Pass -1 for fatal_assertions to don't raise any
-   signal on failed assertion.
- **************************************************************************/
-void log_init(const char *filename, log_callback_fn callback,
-              log_prefix_fn prefix, bool fatal_assertions)
-{
-  if (log_filename) {
-    free(log_filename);
-    log_filename = NULL;
-  }
-  if (filename && strlen(filename) > 0) {
-    log_filename = fc_strdup(filename);
-  } else {
-    log_filename = NULL;
-  }
-  log_callback = callback;
-  log_prefix = prefix;
-  fc_fatal_assertions = fatal_assertions;
-  fc_init_mutex(&logfile_mutex);
-  qDebug("log started");
-  log_debug("LOG_DEBUG test");
-}
+const QString &log_get_level() { return log_level; }
 
 /**********************************************************************/ /**
     Deinitialize logging module.
  **************************************************************************/
 void log_close()
 {
-  fc_destroy_mutex(&logfile_mutex);
-
   QMutexLocker locker(&mutex);
 
   // Flush and delete log file
@@ -231,30 +196,18 @@ void log_close()
 }
 
 /**********************************************************************/ /**
-   Adjust the log preparation callback function.
- **************************************************************************/
-log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback)
-{
-  log_pre_callback_fn old = log_pre_callback;
-
-  log_pre_callback = precallback;
-
-  return old;
-}
-
-/**********************************************************************/ /**
-   Set what signal the fc_assert* macros should raise on failed assertion
+   Set what signal the assert* macros should raise on failed assertion
    (-1 to disable).
  **************************************************************************/
 void fc_assert_set_fatal(bool fatal_assertions)
 {
-  fc_fatal_assertions = fatal_assertions;
+  fatal_assertions = fatal_assertions;
 }
 
 /**********************************************************************/ /**
    Checks whether the fc_assert* macros should raise on failed assertion.
  **************************************************************************/
-bool fc_assert_are_fatal() { return fc_fatal_assertions; }
+bool fc_assert_are_fatal() { return fatal_assertions; }
 
 void log_time(QString msg, bool log)
 {

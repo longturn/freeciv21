@@ -48,7 +48,6 @@
 
 static QString rs_selected;
 static QString od_selected;
-static int fatal_assertions = -1;
 
 /**********************************************************************/ /**
    Parse freeciv-ruleup commandline parameters.
@@ -79,9 +78,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() >= 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
@@ -130,8 +127,6 @@ int main(int argc, char **argv)
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   rup_parse_cmdline(app);
-
-  log_init(NULL, NULL, NULL, fatal_assertions);
 
   init_connections();
 

@@ -808,9 +808,7 @@ int main(int argc, char **argv)
   if (!log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
-  if (parser.isSet("Fatal")) {
-    srvarg.fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() > 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
@@ -831,7 +829,7 @@ int main(int argc, char **argv)
 
   /* must be before con_log_init() */
   init_connections();
-  con_log_init(srvarg.log_filename, srvarg.fatal_assertions);
+  con_log_init(srvarg.log_filename);
   /* logging available after this point */
 
   /* Get common code to treat us as a tool. */

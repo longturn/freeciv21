@@ -434,9 +434,7 @@ int client_main(int argc, char *argv[])
   if (parser.isSet("log")) {
     logfile = parser.value("log");
   }
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("read")) {
     scriptfile = parser.value("read");
   }
@@ -502,7 +500,6 @@ int client_main(int argc, char *argv[])
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
 
-  log_init(qUtf8Printable(logfile), NULL, NULL, fatal_assertions);
   log_set_file(logfile);
   backtrace_init();
 
