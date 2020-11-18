@@ -463,10 +463,7 @@ void citylog_map_workers(QtMsgType level, struct city *pcity)
  **************************************************************************/
 static void citylog_map_index(QtMsgType level)
 {
-  int *city_map_data = NULL;
-
-  city_map_data = new int[city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
-                          sizeof(*city_map_data)];
+  std::vector<int> city_map_data(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ));
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)
   {
@@ -475,8 +472,7 @@ static void citylog_map_index(QtMsgType level)
   city_map_iterate_end;
 
   log_debug("city map index:");
-  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data);
-  delete[] city_map_data;
+  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data.data());
 }
 
 /**********************************************************************/ /**
