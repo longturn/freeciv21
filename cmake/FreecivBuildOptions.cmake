@@ -26,6 +26,7 @@ cmake_dependent_option(
   ON FREECIV_ENABLE_TOOLS OFF)
 
 option(FREECIV_ENABLE_NLS "Enable internationalization" ON)
+option(FREECIV_ENABLE_BACKWARD "Build with stack unwinding" OFF)
 
 set(FREECIV_BUG_URL "https://github.com/longturn/freeciv21/issues"
     CACHE STRING "Where to file bug reports")
