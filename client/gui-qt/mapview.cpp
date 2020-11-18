@@ -658,7 +658,7 @@ void info_tile::drop()
  **************************************************************************/
 info_tile *info_tile::i(struct tile *p)
 {
-  if (!m_instance)
+  if (!m_instance && p)
     m_instance = new info_tile(p, queen()->mapview_wdg);
   return m_instance;
 }
