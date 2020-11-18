@@ -5414,6 +5414,7 @@ static void settable_options_save(struct section_file *sf)
     if (!it.key().compare("gameseed")
         || !it.key().compare("mapseed")) {
       /* Do not save mapseed or gameseed. */
+      it++;
       continue;
     }
     if (!it.key().compare("topology")) {
@@ -5427,6 +5428,7 @@ static void settable_options_save(struct section_file *sf)
        *   client_start_server() decided to set topology, not on player
        *   choice.
        */
+      it++;
       continue;
     }
     QByteArray qkey = it.key().toLocal8Bit();
