@@ -55,14 +55,7 @@ void backtrace_init(void)
 void backtrace_deinit(void)
 {
 #ifdef BACKTRACE_ACTIVE
-  auto active = qInstallMessageHandler(previous);
-
-  if (active != backtrace_log) {
-    /* We were not the active callback!
-     * Restore the active callback and log error */
-    qInstallMessageHandler(active);
-    qCritical("Backtrace log (pre)callback cannot be removed");
-  }
+  qInstallMessageHandler(previous);
 #endif /* BACKTRACE_ACTIVE */
 }
 
