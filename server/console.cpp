@@ -97,7 +97,7 @@ static void con_update_prompt(void)
   } else {
     rl_forced_update_display();
   }
-#else  /* FREECIV_HAVE_LIBREADLINE */
+#else /* FREECIV_HAVE_LIBREADLINE */
   con_dump(C_READY, "> ");
   con_flush();
 #endif /* FREECIV_HAVE_LIBREADLINE */
@@ -124,7 +124,7 @@ static const char *log_prefix(void)
 
   fc_snprintf(buf, sizeof(buf), "T%03d - %s", game.info.turn, timestr);
 
-#else  /* LOG_TIMERS */
+#else /* LOG_TIMERS */
   fc_snprintf(buf, sizeof(buf), "T%03d", game.info.turn);
 #endif /* LOG_TIMERS */
 
@@ -152,6 +152,7 @@ void con_log_init(const QString &log_filename, int fatal_assertions)
   log_init(qUtf8Printable(log_filename), con_handle_log, NULL,
            fatal_assertions);
 #endif /* FREECIV_DEBUG */
+  log_set_file(log_filename);
   backtrace_init();
   deprecation_warn_cb_set(depr_warn_callback);
 }

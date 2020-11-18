@@ -53,6 +53,7 @@ void log_init(const char *filename, log_callback_fn callback,
               log_prefix_fn prefix, bool fatal_assertions);
 void log_close(void);
 bool log_init(const QString &level_str = QStringLiteral("info"));
+void log_set_file(const QString &path);
 const QString &log_get_level();
 
 log_pre_callback_fn log_set_pre_callback(log_pre_callback_fn precallback);
