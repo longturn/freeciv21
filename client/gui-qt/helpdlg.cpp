@@ -44,6 +44,8 @@ canvas *terrain_canvas(struct terrain *terrain,
                        const struct extra_type *resource = NULL,
                        enum extra_cause cause = EC_COUNT);
 
+extern QList<const struct help_item *> *help_nodes;
+
 /**********************************************************************/ /**
    Popup the help dialog to get help on the given string topic.  Note
    that the topic may appear in multiple sections of the help (it may
@@ -225,7 +227,7 @@ void help_dialog::make_tree()
   struct unit_type *f_type;
   struct drawn_sprite sprs[80];
 
-  help_items_iterate(pitem)
+  for (auto pitem : *help_nodes)
   {
     const char *s;
     int last;
@@ -303,7 +305,6 @@ void help_dialog::make_tree()
       hash.value(last)->addChild(item);
     }
   }
-  help_items_iterate_end;
 }
 
 /**********************************************************************/ /**

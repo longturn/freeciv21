@@ -20,6 +20,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QList>
+
 #include <stdio.h>
 #include <string.h>
 
@@ -67,16 +69,8 @@ static const char *const help_type_names[] = {
     "Goods",   "Specialists", "Governments", "Ruleset",
     "Tileset", "Nations",     "Multipliers", NULL};
 
-#define SPECLIST_TAG help
-#define SPECLIST_TYPE struct help_item
-#include "speclist.h"
-
-#define help_list_iterate(helplist, phelp)                                  \
-  TYPED_LIST_ITERATE(struct help_item, helplist, phelp)
-#define help_list_iterate_end LIST_ITERATE_END
-
-static const struct help_list_link *help_nodes_iterator;
-static struct help_list *help_nodes;
+typedef QList<const struct help_item *> helpList;
+helpList *help_nodes;
 static bool help_nodes_init = FALSE;
 /* help_nodes_init is not quite the same as booted in boot_help_texts();
    latter can be FALSE even after call, eg if couldn't find helpdata.txt.
@@ -87,7 +81,7 @@ static bool help_nodes_init = FALSE;
  ****************************************************************************/
 void helpdata_init(void)
 {
-  help_nodes = help_list_new();
+  help_nodes = new helpList;
 }
 
 /************************************************************************/ /**
@@ -95,21 +89,8 @@ void helpdata_init(void)
  ****************************************************************************/
 void helpdata_done(void)
 {
-  help_list_destroy(help_nodes);
-}
-
-/************************************************************************/ /**
-   Make sure help_nodes is initialised.
-   Should call this just about everywhere which uses help_nodes,
-   to be careful...  or at least where called by external
-   (non-static) functions.
- ****************************************************************************/
-static void check_help_nodes_init(void)
-{
-  if (!help_nodes_init) {
-    help_nodes_init = TRUE; /* before help_iter_start to avoid recursion! */
-    help_iter_start();
-  }
+  delete help_nodes;
+  help_nodes = nullptr;
 }
 
 /************************************************************************/ /**
@@ -117,14 +98,14 @@ static void check_help_nodes_init(void)
  ****************************************************************************/
 void free_help_texts(void)
 {
-  check_help_nodes_init();
-  help_list_iterate(help_nodes, ptmp)
+  if (!help_nodes) return;
+  for (auto ptmp : *help_nodes)
   {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
   }
-  help_list_iterate_end;
+  help_nodes->clear();
 }
 
 /************************************************************************/ /**
@@ -694,26 +675,12 @@ static struct help_item *new_help_item(int type)
    For help_list_sort(); sort by topic via compare_strings()
    (sort topics with more leading spaces after those with fewer)
  ****************************************************************************/
-static int help_item_compar(const struct help_item *const *ppa,
-                            const struct help_item *const *ppb)
+static int help_item_compar(const struct help_item *v1,
+                            const struct help_item *v2)
 {
-  const struct help_item *ha, *hb;
-  char *ta, *tb;
-  ha = *ppa;
-  hb = *ppb;
-  for (ta = ha->topic, tb = hb->topic; *ta != '\0' && *tb != '\0';
-       ta++, tb++) {
-    if (*ta != ' ') {
-      if (*tb == ' ')
-        return -1;
-      break;
-    } else if (*tb != ' ') {
-      if (*ta == ' ')
-        return 1;
-      break;
-    }
-  }
-  return compare_strings(ta, tb);
+  if (v1->topic != v2->topic)
+    return v1->topic > v2->topic;
+  return v1->text > v2->text;
 }
 
 /************************************************************************/ /**
@@ -734,7 +701,6 @@ void boot_help_texts(void)
   char long_buffer[64000]; /* HACK: this may be overrun. */
 
   empty[0] = '\0';
-  check_help_nodes_init();
 
   /* need to do something like this or bad things happen */
   popdown_help_dialog();
@@ -743,8 +709,8 @@ void boot_help_texts(void)
     log_verbose("Booting help texts");
   } else {
     /* free memory allocated last time booted */
-    // this wont go well so I commented out - Terminator
-    // free_help_texts();
+    free_help_texts();
+    booted = false;
     log_verbose("Rebooting help texts");
   }
 
@@ -808,7 +774,7 @@ void boot_help_texts(void)
              to change that now.  --dwp
           */
           char name[2048];
-          struct help_list *category_nodes = help_list_new();
+          helpList category_nodes;
 
           switch (current_type) {
           case HELP_UNIT:
@@ -819,7 +785,7 @@ void boot_help_texts(void)
                           utype_name_translation(punittype));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
-              help_list_append(category_nodes, pitem);
+              category_nodes.append(pitem);
             }
             unit_type_iterate_end;
             break;
@@ -833,7 +799,7 @@ void boot_help_texts(void)
                     advance_name_translation(advance_by_number(advi)));
                 pitem->topic = qstrdup(name);
                 pitem->text = qstrdup(empty);
-                help_list_append(category_nodes, pitem);
+                category_nodes.append(pitem);
               }
             }
             advance_index_iterate_end;
@@ -847,7 +813,7 @@ void boot_help_texts(void)
                             terrain_name_translation(pterrain));
                 pitem->topic = qstrdup(name);
                 pitem->text = qstrdup(empty);
-                help_list_append(category_nodes, pitem);
+                category_nodes.append(pitem);
               }
             }
             terrain_type_iterate_end;
@@ -880,7 +846,7 @@ void boot_help_texts(void)
                           extra_name_translation(pextra));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
-              help_list_append(category_nodes, pitem);
+              category_nodes.append(pitem);
             }
             extra_type_iterate_end;
             FCPP_FREE(cats);
@@ -893,7 +859,7 @@ void boot_help_texts(void)
                           goods_name_translation(pgood));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
-              help_list_append(category_nodes, pitem);
+              category_nodes.append(pitem);
             }
             goods_type_iterate_end;
             break;
@@ -907,7 +873,7 @@ void boot_help_texts(void)
                           specialist_plural_translation(pspec));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
-              help_list_append(category_nodes, pitem);
+              category_nodes.append(pitem);
             }
             specialist_type_iterate_end;
             break;
@@ -919,7 +885,7 @@ void boot_help_texts(void)
                           government_name_translation(gov));
               pitem->topic = qstrdup(name);
               pitem->text = qstrdup(empty);
-              help_list_append(category_nodes, pitem);
+              category_nodes.append(pitem);
             }
             governments_iterate_end;
             break;
@@ -933,7 +899,7 @@ void boot_help_texts(void)
                             improvement_name_translation(pimprove));
                 pitem->topic = qstrdup(name);
                 pitem->text = qstrdup(empty);
-                help_list_append(category_nodes, pitem);
+                category_nodes.append(pitem);
               }
             }
             improvement_iterate_end;
@@ -947,7 +913,7 @@ void boot_help_texts(void)
                             improvement_name_translation(pimprove));
                 pitem->topic = qstrdup(name);
                 pitem->text = qstrdup(empty);
-                help_list_append(category_nodes, pitem);
+                category_nodes.append(pitem);
               }
             }
             improvement_iterate_end;
@@ -1010,7 +976,7 @@ void boot_help_texts(void)
               fc_strlcat(pitem->text, game.ruleset_description,
                          len + desc_len);
             }
-            help_list_append(help_nodes, pitem);
+            help_nodes->append(pitem);
           } break;
           case HELP_TILESET: {
             int desc_len;
@@ -1068,7 +1034,7 @@ void boot_help_texts(void)
               fc_strlcat(pitem->text, "\n\n", len + desc_len);
               fc_strlcat(pitem->text, description, len + desc_len);
             }
-            help_list_append(help_nodes, pitem);
+            help_nodes->append(pitem);
           } break;
           case HELP_NATIONS:
             nations_iterate(pnation)
@@ -1080,7 +1046,7 @@ void boot_help_texts(void)
                             nation_plural_translation(pnation));
                 pitem->topic = qstrdup(name);
                 pitem->text = qstrdup(empty);
-                help_list_append(category_nodes, pitem);
+                category_nodes.append(pitem);
               }
             }
             nations_iterate_end;
@@ -1104,7 +1070,7 @@ void boot_help_texts(void)
                 strvec_iterate_end;
               }
               pitem->text = qstrdup(help_text_buffer);
-              help_list_append(help_nodes, pitem);
+              help_nodes->append(pitem);
             }
             multipliers_iterate_end;
             break;
@@ -1112,13 +1078,13 @@ void boot_help_texts(void)
             log_error("Bad current_type: %d.", current_type);
             break;
           }
-          help_list_sort(category_nodes, help_item_compar);
-          help_list_iterate(category_nodes, ptmp)
-          {
-            help_list_append(help_nodes, ptmp);
+          std::sort(category_nodes.begin(), category_nodes.end(), help_item_compar);
+          helpList::iterator it = category_nodes.begin();
+          while (it != category_nodes.end()) {
+            help_nodes->append(*it);
+            it++;
           }
-          help_list_iterate_end;
-          help_list_destroy(category_nodes);
+          //help_list_destroy(category_nodes);
           continue;
         }
       }
@@ -1149,7 +1115,7 @@ void boot_help_texts(void)
       }
       FCPP_FREE(paras);
       pitem->text = qstrdup(long_buffer);
-      help_list_append(help_nodes, pitem);
+      help_nodes->append(pitem);
     }
     section_list_iterate_end;
 
@@ -1170,15 +1136,6 @@ void boot_help_texts(void)
 ****************************************************************************/
 
 /************************************************************************/ /**
-   Number of help items.
- ****************************************************************************/
-int num_help_items(void)
-{
-  check_help_nodes_init();
-  return help_list_size(help_nodes);
-}
-
-/************************************************************************/ /**
    Return pointer to given help_item.
    Returns NULL for 1 past end.
    Returns NULL and prints error message for other out-of bounds.
@@ -1187,8 +1144,7 @@ const struct help_item *get_help_item(int pos)
 {
   int size;
 
-  check_help_nodes_init();
-  size = help_list_size(help_nodes);
+  size = help_nodes->size();
   if (pos < 0 || pos > size) {
     log_error("Bad index %d to get_help_item (size %d)", pos, size);
     return NULL;
@@ -1196,7 +1152,7 @@ const struct help_item *get_help_item(int pos)
   if (pos == size) {
     return NULL;
   }
-  return help_list_get(help_nodes, pos);
+  return help_nodes->at(pos);
 }
 
 /************************************************************************/ /**
@@ -1214,10 +1170,9 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   static char vtopic[128];
   static char vtext[256];
 
-  check_help_nodes_init();
   idx = 0;
-  help_list_iterate(help_nodes, ptmp)
-  {
+
+  for (auto ptmp : *help_nodes) {
     char *p = ptmp->topic;
 
     while (*p == ' ') {
@@ -1229,7 +1184,6 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
     }
     idx++;
   }
-  help_list_iterate_end;
 
   if (!pitem) {
     idx = -1;
@@ -1253,34 +1207,6 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   return pitem;
 }
 
-/************************************************************************/ /**
-   Start iterating through help items;
-   that is, reset iterator to start position.
-   (Could iterate using get_help_item(), but that would be
-   less efficient due to scanning to find pos.)
- ****************************************************************************/
-void help_iter_start(void)
-{
-  check_help_nodes_init();
-  help_nodes_iterator = help_list_head(help_nodes);
-}
-
-/************************************************************************/ /**
-   Returns next help item; after help_iter_start(), this is
-   the first item.  At end, returns NULL.
- ****************************************************************************/
-const struct help_item *help_iter_next(void)
-{
-  const struct help_item *pitem;
-
-  check_help_nodes_init();
-  pitem = help_list_link_data(help_nodes_iterator);
-  if (pitem) {
-    help_nodes_iterator = help_list_link_next(help_nodes_iterator);
-  }
-
-  return pitem;
-}
 
 /****************************************************************************
   FIXME:
