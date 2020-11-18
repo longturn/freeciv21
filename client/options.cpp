@@ -362,8 +362,9 @@ struct client_options gui_options = {
     /* gui-qt client specific options. */
     FALSE, //.gui_qt_fullscreen =
     TRUE,  //.gui_qt_show_preview =
+    true,  //.gui_qt_allied_chat_only =
     TRUE,  //.gui_qt_sidebar_left =
-    "NightStalker"
+    FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
     "Sans Serif,9,-1,5,50,0,0,0,0,0",  //.gui_qt_font_help_label =
     "Monospace,8,-1,5,50,0,0,0,0,0",   //.gui_qt_font_help_text =
