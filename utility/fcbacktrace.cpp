@@ -29,17 +29,14 @@
 #endif
 
 #ifdef BACKTRACE_ACTIVE
-/* We write always in level LOG_NORMAL and not in higher one since those
- * interact badly with server callback to send error messages to local
- * client. */
-#define LOG_BACKTRACE LOG_NORMAL
-
 #define MAX_NUM_FRAMES 64
 
-static log_pre_callback_fn previous = NULL;
+namespace {
+static QtMessageHandler previous = nullptr;
 
-static void backtrace_log(QtMsgType level, bool print_from_where,
-                          const char *where, const char *msg);
+static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
+                          const QString &message);
+} // anonymous namespace
 #endif /* BACKTRACE_ACTIVE */
 
 /********************************************************************/ /**
@@ -48,7 +45,7 @@ static void backtrace_log(QtMsgType level, bool print_from_where,
 void backtrace_init(void)
 {
 #ifdef BACKTRACE_ACTIVE
-  previous = log_set_pre_callback(backtrace_log);
+  previous = qInstallMessageHandler(backtrace_log);
 #endif
 }
 
@@ -58,14 +55,12 @@ void backtrace_init(void)
 void backtrace_deinit(void)
 {
 #ifdef BACKTRACE_ACTIVE
-  log_pre_callback_fn active;
-
-  active = log_set_pre_callback(previous);
+  auto active = qInstallMessageHandler(previous);
 
   if (active != backtrace_log) {
     /* We were not the active callback!
      * Restore the active callback and log error */
-    log_set_pre_callback(active);
+    qInstallMessageHandler(active);
     qCritical("Backtrace log (pre)callback cannot be removed");
   }
 #endif /* BACKTRACE_ACTIVE */
@@ -75,25 +70,27 @@ void backtrace_deinit(void)
 /********************************************************************/ /**
    Main backtrace callback called from logging code.
  ************************************************************************/
-static void backtrace_log(QtMsgType level, bool print_from_where,
-                          const char *where, const char *msg)
+namespace {
+static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
+                          const QString &message)
 {
   if (previous != NULL) {
     /* Call chained callback first */
-    previous(level, print_from_where, where, msg);
+    previous(type, context, message);
   }
 
-  if (level <= LOG_ERROR) {
-    backtrace_print(LOG_BACKTRACE);
+  if (type == QtFatalMsg || type == QtCriticalMsg) {
+    backtrace_print();
   }
 }
+} // anonymous namespace
 
 #endif /* BACKTRACE_ACTIVE */
 
 /********************************************************************/ /**
    Print backtrace
  ************************************************************************/
-void backtrace_print(QtMsgType level)
+void backtrace_print()
 {
 #ifdef BACKTRACE_ACTIVE
   using namespace backward;

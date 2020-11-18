@@ -17,8 +17,8 @@
 /* utility */
 #include "log.h"
 
-void backtrace_init(void);
-void backtrace_deinit(void);
-void backtrace_print(QtMsgType level);
+void backtrace_init();
+void backtrace_deinit();
+void backtrace_print();
 
 #endif /* FC__BACKTRACE_H */
