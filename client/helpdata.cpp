@@ -77,35 +77,19 @@ static bool help_nodes_init = FALSE;
 */
 
 /************************************************************************/ /**
-   Initialize.
- ****************************************************************************/
-void helpdata_init(void)
-{
-  help_nodes = new helpList;
-}
-
-/************************************************************************/ /**
-   Clean up.
- ****************************************************************************/
-void helpdata_done(void)
-{
-  delete help_nodes;
-  help_nodes = nullptr;
-}
-
-/************************************************************************/ /**
    Free all allocations associated with help_nodes.
  ****************************************************************************/
 void free_help_texts(void)
 {
-  if (!help_nodes) return;
-  for (auto ptmp : *help_nodes)
-  {
+  if (!help_nodes)
+    return;
+  for (auto ptmp : *help_nodes) {
     NFCPP_FREE(ptmp->topic);
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
   }
-  help_nodes->clear();
+    delete help_nodes;
+  help_nodes = nullptr;
 }
 
 /************************************************************************/ /**
@@ -704,15 +688,8 @@ void boot_help_texts(void)
 
   /* need to do something like this or bad things happen */
   popdown_help_dialog();
-
-  if (!booted) {
-    log_verbose("Booting help texts");
-  } else {
-    /* free memory allocated last time booted */
-    free_help_texts();
-    booted = false;
-    log_verbose("Rebooting help texts");
-  }
+  free_help_texts();
+  help_nodes = new helpList;
 
   filename = fileinfoname(get_data_dirs(), "helpdata.txt");
   if (!filename) {
@@ -1078,13 +1055,13 @@ void boot_help_texts(void)
             log_error("Bad current_type: %d.", current_type);
             break;
           }
-          std::sort(category_nodes.begin(), category_nodes.end(), help_item_compar);
+          std::sort(category_nodes.begin(), category_nodes.end(),
+                    help_item_compar);
           helpList::iterator it = category_nodes.begin();
           while (it != category_nodes.end()) {
             help_nodes->append(*it);
             it++;
           }
-          //help_list_destroy(category_nodes);
           continue;
         }
       }
@@ -1206,7 +1183,6 @@ get_help_item_spec(const char *name, enum help_page_type htype, int *pos)
   *pos = idx;
   return pitem;
 }
-
 
 /****************************************************************************
   FIXME:
