@@ -6600,14 +6600,6 @@ void tileset_use_preferred_theme(const struct tileset *t)
   size_t default_theme_name_sz = 0;
   int i;
 
-  switch (get_gui_type()) {
-  case GUI_STUB:
-  case GUI_QT:
-      default_theme_name = gui_options.gui_qt_default_theme_name;
-      default_theme_name_sz = sizeof(gui_options.gui_qt_default_theme_name);
-    break;
-  }
-
   if (NULL == default_theme_name || 0 == default_theme_name_sz) {
     /* Theme is not supported by this client. */
     return;
