@@ -39,11 +39,10 @@
 
 #include "rscompat.h"
 
-#define enough_new_user_flags(_new_flags_, _name_, _LAST_USER_FLAG_,        \
-                              _LAST_USER_FLAG_PREV_)                        \
-  FC_STATIC_ASSERT((ARRAY_SIZE(_new_flags_)                                 \
-                    <= _LAST_USER_FLAG_ - _LAST_USER_FLAG_PREV_),           \
-                   not_enough_new_##_name_##_user_flags)
+struct new_flags {
+  const char *name;
+  const char *helptxt;
+};
 
 #define UTYF_LAST_USER_FLAG_3_0 UTYF_USER_FLAG_40
 #define UCF_LAST_USER_FLAG_3_0 UCF_USER_FLAG_8
@@ -341,33 +340,30 @@ bool rscompat_names(struct rscompat_info *info)
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_flags_31[] = {
-        {N_("Infra"), N_("Can build infrastructure.")},
-        {N_("BeachLander"), N_("Won't lose all movement when moving from"
-                               " non-native terrain to native terrain.")},
-        {N_("Cant_Fortify"), NULL},
+    const std::vector<new_flags> new_flags_31 = {
+        new_flags{N_("Infra"), N_("Can build infrastructure.")},
+        new_flags{N_("BeachLander"),
+                  N_("Won't lose all movement when moving from"
+                     " non-native terrain to native terrain.")},
+        new_flags{N_("Cant_Fortify"), NULL},
     };
-    enough_new_user_flags(new_flags_31, unit_type, UTYF_LAST_USER_FLAG,
-                          UTYF_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_flags_31.size()
+                          >= UTYF_LAST_USER_FLAG - UTYF_LAST_USER_FLAG_3_0,
+                      false);
 
     /* Some unit class flags moved to the ruleset between 3.0 and 3.1.
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_class_flags_31[] = {
-        {N_("Missile"), N_("Unit is destroyed when it attacks")},
-        {N_("CanPillage"), N_("Can pillage tile improvements.")},
-        {N_("CanFortify"), N_("Gets a 50% defensive bonus while"
-                              " in cities.")},
+    const std::vector<new_flags> new_class_flags_31 = {
+        new_flags{N_("Missile"), N_("Unit is destroyed when it attacks")},
+        new_flags{N_("CanPillage"), N_("Can pillage tile improvements.")},
+        new_flags{N_("CanFortify"), N_("Gets a 50% defensive bonus while"
+                                       " in cities.")},
     };
-    enough_new_user_flags(new_class_flags_31, unit_class, UCF_LAST_USER_FLAG,
-                          UCF_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_class_flags_31.size()
+                          >= UCF_LAST_USER_FLAG - UCF_LAST_USER_FLAG_3_0,
+                      false);
 
     int first_free;
     int i;
@@ -375,7 +371,7 @@ bool rscompat_names(struct rscompat_info *info)
     /* Unit type flags. */
     first_free = first_free_unit_type_user_flag() + UTYF_USER_FLAG_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
+    for (i = 0; i < new_flags_31.size(); i++) {
       if (UTYF_USER_FLAG_1 + MAX_NUM_USER_UNIT_FLAGS <= first_free + i) {
         /* Can't add the user unit type flags. */
         qCCritical(ruleset_category,
@@ -401,7 +397,7 @@ bool rscompat_names(struct rscompat_info *info)
     /* Unit type class flags. */
     first_free = first_free_unit_class_user_flag() + UCF_USER_FLAG_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_class_flags_31); i++) {
+    for (i = 0; i < new_class_flags_31.size(); i++) {
       if (UCF_USER_FLAG_1 + MAX_NUM_USER_UCLASS_FLAGS <= first_free + i) {
         /* Can't add the user unit type class flags. */
         qCCritical(ruleset_category,
@@ -431,14 +427,13 @@ bool rscompat_names(struct rscompat_info *info)
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_flags_31[] = {
-        {N_("NoFortify"), N_("No units can fortify on this terrain.")},
+    const std::vector<new_flags> new_flags_31 = {
+        new_flags{N_("NoFortify"),
+                  N_("No units can fortify on this terrain.")},
     };
-    enough_new_user_flags(new_flags_31, terrain, TER_USER_LAST,
-                          TER_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_flags_31.size()
+                          >= TER_USER_LAST - TER_LAST_USER_FLAG_3_0,
+                      false);
 
     int first_free;
     int i;
@@ -446,7 +441,7 @@ bool rscompat_names(struct rscompat_info *info)
     /* Terrain flags. */
     first_free = first_free_terrain_user_flag() + TER_USER_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
+    for (i = 0; i < new_flags_31.size(); i++) {
       if (TER_USER_1 + MAX_NUM_USER_TER_FLAGS <= first_free + i) {
         /* Can't add the user terrain flags. */
         qCCritical(ruleset_category,
