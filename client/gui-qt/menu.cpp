@@ -224,7 +224,7 @@ void gov_menu::update()
 
   gov_count = government_count();
   revol_gov = game.government_during_revolution;
-  for (i = 0, j = 0; i < gov_count; ++i) {
+  for (i = 0, j = 0; i < actions.count(); ++i) {
     gov = government_by_number(i);
     if (gov != revol_gov) { // Skip revolution goverment
       sprite = get_government_sprite(tileset, gov);
