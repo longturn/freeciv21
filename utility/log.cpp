@@ -43,6 +43,8 @@
 
 #define MAX_LEN_LOG_LINE 5120
 
+Q_LOGGING_CATEGORY(assert_category, "freeciv.assert")
+
 namespace {
 static QString log_level = QStringLiteral();
 static bool fatal_assertions = false;

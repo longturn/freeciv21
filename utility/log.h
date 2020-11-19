@@ -18,6 +18,7 @@
 
 // Qt
 #include <QDebug>
+#include <QLoggingCategory>
 #include <QString>
 #include <QtGlobal>
 
@@ -83,6 +84,8 @@ const QString &log_get_level();
 #define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
 
 /* Assertions. */
+Q_DECLARE_LOGGING_CATEGORY(assert_category)
+
 void fc_assert_set_fatal(bool fatal_assertions);
 bool fc_assert_are_fatal();
 
@@ -92,9 +95,9 @@ bool fc_assert_are_fatal();
 #define fc_assert(condition)                                                \
   [&] {                                                                     \
     if (!(condition)) {                                                     \
-      qCritical("Assertion %s failed", #condition);                         \
-      qCritical().noquote() /* TRANS: No full stop after the URL, could     \
-                               cause confusion. */                          \
+      qCCritical(assert_category, "Assertion %s failed", #condition);       \
+      qCCritical(assert_category)                                           \
+              .noquote() /* TRANS: No full stop after the URL. */           \
           << QString(_("Please report this message at %1")).arg(BUG_URL);   \
       if (fc_assert_are_fatal()) {                                          \
         qFatal("%s", _("Assertion failed"));                                \
@@ -108,10 +111,10 @@ bool fc_assert_are_fatal();
 #define fc_assert_msg(condition, message, ...)                              \
   [&] {                                                                     \
     if (!(condition)) {                                                     \
-      qCritical("Assertion %s failed", #condition);                         \
-      qCritical(message, ##__VA_ARGS__);                                    \
-      qCritical().noquote() /* TRANS: No full stop after the URL, could     \
-                               cause confusion. */                          \
+      qCCritical(assert_category, "Assertion %s failed", #condition);       \
+      qCCritical(assert_category, message, ##__VA_ARGS__);                  \
+      qCCritical(assert_category)                                           \
+              .noquote() /* TRANS: No full stop after the URL. */           \
           << QString(_("Please report this message at %1")).arg(BUG_URL);   \
       if (fc_assert_are_fatal()) {                                          \
         qFatal("%s", _("Assertion failed"));                                \
