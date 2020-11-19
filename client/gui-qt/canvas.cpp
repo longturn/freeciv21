@@ -50,19 +50,6 @@ struct canvas *qtg_canvas_create(int width, int height)
 void qtg_canvas_free(struct canvas *store) { delete store; }
 
 /************************************************************************/ /**
-   Set canvas zoom for future drawing operations.
- ****************************************************************************/
-void qtg_canvas_set_zoom(struct canvas *store, float zoom)
-{
-  /* Qt-client has no zoom support */
-}
-
-/************************************************************************/ /**
-   This gui has zoom support.
- ****************************************************************************/
-bool qtg_has_zoom_support() { return FALSE; }
-
-/************************************************************************/ /**
    Copies an area from the source canvas to the destination canvas.
  ****************************************************************************/
 void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,

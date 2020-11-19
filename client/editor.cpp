@@ -38,7 +38,6 @@
 #include "editor.h"
 #include "mapctrl_common.h"
 #include "tilespec.h"
-#include "zoom.h"
 
 /* client/include */
 #include "editgui_g.h"

@@ -69,7 +69,6 @@ add_library(
   tilespec.cpp
   update_queue.cpp
   voteinfo.cpp
-  zoom.cpp
   audio.cpp
   audio_none.cpp
   ${FREECIV_AUDIO}

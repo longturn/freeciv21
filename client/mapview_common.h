@@ -104,8 +104,8 @@ extern bool can_slide;
       int _t##_xi, _t##_yi, _t##_si, _t##_di;                               \
       const int _t##_r1 = (tileset_is_isometric(tileset) ? 2 : 1);          \
       const int _t##_r2 = _t##_r1 * 2; /* double the ratio */               \
-      const int _t##_w = tileset_tile_width(tileset) * _zoom;               \
-      const int _t##_h = tileset_tile_height(tileset) * _zoom;              \
+      const int _t##_w = tileset_tile_width(tileset);                       \
+      const int _t##_h = tileset_tile_height(tileset);                      \
       /* Don't divide by _r2 yet, to avoid integer rounding errors. */      \
       const int _t##_x0 = DIVIDE(_x_##_0 * _t##_r2, _t##_w) - _t##_r1 / 2;  \
       const int _t##_y0 = DIVIDE(_y_##_0 * _t##_r2, _t##_h) - _t##_r1 / 2;  \

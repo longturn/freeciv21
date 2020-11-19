@@ -26,7 +26,6 @@
 #include "control.h"
 #include "mapview_g.h"
 #include "options.h"
-#include "zoom.h"
 
 #include "overview_common.h"
 
@@ -57,8 +56,8 @@ static void gui_to_natural_pos(const struct tileset *t, double *ntl_x,
                                double *ntl_y, int gui_x, int gui_y)
 {
   const double gui_xd = gui_x, gui_yd = gui_y;
-  const double W = tileset_tile_width(t) * map_zoom;
-  const double H = tileset_tile_height(t) * map_zoom;
+  const double W = tileset_tile_width(t);
+  const double H = tileset_tile_height(t);
   double map_x, map_y;
 
   /* First convert to map positions.  This ignores hex conversions; we're
