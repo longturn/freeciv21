@@ -18,9 +18,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Qt
+#include <QLoggingCategory>
+
 /* utility */
 #include "fcintl.h"
-#include "log.h"
 #include "mem.h"
 #include "shared.h"
 #include "support.h"
@@ -71,16 +73,15 @@
   Defines, structs, globals, forward declarations
 *****************************************************************************/
 
+Q_LOGGING_CATEGORY(cm_category, "freeciv.cm")
+
 /* Maximal iterations before the search loop is stoped. */
 #define CM_MAX_LOOP 25000
 
 #define CPUHOG_CM_MAX_LOOP (CM_MAX_LOOP * 4)
 
-#ifdef DEBUG_TIMERS
-#define GATHER_TIME_STATS
-#endif
 #ifdef FREECIV_DEBUG
-#define CM_DEBUG
+#define GATHER_TIME_STATS
 #endif
 
 /* Whether to print every query, or just at cm_free ; matters only
@@ -237,42 +238,34 @@ struct cm_state {
 static int num_types(const struct cm_state *state);
 
 /* debugging functions */
-#ifdef CM_DEBUG
-static void real_print_tile_type(enum log_level level, const char *file,
+#ifdef FREECIV_DEBUG
+static void real_print_tile_type(QtMsgType level, const char *file,
                                  const char *function, int line,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix);
 #define print_tile_type(loglevel, ptype, prefix)                            \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_tile_type(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,     \
-                         ptype, prefix);                                    \
-  }
+  real_print_tile_type(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,       \
+                       ptype, prefix);
 
-static void real_print_lattice(enum log_level level, const char *file,
+static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice);
 #define print_lattice(loglevel, lattice)                                    \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_lattice(loglevel, __FILE__, __FUNCTION__, __FC_LINE__,       \
-                       lattice);                                            \
-  }
+  real_print_lattice(loglevel, __FILE__, __FUNCTION__, __FC_LINE__, lattice);
 
-static void real_print_partial_solution(enum log_level level,
-                                        const char *file,
+static void real_print_partial_solution(QtMsgType level, const char *file,
                                         const char *function, int line,
                                         const struct partial_solution *soln,
                                         const struct cm_state *state);
 #define print_partial_solution(loglevel, soln, state)                       \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    real_print_partial_solution(loglevel, __FILE__, __FUNCTION__,           \
-                                __FC_LINE__, soln, state);                  \
-  }
+  real_print_partial_solution(loglevel, __FILE__, __FUNCTION__,             \
+                              __FC_LINE__, soln, state);
 
 #else
 #define print_tile_type(loglevel, ptype, prefix)
 #define print_lattice(loglevel, lattice)
 #define print_partial_solution(loglevel, soln, state)
-#endif /* CM_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 static void cm_result_copy(struct cm_result *result,
                            const struct city *pcity, bool *workers_map);
@@ -2101,8 +2094,9 @@ static void cm_find_best_solution(struct cm_state *state,
     loop_count++;
 
     if (loop_count > max_count) {
-      log_warn("Did not find a cm solution in %d iterations for %s.",
-               max_count, city_name_get(state->pcity));
+      qCWarning(cm_category,
+                "Did not find a cm solution in %d iterations for %s.",
+                max_count, city_name_get(state->pcity));
       result->aborted = TRUE;
       break;
     }
@@ -2316,7 +2310,7 @@ static void cm_result_copy(struct cm_result *result,
 /************************************************************************/ /**
    Debugging routines.
  ****************************************************************************/
-#ifdef CM_DEBUG
+#ifdef FREECIV_DEBUG
 static void snprint_production(char *buffer, size_t bufsz,
                                const int production[])
 {
@@ -2328,7 +2322,7 @@ static void snprint_production(char *buffer, size_t bufsz,
 /************************************************************************/ /**
    Print debugging data about a particular tile type.
  ****************************************************************************/
-static void real_print_tile_type(enum log_level level, const char *file,
+static void real_print_tile_type(QtMsgType level, const char *file,
                                  const char *function, int line,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix)
@@ -2336,21 +2330,20 @@ static void real_print_tile_type(enum log_level level, const char *file,
   char prodstr[256];
 
   snprint_production(prodstr, sizeof(prodstr), ptype->production);
-  do_log(file, function, line, FALSE, level,
-         "%s%s fitness %g depth %d, idx %d; %d tiles", prefix, prodstr,
-         ptype->estimated_fitness, ptype->lattice_depth,
-         ptype->lattice_index, tile_type_num_tiles(ptype));
+  qCDebug(cm_category, "%s%s fitness %g depth %d, idx %d; %d tiles", prefix,
+          prodstr, ptype->estimated_fitness, ptype->lattice_depth,
+          ptype->lattice_index, tile_type_num_tiles(ptype));
 }
 
 /************************************************************************/ /**
    Print debugging data about a whole B&B lattice.
  ****************************************************************************/
-static void real_print_lattice(enum log_level level, const char *file,
+static void real_print_lattice(QtMsgType level, const char *file,
                                const char *function, int line,
                                const struct tile_type_vector *lattice)
 {
-  do_log(file, function, line, FALSE, level, "lattice has %u terrain types",
-         (unsigned) lattice->size);
+  qCDebug(cm_category, "lattice has %u terrain types",
+          (unsigned) lattice->size);
   tile_type_vector_iterate(lattice, ptype)
   {
     real_print_tile_type(level, file, function, line, ptype, "  ");
@@ -2361,8 +2354,7 @@ static void real_print_lattice(enum log_level level, const char *file,
 /************************************************************************/ /**
    Print debugging data about a partial CM solution.
  ****************************************************************************/
-static void real_print_partial_solution(enum log_level level,
-                                        const char *file,
+static void real_print_partial_solution(QtMsgType level, const char *file,
                                         const char *function, int line,
                                         const struct partial_solution *soln,
                                         const struct cm_state *state)
@@ -2372,16 +2364,16 @@ static void real_print_partial_solution(enum log_level level,
   char buf[256];
 
   if (soln->idle != 0) {
-    do_log(file, function, line, FALSE, level,
-           "** partial solution has %d idle workers", soln->idle);
+    qCDebug(cm_category, "** partial solution has %d idle workers",
+            soln->idle);
   } else {
-    do_log(file, function, line, FALSE, level, "** completed solution:");
+    qCDebug(cm_category, "** completed solution:");
   }
 
   snprint_production(buf, sizeof(buf), soln->production);
-  do_log(file, function, line, FALSE, level, "production: %s", buf);
+  qCDebug(cm_category, "production: %s", buf);
 
-  do_log(file, function, line, FALSE, level, "tiles used:");
+  qCDebug(cm_category, "tiles used:");
   for (i = 0; i < num_types(state); i++) {
     if (soln->worker_counts[i] != 0) {
       fc_snprintf(buf, sizeof(buf), "  %d tiles of type ",
@@ -2397,7 +2389,7 @@ static void real_print_partial_solution(enum log_level level,
     }
   }
 
-  do_log(file, function, line, FALSE, level, "tiles available:");
+  qCDebug(cm_category, "tiles available:");
   for (i = last_type; i < num_types(state); i++) {
     const struct cm_tile_type *ptype = tile_type_get(state, i);
 
@@ -2409,7 +2401,7 @@ static void real_print_partial_solution(enum log_level level,
   }
 }
 
-#endif /* CM_DEBUG */
+#endif /* FREECIV_DEBUG */
 
 #ifdef GATHER_TIME_STATS
 /************************************************************************/ /**
@@ -2429,9 +2421,9 @@ static void print_performance(struct one_perf *counts)
 
   applies = counts->apply_count;
 
-  log_base(LOG_TIME_STATS,
-           "CM-%s: overall=%fs queries=%d %fms / query, %d applies",
-           counts->name, s, queries, ms / q, applies);
+  qCDebug(timers_category,
+          "CM-%s: overall=%fs queries=%d %fms / query, %d applies",
+          counts->name, s, queries, ms / q, applies);
 }
 #endif /* GATHER_TIME_STATS */
 

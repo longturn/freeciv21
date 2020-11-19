@@ -245,16 +245,16 @@ bool connection_send_data(struct connection *pconn,
   if (0 < pconn->send_buffer->do_buffer_sends) {
     flush_connection_send_buffer_packets(pconn);
     if (!add_connection_data(pconn, data, len)) {
-      log_verbose("cut connection %s due to huge send buffer (1)",
-                  conn_description(pconn));
+      qDebug("cut connection %s due to huge send buffer (1)",
+             conn_description(pconn));
       return FALSE;
     }
     flush_connection_send_buffer_packets(pconn);
   } else {
     flush_connection_send_buffer_all(pconn);
     if (!add_connection_data(pconn, data, len)) {
-      log_verbose("cut connection %s due to huge send buffer (2)",
-                  conn_description(pconn));
+      qDebug("cut connection %s due to huge send buffer (2)",
+             conn_description(pconn));
       return FALSE;
     }
     flush_connection_send_buffer_all(pconn);
@@ -285,7 +285,7 @@ void connection_do_unbuffer(struct connection *pc)
 
   pc->send_buffer->do_buffer_sends--;
   if (0 > pc->send_buffer->do_buffer_sends) {
-    log_error("Too many calls to unbuffer %s!", pc->username);
+    qCritical("Too many calls to unbuffer %s!", pc->username);
     pc->send_buffer->do_buffer_sends = 0;
   }
 
@@ -563,7 +563,7 @@ void connection_common_init(struct connection *pconn)
 void connection_common_close(struct connection *pconn)
 {
   if (!pconn->used) {
-    log_error("WARNING: Trying to close already closed connection");
+    qCritical("WARNING: Trying to close already closed connection");
   } else {
     pconn->sock->deleteLater();
     pconn->sock = nullptr;
@@ -756,7 +756,7 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
   if (NULL != test) {
     return wildcard_fit_string(ppattern->wildcard, test);
   } else {
-    log_error("%s(): Invalid pattern type (%d)", __FUNCTION__,
+    qCritical("%s(): Invalid pattern type (%d)", __FUNCTION__,
               ppattern->type);
     return FALSE;
   }

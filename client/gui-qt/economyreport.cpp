@@ -227,7 +227,7 @@ void eco_report::selection_changed(const QItemSelection &sl,
       ui.bdisband->setEnabled(true);
       break;
     default:
-      log_error("Not supported type: %d.", selected.kind);
+      qCritical("Not supported type: %d.", selected.kind);
     }
   }
 }

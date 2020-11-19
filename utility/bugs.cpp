@@ -11,31 +11,12 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif /* HAVE_CONFIG_H */
-
-#include <stdarg.h>
-
-/* utility */
-#include "fcintl.h"
-#include "log.h"
-
 #include "bugs.h"
 
-/********************************************************************/ /**
-   Print request for bugreport
- ************************************************************************/
-void bugreport_request(const char *reason_format, ...)
-{
-  va_list args;
-  char buf[1024];
+Q_LOGGING_CATEGORY(bugs_category, "freeciv.bugs")
 
-  va_start(args, reason_format);
-  vdo_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, LOG_ERROR, buf,
-          sizeof(buf), reason_format, args);
-  va_end(args);
-
+#if 0
+  // Kept for reference
   /* TRANS: No full stop after the URL, could cause confusion. */
-  log_error(_("Please report this message at %s"), BUG_URL);
-}
+  qCritical(_("Please report this message at %s"), BUG_URL);
+#endif

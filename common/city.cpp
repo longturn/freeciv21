@@ -53,8 +53,8 @@
 static char *citylog_map_line(int y, int city_radius_sq, int *city_map_data);
 #ifdef FREECIV_DEBUG
 /* only used for debugging */
-static void citylog_map_index(enum log_level level);
-static void citylog_map_radius_sq(enum log_level level);
+static void citylog_map_index(QtMsgType level);
+static void citylog_map_radius_sq(QtMsgType level);
 #endif /* FREECIV_DEBUG */
 
 /* Get city tile informations using the city tile index. */
@@ -403,14 +403,10 @@ static char *citylog_map_line(int y, int city_radius_sq, int *city_map_data)
    requested log level. The size of 'map_data' is defined by
    city_map_tiles(radius_sq).
  **************************************************************************/
-void citylog_map_data(enum log_level level, int radius_sq, int *map_data)
+void citylog_map_data(QtMsgType level, int radius_sq, int *map_data)
 {
   int x, y;
   char line[128], tmp[8];
-
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
 
   log_base(level, "(max squared city radius = %d)", CITY_MAP_MAX_RADIUS_SQ);
 
@@ -438,15 +434,11 @@ void citylog_map_data(enum log_level level, int radius_sq, int *map_data)
 /**********************************************************************/ /**
    Display the location of the workers within the city map of pcity.
  **************************************************************************/
-void citylog_map_workers(enum log_level level, struct city *pcity)
+void citylog_map_workers(QtMsgType level, struct city *pcity)
 {
   int *city_map_data = NULL;
 
   fc_assert_ret(pcity != NULL);
-
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
 
   city_map_data = new int[city_map_tiles(city_map_radius_sq_get(pcity))]();
 
@@ -469,15 +461,9 @@ void citylog_map_workers(enum log_level level, struct city *pcity)
 /**********************************************************************/ /**
    Log the index of all tiles of the city map.
  **************************************************************************/
-static void citylog_map_index(enum log_level level)
+static void citylog_map_index(QtMsgType level)
 {
-  int *city_map_data = NULL;
-
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
-  city_map_data = new int[city_map_tiles(CITY_MAP_MAX_RADIUS_SQ),
-                          sizeof(*city_map_data)];
+  std::vector<int> city_map_data(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ));
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)
   {
@@ -486,19 +472,14 @@ static void citylog_map_index(enum log_level level)
   city_map_iterate_end;
 
   log_debug("city map index:");
-  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data);
-  delete[] city_map_data;
+  citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data.data());
 }
 
 /**********************************************************************/ /**
    Log the radius of all tiles of the city map.
  **************************************************************************/
-static void citylog_map_radius_sq(enum log_level level)
+static void citylog_map_radius_sq(QtMsgType level)
 {
-  if (!log_do_output_for_level(level)) {
-    return;
-  }
-
   std::vector<int> city_map_data(city_map_tiles(CITY_MAP_MAX_RADIUS_SQ));
 
   city_map_iterate(CITY_MAP_MAX_RADIUS_SQ, cindex, x, y)

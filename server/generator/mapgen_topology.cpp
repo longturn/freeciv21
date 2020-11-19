@@ -235,7 +235,7 @@ static void set_sizes(double size, int Xratio, int Yratio)
    * this error is to set the maximum size smaller for all topologies! */
   if (wld.map.server.size * 1000 > size + 900.0) {
     /* Warning when size is set uselessly big */
-    log_error("Requested size of %d is too big for this topology.",
+    qCritical("Requested size of %d is too big for this topology.",
               wld.map.server.size);
   }
 
@@ -246,9 +246,9 @@ static void set_sizes(double size, int Xratio, int Yratio)
   wld.map.ysize =
       CLIP(MAP_MIN_LINEAR_SIZE, wld.map.ysize, MAP_MAX_LINEAR_SIZE);
 
-  log_normal(_("Creating a map of size %d x %d = %d tiles (%d requested)."),
-             wld.map.xsize, wld.map.ysize, wld.map.xsize * wld.map.ysize,
-             (int) size);
+  qInfo(_("Creating a map of size %d x %d = %d tiles (%d requested)."),
+        wld.map.xsize, wld.map.ysize, wld.map.xsize * wld.map.ysize,
+        (int) size);
 }
 
 /************************************************************************/ /**
@@ -305,10 +305,10 @@ void generator_init_topology(bool autosize)
       wld.map.server.tilesperplayer =
           ((map_num_tiles() * wld.map.server.landpercent)
            / (player_count() * 100));
-      log_normal(_("Creating a map of size %d x %d = %d tiles (map size: "
-                   "%d)."),
-                 wld.map.xsize, wld.map.ysize, wld.map.xsize * wld.map.ysize,
-                 wld.map.server.size);
+      qInfo(_("Creating a map of size %d x %d = %d tiles (map size: "
+              "%d)."),
+            wld.map.xsize, wld.map.ysize, wld.map.xsize * wld.map.ysize,
+            wld.map.server.size);
       break;
 
     case MAPSIZE_PLAYER:
@@ -319,25 +319,25 @@ void generator_init_topology(bool autosize)
       if (map_size < MAP_MIN_SIZE * 1000) {
         wld.map.server.size = MAP_MIN_SIZE;
         map_size = MAP_MIN_SIZE * 1000;
-        log_normal(_("Map size calculated for %d (land) tiles per player "
-                     "and %d player(s) too small. Setting map size to the "
-                     "minimal size %d."),
-                   wld.map.server.tilesperplayer, player_count(),
-                   wld.map.server.size);
+        qInfo(_("Map size calculated for %d (land) tiles per player "
+                "and %d player(s) too small. Setting map size to the "
+                "minimal size %d."),
+              wld.map.server.tilesperplayer, player_count(),
+              wld.map.server.size);
       } else if (map_size > MAP_MAX_SIZE * 1000) {
         wld.map.server.size = MAP_MAX_SIZE;
         map_size = MAP_MAX_SIZE * 1000;
-        log_normal(_("Map size calculated for %d (land) tiles per player "
-                     "and %d player(s) too large. Setting map size to the "
-                     "maximal size %d."),
-                   wld.map.server.tilesperplayer, player_count(),
-                   wld.map.server.size);
+        qInfo(_("Map size calculated for %d (land) tiles per player "
+                "and %d player(s) too large. Setting map size to the "
+                "maximal size %d."),
+              wld.map.server.tilesperplayer, player_count(),
+              wld.map.server.size);
       } else {
         wld.map.server.size = (double) map_size / 1000.0 + 0.5;
-        log_normal(_("Setting map size to %d (approx. %d (land) tiles for "
-                     "each of the %d player(s))."),
-                   wld.map.server.size, wld.map.server.tilesperplayer,
-                   player_count());
+        qInfo(_("Setting map size to %d (approx. %d (land) tiles for "
+                "each of the %d player(s))."),
+              wld.map.server.size, wld.map.server.tilesperplayer,
+              player_count());
       }
       get_ratios(&x_ratio, &y_ratio);
       set_sizes(map_size, x_ratio, y_ratio);

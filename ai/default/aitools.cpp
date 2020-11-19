@@ -101,7 +101,7 @@ const char *dai_unit_task_rule_name(const enum ai_unit_task task)
     return "Wonder";
   }
   /* no default, ensure all types handled somehow */
-  log_error("Unsupported ai_unit_task %d.", task);
+  qCritical("Unsupported ai_unit_task %d.", task);
   return NULL;
 }
 
@@ -124,7 +124,7 @@ const char *dai_choice_rule_name(const struct adv_choice *choice)
     return "(unknown)";
   };
   /* no default, ensure all types handled somehow */
-  log_error("Unsupported ai_unit_task %d.", choice->type);
+  qCritical("Unsupported ai_unit_task %d.", choice->type);
   return NULL;
 }
 
@@ -352,11 +352,10 @@ struct tile *immediate_destination(struct unit *punit,
     }
 
     pf_map_destroy(pfm);
-    log_verbose("Did not find an air-route for "
-                "%s %s[%d] (%d,%d)->(%d,%d)",
-                nation_rule_name(nation_of_unit(punit)),
-                unit_rule_name(punit), punit->id, TILE_XY(unit_tile(punit)),
-                TILE_XY(dest_tile));
+    qDebug("Did not find an air-route for "
+           "%s %s[%d] (%d,%d)->(%d,%d)",
+           nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+           punit->id, TILE_XY(unit_tile(punit)), TILE_XY(dest_tile));
     /* Prevent take off */
     return unit_tile(punit);
   }
@@ -691,7 +690,7 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
        * This probably means that some city spot reservation has not been
        * properly cleared; bad for the AI, as it will leave that area
        * uninhabited. */
-      log_error("%s was on city founding mission without target tile.",
+      qCritical("%s was on city founding mission without target tile.",
                 unit_rule_name(punit));
     }
   }

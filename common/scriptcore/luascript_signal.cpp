@@ -254,7 +254,7 @@ void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
     }
 
     if (psignal->depr_msg != NULL) {
-      log_deprecation("%s", psignal->depr_msg);
+      qCWarning(deprecations_category, "%s", psignal->depr_msg);
     }
 
     if (create) {

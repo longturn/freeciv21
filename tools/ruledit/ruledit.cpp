@@ -56,14 +56,11 @@ static void re_parse_cmdline(const QCoreApplication &app);
 
 struct ruledit_arguments reargs;
 
-static int fatal_assertions = -1;
-
 /**********************************************************************/ /**
    Main entry point for freeciv-ruledit
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  enum log_level loglevel = LOG_NORMAL;
   int ui_options;
 
   /* Load win32 post-crash debugger */
@@ -78,6 +75,8 @@ int main(int argc, char **argv)
   QApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
+  log_init();
+
   init_nls();
 
 #ifdef ENABLE_NLS
@@ -88,8 +87,6 @@ int main(int argc, char **argv)
 #ifdef ENABLE_NLS
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
-
-  log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
   /* Initialize command line arguments. */
   re_parse_cmdline(app);
@@ -122,7 +119,7 @@ int main(int argc, char **argv)
   } else {
     /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
      * freeciv version */
-    log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
+    qCritical(R__("Failed to load %s."), COMMENTS_FILE_NAME);
   }
 
   log_close();
@@ -149,7 +146,7 @@ static void re_parse_cmdline(const QCoreApplication &app)
        R__("RULESET")},
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 
@@ -157,9 +154,7 @@ static void re_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() >= 1) {
       fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));

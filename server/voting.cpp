@@ -474,7 +474,7 @@ static void check_vote(struct vote *pvote)
       break;
     }
 
-    log_error("Unknown vote cast variant: %d.", pvc->vote_cast);
+    qCritical("Unknown vote cast variant: %d.", pvc->vote_cast);
     pvote->abstain++;
   }
   vote_cast_list_iterate_end;
@@ -581,10 +581,10 @@ static void check_vote(struct vote *pvote)
   vote_cast_list_iterate(pvote->votes_cast, pvc)
   {
     if (!(pconn = conn_by_number(pvc->conn_id))) {
-      log_error("Got a vote from a lost connection");
+      qCritical("Got a vote from a lost connection");
       continue;
     } else if (!conn_can_vote(pconn, pvote)) {
-      log_error("Got a vote from a non-voting connection");
+      qCritical("Got a vote from a non-voting connection");
       continue;
     }
 
@@ -696,7 +696,7 @@ void connection_vote(struct connection *pconn, struct vote *pvote,
     pvc->conn_id = pconn->id;
   } else {
     /* Must never happen */
-    log_error("Failed to create a vote cast for connection %s.",
+    qCritical("Failed to create a vote cast for connection %s.",
               pconn->username);
     return;
   }
@@ -738,7 +738,7 @@ void voting_init(void)
 void voting_turn(void)
 {
   if (!vote_list) {
-    log_error("voting_turn() called before voting_init()");
+    qCritical("voting_turn() called before voting_init()");
     return;
   }
 
@@ -807,8 +807,8 @@ void handle_vote_submit(struct connection *pconn, int vote_no, int value)
   if (pvote == NULL) {
     /* The client is out of synchronization: this vote is probably just
      * resolved or cancelled. Not an error, let's just ignore the packet. */
-    log_verbose("Submit request for unknown vote_no %d from %s ignored.",
-                vote_no, conn_description(pconn));
+    qDebug("Submit request for unknown vote_no %d from %s ignored.", vote_no,
+           conn_description(pconn));
     return;
   }
 
@@ -819,7 +819,7 @@ void handle_vote_submit(struct connection *pconn, int vote_no, int value)
   } else if (value == 0) {
     type = VOTE_ABSTAIN;
   } else {
-    log_error("Invalid packet data for submit of vote %d "
+    qCritical("Invalid packet data for submit of vote %d "
               "from %s ignored.",
               vote_no, conn_description(pconn));
     return;

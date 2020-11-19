@@ -157,19 +157,19 @@ bool audio_select_plugin(QString &name)
   }
 
   if (!found) {
-    log_fatal(_("Plugin '%s' isn't available. Available are %s"),
-              qUtf8Printable(name), audio_get_all_plugin_names());
+    qFatal(_("Plugin '%s' isn't available. Available are %s"),
+           qUtf8Printable(name), audio_get_all_plugin_names());
     exit(EXIT_FAILURE);
   }
 
   if (!plugins[i].init()) {
-    log_error("Plugin %s found, but can't be initialized.",
+    qCritical("Plugin %s found, but can't be initialized.",
               qUtf8Printable(name));
     return FALSE;
   }
 
   selected_plugin = i;
-  log_verbose("Plugin '%s' is now selected", plugins[selected_plugin].name);
+  qDebug("Plugin '%s' is now selected", plugins[selected_plugin].name);
 
   plugins[selected_plugin].set_volume(gui_options.sound_effects_volume
                                       / 100.0);
@@ -218,7 +218,7 @@ static const char *audiospec_fullname(QString &audioset_name, bool music)
     return NULL;
   }
 
-  log_error("Couldn't find audioset \"%s\", trying \"%s\".",
+  qCritical("Couldn't find audioset \"%s\", trying \"%s\".",
             qUtf8Printable(audioset_name), qUtf8Printable(audioset_default));
 
   return audiospec_fullname(audioset_default, music);
@@ -235,23 +235,23 @@ static bool check_audiofile_capstr(struct section_file *sfile,
 
   file_capstr = secfile_lookup_str(sfile, "%s", opt_path);
   if (NULL == file_capstr) {
-    log_fatal("Audio spec-file \"%s\" doesn't have capability string.",
-              filename);
+    qFatal("Audio spec-file \"%s\" doesn't have capability string.",
+           filename);
     exit(EXIT_FAILURE);
   }
   if (!has_capabilities(our_cap, file_capstr)) {
-    log_fatal("Audio spec-file appears incompatible:");
-    log_fatal("  file: \"%s\"", filename);
-    log_fatal("  file options: %s", file_capstr);
-    log_fatal("  supported options: %s", our_cap);
+    qFatal("Audio spec-file appears incompatible:");
+    qFatal("  file: \"%s\"", filename);
+    qFatal("  file options: %s", file_capstr);
+    qFatal("  supported options: %s", our_cap);
     exit(EXIT_FAILURE);
   }
   if (!has_capabilities(file_capstr, our_cap)) {
-    log_fatal("Audio spec-file claims required option(s) "
-              "which we don't support:");
-    log_fatal("  file: \"%s\"", filename);
-    log_fatal("  file options: %s", file_capstr);
-    log_fatal("  supported options: %s", our_cap);
+    qFatal("Audio spec-file claims required option(s) "
+           "which we don't support:");
+    qFatal("  file: \"%s\"", filename);
+    qFatal("  file options: %s", file_capstr);
+    qFatal("  supported options: %s", our_cap);
     exit(EXIT_FAILURE);
   }
 
@@ -271,52 +271,52 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
   if (preferred_plugin_name == "none") {
     /* We explicitly choose none plugin, silently skip the code below */
-    log_verbose("Proceeding with sound support disabled.");
+    qDebug("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
   }
   if (num_plugins_used == 1) {
     /* We only have the dummy plugin, skip the code but issue an advertise */
-    log_normal(_("No real audio plugin present."));
-    log_normal(_("Proceeding with sound support disabled."));
-    log_normal(_("For sound support, install SDL2_mixer"));
-    log_normal("http://www.libsdl.org/projects/SDL_mixer/index.html");
+    qInfo(_("No real audio plugin present."));
+    qInfo(_("Proceeding with sound support disabled."));
+    qInfo(_("For sound support, install SDL2_mixer"));
+    qInfo("http://www.libsdl.org/projects/SDL_mixer/index.html");
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
   }
   if (soundset_name.isEmpty()) {
-    log_fatal("No sound spec-file given!");
+    qFatal("No sound spec-file given!");
     exit(EXIT_FAILURE);
   }
   if (musicset_name.isEmpty()) {
-    log_fatal("No music spec-file given!");
+    qFatal("No music spec-file given!");
     exit(EXIT_FAILURE);
   }
-  log_verbose("Initializing sound using %s and %s...",
-              qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
+  qDebug("Initializing sound using %s and %s...",
+         qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
   ss_filename = audiospec_fullname(soundset_name, FALSE);
   ms_filename = audiospec_fullname(musicset_name, TRUE);
   if (!ss_filename || !ms_filename) {
-    log_error("Cannot find audio spec-file \"%s\" or \"%s\"",
+    qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
               qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
-    log_normal(_("To get sound you need to download a sound set!"));
-    log_normal(_("Get sound sets from <%s>."),
-               "http://www.freeciv.org/wiki/Sounds");
-    log_normal(_("Proceeding with sound support disabled."));
+    qInfo(_("To get sound you need to download a sound set!"));
+    qInfo(_("Get sound sets from <%s>."),
+          "http://www.freeciv.org/wiki/Sounds");
+    qInfo(_("Proceeding with sound support disabled."));
     ss_tagfile = NULL;
     ms_tagfile = NULL;
     return;
   }
   if (!(ss_tagfile = secfile_load(ss_filename, TRUE))) {
-    log_fatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
-              secfile_error());
+    qFatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
+           secfile_error());
     exit(EXIT_FAILURE);
   }
   if (!(ms_tagfile = secfile_load(ms_filename, TRUE))) {
-    log_fatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
-              secfile_error());
+    qFatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
+           secfile_error());
     exit(EXIT_FAILURE);
   }
 
@@ -341,7 +341,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
   if (preferred_plugin_name[0] != '\0') {
     if (!audio_select_plugin(preferred_plugin_name))
-      log_normal(_("Proceeding with sound support disabled."));
+      qInfo(_("Proceeding with sound support disabled."));
     return;
   }
 
@@ -350,10 +350,9 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   if (audio_select_plugin(audio_str))
     return;
 #endif
-  log_normal(_("No real audio subsystem managed to initialize!"));
-  log_normal(
-      _("Perhaps there is some misconfiguration or bad permissions."));
-  log_normal(_("Proceeding with sound support disabled."));
+  qInfo(_("No real audio subsystem managed to initialize!"));
+  qInfo(_("Perhaps there is some misconfiguration or bad permissions."));
+  qInfo(_("Proceeding with sound support disabled."));
 }
 
 /**********************************************************************/ /**
@@ -462,11 +461,11 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
       }
     }
     if (NULL == soundfile) {
-      log_verbose("No sound file for tag %s", tag);
+      qDebug("No sound file for tag %s", tag);
     } else {
       fullpath = fileinfoname(get_data_dirs(), soundfile);
       if (!fullpath) {
-        log_error("Cannot find audio file %s for tag %s", soundfile, tag);
+        qCritical("Cannot find audio file %s for tag %s", soundfile, tag);
       }
     }
   }
@@ -509,7 +508,7 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
     /* try playing primary tag first, if not go to alternative tag */
     if (!audio_play_sound_tag(tag, FALSE)
         && !audio_play_sound_tag(alt_tag, FALSE)) {
-      log_verbose("Neither of tags %s or %s found", tag, pretty_alt_tag);
+      qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
     }
   }
 }
@@ -534,7 +533,7 @@ static void real_audio_play_music(const char *const tag, char *const alt_tag,
     current_track = audio_play_music_tag(alt_tag, TRUE, keepstyle);
 
     if (current_track < 0) {
-      log_verbose("Neither of tags %s or %s found", tag, pretty_alt_tag);
+      qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
     }
   }
 }

@@ -290,10 +290,9 @@ void unit_versus_unit(struct unit *attacker, struct unit *defender,
   get_modified_firepower(attacker, defender, &attack_firepower,
                          &defense_firepower);
 
-  log_verbose("attack:%d, defense:%d, attack firepower:%d, "
-              "defense firepower:%d",
-              attackpower, defensepower, attack_firepower,
-              defense_firepower);
+  qDebug("attack:%d, defense:%d, attack firepower:%d, "
+         "defense firepower:%d",
+         attackpower, defensepower, attack_firepower, defense_firepower);
 
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
@@ -343,10 +342,9 @@ void unit_bombs_unit(struct unit *attacker, struct unit *defender,
   get_modified_firepower(attacker, defender, &attack_firepower,
                          &defense_firepower);
 
-  log_verbose("attack:%d, defense:%d, attack firepower:%d, "
-              "defense firepower:%d",
-              attackpower, defensepower, attack_firepower,
-              defense_firepower);
+  qDebug("attack:%d, defense:%d, attack firepower:%d, "
+         "defense firepower:%d",
+         attackpower, defensepower, attack_firepower, defense_firepower);
 
   player_update_last_war_action(plr1);
   player_update_last_war_action(plr2);
@@ -514,7 +512,7 @@ void player_restore_units(struct player *pplayer)
               alive = adv_follow_path(punit, path, ptile);
 
               if (!alive) {
-                log_error("rescue plane: unit %d died enroute!", id);
+                qCritical("rescue plane: unit %d died enroute!", id);
               } else if (!same_pos(unit_tile(punit), ptile)) {
                 /* Enemy units probably blocked our route
                  * FIXME: We should try find alternative route around
@@ -1209,10 +1207,9 @@ bool teleport_unit_to_city(struct unit *punit, struct city *pcity,
   struct tile *src_tile = unit_tile(punit), *dst_tile = pcity->tile;
 
   if (city_owner(pcity) == unit_owner(punit)) {
-    log_verbose("Teleported %s %s from (%d,%d) to %s",
-                nation_rule_name(nation_of_unit(punit)),
-                unit_rule_name(punit), TILE_XY(src_tile),
-                city_name_get(pcity));
+    qDebug("Teleported %s %s from (%d,%d) to %s",
+           nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+           TILE_XY(src_tile), city_name_get(pcity));
     if (verbose) {
       notify_player(unit_owner(punit), city_tile(pcity), E_UNIT_RELOCATED,
                     ftc_server, _("Teleported your %s to %s."),
@@ -4499,7 +4496,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
         tgt_id = unitid;
         break;
       case ATK_COUNT:
-        log_error("Invalid action target kind");
+        qCritical("Invalid action target kind");
 
         /* The check below will abort and cancel the orders because prob
          * was initialized to impossible above this switch statement. */
@@ -4613,7 +4610,7 @@ int get_unit_vision_at(struct unit *punit, const struct tile *ptile,
     break;
   }
 
-  log_error("Unsupported vision layer variant: %d.", vlayer);
+  qCritical("Unsupported vision layer variant: %d.", vlayer);
   return 0;
 }
 
@@ -4726,14 +4723,14 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
     struct extra_type *pextra;
 
     if (orders[i].order > ORDER_LAST) {
-      log_error("invalid order %d at index %d", orders[i].order, i);
+      qCritical("invalid order %d at index %d", orders[i].order, i);
       return FALSE;
     }
     switch (orders[i].order) {
     case ORDER_MOVE:
     case ORDER_ACTION_MOVE:
       if (!map_untrusted_dir_is_valid(orders[i].dir)) {
-        log_error("in order %d, invalid move direction %d.", i,
+        qCritical("in order %d, invalid move direction %d.", i,
                   orders[i].dir);
         return FALSE;
       }
@@ -4743,7 +4740,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       case ACTIVITY_SENTRY:
         if (i != length - 1) {
           /* Only allowed as the last order. */
-          log_error("activity %d is not allowed at index %d.",
+          qCritical("activity %d is not allowed at index %d.",
                     orders[i].activity, i);
           return FALSE;
         }
@@ -4761,7 +4758,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       case ACTIVITY_TRANSFORM:
       case ACTIVITY_CONVERT:
       case ACTIVITY_FORTIFYING:
-        log_error("at index %d, use action rather than activity %d.", i,
+        qCritical("at index %d, use action rather than activity %d.", i,
                   orders[i].activity);
         return FALSE;
       /* Not supported. */
@@ -4779,7 +4776,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
       case ACTIVITY_PATROL_UNUSED:
       case ACTIVITY_LAST:
       case ACTIVITY_UNKNOWN:
-        log_error("at index %d, unsupported activity %d.", i,
+        qCritical("at index %d, unsupported activity %d.", i,
                   orders[i].activity);
         return FALSE;
       }
@@ -4788,7 +4785,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
     case ORDER_PERFORM_ACTION:
       if (!action_id_exists(orders[i].action)) {
         /* Non-existent action. */
-        log_error("at index %d, the action %d doesn't exist.", i,
+        qCritical("at index %d, the action %d doesn't exist.", i,
                   orders[i].action);
         return FALSE;
       }
@@ -4797,13 +4794,13 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
 
       /* Validate main target. */
       if (index_to_tile(&(wld.map), orders[i].target) == NULL) {
-        log_error("at index %d, invalid tile target %d for the action %d.",
+        qCritical("at index %d, invalid tile target %d for the action %d.",
                   i, orders[i].target, orders[i].action);
         return FALSE;
       }
 
       if (orders[i].dir != DIR8_ORIGIN) {
-        log_error("at index %d, the action %d sets the outdated target"
+        qCritical("at index %d, the action %d sets the outdated target"
                   " specification dir.",
                   i, orders[i].action);
       }
@@ -4814,7 +4811,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
         /* Sub target is a building. */
         if (!improvement_by_number(orders[i].sub_target)) {
           /* Sub target is invalid. */
-          log_error("at index %d, cannot do %s without a target.", i,
+          qCritical("at index %d, cannot do %s without a target.", i,
                     action_id_rule_name(orders[i].action));
           return FALSE;
         }
@@ -4825,7 +4822,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
             || (!valid_advance_by_number(orders[i].sub_target)
                 && orders[i].sub_target != A_FUTURE)) {
           /* Target tech is invalid. */
-          log_error("at index %d, cannot do %s without a target.", i,
+          qCritical("at index %d, cannot do %s without a target.", i,
                     action_id_rule_name(orders[i].action));
           return FALSE;
         }
@@ -4843,7 +4840,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
         if (pextra == NULL) {
           if (paction->target_complexity != ACT_TGT_COMPL_FLEXIBLE) {
             /* Target extra is invalid. */
-            log_error("at index %d, cannot do %s without a target.", i,
+            qCritical("at index %d, cannot do %s without a target.", i,
                       action_id_rule_name(orders[i].action));
             return FALSE;
           }
@@ -4851,7 +4848,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
           if (!(action_removes_extra(paction, pextra)
                 || action_creates_extra(paction, pextra))) {
             /* Target extra is irrelevant for the action. */
-            log_error("at index %d, cannot do %s to %s.", i,
+            qCritical("at index %d, cannot do %s to %s.", i,
                       action_id_rule_name(orders[i].action),
                       extra_rule_name(pextra));
             return FALSE;
@@ -4880,7 +4877,7 @@ bool unit_order_list_is_sane(int length, const struct unit_order *orders)
             || action_has_result(paction, ACTRES_FORTIFY)) {
           /* than having this action in the middle of a unit's orders is
            * probably wrong. */
-          log_error("action %d is not allowed at index %d.",
+          qCritical("action %d is not allowed at index %d.",
                     orders[i].action, i);
           return FALSE;
         }

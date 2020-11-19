@@ -528,7 +528,7 @@ static const struct sset_val_name *phasemode_name(int phasemode)
    Scorelog level names accessor.
  ****************************************************************************/
 static const struct sset_val_name *
-scoreloglevel_name(enum scorelog_level sl_level)
+scoreloglevel_name(enum scoreQtMsgType sl_level)
 {
   switch (sl_level) {
     NAME_CASE(SL_ALL, "ALL", N_("All players"));
@@ -638,7 +638,7 @@ static void aifill_action(const struct setting *pset)
 {
   const char *msg = aifill(*pset->integer.pvalue);
   if (msg) {
-    log_normal(_("Warning: aifill not met: %s."), msg);
+    qInfo(_("Warning: aifill not met: %s."), msg);
     notify_conn(NULL, NULL, E_SETTING, ftc_server,
                 _("Warning: aifill not met: %s."), msg);
   }
@@ -1248,7 +1248,7 @@ static bool compresstype_callback(int value, struct connection *caller,
 {
 #ifdef FREECIV_HAVE_LIBBZ2
   if (value == FZ_BZIP2) {
-    log_warn(_("Bzip2 is deprecated as compresstype. Consider "
+    qWarning(_("Bzip2 is deprecated as compresstype. Consider "
                "other options."));
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
@@ -2156,14 +2156,12 @@ static struct setting settings[] = {
      * (?) These are done when the game starts, so these are historical and
      * fixed after the game has started.
      */
-    GEN_INT("gameseed", game.server.seed_setting, SSET_MAP_ADD,
-            SSET_INTERNAL, SSET_RARE,
-            ALLOW_HACK, ALLOW_HACK,
-            N_("Game random seed"),
-            N_("For zero (the default) a seed will be chosen based "
-               "on the current time."),
-            NULL, NULL, NULL, GAME_MIN_SEED, GAME_MAX_SEED,
-            GAME_DEFAULT_SEED)
+    GEN_INT(
+        "gameseed", game.server.seed_setting, SSET_MAP_ADD, SSET_INTERNAL,
+        SSET_RARE, ALLOW_HACK, ALLOW_HACK, N_("Game random seed"),
+        N_("For zero (the default) a seed will be chosen based "
+           "on the current time."),
+        NULL, NULL, NULL, GAME_MIN_SEED, GAME_MAX_SEED, GAME_DEFAULT_SEED)
 
         GEN_INT("specials", wld.map.server.riches, SSET_MAP_ADD,
                 SSET_GEOLOGY, SSET_VITAL, ALLOW_NONE, ALLOW_BASIC,
@@ -4078,16 +4076,17 @@ static struct setting settings[] = {
                                                                                                 ALLOW_BASIC,
                                                                                                 N_("Maximum distance citizens may migrate"),
                                                                                                 /* TRANS: Do not translate 'migration' setting name. */
-                                                                                                N_("This setting controls how far citizens may look for a "
-                                                                                                   "suitable migration destination when deciding which city "
-                                                                                                   "to migrate to. The value is added to the candidate target "
-                                                                                                   "city's radius and compared to the distance between the "
-                                                                                                   "two cities. If the distance is lower or equal, migration "
-                                                                                                   "is possible. (So with a setting of 0, citizens will only "
-                                                                                                   "consider migrating if their city's center is within the "
-                                                                                                   "destination city's working radius.) This setting has no "
-                                                                                                   "effect unless migration is enabled by the 'migration' "
-                                                                                                   "setting."),
+                                                                                                N_(
+                                                                                                    "This setting controls how far citizens may look for a "
+                                                                                                    "suitable migration destination when deciding which city "
+                                                                                                    "to migrate to. The value is added to the candidate target "
+                                                                                                    "city's radius and compared to the distance between the "
+                                                                                                    "two cities. If the distance is lower or equal, migration "
+                                                                                                    "is possible. (So with a setting of 0, citizens will only "
+                                                                                                    "consider migrating if their city's center is within the "
+                                                                                                    "destination city's working radius.) This setting has no "
+                                                                                                    "effect unless migration is enabled by the 'migration' "
+                                                                                                    "setting."),
                                                                                                 NULL,
                                                                                                 NULL,
                                                                                                 NULL,
@@ -4119,28 +4118,29 @@ static struct setting settings[] = {
                                                                                                 GAME_MAX_MGR_NATIONCHANCE,
                                                                                                 GAME_DEFAULT_MGR_NATIONCHANCE)
 
-                                                                                                GEN_INT("mgr_worldchance",
-                                                                                                        game.server
-                                                                                                            .mgr_worldchance,
-                                                                                                        SSET_RULES_FLEXIBLE,
-                                                                                                        SSET_SOCIOLOGY,
-                                                                                                        SSET_RARE,
-                                                                                                        ALLOW_NONE,
-                                                                                                        ALLOW_BASIC,
-                                                                                                        N_("Percent probability for migration between foreign cities"),
-                                                                                                        /* TRANS: Do not translate 'migration' setting name. */
-                                                                                                        N_("This setting controls how likely it is for migration "
-                                                                                                           "to occur between cities owned by different players. "
-                                                                                                           "Zero indicates migration will never occur, 100 means "
-                                                                                                           "that citizens will always migrate if they find a suitable "
-                                                                                                           "destination. This setting has no effect if migration is "
-                                                                                                           "not enabled by the 'migration' setting."),
-                                                                                                        NULL,
-                                                                                                        NULL,
-                                                                                                        NULL,
-                                                                                                        GAME_MIN_MGR_WORLDCHANCE,
-                                                                                                        GAME_MAX_MGR_WORLDCHANCE,
-                                                                                                        GAME_DEFAULT_MGR_WORLDCHANCE)
+                                                                                                GEN_INT(
+                                                                                                    "mgr_worldchance",
+                                                                                                    game.server
+                                                                                                        .mgr_worldchance,
+                                                                                                    SSET_RULES_FLEXIBLE,
+                                                                                                    SSET_SOCIOLOGY,
+                                                                                                    SSET_RARE,
+                                                                                                    ALLOW_NONE,
+                                                                                                    ALLOW_BASIC,
+                                                                                                    N_("Percent probability for migration between foreign cities"),
+                                                                                                    /* TRANS: Do not translate 'migration' setting name. */
+                                                                                                    N_("This setting controls how likely it is for migration "
+                                                                                                       "to occur between cities owned by different players. "
+                                                                                                       "Zero indicates migration will never occur, 100 means "
+                                                                                                       "that citizens will always migrate if they find a suitable "
+                                                                                                       "destination. This setting has no effect if migration is "
+                                                                                                       "not enabled by the 'migration' setting."),
+                                                                                                    NULL,
+                                                                                                    NULL,
+                                                                                                    NULL,
+                                                                                                    GAME_MIN_MGR_WORLDCHANCE,
+                                                                                                    GAME_MAX_MGR_WORLDCHANCE,
+                                                                                                    GAME_DEFAULT_MGR_WORLDCHANCE)
 
     /* Meta options: these don't affect the internal rules of the game, but
      * do affect players.  Also options which only produce extra server
@@ -4902,8 +4902,7 @@ static struct setting settings[] = {
                                                                                         game.server
                                                                                             .meta_info
                                                                                             .user_message,
-                                                                                        SSET_META,
-                                                                                        SSET_INTERNAL,
+                                                                                        SSET_META, SSET_INTERNAL,
                                                                                         SSET_RARE,
                                                                                         ALLOW_CTRL,
                                                                                         ALLOW_CTRL,
@@ -5077,7 +5076,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
     return TRUE;
   }
 
-  log_error("Wrong class variant for setting %s (%d): %d.",
+  qCritical("Wrong class variant for setting %s (%d): %d.",
             setting_name(pset), setting_number(pset), pset->sclass);
   settings_snprintf(reject_msg, reject_msg_len, _("Internal error."));
 
@@ -5608,7 +5607,7 @@ int read_enum_value(const struct setting *pset)
     val = *((short *) pset->enumerator.pvalue);
     break;
   default:
-    log_error("Illegal enum store size %d, can't read value",
+    qCritical("Illegal enum store size %d, can't read value",
               pset->enumerator.store_size);
     return 0;
   }
@@ -5637,7 +5636,7 @@ bool setting_enum_set(struct setting *pset, const char *val,
   }
 
   if (!set_enum_value(pset, int_val)) {
-    log_error("Illegal enumerator value size %d for %s",
+    qCritical("Illegal enumerator value size %d for %s",
               pset->enumerator.store_size, val);
     return FALSE;
   }
@@ -5881,7 +5880,7 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return NULL;
 }
@@ -5917,7 +5916,7 @@ const char *setting_default_name(const struct setting *pset, bool pretty,
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return NULL;
 }
@@ -5982,8 +5981,8 @@ bool settings_ruleset(struct section_file *file, const char *section,
   /* settings */
   if (NULL == secfile_section_by_name(file, section)) {
     /* no settings in ruleset file */
-    log_verbose("no [%s] section for game settings in %s", section,
-                secfile_name(file));
+    qDebug("no [%s] section for game settings in %s", section,
+           secfile_name(file));
   } else {
     for (j = 0; (name = secfile_lookup_str_default(
                      file, NULL, "%s.set%d.name", section, j));
@@ -5992,7 +5991,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
       fc_snprintf(path, sizeof(path), "%s.set%d", section, j);
 
       if (!setting_ruleset_one(file, name, path)) {
-        log_error("unknown setting in '%s': %s", secfile_name(file), name);
+        qCritical("unknown setting in '%s': %s", secfile_name(file), name);
       }
     }
   }
@@ -6048,7 +6047,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                  path)) {
       val = (ival != 0);
     } else if (!secfile_lookup_bool(file, &val, "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
       break;
     }
@@ -6057,11 +6056,10 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
           || pset->boolean.validate(val, NULL, reject_msg,
                                     sizeof(reject_msg))) {
         *pset->boolean.pvalue = val;
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6070,15 +6068,14 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     int val;
 
     if (!secfile_lookup_int(file, &val, "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != *pset->integer.pvalue) {
       if (setting_int_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6087,15 +6084,14 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     const char *val = secfile_lookup_str(file, "%s.value", path);
 
     if (NULL == val) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (0 != strcmp(val, pset->string.value)) {
       if (setting_str_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6106,18 +6102,17 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     if (!secfile_lookup_enum_data(file, &val, FALSE,
                                   setting_enum_secfile_str, pset, "%s.value",
                                   path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != read_enum_value(pset)) {
       if (NULL == pset->enumerator.validate
           || pset->enumerator.validate(val, NULL, reject_msg,
                                        sizeof(reject_msg))) {
         set_enum_value(pset, val);
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6128,18 +6123,17 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     if (!secfile_lookup_enum_data(file, &val, TRUE,
                                   setting_bitwise_secfile_str, pset,
                                   "%s.value", path)) {
-      log_error("Can't read value for setting '%s': %s", name,
+      qCritical("Can't read value for setting '%s': %s", name,
                 secfile_error());
     } else if (val != *pset->bitwise.pvalue) {
       if (NULL == pset->bitwise.validate
           || pset->bitwise.validate((unsigned) val, NULL, reject_msg,
                                     sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
-        log_normal(_("Ruleset: '%s' has been set to %s."),
-                   setting_name(pset),
-                   setting_value_name(pset, TRUE, buf, sizeof(buf)));
+        qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
+              setting_value_name(pset, TRUE, buf, sizeof(buf)));
       } else {
-        log_error("%s", reject_msg);
+        qCritical("%s", reject_msg);
       }
     }
   } break;
@@ -6157,8 +6151,8 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   if (lock) {
     /* set lock */
     setting_lock_set(pset, lock);
-    log_normal(_("Ruleset: '%s' has been locked by the ruleset."),
-               setting_name(pset));
+    qInfo(_("Ruleset: '%s' has been locked by the ruleset."),
+          setting_name(pset));
   }
 
   return TRUE;
@@ -6185,7 +6179,7 @@ bool setting_non_default(const struct setting *pset)
     break;
   }
 
-  log_error("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
+  qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
   return FALSE;
 }
@@ -6304,7 +6298,7 @@ static void setting_game_restore(struct setting *pset)
   }
 
   if (!res) {
-    log_error("Error restoring setting '%s' to the value from game start: "
+    qCritical("Error restoring setting '%s' to the value from game start: "
               "%s",
               setting_name(pset), reject_msg);
   }
@@ -6409,7 +6403,7 @@ void settings_game_load(struct section_file *file, const char *section)
 
   if (!secfile_lookup_int(file, &set_count, "%s.set_count", section)) {
     /* Old savegames and scenarios doesn't contain this, not an error. */
-    log_verbose("Can't read the number of settings in the save file.");
+    qDebug("Can't read the number of settings in the save file.");
     return;
   }
 
@@ -6432,8 +6426,8 @@ void settings_game_load(struct section_file *file, const char *section)
         bool val;
 
         if (!secfile_lookup_bool(file, &val, "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6444,15 +6438,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->boolean.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->boolean.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6463,8 +6457,8 @@ void settings_game_load(struct section_file *file, const char *section)
         int val;
 
         if (!secfile_lookup_int(file, &val, "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6475,15 +6469,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->integer.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->integer.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6495,23 +6489,23 @@ void settings_game_load(struct section_file *file, const char *section)
             secfile_lookup_str(file, "%s.set%d.value", section, i);
 
         if (NULL == val) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
           if (0 != strcmp(val, pset->string.value)) {
             if (setting_str_set(pset, val, NULL, reject_msg,
                                 sizeof(reject_msg))) {
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6524,8 +6518,8 @@ void settings_game_load(struct section_file *file, const char *section)
         if (!secfile_lookup_enum_data(file, &val, FALSE,
                                       setting_enum_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6536,15 +6530,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->enumerator.validate(val, NULL, reject_msg,
                                                  sizeof(reject_msg)))) {
               set_enum_value(pset, val);
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }
@@ -6557,8 +6551,8 @@ void settings_game_load(struct section_file *file, const char *section)
         if (!secfile_lookup_enum_data(file, &val, TRUE,
                                       setting_bitwise_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
-          log_verbose("Option '%s' not defined in the savegame: %s", name,
-                      secfile_error());
+          qDebug("Option '%s' not defined in the savegame: %s", name,
+                 secfile_error());
         } else {
           pset->setdef = SETDEF_CHANGED;
 
@@ -6569,15 +6563,15 @@ void settings_game_load(struct section_file *file, const char *section)
                     || pset->bitwise.validate(val, NULL, reject_msg,
                                               sizeof(reject_msg)))) {
               *pset->bitwise.pvalue = val;
-              log_normal(_("Savegame: '%s' has been set to %s."),
-                         setting_name(pset),
-                         setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qInfo(_("Savegame: '%s' has been set to %s."),
+                    setting_name(pset),
+                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
             } else {
-              log_error("Savegame: error restoring '%s' . (%s)",
+              qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
             }
           } else {
-            log_normal(
+            qInfo(
                 _("Savegame: '%s' explicitly set to value same as default."),
                 setting_name(pset));
           }

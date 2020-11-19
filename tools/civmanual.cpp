@@ -292,7 +292,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     if (!is_reg_file_for_access(filename, TRUE)
         || !(doc = fc_fopen(filename, "w"))) {
-      log_error(_("Could not write manual file %s."), filename);
+      qCritical(_("Could not write manual file %s."), filename);
       return FALSE;
     }
 
@@ -751,7 +751,7 @@ static bool manual_command(struct tag_types *tag_info)
 
     fprintf(doc, "%s", tag_info->tail);
     fclose(doc);
-    log_normal(_("Manual file %s successfully written."), filename);
+    qInfo(_("Manual file %s successfully written."), filename);
   } /* manuals */
 
   return TRUE;
@@ -775,23 +775,17 @@ int main(int argc, char **argv)
   init_nls();
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
-  /* Set the default log level. */
-  srvarg.loglevel = LOG_NORMAL;
-
   QCommandLineParser parser;
   parser.addHelpOption();
   parser.addVersionOption();
 
   bool ok = parser.addOptions({
-      {{"d", "debug"},
-#ifdef FREECIV_DEBUG
-       _("Set debug log level (one of f,e,w,n,v,d, or d:file1,min,max:...)"),
-#else
-       QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                         LOG_VERBOSE),
-#endif
-       // TRANS: Command-line argument
-       _("LEVEL")},
+      {{"d", _("debug")},
+       // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+       //        "debug". It's exactly what the user must type.
+       _("Set debug log level (fatal/critical/warning/info/debug)"),
+       _("LEVEL"),
+       QStringLiteral("info")},
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
       {{"l", "log"},
        _("Use FILE as logfile"),
@@ -811,14 +805,10 @@ int main(int argc, char **argv)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {
-      exit(EXIT_FAILURE);
-    }
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
   }
-  if (parser.isSet("Fatal")) {
-    srvarg.fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() > 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
@@ -839,8 +829,7 @@ int main(int argc, char **argv)
 
   /* must be before con_log_init() */
   init_connections();
-  con_log_init(srvarg.log_filename, srvarg.loglevel,
-               srvarg.fatal_assertions);
+  con_log_init(srvarg.log_filename);
   /* logging available after this point */
 
   /* Get common code to treat us as a tool. */

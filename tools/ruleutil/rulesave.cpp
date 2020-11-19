@@ -532,7 +532,7 @@ static bool save_action_auto_uflag_block(
 
       protecor_flag[i++] = unit_type_flag_id(req->source.value.unitflag);
     } else if (unexpected_req(req)) {
-      log_error("Can't handle action auto performer requirement %s",
+      qCritical("Can't handle action auto performer requirement %s",
                 req_to_fstring(req));
 
       return FALSE;
@@ -544,7 +544,7 @@ static bool save_action_auto_uflag_block(
                                 "%s", uflags_path);
 
   if (ret != i) {
-    log_error("%s: didn't save all unit type flags.", uflags_path);
+    qCritical("%s: didn't save all unit type flags.", uflags_path);
 
     return FALSE;
   }
@@ -577,7 +577,7 @@ static bool save_action_auto_actions(struct section_file *sfile,
                                 actions_path);
 
   if (ret != i) {
-    log_error("%s: didn't save all actions.", actions_path);
+    qCritical("%s: didn't save all actions.", actions_path);
 
     return FALSE;
   }
@@ -1156,7 +1156,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   if (secfile_insert_enum_vec(sfile, &quiet_actions, i, gen_action,
                               "actions.quiet_actions")
       != i) {
-    log_error("Didn't save all quiet actions.");
+    qCritical("Didn't save all quiet actions.");
 
     return FALSE;
   }
@@ -1872,7 +1872,7 @@ static bool save_nations_ruleset(const char *filename, const char *name,
             game.server.ruledit.embedded_nations[sect_idx]);
 
         if (pnat == NULL) {
-          log_error("Embedded nation \"%s\" not found!",
+          qCritical("Embedded nation \"%s\" not found!",
                     game.server.ruledit.embedded_nations[sect_idx]);
         } else {
           save_nation(sfile, pnat, sect_idx);
@@ -3091,7 +3091,7 @@ bool save_ruleset(const char *path, const char *name, struct rule_data *data)
 
     return success;
   } else {
-    log_error("Failed to create directory %s", path);
+    qCritical("Failed to create directory %s", path);
     return FALSE;
   }
 

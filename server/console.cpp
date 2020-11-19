@@ -49,16 +49,21 @@ static bool readline_received_enter = TRUE;
 static int con_dump(enum rfc_status rfc_status, const char *message, ...);
 #endif
 
+namespace {
+static QString log_prefix();
+static QtMessageHandler original_handler = nullptr;
+
 /********************************************************************/ /**
    Function to handle log messages.
-   This must match the log_callback_fn typedef signature.
  ************************************************************************/
-static void con_handle_log(enum log_level level, const char *message,
-                           bool file_too)
+static void console_handle_message(QtMsgType type,
+                                   const QMessageLogContext &context,
+                                   const QString &message)
 {
-  if (LOG_ERROR == level) {
-    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s", message);
-  } else if (LOG_FATAL >= level) {
+  if (type == QtCriticalMsg) {
+    notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
+                qUtf8Printable(message));
+  } else if (type == QtFatalMsg) {
     /* Make sure that message is not left to buffers when server dies */
     conn_list_iterate(game.est_connections, pconn)
     {
@@ -67,20 +72,17 @@ static void con_handle_log(enum log_level level, const char *message,
     }
     conn_list_iterate_end;
 
-    notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s", message);
+    notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s",
+                qUtf8Printable(message));
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
                 _("Please report this message at %s"), BUG_URL);
   }
 
-  /* Write debug/verbose message to console only when not written to file. */
-  if (!file_too || level <= LOG_NORMAL) {
-    if (console_rfcstyle) {
-      con_write(rfc_status(C_LOG_BASE + level), "%s", message);
-    } else {
-      con_write(rfc_status(C_LOG_BASE + level), "%d: %s", level, message);
-    }
+  if (original_handler != nullptr) {
+    original_handler(type, context, log_prefix() + message);
   }
 }
+} // anonymous namespace
 
 /********************************************************************/ /**
  Print the prompt if it is not the last thing printed.
@@ -97,7 +99,7 @@ static void con_update_prompt(void)
   } else {
     rl_forced_update_display();
   }
-#else  /* FREECIV_HAVE_LIBREADLINE */
+#else /* FREECIV_HAVE_LIBREADLINE */
   con_dump(C_READY, "> ");
   con_flush();
 #endif /* FREECIV_HAVE_LIBREADLINE */
@@ -105,32 +107,18 @@ static void con_update_prompt(void)
   console_prompt_is_showing = TRUE;
 }
 
-#ifdef FREECIV_DEBUG
 /********************************************************************/ /**
    Prefix for log messages saved to file. At the moment the turn and the
    current date and time are used.
  ************************************************************************/
-static const char *log_prefix(void)
+namespace {
+static QString log_prefix()
 {
-  static char buf[128];
-
-#ifdef LOG_TIMERS
-  char timestr[32];
-  time_t timestamp;
-
-  time(&timestamp);
-  strftime(timestr, sizeof(timestr), "%Y/%m/%d %H:%M:%S",
-           localtime(&timestamp));
-
-  fc_snprintf(buf, sizeof(buf), "T%03d - %s", game.info.turn, timestr);
-
-#else  /* LOG_TIMERS */
-  fc_snprintf(buf, sizeof(buf), "T%03d", game.info.turn);
-#endif /* LOG_TIMERS */
-
-  return buf;
+  // TRANS: T for turn
+  return game.info.turn > 0 ? QString::asprintf(_("T%03d: "), game.info.turn)
+                            : QStringLiteral("");
 }
-#endif /* FREECIV_DEBUG */
+} // anonymous namespace
 
 /********************************************************************/ /**
    Deprecation warning callback to send event to clients.
@@ -143,18 +131,14 @@ static void depr_warn_callback(const char *msg)
 /********************************************************************/ /**
    Initialize logging via console.
  ************************************************************************/
-void con_log_init(const QString &log_filename, enum log_level level,
-                  int fatal_assertions)
+void con_log_init(const QString &log_filename)
 {
-#ifdef FREECIV_DEBUG
-  log_init(qUtf8Printable(log_filename), level, con_handle_log, log_prefix,
-           fatal_assertions);
-#else
-  log_init(qUtf8Printable(log_filename), level, con_handle_log, NULL,
-           fatal_assertions);
-#endif /* FREECIV_DEBUG */
+  log_set_file(log_filename);
   backtrace_init();
   deprecation_warn_cb_set(depr_warn_callback);
+
+  // Install our handler last so it gets executed first
+  original_handler = qInstallMessageHandler(console_handle_message);
 }
 
 /********************************************************************/ /**

@@ -329,7 +329,7 @@ bool create_start_positions(enum map_startpos mode,
   if (wld.map.num_continents < 1) {
     /* Currently we can only place starters on land terrain, so fail
      * immediately if there isn't any on the map. */
-    log_verbose("Map has no land, so cannot assign start positions!");
+    qDebug("Map has no land, so cannot assign start positions!");
     return FALSE;
   }
 
@@ -344,7 +344,7 @@ bool create_start_positions(enum map_startpos mode,
 
   /* If the default is given, just use MAPSTARTPOS_VARIABLE. */
   if (MAPSTARTPOS_DEFAULT == mode) {
-    log_verbose("Using startpos=VARIABLE");
+    qDebug("Using startpos=VARIABLE");
     mode = MAPSTARTPOS_VARIABLE;
   }
 
@@ -413,13 +413,13 @@ bool create_start_positions(enum map_startpos mode,
    * choice. */
   if (MAPSTARTPOS_SINGLE == mode
       && wld.map.num_continents < player_count() + 3) {
-    log_verbose("Not enough continents; falling back to startpos=2or3");
+    qDebug("Not enough continents; falling back to startpos=2or3");
     mode = MAPSTARTPOS_2or3;
   }
 
   if (MAPSTARTPOS_2or3 == mode
       && wld.map.num_continents < player_count() / 2 + 4) {
-    log_verbose("Not enough continents; falling back to startpos=VARIABLE");
+    qDebug("Not enough continents; falling back to startpos=VARIABLE");
     mode = MAPSTARTPOS_VARIABLE;
   }
 
@@ -427,7 +427,7 @@ bool create_start_positions(enum map_startpos mode,
       && (islands[1].goodies < player_count() * min_goodies_per_player
           || islands[1].goodies
                  < total_goodies * (0.5 + 0.8 * efactor) / (1 + efactor))) {
-    log_verbose("No good enough island; falling back to startpos=VARIABLE");
+    qDebug("No good enough island; falling back to startpos=VARIABLE");
     mode = MAPSTARTPOS_VARIABLE;
   }
 
@@ -501,7 +501,7 @@ bool create_start_positions(enum map_startpos mode,
   for (k = 1; k <= wld.map.num_continents; k++) {
     sum += islands[islands_index[k]].starters;
     if (islands[islands_index[k]].starters != 0) {
-      log_verbose("starters on isle %i", k);
+      qDebug("starters on isle %i", k);
     }
   }
   fc_assert_ret_val(player_count() <= sum, FALSE);
@@ -519,9 +519,9 @@ bool create_start_positions(enum map_startpos mode,
     } else {
       data.min_value *= 0.95;
       if (data.min_value <= 10) {
-        log_normal(_("The server appears to have gotten into an infinite "
-                     "loop in the allocation of starting positions.\nMaybe "
-                     "the number of players is too high for this map."));
+        qInfo(_("The server appears to have gotten into an infinite "
+                "loop in the allocation of starting positions.\nMaybe "
+                "the number of players is too high for this map."));
         failure = TRUE;
         break;
       }

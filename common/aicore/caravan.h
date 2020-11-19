@@ -13,10 +13,7 @@
 #ifndef FC__CARAVAN_H
 #define FC__CARAVAN_H
 
-
-
 /* utility */
-#include "log.h" /* enum log_level */
 #include "shared.h"
 
 /* common */
@@ -124,14 +121,6 @@ void caravan_parameter_init_default(struct caravan_parameter *parameter);
 void caravan_parameter_init_from_unit(struct caravan_parameter *parameter,
                                       const struct unit *caravan);
 bool caravan_parameter_is_legal(const struct caravan_parameter *parameter);
-void caravan_parameter_log_real(const struct caravan_parameter *parameter,
-                                enum log_level level, const char *file,
-                                const char *function, int line);
-#define caravan_parameter_log(parameter, loglevel)                          \
-  if (log_do_output_for_level(loglevel)) {                                  \
-    caravan_parameter_log_real(parameter, loglevel, __FILE__, __FUNCTION__, \
-                               __FC_LINE__);                                \
-  }
 
 void caravan_result_init_zero(struct caravan_result *result);
 int caravan_result_compare(const struct caravan_result *a,
@@ -150,7 +139,5 @@ void caravan_optimize_allpairs(const struct unit *caravan,
                                const struct caravan_parameter *parameter,
                                struct caravan_result *result,
                                bool omniscient);
-
-
 
 #endif /* FC__CARAVAN_H */

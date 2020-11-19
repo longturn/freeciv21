@@ -1158,7 +1158,7 @@ struct action *action_by_number(action_id act_id)
   if (!action_id_exists(act_id)) {
     /* Nothing to return. */
 
-    log_verbose("Asked for non existing action numbered %d", act_id);
+    qDebug("Asked for non existing action numbered %d", act_id);
 
     return NULL;
   }
@@ -1181,7 +1181,7 @@ struct action *action_by_rule_name(const char *name)
   if (!action_id_exists(act_id)) {
     /* Nothing to return. */
 
-    log_verbose("Asked for non existing action named %s", name);
+    qDebug("Asked for non existing action named %s", name);
 
     return NULL;
   }
@@ -5222,7 +5222,7 @@ struct act_prob action_prob_unit_vs_tgt(const struct action *paction,
     prob = action_prob_self(act_unit, paction->id);
     break;
   case ATK_COUNT:
-    log_error("Invalid action target kind");
+    qCritical("Invalid action target kind");
     break;
   }
 

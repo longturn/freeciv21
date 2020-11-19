@@ -76,7 +76,9 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
 #define MAX_UINT16 0xFFFF
 #define MAX_UINT8 0xFF
 
-#define ARRAY_SIZE(x) (sizeof(x) / sizeof((x)[0]))
+// Can't use sizeof() because of the lambda in assert(), see
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60855
+#define ARRAY_SIZE(x) (*(&(x) + 1) - (x))
 #define ADD_TO_POINTER(p, n) ((void *) ((char *) (p) + (n)))
 
 #define FC_MEMBER(type, member) (((type *) NULL)->member)

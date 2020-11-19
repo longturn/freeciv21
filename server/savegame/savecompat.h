@@ -19,8 +19,6 @@
 /* server */
 #include "srv_main.h"
 
-
-
 struct section_file;
 struct extra_type;
 struct base_type;
@@ -135,7 +133,7 @@ struct loaddata {
   int *worked_tiles;
 };
 
-#define log_sg log_error
+#define log_sg qCritical
 
 #define sg_check_ret(...)                                                   \
   if (!sg_success) {                                                        \
@@ -205,7 +203,5 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road);
 #define ORDER_OLD_HOMECITY (-5)
 int sg_order_to_action(int order, struct unit *act_unit,
                        struct tile *tgt_tile);
-
-
 
 #endif /* FC__SAVECOMPAT_H */

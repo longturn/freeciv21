@@ -318,7 +318,6 @@ static void client_game_reset(void)
 int client_main(int argc, char *argv[])
 {
   int i;
-  enum log_level loglevel = LOG_NORMAL;
   int ui_options = 0;
   bool ui_separator = FALSE;
   char *option = NULL;
@@ -380,16 +379,11 @@ int client_main(int argc, char *argv[])
         "IPv4"},
        {{"a", "autoconnect"}, _("Skip connect dialog")},
        {{"d", _("debug")},
-#ifdef FREECIV_DEBUG
-        /* TRANS: "debug" do not translate. */
-        _("Set debug log level (one of f,e,w,n,v,d, or "
-          "d:file1,min,max:...)"),
-#else
-        /* TRANS: "debug" do not translate. */
-        QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                          LOG_VERBOSE),
-#endif /* FREECIV_DEBUG */
-        _("LEVEL")},
+        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+        //        "debug". It's exactly what the user must type.
+        _("Set debug log level (fatal/critical/warning/info/debug)"),
+        _("LEVEL"),
+        QStringLiteral("info")},
        {{"F", _("Fatal")}, _("Raise a signal on failed assertion")},
        {{"f", "file"}, _("Load saved game FILE"), "FILE"},
 #ifdef FREECIV_DEBUG
@@ -419,12 +413,15 @@ int client_main(int argc, char *argv[])
        {{"t", "tiles"}, _("Use data file FILE.tilespec for tiles"), "FILE"},
        {{"w", "warnings"}, _("Warn about deprecated modpack constructs")}});
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
   parser.process(app);
 
   // Process the parsed options
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
+  }
   if (parser.isSet("version")) {
     fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
     exit(EXIT_SUCCESS);
@@ -437,9 +434,7 @@ int client_main(int argc, char *argv[])
   if (parser.isSet("log")) {
     logfile = parser.value("log");
   }
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("read")) {
     scriptfile = parser.value("read");
   }
@@ -466,21 +461,12 @@ int client_main(int argc, char *argv[])
     bool conversion_ok;
     server_port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid port number %s"),
-                qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
   if (parser.isSet("autoconnect")) {
     auto_connect = TRUE;
-  }
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
-      log_fatal(
-          _("Invalid debug level \"%s\" specified with --debug option.\n"),
-          qPrintable(parser.value("option")));
-      exit(EXIT_FAILURE);
-    }
   }
   if (parser.isSet("tiles")) {
     forced_tileset_name = parser.value("tiles");
@@ -494,12 +480,14 @@ int client_main(int argc, char *argv[])
     } else if (value == QLatin1String("none")) {
       announce = ANNOUNCE_NONE;
     } else {
-      log_error(_("Illegal value \"%s\" for --Announce"),
+      qCritical(_("Illegal value \"%s\" for --Announce"),
                 qPrintable(parser.value("Announce")));
     }
   }
   if (parser.isSet("warnings")) {
-    deprecation_warnings_enable();
+    qCWarning(deprecations_category,
+              // TRANS: Do not translate --warnings
+              _("The --warnings option is deprecated."));
   }
 
   if (auto_spawn && auto_connect) {
@@ -512,7 +500,7 @@ int client_main(int argc, char *argv[])
   /* disallow running as root -- too dangerous */
   dont_run_as_root(argv[0], "freeciv_client");
 
-  log_init(qUtf8Printable(logfile), loglevel, NULL, NULL, fatal_assertions);
+  log_set_file(logfile);
   backtrace_init();
 
   /* after log_init: */
@@ -579,10 +567,10 @@ int client_main(int argc, char *argv[])
     const char *oldaddr = "http://www.cazfi.net/freeciv/metaserver/";
 
     if (0 == strcmp(gui_options.default_metaserver, oldaddr)) {
-      log_normal(_("Updating old metaserver address \"%s\"."), oldaddr);
+      qInfo(_("Updating old metaserver address \"%s\"."), oldaddr);
       sz_strlcpy(gui_options.default_metaserver, DEFAULT_METASERVER_OPTION);
-      log_normal(_("Default metaserver has been set to value \"%s\"."),
-                 DEFAULT_METASERVER_OPTION);
+      qInfo(_("Default metaserver has been set to value \"%s\"."),
+            DEFAULT_METASERVER_OPTION);
     }
     if (0
         == strcmp(gui_options.default_metaserver,
@@ -608,7 +596,7 @@ int client_main(int argc, char *argv[])
   if (!forced_tileset_name.isEmpty()) {
     if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
                            TRUE)) {
-      log_error(_("Can't load requested tileset %s!"),
+      qCritical(_("Can't load requested tileset %s!"),
                 qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
@@ -635,13 +623,25 @@ int client_main(int argc, char *argv[])
 /**********************************************************************/ /**
    Write messages from option saving to the log.
  **************************************************************************/
-static void log_option_save_msg(enum log_level lvl, const char *msg, ...)
+static void log_option_save_msg(QtMsgType lvl, const QString &msg)
 {
-  va_list args;
-
-  va_start(args, msg);
-  log_va_list(lvl, msg, args);
-  va_end(args);
+  switch (lvl) {
+  case QtDebugMsg:
+    qDebug("%s", qPrintable(msg));
+    break;
+  case QtInfoMsg:
+    qInfo("%s", qPrintable(msg));
+    break;
+  case QtWarningMsg:
+    qWarning("%s", qPrintable(msg));
+    break;
+  case QtCriticalMsg:
+    qCritical("%s", qPrintable(msg));
+    break;
+  case QtFatalMsg:
+    qFatal("%s", qPrintable(msg));
+    break;
+  }
 }
 
 /**********************************************************************/ /**
@@ -699,11 +699,11 @@ void client_packet_input(void *packet, int type)
       && PACKET_AUTHENTICATION_REQ != type && PACKET_SERVER_SHUTDOWN != type
       && PACKET_CONNECT_MSG != type && PACKET_EARLY_CHAT_MSG != type
       && PACKET_SERVER_INFO != type) {
-    log_error("Received packet %s (%d) before establishing connection!",
+    qCritical("Received packet %s (%d) before establishing connection!",
               packet_name(static_cast<packet_type>(type)), type);
     disconnect_from_server();
   } else if (!client_handle_packet(static_cast<packet_type>(type), packet)) {
-    log_error("Received unknown packet (type %d) from server!", type);
+    qCritical("Received unknown packet (type %d) from server!", type);
     disconnect_from_server();
   }
 }
@@ -762,14 +762,14 @@ void set_client_state(enum client_states newstate)
     fc_assert(!auto_connect);
     auto_spawn = FALSE;
     if (!client_start_server()) {
-      log_fatal(_("Failed to start local server; aborting."));
+      qFatal(_("Failed to start local server; aborting."));
       exit(EXIT_FAILURE);
     }
   }
 
   if (auto_connect && newstate == C_S_DISCONNECTED) {
     if (oldstate == C_S_DISCONNECTED) {
-      log_fatal(_("There was an error while auto connecting; aborting."));
+      qFatal(_("There was an error while auto connecting; aborting."));
       exit(EXIT_FAILURE);
     } else {
       start_autoconnecting_to_server();
@@ -800,7 +800,7 @@ void set_client_state(enum client_states newstate)
 
   switch (newstate) {
   case C_S_INITIAL:
-    log_error("%d is not a valid client state to set.", C_S_INITIAL);
+    qCritical("%d is not a valid client state to set.", C_S_INITIAL);
     break;
 
   case C_S_DISCONNECTED:
@@ -1280,7 +1280,7 @@ static server_setting_id client_ss_by_name(const char *name)
   if (pset) {
     return option_number(pset);
   } else {
-    log_error("No server setting named %s exists.", name);
+    qCritical("No server setting named %s exists.", name);
     return SERVER_SETTING_NONE;
   }
 }
@@ -1295,7 +1295,7 @@ static const char *client_ss_name_get(server_setting_id id)
   if (pset) {
     return option_name(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return NULL;
   }
 }
@@ -1309,7 +1309,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   struct option *pset = optset_option_by_number(server_optset, id);
 
   if (!pset) {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return sset_type_invalid();
   }
 
@@ -1352,7 +1352,7 @@ static bool client_ss_val_bool_get(server_setting_id id)
   if (pset) {
     return option_bool_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }
@@ -1367,7 +1367,7 @@ static int client_ss_val_int_get(server_setting_id id)
   if (pset) {
     return option_int_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return 0;
   }
 }
@@ -1382,7 +1382,7 @@ static unsigned int client_ss_val_bitwise_get(server_setting_id id)
   if (pset) {
     return option_bitwise_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }

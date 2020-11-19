@@ -2020,7 +2020,7 @@ static void dai_caravan_goto(struct ai_type *ait, struct player *pplayer,
       unit_do_action(pplayer, punit->id, dest_city->id, 0, "",
                      ACTION_MARKETPLACE);
     } else {
-      enum log_level level = LOG_NORMAL;
+      QtMsgType level = LOG_NORMAL;
 
       if (help_wonder) {
         /* A Caravan ordered to help build wonder may arrive after
@@ -2314,10 +2314,8 @@ static void dai_manage_caravan(struct ai_type *ait, struct player *pplayer,
       parameter.allow_foreign_trade = FTL_ALLIED;
     }
 
-    if (log_do_output_for_level(LOG_CARAVAN2)) {
-      parameter.callback = caravan_optimize_callback;
-      parameter.callback_data = punit;
-    }
+    parameter.callback = caravan_optimize_callback;
+    parameter.callback_data = punit;
     if (dai_caravan_can_trade_cities_diff_cont(pplayer, punit)) {
       parameter.ignore_transit_time = TRUE;
     }

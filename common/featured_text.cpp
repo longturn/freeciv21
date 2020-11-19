@@ -38,7 +38,7 @@
 #define SEQ_END '/'
 
 #define MAX_LEN_STR 32
-#define log_featured_text log_verbose
+#define log_featured_text qDebug
 
 #define text_tag_list_rev_iterate(tags, ptag)                               \
   TYPED_LIST_ITERATE_REV(struct text_tag, tags, ptag)
@@ -100,7 +100,6 @@ const struct ft_color ftc_luaconsole_error = FT_COLOR("#FF0000", NULL);
 const struct ft_color ftc_luaconsole_warn = FT_COLOR("#CF2020", NULL);
 const struct ft_color ftc_luaconsole_normal = FT_COLOR("#006400", NULL);
 const struct ft_color ftc_luaconsole_verbose = FT_COLOR("#B8B8B8", NULL);
-const struct ft_color ftc_luaconsole_debug = FT_COLOR("#B87676", NULL);
 
 /**********************************************************************/ /**
    Return the long name of the text tag type.
@@ -684,7 +683,7 @@ ft_offset_t text_tag_stop_offset(const struct text_tag *ptag)
 const char *text_tag_color_foreground(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
-    log_error("text_tag_color_foreground(): incompatible tag type.");
+    qCritical("text_tag_color_foreground(): incompatible tag type.");
     return NULL;
   }
 
@@ -698,7 +697,7 @@ const char *text_tag_color_foreground(const struct text_tag *ptag)
 const char *text_tag_color_background(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_COLOR) {
-    log_error("text_tag_color_background(): incompatible tag type.");
+    qCritical("text_tag_color_background(): incompatible tag type.");
     return NULL;
   }
 
@@ -712,7 +711,7 @@ const char *text_tag_color_background(const struct text_tag *ptag)
 enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
-    log_error("text_tag_link_type(): incompatible tag type.");
+    qCritical("text_tag_link_type(): incompatible tag type.");
     return TLT_INVALID;
   }
 
@@ -727,7 +726,7 @@ enum text_link_type text_tag_link_type(const struct text_tag *ptag)
 int text_tag_link_id(const struct text_tag *ptag)
 {
   if (ptag->type != TTT_LINK) {
-    log_error("text_tag_link_id(): incompatible tag type.");
+    qCritical("text_tag_link_id(): incompatible tag type.");
     return TTT_INVALID;
   }
 

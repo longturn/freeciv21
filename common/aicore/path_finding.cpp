@@ -30,6 +30,10 @@
 /* common/aicore */
 #include "pf_tools.h"
 
+// Qt
+#include <QDebug>
+#include <QString>
+
 #include "path_finding.h"
 
 /* For explanations on how to use this module, see "path_finding.h". */
@@ -234,17 +238,13 @@ struct pf_normal_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_normal_map *pf_normal_map_check(struct pf_map *pfm,
-                                                        const char *file,
-                                                        const char *function,
-                                                        int line)
+static inline pf_normal_map *pf_normal_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_NORMAL == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_normal_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_NORMAL == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_normal_map conversion.");
   return (struct pf_normal_map *) pfm;
 }
-#define PF_NORMAL_MAP(pfm)                                                  \
-  pf_normal_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_NORMAL_MAP(pfm) pf_normal_map_check(pfm)
 #else
 #define PF_NORMAL_MAP(pfm) ((struct pf_normal_map *) (pfm))
 #endif /* PF_DEBUG */
@@ -959,17 +959,13 @@ struct pf_danger_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_danger_map *pf_danger_map_check(struct pf_map *pfm,
-                                                        const char *file,
-                                                        const char *function,
-                                                        int line)
+static inline pf_danger_map *pf_danger_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_DANGER == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_danger_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_DANGER == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_danger_map conversion.");
   return (struct pf_danger_map *) pfm;
 }
-#define PF_DANGER_MAP(pfm)                                                  \
-  pf_danger_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_DANGER_MAP(pfm) pf_danger_map_check(pfm)
 #else
 #define PF_DANGER_MAP(pfm) ((struct pf_danger_map *) (pfm))
 #endif /* PF_DEBUG */
@@ -1321,7 +1317,7 @@ static void pf_danger_map_create_segment(struct pf_danger_map *pfdm,
 
 #ifdef PF_DEBUG
   if (NULL != node1->danger_segment) {
-    log_error("Possible memory leak in pf_danger_map_create_segment().");
+    qCritical("Possible memory leak in pf_danger_map_create_segment().");
   }
 #endif /* PF_DEBUG */
 
@@ -1680,7 +1676,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
     scope = pf_move_scope(node->move_scope);
   }
 
-  log_error("%s(): internal error.", __FUNCTION__);
+  qCritical("%s(): internal error.", __FUNCTION__);
   return FALSE;
 }
 
@@ -1939,17 +1935,13 @@ struct pf_fuel_map {
 
 /* Up-cast macro. */
 #ifdef PF_DEBUG
-static inline struct pf_fuel_map *pf_fuel_map_check(struct pf_map *pfm,
-                                                    const char *file,
-                                                    const char *function,
-                                                    int line)
+static inline pf_fuel_map *pf_fuel_map_check(pf_map *pfm)
 {
-  fc_assert_full(file, function, line, NULL != pfm && PF_FUEL == pfm->mode,
-                 return NULL, "Wrong pf_map to pf_fuel_map conversion.");
+  fc_assert_ret_val_msg(NULL != pfm && PF_FUEL == pfm->mode, nullptr,
+                        "Wrong pf_map to pf_fuel_map conversion.");
   return (struct pf_fuel_map *) pfm;
 }
-#define PF_FUEL_MAP(pfm)                                                    \
-  pf_fuel_map_check(pfm, __FILE__, __FUNCTION__, __FC_LINE__)
+#define PF_FUEL_MAP(pfm) pf_fuel_map_check(pfm)
 #else
 #define PF_FUEL_MAP(pfm) ((struct pf_fuel_map *) (pfm))
 #endif /* PF_DEBUG */
@@ -2855,7 +2847,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
     scope = pf_move_scope(node->move_scope);
   }
 
-  log_error("%s(): internal error.", __FUNCTION__);
+  qCritical("%s(): internal error.", __FUNCTION__);
   return FALSE;
 }
 
@@ -3053,16 +3045,16 @@ struct pf_map *pf_map_new(const struct pf_parameter *parameter)
 {
   if (parameter->is_pos_dangerous) {
     if (parameter->get_moves_left_req) {
-      log_error("path finding code cannot deal with dangers "
+      qCritical("path finding code cannot deal with dangers "
                 "and fuel together.");
     }
     if (parameter->get_costs) {
-      log_error("jumbo callbacks for danger maps are not yet implemented.");
+      qCritical("jumbo callbacks for danger maps are not yet implemented.");
     }
     return pf_danger_map_new(parameter);
   } else if (parameter->get_moves_left_req) {
     if (parameter->get_costs) {
-      log_error("jumbo callbacks for fuel maps are not yet implemented.");
+      qCritical("jumbo callbacks for fuel maps are not yet implemented.");
     }
     return pf_fuel_map_new(parameter);
   }
@@ -3400,31 +3392,30 @@ const struct pf_position *pf_path_last_position(const struct pf_path *path)
 }
 
 /************************************************************************/ /**
-   Debug a path. This function shouldn't be called directly, see
-   pf_path_print() defined in "path_finding.h".
+   Debug a path.
  ****************************************************************************/
-void pf_path_print_real(const struct pf_path *path, enum log_level level,
-                        const char *file, const char *function, int line)
+QDebug &operator<<(QDebug &logger, const pf_path *path)
 {
   struct pf_position *pos;
   int i;
 
   if (path) {
-    do_log(file, function, line, TRUE, level,
-           "PF: path (at %p) consists of %d positions:", (void *) path,
-           path->length);
+    logger << QString::asprintf(
+        "PF: path (at %p) consists of %d positions:\n", (void *) path,
+        path->length);
   } else {
-    do_log(file, function, line, TRUE, level, "PF: path is NULL");
-    return;
+    logger << "PF: path is NULL";
+    return logger;
   }
 
   for (i = 0, pos = path->positions; i < path->length; i++, pos++) {
-    do_log(file, function, line, FALSE, level,
-           "PF:   %2d/%2d: (%2d,%2d) dir=%-2s cost=%2d (%2d, %d) EC=%d",
-           i + 1, path->length, TILE_XY(pos->tile),
-           dir_get_name(pos->dir_to_next_pos), pos->total_MC, pos->turn,
-           pos->moves_left, pos->total_EC);
+    logger << QString::asprintf(
+        "PF:   %2d/%2d: (%2d,%2d) dir=%-2s cost=%2d (%2d, %d) EC=%d\n",
+        i + 1, path->length, TILE_XY(pos->tile),
+        dir_get_name(pos->dir_to_next_pos), pos->total_MC, pos->turn,
+        pos->moves_left, pos->total_EC);
   }
+  return logger;
 }
 
 /* ===================== pf_reverse_map functions ======================== */

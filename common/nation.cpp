@@ -21,7 +21,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h"
 #include "mem.h"
 #include "support.h"
 
@@ -53,40 +52,26 @@ static struct nation_group nation_groups[MAX_NUM_NATION_GROUPS];
 ****************************************************************************/
 #ifdef FREECIV_DEBUG
 #define NATION_CHECK(pnation, action)                                       \
-  fc_assert_action(nation_check(pnation,                                    \
-                                log_do_output_for_level(LOG_ERROR),         \
-                                __FILE__, __FUNCTION__, __FC_LINE__),       \
-                   action)
+  fc_assert_action(nation_check(pnation), action)
 
 /************************************************************************/ /**
    Returns TRUE if the nation is valid, else, print an error message and
    returns FALSE.
  ****************************************************************************/
-static inline bool nation_check(const struct nation_type *pnation,
-                                bool do_output, const char *file,
-                                const char *function, int line)
+static bool nation_check(const nation_type *pnation)
 {
   if (0 == nation_count()) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "Function called before nations setup.");
-    }
+    qCritical("Function called before nations setup.");
     return FALSE;
   }
   if (NULL == pnation) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "This function has NULL nation argument.");
-    }
+    qCritical("This function has NULL nation argument.");
     return FALSE;
   }
   if (pnation->item_number < 0 || pnation->item_number >= nation_count()
       || &nations[nation_index(pnation)] != pnation) {
-    if (do_output) {
-      do_log(file, function, line, TRUE, LOG_ERROR,
-             "This function has bad nation number %d (count %d).",
-             pnation->item_number, nation_count());
-    }
+    qCritical("This function has bad nation number %d (count %d).",
+              pnation->item_number, nation_count());
     return FALSE;
   }
   return TRUE;
@@ -379,7 +364,7 @@ nation_city_preference_revert(enum nation_city_preference prefer)
     return NCP_DISLIKE;
   }
 
-  log_error("%s(): Wrong nation_city_preference variant (%d).", __FUNCTION__,
+  qCritical("%s(): Wrong nation_city_preference variant (%d).", __FUNCTION__,
             prefer);
   return NCP_NONE;
 }
@@ -706,7 +691,7 @@ struct nation_set *nation_set_new(const char *set_name,
   struct nation_set *pset;
 
   if (MAX_NUM_NATION_SETS <= num_nation_sets) {
-    log_error("Too many nation sets (%d is the maximum).",
+    qCritical("Too many nation sets (%d is the maximum).",
               MAX_NUM_NATION_SETS);
     return NULL;
   }
@@ -719,12 +704,12 @@ struct nation_set *nation_set_new(const char *set_name,
       "Nation set description \"%s\" too long; truncating.");
 
   if (NULL != nation_set_by_rule_name(rule_name_get(&pset->name))) {
-    log_error("Duplicate nation set name %s.", rule_name_get(&pset->name));
+    qCritical("Duplicate nation set name %s.", rule_name_get(&pset->name));
     return NULL;
   }
 
   if (NULL != nation_group_by_rule_name(rule_name_get(&pset->name))) {
-    log_error("Nation set name %s is already used for a group.",
+    qCritical("Nation set name %s is already used for a group.",
               rule_name_get(&pset->name));
     return NULL;
   }
@@ -939,7 +924,7 @@ struct nation_group *nation_group_new(const char *name)
   struct nation_group *pgroup;
 
   if (MAX_NUM_NATION_GROUPS <= num_nation_groups) {
-    log_error("Too many nation groups (%d is the maximum).",
+    qCritical("Too many nation groups (%d is the maximum).",
               MAX_NUM_NATION_GROUPS);
     return NULL;
   }
@@ -948,13 +933,13 @@ struct nation_group *nation_group_new(const char *name)
   pgroup = nation_groups + num_nation_groups;
   name_set(&pgroup->name, NULL, name);
   if (NULL != nation_group_by_rule_name(rule_name_get(&pgroup->name))) {
-    log_error("Duplicate nation group name %s.",
+    qCritical("Duplicate nation group name %s.",
               rule_name_get(&pgroup->name));
     return NULL;
   }
 
   if (NULL != nation_set_by_rule_name(rule_name_get(&pgroup->name))) {
-    log_error("Nation group name %s is already used for a set.",
+    qCritical("Nation group name %s is already used for a set.",
               rule_name_get(&pgroup->name));
     return NULL;
   }

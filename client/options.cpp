@@ -362,8 +362,9 @@ struct client_options gui_options = {
     /* gui-qt client specific options. */
     FALSE, //.gui_qt_fullscreen =
     TRUE,  //.gui_qt_show_preview =
+    true,  //.gui_qt_allied_chat_only =
     TRUE,  //.gui_qt_sidebar_left =
-    "NightStalker"
+    FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
     "Sans Serif,9,-1,5,50,0,0,0,0,0",  //.gui_qt_font_help_label =
     "Monospace,8,-1,5,50,0,0,0,0,0",   //.gui_qt_font_help_text =
@@ -3277,7 +3278,7 @@ static const char *client_optset_category_name(int category)
     break;
   }
 
-  log_error("%s: invalid option category number %d.", __FUNCTION__,
+  qCritical("%s: invalid option category number %d.", __FUNCTION__,
             category);
   return NULL;
 }
@@ -5040,25 +5041,25 @@ static void message_options_load(struct section_file *file,
   for (i = 0; i < num_events; i++) {
     p = secfile_lookup_str(file, "messages.event%d.name", i);
     if (NULL == p) {
-      log_error("Corruption in file %s: %s", secfile_name(file),
+      qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
       continue;
     }
     /* Compatibility: Before 3.0 E_UNIT_WIN_DEF was called E_UNIT_WIN. */
     if (!fc_strcasecmp("E_UNIT_WIN", p)) {
-      log_deprecation(
-          _("Deprecated event type E_UNIT_WIN in client options."));
+      qCWarning(deprecations_category,
+                _("Deprecated event type E_UNIT_WIN in client options."));
       p = "E_UNIT_WIN_DEF";
     }
     event = event_type_by_name(p, strcmp);
     if (!event_type_is_valid(event)) {
-      log_error("Event not supported: %s", p);
+      qCritical("Event not supported: %s", p);
       continue;
     }
 
     if (!secfile_lookup_int(file, &messages_where[event],
                             "messages.event%d.where", i)) {
-      log_error("Corruption in file %s: %s", secfile_name(file),
+      qCritical("Corruption in file %s: %s", secfile_name(file),
                 secfile_error());
     }
   }
@@ -5200,7 +5201,7 @@ static const char *get_current_option_file_name(void)
 #else
     name = freeciv_storage_dir();
     if (!name) {
-      log_error(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find freeciv storage directory"));
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
@@ -5208,7 +5209,7 @@ static const char *get_current_option_file_name(void)
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
 #endif /* OPTION_FILE_NAME */
   }
-  log_verbose("settings file is %s", name_buffer);
+  qDebug("settings file is %s", name_buffer);
   return name_buffer;
 }
 
@@ -5251,7 +5252,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     name = freeciv_storage_dir();
     if (name == NULL) {
-      log_error(_("Cannot find freeciv storage directory"));
+      qCritical(_("Cannot find freeciv storage directory"));
 
       return NULL;
     }
@@ -5269,10 +5270,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
-            log_normal(_("Didn't find '%s' option file, "
-                         "loading from '%s' instead."),
-                       get_current_option_file_name() + strlen(name) + 1,
-                       name_buffer + strlen(name) + 1);
+            qInfo(_("Didn't find '%s' option file, "
+                    "loading from '%s' instead."),
+                  get_current_option_file_name() + strlen(name) + 1,
+                  name_buffer + strlen(name) + 1);
           }
 
           return name_buffer;
@@ -5284,7 +5285,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     /* Older versions had options file in user home directory */
     name = user_home_dir();
     if (name == NULL) {
-      log_error(_("Cannot find your home directory"));
+      qCritical(_("Cannot find your home directory"));
 
       return NULL;
     }
@@ -5300,10 +5301,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   "%s" DIR_SEPARATOR MID_OPTION_FILE_NAME, name, major,
                   minor);
       if (0 == fc_stat(name_buffer, &buf)) {
-        log_normal(_("Didn't find '%s' option file, "
-                     "loading from '%s' instead."),
-                   get_current_option_file_name() + strlen(name) + 1,
-                   name_buffer + strlen(name) + 1);
+        qInfo(_("Didn't find '%s' option file, "
+                "loading from '%s' instead."),
+              get_current_option_file_name() + strlen(name) + 1,
+              name_buffer + strlen(name) + 1);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
           *allow_digital_boolean = TRUE;
@@ -5316,10 +5317,10 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     fc_snprintf(name_buffer, sizeof(name_buffer),
                 "%s" DIR_SEPARATOR OLD_OPTION_FILE_NAME, name);
     if (0 == fc_stat(name_buffer, &buf)) {
-      log_normal(_("Didn't find '%s' option file, "
-                   "loading from '%s' instead."),
-                 get_current_option_file_name() + strlen(name) + 1,
-                 OLD_OPTION_FILE_NAME);
+      qInfo(_("Didn't find '%s' option file, "
+              "loading from '%s' instead."),
+            get_current_option_file_name() + strlen(name) + 1,
+            OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = TRUE;
       return name_buffer;
     } else {
@@ -5327,7 +5328,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 #endif /* OPTION_FILE_NAME */
   }
-  log_verbose("settings file is %s", name_buffer);
+  qDebug("settings file is %s", name_buffer);
   return name_buffer;
 }
 #undef OLD_OPTION_FILE_NAME
@@ -5394,7 +5395,7 @@ static void settable_options_load(struct section_file *sf)
     }
 
     if (NULL == string) {
-      log_error("Entry type variant of \"%s.%s\" is not supported.",
+      qCritical("Entry type variant of \"%s.%s\" is not supported.",
                 section_name(psection), entry_name(pentry));
       continue;
     }
@@ -5486,7 +5487,7 @@ void desired_settable_options_update(void)
     }
 
     if (NULL == value || NULL == def_val) {
-      log_error("Option type %s (%d) not supported for '%s'.",
+      qCritical("Option type %s (%d) not supported for '%s'.",
                 option_type_name(option_type(poption)), option_type(poption),
                 option_name(poption));
       continue;
@@ -5630,7 +5631,7 @@ static void desired_settable_option_send(struct option *poption)
     break;
   }
 
-  log_error("Option type %s (%d) not supported for '%s'.",
+  qCritical("Option type %s (%d) not supported for '%s'.",
             option_type_name(option_type(poption)), option_type(poption),
             option_name(poption));
 }
@@ -5753,7 +5754,7 @@ void options_load(void)
 
   name = get_last_option_file_name(&allow_digital_boolean);
   if (!name) {
-    log_normal(_("Didn't find the option file. Creating a new one."));
+    qInfo(_("Didn't find the option file. Creating a new one."));
     options_fully_initialized = TRUE;
     create_default_cma_presets();
     gui_options.first_boot = TRUE;
@@ -5771,9 +5772,9 @@ void options_load(void)
 
     /* FIXME: need better messages */
     if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
-      log_error(_("Save failed, cannot write to file %s"), name);
+      qCritical(_("Save failed, cannot write to file %s"), name);
     } else {
-      log_normal(_("Saved settings to file %s"), name);
+      qInfo(_("Saved settings to file %s"), name);
     }
     secfile_destroy(sf);
     options_fully_initialized = TRUE;
@@ -5879,14 +5880,10 @@ void options_load(void)
 /************************************************************************/ /**
    Write messages from option saving to the output window.
  ****************************************************************************/
-static void option_save_output_window_callback(enum log_level lvl,
-                                               const char *msg, ...)
+static void option_save_output_window_callback(QtMsgType lvl,
+                                               const QString &msg)
 {
-  va_list args;
-
-  va_start(args, msg);
-  output_window_vprintf(ftc_client, msg, args);
-  va_end(args);
+  output_window_append(ftc_client, qUtf8Printable(msg));
 }
 
 /************************************************************************/ /**
@@ -5981,9 +5978,11 @@ void options_save(option_save_log_callback log_cb)
 
   /* save to disk */
   if (!secfile_save(sf, name, 0, FZ_PLAIN)) {
-    log_cb(LOG_ERROR, _("Save failed, cannot write to file %s"), name);
+    log_cb(LOG_ERROR, QString::asprintf(
+                          _("Save failed, cannot write to file %s"), name));
   } else {
-    log_cb(LOG_VERBOSE, _("Saved settings to file %s"), name);
+    log_cb(LOG_VERBOSE,
+           QString::asprintf(_("Saved settings to file %s"), name));
   }
   secfile_destroy(sf);
 }
@@ -6027,7 +6026,7 @@ void options_init(void)
             MAX(MIN(option_int_def(poption), option_int_max(poption)),
                 option_int_min(poption));
 
-        log_error("option %s has default value of %d, which is "
+        qCritical("option %s has default value of %d, which is "
                   "out of its range [%d; %d], changing to %d.",
                   option_name(poption), option_int_def(poption),
                   option_int_min(poption), option_int_max(poption),
@@ -6047,7 +6046,7 @@ void options_init(void)
         const struct strvec *values = option_str_values(poption);
 
         if (NULL == values || strvec_size(values) == 0) {
-          log_error("Invalid NULL default string for option %s.",
+          qCritical("Invalid NULL default string for option %s.",
                     option_name(poption));
         } else {
           *((const char **) &(pcoption->string.def)) = strvec_get(values, 0);
@@ -6209,9 +6208,9 @@ static void mapimg_changed_callback(struct option *poption)
   if (!mapimg_client_define()) {
     bool success;
 
-    log_normal("Error setting the value for %s (%s). Restoring the default "
-               "value.",
-               option_name(poption), mapimg_error());
+    qInfo("Error setting the value for %s (%s). Restoring the default "
+          "value.",
+          option_name(poption), mapimg_error());
 
     /* Reset the value to the default value. */
     success = option_reset(poption);
@@ -6330,7 +6329,7 @@ void option_set_default_ts(struct tileset *t)
   opt = optset_option_by_name(client_optset, optname);
 
   if (opt == NULL) {
-    log_error("Unknown option name \"%s\" in option_set_default_ts()",
+    qCritical("Unknown option name \"%s\" in option_set_default_ts()",
               optname);
     return;
   }

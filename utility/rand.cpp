@@ -110,7 +110,7 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
     rand_state.v[rand_state.x] = new_rand;
 
     if (++bailout > 10000) {
-      log_error("%s(%lu) = %lu bailout at %s:%d", called_as,
+      qCritical("%s(%lu) = %lu bailout at %s:%d", called_as,
                 (unsigned long) size, (unsigned long) new_rand, file, line);
       new_rand = 0;
       break;

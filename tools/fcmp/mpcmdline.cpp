@@ -51,16 +51,12 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.addVersionOption();
 
   bool ok = parser.addOptions(
-      {{{"d", "debug"},
-#ifdef FREECIV_DEBUG
-        _("Set debug log level (one of f,e,w,n,v,d, or "
-          "d:file1,min,max:...)"),
-#else
-        QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                          LOG_VERBOSE),
-#endif
-        // TRANS: Command-line argument
-        _("LEVEL")},
+      {{{"d", _("debug")},
+        // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+        //        "debug". It's exactly what the user must type.
+        _("Set debug log level (fatal/critical/warning/info/debug)"),
+        _("LEVEL"),
+        QStringLiteral("info")},
        {{"i", "install"},
         _("Automatically install modpack from a given URL"),
         // TRANS: Command line argument
@@ -82,11 +78,8 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  log_level loglevel;
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &loglevel)) {
-      exit(EXIT_FAILURE);
-    }
+  if (log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
   }
   if (parser.isSet("List")) {
     fcmp.list_url = QUrl::fromUserInput(parser.value("List"));
@@ -98,13 +91,11 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
     fcmp.autoinstall = parser.value("install");
   }
 
-  log_init(NULL, loglevel, NULL, NULL, -1);
-
   if (fcmp.inst_prefix.isNull()) {
     fcmp.inst_prefix = freeciv_storage_dir();
 
     if (fcmp.inst_prefix.isNull()) {
-      log_error("Cannot determine freeciv storage directory");
+      qCritical("Cannot determine freeciv storage directory");
     }
   }
 }

@@ -18,10 +18,8 @@
 #ifndef FC__TILESPEC_H
 #define FC__TILESPEC_H
 
-
-
 /* utility */
-#include "log.h" /* enum log_level */
+#include "log.h" /* QtMsgType */
 
 /* common */
 #include "city.h" /* enum citizen_category */
@@ -204,7 +202,7 @@ extern struct tileset *unscaled_tileset;
 struct strvec;
 const struct strvec *get_tileset_list(const struct option *poption);
 
-void tileset_error(enum log_level level, const char *format, ...);
+void tileset_error(QtMsgType level, const char *format, ...);
 
 void tileset_init(struct tileset *t);
 void tileset_free(struct tileset *tileset);
@@ -373,9 +371,8 @@ struct sprite *get_event_sprite(const struct tileset *t,
                                 enum event_type event);
 
 struct sprite *tiles_lookup_sprite_tag_alt(struct tileset *t,
-                                           enum log_level level,
-                                           const char *tag, const char *alt,
-                                           const char *what,
+                                           QtMsgType level, const char *tag,
+                                           const char *alt, const char *what,
                                            const char *name, bool scale);
 
 struct color_system;
@@ -419,7 +416,5 @@ const char *tileset_summary(struct tileset *t);
 const char *tileset_description(struct tileset *t);
 char *tileset_what_ruleset(struct tileset *t);
 int tileset_topo_index(struct tileset *t);
-
-
 
 #endif /* FC__TILESPEC_H */

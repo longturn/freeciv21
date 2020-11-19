@@ -320,10 +320,9 @@ static void dai_city_choose_build(struct ai_type *ait,
 
 #ifdef ADV_CHOICE_TRACK
     if (city_data->choice.log_if_chosen) {
-      log_normal("%s wants %s for %s with desire " ADV_WANT_PRINTF ".",
-                 city_name_get(pcity),
-                 dai_choice_rule_name(&city_data->choice),
-                 city_data->choice.use, city_data->choice.want);
+      qInfo("%s wants %s for %s with desire " ADV_WANT_PRINTF ".",
+            city_name_get(pcity), dai_choice_rule_name(&city_data->choice),
+            city_data->choice.use, city_data->choice.want);
     }
 #endif /* ADV_CHOICE_TRACK */
 

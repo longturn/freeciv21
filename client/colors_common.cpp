@@ -58,7 +58,7 @@ struct color_system *color_system_read(struct section_file *file)
                       color_std_name(stdcolor))) {
       *(colors->stdcolors + stdcolor) = prgbcolor;
     } else {
-      log_error("Color %s: %s", color_std_name(stdcolor), secfile_error());
+      qCritical("Color %s: %s", color_std_name(stdcolor), secfile_error());
       *(colors->stdcolors + stdcolor) = rgbcolor_new(0, 0, 0);
     }
   }

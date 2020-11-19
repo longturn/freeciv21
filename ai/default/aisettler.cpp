@@ -1269,7 +1269,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
                 TILE_XY(ptile));
     } else {
       /* The request was illegal to begin with. */
-      log_error("%s: Failed to build city at (%d, %d). Reason id: %d",
+      qCritical("%s: Failed to build city at (%d, %d). Reason id: %d",
                 player_name(pplayer), TILE_XY(ptile), reason);
     }
     return FALSE;

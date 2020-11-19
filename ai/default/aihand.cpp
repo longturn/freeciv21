@@ -227,9 +227,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
   int rate_lux_min_celebrate = maxrate;
   int delta_tax = 0, delta_sci = 0;
 
-#ifdef DEBUG_TIMERS
   civtimer *taxtimer = NULL;
-#endif
 
   struct cm_parameter cmp;
 
@@ -243,10 +241,8 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     return; /* This government does not support changing tax rates. */
   }
 
-#ifdef DEBUG_TIMERS
   taxtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(taxtimer);
-#endif
 
   /* City parameters needed for celebrations. */
   cm_init_parameter(&cmp);
@@ -686,15 +682,13 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
   send_player_info_c(pplayer, pplayer->connections);
 
-#ifdef DEBUG_TIMERS
   timer_stop(taxtimer);
-  log_base(LOGLEVEL_TAX,
-           "Tax calculation for %s (player %d) in %.3f "
-           "seconds.",
-           player_name(pplayer), player_index(pplayer),
-           timer_read_seconds(taxtimer));
+  qCDebug(timers_category,
+          "Tax calculation for %s (player %d) in %.3f "
+          "seconds.",
+          player_name(pplayer), player_index(pplayer),
+          timer_read_seconds(taxtimer));
   timer_destroy(taxtimer);
-#endif /* DEBUG_TIMERS */
 }
 #undef RATE_NOT_SET
 #undef RATE_VALID

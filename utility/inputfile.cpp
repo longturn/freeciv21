@@ -71,11 +71,13 @@
 #include <stdio.h>
 #include <string.h>
 
+// Qt
+#include <QLoggingCategory>
+
 /* utility */
 #include "astring.h"
 #include "fcintl.h"
 #include "ioz.h"
-#include "log.h"
 #include "mem.h"
 #include "shared.h" /* TRUE, FALSE */
 #include "support.h"
@@ -138,12 +140,7 @@ static struct {
 
 static bool read_a_line(struct inputfile *inf);
 
-#define inf_log(inf, level, message, ...)                                   \
-  if (log_do_output_for_level(level)) {                                     \
-    do_log(__FILE__, __FUNCTION__, __FC_LINE__, FALSE, level, "%s",         \
-           inf_log_str(inf, message, ##__VA_ARGS__));                       \
-  }
-#define inf_warn(inf, message) inf_log(inf, LOG_NORMAL, "%s", message);
+Q_LOGGING_CATEGORY(inf_category, "freeciv.inputfile")
 
 /*******************************************************************/ /**
    Return true if c is a 'comment' character: '#' or ';'
@@ -260,12 +257,12 @@ static void inf_close_partial(struct inputfile *inf)
   log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
   if (fz_ferror(inf->fp) != 0) {
-    log_error("Error before closing %s: %s", inf_filename(inf),
+    qCritical("Error before closing %s: %s", inf_filename(inf),
               fz_strerror(inf->fp));
     fz_fclose(inf->fp);
     inf->fp = NULL;
   } else if (fz_fclose(inf->fp) != 0) {
-    log_error("Error closing %s", inf_filename(inf));
+    qCritical("Error closing %s", inf_filename(inf));
   }
   if (inf->filename) {
     delete[] inf->filename;
@@ -370,7 +367,7 @@ static bool check_include(struct inputfile *inf)
   }
 
   if (*c != '\"') {
-    inf_log(inf, LOG_ERROR,
+    qCCritical(inf_category,
             "Did not find opening doublequote for '*include' line");
     return FALSE;
   }
@@ -381,7 +378,7 @@ static bool check_include(struct inputfile *inf)
   while (*c != '\0' && *c != '\"')
     c++;
   if (*c != '\"') {
-    inf_log(inf, LOG_ERROR,
+    qCCritical(inf_category,
             "Did not find closing doublequote for '*include' line");
     return FALSE;
   }
@@ -397,7 +394,7 @@ static bool check_include(struct inputfile *inf)
     c++;
   }
   if (!(*c == '\0' || is_comment(*c))) {
-    inf_log(inf, LOG_ERROR, "Junk after filename for '*include' line");
+    qCCritical(inf_category, "Junk after filename for '*include' line");
     free(bare_name);
     return FALSE;
   }
@@ -405,7 +402,7 @@ static bool check_include(struct inputfile *inf)
 
   full_name = inf->datafn(bare_name);
   if (!full_name) {
-    log_error("Could not find included file \"%s\"", bare_name);
+    qCritical("Could not find included file \"%s\"", bare_name);
     free(bare_name);
     return FALSE;
   }
@@ -417,7 +414,7 @@ static bool check_include(struct inputfile *inf)
     struct inputfile *inc = inf;
     do {
       if (inc->filename && strcmp(full_name, inc->filename) == 0) {
-        log_error("Recursion trap on '*include' for \"%s\"", full_name);
+        qCritical("Recursion trap on '*include' for \"%s\"", full_name);
         return FALSE;
       }
     } while ((inc = inc->included_from));
@@ -474,13 +471,13 @@ static bool read_a_line(struct inputfile *inf)
     if (!ret) {
       /* fgets failed */
       if (pos > 0) {
-        inf_log(inf, LOG_ERROR, _("End-of-file not in line of its own"));
+        qCCritical(inf_category, _("End-of-file not in line of its own"));
       }
       inf->at_eof = TRUE;
       if (inf->in_string) {
         /* Note: Don't allow multi-line strings to cross "include"
          * boundaries */
-        inf_log(inf, LOG_ERROR, "Multi-line string went to end-of-file");
+        qCCritical(inf_category, "Multi-line string went to end-of-file");
         return FALSE;
       }
       break;
@@ -590,7 +587,7 @@ const char *inf_token(struct inputfile *inf, enum inf_token_type type)
   func = tok_tab[type].func;
 
   if (!func) {
-    log_error("token type %d (%s) not supported yet", type, name);
+    qCritical("token type %d (%s) not supported yet", type, name);
     c = NULL;
   } else {
     while (!have_line(inf) && read_a_line(inf)) {
@@ -857,14 +854,14 @@ static const char *get_token_value(struct inputfile *inf)
 
     rfname = fileinfoname(get_data_dirs(), start);
     if (rfname == NULL) {
-      inf_log(inf, LOG_ERROR, _("Cannot find stringfile \"%s\"."), start);
+      qCCritical(inf_category, _("Cannot find stringfile \"%s\"."), start);
       *((char *) c) = trailing; /* Revert. */
       return NULL;
     }
     *((char *) c) = trailing; /* Revert. */
     fp = fz_from_file(rfname, "r", FZ_PLAIN, 0);
     if (!fp) {
-      inf_log(inf, LOG_ERROR, _("Cannot open stringfile \"%s\"."), rfname);
+      qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
       return NULL;
     }
     log_debug("Stringfile \"%s\" opened ok", start);
@@ -955,7 +952,7 @@ static const char *get_token_value(struct inputfile *inf)
 
     if (!read_a_line(inf)) {
       /* shouldn't happen */
-      inf_log(inf, LOG_ERROR,
+      qCCritical(inf_category,
               "Bad return for multi-line string from read_a_line");
       return NULL;
     }
@@ -976,7 +973,7 @@ static const char *get_token_value(struct inputfile *inf)
     if (*++c == ')') {
       inf->cur_line_pos++;
     } else {
-      inf_warn(inf, "Missing end of i18n string marking");
+      qCWarning(inf_category, "Missing end of i18n string marking");
     }
   }
   inf->in_string = FALSE;

@@ -194,8 +194,8 @@ struct player *create_barbarian_player(enum barbarian_type type)
 
   CALL_PLR_AI_FUNC(gained_control, barbarians, barbarians);
 
-  log_verbose("Created barbarian %s, player %d", player_name(barbarians),
-              player_number(barbarians));
+  qDebug("Created barbarian %s, player %d", player_name(barbarians),
+         player_number(barbarians));
   notify_player(NULL, NULL, E_UPRISING, ftc_server,
                 _("%s gain a leader by the name %s. Dangerous "
                   "times may lie ahead."),

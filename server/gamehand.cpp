@@ -191,8 +191,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
 
   if (hut_present) {
     update_tile_knowledge(ptile);
-    log_verbose("Removed hut on start position for %s",
-                player_name(pplayer));
+    qDebug("Removed hut on start position for %s", player_name(pplayer));
   }
 
   /* Expose visible area. */
@@ -413,9 +412,9 @@ static void do_team_placement(const struct team_placement_config *pconfig,
 
     team_placement_state_destroy(pstate);
     if (iter++ >= iter_max) {
-      log_normal(_("Didn't find optimal solution for team placement "
-                   "in %d iterations."),
-                 iter);
+      qInfo(_("Didn't find optimal solution for team placement "
+              "in %d iterations."),
+            iter);
       break;
     }
 
@@ -468,12 +467,12 @@ void init_new_game(void)
             == map_startpos_count());
 
   memset(player_startpos, 0, sizeof(player_startpos));
-  log_verbose("Placing players at start positions.");
+  qDebug("Placing players at start positions.");
 
   /* First assign start positions which have restrictions on which nations
    * can use them. */
   if (0 < startpos_list_size(targeted_list)) {
-    log_verbose("Assigning matching nations.");
+    qDebug("Assigning matching nations.");
 
     startpos_list_shuffle(targeted_list); /* Randomize. */
     do {
@@ -514,10 +513,9 @@ void init_new_game(void)
           startpos_list_erase(targeted_list, choice);
           players_to_place--;
           removed = TRUE;
-          log_verbose(
-              "Start position (%d, %d) exactly matches player %s (%s).",
-              TILE_XY(ptile), player_name(pplayer),
-              nation_rule_name(pnation));
+          qDebug("Start position (%d, %d) exactly matches player %s (%s).",
+                 TILE_XY(ptile), player_name(pplayer),
+                 nation_rule_name(pnation));
         }
       }
       players_iterate_end;
@@ -549,16 +547,16 @@ void init_new_game(void)
         if (NULL != rand_plr) {
           player_startpos[player_index(rand_plr)] = ptile;
           players_to_place--;
-          log_verbose("Start position (%d, %d) matches player %s (%s).",
-                      TILE_XY(ptile), player_name(rand_plr),
-                      nation_rule_name(nation_of_player(rand_plr)));
+          qDebug("Start position (%d, %d) matches player %s (%s).",
+                 TILE_XY(ptile), player_name(rand_plr),
+                 nation_rule_name(nation_of_player(rand_plr)));
         } else {
           /* This start position cannot be assigned, given the assignments
            * made so far. We may have to fall back to mismatched
            * assignments. */
-          log_verbose("Start position (%d, %d) cannot be assigned for "
-                      "any player, keeping for the moment...",
-                      TILE_XY(ptile));
+          qDebug("Start position (%d, %d) cannot be assigned for "
+                 "any player, keeping for the moment...",
+                 TILE_XY(ptile));
           /* Keep it for later, we may need it. */
           startpos_list_append(impossible_list, psp);
         }
@@ -599,9 +597,9 @@ void init_new_game(void)
       struct team_placement_state state;
       int i, j, t;
 
-      log_verbose("Do team placement for %d players, using %s variant.",
-                  team_placement_players_to_place,
-                  team_placement_name(wld.map.server.team_placement));
+      qDebug("Do team placement for %d players, using %s variant.",
+             team_placement_players_to_place,
+             team_placement_name(wld.map.server.team_placement));
 
       /* Initialize configuration. */
       config.flexible_startpos_num = startpos_list_size(flexible_list);
@@ -680,8 +678,8 @@ void init_new_game(void)
           int candidate_index = -1;
           int candidate_num = 0;
 
-          log_verbose("Start position (%d, %d) assigned to team %d (%s)",
-                      TILE_XY(config.startpos[i]), t, team_rule_name(pteam));
+          qDebug("Start position (%d, %d) assigned to team %d (%s)",
+                 TILE_XY(config.startpos[i]), t, team_rule_name(pteam));
 
           player_list_iterate(team_members(pteam), member)
           {
@@ -735,7 +733,7 @@ void init_new_game(void)
   if (0 < players_to_place && 0 < startpos_list_size(flexible_list)) {
     struct tile *ptile;
 
-    log_verbose("Assigning unrestricted start positions.");
+    qDebug("Assigning unrestricted start positions.");
 
     startpos_list_shuffle(flexible_list); /* Randomize. */
     players_iterate(pplayer)
@@ -749,10 +747,10 @@ void init_new_game(void)
       player_startpos[player_index(pplayer)] = ptile;
       players_to_place--;
       startpos_list_pop_front(flexible_list);
-      log_verbose("Start position (%d, %d) assigned randomly "
-                  "to player %s (%s).",
-                  TILE_XY(ptile), player_name(pplayer),
-                  nation_rule_name(nation_of_player(pplayer)));
+      qDebug("Start position (%d, %d) assigned randomly "
+             "to player %s (%s).",
+             TILE_XY(ptile), player_name(pplayer),
+             nation_rule_name(nation_of_player(pplayer)));
       if (0 == startpos_list_size(flexible_list)) {
         break;
       }
@@ -768,8 +766,7 @@ void init_new_game(void)
 
     struct tile *ptile;
 
-    log_verbose(
-        "Ignoring nation restrictions on remaining start positions.");
+    qDebug("Ignoring nation restrictions on remaining start positions.");
 
     startpos_list_shuffle(impossible_list); /* Randomize. */
     players_iterate(pplayer)
@@ -783,10 +780,10 @@ void init_new_game(void)
       player_startpos[player_index(pplayer)] = ptile;
       players_to_place--;
       startpos_list_pop_front(impossible_list);
-      log_verbose("Start position (%d, %d) assigned to mismatched "
-                  "player %s (%s).",
-                  TILE_XY(ptile), player_name(pplayer),
-                  nation_rule_name(nation_of_player(pplayer)));
+      qDebug("Start position (%d, %d) assigned to mismatched "
+             "player %s (%s).",
+             TILE_XY(ptile), player_name(pplayer),
+             nation_rule_name(nation_of_player(pplayer)));
       if (0 == startpos_list_size(impossible_list)) {
         break;
       }
@@ -1133,16 +1130,15 @@ static void send_ruleset_choices(struct connection *pc)
   {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
-      log_verbose("Can't send more than %d ruleset names to client, "
-                  "skipping some",
-                  MAX_NUM_RULESETS);
+      qDebug("Can't send more than %d ruleset names to client, "
+             "skipping some",
+             MAX_NUM_RULESETS);
       break;
     }
     if (fc_strlcpy(packet.rulesets[i], s, maxlen) < maxlen) {
       i++;
     } else {
-      log_verbose("Ruleset name '%s' too long to send to client, skipped",
-                  s);
+      qDebug("Ruleset name '%s' too long to send to client, skipped", s);
     }
   }
   strvec_iterate_end;

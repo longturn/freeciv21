@@ -166,7 +166,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else  /* FREECIV_TESTMATIC */
+#else /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -211,11 +211,8 @@ void srv_init(void)
 
   srvarg.port = DEFAULT_SOCK_PORT;
 
-  srvarg.loglevel = LOG_NORMAL;
-
-  srvarg.fatal_assertions = -1;
-  srvarg.saves_pathname = QString("");
-  srvarg.scenarios_pathname = QString("");
+  srvarg.saves_pathname = QStringLiteral("");
+  srvarg.scenarios_pathname = QStringLiteral("");
 
   srvarg.quitidle = 0;
 
@@ -1107,7 +1104,7 @@ void begin_turn(bool is_new_turn)
     game.server.num_phases = team_count();
     break;
   default:
-    log_error("Unrecognized phase mode %d in begin_turn().",
+    qCritical("Unrecognized phase mode %d in begin_turn().",
               game.info.phase_mode);
     game.server.num_phases = 1;
     break;
@@ -1913,12 +1910,12 @@ void handle_report_req(struct connection *pconn, enum report_type type)
   struct conn_list *dest = pconn->self;
 
   if (S_S_RUNNING != server_state() && S_S_OVER != server_state()) {
-    log_error("Got a report request %d before game start", type);
+    qCritical("Got a report request %d before game start", type);
     return;
   }
 
   if (NULL == pconn->playing && !pconn->observer) {
-    log_error("Got a report request %d from detached connection", type);
+    qCritical("Got a report request %d from detached connection", type);
     return;
   }
 
@@ -2023,8 +2020,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     unsigned char buffer[4096];
     struct raw_data_out dout;
 
-    log_normal(_("Warning: rejecting old client %s"),
-               conn_description(pconn));
+    qInfo(_("Warning: rejecting old client %s"), conn_description(pconn));
 
     dio_output_init(&dout, buffer, sizeof(buffer));
     dio_put_uint16_raw(&dout, 0);
@@ -2071,7 +2067,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   }
 
   if (!pconn->established) {
-    log_error("Received game packet %s(%d) from unaccepted connection %s.",
+    qCritical("Received game packet %s(%d) from unaccepted connection %s.",
               packet_name(packet_type(type)), type, conn_description(pconn));
     return TRUE;
   }
@@ -2093,7 +2089,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
     }
 
     if (!server_handle_packet(packet_type(type), packet, NULL, pconn)) {
-      log_error("Received unknown packet %d from %s.", type,
+      qCritical("Received unknown packet %d from %s.", type,
                 conn_description(pconn));
     }
     return TRUE;
@@ -2107,7 +2103,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
       return TRUE;
     }
     /* don't support these yet */
-    log_error("Received packet %s(%d) from non-player connection %s.",
+    qCritical("Received packet %s(%d) from non-player connection %s.",
               packet_name(packet_type(type)), type, conn_description(pconn));
     return TRUE;
   }
@@ -2121,7 +2117,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
                 packet_name(packet_type(type)), type,
                 server_states_name(S_S_OVER));
     } else {
-      log_error("Got a packet of type %s(%d) outside %s.",
+      qCritical("Got a packet of type %s(%d) outside %s.",
                 packet_name(packet_type(type)), type,
                 server_states_name(S_S_RUNNING));
     }
@@ -2131,7 +2127,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   pplayer->nturns_idle = 0;
 
   if (!pplayer->is_alive && type != PACKET_REPORT_REQ) {
-    log_error("Got a packet of type %s(%d) from a dead player.",
+    qCritical("Got a packet of type %s(%d) from a dead player.",
               packet_name(packet_type(type)), type);
     return TRUE;
   }
@@ -2140,7 +2136,7 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
   pplayer->current_conn = pconn;
 
   if (!server_handle_packet(packet_type(type), packet, pplayer, pconn)) {
-    log_error("Received unknown packet %d from %s.", type,
+    qCritical("Received unknown packet %d from %s.", type,
               conn_description(pconn));
   }
 
@@ -2495,10 +2491,10 @@ const char *aifill(int amount)
 
     CALL_PLR_AI_FUNC(gained_control, pplayer, pplayer);
 
-    log_normal(_("%s has been added as %s level AI-controlled player (%s)."),
-               player_name(pplayer),
-               ai_level_translated_name(pplayer->ai_common.skill_level),
-               ai_name(pplayer->ai));
+    qInfo(_("%s has been added as %s level AI-controlled player (%s)."),
+          player_name(pplayer),
+          ai_level_translated_name(pplayer->ai_common.skill_level),
+          ai_name(pplayer->ai));
     notify_conn(
         NULL, NULL, E_SETTING, ftc_server,
         _("%s has been added as %s level AI-controlled player (%s)."),
@@ -2798,8 +2794,8 @@ const char *pick_random_player_name(const struct nation_type *pnation)
  **************************************************************************/
 static void announce_player(struct player *pplayer)
 {
-  log_normal(_("%s rules the %s."), player_name(pplayer),
-             nation_plural_for_player(pplayer));
+  qInfo(_("%s rules the %s."), player_name(pplayer),
+        nation_plural_for_player(pplayer));
 
   notify_conn(game.est_connections, NULL, E_GAME_START, ftc_server,
               _("%s rules the %s."), player_name(pplayer),
@@ -2960,14 +2956,14 @@ void srv_ready()
         fc_assert(wld.map.server.seed_setting == 0);
         if (i == 0) {
           /* We will retry only if max attempts allow it */
-          log_normal(_("Failed to create suitable map, retrying with "
-                       "another mapseed."));
+          qInfo(_("Failed to create suitable map, retrying with "
+                  "another mapseed."));
         } else {
           /* +1 - start human readable count from 1 and not from 0
            * +1 - refers to next round, not to one we just did
            * ==
            * +2 */
-          log_normal(_("Attempt %d/%d"), i + 2, max);
+          qInfo(_("Attempt %d/%d"), i + 2, max);
         }
         wld.map.server.have_resources = FALSE;
 
@@ -2991,8 +2987,8 @@ void srv_ready()
       }
     }
     if (!created) {
-      bugreport_request(
-          _("Cannot create suitable map with given settings."));
+      qCCritical(bugs_category,
+                 _("Cannot create suitable map with given settings."));
 
       exit(EXIT_FAILURE);
     }
@@ -3017,8 +3013,8 @@ void srv_ready()
       notify_conn(NULL, NULL, E_SETTING, ftc_server,
                   _("Setting '%s' has been adjusted from %s to %s."),
                   setting_name(pset), mapgen_settings[i].pretty, pretty);
-      log_normal(_("Setting '%s' has been adjusted from %s to %s."),
-                 setting_name(pset), mapgen_settings[i].pretty, pretty);
+      qInfo(_("Setting '%s' has been adjusted from %s to %s."),
+            setting_name(pset), mapgen_settings[i].pretty, pretty);
     }
   }
 
@@ -3135,7 +3131,7 @@ void srv_ready()
 
   CALL_FUNC_EACH_AI(game_start);
 
-  log_verbose("srv_running() mostly redundant send_server_settings()");
+  qDebug("srv_running() mostly redundant send_server_settings()");
   send_server_settings(NULL);
 
   if (game.server.autosaves & (1 << AS_TIMER)) {
@@ -3251,7 +3247,7 @@ server_setting_id server_ss_by_name(const char *name)
   if (pset) {
     return setting_number(pset);
   } else {
-    log_error("No server setting named %s exists.", name);
+    qCritical("No server setting named %s exists.", name);
     return SERVER_SETTING_NONE;
   }
 }
@@ -3266,7 +3262,7 @@ const char *server_ss_name_get(server_setting_id id)
   if (pset) {
     return setting_name(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return NULL;
   }
 }
@@ -3281,7 +3277,7 @@ enum sset_type server_ss_type_get(server_setting_id id)
   if (pset) {
     return setting_type(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return sset_type_invalid();
   }
 }
@@ -3296,7 +3292,7 @@ bool server_ss_val_bool_get(server_setting_id id)
   if (pset) {
     return setting_bool_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }
@@ -3311,7 +3307,7 @@ int server_ss_val_int_get(server_setting_id id)
   if (pset) {
     return setting_int_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return 0;
   }
 }
@@ -3326,7 +3322,7 @@ unsigned int server_ss_val_bitwise_get(server_setting_id id)
   if (pset) {
     return setting_bitwise_get(pset);
   } else {
-    log_error("No server setting with the id %d exists.", id);
+    qCritical("No server setting with the id %d exists.", id);
     return FALSE;
   }
 }

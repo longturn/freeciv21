@@ -93,7 +93,7 @@ static void client_conn_close_callback(struct connection *pconn)
   close_socket_nomessage(pconn);
   /* If we lost connection to the internal server - kill it. */
   client_kill_server(TRUE);
-  log_error("Lost connection to server: %s.", qPrintable(reason));
+  qCritical("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
 }
@@ -391,10 +391,10 @@ double try_to_autoconnect(void)
   count++;
 
   if (count >= MAX_AUTOCONNECT_ATTEMPTS) {
-    log_fatal(_("Failed to contact server \"%s\" at port "
-                "%d as \"%s\" after %d attempts"),
-              qUtf8Printable(server_host), server_port,
-              qUtf8Printable(user_name), count);
+    qFatal(_("Failed to contact server \"%s\" at port "
+             "%d as \"%s\" after %d attempts"),
+           qUtf8Printable(server_host), server_port,
+           qUtf8Printable(user_name), count);
     exit(EXIT_FAILURE);
   }
 
@@ -406,10 +406,10 @@ double try_to_autoconnect(void)
     return FC_INFINITY;
   } else {
     // All errors are fatal
-    log_fatal(_("Error contacting server \"%s\" at port %d "
-                "as \"%s\":\n %s\n"),
-              qUtf8Printable(server_host), server_port,
-              qUtf8Printable(user_name), errbuf);
+    qFatal(_("Error contacting server \"%s\" at port %d "
+             "as \"%s\":\n %s\n"),
+           qUtf8Printable(server_host), server_port,
+           qUtf8Printable(user_name), errbuf);
     exit(EXIT_FAILURE);
   }
 }

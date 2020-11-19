@@ -14,10 +14,8 @@
 #ifndef FC__BUGS_H
 #define FC__BUGS_H
 
+#include <QLoggingCategory>
 
-
-void bugreport_request(const char *reason_format, ...);
-
-
+Q_DECLARE_LOGGING_CATEGORY(bugs_category)
 
 #endif /* FC__BUGS_H */

@@ -23,7 +23,6 @@
 /* utility */
 #include "capability.h"
 #include "fcintl.h"
-#include "log.h"
 #include "registry.h"
 
 /* common */
@@ -40,11 +39,10 @@
 
 #include "rscompat.h"
 
-#define enough_new_user_flags(_new_flags_, _name_, _LAST_USER_FLAG_,        \
-                              _LAST_USER_FLAG_PREV_)                        \
-  FC_STATIC_ASSERT((ARRAY_SIZE(_new_flags_)                                 \
-                    <= _LAST_USER_FLAG_ - _LAST_USER_FLAG_PREV_),           \
-                   not_enough_new_##_name_##_user_flags)
+struct new_flags {
+  const char *name;
+  const char *helptxt;
+};
 
 #define UTYF_LAST_USER_FLAG_3_0 UTYF_USER_FLAG_40
 #define UCF_LAST_USER_FLAG_3_0 UCF_USER_FLAG_8
@@ -71,8 +69,9 @@ int rscompat_check_capabilities(struct section_file *file,
   int format;
 
   if (!(datafile_options = secfile_lookup_str(file, "datafile.options"))) {
-    log_fatal("\"%s\": ruleset capability problem:", filename);
-    ruleset_error(LOG_ERROR, "%s", secfile_error());
+    qCCritical(ruleset_category,
+               "\"%s\": ruleset capability problem:", filename);
+    qCCritical(ruleset_category, "%s", secfile_error());
 
     return 0;
   }
@@ -90,33 +89,39 @@ int rscompat_check_capabilities(struct section_file *file,
 
   if (!ok) {
     if (!has_capabilities(RULESET_CAPABILITIES, datafile_options)) {
-      log_fatal("\"%s\": ruleset datafile appears incompatible:", filename);
-      log_fatal("  datafile options: %s", datafile_options);
-      log_fatal("  supported options: %s", RULESET_CAPABILITIES);
-      ruleset_error(LOG_ERROR, "Capability problem");
+      qCCritical(ruleset_category,
+                 "\"%s\": ruleset datafile appears incompatible:", filename);
+      qCCritical(ruleset_category, "  datafile options: %s",
+                 datafile_options);
+      qCCritical(ruleset_category, "  supported options: %s",
+                 RULESET_CAPABILITIES);
+      qCCritical(ruleset_category, "Capability problem");
 
       return 0;
     }
     if (!has_capabilities(datafile_options, RULESET_CAPABILITIES)) {
-      log_fatal("\"%s\": ruleset datafile claims required option(s)"
-                " that we don't support:",
-                filename);
-      log_fatal("  datafile options: %s", datafile_options);
-      log_fatal("  supported options: %s", RULESET_CAPABILITIES);
-      ruleset_error(LOG_ERROR, "Capability problem");
+      qCCritical(ruleset_category,
+                 "\"%s\": ruleset datafile claims required option(s)"
+                 " that we don't support:",
+                 filename);
+      qCCritical(ruleset_category, "  datafile options: %s",
+                 datafile_options);
+      qCCritical(ruleset_category, "  supported options: %s",
+                 RULESET_CAPABILITIES);
+      qCCritical(ruleset_category, "Capability problem");
 
       return 0;
     }
   }
 
   if (!secfile_lookup_int(file, &format, "datafile.format_version")) {
-    log_error("\"%s\": lacking legal format_version field", filename);
-    ruleset_error(LOG_ERROR, "%s", secfile_error());
+    qCritical("\"%s\": lacking legal format_version field", filename);
+    qCCritical(ruleset_category, "%s", secfile_error());
 
     return 0;
   } else if (format == 0) {
-    log_error("\"%s\": Illegal format_version value", filename);
-    ruleset_error(LOG_ERROR, "Format version error");
+    qCritical("\"%s\": Illegal format_version value", filename);
+    qCCritical(ruleset_category, "Format version error");
   }
 
   return format;
@@ -146,7 +151,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
     if (problem->num_suggested_solutions == 0) {
       /* Didn't get any suggestions about how to solve this. */
 
-      log_error("Dropping an action enabler for %s."
+      qCritical("Dropping an action enabler for %s."
                 " Don't know how to fix: %s.",
                 action_rule_name(paction), problem->description);
       ae->disabled = TRUE;
@@ -167,7 +172,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
          * it obligatory. In that case the enabler was never in use. The
          * action it self would have blocked it. */
 
-        log_error("While adding hard obligatory reqs to action enabler"
+        qCritical("While adding hard obligatory reqs to action enabler"
                   " for %s: %s Dropping it.",
                   action_rule_name(paction), problem->description);
         ae->disabled = TRUE;
@@ -188,7 +193,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
       if (!req_vec_change_apply(&problem->suggested_solutions[i],
                                 action_enabler_vector_by_number,
                                 new_enabler)) {
-        log_error(
+        qCritical(
             "Failed to apply solution %s for %s to action enabler"
             " for %s. Dropping it.",
             req_vec_change_translation(&problem->suggested_solutions[i],
@@ -335,33 +340,30 @@ bool rscompat_names(struct rscompat_info *info)
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_flags_31[] = {
-        {N_("Infra"), N_("Can build infrastructure.")},
-        {N_("BeachLander"), N_("Won't lose all movement when moving from"
-                               " non-native terrain to native terrain.")},
-        {N_("Cant_Fortify"), NULL},
+    const std::vector<new_flags> new_flags_31 = {
+        new_flags{N_("Infra"), N_("Can build infrastructure.")},
+        new_flags{N_("BeachLander"),
+                  N_("Won't lose all movement when moving from"
+                     " non-native terrain to native terrain.")},
+        new_flags{N_("Cant_Fortify"), NULL},
     };
-    enough_new_user_flags(new_flags_31, unit_type, UTYF_LAST_USER_FLAG,
-                          UTYF_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_flags_31.size()
+                          >= UTYF_LAST_USER_FLAG - UTYF_LAST_USER_FLAG_3_0,
+                      false);
 
     /* Some unit class flags moved to the ruleset between 3.0 and 3.1.
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_class_flags_31[] = {
-        {N_("Missile"), N_("Unit is destroyed when it attacks")},
-        {N_("CanPillage"), N_("Can pillage tile improvements.")},
-        {N_("CanFortify"), N_("Gets a 50% defensive bonus while"
-                              " in cities.")},
+    const std::vector<new_flags> new_class_flags_31 = {
+        new_flags{N_("Missile"), N_("Unit is destroyed when it attacks")},
+        new_flags{N_("CanPillage"), N_("Can pillage tile improvements.")},
+        new_flags{N_("CanFortify"), N_("Gets a 50% defensive bonus while"
+                                       " in cities.")},
     };
-    enough_new_user_flags(new_class_flags_31, unit_class, UCF_LAST_USER_FLAG,
-                          UCF_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_class_flags_31.size()
+                          >= UCF_LAST_USER_FLAG - UCF_LAST_USER_FLAG_3_0,
+                      false);
 
     int first_free;
     int i;
@@ -369,22 +371,22 @@ bool rscompat_names(struct rscompat_info *info)
     /* Unit type flags. */
     first_free = first_free_unit_type_user_flag() + UTYF_USER_FLAG_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
+    for (i = 0; i < new_flags_31.size(); i++) {
       if (UTYF_USER_FLAG_1 + MAX_NUM_USER_UNIT_FLAGS <= first_free + i) {
         /* Can't add the user unit type flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free unit type "
-                      "user flags to add user flags for the unit type flags "
-                      "that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free unit type "
+                   "user flags to add user flags for the unit type flags "
+                   "that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
       if (unit_type_flag_id_by_name(new_flags_31[i].name, fc_strcasecmp)
           != unit_type_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user unit type flag '%s'",
-                      new_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user unit type flag '%s'",
+                   new_flags_31[i].name);
         return FALSE;
       }
       set_user_unit_type_flag_name(unit_type_flag_id(first_free + i),
@@ -395,13 +397,13 @@ bool rscompat_names(struct rscompat_info *info)
     /* Unit type class flags. */
     first_free = first_free_unit_class_user_flag() + UCF_USER_FLAG_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_class_flags_31); i++) {
+    for (i = 0; i < new_class_flags_31.size(); i++) {
       if (UCF_USER_FLAG_1 + MAX_NUM_USER_UCLASS_FLAGS <= first_free + i) {
         /* Can't add the user unit type class flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free unit "
-                      "type class user flags to add user flags for the "
-                      "unit type class flags that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free unit "
+                   "type class user flags to add user flags for the "
+                   "unit type class flags that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
@@ -409,9 +411,9 @@ bool rscompat_names(struct rscompat_info *info)
       if (unit_class_flag_id_by_name(new_class_flags_31[i].name,
                                      fc_strcasecmp)
           != unit_class_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user unit class flag '%s'",
-                      new_class_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user unit class flag '%s'",
+                   new_class_flags_31[i].name);
         return FALSE;
       }
       set_user_unit_class_flag_name(unit_class_flag_id(first_free + i),
@@ -425,14 +427,13 @@ bool rscompat_names(struct rscompat_info *info)
      * Add them back as user flags.
      * XXX: ruleset might not need all of these, and may have enough
      * flags of its own that these additional ones prevent conversion. */
-    const struct {
-      const char *name;
-      const char *helptxt;
-    } new_flags_31[] = {
-        {N_("NoFortify"), N_("No units can fortify on this terrain.")},
+    const std::vector<new_flags> new_flags_31 = {
+        new_flags{N_("NoFortify"),
+                  N_("No units can fortify on this terrain.")},
     };
-    enough_new_user_flags(new_flags_31, terrain, TER_USER_LAST,
-                          TER_LAST_USER_FLAG_3_0);
+    fc_assert_ret_val(new_flags_31.size()
+                          >= TER_USER_LAST - TER_LAST_USER_FLAG_3_0,
+                      false);
 
     int first_free;
     int i;
@@ -440,22 +441,22 @@ bool rscompat_names(struct rscompat_info *info)
     /* Terrain flags. */
     first_free = first_free_terrain_user_flag() + TER_USER_1;
 
-    for (i = 0; i < ARRAY_SIZE(new_flags_31); i++) {
+    for (i = 0; i < new_flags_31.size(); i++) {
       if (TER_USER_1 + MAX_NUM_USER_TER_FLAGS <= first_free + i) {
         /* Can't add the user terrain flags. */
-        ruleset_error(LOG_ERROR,
-                      "Can't upgrade the ruleset. Not enough free terrain "
-                      "user flags to add user flags for the terrain flags "
-                      "that used to be hardcoded.");
+        qCCritical(ruleset_category,
+                   "Can't upgrade the ruleset. Not enough free terrain "
+                   "user flags to add user flags for the terrain flags "
+                   "that used to be hardcoded.");
         return FALSE;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
       if (terrain_flag_id_by_name(new_flags_31[i].name, fc_strcasecmp)
           != terrain_flag_id_invalid()) {
-        ruleset_error(LOG_ERROR,
-                      "Ruleset had illegal user terrain flag '%s'",
-                      new_flags_31[i].name);
+        qCCritical(ruleset_category,
+                   "Ruleset had illegal user terrain flag '%s'",
+                   new_flags_31[i].name);
         return FALSE;
       }
       set_user_terrain_flag_name(terrain_flag_id(first_free + i),

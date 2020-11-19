@@ -38,8 +38,8 @@
 static void handle_alloc_failure(size_t size, const char *called_as,
                                  int line, const char *file)
 {
-  log_fatal("Out of memory trying to %s %lu bytes at line %d of %s.",
-            called_as, (unsigned long) size, line, file);
+  qFatal("Out of memory trying to %s %lu bytes at line %d of %s.", called_as,
+         (unsigned long) size, line, file);
   exit(EXIT_FAILURE);
 }
 
@@ -58,8 +58,8 @@ static void sanity_check_size(size_t size, const char *called_as, int line,
    * preventing a large number of smaller allocations. */
 
   if (size == 0) {
-    log_verbose("Warning: %s with size %lu at line %d of %s", called_as,
-                (unsigned long) size, line, file);
+    qDebug("Warning: %s with size %lu at line %d of %s", called_as,
+           (unsigned long) size, line, file);
   }
 }
 #endif /* FREECIV_DEBUG */

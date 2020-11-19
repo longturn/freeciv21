@@ -84,7 +84,7 @@ static void close_connection(struct connection *pconn)
   }
 
   if (pconn->server.ping_timers != NULL) {
-    while(!pconn->server.ping_timers->isEmpty()) {
+    while (!pconn->server.ping_timers->isEmpty()) {
       timer_destroy(pconn->server.ping_timers->takeFirst());
     }
     delete pconn->server.ping_timers;
@@ -201,8 +201,8 @@ void flush_packets(void)
 
     if (pconn->used && !pconn->server.is_closing) {
       if (!pconn->sock->isOpen()) {
-        log_verbose("connection (%s) cut due to exception data",
-                    conn_description(pconn));
+        qDebug("connection (%s) cut due to exception data",
+               conn_description(pconn));
         connection_close_server(pconn, _("network exception"));
       } else {
         if (pconn->send_buffer && pconn->send_buffer->ndata > 0) {
@@ -271,8 +271,8 @@ void incoming_client_packets(struct connection *pconn)
     connection_do_unbuffer(pconn);
 
 #if PROCESSING_TIME_STATISTICS
-    log_verbose("processed request %d in %gms", request_id,
-                timer_read_seconds(request_time) * 1000.0);
+    qDebug("processed request %d in %gms", request_id,
+           timer_read_seconds(request_time) * 1000.0);
 #endif /* PROCESSING_TIME_STATISTICS */
 
     if (!command_ok) {
@@ -339,7 +339,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
       pconn->server.auth_tries = 0;
       pconn->server.auth_settime = 0;
       pconn->server.status = AS_NOT_ESTABLISHED;
-      pconn->server.ping_timers = new QList<civtimer*>;
+      pconn->server.ping_timers = new QList<civtimer *>;
       pconn->server.granted_access_level = pconn->access_level;
       pconn->server.ignore_list =
           conn_pattern_list_new_full(conn_pattern_destroy);
@@ -355,8 +355,8 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
 
       conn_list_append(game.all_connections, pconn);
 
-      log_verbose("connection (%s) from %s (%s)", pconn->username,
-                  qUtf8Printable(pconn->addr), pconn->server.ipaddr);
+      qDebug("connection (%s) from %s (%s)", pconn->username,
+             qUtf8Printable(pconn->addr), pconn->server.ipaddr);
       /* Give a ping timeout to send the PACKET_SERVER_JOIN_REQ, or close
        * the mute connection. This timer will be canceled into
        * connecthand.c:handle_login_request(). */
@@ -368,7 +368,7 @@ int server_make_connection(QTcpSocket *new_sock, const QString &client_addr)
   }
 
   // Should not happen as per the check earlier in server_attempt_connection
-  log_error("maximum number of connections reached");
+  qCritical("maximum number of connections reached");
   new_sock->deleteLater();
   return -1;
 }
@@ -381,19 +381,18 @@ QTcpServer *server_open_socket()
 {
   auto server = new QTcpServer;
 
-  log_verbose("Server attempting to listen on %s:%d",
-              srvarg.bind_addr.isNull() ? qPrintable(srvarg.bind_addr)
-                                        : "(any)",
-              srvarg.port);
+  qDebug("Server attempting to listen on %s:%d",
+         srvarg.bind_addr.isNull() ? qPrintable(srvarg.bind_addr) : "(any)",
+         srvarg.port);
 
   if (!server->listen(QHostAddress::Any, srvarg.port)) {
     // Failed
 
     // TRANS: %1 is a port number, %2 is the error message
-    log_fatal("%s", qPrintable(QString::fromUtf8(
-                                   _("Server: cannot listen on port %1: %2"))
-                                   .arg(srvarg.port)
-                                   .arg(server->errorString())));
+    qFatal("%s", qPrintable(QString::fromUtf8(
+                                _("Server: cannot listen on port %1: %2"))
+                                .arg(srvarg.port)
+                                .arg(server->errorString())));
 
     return server;
   }
@@ -418,13 +417,13 @@ QTcpServer *server_open_socket()
 
   if (!udp_socket->bind(address_type, SERVER_LAN_PORT,
                         QAbstractSocket::ReuseAddressHint)) {
-    log_error("SO_REUSEADDR failed: %s",
+    qCritical("SO_REUSEADDR failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
     return server;
   }
   auto group = get_multicast_group(srvarg.announce == ANNOUNCE_IPV6);
   if (!udp_socket->joinMulticastGroup(QHostAddress(group))) {
-    log_error("Announcement socket binding failed: %s",
+    qCritical("Announcement socket binding failed: %s",
               udp_socket->errorString().toLocal8Bit().data());
   }
 
@@ -505,7 +504,7 @@ void handle_conn_pong(struct connection *pconn)
   civtimer *timer;
 
   if (pconn->server.ping_timers->size() == 0) {
-    log_error("got unexpected pong from %s", conn_description(pconn));
+    qCritical("got unexpected pong from %s", conn_description(pconn));
     return;
   }
 

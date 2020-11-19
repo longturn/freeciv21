@@ -14,7 +14,7 @@
 #define FC__SRV_MAIN_H
 
 /* utility */
-#include "log.h"       /* enum log_level */
+#include "log.h"       /* QtMsgType */
 #include "net_types.h" /* announce_type */
 
 /* common */
@@ -36,8 +36,6 @@ struct server_arguments {
   int port;
   /* address to bind when connecting to the metaserver (NULL => bind_addr) */
   QString bind_meta_addr;
-  /* the log level */
-  enum log_level loglevel;
   /* filenames */
   QString log_filename;
   QString ranklog_filename;
@@ -59,7 +57,6 @@ struct server_arguments {
   bool auth_allow_guests;   /* defaults to FALSE */
   bool auth_allow_newusers; /* defaults to FALSE */
   enum announce_type announce;
-  int fatal_assertions; /* default to -1 (disabled). */
 };
 
 /* used in savegame values */

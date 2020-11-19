@@ -400,8 +400,8 @@ void luascript_destroy(struct fc_lua *fcl)
 /*************************************************************************/ /**
    Print a message to the selected output handle.
  *****************************************************************************/
-void luascript_log(struct fc_lua *fcl, enum log_level level,
-                   const char *format, ...)
+void luascript_log(struct fc_lua *fcl, QtMsgType level, const char *format,
+                   ...)
 {
   va_list args;
 
@@ -413,7 +413,7 @@ void luascript_log(struct fc_lua *fcl, enum log_level level,
 /*************************************************************************/ /**
    Print a message to the selected output handle.
  *****************************************************************************/
-void luascript_log_vargs(struct fc_lua *fcl, enum log_level level,
+void luascript_log_vargs(struct fc_lua *fcl, QtMsgType level,
                          const char *format, va_list args)
 {
   char buf[1024];
@@ -456,7 +456,7 @@ void luascript_pop_returns(struct fc_lua *fcl, const char *func_name,
 
       *pres = lua_tointegerx(L, -1, &isnum);
       if (!isnum) {
-        log_error("Return value from lua function %s is a %s, want int",
+        qCritical("Return value from lua function %s is a %s, want int",
                   func_name, lua_typename(L, lua_type(L, -1)));
       }
     } break;

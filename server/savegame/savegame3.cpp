@@ -224,14 +224,14 @@ extern bool sg_success;
       if (NULL == _line) {                                                  \
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
-        log_verbose("Line not found='%s'", buf);                            \
+        qDebug("Line not found='%s'", buf);                                 \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       } else if (strlen(_line) != wld.map.xsize) {                          \
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
-        log_verbose("Line too short (expected %d got %lu)='%s'",            \
-                    wld.map.xsize, (unsigned long) strlen(_line), buf);     \
+        qDebug("Line too short (expected %d got %lu)='%s'", wld.map.xsize,  \
+               (unsigned long) strlen(_line), buf);                         \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       }                                                                     \
@@ -417,20 +417,16 @@ void savegame3_save(struct section_file *sfile, const char *save_reason,
 {
   fc_assert_ret(sfile != NULL);
 
-#ifdef DEBUG_TIMERS
   civtimer *savetimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(savetimer);
-#endif
 
-  log_verbose("saving game in new format ...");
+  qDebug("saving game in new format ...");
   savegame3_save_real(sfile, save_reason, scenario);
 
-#ifdef DEBUG_TIMERS
   timer_stop(savetimer);
-  log_debug("Creating secfile in %.3f seconds.",
-            timer_read_seconds(savetimer));
+  qCDebug(timers_category, "Creating secfile in %.3f seconds.",
+          timer_read_seconds(savetimer));
   timer_destroy(savetimer);
-#endif /* DEBUG_TIMERS */
 }
 
 /* =======================================================================
@@ -496,7 +492,7 @@ void savegame3_load(struct section_file *file)
   send_city_suppression(was_send_city_suppressed);
 
   if (!sg_success) {
-    log_error("Failure loading savegame!");
+    qCritical("Failure loading savegame!");
     /* Try to get the server back to a vaguely sane state */
     server_game_free();
     server_game_init(FALSE);
@@ -554,7 +550,7 @@ static void savegame3_save_real(struct section_file *file,
   savedata_destroy(saving);
 
   if (!sg_success) {
-    log_error("Failure saving savegame!");
+    qCritical("Failure saving savegame!");
   }
 }
 
@@ -1102,7 +1098,7 @@ static struct terrain *char2terrain(char ch)
   }
   terrain_type_iterate_end;
 
-  log_fatal("Unknown terrain identifier '%c' in savegame.", ch);
+  qFatal("Unknown terrain identifier '%c' in savegame.", ch);
   exit(EXIT_FAILURE);
 }
 
@@ -1231,8 +1227,8 @@ static void sg_load_savefile(struct loaddata *loading)
        * Saving happens with real ruleset name, so savegames containing this
        * are special scenarios. */
       sz_strlcpy(game.server.rulesetdir, GAME_DEFAULT_RULESETDIR);
-      log_verbose("Savegame specified ruleset '%s'. Really loading '%s'.",
-                  ruleset, game.server.rulesetdir);
+      qDebug("Savegame specified ruleset '%s'. Really loading '%s'.",
+             ruleset, game.server.rulesetdir);
     }
 
     alt_dir = secfile_lookup_str_default(loading->file, NULL,
@@ -1275,10 +1271,9 @@ static void sg_load_savefile(struct loaddata *loading)
 
     if (!has_capabilities(req_caps, game.ruleset_capabilities)) {
       /* Current ruleset lacks required capabilities. */
-      log_normal(_("Scenario requires ruleset capabilities: %s"), req_caps);
-      log_normal(_("Ruleset has capabilities: %s"),
-                 game.ruleset_capabilities);
-      log_error(_("Current ruleset not compatible with the scenario."));
+      qInfo(_("Scenario requires ruleset capabilities: %s"), req_caps);
+      qInfo(_("Ruleset has capabilities: %s"), game.ruleset_capabilities);
+      qCritical(_("Current ruleset not compatible with the scenario."));
       sg_success = FALSE;
       return;
     }
@@ -1303,7 +1298,7 @@ static void sg_load_savefile(struct loaddata *loading)
       }
 
       if (found == NULL) {
-        log_error(_("Can't find scenario luadata file %s.luadata."),
+        qCritical(_("Can't find scenario luadata file %s.luadata."),
                   game.scenario.datafile);
         sg_success = FALSE;
         return;
@@ -1311,7 +1306,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
       secfile = secfile_load(found, FALSE);
       if (secfile == NULL) {
-        log_error(_("Failed to load scenario luadata file %s.luadata"),
+        qCritical(_("Failed to load scenario luadata file %s.luadata"),
                   game.scenario.datafile);
         sg_success = FALSE;
         return;
@@ -1416,9 +1411,9 @@ static void sg_load_savefile(struct loaddata *loading)
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
-        log_verbose("Multiplier \"%s\" in savegame but not in ruleset, "
-                    "discarding",
-                    modname[j]);
+        qDebug("Multiplier \"%s\" in savegame but not in ruleset, "
+               "discarding",
+               modname[j]);
       }
     }
     delete[] modname;
@@ -1551,7 +1546,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
       pterr->identifier_load = *iptr;
     } else {
-      log_error("Identifier for unknown terrain type %s.", terr_name);
+      qCritical("Identifier for unknown terrain type %s.", terr_name);
     }
     i++;
   }
@@ -1964,12 +1959,12 @@ static void sg_load_game(struct loaddata *loading)
   if (str != NULL) {
     game.info.phase_mode = phase_mode_type_by_name(str, fc_strcasecmp);
     if (!phase_mode_type_is_valid(game.info.phase_mode)) {
-      log_error("Illegal phase mode \"%s\"", str);
+      qCritical("Illegal phase mode \"%s\"", str);
       game.info.phase_mode =
           static_cast<phase_mode_type>(GAME_DEFAULT_PHASE_MODE);
     }
   } else {
-    log_error("Phase mode missing");
+    qCritical("Phase mode missing");
   }
 
   str = secfile_lookup_str_default(loading->file, NULL,
@@ -1979,11 +1974,11 @@ static void sg_load_game(struct loaddata *loading)
         phase_mode_type_by_name(str, fc_strcasecmp);
     if (!phase_mode_type_is_valid(
             static_cast<phase_mode_type>(game.server.phase_mode_stored))) {
-      log_error("Illegal stored phase mode \"%s\"", str);
+      qCritical("Illegal stored phase mode \"%s\"", str);
       game.server.phase_mode_stored = GAME_DEFAULT_PHASE_MODE;
     }
   } else {
-    log_error("Stored phase mode missing");
+    qCritical("Stored phase mode missing");
   }
   game.info.phase =
       secfile_lookup_int_default(loading->file, 0, "game.phase");
@@ -2779,7 +2774,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
 
     ptile = native_pos_to_tile(&(wld.map), nat_x, nat_y);
     if (NULL == ptile) {
-      log_error("Start position native coordinates (%d, %d) do not exist "
+      qCritical("Start position native coordinates (%d, %d) do not exist "
                 "in this map. Skipping...",
                 nat_x, nat_y);
       continue;
@@ -2811,7 +2806,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
             startpos_allow(psp, pnation);
           }
         } else {
-          log_verbose("Missing nation \"%s\".", start);
+          qDebug("Missing nation \"%s\".", start);
         }
       }
     }
@@ -2819,9 +2814,9 @@ static void sg_load_map_startpos(struct loaddata *loading)
 
   if (0 < map_startpos_count() && loading->server_state == S_S_INITIAL
       && map_startpos_count() < game.server.max_players) {
-    log_verbose("Number of starts (%d) are lower than rules.max_players "
-                "(%d), lowering rules.max_players.",
-                map_startpos_count(), game.server.max_players);
+    qDebug("Number of starts (%d) are lower than rules.max_players "
+           "(%d), lowering rules.max_players.",
+           map_startpos_count(), game.server.max_players);
     game.server.max_players = map_startpos_count();
   }
 
@@ -3424,7 +3419,7 @@ static void sg_load_players_basic(struct loaddata *loading)
                pslot_id);
         /* This will be fixed up later */
       } else {
-        log_verbose("No color defined for player %d.", pslot_id);
+        qDebug("No color defined for player %d.", pslot_id);
         /* Colors will be assigned on game start, or at end of savefile
          * loading if game has already started */
       }
@@ -3466,9 +3461,9 @@ static void sg_load_players_basic(struct loaddata *loading)
                    + pmul->start;
 
         if (rval != val) {
-          log_verbose("Player %d had illegal value for multiplier \"%s\": "
-                      "was %d, clamped to %d",
-                      pslot_id, multiplier_rule_name(pmul), val, rval);
+          qDebug("Player %d had illegal value for multiplier \"%s\": "
+                 "was %d, clamped to %d",
+                 pslot_id, multiplier_rule_name(pmul), val, rval);
         }
         pplayer->multipliers[idx] = rval;
 
@@ -3481,9 +3476,9 @@ static void sg_load_players_basic(struct loaddata *loading)
                + pmul->start;
 
         if (rval != val) {
-          log_verbose("Player %d had illegal value for multiplier_target "
-                      " \"%s\": was %d, clamped to %d",
-                      pslot_id, multiplier_rule_name(pmul), val, rval);
+          qDebug("Player %d had illegal value for multiplier_target "
+                 " \"%s\": was %d, clamped to %d",
+                 pslot_id, multiplier_rule_name(pmul), val, rval);
         }
         pplayer->multipliers_target[idx] = rval;
       } /* else silently discard multiplier not in current ruleset */
@@ -3637,14 +3632,13 @@ static void sg_load_players(struct loaddata *loading)
 
     /* print out some informations */
     if (is_ai(pplayer)) {
-      log_normal(_("%s has been added as %s level AI-controlled player "
-                   "(%s)."),
-                 player_name(pplayer),
-                 ai_level_translated_name(pplayer->ai_common.skill_level),
-                 ai_name(pplayer->ai));
+      qInfo(_("%s has been added as %s level AI-controlled player "
+              "(%s)."),
+            player_name(pplayer),
+            ai_level_translated_name(pplayer->ai_common.skill_level),
+            ai_name(pplayer->ai));
     } else {
-      log_normal(_("%s has been added as human player."),
-                 player_name(pplayer));
+      qInfo(_("%s has been added as human player."), player_name(pplayer));
     }
   }
   players_iterate_end;
@@ -5682,7 +5676,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
     if (direction8_is_valid(facing)) {
       punit->facing = facing;
     } else {
-      log_error("Illegal unit orientation '%s'", facing_str);
+      qCritical("Illegal unit orientation '%s'", facing_str);
     }
   }
 
@@ -7287,7 +7281,7 @@ static void sg_load_treaties(struct loaddata *loading)
     p1 = player_by_name(plr1);
 
     if (p0 == NULL || p1 == NULL) {
-      log_error("Treaty between unknown players %s and %s", plr0, plr1);
+      qCritical("Treaty between unknown players %s and %s", plr0, plr1);
     } else {
       struct Treaty *ptreaty = new Treaty;
 
@@ -7303,7 +7297,7 @@ static void sg_load_treaties(struct loaddata *loading)
         const char *plrx;
 
         if (!clause_type_is_valid(type)) {
-          log_error("Invalid clause type \"%s\"", ct);
+          qCritical("Invalid clause type \"%s\"", ct);
         } else {
           struct player *pgiver = NULL;
 
@@ -7315,7 +7309,7 @@ static void sg_load_treaties(struct loaddata *loading)
           } else if (!fc_strcasecmp(plrx, plr1)) {
             pgiver = p1;
           } else {
-            log_error("Clause giver %s is not participant of the treaty"
+            qCritical("Clause giver %s is not participant of the treaty"
                       "between %s and %s",
                       plrx, plr0, plr1);
           }
@@ -7446,7 +7440,7 @@ static void sg_load_mapimg(struct loaddata *loading)
 
   mapdef_count =
       secfile_lookup_int_default(loading->file, 0, "mapimg.count");
-  log_verbose("Saved map image definitions: %d.", mapdef_count);
+  qDebug("Saved map image definitions: %d.", mapdef_count);
 
   if (0 >= mapdef_count) {
     return;
@@ -7457,15 +7451,15 @@ static void sg_load_mapimg(struct loaddata *loading)
 
     p = secfile_lookup_str(loading->file, "mapimg.mapdef%d", i);
     if (NULL == p) {
-      log_verbose("[Mapimg %4d] Missing definition.", i);
+      qDebug("[Mapimg %4d] Missing definition.", i);
       continue;
     }
 
     if (!mapimg_define(p, FALSE)) {
-      log_error("Invalid map image definition %4d: %s.", i, p);
+      qCritical("Invalid map image definition %4d: %s.", i, p);
     }
 
-    log_verbose("Mapimg %4d loaded.", i);
+    qDebug("Mapimg %4d loaded.", i);
   }
 }
 
@@ -7513,7 +7507,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
    * fix. */
   players = normal_player_count();
   if (game.server.max_players < players) {
-    log_verbose("Max players lower than current players, fixing");
+    qDebug("Max players lower than current players, fixing");
     game.server.max_players = players;
   }
 
@@ -7576,7 +7570,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
     whole_map_iterate(&(wld.map), ptile)
     {
       if (loading->worked_tiles[ptile->index] != -1) {
-        log_error("[city id: %d] Unused worked tile at (%d, %d).",
+        qCritical("[city id: %d] Unused worked tile at (%d, %d).",
                   loading->worked_tiles[ptile->index], TILE_XY(ptile));
       }
     }

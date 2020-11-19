@@ -177,7 +177,7 @@ static bool apply_result_on_server(struct city *pcity,
 
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
-    log_error("apply_result_on_server(city %d=\"%s\") bad result!",
+    qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
               pcity->id, city_name_get(pcity));
     cm_print_city(pcity);
     cm_print_result(result);
@@ -288,7 +288,7 @@ static bool apply_result_on_server(struct city *pcity,
 
     wait_for_requests("CMA", first_request_id, last_request_id);
     if (pcity != check_city(city_id, NULL)) {
-      log_verbose("apply_result_on_server(city %d) !check_city()!", city_id);
+      qDebug("apply_result_on_server(city %d) !check_city()!", city_id);
       return FALSE;
     }
   }
@@ -301,7 +301,7 @@ static bool apply_result_on_server(struct city *pcity,
     cm_clear_cache(pcity);
 
 #if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
-    log_error("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
+    qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
               city_name_get(pcity));
 
     log_test("apply_result_on_server(city %d=\"%s\") have:", pcity->id,
@@ -424,8 +424,9 @@ static void handle_city(struct city *pcity)
 
     cma_release_city(pcity);
 
-    bugreport_request("handle_city() CMA: %s has changed multiple times.",
-                      city_name_get(pcity));
+    qCInfo(bugs_category,
+           "handle_city() CMA: %s has changed multiple times.",
+           city_name_get(pcity));
   }
 
   log_handle_city2("END handle city=(%d)", city_id);

@@ -147,7 +147,8 @@ pact_clause_to_diplstate_type(enum clause_type type)
   case CLAUSE_CEASEFIRE:
     return DS_CEASEFIRE;
   default:
-    log_error("Invalid diplomatic clause %d.", type) return DS_WAR;
+    qCritical("Invalid diplomatic clause %d.", type);
+    return DS_WAR;
   }
 }
 

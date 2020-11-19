@@ -33,6 +33,8 @@
 
 #include "ailog.h"
 
+Q_LOGGING_CATEGORY(ai_category, "freeciv.ai")
+
 /**********************************************************************/ /**
    Produce logline fragment for srv_log.
  **************************************************************************/
@@ -60,37 +62,21 @@ void dai_unit_log(struct ai_type *ait, char *buffer, int buflength,
 /**********************************************************************/ /**
    Log player tech messages.
  **************************************************************************/
-void real_tech_log(struct ai_type *ait, const char *file,
-                   const char *function, int line, enum log_level level,
-                   bool send_notify, const struct player *pplayer,
-                   struct advance *padvance, const char *msg, ...)
+QString tech_log_prefix(ai_type *ait, const player *pplayer,
+                        advance *padvance)
 {
-  char buffer[500];
-  char buffer2[500];
-  va_list ap;
-  struct ai_plr *plr_data;
-
+  // FIXME const-correctness of the arguments
   if (!valid_advance(padvance) || advance_by_number(A_NONE) == padvance) {
-    return;
+    return QStringLiteral("(invalid tech)");
   }
 
-  plr_data = def_ai_player_data(pplayer, ait);
-  fc_snprintf(buffer, sizeof(buffer),
-              "%s::%s (want " ADV_WANT_PRINTF ", dist %d) ",
-              player_name(pplayer), advance_rule_name(padvance),
-              plr_data->tech_want[advance_index(padvance)],
-              research_goal_unknown_techs(research_get(pplayer),
-                                          advance_number(padvance)));
-
-  va_start(ap, msg);
-  fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
-  va_end(ap);
-
-  cat_snprintf(buffer, sizeof(buffer), "%s", buffer2);
-  if (send_notify) {
-    notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buffer);
-  }
-  do_log(file, function, line, FALSE, level, "%s", buffer);
+  auto plr_data = def_ai_player_data(pplayer, ait);
+  return QString::asprintf(
+      "%s::%s (want " ADV_WANT_PRINTF ", dist %d) ", player_name(pplayer),
+      advance_rule_name(padvance),
+      plr_data->tech_want[advance_index(padvance)],
+      research_goal_unknown_techs(research_get(pplayer),
+                                  advance_number(padvance)));
 }
 
 /**********************************************************************/ /**
@@ -98,51 +84,28 @@ void real_tech_log(struct ai_type *ait, const char *file,
 
    where ti is timer, co countdown and lo love for target, who is e.
  **************************************************************************/
-void real_diplo_log(struct ai_type *ait, const char *file,
-                    const char *function, int line, enum log_level level,
-                    bool send_notify, const struct player *pplayer,
-                    const struct player *aplayer, const char *msg, ...)
+QString diplo_log_prefix(ai_type *ait, const player *pplayer,
+                         const player *aplayer)
 {
-  char buffer[500];
-  char buffer2[500];
-  va_list ap;
-  const struct ai_dip_intel *adip;
-
+  // FIXME const-correctness of the arguments
   /* Don't use ai_data_get since it can have side effects. */
-  adip = dai_diplomacy_get(ait, pplayer, aplayer);
+  auto adip = dai_diplomacy_get(ait, pplayer, aplayer);
 
-  fc_snprintf(
-      buffer, sizeof(buffer),
+  return QString::asprintf(
       "%s->%s(l%d,c%d,d%d%s): ", player_name(pplayer), player_name(aplayer),
       pplayer->ai_common.love[player_index(aplayer)], adip->countdown,
       adip->distance,
       adip->is_allied_with_enemy ? "?"
                                  : (adip->at_war_with_ally ? "!" : ""));
-
-  va_start(ap, msg);
-  fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
-  va_end(ap);
-
-  cat_snprintf(buffer, sizeof(buffer), "%s", buffer2);
-  if (send_notify) {
-    notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buffer);
-  }
-  do_log(file, function, line, FALSE, level, "%s", buffer);
 }
 
 /**********************************************************************/ /**
    Log message for bodyguards. They will appear like this
-     2: Polish Mech. Inf.[485] bodyguard (38,22){Riflemen:574@37,23} was ...
+     Polish Mech. Inf.[485] bodyguard (38,22){Riflemen:574@37,23}
    note that these messages are likely to wrap if long.
  **************************************************************************/
-void real_bodyguard_log(struct ai_type *ait, const char *file,
-                        const char *function, int line, enum log_level level,
-                        bool send_notify, const struct unit *punit,
-                        const char *msg, ...)
+QString bodyguard_log_prefix(ai_type *ait, const unit *punit)
 {
-  char buffer[500];
-  char buffer2[500];
-  va_list ap;
   const struct unit *pcharge;
   const struct city *pcity;
   int id = -1;
@@ -167,18 +130,8 @@ void real_bodyguard_log(struct ai_type *ait, const char *file,
   }
   /* else perhaps the charge died */
 
-  fc_snprintf(buffer, sizeof(buffer), "%s %s[%d] %s (%d,%d){%s:%d@%d,%d} ",
-              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
-              punit->id, type, TILE_XY(unit_tile(punit)), s, id, charge_x,
-              charge_y);
-
-  va_start(ap, msg);
-  fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
-  va_end(ap);
-
-  cat_snprintf(buffer, sizeof(buffer), "%s", buffer2);
-  if (send_notify) {
-    notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buffer);
-  }
-  do_log(file, function, line, FALSE, level, "%s", buffer);
+  return QString::asprintf(
+      "%s %s[%d] %s (%d,%d){%s:%d@%d,%d} ",
+      nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
+      punit->id, type, TILE_XY(unit_tile(punit)), s, id, charge_x, charge_y);
 }

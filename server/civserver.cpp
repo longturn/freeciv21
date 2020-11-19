@@ -71,12 +71,12 @@ static void signal_handler(int sig)
       save_and_exit(SIGINT);
     } else {
       if (game.info.timeout == -1) {
-        log_normal(_("Setting timeout to 0. Autogame will stop."));
+        qInfo(_("Setting timeout to 0. Autogame will stop."));
         game.info.timeout = 0;
       }
       if (!timer) {
-        log_normal(_("You must interrupt Freeciv twice "
-                     "within one second to make it exit."));
+        qInfo(_("You must interrupt Freeciv twice "
+                "within one second to make it exit."));
       }
     }
     timer = timer_renew(timer, TIMER_USER, TIMER_ACTIVE);
@@ -191,15 +191,12 @@ int main(int argc, char *argv[])
        _("Listen for clients on ADDR"),
        // TRANS: Command-line argument
        _("ADDR")},
-      {{"d", "debug"},
-#ifdef FREECIV_DEBUG
-       _("Set debug log level (one of f,e,w,n,v,d, or d:file1,min,max:...)"),
-#else
-       QString::asprintf(_("Set debug log level (%d to %d)"), LOG_FATAL,
-                         LOG_VERBOSE),
-#endif
-       // TRANS: Command-line argument
-       _("LEVEL")},
+      {{"d", _("debug")},
+       // TRANS: Do not translate "fatal", "critical", "warning", "info" or
+       //        "debug". It's exactly what the user must type.
+       _("Set debug log level (fatal/critical/warning/info/debug)"),
+       _("LEVEL"),
+       QStringLiteral("info")},
       {{"e", "exit-on-end"},
        _("When a game ends, exit instead of restarting")},
       {{"F", "Fatal"}, _("Raise a signal on failed assertion")},
@@ -272,7 +269,7 @@ int main(int argc, char *argv[])
 #endif // AI_MODULES
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 
@@ -280,15 +277,16 @@ int main(int argc, char *argv[])
   parser.process(app);
 
   // Process the parsed options
+  if (!log_init(parser.value(QStringLiteral("debug")))) {
+    exit(EXIT_FAILURE);
+  }
   if (parser.isSet("file")) {
     srvarg.load_filename = parser.value("file");
   }
   if (parser.isSet("log")) {
     srvarg.log_filename = parser.value("log");
   }
-  if (parser.isSet("Fatal")) {
-    srvarg.fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("Ranklog")) {
     srvarg.ranklog_filename = parser.value("Ranklog");
   }
@@ -312,8 +310,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.port = parser.value("port").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid port number %s"),
-                qPrintable(parser.value("port")));
+      qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
@@ -330,8 +327,7 @@ int main(int argc, char *argv[])
     bool conversion_ok;
     srvarg.quitidle = parser.value("quitidle").toUInt(&conversion_ok);
     if (!conversion_ok) {
-      log_fatal(_("Invalid number %s"),
-                qPrintable(parser.value("quitidle")));
+      qFatal(_("Invalid number %s"), qPrintable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }
   }
@@ -341,11 +337,6 @@ int main(int argc, char *argv[])
   if (parser.isSet("timetrack")) {
     srvarg.timetrack = true;
     log_time("Time tracking enabled", true);
-  }
-  if (parser.isSet("debug")) {
-    if (!log_parse_level_str(parser.value("debug"), &srvarg.loglevel)) {
-      exit(EXIT_FAILURE);
-    }
   }
 #ifdef HAVE_FCDB
   if (parser.isSet("Database")) {
@@ -383,12 +374,14 @@ int main(int argc, char *argv[])
     } else if (value == QLatin1String("none")) {
       srvarg.announce = ANNOUNCE_NONE;
     } else {
-      log_error(_("Illegal value \"%s\" for --Announce"),
+      qCritical(_("Illegal value \"%s\" for --Announce"),
                 qPrintable(parser.value("Announce")));
     }
   }
   if (parser.isSet("warnings")) {
-    deprecation_warnings_enable();
+    qCWarning(deprecations_category,
+              // TRANS: Do not translate --warnings
+              _("The --warnings option is deprecated."));
   }
 #ifdef AI_MODULES
   if (parser.isSet("LoadAI")) {

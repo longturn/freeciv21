@@ -141,8 +141,7 @@ QTcpServer *srv_prepare()
 
   /* must be before con_log_init() */
   init_connections();
-  con_log_init(srvarg.log_filename, srvarg.loglevel,
-               srvarg.fatal_assertions);
+  con_log_init(srvarg.log_filename);
   /* logging available after this point */
 
   auto tcp_server = server_open_socket();
@@ -192,8 +191,8 @@ QTcpServer *srv_prepare()
     testfilename =
         fileinfoname(get_data_dirs(), qUtf8Printable(srvarg.ruleset));
     if (testfilename == NULL) {
-      log_fatal(_("Ruleset directory \"%s\" not found"),
-                qPrintable(srvarg.ruleset));
+      qFatal(_("Ruleset directory \"%s\" not found"),
+             qPrintable(srvarg.ruleset));
       QCoreApplication::exit(EXIT_FAILURE);
       return tcp_server;
     }
@@ -212,8 +211,8 @@ QTcpServer *srv_prepare()
   maybe_automatic_meta_message(default_meta_message_string());
 
   if (!(srvarg.metaserver_no_send)) {
-    log_normal(_("Sending info to metaserver <%s>."),
-               qPrintable(meta_addr_port()));
+    qInfo(_("Sending info to metaserver <%s>."),
+          qPrintable(meta_addr_port()));
     /* Open socket for meta server */
     if (!server_open_meta(srvarg.metaconnection_persistent)
         || !send_server_info_to_metaserver(META_INFO)) {
@@ -284,7 +283,7 @@ server::server()
           &server::accept_connections);
   connect(m_tcp_server, &QTcpServer::acceptError,
           [](QAbstractSocket::SocketError error) {
-            log_error("Error accepting connection: %d", error);
+            qCritical("Error accepting connection: %d", error);
           });
 
   m_eot_timer = timer_new(TIMER_CPU, TIMER_ACTIVE);
@@ -374,9 +373,9 @@ void server::accept_connections()
 
     // Reject the connection if we have reached the hard-coded limit
     if (conn_list_size(game.all_connections) >= MAX_NUM_CONNECTIONS) {
-      log_verbose("Rejecting new connection from %s: maximum number of "
-                  "connections exceeded (%d).",
-                  qUtf8Printable(remote), MAX_NUM_CONNECTIONS);
+      qDebug("Rejecting new connection from %s: maximum number of "
+             "connections exceeded (%d).",
+             qUtf8Printable(remote), MAX_NUM_CONNECTIONS);
       socket->deleteLater();
       continue;
     }
@@ -396,10 +395,9 @@ void server::accept_connections()
           continue;
         }
         if (++count >= game.server.maxconnectionsperhost) {
-          log_verbose("Rejecting new connection from %s: maximum number of "
-                      "connections for this address exceeded (%d).",
-                      qUtf8Printable(remote),
-                      game.server.maxconnectionsperhost);
+          qDebug("Rejecting new connection from %s: maximum number of "
+                 "connections for this address exceeded (%d).",
+                 qUtf8Printable(remote), game.server.maxconnectionsperhost);
 
           success = false;
           socket->deleteLater();
@@ -454,11 +452,11 @@ void server::send_pings()
           || pconn->ping_time > game.server.pingtimeout) {
         // cut mute players, except for hack-level ones
         if (pconn->access_level == ALLOW_HACK) {
-          log_verbose("connection (%s) [hack-level] ping timeout ignored",
-                      conn_description(pconn));
+          qDebug("connection (%s) [hack-level] ping timeout ignored",
+                 conn_description(pconn));
         } else {
-          log_verbose("connection (%s) cut due to ping timeout",
-                      conn_description(pconn));
+          qDebug("connection (%s) cut due to ping timeout",
+                 conn_description(pconn));
           connection_close_server(pconn, _("ping timeout"));
         }
       } else if (pconn->established) {
@@ -548,7 +546,7 @@ void server::input_on_stdin()
       // QSocketNotifier gets mad after EOF. Turn it off.
       m_stdin_notifier->deleteLater();
       m_stdin_notifier = nullptr;
-      log_normal(_("Reached end of standard input."));
+      qInfo(_("Reached end of standard input."));
     } else {
       // Got something to read. Hopefully there's even a complete line and
       // we can process it.
@@ -582,8 +580,7 @@ void server::prepare_game()
     event_cache_clear();
   }
 
-  log_normal(_("Now accepting new client connections on port %d."),
-             srvarg.port);
+  qInfo(_("Now accepting new client connections on port %d."), srvarg.port);
 
   if (game.info.timeout == -1) {
     // Autogame, start as soon as the event loop allows
@@ -651,7 +648,7 @@ void server::begin_phase()
           mapimg_create(pmapdef, FALSE, game.server.save_name,
                         qUtf8Printable(srvarg.saves_pathname));
         } else {
-          log_error("%s", mapimg_error());
+          qCritical("%s", mapimg_error());
         }
       }
     } else {
@@ -816,13 +813,13 @@ void server::update_game_state()
       && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
 
     if (srvarg.exit_on_end) {
-      log_normal(_("Shutting down in %d seconds for lack of players."),
-                 srvarg.quitidle);
+      qInfo(_("Shutting down in %d seconds for lack of players."),
+            srvarg.quitidle);
 
       set_meta_message_string(N_("shutting down soon for lack of players"));
     } else {
-      log_normal(_("Restarting in %d seconds for lack of players."),
-                 srvarg.quitidle);
+      qInfo(_("Restarting in %d seconds for lack of players."),
+            srvarg.quitidle);
 
       set_meta_message_string(N_("restarting soon for lack of players"));
     }
@@ -869,10 +866,10 @@ void server::quit_idle()
   m_quitidle_timer = nullptr;
 
   if (srvarg.exit_on_end) {
-    log_normal(_("Shutting down for lack of players."));
+    qInfo(_("Shutting down for lack of players."));
     set_meta_message_string("shutting down for lack of players");
   } else {
-    log_normal(_("Restarting for lack of players."));
+    qInfo(_("Restarting for lack of players."));
     set_meta_message_string("restarting for lack of players");
   }
 

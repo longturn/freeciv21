@@ -408,7 +408,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     return TRUE;
   }
 
-  log_error("Received unknown spaceship place type %d from %s", type,
+  qCritical("Received unknown spaceship place type %d from %s", type,
             player_name(pplayer));
   return FALSE;
 }

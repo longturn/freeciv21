@@ -52,7 +52,7 @@ enum autosave_type {
   AS_TIMER
 };
 
-enum scorelog_level { SL_ALL = 0, SL_HUMANS };
+enum scoreQtMsgType { SL_ALL = 0, SL_HUMANS };
 
 struct user_flag {
   char *name;
@@ -194,8 +194,7 @@ struct civ_game {
                                 */
 
       time_t last_ping;
-      civtimer
-          *phase_timer; /* Time since seconds_to_phase_done was set. */
+      civtimer *phase_timer; /* Time since seconds_to_phase_done was set. */
       int additional_phase_seconds;
       /* The game.info.phase_mode value indicates the phase mode currently in
        * use. The "stored" value is a value the player can change; it won't
@@ -206,7 +205,7 @@ struct civ_game {
       char connectmsg[MAX_LEN_MSG];
       char save_name[MAX_LEN_NAME];
       bool scorelog;
-      enum scorelog_level scoreloglevel;
+      enum scoreQtMsgType scoreloglevel;
       char scorefile[MAX_LEN_NAME];
       int scoreturn; /* next make_history_report() */
       int seed_setting;

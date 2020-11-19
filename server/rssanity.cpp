@@ -45,7 +45,7 @@ static bool sanity_check_metadata(void)
 {
   if (game.ruleset_summary != NULL
       && strlen(game.ruleset_summary) > MAX_LEN_CONTENT) {
-    log_error("Too long ruleset summary. It can be only %d bytes long. "
+    qCritical("Too long ruleset summary. It can be only %d bytes long. "
               "Put longer explanations to ruleset description.",
               MAX_LEN_CONTENT);
     return FALSE;
@@ -161,13 +161,13 @@ static bool sanity_check_req_individual(struct requirement *preq,
       const struct impr_type *pimprove = preq->source.value.building;
 
       if (preq->range == REQ_RANGE_WORLD && !is_great_wonder(pimprove)) {
-        log_error("%s: World-ranged requirement not supported for "
+        qCritical("%s: World-ranged requirement not supported for "
                   "%s (only great wonders supported)",
                   list_for, improvement_name_translation(pimprove));
         return FALSE;
       } else if (preq->range > REQ_RANGE_TRADEROUTE
                  && !is_wonder(pimprove)) {
-        log_error("%s: %s-ranged requirement not supported for "
+        qCritical("%s: %s-ranged requirement not supported for "
                   "%s (only wonders supported)",
                   list_for, req_range_name(preq->range),
                   improvement_name_translation(pimprove));
@@ -179,13 +179,13 @@ static bool sanity_check_req_individual(struct requirement *preq,
     /* Currently [calendar] is loaded after some requirements are
      * parsed, so we can't do this in universal_value_from_str(). */
     if (game.calendar.calendar_fragments < 1) {
-      log_error("%s: MinCalFrag requirement used in ruleset without "
+      qCritical("%s: MinCalFrag requirement used in ruleset without "
                 "calendar fragments",
                 list_for);
       return FALSE;
     } else if (preq->source.value.mincalfrag
                >= game.calendar.calendar_fragments) {
-      log_error("%s: MinCalFrag requirement %d out of range (max %d in "
+      qCritical("%s: MinCalFrag requirement %d out of range (max %d in "
                 "this ruleset)",
                 list_for, preq->source.value.mincalfrag,
                 game.calendar.calendar_fragments - 1);
@@ -204,7 +204,7 @@ static bool sanity_check_req_individual(struct requirement *preq,
       pset = setting_by_number(id);
 
       if (!sanity_check_setting_is_seen(pset)) {
-        log_error("%s: ServerSetting requirement %s isn't visible enough "
+        qCritical("%s: ServerSetting requirement %s isn't visible enough "
                   "to appear in a requirement. Everyone should be able to "
                   "see the value of a server setting that appears in a "
                   "requirement.",
@@ -215,7 +215,7 @@ static bool sanity_check_req_individual(struct requirement *preq,
       if (!sanity_check_setting_is_game_rule(pset)) {
         /* This is a server operator related setting (like the compression
          * type of savegames), not a game rule. */
-        log_error("%s: ServerSetting requirement setting %s isn't about a "
+        qCritical("%s: ServerSetting requirement setting %s isn't about a "
                   "game rule.",
                   list_for, server_setting_name_get(id));
         return FALSE;
@@ -264,7 +264,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     switch (preq->source.kind) {
     case VUT_TERRAINCLASS:
       if (local_reqs_of_type[VUT_TERRAIN] > 0) {
-        log_error("%s: Requirement list has both local terrain and "
+        qCritical("%s: Requirement list has both local terrain and "
                   "terrainclass requirement",
                   list_for);
         return FALSE;
@@ -272,7 +272,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
       break;
     case VUT_TERRAIN:
       if (local_reqs_of_type[VUT_TERRAINCLASS] > 0) {
-        log_error("%s: Requirement list has both local terrain and "
+        qCritical("%s: Requirement list has both local terrain and "
                   "terrainclass requirement",
                   list_for);
         return FALSE;
@@ -310,7 +310,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
        * Requirements might be identical, but we consider multiple
        * declarations error anyway. */
 
-      log_error("%s: Requirement list has multiple %s requirements",
+      qCritical("%s: Requirement list has multiple %s requirements",
                 list_for, universal_type_rule_name(&preq->source));
       return FALSE;
       break;
@@ -318,7 +318,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_TERRAIN:
       /* There can be only up to max_tiles requirements of these types */
       if (max_tiles != -1 && rc > max_tiles) {
-        log_error("%s: Requirement list has more %s requirements than "
+        qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
                   list_for, universal_type_rule_name(&preq->source));
         return FALSE;
@@ -327,7 +327,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
 
     case VUT_TERRAINCLASS:
       if (rc > 2 || (max_tiles != -1 && rc > max_tiles)) {
-        log_error("%s: Requirement list has more %s requirements than "
+        qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
                   list_for, universal_type_rule_name(&preq->source));
         return FALSE;
@@ -337,7 +337,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_AGE:
       /* There can be age of the city, unit, and player */
       if (rc > 3) {
-        log_error("%s: Requirement list has more %s requirements than "
+        qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
                   list_for, universal_type_rule_name(&preq->source));
         return FALSE;
@@ -347,7 +347,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     case VUT_MINTECHS:
       /* At ranges 'Player' and 'World' */
       if (rc > 2) {
-        log_error("%s: Requirement list has more %s requirements than "
+        qCritical("%s: Requirement list has more %s requirements than "
                   "can ever be fulfilled.",
                   list_for, universal_type_rule_name(&preq->source));
         return FALSE;
@@ -441,7 +441,7 @@ static bool sanity_check_req_vec(const struct requirement_vector *preqs,
   problem =
       req_vec_get_first_contradiction(preqs, req_vec_vector_number, preqs);
   if (problem != NULL) {
-    log_error("%s: %s.", list_for, problem->description);
+    qCritical("%s: %s.", list_for, problem->description);
     req_vec_problem_free(problem);
     return FALSE;
   }
@@ -468,7 +468,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
            * supported unit stack targeted action performer (like
            * action_consequence_success() does) or to have the unit stack
            * targeted actions return a list of targets. */
-          log_error("The effect Action_Success_Target_Move_Cost has the"
+          qCritical("The effect Action_Success_Target_Move_Cost has the"
                     " requirement {%s} but the action %s isn't"
                     " (single) unit targeted.",
                     req_to_fstring(preq),
@@ -484,7 +484,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
     {
       if (preq->source.kind == VUT_ACTION && preq->present) {
         if (action_get_actor_kind(preq->source.value.action) != AAK_UNIT) {
-          log_error("The effect Action_Success_Actor_Move_Cost has the"
+          qCritical("The effect Action_Success_Actor_Move_Cost has the"
                     " requirement {%s} but the action %s isn't"
                     " performed by a unit.",
                     req_to_fstring(preq),
@@ -501,7 +501,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
       if (preq->source.kind == VUT_ACTION && preq->present) {
         if (action_dice_roll_initial_odds(preq->source.value.action)
             == ACTION_ODDS_PCT_DICE_ROLL_NA) {
-          log_error("The effect Action_Odds_Pct has the"
+          qCritical("The effect Action_Odds_Pct has the"
                     " requirement {%s} but the action %s doesn't"
                     " roll the dice to see if it fails.",
                     req_to_fstring(preq),
@@ -524,15 +524,15 @@ static bool rs_barbarian_units(void)
 {
   if (num_role_units(L_BARBARIAN) > 0) {
     if (num_role_units(L_BARBARIAN_LEADER) == 0) {
-      ruleset_error(LOG_ERROR, "No role barbarian leader units");
+      qCCritical(ruleset_category, "No role barbarian leader units");
       return FALSE;
     }
     if (num_role_units(L_BARBARIAN_BUILD) == 0) {
-      ruleset_error(LOG_ERROR, "No role barbarian build units");
+      qCCritical(ruleset_category, "No role barbarian build units");
       return FALSE;
     }
     if (num_role_units(L_BARBARIAN_BOAT) == 0) {
-      ruleset_error(LOG_ERROR, "No role barbarian ship units");
+      qCCritical(ruleset_category, "No role barbarian ship units");
       return FALSE;
     } else if (num_role_units(L_BARBARIAN_BOAT) > 0) {
       bool sea_capable = FALSE;
@@ -549,14 +549,14 @@ static bool rs_barbarian_units(void)
       terrain_type_iterate_end;
 
       if (!sea_capable) {
-        ruleset_error(LOG_ERROR,
-                      "Barbarian boat (%s) needs to be able to move at sea.",
-                      utype_rule_name(u));
+        qCCritical(ruleset_category,
+                   "Barbarian boat (%s) needs to be able to move at sea.",
+                   utype_rule_name(u));
         return FALSE;
       }
     }
     if (num_role_units(L_BARBARIAN_SEA) == 0) {
-      ruleset_error(LOG_ERROR, "No role sea raider barbarian units");
+      qCCritical(ruleset_category, "No role sea raider barbarian units");
       return FALSE;
     }
 
@@ -564,10 +564,10 @@ static bool rs_barbarian_units(void)
     {
       if (utype_has_role(ptype, L_BARBARIAN_BOAT)) {
         if (ptype->transport_capacity <= 1) {
-          ruleset_error(LOG_ERROR,
-                        "Barbarian boat %s has no capacity for both "
-                        "leader and at least one man.",
-                        utype_rule_name(ptype));
+          qCCritical(ruleset_category,
+                     "Barbarian boat %s has no capacity for both "
+                     "leader and at least one man.",
+                     utype_rule_name(ptype));
           return FALSE;
         }
 
@@ -577,10 +577,10 @@ static bool rs_barbarian_units(void)
               || utype_has_role(pbarb, L_BARBARIAN_SEA_TECH)
               || utype_has_role(pbarb, L_BARBARIAN_LEADER)) {
             if (!can_unit_type_transport(ptype, utype_class(pbarb))) {
-              ruleset_error(LOG_ERROR,
-                            "Barbarian boat %s cannot transport "
-                            "barbarian cargo %s.",
-                            utype_rule_name(ptype), utype_rule_name(pbarb));
+              qCCritical(ruleset_category,
+                         "Barbarian boat %s cannot transport "
+                         "barbarian cargo %s.",
+                         utype_rule_name(ptype), utype_rule_name(pbarb));
               return FALSE;
             }
           }
@@ -601,17 +601,17 @@ static bool rs_common_units(void)
 {
   /* Check some required flags and roles etc: */
   if (num_role_units(UTYF_SETTLERS) == 0) {
-    ruleset_error(LOG_ERROR, "No flag Settler units");
+    qCCritical(ruleset_category, "No flag Settler units");
     return FALSE;
   }
   if (num_role_units(L_START_EXPLORER) == 0) {
-    ruleset_error(LOG_ERROR, "No role Start Explorer units");
+    qCCritical(ruleset_category, "No role Start Explorer units");
   }
   if (num_role_units(L_FERRYBOAT) == 0) {
-    ruleset_error(LOG_ERROR, "No role Ferryboat units");
+    qCCritical(ruleset_category, "No role Ferryboat units");
   }
   if (num_role_units(L_FIRSTBUILD) == 0) {
-    ruleset_error(LOG_ERROR, "No role Firstbuild units");
+    qCCritical(ruleset_category, "No role Firstbuild units");
   }
 
   if (num_role_units(L_FERRYBOAT) > 0) {
@@ -629,17 +629,17 @@ static bool rs_common_units(void)
     terrain_type_iterate_end;
 
     if (!sea_capable) {
-      ruleset_error(LOG_ERROR,
-                    "Ferryboat (%s) needs to be able to move at sea.",
-                    utype_rule_name(u));
+      qCCritical(ruleset_category,
+                 "Ferryboat (%s) needs to be able to move at sea.",
+                 utype_rule_name(u));
       return FALSE;
     }
   }
 
   if (num_role_units(L_PARTISAN) == 0
       && effect_cumulative_max(EFT_INSPIRE_PARTISANS, NULL) > 0) {
-    ruleset_error(LOG_ERROR, "Inspire_Partisans effect present, but no "
-                             "units with partisan role.");
+    qCCritical(ruleset_category, "Inspire_Partisans effect present, but no "
+                                 "units with partisan role.");
     return FALSE;
   }
 
@@ -656,16 +656,16 @@ static bool rs_buildings(void)
   {
     if (improvement_has_flag(pimprove, IF_GOLD)
         && pimprove->genus != IG_SPECIAL) {
-      ruleset_error(
-          LOG_ERROR,
+      qCCritical(
+          ruleset_category,
           "Gold producing improvement with genus other than \"Special\"");
 
       return FALSE;
     }
     if (improvement_has_flag(pimprove, IF_DISASTER_PROOF)
         && pimprove->genus != IG_IMPROVEMENT) {
-      ruleset_error(
-          LOG_ERROR,
+      qCCritical(
+          ruleset_category,
           "Disasterproof improvement with genus other than \"Improvement\"");
 
       return FALSE;
@@ -696,10 +696,10 @@ static bool sanity_check_boolean_effects(void)
   for (i = 0; boolean_effects[i] != EFT_COUNT; i++) {
     if (effect_cumulative_min(boolean_effects[i], NULL) < 0
         && effect_cumulative_max(boolean_effects[i], NULL) == 0) {
-      ruleset_error(LOG_ERROR,
-                    "Boolean effect %s can get disabled, but it can't get "
-                    "enabled before that.",
-                    effect_type_name(boolean_effects[i]));
+      qCCritical(ruleset_category,
+                 "Boolean effect %s can get disabled, but it can't get "
+                 "enabled before that.",
+                 effect_type_name(boolean_effects[i]));
       ret = FALSE;
     }
   }
@@ -729,9 +729,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
   if (game.info.tech_cost_style == TECH_COST_CIV1CIV2
       && game.info.free_tech_method == FTM_CHEAPEST) {
-    ruleset_error(LOG_ERROR,
-                  "Cost based free tech method, but tech cost style "
-                  "1 so all techs cost the same.");
+    qCCritical(ruleset_category,
+               "Cost based free tech method, but tech cost style "
+               "1 so all techs cost the same.");
     ok = FALSE;
   }
 
@@ -751,8 +751,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       if (A_NEVER == preq) {
         continue;
       } else if (preq == padvance) {
-        ruleset_error(LOG_ERROR, "Tech \"%s\" requires itself.",
-                      advance_rule_name(padvance));
+        qCCritical(ruleset_category, "Tech \"%s\" requires itself.",
+                   advance_rule_name(padvance));
         ok = FALSE;
         continue;
       }
@@ -760,10 +760,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       advance_req_iterate(preq, preqreq)
       {
         if (preqreq == padvance) {
-          ruleset_error(LOG_ERROR,
-                        "Tech \"%s\" requires itself indirectly via \"%s\".",
-                        advance_rule_name(padvance),
-                        advance_rule_name(preq));
+          qCCritical(ruleset_category,
+                     "Tech \"%s\" requires itself indirectly via \"%s\".",
+                     advance_rule_name(padvance), advance_rule_name(preq));
           ok = FALSE;
         }
       }
@@ -776,22 +775,22 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         /* Don't allow this even if allowing changing reqs. Players will
          * expect all tech reqs to appear in the client tech tree. That
          * should be taken care of first. */
-        ruleset_error(LOG_ERROR,
-                      "Tech \"%s\" requires a tech in its research_reqs."
-                      " This isn't supported yet. Please keep using req1"
-                      " and req2 like before.",
-                      advance_rule_name(padvance));
+        qCCritical(ruleset_category,
+                   "Tech \"%s\" requires a tech in its research_reqs."
+                   " This isn't supported yet. Please keep using req1"
+                   " and req2 like before.",
+                   advance_rule_name(padvance));
         ok = FALSE;
       } else if (!is_req_unchanging(preq)) {
         /* Only support unchanging requirements until the reachability code
          * can handle it and the tech tree can display changing
          * requirements. */
-        ruleset_error(LOG_ERROR,
-                      "Tech \"%s\" has the requirement %s in its"
-                      " research_reqs. This requirement may change during"
-                      " the game. Changing requirements aren't supported"
-                      " yet.",
-                      advance_rule_name(padvance), req_to_fstring(preq));
+        qCCritical(ruleset_category,
+                   "Tech \"%s\" has the requirement %s in its"
+                   " research_reqs. This requirement may change during"
+                   " the game. Changing requirements aren't supported"
+                   " yet.",
+                   advance_rule_name(padvance), req_to_fstring(preq));
         ok = FALSE;
       }
     }
@@ -799,10 +798,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
     if (padvance->bonus_message != NULL) {
       if (!formats_match(padvance->bonus_message, "%s")) {
-        ruleset_error(LOG_ERROR,
-                      "Tech \"%s\" bonus message is not format with %%s for "
-                      "a bonus tech name.",
-                      advance_rule_name(padvance));
+        qCCritical(ruleset_category,
+                   "Tech \"%s\" bonus message is not format with %%s for "
+                   "a bonus tech name.",
+                   advance_rule_name(padvance));
         ok = FALSE;
       }
     }
@@ -810,11 +809,11 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   advance_iterate_end;
 
   if (game.default_government == game.government_during_revolution) {
-    ruleset_error(LOG_ERROR,
-                  "The government form %s reserved for revolution handling "
-                  "has been set as "
-                  "default_government.",
-                  government_rule_name(game.government_during_revolution));
+    qCCritical(ruleset_category,
+               "The government form %s reserved for revolution handling "
+               "has been set as "
+               "default_government.",
+               government_rule_name(game.government_during_revolution));
     ok = FALSE;
     default_gov_failed = TRUE;
   }
@@ -832,18 +831,18 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       struct advance *a = valid_advance_by_number(tech);
 
       if (a == NULL) {
-        ruleset_error(LOG_ERROR,
-                      "Tech %s does not exist, but is initial "
-                      "tech for everyone.",
-                      advance_rule_name(advance_by_number(tech)));
+        qCCritical(ruleset_category,
+                   "Tech %s does not exist, but is initial "
+                   "tech for everyone.",
+                   advance_rule_name(advance_by_number(tech)));
         ok = FALSE;
       } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
                  && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
         /* Nation has no root_req for tech */
-        ruleset_error(LOG_ERROR,
-                      "Tech %s is initial for everyone, but %s has "
-                      "no root_req for it.",
-                      advance_rule_name(a), nation_rule_name(pnation));
+        qCCritical(ruleset_category,
+                   "Tech %s is initial for everyone, but %s has "
+                   "no root_req for it.",
+                   advance_rule_name(a), nation_rule_name(pnation));
         ok = FALSE;
       }
     }
@@ -856,18 +855,18 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       struct advance *a = valid_advance_by_number(tech);
 
       if (a == NULL) {
-        ruleset_error(LOG_ERROR,
-                      "Tech %s does not exist, but is tech for %s.",
-                      advance_rule_name(advance_by_number(tech)),
-                      nation_rule_name(pnation));
+        qCCritical(ruleset_category,
+                   "Tech %s does not exist, but is tech for %s.",
+                   advance_rule_name(advance_by_number(tech)),
+                   nation_rule_name(pnation));
         ok = FALSE;
       } else if (advance_by_number(A_NONE) != a->require[AR_ROOT]
                  && !nation_has_initial_tech(pnation, a->require[AR_ROOT])) {
         /* Nation has no root_req for tech */
-        ruleset_error(LOG_ERROR,
-                      "Tech %s is initial for %s, but they have "
-                      "no root_req for it.",
-                      advance_rule_name(a), nation_rule_name(pnation));
+        qCCritical(ruleset_category,
+                   "Tech %s is initial for %s, but they have "
+                   "no root_req for it.",
+                   advance_rule_name(a), nation_rule_name(pnation));
         ok = FALSE;
       }
     }
@@ -875,20 +874,20 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     /* Check national initial buildings */
     if (nation_barbarian_type(pnation) != NOT_A_BARBARIAN
         && pnation->init_buildings[0] != B_LAST) {
-      ruleset_error(LOG_ERROR,
-                    "Barbarian nation %s has init_buildings set but will "
-                    "never see them",
-                    nation_rule_name(pnation));
+      qCCritical(ruleset_category,
+                 "Barbarian nation %s has init_buildings set but will "
+                 "never see them",
+                 nation_rule_name(pnation));
     }
 
     if (!default_gov_failed
         && pnation->init_government == game.government_during_revolution) {
-      ruleset_error(LOG_ERROR,
-                    "The government form %s reserved for revolution "
-                    "handling has been set as "
-                    "initial government for %s.",
-                    government_rule_name(game.government_during_revolution),
-                    nation_rule_name(pnation));
+      qCCritical(ruleset_category,
+                 "The government form %s reserved for revolution "
+                 "handling has been set as "
+                 "initial government for %s.",
+                 government_rule_name(game.government_during_revolution),
+                 nation_rule_name(pnation));
       ok = FALSE;
     }
   }
@@ -905,10 +904,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       upgraded = upgraded->obsoleted_by;
       chain_length++;
       if (chain_length > num_utypes) {
-        ruleset_error(LOG_ERROR,
-                      "There seems to be obsoleted_by loop in update "
-                      "chain that starts from %s",
-                      utype_rule_name(putype));
+        qCCritical(ruleset_category,
+                   "There seems to be obsoleted_by loop in update "
+                   "chain that starts from %s",
+                   utype_rule_name(putype));
         ok = FALSE;
       }
     }
@@ -924,10 +923,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
      * kept. */
     if (utype_has_flag(putype, UTYF_SPY)
         && !utype_has_flag(putype, UTYF_DIPLOMAT)) {
-      ruleset_error(LOG_ERROR,
-                    "The unit type '%s' has the 'Spy' unit type flag but "
-                    "not the 'Diplomat' unit type flag.",
-                    utype_rule_name(putype));
+      qCCritical(ruleset_category,
+                 "The unit type '%s' has the 'Spy' unit type flag but "
+                 "not the 'Diplomat' unit type flag.",
+                 utype_rule_name(putype));
       ok = FALSE;
     }
   }
@@ -939,11 +938,11 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     if (putype->paratroopers_range < 0
         || putype->paratroopers_range > UNIT_MAX_PARADROP_RANGE) {
       /* Paradrop range is limited by the network protocol. */
-      ruleset_error(LOG_ERROR,
-                    "The paratroopers_range of the unit type '%s' is %d. "
-                    "That is out of range. Max range is %d.",
-                    utype_rule_name(putype), putype->paratroopers_range,
-                    UNIT_MAX_PARADROP_RANGE);
+      qCCritical(ruleset_category,
+                 "The paratroopers_range of the unit type '%s' is %d. "
+                 "That is out of range. Max range is %d.",
+                 utype_rule_name(putype), putype->paratroopers_range,
+                 UNIT_MAX_PARADROP_RANGE);
       ok = FALSE;
     }
   }
@@ -952,8 +951,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Check requirement sets against conflicting requirements.
    * Effects use requirement lists */
   if (!iterate_effect_cache(effect_list_sanity_cb, NULL)) {
-    ruleset_error(LOG_ERROR,
-                  "Effects have conflicting or invalid requirements!");
+    qCCritical(ruleset_category,
+               "Effects have conflicting or invalid requirements!");
     ok = FALSE;
   }
 
@@ -968,8 +967,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (!sanity_check_req_vec(&pdis->reqs, TRUE, -1,
                               disaster_rule_name(pdis))) {
-      ruleset_error(LOG_ERROR,
-                    "Disasters have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Disasters have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -980,8 +979,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (!sanity_check_req_vec(&pgood->reqs, TRUE, -1,
                               goods_rule_name(pgood))) {
-      ruleset_error(LOG_ERROR,
-                    "Goods have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Goods have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -992,15 +991,14 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (!sanity_check_req_vec(&pimprove->reqs, TRUE, -1,
                               improvement_rule_name(pimprove))) {
-      ruleset_error(LOG_ERROR,
-                    "Buildings have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Buildings have conflicting or invalid requirements!");
       ok = FALSE;
     }
     if (!sanity_check_req_vec(&pimprove->obsolete_by, FALSE, -1,
                               improvement_rule_name(pimprove))) {
-      ruleset_error(
-          LOG_ERROR,
-          "Buildings have conflicting or invalid obsolescence req!");
+      qCCritical(ruleset_category,
+                 "Buildings have conflicting or invalid obsolescence req!");
       ok = FALSE;
     }
   }
@@ -1011,8 +1009,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (!sanity_check_req_vec(&pgov->reqs, TRUE, -1,
                               government_rule_name(pgov))) {
-      ruleset_error(LOG_ERROR,
-                    "Governments have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Governments have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -1025,8 +1023,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
     if (!sanity_check_req_vec(&psp->reqs, TRUE, -1,
                               specialist_rule_name(psp))) {
-      ruleset_error(LOG_ERROR,
-                    "Specialists have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Specialists have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -1037,24 +1035,23 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (!sanity_check_req_vec(&pextra->reqs, TRUE, -1,
                               extra_rule_name(pextra))) {
-      ruleset_error(LOG_ERROR,
-                    "Extras have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Extras have conflicting or invalid requirements!");
       ok = FALSE;
     }
     if (!sanity_check_req_vec(&pextra->rmreqs, TRUE, -1,
                               extra_rule_name(pextra))) {
-      ruleset_error(
-          LOG_ERROR,
-          "Extras have conflicting or invalid removal requirements!");
+      qCCritical(ruleset_category,
+                 "Extras have conflicting or invalid removal requirements!");
       ok = FALSE;
     }
     if ((requirement_vector_size(&pextra->rmreqs) > 0)
         && !(pextra->rmcauses
              & (ERM_ENTER | ERM_CLEANPOLLUTION | ERM_CLEANFALLOUT
                 | ERM_PILLAGE))) {
-      ruleset_error(LOG_WARN,
-                    "Requirements for extra removal defined but not "
-                    "a valid remove cause!");
+      qCWarning(ruleset_category,
+                "Requirements for extra removal defined but not "
+                "a valid remove cause!");
     }
   }
   extra_type_iterate_end;
@@ -1071,9 +1068,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
       if (pnbr != road_number(iroad) && !BV_ISSET(iroad->integrates, pnbr)) {
         /* We don't support non-symmetric integrator relationships yet. */
-        ruleset_error(LOG_ERROR,
-                      "Road '%s' integrates with '%s' but not vice versa!",
-                      extra_rule_name(pextra), extra_rule_name(iextra));
+        qCCritical(ruleset_category,
+                   "Road '%s' integrates with '%s' but not vice versa!",
+                   extra_rule_name(pextra), extra_rule_name(iextra));
         ok = FALSE;
       }
     }
@@ -1099,9 +1096,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       }
 
       if (BV_ISSET(pbase->flags, bfi)) {
-        ruleset_error(LOG_ERROR, "Base %s uses the retired base flag %s!",
-                      extra_name_translation(pextra),
-                      base_flag_id_name(base_flag_id(bfi)));
+        qCCritical(ruleset_category,
+                   "Base %s uses the retired base flag %s!",
+                   extra_name_translation(pextra),
+                   base_flag_id_name(base_flag_id(bfi)));
       }
     }
   }
@@ -1111,8 +1109,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   for (i = 0; i < game.control.styles_count; i++) {
     if (!sanity_check_req_vec(&city_styles[i].reqs, TRUE, -1,
                               city_style_rule_name(i))) {
-      ruleset_error(LOG_ERROR,
-                    "City styles have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "City styles have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -1123,33 +1121,33 @@ bool sanity_check_ruleset_data(bool ignore_retired)
     struct action *paction = action_by_number(act);
 
     if (paction->min_distance < 0) {
-      ruleset_error(LOG_ERROR, "Action %s: negative min distance (%d).",
-                    action_id_rule_name(act), paction->min_distance);
+      qCCritical(ruleset_category, "Action %s: negative min distance (%d).",
+                 action_id_rule_name(act), paction->min_distance);
       ok = FALSE;
     }
 
     if (paction->min_distance > ACTION_DISTANCE_LAST_NON_SIGNAL) {
-      ruleset_error(LOG_ERROR,
-                    "Action %s: min distance (%d) larger than "
-                    "any distance on a map can be (%d).",
-                    action_id_rule_name(act), paction->min_distance,
-                    ACTION_DISTANCE_LAST_NON_SIGNAL);
+      qCCritical(ruleset_category,
+                 "Action %s: min distance (%d) larger than "
+                 "any distance on a map can be (%d).",
+                 action_id_rule_name(act), paction->min_distance,
+                 ACTION_DISTANCE_LAST_NON_SIGNAL);
       ok = FALSE;
     }
 
     if (paction->max_distance > ACTION_DISTANCE_MAX) {
-      ruleset_error(LOG_ERROR,
-                    "Action %s: max distance is %d. "
-                    "A map can't be that big.",
-                    action_id_rule_name(act), paction->max_distance);
+      qCCritical(ruleset_category,
+                 "Action %s: max distance is %d. "
+                 "A map can't be that big.",
+                 action_id_rule_name(act), paction->max_distance);
       ok = FALSE;
     }
 
     if (!action_distance_inside_max(paction, paction->min_distance)) {
-      ruleset_error(LOG_ERROR,
-                    "Action %s: min distance is %d but max distance is %d.",
-                    action_id_rule_name(act), paction->min_distance,
-                    paction->max_distance);
+      qCCritical(ruleset_category,
+                 "Action %s: min distance is %d but max distance is %d.",
+                 action_id_rule_name(act), paction->min_distance,
+                 paction->max_distance);
       ok = FALSE;
     }
 
@@ -1161,9 +1159,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         /* Can't find an individual unit target to evaluate the blocking
          * action against. (A tile may have more than one individual
          * unit) */
-        ruleset_error(LOG_ERROR, "The action %s can't block %s.",
-                      action_id_rule_name(blocker),
-                      action_id_rule_name(act));
+        qCCritical(ruleset_category, "The action %s can't block %s.",
+                   action_id_rule_name(blocker), action_id_rule_name(act));
         ok = FALSE;
       }
     }
@@ -1175,10 +1172,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
                                 "Action Enabler Actor Reqs")
           || !sanity_check_req_vec(&(enabler->target_reqs), TRUE, -1,
                                    "Action Enabler Target Reqs")) {
-        ruleset_error(LOG_ERROR,
-                      "Action enabler for %s has conflicting or invalid "
-                      "requirements!",
-                      action_id_rule_name(act));
+        qCCritical(ruleset_category,
+                   "Action enabler for %s has conflicting or invalid "
+                   "requirements!",
+                   action_id_rule_name(act));
         ok = FALSE;
       }
 
@@ -1188,10 +1185,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         if (requirement_vector_size(&(enabler->target_reqs)) > 0) {
           /* Shouldn't have target requirements since the action doesn't
            * have a target. */
-          ruleset_error(LOG_ERROR,
-                        "An action enabler for %s has a target "
-                        "requirement vector. %s doesn't have a target.",
-                        action_id_rule_name(act), action_id_rule_name(act));
+          qCCritical(ruleset_category,
+                     "An action enabler for %s has a target "
+                     "requirement vector. %s doesn't have a target.",
+                     action_id_rule_name(act), action_id_rule_name(act));
           ok = FALSE;
         }
       }
@@ -1203,12 +1200,12 @@ bool sanity_check_ruleset_data(bool ignore_retired)
           /* A Local DiplRel requirement can be expressed as a requirement
            * in actor_reqs. Demand that it is there. This avoids breaking
            * code that reasons about actions. */
-          ruleset_error(LOG_ERROR,
-                        "Action enabler for %s has a local DiplRel "
-                        "requirement %s in target_reqs! Please read the "
-                        "section \"Requirement vector rules\" in "
-                        "doc/README.actions",
-                        action_id_rule_name(act), req_to_fstring(preq));
+          qCCritical(ruleset_category,
+                     "Action enabler for %s has a local DiplRel "
+                     "requirement %s in target_reqs! Please read the "
+                     "section \"Requirement vector rules\" in "
+                     "doc/README.actions",
+                     action_id_rule_name(act), req_to_fstring(preq));
           ok = FALSE;
         }
       }
@@ -1224,14 +1221,14 @@ bool sanity_check_ruleset_data(bool ignore_retired)
             action_enabler_suggest_repair(enabler);
 
         if (problem != NULL) {
-          ruleset_error(LOG_ERROR, "%s", problem->description);
+          qCCritical(ruleset_category, "%s", problem->description);
           ok = FALSE;
         }
 
         problem = action_enabler_suggest_improvement(enabler);
         if (problem != NULL) {
           /* There is a potential for improving this enabler. */
-          log_deprecation("%s", problem->description);
+          qCWarning(deprecations_category, "%s", problem->description);
         }
       }
     }
@@ -1256,10 +1253,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
          * attack actions for now. Other actions need more testing and
          * fixing of issues caused by a worst case action probability of
          * 0%. */
-        ruleset_error(LOG_ERROR,
-                      "auto_attack: %s not supported in"
-                      " attack_actions.",
-                      action_rule_name(paction));
+        qCCritical(ruleset_category,
+                   "auto_attack: %s not supported in"
+                   " attack_actions.",
+                   action_rule_name(paction));
         ok = FALSE;
       }
     }
@@ -1270,9 +1267,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   styles_iterate(pstyle)
   {
     if (basic_city_style_for_style(pstyle) < 0) {
-      ruleset_error(LOG_ERROR,
-                    "There's no basic city style for nation style %s",
-                    style_rule_name(pstyle));
+      qCCritical(ruleset_category,
+                 "There's no basic city style for nation style %s",
+                 style_rule_name(pstyle));
       ok = FALSE;
     }
   }
@@ -1282,9 +1279,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   music_styles_iterate(pmus)
   {
     if (!sanity_check_req_vec(&pmus->reqs, TRUE, -1, "Music Style")) {
-      ruleset_error(
-          LOG_ERROR,
-          "Music Styles have conflicting or invalid requirements!");
+      qCCritical(ruleset_category,
+                 "Music Styles have conflicting or invalid requirements!");
       ok = FALSE;
     }
   }
@@ -1294,11 +1290,10 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     if (pterr->animal != NULL) {
       if (!is_native_to_class(utype_class(pterr->animal), pterr, NULL)) {
-        ruleset_error(LOG_ERROR,
-                      "%s has %s as animal to appear, but it's not native "
-                      "to the terrain.",
-                      terrain_rule_name(pterr),
-                      utype_rule_name(pterr->animal));
+        qCCritical(ruleset_category,
+                   "%s has %s as animal to appear, but it's not native "
+                   "to the terrain.",
+                   terrain_rule_name(pterr), utype_rule_name(pterr->animal));
         ok = FALSE;
       }
     }
@@ -1333,8 +1328,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       }
 
       if (!can_exist) {
-        ruleset_error(LOG_ERROR, "Unit class %s cannot exist anywhere.",
-                      uclass_rule_name(pclass));
+        qCCritical(ruleset_category, "Unit class %s cannot exist anywhere.",
+                   uclass_rule_name(pclass));
         ok = FALSE;
       }
     }
@@ -1344,8 +1339,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   achievements_iterate(pach)
   {
     if (!pach->unique && pach->cons_msg == NULL) {
-      ruleset_error(
-          LOG_ERROR,
+      qCCritical(
+          ruleset_category,
           "Achievement %s has no message for consecutive gainers though "
           "it's possible to be gained by multiple players",
           achievement_rule_name(pach));
@@ -1363,8 +1358,8 @@ bool sanity_check_ruleset_data(bool ignore_retired)
           nation_by_rule_name(game.server.ruledit.embedded_nations[nati]);
 
       if (pnat == NULL) {
-        ruleset_error(
-            LOG_ERROR,
+        qCCritical(
+            ruleset_category,
             "There's nation %s listed in embedded nations, but there's "
             "no such nation.",
             game.server.ruledit.embedded_nations[nati]);
@@ -1466,8 +1461,8 @@ bool autoadjust_ruleset_data(void)
         action_by_result_iterate(blocker, blocked_id, blocker_result)
         {
           if (!action_would_be_blocked_by(blocked, blocker)) {
-            log_verbose("Autoblocking %s with %s", action_rule_name(blocked),
-                        action_rule_name(blocker));
+            qCDebug(ruleset_category, "Autoblocking %s with %s",
+                    action_rule_name(blocked), action_rule_name(blocker));
             BV_SET(blocked->blocked_by, blocker->id);
           }
         }
@@ -1490,8 +1485,9 @@ bool autolock_settings(void)
   if (num_role_units(L_BARBARIAN) == 0) {
     struct setting *pset = setting_by_name("barbarians");
 
-    log_normal(_("Disabling 'barbarians' setting for lack of suitable "
-                 "unit types."));
+    qCInfo(ruleset_category,
+           ("Disabling 'barbarians' setting for lack of suitable "
+            "unit types."));
     setting_lock_set(pset, FALSE);
     if (!setting_enum_set(pset, "DISABLED", NULL, NULL, 0)) {
       ok = FALSE;

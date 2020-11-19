@@ -48,7 +48,6 @@
 
 static QString rs_selected;
 static QString od_selected;
-static int fatal_assertions = -1;
 
 /**********************************************************************/ /**
    Parse freeciv-ruleup commandline parameters.
@@ -71,7 +70,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
        _("DIRECTORY")},
   });
   if (!ok) {
-    log_fatal("Adding command line arguments failed");
+    qFatal("Adding command line arguments failed");
     exit(EXIT_FAILURE);
   }
 
@@ -79,9 +78,7 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  if (parser.isSet("Fatal")) {
-    fatal_assertions = SIGABRT;
-  }
+  fc_assert_set_fatal(parser.isSet("Fatal"));
   if (parser.isSet("ruleset")) {
     if (parser.values("ruleset").size() >= 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
@@ -104,15 +101,13 @@ static void rup_parse_cmdline(const QCoreApplication &app)
 /**********************************************************************/ /**
    Conversion log callback
  **************************************************************************/
-static void conv_log(const char *msg) { log_normal("%s", msg); }
+static void conv_log(const char *msg) { qInfo("%s", msg); }
 
 /**********************************************************************/ /**
    Main entry point for freeciv-ruleup
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  enum log_level loglevel = LOG_NORMAL;
-
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
   if (LoadLibrary("exchndl.dll") == NULL) {
@@ -125,13 +120,13 @@ int main(int argc, char **argv)
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
+  log_init();
+
   init_nls();
 
   init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
 
   rup_parse_cmdline(app);
-
-  log_init(NULL, loglevel, NULL, NULL, fatal_assertions);
 
   init_connections();
 
@@ -167,14 +162,14 @@ int main(int argc, char **argv)
     if (!comments_load()) {
       /* TRANS: 'Failed to load comments-x.y.txt' where x.y is
        * freeciv version */
-      log_error(R__("Failed to load %s."), COMMENTS_FILE_NAME);
+      qCritical(R__("Failed to load %s."), COMMENTS_FILE_NAME);
     }
 
     save_ruleset(qPrintable(tgt_dir), game.control.name, &data);
-    log_normal("Saved %s", qPrintable(tgt_dir));
+    qInfo("Saved %s", qPrintable(tgt_dir));
     comments_free();
   } else {
-    log_error(_("Can't load ruleset %s"), qPrintable(rs_selected));
+    qCritical(_("Can't load ruleset %s"), qPrintable(rs_selected));
   }
 
   log_close();

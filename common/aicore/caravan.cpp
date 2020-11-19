@@ -17,9 +17,6 @@
 
 #include <math.h>
 
-/* utility */
-#include "log.h"
-
 /* common */
 #include "game.h"
 #include "traderoutes.h"
@@ -88,49 +85,6 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
   }
 
   return TRUE;
-}
-
-/************************************************************************/ /**
-   For debugging, print out the parameter.
- ****************************************************************************/
-void caravan_parameter_log_real(const struct caravan_parameter *parameter,
-                                enum log_level level, const char *file,
-                                const char *function, int line)
-{
-  const char *foreign = "<illegal>";
-
-  switch (parameter->allow_foreign_trade) {
-  case FTL_NATIONAL_ONLY:
-    foreign = "no";
-    break;
-  case FTL_ALLIED:
-    foreign = "allied";
-    break;
-  case FTL_PEACEFUL:
-    foreign = "peaceful";
-    break;
-  case FTL_NONWAR:
-    foreign = "anything but enemies";
-    break;
-  }
-
-  do_log(file, function, line, FALSE, level,
-         "parameter {\n"
-         "  horizon   = %d\n"
-         "  discount  = %g\n"
-         "  objective = <%s,%s,%s>\n"
-         "  account-broken = %s\n"
-         "  allow-foreign  = %s\n"
-         "  ignore-transit = %s\n"
-         "  convert-trade  = %s\n"
-         "}\n",
-         parameter->horizon, parameter->discount,
-         parameter->consider_windfall ? "windfall" : "-",
-         parameter->consider_trade ? "trade" : "-",
-         parameter->consider_wonders ? "wonders" : "-",
-         parameter->account_for_broken_routes ? "yes" : "no", foreign,
-         parameter->ignore_transit_time ? "yes" : "no",
-         parameter->convert_trade ? "yes" : "no");
 }
 
 /************************************************************************/ /**

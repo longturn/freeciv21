@@ -13,6 +13,8 @@
 #ifndef FC__RULESET_H
 #define FC__RULESET_H
 
+#include <QLoggingCategory>
+
 #define RULESET_CAPABILITIES "+Freeciv-ruleset-Devel-2017.Jan.02"
 /*
  * Ruleset capabilities acceptable to this program:
@@ -23,6 +25,8 @@
  * +Freeciv-ruleset-Devel-YYYY.MMM.DD
  *    - ruleset of the development version at the given data
  */
+
+Q_DECLARE_LOGGING_CATEGORY(ruleset_category)
 
 struct conn_list;
 
@@ -36,16 +40,6 @@ bool reload_rulesets_settings(void);
 void send_rulesets(struct conn_list *dest);
 
 void rulesets_deinit(void);
-
-void ruleset_error_real(const char *file, const char *function, int line,
-                        enum log_level level, const char *format, ...)
-    fc__attribute((__format__(__printf__, 5, 6)));
-
-#define ruleset_error(level, format, ...)                                   \
-  if (log_do_output_for_level(level)) {                                     \
-    ruleset_error_real(__FILE__, __FUNCTION__, __FC_LINE__, level, format,  \
-                       ##__VA_ARGS__);                                      \
-  }
 
 char *get_script_buffer(void);
 char *get_parser_buffer(void);

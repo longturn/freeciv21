@@ -678,7 +678,7 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     v += amount * adv->infra_priority;
     break;
   case EFT_COUNT:
-    log_error("Bad effect type.");
+    qCritical("Bad effect type.");
     break;
   }
 

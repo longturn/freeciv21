@@ -199,7 +199,7 @@ void update_queue_thaw(void)
     update_queue_has_idle_callback = TRUE;
     add_idle_callback(update_unqueue, NULL);
   } else if (0 > update_queue_frozen_level) {
-    log_error("update_queue_frozen_level < 0, repairing...");
+    qCritical("update_queue_frozen_level < 0, repairing...");
     update_queue_frozen_level = 0;
   }
 }
@@ -572,7 +572,7 @@ static void cities_update_callback(void *data)
 
 #ifdef FREECIV_DEBUG
     if (CU_NO_UPDATE != need_update) {
-      log_error("Some city updates not handled "
+      qCritical("Some city updates not handled "
                 "for city %s (id %d): %d left.",
                 city_name_get(pcity), pcity->id, need_update);
     }

@@ -19,7 +19,6 @@
 
 /* utility */
 #include "astring.h"
-#include "log.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"
@@ -46,49 +45,29 @@ static int recursion[AIT_LAST];
 /* General AI logging functions */
 
 /**********************************************************************/ /**
-   Log city messages, they will appear like this
-     2: Polish Romenna(5,35) [s1 d106 u11 g1] must have Archers ...
+   Log a city, it will appear like this
+     Polish Romenna(5,35) [s1 d106 u11 g1]
  **************************************************************************/
-void real_city_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct city *pcity, const char *msg, ...)
+QString city_log_prefix(const city *pcity)
 {
-  char buffer[500];
-  char buffer2[500];
-  va_list ap;
   char aibuf[500] = "\0";
-
   CALL_PLR_AI_FUNC(log_fragment_city, city_owner(pcity), aibuf,
                    sizeof(aibuf), pcity);
 
-  fc_snprintf(buffer, sizeof(buffer), "%s %s(%d,%d) (s%d) {%s} ",
-              nation_rule_name(nation_of_city(pcity)), city_name_get(pcity),
-              TILE_XY(pcity->tile), city_size_get(pcity), aibuf);
-
-  va_start(ap, msg);
-  fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
-  va_end(ap);
-
-  cat_snprintf(buffer, sizeof(buffer), "%s", buffer2);
-  if (notify) {
-    notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buffer);
-  }
-  do_log(file, function, line, FALSE, level, "%s", buffer);
+  return QString::asprintf("%s %s(%d,%d) (s%d) {%s} ",
+                           nation_rule_name(nation_of_city(pcity)),
+                           city_name_get(pcity), TILE_XY(pcity->tile),
+                           city_size_get(pcity), aibuf);
 }
 
 /**********************************************************************/ /**
-   Log unit messages, they will appear like this
-     2: Polish Archers[139] (5,35)->(0,0){0,0} stays to defend city
+   Log a unit, it will appear like this
+     Polish Archers[139] (5,35)->(0,0){0,0}
    where [] is unit id, ()->() are coordinates present and goto, and
    {,} contains bodyguard and ferryboat ids.
  **************************************************************************/
-void real_unit_log(const char *file, const char *function, int line,
-                   enum log_level level, bool notify,
-                   const struct unit *punit, const char *msg, ...)
+QString unit_log_prefix(const unit *punit)
 {
-  char buffer[500];
-  char buffer2[500];
-  va_list ap;
   int gx, gy;
   char aibuf[500] = "\0";
 
@@ -101,20 +80,11 @@ void real_unit_log(const char *file, const char *function, int line,
     gx = gy = -1;
   }
 
-  fc_snprintf(buffer, sizeof(buffer), "%s %s(%d) %s (%d,%d)->(%d,%d){%s} ",
-              nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
-              punit->id, get_activity_text(punit->activity),
-              TILE_XY(unit_tile(punit)), gx, gy, aibuf);
-
-  va_start(ap, msg);
-  fc_vsnprintf(buffer2, sizeof(buffer2), msg, ap);
-  va_end(ap);
-
-  cat_snprintf(buffer, sizeof(buffer), "%s", buffer2);
-  if (notify) {
-    notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buffer);
-  }
-  do_log(file, function, line, FALSE, level, "%s", buffer);
+  return QString::asprintf("%s %s(%d) %s (%d,%d)->(%d,%d){%s} ",
+                           nation_rule_name(nation_of_unit(punit)),
+                           unit_rule_name(punit), punit->id,
+                           get_activity_text(punit->activity),
+                           TILE_XY(unit_tile(punit)), gx, gy, aibuf);
 }
 
 /**********************************************************************/ /**
@@ -153,26 +123,14 @@ void timing_results_real(void)
 {
   char buf[200];
 
-#ifdef LOG_TIMERS
-
 #define AILOG_OUT(text, which)                                              \
   fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text,     \
               timer_read_seconds(aitimer[which][0]),                        \
               timer_read_seconds(aitimer[which][1]));                       \
-  log_test("%s", buf);                                                      \
+  qCInfo(timers_category, "%s", buf);                                       \
   notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
 
-  log_test("  --- AI timing results ---");
-
-#else /* LOG_TIMERS */
-
-#define AILOG_OUT(text, which)                                              \
-  fc_snprintf(buf, sizeof(buf), "  %s: %g sec turn, %g sec game", text,     \
-              timer_read_seconds(aitimer[which][0]),                        \
-              timer_read_seconds(aitimer[which][1]));                       \
-  notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log, "%s", buf);
-
-#endif /* LOG_TIMERS */
+  qCInfo(timers_category, "  --- AI timing results ---");
 
   notify_conn(NULL, NULL, E_AI_DEBUG, ftc_log,
               "  --- AI timing results ---");

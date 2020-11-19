@@ -74,7 +74,7 @@ static void script_server_code_save(struct section_file *file);
 static void script_server_signals_create(void);
 static void script_server_functions_define(void);
 
-static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
+static void script_server_cmd_reply(struct fc_lua *fcl, QtMsgType level,
                                     const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
@@ -547,7 +547,7 @@ bool script_server_call(const char *func_name, ...)
 /***********************************************************************/ /**
    Send the message via cmd_reply().
  ***************************************************************************/
-static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
+static void script_server_cmd_reply(struct fc_lua *fcl, QtMsgType level,
                                     const char *format, ...)
 {
   va_list args;
@@ -561,7 +561,7 @@ static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
   switch (level) {
   case LOG_FATAL:
     /* Special case - will quit the server. */
-    log_fatal("%s", buf);
+    qFatal("%s", buf);
     break;
   case LOG_ERROR:
   case LOG_WARN:
@@ -572,9 +572,6 @@ static void script_server_cmd_reply(struct fc_lua *fcl, enum log_level level,
     break;
   case LOG_VERBOSE:
     rfc_status = C_LOG_BASE;
-    break;
-  case LOG_DEBUG:
-    rfc_status = C_DEBUG;
     break;
   }
 

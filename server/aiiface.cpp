@@ -88,7 +88,7 @@ bool load_ai_module(const char *modname)
   fc_snprintf(buffer, sizeof(buffer), "%s", filename);
   handle = lt_dlopenext(buffer);
   if (handle == NULL) {
-    log_error(_("Cannot open AI module %s (%s)"), filename,
+    qCritical(_("Cannot open AI module %s (%s)"), filename,
               fc_module_error());
     return FALSE;
   }
@@ -96,16 +96,16 @@ bool load_ai_module(const char *modname)
   fc_snprintf(buffer, sizeof(buffer), "%s_capstr", filename);
   capstr_func = lt_dlsym(handle, buffer);
   if (capstr_func == NULL) {
-    log_error(_("Cannot find capstr function from ai module %s (%s)"),
+    qCritical(_("Cannot find capstr function from ai module %s (%s)"),
               filename, fc_module_error());
     return FALSE;
   }
 
   capstr = capstr_func();
   if (strcmp(FC_AI_MOD_CAPSTR, capstr)) {
-    log_error(_("Incompatible ai module %s:"), filename);
-    log_error(_("  Module options:    %s"), capstr);
-    log_error(_("  Supported options: %s"), FC_AI_MOD_CAPSTR);
+    qCritical(_("Incompatible ai module %s:"), filename);
+    qCritical(_("  Module options:    %s"), capstr);
+    qCritical(_("  Supported options: %s"), FC_AI_MOD_CAPSTR);
 
     return FALSE;
   }
@@ -113,14 +113,14 @@ bool load_ai_module(const char *modname)
   fc_snprintf(buffer, sizeof(buffer), "%s_setup", filename);
   setup_func = lt_dlsym(handle, buffer);
   if (setup_func == NULL) {
-    log_error(_("Cannot find setup function from ai module %s (%s)"),
+    qCritical(_("Cannot find setup function from ai module %s (%s)"),
               filename, fc_module_error());
     return FALSE;
   }
   setup_success = setup_func(ai);
 
   if (!setup_success) {
-    log_error(_("Setup of ai module %s failed."), filename);
+    qCritical(_("Setup of ai module %s failed."), filename);
     return FALSE;
   }
 
@@ -172,7 +172,7 @@ void ai_init(void)
   if (ai != NULL) {
     init_ai(ai);
     if (!fc_ai_classic_setup(ai)) {
-      log_error(_("Failed to setup \"%s\" AI module"), "classic");
+      qCritical(_("Failed to setup \"%s\" AI module"), "classic");
       ai_type_dealloc();
     }
   }
@@ -183,7 +183,7 @@ void ai_init(void)
   if (ai != NULL) {
     init_ai(ai);
     if (!fc_ai_threaded_setup(ai)) {
-      log_error(_("Failed to setup \"%s\" AI module"), "threaded");
+      qCritical(_("Failed to setup \"%s\" AI module"), "threaded");
       ai_type_dealloc();
     }
   }
@@ -194,7 +194,7 @@ void ai_init(void)
   if (ai != NULL) {
     init_ai(ai);
     if (!fc_ai_tex_setup(ai)) {
-      log_error(_("Failed to setup \"%s\" AI module"), "tex");
+      qCritical(_("Failed to setup \"%s\" AI module"), "tex");
       ai_type_dealloc();
     }
   }
@@ -205,7 +205,7 @@ void ai_init(void)
   if (ai != NULL) {
     init_ai(ai);
     if (!fc_ai_stub_setup(ai)) {
-      log_error(_("Failed to setup \"%s\" AI module"), "stub");
+      qCritical(_("Failed to setup \"%s\" AI module"), "stub");
       ai_type_dealloc();
     }
   }
@@ -224,7 +224,7 @@ void ai_init(void)
   }
 #endif /* AI_MODULES */
   if (default_ai == NULL || failure) {
-    log_error(
+    qCritical(
         _("Failed to setup default AI module \"%s\", cannot continue."),
         AI_MOD_DEFAULT);
     exit(EXIT_FAILURE);

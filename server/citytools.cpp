@@ -459,8 +459,8 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
   struct nation_type *pnation = nation_of_player(pplayer);
   const char *name;
 
-  log_verbose("Suggesting city name for %s at (%d,%d)", player_name(pplayer),
-              TILE_XY(ptile));
+  qDebug("Suggesting city name for %s at (%d,%d)", player_name(pplayer),
+         TILE_XY(ptile));
 
   /* First try default city names. */
   name = search_for_city_name(ptile, nation_cities(pnation), pplayer);
@@ -606,9 +606,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
 
   if (from_player == to_player) {
     fc_assert_ret(rehome);
-    log_verbose("Changed homecity of %s %s to %s",
-                nation_rule_name(nation_of_player(from_player)),
-                unit_rule_name(punit), city_name_get(tocity));
+    qDebug("Changed homecity of %s %s to %s",
+           nation_rule_name(nation_of_player(from_player)),
+           unit_rule_name(punit), city_name_get(tocity));
     if (verbose) {
       notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                     ftc_server, _("Changed homecity of %s to %s."),
@@ -650,10 +650,10 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
     }
 
     if (in_city) {
-      log_verbose("Transferred %s in %s from %s to %s",
-                  unit_rule_name(punit), city_name_get(in_city),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Transferred %s in %s from %s to %s", unit_rule_name(punit),
+             city_name_get(in_city),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                       ftc_server, _("Transferred %s in %s from %s to %s."),
@@ -662,9 +662,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
                       nation_plural_for_player(to_player));
       }
     } else if (can_unit_exist_at_tile(&(wld.map), punit, tocity->tile)) {
-      log_verbose("Transferred %s from %s to %s", unit_rule_name(punit),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Transferred %s from %s to %s", unit_rule_name(punit),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(from_player, unit_tile(punit), E_UNIT_RELOCATED,
                       ftc_server, _("Transferred %s from %s to %s."),
@@ -673,10 +673,9 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
                       nation_plural_for_player(to_player));
       }
     } else {
-      log_verbose("Could not transfer %s from %s to %s",
-                  unit_rule_name(punit),
-                  nation_rule_name(nation_of_player(from_player)),
-                  nation_rule_name(nation_of_player(to_player)));
+      qDebug("Could not transfer %s from %s to %s", unit_rule_name(punit),
+             nation_rule_name(nation_of_player(from_player)),
+             nation_rule_name(nation_of_player(to_player)));
       if (verbose) {
         notify_player(
             from_player, unit_tile(punit), E_UNIT_LOST_MISC, ftc_server,
@@ -807,9 +806,9 @@ void transfer_city_units(struct player *pplayer, struct player *pvictim,
     } else {
       /* The unit is lost.  Call notify_player (in all other cases it is
        * called automatically). */
-      log_verbose("Lost %s %s at (%d,%d) when %s was lost.",
-                  nation_rule_name(nation_of_unit(vunit)),
-                  unit_rule_name(vunit), TILE_XY(unit_tile(vunit)), name);
+      qDebug("Lost %s %s at (%d,%d) when %s was lost.",
+             nation_rule_name(nation_of_unit(vunit)), unit_rule_name(vunit),
+             TILE_XY(unit_tile(vunit)), name);
       if (verbose) {
         notify_player(unit_owner(vunit), unit_tile(vunit), E_UNIT_LOST_MISC,
                       ftc_server, _("%s lost along with control of %s."),
@@ -869,7 +868,7 @@ struct city *find_closest_city(const struct tile *ptile,
   fc_assert_ret_val(ptile != NULL, NULL);
 
   if (pplayer != NULL && only_player && only_enemy) {
-    log_error("Non of my own cities will be at war with me!");
+    qCritical("Non of my own cities will be at war with me!");
     return NULL;
   }
 
@@ -2277,7 +2276,7 @@ void send_player_cities(struct player *pplayer)
   city_list_iterate(pplayer->cities, pcity)
   {
     if (city_refresh(pcity)) {
-      log_error("%s radius changed while sending to player.",
+      qCritical("%s radius changed while sending to player.",
                 city_name_get(pcity));
 
       /* Make sure that no workers in illegal position outside radius. */
@@ -2503,7 +2502,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
     if (recursion) {
       /* Recursion didn't help. Do not enter infinite recursive loop.
        * Package city as it is. */
-      log_error("Failed to fix inconsistent city size.");
+      qCritical("Failed to fix inconsistent city size.");
       recursion = FALSE;
     } else {
       /* Note: If you get this error and try to debug the cause, you may find
@@ -2513,7 +2512,7 @@ void package_city(struct city *pcity, struct packet_city_info *packet,
       fc_assert(packet->size == ppl);
 
       /* In all builds have an error message shown. */
-      log_error("City size %d, citizen count %d for %s", packet->size, ppl,
+      qCritical("City size %d, citizen count %d for %s", packet->size, ppl,
                 city_name_get(pcity));
 
       /* Try to fix */
@@ -2661,13 +2660,13 @@ bool update_dumb_city(struct player *pplayer, struct city *pcity)
     pdcity = vision_site_new_from_city(pcity);
     change_playertile_site(map_get_player_tile(pcenter, pplayer), pdcity);
   } else if (pdcity->location != pcenter) {
-    log_error("Trying to update bad city (wrong location) "
+    qCritical("Trying to update bad city (wrong location) "
               "at %i,%i for player %s",
               TILE_XY(pcity->tile), player_name(pplayer));
     fc_assert(pdcity->location == pcenter);
     pdcity->location = pcenter; /* ?? */
   } else if (pdcity->identity != pcity->id) {
-    log_error("Trying to update old city (wrong identity) "
+    qCritical("Trying to update old city (wrong identity) "
               "at %i,%i for player %s",
               TILE_XY(city_tile(pcity)), player_name(pplayer));
     fc_assert(pdcity->identity == pcity->id);

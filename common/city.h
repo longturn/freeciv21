@@ -13,8 +13,6 @@
 #ifndef FC__CITY_H
 #define FC__CITY_H
 
-
-
 /* utility */
 #include "bitvector.h"
 #include "log.h"
@@ -114,8 +112,8 @@ int city_map_tiles(int city_radius_sq);
 #define city_map_tiles_from_city(_pcity)                                    \
   city_map_tiles(city_map_radius_sq_get(_pcity))
 
-void citylog_map_data(enum log_level level, int radius_sq, int *map_data);
-void citylog_map_workers(enum log_level level, struct city *pcity);
+void citylog_map_data(QtMsgType level, int radius_sq, int *map_data);
+void citylog_map_workers(QtMsgType level, struct city *pcity);
 
 /* Iterate over the tiles of a city map. Starting at a given city radius
  * (the city center is _radius_sq_min = 0) outward to the tiles of
@@ -775,7 +773,5 @@ bool is_free_worked(const struct city *pcity, const struct tile *ptile);
 void *city_ai_data(const struct city *pcity, const struct ai_type *ai);
 void city_set_ai_data(struct city *pcity, const struct ai_type *ai,
                       void *data);
-
-
 
 #endif /* FC__CITY_H */

@@ -484,7 +484,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
 
     return TRUE;
   }
-  log_error("Unknown directive '$%s' in help", name);
+  qCritical("Unknown directive '$%s' in help", name);
   return FALSE;
 }
 
@@ -693,14 +693,14 @@ void boot_help_texts(void)
 
   filename = fileinfoname(get_data_dirs(), "helpdata.txt");
   if (!filename) {
-    log_error("Did not read help texts");
+    qCritical("Did not read help texts");
     return;
   }
   /* after following call filename may be clobbered; use sf->filename instead
    */
   if (!(sf = secfile_load(filename, FALSE))) {
     /* this is now unlikely to happen */
-    log_error("failed reading help-texts from '%s':\n%s", filename,
+    qCritical("failed reading help-texts from '%s':\n%s", filename,
               secfile_error());
     return;
   }
@@ -727,7 +727,7 @@ void boot_help_texts(void)
           }
         }
         if (current_type == HELP_ANY) {
-          log_error("bad help-generate category \"%s\"", gen_str);
+          qCritical("bad help-generate category \"%s\"", gen_str);
           continue;
         }
 
@@ -1052,7 +1052,7 @@ void boot_help_texts(void)
             multipliers_iterate_end;
             break;
           default:
-            log_error("Bad current_type: %d.", current_type);
+            qCritical("Bad current_type: %d.", current_type);
             break;
           }
           std::sort(category_nodes.begin(), category_nodes.end(),
@@ -1102,7 +1102,7 @@ void boot_help_texts(void)
   secfile_check_unused(sf);
   secfile_destroy(sf);
   booted = TRUE;
-  log_verbose("Booted help texts ok");
+  qDebug("Booted help texts ok");
 }
 
 /****************************************************************************
@@ -1123,7 +1123,7 @@ const struct help_item *get_help_item(int pos)
 
   size = help_nodes->size();
   if (pos < 0 || pos > size) {
-    log_error("Bad index %d to get_help_item (size %d)", pos, size);
+    qCritical("Bad index %d to get_help_item (size %d)", pos, size);
     return NULL;
   }
   if (pos == size) {
@@ -1431,7 +1431,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
       case REQ_RANGE_COUNT:
-        log_error("The range %s is invalid for buildings.",
+        qCritical("The range %s is invalid for buildings.",
                   req_range_name(max_range));
         break;
       }
@@ -1559,7 +1559,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
       case REQ_RANGE_CADJACENT:
       case REQ_RANGE_ADJACENT:
       case REQ_RANGE_COUNT:
-        log_error("The range %s is invalid for buildings.",
+        qCritical("The range %s is invalid for buildings.",
                   req_range_name(min_range));
         break;
       }
@@ -1677,7 +1677,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   fc_assert_ret_val(NULL != buf && 0 < bufsz && NULL != user_text, NULL);
 
   if (!utype) {
-    log_error("Unknown unit!");
+    qCritical("Unknown unit!");
     fc_strlcpy(buf, user_text, bufsz);
     return buf;
   }
@@ -2979,7 +2979,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
   fc_strlcpy(buf, user_text, bufsz);
 
   if (NULL == vap) {
-    log_error("Unknown tech %d.", i);
+    qCritical("Unknown tech %d.", i);
     return;
   }
 
@@ -3217,7 +3217,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (!pterrain) {
-    log_error("Unknown terrain!");
+    qCritical("Unknown terrain!");
     return;
   }
 
@@ -3504,7 +3504,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (!pextra) {
-    log_error("Unknown extra!");
+    qCritical("Unknown extra!");
     return;
   }
 
@@ -4743,7 +4743,7 @@ char *helptext_unit_upkeep_str(const struct unit_type *utype)
   empty[0] = '\0';
 
   if (!utype) {
-    log_error("Unknown unit!");
+    qCritical("Unknown unit!");
     return empty;
   }
 

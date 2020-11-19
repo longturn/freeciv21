@@ -15,6 +15,9 @@
 #include <fc_config.h>
 #endif /* HAVE_CONFIG_H */
 
+#include <QLoggingCategory>
+#include <sstream>
+
 #include <backward.hpp>
 
 /* utility */
@@ -29,17 +32,17 @@
 #endif
 
 #ifdef BACKTRACE_ACTIVE
-/* We write always in level LOG_NORMAL and not in higher one since those
- * interact badly with server callback to send error messages to local
- * client. */
-#define LOG_BACKTRACE LOG_NORMAL
-
 #define MAX_NUM_FRAMES 64
 
-static log_pre_callback_fn previous = NULL;
+Q_LOGGING_CATEGORY(stack_category, "freeciv.stacktrace")
 
-static void backtrace_log(enum log_level level, bool print_from_where,
-                          const char *where, const char *msg);
+namespace {
+static QtMessageHandler previous = nullptr;
+
+static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
+                          const QString &message);
+void backtrace_print(QtMsgType type, const QMessageLogContext &context);
+} // anonymous namespace
 #endif /* BACKTRACE_ACTIVE */
 
 /********************************************************************/ /**
@@ -48,7 +51,7 @@ static void backtrace_log(enum log_level level, bool print_from_where,
 void backtrace_init(void)
 {
 #ifdef BACKTRACE_ACTIVE
-  previous = log_set_pre_callback(backtrace_log);
+  previous = qInstallMessageHandler(backtrace_log);
 #endif
 }
 
@@ -58,16 +61,7 @@ void backtrace_init(void)
 void backtrace_deinit(void)
 {
 #ifdef BACKTRACE_ACTIVE
-  log_pre_callback_fn active;
-
-  active = log_set_pre_callback(previous);
-
-  if (active != backtrace_log) {
-    /* We were not the active callback!
-     * Restore the active callback and log error */
-    log_set_pre_callback(active);
-    log_error("Backtrace log (pre)callback cannot be removed");
-  }
+  qInstallMessageHandler(previous);
 #endif /* BACKTRACE_ACTIVE */
 }
 
@@ -75,35 +69,61 @@ void backtrace_deinit(void)
 /********************************************************************/ /**
    Main backtrace callback called from logging code.
  ************************************************************************/
-static void backtrace_log(enum log_level level, bool print_from_where,
-                          const char *where, const char *msg)
+namespace {
+static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
+                          const QString &message)
 {
-  if (previous != NULL) {
-    /* Call chained callback first */
-    previous(level, print_from_where, where, msg);
+  if (type == QtFatalMsg || type == QtCriticalMsg) {
+    backtrace_print(type, context);
   }
 
-  if (level <= LOG_ERROR) {
-    backtrace_print(LOG_BACKTRACE);
+  if (previous != nullptr) {
+    // Call chained callback after printing the trace, because it might
+    // abort()
+    previous(type, context, message);
   }
 }
+} // anonymous namespace
 
-#endif /* BACKTRACE_ACTIVE */
+namespace {
 
 /********************************************************************/ /**
    Print backtrace
  ************************************************************************/
-void backtrace_print(enum log_level level)
+void backtrace_print(QtMsgType type, const QMessageLogContext &context)
 {
-#ifdef BACKTRACE_ACTIVE
+  if (!stack_category().isEnabled(QtInfoMsg)) {
+    // We won't print anything anyway. Since walking the stack is
+    // expensive, return immediately.
+    return;
+  }
+
   using namespace backward;
   StackTrace st;
   st.load_here(MAX_NUM_FRAMES);
 
+  // Generate the trace string
   Printer p;
   p.object = false;
-  p.color_mode = ColorMode::automatic;
   p.address = true;
-  p.print(st, stderr);
-#endif /* BACKTRACE_ACTIVE */
+
+  std::stringstream ss;
+  p.print(st, ss);
+
+  // Create a new context with the correct category name.
+  QMessageLogContext modified_context(context.file, context.line,
+                                      context.function,
+                                      stack_category().categoryName());
+
+  // Print
+  std::string line;
+  while (std::getline(ss, line)) {
+    // Do the formatting manually (this is called from the message handler
+    // and automatic formatting doesn't appear to work there).
+    qCInfo(stack_category).noquote()
+        << qFormatLogMessage(type, modified_context, line.data());
+  }
 }
+
+} // anonymous namespace
+#endif /* BACKTRACE_ACTIVE */

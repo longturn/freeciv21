@@ -198,23 +198,23 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
 
   dio_get_uint32_raw(&din, &dummy);
   if (dummy != 0) {
-    log_verbose("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
-                (long unsigned) dummy);
+    qDebug("attribute.c unserialize_hash() preamble, uint32 %lu != 0",
+           (long unsigned) dummy);
     return A_SERIAL_OLD;
   }
   dio_get_uint8_raw(&din, &dummy);
   if (dummy != 2) {
-    log_verbose("attribute.c unserialize_hash() preamble, "
-                "uint8 %lu != 2 version",
-                (long unsigned) dummy);
+    qDebug("attribute.c unserialize_hash() preamble, "
+           "uint8 %lu != 2 version",
+           (long unsigned) dummy);
     return A_SERIAL_OLD;
   }
   dio_get_uint32_raw(&din, &entries);
   dio_get_uint32_raw(&din, &dummy);
   if (dummy != data_length) {
-    log_verbose("attribute.c unserialize_hash() preamble, "
-                "uint32 %lu != %lu data_length",
-                (long unsigned) dummy, (long unsigned) data_length);
+    qDebug("attribute.c unserialize_hash() preamble, "
+           "uint32 %lu != %lu data_length",
+           (long unsigned) dummy, (long unsigned) data_length);
     return A_SERIAL_FAIL;
   }
 
@@ -229,8 +229,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     struct raw_data_out dout;
 
     if (!dio_get_uint32_raw(&din, &value_length)) {
-      log_verbose("attribute.c unserialize_hash() "
-                  "uint32 value_length dio_input_too_short");
+      qDebug("attribute.c unserialize_hash() "
+             "uint32 value_length dio_input_too_short");
       return A_SERIAL_FAIL;
     }
     log_attribute("attribute.c unserialize_hash() "
@@ -242,8 +242,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
         || !dio_get_uint32_raw(&din, &key.id)
         || !dio_get_sint16_raw(&din, &key.x)
         || !dio_get_sint16_raw(&din, &key.y)) {
-      log_verbose("attribute.c unserialize_hash() "
-                  "uint32 key dio_input_too_short");
+      qDebug("attribute.c unserialize_hash() "
+             "uint32 key dio_input_too_short");
       return A_SERIAL_FAIL;
     }
     pvalue = new char[value_length + 4];
@@ -251,8 +251,8 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     dio_output_init(&dout, pvalue, value_length + 4);
     dio_put_uint32_raw(&dout, value_length);
     if (!dio_get_memory_raw(&din, ADD_TO_POINTER(pvalue, 4), value_length)) {
-      log_verbose("attribute.c unserialize_hash() "
-                  "memory dio_input_too_short");
+      qDebug("attribute.c unserialize_hash() "
+             "memory dio_input_too_short");
       return A_SERIAL_FAIL;
     }
 
@@ -322,11 +322,11 @@ void attribute_restore(void)
   switch (unserialize_hash(attribute_hash, pplayer->attribute_block.data,
                            pplayer->attribute_block.length)) {
   case A_SERIAL_FAIL:
-    log_error(_("There has been a CMA error. "
+    qCritical(_("There has been a CMA error. "
                 "Your citizen governor settings may be broken."));
     break;
   case A_SERIAL_OLD:
-    log_normal(_("Old attributes detected and removed."));
+    qInfo(_("Old attributes detected and removed."));
     break;
   default:
     break;

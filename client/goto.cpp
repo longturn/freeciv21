@@ -17,8 +17,10 @@
 
 #include <string.h>
 
+// Qt
+#include <QLoggingCategory>
+
 /* utility */
-#include "log.h"
 #include "mem.h"
 
 /* common */
@@ -40,9 +42,8 @@
 #include "goto.h"
 #include "mapctrl_common.h"
 
-#define LOG_GOTO_PATH LOG_DEBUG
-#define log_goto_path log_debug
-#define log_goto_packet log_debug
+// Logging category for goto
+Q_LOGGING_CATEGORY(goto_category, "freeciv.goto")
 
 /*
  * The whole path is separated by waypoints into parts.  Each part has its
@@ -266,19 +267,19 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
     return TRUE;
   }
 
-  log_debug("update_last_part(%d,%d) old (%d,%d)-(%d,%d)", TILE_XY(ptile),
-            TILE_XY(p->start_tile), TILE_XY(p->end_tile));
+  qCDebug(goto_category, "update_last_part(%d,%d) old (%d,%d)-(%d,%d)",
+          TILE_XY(ptile), TILE_XY(p->start_tile), TILE_XY(p->end_tile));
   new_path = pf_map_path(p->map, ptile);
 
   if (!new_path) {
-    log_goto_path("  no path found");
+    qCDebug(goto_category, "  no path found");
 
     if (p->start_tile == ptile) {
       /* This mean we cannot reach the start point.  It is probably,
        * a path-finding bug, but don't make infinite recursion. */
 
       if (!goto_warned) {
-        log_error("No path found to reach the start point.");
+        qCCritical(goto_category, "No path found to reach the start point.");
         goto_warned = TRUE;
       }
 
@@ -300,8 +301,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
     return FALSE;
   }
 
-  log_goto_path("  path found:");
-  pf_path_print(new_path, LOG_GOTO_PATH);
+  qCDebug(goto_category) << "  path found:" << new_path;
 
   p->path = new_path;
   p->end_tile = ptile;
@@ -319,14 +319,15 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
     pf_map_destroy(pfm);
 
     if (return_path == NULL) {
-      log_goto_path("  no return path found");
+      qCDebug(goto_category, "  no return path found");
 
       if (p->start_tile == ptile) {
         /* This mean we cannot reach the start point.  It is probably,
          * a path-finding bug, but don't make infinite recursion. */
 
         if (!goto_warned) {
-          log_error("No path found to reach the start point.");
+          qCCritical(goto_category,
+                     "No path found to reach the start point.");
           goto_warned = TRUE;
         }
 
@@ -353,8 +354,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
       return FALSE;
     }
 
-    log_goto_path("  returned path found:");
-    pf_path_print(return_path, LOG_GOTO_PATH);
+    qCDebug(goto_category) << "  returned path found:" << return_path;
 
     if (goto_map->patrol.return_path != NULL) {
       /* We cannot re-use old path because:
@@ -370,12 +370,12 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
   goto_path_redraw(new_path, old_path);
   pf_path_destroy(old_path);
 
-  log_goto_path("To (%d,%d) part %d: total_MC: %d", TILE_XY(ptile),
-                goto_map->num_parts,
-                pf_path_last_position(hover_state == HOVER_PATROL
-                                          ? goto_map->patrol.return_path
-                                          : new_path)
-                    ->total_MC);
+  qCDebug(goto_category, "To (%d,%d) part %d: total_MC: %d", TILE_XY(ptile),
+          goto_map->num_parts,
+          pf_path_last_position(hover_state == HOVER_PATROL
+                                    ? goto_map->patrol.return_path
+                                    : new_path)
+              ->total_MC);
 
   return TRUE;
 }
@@ -652,7 +652,8 @@ static int get_activity_time(const struct tile *ptile,
     }
     break;
   default:
-    log_error("Invalid connect activity: %d.", connect_activity);
+    qCCritical(goto_category, "Invalid connect activity: %d.",
+               connect_activity);
   }
 
   return activity_mc;
@@ -1368,7 +1369,7 @@ void request_orders_cleared(struct unit *punit)
   }
 
   /* Clear the orders by sending an empty orders path. */
-  log_goto_packet("Clearing orders for unit %d.", punit->id);
+  qCDebug(goto_category, "Clearing orders for unit %d.", punit->id);
   p.unit_id = punit->id;
   p.src_tile = tile_index(unit_tile(punit));
   p.repeat = p.vigilant = FALSE;
@@ -1412,7 +1413,8 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
       order_list[i].target = NO_TARGET;
       order_list[i].sub_target = NO_TARGET;
       order_list[i].action = ACTION_NONE;
-      log_goto_packet("  packet[%d] = wait: %d,%d", i, TILE_XY(old_tile));
+      qCDebug(goto_category, "  packet[%d] = wait: %d,%d", i,
+              TILE_XY(old_tile));
     } else {
       order_list[i].order = orders;
       order_list[i].dir = static_cast<direction8>(
@@ -1421,9 +1423,9 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
       order_list[i].target = NO_TARGET;
       order_list[i].sub_target = NO_TARGET;
       order_list[i].action = ACTION_NONE;
-      log_goto_packet("  packet[%d] = move %s: %d,%d => %d,%d", i,
-                      dir_get_name(order_list[i].dir), TILE_XY(old_tile),
-                      TILE_XY(new_tile));
+      qCDebug(goto_category, "  packet[%d] = move %s: %d,%d => %d,%d", i,
+              dir_get_name(order_list[i].dir), TILE_XY(old_tile),
+              TILE_XY(new_tile));
     }
     old_tile = new_tile;
   }
@@ -1445,8 +1447,8 @@ static void make_path_orders(struct unit *punit, struct pf_path *path,
        * cities. Some actions causes the actor to enter the target tile but
        * that is a part of the action it self, not a regular pre action
        * move. */
-      log_verbose("unit or city blocks the path of your %s",
-                  unit_rule_name(punit));
+      qCDebug(goto_category, "unit or city blocks the path of your %s",
+              unit_rule_name(punit));
     }
   }
 
@@ -1488,8 +1490,9 @@ static void send_path_orders(struct unit *punit, struct pf_path *path,
   p.repeat = repeat;
   p.vigilant = vigilant;
 
-  log_goto_packet("Orders for unit %d:", punit->id);
-  log_goto_packet("  Repeat: %d. Vigilant: %d.", p.repeat, p.vigilant);
+  qCDebug(goto_category, "Orders for unit %d:", punit->id);
+  qCDebug(goto_category, "  Repeat: %d. Vigilant: %d.", p.repeat,
+          p.vigilant);
 
   make_path_orders(punit, path, orders, final_order, p.orders, &p.length,
                    &p.dest_tile);
@@ -1512,8 +1515,8 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
   p.city_id = pcity->id;
   p.vigilant = vigilant;
 
-  log_goto_packet("Rally orders for city %d:", pcity->id);
-  log_goto_packet("  Vigilant: %d.", p.vigilant);
+  qCDebug(goto_category, "Rally orders for city %d:", pcity->id);
+  qCDebug(goto_category, "  Vigilant: %d.", p.vigilant);
 
   make_path_orders(punit, path, orders, final_order, p.orders, &p.length,
                    NULL);
@@ -1756,7 +1759,7 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
         order_recursive_roads(old_tile, tgt, &p, 0);
         break;
       default:
-        log_error("Invalid connect activity: %d.", activity);
+        qCCritical(goto_category, "Invalid connect activity: %d.", activity);
         break;
       }
 

@@ -324,9 +324,9 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   astring_vector_init(&columns);
 
   if (filename) {
-    log_verbose("Reading registry from \"%s\"", filename);
+    qDebug("Reading registry from \"%s\"", filename);
   } else {
-    log_verbose("Reading registry");
+    qDebug("Reading registry");
   }
 
   while (!inf_at_eof(inf)) {
@@ -775,7 +775,8 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
                  * FIXME: If the first row is missing some entries that the
                  * second or later row has, then we'll drop out of tabular
                  * format without an error message. */
-                bugreport_request(
+                qCCritical(
+                    bugs_category,
                     "In file %s, there is no entry in the registry for\n"
                     "%s.%s (or the entries are out of order). This means\n"
                     "a less efficient non-tabular format will be used.\n"
@@ -876,24 +877,12 @@ void secfile_check_unused(const struct section_file *secfile)
     {
       if (!entry_used(pentry)) {
         if (!any && secfile->name) {
-          log_verbose("Unused entries in file %s:", secfile->name);
+          qDebug("Unused entries in file %s:", secfile->name);
           any = TRUE;
         }
-        if (are_deprecation_warnings_enabled()) {
-          log_deprecation_always("%s: unused entry: %s.%s",
-                                 secfile->name != NULL ? secfile->name
-                                                       : "nameless",
-                                 section_name(psection), entry_name(pentry));
-        } else {
-#ifdef FREECIV_TESTMATIC
-          log_testmatic("%s: unused entry: %s.%s",
-                        secfile->name != NULL ? secfile->name : "nameless",
-                        section_name(psection), entry_name(pentry));
-#else  /* FREECIV_TESTMATIC */
-          log_verbose("  unused entry: %s.%s", section_name(psection),
-                      entry_name(pentry));
-#endif /* FREECIV_TESTMATIC */
-        }
+        qCWarning(deprecations_category, "%s: unused entry: %s.%s",
+                  secfile->name != NULL ? secfile->name : "nameless",
+                  section_name(psection), entry_name(pentry));
       }
     }
     entry_list_iterate_end;
@@ -1253,7 +1242,7 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
   }
 
   if (psection->special != stype) {
-    log_error("Tried to insert wrong type of entry to section");
+    qCritical("Tried to insert wrong type of entry to section");
     return NULL;
   }
 
@@ -1351,7 +1340,7 @@ struct entry *secfile_insert_filereference(struct section_file *secfile,
   }
 
   if (psection->special != EST_NORMAL) {
-    log_error("Tried to insert normal entry to different kind of section");
+    qCritical("Tried to insert normal entry to different kind of section");
     return NULL;
   }
 
@@ -3491,6 +3480,6 @@ static void entry_from_inf_token(struct section *psection, const char *name,
                                  const char *tok, struct inputfile *inf)
 {
   if (!entry_from_token(psection, name, tok)) {
-    log_error("%s", inf_log_str(inf, "Entry value not recognized: %s", tok));
+    qCritical("%s", inf_log_str(inf, "Entry value not recognized: %s", tok));
   }
 }

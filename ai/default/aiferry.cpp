@@ -375,7 +375,7 @@ int aiferry_avail_boats(struct ai_type *ait, struct player *pplayer)
   unit_list_iterate_end;
 
   if (boats != ai->stats.available_boats) {
-    log_error("Player[%d] in turn %d: boats miscounted.",
+    qCritical("Player[%d] in turn %d: boats miscounted.",
               player_number(pplayer), game.info.turn);
     aiferry_print_stats(ait, pplayer);
   }

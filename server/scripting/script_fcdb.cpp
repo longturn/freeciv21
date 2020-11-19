@@ -71,7 +71,7 @@
 static void script_fcdb_functions_define(void);
 static bool script_fcdb_functions_check(const char *fcdb_luafile);
 
-static void script_fcdb_cmd_reply(struct fc_lua *lfcl, enum log_level level,
+static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
                                   const char *format, ...)
     fc__attribute((__format__(__printf__, 3, 4)));
 
@@ -140,7 +140,7 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
                             missing_func_optional)) {
     strvec_iterate(missing_func_required, func_name)
     {
-      log_error("Database script '%s' does not define the required function "
+      qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
                 fcdb_luafile, func_name);
       ret = FALSE;
@@ -148,9 +148,9 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
     strvec_iterate_end;
     strvec_iterate(missing_func_optional, func_name)
     {
-      log_verbose("Database script '%s' does not define the optional "
-                  "function '%s'.",
-                  fcdb_luafile, func_name);
+      qDebug("Database script '%s' does not define the optional "
+             "function '%s'.",
+             fcdb_luafile, func_name);
     }
     strvec_iterate_end;
   }
@@ -164,7 +164,7 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
 /*************************************************************************/ /**
    Send the message via cmd_reply().
  *****************************************************************************/
-static void script_fcdb_cmd_reply(struct fc_lua *lfcl, enum log_level level,
+static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
                                   const char *format, ...)
 {
   va_list args;
@@ -178,7 +178,7 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, enum log_level level,
   switch (level) {
   case LOG_FATAL:
     /* Special case - will quit the server. */
-    log_fatal("%s", buf);
+    qFatal("%s", buf);
     break;
   case LOG_ERROR:
   case LOG_WARN:
@@ -241,7 +241,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
 
   fcl = luascript_new(NULL, FALSE);
   if (fcl == NULL) {
-    log_error("Error loading the Freeciv database lua definition.");
+    qCritical("Error loading the Freeciv database lua definition.");
     return FALSE;
   }
 
@@ -274,14 +274,14 @@ bool script_fcdb_init(const char *fcdb_luafile)
 
   if (luascript_do_file(fcl, fcdb_luafile)
       || !script_fcdb_functions_check(fcdb_luafile)) {
-    log_error("Error loading the Freeciv database lua script '%s'.",
+    qCritical("Error loading the Freeciv database lua script '%s'.",
               fcdb_luafile);
     script_fcdb_free();
     return FALSE;
   }
 
   if (!script_fcdb_call("database_init")) {
-    log_error("Error connecting to the database");
+    qCritical("Error connecting to the database");
     script_fcdb_free();
     return FALSE;
   }
@@ -318,7 +318,7 @@ void script_fcdb_free(void)
 {
 #ifdef HAVE_FCDB
   if (!script_fcdb_call("database_free", 0)) {
-    log_error("Error closing the database connection. Continuing anyway...");
+    qCritical("Error closing the database connection. Continuing anyway...");
   }
 
   if (fcl) {

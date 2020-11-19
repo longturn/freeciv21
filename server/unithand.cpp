@@ -174,7 +174,7 @@ void handle_unit_type_upgrade(struct player *pplayer, Unit_type_id uti)
 
   if (NULL == from_unittype) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_type_upgrade() invalid unit type %d", uti);
+    qDebug("handle_unit_type_upgrade() invalid unit type %d", uti);
     return;
   }
 
@@ -442,7 +442,7 @@ static bool do_expel_unit(struct player *pplayer, struct unit *actor,
 
   /* Being expelled destroys all remaining movement. */
   if (!teleport_unit_to_city(target, pcity, 0, FALSE)) {
-    log_error("Bug in unit expulsion: unit can't teleport.");
+    qCritical("Bug in unit expulsion: unit can't teleport.");
 
     return FALSE;
   }
@@ -2539,7 +2539,7 @@ void handle_unit_action_query(struct connection *pc, const int actor_id,
 
   if (NULL == paction) {
     /* Non existing action */
-    log_error("handle_unit_action_query() the action %d doesn't exist.",
+    qCritical("handle_unit_action_query() the action %d doesn't exist.",
               action_type);
 
     unit_query_impossible(pc, actor_id, target_id, disturb_player);
@@ -2548,7 +2548,7 @@ void handle_unit_action_query(struct connection *pc, const int actor_id,
 
   if (NULL == pactor) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_action_query() invalid actor %d", actor_id);
+    qDebug("handle_unit_action_query() invalid actor %d", actor_id);
     unit_query_impossible(pc, actor_id, target_id, disturb_player);
     return;
   }
@@ -2674,7 +2674,7 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
 
   if (!action_id_exists(action_type)) {
     /* Non existing action */
-    log_error("unit_perform_action() the action %d doesn't exist.",
+    qCritical("unit_perform_action() the action %d doesn't exist.",
               action_type);
 
     return FALSE;
@@ -2702,15 +2702,15 @@ bool unit_perform_action(struct player *pplayer, const int actor_id,
       && unit_activity_needs_target_from_client(action_get_activity(paction))
       && target_extra == NULL) {
     /* Missing required action extra target. */
-    log_verbose("unit_perform_action() action %d requires action "
-                "but extra id %d is invalid.",
-                action_type, sub_tgt_id);
+    qDebug("unit_perform_action() action %d requires action "
+           "but extra id %d is invalid.",
+           action_type, sub_tgt_id);
     return FALSE;
   }
 
   if (NULL == actor_unit) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_do_action() invalid actor %d", actor_id);
+    qDebug("handle_unit_do_action() invalid actor %d", actor_id);
     return FALSE;
   }
 
@@ -3400,7 +3400,7 @@ handle_unit_change_activity_real(struct player *pplayer, int unit_id,
 
   if (NULL == punit) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_change_activity() invalid unit %d", unit_id);
+    qDebug("handle_unit_change_activity() invalid unit %d", unit_id);
     return;
   }
 
@@ -4943,7 +4943,7 @@ void handle_unit_sscs_set(struct player *pplayer, int unit_id,
      * been told that it's gone is expected. */
     if (type != USSDT_UNQUEUE) {
       /* Probably died or bribed. */
-      log_verbose("handle_unit_sscs_set() invalid unit %d", unit_id);
+      qDebug("handle_unit_sscs_set() invalid unit %d", unit_id);
     }
 
     return;
@@ -4958,8 +4958,8 @@ void handle_unit_sscs_set(struct player *pplayer, int unit_id,
     if (index_to_tile(&(wld.map), value) == NULL) {
       /* Asked to be reminded to ask what actions the unit can do to a non
        * existing target tile. */
-      log_verbose("unit_sscs_set() invalid target tile %d for unit %d",
-                  value, unit_id);
+      qDebug("unit_sscs_set() invalid target tile %d for unit %d", value,
+             unit_id);
       break;
     }
 
@@ -5020,15 +5020,13 @@ void handle_unit_server_side_agent_set(struct player *pplayer, int unit_id,
 
   if (NULL == punit) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_server_side_agent_set() invalid unit %d",
-                unit_id);
+    qDebug("handle_unit_server_side_agent_set() invalid unit %d", unit_id);
     return;
   }
 
   if (!server_side_agent_is_valid(agent)) {
     /* Client error. */
-    log_verbose("handle_unit_server_side_agent_set() invalid agent %d",
-                agent);
+    qDebug("handle_unit_server_side_agent_set() invalid agent %d", agent);
     return;
   }
 
@@ -5300,13 +5298,13 @@ void handle_unit_orders(struct player *pplayer,
 
   if (NULL == punit) {
     /* Probably died or bribed. */
-    log_verbose("handle_unit_orders() invalid unit %d", packet->unit_id);
+    qDebug("handle_unit_orders() invalid unit %d", packet->unit_id);
     return;
   }
 
   if (0 > length || MAX_LEN_ROUTE < length) {
     /* Shouldn't happen */
-    log_error("handle_unit_orders() invalid %s (%d) "
+    qCritical("handle_unit_orders() invalid %s (%d) "
               "packet length %d (max %d)",
               unit_rule_name(punit), packet->unit_id, length, MAX_LEN_ROUTE);
     return;
@@ -5318,10 +5316,10 @@ void handle_unit_orders(struct player *pplayer,
      * different position than it's actually in.  The easy solution is to
      * discard the packet.  We don't send an error message to the client
      * here (though maybe we should?). */
-    log_verbose("handle_unit_orders() invalid %s (%d) tile (%d, %d) "
-                "!= (%d, %d)",
-                unit_rule_name(punit), punit->id, TILE_XY(src_tile),
-                TILE_XY(unit_tile(punit)));
+    qDebug("handle_unit_orders() invalid %s (%d) tile (%d, %d) "
+           "!= (%d, %d)",
+           unit_rule_name(punit), punit->id, TILE_XY(src_tile),
+           TILE_XY(unit_tile(punit)));
     return;
   }
 
@@ -5333,7 +5331,7 @@ void handle_unit_orders(struct player *pplayer,
   if (length) {
     order_list = create_unit_orders(length, packet->orders);
     if (!order_list) {
-      log_error("received invalid orders from %s for %s (%d).",
+      qCritical("received invalid orders from %s for %s (%d).",
                 player_name(pplayer), unit_rule_name(punit),
                 packet->unit_id);
       return;

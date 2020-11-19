@@ -131,8 +131,8 @@ void climate_change(bool warming, int effect)
   bool used[k];
   memset(used, 0, sizeof(used));
 
-  log_verbose("Climate change: %s (%d)",
-              warming ? "Global warming" : "Nuclear winter", effect);
+  qDebug("Climate change: %s (%d)",
+         warming ? "Global warming" : "Nuclear winter", effect);
 
   while (effect > 0 && (k--) > 0) {
     struct terrain *old, *candidates[2], *tnew;
@@ -1617,7 +1617,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
   if (pfrom == pto)
     return;
   if (gives_shared_vision(pfrom, pto)) {
-    log_error("Trying to give shared vision from %s to %s, "
+    qCritical("Trying to give shared vision from %s to %s, "
               "but that vision is already given!",
               player_name(pfrom), player_name(pto));
     return;
@@ -1682,7 +1682,7 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
 
   fc_assert_ret(pfrom != pto);
   if (!gives_shared_vision(pfrom, pto)) {
-    log_error("Tried removing the shared vision from %s to %s, "
+    qCritical("Tried removing the shared vision from %s to %s, "
               "but it did not exist in the first place!",
               player_name(pfrom), player_name(pto));
     return;
@@ -1840,9 +1840,9 @@ static void check_units_single_tile(struct tile *ptile)
         if (can_unit_exist_at_tile(&(wld.map), punit, ptile2)
             && !is_non_allied_unit_tile(ptile2, unit_owner(punit))
             && !is_non_allied_city_tile(ptile2, unit_owner(punit))) {
-          log_verbose("Moved %s %s due to changing terrain at (%d,%d).",
-                      nation_rule_name(nation_of_unit(punit)),
-                      unit_rule_name(punit), TILE_XY(unit_tile(punit)));
+          qDebug("Moved %s %s due to changing terrain at (%d,%d).",
+                 nation_rule_name(nation_of_unit(punit)),
+                 unit_rule_name(punit), TILE_XY(unit_tile(punit)));
           notify_player(unit_owner(punit), unit_tile(punit),
                         E_UNIT_RELOCATED, ftc_server,
                         _("Moved your %s due to changing terrain."),
@@ -1863,10 +1863,10 @@ static void check_units_single_tile(struct tile *ptile)
       adjc_iterate_end;
       if (unit_alive && unit_tile(punit) == ptile) {
         /* If we get here we could not move punit. */
-        log_verbose("Disbanded %s %s due to changing land "
-                    " to sea at (%d, %d).",
-                    nation_rule_name(nation_of_unit(punit)),
-                    unit_rule_name(punit), TILE_XY(unit_tile(punit)));
+        qDebug("Disbanded %s %s due to changing land "
+               " to sea at (%d, %d).",
+               nation_rule_name(nation_of_unit(punit)),
+               unit_rule_name(punit), TILE_XY(unit_tile(punit)));
         notify_player(unit_owner(punit), unit_tile(punit), E_UNIT_LOST_MISC,
                       ftc_server,
                       _("Disbanded your %s due to changing terrain."),
@@ -2340,7 +2340,7 @@ void map_calculate_borders(void)
     return;
   }
 
-  log_verbose("map_calculate_borders()");
+  qDebug("map_calculate_borders()");
 
   whole_map_iterate(&(wld.map), ptile)
   {
@@ -2350,7 +2350,7 @@ void map_calculate_borders(void)
   }
   whole_map_iterate_end;
 
-  log_verbose("map_calculate_borders() workers");
+  qDebug("map_calculate_borders() workers");
   city_thaw_workers_queue();
   city_refresh_queue_processing();
 }

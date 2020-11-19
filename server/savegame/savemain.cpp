@@ -51,28 +51,26 @@ void savegame_load(struct section_file *sfile)
 
   fc_assert_ret(sfile != NULL);
 
-#ifdef DEBUG_TIMERS
   civtimer *loadtimer = timer_new(TIMER_CPU, TIMER_DEBUG);
   timer_start(loadtimer);
-#endif
 
   savefile_options = secfile_lookup_str(sfile, "savefile.options");
 
   if (!savefile_options) {
-    log_error("Missing savefile options. Can not load the savegame.");
+    qCritical("Missing savefile options. Can not load the savegame.");
     return;
   }
 
   if (has_capabilities("+version3", savefile_options)) {
     /* load new format (freeciv 3.0.x and newer) */
-    log_verbose("loading savefile in 3.0+ format ...");
+    qDebug("loading savefile in 3.0+ format ...");
     savegame3_load(sfile);
   } else if (has_capabilities("+version2", savefile_options)) {
     /* load old format (freeciv 2.3 - 2.6) */
-    log_verbose("loading savefile in 2.3 - 2.6 format ...");
+    qDebug("loading savefile in 2.3 - 2.6 format ...");
     savegame2_load(sfile);
   } else {
-    log_error("Too old savegame format not supported any more.");
+    qCritical("Too old savegame format not supported any more.");
     return;
   }
 
@@ -94,12 +92,10 @@ void savegame_load(struct section_file *sfile)
   }
   players_iterate_end;
 
-#ifdef DEBUG_TIMERS
   timer_stop(loadtimer);
-  log_debug("Loading secfile in %.3f seconds.",
-            timer_read_seconds(loadtimer));
+  qCDebug(timers_category, "Loading secfile in %.3f seconds.",
+          timer_read_seconds(loadtimer));
   timer_destroy(loadtimer);
-#endif /* DEBUG_TIMERS */
 }
 
 /************************************************************************/ /**
@@ -129,7 +125,7 @@ static void save_thread_run(void *arg)
                     stdata->save_compress_level,
                     stdata->save_compress_type)) {
     con_write(C_FAIL, _("Failed saving game as %s"), stdata->filepath);
-    log_error("Game saving failed: %s", secfile_error());
+    qCritical("Game saving failed: %s", secfile_error());
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning,
                 _("Failed saving game."));
   } else {
@@ -237,7 +233,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     case FZ_PLAIN:
       break;
     default:
-      log_error(_("Unsupported compression type %d."),
+      qCritical(_("Unsupported compression type %d."),
                 stdata->save_compress_type);
       notify_conn(NULL, NULL, E_SETTING, ftc_warning,
                   _("Unsupported compression type %d."),
@@ -290,7 +286,8 @@ void save_game(const char *orig_filename, const char *save_reason,
     save_thread_run(stdata);
   }
 
-  log_time(QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
+  log_time(
+      QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
   timer_destroy(timer_cpu);
 }
 

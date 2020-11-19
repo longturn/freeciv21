@@ -50,7 +50,7 @@ bool diplomacy_possible(const struct player *pplayer1,
   case DIPLO_DISABLED:
     return FALSE;
   }
-  log_error("%s(): Unsupported diplomacy variant %d.", __FUNCTION__,
+  qCritical("%s(): Unsupported diplomacy variant %d.", __FUNCTION__,
             game.info.diplomacy);
   return FALSE;
 }
@@ -146,12 +146,12 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
       player_diplstate_get(ptreaty->plr0, ptreaty->plr1)->type;
 
   if (!clause_type_is_valid(type)) {
-    log_error("Illegal clause type encountered.");
+    qCritical("Illegal clause type encountered.");
     return FALSE;
   }
 
   if (type == CLAUSE_ADVANCE && !valid_advance_by_number(val)) {
-    log_error("Illegal tech value %i in clause.", val);
+    qCritical("Illegal tech value %i in clause.", val);
     return FALSE;
   }
 
@@ -161,7 +161,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
           || (ds == DS_ALLIANCE && type == CLAUSE_ALLIANCE)
           || (ds == DS_CEASEFIRE && type == CLAUSE_CEASEFIRE))) {
     /* we already have this diplomatic state */
-    log_error("Illegal treaty suggested between %s and %s - they "
+    qCritical("Illegal treaty suggested between %s and %s - they "
               "already have this treaty level.",
               nation_rule_name(nation_of_player(ptreaty->plr0)),
               nation_rule_name(nation_of_player(ptreaty->plr1)));
@@ -170,7 +170,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
 
   if (type == CLAUSE_EMBASSY && player_has_real_embassy(pto, pfrom)) {
     /* we already have embassy */
-    log_error("Illegal embassy clause: %s already have embassy with %s.",
+    qCritical("Illegal embassy clause: %s already have embassy with %s.",
               nation_rule_name(nation_of_player(pto)),
               nation_rule_name(nation_of_player(pfrom)));
     return FALSE;

@@ -62,15 +62,14 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
 
   if (NULL == punit) {
     /* Probably died or bribed. */
-    log_verbose("handle_city_name_suggestion_req() invalid unit %d",
-                unit_id);
+    qDebug("handle_city_name_suggestion_req() invalid unit %d", unit_id);
     return;
   }
 
   if (action_prob_possible(action_prob_vs_tile(punit, ACTION_FOUND_CITY,
                                                unit_tile(punit), NULL))) {
-    log_verbose("handle_city_name_suggest_req(unit_pos (%d, %d))",
-                TILE_XY(unit_tile(punit)));
+    qDebug("handle_city_name_suggest_req(unit_pos (%d, %d))",
+           TILE_XY(unit_tile(punit)));
     dlsend_packet_city_name_suggestion_info(
         pplayer->connections, unit_id,
         city_name_suggestion(pplayer, unit_tile(punit)));
@@ -79,9 +78,9 @@ void handle_city_name_suggestion_req(struct player *pplayer, int unit_id)
     return;
   }
 
-  log_verbose("handle_city_name_suggest_req(unit_pos (%d, %d)): "
-              "cannot build there.",
-              TILE_XY(unit_tile(punit)));
+  qDebug("handle_city_name_suggest_req(unit_pos (%d, %d)): "
+         "cannot build there.",
+         TILE_XY(unit_tile(punit)));
 
   illegal_action_msg(pplayer, E_BAD_COMMAND, punit, ACTION_FOUND_CITY,
                      unit_tile(punit), NULL, NULL);
@@ -105,7 +104,7 @@ void handle_city_change_specialist(struct player *pplayer, int city_id,
       || pcity->specialists[from] == 0) {
     /* This could easily just be due to clicking faster on the specialist
      * than the server can cope with. */
-    log_verbose("Error in specialist change request from client.");
+    qDebug("Error in specialist change request from client.");
     return;
   }
 
@@ -128,18 +127,17 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
 
   if (NULL == pcity) {
     /* Probably lost. */
-    log_verbose("handle_city_make_specialist() bad city number %d.",
-                city_id);
+    qDebug("handle_city_make_specialist() bad city number %d.", city_id);
     return;
   }
 
   if (NULL == ptile) {
-    log_error("handle_city_make_specialist() bad tile number %d.", tile_id);
+    qCritical("handle_city_make_specialist() bad tile number %d.", tile_id);
     return;
   }
 
   if (!city_map_includes_tile(pcity, ptile)) {
-    log_error("handle_city_make_specialist() tile (%d, %d) not in the "
+    qCritical("handle_city_make_specialist() tile (%d, %d) not in the "
               "city map of \"%s\".",
               TILE_XY(ptile), city_name_get(pcity));
     return;
@@ -151,9 +149,9 @@ void handle_city_make_specialist(struct player *pplayer, int city_id,
     city_map_update_empty(pcity, ptile);
     pcity->specialists[DEFAULT_SPECIALIST]++;
   } else {
-    log_verbose("handle_city_make_specialist() not working (%d, %d) "
-                "\"%s\".",
-                TILE_XY(ptile), city_name_get(pcity));
+    qDebug("handle_city_make_specialist() not working (%d, %d) "
+           "\"%s\".",
+           TILE_XY(ptile), city_name_get(pcity));
   }
 
   city_refresh(pcity);
@@ -174,17 +172,17 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
 
   if (NULL == pcity) {
     /* Probably lost. */
-    log_verbose("handle_city_make_worker() bad city number %d.", city_id);
+    qDebug("handle_city_make_worker() bad city number %d.", city_id);
     return;
   }
 
   if (NULL == ptile) {
-    log_error("handle_city_make_worker() bad tile number %d.", tile_id);
+    qCritical("handle_city_make_worker() bad tile number %d.", tile_id);
     return;
   }
 
   if (!city_map_includes_tile(pcity, ptile)) {
-    log_error("handle_city_make_worker() tile (%d, %d) not in the "
+    qCritical("handle_city_make_worker() tile (%d, %d) not in the "
               "city map of \"%s\".",
               TILE_XY(ptile), city_name_get(pcity));
     return;
@@ -197,21 +195,20 @@ void handle_city_make_worker(struct player *pplayer, int city_id,
   }
 
   if (tile_worked(ptile) == pcity) {
-    log_verbose("handle_city_make_worker() already working (%d, %d) \"%s\".",
-                TILE_XY(ptile), city_name_get(pcity));
+    qDebug("handle_city_make_worker() already working (%d, %d) \"%s\".",
+           TILE_XY(ptile), city_name_get(pcity));
     return;
   }
 
   if (0 == city_specialists(pcity)) {
-    log_verbose("handle_city_make_worker() no specialists (%d, %d) \"%s\".",
-                TILE_XY(ptile), city_name_get(pcity));
+    qDebug("handle_city_make_worker() no specialists (%d, %d) \"%s\".",
+           TILE_XY(ptile), city_name_get(pcity));
     return;
   }
 
   if (!city_can_work_tile(pcity, ptile)) {
-    log_verbose(
-        "handle_city_make_worker() cannot work here (%d, %d) \"%s\".",
-        TILE_XY(ptile), city_name_get(pcity));
+    qDebug("handle_city_make_worker() cannot work here (%d, %d) \"%s\".",
+           TILE_XY(ptile), city_name_get(pcity));
     return;
   }
 
@@ -437,14 +434,14 @@ void handle_city_change(struct player *pplayer, int city_id,
   struct city *pcity = player_city_by_number(pplayer, city_id);
 
   if (!universals_n_is_valid(universals_n(production_kind))) {
-    log_error("[%s] bad production_kind %d.", __FUNCTION__, production_kind);
+    qCritical("[%s] bad production_kind %d.", __FUNCTION__, production_kind);
     prod.kind = VUT_NONE;
     return;
   } else {
     prod =
         universal_by_number(universals_n(production_kind), production_value);
     if (!universals_n_is_valid(prod.kind)) {
-      log_error("[%s] production_kind %d with bad production_value %d.",
+      qCritical("[%s] production_kind %d with bad production_value %d.",
                 __FUNCTION__, production_kind, production_value);
       prod.kind = VUT_NONE;
       return;
@@ -530,13 +527,13 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
 
   if (NULL == pcity) {
     /* Probably lost. */
-    log_verbose("handle_city_rally_point() bad city number %d.", city_id);
+    qDebug("handle_city_rally_point() bad city number %d.", city_id);
     return;
   }
 
   if (0 > length || MAX_LEN_ROUTE < length) {
     /* Shouldn't happen */
-    log_error("handle_city_rally_point() invalid packet length %d (max %d)",
+    qCritical("handle_city_rally_point() invalid packet length %d (max %d)",
               length, MAX_LEN_ROUTE);
     return;
   }
@@ -554,7 +551,7 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
     checked_orders = create_unit_orders(length, orders);
     if (!checked_orders) {
       pcity->rally_point.length = 0;
-      log_error("invalid rally point orders for city number %d.", city_id);
+      qCritical("invalid rally point orders for city number %d.", city_id);
       return;
     }
 
@@ -576,7 +573,7 @@ void handle_city_manager(struct player *pplayer, int city_id, bool enabled,
 
   if (NULL == pcity) {
     /* Probably lost. */
-    log_verbose("handle_city_manager() bad city number %d.", city_id);
+    qDebug("handle_city_manager() bad city number %d.", city_id);
     return;
   }
 

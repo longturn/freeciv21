@@ -172,7 +172,8 @@ void establish_new_connection(struct connection *pconn)
    * message option for the client with event */
 
   /* Notify the console that you're here. */
-  log_normal(_("%s has connected from %s."), pconn->username, qUtf8Printable(pconn->addr));
+  qInfo(_("%s has connected from %s."), pconn->username,
+        qUtf8Printable(pconn->addr));
 
   conn_compression_freeze(pconn);
   send_rulesets(dest);
@@ -205,7 +206,7 @@ void establish_new_connection(struct connection *pconn)
     } else {
       fc_assert(pdelegate);
       /* This really shouldn't happen. */
-      log_error("Failed to revoke delegate %s's control of %s, so owner %s "
+      qCritical("Failed to revoke delegate %s's control of %s, so owner %s "
                 "can't regain control.",
                 pdelegate->username, player_name(pplayer), pconn->username);
       notify_conn(dest, NULL, E_CONNECTION, ftc_server,
@@ -232,7 +233,7 @@ void establish_new_connection(struct connection *pconn)
         } else {
           notify_conn(dest, NULL, E_CONNECTION, ftc_server,
                       _("Couldn't attach your connection to new player."));
-          log_verbose("%s is not attached to a player", pconn->username);
+          qDebug("%s is not attached to a player", pconn->username);
         }
       }
       send_player_info_c(NULL, dest);
@@ -330,7 +331,7 @@ void reject_new_connection(const char *msg, struct connection *pconn)
   packet.challenge_file[0] = '\0';
   packet.conn_id = -1;
   send_packet_server_join_reply(pconn, &packet);
-  log_normal(_("Client rejected: %s."), conn_description(pconn));
+  qInfo(_("Client rejected: %s."), conn_description(pconn));
   flush_connection_send_buffer_all(pconn);
 }
 
@@ -350,15 +351,15 @@ bool handle_login_request(struct connection *pconn,
     return FALSE;
   }
 
-  log_normal(_("Connection request from %s from %s"), req->username,
-             qUtf8Printable(pconn->addr));
+  qInfo(_("Connection request from %s from %s"), req->username,
+        qUtf8Printable(pconn->addr));
 
   /* print server and client capabilities to console */
-  log_normal(_("%s has client version %d.%d.%d%s"), pconn->username,
-             req->major_version, req->minor_version, req->patch_version,
-             req->version_label);
-  log_verbose("Client caps: %s", req->capability);
-  log_verbose("Server caps: %s", our_capability);
+  qInfo(_("%s has client version %d.%d.%d%s"), pconn->username,
+        req->major_version, req->minor_version, req->patch_version,
+        req->version_label);
+  qDebug("Client caps: %s", req->capability);
+  qDebug("Server caps: %s", our_capability);
   conn_set_capability(pconn, req->capability);
 
   /* Make sure the server has every capability the client needs */
@@ -372,8 +373,7 @@ bool handle_login_request(struct connection *pconn,
         req->major_version, req->minor_version, req->patch_version,
         req->version_label);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Mismatched capabilities."),
-               req->username);
+    qInfo(_("%s was rejected: Mismatched capabilities."), req->username);
     return FALSE;
   }
 
@@ -388,8 +388,7 @@ bool handle_login_request(struct connection *pconn,
         req->major_version, req->minor_version, req->patch_version,
         req->version_label);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Mismatched capabilities."),
-               req->username);
+    qInfo(_("%s was rejected: Mismatched capabilities."), req->username);
     return FALSE;
   }
 
@@ -416,8 +415,8 @@ bool handle_login_request(struct connection *pconn,
   if (!is_valid_username(req->username)) {
     fc_snprintf(msg, sizeof(msg), _("Invalid username '%s'"), req->username);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Invalid name [%s]."), req->username,
-               qUtf8Printable(pconn->addr));
+    qInfo(_("%s was rejected: Invalid name [%s]."), req->username,
+          qUtf8Printable(pconn->addr));
     return FALSE;
   }
 
@@ -427,9 +426,9 @@ bool handle_login_request(struct connection *pconn,
                   "and cannot reconnect for %d seconds."),
                 kick_time_remaining);
     reject_new_connection(msg, pconn);
-    log_normal(_("%s was rejected: Connection kicked "
-                 "(%d seconds remaining)."),
-               req->username, kick_time_remaining);
+    qInfo(_("%s was rejected: Connection kicked "
+            "(%d seconds remaining)."),
+          req->username, kick_time_remaining);
     return FALSE;
   }
 
@@ -440,8 +439,8 @@ bool handle_login_request(struct connection *pconn,
       fc_snprintf(msg, sizeof(msg), _("'%s' already connected."),
                   req->username);
       reject_new_connection(msg, pconn);
-      log_normal(_("%s was rejected: Duplicate login name [%s]."),
-                 req->username, qUtf8Printable(pconn->addr));
+      qInfo(_("%s was rejected: Duplicate login name [%s]."), req->username,
+            qUtf8Printable(pconn->addr));
       return FALSE;
     }
   }
@@ -451,8 +450,7 @@ bool handle_login_request(struct connection *pconn,
   fc_assert_msg(1 == pconn->server.ping_timers->size(),
                 "Ping timer list size %d, should be 1. Have we sent "
                 "a ping to unestablished connection %s?",
-                pconn->server.ping_timers->size(),
-                conn_description(pconn));
+                pconn->server.ping_timers->size(), conn_description(pconn));
 
   civtimer *deltimer = pconn->server.ping_timers->takeFirst();
   timer_destroy(deltimer);
@@ -485,7 +483,7 @@ void lost_connection_to_client(struct connection *pconn)
 
   fc_assert_ret(TRUE == pconn->server.is_closing);
 
-  log_normal(_("Lost connection: %s."), desc);
+  qInfo(_("Lost connection: %s."), desc);
 
   /* Special color (white on black) for player loss */
   notify_conn(game.est_connections, NULL, E_CONNECTION,
@@ -824,7 +822,7 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
            * client to display player information.
            * See establish_new_connection().
            */
-          log_verbose("connection_detach() calls send_player_info_c()");
+          qDebug("connection_detach() calls send_player_info_c()");
           send_player_info_c(pplayer, NULL);
 
           reset_all_start_commands(TRUE);
