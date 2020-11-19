@@ -1210,7 +1210,7 @@ void choice_dialog::set_layout()
     pix = qtg_canvas_create(tileset_unit_width(tileset),
                             tileset_unit_height(tileset));
     pix->map_pixmap.fill(Qt::transparent);
-    put_unit(targeted_unit, pix, 1.0, 0, 0);
+    put_unit(targeted_unit, pix, 0, 0);
     target_unit_button->setIcon(QIcon(pix->map_pixmap));
     qtg_canvas_free(pix);
     target_unit_button->setIconSize(QSize(96, 96));
@@ -1361,7 +1361,7 @@ void choice_dialog::next_unit()
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
   pix->map_pixmap.fill(Qt::transparent);
-  put_unit(targeted_unit, pix, 1.0, 0, 0);
+  put_unit(targeted_unit, pix, 0, 0);
   target_unit_button->setIcon(QIcon(pix->map_pixmap));
   qtg_canvas_free(pix);
   switch_target();
@@ -1392,7 +1392,7 @@ void choice_dialog::prev_unit()
   pix = qtg_canvas_create(tileset_unit_width(tileset),
                           tileset_unit_height(tileset));
   pix->map_pixmap.fill(Qt::transparent);
-  put_unit(targeted_unit, pix, 1.0, 0, 0);
+  put_unit(targeted_unit, pix, 0, 0);
   target_unit_button->setIcon(QIcon(pix->map_pixmap));
   qtg_canvas_free(pix);
   switch_target();

@@ -217,7 +217,7 @@ static bool movement_animation(struct animation *anim, double time_gone)
     if (anim->old_x >= 0) {
       update_map_canvas(anim->old_x, anim->old_y, anim->width, anim->height);
     }
-    put_unit(punit, mapview.store, 1.0f, new_x, new_y);
+    put_unit(punit, mapview.store, new_x, new_y);
     dirty_rect(new_x, new_y, anim->width, anim->height);
     anim->old_x = new_x;
     anim->old_y = new_y;
@@ -270,8 +270,7 @@ static bool battle_animation(struct animation *anim, double time_gone)
           (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
     }
 
-    put_unit(anim->battle.virt_loser, mapview.store, 1.0f, canvas_x,
-             canvas_y);
+    put_unit(anim->battle.virt_loser, mapview.store, canvas_x, canvas_y);
     dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
                tileset_tile_height(tileset));
   }
@@ -287,8 +286,7 @@ static bool battle_animation(struct animation *anim, double time_gone)
       canvas_y -=
           (tileset_unit_height(tileset) - tileset_full_tile_height(tileset));
     }
-    put_unit(anim->battle.virt_winner, mapview.store, 1.0f, canvas_x,
-             canvas_y);
+    put_unit(anim->battle.virt_winner, mapview.store, canvas_x, canvas_y);
     dirty_rect(canvas_x, canvas_y, tileset_tile_width(tileset),
                tileset_tile_height(tileset));
   }
@@ -512,8 +510,8 @@ void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
    Note that a gui_to_map_vector function is not possible, since the
    resulting map vector may differ based on the origin of the gui vector.
  ****************************************************************************/
-void map_to_gui_vector(const struct tileset *t, float zoom, float *gui_dx,
-                       float *gui_dy, int map_dx, int map_dy)
+void map_to_gui_vector(const struct tileset *t, float *gui_dx, float *gui_dy,
+                       int map_dx, int map_dy)
 {
   if (tileset_is_isometric(t)) {
     /*
@@ -527,11 +525,11 @@ void map_to_gui_vector(const struct tileset *t, float zoom, float *gui_dx,
      * 789                4 8
      *                     7
      */
-    *gui_dx = (map_dx - map_dy) * tileset_tile_width(t) / 2 * zoom;
-    *gui_dy = (map_dx + map_dy) * tileset_tile_height(t) / 2 * zoom;
+    *gui_dx = (map_dx - map_dy) * tileset_tile_width(t) / 2;
+    *gui_dy = (map_dx + map_dy) * tileset_tile_height(t) / 2;
   } else {
-    *gui_dx = map_dx * tileset_tile_height(t) * zoom;
-    *gui_dy = map_dy * tileset_tile_width(t) * zoom;
+    *gui_dx = map_dx * tileset_tile_height(t);
+    *gui_dy = map_dy * tileset_tile_width(t);
   }
 }
 
@@ -546,7 +544,7 @@ static void map_to_gui_pos(const struct tileset *t, float *gui_x,
 {
   /* Since the GUI origin is the same as the map origin we can just do a
    * vector conversion. */
-  map_to_gui_vector(t, 1.0f, gui_x, gui_y, map_x, map_y);
+  map_to_gui_vector(t, gui_x, gui_y, map_x, map_y);
 }
 
 /************************************************************************/ /**
@@ -1270,9 +1268,9 @@ bool tile_visible_and_not_on_border_mapcanvas(struct tile *ptile)
 /************************************************************************/ /**
    Draw an array of drawn sprites onto the canvas.
  ****************************************************************************/
-void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
-                       int canvas_y, int count, struct drawn_sprite *pdrawn,
-                       bool fog, bool city_dialog, bool city_unit)
+void put_drawn_sprites(struct canvas *pcanvas, int canvas_x, int canvas_y,
+                       int count, struct drawn_sprite *pdrawn, bool fog,
+                       bool city_dialog, bool city_unit)
 {
   int i;
 
@@ -1284,24 +1282,23 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
     if (city_unit
         && (i == LAYER_CATEGORY_TILE || i == LAYER_UNIT
             || i == LAYER_FOCUS_UNIT || i == LAYER_CATEGORY_TILE)) {
-      canvas_put_unit_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
-                             canvas_y / zoom + pdrawn[i].offset_y,
-                             pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
+      canvas_put_unit_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
+                             canvas_y + pdrawn[i].offset_y, pdrawn[i].sprite,
+                             TRUE, canvas_x, canvas_y);
     } else if (city_dialog) {
-      canvas_put_sprite_citymode(pcanvas,
-                                 canvas_x / zoom + pdrawn[i].offset_x,
-                                 canvas_y / zoom + pdrawn[i].offset_y,
+      canvas_put_sprite_citymode(pcanvas, canvas_x + pdrawn[i].offset_x,
+                                 canvas_y + pdrawn[i].offset_y,
                                  pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
     } else if (fog && pdrawn[i].foggable) {
-      canvas_put_sprite_fogged(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
-                               canvas_y / zoom + pdrawn[i].offset_y,
+      canvas_put_sprite_fogged(pcanvas, canvas_x + pdrawn[i].offset_x,
+                               canvas_y + pdrawn[i].offset_y,
                                pdrawn[i].sprite, TRUE, canvas_x, canvas_y);
     } else {
       /* We avoid calling canvas_put_sprite_fogged, even though it
        * should be a valid thing to do, because gui-gtk-2.0 doesn't have
        * a full implementation. */
-      canvas_put_sprite_full(pcanvas, canvas_x / zoom + pdrawn[i].offset_x,
-                             canvas_y / zoom + pdrawn[i].offset_y,
+      canvas_put_sprite_full(pcanvas, canvas_x + pdrawn[i].offset_x,
+                             canvas_y + pdrawn[i].offset_y,
                              pdrawn[i].sprite);
     }
   }
@@ -1311,9 +1308,8 @@ void put_drawn_sprites(struct canvas *pcanvas, float zoom, int canvas_x,
    Draw one layer of a tile, edge, corner, unit, and/or city onto the
    canvas at the given position.
  ****************************************************************************/
-void put_one_element(struct canvas *pcanvas, float zoom,
-                     enum mapview_layer layer, const struct tile *ptile,
-                     const struct tile_edge *pedge,
+void put_one_element(struct canvas *pcanvas, enum mapview_layer layer,
+                     const struct tile *ptile, const struct tile_edge *pedge,
                      const struct tile_corner *pcorner,
                      const struct unit *punit, const struct city *pcity,
                      int canvas_x, int canvas_y, const struct city *citymode,
@@ -1344,7 +1340,7 @@ void put_one_element(struct canvas *pcanvas, float zoom,
     }
   }
   /*** Draw terrain and specials ***/
-  put_drawn_sprites(pcanvas, zoom, canvas_x, canvas_y, count, tile_sprs, fog,
+  put_drawn_sprites(pcanvas, canvas_x, canvas_y, count, tile_sprs, fog,
                     city_mode, city_unit);
 }
 
@@ -1352,15 +1348,14 @@ void put_one_element(struct canvas *pcanvas, float zoom,
    Draw the given unit onto the canvas store at the given location. The area
    of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
  ****************************************************************************/
-void put_unit(const struct unit *punit, struct canvas *pcanvas, float zoom,
-              int canvas_x, int canvas_y)
+void put_unit(const struct unit *punit, struct canvas *pcanvas, int canvas_x,
+              int canvas_y)
 {
-  canvas_y +=
-      (tileset_unit_height(tileset) - tileset_tile_height(tileset)) * zoom;
+  canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   mapview_layer_iterate(layer)
   {
-    put_one_element(pcanvas, zoom, layer, NULL, NULL, NULL, punit, NULL,
-                    canvas_x, canvas_y, NULL, NULL);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, punit, NULL, canvas_x,
+                    canvas_y, NULL, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1370,14 +1365,13 @@ void put_unit(const struct unit *punit, struct canvas *pcanvas, float zoom,
    of drawing is tileset_unit_height(tileset) x tileset_unit_width(tileset).
  ****************************************************************************/
 void put_unittype(const struct unit_type *putype, struct canvas *pcanvas,
-                  float zoom, int canvas_x, int canvas_y)
+                  int canvas_x, int canvas_y)
 {
-  canvas_y +=
-      (tileset_unit_height(tileset) - tileset_tile_height(tileset)) * zoom;
+  canvas_y += (tileset_unit_height(tileset) - tileset_tile_height(tileset));
   mapview_layer_iterate(layer)
   {
-    put_one_element(pcanvas, zoom, layer, NULL, NULL, NULL, NULL, NULL,
-                    canvas_x, canvas_y, NULL, putype);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, NULL, canvas_x,
+                    canvas_y, NULL, putype);
   }
   mapview_layer_iterate_end;
 }
@@ -1387,16 +1381,15 @@ void put_unittype(const struct unit_type *putype, struct canvas *pcanvas,
    area of drawing is
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset).
  ****************************************************************************/
-void put_city(struct city *pcity, struct canvas *pcanvas, float zoom,
-              int canvas_x, int canvas_y)
+void put_city(struct city *pcity, struct canvas *pcanvas, int canvas_x,
+              int canvas_y)
 {
   canvas_y +=
-      (tileset_full_tile_height(tileset) - tileset_tile_height(tileset))
-      * zoom;
+      (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   mapview_layer_iterate(layer)
   {
-    put_one_element(pcanvas, zoom, layer, NULL, NULL, NULL, NULL, pcity,
-                    canvas_x, canvas_y, NULL, NULL);
+    put_one_element(pcanvas, layer, NULL, NULL, NULL, NULL, pcity, canvas_x,
+                    canvas_y, NULL, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1407,17 +1400,16 @@ void put_city(struct city *pcity, struct canvas *pcanvas, float zoom,
    tileset_full_tile_height(tileset) x tileset_full_tile_width(tileset)
    (even though most tiles are not this tall).
  ****************************************************************************/
-void put_terrain(struct tile *ptile, struct canvas *pcanvas, float zoom,
-                 int canvas_x, int canvas_y)
+void put_terrain(struct tile *ptile, struct canvas *pcanvas, int canvas_x,
+                 int canvas_y)
 {
   /* Use full tile height, even for terrains. */
   canvas_y +=
-      (tileset_full_tile_height(tileset) - tileset_tile_height(tileset))
-      * zoom;
+      (tileset_full_tile_height(tileset) - tileset_tile_height(tileset));
   mapview_layer_iterate(layer)
   {
-    put_one_element(pcanvas, zoom, layer, ptile, NULL, NULL, NULL, NULL,
-                    canvas_x, canvas_y, NULL, NULL);
+    put_one_element(pcanvas, layer, ptile, NULL, NULL, NULL, NULL, canvas_x,
+                    canvas_y, NULL, NULL);
   }
   mapview_layer_iterate_end;
 }
@@ -1570,7 +1562,7 @@ static void put_one_tile(struct canvas *pcanvas, enum mapview_layer layer,
       punit = NULL;
     }
 
-    put_one_element(pcanvas, 1.0f, layer, ptile, NULL, NULL, punit,
+    put_one_element(pcanvas, layer, ptile, NULL, NULL, punit,
                     tile_city(ptile), canvas_x, canvas_y, citymode, NULL);
   }
 }
@@ -1645,8 +1637,6 @@ static void draw_trade_route_line(const struct tile *ptile1,
 
   line_count = trade_route_to_canvas_lines(ptile1, ptile2, lines);
   for (i = 0; i < line_count; i++) {
-    /* XXX: canvas_put_line doesn't currently take map_zoom into account
-     * itself, but it probably should? */
     canvas_put_line(mapview.store, pcolor, LINE_BORDER,
                     lines[i].x + tileset_tile_width(tileset) / 2,
                     lines[i].y + tileset_tile_height(tileset) / 2,
@@ -1765,18 +1755,18 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
                                + (tileset_is_isometric(tileset)
                                       ? (tileset_tile_height(tileset) / 2)
                                       : 0),
-                           ptile, pedge, pcorner, gui_x, gui_y, 1.0f)
+                           ptile, pedge, pcorner, gui_x, gui_y)
     {
       const int cx = gui_x - mapview.gui_x0, cy = gui_y - mapview.gui_y0;
 
       if (ptile) {
         put_one_tile(mapview.store, layer, ptile, cx, cy, NULL);
       } else if (pedge) {
-        put_one_element(mapview.store, 1.0f, layer, NULL, pedge, NULL, NULL,
-                        NULL, cx, cy, NULL, NULL);
+        put_one_element(mapview.store, layer, NULL, pedge, NULL, NULL, NULL,
+                        cx, cy, NULL, NULL);
       } else if (pcorner) {
-        put_one_element(mapview.store, 1.0f, layer, NULL, NULL, pcorner,
-                        NULL, NULL, cx, cy, NULL, NULL);
+        put_one_element(mapview.store, layer, NULL, NULL, pcorner, NULL,
+                        NULL, cx, cy, NULL, NULL);
       } else {
         /* This can happen, for instance for unreal tiles. */
       }
@@ -1796,7 +1786,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
    * from adjacent tiles (if they're close enough). */
   gui_rect_iterate(gui_x0 - GOTO_WIDTH, gui_y0 - GOTO_WIDTH,
                    width + 2 * GOTO_WIDTH, height + 2 * GOTO_WIDTH, ptile,
-                   pedge, pcorner, 1.0f)
+                   pedge, pcorner)
   {
     if (!ptile) {
       continue;
@@ -2081,10 +2071,6 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
 
   if (gui_options.draw_city_names) {
     canvas_put_sprite_full(pcanvas, flag_rect.x, flag_rect.y, flag);
-    /* XXX: canvas_put_line() doesn't currently take map_zoom into account.
-     * Should it?
-     * In the meantime, don't compensate with '/ map_zoom' here, unlike
-     * for canvas_put_sprite/text/rectangle */
     canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
                     (flag_rect.x + flag_rect.w) /* */ - 1, canvas_y /* */, 0,
                     height1 /* */);
@@ -2133,7 +2119,6 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
   }
 
   /* Draw the city bar's outline. */
-  /* XXX not scaling by map_zoom, see above */
   canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
                   (canvas_x - *width / 2) /* */, canvas_y /* */,
                   *width /* */, 0);
@@ -2365,7 +2350,7 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
   gui_rect_iterate_coord(mapview.gui_x0 + canvas_base_x - dx / 2,
                          mapview.gui_y0 + canvas_base_y - dy,
                          width_base + dx, height_base + dy - offset_y, ptile,
-                         pedge, pcorner, gui_x, gui_y, map_zoom)
+                         pedge, pcorner, gui_x, gui_y)
   {
     const int canvas_x = gui_x - mapview.gui_x0;
     const int canvas_y = gui_y - mapview.gui_y0;
@@ -2411,7 +2396,7 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
   gui_rect_iterate_coord(mapview.gui_x0 + canvas_base_x - dx / 2,
                          mapview.gui_y0 + canvas_base_y - dy,
                          width_base + dx, height_base + dy, ptile, pedge,
-                         pcorner, gui_x, gui_y, 1.0f)
+                         pcorner, gui_x, gui_y)
   {
     const int canvas_x = gui_x - mapview.gui_x0;
     const int canvas_y = gui_y - mapview.gui_y0;
@@ -2502,12 +2487,10 @@ void draw_segment(struct tile *src_tile, enum direction8 dir)
   canvas_y += tileset_tile_height(tileset) / 2;
 
   /* Determine the vector of the segment. */
-  map_to_gui_vector(tileset, 1.0f, &canvas_dx, &canvas_dy, DIR_DX[dir],
+  map_to_gui_vector(tileset, &canvas_dx, &canvas_dy, DIR_DX[dir],
                     DIR_DY[dir]);
 
   /* Draw the segment. */
-  /* XXX: canvas_put_line doesn't currently take map_zoom into account
-   * itself, but it probably should? If so this will need adjusting */
   canvas_put_line(mapview.store, get_color(tileset, COLOR_MAPVIEW_GOTO),
                   LINE_GOTO, canvas_x, canvas_y, canvas_dx, canvas_dy);
 
@@ -2683,7 +2666,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
 
     fc_assert(gui_options.smooth_move_unit_msec > 0);
 
-    map_to_gui_vector(tileset, 1.0f, &canvas_dx, &canvas_dy, dx, dy);
+    map_to_gui_vector(tileset, &canvas_dx, &canvas_dy, dx, dy);
 
     tile_to_canvas_pos(&start_x, &start_y, src_tile);
     if (tileset_is_isometric(tileset) && tileset_hex_height(tileset) == 0) {
@@ -2731,7 +2714,7 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
                       new_y, tuw, tuh);
 
           /* Draw */
-          put_unit(punit, mapview.store, 1.0f, new_x, new_y);
+          put_unit(punit, mapview.store, new_x, new_y);
           dirty_rect(new_x, new_y, tuw, tuh);
 
           /* Flush. */
@@ -3845,8 +3828,6 @@ static void link_mark_draw(const struct link_mark *pmark)
   y_top = canvas_y + yd;
   y_bottom = canvas_y + height - yd;
 
-  /* XXX: canvas_put_line doesn't currently take map_zoom into account
-   * itself, but it probably should? If so these will need adjusting */
   canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_top,
                   xlen, 0);
   canvas_put_line(mapview.store, pcolor, LINE_TILE_FRAME, x_left, y_top, 0,

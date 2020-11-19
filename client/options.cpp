@@ -5815,12 +5815,6 @@ void options_load(void)
       secfile_lookup_bool_default(sf, gui_options.gui_qt_migrated_from_2_5,
                                   "%s.migration_qt_from_2_5", prefix);
 
-  /* These are not gui-enabled yet */
-  gui_options.zoom_set =
-      secfile_lookup_bool_default(sf, FALSE, "%s.zoom_set", prefix);
-  gui_options.zoom_default_level =
-      secfile_lookup_float_default(sf, 1.0, "%s.zoom_default_level", prefix);
-
   str = secfile_lookup_str_default(sf, NULL, "client.default_tileset_name");
   if (str != NULL) {
     sz_strlcpy(gui_options.default_tileset_name, str);
@@ -5944,11 +5938,6 @@ void options_save(option_save_log_callback log_cb)
     }
   }
   client_options_iterate_all_end;
-
-  /* These are not gui-enabled yet. */
-  secfile_insert_bool(sf, gui_options.zoom_set, "client.zoom_set");
-  secfile_insert_float(sf, gui_options.zoom_default_level,
-                       "client.zoom_default_level");
 
   if (gui_options.default_tileset_name[0] != '\0') {
     secfile_insert_str(sf, gui_options.default_tileset_name,
