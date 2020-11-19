@@ -1875,7 +1875,7 @@ rmact_gfx_alt  = "-"
 extra          = "Fortress"
 gui_type       = "Fortress"
 border_sq      = 5
-flags          = "NoAggressive"
+flags          = _("NoAggressive")
 
 [base_airbase]
 extra          = "Airbase"

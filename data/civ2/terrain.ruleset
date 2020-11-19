@@ -1616,7 +1616,7 @@ rmact_gfx_alt  = "-"
 [base_fortress]
 extra         = "Fortress"
 gui_type      = "Fortress"
-flags         = "NoAggressive"
+flags         = _("NoAggressive")
 
 [base_airbase]
 extra         = "Airbase"
