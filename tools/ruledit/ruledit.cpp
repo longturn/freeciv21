@@ -35,7 +35,6 @@
 #include "registry.h"
 
 /* common */
-#include "fc_cmdhelp.h"
 #include "fc_interface.h"
 #include "version.h"
 

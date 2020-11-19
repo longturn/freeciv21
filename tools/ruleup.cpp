@@ -31,7 +31,6 @@
 #include "string_vector.h"
 
 /* common */
-#include "fc_cmdhelp.h"
 #include "fc_interface.h"
 
 /* server */

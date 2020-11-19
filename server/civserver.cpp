@@ -39,7 +39,6 @@
 
 /* common */
 #include "capstr.h"
-#include "fc_cmdhelp.h"
 #include "game.h"
 #include "version.h"
 

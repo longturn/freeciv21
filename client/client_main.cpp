@@ -46,7 +46,6 @@
 /* common */
 #include "ai.h"
 #include "diptreaty.h"
-#include "fc_cmdhelp.h"
 #include "fc_interface.h"
 #include "game.h"
 #include "idex.h"
