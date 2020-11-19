@@ -510,11 +510,11 @@ void tileset_error(QtMsgType level, const char *format, ...)
 
   log_base(level, "%s", buf);
 
-  if (level <= LOG_NORMAL) {
+  if (level == QtCriticalMsg || level == QtFatalMsg) {
     show_tileset_error(buf);
   }
 
-  if (level == LOG_FATAL) {
+  if (level == QtFatalMsg) {
     exit(EXIT_FAILURE);
   }
 }
