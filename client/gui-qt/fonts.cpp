@@ -14,6 +14,7 @@
 #include <QGuiApplication>
 #include <QScreen>
 // client
+#include "gui_main.h"
 #include "options.h"
 
 /************************************************************************/ /**
@@ -78,13 +79,37 @@ void fc_font::init_fonts()
     if (option_type(poption) == OT_FONT) {
       f = new QFont;
       s = option_font_get(poption);
-      f->fromString(s);
-      s = option_name(poption);
-      set_font(s, f);
+      if (f->fromString(s)) {
+        s = option_name(poption);
+        set_font(s, f);
+      } else {
+        delete f;
+      }
     }
   }
   options_iterate_end;
   get_mapfont_size();
+}
+
+/*****************************************************************************
+   Increases/decreases all fonts sizes
+ ****************************************************************************/
+void fc_font::set_size_all(int new_size)
+{
+  options_iterate(client_optset, poption)
+  {
+    if (option_type(poption) == OT_FONT) {
+      QFont font;
+      font.fromString(option_font_get(poption));
+      int old_size = font.pointSize();
+      font.setPointSize(old_size + (new_size * old_size) / 100);
+      QString s = font.toString();
+      QByteArray ba = s.toLocal8Bit();
+      option_font_set(poption, ba.data());
+      gui_qt_apply_font(poption);
+    }
+  }
+  options_iterate_end;
 }
 
 /************************************************************************/ /**
@@ -92,7 +117,7 @@ void fc_font::init_fonts()
  ****************************************************************************/
 void fc_font::release_fonts()
 {
-  for (QFont *f: qAsConst(font_map)) {
+  for (QFont *f : qAsConst(font_map)) {
     delete f;
   }
 }

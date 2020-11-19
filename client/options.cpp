@@ -194,6 +194,7 @@ struct client_options gui_options = {
     TRUE,  //.gui_qt_show_preview =
     true,  //.gui_qt_allied_chat_only =
     TRUE,  //.gui_qt_sidebar_left =
+    0,     // font_increase
     FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
     "Sans Serif,9,-1,5,50,0,0,0,0,0",  //.gui_qt_font_help_label =
@@ -1503,6 +1504,7 @@ static void view_option_changed_callback(struct option *poption);
 static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
+static void allfont_changed_callback(struct option *poption);
 static void mapimg_changed_callback(struct option *poption);
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
@@ -2072,6 +2074,11 @@ static struct client_option client_options[] = {
            "minimize/maximize/etc buttons will be placed on the "
            "menu bar."),
         COC_INTERFACE, GUI_QT, TRUE, NULL),
+    GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
+                   N_("Change size of all fonts at once by given percent."
+                   "That options is not unsaveable. Hit Apply button"
+                   "after changing this."),
+                   COC_FONT, GUI_QT, 0, -100, 100, allfont_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT, GUI_QT,
                     "Sans Serif,10,-1,5,75,0,0,0,0,0",
@@ -4769,6 +4776,8 @@ void options_save(option_save_log_callback log_cb)
   secfile_insert_bool(sf, gui_options.gui_qt_migrated_from_2_5,
                       "client.migration_qt_from_2_5");
 
+  // prevent saving that option
+  gui_options.gui_qt_increase_fonts = 0;
   /* gui-enabled options */
   client_options_iterate_all(poption)
   {
@@ -5019,6 +5028,14 @@ static void sound_volume_callback(struct option *poption)
 static void voteinfo_bar_callback(struct option *poption)
 {
   voteinfo_gui_update();
+}
+
+/************************************************************************/ /**
+   Callback for font options.
+ ****************************************************************************/
+static void allfont_changed_callback(struct option *poption)
+{
+  gui_update_allfonts();
 }
 
 /************************************************************************/ /**

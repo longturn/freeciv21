@@ -38,6 +38,7 @@ public:
   static fc_font *instance();
   static void drop();
   void set_font(const QString &name, QFont *qf);
+  void set_size_all(int);
   QFont *get_font(const QString &name);
   void init_fonts();
   void release_fonts();

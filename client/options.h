@@ -166,6 +166,7 @@ struct client_options {
   bool gui_qt_show_preview;
   bool gui_qt_allied_chat_only;
   bool gui_qt_sidebar_left;
+  int gui_qt_increase_fonts;
   char gui_qt_default_theme_name[512];
   char gui_qt_font_default[512];
   char gui_qt_font_notify_label[512];
