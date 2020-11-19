@@ -19,6 +19,5 @@
 
 void backtrace_init();
 void backtrace_deinit();
-void backtrace_print();
 
 #endif /* FC__BACKTRACE_H */

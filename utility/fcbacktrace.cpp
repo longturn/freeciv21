@@ -15,6 +15,9 @@
 #include <fc_config.h>
 #endif /* HAVE_CONFIG_H */
 
+#include <QLoggingCategory>
+#include <sstream>
+
 #include <backward.hpp>
 
 /* utility */
@@ -31,11 +34,14 @@
 #ifdef BACKTRACE_ACTIVE
 #define MAX_NUM_FRAMES 64
 
+Q_LOGGING_CATEGORY(stack_category, "freeciv.stacktrace")
+
 namespace {
 static QtMessageHandler previous = nullptr;
 
 static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
                           const QString &message);
+void backtrace_print(QtMsgType type, const QMessageLogContext &context);
 } // anonymous namespace
 #endif /* BACKTRACE_ACTIVE */
 
@@ -68,7 +74,7 @@ static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
                           const QString &message)
 {
   if (type == QtFatalMsg || type == QtCriticalMsg) {
-    backtrace_print();
+    backtrace_print(type, context);
   }
 
   if (previous != nullptr) {
@@ -79,22 +85,45 @@ static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
 }
 } // anonymous namespace
 
-#endif /* BACKTRACE_ACTIVE */
+namespace {
 
 /********************************************************************/ /**
    Print backtrace
  ************************************************************************/
-void backtrace_print()
+void backtrace_print(QtMsgType type, const QMessageLogContext &context)
 {
-#ifdef BACKTRACE_ACTIVE
+  if (!stack_category().isEnabled(QtInfoMsg)) {
+    // We won't print anything anyway. Since walking the stack is
+    // expensive, return immediately.
+    return;
+  }
+
   using namespace backward;
   StackTrace st;
   st.load_here(MAX_NUM_FRAMES);
 
+  // Generate the trace string
   Printer p;
   p.object = false;
-  p.color_mode = ColorMode::automatic;
   p.address = true;
-  p.print(st, stderr);
-#endif /* BACKTRACE_ACTIVE */
+
+  std::stringstream ss;
+  p.print(st, ss);
+
+  // Create a new context with the correct category name.
+  QMessageLogContext modified_context(context.file, context.line,
+                                      context.function,
+                                      stack_category().categoryName());
+
+  // Print
+  std::string line;
+  while (std::getline(ss, line)) {
+    // Do the formatting manually (this is called from the message handler
+    // and automatic formatting doesn't appear to work there).
+    qCInfo(stack_category).noquote()
+        << qFormatLogMessage(type, modified_context, line.data());
+  }
 }
+
+} // anonymous namespace
+#endif /* BACKTRACE_ACTIVE */
