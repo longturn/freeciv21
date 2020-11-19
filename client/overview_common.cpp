@@ -464,7 +464,6 @@ void calculate_overview_dimensions(void)
   canvas_put_rectangle(
       gui_options.overview.map, get_color(tileset, COLOR_OVERVIEW_UNKNOWN),
       0, 0, gui_options.overview.width, gui_options.overview.height);
-  update_map_canvas_scrollbars_size();
 
   update_minimap();
   if (can_client_change_view()) {

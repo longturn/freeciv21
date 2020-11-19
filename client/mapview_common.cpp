@@ -3621,7 +3621,6 @@ bool map_canvas_resized(int width, int height)
     /* If the width/height has changed, update the scrollbars even if
      * the backing store is not resized. */
     if (size_changed) {
-      update_map_canvas_scrollbars_size();
       update_map_canvas_scrollbars();
     }
   }
