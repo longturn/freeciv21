@@ -97,7 +97,6 @@ struct gui_funcs {
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);
   void (*options_extra_init)(void);
-  void (*server_connect)(void);
   void (*add_net_input)(QTcpSocket *sock);
   void (*remove_net_input)(void);
   void (*real_conn_list_dialog_update)(void *unused);

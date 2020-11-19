@@ -364,7 +364,6 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     if (auto_connect) {
       qInfo(_("You were rejected from the game: %s"), message);
     }
-    server_connect();
 
     set_client_page(PAGE_MAIN);
   }

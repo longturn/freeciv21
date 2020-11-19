@@ -79,7 +79,6 @@ void setup_gui_funcs(void)
 
   funcs->set_rulesets = gui_set_rulesets;
   funcs->options_extra_init = gui_options_extra_init;
-  funcs->server_connect = gui_server_connect;
   funcs->add_net_input = gui_add_net_input;
   funcs->remove_net_input = gui_remove_net_input;
   funcs->real_conn_list_dialog_update = gui_real_conn_list_dialog_update;

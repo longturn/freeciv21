@@ -289,10 +289,6 @@ void set_rulesets(int num_rulesets, char **rulesets)
  **************************************************************************/
 void options_extra_init(void) { funcs.options_extra_init(); }
 
-/**********************************************************************/ /**
-   Call server_connect callback
- **************************************************************************/
-void server_connect(void) { funcs.server_connect(); }
 
 /**********************************************************************/ /**
    Call add_net_input callback

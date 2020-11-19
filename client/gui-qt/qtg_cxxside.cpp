@@ -59,7 +59,6 @@ void setup_gui_funcs()
 
   funcs->set_rulesets = qtg_set_rulesets;
   funcs->options_extra_init = qtg_options_extra_init;
-  funcs->server_connect = [] {};
   funcs->add_net_input = qtg_add_net_input;
   funcs->remove_net_input = qtg_remove_net_input;
   funcs->real_conn_list_dialog_update = qtg_real_conn_list_dialog_update;
