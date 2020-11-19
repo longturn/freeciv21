@@ -16,6 +16,7 @@ if (MSVC)
 endif()
 
 # libunwind
+set(BACKWARD_HAS_UNWIND 0)
 if (NOT CAN_UNWIND_STACK)
   find_package(PkgConfig)
   if (PKG_CONFIG_FOUND)
@@ -31,6 +32,7 @@ if (NOT CAN_UNWIND_STACK)
 endif()
 
 # Last-resort: backtrace()
+set(BACKWARD_HAS_BACKTRACE 0)
 if (NOT CAN_UNWIND_STACK AND (NOT HAVE_EXECINFO_H OR NOT HAVE_BACKTRACE))
   check_include_file(execinfo.h HAVE_EXECINFO_H)
   check_symbol_exists(backtrace execinfo.h HAVE_BACKTRACE)
@@ -61,6 +63,7 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   endif()
 
   # libdw
+  set(BACKWARD_HAS_DW 0)
   if (NOT CAN_RETRIEVE_SYMBOLS)
     find_package(PkgConfig)
     if (PKG_CONFIG_FOUND)
@@ -76,6 +79,7 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   endif()
 
   # Last-resort: backtrace_symbol
+  set(BACKWARD_HAS_BACKTRACE_SYMBOLS 0)
   if (NOT CAN_RETRIEVE_SYMBOLS)
     find_package(PkgConfig)
     check_include_file(execinfo.h HAVE_EXECINFO_H)
