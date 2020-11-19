@@ -67,13 +67,14 @@ namespace {
 static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
                           const QString &message)
 {
-  if (previous != NULL) {
-    /* Call chained callback first */
-    previous(type, context, message);
-  }
-
   if (type == QtFatalMsg || type == QtCriticalMsg) {
     backtrace_print();
+  }
+
+  if (previous != nullptr) {
+    // Call chained callback after printing the trace, because it might
+    // abort()
+    previous(type, context, message);
   }
 }
 } // anonymous namespace
