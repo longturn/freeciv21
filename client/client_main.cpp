@@ -275,7 +275,6 @@ static void client_game_free(void)
   link_marks_free();
   control_free();
   free_help_texts();
-  helpdata_done();
   attribute_free();
   agents_free();
   game.client.ruleset_init = FALSE;
@@ -602,7 +601,6 @@ int client_main(int argc, char *argv[])
   /* This seed is not saved anywhere; randoms in the client should
      have cosmetic effects only (eg city name suggestions).  --dwp */
   fc_srand(time(NULL));
-  helpdata_init();
   boot_help_texts();
 
   fill_topo_ts_default();
