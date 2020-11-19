@@ -1312,8 +1312,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   opt_type = option_type(pset);
 
   /* The option type isn't client only. */
-  fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR
-                         && opt_type != OT_VIDEO_MODE),
+  fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR),
                         sset_type_invalid(),
                         "%s is a client option type but not a server "
                         "setting type",

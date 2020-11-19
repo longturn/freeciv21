@@ -24,34 +24,6 @@
 
 #define DEFAULT_METASERVER_OPTION "default"
 
-struct video_mode {
-  int width;
-  int height;
-};
-
-#define VIDEO_MODE(ARG_width, ARG_height)                                   \
-  {                                                                         \
-    ARG_width, ARG_height                                                   \
-  }
-
-/****************************************************************************
-  Constructor.
-****************************************************************************/
-static inline struct video_mode video_mode_construct(int width, int height)
-{
-  struct video_mode mode = VIDEO_MODE(width, height);
-
-  return mode;
-}
-
-enum {
-  /* Order must match strings in
-   * options.c:gui_popup_tech_help_name() */
-  GUI_POPUP_TECH_HELP_ENABLED,
-  GUI_POPUP_TECH_HELP_DISABLED,
-  GUI_POPUP_TECH_HELP_RULESET
-};
-
 enum overview_layers {
   OLAYER_BACKGROUND,
   OLAYER_RELIEF,
@@ -219,7 +191,6 @@ extern struct client_options gui_options;
 #define SPECENUM_VALUE4 OT_BITWISE
 #define SPECENUM_VALUE5 OT_FONT
 #define SPECENUM_VALUE6 OT_COLOR
-#define SPECENUM_VALUE7 OT_VIDEO_MODE
 #include "specenum_gen.h"
 
 struct option;     /* Opaque type. */
@@ -321,11 +292,6 @@ bool option_font_set(struct option *poption, const char *font);
 struct ft_color option_color_get(const struct option *poption);
 struct ft_color option_color_def(const struct option *poption);
 bool option_color_set(struct option *poption, struct ft_color color);
-
-/* Option type OT_VIDEO_MODE functions. */
-struct video_mode option_video_mode_get(const struct option *poption);
-struct video_mode option_video_mode_def(const struct option *poption);
-bool option_video_mode_set(struct option *poption, struct video_mode mode);
 
 #define options_iterate(poptset, poption)                                   \
   {                                                                         \

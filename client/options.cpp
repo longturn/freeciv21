@@ -344,12 +344,6 @@ struct option_color_vtable {
   struct ft_color (*def)(const struct option *);
   bool (*set)(struct option *, struct ft_color);
 };
-/* Specific video mode accessors (OT_VIDEO_MODE == type). */
-struct option_video_mode_vtable {
-  struct video_mode (*get)(const struct option *);
-  struct video_mode (*def)(const struct option *);
-  bool (*set)(struct option *, struct video_mode);
-};
 
 /****************************************************************************
   The base class for options.
@@ -379,8 +373,6 @@ struct option {
     const struct option_font_vtable *font_vtable;
     /* Specific color accessors (OT_COLOR == type). */
     const struct option_color_vtable *color_vtable;
-    /* Specific video mode accessors (OT_VIDEO_MODE == type). */
-    const struct option_video_mode_vtable *video_mode_vtable;
   };
   /* Called after the value changed. */
   void (*changed_callback)(struct option *option);
@@ -424,10 +416,6 @@ struct option {
 #define OPTION_COLOR_INIT(optset, common_table, color_table, changed_cb)    \
   OPTION_INIT(optset, OT_COLOR, color_vtable, common_table, color_table,    \
               changed_cb, 0)
-#define OPTION_VIDEO_MODE_INIT(optset, common_table, video_mode_table,      \
-                               changed_cb)                                  \
-  OPTION_INIT(optset, OT_VIDEO_MODE, video_mode_vtable, common_table,       \
-              video_mode_table, changed_cb, 0)
 
 /************************************************************************/ /**
    Returns the option set owner of this option.
@@ -552,8 +540,6 @@ bool option_reset(struct option *poption)
     return option_font_set(poption, option_font_def(poption));
   case OT_COLOR:
     return option_color_set(poption, option_color_def(poption));
-  case OT_VIDEO_MODE:
-    return option_video_mode_set(poption, option_video_mode_def(poption));
   }
   return FALSE;
 }
@@ -1051,46 +1037,6 @@ bool option_color_set(struct option *poption, struct ft_color color)
   return FALSE;
 }
 
-/************************************************************************/ /**
-   Returns the current value of this video mode option.
- ****************************************************************************/
-struct video_mode option_video_mode_get(const struct option *poption)
-{
-  fc_assert_ret_val(NULL != poption, video_mode_construct(-1, -1));
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type,
-                    video_mode_construct(-1, -1));
-
-  return poption->video_mode_vtable->get(poption);
-}
-
-/************************************************************************/ /**
-   Returns the default value of this video mode option.
- ****************************************************************************/
-struct video_mode option_video_mode_def(const struct option *poption)
-{
-  fc_assert_ret_val(NULL != poption, video_mode_construct(-1, -1));
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type,
-                    video_mode_construct(-1, -1));
-
-  return poption->video_mode_vtable->def(poption);
-}
-
-/************************************************************************/ /**
-   Sets the value of this video mode option. Returns TRUE if the value
-   changed.
- ****************************************************************************/
-bool option_video_mode_set(struct option *poption, struct video_mode mode)
-{
-  fc_assert_ret_val(NULL != poption, FALSE);
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type, FALSE);
-
-  if (poption->video_mode_vtable->set(poption, mode)) {
-    option_changed(poption);
-    return TRUE;
-  }
-  return FALSE;
-}
-
 /****************************************************************************
   Client option set.
 ****************************************************************************/
@@ -1216,18 +1162,6 @@ static const struct option_color_vtable client_option_color_vtable = {
     .def = client_option_color_def,
     .set = client_option_color_set};
 
-static struct video_mode
-client_option_video_mode_get(const struct option *poption);
-static struct video_mode
-client_option_video_mode_def(const struct option *poption);
-static bool client_option_video_mode_set(struct option *poption,
-                                         struct video_mode mode);
-
-static const struct option_video_mode_vtable
-    client_option_video_mode_vtable = {.get = client_option_video_mode_get,
-                                       .def = client_option_video_mode_def,
-                                       .set = client_option_video_mode_set};
-
 enum client_option_category {
   COC_GRAPHICS,
   COC_OVERVIEW,
@@ -1299,11 +1233,6 @@ struct client_option {
       struct ft_color *const pvalue;
       const struct ft_color def;
     } color;
-    /* OT_VIDEO_MODE type option. */
-    struct {
-      struct video_mode *const pvalue;
-      const struct video_mode def;
-    } video_mode;
   };
 };
 
@@ -1564,73 +1493,9 @@ struct client_option {
         .def = FT_COLOR(odef_fg, odef_bg)} INIT_BRACE_END                   \
   }
 
-/*
- * Generate a client option of type OT_VIDEO_MODE.
- *
- * oname: The option data.  Note it is used as name to be loaded or saved.
- *        So, you shouldn't change the name of this variable in any case.
- * odesc: A short description of the client option.  Should be used with the
- *        N_() macro.
- * ohelp: The help text for the client option.  Should be used with the N_()
- *        macro.
- * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
- * odef_width, odef_height:  The default values for this client option.
- * ocb:   A callback function of type void (*)(struct option *) called when
- *        the option changed.
- */
-#define GEN_VIDEO_OPTION(oname, odesc, ohelp, ocat, ospec, odef_width,      \
-                         odef_height, ocb)                                  \
-  {                                                                         \
-    .base_option = OPTION_VIDEO_MODE_INIT(                                  \
-        &client_optset_static, client_option_common_vtable,                 \
-        client_option_video_mode_vtable, ocb),                              \
-    .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.video_mode = {                                         \
-        .pvalue = &gui_options.oname,                                       \
-        .def = VIDEO_MODE(odef_width, odef_height)} INIT_BRACE_END          \
-  }
-
 /****************************************************************************
   Enumerator name accessors.
 ****************************************************************************/
-
-/************************************************************************/ /**
-   GTK message/chat layout setting names accessor.
- ****************************************************************************/
-static const struct copt_val_name *
-gui_gtk_message_chat_location_name(int value)
-{
-  /* Order must match enum GUI_GTK_MSGCHAT_* */
-  static const struct copt_val_name names[] = {
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"SPLIT", N_("Split")},
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"SEPARATE", N_("Separate")},
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"MERGED", N_("Merged")}};
-
-  return (0 <= value && value < ARRAY_SIZE(names) ? names + value : NULL);
-}
-
-/************************************************************************/ /**
-   Popup tech help setting names accessor.
- ****************************************************************************/
-static const struct copt_val_name *gui_popup_tech_help_name(int value)
-{
-  /* Order must match enum GUI_POPUP_TECH_HELP_* */
-  static const struct copt_val_name names[] = {
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"ENABLED", N_("Enabled")},
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"DISABLED", N_("Disabled")},
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"RULESET", N_("Ruleset")}};
-
-  return (0 <= value && value < ARRAY_SIZE(names) ? names + value : NULL);
-}
 
 /* Some changed callbacks. */
 static void reqtree_show_icons_callback(struct option *poption);
@@ -2743,43 +2608,6 @@ static bool client_option_color_set(struct option *poption,
 }
 
 /************************************************************************/ /**
-   Returns the value of this client option of type OT_VIDEO_MODE.
- ****************************************************************************/
-static struct video_mode
-client_option_video_mode_get(const struct option *poption)
-{
-  return *CLIENT_OPTION(poption)->video_mode.pvalue;
-}
-
-/************************************************************************/ /**
-   Returns the default value of this client option of type OT_VIDEO_MODE.
- ****************************************************************************/
-static struct video_mode
-client_option_video_mode_def(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->video_mode.def;
-}
-
-/************************************************************************/ /**
-   Set the value of this client option of type OT_VIDEO_MODE.  Returns TRUE
-   if the value changed.
- ****************************************************************************/
-static bool client_option_video_mode_set(struct option *poption,
-                                         struct video_mode mode)
-{
-  struct client_option *pcoption = CLIENT_OPTION(poption);
-
-  if (0
-      == memcmp(&mode, pcoption->video_mode.pvalue,
-                sizeof(struct video_mode))) {
-    return FALSE;
-  }
-
-  *pcoption->video_mode.pvalue = mode;
-  return TRUE;
-}
-
-/************************************************************************/ /**
    Load the option from a file.  Returns TRUE if the option changed.
  ****************************************************************************/
 static bool client_option_load(struct option *poption,
@@ -2841,15 +2669,6 @@ static bool client_option_load(struct option *poption,
                     sf, "client.%s.background", option_name(poption)))
             && option_color_set(poption, color));
   }
-  case OT_VIDEO_MODE: {
-    struct video_mode mode;
-
-    return (secfile_lookup_int(sf, &mode.width, "client.%s.width",
-                               option_name(poption))
-            && secfile_lookup_int(sf, &mode.height, "client.%s.height",
-                                  option_name(poption))
-            && option_video_mode_set(poption, mode));
-  }
   }
   return FALSE;
 }
@@ -2896,14 +2715,6 @@ static void client_option_save(struct option *poption,
     secfile_insert_str(sf, color.foreground, "client.%s.foreground",
                        option_name(poption));
     secfile_insert_str(sf, color.background, "client.%s.background",
-                       option_name(poption));
-  } break;
-  case OT_VIDEO_MODE: {
-    struct video_mode mode = option_video_mode_get(poption);
-
-    secfile_insert_int(sf, mode.width, "client.%s.width",
-                       option_name(poption));
-    secfile_insert_int(sf, mode.height, "client.%s.height",
                        option_name(poption));
   } break;
   }
@@ -3116,7 +2927,6 @@ static void server_option_free(struct server_option *poption)
   case OT_INTEGER:
   case OT_FONT:
   case OT_COLOR:
-  case OT_VIDEO_MODE:
     break;
   }
 
@@ -4550,7 +4360,6 @@ void desired_settable_options_update(void)
       break;
     case OT_FONT:
     case OT_COLOR:
-    case OT_VIDEO_MODE:
       break;
     }
 
@@ -4696,7 +4505,6 @@ static void desired_settable_option_send(struct option *poption)
     return;
   case OT_FONT:
   case OT_COLOR:
-  case OT_VIDEO_MODE:
     break;
   }
 
@@ -5112,7 +4920,6 @@ void options_init(void)
 
     case OT_BOOLEAN:
     case OT_FONT:
-    case OT_VIDEO_MODE:
       break;
     }
 
@@ -5155,7 +4962,6 @@ void options_free(void)
     case OT_STRING:
     case OT_FONT:
     case OT_COLOR:
-    case OT_VIDEO_MODE:
       break;
     }
   }
