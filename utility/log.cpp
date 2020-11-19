@@ -204,9 +204,9 @@ void log_close()
    Set what signal the assert* macros should raise on failed assertion
    (-1 to disable).
  **************************************************************************/
-void fc_assert_set_fatal(bool fatal_assertions)
+void fc_assert_set_fatal(bool fatal)
 {
-  fatal_assertions = fatal_assertions;
+  fatal_assertions = fatal;
 }
 
 /**********************************************************************/ /**
