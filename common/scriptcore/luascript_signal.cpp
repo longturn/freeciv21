@@ -334,10 +334,10 @@ void luascript_signal_free(struct fc_lua *fcl)
 /*************************************************************************/ /**
    Return the name of the signal with the given index.
  *****************************************************************************/
-const QString &luascript_signal_by_index(struct fc_lua *fcl, int sindex)
+QString luascript_signal_by_index(struct fc_lua *fcl, int sindex)
 {
-  fc_assert_ret_val(fcl != NULL, NULL);
-  fc_assert_ret_val(fcl->signal_names != NULL, NULL);
+  fc_assert_ret_val(fcl != NULL, QString());
+  fc_assert_ret_val(fcl->signal_names != NULL, QString());
 
   return fcl->signal_names->at(sindex);
 }

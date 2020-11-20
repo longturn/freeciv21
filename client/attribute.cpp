@@ -223,7 +223,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
                 (long unsigned) entries, (long unsigned) data_length);
 
   for (i = 0; i < entries; i++) {
-    struct attr_key key;
+    attr_key key;
     void *pvalue;
     int value_length;
     struct raw_data_out dout;

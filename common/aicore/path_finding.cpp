@@ -3466,7 +3466,7 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 
 inline uint qHash(const pf_parameter &key, uint seed)
 {
-  uint result;
+  uint result = 0;
   size_t b, i;
   static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 

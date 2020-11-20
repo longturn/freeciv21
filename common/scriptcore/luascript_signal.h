@@ -49,7 +49,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *signal_name,
                                        const char *callback_name);
 
-const QString &luascript_signal_by_index(struct fc_lua *fcl, int sindex);
+QString luascript_signal_by_index(struct fc_lua *fcl, int sindex);
 const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);
