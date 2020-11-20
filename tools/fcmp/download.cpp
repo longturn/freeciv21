@@ -391,7 +391,6 @@ const char *download_modpack_list(const struct fcmp_params *fcmp,
   int modpack_count;
   const char *msg;
   const char *mp_name;
-  int start_idx;
 
   list_file = netfile_get_section_file(fcmp->list_url, mcb);
 

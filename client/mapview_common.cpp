@@ -3533,9 +3533,6 @@ void mapdeco_clear_gotoroutes(void)
  ****************************************************************************/
 bool map_canvas_resized(int width, int height)
 {
-  int old_tile_width = mapview.tile_width;
-  int old_tile_height = mapview.tile_height;
-  int old_width = mapview.width, old_height = mapview.height;
   int tile_width = (width + tileset_tile_width(tileset) - 1)
                    / (tileset_tile_width(tileset));
   int tile_height = (height + tileset_tile_height(tileset) - 1)
@@ -3675,9 +3672,9 @@ void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 

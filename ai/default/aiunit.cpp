@@ -2760,8 +2760,6 @@ static void dai_set_defenders(struct ai_type *ait, struct player *pplayer)
            * to city. */
           enough = TRUE;
         } else {
-          int loglevel = pcity->server.debug ? LOG_AI_TEST : LOG_DEBUG;
-
           total_defense += best_want;
           dai_unit_new_task(ait, best, AIUNIT_DEFEND_HOME, pcity->tile);
           count++;

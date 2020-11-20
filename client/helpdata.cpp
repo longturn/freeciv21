@@ -71,7 +71,6 @@ static const char *const help_type_names[] = {
 
 typedef QList<const struct help_item *> helpList;
 helpList *help_nodes;
-static bool help_nodes_init = FALSE;
 /* help_nodes_init is not quite the same as booted in boot_help_texts();
    latter can be FALSE even after call, eg if couldn't find helpdata.txt.
 */
@@ -88,7 +87,7 @@ void free_help_texts(void)
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
   }
-    delete help_nodes;
+  delete help_nodes;
   help_nodes = nullptr;
 }
 

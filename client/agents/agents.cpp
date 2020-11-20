@@ -343,8 +343,6 @@ void agents_init(void)
  ****************************************************************************/
 void agents_free(void)
 {
-  int i;
-
   /* FIXME: doing this will wipe out any presets on disconnect.
    * a proper solution should be to split up the client_free functions
    * for a simple disconnect and a client quit. for right now, we just
@@ -362,9 +360,6 @@ void agents_free(void)
     delete pcall;
   }
 
-  for (i = 0; i < agents.entries_used; i++) {
-    struct my_agent *agent = &agents.entries[i];
-  }
   call_list_destroy(agents.calls);
 }
 

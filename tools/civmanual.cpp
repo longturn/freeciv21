@@ -761,10 +761,6 @@ static bool manual_command(struct tag_types *tag_info)
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  int inx;
-  bool showhelp = FALSE;
-  bool showvers = FALSE;
-  char *option = NULL;
   int retval = EXIT_SUCCESS;
   struct tag_types *tag_info = &html_tags;
 

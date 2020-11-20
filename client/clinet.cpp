@@ -378,9 +378,6 @@ double try_to_autoconnect(void)
 {
   char errbuf[512];
   static int count = 0;
-#ifndef FREECIV_MSWINDOWS
-  static int warning_shown = 0;
-#endif
 
   // Don't repeat autoconnect if not autoconnecting or the user
   // established a connection by himself.
@@ -423,8 +420,6 @@ double try_to_autoconnect(void)
  **************************************************************************/
 void start_autoconnecting_to_server(void)
 {
-  char buf[512];
-
   output_window_printf(
       ftc_client,
       _("Auto-connecting to server \"%s\" at port %d "

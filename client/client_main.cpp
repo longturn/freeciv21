@@ -315,13 +315,6 @@ static void client_game_reset(void)
  **************************************************************************/
 int client_main(int argc, char *argv[])
 {
-  int i;
-  int ui_options = 0;
-  bool ui_separator = FALSE;
-  char *option = NULL;
-  int fatal_assertions = -1;
-  int aii;
-
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
   if (LoadLibrary("exchndl.dll") == NULL) {
@@ -343,7 +336,7 @@ int client_main(int argc, char *argv[])
   /* Ensure that all AIs are initialized to unused state
    * Not using ai_type_iterate as it would stop at
    * current ai type count, ai_type_get_count(), i.e., 0 */
-  for (aii = 0; aii < FREECIV_AI_MOD_LAST; aii++) {
+  for (int aii = 0; aii < FREECIV_AI_MOD_LAST; aii++) {
     struct ai_type *ai = get_ai_type(aii);
 
     init_ai(ai);
@@ -359,10 +352,6 @@ int client_main(int argc, char *argv[])
 #ifdef ENABLE_NLS
   bind_textdomain_codeset("freeciv-nations", get_internal_encoding());
 #endif
-
-  i = 1;
-
-  announce = ANNOUNCE_DEFAULT;
 
   QCommandLineParser parser;
   parser.addHelpOption();
@@ -469,6 +458,7 @@ int client_main(int argc, char *argv[])
   if (parser.isSet("tiles")) {
     forced_tileset_name = parser.value("tiles");
   }
+  announce = ANNOUNCE_DEFAULT;
   if (parser.isSet("Announce")) {
     auto value = parser.value("Announce").toLower();
     if (value == QLatin1String("ipv4")) {

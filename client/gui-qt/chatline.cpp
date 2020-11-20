@@ -13,9 +13,9 @@
 // Qt
 #include <QApplication>
 #include <QCheckBox>
-#include <QPainter>
 #include <QCompleter>
 #include <QGridLayout>
+#include <QPainter>
 #include <QScrollBar>
 #include <QTextBlock>
 // common
@@ -23,10 +23,10 @@
 #include "chatline_common.h"
 // client
 #include "audio.h"
+#include "client_main.h"
 #include "climap.h"
 #include "colors_common.h"
 #include "connectdlg_common.h"
-#include "client_main.h"
 #include "control.h"
 #include "game.h"
 #include "mapview_common.h"
@@ -106,7 +106,6 @@ void chat_listener::chat_word_list_changed(const QStringList &) {}
  ***************************************************************************/
 void chat_listener::send_chat_message(const QString &message)
 {
-  int index;
   QString splayer, s;
 
   history << message;
@@ -195,10 +194,7 @@ chat_input::chat_input(QWidget *parent) : QLineEdit(parent)
   chat_listener::listen();
 }
 
-chat_input::~chat_input()
-{
-  delete cmplt;
-}
+chat_input::~chat_input() { delete cmplt; }
 /***********************************************************************/ /**
    Sends the content of the input box
  ***************************************************************************/

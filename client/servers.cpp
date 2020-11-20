@@ -189,7 +189,6 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   bool found_new = FALSE;
 
   struct server *pserver;
-  bool duplicate = FALSE;
 
   for (auto datagram : datagram_list) {
     if (datagram.isNull() || !datagram.isValid()) {
@@ -209,11 +208,6 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     dio_get_string_raw(&din, message, sizeof(message));
 
     if (!fc_strcasecmp("none", servername)) {
-      bool nameinfo = FALSE;
-
-      const char *dst = NULL;
-      struct hostent *from;
-      const char *host = NULL;
       sz_strlcpy(servername,
                  datagram.senderAddress().toString().toLocal8Bit());
     }

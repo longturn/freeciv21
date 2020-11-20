@@ -1488,7 +1488,6 @@ static bool save_governments_ruleset(const char *filename, const char *name)
   governments_re_active_iterate(pg)
   {
     char path[512];
-    struct ruler_title *prtitle;
 
     fc_snprintf(path, sizeof(path), "government_%d", sect_idx++);
 
