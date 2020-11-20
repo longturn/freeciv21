@@ -120,6 +120,8 @@ static const char *text_tag_type_name(enum text_tag_type type)
     return "color";
   case TTT_LINK:
     return "link";
+  case TTT_INVALID:
+    fc_assert_ret_val(type != TTT_INVALID, nullptr);
   };
   /* Don't handle the default case to be warned if a new value was added. */
   return NULL;
@@ -144,6 +146,8 @@ static const char *text_tag_type_short_name(enum text_tag_type type)
     return "c";
   case TTT_LINK:
     return "l";
+  case TTT_INVALID:
+    fc_assert_ret_val(type != TTT_INVALID, nullptr);
   };
   /* Don't handle the default case to be warned if a new value was added. */
   return NULL;
@@ -161,6 +165,8 @@ static const char *text_link_type_name(enum text_link_type type)
     return "tile";
   case TLT_UNIT:
     return "unit";
+  case TLT_INVALID:
+    fc_assert_ret_val(type != TLT_INVALID, nullptr);
   };
   /* Don't handle the default case to be warned if a new value was added. */
   return NULL;
@@ -361,8 +367,12 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       }
     }
       return TRUE;
+    case TLT_INVALID:
+      fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
   }
+  case TTT_INVALID:
+    fc_assert_ret_val(type != TTT_INVALID, false);
   };
   return FALSE;
 }
@@ -453,8 +463,12 @@ static bool text_tag_initv(struct text_tag *ptag, enum text_tag_type type,
       sz_strlcpy(ptag->link.name, unit_name_translation(punit));
     }
       return TRUE;
+    case TLT_INVALID:
+      fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
   }
+  case TTT_INVALID:
+    fc_assert_ret_val(type != TTT_INVALID, false);
   };
   return FALSE;
 }
@@ -522,6 +536,8 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
         ret += fc_snprintf(buf + ret, len - ret, " id=%d", ptag->link.id);
       }
     } break;
+    case TLT_INVALID:
+      fc_assert_ret_val(ptag->link.type != TLT_INVALID, 0);
     };
 
     if (ptag->stop_offset == ptag->start_offset) {
@@ -531,6 +547,8 @@ static size_t text_tag_start_sequence(const struct text_tag *ptag, char *buf,
 
     return ret + fc_snprintf(buf + ret, len - ret, "%c", SEQ_STOP);
   }
+  case TTT_INVALID:
+    fc_assert_ret_val(ptag->type != TTT_INVALID, false);
   };
   return 0;
 }
@@ -583,6 +601,8 @@ static size_t text_tag_replace_text(const struct text_tag *ptag, char *buf,
         return fc_snprintf(buf, len, "%s", unit_name_translation(punit));
       }
     } break;
+    case TLT_INVALID:
+      fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
     };
   }
 

@@ -3772,6 +3772,8 @@ static struct tile *link_mark_tile(const struct link_mark *pmark)
     struct unit *punit = game_unit_by_number(pmark->id);
     return punit ? unit_tile(punit) : NULL;
   }
+  case TLT_INVALID:
+    fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
   return NULL;
 }
@@ -3788,6 +3790,8 @@ static struct color *link_mark_color(const struct link_mark *pmark)
     return get_color(tileset, COLOR_MAPVIEW_TILE_LINK);
   case TLT_UNIT:
     return get_color(tileset, COLOR_MAPVIEW_UNIT_LINK);
+  case TLT_INVALID:
+    fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
   return NULL;
 }
