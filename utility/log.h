@@ -72,7 +72,7 @@ const QString &log_get_level();
 #ifdef FREECIV_TESTMATIC
 #define log_testmatic(message, ...) qCritical(message, ##__VA_ARGS__)
 #else
-#define log_testmatic(message, ...) ((void)0)
+#define log_testmatic(message, ...) ((void) 0)
 #endif
 
 #define log_testmatic_alt(lvl, ...) log_testmatic(__VA_ARGS__)
@@ -89,44 +89,32 @@ Q_DECLARE_LOGGING_CATEGORY(assert_category)
 void fc_assert_set_fatal(bool fatal_assertions);
 bool fc_assert_are_fatal();
 
+void fc_assert_handle_failure(const char *condition, const char *file,
+                              int line, const char *function,
+                              const QString &message = QString());
+
 /* Like assert(). */
 // The lambda below is used to allow returning a value from a multi-line
 // macro. We need a macro for line number reporting to work.
 #define fc_assert(condition)                                                \
-  [&] {                                                                     \
-    if (!(condition)) {                                                     \
-      qCCritical(assert_category, "Assertion %s failed", #condition);       \
-      qCCritical(assert_category)                                           \
-              .noquote() /* TRANS: No full stop after the URL. */           \
-          << QString(_("Please report this message at %1")).arg(BUG_URL);   \
-      if (fc_assert_are_fatal()) {                                          \
-        qFatal("%s", _("Assertion failed"));                                \
-      }                                                                     \
-      return false;                                                         \
-    }                                                                       \
-    return true;                                                            \
-  }() // Forces the usage of ';' at the end of the call.
+  ((condition)                                                              \
+       ? ((void) 0)                                                         \
+       : fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,           \
+                                  QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC))
 
 /* Like assert() with extra message. */
 #define fc_assert_msg(condition, message, ...)                              \
-  [&] {                                                                     \
-    if (!(condition)) {                                                     \
-      qCCritical(assert_category, "Assertion %s failed", #condition);       \
-      qCCritical(assert_category, message, ##__VA_ARGS__);                  \
-      qCCritical(assert_category)                                           \
-              .noquote() /* TRANS: No full stop after the URL. */           \
-          << QString(_("Please report this message at %1")).arg(BUG_URL);   \
-      if (fc_assert_are_fatal()) {                                          \
-        qFatal("%s", _("Assertion failed"));                                \
-      }                                                                     \
-      return false;                                                         \
-    }                                                                       \
-    return true;                                                            \
-  }() // Forces the usage of ';' at the end of the call.
+  ((condition)                                                              \
+       ? ((void) 0)                                                         \
+       : fc_assert_handle_failure(                                          \
+           #condition, QT_MESSAGELOG_FILE, QT_MESSAGELOG_LINE,              \
+           QT_MESSAGELOG_FUNC, QString::asprintf(message, ##__VA_ARGS__)))
 
 /* Do action on failure. */
 #define fc_assert_action(condition, action)                                 \
-  if (!fc_assert(condition)) {                                              \
+  if (!(condition)) {                                                       \
+    fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,                \
+                             QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC);       \
     action;                                                                 \
   }
 
@@ -141,7 +129,10 @@ bool fc_assert_are_fatal();
 
 /* Do action on failure with extra message. */
 #define fc_assert_action_msg(condition, action, message, ...)               \
-  if (!fc_assert_msg(condition, message, ##__VA_ARGS__)) {                  \
+  if (!(condition)) {                                                       \
+    fc_assert_handle_failure(#condition, QT_MESSAGELOG_FILE,                \
+                             QT_MESSAGELOG_LINE, QT_MESSAGELOG_FUNC,        \
+                             QString::asprintf(message, ##__VA_ARGS__));    \
     action;                                                                 \
   }
 /* Return on failure with extra message. */
