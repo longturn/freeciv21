@@ -374,3 +374,25 @@ bool has_thread_cond_impl(void)
   return FALSE;
 #endif
 }
+
+fcThread::fcThread(void(tfunc)(void *), void *tdata)
+    : func(tfunc), data(tdata)
+{
+}
+
+void fcThread::set_func(void(tfunc)(void *), void *tdata)
+{
+  func = tfunc;
+  data = tdata;
+}
+
+
+fcThread::~fcThread() {}
+
+void fcThread::run()
+{
+  QMutexLocker locker(&mutex);
+  if (func) {
+  (func)(data);
+  }
+}

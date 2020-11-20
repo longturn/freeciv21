@@ -10,9 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
+#pragma once
 
-#ifndef FC__THREAD_H
-#define FC__THREAD_H
+#include <QMutex>
+#include <QThread>
 
 #include "fc_config.h"
 
@@ -77,4 +78,19 @@ void fc_thread_cond_signal(fc_thread_cond *cond);
 
 bool has_thread_cond_impl(void);
 
-#endif /* FC__THREAD_H */
+class fcThread : public QThread {
+public:
+  fcThread(){};
+  fcThread(void(tfunc)(void *), void *tdata);
+  void set_func(void(tfunc)(void *), void *tdata);
+  ~fcThread();
+protected:
+  void run() Q_DECL_OVERRIDE;
+
+private:
+  void (*func)(void *data);
+  void *data;
+  QMutex mutex;
+};
+
+
