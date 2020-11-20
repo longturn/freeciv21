@@ -168,19 +168,6 @@ struct canvas *canvas_create(int width, int height)
 void canvas_free(struct canvas *store) { funcs.canvas_free(store); }
 
 /**********************************************************************/ /**
-   Call canvas_set_zoom callback
- **************************************************************************/
-void canvas_set_zoom(struct canvas *store, float zoom)
-{
-  funcs.canvas_set_zoom(store, zoom);
-}
-
-/**********************************************************************/ /**
-   Call has_zoom_support callback
- **************************************************************************/
-bool has_zoom_support(void) { return funcs.has_zoom_support(); }
-
-/**********************************************************************/ /**
    Call canvas_copy callback
  **************************************************************************/
 void canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
@@ -302,10 +289,6 @@ void set_rulesets(int num_rulesets, char **rulesets)
  **************************************************************************/
 void options_extra_init(void) { funcs.options_extra_init(); }
 
-/**********************************************************************/ /**
-   Call server_connect callback
- **************************************************************************/
-void server_connect(void) { funcs.server_connect(); }
 
 /**********************************************************************/ /**
    Call add_net_input callback

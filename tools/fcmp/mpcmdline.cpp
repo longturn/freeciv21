@@ -24,7 +24,6 @@
 #include "support.h"
 
 /* common */
-#include "fc_cmdhelp.h"
 #include "version.h"
 
 /* modinst */

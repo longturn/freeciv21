@@ -19,8 +19,8 @@
 #include "map.h"
 // client
 #include "client_main.h"
-#include "climisc.h"
 #include "climap.h"
+#include "climisc.h"
 #include "colors_common.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
@@ -90,7 +90,7 @@ void draw_calculated_trade_routes(QPainter *painter)
     for (auto qgilles : qAsConst(king()->trade_gen.lines)) {
       base_map_distance_vector(&dx, &dy, TILE_XY(qgilles.t1),
                                TILE_XY(qgilles.t2));
-      map_to_gui_vector(tileset, 1.0, &w, &h, dx, dy);
+      map_to_gui_vector(tileset, &w, &h, dx, dy);
 
       tile_to_canvas_pos(&x1, &y1, qgilles.t1);
       tile_to_canvas_pos(&x2, &y2, qgilles.t2);
@@ -176,7 +176,8 @@ void map_view::update_cursor(enum cursor_type ct)
  **************************************************************************/
 void map_view::timer_event()
 {
-  if (queen()->infotab->underMouse() || queen()->minimapview_wdg->underMouse()
+  if (queen()->infotab->underMouse()
+      || queen()->minimapview_wdg->underMouse()
       || queen()->sidebar_wdg->underMouse()) {
     update_cursor(CURSOR_DEFAULT);
     return;
@@ -391,7 +392,8 @@ void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
 static void flush_mapcanvas(int canvas_x, int canvas_y, int pixel_width,
                             int pixel_height)
 {
-  queen()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width, pixel_height);
+  queen()->mapview_wdg->repaint(canvas_x, canvas_y, pixel_width,
+                                pixel_height);
 }
 
 /**********************************************************************/ /**
@@ -460,13 +462,6 @@ void gui_flush(void) { queen()->mapview_wdg->update(); }
    them).
  **************************************************************************/
 void update_map_canvas_scrollbars(void) { queen()->mapview_wdg->update(); }
-
-/**********************************************************************/ /**
-   Update the size of the sliders on the scrollbars.
- **************************************************************************/
-void update_map_canvas_scrollbars_size(void)
-{ /* PORTME */
-}
 
 /**********************************************************************/ /**
    Update (refresh) all city descriptions on the mapview.

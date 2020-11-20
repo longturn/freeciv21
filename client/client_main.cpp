@@ -46,7 +46,6 @@
 /* common */
 #include "ai.h"
 #include "diptreaty.h"
-#include "fc_cmdhelp.h"
 #include "fc_interface.h"
 #include "game.h"
 #include "idex.h"
@@ -97,7 +96,6 @@
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
-#include "zoom.h"
 
 /* client/agents */
 #include "agents.h"
@@ -1094,8 +1092,6 @@ double real_timer_callback(void)
     return time_until_next_call;
   }
 
-  time_until_next_call = zoom_update(time_until_next_call);
-
   {
     double blink_time = blink_turn_done_button();
 
@@ -1316,8 +1312,7 @@ static enum sset_type client_ss_type_get(server_setting_id id)
   opt_type = option_type(pset);
 
   /* The option type isn't client only. */
-  fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR
-                         && opt_type != OT_VIDEO_MODE),
+  fc_assert_ret_val_msg((opt_type != OT_FONT && opt_type != OT_COLOR),
                         sset_type_invalid(),
                         "%s is a client option type but not a server "
                         "setting type",

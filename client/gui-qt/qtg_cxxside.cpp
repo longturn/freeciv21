@@ -45,8 +45,6 @@ void setup_gui_funcs()
 
   funcs->canvas_create = qtg_canvas_create;
   funcs->canvas_free = qtg_canvas_free;
-  funcs->canvas_set_zoom = qtg_canvas_set_zoom;
-  funcs->has_zoom_support = qtg_has_zoom_support;
   funcs->canvas_copy = qtg_canvas_copy;
   funcs->canvas_put_sprite = qtg_canvas_put_sprite;
   funcs->canvas_put_sprite_full = qtg_canvas_put_sprite_full;
@@ -61,7 +59,6 @@ void setup_gui_funcs()
 
   funcs->set_rulesets = qtg_set_rulesets;
   funcs->options_extra_init = qtg_options_extra_init;
-  funcs->server_connect = [] {};
   funcs->add_net_input = qtg_add_net_input;
   funcs->remove_net_input = qtg_remove_net_input;
   funcs->real_conn_list_dialog_update = qtg_real_conn_list_dialog_update;

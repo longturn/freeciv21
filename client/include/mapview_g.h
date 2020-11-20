@@ -48,7 +48,6 @@ GUI_FUNC_PROTO(void, flush_dirty, void)
 GUI_FUNC_PROTO(void, gui_flush, void)
 
 GUI_FUNC_PROTO(void, update_map_canvas_scrollbars, void)
-GUI_FUNC_PROTO(void, update_map_canvas_scrollbars_size, void)
 
 GUI_FUNC_PROTO(void, put_cross_overlay_tile, struct tile *ptile)
 

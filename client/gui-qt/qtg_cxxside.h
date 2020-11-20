@@ -51,8 +51,6 @@ void qtg_color_free(struct color *pcolor);
 
 struct canvas *qtg_canvas_create(int width, int height);
 void qtg_canvas_free(struct canvas *store);
-void qtg_canvas_set_zoom(struct canvas *store, float zoom);
-bool qtg_has_zoom_support();
 void qtg_canvas_copy(struct canvas *dest, struct canvas *src, int src_x,
                      int src_y, int dest_x, int dest_y, int width,
                      int height);
@@ -88,7 +86,6 @@ void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
 
 void qtg_set_rulesets(int num_rulesets, char **rulesets);
 void qtg_options_extra_init();
-void qtg_server_connect();
 void qtg_add_net_input(QTcpSocket *sock);
 void qtg_remove_net_input();
 void qtg_real_conn_list_dialog_update(void *unused);

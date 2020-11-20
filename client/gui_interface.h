@@ -61,8 +61,6 @@ struct gui_funcs {
 
   struct canvas *(*canvas_create)(int width, int height);
   void (*canvas_free)(struct canvas *store);
-  void (*canvas_set_zoom)(struct canvas *store, float zoom);
-  bool (*has_zoom_support)(void);
   void (*canvas_copy)(struct canvas *dest, struct canvas *src, int src_x,
                       int src_y, int dest_x, int dest_y, int width,
                       int height);
@@ -99,7 +97,6 @@ struct gui_funcs {
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);
   void (*options_extra_init)(void);
-  void (*server_connect)(void);
   void (*add_net_input)(QTcpSocket *sock);
   void (*remove_net_input)(void);
   void (*real_conn_list_dialog_update)(void *unused);

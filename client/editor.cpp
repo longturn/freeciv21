@@ -38,7 +38,6 @@
 #include "editor.h"
 #include "mapctrl_common.h"
 #include "tilespec.h"
-#include "zoom.h"
 
 /* client/include */
 #include "editgui_g.h"
@@ -758,7 +757,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
 
   gui_rect_iterate(mapview.gui_x0 + editor->selrect_x,
                    mapview.gui_y0 + editor->selrect_y, editor->selrect_width,
-                   editor->selrect_height, ptile, pedge, pcorner, map_zoom)
+                   editor->selrect_height, ptile, pedge, pcorner)
   {
     if (ptile == NULL) {
       continue;

@@ -44,7 +44,6 @@
 #include "connectdlg_common.h"
 #include "options.h"
 #include "tilespec.h"
-#include "zoom.h"
 
 #include "update_queue.h"
 
@@ -441,16 +440,6 @@ static void set_client_page_callback(void *data)
   enum client_pages page = static_cast<client_pages>(FC_PTR_TO_INT(data));
 
   real_set_client_page(page);
-
-  if (page == PAGE_GAME) {
-    if (has_zoom_support()) {
-      if (gui_options.zoom_set) {
-        zoom_set(gui_options.zoom_default_level);
-      } else {
-        zoom_1_0();
-      }
-    }
-  }
 }
 
 /************************************************************************/ /**

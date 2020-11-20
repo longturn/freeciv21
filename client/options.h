@@ -24,42 +24,6 @@
 
 #define DEFAULT_METASERVER_OPTION "default"
 
-struct video_mode {
-  int width;
-  int height;
-};
-
-#define VIDEO_MODE(ARG_width, ARG_height)                                   \
-  {                                                                         \
-    ARG_width, ARG_height                                                   \
-  }
-
-/****************************************************************************
-  Constructor.
-****************************************************************************/
-static inline struct video_mode video_mode_construct(int width, int height)
-{
-  struct video_mode mode = VIDEO_MODE(width, height);
-
-  return mode;
-}
-
-enum {
-  /* Order must match strings in
-   * options.c:gui_gtk_message_chat_location_name() */
-  GUI_GTK_MSGCHAT_SPLIT,
-  GUI_GTK_MSGCHAT_SEPARATE,
-  GUI_GTK_MSGCHAT_MERGED
-};
-
-enum {
-  /* Order must match strings in
-   * options.c:gui_popup_tech_help_name() */
-  GUI_POPUP_TECH_HELP_ENABLED,
-  GUI_POPUP_TECH_HELP_DISABLED,
-  GUI_POPUP_TECH_HELP_RULESET
-};
-
 enum overview_layers {
   OLAYER_BACKGROUND,
   OLAYER_RELIEF,
@@ -111,12 +75,6 @@ struct client_options {
   char default_tileset_overhead_name[512]; /* 2.6 had separate tilesets for
                                               ... */
   char default_tileset_iso_name[512]; /* ...overhead and iso topologies. */
-  bool gui_gtk3_migrated_from_gtk2;
-  bool gui_gtk3_22_migrated_from_gtk3;
-  bool gui_gtk4_migrated_from_gtk3_22;
-  bool gui_sdl2_migrated_from_sdl;
-  bool gui_gtk2_migrated_from_2_5;
-  bool gui_gtk3_migrated_from_2_5;
   bool gui_qt_migrated_from_2_5;
 
   bool migrate_fullscreen;
@@ -202,167 +160,6 @@ struct client_options {
   bool mapimg_layer[MAPIMG_LAYER_COUNT];
   char mapimg_filename[512];
 
-  bool zoom_set;
-  float zoom_default_level;
-
-  /* These are still kept just so users can migrate them to gtk3-client */
-#define FC_GTK2_DEFAULT_THEME_NAME "Freeciv"
-  char gui_gtk2_default_theme_name[512];
-  bool gui_gtk2_map_scrollbars;
-  bool gui_gtk2_dialogs_on_top;
-  bool gui_gtk2_show_task_icons;
-  bool gui_gtk2_enable_tabs;
-  bool gui_gtk2_better_fog;
-  bool gui_gtk2_show_chat_message_time;
-  bool gui_gtk2_new_messages_go_to_top;
-  bool gui_gtk2_show_message_window_buttons;
-  bool gui_gtk2_metaserver_tab_first;
-  bool gui_gtk2_allied_chat_only;
-  bool gui_gtk2_mouse_over_map_focus;
-  bool gui_gtk2_chatline_autocompletion;
-  int gui_gtk2_citydlg_xsize;
-  int gui_gtk2_citydlg_ysize;
-  int gui_gtk2_popup_tech_help;
-  char gui_gtk2_font_city_label[512];
-  char gui_gtk2_font_notify_label[512];
-  char gui_gtk2_font_spaceship_label[512];
-  char gui_gtk2_font_help_label[512];
-  char gui_gtk2_font_help_link[512];
-  char gui_gtk2_font_help_text[512];
-  char gui_gtk2_font_chatline[512];
-  char gui_gtk2_font_beta_label[512];
-  char gui_gtk2_font_small[512];
-  char gui_gtk2_font_comment_label[512];
-  char gui_gtk2_font_city_names[512];
-  char gui_gtk2_font_city_productions[512];
-  char gui_gtk2_font_reqtree_text[512];
-
-/* gui-gtk-3.0 client specific options. */
-#define FC_GTK3_DEFAULT_THEME_NAME "Freeciv"
-  char gui_gtk3_default_theme_name[512];
-  bool gui_gtk3_fullscreen;
-  bool gui_gtk3_map_scrollbars;
-  bool gui_gtk3_dialogs_on_top;
-  bool gui_gtk3_show_task_icons;
-  bool gui_gtk3_enable_tabs;
-  bool gui_gtk3_show_chat_message_time;
-  bool gui_gtk3_new_messages_go_to_top;
-  bool gui_gtk3_show_message_window_buttons;
-  bool gui_gtk3_metaserver_tab_first;
-  bool gui_gtk3_allied_chat_only;
-  int gui_gtk3_message_chat_location; /* enum GUI_GTK_MSGCHAT_* */
-  bool gui_gtk3_small_display_layout;
-  bool gui_gtk3_mouse_over_map_focus;
-  bool gui_gtk3_chatline_autocompletion;
-  int gui_gtk3_citydlg_xsize;
-  int gui_gtk3_citydlg_ysize;
-  int gui_gtk3_popup_tech_help;
-  int gui_gtk3_governor_range_min;
-  int gui_gtk3_governor_range_max;
-  char gui_gtk3_font_city_label[512];
-  char gui_gtk3_font_notify_label[512];
-  char gui_gtk3_font_spaceship_label[512];
-  char gui_gtk3_font_help_label[512];
-  char gui_gtk3_font_help_link[512];
-  char gui_gtk3_font_help_text[512];
-  char gui_gtk3_font_chatline[512];
-  char gui_gtk3_font_beta_label[512];
-  char gui_gtk3_font_small[512];
-  char gui_gtk3_font_comment_label[512];
-  char gui_gtk3_font_city_names[512];
-  char gui_gtk3_font_city_productions[512];
-  char gui_gtk3_font_reqtree_text[512];
-
-  /* gui-gtk-3.22 client specific options. */
-#define FC_GTK3_22_DEFAULT_THEME_NAME "Freeciv"
-  char gui_gtk3_22_default_theme_name[512];
-  bool gui_gtk3_22_fullscreen;
-  bool gui_gtk3_22_map_scrollbars;
-  bool gui_gtk3_22_dialogs_on_top;
-  bool gui_gtk3_22_show_task_icons;
-  bool gui_gtk3_22_enable_tabs;
-  bool gui_gtk3_22_show_chat_message_time;
-  bool gui_gtk3_22_new_messages_go_to_top;
-  bool gui_gtk3_22_show_message_window_buttons;
-  bool gui_gtk3_22_metaserver_tab_first;
-  bool gui_gtk3_22_allied_chat_only;
-  int gui_gtk3_22_message_chat_location; /* enum GUI_GTK_MSGCHAT_* */
-  bool gui_gtk3_22_small_display_layout;
-  bool gui_gtk3_22_mouse_over_map_focus;
-  bool gui_gtk3_22_chatline_autocompletion;
-  int gui_gtk3_22_citydlg_xsize;
-  int gui_gtk3_22_citydlg_ysize;
-  int gui_gtk3_22_popup_tech_help;
-  int gui_gtk3_22_governor_range_min;
-  int gui_gtk3_22_governor_range_max;
-  char gui_gtk3_22_font_city_label[512];
-  char gui_gtk3_22_font_notify_label[512];
-  char gui_gtk3_22_font_spaceship_label[512];
-  char gui_gtk3_22_font_help_label[512];
-  char gui_gtk3_22_font_help_link[512];
-  char gui_gtk3_22_font_help_text[512];
-  char gui_gtk3_22_font_chatline[512];
-  char gui_gtk3_22_font_beta_label[512];
-  char gui_gtk3_22_font_small[512];
-  char gui_gtk3_22_font_comment_label[512];
-  char gui_gtk3_22_font_city_names[512];
-  char gui_gtk3_22_font_city_productions[512];
-  char gui_gtk3_22_font_reqtree_text[512];
-
-/* gui-gtk-3-x client specific options. */
-#define FC_GTK4_DEFAULT_THEME_NAME "Freeciv"
-  char gui_gtk4_default_theme_name[512];
-  bool gui_gtk4_fullscreen;
-  bool gui_gtk4_map_scrollbars;
-  bool gui_gtk4_dialogs_on_top;
-  bool gui_gtk4_show_task_icons;
-  bool gui_gtk4_enable_tabs;
-  bool gui_gtk4_show_chat_message_time;
-  bool gui_gtk4_new_messages_go_to_top;
-  bool gui_gtk4_show_message_window_buttons;
-  bool gui_gtk4_metaserver_tab_first;
-  bool gui_gtk4_allied_chat_only;
-  int gui_gtk4_message_chat_location; /* enum GUI_GTK_MSGCHAT_* */
-  bool gui_gtk4_small_display_layout;
-  bool gui_gtk4_mouse_over_map_focus;
-  bool gui_gtk4_chatline_autocompletion;
-  int gui_gtk4_citydlg_xsize;
-  int gui_gtk4_citydlg_ysize;
-  int gui_gtk4_popup_tech_help;
-  int gui_gtk4_governor_range_min;
-  int gui_gtk4_governor_range_max;
-  char gui_gtk4_font_city_label[512];
-  char gui_gtk4_font_notify_label[512];
-  char gui_gtk4_font_spaceship_label[512];
-  char gui_gtk4_font_help_label[512];
-  char gui_gtk4_font_help_link[512];
-  char gui_gtk4_font_help_text[512];
-  char gui_gtk4_font_chatline[512];
-  char gui_gtk4_font_beta_label[512];
-  char gui_gtk4_font_small[512];
-  char gui_gtk4_font_comment_label[512];
-  char gui_gtk4_font_city_names[512];
-  char gui_gtk4_font_city_productions[512];
-  char gui_gtk4_font_reqtree_text[512];
-
-  /* gui-sdl client specific options.
-   * These are still kept just so users can migrate them to sdl2-client */
-  bool gui_sdl_fullscreen;
-  struct video_mode gui_sdl_screen;
-  bool gui_sdl_do_cursor_animation;
-  bool gui_sdl_use_color_cursors;
-
-/* gui-sdl2 client specific options. */
-#define FC_SDL2_DEFAULT_THEME_NAME "human"
-  char gui_sdl2_default_theme_name[512];
-  bool gui_sdl2_fullscreen;
-  struct video_mode gui_sdl2_screen;
-  bool gui_sdl2_swrenderer;
-  bool gui_sdl2_do_cursor_animation;
-  bool gui_sdl2_use_color_cursors;
-  char gui_sdl2_font_city_names[64];
-  char gui_sdl2_font_city_productions[64];
-
 /* gui-qt client specific options. */
 #define FC_QT_DEFAULT_THEME_NAME "NightStalker"
   bool gui_qt_fullscreen;
@@ -394,7 +191,6 @@ extern struct client_options gui_options;
 #define SPECENUM_VALUE4 OT_BITWISE
 #define SPECENUM_VALUE5 OT_FONT
 #define SPECENUM_VALUE6 OT_COLOR
-#define SPECENUM_VALUE7 OT_VIDEO_MODE
 #include "specenum_gen.h"
 
 struct option;     /* Opaque type. */
@@ -497,11 +293,6 @@ struct ft_color option_color_get(const struct option *poption);
 struct ft_color option_color_def(const struct option *poption);
 bool option_color_set(struct option *poption, struct ft_color color);
 
-/* Option type OT_VIDEO_MODE functions. */
-struct video_mode option_video_mode_get(const struct option *poption);
-struct video_mode option_video_mode_def(const struct option *poption);
-bool option_video_mode_set(struct option *poption, struct video_mode mode);
-
 #define options_iterate(poptset, poption)                                   \
   {                                                                         \
     struct option *poption = optset_option_first(poptset);                  \
@@ -534,75 +325,7 @@ extern int messages_where[]; /* OR-ed MW_ values [E_COUNT] */
 /** Client options **/
 
 #define GUI_DEFAULT_CHAT_LOGFILE "freeciv-chat.log"
-
-/* gui-gtk2: [xy]size of the city dialog */
-#define GUI_GTK2_CITYDLG_DEFAULT_XSIZE 770
-#define GUI_GTK2_CITYDLG_MIN_XSIZE 256
-#define GUI_GTK2_CITYDLG_MAX_XSIZE 4096
-
-#define GUI_GTK2_CITYDLG_DEFAULT_YSIZE 512
-#define GUI_GTK2_CITYDLG_MIN_YSIZE 128
-#define GUI_GTK2_CITYDLG_MAX_YSIZE 4096
-
-#define GUI_GTK_OVERVIEW_MIN_XSIZE 160
-#define GUI_GTK_OVERVIEW_MIN_YSIZE 100
-
-/* gui-gtk3: [xy]size of the city dialog */
-#define GUI_GTK3_CITYDLG_DEFAULT_XSIZE 770
-#define GUI_GTK3_CITYDLG_MIN_XSIZE 256
-#define GUI_GTK3_CITYDLG_MAX_XSIZE 4096
-
-#define GUI_GTK3_CITYDLG_DEFAULT_YSIZE 512
-#define GUI_GTK3_CITYDLG_MIN_YSIZE 128
-#define GUI_GTK3_CITYDLG_MAX_YSIZE 4096
-
-#define GUI_GTK3_GOV_RANGE_MIN_DEFAULT -20
-#define GUI_GTK3_GOV_RANGE_MIN_MIN -100
-#define GUI_GTK3_GOV_RANGE_MIN_MAX 0
-
-#define GUI_GTK3_GOV_RANGE_MAX_DEFAULT 20
-#define GUI_GTK3_GOV_RANGE_MAX_MIN 0
-#define GUI_GTK3_GOV_RANGE_MAX_MAX 100
-
-/* gui-gtk3.22: [xy]size of the city dialog */
-#define GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE 770
-#define GUI_GTK3_22_CITYDLG_MIN_XSIZE 256
-#define GUI_GTK3_22_CITYDLG_MAX_XSIZE 4096
-
-#define GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE 512
-#define GUI_GTK3_22_CITYDLG_MIN_YSIZE 128
-#define GUI_GTK3_22_CITYDLG_MAX_YSIZE 4096
-
-#define GUI_GTK3_22_GOV_RANGE_MIN_DEFAULT -20
-#define GUI_GTK3_22_GOV_RANGE_MIN_MIN -100
-#define GUI_GTK3_22_GOV_RANGE_MIN_MAX 0
-
-#define GUI_GTK3_22_GOV_RANGE_MAX_DEFAULT 20
-#define GUI_GTK3_22_GOV_RANGE_MAX_MIN 0
-#define GUI_GTK3_22_GOV_RANGE_MAX_MAX 100
-
-/* gui-gtk3x: [xy]size of the city dialog */
-#define GUI_GTK4_CITYDLG_DEFAULT_XSIZE 770
-#define GUI_GTK4_CITYDLG_MIN_XSIZE 256
-#define GUI_GTK4_CITYDLG_MAX_XSIZE 4096
-
-#define GUI_GTK4_CITYDLG_DEFAULT_YSIZE 512
-#define GUI_GTK4_CITYDLG_MIN_YSIZE 128
-#define GUI_GTK4_CITYDLG_MAX_YSIZE 4096
-
-#define GUI_GTK4_GOV_RANGE_MIN_DEFAULT -20
-#define GUI_GTK4_GOV_RANGE_MIN_MIN -100
-#define GUI_GTK4_GOV_RANGE_MIN_MAX 0
-
-#define GUI_GTK4_GOV_RANGE_MAX_DEFAULT 20
-#define GUI_GTK4_GOV_RANGE_MAX_MIN 0
-#define GUI_GTK4_GOV_RANGE_MAX_MAX 100
-
 #define GUI_DEFAULT_MAPIMG_FILENAME "freeciv"
-
-bool video_mode_to_string(char *buf, size_t buf_len,
-                          struct video_mode *mode);
-bool string_to_video_mode(const char *buf, struct video_mode *mode);
 
 struct tileset;
 

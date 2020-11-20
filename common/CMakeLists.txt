@@ -55,7 +55,6 @@ add_library(
   events.cpp
   extras.cpp
   featured_text.cpp
-  fc_cmdhelp.cpp
   fc_interface.cpp
   game.cpp
   government.cpp

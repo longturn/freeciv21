@@ -65,8 +65,6 @@ void setup_gui_funcs(void)
 
   funcs->canvas_create = gui_canvas_create;
   funcs->canvas_free = gui_canvas_free;
-  funcs->canvas_set_zoom = gui_canvas_set_zoom;
-  funcs->has_zoom_support = gui_has_zoom_support;
   funcs->canvas_copy = gui_canvas_copy;
   funcs->canvas_put_sprite = gui_canvas_put_sprite;
   funcs->canvas_put_sprite_full = gui_canvas_put_sprite_full;
@@ -81,7 +79,6 @@ void setup_gui_funcs(void)
 
   funcs->set_rulesets = gui_set_rulesets;
   funcs->options_extra_init = gui_options_extra_init;
-  funcs->server_connect = gui_server_connect;
   funcs->add_net_input = gui_add_net_input;
   funcs->remove_net_input = gui_remove_net_input;
   funcs->real_conn_list_dialog_update = gui_real_conn_list_dialog_update;

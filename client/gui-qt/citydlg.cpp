@@ -606,7 +606,7 @@ unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
     }
 
     unit_pixmap->map_pixmap.fill(Qt::transparent);
-    put_unit(punit, unit_pixmap, 1.0, 0, 0);
+    put_unit(punit, unit_pixmap, 0, 0);
 
     if (supported) {
       put_unit_city_overlays(punit, unit_pixmap, 0,
@@ -2920,10 +2920,7 @@ void qtg_popdown_city_dialog(struct city *pcity)
 /************************************************************************/ /**
    Close the dialogs for all cities.
  ****************************************************************************/
-void qtg_popdown_all_city_dialogs()
-{
-  destroy_city_dialog();
-}
+void qtg_popdown_all_city_dialogs() { destroy_city_dialog(); }
 
 /************************************************************************/ /**
    Refresh (update) all data for the given city's dialog.

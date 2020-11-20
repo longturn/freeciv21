@@ -260,11 +260,6 @@ void option_dialog::apply_options()
       get_color(poption, ba1, ba2);
       option_color_set(poption, ft_color_construct(ba1.data(), ba2.data()));
       break;
-    case OT_VIDEO_MODE:
-      qCritical("Option type %s (%d) not supported yet.",
-                option_type_name(option_type(poption)),
-                option_type(poption));
-      break;
     }
   }
   options_iterate_end;
@@ -515,10 +510,6 @@ void option_dialog::option_dialog_refresh(struct option *poption)
   case OT_COLOR:
     set_color(poption, option_color_get(poption));
     break;
-  case OT_VIDEO_MODE:
-    qCritical("Option type %s (%d) not supported yet.",
-              option_type_name(option_type(poption)), option_type(poption));
-    break;
   }
 }
 
@@ -566,10 +557,6 @@ void option_dialog::option_dialog_reset(struct option *poption)
     break;
   case OT_COLOR:
     set_color(poption, option_color_def(poption));
-    break;
-  case OT_VIDEO_MODE:
-    qCritical("Option type %s (%d) not supported yet.",
-              option_type_name(option_type(poption)), option_type(poption));
     break;
   }
 }
@@ -712,11 +699,6 @@ void option_dialog::add_option(struct option *poption)
     hbox_layout->addWidget(button);
     widget = new QWidget();
     widget->setLayout(hbox_layout);
-    break;
-
-  case OT_VIDEO_MODE:
-    qCritical("Option type %s (%d) not supported yet.",
-              option_type_name(option_type(poption)), option_type(poption));
     break;
   }
 

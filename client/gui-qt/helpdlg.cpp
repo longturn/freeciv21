@@ -846,7 +846,7 @@ void help_widget::set_topic_unit(const help_item *topic, const char *title)
     canvas = qtg_canvas_create(tileset_full_tile_width(tileset),
                                tileset_full_tile_height(tileset));
     canvas->map_pixmap.fill(Qt::transparent);
-    put_unittype(utype, canvas, 1.0f, 0, 0);
+    put_unittype(utype, canvas, 0, 0);
     add_info_pixmap(&canvas->map_pixmap);
     qtg_canvas_free(canvas);
 
@@ -1178,7 +1178,7 @@ canvas *terrain_canvas(struct terrain *terrain,
   canvas->map_pixmap.fill(Qt::transparent);
   for (i = 0; i < 3; ++i) {
     count = fill_basic_terrain_layer_sprite_array(tileset, sprs, i, terrain);
-    put_drawn_sprites(canvas, 1.0f, 0, canvas_y, count, sprs, false);
+    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
   }
 
   pextra = NULL;
@@ -1191,12 +1191,12 @@ canvas *terrain_canvas(struct terrain *terrain,
     extra_type_by_cause_iterate_end;
 
     count = fill_basic_extra_sprite_array(tileset, sprs, pextra);
-    put_drawn_sprites(canvas, 1.0f, 0, canvas_y, count, sprs, false);
+    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
   }
 
   if (resource != NULL) {
     count = fill_basic_extra_sprite_array(tileset, sprs, resource);
-    put_drawn_sprites(canvas, 1.0f, 0, canvas_y, count, sprs, false);
+    put_drawn_sprites(canvas, 0, canvas_y, count, sprs, false);
   }
 
   return canvas;

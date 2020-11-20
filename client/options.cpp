@@ -93,12 +93,6 @@ struct client_options gui_options = {
     "\0",  //.default_tileset_name =
     "\0",  //.default_tileset_overhead_name =
     "\0",  //.default_tileset_iso_name =
-    FALSE, //.gui_gtk3_migrated_from_gtk2 =
-    FALSE, //.gui_gtk3_22_migrated_from_gtk3 =
-    FALSE, //.gui_gtk4_migrated_from_gtk3_22 =
-    FALSE, //.gui_sdl2_migrated_from_sdl =
-    FALSE, //.gui_gtk2_migrated_from_2_5
-    FALSE, //.gui_gtk3_migrated_from_2_5 =
     FALSE, //.gui_qt_migrated_from_2_5 =
 
     FALSE, //.migrate_fullscreen =
@@ -193,171 +187,7 @@ struct client_options gui_options = {
         TRUE,  /* t - MAPIMG_LAYER_TERRAIN */
         TRUE   /* u - MAPIMG_LAYER_UNITS */
     },
-    /* See the definition of MAPIMG_LAYER in mapimg.h. */
-    //.mapimg_layer =
-    // INIT LATER
-    /*  .mapimg_filename, */
     "mapimage filename",
-
-    // sveinung
-
-    FALSE, //.zoom_set =
-    1.0,   //.zoom_default_level =
-
-    /* gui-gtk-2.0 client specific options.
-     * These are still kept just so users can migrate them to gtk3-client */
-    FC_GTK2_DEFAULT_THEME_NAME,     //.gui_gtk2_default_theme_name =
-    FALSE,                          //.gui_gtk2_map_scrollbars =
-    TRUE,                           //.gui_gtk2_dialogs_on_top =
-    TRUE,                           //.gui_gtk2_show_task_icons =
-    TRUE,                           //.gui_gtk2_enable_tabs =
-    TRUE,                           //.gui_gtk2_better_fog =
-    FALSE,                          //.gui_gtk2_show_chat_message_time =
-    FALSE,                          //.gui_gtk2_new_messages_go_to_top =
-    TRUE,                           //.gui_gtk2_show_message_window_buttons =
-    FALSE,                          //.gui_gtk2_metaserver_tab_first =
-    FALSE,                          //.gui_gtk2_allied_chat_only =
-    FALSE,                          //.gui_gtk2_mouse_over_map_focus =
-    TRUE,                           //.gui_gtk2_chatline_autocompletion =
-    GUI_GTK2_CITYDLG_DEFAULT_XSIZE, //.gui_gtk2_citydlg_xsize =
-    GUI_GTK2_CITYDLG_DEFAULT_YSIZE, //.gui_gtk2_citydlg_ysize =
-    GUI_POPUP_TECH_HELP_RULESET,    //.gui_gtk2_popup_tech_help =
-    "Monospace 8",                  //.gui_gtk2_font_city_label =
-    "Monospace Bold 9",             //.gui_gtk2_font_notify_label =
-    "Monospace 8",                  //.gui_gtk2_font_spaceship_label =
-    "Sans Bold 10",                 //.gui_gtk2_font_help_label =
-    "Sans 9",                       //.gui_gtk2_font_help_link =
-    "Monospace 8",                  //.gui_gtk2_font_help_text =
-    "Monospace 8",                  //.gui_gtk2_font_chatline =
-    "Sans Italic 10",               //.gui_gtk2_font_beta_label =
-    "Sans 9",                       //.gui_gtk2_font_small =
-    "Sans Italic 9",                //.gui_gtk2_font_comment_label =
-    "Sans Bold 10",                 //.gui_gtk2_font_city_names =
-    "Serif 10",                     //.gui_gtk2_font_city_productions =
-    "Serif 10",                     //.gui_gtk2_font_reqtree_text =
-                                    /*** IM AWESOME ***/
-    /* gui-gtk-3.0 client specific options. */
-    FC_GTK3_DEFAULT_THEME_NAME,     //.gui_gtk3_default_theme_name =
-    FALSE,                          //.gui_gtk3_fullscreen =
-    FALSE,                          //.gui_gtk3_map_scrollbars =
-    TRUE,                           //.gui_gtk3_dialogs_on_top =
-    TRUE,                           //.gui_gtk3_show_task_icons =
-    TRUE,                           //.gui_gtk3_enable_tabs =
-    FALSE,                          //.gui_gtk3_show_chat_message_time =
-    FALSE,                          //.gui_gtk3_show_chat_message_time =
-    TRUE,                           //.gui_gtk3_show_message_window_buttons =
-    FALSE,                          //.gui_gtk3_metaserver_tab_first =
-    FALSE,                          //.gui_gtk3_allied_chat_only =
-    GUI_GTK_MSGCHAT_SEPARATE,       //.gui_gtk3_allied_chat_only =
-    FALSE,                          //.gui_gtk3_small_display_layout =
-    FALSE,                          //.gui_gtk3_small_display_layout =
-    TRUE,                           //.gui_gtk3_chatline_autocompletion =
-    GUI_GTK3_CITYDLG_DEFAULT_XSIZE, //.gui_gtk3_citydlg_xsize =
-    GUI_GTK3_CITYDLG_DEFAULT_YSIZE, //.gui_gtk3_citydlg_ysize =
-    GUI_POPUP_TECH_HELP_RULESET,    //.gui_gtk3_popup_tech_help =
-    -20,                            //.gui_gtk3_governor_range_min =
-    20,                             //.gui_gtk3_governor_range_max =
-    "Monospace 8",                  //.gui_gtk3_font_city_label =
-    "Monospace Bold 9",             //.gui_gtk3_font_notify_label =
-    "Monospace 8",                  //.gui_gtk3_font_spaceship_label =
-    "Sans Bold 10",                 //.gui_gtk3_font_help_label =
-    "Sans 9",                       //.gui_gtk3_font_help_link =
-    "Monospace 8",                  //.gui_gtk3_font_help_text =
-    "Monospace 8",                  //.gui_gtk3_font_chatline =
-    "Sans Italic 10",               //.gui_gtk3_font_beta_label =
-    "Sans 9",                       //.gui_gtk3_font_small =
-    "Sans Italic 9",                //.gui_gtk3_font_comment_label =
-    "Sans Bold 10",                 //.gui_gtk3_font_city_names =
-    "Serif 10",                     //.gui_gtk3_font_city_productions =
-    "Serif 10",                     //.gui_gtk3_font_reqtree_text =
-
-    /* If its broken then its Louis fault */
-
-    /* gui-gtk-3.22 client specific options. */
-    FC_GTK3_22_DEFAULT_THEME_NAME, //.gui_gtk3_22_default_theme_name =
-    FALSE,                         //.gui_gtk3_22_fullscreen =
-    FALSE,                         //.gui_gtk3_22_map_scrollbars =
-    TRUE,                          //.gui_gtk3_22_dialogs_on_top =
-    TRUE,                          //.gui_gtk3_22_show_task_icons =
-    TRUE,                          //.gui_gtk3_22_enable_tabs =
-    FALSE,                         //.gui_gtk3_22_show_chat_message_time =
-    FALSE,                         //.gui_gtk3_22_new_messages_go_to_top =
-    TRUE,                     //.gui_gtk3_22_show_message_window_buttons =
-    FALSE,                    //.gui_gtk3_22_metaserver_tab_first =
-    FALSE,                    //.gui_gtk3_22_allied_chat_only =
-    GUI_GTK_MSGCHAT_SEPARATE, //.gui_gtk3_22_message_chat_location =
-    FALSE,                    //.gui_gtk3_22_small_display_layout =
-    FALSE,                    //.gui_gtk3_22_mouse_over_map_focus =
-    TRUE,                     //.gui_gtk3_22_chatline_autocompletion =
-    GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE, //.gui_gtk3_22_citydlg_xsize =
-    GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE, //.gui_gtk3_22_citydlg_ysize =
-    GUI_POPUP_TECH_HELP_RULESET,       //.gui_gtk3_22_popup_tech_help =
-    -20,                               //.gui_gtk3_22_governor_range_min =
-    20,                                //.gui_gtk3_22_governor_range_max =
-    "Monospace 8",                     //.gui_gtk3_22_font_city_label =
-    "Monospace Bold 9",                //.gui_gtk3_22_font_notify_label =
-    "Monospace 8",                     //.gui_gtk3_22_font_spaceship_label =
-    "Sans Bold 10",                    //.gui_gtk3_22_font_help_label =
-    "Sans 9",                          //.gui_gtk3_22_font_help_link =
-    "Monospace 8",                     //.gui_gtk3_22_font_help_text =
-    "Monospace 8",                     //.gui_gtk3_22_font_chatline =
-    "Sans Italic 10",                  //.gui_gtk3_22_font_beta_label =
-    "Sans 9",                          //.gui_gtk3_22_font_small =
-    "Sans Italic 9",                   //.gui_gtk3_22_font_comment_label =
-    "Sans Bold 10",                    //.gui_gtk3_22_font_city_names =
-    "Serif 10",                        //.gui_gtk3_22_font_city_productions =
-    "Serif 10",                        //.gui_gtk3_22_font_reqtree_text =
-
-    /* gui-gtk-3.x client specific options. */
-    FC_GTK4_DEFAULT_THEME_NAME,     //.gui_gtk4_default_theme_name =
-    FALSE,                          //.gui_gtk4_fullscreen =
-    FALSE,                          //.gui_gtk4_map_scrollbars =
-    TRUE,                           //.gui_gtk4_dialogs_on_top =
-    TRUE,                           //.gui_gtk4_show_task_icons =
-    TRUE,                           //.gui_gtk4_enable_tabs =
-    FALSE,                          //.gui_gtk4_show_chat_message_time =
-    FALSE,                          //.gui_gtk4_new_messages_go_to_top =
-    TRUE,                           //.gui_gtk4_show_message_window_buttons =
-    FALSE,                          //.gui_gtk4_metaserver_tab_first =
-    FALSE,                          //.gui_gtk4_allied_chat_only =
-    GUI_GTK_MSGCHAT_SEPARATE,       //.gui_gtk4_message_chat_location =
-    FALSE,                          //.gui_gtk4_small_display_layout =
-    FALSE,                          //.gui_gtk4_mouse_over_map_focus =
-    TRUE,                           //.gui_gtk4_chatline_autocompletion =
-    GUI_GTK4_CITYDLG_DEFAULT_XSIZE, //.gui_gtk4_citydlg_xsize =
-    GUI_GTK4_CITYDLG_DEFAULT_YSIZE, //.gui_gtk4_citydlg_ysize =
-    GUI_POPUP_TECH_HELP_RULESET,    //.gui_gtk4_popup_tech_help =
-    -20,                            //.gui_gtk4_governor_range_min =
-    20,                             //.gui_gtk4_governor_range_max =
-    "Monospace 8",                  //.gui_gtk4_font_city_label =
-    "Monospace Bold 9",             //.gui_gtk4_font_notify_label =
-    "Monospace 8",                  //.gui_gtk4_font_spaceship_label =
-    "Sans Bold 10",                 //.gui_gtk4_font_help_label =
-    "Sans 9",                       //.gui_gtk4_font_help_link =
-    "Monospace 8",                  //.gui_gtk4_font_help_text =
-    "Monospace 8",                  //.gui_gtk4_font_chatline =
-    "Sans Italic 10",               //.gui_gtk4_font_beta_label =
-    "Sans 9",                       //.gui_gtk4_font_small =
-    "Sans Italic 9",                //.gui_gtk4_font_comment_label =
-    "Sans Bold 10",                 //.gui_gtk4_font_city_names =
-    "Serif 10",                     //.gui_gtk4_font_city_productions =
-    "Serif 10",                     //.gui_gtk4_font_reqtree_text =
-
-    /* gui-sdl client specific options. */
-    FALSE,                //.gui_sdl_fullscreen =
-    VIDEO_MODE(640, 480), //.gui_sdl_screen =
-    TRUE,                 //.gui_sdl_do_cursor_animation =
-    TRUE,                 //.gui_sdl_use_color_cursors =
-
-    /* gui-sdl2 client specific options. */
-    FC_SDL2_DEFAULT_THEME_NAME, //.gui_sdl2_default_theme_name =
-    FALSE,                      //.gui_sdl2_fullscreen =
-    VIDEO_MODE(640, 480),       //.gui_sdl2_screen =
-    FALSE,                      //.gui_sdl2_swrenderer =
-    TRUE,                       //.gui_sdl2_do_cursor_animation =
-    TRUE,                       //.gui_sdl2_use_color_cursors =
-    "10",                       //.gui_sdl2_font_city_names =
-    "10",                       //.gui_sdl2_font_city_productions =
 
     /* gui-qt client specific options. */
     FALSE, //.gui_qt_fullscreen =
@@ -514,12 +344,6 @@ struct option_color_vtable {
   struct ft_color (*def)(const struct option *);
   bool (*set)(struct option *, struct ft_color);
 };
-/* Specific video mode accessors (OT_VIDEO_MODE == type). */
-struct option_video_mode_vtable {
-  struct video_mode (*get)(const struct option *);
-  struct video_mode (*def)(const struct option *);
-  bool (*set)(struct option *, struct video_mode);
-};
 
 /****************************************************************************
   The base class for options.
@@ -549,8 +373,6 @@ struct option {
     const struct option_font_vtable *font_vtable;
     /* Specific color accessors (OT_COLOR == type). */
     const struct option_color_vtable *color_vtable;
-    /* Specific video mode accessors (OT_VIDEO_MODE == type). */
-    const struct option_video_mode_vtable *video_mode_vtable;
   };
   /* Called after the value changed. */
   void (*changed_callback)(struct option *option);
@@ -594,10 +416,6 @@ struct option {
 #define OPTION_COLOR_INIT(optset, common_table, color_table, changed_cb)    \
   OPTION_INIT(optset, OT_COLOR, color_vtable, common_table, color_table,    \
               changed_cb, 0)
-#define OPTION_VIDEO_MODE_INIT(optset, common_table, video_mode_table,      \
-                               changed_cb)                                  \
-  OPTION_INIT(optset, OT_VIDEO_MODE, video_mode_vtable, common_table,       \
-              video_mode_table, changed_cb, 0)
 
 /************************************************************************/ /**
    Returns the option set owner of this option.
@@ -722,8 +540,6 @@ bool option_reset(struct option *poption)
     return option_font_set(poption, option_font_def(poption));
   case OT_COLOR:
     return option_color_set(poption, option_color_def(poption));
-  case OT_VIDEO_MODE:
-    return option_video_mode_set(poption, option_video_mode_def(poption));
   }
   return FALSE;
 }
@@ -1221,46 +1037,6 @@ bool option_color_set(struct option *poption, struct ft_color color)
   return FALSE;
 }
 
-/************************************************************************/ /**
-   Returns the current value of this video mode option.
- ****************************************************************************/
-struct video_mode option_video_mode_get(const struct option *poption)
-{
-  fc_assert_ret_val(NULL != poption, video_mode_construct(-1, -1));
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type,
-                    video_mode_construct(-1, -1));
-
-  return poption->video_mode_vtable->get(poption);
-}
-
-/************************************************************************/ /**
-   Returns the default value of this video mode option.
- ****************************************************************************/
-struct video_mode option_video_mode_def(const struct option *poption)
-{
-  fc_assert_ret_val(NULL != poption, video_mode_construct(-1, -1));
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type,
-                    video_mode_construct(-1, -1));
-
-  return poption->video_mode_vtable->def(poption);
-}
-
-/************************************************************************/ /**
-   Sets the value of this video mode option. Returns TRUE if the value
-   changed.
- ****************************************************************************/
-bool option_video_mode_set(struct option *poption, struct video_mode mode)
-{
-  fc_assert_ret_val(NULL != poption, FALSE);
-  fc_assert_ret_val(OT_VIDEO_MODE == poption->type, FALSE);
-
-  if (poption->video_mode_vtable->set(poption, mode)) {
-    option_changed(poption);
-    return TRUE;
-  }
-  return FALSE;
-}
-
 /****************************************************************************
   Client option set.
 ****************************************************************************/
@@ -1386,18 +1162,6 @@ static const struct option_color_vtable client_option_color_vtable = {
     .def = client_option_color_def,
     .set = client_option_color_set};
 
-static struct video_mode
-client_option_video_mode_get(const struct option *poption);
-static struct video_mode
-client_option_video_mode_def(const struct option *poption);
-static bool client_option_video_mode_set(struct option *poption,
-                                         struct video_mode mode);
-
-static const struct option_video_mode_vtable
-    client_option_video_mode_vtable = {.get = client_option_video_mode_get,
-                                       .def = client_option_video_mode_def,
-                                       .set = client_option_video_mode_set};
-
 enum client_option_category {
   COC_GRAPHICS,
   COC_OVERVIEW,
@@ -1469,11 +1233,6 @@ struct client_option {
       struct ft_color *const pvalue;
       const struct ft_color def;
     } color;
-    /* OT_VIDEO_MODE type option. */
-    struct {
-      struct video_mode *const pvalue;
-      const struct video_mode def;
-    } video_mode;
   };
 };
 
@@ -1734,73 +1493,9 @@ struct client_option {
         .def = FT_COLOR(odef_fg, odef_bg)} INIT_BRACE_END                   \
   }
 
-/*
- * Generate a client option of type OT_VIDEO_MODE.
- *
- * oname: The option data.  Note it is used as name to be loaded or saved.
- *        So, you shouldn't change the name of this variable in any case.
- * odesc: A short description of the client option.  Should be used with the
- *        N_() macro.
- * ohelp: The help text for the client option.  Should be used with the N_()
- *        macro.
- * ocat:  The client_option_class of this client option.
- * ospec: A gui_type enumerator which determin for what particular client
- *        gui this option is for. Sets to GUI_STUB for common options.
- * odef_width, odef_height:  The default values for this client option.
- * ocb:   A callback function of type void (*)(struct option *) called when
- *        the option changed.
- */
-#define GEN_VIDEO_OPTION(oname, odesc, ohelp, ocat, ospec, odef_width,      \
-                         odef_height, ocb)                                  \
-  {                                                                         \
-    .base_option = OPTION_VIDEO_MODE_INIT(                                  \
-        &client_optset_static, client_option_common_vtable,                 \
-        client_option_video_mode_vtable, ocb),                              \
-    .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.video_mode = {                                         \
-        .pvalue = &gui_options.oname,                                       \
-        .def = VIDEO_MODE(odef_width, odef_height)} INIT_BRACE_END          \
-  }
-
 /****************************************************************************
   Enumerator name accessors.
 ****************************************************************************/
-
-/************************************************************************/ /**
-   GTK message/chat layout setting names accessor.
- ****************************************************************************/
-static const struct copt_val_name *
-gui_gtk_message_chat_location_name(int value)
-{
-  /* Order must match enum GUI_GTK_MSGCHAT_* */
-  static const struct copt_val_name names[] = {
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"SPLIT", N_("Split")},
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"SEPARATE", N_("Separate")},
-      /* TRANS: enum value for 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-      {"MERGED", N_("Merged")}};
-
-  return (0 <= value && value < ARRAY_SIZE(names) ? names + value : NULL);
-}
-
-/************************************************************************/ /**
-   Popup tech help setting names accessor.
- ****************************************************************************/
-static const struct copt_val_name *gui_popup_tech_help_name(int value)
-{
-  /* Order must match enum GUI_POPUP_TECH_HELP_* */
-  static const struct copt_val_name names[] = {
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"ENABLED", N_("Enabled")},
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"DISABLED", N_("Disabled")},
-      /* TRANS: enum value for 'gui_popup_tech_help' */
-      {"RULESET", N_("Ruleset")}};
-
-  return (0 <= value && value < ARRAY_SIZE(names) ? names + value : NULL);
-}
 
 /* Some changed callbacks. */
 static void reqtree_show_icons_callback(struct option *poption);
@@ -1878,30 +1573,6 @@ static struct client_option client_options[] = {
     GEN_STR_OPTION(default_chat_logfile, N_("The chat log file"),
                    N_("The name of the chat log file."), COC_INTERFACE,
                    GUI_STUB, GUI_DEFAULT_CHAT_LOGFILE, NULL, 0),
-    /* gui_gtk3/4_default_theme_name and gui_sdl2_default_theme_name are
-     * different settings to avoid client crash after loading the
-     * style for the other gui.  Keeps 5 different options! */
-    GEN_STR_LIST_OPTION(gui_gtk3_default_theme_name, N_("Theme"),
-                        N_("By changing this option you change the "
-                           "active theme."),
-                        COC_GRAPHICS, GUI_GTK3, FC_GTK3_DEFAULT_THEME_NAME,
-                        get_themes_list, theme_reread_callback, 0),
-    GEN_STR_LIST_OPTION(gui_gtk3_22_default_theme_name, N_("Theme"),
-                        N_("By changing this option you change the "
-                           "active theme."),
-                        COC_GRAPHICS, GUI_GTK3_22,
-                        FC_GTK3_22_DEFAULT_THEME_NAME, get_themes_list,
-                        theme_reread_callback, 0),
-    GEN_STR_LIST_OPTION(gui_gtk4_default_theme_name, N_("Theme"),
-                        N_("By changing this option you change the "
-                           "active theme."),
-                        COC_GRAPHICS, GUI_GTK3x, FC_GTK4_DEFAULT_THEME_NAME,
-                        get_themes_list, theme_reread_callback, 0),
-    GEN_STR_LIST_OPTION(gui_sdl2_default_theme_name, N_("Theme"),
-                        N_("By changing this option you change the "
-                           "active theme."),
-                        COC_GRAPHICS, GUI_SDL2, FC_SDL2_DEFAULT_THEME_NAME,
-                        get_themes_list, theme_reread_callback, 0),
     GEN_STR_LIST_OPTION(gui_qt_default_theme_name, N_("Theme"),
                         N_("By changing this option you change the "
                            "active theme."),
@@ -2007,8 +1678,7 @@ static struct client_option client_options[] = {
            "on the map."),
         COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
     GEN_BOOL_OPTION(
-        draw_mines,
-        N_("Draw the mines"),
+        draw_mines, N_("Draw the mines"),
         N_("Setting this option will draw the mines on the map."),
         COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
     GEN_BOOL_OPTION(
@@ -2389,742 +2059,6 @@ static struct client_option client_options[] = {
            "A string identifying the game turn and map options will "
            "be appended."),
         COC_MAPIMG, GUI_STUB, GUI_DEFAULT_MAPIMG_FILENAME, NULL, 0),
-
-    /* gui-gtk-2.0 client specific options.
-     * These are still kept just so users can migrate them to gtk3-client */
-    GEN_BOOL_OPTION(gui_gtk2_map_scrollbars, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_dialogs_on_top, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_show_task_icons, NULL, NULL, COC_GRAPHICS,
-                    GUI_GTK2, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_enable_tabs, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_better_fog, NULL, NULL, COC_GRAPHICS, GUI_GTK2,
-                    TRUE, view_option_changed_callback),
-    GEN_BOOL_OPTION(gui_gtk2_show_chat_message_time, NULL, NULL,
-                    COC_INTERFACE, GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_new_messages_go_to_top, NULL, NULL,
-                    COC_INTERFACE, GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_show_message_window_buttons, NULL, NULL,
-                    COC_INTERFACE, GUI_GTK2, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_metaserver_tab_first, NULL, NULL, COC_NETWORK,
-                    GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_allied_chat_only, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_mouse_over_map_focus, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk2_chatline_autocompletion, NULL, NULL,
-                    COC_INTERFACE, GUI_GTK2, TRUE, NULL),
-    GEN_INT_OPTION(gui_gtk2_citydlg_xsize, NULL, NULL, COC_INTERFACE,
-                   GUI_GTK2, GUI_GTK2_CITYDLG_DEFAULT_XSIZE,
-                   GUI_GTK2_CITYDLG_MIN_XSIZE, GUI_GTK2_CITYDLG_MAX_XSIZE,
-                   NULL),
-    GEN_INT_OPTION(gui_gtk2_citydlg_ysize, NULL, NULL, COC_INTERFACE,
-                   GUI_GTK2, GUI_GTK2_CITYDLG_DEFAULT_YSIZE,
-                   GUI_GTK2_CITYDLG_MIN_YSIZE, GUI_GTK2_CITYDLG_MAX_YSIZE,
-                   NULL),
-    GEN_ENUM_OPTION(gui_gtk2_popup_tech_help, NULL, NULL, COC_INTERFACE,
-                    GUI_GTK2, GUI_POPUP_TECH_HELP_RULESET,
-                    gui_popup_tech_help_name, NULL),
-    GEN_FONT_OPTION(gui_gtk2_font_city_label, "city_label", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_notify_label, "notify_label", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Monospace Bold 9",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_spaceship_label, "spaceship_label", NULL,
-                    NULL, COC_FONT, GUI_GTK2, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_help_label, "help_label", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Sans Bold 10",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_help_link, "help_link", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Sans 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_help_text, "help_text", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_chatline, "chatline", NULL, NULL, COC_FONT,
-                    GUI_GTK2, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_beta_label, "beta_label", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Sans Italic 10",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_small, "small_font", NULL, NULL, COC_FONT,
-                    GUI_GTK2, "Sans 9", NULL),
-    GEN_FONT_OPTION(gui_gtk2_font_comment_label, "comment_label", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Sans Italic 9",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk2_font_city_names, "city_names", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Sans Bold 10", NULL),
-    GEN_FONT_OPTION(gui_gtk2_font_city_productions, "city_productions", NULL,
-                    NULL, COC_FONT, GUI_GTK2, "Serif 10", NULL),
-    GEN_FONT_OPTION(gui_gtk2_font_reqtree_text, "reqtree_text", NULL, NULL,
-                    COC_FONT, GUI_GTK2, "Serif 10", NULL),
-
-    /* gui-gtk-3.0 client specific options. */
-    GEN_BOOL_OPTION(gui_gtk3_fullscreen, N_("Fullscreen"),
-                    N_("If this option is set the client will use the "
-                       "whole screen area for drawing."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_map_scrollbars, N_("Show map scrollbars"),
-                    N_("Disable this option to hide the scrollbars on the "
-                       "map view."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk3_dialogs_on_top, N_("Keep dialogs on top"),
-        N_("If this option is set then dialog windows will always "
-           "remain in front of the main Freeciv window. "
-           "Disabling this has no effect in fullscreen mode."),
-        COC_INTERFACE, GUI_GTK3, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_show_task_icons, N_("Show worklist task icons"),
-                    N_("Disabling this will turn off the unit and building "
-                       "icons in the worklist dialog and the production "
-                       "tab of the city dialog."),
-                    COC_GRAPHICS, GUI_GTK3, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_enable_tabs, N_("Enable status report tabs"),
-                    N_("If this option is enabled then report dialogs will "
-                       "be shown as separate tabs rather than in popup "
-                       "dialogs."),
-                    COC_INTERFACE, GUI_GTK3, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_show_chat_message_time,
-                    N_("Show time for each chat message"),
-                    N_("If this option is enabled then all chat messages "
-                       "will be prefixed by a time string of the form "
-                       "[hour:minute:second]."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_new_messages_go_to_top,
-                    N_("New message events go to top of list"),
-                    N_("If this option is enabled, new events in the "
-                       "message window will appear at the top of the list, "
-                       "rather than being appended at the bottom."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_show_message_window_buttons,
-                    N_("Show extra message window buttons"),
-                    N_("If this option is enabled, there will be two "
-                       "buttons displayed in the message window for "
-                       "inspecting a city and going to a location. If this "
-                       "option is disabled, these buttons will not appear "
-                       "(you can still double-click with the left mouse "
-                       "button or right-click on a row to inspect or goto "
-                       "respectively). This option will only take effect "
-                       "once the message window is closed and reopened."),
-                    COC_INTERFACE, GUI_GTK3, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_metaserver_tab_first,
-                    N_("Metaserver tab first in network page"),
-                    N_("If this option is enabled, the metaserver tab will "
-                       "be the first notebook tab in the network page. This "
-                       "option requires a restart in order to take effect."),
-                    COC_NETWORK, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_allied_chat_only,
-                    N_("Plain chat messages are sent to allies only"),
-                    N_("If this option is enabled, then plain messages "
-                       "typed into the chat entry while the game is "
-                       "running will only be sent to your allies. "
-                       "Otherwise plain messages will be sent as "
-                       "public chat messages. To send a public chat "
-                       "message with this option enabled, prefix the "
-                       "message with a single colon ':'. This option "
-                       "can also be set using a toggle button beside "
-                       "the chat entry (only visible in multiplayer "
-                       "games)."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_ENUM_OPTION(
-        gui_gtk3_message_chat_location,
-        N_("Messages and Chat reports location"),
-        /* TRANS: The strings used in the UI for 'Split' etc are
-         * tagged 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-        N_("Controls where the Messages and Chat reports "
-           "appear relative to the main view containing the map.\n"
-           "'Split' allows all three to be seen simultaneously, "
-           "which is best for multiplayer, but requires a large "
-           "window to be usable.\n"
-           "'Separate' puts Messages and Chat in a notebook "
-           "separate from the main view, so that one of them "
-           "can always be seen alongside the main view.\n"
-           "'Merged' makes the Messages and Chat reports into "
-           "tabs alongside the map and other reports; this "
-           "allows a larger map view on small screens.\n"
-           "This option requires a restart in order to take "
-           "effect."),
-        COC_INTERFACE, GUI_GTK3, GUI_GTK_MSGCHAT_SEPARATE,
-        gui_gtk_message_chat_location_name, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_small_display_layout,
-                    N_("Arrange widgets for small displays"),
-                    N_("If this option is enabled, widgets in the main "
-                       "window will be arranged so that they take up the "
-                       "least amount of total screen space. Specifically, "
-                       "the left panel containing the overview, player "
-                       "status, and the unit information box will be "
-                       "extended over the entire left side of the window. "
-                       "This option requires a restart in order to take "
-                       "effect."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_mouse_over_map_focus,
-                    N_("Mouse over the map widget selects it automatically"),
-                    N_("If this option is enabled, then the map will be "
-                       "focused when the mouse hovers over it."),
-                    COC_INTERFACE, GUI_GTK3, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk3_chatline_autocompletion,
-        N_("Player or user name autocompletion"),
-        N_("If this option is turned on, the tabulation key "
-           "will be used in the chatline to complete the word you "
-           "are typing with the name of a player or a user."),
-        COC_INTERFACE, GUI_GTK3, TRUE, NULL),
-    GEN_INT_OPTION(gui_gtk3_citydlg_xsize, N_("Width of the city dialog"),
-                   N_("This value is only used if the width of the city "
-                      "dialog is saved."),
-                   COC_INTERFACE, GUI_GTK3, GUI_GTK3_CITYDLG_DEFAULT_XSIZE,
-                   GUI_GTK3_CITYDLG_MIN_XSIZE, GUI_GTK3_CITYDLG_MAX_XSIZE,
-                   NULL),
-    GEN_INT_OPTION(gui_gtk3_citydlg_ysize, N_("Height of the city dialog"),
-                   N_("This value is only used if the height of the city "
-                      "dialog is saved."),
-                   COC_INTERFACE, GUI_GTK3, GUI_GTK3_CITYDLG_DEFAULT_YSIZE,
-                   GUI_GTK3_CITYDLG_MIN_YSIZE, GUI_GTK3_CITYDLG_MAX_YSIZE,
-                   NULL),
-    GEN_ENUM_OPTION(gui_gtk3_popup_tech_help,
-                    N_("Popup tech help when gained"),
-                    N_("Controls if tech help should be opened when "
-                       "new tech has been gained.\n"
-                       "'Ruleset' means that behavior suggested by "
-                       "current ruleset is used."),
-                    COC_INTERFACE, GUI_GTK3, GUI_POPUP_TECH_HELP_RULESET,
-                    gui_popup_tech_help_name, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_governor_range_min, N_("Minimum surplus for a governor"),
-        N_("The lower limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3, GUI_GTK3_GOV_RANGE_MIN_DEFAULT,
-        GUI_GTK3_GOV_RANGE_MIN_MIN, GUI_GTK3_GOV_RANGE_MIN_MAX, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_governor_range_max, N_("Maximum surplus for a governor"),
-        N_("The higher limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3, GUI_GTK3_GOV_RANGE_MAX_DEFAULT,
-        GUI_GTK3_GOV_RANGE_MAX_MIN, GUI_GTK3_GOV_RANGE_MAX_MAX, NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_city_label, "city_label", N_("City Label"),
-        N_("This font is used to display the city labels on city "
-           "dialogs."),
-        COC_FONT, GUI_GTK3, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_notify_label, "notify_label", N_("Notify Label"),
-        N_("This font is used to display server reports such "
-           "as the demographic report or historian publications."),
-        COC_FONT, GUI_GTK3, "Monospace Bold 9", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_spaceship_label, "spaceship_label",
-        N_("Spaceship Label"),
-        N_("This font is used to display the spaceship widgets."), COC_FONT,
-        GUI_GTK3, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_help_label, "help_label", N_("Help Label"),
-        N_("This font is used to display the help headers in the "
-           "help window."),
-        COC_FONT, GUI_GTK3, "Sans Bold 10", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_help_link, "help_link", N_("Help Link"),
-                    N_("This font is used to display the help links in the "
-                       "help window."),
-                    COC_FONT, GUI_GTK3, "Sans 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_help_text, "help_text", N_("Help Text"),
-                    N_("This font is used to display the help body text in "
-                       "the help window."),
-                    COC_FONT, GUI_GTK3, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_chatline, "chatline", N_("Chatline Area"),
-                    N_("This font is used to display the text in the "
-                       "chatline area."),
-                    COC_FONT, GUI_GTK3, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_beta_label, "beta_label", N_("Beta Label"),
-                    N_("This font is used to display the beta label."),
-                    COC_FONT, GUI_GTK3, "Sans Italic 10",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_small, "small_font", N_("Small Font"),
-                    N_("This font is used for any small font request.  For "
-                       "example, it is used for display the building lists "
-                       "in the city dialog, the Economy report or the Units "
-                       "report."),
-                    COC_FONT, GUI_GTK3, "Sans 9", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_comment_label, "comment_label", N_("Comment Label"),
-        N_("This font is used to display comment labels, such as "
-           "in the governor page of the city dialogs."),
-        COC_FONT, GUI_GTK3, "Sans Italic 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_font_city_names, "city_names", N_("City Names"),
-                    N_("This font is used to the display the city names "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3, "Sans Bold 10", NULL),
-    GEN_FONT_OPTION(gui_gtk3_font_city_productions, "city_productions",
-                    N_("City Productions"),
-                    N_("This font is used to display the city production "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3, "Serif 10", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_font_reqtree_text, "reqtree_text", N_("Requirement Tree"),
-        N_("This font is used to the display the requirement tree "
-           "in the Research report."),
-        COC_FONT, GUI_GTK3, "Serif 10", NULL),
-
-    /* gui-gtk-3.22 client specific options. */
-    GEN_BOOL_OPTION(gui_gtk3_22_fullscreen, N_("Fullscreen"),
-                    N_("If this option is set the client will use the "
-                       "whole screen area for drawing."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_map_scrollbars, N_("Show map scrollbars"),
-                    N_("Disable this option to hide the scrollbars on the "
-                       "map view."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk3_22_dialogs_on_top, N_("Keep dialogs on top"),
-        N_("If this option is set then dialog windows will always "
-           "remain in front of the main Freeciv window. "
-           "Disabling this has no effect in fullscreen mode."),
-        COC_INTERFACE, GUI_GTK3_22, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_show_task_icons,
-                    N_("Show worklist task icons"),
-                    N_("Disabling this will turn off the unit and building "
-                       "icons in the worklist dialog and the production "
-                       "tab of the city dialog."),
-                    COC_GRAPHICS, GUI_GTK3_22, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_enable_tabs, N_("Enable status report tabs"),
-                    N_("If this option is enabled then report dialogs will "
-                       "be shown as separate tabs rather than in popup "
-                       "dialogs."),
-                    COC_INTERFACE, GUI_GTK3_22, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_show_chat_message_time,
-                    N_("Show time for each chat message"),
-                    N_("If this option is enabled then all chat messages "
-                       "will be prefixed by a time string of the form "
-                       "[hour:minute:second]."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_new_messages_go_to_top,
-                    N_("New message events go to top of list"),
-                    N_("If this option is enabled, new events in the "
-                       "message window will appear at the top of the list, "
-                       "rather than being appended at the bottom."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_show_message_window_buttons,
-                    N_("Show extra message window buttons"),
-                    N_("If this option is enabled, there will be two "
-                       "buttons displayed in the message window for "
-                       "inspecting a city and going to a location. If this "
-                       "option is disabled, these buttons will not appear "
-                       "(you can still double-click with the left mouse "
-                       "button or right-click on a row to inspect or goto "
-                       "respectively). This option will only take effect "
-                       "once the message window is closed and reopened."),
-                    COC_INTERFACE, GUI_GTK3_22, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_metaserver_tab_first,
-                    N_("Metaserver tab first in network page"),
-                    N_("If this option is enabled, the metaserver tab will "
-                       "be the first notebook tab in the network page. This "
-                       "option requires a restart in order to take effect."),
-                    COC_NETWORK, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_allied_chat_only,
-                    N_("Plain chat messages are sent to allies only"),
-                    N_("If this option is enabled, then plain messages "
-                       "typed into the chat entry while the game is "
-                       "running will only be sent to your allies. "
-                       "Otherwise plain messages will be sent as "
-                       "public chat messages. To send a public chat "
-                       "message with this option enabled, prefix the "
-                       "message with a single colon ':'. This option "
-                       "can also be set using a toggle button beside "
-                       "the chat entry (only visible in multiplayer "
-                       "games)."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_ENUM_OPTION(
-        gui_gtk3_22_message_chat_location,
-        N_("Messages and Chat reports location"),
-        /* TRANS: The strings used in the UI for 'Split' etc are
-         * tagged 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-        N_("Controls where the Messages and Chat reports "
-           "appear relative to the main view containing the map.\n"
-           "'Split' allows all three to be seen simultaneously, "
-           "which is best for multiplayer, but requires a large "
-           "window to be usable.\n"
-           "'Separate' puts Messages and Chat in a notebook "
-           "separate from the main view, so that one of them "
-           "can always be seen alongside the main view.\n"
-           "'Merged' makes the Messages and Chat reports into "
-           "tabs alongside the map and other reports; this "
-           "allows a larger map view on small screens.\n"
-           "This option requires a restart in order to take "
-           "effect."),
-        COC_INTERFACE, GUI_GTK3_22, GUI_GTK_MSGCHAT_SEPARATE,
-        gui_gtk_message_chat_location_name, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_small_display_layout,
-                    N_("Arrange widgets for small displays"),
-                    N_("If this option is enabled, widgets in the main "
-                       "window will be arranged so that they take up the "
-                       "least amount of total screen space. Specifically, "
-                       "the left panel containing the overview, player "
-                       "status, and the unit information box will be "
-                       "extended over the entire left side of the window. "
-                       "This option requires a restart in order to take "
-                       "effect."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk3_22_mouse_over_map_focus,
-                    N_("Mouse over the map widget selects it automatically"),
-                    N_("If this option is enabled, then the map will be "
-                       "focused when the mouse hovers over it."),
-                    COC_INTERFACE, GUI_GTK3_22, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk3_22_chatline_autocompletion,
-        N_("Player or user name autocompletion"),
-        N_("If this option is turned on, the tabulation key "
-           "will be used in the chatline to complete the word you "
-           "are typing with the name of a player or a user."),
-        COC_INTERFACE, GUI_GTK3_22, TRUE, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_22_citydlg_xsize, N_("Width of the city dialog"),
-        N_("This value is only used if the width of the city "
-           "dialog is saved."),
-        COC_INTERFACE, GUI_GTK3_22, GUI_GTK3_22_CITYDLG_DEFAULT_XSIZE,
-        GUI_GTK3_22_CITYDLG_MIN_XSIZE, GUI_GTK3_22_CITYDLG_MAX_XSIZE, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_22_citydlg_ysize, N_("Height of the city dialog"),
-        N_("This value is only used if the height of the city "
-           "dialog is saved."),
-        COC_INTERFACE, GUI_GTK3_22, GUI_GTK3_22_CITYDLG_DEFAULT_YSIZE,
-        GUI_GTK3_22_CITYDLG_MIN_YSIZE, GUI_GTK3_22_CITYDLG_MAX_YSIZE, NULL),
-    GEN_ENUM_OPTION(gui_gtk3_22_popup_tech_help,
-                    N_("Popup tech help when gained"),
-                    N_("Controls if tech help should be opened when "
-                       "new tech has been gained.\n"
-                       "'Ruleset' means that behavior suggested by "
-                       "current ruleset is used."),
-                    COC_INTERFACE, GUI_GTK3_22, GUI_POPUP_TECH_HELP_RULESET,
-                    gui_popup_tech_help_name, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_22_governor_range_min, N_("Minimum surplus for a governor"),
-        N_("The lower limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3_22, GUI_GTK3_22_GOV_RANGE_MIN_DEFAULT,
-        GUI_GTK3_22_GOV_RANGE_MIN_MIN, GUI_GTK3_22_GOV_RANGE_MIN_MAX, NULL),
-    GEN_INT_OPTION(
-        gui_gtk3_22_governor_range_max, N_("Maximum surplus for a governor"),
-        N_("The higher limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3_22, GUI_GTK3_22_GOV_RANGE_MAX_DEFAULT,
-        GUI_GTK3_22_GOV_RANGE_MAX_MIN, GUI_GTK3_22_GOV_RANGE_MAX_MAX, NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_city_label, "city_label", N_("City Label"),
-        N_("This font is used to display the city labels on city "
-           "dialogs."),
-        COC_FONT, GUI_GTK3_22, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_notify_label, "notify_label", N_("Notify Label"),
-        N_("This font is used to display server reports such "
-           "as the demographic report or historian publications."),
-        COC_FONT, GUI_GTK3_22, "Monospace Bold 9", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_spaceship_label, "spaceship_label",
-        N_("Spaceship Label"),
-        N_("This font is used to display the spaceship widgets."), COC_FONT,
-        GUI_GTK3_22, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_help_label, "help_label", N_("Help Label"),
-        N_("This font is used to display the help headers in the "
-           "help window."),
-        COC_FONT, GUI_GTK3_22, "Sans Bold 10", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_22_font_help_link, "help_link", N_("Help Link"),
-                    N_("This font is used to display the help links in the "
-                       "help window."),
-                    COC_FONT, GUI_GTK3_22, "Sans 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_22_font_help_text, "help_text", N_("Help Text"),
-                    N_("This font is used to display the help body text in "
-                       "the help window."),
-                    COC_FONT, GUI_GTK3_22, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_chatline, "chatline", N_("Chatline Area"),
-        N_("This font is used to display the text in the "
-           "chatline area."),
-        COC_FONT, GUI_GTK3_22, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_beta_label, "beta_label", N_("Beta Label"),
-        N_("This font is used to display the beta label."), COC_FONT,
-        GUI_GTK3_22, "Sans Italic 10", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_22_font_small, "small_font", N_("Small Font"),
-                    N_("This font is used for any small font request.  For "
-                       "example, it is used for display the building lists "
-                       "in the city dialog, the Economy report or the Units "
-                       "report."),
-                    COC_FONT, GUI_GTK3_22, "Sans 9", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_comment_label, "comment_label", N_("Comment Label"),
-        N_("This font is used to display comment labels, such as "
-           "in the governor page of the city dialogs."),
-        COC_FONT, GUI_GTK3_22, "Sans Italic 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk3_22_font_city_names, "city_names",
-                    N_("City Names"),
-                    N_("This font is used to the display the city names "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3_22, "Sans Bold 10", NULL),
-    GEN_FONT_OPTION(gui_gtk3_22_font_city_productions, "city_productions",
-                    N_("City Productions"),
-                    N_("This font is used to display the city production "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3_22, "Serif 10", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk3_22_font_reqtree_text, "reqtree_text",
-        N_("Requirement Tree"),
-        N_("This font is used to the display the requirement tree "
-           "in the Research report."),
-        COC_FONT, GUI_GTK3_22, "Serif 10", NULL),
-
-    /* gui-gtk-3.x client specific options. */
-    GEN_BOOL_OPTION(gui_gtk4_fullscreen, N_("Fullscreen"),
-                    N_("If this option is set the client will use the "
-                       "whole screen area for drawing."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_map_scrollbars, N_("Show map scrollbars"),
-                    N_("Disable this option to hide the scrollbars on the "
-                       "map view."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk4_dialogs_on_top, N_("Keep dialogs on top"),
-        N_("If this option is set then dialog windows will always "
-           "remain in front of the main Freeciv window. "
-           "Disabling this has no effect in fullscreen mode."),
-        COC_INTERFACE, GUI_GTK3x, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_show_task_icons, N_("Show worklist task icons"),
-                    N_("Disabling this will turn off the unit and building "
-                       "icons in the worklist dialog and the production "
-                       "tab of the city dialog."),
-                    COC_GRAPHICS, GUI_GTK3x, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_enable_tabs, N_("Enable status report tabs"),
-                    N_("If this option is enabled then report dialogs will "
-                       "be shown as separate tabs rather than in popup "
-                       "dialogs."),
-                    COC_INTERFACE, GUI_GTK3x, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_show_chat_message_time,
-                    N_("Show time for each chat message"),
-                    N_("If this option is enabled then all chat messages "
-                       "will be prefixed by a time string of the form "
-                       "[hour:minute:second]."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_new_messages_go_to_top,
-                    N_("New message events go to top of list"),
-                    N_("If this option is enabled, new events in the "
-                       "message window will appear at the top of the list, "
-                       "rather than being appended at the bottom."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_show_message_window_buttons,
-                    N_("Show extra message window buttons"),
-                    N_("If this option is enabled, there will be two "
-                       "buttons displayed in the message window for "
-                       "inspecting a city and going to a location. If this "
-                       "option is disabled, these buttons will not appear "
-                       "(you can still double-click with the left mouse "
-                       "button or right-click on a row to inspect or goto "
-                       "respectively). This option will only take effect "
-                       "once the message window is closed and reopened."),
-                    COC_INTERFACE, GUI_GTK3x, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_metaserver_tab_first,
-                    N_("Metaserver tab first in network page"),
-                    N_("If this option is enabled, the metaserver tab will "
-                       "be the first notebook tab in the network page. This "
-                       "option requires a restart in order to take effect."),
-                    COC_NETWORK, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_allied_chat_only,
-                    N_("Plain chat messages are sent to allies only"),
-                    N_("If this option is enabled, then plain messages "
-                       "typed into the chat entry while the game is "
-                       "running will only be sent to your allies. "
-                       "Otherwise plain messages will be sent as "
-                       "public chat messages. To send a public chat "
-                       "message with this option enabled, prefix the "
-                       "message with a single colon ':'. This option "
-                       "can also be set using a toggle button beside "
-                       "the chat entry (only visible in multiplayer "
-                       "games)."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_ENUM_OPTION(
-        gui_gtk4_message_chat_location,
-        N_("Messages and Chat reports location"),
-        /* TRANS: The strings used in the UI for 'Split' etc are
-         * tagged 'gui_gtk2/gtk3/gtk3x_message_chat_location' */
-        N_("Controls where the Messages and Chat reports "
-           "appear relative to the main view containing the map.\n"
-           "'Split' allows all three to be seen simultaneously, "
-           "which is best for multiplayer, but requires a large "
-           "window to be usable.\n"
-           "'Separate' puts Messages and Chat in a notebook "
-           "separate from the main view, so that one of them "
-           "can always be seen alongside the main view.\n"
-           "'Merged' makes the Messages and Chat reports into "
-           "tabs alongside the map and other reports; this "
-           "allows a larger map view on small screens.\n"
-           "This option requires a restart in order to take "
-           "effect."),
-        COC_INTERFACE, GUI_GTK3x, GUI_GTK_MSGCHAT_SEPARATE,
-        gui_gtk_message_chat_location_name, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_small_display_layout,
-                    N_("Arrange widgets for small displays"),
-                    N_("If this option is enabled, widgets in the main "
-                       "window will be arranged so that they take up the "
-                       "least amount of total screen space. Specifically, "
-                       "the left panel containing the overview, player "
-                       "status, and the unit information box will be "
-                       "extended over the entire left side of the window. "
-                       "This option requires a restart in order to take "
-                       "effect."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_gtk4_mouse_over_map_focus,
-                    N_("Mouse over the map widget selects it automatically"),
-                    N_("If this option is enabled, then the map will be "
-                       "focused when the mouse hovers over it."),
-                    COC_INTERFACE, GUI_GTK3x, FALSE, NULL),
-    GEN_BOOL_OPTION(
-        gui_gtk4_chatline_autocompletion,
-        N_("Player or user name autocompletion"),
-        N_("If this option is turned on, the tabulation key "
-           "will be used in the chatline to complete the word you "
-           "are typing with the name of a player or a user."),
-        COC_INTERFACE, GUI_GTK3x, TRUE, NULL),
-    GEN_INT_OPTION(gui_gtk4_citydlg_xsize, N_("Width of the city dialog"),
-                   N_("This value is only used if the width of the city "
-                      "dialog is saved."),
-                   COC_INTERFACE, GUI_GTK3x, GUI_GTK4_CITYDLG_DEFAULT_XSIZE,
-                   GUI_GTK4_CITYDLG_MIN_XSIZE, GUI_GTK4_CITYDLG_MAX_XSIZE,
-                   NULL),
-    GEN_INT_OPTION(gui_gtk4_citydlg_ysize, N_("Height of the city dialog"),
-                   N_("This value is only used if the height of the city "
-                      "dialog is saved."),
-                   COC_INTERFACE, GUI_GTK3x, GUI_GTK4_CITYDLG_DEFAULT_YSIZE,
-                   GUI_GTK4_CITYDLG_MIN_YSIZE, GUI_GTK4_CITYDLG_MAX_YSIZE,
-                   NULL),
-    GEN_ENUM_OPTION(gui_gtk4_popup_tech_help,
-                    N_("Popup tech help when gained"),
-                    N_("Controls if tech help should be opened when "
-                       "new tech has been gained.\n"
-                       "'Ruleset' means that behavior suggested by "
-                       "current ruleset is used."),
-                    COC_INTERFACE, GUI_GTK3x, GUI_POPUP_TECH_HELP_RULESET,
-                    gui_popup_tech_help_name, NULL),
-    GEN_INT_OPTION(
-        gui_gtk4_governor_range_min, N_("Minimum surplus for a governor"),
-        N_("The lower limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3x, GUI_GTK4_GOV_RANGE_MIN_DEFAULT,
-        GUI_GTK4_GOV_RANGE_MIN_MIN, GUI_GTK4_GOV_RANGE_MIN_MAX, NULL),
-    GEN_INT_OPTION(
-        gui_gtk4_governor_range_max, N_("Maximum surplus for a governor"),
-        N_("The higher limit of the range for requesting surpluses "
-           "from the governor."),
-        COC_INTERFACE, GUI_GTK3x, GUI_GTK4_GOV_RANGE_MAX_DEFAULT,
-        GUI_GTK4_GOV_RANGE_MAX_MIN, GUI_GTK4_GOV_RANGE_MAX_MAX, NULL),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_city_label, "city_label", N_("City Label"),
-        N_("This font is used to display the city labels on city "
-           "dialogs."),
-        COC_FONT, GUI_GTK3x, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_notify_label, "notify_label", N_("Notify Label"),
-        N_("This font is used to display server reports such "
-           "as the demographic report or historian publications."),
-        COC_FONT, GUI_GTK3x, "Monospace Bold 9", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_spaceship_label, "spaceship_label",
-        N_("Spaceship Label"),
-        N_("This font is used to display the spaceship widgets."), COC_FONT,
-        GUI_GTK3x, "Monospace 8", font_changed_callback),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_help_label, "help_label", N_("Help Label"),
-        N_("This font is used to display the help headers in the "
-           "help window."),
-        COC_FONT, GUI_GTK3x, "Sans Bold 10", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_help_link, "help_link", N_("Help Link"),
-                    N_("This font is used to display the help links in the "
-                       "help window."),
-                    COC_FONT, GUI_GTK3x, "Sans 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_help_text, "help_text", N_("Help Text"),
-                    N_("This font is used to display the help body text in "
-                       "the help window."),
-                    COC_FONT, GUI_GTK3x, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_chatline, "chatline", N_("Chatline Area"),
-                    N_("This font is used to display the text in the "
-                       "chatline area."),
-                    COC_FONT, GUI_GTK3x, "Monospace 8",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_beta_label, "beta_label", N_("Beta Label"),
-                    N_("This font is used to display the beta label."),
-                    COC_FONT, GUI_GTK3x, "Sans Italic 10",
-                    font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_small, "small_font", N_("Small Font"),
-                    N_("This font is used for any small font request.  For "
-                       "example, it is used for display the building lists "
-                       "in the city dialog, the Economy report or the Units "
-                       "report."),
-                    COC_FONT, GUI_GTK3x, "Sans 9", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_comment_label, "comment_label", N_("Comment Label"),
-        N_("This font is used to display comment labels, such as "
-           "in the governor page of the city dialogs."),
-        COC_FONT, GUI_GTK3x, "Sans Italic 9", font_changed_callback),
-    GEN_FONT_OPTION(gui_gtk4_font_city_names, "city_names", N_("City Names"),
-                    N_("This font is used to the display the city names "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3x, "Sans Bold 10", NULL),
-    GEN_FONT_OPTION(gui_gtk4_font_city_productions, "city_productions",
-                    N_("City Productions"),
-                    N_("This font is used to display the city production "
-                       "on the map."),
-                    COC_FONT, GUI_GTK3x, "Serif 10", NULL),
-    GEN_FONT_OPTION(
-        gui_gtk4_font_reqtree_text, "reqtree_text", N_("Requirement Tree"),
-        N_("This font is used to the display the requirement tree "
-           "in the Research report."),
-        COC_FONT, GUI_GTK3x, "Serif 10", NULL),
-
-    /* gui-sdl client specific options.
-     * These are still kept just so users can migrate them to sdl2-client */
-    GEN_BOOL_OPTION(gui_sdl_fullscreen, NULL, NULL, COC_INTERFACE, GUI_SDL,
-                    FALSE, NULL),
-    GEN_VIDEO_OPTION(gui_sdl_screen, NULL, NULL, COC_INTERFACE, GUI_SDL, 640,
-                     480, NULL),
-    GEN_BOOL_OPTION(gui_sdl_do_cursor_animation, NULL, NULL, COC_INTERFACE,
-                    GUI_SDL, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_sdl_use_color_cursors, NULL, NULL, COC_INTERFACE,
-                    GUI_SDL, TRUE, NULL),
-
-    /* gui-sdl2 client specific options. */
-    GEN_BOOL_OPTION(gui_sdl2_fullscreen, N_("Fullscreen"),
-                    N_("If this option is set the client will use the "
-                       "whole screen area for drawing."),
-                    COC_INTERFACE, GUI_SDL2, FALSE, NULL),
-    GEN_VIDEO_OPTION(gui_sdl2_screen, N_("Screen resolution"),
-                     N_("This option controls the resolution of the "
-                        "selected screen."),
-                     COC_INTERFACE, GUI_SDL2, 640, 480, NULL),
-    GEN_BOOL_OPTION(
-        gui_sdl2_swrenderer, N_("Use software rendering"),
-        N_("Usually hardware rendering is used when possible. "
-           "With this option set, software rendering is always used."),
-        COC_GRAPHICS, GUI_SDL2, FALSE, NULL),
-    GEN_BOOL_OPTION(gui_sdl2_do_cursor_animation, N_("Do cursor animation"),
-                    N_("If this option is disabled, the cursor will "
-                       "always be displayed as static."),
-                    COC_INTERFACE, GUI_SDL2, TRUE, NULL),
-    GEN_BOOL_OPTION(gui_sdl2_use_color_cursors, N_("Use color cursors"),
-                    N_("If this option is disabled, the cursor will "
-                       "always be displayed in black and white."),
-                    COC_INTERFACE, GUI_SDL2, TRUE, NULL),
-    GEN_FONT_OPTION(gui_sdl2_font_city_names, "FONT_CITY_NAME",
-                    N_("City Names"),
-                    N_("The size of font used to the display the city names "
-                       "on the map."),
-                    COC_FONT, GUI_SDL2, "10", font_changed_callback),
-    GEN_FONT_OPTION(gui_sdl2_font_city_productions, "FONT_CITY_PROD",
-                    N_("City Productions"),
-                    N_("The size of font used to the display the city "
-                       "production names on the map."),
-                    COC_FONT, GUI_SDL2, "10", font_changed_callback),
 
     /* gui-qt client specific options. */
     GEN_BOOL_OPTION(gui_qt_fullscreen, N_("Fullscreen"),
@@ -3674,43 +2608,6 @@ static bool client_option_color_set(struct option *poption,
 }
 
 /************************************************************************/ /**
-   Returns the value of this client option of type OT_VIDEO_MODE.
- ****************************************************************************/
-static struct video_mode
-client_option_video_mode_get(const struct option *poption)
-{
-  return *CLIENT_OPTION(poption)->video_mode.pvalue;
-}
-
-/************************************************************************/ /**
-   Returns the default value of this client option of type OT_VIDEO_MODE.
- ****************************************************************************/
-static struct video_mode
-client_option_video_mode_def(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->video_mode.def;
-}
-
-/************************************************************************/ /**
-   Set the value of this client option of type OT_VIDEO_MODE.  Returns TRUE
-   if the value changed.
- ****************************************************************************/
-static bool client_option_video_mode_set(struct option *poption,
-                                         struct video_mode mode)
-{
-  struct client_option *pcoption = CLIENT_OPTION(poption);
-
-  if (0
-      == memcmp(&mode, pcoption->video_mode.pvalue,
-                sizeof(struct video_mode))) {
-    return FALSE;
-  }
-
-  *pcoption->video_mode.pvalue = mode;
-  return TRUE;
-}
-
-/************************************************************************/ /**
    Load the option from a file.  Returns TRUE if the option changed.
  ****************************************************************************/
 static bool client_option_load(struct option *poption,
@@ -3772,15 +2669,6 @@ static bool client_option_load(struct option *poption,
                     sf, "client.%s.background", option_name(poption)))
             && option_color_set(poption, color));
   }
-  case OT_VIDEO_MODE: {
-    struct video_mode mode;
-
-    return (secfile_lookup_int(sf, &mode.width, "client.%s.width",
-                               option_name(poption))
-            && secfile_lookup_int(sf, &mode.height, "client.%s.height",
-                                  option_name(poption))
-            && option_video_mode_set(poption, mode));
-  }
   }
   return FALSE;
 }
@@ -3827,14 +2715,6 @@ static void client_option_save(struct option *poption,
     secfile_insert_str(sf, color.foreground, "client.%s.foreground",
                        option_name(poption));
     secfile_insert_str(sf, color.background, "client.%s.background",
-                       option_name(poption));
-  } break;
-  case OT_VIDEO_MODE: {
-    struct video_mode mode = option_video_mode_get(poption);
-
-    secfile_insert_int(sf, mode.width, "client.%s.width",
-                       option_name(poption));
-    secfile_insert_int(sf, mode.height, "client.%s.height",
                        option_name(poption));
   } break;
   }
@@ -4047,7 +2927,6 @@ static void server_option_free(struct server_option *poption)
   case OT_INTEGER:
   case OT_FONT:
   case OT_COLOR:
-  case OT_VIDEO_MODE:
     break;
   }
 
@@ -5412,8 +4291,7 @@ static void settable_options_save(struct section_file *sf)
 {
   optionsHash::const_iterator it = settable_options->constBegin();
   while (it != settable_options->constEnd()) {
-    if (!it.key().compare("gameseed")
-        || !it.key().compare("mapseed")) {
+    if (!it.key().compare("gameseed") || !it.key().compare("mapseed")) {
       /* Do not save mapseed or gameseed. */
       it++;
       continue;
@@ -5482,7 +4360,6 @@ void desired_settable_options_update(void)
       break;
     case OT_FONT:
     case OT_COLOR:
-    case OT_VIDEO_MODE:
       break;
     }
 
@@ -5567,7 +4444,8 @@ static void desired_settable_option_send(struct option *poption)
     /* No change explicitly  desired. */
     return;
   }
-  QByteArray qval = settable_options->value(option_name(poption)).toLocal8Bit();
+  QByteArray qval =
+      settable_options->value(option_name(poption)).toLocal8Bit();
   desired = qval.data();
   switch (option_type(poption)) {
   case OT_BOOLEAN:
@@ -5627,7 +4505,6 @@ static void desired_settable_option_send(struct option *poption)
     return;
   case OT_FONT:
   case OT_COLOR:
-  case OT_VIDEO_MODE:
     break;
   }
 
@@ -5677,7 +4554,7 @@ static void options_dialogs_save(struct section_file *sf)
   dialOptionsHash::const_iterator it = dialog_options->constBegin();
   while (it != dialog_options->constEnd()) {
     QByteArray qba = it.key().toLocal8Bit();
-    secfile_insert_bool(sf, (bool)it.value(), "client.%s", qba.data());
+    secfile_insert_bool(sf, (bool) it.value(), "client.%s", qba.data());
     it++;
   }
 }
@@ -5792,34 +4669,9 @@ void options_load(void)
   gui_options.migrate_fullscreen = secfile_lookup_bool_default(
       sf, gui_options.migrate_fullscreen, "%s.fullscreen_mode", prefix);
 
-  /* Settings migrations */
-  gui_options.gui_gtk3_migrated_from_gtk2 = secfile_lookup_bool_default(
-      sf, gui_options.gui_gtk3_migrated_from_gtk2,
-      "%s.migration_gtk3_from_gtk2", prefix);
-  gui_options.gui_gtk3_22_migrated_from_gtk3 = secfile_lookup_bool_default(
-      sf, gui_options.gui_gtk3_22_migrated_from_gtk3,
-      "%s.migration_gtk3_22_from_gtk3", prefix);
-  gui_options.gui_gtk4_migrated_from_gtk3_22 = secfile_lookup_bool_default(
-      sf, gui_options.gui_gtk4_migrated_from_gtk3_22,
-      "%s.migration_gtk4_from_gtk3_22", prefix);
-  gui_options.gui_sdl2_migrated_from_sdl =
-      secfile_lookup_bool_default(sf, gui_options.gui_sdl2_migrated_from_sdl,
-                                  "%s.migration_sdl2_from_sdl", prefix);
-  gui_options.gui_gtk2_migrated_from_2_5 =
-      secfile_lookup_bool_default(sf, gui_options.gui_gtk2_migrated_from_2_5,
-                                  "%s.migration_gtk2_from_2_5", prefix);
-  gui_options.gui_gtk3_migrated_from_2_5 =
-      secfile_lookup_bool_default(sf, gui_options.gui_gtk3_migrated_from_2_5,
-                                  "%s.migration_gtk3_from_2_5", prefix);
   gui_options.gui_qt_migrated_from_2_5 =
       secfile_lookup_bool_default(sf, gui_options.gui_qt_migrated_from_2_5,
                                   "%s.migration_qt_from_2_5", prefix);
-
-  /* These are not gui-enabled yet */
-  gui_options.zoom_set =
-      secfile_lookup_bool_default(sf, FALSE, "%s.zoom_set", prefix);
-  gui_options.zoom_default_level =
-      secfile_lookup_float_default(sf, 1.0, "%s.zoom_default_level", prefix);
 
   str = secfile_lookup_str_default(sf, NULL, "client.default_tileset_name");
   if (str != NULL) {
@@ -5914,29 +4766,14 @@ void options_save(option_save_log_callback log_cb)
   secfile_insert_bool_comment(sf, gui_options.migrate_fullscreen,
                               "deprecated", "client.fullscreen_mode");
 
-  /* Migrations */
-  secfile_insert_bool(sf, gui_options.gui_gtk3_migrated_from_gtk2,
-                      "client.migration_gtk3_from_gtk2");
-  secfile_insert_bool(sf, gui_options.gui_gtk3_22_migrated_from_gtk3,
-                      "client.migration_gtk3_22_from_gtk3");
-  secfile_insert_bool(sf, gui_options.gui_gtk4_migrated_from_gtk3_22,
-                      "client.migration_gtk4_from_gtk3");
-  secfile_insert_bool(sf, gui_options.gui_sdl2_migrated_from_sdl,
-                      "client.migration_sdl2_from_sdl");
-  secfile_insert_bool(sf, gui_options.gui_gtk2_migrated_from_2_5,
-                      "client.migration_gtk2_from_2_5");
-  secfile_insert_bool(sf, gui_options.gui_gtk3_migrated_from_2_5,
-                      "client.migration_gtk3_from_2_5");
   secfile_insert_bool(sf, gui_options.gui_qt_migrated_from_2_5,
                       "client.migration_qt_from_2_5");
 
   /* gui-enabled options */
   client_options_iterate_all(poption)
   {
-    if ((client_poption->specific != GUI_SDL
-         || !gui_options.gui_sdl2_migrated_from_sdl)
-        && (client_poption->specific != GUI_GTK2
-            || !gui_options.gui_gtk3_migrated_from_gtk2)) {
+    if ((client_poption->specific != GUI_SDL)
+        && (client_poption->specific != GUI_GTK2)) {
       /* Once sdl-client options have been migrated to sdl2-client, or
        * gtk2-client options to gtk3-client, there's no use for them any
        * more, so no point in saving them. */
@@ -5944,11 +4781,6 @@ void options_save(option_save_log_callback log_cb)
     }
   }
   client_options_iterate_all_end;
-
-  /* These are not gui-enabled yet. */
-  secfile_insert_bool(sf, gui_options.zoom_set, "client.zoom_set");
-  secfile_insert_float(sf, gui_options.zoom_default_level,
-                       "client.zoom_default_level");
 
   if (gui_options.default_tileset_name[0] != '\0') {
     secfile_insert_str(sf, gui_options.default_tileset_name,
@@ -6088,7 +4920,6 @@ void options_init(void)
 
     case OT_BOOLEAN:
     case OT_FONT:
-    case OT_VIDEO_MODE:
       break;
     }
 
@@ -6131,7 +4962,6 @@ void options_free(void)
     case OT_STRING:
     case OT_FONT:
     case OT_COLOR:
-    case OT_VIDEO_MODE:
       break;
     }
   }
@@ -6249,22 +5079,6 @@ static void menu_music_enable_callback(struct option *poption)
       stop_menu_music();
     }
   }
-}
-
-/************************************************************************/ /**
-   Convert a video mode to string. Returns TRUE on success.
- ****************************************************************************/
-bool video_mode_to_string(char *buf, size_t buf_len, struct video_mode *mode)
-{
-  return (2 < fc_snprintf(buf, buf_len, "%dx%d", mode->width, mode->height));
-}
-
-/************************************************************************/ /**
-   Convert a string to video mode. Returns TRUE on success.
- ****************************************************************************/
-bool string_to_video_mode(const char *buf, struct video_mode *mode)
-{
-  return (2 == sscanf(buf, "%dx%d", &mode->width, &mode->height));
 }
 
 /************************************************************************/ /**
