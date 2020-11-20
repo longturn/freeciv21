@@ -33,6 +33,7 @@
 /* bv_*  - static bitvectors; used for data which where the length is
            fixed (number of players; flags for enums; ...). They are
            named bv_* and the macros BV_* are defined.
+ */
 
 /***********************************************************************/ /**
    Return whether two vectors: vec1 and vec2 have common
