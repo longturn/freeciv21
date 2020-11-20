@@ -11,4 +11,5 @@
 
 class QApplication;
 void popup_quit_dialog();
+void gui_qt_apply_font(struct option *poption);
 QApplication *current_app();

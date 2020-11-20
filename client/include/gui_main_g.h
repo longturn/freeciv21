@@ -49,6 +49,7 @@ GUI_FUNC_PROTO(void, gui_update_font, const char *font_name,
 extern const char *client_string;
 
 /* Actually defined in update_queue.c */
+void gui_update_allfonts();
 void conn_list_dialog_update(void);
 
 #endif /* FC__GUI_MAIN_G_H */

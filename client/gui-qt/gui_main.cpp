@@ -49,7 +49,6 @@ const char *client_string = "gui-qt";
 static fc_client *freeciv_qt;
 
 void reset_unit_table(void);
-static void apply_font(struct option *poption);
 static void apply_help_font(struct option *poption);
 static void apply_notify_font(struct option *poption);
 static void apply_sidebar(struct option *poption);
@@ -134,12 +133,12 @@ void qtg_options_extra_init()
   } else {                                                                  \
     qCritical("Didn't find option %s!", #var);                              \
   }
-  option_var_set_callback(gui_qt_font_city_names, apply_font);
-  option_var_set_callback(gui_qt_font_city_productions, apply_font);
-  option_var_set_callback(gui_qt_font_reqtree_text, apply_font);
-  option_var_set_callback(gui_qt_font_default, apply_font);
+  option_var_set_callback(gui_qt_font_city_names, gui_qt_apply_font);
+  option_var_set_callback(gui_qt_font_city_productions, gui_qt_apply_font);
+  option_var_set_callback(gui_qt_font_reqtree_text, gui_qt_apply_font);
+  option_var_set_callback(gui_qt_font_default, gui_qt_apply_font);
   option_var_set_callback(gui_qt_font_help_text, apply_help_font);
-  option_var_set_callback(gui_qt_font_chatline, apply_font);
+  option_var_set_callback(gui_qt_font_chatline, gui_qt_apply_font);
   option_var_set_callback(gui_qt_font_notify_label, apply_notify_font);
   option_var_set_callback(gui_qt_show_titlebar, apply_titlebar);
   option_var_set_callback(gui_qt_sidebar_left, apply_sidebar);
@@ -283,7 +282,7 @@ void apply_sidebar(struct option *poption)
 /**********************************************************************/ /**
    Change the given font.
  **************************************************************************/
-static void apply_font(struct option *poption)
+void gui_qt_apply_font(struct option *poption)
 {
   QFont *f;
   QFont *remove_old;
@@ -394,6 +393,12 @@ void qtg_gui_update_font(const char *font_name, const char *font_value)
   delete remove_old;
   fc_font::instance()->set_font(fname, f);
   fc_font::instance()->get_mapfont_size();
+}
+
+void gui_update_allfonts()
+{
+  fc_font::instance()->set_size_all(gui_options.gui_qt_increase_fonts);
+  gui_options.gui_qt_increase_fonts = 0;
 }
 
 /**********************************************************************/ /**
