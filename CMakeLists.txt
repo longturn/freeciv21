@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10...3.17 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.12...3.17 FATAL_ERROR)
 
 # set vcpkg if exist
 if(DEFINED ENV{VCPKG_ROOT} AND NOT DEFINED CMAKE_TOOLCHAIN_FILE)
@@ -22,6 +22,10 @@ include(FreecivDependencies)
 include(FreecivHelpers)
 # Put all executables at the root of the build tree
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+
+# We do this after all targets with third-party code have been created, so
+# the options only apply to code we own.
+include(EnableCompilerWarnings)
 
 # Include subdirectories with the actual project definitions
 add_subdirectory(utility)
