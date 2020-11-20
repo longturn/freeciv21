@@ -60,7 +60,7 @@ static int meta_retry_wait = 0;
 static char meta_patches[256] = "";
 static char meta_message[256] = "";
 
-static fc_thread *meta_srv_thread = NULL;
+Q_GLOBAL_STATIC(fcThread, meta_srv_thread);
 
 /*********************************************************************/ /**
    The default metaserver patches for this server
@@ -437,15 +437,9 @@ static bool send_to_metaserver(enum meta_flag flag)
     }
   }
 
-  if (meta_srv_thread != NULL) {
-    /* Previously started thread */
-    fc_thread_wait(meta_srv_thread);
-  } else {
-    meta_srv_thread = new pthread_t;
-  }
-
   /* Send POST in new thread */
-  fc_thread_start(meta_srv_thread, &send_metaserver_post, post);
+  meta_srv_thread->set_func(send_metaserver_post, post);
+  meta_srv_thread->start(QThread::NormalPriority);
 
   return TRUE;
 }
@@ -512,10 +506,8 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     }
     send_to_metaserver(flag);
 
-    /* Wait metaserver thread to finish */
-    fc_thread_wait(meta_srv_thread);
-    free(meta_srv_thread);
-    meta_srv_thread = NULL;
+    meta_srv_thread->wait();
+    meta_srv_thread->quit();
 
     return TRUE;
   }
