@@ -1156,7 +1156,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
 
   *state = GTS_INVALID;
   *turns = GTS_INVALID;
-  *waypoint = GTS_INVALID;
+  *waypoint = false;
 
   if (hover_state == HOVER_CONNECT) {
     /* In connect mode, we want to know the turn number the activity will
