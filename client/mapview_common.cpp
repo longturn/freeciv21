@@ -63,7 +63,6 @@ struct gotoline_counter {
 };
 
 static inline struct gotoline_counter *gotoline_counter_new(void);
-static void gotoline_counter_destroy(struct gotoline_counter *pglc);
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
 Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
@@ -434,15 +433,6 @@ static inline struct gotoline_counter *gotoline_counter_new(void)
   struct gotoline_counter *pglc =
       static_cast<gotoline_counter *>(fc_calloc(1, sizeof(*pglc)));
   return pglc;
-}
-
-/************************************************************************/ /**
-   Create a new goto line counter.
- ****************************************************************************/
-static void gotoline_counter_destroy(struct gotoline_counter *pglc)
-{
-  fc_assert_ret(NULL != pglc);
-  delete pglc;
 }
 
 /************************************************************************/ /**

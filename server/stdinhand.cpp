@@ -98,8 +98,6 @@
 static enum cmdlevel default_access_level = ALLOW_BASIC;
 static enum cmdlevel first_access_level = ALLOW_BASIC;
 
-static time_t *time_duplicate(const time_t *t);
-
 typedef QHash<QString, time_t> kickhash;
 Q_GLOBAL_STATIC(kickhash, kick_table_by_addr)
 Q_GLOBAL_STATIC(kickhash, kick_table_by_user)
@@ -6158,16 +6156,6 @@ static bool cut_client_connection(struct connection *caller, char *name,
   connection_close_server(ptarget, _("connection cut"));
 
   return TRUE;
-}
-
-/**********************************************************************/ /**
-   Utility for 'kick_hash' tables.
- **************************************************************************/
-static time_t *time_duplicate(const time_t *t)
-{
-  auto d = new time_t;
-  *d = *t;
-  return d;
 }
 
 /**********************************************************************/ /**
