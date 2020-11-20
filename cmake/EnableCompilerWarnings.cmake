@@ -3,7 +3,7 @@ set(GCC_WARNINGS all no-sign-compare)
 set(CLANG_WARNINGS ${GCC_WARNINGS})
 
 # Candidates for -Werror
-set(GCC_ERROR_WARNINGS)
+set(GCC_ERROR_WARNINGS return-type)
 set(CLANG_ERROR_WARNINGS ${GCC_ERROR_WARNINGS})
 
 # Prepend -W and -Werror=
