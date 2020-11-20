@@ -1,3 +1,7 @@
+env:
+  global:
+    - secure: $COVERITY_SCAN_TOKEN
+
 language: c++
 
 jobs:
@@ -54,3 +58,20 @@ script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build
   - cmake --build build --target install
+
+addons:
+  coverity_scan:
+
+    project:
+      name: longturn/freeciv21
+      version: 0.1337
+      description: Freeciv21
+
+    #notification_email: scan_notifications@example.com
+
+    build_command_prepend: cmake . -B covbuild -G Ninja
+
+    build_command: cmake --build covbuild
+
+    # Pattern to match selecting branches that will run analysis. We recommend leaving this set to 'coverity_scan'.
+    branch_pattern: coverity_scan
