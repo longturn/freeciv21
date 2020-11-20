@@ -206,8 +206,8 @@ signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
 /*************************************************************************/ /**
    Mark signal deprecated.
  *****************************************************************************/
-void deprecate_signal(signal_deprecator *deprecator, char *signal_name,
-                      char *replacement, char *deprecated_since)
+void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
+                      const char *replacement, const char *deprecated_since)
 {
   if (deprecator != NULL) {
     char buffer[1024];
@@ -320,7 +320,8 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  if (!fcl || !fcl->signals_hash) return;
+  if (!fcl || !fcl->signals_hash)
+    return;
   for (auto nissan : fcl->signals_hash->values()) {
     signal_destroy(nissan);
   }

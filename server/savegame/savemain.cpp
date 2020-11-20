@@ -170,7 +170,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       filename[0] = '\0';
     } else {
       char *end_dot;
-      char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
+      const char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
       bool stripped = TRUE;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {

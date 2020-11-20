@@ -32,8 +32,8 @@
 
 bool sg_success;
 
-static char *special_names[] = {"Irrigation", "Mine",    "Pollution", "Hut",
-                                "Farmland",   "Fallout", NULL};
+static const char *special_names[] = {
+    "Irrigation", "Mine", "Pollution", "Hut", "Farmland", "Fallout", NULL};
 
 /*
   For each savefile format after 2.3.0, compatibility functions are defined
@@ -157,7 +157,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else  /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
@@ -663,7 +663,7 @@ static void compat_load_020500(struct loaddata *loading,
 /************************************************************************/ /**
    Return string representation of revolentype
  ****************************************************************************/
-static char *revolentype_str(enum revolen_type type)
+static const char *revolentype_str(enum revolen_type type)
 {
   switch (type) {
   case REVOLEN_FIXED:
@@ -1215,7 +1215,7 @@ static void compat_load_020600(struct loaddata *loading,
     int j;
 
     i = 0;
-    modname = new const char*[DS_LAST]();
+    modname = new const char *[DS_LAST]();
 
     for (j = 0; j < DS_LAST; j++) {
       modname[i++] = diplstate_type_name(static_cast<diplstate_type>(j));
@@ -1437,7 +1437,7 @@ static void insert_server_side_agent(struct loaddata *loading,
     int j;
 
     i = 0;
-    modname = new const char*[SSA_COUNT]();
+    modname = new const char *[SSA_COUNT]();
 
     for (j = 0; j < SSA_COUNT; j++) {
       modname[i++] =
@@ -2247,7 +2247,7 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else  /* FREECIV_DEBUG */
+#else /* FREECIV_DEBUG */
     return AI_LEVEL_HARD;
 #endif /* FREECIV_DEBUG */
   }

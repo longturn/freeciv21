@@ -4050,8 +4050,8 @@ void tileset_setup_government(struct tileset *t, struct government *gov)
  ****************************************************************************/
 void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
 {
-  char *tags[] = {nation->flag_graphic_str, nation->flag_graphic_alt,
-                  "unknown", NULL};
+  const char *tags[] = {nation->flag_graphic_str, nation->flag_graphic_alt,
+                        "unknown", NULL};
   int i;
   struct sprite *flag = NULL, *shield = NULL;
   char buf[1024];
