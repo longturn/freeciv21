@@ -252,7 +252,7 @@ struct civ_game {
       } meta_info;
 
       struct {
-        QMutex city_list;
+        QMutex *city_list;
       } mutexes;
 
       struct trait_limits default_traits[TRAIT_COUNT];

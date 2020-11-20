@@ -147,6 +147,10 @@
   - The number of entries is fixed when the hash table is built.
   - Now uses hash.c
 **************************************************************************/
+#ifdef HAVE_CONFIG_H
+#include <fc_config.h>
+#endif
+
 /* utility */
 #include "astring.h"
 #include "bugs.h"

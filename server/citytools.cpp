@@ -1545,9 +1545,9 @@ void create_city(struct player *pplayer, struct tile *ptile,
   city_choose_build_default(pcity);
   pcity->id = identity_number();
 
-  fc_allocate_mutex(&game.server.mutexes.city_list);
+  game.server.mutexes.city_list->lock();
   idex_register_city(&wld, pcity);
-  fc_release_mutex(&game.server.mutexes.city_list);
+  game.server.mutexes.city_list->unlock();
 
   if (city_list_size(pplayer->cities) == 0) {
     /* Free initial buildings, or at least a palace if they were
@@ -1875,9 +1875,9 @@ void remove_city(struct city *pcity)
   }
   players_iterate_end;
 
-  fc_allocate_mutex(&game.server.mutexes.city_list);
+  game.server.mutexes.city_list->lock();
   game_remove_city(&wld, pcity);
-  fc_release_mutex(&game.server.mutexes.city_list);
+  game.server.mutexes.city_list->unlock();
 
   /* Remove any extras that were only there because the city was there. */
   extra_type_iterate(pextra)

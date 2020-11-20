@@ -36,6 +36,10 @@
 
   If the value is 'true' the current signal emission will be stopped.
 *****************************************************************************/
+#ifdef HAVE_CONFIG_H
+#include <fc_config.h>
+#endif
+
 /* utility */
 #include "deprecations.h"
 

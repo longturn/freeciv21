@@ -38,7 +38,7 @@
 
 #include "chatline_common.h"
 
-static fc_mutex ow_mutex;
+static QMutex ow_mutex;
 
 /**********************************************************************/ /**
    Send the message as a chat to the server.
@@ -68,22 +68,22 @@ int send_chat_printf(const char *format, ...)
 /**********************************************************************/ /**
    Allocate output window mutex
  **************************************************************************/
-void fc_allocate_ow_mutex(void) { fc_allocate_mutex(&ow_mutex); }
+void fc_allocate_ow_mutex(void) { ow_mutex.lock(); }
 
 /**********************************************************************/ /**
    Release output window mutex
  **************************************************************************/
-void fc_release_ow_mutex(void) { fc_release_mutex(&ow_mutex); }
+void fc_release_ow_mutex(void) { ow_mutex.unlock(); }
 
 /**********************************************************************/ /**
    Initialize output window mutex
  **************************************************************************/
-void fc_init_ow_mutex(void) { fc_init_mutex(&ow_mutex); }
+void fc_init_ow_mutex(void) {}
 
 /**********************************************************************/ /**
    Destroy output window mutex
  **************************************************************************/
-void fc_destroy_ow_mutex(void) { fc_destroy_mutex(&ow_mutex); }
+void fc_destroy_ow_mutex(void) { }
 
 /**********************************************************************/ /**
    Add a line of text to the output ("chatline") window, like puts() would
