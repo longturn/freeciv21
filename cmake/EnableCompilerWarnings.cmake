@@ -1,10 +1,21 @@
 # Lists of warnings to enable
 set(GCC_WARNINGS all no-sign-compare)
-set(CLANG_WARNINGS ${GCC_WARNINGS})
+set(CLANG_WARNINGS ${GCC_WARNINGS} no-tautological-compare)
 
 # Candidates for -Werror
-set(GCC_ERROR_WARNINGS return-type)
-set(CLANG_ERROR_WARNINGS ${GCC_ERROR_WARNINGS})
+# Warnings in common between GCC and clang
+set(GCC_ERROR_WARNINGS
+  int-in-bool-context
+  return-type
+  switch
+  unused-value)
+# clang-only warnings
+set(CLANG_ERROR_WARNINGS ${GCC_ERROR_WARNINGS}
+  mismatched-tags
+  return-stack-address
+  uninitialized)
+# GCC-only warnings
+list(APPEND GCC_ERROR_WARNINGS maybe-uninitialized)
 
 # Prepend -W and -Werror=
 list(TRANSFORM GCC_WARNINGS PREPEND -W)
