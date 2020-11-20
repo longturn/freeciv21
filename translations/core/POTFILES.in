@@ -81,7 +81,6 @@ common/clientutils.cpp
 common/effects.cpp
 common/events.cpp
 common/extras.h
-common/fc_cmdhelp.cpp
 common/fc_types.h
 common/game.h
 common/government.cpp
