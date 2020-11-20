@@ -28,8 +28,8 @@
 struct player;
 
 struct tai_msgs {
-  fc_thread_cond thr_cond;
-  fc_mutex mutex;
+  QWaitCondition thr_cond;
+  QMutex mutex;
   struct taimsg_list *msglist;
 };
 
