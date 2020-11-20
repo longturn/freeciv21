@@ -220,11 +220,9 @@ void gov_menu::update()
 {
   struct government *gov, *revol_gov;
   struct sprite *sprite;
-  int gov_count, i, j;
 
-  gov_count = government_count();
   revol_gov = game.government_during_revolution;
-  for (i = 0, j = 0; i < actions.count(); ++i) {
+  for (int i = 0, j = 0; i < actions.count(); ++i) {
     gov = government_by_number(i);
     if (gov != revol_gov) { // Skip revolution goverment
       sprite = get_government_sprite(tileset, gov);
