@@ -10,6 +10,7 @@ language: c++
 jobs:
   include:
   - name: "ubuntu-gcc"
+    if: branch != coverity_scan
     dist: focal
     compiler: gcc
     addons:
@@ -58,19 +59,33 @@ jobs:
           - sdl2_mixer
     before_script:
       - brew link gettext --force
+  - name: "coverity"
+    if: branch = coverity_scan
+    dist: focal
+    compiler: gcc
+    addons:
+      apt:
+        packages:
+        - cmake
+        - ninja-build
+        - python3
+        - gettext
+        - qt5-default
+        - libsqlite3-dev
+        - libsdl2-mixer-dev
+      coverity_scan:
+        project:
+          name: longturn/freeciv21
+          version: 0.1337
+          description: Freeciv21
+        #notification_email: $COVERITY_SCAN_NOTIFICATION_EMAIL (Travis settings)
+        build_command_prepend: cmake . -B covbuild -G Ninja
+        build_command: cmake --build covbuild
+        branch_pattern: coverity_scan
+    script:
+      - echo "No build script when doing a Coverity build"
 
 script:
   - cmake . -B build -G Ninja -DCMAKE_INSTALL_PREFIX=$PWD/build/install
   - cmake --build build
   - cmake --build build --target install
-
-addons:
-  coverity_scan:
-    project:
-      name: longturn/freeciv21
-      version: 0.1337
-      description: Freeciv21
-    #notification_email: scan_notifications@example.com
-    build_command_prepend: cmake . -B covbuild -G Ninja
-    build_command: cmake --build covbuild
-    branch_pattern: coverity_scan
