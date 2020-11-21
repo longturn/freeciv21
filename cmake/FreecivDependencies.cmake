@@ -22,17 +22,6 @@ find_package(PythonInterp 3 REQUIRED)
 # Required as the main networking and utility library
 find_package(Qt5 5.10 COMPONENTS Core Network REQUIRED)
 
-# Required for utility
-find_package(Threads REQUIRED)
-if (CMAKE_USE_PTHREADS_INIT)
-  set(FREECIV_HAVE_PTHREAD TRUE)
-  set(FREECIV_HAVE_THREAD_COND TRUE) # Have condition variables
-elseif (CMAKE_USE_WIN32_THREADS_INIT)
-  set(FREECIV_HAVE_WINTHREADS TRUE)
-endif()
-# Not supported by FindThreads
-set(FREECIV_C11_THR FALSE)
-set(FREECIV_HAVE_TINYCTHR FALSE)
 
 # Required for utility
 find_package(Iconv)

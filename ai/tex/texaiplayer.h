@@ -13,6 +13,8 @@
 #ifndef FC__TEXAIPLAYER_H
 #define FC__TEXAIPLAYER_H
 
+#include <QMutex>
+#include <QWaitCondition>
 /* utility */
 #include "fcthread.h"
 
@@ -28,8 +30,8 @@
 struct player;
 
 struct texai_msgs {
-  fc_thread_cond thr_cond;
-  fc_mutex mutex;
+  QWaitCondition thr_cond;
+  QMutex mutex;
   struct texaimsg_list *msglist;
 };
 

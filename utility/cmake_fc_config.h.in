@@ -165,21 +165,6 @@
 /* Month next version will be released */
 #cmakedefine FREECIV_RELEASE_MONTH
 
-/* Use C11 threads as thread implementation */
-#cmakedefine FREECIV_HAVE_C11_THREADS
-
-/* Use pthreads as thread implementation */
-#cmakedefine FREECIV_HAVE_PTHREAD
-
-/* Use Windows threads as thread implementation */
-#cmakedefine FREECIV_HAVE_WINTHREADS
-
-/* Use tinycthread as thread implementation */
-#cmakedefine FREECIV_HAVE_TINYCTHR
-
-/* Has thread condition variable implementation */
-#cmakedefine FREECIV_HAVE_THREAD_COND
-
 /* Native language support enabled */
 #cmakedefine FREECIV_ENABLE_NLS
 

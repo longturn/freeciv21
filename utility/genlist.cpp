@@ -40,7 +40,6 @@ struct genlist *genlist_new_full(genlist_free_fn_t free_data_func)
   pgenlist->nelements = 0;
   pgenlist->head_link = NULL;
   pgenlist->tail_link = NULL;
-  fc_init_mutex(&pgenlist->mutex);
   pgenlist->free_data_func = free_data_func;
 
   return pgenlist;
@@ -56,7 +55,6 @@ void genlist_destroy(struct genlist *pgenlist)
   }
 
   genlist_clear(pgenlist);
-  fc_destroy_mutex(&pgenlist->mutex);
   delete pgenlist;
 }
 
@@ -678,7 +676,7 @@ void genlist_reverse(struct genlist *pgenlist)
  ****************************************************************************/
 void genlist_allocate_mutex(struct genlist *pgenlist)
 {
-  fc_allocate_mutex(&pgenlist->mutex);
+  pgenlist->mutex.lock();
 }
 
 /************************************************************************/ /**
@@ -686,5 +684,5 @@ void genlist_allocate_mutex(struct genlist *pgenlist)
  ****************************************************************************/
 void genlist_release_mutex(struct genlist *pgenlist)
 {
-  fc_release_mutex(&pgenlist->mutex);
+  pgenlist->mutex.unlock();
 }

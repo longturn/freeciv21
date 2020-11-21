@@ -56,7 +56,7 @@ struct texai_thr {
   struct texai_msgs msgs_to;
   struct texai_reqs reqs_from;
   bool thread_running;
-  fc_thread ait;
+  fcThread ait;
 } exthrai;
 
 struct texai_build_choice_req {
@@ -309,7 +309,8 @@ void texai_control_gained(struct ai_type *ait, struct player *pplayer)
 
     fc_thread_cond_init(&exthrai.msgs_to.thr_cond);
     fc_init_mutex(&exthrai.msgs_to.mutex);
-    fc_thread_start(&exthrai.ait, texai_thread_start, ait);
+    exthrai.ait.set_func(texai_thread_start, ait);
+    exthrai.ait.start(QThread::LowestPriority);
 
     players_iterate(oplayer)
     {

@@ -56,7 +56,7 @@ typedef bool (*genlist_comp_fn_t)(const void *, const void *);
  * of the list. */
 struct genlist {
   int nelements;
-  fc_mutex mutex;
+  QMutex mutex;
   struct genlist_link *head_link;
   struct genlist_link *tail_link;
   genlist_free_fn_t free_data_func;

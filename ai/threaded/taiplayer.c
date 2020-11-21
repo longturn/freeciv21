@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QMutexLocker>
+
 /* utility */
 #include "log.h"
 
@@ -52,7 +54,7 @@ struct tai_thr {
   struct tai_msgs msgs_to;
   struct tai_reqs reqs_from;
   bool thread_running;
-  fc_thread ait;
+  fcThread ait;
 } thrai;
 
 /**********************************************************************/ /**
@@ -76,15 +78,14 @@ static void tai_thread_start(void *arg)
   log_debug("New AI thread launched");
 
   /* Just wait until we are signaled to shutdown */
-  fc_allocate_mutex(&thrai.msgs_to.mutex);
+  QMutexLocker locker(&thrai.msgs_to.mutex);
   while (!finished) {
-    fc_thread_cond_wait(&thrai.msgs_to.thr_cond, &thrai.msgs_to.mutex);
+    thrai.msgs_to.thr_cond.wait(&thrai.msgs_to.mutex);
 
     if (tai_check_messages(ait) <= TAI_ABORT_EXIT) {
       finished = TRUE;
     }
   }
-  fc_release_mutex(&thrai.msgs_to.mutex);
 
   log_debug("AI thread exiting");
 }
@@ -96,20 +97,20 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
 {
   enum tai_abort_msg_class ret_abort = TAI_ABORT_NONE;
 
-  taimsg_list_allocate_mutex(thrai.msgs_to.msglist);
+  thrai.msgs_to.msglist.lock();
   while (taimsg_list_size(thrai.msgs_to.msglist) > 0) {
     struct tai_msg *msg;
     enum tai_abort_msg_class new_abort = TAI_ABORT_NONE;
 
     msg = taimsg_list_get(thrai.msgs_to.msglist, 0);
     taimsg_list_remove(thrai.msgs_to.msglist, msg);
-    taimsg_list_release_mutex(thrai.msgs_to.msglist);
+    thrai.msgs_to.msglist.unlock();
 
     log_debug("Plr thr got %s", taimsgtype_name(msg->type));
 
     switch (msg->type) {
     case TAI_MSG_FIRST_ACTIVITIES:
-      fc_allocate_mutex(&game.server.mutexes.city_list);
+      game.server.mutexes.city_list.lock();
 
       initialize_infrastructure_cache(msg->plr);
 
@@ -121,17 +122,17 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
 
         /* Release mutex for a second in case main thread
          * wants to do something to city list. */
-        fc_release_mutex(&game.server.mutexes.city_list);
+        game.server.mutexes.city_list.unlock();
 
         /* Recursive message check in case phase is finished. */
         new_abort = tai_check_messages(ait);
-        fc_allocate_mutex(&game.server.mutexes.city_list);
+        game.server.mutexes.city_list.lock();
         if (new_abort < TAI_ABORT_NONE) {
           break;
         }
       }
       city_list_iterate_safe_end;
-      fc_release_mutex(&game.server.mutexes.city_list);
+      game.server.mutexes.city_list.unlock();
 
       tai_send_req(TAI_REQ_TURN_DONE, msg->plr, NULL);
 
@@ -154,9 +155,9 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
 
     FC_FREE(msg);
 
-    taimsg_list_allocate_mutex(thrai.msgs_to.msglist);
+    thrai.msgs_to.msglist.lock();
   }
-  taimsg_list_release_mutex(thrai.msgs_to.msglist);
+  thrai.msgs_to.msglist.unlock();
 
   return ret_abort;
 }
@@ -206,9 +207,8 @@ void tai_control_gained(struct ai_type *ait, struct player *pplayer)
 
     thrai.thread_running = TRUE;
 
-    fc_thread_cond_init(&thrai.msgs_to.thr_cond);
-    fc_init_mutex(&thrai.msgs_to.mutex);
-    fc_thread_start(&thrai.ait, tai_thread_start, ait);
+    thrai.ait->set_func(tai_thread_start, ait);
+    thrai.ait->start(QThread::NormalPriority);
   }
 }
 
@@ -225,11 +225,9 @@ void tai_control_lost(struct ai_type *ait, struct player *pplayer)
   if (thrai.num_players <= 0) {
     tai_send_msg(TAI_MSG_THR_EXIT, pplayer, NULL);
 
-    fc_thread_wait(&thrai.ait);
+    thrai.ait.wait();
     thrai.thread_running = FALSE;
 
-    fc_thread_cond_destroy(&thrai.msgs_to.thr_cond);
-    fc_destroy_mutex(&thrai.msgs_to.mutex);
     taimsg_list_destroy(thrai.msgs_to.msglist);
     taireq_list_destroy(thrai.reqs_from.reqlist);
   }
@@ -241,14 +239,14 @@ void tai_control_lost(struct ai_type *ait, struct player *pplayer)
 void tai_refresh(struct ai_type *ait, struct player *pplayer)
 {
   if (thrai.thread_running) {
-    taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
+    thrai.reqs_from.reqlist.lock();
     while (taireq_list_size(thrai.reqs_from.reqlist) > 0) {
       struct tai_req *req;
 
       req = taireq_list_get(thrai.reqs_from.reqlist, 0);
       taireq_list_remove(thrai.reqs_from.reqlist, req);
 
-      taireq_list_release_mutex(thrai.reqs_from.reqlist);
+      thrai.reqs_from.reqlist.unlock();
 
       log_debug("Plr thr sent %s", taireqtype_name(req->type));
 
@@ -263,9 +261,9 @@ void tai_refresh(struct ai_type *ait, struct player *pplayer)
 
       FC_FREE(req);
 
-      taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
+      thrai.reqs_from.reqlist.lock();
     }
-    taireq_list_release_mutex(thrai.reqs_from.reqlist);
+    thrai.reqs_from.reqlist.unlock();
   }
 }
 
@@ -275,10 +273,9 @@ void tai_refresh(struct ai_type *ait, struct player *pplayer)
  **************************************************************************/
 void tai_msg_to_thr(struct tai_msg *msg)
 {
-  fc_allocate_mutex(&thrai.msgs_to.mutex);
+  QMutexLocker locker(&thrai.msgs_to.mutex);
   taimsg_list_append(thrai.msgs_to.msglist, msg);
   fc_thread_cond_signal(&thrai.msgs_to.thr_cond);
-  fc_release_mutex(&thrai.msgs_to.mutex);
 }
 
 /**********************************************************************/ /**
@@ -286,9 +283,8 @@ void tai_msg_to_thr(struct tai_msg *msg)
  **************************************************************************/
 void tai_req_from_thr(struct tai_req *req)
 {
-  taireq_list_allocate_mutex(thrai.reqs_from.reqlist);
+  QMutexLocker locker(&thrai.reqs_from.reqlist);
   taireq_list_append(thrai.reqs_from.reqlist, req);
-  taireq_list_release_mutex(thrai.reqs_from.reqlist);
 }
 
 /**********************************************************************/ /**

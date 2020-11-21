@@ -166,7 +166,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else /* FREECIV_TESTMATIC */
+#else  /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -232,9 +232,9 @@ void srv_init(void)
 
   /* Initialize callbacks. */
   game.callbacks.unit_deallocate = identity_number_release;
-
   /* Initialize global mutexes */
-  fc_init_mutex(&game.server.mutexes.city_list);
+  QMutex* mutex = new QMutex;
+  game.server.mutexes.city_list = mutex;
 
   /* done */
   return;
@@ -1894,7 +1894,7 @@ void server_quit(void)
   rulesets_deinit();
   CALL_FUNC_EACH_AI(module_close);
   timing_log_free();
-  fc_destroy_mutex(&game.server.mutexes.city_list);
+  delete game.server.mutexes.city_list;
   free_libfreeciv();
   free_nls();
   con_log_close();

@@ -40,7 +40,7 @@
 
 #include "savemain.h"
 
-static fc_thread *save_thread = NULL;
+Q_GLOBAL_STATIC(fcThread, save_thread);
 
 /************************************************************************/ /**
    Main entry point for loading a game.
@@ -268,22 +268,10 @@ void save_game(const char *orig_filename, const char *save_reason,
     sz_strlcpy(stdata->filepath, qUtf8Printable(tmpname));
   }
 
-  if (save_thread != NULL) {
-    /* Previously started thread */
-    fc_thread_wait(save_thread);
-    if (!game.server.threaded_save) {
-      /* Setting has changed since the last save */
-      delete save_thread;
-      save_thread = NULL;
-    }
-  } else if (game.server.threaded_save) {
-    save_thread = new pthread_t;
-  }
-
-  if (save_thread != NULL) {
-    fc_thread_start(save_thread, &save_thread_run, stdata);
-  } else {
-    save_thread_run(stdata);
+  // Don't start another thread if game is being saved now
+  if (!save_thread->isRunning()) {
+    save_thread->set_func(save_thread_run, stdata);
+    save_thread->start(QThread::LowestPriority);
   }
 
   log_time(
@@ -294,10 +282,6 @@ void save_game(const char *orig_filename, const char *save_reason,
 /************************************************************************/ /**
    Close saving system.
  ****************************************************************************/
-void save_system_close(void)
-{
-  if (save_thread != NULL) {
-    fc_thread_wait(save_thread);
-    FC_FREE(save_thread);
-  }
+void save_system_close(void) {
+  save_thread->wait();
 }
