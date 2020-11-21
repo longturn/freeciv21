@@ -98,8 +98,6 @@
 static enum cmdlevel default_access_level = ALLOW_BASIC;
 static enum cmdlevel first_access_level = ALLOW_BASIC;
 
-static time_t *time_duplicate(const time_t *t);
-
 typedef QHash<QString, time_t> kickhash;
 Q_GLOBAL_STATIC(kickhash, kick_table_by_addr)
 Q_GLOBAL_STATIC(kickhash, kick_table_by_user)
@@ -230,9 +228,7 @@ static enum command_id command_named(const char *token,
 /**********************************************************************/ /**
    Initialize stuff related to this code module.
  **************************************************************************/
-void stdinhand_init(void)
-{
-}
+void stdinhand_init(void) {}
 
 /**********************************************************************/ /**
    Update stuff every turn that is related to this code module. Run this
@@ -309,15 +305,14 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM
-                            ? command_name_by_number(cmd)
-                            : cmd == CMD_AMBIGUOUS
-                                  /* TRANS: ambiguous command */
-                                  ? _("(ambiguous)")
-                                  : cmd == CMD_UNRECOGNIZED
-                                        /* TRANS: unrecognized command */
-                                        ? _("(unknown)")
-                                        : "(?!?)"; /* this case is a bug! */
+  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
+                        : cmd == CMD_AMBIGUOUS
+                            /* TRANS: ambiguous command */
+                            ? _("(ambiguous)")
+                            : cmd == CMD_UNRECOGNIZED
+                                  /* TRANS: unrecognized command */
+                                  ? _("(unknown)")
+                                  : "(?!?)"; /* this case is a bug! */
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -3548,7 +3543,8 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-                                    : is_ai(pplayer) ? _("AI") : _("Human"),
+              : is_ai(pplayer)      ? _("AI")
+                                    : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -6163,22 +6159,12 @@ static bool cut_client_connection(struct connection *caller, char *name,
 }
 
 /**********************************************************************/ /**
-   Utility for 'kick_hash' tables.
- **************************************************************************/
-static time_t *time_duplicate(const time_t *t)
-{
-  auto d = new time_t;
-  *d = *t;
-  return d;
-}
-
-/**********************************************************************/ /**
    Returns FALSE if the connection isn't kicked and can connect the server
    normally.
  **************************************************************************/
 bool conn_is_kicked(struct connection *pconn, int *time_remaining)
 {
-  time_t time_of_addr_kick, time_of_user_kick;
+  time_t time_of_addr_kick = 0, time_of_user_kick = 0;
   time_t now, time_of_kick = 0;
 
   if (NULL != time_remaining) {
@@ -7121,7 +7107,8 @@ static const char *option_value_accessor(int idx)
     return setting_bitwise_bit(pset, idx, FALSE);
     break;
   default:
-    fc_assert_ret_val(0, NULL);
+    fc_assert(false);
+    return nullptr;
   }
 }
 
@@ -7198,9 +7185,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  **************************************************************************/
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)
-              ? "first"
-              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
+  return ((idx == 0)   ? "first"
+          : (idx == 1) ? "new"
+                       : connection_name_accessor(idx - 2));
 }
 
 /**********************************************************************/ /**

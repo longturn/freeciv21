@@ -115,11 +115,6 @@ static void signal_handler(int sig)
  **************************************************************************/
 int main(int argc, char *argv[])
 {
-  int inx;
-  bool showhelp = FALSE;
-  bool showvers = FALSE;
-  char *option = NULL;
-
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
   if (LoadLibrary("exchndl.dll") == NULL) {

@@ -204,15 +204,31 @@ void log_close()
    Set what signal the assert* macros should raise on failed assertion
    (-1 to disable).
  **************************************************************************/
-void fc_assert_set_fatal(bool fatal)
-{
-  fatal_assertions = fatal;
-}
+void fc_assert_set_fatal(bool fatal) { fatal_assertions = fatal; }
 
 /**********************************************************************/ /**
    Checks whether the fc_assert* macros should raise on failed assertion.
  **************************************************************************/
 bool fc_assert_are_fatal() { return fatal_assertions; }
+
+/**********************************************************************/ /**
+   Handles a failed assertion.
+ **************************************************************************/
+void fc_assert_handle_failure(const char *condition, const char *file,
+                              int line, const char *function,
+                              const QString &message)
+{
+  QMessageLogger logger(file, line, assert_category().categoryName());
+  logger.critical("Assertion %s failed", condition);
+  if (!message.isEmpty()) {
+    logger.critical().noquote() << message;
+  }
+  logger.critical().noquote() /* TRANS: No full stop after the URL. */
+      << QString(_("Please report this message at %1")).arg(BUG_URL);
+  if (fc_assert_are_fatal()) {
+    logger.fatal("%s", _("Assertion failed"));
+  }
+}
 
 void log_time(QString msg, bool log)
 {

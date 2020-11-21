@@ -27,6 +27,8 @@ cmake_dependent_option(
 
 option(FREECIV_ENABLE_NLS "Enable internationalization" ON)
 
+option(FREECIV_ENABLE_WERROR "Error out on select compiler warnings" ON)
+
 set(FREECIV_BUG_URL "https://github.com/longturn/freeciv21/issues"
     CACHE STRING "Where to file bug reports")
 mark_as_advanced(FREECIV_BUG_URL)

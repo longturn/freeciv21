@@ -477,7 +477,7 @@ void page_pregame::start_page_menu(QPoint pos)
         str = QString(_("Pick nation"));
         action = new QAction(str, ui.start_players_tree);
         str = QString(player_name(pplayer)); /* PICK is a key */
-        QObject::connect(action, &QAction::triggered, [this, str]() {
+        QObject::connect(action, &QAction::triggered, [str]() {
           QString splayer;
           players_iterate(pplayer)
           {

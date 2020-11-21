@@ -26,9 +26,9 @@ struct signal_callback {
 
 /* Signal datastructure. */
 struct signal {
-  int nargs;                              /* number of arguments to pass */
-  enum api_types *arg_types;              /* argument types */
-  QList<signal_callback*> *callbacks;            /* connected callbacks */
+  int nargs;                           /* number of arguments to pass */
+  enum api_types *arg_types;           /* argument types */
+  QList<signal_callback *> *callbacks; /* connected callbacks */
   char *depr_msg; /* deprecation message to show if handler added */
 };
 
@@ -41,15 +41,15 @@ void luascript_signal_emit(struct fc_lua *fcl, const char *signal_name, ...);
 signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
                                            const char *signal_name,
                                            int nargs, ...);
-void deprecate_signal(signal_deprecator *deprecator, char *signal_name,
-                      char *replacement, char *deprecated_since);
+void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
+                      const char *replacement, const char *deprecated_since);
 void luascript_signal_callback(struct fc_lua *fcl, const char *signal_name,
                                const char *callback_name, bool create);
 bool luascript_signal_callback_defined(struct fc_lua *fcl,
                                        const char *signal_name,
                                        const char *callback_name);
 
-const QString& luascript_signal_by_index(struct fc_lua *fcl, int sindex);
-const char * luascript_signal_callback_by_index(struct fc_lua *fcl,
+QString luascript_signal_by_index(struct fc_lua *fcl, int sindex);
+const char *luascript_signal_callback_by_index(struct fc_lua *fcl,
                                                const char *signal_name,
                                                int sindex);

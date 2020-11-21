@@ -223,7 +223,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
                 (long unsigned) entries, (long unsigned) data_length);
 
   for (i = 0; i < entries; i++) {
-    struct attr_key key;
+    attr_key key;
     void *pvalue;
     int value_length;
     struct raw_data_out dout;
@@ -373,7 +373,6 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
                      void *data)
 {
   attr_key akey(key, id, x, y);
-  void *pvalue;
   int length;
   struct data_in din;
 
@@ -387,6 +386,8 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
     log_attribute("  not found");
     return 0;
   }
+
+  auto pvalue = attribute_hash->value(akey);
 
   dio_input_init(&din, pvalue, 0xffffffff);
   dio_get_uint32_raw(&din, &length);

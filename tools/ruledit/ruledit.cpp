@@ -60,8 +60,6 @@ struct ruledit_arguments reargs;
  **************************************************************************/
 int main(int argc, char **argv)
 {
-  int ui_options;
-
   /* Load win32 post-crash debugger */
 #ifdef FREECIV_MSWINDOWS
   if (LoadLibrary("exchndl.dll") == NULL) {
@@ -105,7 +103,7 @@ int main(int argc, char **argv)
 
   if (comments_load()) {
     auto main = new ruledit_main;
-    auto gui = new ruledit_gui(main);
+    new ruledit_gui(main);
 
     main->show();
 

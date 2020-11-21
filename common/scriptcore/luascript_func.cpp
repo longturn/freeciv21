@@ -94,10 +94,8 @@ bool luascript_func_check(struct fc_lua *fcl,
   for (auto qfunc_name : fcl->funcs->keys()) {
     char *func_name = qfunc_name.toLocal8Bit().data();
     if (!luascript_check_function(fcl, func_name)) {
-      struct luascript_func *pfunc;
-
       fc_assert_ret_val(fcl->funcs->contains(func_name), FALSE);
-
+      auto pfunc = fcl->funcs->value(func_name);
       if (pfunc->required) {
         strvec_append(missing_func_required, func_name);
       } else {

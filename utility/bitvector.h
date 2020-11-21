@@ -34,9 +34,14 @@
 #else
 #define _BV_ASSERT(bv, bit) (void) 0
 #endif
-#define BV_ISSET(bv, bit)                                                   \
-  (_BV_ASSERT(bv, bit),                                                     \
-   ((bv).vec[_BV_BYTE_INDEX(bit)] & _BV_BITMASK(bit)) != 0)
+
+template <class BV> inline bool BV_ISSET(const BV &bv, int bit)
+{
+  fc_assert_ret_val(bit >= 0 && bit < (signed int) sizeof(bv.vec) * 8,
+                    false);
+  return (bv.vec[_BV_BYTE_INDEX(bit)] & _BV_BITMASK(bit)) != 0;
+}
+
 #define BV_SET(bv, bit)                                                     \
   do {                                                                      \
     _BV_ASSERT(bv, bit);                                                    \
@@ -94,6 +99,5 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
   typedef struct {                                                          \
     unsigned char vec[_BV_BYTES(bits)];                                     \
   } name
-
 
 #endif /* FC__BITVECTOR_H */

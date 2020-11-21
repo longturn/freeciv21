@@ -210,8 +210,8 @@ signal_deprecator *luascript_signal_create(struct fc_lua *fcl,
 /*************************************************************************/ /**
    Mark signal deprecated.
  *****************************************************************************/
-void deprecate_signal(signal_deprecator *deprecator, char *signal_name,
-                      char *replacement, char *deprecated_since)
+void deprecate_signal(signal_deprecator *deprecator, const char *signal_name,
+                      const char *replacement, const char *deprecated_since)
 {
   if (deprecator != NULL) {
     char buffer[1024];
@@ -324,7 +324,8 @@ void luascript_signal_init(struct fc_lua *fcl)
  *****************************************************************************/
 void luascript_signal_free(struct fc_lua *fcl)
 {
-  if (!fcl || !fcl->signals_hash) return;
+  if (!fcl || !fcl->signals_hash)
+    return;
   for (auto nissan : fcl->signals_hash->values()) {
     signal_destroy(nissan);
   }
@@ -337,10 +338,10 @@ void luascript_signal_free(struct fc_lua *fcl)
 /*************************************************************************/ /**
    Return the name of the signal with the given index.
  *****************************************************************************/
-const QString &luascript_signal_by_index(struct fc_lua *fcl, int sindex)
+QString luascript_signal_by_index(struct fc_lua *fcl, int sindex)
 {
-  fc_assert_ret_val(fcl != NULL, NULL);
-  fc_assert_ret_val(fcl->signal_names != NULL, NULL);
+  fc_assert_ret_val(fcl != NULL, QString());
+  fc_assert_ret_val(fcl->signal_names != NULL, QString());
 
   return fcl->signal_names->at(sindex);
 }

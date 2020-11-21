@@ -136,5 +136,6 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   }
 
   /* Should never reach here */
-  fc_assert_ret_val(FALSE, NULL);
+  fc_assert(FALSE);
+  return nullptr;
 }

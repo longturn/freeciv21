@@ -63,7 +63,6 @@ struct gotoline_counter {
 };
 
 static inline struct gotoline_counter *gotoline_counter_new(void);
-static void gotoline_counter_destroy(struct gotoline_counter *pglc);
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
 Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
@@ -434,15 +433,6 @@ static inline struct gotoline_counter *gotoline_counter_new(void)
   struct gotoline_counter *pglc =
       static_cast<gotoline_counter *>(fc_calloc(1, sizeof(*pglc)));
   return pglc;
-}
-
-/************************************************************************/ /**
-   Create a new goto line counter.
- ****************************************************************************/
-static void gotoline_counter_destroy(struct gotoline_counter *pglc)
-{
-  fc_assert_ret(NULL != pglc);
-  delete pglc;
 }
 
 /************************************************************************/ /**
@@ -3533,9 +3523,6 @@ void mapdeco_clear_gotoroutes(void)
  ****************************************************************************/
 bool map_canvas_resized(int width, int height)
 {
-  int old_tile_width = mapview.tile_width;
-  int old_tile_height = mapview.tile_height;
-  int old_width = mapview.width, old_height = mapview.height;
   int tile_width = (width + tileset_tile_width(tileset) - 1)
                    / (tileset_tile_width(tileset));
   int tile_height = (height + tileset_tile_height(tileset) - 1)
@@ -3675,9 +3662,9 @@ void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 
@@ -3785,6 +3772,8 @@ static struct tile *link_mark_tile(const struct link_mark *pmark)
     struct unit *punit = game_unit_by_number(pmark->id);
     return punit ? unit_tile(punit) : NULL;
   }
+  case TLT_INVALID:
+    fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
   return NULL;
 }
@@ -3801,6 +3790,8 @@ static struct color *link_mark_color(const struct link_mark *pmark)
     return get_color(tileset, COLOR_MAPVIEW_TILE_LINK);
   case TLT_UNIT:
     return get_color(tileset, COLOR_MAPVIEW_UNIT_LINK);
+  case TLT_INVALID:
+    fc_assert_ret_val(pmark->type != TLT_INVALID, nullptr);
   }
   return NULL;
 }

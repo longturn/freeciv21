@@ -4756,8 +4756,8 @@ static struct act_prob action_prob(
     break;
   };
 
-  fc_assert_ret_val_msg(FALSE, ACTPROB_NOT_IMPLEMENTED,
-                        "Should be yes, maybe or no");
+  fc_assert_msg(false, "Should be yes, maybe or no");
+  return ACTPROB_NOT_IMPLEMENTED;
 }
 
 /**********************************************************************/ /**

@@ -83,7 +83,7 @@ enum pf_zoc_type {
 struct pf_map {
 #ifdef PF_DEBUG
   enum pf_mode mode; /* The mode of the map, for conversion checking. */
-#endif               /* PF_DEBUG */
+#endif /* PF_DEBUG */
 
   /* "Virtual" function table. */
   void (*destroy)(struct pf_map *pfm); /* Destructor. */
@@ -3424,9 +3424,6 @@ QDebug &operator<<(QDebug &logger, const pf_path *path)
  * units needs to reach the start tile. It stores a pf_map for every unit
  * type. */
 
-static void pf_reverse_map_destroy_pos(struct pf_position *pos);
-static void pf_reverse_map_destroy_param(struct pf_parameter *param);
-
 static const enum unit_type_flag_id signifiant_flags[3] = {
     UTYF_IGTER, UTYF_CIVILIAN, UTYF_COAST_STRICT};
 
@@ -3469,7 +3466,7 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 
 inline uint qHash(const pf_parameter &key, uint seed)
 {
-  uint result;
+  uint result = 0;
   size_t b, i;
   static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
 
@@ -3497,22 +3494,6 @@ struct pf_reverse_map {
   QHash<const pf_parameter *, struct pf_position *>
       *hash; /* A hash where pf_position are stored. */
 };
-
-/************************************************************************/ /**
-   Destroy the position if not NULL.
- ****************************************************************************/
-static void pf_reverse_map_destroy_pos(struct pf_position *pos)
-{
-  delete pos;
-}
-
-/************************************************************************/ /**
-   Destroy the parameter.
- ****************************************************************************/
-static void pf_reverse_map_destroy_param(struct pf_parameter *param)
-{
-  delete param;
-}
 
 /************************************************************************/ /**
    'pf_reverse_map' constructor. If 'max_turns' is positive, then it won't

@@ -133,7 +133,7 @@ static void save_thread_run(void *arg)
   }
 
   secfile_destroy(stdata->sfile);
-  delete arg;
+  delete stdata;
 }
 
 /************************************************************************/ /**
@@ -144,7 +144,7 @@ void save_game(const char *orig_filename, const char *save_reason,
                bool scenario)
 {
   char *dot, *filename;
-  civtimer *timer_cpu, *timer_user;
+  civtimer *timer_cpu;
   struct save_thread_data *stdata = new save_thread_data();
 
   stdata->save_compress_type = game.server.save_compress_type;
@@ -170,7 +170,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       filename[0] = '\0';
     } else {
       char *end_dot;
-      char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
+      const char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
       bool stripped = TRUE;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
