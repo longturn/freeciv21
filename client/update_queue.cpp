@@ -153,9 +153,6 @@ waiting_queue_data_extract(struct waiting_queue_data *wq_data)
  ****************************************************************************/
 void update_queue_init(void)
 {
-  processing_started_waiting_queue->clear();
-  processing_finished_waiting_queue->clear();
-  update_queue->clear();
   update_queue_frozen_level = 0;
   update_queue_has_idle_callback = FALSE;
 }
