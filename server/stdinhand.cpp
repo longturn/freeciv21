@@ -6164,7 +6164,7 @@ static bool cut_client_connection(struct connection *caller, char *name,
  **************************************************************************/
 bool conn_is_kicked(struct connection *pconn, int *time_remaining)
 {
-  time_t time_of_addr_kick, time_of_user_kick;
+  time_t time_of_addr_kick = 0, time_of_user_kick = 0;
   time_t now, time_of_kick = 0;
 
   if (NULL != time_remaining) {
