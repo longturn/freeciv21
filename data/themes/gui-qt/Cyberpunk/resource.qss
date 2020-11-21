@@ -46,13 +46,29 @@ resize_widget
   background: #1155BB;
 }
 
+QPushButton[main_pagebt="true"] {
+  color: white;
+  min-height: 40px;
+  min-width: 200px;
+  background: black;
+  border: 2px solid #b9b20f;
+  border-radius: 0px;
+  padding: 0px;
+}
+QPushButton:hover[main_pagebt="true"] {
+  color: white;
+  background: #03031b;
+  border: 3px solid #fbff00;
+}
+
 QPushButton {
   color: white;
   background: black;
   border: 2px solid #b9b20f;
-  border-radius: 1px;
-  padding: 2px;
+  border-radius: 0px;
+  padding: 0px;
 }
+
 
 QPushButton:hover {
   color: white;
