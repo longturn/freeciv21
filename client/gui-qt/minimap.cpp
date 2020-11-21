@@ -196,18 +196,31 @@ minimap_thread::minimap_thread(QObject *parent) : QThread(parent) {}
 /**********************************************************************/ /**
    Minimap thread's desctructor
  **************************************************************************/
-minimap_thread::~minimap_thread() { wait(); }
+minimap_thread::~minimap_thread()
+{
+  mutex.lock();
+  abort = true;
+  condition.wakeOne();
+  mutex.unlock();
+  wait();
+}
 
 /**********************************************************************/ /**
    Starts thread
  **************************************************************************/
 void minimap_thread::render(double scale_factor, int width, int height)
 {
-  QMutexLocker locker(&mutex);
+  restart = false;
+  abort = false;
   mini_width = width;
   mini_height = height;
   scale = scale_factor;
-  start(LowPriority);
+  if (!isRunning()) {
+    start(LowPriority);
+  } else {
+    restart = true;
+    condition.wakeOne();
+  }
 }
 
 /**********************************************************************/ /**
@@ -215,53 +228,61 @@ void minimap_thread::render(double scale_factor, int width, int height)
  **************************************************************************/
 void minimap_thread::run()
 {
-  QImage tpix;
-  QImage gpix;
-  QImage image(QSize(mini_width, mini_height), QImage::Format_RGB32);
-  QImage bigger_pix(gui_options.overview.width * 2,
-                    gui_options.overview.height * 2, QImage::Format_RGB32);
-  int delta_x, delta_y;
-  int x, y, ix, iy;
-  float wf, hf;
-  QPixmap *src, *dst;
+  forever
+  {
+    QImage tpix;
+    QImage gpix;
+    QImage image(QSize(mini_width, mini_height), QImage::Format_RGB32);
+    QImage bigger_pix(gui_options.overview.width * 2,
+                      gui_options.overview.height * 2, QImage::Format_RGB32);
+    int delta_x, delta_y;
+    int x, y, ix, iy;
+    float wf, hf;
+    QPixmap *src, *dst;
 
-  mutex.lock();
-  if (gui_options.overview.map != nullptr) {
-    if (scale > 1) {
-      /* move minimap now,
-         scale later and draw without looking for origin */
-      src = &gui_options.overview.map->map_pixmap;
-      dst = &gui_options.overview.window->map_pixmap;
-      x = gui_options.overview.map_x0;
-      y = gui_options.overview.map_y0;
-      ix = gui_options.overview.width - x;
-      iy = gui_options.overview.height - y;
-      pixmap_copy(dst, src, 0, 0, ix, iy, x, y);
-      pixmap_copy(dst, src, 0, y, ix, 0, x, iy);
-      pixmap_copy(dst, src, x, 0, 0, iy, ix, y);
-      pixmap_copy(dst, src, x, y, 0, 0, ix, iy);
-      tpix = gui_options.overview.window->map_pixmap.toImage();
-      wf = static_cast<float>(gui_options.overview.width) / scale;
-      hf = static_cast<float>(gui_options.overview.height) / scale;
-      x = 0;
-      y = 0;
-      unscale_point(scale, x, y);
-      bigger_pix.fill(Qt::black);
-      delta_x = gui_options.overview.width / 2;
-      delta_y = gui_options.overview.height / 2;
-      image_copy(&bigger_pix, &tpix, 0, 0, delta_x, delta_y,
-                 gui_options.overview.width, gui_options.overview.height);
-      gpix = bigger_pix.copy(delta_x + x, delta_y + y, wf, hf);
-      image = gpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
-                          Qt::FastTransformation);
-    } else {
-      tpix = gui_options.overview.map->map_pixmap.toImage();
-      image = tpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
-                          Qt::FastTransformation);
+    if (abort)
+      return;
+    mutex.lock();
+    if (gui_options.overview.map != nullptr) {
+      if (scale > 1) {
+        /* move minimap now,
+           scale later and draw without looking for origin */
+        src = &gui_options.overview.map->map_pixmap;
+        dst = &gui_options.overview.window->map_pixmap;
+        x = gui_options.overview.map_x0;
+        y = gui_options.overview.map_y0;
+        ix = gui_options.overview.width - x;
+        iy = gui_options.overview.height - y;
+        pixmap_copy(dst, src, 0, 0, ix, iy, x, y);
+        pixmap_copy(dst, src, 0, y, ix, 0, x, iy);
+        pixmap_copy(dst, src, x, 0, 0, iy, ix, y);
+        pixmap_copy(dst, src, x, y, 0, 0, ix, iy);
+        tpix = gui_options.overview.window->map_pixmap.toImage();
+        wf = static_cast<float>(gui_options.overview.width) / scale;
+        hf = static_cast<float>(gui_options.overview.height) / scale;
+        x = 0;
+        y = 0;
+        unscale_point(scale, x, y);
+        bigger_pix.fill(Qt::black);
+        delta_x = gui_options.overview.width / 2;
+        delta_y = gui_options.overview.height / 2;
+        image_copy(&bigger_pix, &tpix, 0, 0, delta_x, delta_y,
+                   gui_options.overview.width, gui_options.overview.height);
+        gpix = bigger_pix.copy(delta_x + x, delta_y + y, wf, hf);
+        image = gpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
+                            Qt::FastTransformation);
+      } else {
+        tpix = gui_options.overview.map->map_pixmap.toImage();
+        image = tpix.scaled(mini_width, mini_height, Qt::IgnoreAspectRatio,
+                            Qt::FastTransformation);
+      }
     }
+    emit rendered_image(image);
+    if (!restart)
+      condition.wait(&mutex);
+    restart = false;
+    mutex.unlock();
   }
-  emit rendered_image(image);
-  mutex.unlock();
 }
 
 /**********************************************************************/ /**
@@ -421,10 +442,7 @@ void minimap_view::mouseReleaseEvent(QMouseEvent *event)
 /**********************************************************************/ /**
    Return a canvas that is the overview window.
  **************************************************************************/
-void update_minimap()
-{
-  queen()->minimapview_wdg->update_image();
-}
+void update_minimap() { queen()->minimapview_wdg->update_image(); }
 
 /**********************************************************************/ /**
    Called when the map size changes. This may be used to change the

@@ -19,6 +19,7 @@
 #include <QQueue>
 #include <QThread>
 #include <QTimer>
+#include <QWaitCondition>
 // gui-qt is The One
 #include "widgetdecorations.h"
 class QImage;
@@ -53,6 +54,9 @@ private:
   int mini_width, mini_height;
   double scale;
   QMutex mutex;
+  bool restart;
+  bool abort;
+  QWaitCondition condition;
 };
 
 /**************************************************************************
