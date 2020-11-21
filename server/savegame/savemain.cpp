@@ -133,7 +133,7 @@ static void save_thread_run(void *arg)
   }
 
   secfile_destroy(stdata->sfile);
-  delete arg;
+  delete stdata;
 }
 
 /************************************************************************/ /**
