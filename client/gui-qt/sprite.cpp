@@ -41,12 +41,8 @@ const char **gfx_fileextensions(void)
 
   gfx_array_extensions = new const char *[gfx_ext.count() + 1];
   while (!gfx_ext.isEmpty()) {
-    char *ext;
-
     cp = gfx_ext.takeFirst();
-    ext = new char[sizeof(cp.data())];
-    strncpy(ext, cp.data(), sizeof(cp));
-    gfx_array_extensions[j] = ext;
+    gfx_array_extensions[j] = fc_strdup(cp.data());
     j++;
   }
   gfx_array_extensions[j] = NULL;
