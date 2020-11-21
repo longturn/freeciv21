@@ -1,12 +1,16 @@
 # Lists of warnings to enable
-set(GCC_WARNINGS all no-sign-compare)
+set(GCC_WARNINGS
+  all no-sign-compare)
 set(CLANG_WARNINGS ${GCC_WARNINGS} no-tautological-compare)
 
 # Candidates for -Werror
 # Warnings in common between GCC and clang
 set(GCC_ERROR_WARNINGS
+  array-bounds
+  delete-incomplete
   int-in-bool-context
   return-type
+  sequence-point
   switch
   unused-value)
 # clang-only warnings
@@ -15,7 +19,9 @@ set(CLANG_ERROR_WARNINGS ${GCC_ERROR_WARNINGS}
   return-stack-address
   uninitialized)
 # GCC-only warnings
-list(APPEND GCC_ERROR_WARNINGS maybe-uninitialized)
+list(APPEND GCC_ERROR_WARNINGS
+  maybe-uninitialized
+  stringop-truncation)
 
 # Prepend -W and -Werror=
 list(TRANSFORM GCC_WARNINGS PREPEND -W)
