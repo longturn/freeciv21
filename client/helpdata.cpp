@@ -661,9 +661,10 @@ static struct help_item *new_help_item(int type)
 static int help_item_compar(const struct help_item *v1,
                             const struct help_item *v2)
 {
-  if (v1->topic != v2->topic)
-    return v1->topic > v2->topic;
-  return v1->text > v2->text;
+  if (QString(v1->topic) != QString(v2->topic))
+    return QString(v1->topic) < QString(v2->topic);
+  else
+    return 0;
 }
 
 /************************************************************************/ /**
