@@ -171,8 +171,5 @@
 /* libintl.h available */
 #cmakedefine FREECIV_HAVE_LIBINTL_H
 
-/* Readline support */
-#cmakedefine FREECIV_HAVE_LIBREADLINE
-
 /* Windows build */
 #cmakedefine FREECIV_MSWINDOWS 1

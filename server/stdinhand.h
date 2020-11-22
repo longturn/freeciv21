@@ -62,8 +62,6 @@ bool conn_is_kicked(struct connection *pconn, int *time_remaining);
 
 void set_running_game_access_level(void);
 
-#ifdef FREECIV_HAVE_LIBREADLINE
 char **freeciv_completion(const char *text, int start, int end);
-#endif
 
 #endif /* FC__STDINHAND_H */

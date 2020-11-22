@@ -19,9 +19,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef FREECIV_HAVE_LIBREADLINE
 #include <readline/readline.h>
-#endif
 
 /* utility */
 #include "deprecations.h"
@@ -43,11 +41,7 @@
 static bool console_show_prompt = FALSE;
 static bool console_prompt_is_showing = FALSE;
 static bool console_rfcstyle = FALSE;
-#ifdef FREECIV_HAVE_LIBREADLINE
 static bool readline_received_enter = TRUE;
-#else
-static int con_dump(enum rfc_status rfc_status, const char *message, ...);
-#endif
 
 namespace {
 static QString log_prefix();
@@ -93,16 +87,11 @@ static void con_update_prompt(void)
     return;
   }
 
-#ifdef FREECIV_HAVE_LIBREADLINE
   if (readline_received_enter) {
     readline_received_enter = FALSE;
   } else {
     rl_forced_update_display();
   }
-#else /* FREECIV_HAVE_LIBREADLINE */
-  con_dump(C_READY, "> ");
-  con_flush();
-#endif /* FREECIV_HAVE_LIBREADLINE */
 
   console_prompt_is_showing = TRUE;
 }
@@ -150,32 +139,6 @@ void con_log_close(void)
 
   log_close();
 }
-
-#ifndef FREECIV_HAVE_LIBREADLINE
-/********************************************************************/ /**
-   Write to console without line-break, don't print prompt.
- ************************************************************************/
-static int con_dump(enum rfc_status rfc_status, const char *message, ...)
-{
-  static char buf[MAX_LEN_CONSOLE_LINE];
-  va_list args;
-
-  va_start(args, message);
-  fc_vsnprintf(buf, sizeof(buf), message, args);
-  va_end(args);
-
-  if (console_prompt_is_showing) {
-    fc_printf("\n");
-  }
-  if ((console_rfcstyle) && (rfc_status >= 0)) {
-    fc_printf("%.3d %s", rfc_status, buf);
-  } else {
-    fc_printf("%s", buf);
-  }
-  console_prompt_is_showing = FALSE;
-  return (int) strlen(buf);
-}
-#endif /* FREECIV_HAVE_LIBREADLINE */
 
 /********************************************************************/ /**
    Write to console and add line-break, and show prompt if required.
@@ -274,9 +237,7 @@ void con_prompt_off(void) { console_show_prompt = FALSE; }
 void con_prompt_enter(void)
 {
   console_prompt_is_showing = FALSE;
-#ifdef FREECIV_HAVE_LIBREADLINE
   readline_received_enter = TRUE;
-#endif
 }
 
 /********************************************************************/ /**
@@ -285,7 +246,5 @@ void con_prompt_enter(void)
 void con_prompt_enter_clear(void)
 {
   console_prompt_is_showing = TRUE;
-#ifdef FREECIV_HAVE_LIBREADLINE
   readline_received_enter = FALSE;
-#endif
 }
