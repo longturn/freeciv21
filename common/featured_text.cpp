@@ -121,7 +121,7 @@ static const char *text_tag_type_name(enum text_tag_type type)
   case TTT_LINK:
     return "link";
   case TTT_INVALID:
-    fc_assert_ret_val(type != TTT_INVALID, nullptr);
+    return nullptr;
   };
   /* Don't handle the default case to be warned if a new value was added. */
   return NULL;
@@ -147,7 +147,7 @@ static const char *text_tag_type_short_name(enum text_tag_type type)
   case TTT_LINK:
     return "l";
   case TTT_INVALID:
-    fc_assert_ret_val(type != TTT_INVALID, nullptr);
+    return nullptr;
   };
   /* Don't handle the default case to be warned if a new value was added. */
   return NULL;
