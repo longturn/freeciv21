@@ -210,6 +210,7 @@ void srv_init(void)
   srvarg.metaconnection_persistent = FALSE;
 
   srvarg.port = DEFAULT_SOCK_PORT;
+  srvarg.user_specified_port = false;
 
   srvarg.saves_pathname = QStringLiteral("");
   srvarg.scenarios_pathname = QStringLiteral("");
@@ -233,7 +234,7 @@ void srv_init(void)
   /* Initialize callbacks. */
   game.callbacks.unit_deallocate = identity_number_release;
   /* Initialize global mutexes */
-  QMutex* mutex = new QMutex;
+  QMutex *mutex = new QMutex;
   game.server.mutexes.city_list = mutex;
 
   /* done */

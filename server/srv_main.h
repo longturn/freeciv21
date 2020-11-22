@@ -34,6 +34,7 @@ struct server_arguments {
   QString bind_addr;
   /* this server's listen port */
   int port;
+  bool user_specified_port;
   /* address to bind when connecting to the metaserver (NULL => bind_addr) */
   QString bind_meta_addr;
   /* filenames */

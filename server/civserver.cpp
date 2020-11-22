@@ -303,6 +303,7 @@ int main(int argc, char *argv[])
   if (parser.isSet("port")) {
     bool conversion_ok;
     srvarg.port = parser.value("port").toUInt(&conversion_ok);
+    srvarg.user_specified_port = true;
     if (!conversion_ok) {
       qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
