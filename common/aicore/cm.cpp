@@ -338,8 +338,9 @@ struct cm_result *cm_result_new(struct city *pcity)
   result = new cm_result[1]();
   result->city_radius_sq =
       pcity ? city_map_radius_sq_get(pcity) : CITY_MAP_MAX_RADIUS_SQ;
-  result->worker_positions =
-      new bool[city_map_tiles(result->city_radius_sq)]();
+  int tiles = city_map_tiles(result->city_radius_sq);
+  fc_assert_ret_val(tiles > 0, nullptr);
+  result->worker_positions = new bool[tiles]();
 
   /* test if the city pointer is valid; the cm_result struct can be
    * returned as it uses the maximal possible value for the size of

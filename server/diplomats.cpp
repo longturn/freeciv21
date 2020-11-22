@@ -279,8 +279,8 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
                           struct city *pcity, const struct action *paction)
 {
   struct player *cplayer;
-  struct packet_unit_short_info unit_packet;
-  struct packet_city_info city_packet;
+  struct packet_unit_short_info unit_packet{};
+  struct packet_city_info city_packet{};
   struct traderoute_packet_list *routes;
 
   /* Fetch target city's player.  Sanity checks. */
