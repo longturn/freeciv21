@@ -54,6 +54,8 @@ endif()
 # backtrace_symbols from libgcc.
 # Options supported by backtrace-cpp: libdw, libdwarf, libbfd, backtrace_symbols
 # Options supported by us: libdw, backtrace_symbol
+set(BACKWARD_HAS_DW 0)
+set(BACKWARD_HAS_BACKTRACE_SYMBOLS 0)
 if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   # Native Windows API
   if (MSVC)
@@ -63,7 +65,6 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   endif()
 
   # libdw
-  set(BACKWARD_HAS_DW 0)
   if (NOT CAN_RETRIEVE_SYMBOLS)
     find_package(PkgConfig)
     if (PKG_CONFIG_FOUND)
@@ -79,7 +80,6 @@ if (CAN_UNWIND_STACK) # If we can't unwind, everything below is useless
   endif()
 
   # Last-resort: backtrace_symbol
-  set(BACKWARD_HAS_BACKTRACE_SYMBOLS 0)
   if (NOT CAN_RETRIEVE_SYMBOLS)
     find_package(PkgConfig)
     check_include_file(execinfo.h HAVE_EXECINFO_H)
