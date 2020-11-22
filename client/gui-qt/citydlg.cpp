@@ -2920,7 +2920,7 @@ void qtg_popdown_city_dialog(struct city *pcity)
 /************************************************************************/ /**
    Close the dialogs for all cities.
  ****************************************************************************/
-void qtg_popdown_all_city_dialogs() { destroy_city_dialog(); }
+void qtg_popdown_all_city_dialogs() { city_dialog::instance()->hide(); }
 
 /************************************************************************/ /**
    Refresh (update) all data for the given city's dialog.
