@@ -2585,7 +2585,7 @@ void city_dialog::update_improvements()
   QPixmap pix_scaled;
   QString str, tooltip;
   QTableWidgetItem *qitem;
-  struct sprite *sprite;
+  struct sprite *sprite = nullptr;
   int h, cost, item, targets_used, col, upkeep;
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
@@ -2630,7 +2630,7 @@ void city_dialog::update_improvements()
       tooltip = get_tooltip_unit(target.value.utype, true).trimmed();
       sprite = get_unittype_sprite(get_tileset(), target.value.utype,
                                    direction8_invalid());
-    } else {
+    } else if (target.kind == VUT_IMPROVEMENT) {
       str = city_improvement_name_translation(pcity, target.value.building);
       sprite = get_building_sprite(tileset, target.value.building);
       tooltip = get_tooltip_improvement(target.value.building, pcity, true)
