@@ -232,7 +232,6 @@ void help_dialog::make_tree()
     const char *s;
     int last;
     title = pitem->topic;
-
     for (s = pitem->topic; *s == ' '; s++) {
       /* nothing */
     }
