@@ -89,6 +89,7 @@ target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/default)
 target_include_directories(server PUBLIC ${CMAKE_SOURCE_DIR}/ai/classic)
 
 target_link_libraries(server PUBLIC Qt5::Core Qt5::Network server_gen)
+target_link_libraries(server PRIVATE Readline::readline)
 
 add_subdirectory(advisors)
 add_subdirectory(generator)
@@ -103,10 +104,6 @@ target_link_libraries(server PRIVATE savegame)
 target_link_libraries(server PRIVATE scripting)
 target_link_libraries(server PRIVATE ai)
 target_link_libraries(server PRIVATE ai_classic)
-
-if(FREECIV_HAVE_LIBREADLINE)
-  target_link_libraries(server PRIVATE Readline::readline)
-endif()
 
 # Create an empty file to build the server from. srv_main.cpp is needed by ruledit
 # so it has to be in the freeciv_server library.

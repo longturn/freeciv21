@@ -29,10 +29,7 @@ if(Iconv_FOUND)
   set(HAVE_ICONV TRUE) # For compiler macro
   set(FREECIV_HAVE_ICONV TRUE) # For CMake code
 endif()
-find_package(Readline)
-if(Readline_FOUND)
-  set(FREECIV_HAVE_LIBREADLINE TRUE)
-endif()
+find_package(Readline REQUIRED)
 
 # Internationalization
 add_custom_target(freeciv_translations)
