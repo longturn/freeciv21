@@ -638,12 +638,12 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
     last_i = i.key();
     j = i;
     if (i != mm.constBegin()) {
-      j--;
+      --j;
     }
     if (j.key() == i.key() && i != j) {
       final_string = final_string.prepend(j.value());
       final_string = final_string.prepend(i.value());
-      i--;
+      --i;
     } else {
       final_string = final_string.prepend(i.value());
     }

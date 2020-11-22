@@ -259,13 +259,12 @@ void eco_report::disband_units()
 
     if (putype) {
       disband_all_units(putype, false, buf, sizeof(buf));
+      result = new hud_message_box(king()->central_wdg);
+      result->set_text_title(buf, _("Disband Results"));
+      result->setStandardButtons(QMessageBox::Ok);
+      result->setAttribute(Qt::WA_DeleteOnClose);
+      result->show();
     }
-
-    result = new hud_message_box(king()->central_wdg);
-    result->set_text_title(buf, _("Disband Results"));
-    result->setStandardButtons(QMessageBox::Ok);
-    result->setAttribute(Qt::WA_DeleteOnClose);
-    result->show();
   });
 }
 

@@ -362,7 +362,7 @@ void diplo_wdg::show_menu(int player)
         some_action = adv_menu->addAction(adv_iter.key());
         connect(some_action, &QAction::triggered, this,
                 [=]() { give_advance(id); });
-        adv_iter++;
+        ++adv_iter;
       }
     } else {
       adv_menu->setDisabled(true);
@@ -387,7 +387,7 @@ void diplo_wdg::show_menu(int player)
         some_action = city_menu->addAction(city_iter.key());
         connect(some_action, &QAction::triggered, this,
                 [=]() { give_city(id); });
-        city_iter++;
+        ++city_iter;
       }
     } else {
       city_menu->setDisabled(true);

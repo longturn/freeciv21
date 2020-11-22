@@ -270,10 +270,7 @@ qfc_dialog::qfc_dialog(QWidget *parent)
   close_pix = fc_icons::instance()->get_pixmap("cclose");
 }
 
-qfc_dialog::~qfc_dialog()
-{
-  delete close_pix;
-}
+qfc_dialog::~qfc_dialog() { delete close_pix; }
 
 /***********************************************************************/ /**
    Paint event for themed dialog
@@ -812,11 +809,7 @@ void races_dialog::ok_pressed()
 /***********************************************************************/ /**
    Default actions provider constructor
  ***************************************************************************/
-qdef_act::qdef_act()
-{
-  vs_city = -1;
-  vs_unit = -1;
-}
+qdef_act::qdef_act() : vs_city(-1), vs_unit(-1) {}
 
 /***********************************************************************/ /**
    Returns instance of qdef_act
@@ -1100,11 +1093,9 @@ Choice_dialog_button::Choice_dialog_button(const QString title,
                                            pfcn_void func_in,
                                            QVariant data1_in,
                                            QVariant data2_in)
-    : QPushButton(title)
+    : QPushButton(title), data1(data1_in), data2(data2_in)
 {
   func = func_in;
-  data1 = data1_in;
-  data2 = data2_in;
 }
 
 /***********************************************************************/ /**

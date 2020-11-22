@@ -751,7 +751,7 @@ void city_widget::fill_data(menu_labels which,
     action = menu->addAction(map_iter.key());
     action->setData(map_iter.value());
     action->setProperty("FC", which);
-    map_iter++;
+    ++map_iter;
   }
   if (custom_labels.isEmpty()) {
     menu->setDisabled(true);

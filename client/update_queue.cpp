@@ -162,19 +162,27 @@ void update_queue_init(void)
  ****************************************************************************/
 void update_queue_free(void)
 {
-  while (!update_queue->isEmpty()) {
+  while (update_queue.exists() && !update_queue->isEmpty()) {
     updatePair pair = update_queue->dequeue();
     update_queue_data_destroy(pair.second);
   }
 
-  for (auto a : processing_started_waiting_queue->values()) {
-    waiting_queue_list_iterate(a, data) { waiting_queue_data_destroy(data); }
-    waiting_queue_list_iterate_end;
-  }
-  for (auto a : processing_finished_waiting_queue->values()) {
-    waiting_queue_list_iterate(a, data) { waiting_queue_data_destroy(data); }
-    waiting_queue_list_iterate_end;
-  }
+  if (processing_started_waiting_queue.exists())
+    for (auto a : processing_started_waiting_queue->values()) {
+      waiting_queue_list_iterate(a, data)
+      {
+        waiting_queue_data_destroy(data);
+      }
+      waiting_queue_list_iterate_end;
+    }
+  if (processing_finished_waiting_queue.exists())
+    for (auto a : processing_finished_waiting_queue->values()) {
+      waiting_queue_list_iterate(a, data)
+      {
+        waiting_queue_data_destroy(data);
+      }
+      waiting_queue_list_iterate_end;
+    }
   update_queue_frozen_level = 0;
   update_queue_has_idle_callback = FALSE;
 }

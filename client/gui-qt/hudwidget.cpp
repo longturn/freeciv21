@@ -225,11 +225,10 @@ void hud_message_box::paintEvent(QPaintEvent *event)
    Hud text constructor takes text to display and time
  ****************************************************************************/
 hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), text(s)
 {
   int size;
 
-  text = s;
   timeout = time_secs;
 
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
