@@ -2018,7 +2018,7 @@ void city_dialog::display_worklist_menu(const QPoint)
     action = insert_menu->addAction(map_iter.key());
     action->setData(map_iter.value());
 
-    map_iter++;
+    ++map_iter;
   }
 
   wl_save = list_menu->addAction(_("Save worklist"));
@@ -3008,9 +3008,8 @@ bool qtg_city_dialog_is_open(struct city *pcity)
 city_production_delegate::city_production_delegate(QPoint sh,
                                                    QObject *parent,
                                                    struct city *city)
-    : QItemDelegate(parent)
+    : QItemDelegate(parent), pd(sh)
 {
-  pd = sh;
   item_height = sh.y();
   pcity = city;
 }
