@@ -162,7 +162,7 @@ void update_queue_init(void)
  ****************************************************************************/
 void update_queue_free(void)
 {
-  while (!update_queue->isEmpty()) {
+  while (update_queue.exists() && !update_queue->isEmpty()) {
     updatePair pair = update_queue->dequeue();
     update_queue_data_destroy(pair.second);
   }
