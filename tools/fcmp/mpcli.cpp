@@ -100,10 +100,10 @@ int main(int argc, char *argv[])
   QCoreApplication app(argc, argv);
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
-  fcmp_init();
-
   // Delegate option parsing to the common function.
   fcmp_parse_cmdline(app);
+
+  fcmp_init();
 
   const char *rev_ver;
 
