@@ -383,20 +383,28 @@ QTcpServer *server_open_socket()
 {
   auto server = new QTcpServer;
 
-  qDebug("Server attempting to listen on %s:%d",
-         srvarg.bind_addr.isNull() ? qPrintable(srvarg.bind_addr) : "(any)",
-         srvarg.port);
+  int max = srvarg.port + 100;
+  for (; srvarg.port < max; ++srvarg.port) {
+    qDebug("Server attempting to listen on %s:%d",
+           srvarg.bind_addr.isNull() ? qPrintable(srvarg.bind_addr)
+                                     : "(any)",
+           srvarg.port);
+    if (server->listen(QHostAddress::Any, srvarg.port)) {
+      break;
+    }
 
-  if (!server->listen(QHostAddress::Any, srvarg.port)) {
     // Failed
-
-    // TRANS: %1 is a port number, %2 is the error message
-    qFatal("%s", qPrintable(QString::fromUtf8(
-                                _("Server: cannot listen on port %1: %2"))
-                                .arg(srvarg.port)
-                                .arg(server->errorString())));
-
-    return server;
+    if (srvarg.user_specified_port) {
+      // Failure to meet user expectations.
+      qFatal("%s",
+             qPrintable(
+                 QString::fromUtf8(
+                     // TRANS: %1 is a port number, %2 is the error message
+                     _("Server: cannot listen on port %1: %2"))
+                     .arg(srvarg.port)
+                     .arg(server->errorString())));
+      return server;
+    }
   }
 
   connections_set_close_callback(server_conn_close_callback);
