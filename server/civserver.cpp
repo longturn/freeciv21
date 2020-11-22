@@ -357,7 +357,7 @@ int main(int argc, char *argv[])
     srvarg.scenarios_pathname = parser.value("scenarios_pathname");
   }
   if (parser.isSet("ruleset")) {
-    srvarg.ruleset = parser.value("scenarios_pathname");
+    srvarg.ruleset = parser.value("ruleset");
   }
   if (parser.isSet("Announce")) {
     auto value = parser.value("Announce").toLower();
