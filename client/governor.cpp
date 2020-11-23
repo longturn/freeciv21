@@ -9,10 +9,6 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifdef HAVE_CONFIG_H
-#include <fc_config.h>
-#endif
-
 #include <QElapsedTimer>
 
 /* utility */
@@ -48,15 +44,40 @@
 #include "mapctrl_g.h"
 #include "messagewin_g.h"
 
-
 #include "governor.h"
 
 #define log_request_ids(...) /* log_test(__VA_ARGS__) */
 #define log_todo_lists(...)  /* log_test(__VA_ARGS__) */
 #define log_meta_callback(...) log_debug(__VA_ARGS__)
 #define log_debug_freeze(...) /* log_test(__VA_ARGS__) */
+#define log_apply_result log_debug
+#define log_handle_city log_debug
+#define log_handle_city2 log_debug
+#define log_results_are_equal log_debug
 
+#define SHOW_TIME_STATS FALSE
+#define SHOW_APPLY_RESULT_ON_SERVER_ERRORS FALSE
+#define ALWAYS_APPLY_AT_SERVER FALSE
+#define RESULT_COLUMNS 10
+#define BUFFER_SIZE 100
+#define MAX_LEN_PRESET_NAME 80
+#define SAVED_PARAMETER_SIZE 29
 #define MAX_AGENTS 10
+
+#define SPECLIST_TAG preset
+#define SPECLIST_TYPE struct cma_preset
+#include "speclist.h"
+
+#define preset_list_iterate(presetlist, ppreset)                            \
+  TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
+#define preset_list_iterate_end LIST_ITERATE_END
+
+static struct preset_list *preset_list = NULL;
+
+struct cma_preset {
+  char *descr;
+  struct cm_parameter parameter;
+};
 
 struct my_agent {
   struct agent agent;
@@ -75,6 +96,43 @@ struct call {
   enum callback_type cb_type;
   int arg;
 };
+
+static struct {
+  civtimer *wall_timer;
+  int apply_result_ignored, apply_result_applied, refresh_forced;
+} stats;
+
+class cma_bitch {
+public:
+  cma_bitch();
+  ~cma_bitch();
+  bool apply_result(struct city *pcity, const struct cm_result *result);
+  void put_city_under_agent(struct city *pcity,
+                            const struct cm_parameter *const parameter);
+  void release_city(struct city *pcity);
+  bool is_city_under_agent(const struct city *pcity,
+                           struct cm_parameter *parameter);
+  bool get_parameter(enum attr_city attr, int city_id,
+                     struct cm_parameter *parameter);
+  void set_parameter(enum attr_city attr, int city_id,
+                     const struct cm_parameter *parameter);
+  void handle_city(struct city *pcity);
+  int get_request();
+  void result_came_from_server(int request);
+
+private:
+  void city_changed(int city_id);
+  struct city *check_city(int city_id, struct cm_parameter *parameter);
+  bool apply_result_on_server(struct city *pcity,
+                              const struct cm_result *result);
+  struct cm_result *cma_state_result;
+  const struct cm_result *cma_result_got;
+  int last_request;
+  struct city *xcity;
+};
+
+// cimb means "cma is my bitch"
+Q_GLOBAL_STATIC(cma_bitch, cimb)
 
 #define SPECLIST_TAG call
 #define SPECLIST_TYPE struct call
@@ -329,7 +387,6 @@ void agents_init(void)
   /* Add init calls of agents here */
   cma_init();
   cmafec_init();
-  /*simple_historian_init();*/
 }
 
 /************************************************************************/ /**
@@ -545,56 +602,6 @@ bool agents_busy(void)
   return FALSE;
 }
 
-#define log_apply_result log_debug
-#define log_handle_city log_debug
-#define log_handle_city2 log_debug
-#define log_results_are_equal log_debug
-
-#define SHOW_TIME_STATS FALSE
-#define SHOW_APPLY_RESULT_ON_SERVER_ERRORS FALSE
-#define ALWAYS_APPLY_AT_SERVER FALSE
-
-#define SAVED_PARAMETER_SIZE 29
-
-/*
- * Misc statistic to analyze performance.
- */
-static struct {
-  civtimer *wall_timer;
-  int apply_result_ignored, apply_result_applied, refresh_forced;
-} stats;
-
-class cma_bitch {
-public:
-  cma_bitch();
-  ~cma_bitch();
-  bool apply_result(struct city *pcity, const struct cm_result *result);
-  void put_city_under_agent(struct city *pcity,
-                            const struct cm_parameter *const parameter);
-  void release_city(struct city *pcity);
-  bool is_city_under_agent(const struct city *pcity,
-                           struct cm_parameter *parameter);
-  bool get_parameter(enum attr_city attr, int city_id,
-                     struct cm_parameter *parameter);
-  void set_parameter(enum attr_city attr, int city_id,
-                     const struct cm_parameter *parameter);
-  void handle_city(struct city *pcity);
-  int get_request();
-  void result_came_from_server(int request);
-
-private:
-  void city_changed(int city_id);
-  struct city *check_city(int city_id, struct cm_parameter *parameter);
-  bool apply_result_on_server(struct city *pcity,
-                              const struct cm_result *result);
-  struct cm_result *cma_state_result;
-  const struct cm_result *cma_result_got;
-  int last_request;
-  struct city *xcity;
-};
-
-// cimb means "cma is my bitch"
-Q_GLOBAL_STATIC(cma_bitch, cimb)
 
 inline bool operator==(const struct cm_result &result1,
                        const struct cm_result &result2)
@@ -846,7 +853,8 @@ bool cma_bitch::apply_result_on_server(struct city *pcity,
   }
 
   connection_do_unbuffer(&client.conn);
-  cma_result_got = result; // copy ?
+
+  cma_result_got = result;
   cma_state_result = current_state;
   last_request = last_request_id;
   xcity = pcity;
@@ -1070,9 +1078,6 @@ static void city_changed(int city_id)
   }
 }
 
-/****************************************************************************
-                           algorithmic functions
-****************************************************************************/
 
 /************************************************************************/ /**
    Callback for the agent interface.
@@ -1162,24 +1167,7 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 {
   cimb->set_parameter(attr, city_id, parameter);
 }
-#define RESULT_COLUMNS 10
-#define BUFFER_SIZE 100
-#define MAX_LEN_PRESET_NAME 80
 
-struct cma_preset {
-  char *descr;
-  struct cm_parameter parameter;
-};
-
-#define SPECLIST_TAG preset
-#define SPECLIST_TYPE struct cma_preset
-#include "speclist.h"
-
-#define preset_list_iterate(presetlist, ppreset)                            \
-  TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
-#define preset_list_iterate_end LIST_ITERATE_END
-
-static struct preset_list *preset_list = NULL;
 
 /**********************************************************************/ /**
    Is called if the game removes a city. It will clear the
@@ -1545,4 +1533,3 @@ void create_default_cma_presets(void)
     cmafec_preset_add(Q_(names[i]), &parameters[i]);
   }
 }
-

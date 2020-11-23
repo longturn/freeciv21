@@ -32,6 +32,8 @@
 
 enum callback_type { CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST };
 
+
+
 struct agent {
   char name[MAX_AGENT_NAME_LEN];
   int level;
@@ -60,30 +62,11 @@ void agents_city_remove(struct city *pcity);
 /* called from agents */
 void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
                                     struct city *pcity);
-
-
-
-
-/*
- * Called once per client start.
- */
 void cma_init(void);
-
-/* Change the actual city setting. */
 bool cma_apply_result(struct city *pcity, const struct cm_result *result);
-
-/* Till a call of cma_release_city the city will be managed by the agent. */
 void cma_put_city_under_agent(struct city *pcity,
                               const struct cm_parameter *const parameter);
-
-/* Release the city from the agent. */
 void cma_release_city(struct city *pcity);
-
-/*
- * Test if the citizen in the given city are managed by the agent. The
- * given parameter is filled if pointer is non-NULL. The parameter is
- * only valid if cma_is_city_under_agent returns true.
- */
 bool cma_is_city_under_agent(const struct city *pcity,
                              struct cm_parameter *parameter);
 
