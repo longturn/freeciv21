@@ -10,25 +10,8 @@
 **************************************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
-
 #include "attribute.h"
-#include "fc_types.h"
-#include "city.h"
 #include <QSet>
-
-/*
- * Besides callback for convenience client/agents/agents also
- * implements a "flattening" of the call stack i.e. to ensure that
- * every agent is only called once at any time.
- */
-
-/* Don't use the very last level unless you know what you're doing */
-#define LAST_AGENT_LEVEL 99
-
-#define MAX_AGENT_NAME_LEN 10
-
-enum callback_type { CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST };
 
 class governor {
 public:

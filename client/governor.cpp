@@ -13,36 +13,22 @@
 
 /* utility */
 #include "bugs.h"
-#include "capability.h"
 #include "fciconv.h"
-#include "fcintl.h"
-#include "log.h"
-#include "mem.h"
-#include "shared.h" /* for MIN() */
-#include "specialist.h"
-#include "support.h"
 
 // common
 #include "city.h"
 #include "dataio.h"
-#include "events.h"
-#include "game.h"
-#include "government.h"
-#include "packets.h"
 #include "specialist.h"
 
 /* client */
 #include "attribute.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "packhand.h"
 
 /* include */
-#include "chatline_g.h"
 #include "citydlg_g.h"
 #include "cityrep_g.h"
 #include "mapctrl_g.h"
-#include "messagewin_g.h"
 
 #include "governor.h"
 
@@ -62,7 +48,6 @@
 #define BUFFER_SIZE 100
 #define MAX_LEN_PRESET_NAME 80
 #define SAVED_PARAMETER_SIZE 29
-#define MAX_AGENTS 10
 
 #define SPECLIST_TAG preset
 #define SPECLIST_TYPE struct cma_preset
@@ -72,69 +57,13 @@
   TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
 #define preset_list_iterate_end LIST_ITERATE_END
 
+static struct preset_list *preset_list = NULL;
+
 static void city_changed(int city_id);
 static void city_remove(int city_id)
 {
   attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
 }
-
-governor *governor::m_instance = 0;
-
-void governor::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
-}
-
-governor::~governor() {}
-
-governor *governor::i()
-{
-  if (!m_instance)
-    m_instance = new governor;
-  return m_instance;
-}
-
-void governor::add_city_changed(struct city *pcity)
-{
-  scity_changed.insert(pcity);
-  run();
-};
-void governor::add_city_new(struct city *pcity)
-{
-  scity_changed.insert(pcity);
-  run();
-};
-void governor::add_city_remove(struct city *pcity)
-{
-  scity_remove.insert(pcity);
-  run();
-};
-
-void governor::run()
-{
-  if (superhot < 1)
-    return;
-
-  for (auto pcity : scity_changed) {
-    if (pcity) {
-      city_changed(pcity->id);
-    }
-  }
-  scity_changed.clear();
-  for (auto pcity : scity_remove) {
-    if (pcity) {
-      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
-      city_remove(pcity->id);
-    }
-  }
-  scity_remove.clear();
-  update_turn_done_button_state();
-}
-
-static struct preset_list *preset_list = NULL;
 
 struct cma_preset {
   char *descr;
@@ -146,6 +75,9 @@ static struct {
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
+governor *governor::m_instance = 0;
+
+// yolo class
 class cma_yoloswag {
 public:
   cma_yoloswag();
@@ -178,13 +110,73 @@ private:
 // gimb means "governor is my bitch"
 Q_GLOBAL_STATIC(cma_yoloswag, gimb)
 
+// deletes governor
+void governor::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = 0;
+  }
+}
+
+governor::~governor() {}
+
+// instance for governor
+governor *governor::i()
+{
+  if (!m_instance)
+    m_instance = new governor;
+  return m_instance;
+}
+
+// register new event and run it if hot
+void governor::add_city_changed(struct city *pcity)
+{
+  scity_changed.insert(pcity);
+  run();
+};
+
+void governor::add_city_new(struct city *pcity)
+{
+  scity_changed.insert(pcity);
+  run();
+};
+
+void governor::add_city_remove(struct city *pcity)
+{
+  scity_remove.insert(pcity);
+  run();
+};
+
+// run all events
+void governor::run()
+{
+  if (superhot < 1)
+    return;
+
+  for (auto pcity : scity_changed) {
+    if (pcity) {
+      city_changed(pcity->id);
+    }
+  }
+  scity_changed.clear();
+  for (auto pcity : scity_remove) {
+    if (pcity) {
+      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
+      city_remove(pcity->id);
+    }
+  }
+  scity_remove.clear();
+  update_turn_done_button_state();
+}
+
 inline bool operator==(const struct cm_result &result1,
                        const struct cm_result &result2)
 {
-#define T(x)                                                                 \
-  if (result1.x != result2.x) {                                              \
-    log_results_are_equal(#x);                                               \
-    return FALSE;                                                            \
+#define T(x)                                                                \
+  if (result1.x != result2.x) {                                             \
+    log_results_are_equal(#x);                                              \
+    return FALSE;                                                           \
   }
 
   T(disorder);
@@ -215,10 +207,12 @@ inline bool operator==(const struct cm_result &result1,
 #undef T
 }
 
+// yet another abstraction layer
 int cities_results_request() { return gimb->get_request(); }
-
+int cma_yoloswag::get_request() { return last_request; }
 void cma_got_result(int citynr) { gimb->result_came_from_server(citynr); }
 
+// yolo constructor
 cma_yoloswag::cma_yoloswag()
 {
   cma_state_result = nullptr;
@@ -227,8 +221,7 @@ cma_yoloswag::cma_yoloswag()
   xcity = nullptr;
 }
 
-int cma_yoloswag::get_request() { return last_request; }
-
+// cma results returned from server to check if everything is legit
 void cma_yoloswag::result_came_from_server(int last_request_id)
 {
   struct city *pcity = xcity;
@@ -261,68 +254,67 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
     cm_print_city(pcity);
     cm_print_result(cma_state_result);
 
-  log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
+    log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
              city_name_get(pcity));
-  cm_print_result(cma_result_got);
+    cm_print_result(cma_result_got);
 #endif /* SHOW_APPLY_RESULT_ON_SERVER_ERRORS */
- }
- cm_result_destroy(cma_state_result);
- cm_result_destroy(const_cast<cm_result *>(cma_result_got));
- log_apply_result("apply_result_on_server() return %d.", (int) success);
- cma_state_result = nullptr;
- last_request = -9999;
- xcity = nullptr;
+  }
+  cm_result_destroy(cma_state_result);
+  cm_result_destroy(const_cast<cm_result *>(cma_result_got));
+  log_apply_result("apply_result_on_server() return %d.", (int) success);
+  cma_state_result = nullptr;
+  last_request = -9999;
+  xcity = nullptr;
 }
 
 cma_yoloswag::~cma_yoloswag() {}
 
 void cma_yoloswag::city_changed(int city_id)
 {
- struct city *pcity = game_city_by_number(city_id);
+  struct city *pcity = game_city_by_number(city_id);
   if (pcity) {
-   handle_city(pcity);
- }
+    handle_city(pcity);
+  }
 }
 
 bool cma_yoloswag::apply_result(struct city *pcity,
-                            const struct cm_result *result)
+                                const struct cm_result *result)
 {
- fc_assert(!cma_is_city_under_agent(pcity, NULL));
- if (result->found_a_valid) {
-   return apply_result_on_server(pcity, result);
- } else {
-   return false;
- }
+  fc_assert(!cma_is_city_under_agent(pcity, NULL));
+  if (result->found_a_valid) {
+    return apply_result_on_server(pcity, result);
+  } else {
+    return false;
+  }
 }
-
 
 /************************************************************************/ /**
  Change the actual city setting to the given result. Returns TRUE iff
  the actual data matches the calculated one.
 ****************************************************************************/
 bool cma_yoloswag::apply_result_on_server(struct city *pcity,
-                                       const struct cm_result *result)
+                                          const struct cm_result *result)
 {
- int first_request_id = 0, last_request_id = 0, i;
- int city_radius_sq = city_map_radius_sq_get(pcity);
- struct cm_result *current_state = cm_result_new(pcity);
- struct tile *pcenter = city_tile(pcity);
+  int first_request_id = 0, last_request_id = 0, i;
+  int city_radius_sq = city_map_radius_sq_get(pcity);
+  struct cm_result *current_state = cm_result_new(pcity);
+  struct tile *pcenter = city_tile(pcity);
 
- fc_assert_ret_val(result->found_a_valid, FALSE);
- cm_result_from_main_map(current_state, pcity);
+  fc_assert_ret_val(result->found_a_valid, FALSE);
+  cm_result_from_main_map(current_state, pcity);
 
- if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
-   stats.apply_result_ignored++;
-   return TRUE;
- }
+  if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
+    stats.apply_result_ignored++;
+    return TRUE;
+  }
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
-   qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
-             pcity->id, city_name_get(pcity));
-   cm_print_city(pcity);
-   cm_print_result(result);
-   return FALSE;
- }
+    qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
+              pcity->id, city_name_get(pcity));
+    cm_print_city(pcity);
+    cm_print_result(result);
+    return FALSE;
+  }
 
   stats.apply_result_applied++;
 
@@ -331,12 +323,12 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 
   connection_do_buffer(&client.conn);
 
- /* Remove all surplus workers */
- city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
-                                    y)
+  /* Remove all surplus workers */
+  city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
+                                     y)
   {
-   if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
-     log_apply_result("Removing worker at {%d,%d}.", x, y);
+    if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
+      log_apply_result("Removing worker at {%d,%d}.", x, y);
 
       last_request_id = dsend_packet_city_make_specialist(
           &client.conn, pcity->id, ptile->index);
@@ -449,7 +441,7 @@ void cma_yoloswag::release_city(struct city *pcity)
 }
 
 bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
-                                    struct cm_parameter *parameter)
+                                       struct cm_parameter *parameter)
 {
   struct cm_parameter my_parameter;
 
@@ -464,7 +456,7 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
   return TRUE;
 }
 bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
-                              struct cm_parameter *parameter)
+                                 struct cm_parameter *parameter)
 {
   size_t len;
   char buffer[SAVED_PARAMETER_SIZE];
@@ -505,7 +497,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
 }
 
 void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
-                              const struct cm_parameter *parameter)
+                                 const struct cm_parameter *parameter)
 {
   char buffer[SAVED_PARAMETER_SIZE];
   struct raw_data_out dout;
@@ -538,7 +530,7 @@ void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
    is returned. Parameter can be NULL.
  ****************************************************************************/
 struct city *cma_yoloswag::check_city(int city_id,
-                                   struct cm_parameter *parameter)
+                                      struct cm_parameter *parameter)
 {
   struct city *pcity = game_city_by_number(city_id);
   struct cm_parameter dummy;
@@ -699,8 +691,6 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 {
   gimb->set_parameter(attr, city_id, parameter);
 }
-
-
 
 /**********************************************************************/ /**
    Initialize the presets if there are no presets loaded on startup.
