@@ -40,7 +40,6 @@ struct agent {
   void (*turn_start_notify)(void);
   void (*city_callbacks[CB_LAST])(int);
   void (*unit_callbacks[CB_LAST])(int);
-  void (*tile_callbacks[CB_LAST])(struct tile *ptile);
 };
 
 void agents_init(void);

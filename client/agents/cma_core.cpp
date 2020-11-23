@@ -152,7 +152,6 @@ inline bool operator==(const struct cm_result &result1, const struct cm_result &
 #undef T
 }
 
-
 static void release_city(int city_id)
 {
   attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);

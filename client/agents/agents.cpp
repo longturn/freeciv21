@@ -50,7 +50,7 @@ struct my_agent {
   } stats;
 };
 
-enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY, OCT_TILE };
+enum oct { OCT_NEW_TURN, OCT_UNIT, OCT_CITY };
 
 struct call {
   struct my_agent *agent;
@@ -103,7 +103,6 @@ static bool calls_are_equal(const struct call *pcall1,
   switch (pcall1->type) {
   case OCT_UNIT:
   case OCT_CITY:
-  case OCT_TILE:
     return (pcall1->arg == pcall2->arg);
   case OCT_NEW_TURN:
     return TRUE;
@@ -124,7 +123,6 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   va_list ap;
   struct call *pcall2;
   int arg = 0;
-  const struct tile *ptile;
   bool added = FALSE;
 
   if (client_is_observer()) {
@@ -135,10 +133,6 @@ static void enqueue_call(enum oct type, enum callback_type cb_type,
   case OCT_UNIT:
   case OCT_CITY:
     arg = va_arg(ap, int);
-    break;
-  case OCT_TILE:
-    ptile = va_arg(ap, const struct tile *);
-    arg = tile_index(ptile);
     break;
   case OCT_NEW_TURN:
     /* nothing */
@@ -217,9 +211,6 @@ static void execute_call(const struct call *call)
   case OCT_CITY:
     call->agent->agent.city_callbacks[call->cb_type](call->arg);
     break;
-  case OCT_TILE:
-    call->agent->agent.tile_callbacks[call->cb_type](
-        index_to_tile(&(wld.map), call->arg));
     break;
   }
 }
@@ -655,9 +646,6 @@ void agents_tile_remove(struct tile *ptile)
     if (is_outstanding_request(agent)) {
       continue;
     }
-    if (agent->agent.tile_callbacks[CB_REMOVE]) {
-      enqueue_call(OCT_TILE, CB_REMOVE, agent, ptile);
-    }
   }
 
   call_handle_methods();
@@ -679,9 +667,6 @@ void agents_tile_changed(struct tile *ptile)
     if (is_outstanding_request(agent)) {
       continue;
     }
-    if (agent->agent.tile_callbacks[CB_CHANGE]) {
-      enqueue_call(OCT_TILE, CB_CHANGE, agent, ptile);
-    }
   }
 
   call_handle_methods();
@@ -702,9 +687,6 @@ void agents_tile_new(struct tile *ptile)
 
     if (is_outstanding_request(agent)) {
       continue;
-    }
-    if (agent->agent.tile_callbacks[CB_NEW]) {
-      enqueue_call(OCT_TILE, CB_NEW, agent, ptile);
     }
   }
 
