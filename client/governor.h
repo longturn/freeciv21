@@ -12,12 +12,12 @@
 #ifndef FC__AGENTS_H
 #define FC__AGENTS_H
 
-
 #include "support.h" /* bool type */
 
-#include <QHash>
 #include "attribute.h"
 #include "fc_types.h"
+#include "city.h"
+#include <QSet>
 
 /*
  * Besides callback for convenience client/agents/agents also
@@ -32,7 +32,24 @@
 
 enum callback_type { CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST };
 
-
+class governor {
+  ~governor();
+  static governor *i();
+  static void drop();
+  bool hot() { return superhot; };
+  void freeze() { --superhot; };
+  void unfreeze() { ++superhot; };
+  void add_city_changed(struct city *pcity);
+  void add_city_new(struct city *pcity);
+  void add_city_remove(struct city *pcity);
+private:
+  governor() { superhot = 1; };
+  static governor *m_instance;
+  QSet<struct city*> city_changed;
+  QSet<struct city*> city_new;
+  QSet<struct city*> city_remove;
+  int superhot;
+};
 
 struct agent {
   char name[MAX_AGENT_NAME_LEN];
@@ -57,7 +74,6 @@ void agents_game_joined(void);
 void agents_city_changed(struct city *pcity);
 void agents_city_new(struct city *pcity);
 void agents_city_remove(struct city *pcity);
-
 
 /* called from agents */
 void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
@@ -105,6 +121,5 @@ const struct cm_parameter *cmafec_preset_get_parameter(int idx);
 int cmafec_preset_num(void);
 
 void create_default_cma_presets(void);
-
 
 #endif /* FC__AGENTS_H */

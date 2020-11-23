@@ -14,13 +14,13 @@
 /* utility */
 #include "bugs.h"
 #include "capability.h"
+#include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
 #include "mem.h"
 #include "shared.h" /* for MIN() */
 #include "specialist.h"
 #include "support.h"
-#include "fciconv.h"
 
 // common
 #include "city.h"
@@ -71,6 +71,35 @@
 #define preset_list_iterate(presetlist, ppreset)                            \
   TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
 #define preset_list_iterate_end LIST_ITERATE_END
+
+governor *governor::m_instance = 0;
+
+void governor::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = 0;
+  }
+}
+
+governor::~governor() {}
+
+governor *governor::i()
+{
+  if (!m_instance)
+    m_instance = new governor;
+  return m_instance;
+}
+
+void governor::add_city_changed(struct city *pcity)
+{
+  city_changed.insert(pcity);
+};
+void governor::add_city_new(struct city *pcity) { city_new.insert(pcity); };
+void governor::add_city_remove(struct city *pcity)
+{
+  city_remove.insert(pcity);
+};
 
 static struct preset_list *preset_list = NULL;
 
@@ -602,7 +631,6 @@ bool agents_busy(void)
   return FALSE;
 }
 
-
 inline bool operator==(const struct cm_result &result1,
                        const struct cm_result &result2)
 {
@@ -1078,7 +1106,6 @@ static void city_changed(int city_id)
   }
 }
 
-
 /************************************************************************/ /**
    Callback for the agent interface.
  ****************************************************************************/
@@ -1167,7 +1194,6 @@ void cma_set_parameter(enum attr_city attr, int city_id,
 {
   cimb->set_parameter(attr, city_id, parameter);
 }
-
 
 /**********************************************************************/ /**
    Is called if the game removes a city. It will clear the
