@@ -92,7 +92,7 @@ namespace {
  ************************************************************************/
 void backtrace_print(QtMsgType type, const QMessageLogContext &context)
 {
-  if (!stack_category().isEnabled(QtInfoMsg)) {
+  if (!stack_category().isEnabled(QtDebugMsg)) {
     // We won't print anything anyway. Since walking the stack is
     // expensive, return immediately.
     return;
@@ -120,7 +120,7 @@ void backtrace_print(QtMsgType type, const QMessageLogContext &context)
   while (std::getline(ss, line)) {
     // Do the formatting manually (this is called from the message handler
     // and automatic formatting doesn't appear to work there).
-    qCInfo(stack_category).noquote()
+    qCDebug(stack_category).noquote()
         << qFormatLogMessage(type, modified_context, line.data());
   }
 }
