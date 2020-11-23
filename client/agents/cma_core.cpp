@@ -118,7 +118,7 @@ Q_GLOBAL_STATIC(cma_bitch, cimb)
 inline bool operator==(const struct cm_result &result1, const struct cm_result &result2)
 {
 #define T(x)                                                                \
-  if (result1.x != result2.x) {                                           \
+  if (result1.x != result2.x) {                                             \
     log_results_are_equal(#x);                                              \
     return FALSE;                                                           \
   }

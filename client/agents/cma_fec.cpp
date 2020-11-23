@@ -199,7 +199,7 @@ int cmafec_preset_get_index_of_parameter(
 
   for (i = 0; i < preset_list_size(preset_list); i++) {
     struct cma_preset *ppreset = preset_list_get(preset_list, i);
-    if (cm_are_parameter_equal(&ppreset->parameter, parameter)) {
+    if (ppreset->parameter == *parameter) {
       return i;
     }
   }

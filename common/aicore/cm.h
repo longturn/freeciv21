@@ -14,8 +14,6 @@
 #ifndef FC__CM_H
 #define FC__CM_H
 
-
-
 /*
  * The purpose of this module is to manage the citizens of a city. The
  * caller has to provide a goal (struct cm_parameter) which determines
@@ -74,10 +72,9 @@ void cm_query_result(struct city *pcity,
                      const struct cm_parameter *const parameter,
                      struct cm_result *result, bool negative_ok);
 
-
 /***************** utility methods *************************************/
-bool cm_are_parameter_equal(const struct cm_parameter *const p1,
-                            const struct cm_parameter *const p2);
+bool operator==(const struct cm_parameter &p1,
+                const struct cm_parameter &p2);
 void cm_copy_parameter(struct cm_parameter *dest,
                        const struct cm_parameter *const src);
 void cm_init_parameter(struct cm_parameter *dest);
@@ -92,7 +89,5 @@ int cm_result_workers(const struct cm_result *result);
 
 void cm_result_from_main_map(struct cm_result *result,
                              const struct city *pcity);
-
-
 
 #endif /* FC__CM_H */
