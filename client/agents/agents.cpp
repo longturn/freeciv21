@@ -713,46 +713,6 @@ void agents_tile_new(struct tile *ptile)
 }
 
 /************************************************************************/ /**
-   Called from an agent. This function will return until the last
-   request has been processed by the server.
- ****************************************************************************/
-void wait_for_requests(const char *agent_name, int first_request_id,
-                       int last_request_id)
-{
-  QElapsedTimer timer;
-  struct my_agent *agent = agent_by_name(agent_name);
-
-  log_request_ids("A:%s: wait_for_request(ids=[%d..%d])", agent->agent.name,
-                  first_request_id, last_request_id);
-
-  fc_assert_ret(first_request_id != 0 && last_request_id != 0
-                && first_request_id <= last_request_id);
-  fc_assert_ret(agent->first_outstanding_request_id == 0);
-  agent->first_outstanding_request_id = first_request_id;
-  agent->last_outstanding_request_id = last_request_id;
-
-  timer.start();
-  wait_till_request_got_processed(last_request_id);
-  agent->stats.network_wall_timer = timer.elapsed();
-
-  agent->stats.wait_at_network++;
-  agent->stats.wait_at_network_requests +=
-      (1 + (last_request_id - first_request_id));
-
-  log_request_ids("A:%s: wait_for_request: ids=[%d..%d]; got it",
-                  agent->agent.name, first_request_id, last_request_id);
-
-  agent->first_outstanding_request_id = 0;
-
-  log_time(QString("A:%1: waited %2ms in total for network; "
-                   "requests=%3; waited %4 times")
-               .arg(agent->agent.name)
-               .arg(agent->stats.network_wall_timer)
-               .arg(agent->stats.wait_at_network_requests)
-               .arg(agent->stats.wait_at_network));
-}
-
-/************************************************************************/ /**
    Adds a specific call for the given agent.
  ****************************************************************************/
 void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,

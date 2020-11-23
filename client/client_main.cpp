@@ -966,13 +966,6 @@ void send_attribute_block_request(void)
   send_packet_player_attribute_block(&client.conn);
 }
 
-/**********************************************************************/ /**
-   Wait until server has responsed to given request id.
- **************************************************************************/
-void wait_till_request_got_processed(int request_id)
-{
-  input_from_server_till_request_got_processed(client.conn.sock, request_id);
-}
 
 /**********************************************************************/ /**
    Returns whether client is observer.

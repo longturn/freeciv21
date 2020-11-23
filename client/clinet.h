@@ -22,8 +22,6 @@ int connect_to_server(QString &username, QString &hostname, int port,
 void make_connection(QTcpSocket *sock, QString &username);
 
 void input_from_server(QTcpSocket *sock);
-void input_from_server_till_request_got_processed(QTcpSocket *socket,
-                                                  int expected_request_id);
 void disconnect_from_server(void);
 
 double try_to_autoconnect(void);

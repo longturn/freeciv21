@@ -77,8 +77,6 @@ void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
                                     struct city *pcity);
 void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,
                                     struct unit *punit);
-void wait_for_requests(const char *agent_name, int first_request_id,
-                       int last_request_id);
 
 
 
