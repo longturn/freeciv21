@@ -606,7 +606,6 @@ static void city_changed(int city_id)
   struct city *pcity = game_city_by_number(city_id);
 
   if (pcity) {
-    cm_clear_cache(pcity);
     cimb->handle_city(pcity);
   }
 }

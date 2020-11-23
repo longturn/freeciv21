@@ -304,13 +304,6 @@ void cm_init_citymap(void)
   /* In the B&B algorithm there's not really anything to initialize. */
 }
 
-/************************************************************************/ /**
-   Clear the cache for a city.
- ****************************************************************************/
-void cm_clear_cache(struct city *pcity)
-{
-  /* The B&B algorithm doesn't have city caches so there's nothing to do. */
-}
 
 /************************************************************************/ /**
    Called at the end of a game to free any CM data.
