@@ -296,7 +296,7 @@ void input_from_server(QTcpSocket *sock)
 
   nb = read_from_connection(&client.conn, FALSE);
   if (0 <= nb) {
-    agents_freeze_hint();
+    governor::i()->freeze();
     while (client.conn.used) {
       enum packet_type type;
       void *packet = get_packet_from_connection(&client.conn, &type);
@@ -316,7 +316,7 @@ void input_from_server(QTcpSocket *sock)
       }
     }
     if (client.conn.used) {
-      agents_thaw_hint();
+      governor::i()->unfreeze();
     }
   } else if (-2 == nb) {
     connection_close(&client.conn, _("server disconnected"));

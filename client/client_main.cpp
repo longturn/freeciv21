@@ -242,7 +242,6 @@ static void client_game_init(void)
 
   game_init(FALSE);
   attribute_init();
-  agents_init();
   control_init();
   link_marks_init();
   voteinfo_queue_init();
@@ -271,7 +270,7 @@ static void client_game_free(void)
   control_free();
   free_help_texts();
   attribute_free();
-  agents_free();
+  governor::i()->drop();
   game.client.ruleset_init = FALSE;
   game.client.ruleset_ready = FALSE;
   game_free();
@@ -296,13 +295,12 @@ static void client_game_reset(void)
   link_marks_free();
   control_free();
   attribute_free();
-  agents_free();
+  governor::i()->drop();
 
   game_reset();
   mapimg_reset();
 
   attribute_init();
-  agents_init();
   control_init();
   link_marks_init();
 }
@@ -711,7 +709,7 @@ void send_turn_done(void)
      * the return key.
      */
 
-    if (agents_busy()) {
+    if (!governor::i()->hot()) {
       waiting_for_end_turn = TRUE;
     }
 
@@ -796,7 +794,6 @@ void set_client_state(enum client_states newstate)
 
     if (oldstate > C_S_DISCONNECTED) {
       unit_focus_set(NULL);
-      agents_disconnect();
       editor_clear();
       global_worklists_unbuild();
       client_remove_all_cli_conn();

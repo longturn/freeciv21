@@ -72,6 +72,12 @@
   TYPED_LIST_ITERATE(struct cma_preset, presetlist, ppreset)
 #define preset_list_iterate_end LIST_ITERATE_END
 
+static void city_changed(int city_id);
+static void city_remove(int city_id)
+{
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
+}
+
 governor *governor::m_instance = 0;
 
 void governor::drop()
@@ -93,13 +99,40 @@ governor *governor::i()
 
 void governor::add_city_changed(struct city *pcity)
 {
-  city_changed.insert(pcity);
+  scity_changed.insert(pcity);
+  run();
 };
-void governor::add_city_new(struct city *pcity) { city_new.insert(pcity); };
+void governor::add_city_new(struct city *pcity)
+{
+  scity_changed.insert(pcity);
+  run();
+};
 void governor::add_city_remove(struct city *pcity)
 {
-  city_remove.insert(pcity);
+  scity_remove.insert(pcity);
+  run();
 };
+
+void governor::run()
+{
+  if (superhot < 1)
+    return;
+
+  for (auto pcity : scity_changed) {
+    if (pcity) {
+      city_changed(pcity->id);
+    }
+  }
+  scity_changed.clear();
+  for (auto pcity : scity_remove) {
+    if (pcity) {
+      attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
+      city_remove(pcity->id);
+    }
+  }
+  scity_remove.clear();
+  update_turn_done_button_state();
+}
 
 static struct preset_list *preset_list = NULL;
 
@@ -108,33 +141,15 @@ struct cma_preset {
   struct cm_parameter parameter;
 };
 
-struct my_agent {
-  struct agent agent;
-  int first_outstanding_request_id, last_outstanding_request_id;
-  struct {
-    int network_wall_timer;
-    int wait_at_network, wait_at_network_requests;
-  } stats;
-};
-
-enum oct { OCT_CITY };
-
-struct call {
-  struct my_agent *agent;
-  enum oct type;
-  enum callback_type cb_type;
-  int arg;
-};
-
 static struct {
   civtimer *wall_timer;
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
-class cma_bitch {
+class cma_yoloswag {
 public:
-  cma_bitch();
-  ~cma_bitch();
+  cma_yoloswag();
+  ~cma_yoloswag();
   bool apply_result(struct city *pcity, const struct cm_result *result);
   void put_city_under_agent(struct city *pcity,
                             const struct cm_parameter *const parameter);
@@ -160,484 +175,16 @@ private:
   struct city *xcity;
 };
 
-// cimb means "cma is my bitch"
-Q_GLOBAL_STATIC(cma_bitch, cimb)
-
-#define SPECLIST_TAG call
-#define SPECLIST_TYPE struct call
-#include "speclist.h"
-
-#define call_list_iterate(calllist, pcall)                                  \
-  TYPED_LIST_ITERATE(struct call, calllist, pcall)
-#define call_list_iterate_end LIST_ITERATE_END
-
-#define call_list_both_iterate(calllist, plink, pcall)                      \
-  TYPED_LIST_BOTH_ITERATE(struct call_list_link, struct call, calllist,     \
-                          plink, pcall)
-#define call_list_both_iterate_end LIST_BOTH_ITERATE_END
-
-/*
- * Main data structure. Contains all registered agents and all
- * outstanding calls.
- */
-static struct {
-  int entries_used;
-  struct my_agent entries[MAX_AGENTS];
-  struct call_list *calls;
-} agents;
-
-static bool initialized = FALSE;
-static int frozen_level;
-static bool currently_running = FALSE;
-
-/************************************************************************/ /**
-   Return TRUE iff the two agent calls are equal.
- ****************************************************************************/
-static bool calls_are_equal(const struct call *pcall1,
-                            const struct call *pcall2)
-{
-  if (pcall1->agent != pcall2->agent) {
-    return FALSE;
-  }
-
-  if (pcall1->type != pcall2->type && pcall1->cb_type != pcall2->cb_type) {
-    return FALSE;
-  }
-
-  switch (pcall1->type) {
-  case OCT_CITY:
-    return (pcall1->arg == pcall2->arg);
-  }
-
-  qCritical("Unsupported call type %d.", pcall1->type);
-  return FALSE;
-}
-
-/************************************************************************/ /**
-   If the call described by the given arguments isn't contained in
-   agents.calls list, add the call to this list.
-   Maintains the list in a sorted order.
- ****************************************************************************/
-static void enqueue_call(enum oct type, enum callback_type cb_type,
-                         struct my_agent *agent, ...)
-{
-  va_list ap;
-  struct call *pcall2;
-  int arg = 0;
-  bool added = FALSE;
-
-  if (client_is_observer()) {
-    return;
-  }
-  va_start(ap, agent);
-  switch (type) {
-  case OCT_CITY:
-    arg = va_arg(ap, int);
-    break;
-  }
-  va_end(ap);
-
-  pcall2 = new call;
-  pcall2->agent = agent;
-  pcall2->type = type;
-  pcall2->cb_type = cb_type;
-  pcall2->arg = arg;
-
-  /* Ensure list is sorted so that calls to agents with lower levels
-   * come first, since that's how we'll want to pop them */
-  call_list_both_iterate(agents.calls, plink, pcall)
-  {
-    if (calls_are_equal(pcall, pcall2)) {
-      /* Already got one like this, discard duplicate. */
-      delete pcall2;
-      return;
-    }
-    if (pcall->agent->agent.level - pcall2->agent->agent.level > 0) {
-      /* Found a level greater than ours. Can assume that calls_are_equal()
-       * will never be true from here on, since list is sorted by level and
-       * unequal levels => unequal agents => !calls_are_equal().
-       * Insert into list here. */
-      call_list_insert_before(agents.calls, pcall2, plink);
-      added = TRUE;
-      break;
-    }
-  }
-  call_list_both_iterate_end;
-
-  if (!added) {
-    call_list_append(agents.calls, pcall2);
-  }
-
-  log_todo_lists("A: adding call");
-
-  /* agents_busy() may have changed */
-  update_turn_done_button_state();
-}
-
-/************************************************************************/ /**
-   Return an outstanding call. The call is removed from the agents.calls
-   list. Returns NULL if there no more outstanding calls.
- ****************************************************************************/
-static struct call *remove_and_return_a_call(void)
-{
-  struct call *result;
-
-  if (call_list_size(agents.calls) == 0) {
-    return NULL;
-  }
-
-  result = call_list_front(agents.calls);
-  call_list_pop_front(agents.calls);
-
-  log_todo_lists("A: removed call");
-  return result;
-}
-
-/************************************************************************/ /**
-   Calls an callback of an agent as described in the given call.
- ****************************************************************************/
-static void execute_call(const struct call *call)
-{
-  switch (call->type) {
-  case OCT_CITY:
-    call->agent->agent.city_callbacks[call->cb_type](call->arg);
-    break;
-    break;
-  }
-}
-
-/************************************************************************/ /**
-   Execute all outstanding calls. This method will do nothing if the
-   dispatching is frozen (frozen_level > 0). Also call_handle_methods
-   will ensure that only one instance is running at any given time.
- ****************************************************************************/
-static void call_handle_methods(void)
-{
-  if (currently_running) {
-    return;
-  }
-  if (frozen_level > 0) {
-    return;
-  }
-  currently_running = TRUE;
-
-  /*
-   * The following should ensure that the methods of agents which have
-   * a lower level are called first.
-   */
-  for (;;) {
-    struct call *pcall;
-
-    pcall = remove_and_return_a_call();
-    if (!pcall) {
-      break;
-    }
-
-    execute_call(pcall);
-    delete[] pcall;
-  }
-
-  currently_running = FALSE;
-
-  update_turn_done_button_state();
-}
-
-/************************************************************************/ /**
-   Increase the frozen_level by one.
- ****************************************************************************/
-static void freeze(void)
-{
-  if (!initialized) {
-    frozen_level = 0;
-    initialized = TRUE;
-  }
-  log_debug_freeze("A: freeze() current level=%d", frozen_level);
-  frozen_level++;
-}
-
-/************************************************************************/ /**
-   Decrease the frozen_level by one. If the dispatching is not frozen
-   anymore (frozen_level == 0) all outstanding calls are executed.
- ****************************************************************************/
-static void thaw(void)
-{
-  log_debug_freeze("A: thaw() current level=%d", frozen_level);
-  frozen_level--;
-  fc_assert(frozen_level >= 0);
-  if (0 == frozen_level && C_S_RUNNING == client_state()) {
-    call_handle_methods();
-  }
-}
-
-/************************************************************************/ /**
-   Helper.
- ****************************************************************************/
-static struct my_agent *agent_by_name(const char *agent_name)
-{
-  int i;
-
-  for (i = 0; i < agents.entries_used; i++) {
-    if (strcmp(agent_name, agents.entries[i].agent.name) == 0)
-      return &agents.entries[i];
-  }
-
-  return NULL;
-}
-
-/************************************************************************/ /**
-   Returns TRUE iff currently handled packet was caused by the given
-   agent.
- ****************************************************************************/
-static bool is_outstanding_request(struct my_agent *agent)
-{
-  if (agent->first_outstanding_request_id != 0
-      && client.conn.client.request_id_of_currently_handled_packet != 0
-      && agent->first_outstanding_request_id
-             <= client.conn.client.request_id_of_currently_handled_packet
-      && agent->last_outstanding_request_id
-             >= client.conn.client.request_id_of_currently_handled_packet) {
-    log_debug("A:%s: ignoring packet; outstanding [%d..%d] got=%d",
-              agent->agent.name, agent->first_outstanding_request_id,
-              agent->last_outstanding_request_id,
-              client.conn.client.request_id_of_currently_handled_packet);
-    return TRUE;
-  }
-  return FALSE;
-}
-
-/************************************************************************/ /**
-   Called once per client startup.
- ****************************************************************************/
-void agents_init(void)
-{
-  agents.entries_used = 0;
-  agents.calls = call_list_new();
-
-  /* Add init calls of agents here */
-  cma_init();
-  cmafec_init();
-}
-
-/************************************************************************/ /**
-   Free resources allocated for agents framework
- ****************************************************************************/
-void agents_free(void)
-{
-  /* FIXME: doing this will wipe out any presets on disconnect.
-   * a proper solution should be to split up the client_free functions
-   * for a simple disconnect and a client quit. for right now, we just
-   * let the OS free the memory on exit instead of doing it ourselves. */
-  /* cmafec_free(); */
-
-  /*simple_historian_done();*/
-
-  for (;;) {
-    struct call *pcall = remove_and_return_a_call();
-    if (!pcall) {
-      break;
-    }
-
-    delete pcall;
-  }
-
-  call_list_destroy(agents.calls);
-}
-
-/************************************************************************/ /**
-   Registers an agent.
- ****************************************************************************/
-void register_agent(const struct agent *agent)
-{
-  struct my_agent *priv_agent = &agents.entries[agents.entries_used];
-
-  fc_assert_ret(agents.entries_used < MAX_AGENTS);
-  fc_assert_ret(agent->level > 0);
-
-  memcpy(&priv_agent->agent, agent, sizeof(struct agent));
-
-  priv_agent->first_outstanding_request_id = 0;
-  priv_agent->last_outstanding_request_id = 0;
-
-  priv_agent->stats.network_wall_timer = 0;
-  priv_agent->stats.wait_at_network = 0;
-  priv_agent->stats.wait_at_network_requests = 0;
-
-  agents.entries_used++;
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_disconnect(void)
-{
-  log_meta_callback("agents_disconnect()");
-  initialized = FALSE;
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_processing_started(void)
-{
-  log_meta_callback("agents_processing_started()");
-  freeze();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_processing_finished(void)
-{
-  log_meta_callback("agents_processing_finished()");
-  thaw();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_freeze_hint(void)
-{
-  log_meta_callback("agents_freeze_hint()");
-  freeze();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_thaw_hint(void)
-{
-  log_meta_callback("agents_thaw_hint()");
-  thaw();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c.
- ****************************************************************************/
-void agents_game_joined(void) { log_meta_callback("agents_game_joined()"); }
-
-/************************************************************************/ /**
-   Called from client/packhand.c. See agents_unit_changed() for a generic
-   documentation.
- ****************************************************************************/
-void agents_city_changed(struct city *pcity)
-{
-  int i;
-
-  log_debug("A: agents_city_changed(city %d=\"%s\") owner=%s", pcity->id,
-            city_name_get(pcity), nation_rule_name(nation_of_city(pcity)));
-
-  for (i = 0; i < agents.entries_used; i++) {
-    struct my_agent *agent = &agents.entries[i];
-
-    if (is_outstanding_request(agent)) {
-      continue;
-    }
-    if (agent->agent.city_callbacks[CB_CHANGE]) {
-      enqueue_call(OCT_CITY, CB_CHANGE, agent, pcity->id);
-    }
-  }
-
-  call_handle_methods();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c. See agents_unit_changed() for a generic
-   documentation.
- ****************************************************************************/
-void agents_city_new(struct city *pcity)
-{
-  int i;
-
-  log_debug("A: agents_city_new(city %d=\"%s\") pos=(%d,%d) owner=%s",
-            pcity->id, city_name_get(pcity), TILE_XY(pcity->tile),
-            nation_rule_name(nation_of_city(pcity)));
-
-  for (i = 0; i < agents.entries_used; i++) {
-    struct my_agent *agent = &agents.entries[i];
-
-    if (is_outstanding_request(agent)) {
-      continue;
-    }
-    if (agent->agent.city_callbacks[CB_NEW]) {
-      enqueue_call(OCT_CITY, CB_NEW, agent, pcity->id);
-    }
-  }
-
-  call_handle_methods();
-}
-
-/************************************************************************/ /**
-   Called from client/packhand.c. See agents_unit_changed() for a generic
-   documentation.
- ****************************************************************************/
-void agents_city_remove(struct city *pcity)
-{
-  int i;
-
-  log_debug("A: agents_city_remove(city %d=\"%s\") pos=(%d,%d) owner=%s",
-            pcity->id, city_name_get(pcity), TILE_XY(pcity->tile),
-            nation_rule_name(nation_of_city(pcity)));
-
-  for (i = 0; i < agents.entries_used; i++) {
-    struct my_agent *agent = &agents.entries[i];
-
-    if (is_outstanding_request(agent)) {
-      continue;
-    }
-    if (agent->agent.city_callbacks[CB_REMOVE]) {
-      enqueue_call(OCT_CITY, CB_REMOVE, agent, pcity->id);
-    }
-  }
-
-  call_handle_methods();
-}
-
-/************************************************************************/ /**
-   Adds a specific call for the given agent.
- ****************************************************************************/
-void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
-                                    struct city *pcity)
-{
-  struct my_agent *agent = agent_by_name(name_of_calling_agent);
-
-  fc_assert_ret(agent->agent.city_callbacks[CB_CHANGE] != NULL);
-  enqueue_call(OCT_CITY, CB_CHANGE, agent, pcity->id);
-  call_handle_methods();
-}
-
-/************************************************************************/ /**
-   Returns TRUE iff some agent is currently busy.
- ****************************************************************************/
-bool agents_busy(void)
-{
-  int i;
-
-  if (!initialized) {
-    return FALSE;
-  }
-
-  if (call_list_size(agents.calls) > 0 || frozen_level > 0
-      || currently_running) {
-    return TRUE;
-  }
-
-  for (i = 0; i < agents.entries_used; i++) {
-    struct my_agent *agent = &agents.entries[i];
-
-    if (agent->first_outstanding_request_id != 0) {
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
+// gimb means "governor is my bitch"
+Q_GLOBAL_STATIC(cma_yoloswag, gimb)
 
 inline bool operator==(const struct cm_result &result1,
                        const struct cm_result &result2)
 {
-#define T(x)                                                                \
-  if (result1.x != result2.x) {                                             \
-    log_results_are_equal(#x);                                              \
-    return FALSE;                                                           \
+#define T(x)                                                                 \
+  if (result1.x != result2.x) {                                              \
+    log_results_are_equal(#x);                                               \
+    return FALSE;                                                            \
   }
 
   T(disorder);
@@ -668,16 +215,11 @@ inline bool operator==(const struct cm_result &result1,
 #undef T
 }
 
-static void release_city(int city_id)
-{
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
-}
+int cities_results_request() { return gimb->get_request(); }
 
-int cities_results_request() { return cimb->get_request(); }
+void cma_got_result(int citynr) { gimb->result_came_from_server(citynr); }
 
-void cma_got_result(int citynr) { cimb->result_came_from_server(citynr); }
-
-cma_bitch::cma_bitch()
+cma_yoloswag::cma_yoloswag()
 {
   cma_state_result = nullptr;
   last_request = -9999;
@@ -685,9 +227,9 @@ cma_bitch::cma_bitch()
   xcity = nullptr;
 }
 
-int cma_bitch::get_request() { return last_request; }
+int cma_yoloswag::get_request() { return last_request; }
 
-void cma_bitch::result_came_from_server(int last_request_id)
+void cma_yoloswag::result_came_from_server(int last_request_id)
 {
   struct city *pcity = xcity;
   last_request = last_request_id;
@@ -719,69 +261,68 @@ void cma_bitch::result_came_from_server(int last_request_id)
     cm_print_city(pcity);
     cm_print_result(cma_state_result);
 
-    log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
+  log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
              city_name_get(pcity));
-    cm_print_result(cma_result_got);
+  cm_print_result(cma_result_got);
 #endif /* SHOW_APPLY_RESULT_ON_SERVER_ERRORS */
-  }
-  cm_result_destroy(cma_state_result);
-  cm_result_destroy(const_cast<cm_result *>(cma_result_got));
-  log_apply_result("apply_result_on_server() return %d.", (int) success);
-  cma_state_result = nullptr;
-  last_request = -9999;
-  xcity = nullptr;
+ }
+ cm_result_destroy(cma_state_result);
+ cm_result_destroy(const_cast<cm_result *>(cma_result_got));
+ log_apply_result("apply_result_on_server() return %d.", (int) success);
+ cma_state_result = nullptr;
+ last_request = -9999;
+ xcity = nullptr;
 }
 
-cma_bitch::~cma_bitch() {}
+cma_yoloswag::~cma_yoloswag() {}
 
-void cma_bitch::city_changed(int city_id)
+void cma_yoloswag::city_changed(int city_id)
 {
-  struct city *pcity = game_city_by_number(city_id);
-
+ struct city *pcity = game_city_by_number(city_id);
   if (pcity) {
-    handle_city(pcity);
-  }
+   handle_city(pcity);
+ }
 }
 
-bool cma_bitch::apply_result(struct city *pcity,
-                             const struct cm_result *result)
+bool cma_yoloswag::apply_result(struct city *pcity,
+                            const struct cm_result *result)
 {
-  fc_assert(!cma_is_city_under_agent(pcity, NULL));
-  if (result->found_a_valid) {
-    return apply_result_on_server(pcity, result);
-  } else {
-    return false;
-  }
+ fc_assert(!cma_is_city_under_agent(pcity, NULL));
+ if (result->found_a_valid) {
+   return apply_result_on_server(pcity, result);
+ } else {
+   return false;
+ }
 }
+
 
 /************************************************************************/ /**
-  Change the actual city setting to the given result. Returns TRUE iff
-  the actual data matches the calculated one.
- ****************************************************************************/
-bool cma_bitch::apply_result_on_server(struct city *pcity,
+ Change the actual city setting to the given result. Returns TRUE iff
+ the actual data matches the calculated one.
+****************************************************************************/
+bool cma_yoloswag::apply_result_on_server(struct city *pcity,
                                        const struct cm_result *result)
 {
-  int first_request_id = 0, last_request_id = 0, i;
-  int city_radius_sq = city_map_radius_sq_get(pcity);
-  struct cm_result *current_state = cm_result_new(pcity);
-  struct tile *pcenter = city_tile(pcity);
+ int first_request_id = 0, last_request_id = 0, i;
+ int city_radius_sq = city_map_radius_sq_get(pcity);
+ struct cm_result *current_state = cm_result_new(pcity);
+ struct tile *pcenter = city_tile(pcity);
 
-  fc_assert_ret_val(result->found_a_valid, FALSE);
-  cm_result_from_main_map(current_state, pcity);
+ fc_assert_ret_val(result->found_a_valid, FALSE);
+ cm_result_from_main_map(current_state, pcity);
 
-  if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
-    stats.apply_result_ignored++;
-    return TRUE;
-  }
-
+ if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
+   stats.apply_result_ignored++;
+   return TRUE;
+ }
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
-    qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
-              pcity->id, city_name_get(pcity));
-    cm_print_city(pcity);
-    cm_print_result(result);
-    return FALSE;
-  }
+   qCritical("apply_result_on_server(city %d=\"%s\") bad result!",
+             pcity->id, city_name_get(pcity));
+   cm_print_city(pcity);
+   cm_print_result(result);
+   return FALSE;
+ }
 
   stats.apply_result_applied++;
 
@@ -790,12 +331,12 @@ bool cma_bitch::apply_result_on_server(struct city *pcity,
 
   connection_do_buffer(&client.conn);
 
-  /* Remove all surplus workers */
-  city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
-                                     y)
+ /* Remove all surplus workers */
+ city_tile_iterate_skip_free_worked(city_radius_sq, pcenter, ptile, idx, x,
+                                    y)
   {
-    if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
-      log_apply_result("Removing worker at {%d,%d}.", x, y);
+   if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
+     log_apply_result("Removing worker at {%d,%d}.", x, y);
 
       last_request_id = dsend_packet_city_make_specialist(
           &client.conn, pcity->id, ptile->index);
@@ -889,25 +430,25 @@ bool cma_bitch::apply_result_on_server(struct city *pcity,
   return true;
 }
 
-void cma_bitch::put_city_under_agent(
+void cma_yoloswag::put_city_under_agent(
     struct city *pcity, const struct cm_parameter *const parameter)
 {
   log_debug("cma_put_city_under_agent(city %d=\"%s\")", pcity->id,
             city_name_get(pcity));
   fc_assert_ret(city_owner(pcity) == client.conn.playing);
   cma_set_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id, parameter);
-  cause_a_city_changed_for_agent("CMA", pcity);
+  governor::i()->add_city_changed(pcity);
   log_debug("cma_put_city_under_agent: return");
 }
 
-void cma_bitch::release_city(struct city *pcity)
+void cma_yoloswag::release_city(struct city *pcity)
 {
-  ::release_city(pcity->id);
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, pcity->id, 0, NULL);
   refresh_city_dialog(pcity);
   city_report_dialog_update_city(pcity);
 }
 
-bool cma_bitch::is_city_under_agent(const struct city *pcity,
+bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
                                     struct cm_parameter *parameter)
 {
   struct cm_parameter my_parameter;
@@ -922,7 +463,7 @@ bool cma_bitch::is_city_under_agent(const struct city *pcity,
   }
   return TRUE;
 }
-bool cma_bitch::get_parameter(enum attr_city attr, int city_id,
+bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                               struct cm_parameter *parameter)
 {
   size_t len;
@@ -963,7 +504,7 @@ bool cma_bitch::get_parameter(enum attr_city attr, int city_id,
   return TRUE;
 }
 
-void cma_bitch::set_parameter(enum attr_city attr, int city_id,
+void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
                               const struct cm_parameter *parameter)
 {
   char buffer[SAVED_PARAMETER_SIZE];
@@ -996,7 +537,7 @@ void cma_bitch::set_parameter(enum attr_city attr, int city_id,
    Returns TRUE if the city is valid for CMA. Fills parameter if TRUE
    is returned. Parameter can be NULL.
  ****************************************************************************/
-struct city *cma_bitch::check_city(int city_id,
+struct city *cma_yoloswag::check_city(int city_id,
                                    struct cm_parameter *parameter)
 {
   struct city *pcity = game_city_by_number(city_id);
@@ -1024,7 +565,7 @@ struct city *cma_bitch::check_city(int city_id,
    follows the set CMA goal or that the CMA detaches itself from the
    city.
  ****************************************************************************/
-void cma_bitch::handle_city(struct city *pcity)
+void cma_yoloswag::handle_city(struct city *pcity)
 {
   struct cm_result *result = cm_result_new(pcity);
   bool handled;
@@ -1102,44 +643,8 @@ static void city_changed(int city_id)
   struct city *pcity = game_city_by_number(city_id);
 
   if (pcity) {
-    cimb->handle_city(pcity);
+    gimb->handle_city(pcity);
   }
-}
-
-/************************************************************************/ /**
-   Callback for the agent interface.
- ****************************************************************************/
-static void city_remove(int city_id) { release_city(city_id); }
-
-/*************************** public interface ******************************/
-/************************************************************************/ /**
-   Initialize city governor code
- ****************************************************************************/
-void cma_init(void)
-{
-  struct agent self;
-  civtimer *timer = stats.wall_timer;
-
-  log_debug("sizeof(struct cm_result)=%d",
-            (unsigned int) sizeof(struct cm_result));
-  log_debug("sizeof(struct cm_parameter)=%d",
-            (unsigned int) sizeof(struct cm_parameter));
-
-  /* reset cache counters */
-  memset(&stats, 0, sizeof(stats));
-
-  /* We used to just use timer_new here, but apparently cma_init can be
-   * called multiple times per client invocation so that lead to memory
-   * leaks. */
-  stats.wall_timer = timer_renew(timer, TIMER_USER, TIMER_ACTIVE);
-
-  memset(&self, 0, sizeof(self));
-  strcpy(self.name, "CMA");
-  self.level = 1;
-  self.city_callbacks[CB_CHANGE] = city_changed;
-  self.city_callbacks[CB_NEW] = city_changed;
-  self.city_callbacks[CB_REMOVE] = city_remove;
-  register_agent(&self);
 }
 
 /************************************************************************/ /**
@@ -1147,7 +652,7 @@ void cma_init(void)
  ****************************************************************************/
 bool cma_apply_result(struct city *pcity, const struct cm_result *result)
 {
-  return cimb->apply_result(pcity, result);
+  return gimb->apply_result(pcity, result);
 }
 
 /************************************************************************/ /**
@@ -1156,13 +661,13 @@ bool cma_apply_result(struct city *pcity, const struct cm_result *result)
 void cma_put_city_under_agent(struct city *pcity,
                               const struct cm_parameter *const parameter)
 {
-  cimb->put_city_under_agent(pcity, parameter);
+  gimb->put_city_under_agent(pcity, parameter);
 }
 
 /************************************************************************/ /**
    Release city from governor control.
  ****************************************************************************/
-void cma_release_city(struct city *pcity) { cimb->release_city(pcity); }
+void cma_release_city(struct city *pcity) { gimb->release_city(pcity); }
 
 /************************************************************************/ /**
    Check whether city is under governor control, and fill parameter if it is.
@@ -1170,7 +675,7 @@ void cma_release_city(struct city *pcity) { cimb->release_city(pcity); }
 bool cma_is_city_under_agent(const struct city *pcity,
                              struct cm_parameter *parameter)
 {
-  return cimb->is_city_under_agent(pcity, parameter);
+  return gimb->is_city_under_agent(pcity, parameter);
 }
 
 /************************************************************************/ /**
@@ -1183,7 +688,7 @@ bool cma_is_city_under_agent(const struct city *pcity,
 bool cma_get_parameter(enum attr_city attr, int city_id,
                        struct cm_parameter *parameter)
 {
-  return cimb->get_parameter(attr, city_id, parameter);
+  return gimb->get_parameter(attr, city_id, parameter);
 }
 
 /************************************************************************/ /**
@@ -1192,34 +697,20 @@ bool cma_get_parameter(enum attr_city attr, int city_id,
 void cma_set_parameter(enum attr_city attr, int city_id,
                        const struct cm_parameter *parameter)
 {
-  cimb->set_parameter(attr, city_id, parameter);
+  gimb->set_parameter(attr, city_id, parameter);
 }
 
-/**********************************************************************/ /**
-   Is called if the game removes a city. It will clear the
-   "fe parameter" attribute to reduce the size of the savegame.
- **************************************************************************/
-static void fe_city_remove(int city_id)
-{
-  attr_city_set(ATTR_CITY_CMAFE_PARAMETER, city_id, 0, NULL);
-}
+
 
 /**********************************************************************/ /**
    Initialize the presets if there are no presets loaded on startup.
  **************************************************************************/
 void cmafec_init(void)
 {
-  struct agent self;
 
   if (preset_list == NULL) {
     preset_list = preset_list_new();
   }
-
-  memset(&self, 0, sizeof(self));
-  strcpy(self.name, "CMA");
-  self.level = 1;
-  self.city_callbacks[CB_REMOVE] = fe_city_remove;
-  register_agent(&self);
 }
 
 /**********************************************************************/ /**

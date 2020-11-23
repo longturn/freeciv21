@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-
-#ifndef FC__AGENTS_H
-#define FC__AGENTS_H
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -33,51 +31,25 @@
 enum callback_type { CB_NEW, CB_REMOVE, CB_CHANGE, CB_LAST };
 
 class governor {
+public:
   ~governor();
   static governor *i();
   static void drop();
   bool hot() { return superhot; };
   void freeze() { --superhot; };
-  void unfreeze() { ++superhot; };
+  void unfreeze() { ++superhot; run();};
   void add_city_changed(struct city *pcity);
   void add_city_new(struct city *pcity);
   void add_city_remove(struct city *pcity);
 private:
   governor() { superhot = 1; };
+  void run();
   static governor *m_instance;
-  QSet<struct city*> city_changed;
-  QSet<struct city*> city_new;
-  QSet<struct city*> city_remove;
+  QSet<struct city*> scity_changed;
+  QSet<struct city*> scity_remove;
   int superhot;
 };
 
-struct agent {
-  char name[MAX_AGENT_NAME_LEN];
-  int level;
-
-  void (*city_callbacks[CB_LAST])(int);
-};
-
-void agents_init(void);
-void agents_free(void);
-void register_agent(const struct agent *agent);
-bool agents_busy(void);
-
-/* called from client/packhand.c */
-void agents_disconnect(void);
-void agents_processing_started(void);
-void agents_processing_finished(void);
-void agents_freeze_hint(void);
-void agents_thaw_hint(void);
-void agents_game_joined(void);
-
-void agents_city_changed(struct city *pcity);
-void agents_city_new(struct city *pcity);
-void agents_city_remove(struct city *pcity);
-
-/* called from agents */
-void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
-                                    struct city *pcity);
 void cma_init(void);
 bool cma_apply_result(struct city *pcity, const struct cm_result *result);
 void cma_put_city_under_agent(struct city *pcity,
@@ -119,7 +91,5 @@ int cmafec_preset_get_index_of_parameter(
 char *cmafec_preset_get_descr(int idx);
 const struct cm_parameter *cmafec_preset_get_parameter(int idx);
 int cmafec_preset_num(void);
-
 void create_default_cma_presets(void);
 
-#endif /* FC__AGENTS_H */

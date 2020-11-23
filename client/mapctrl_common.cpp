@@ -497,7 +497,7 @@ bool can_end_turn(void)
   return (can_client_issue_orders() && client.conn.playing->is_alive
           && !client.conn.playing->phase_done && !is_server_busy()
           && is_player_phase(client.conn.playing, game.info.phase)
-          && !agents_busy());
+          && governor::i()->hot());
 }
 
 /**********************************************************************/ /**

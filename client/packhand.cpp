@@ -329,7 +329,6 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     client.conn.established = TRUE;
     client.conn.id = conn_id;
 
-    agents_game_joined();
     set_server_busy(FALSE);
 
     if (get_client_page() == PAGE_MAIN
@@ -389,7 +388,7 @@ void handle_city_remove(int city_id)
 
   need_menus_update = (NULL != get_focus_unit_on_tile(city_tile(pcity)));
 
-  agents_city_remove(pcity);
+  governor::i()->add_city_remove(pcity);
   editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, TRUE);
   client_remove_city(pcity);
 
@@ -852,9 +851,9 @@ void handle_city_info(const struct packet_city_info *packet)
                      popup, packet->diplomat_investigate);
 
   if (city_is_new && !city_has_changed_owner) {
-    agents_city_new(pcity);
-  } else {
-    agents_city_changed(pcity);
+    governor::i()->add_city_new(pcity);
+  } else { //city new and changed is the same call :P
+    governor::i()->add_city_changed(pcity);
   }
 
   /* Update the description if necessary. */
@@ -1192,9 +1191,9 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
                      FALSE, FALSE);
 
   if (city_is_new && !city_has_changed_owner) {
-    agents_city_new(pcity);
-  } else {
-    agents_city_changed(pcity);
+    governor::i()->add_city_new(pcity);
+  } else { // its the same
+    governor::i()->add_city_changed(pcity);
   }
 
   /* Update the description if necessary. */
@@ -5099,7 +5098,7 @@ void handle_player_attribute_chunk(
  ****************************************************************************/
 void handle_processing_started(void)
 {
-  agents_processing_started();
+  governor::i()->freeze();
 
   fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
   client.conn.client.request_id_of_currently_handled_packet =
@@ -5128,7 +5127,7 @@ void handle_processing_finished(void)
 
   client.conn.client.request_id_of_currently_handled_packet = 0;
 
-  agents_processing_finished();
+  governor::i()->unfreeze();
 }
 
 /************************************************************************/ /**
@@ -5161,7 +5160,7 @@ void handle_freeze_client(void)
 {
   log_debug("handle_freeze_client");
 
-  agents_freeze_hint();
+  governor::i()->freeze();
 }
 
 /************************************************************************/ /**
@@ -5171,7 +5170,7 @@ void handle_thaw_client(void)
 {
   log_debug("handle_thaw_client");
 
-  agents_thaw_hint();
+  governor::i()->unfreeze();
   update_turn_done_button_state();
 }
 
