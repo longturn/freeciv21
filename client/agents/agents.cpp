@@ -31,7 +31,6 @@
 /* agents */
 #include "cma_core.h"
 #include "cma_fec.h"
-#include "sha.h"
 
 #include "agents.h"
 
