@@ -102,8 +102,6 @@ public:
   void result_came_from_server(int request);
 
 private:
-  bool fc_results_are_equal(const struct cm_result *result1,
-                            const struct cm_result *result2);
   void city_changed(int city_id);
   struct city *check_city(int city_id, struct cm_parameter *parameter);
   bool apply_result_on_server(struct city *pcity,
@@ -116,6 +114,44 @@ private:
 
 // cimb means "cma is my bitch"
 Q_GLOBAL_STATIC(cma_bitch, cimb)
+
+inline bool operator==(const struct cm_result &result1, const struct cm_result &result2)
+{
+#define T(x)                                                                \
+  if (result1.x != result2.x) {                                           \
+    log_results_are_equal(#x);                                              \
+    return FALSE;                                                           \
+  }
+
+  T(disorder);
+  T(happy);
+
+  specialist_type_iterate(sp) { T(specialists[sp]); }
+  specialist_type_iterate_end;
+
+  output_type_iterate(ot) { T(surplus[ot]); }
+  output_type_iterate_end;
+
+  fc_assert_ret_val(result1.city_radius_sq == result2.city_radius_sq,
+                    FALSE);
+  city_map_iterate(result1.city_radius_sq, cindex, x, y)
+  {
+    if (is_free_worked_index(cindex)) {
+      continue;
+    }
+
+    if (result1.worker_positions[cindex]
+        != result2.worker_positions[cindex]) {
+      log_results_are_equal("worker_positions");
+      return FALSE;
+    }
+  }
+  city_map_iterate_end;
+
+  return TRUE;
+#undef T
+}
+
 
 static void release_city(int city_id)
 {
@@ -140,8 +176,8 @@ void cma_bitch::result_came_from_server(int last_request_id)
 {
   struct city *pcity = xcity;
   last_request = last_request_id;
-  xcity = pcity;
   bool success;
+
   if (last_request_id < 0)
     return;
   if (last_request_id != 0) {
@@ -156,7 +192,7 @@ void cma_bitch::result_came_from_server(int last_request_id)
   /* Return. */
   cm_result_from_main_map(cma_state_result, pcity);
 
-  success = fc_results_are_equal(cma_state_result, cma_result_got);
+  success = (*cma_state_result == *cma_result_got);
   if (!success) {
 
 #if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
@@ -204,49 +240,6 @@ bool cma_bitch::apply_result(struct city *pcity,
 }
 
 /************************************************************************/ /**
-   Returns TRUE iff the two results are equal. Both results have to be
-   results for the given city.
- ****************************************************************************/
-bool cma_bitch::fc_results_are_equal(const struct cm_result *result1,
-                                     const struct cm_result *result2)
-{
-#define T(x)                                                                \
-  if (result1->x != result2->x) {                                           \
-    log_results_are_equal(#x);                                              \
-    return FALSE;                                                           \
-  }
-
-  T(disorder);
-  T(happy);
-
-  specialist_type_iterate(sp) { T(specialists[sp]); }
-  specialist_type_iterate_end;
-
-  output_type_iterate(ot) { T(surplus[ot]); }
-  output_type_iterate_end;
-
-  fc_assert_ret_val(result1->city_radius_sq == result2->city_radius_sq,
-                    FALSE);
-  city_map_iterate(result1->city_radius_sq, cindex, x, y)
-  {
-    if (is_free_worked_index(cindex)) {
-      continue;
-    }
-
-    if (result1->worker_positions[cindex]
-        != result2->worker_positions[cindex]) {
-      log_results_are_equal("worker_positions");
-      return FALSE;
-    }
-  }
-  city_map_iterate_end;
-
-  return TRUE;
-
-#undef T
-}
-
-/************************************************************************/ /**
   Change the actual city setting to the given result. Returns TRUE iff
   the actual data matches the calculated one.
  ****************************************************************************/
@@ -261,7 +254,7 @@ bool cma_bitch::apply_result_on_server(struct city *pcity,
   fc_assert_ret_val(result->found_a_valid, FALSE);
   cm_result_from_main_map(current_state, pcity);
 
-  if (fc_results_are_equal(current_state, result)
+  if (*current_state == *result
       && !ALWAYS_APPLY_AT_SERVER) {
     stats.apply_result_ignored++;
     return TRUE;
