@@ -18,7 +18,7 @@ public:
   ~governor();
   static governor *i();
   static void drop();
-  bool hot() { return superhot; };
+  bool hot() { return superhot > 0; };
   void freeze() { --superhot; };
   void unfreeze() { ++superhot; run();};
   void add_city_changed(struct city *pcity);
