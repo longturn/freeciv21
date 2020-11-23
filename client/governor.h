@@ -33,7 +33,6 @@ private:
   int superhot;
 };
 
-void cma_init(void);
 bool cma_apply_result(struct city *pcity, const struct cm_result *result);
 void cma_put_city_under_agent(struct city *pcity,
                               const struct cm_parameter *const parameter);
