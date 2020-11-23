@@ -77,7 +77,7 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "attribute.h"
 #include "audio.h"
 #include "cityrepdata.h"

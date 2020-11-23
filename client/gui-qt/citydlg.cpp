@@ -32,7 +32,7 @@
 #include "game.h"
 
 // client
-#include "agents.h"
+#include "governor.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"

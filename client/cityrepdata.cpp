@@ -35,7 +35,7 @@
 #include "unitlist.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "citydlg_common.h" /* city_production_cost_str() */
 #include "options.h"
 

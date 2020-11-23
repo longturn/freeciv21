@@ -28,7 +28,7 @@
 #include "unitlist.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "chatline_common.h"
 #include "cityrep_g.h"
 #include "client_main.h"

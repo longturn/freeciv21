@@ -44,7 +44,7 @@
 #include "menu_g.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "audio.h"
 #include "client_main.h"
 #include "climap.h"

@@ -34,7 +34,7 @@
 #include "version.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "attribute.h"
 #include "chatline_g.h"
 #include "client_main.h"

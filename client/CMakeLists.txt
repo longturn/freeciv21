@@ -50,6 +50,7 @@ add_library(
   control.cpp
   editor.cpp
   global_worklist.cpp
+  governor.cpp
   gui_interface.cpp
   goto.cpp
   helpdata.cpp
@@ -79,13 +80,11 @@ target_include_directories(client PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_include_directories(client PUBLIC ${SDL2_INCLUDE_DIR})
 target_include_directories(client PUBLIC ${SDL2_MIXER_INCLUDE_DIR})
 
-add_subdirectory(agents)
 add_subdirectory(luascript)
 
 target_link_libraries(client PUBLIC Qt5::Widgets)
 target_link_libraries(client PUBLIC ${SDL2_MIXER_LIBRARIES} ${SDL2_LIBRARY})
 
-target_link_libraries(client PUBLIC agents)
 target_link_libraries(client PUBLIC client_gen)
 target_link_libraries(client PUBLIC cvercmp)
 target_link_libraries(client PUBLIC luascript)
