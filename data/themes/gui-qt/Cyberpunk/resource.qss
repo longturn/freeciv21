@@ -64,7 +64,7 @@ QPushButton:hover[main_pagebt="true"] {
 QPushButton {
   color: white;
   background: black;
-  border: 2px solid black;
+  border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
 }
@@ -698,7 +698,7 @@ QScrollBar::add-page:vertical {
 }
 
 QScrollBar::handle:vertical {
-  background: #e4da11; min-height: 20px
+  background: #6a6a00; min-height: 20px
 }
 
 QScrollBar::sub-line:horizontal {
@@ -720,7 +720,7 @@ QScrollBar::add-page:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-  background: #e4da11; min-width: 20px
+  background: #6a6a00; min-width: 20px
 }
 
 
