@@ -83,12 +83,132 @@ static struct {
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
+class cma_bitch {
+public:
+  cma_bitch();
+  ~cma_bitch();
+  bool apply_result(struct city *pcity, const struct cm_result *result);
+  void put_city_under_agent(struct city *pcity,
+                            const struct cm_parameter *const parameter);
+  void release_city(struct city *pcity);
+  bool is_city_under_agent(const struct city *pcity,
+                           struct cm_parameter *parameter);
+  bool get_parameter(enum attr_city attr, int city_id,
+                     struct cm_parameter *parameter);
+  void set_parameter(enum attr_city attr, int city_id,
+                     const struct cm_parameter *parameter);
+  void handle_city(struct city *pcity);
+  int get_request();
+  void result_came_from_server(int request);
+
+private:
+  bool fc_results_are_equal(const struct cm_result *result1,
+                            const struct cm_result *result2);
+  void city_changed(int city_id);
+  struct city *check_city(int city_id, struct cm_parameter *parameter);
+  bool apply_result_on_server(struct city *pcity,
+                              const struct cm_result *result);
+  struct cm_result *cma_state_result;
+  const struct cm_result *cma_result_got;
+  int last_request;
+  struct city *xcity;
+};
+
+// cimb means "cma is my bitch"
+Q_GLOBAL_STATIC(cma_bitch, cimb)
+
+static void release_city(int city_id)
+{
+  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
+}
+
+int cities_results_request() { return cimb->get_request(); }
+
+void cma_got_result(int citynr) { cimb->result_came_from_server(citynr); }
+
+cma_bitch::cma_bitch()
+{
+  cma_state_result = nullptr;
+  last_request = -9999;
+  cma_result_got = nullptr;
+  xcity = nullptr;
+}
+
+int cma_bitch::get_request() { return last_request; }
+
+void cma_bitch::result_came_from_server(int last_request_id)
+{
+  struct city *pcity = xcity;
+  last_request = last_request_id;
+  xcity = pcity;
+  bool success;
+  if (last_request_id < 0)
+    return;
+  if (last_request_id != 0) {
+    int city_id = pcity->id;
+
+    if (pcity != check_city(city_id, NULL)) {
+      qDebug("apply_result_on_server(city %d) !check_city()!", city_id);
+      return;
+    }
+  }
+
+  /* Return. */
+  cm_result_from_main_map(cma_state_result, pcity);
+
+  success = fc_results_are_equal(cma_state_result, cma_result_got);
+  if (!success) {
+
+#if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
+    qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
+              city_name_get(pcity));
+
+    log_test("apply_result_on_server(city %d=\"%s\") have:", pcity->id,
+             city_name_get(pcity));
+    cm_print_city(pcity);
+    cm_print_result(cma_state_result);
+
+    log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
+             city_name_get(pcity));
+    cm_print_result(cma_result_got);
+#endif /* SHOW_APPLY_RESULT_ON_SERVER_ERRORS */
+  }
+  cm_result_destroy(cma_state_result);
+  cm_result_destroy(const_cast<cm_result *>(cma_result_got));
+  log_apply_result("apply_result_on_server() return %d.", (int) success);
+  cma_state_result = nullptr;
+  last_request = -9999;
+  xcity = nullptr;
+}
+
+cma_bitch::~cma_bitch() {}
+
+void cma_bitch::city_changed(int city_id)
+{
+  struct city *pcity = game_city_by_number(city_id);
+
+  if (pcity) {
+    handle_city(pcity);
+  }
+}
+
+bool cma_bitch::apply_result(struct city *pcity,
+                             const struct cm_result *result)
+{
+  fc_assert(!cma_is_city_under_agent(pcity, NULL));
+  if (result->found_a_valid) {
+    return apply_result_on_server(pcity, result);
+  } else {
+    return false;
+  }
+}
+
 /************************************************************************/ /**
    Returns TRUE iff the two results are equal. Both results have to be
    results for the given city.
  ****************************************************************************/
-static bool fc_results_are_equal(const struct cm_result *result1,
-                                 const struct cm_result *result2)
+bool cma_bitch::fc_results_are_equal(const struct cm_result *result1,
+                                     const struct cm_result *result2)
 {
 #define T(x)                                                                \
   if (result1->x != result2->x) {                                           \
@@ -127,43 +247,15 @@ static bool fc_results_are_equal(const struct cm_result *result1,
 }
 
 /************************************************************************/ /**
-   Returns TRUE if the city is valid for CMA. Fills parameter if TRUE
-   is returned. Parameter can be NULL.
- ****************************************************************************/
-static struct city *check_city(int city_id, struct cm_parameter *parameter)
-{
-  struct city *pcity = game_city_by_number(city_id);
-  struct cm_parameter dummy;
-
-  if (!parameter) {
-    parameter = &dummy;
-  }
-
-  if (!pcity
-      || !cma_get_parameter(ATTR_CITY_CMA_PARAMETER, city_id, parameter)) {
-    return NULL;
-  }
-
-  if (city_owner(pcity) != client.conn.playing) {
-    cma_release_city(pcity);
-    return NULL;
-  }
-
-  return pcity;
-}
-
-/************************************************************************/ /**
   Change the actual city setting to the given result. Returns TRUE iff
   the actual data matches the calculated one.
  ****************************************************************************/
-static bool apply_result_on_server(struct city *pcity,
-                                   const struct cm_result *result)
+bool cma_bitch::apply_result_on_server(struct city *pcity,
+                                       const struct cm_result *result)
 {
   int first_request_id = 0, last_request_id = 0, i;
   int city_radius_sq = city_map_radius_sq_get(pcity);
   struct cm_result *current_state = cm_result_new(pcity);
-  ;
-  bool success;
   struct tile *pcenter = city_tile(pcity);
 
   fc_assert_ret_val(result->found_a_valid, FALSE);
@@ -282,43 +374,11 @@ static bool apply_result_on_server(struct city *pcity,
   }
 
   connection_do_unbuffer(&client.conn);
-
-  if (last_request_id != 0) {
-    int city_id = pcity->id;
-
-    wait_for_requests("CMA", first_request_id, last_request_id);
-    if (pcity != check_city(city_id, NULL)) {
-      qDebug("apply_result_on_server(city %d) !check_city()!", city_id);
-      return FALSE;
-    }
-  }
-
-  /* Return. */
-  cm_result_from_main_map(current_state, pcity);
-
-  success = fc_results_are_equal(current_state, result);
-  if (!success) {
-    cm_clear_cache(pcity);
-
-#if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
-    qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
-              city_name_get(pcity));
-
-    log_test("apply_result_on_server(city %d=\"%s\") have:", pcity->id,
-             city_name_get(pcity));
-    cm_print_city(pcity);
-    cm_print_result(current_state);
-
-    log_test("apply_result_on_server(city %d=\"%s\") want:", pcity->id,
-             city_name_get(pcity));
-    cm_print_result(result);
-#endif /* SHOW_APPLY_RESULT_ON_SERVER_ERRORS */
-  }
-
-  cm_result_destroy(current_state);
-
-  log_apply_result("apply_result_on_server() return %d.", (int) success);
-  return success;
+  cma_result_got = result; // copy ?
+  cma_state_result = current_state;
+  last_request = last_request_id;
+  xcity = pcity;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -340,24 +400,142 @@ static void report_stats(void)
 #endif /* SHOW_TIME_STATS */
 }
 
-/************************************************************************/ /**
-   Remove governor setting from city.
- ****************************************************************************/
-static void release_city(int city_id)
+void cma_bitch::put_city_under_agent(
+    struct city *pcity, const struct cm_parameter *const parameter)
 {
-  attr_city_set(ATTR_CITY_CMA_PARAMETER, city_id, 0, NULL);
+  log_debug("cma_put_city_under_agent(city %d=\"%s\")", pcity->id,
+            city_name_get(pcity));
+  fc_assert_ret(city_owner(pcity) == client.conn.playing);
+  cma_set_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id, parameter);
+  cause_a_city_changed_for_agent("CMA", pcity);
+  log_debug("cma_put_city_under_agent: return");
 }
 
-/****************************************************************************
-                           algorithmic functions
-****************************************************************************/
+void cma_bitch::release_city(struct city *pcity)
+{
+  ::release_city(pcity->id);
+  refresh_city_dialog(pcity);
+  city_report_dialog_update_city(pcity);
+}
+
+bool cma_bitch::is_city_under_agent(const struct city *pcity,
+                                    struct cm_parameter *parameter)
+{
+  struct cm_parameter my_parameter;
+
+  if (!cma_get_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id,
+                         &my_parameter)) {
+    return FALSE;
+  }
+
+  if (parameter) {
+    memcpy(parameter, &my_parameter, sizeof(struct cm_parameter));
+  }
+  return TRUE;
+}
+bool cma_bitch::get_parameter(enum attr_city attr, int city_id,
+                              struct cm_parameter *parameter)
+{
+  size_t len;
+  char buffer[SAVED_PARAMETER_SIZE];
+  struct data_in din;
+  int version, dummy;
+
+  /* Changing this function is likely to break compatability with old
+   * savegames that store these values. */
+
+  len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
+  if (len == 0) {
+    return FALSE;
+  }
+  fc_assert_ret_val(len == SAVED_PARAMETER_SIZE, FALSE);
+
+  dio_input_init(&din, buffer, len);
+
+  dio_get_uint8_raw(&din, &version);
+  fc_assert_ret_val(version == 2, FALSE);
+
+  /* Initialize the parameter (includes some AI-only fields that aren't
+   * touched below). */
+  cm_init_parameter(parameter);
+
+  output_type_iterate(i)
+  {
+    dio_get_sint16_raw(&din, &parameter->minimal_surplus[i]);
+    dio_get_sint16_raw(&din, &parameter->factor[i]);
+  }
+  output_type_iterate_end;
+
+  dio_get_sint16_raw(&din, &parameter->happy_factor);
+  dio_get_uint8_raw(&din,
+                    &dummy); /* Dummy value; used to be factor_target. */
+  dio_get_bool8_raw(&din, &parameter->require_happy);
+
+  return TRUE;
+}
+
+void cma_bitch::set_parameter(enum attr_city attr, int city_id,
+                              const struct cm_parameter *parameter)
+{
+  char buffer[SAVED_PARAMETER_SIZE];
+  struct raw_data_out dout;
+
+  /* Changing this function is likely to break compatability with old
+   * savegames that store these values. */
+
+  dio_output_init(&dout, buffer, sizeof(buffer));
+
+  dio_put_uint8_raw(&dout, 2);
+
+  output_type_iterate(i)
+  {
+    dio_put_sint16_raw(&dout, parameter->minimal_surplus[i]);
+    dio_put_sint16_raw(&dout, parameter->factor[i]);
+  }
+  output_type_iterate_end;
+
+  dio_put_sint16_raw(&dout, parameter->happy_factor);
+  dio_put_uint8_raw(&dout, 0); /* Dummy value; used to be factor_target. */
+  dio_put_bool8_raw(&dout, parameter->require_happy);
+
+  fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
+
+  attr_city_set(attr, city_id, SAVED_PARAMETER_SIZE, buffer);
+}
+
+/************************************************************************/ /**
+   Returns TRUE if the city is valid for CMA. Fills parameter if TRUE
+   is returned. Parameter can be NULL.
+ ****************************************************************************/
+struct city *cma_bitch::check_city(int city_id,
+                                   struct cm_parameter *parameter)
+{
+  struct city *pcity = game_city_by_number(city_id);
+  struct cm_parameter dummy;
+
+  if (!parameter) {
+    parameter = &dummy;
+  }
+
+  if (!pcity
+      || !cma_get_parameter(ATTR_CITY_CMA_PARAMETER, city_id, parameter)) {
+    return NULL;
+  }
+
+  if (city_owner(pcity) != client.conn.playing) {
+    cma_release_city(pcity);
+    return NULL;
+  }
+
+  return pcity;
+}
 
 /************************************************************************/ /**
    The given city has changed. handle_city ensures that either the city
    follows the set CMA goal or that the CMA detaches itself from the
    city.
  ****************************************************************************/
-static void handle_city(struct city *pcity)
+void cma_bitch::handle_city(struct city *pcity)
 {
   struct cm_result *result = cm_result_new(pcity);
   bool handled;
@@ -411,8 +589,6 @@ static void handle_city(struct city *pcity)
     }
   }
 
-  cm_result_destroy(result);
-
   if (!handled) {
     fc_assert_ret(pcity == check_city(city_id, NULL));
     log_handle_city2("  not handled");
@@ -432,18 +608,19 @@ static void handle_city(struct city *pcity)
   log_handle_city2("END handle city=(%d)", city_id);
 }
 
-/************************************************************************/ /**
-   Callback for the agent interface.
- ****************************************************************************/
 static void city_changed(int city_id)
 {
   struct city *pcity = game_city_by_number(city_id);
 
   if (pcity) {
     cm_clear_cache(pcity);
-    handle_city(pcity);
+    cimb->handle_city(pcity);
   }
 }
+
+/****************************************************************************
+                           algorithmic functions
+****************************************************************************/
 
 /************************************************************************/ /**
    Callback for the agent interface.
@@ -492,11 +669,7 @@ void cma_init(void)
  ****************************************************************************/
 bool cma_apply_result(struct city *pcity, const struct cm_result *result)
 {
-  fc_assert(!cma_is_city_under_agent(pcity, NULL));
-  if (result->found_a_valid) {
-    return apply_result_on_server(pcity, result);
-  } else
-    return TRUE; /* ???????? */
+  return cimb->apply_result(pcity, result);
 }
 
 /************************************************************************/ /**
@@ -505,27 +678,13 @@ bool cma_apply_result(struct city *pcity, const struct cm_result *result)
 void cma_put_city_under_agent(struct city *pcity,
                               const struct cm_parameter *const parameter)
 {
-  log_debug("cma_put_city_under_agent(city %d=\"%s\")", pcity->id,
-            city_name_get(pcity));
-
-  fc_assert_ret(city_owner(pcity) == client.conn.playing);
-
-  cma_set_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id, parameter);
-
-  cause_a_city_changed_for_agent("CMA", pcity);
-
-  log_debug("cma_put_city_under_agent: return");
+  cimb->put_city_under_agent(pcity, parameter);
 }
 
 /************************************************************************/ /**
    Release city from governor control.
  ****************************************************************************/
-void cma_release_city(struct city *pcity)
-{
-  release_city(pcity->id);
-  refresh_city_dialog(pcity);
-  city_report_dialog_update_city(pcity);
-}
+void cma_release_city(struct city *pcity) { cimb->release_city(pcity); }
 
 /************************************************************************/ /**
    Check whether city is under governor control, and fill parameter if it is.
@@ -533,17 +692,7 @@ void cma_release_city(struct city *pcity)
 bool cma_is_city_under_agent(const struct city *pcity,
                              struct cm_parameter *parameter)
 {
-  struct cm_parameter my_parameter;
-
-  if (!cma_get_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id,
-                         &my_parameter)) {
-    return FALSE;
-  }
-
-  if (parameter) {
-    memcpy(parameter, &my_parameter, sizeof(struct cm_parameter));
-  }
-  return TRUE;
+  return cimb->is_city_under_agent(pcity, parameter);
 }
 
 /************************************************************************/ /**
@@ -556,42 +705,7 @@ bool cma_is_city_under_agent(const struct city *pcity,
 bool cma_get_parameter(enum attr_city attr, int city_id,
                        struct cm_parameter *parameter)
 {
-  size_t len;
-  char buffer[SAVED_PARAMETER_SIZE];
-  struct data_in din;
-  int version, dummy;
-
-  /* Changing this function is likely to break compatability with old
-   * savegames that store these values. */
-
-  len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
-  if (len == 0) {
-    return FALSE;
-  }
-  fc_assert_ret_val(len == SAVED_PARAMETER_SIZE, FALSE);
-
-  dio_input_init(&din, buffer, len);
-
-  dio_get_uint8_raw(&din, &version);
-  fc_assert_ret_val(version == 2, FALSE);
-
-  /* Initialize the parameter (includes some AI-only fields that aren't
-   * touched below). */
-  cm_init_parameter(parameter);
-
-  output_type_iterate(i)
-  {
-    dio_get_sint16_raw(&din, &parameter->minimal_surplus[i]);
-    dio_get_sint16_raw(&din, &parameter->factor[i]);
-  }
-  output_type_iterate_end;
-
-  dio_get_sint16_raw(&din, &parameter->happy_factor);
-  dio_get_uint8_raw(&din,
-                    &dummy); /* Dummy value; used to be factor_target. */
-  dio_get_bool8_raw(&din, &parameter->require_happy);
-
-  return TRUE;
+  return cimb->get_parameter(attr, city_id, parameter);
 }
 
 /************************************************************************/ /**
@@ -600,28 +714,5 @@ bool cma_get_parameter(enum attr_city attr, int city_id,
 void cma_set_parameter(enum attr_city attr, int city_id,
                        const struct cm_parameter *parameter)
 {
-  char buffer[SAVED_PARAMETER_SIZE];
-  struct raw_data_out dout;
-
-  /* Changing this function is likely to break compatability with old
-   * savegames that store these values. */
-
-  dio_output_init(&dout, buffer, sizeof(buffer));
-
-  dio_put_uint8_raw(&dout, 2);
-
-  output_type_iterate(i)
-  {
-    dio_put_sint16_raw(&dout, parameter->minimal_surplus[i]);
-    dio_put_sint16_raw(&dout, parameter->factor[i]);
-  }
-  output_type_iterate_end;
-
-  dio_put_sint16_raw(&dout, parameter->happy_factor);
-  dio_put_uint8_raw(&dout, 0); /* Dummy value; used to be factor_target. */
-  dio_put_bool8_raw(&dout, parameter->require_happy);
-
-  fc_assert(dio_output_used(&dout) == SAVED_PARAMETER_SIZE);
-
-  attr_city_set(attr, city_id, SAVED_PARAMETER_SIZE, buffer);
+  cimb->set_parameter(attr, city_id, parameter);
 }

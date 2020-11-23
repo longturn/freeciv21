@@ -14,7 +14,7 @@
 #ifndef FC__CMA_CORE_H
 #define FC__CMA_CORE_H
 
-
+#include <QHash>
 
 /*
  * CM stands for citizen management.
@@ -63,6 +63,7 @@ bool cma_get_parameter(enum attr_city attr, int city_id,
 void cma_set_parameter(enum attr_city attr, int city_id,
                        const struct cm_parameter *parameter);
 
-
+int cities_results_request();
+void cma_got_result(int);
 
 #endif /* FC__CMA_CORE_H */

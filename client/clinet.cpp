@@ -39,6 +39,7 @@
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
+#include "cma_core.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
 #include "dialogs_g.h"      /* popdown_races_dialog() */
@@ -304,6 +305,13 @@ void input_from_server(QTcpSocket *sock)
       if (NULL != packet) {
         client_packet_input(packet, type);
         ::operator delete(packet);
+
+        if (type == PACKET_PROCESSING_FINISHED) {
+          if (client.conn.client.last_processed_request_id_seen
+              >= cities_results_request()) {
+            cma_got_result(cities_results_request());
+          }
+        }
       } else {
         break;
       }
