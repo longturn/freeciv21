@@ -441,7 +441,6 @@ void handle_unit_remove(int unit_id)
   }
   punit->client.transported_by = -1;
 
-  agents_unit_remove(punit);
   editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, TRUE);
   client_remove_unit(punit);
 
@@ -1294,8 +1293,6 @@ void handle_new_year(int year, int fragments, int turn)
                  game.info.turn);
   }
 
-  agents_new_turn();
-
   if (last_turn != turn) {
     start_turn();
     last_turn = turn;
@@ -1347,7 +1344,6 @@ void handle_start_phase(int phase)
 
   if (NULL != client.conn.playing
       && is_player_phase(client.conn.playing, phase)) {
-    agents_start_turn();
     non_ai_unit_focus = FALSE;
 
     update_turn_done_button_state();
@@ -1413,7 +1409,6 @@ void handle_end_turn(void)
    * the game.info.turn in handle_new_year() we will check it.
    */
   game.info.turn++;
-  agents_before_new_turn();
 }
 
 /************************************************************************/ /**
@@ -1835,8 +1830,6 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       check_focus = TRUE;
     }
 
-    /* This won't change punit; it enqueues the call for later handling. */
-    agents_unit_changed(punit);
     editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, FALSE);
 
     punit->action_decision_tile = packet_unit->action_decision_tile;
@@ -1867,7 +1860,6 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
               (pcity ? city_name_get(pcity) : "(unknown)"));
 
     repaint_unit = !unit_transported(punit);
-    agents_unit_new(punit);
 
     /* Check if we should link cargo units.
      * (This might be necessary if the cargo info was sent to us before
@@ -3128,17 +3120,6 @@ void handle_tile_info(const struct packet_tile_info *packet)
   }
 
   if (known_changed || tile_changed) {
-    /*
-     * A tile can only change if it was known before and is still
-     * known. In the other cases the tile is new or removed.
-     */
-    if (known_changed && TILE_KNOWN_SEEN == new_known) {
-      agents_tile_new(ptile);
-    } else if (known_changed && TILE_KNOWN_UNSEEN == new_known) {
-      agents_tile_remove(ptile);
-    } else {
-      agents_tile_changed(ptile);
-    }
     editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile), FALSE);
   }
 

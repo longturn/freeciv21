@@ -77,6 +77,7 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
+#include "agents.h"
 #include "attribute.h"
 #include "audio.h"
 #include "cityrepdata.h"
@@ -96,10 +97,6 @@
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
-
-/* client/agents */
-#include "agents.h"
-#include "cma_core.h" /* kludge */
 
 /* client/luascript */
 #include "script_client.h"
@@ -857,7 +854,6 @@ void set_client_state(enum client_states newstate)
     /* Find something sensible to display instead of the intro gfx. */
     center_on_something();
     free_intro_radar_sprites();
-    agents_game_start();
     editgui_tileset_changed();
     voteinfo_gui_update();
 

@@ -18,6 +18,8 @@
 
 #include "support.h" /* bool type */
 
+#include <QHash>
+#include "attribute.h"
 #include "fc_types.h"
 
 /*
@@ -37,9 +39,7 @@ struct agent {
   char name[MAX_AGENT_NAME_LEN];
   int level;
 
-  void (*turn_start_notify)(void);
   void (*city_callbacks[CB_LAST])(int);
-  void (*unit_callbacks[CB_LAST])(int);
 };
 
 void agents_init(void);
@@ -54,29 +54,77 @@ void agents_processing_finished(void);
 void agents_freeze_hint(void);
 void agents_thaw_hint(void);
 void agents_game_joined(void);
-void agents_game_start(void);
-void agents_before_new_turn(void);
-void agents_start_turn(void);
-void agents_new_turn(void);
-
-void agents_unit_changed(struct unit *punit);
-void agents_unit_new(struct unit *punit);
-void agents_unit_remove(struct unit *punit);
 
 void agents_city_changed(struct city *pcity);
 void agents_city_new(struct city *pcity);
 void agents_city_remove(struct city *pcity);
 
-void agents_tile_changed(struct tile *ptile);
-void agents_tile_new(struct tile *ptile);
-void agents_tile_remove(struct tile *ptile);
 
 /* called from agents */
 void cause_a_city_changed_for_agent(const char *name_of_calling_agent,
                                     struct city *pcity);
-void cause_a_unit_changed_for_agent(const char *name_of_calling_agent,
-                                    struct unit *punit);
 
+
+
+
+/*
+ * Called once per client start.
+ */
+void cma_init(void);
+
+/* Change the actual city setting. */
+bool cma_apply_result(struct city *pcity, const struct cm_result *result);
+
+/* Till a call of cma_release_city the city will be managed by the agent. */
+void cma_put_city_under_agent(struct city *pcity,
+                              const struct cm_parameter *const parameter);
+
+/* Release the city from the agent. */
+void cma_release_city(struct city *pcity);
+
+/*
+ * Test if the citizen in the given city are managed by the agent. The
+ * given parameter is filled if pointer is non-NULL. The parameter is
+ * only valid if cma_is_city_under_agent returns true.
+ */
+bool cma_is_city_under_agent(const struct city *pcity,
+                             struct cm_parameter *parameter);
+
+/***************** utility methods *************************************/
+bool cma_get_parameter(enum attr_city attr, int city_id,
+                       struct cm_parameter *parameter);
+void cma_set_parameter(enum attr_city attr, int city_id,
+                       const struct cm_parameter *parameter);
+
+int cities_results_request();
+void cma_got_result(int);
+
+void cmafec_init(void);
+void cmafec_free(void);
+
+void cmafec_set_fe_parameter(struct city *pcity,
+                             const struct cm_parameter *const parameter);
+void cmafec_get_fe_parameter(struct city *pcity, struct cm_parameter *dest);
+
+const char *
+cmafec_get_short_descr(const struct cm_parameter *const parameter);
+const char *cmafec_get_short_descr_of_city(const struct city *pcity);
+const char *
+cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
+                        const struct cm_parameter *const parameter);
+
+/*
+ * Preset handling
+ */
+void cmafec_preset_add(const char *descr_name, struct cm_parameter *pparam);
+void cmafec_preset_remove(int idx);
+int cmafec_preset_get_index_of_parameter(
+    const struct cm_parameter *const parameter);
+char *cmafec_preset_get_descr(int idx);
+const struct cm_parameter *cmafec_preset_get_parameter(int idx);
+int cmafec_preset_num(void);
+
+void create_default_cma_presets(void);
 
 
 #endif /* FC__AGENTS_H */

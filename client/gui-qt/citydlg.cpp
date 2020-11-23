@@ -30,10 +30,9 @@
 #include "citizens.h"
 #include "city.h"
 #include "game.h"
-// agents
-#include "cma_core.h"
-#include "cma_fec.h"
+
 // client
+#include "agents.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"

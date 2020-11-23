@@ -39,7 +39,6 @@
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "cma_core.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
 #include "dialogs_g.h"      /* popdown_races_dialog() */

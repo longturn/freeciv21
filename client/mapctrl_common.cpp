@@ -33,7 +33,6 @@
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "cma_core.h"
 #include "control.h"
 #include "editor.h"
 #include "fcintl.h"
@@ -180,7 +179,6 @@ static void define_tiles_within_rectangle(bool append)
 
   /* Clear previous rectangle. */
   draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
-
 }
 
 /**********************************************************************/ /**
