@@ -2150,9 +2150,6 @@ bool cm_are_parameter_equal(const struct cm_parameter *const p1,
   if (p1->happy_factor != p2->happy_factor) {
     return FALSE;
   }
-  if (p1->max_growth != p2->max_growth) {
-    return FALSE;
-  }
 
   return TRUE;
 }
