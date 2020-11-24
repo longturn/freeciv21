@@ -1268,7 +1268,7 @@ static bool choice_stack_empty(struct cm_state *state)
  ****************************************************************************/
 static int last_choice(struct cm_state *state)
 {
-  fc_assert_ret_val(!choice_stack_empty(state), -1);
+  fc_assert_ret_val(!choice_stack_empty(state), 0);
 
   return state->choice.stack[state->choice.size - 1];
 }

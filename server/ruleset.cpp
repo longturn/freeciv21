@@ -1074,7 +1074,6 @@ static bool load_game_names(struct section_file *file,
       } else if (nval < 1) {
         qCCritical(ruleset_category,
                    "\"%s\": At least one goods type needed", filename);
-        section_list_destroy(sec);
         ok = FALSE;
       } else {
         game.control.num_goods_types = nval;
@@ -3528,11 +3527,6 @@ static bool load_ruleset_terrain(struct section_file *file,
         ok = FALSE;
         break;
       }
-
-      if (!ok) {
-        break;
-      }
-
       i++;
     }
     extra_type_by_cause_iterate_end;
@@ -6447,7 +6441,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
 
         if (psize) {
-          FC_FREE(protecor_flag);
+          FCPP_FREE(protecor_flag);
         }
       }
     }

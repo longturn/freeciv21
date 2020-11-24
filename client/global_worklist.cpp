@@ -291,7 +291,7 @@ global_worklist_get(const struct global_worklist *pgwl)
  ***********************************************************************/
 int global_worklist_id(const struct global_worklist *pgwl)
 {
-  fc_assert_ret_val(NULL != pgwl, -1);
+  fc_assert_ret_val(NULL != pgwl, 0);
   return pgwl->id;
 }
 

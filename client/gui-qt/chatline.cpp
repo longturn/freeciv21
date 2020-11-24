@@ -618,7 +618,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
                   .arg(QString::number(text_tag_link_type(ptag)),
                        QString::number(text_tag_link_id(ptag)));
       mm.insert(start, color);
-    }
+    } break;
     case TTT_INVALID:
       break;
     }

@@ -201,7 +201,11 @@ QString fc_shortcuts::get_desc(shortcut_id id)
 {
   fc_shortcut *s;
   s = hash.value(id);
-  return s->str;
+  if (s) {
+    return s->str;
+  } else {
+    return QString();
+  }
 }
 
 /**********************************************************************/ /**

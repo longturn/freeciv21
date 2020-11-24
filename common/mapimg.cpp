@@ -1960,8 +1960,8 @@ static inline void img_set_pixel(struct img *pimg, const int mindex,
  ****************************************************************************/
 static inline int img_index(const int x, const int y, const struct img *pimg)
 {
-  fc_assert_ret_val(x >= 0 && x < pimg->imgsize.x, -1);
-  fc_assert_ret_val(y >= 0 && y < pimg->imgsize.y, -1);
+  fc_assert_ret_val(x >= 0 && x < pimg->imgsize.x, 0);
+  fc_assert_ret_val(y >= 0 && y < pimg->imgsize.y, 0);
 
   return pimg->imgsize.x * y + x;
 }

@@ -25,7 +25,7 @@
  ***************************************************************************/
 notify_dialog::notify_dialog(const char *caption, const char *headline,
                              const char *lines, QWidget *parent)
-    : fcwidget()
+    : fcwidget(), label(nullptr), layout(nullptr)
 {
   int x, y;
   QString qlines;

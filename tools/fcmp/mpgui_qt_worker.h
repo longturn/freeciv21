@@ -33,6 +33,7 @@ class mpqt_worker : public QThread {
   Q_OBJECT
 
 public:
+  mpqt_worker() : m_gui(nullptr), m_fcmp(nullptr) {};
   void run();
   void download(const QUrl &url, mpgui *gui, fcmp_params *fcmp,
                 const dl_msg_callback &msg_callback,

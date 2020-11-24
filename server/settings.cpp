@@ -4955,7 +4955,7 @@ struct setting *setting_by_name(const char *name)
  ****************************************************************************/
 int setting_number(const struct setting *pset)
 {
-  fc_assert_ret_val(pset != NULL, -1);
+  fc_assert_ret_val(pset != NULL, 0);
   return pset - settings;
 }
 

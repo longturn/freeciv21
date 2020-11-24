@@ -291,7 +291,7 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
     move_fragment_cost = MIN(MAX_MOVE_FRAGS, move_fragment_cost);
 
     /* Losing all movement is seen as losing 2 utility. */
-    utility -= move_fragment_cost / (MAX_MOVE_FRAGS / 2);
+    utility -= move_fragment_cost / (float(MAX_MOVE_FRAGS) / 2);
   }
 
   return MAX(0, utility);

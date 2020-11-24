@@ -53,7 +53,7 @@ static void cycle_enemy_units();
 extern void toggle_units_report(bool);
 
 page_game::page_game(QWidget *parent)
-    : QWidget(parent), unit_selector(nullptr)
+    : QWidget(parent), unit_selector(nullptr), update_info_timer(nullptr)
 {
   QGridLayout *page_game_layout;
   QGridLayout *game_layout;

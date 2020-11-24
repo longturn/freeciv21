@@ -552,7 +552,7 @@ void goods_free(void)
  *************************************************************************/
 Goods_type_id goods_number(const struct goods_type *pgood)
 {
-  fc_assert_ret_val(NULL != pgood, -1);
+  fc_assert_ret_val(NULL != pgood, 0);
 
   return pgood->id;
 }
@@ -565,7 +565,7 @@ Goods_type_id goods_number(const struct goods_type *pgood)
  *************************************************************************/
 Goods_type_id goods_index(const struct goods_type *pgood)
 {
-  fc_assert_ret_val(NULL != pgood, -1);
+  fc_assert_ret_val(NULL != pgood, 0);
 
   return pgood - goods;
 }

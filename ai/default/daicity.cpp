@@ -744,7 +744,7 @@ static int unit_foodbox_cost(struct unit *punit)
     int foodloss_pct = 100 - get_city_bonus(pcity, EFT_GROWTH_FOOD);
 
     foodloss_pct = CLIP(0, foodloss_pct, 100);
-    fc_assert_ret_val(pcity != NULL, -1);
+    fc_assert_ret_val(pcity != NULL, 0);
     fc_assert(size >= pop_cost);
 
     for (i = pop_cost; i > 0; i--) {
@@ -769,7 +769,7 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
 {
   struct unit *virtualunit;
   int want;
-  enum unit_activity best_act;
+  enum unit_activity best_act = ACTIVITY_IDLE;
   struct extra_type *best_target;
   struct tile *best_tile = NULL; /* May be accessed by log_*() calls. */
   struct tile *pcenter = city_tile(pcity);

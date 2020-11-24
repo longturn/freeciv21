@@ -1207,7 +1207,8 @@ void city_info::update_labels(struct city *pcity)
   }
 }
 
-governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
+governor_sliders::governor_sliders(QWidget *parent)
+    : QGroupBox(parent), cma_celeb_checkbox(nullptr)
 {
   QStringList str_list;
   QSlider *slider;
@@ -1340,7 +1341,7 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
     : qfc_dialog(parent), future_targets(false), show_units(true),
-      show_wonders(true), show_buildings(true)
+      show_wonders(true), show_buildings(true), current_building(0)
 {
   QFont f = QApplication::font();
   QFont *small_font;
@@ -2591,6 +2592,7 @@ void city_dialog::update_improvements()
   struct worklist queue;
   impr_item *ii;
 
+  cost = 0;
   upkeep = 0;
   ui.city_buildings->setUpdatesEnabled(false);
   ui.city_buildings->clear_layout();

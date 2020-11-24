@@ -618,7 +618,7 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
 
   revolution_turns = get_player_bonus(pplayer, EFT_REVOLUTION_UNHAPPINESS);
   if (revolution_turns > 0) {
-    bonus -= 6 / revolution_turns;
+    bonus -= int(6 / revolution_turns);
   }
 
   *val += (*val * bonus) / 100;

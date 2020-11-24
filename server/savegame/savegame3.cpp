@@ -5024,8 +5024,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
         if (rally_orders[i] == '\0' || rally_dirs[i] == '\0'
             || rally_activities[i] == '\0') {
           log_sg("Invalid rally point.");
-          free(pcity->rally_point.orders);
-          pcity->rally_point.orders = NULL;
+          FCPP_FREE(pcity->rally_point.orders);
           pcity->rally_point.length = 0;
           break;
         }
@@ -6016,8 +6015,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             || (order->order == ORDER_ACTIVITY
                 && order->activity == ACTIVITY_LAST)) {
           /* An invalid order. Just drop the orders for this unit. */
-          free(punit->orders.list);
-          punit->orders.list = NULL;
+          FCPP_FREE(punit->orders.list);
           punit->has_orders = FALSE;
           break;
         }
@@ -6099,8 +6097,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
               && unit_activity_needs_target_from_client(act)
               && order->sub_target == EXTRA_NONE) {
             /* Missing required action extra target. */
-            free(punit->orders.list);
-            punit->orders.list = NULL;
+            FCPP_FREE(punit->orders.list);
             punit->has_orders = FALSE;
           }
         } else if (order->order != ORDER_PERFORM_ACTION) {

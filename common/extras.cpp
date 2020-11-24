@@ -147,7 +147,7 @@ int extra_count(void) { return game.control.num_extra_types; }
  ****************************************************************************/
 int extra_number(const struct extra_type *pextra)
 {
-  fc_assert_ret_val(NULL != pextra, -1);
+  fc_assert_ret_val(NULL != pextra, 0);
 
   return pextra->id;
 }
@@ -158,7 +158,7 @@ int extra_number(const struct extra_type *pextra)
  ****************************************************************************/
 int extra_index(const struct extra_type *pextra)
 {
-  fc_assert_ret_val(NULL != pextra, -1);
+  fc_assert_ret_val(NULL != pextra, 0);
 
   return pextra - extras;
 }

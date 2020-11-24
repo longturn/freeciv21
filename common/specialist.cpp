@@ -81,7 +81,7 @@ Specialist_type_id specialist_count(void)
  **************************************************************************/
 Specialist_type_id specialist_index(const struct specialist *sp)
 {
-  fc_assert_ret_val(NULL != sp, -1);
+  fc_assert_ret_val(NULL != sp, 0);
   return sp - specialists;
 }
 
@@ -90,7 +90,7 @@ Specialist_type_id specialist_index(const struct specialist *sp)
  **************************************************************************/
 Specialist_type_id specialist_number(const struct specialist *sp)
 {
-  fc_assert_ret_val(NULL != sp, -1);
+  fc_assert_ret_val(NULL != sp, 0);
   return sp->item_number;
 }
 

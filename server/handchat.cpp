@@ -443,12 +443,6 @@ void handle_chat_msg_req(struct connection *pconn, const char *message)
         chat_msg_to_conn(pconn, conn_dest, cp + 1);
         return;
       }
-      if (pdest && match_result_player < M_PRE_AMBIGUOUS) {
-        /* Would have done something above if connected */
-        notify_conn(pconn->self, NULL, E_CHAT_ERROR, ftc_server,
-                    _("%s is not connected."), player_name(pdest));
-        return;
-      }
     }
     /* Didn't match; check heuristics to see if this is likely
      * to be a global message

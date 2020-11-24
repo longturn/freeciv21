@@ -84,7 +84,7 @@ Government_type_id government_count(void)
  **************************************************************************/
 Government_type_id government_index(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, -1);
+  fc_assert_ret_val(NULL != pgovern, 0);
   return pgovern - governments;
 }
 
@@ -93,7 +93,7 @@ Government_type_id government_index(const struct government *pgovern)
  **************************************************************************/
 Government_type_id government_number(const struct government *pgovern)
 {
-  fc_assert_ret_val(NULL != pgovern, -1);
+  fc_assert_ret_val(NULL != pgovern, 0);
   return pgovern->item_number;
 }
 

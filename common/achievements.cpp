@@ -77,7 +77,7 @@ void achievements_free(void)
  **************************************************************************/
 int achievement_number(const struct achievement *pach)
 {
-  fc_assert_ret_val(NULL != pach, -1);
+  fc_assert_ret_val(NULL != pach, 0);
 
   return pach->id;
 }
@@ -87,7 +87,7 @@ int achievement_number(const struct achievement *pach)
  **************************************************************************/
 int achievement_index(const struct achievement *pach)
 {
-  fc_assert_ret_val(NULL != pach, -1);
+  fc_assert_ret_val(NULL != pach, 0);
 
   return pach - achievements;
 }

@@ -503,7 +503,9 @@ void hud_input_box::paintEvent(QPaintEvent *event)
 /************************************************************************/ /**
    Constructor for hud_units (holds layout for whole uunits info)
  ****************************************************************************/
-hud_units::hud_units(QWidget *parent) : QFrame(parent)
+hud_units::hud_units(QWidget *parent)
+    : QFrame(parent), ufont(nullptr), ul_units(nullptr),
+      current_tile(nullptr)
 {
   QVBoxLayout *vbox;
   QVBoxLayout *unit_lab;
@@ -1999,7 +2001,8 @@ void hud_battle_log::moveEvent(QMoveEvent *event)
   QPoint p;
 
   p = pos();
-  king()->qt_settings.battlelog_x = static_cast<float>(p.x()) / mapview.width;
+  king()->qt_settings.battlelog_x =
+      static_cast<float>(p.x()) / mapview.width;
   king()->qt_settings.battlelog_y =
       static_cast<float>(p.y()) / mapview.height;
   m_timer.restart();

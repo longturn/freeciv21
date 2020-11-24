@@ -123,7 +123,7 @@ char terrain_identifier(const struct terrain *pterrain)
  **************************************************************************/
 Terrain_type_id terrain_index(const struct terrain *pterrain)
 {
-  fc_assert_ret_val(pterrain, -1);
+  fc_assert_ret_val(pterrain, 0);
   return pterrain - civ_terrains;
 }
 
@@ -132,7 +132,7 @@ Terrain_type_id terrain_index(const struct terrain *pterrain)
  **************************************************************************/
 Terrain_type_id terrain_number(const struct terrain *pterrain)
 {
-  fc_assert_ret_val(pterrain, -1);
+  fc_assert_ret_val(pterrain, 0);
   return pterrain->item_number;
 }
 

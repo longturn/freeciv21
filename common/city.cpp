@@ -170,8 +170,8 @@ int city_map_tiles(int city_radius_sq)
     return 0;
   }
 
-  fc_assert_ret_val(city_radius_sq >= CITY_MAP_MIN_RADIUS_SQ, -1);
-  fc_assert_ret_val(city_radius_sq <= CITY_MAP_MAX_RADIUS_SQ, -1);
+  fc_assert_ret_val(city_radius_sq >= CITY_MAP_MIN_RADIUS_SQ, 0);
+  fc_assert_ret_val(city_radius_sq <= CITY_MAP_MAX_RADIUS_SQ, 0);
 
   return city_map_numtiles[city_radius_sq];
 }

@@ -87,7 +87,7 @@ Unit_type_id utype_count(void) { return game.control.num_unit_types; }
  **************************************************************************/
 Unit_type_id utype_index(const struct unit_type *punittype)
 {
-  fc_assert_ret_val(punittype, -1);
+  fc_assert_ret_val(punittype, 0);
   return punittype - unit_types;
 }
 
@@ -96,7 +96,7 @@ Unit_type_id utype_index(const struct unit_type *punittype)
  **************************************************************************/
 Unit_type_id utype_number(const struct unit_type *punittype)
 {
-  fc_assert_ret_val(punittype, -1);
+  fc_assert_ret_val(punittype, 0);
   return punittype->item_number;
 }
 
@@ -1935,8 +1935,8 @@ int num_role_units(int role)
   fc_assert_ret_val((role >= 0 && role <= UTYF_LAST_USER_FLAG)
                         || (role >= L_FIRST && role < L_LAST)
                         || (role >= L_LAST && role < MAX_UNIT_ROLES),
-                    -1);
-  fc_assert_ret_val(!first_init, -1);
+                    0);
+  fc_assert_ret_val(!first_init, 0);
   return n_with_role[role];
 }
 
@@ -2190,7 +2190,7 @@ Unit_Class_id uclass_count(void) { return game.control.num_unit_classes; }
  **************************************************************************/
 Unit_Class_id uclass_index(const struct unit_class *pclass)
 {
-  fc_assert_ret_val(pclass, -1);
+  fc_assert_ret_val(pclass, 0);
   return pclass - unit_classes;
 }
 #endif /* uclass_index */
@@ -2200,7 +2200,7 @@ Unit_Class_id uclass_index(const struct unit_class *pclass)
  **************************************************************************/
 Unit_Class_id uclass_number(const struct unit_class *pclass)
 {
-  fc_assert_ret_val(pclass, -1);
+  fc_assert_ret_val(pclass, 0);
   return pclass->item_number;
 }
 

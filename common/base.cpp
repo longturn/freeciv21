@@ -159,7 +159,7 @@ struct base_type *base_by_number(const Base_type_id id)
  ****************************************************************************/
 Base_type_id base_number(const struct base_type *pbase)
 {
-  fc_assert_ret_val(NULL != pbase, -1);
+  fc_assert_ret_val(NULL != pbase, 0);
   return pbase->item_number;
 }
 

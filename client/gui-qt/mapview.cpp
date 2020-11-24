@@ -139,7 +139,7 @@ void draw_calculated_trade_routes(QPainter *painter)
 /**********************************************************************/ /**
    Constructor for map
  **************************************************************************/
-map_view::map_view() : QWidget()
+map_view::map_view() : QWidget(), cursor_frame(0)
 {
   menu_click = false;
   cursor = -1;

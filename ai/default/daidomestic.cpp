@@ -588,7 +588,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     cur->want = cur->want
                 * (0.5
                    + double((ai_trait_get_value(TRAIT_BUILDER, pplayer))
-                      / TRAIT_DEFAULT_VALUE / 2));
+                            / static_cast<double>(TRAIT_DEFAULT_VALUE) / 2));
     choice = adv_better_choice_free(choice, cur);
 
     /* Consider building caravan-type units for trade route */

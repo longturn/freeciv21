@@ -3224,7 +3224,7 @@ struct rgbcolor *playercolor_get(int id)
  **************************************************************************/
 int playercolor_count(void)
 {
-  fc_assert_ret_val(game.server.plr_colors != NULL, -1);
+  fc_assert_ret_val(game.server.plr_colors != NULL, 0);
 
   return rgbcolor_list_size(game.server.plr_colors);
 }

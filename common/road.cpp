@@ -31,7 +31,7 @@
  ****************************************************************************/
 Road_type_id road_number(const struct road_type *proad)
 {
-  fc_assert_ret_val(NULL != proad, -1);
+  fc_assert_ret_val(NULL != proad, 0);
 
   return proad->id;
 }
