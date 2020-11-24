@@ -19,7 +19,8 @@
 /************************************************************************/ /**
    Constructor for economy report
  ****************************************************************************/
-eco_report::eco_report() : QWidget()
+eco_report::eco_report()
+    : QWidget(), curr_row(-1), max_row(0), uid(0), counter(0)
 {
   ui.setupUi(this);
 
@@ -44,6 +45,8 @@ eco_report::eco_report() : QWidget()
           SLOT(selection_changed(const QItemSelection &,
                                  const QItemSelection &)));
   setLayout(ui.eco_layout);
+  queen()->gimme_place(this, "ECO");
+  index = queen()->add_game_tab(this);
 }
 
 /************************************************************************/ /**
@@ -54,13 +57,7 @@ eco_report::~eco_report() { queen()->remove_repo_dlg("ECO"); }
 /************************************************************************/ /**
    Initializes place in tab for economy report
  ****************************************************************************/
-void eco_report::init()
-{
-  curr_row = -1;
-  queen()->gimme_place(this, "ECO");
-  index = queen()->add_game_tab(this);
-  queen()->game_tab_widget->setCurrentIndex(index);
-}
+void eco_report::init() { queen()->game_tab_widget->setCurrentIndex(index); }
 
 /************************************************************************/ /**
    Refresh all widgets for economy report

@@ -1342,7 +1342,7 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
     : qfc_dialog(parent), future_targets(false), show_units(true),
-      show_wonders(true), show_buildings(true)
+      show_wonders(true), show_buildings(true), current_building(0)
 {
   QFont f = QApplication::font();
   QFont *small_font;

@@ -47,6 +47,8 @@ endgame_report::endgame_report(const struct packet_endgame_report *packet)
   end_widget->horizontalHeader()->setSectionResizeMode(
       QHeaderView::ResizeToContents);
   end_layout->addWidget(end_widget, 1, 0, 5, 5);
+  queen()->gimme_place(this, "END");
+  index = queen()->add_game_tab(this);
   setLayout(end_layout);
 }
 
@@ -60,8 +62,6 @@ endgame_report::~endgame_report() { queen()->remove_repo_dlg("END"); }
  ****************************************************************************/
 void endgame_report::init()
 {
-  queen()->gimme_place(this, "END");
-  index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 

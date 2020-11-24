@@ -377,7 +377,8 @@ QSize research_diagram::size()
 /************************************************************************/ /**
    Consctructor for science_report
  ****************************************************************************/
-science_report::science_report() : QWidget()
+science_report::science_report()
+    : QWidget(), curr_list(nullptr), goal_list(nullptr), index(0)
 {
   QSize size;
   QSizePolicy size_expanding_policy(QSizePolicy::Expanding,
@@ -393,8 +394,6 @@ science_report::science_report() : QWidget()
   res_diag = new research_diagram();
   scroll = new QScrollArea();
 
-  curr_list = NULL;
-  goal_list = NULL;
   progress->setTextVisible(true);
   progress_label->setSizePolicy(size_fixed_policy);
   sci_layout->addWidget(progress_label, 0, 0, 1, 8);
