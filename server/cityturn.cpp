@@ -2566,8 +2566,7 @@ static bool city_build_unit(struct player *pplayer, struct city *pcity)
         pcity->rally_point.length = 0;
         pcity->rally_point.persistent = FALSE;
         pcity->rally_point.vigilant = FALSE;
-        free(pcity->rally_point.orders);
-        pcity->rally_point.orders = NULL;
+        FCPP_FREE(pcity->rally_point.orders);
       }
 
       /* Done building this unit; time to move on to the next. */

@@ -4268,8 +4268,7 @@ static bool sg_load_player_unit(struct loaddata *loading, struct player *plr,
             || (order->order == ORDER_ACTIVITY
                 && order->activity == ACTIVITY_LAST)) {
           /* An invalid order. Just drop the orders for this unit. */
-          free(punit->orders.list);
-          punit->orders.list = NULL;
+          FCPP_FREE(punit->orders.list);
           punit->has_orders = FALSE;
           break;
         }
