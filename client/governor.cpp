@@ -71,11 +71,10 @@ struct cma_preset {
 };
 
 static struct {
-  civtimer *wall_timer;
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
-governor *governor::m_instance = 0;
+governor *governor::m_instance = nullptr;
 
 // yolo class
 class cma_yoloswag {
@@ -97,7 +96,6 @@ public:
   void result_came_from_server(int request);
 
 private:
-  void city_changed(int city_id);
   struct city *check_city(int city_id, struct cm_parameter *parameter);
   bool apply_result_on_server(struct city *pcity,
                               const struct cm_result *result);
@@ -151,8 +149,9 @@ void governor::add_city_remove(struct city *pcity)
 // run all events
 void governor::run()
 {
-  if (superhot < 1)
+  if (superhot < 1) {
     return;
+  }
 
   for (auto pcity : scity_changed) {
     if (pcity) {
@@ -228,8 +227,9 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   last_request = last_request_id;
   bool success;
 
-  if (last_request_id < 0)
+  if (last_request_id < 0) {
     return;
+  }
   if (last_request_id != 0) {
     int city_id = pcity->id;
 
@@ -268,14 +268,6 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
 }
 
 cma_yoloswag::~cma_yoloswag() {}
-
-void cma_yoloswag::city_changed(int city_id)
-{
-  struct city *pcity = game_city_by_number(city_id);
-  if (pcity) {
-    handle_city(pcity);
-  }
-}
 
 bool cma_yoloswag::apply_result(struct city *pcity,
                                 const struct cm_result *result)
@@ -408,8 +400,8 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
      * allocation of citizen than the server. We just send a
      * PACKET_CITY_REFRESH to bring them in sync.
      */
-    first_request_id = last_request_id =
-        dsend_packet_city_refresh(&client.conn, pcity->id);
+    first_request_id = dsend_packet_city_refresh(&client.conn, pcity->id);
+    last_request_id = first_request_id;
     stats.refresh_forced++;
   }
 
@@ -470,7 +462,6 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
   if (len == 0) {
     return FALSE;
   }
-  fc_assert_ret_val(len == SAVED_PARAMETER_SIZE, FALSE);
 
   dio_input_init(&din, buffer, len);
 
@@ -877,14 +868,8 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
 
   if (stock >= cost) {
     turns = 1;
-  } else if (surplus > 0) {
-    turns = ((cost - stock - 1) / surplus) + 1 + 1;
   } else {
-    if (stock < 0) {
-      turns = -1;
-    } else {
-      turns = (stock / surplus);
-    }
+    turns = ((cost - stock - 1) / surplus) + 1 + 1;
   }
   fc_snprintf(buffer, sizeof(buffer), PL_("%d turn", "%d turns", turns),
               turns);
@@ -948,7 +933,7 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
               specialists_abbreviation_string());
 
   if (!result->found_a_valid) {
-    for (j = 0; j < RESULT_COLUMNS; j++)
+    for (j = 0; j < RESULT_COLUMNS; ++j)
       fc_snprintf(buf[j], BUFFER_SIZE, "---");
   } else {
     output_type_iterate(o)
