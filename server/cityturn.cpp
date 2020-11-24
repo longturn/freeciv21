@@ -389,7 +389,6 @@ void auto_arrange_workers(struct city *pcity)
   city_refresh(pcity);
 
   sanity_check_city(pcity);
-  cm_clear_cache(pcity);
 
   cm_init_parameter(&cmp);
 

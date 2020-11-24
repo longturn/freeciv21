@@ -467,7 +467,6 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
       struct cm_result *cmr = cm_result_new(pcity);
       struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
-      cm_clear_cache(pcity);
       cm_query_result(pcity, &cmp, cmr, FALSE); /* burn some CPU */
 
       total_cities++;

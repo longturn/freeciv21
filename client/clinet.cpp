@@ -34,7 +34,7 @@
 #include "version.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "attribute.h"
 #include "chatline_g.h"
 #include "client_main.h"
@@ -296,7 +296,7 @@ void input_from_server(QTcpSocket *sock)
 
   nb = read_from_connection(&client.conn, FALSE);
   if (0 <= nb) {
-    agents_freeze_hint();
+    governor::i()->freeze();
     while (client.conn.used) {
       enum packet_type type;
       void *packet = get_packet_from_connection(&client.conn, &type);
@@ -304,68 +304,24 @@ void input_from_server(QTcpSocket *sock)
       if (NULL != packet) {
         client_packet_input(packet, type);
         ::operator delete(packet);
+
+        if (type == PACKET_PROCESSING_FINISHED) {
+          if (client.conn.client.last_processed_request_id_seen
+              >= cities_results_request()) {
+            cma_got_result(cities_results_request());
+          }
+        }
       } else {
         break;
       }
     }
     if (client.conn.used) {
-      agents_thaw_hint();
+      governor::i()->unfreeze();
     }
   } else if (-2 == nb) {
     connection_close(&client.conn, _("server disconnected"));
   } else {
     connection_close(&client.conn, _("read error"));
-  }
-}
-
-/**********************************************************************/ /**
-   This function will sniff from the given socket, get the packet and call
-   client_packet_input. It will return if there is a network error or if
-   the PACKET_PROCESSING_FINISHED packet for the given request is
-   received.
- **************************************************************************/
-void input_from_server_till_request_got_processed(QTcpSocket *socket,
-                                                  int expected_request_id)
-{
-  fc_assert_ret(expected_request_id);
-  fc_assert_ret(socket == client.conn.sock);
-
-  log_debug("input_from_server_till_request_got_processed("
-            "expected_request_id=%d)",
-            expected_request_id);
-
-  while (TRUE) {
-    int nb = read_from_connection(&client.conn, TRUE);
-
-    if (0 <= nb) {
-      enum packet_type type;
-
-      while (TRUE) {
-        void *packet = get_packet_from_connection(&client.conn, &type);
-        if (NULL == packet) {
-          break;
-        }
-
-        client_packet_input(packet, type);
-        free(packet);
-
-        if (type == PACKET_PROCESSING_FINISHED) {
-          log_debug("ifstrgp: expect=%d, seen=%d", expected_request_id,
-                    client.conn.client.last_processed_request_id_seen);
-          if (client.conn.client.last_processed_request_id_seen
-              >= expected_request_id) {
-            log_debug("ifstrgp: got it; returning");
-            return;
-          }
-        }
-      }
-    } else if (-2 == nb) {
-      connection_close(&client.conn, _("server disconnected"));
-      break;
-    } else {
-      connection_close(&client.conn, _("read error"));
-      break;
-    }
   }
 }
 

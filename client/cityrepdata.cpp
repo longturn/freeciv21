@@ -34,10 +34,8 @@
 #include "specialist.h"
 #include "unitlist.h"
 
-/* agents */
-#include "cma_fec.h"
-
 /* client */
+#include "governor.h"
 #include "citydlg_common.h" /* city_production_cost_str() */
 #include "options.h"
 

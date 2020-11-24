@@ -36,9 +36,6 @@
 #include "events.h"
 #include "version.h"
 
-/* client/agents */
-#include "cma_fec.h"
-
 /* client/include */
 #include "chatline_g.h"
 #include "dialogs_g.h"
@@ -49,6 +46,7 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
+#include "governor.h"
 #include "audio.h"
 #include "cityrepdata.h"
 #include "client_main.h"

@@ -92,7 +92,6 @@ extern struct civclient {
   struct global_worklist_list *worklists;
 } client;
 
-void wait_till_request_got_processed(int request_id);
 bool client_is_observer(void);
 bool client_is_global_observer(void);
 int client_player_number(void);

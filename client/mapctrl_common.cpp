@@ -28,12 +28,11 @@
 #include "unitlist.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "chatline_common.h"
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "climisc.h"
-#include "cma_core.h"
 #include "control.h"
 #include "editor.h"
 #include "fcintl.h"
@@ -180,7 +179,6 @@ static void define_tiles_within_rectangle(bool append)
 
   /* Clear previous rectangle. */
   draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
-
 }
 
 /**********************************************************************/ /**
@@ -499,7 +497,7 @@ bool can_end_turn(void)
   return (can_client_issue_orders() && client.conn.playing->is_alive
           && !client.conn.playing->phase_done && !is_server_busy()
           && is_player_phase(client.conn.playing, game.info.phase)
-          && !agents_busy());
+          && governor::i()->hot());
 }
 
 /**********************************************************************/ /**

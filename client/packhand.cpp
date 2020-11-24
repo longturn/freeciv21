@@ -77,7 +77,7 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
-#include "agents.h"
+#include "governor.h"
 #include "attribute.h"
 #include "audio.h"
 #include "client_main.h"
@@ -329,7 +329,6 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     client.conn.established = TRUE;
     client.conn.id = conn_id;
 
-    agents_game_joined();
     set_server_busy(FALSE);
 
     if (get_client_page() == PAGE_MAIN
@@ -389,7 +388,7 @@ void handle_city_remove(int city_id)
 
   need_menus_update = (NULL != get_focus_unit_on_tile(city_tile(pcity)));
 
-  agents_city_remove(pcity);
+  governor::i()->add_city_remove(pcity);
   editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, TRUE);
   client_remove_city(pcity);
 
@@ -441,7 +440,6 @@ void handle_unit_remove(int unit_id)
   }
   punit->client.transported_by = -1;
 
-  agents_unit_remove(punit);
   editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, TRUE);
   client_remove_unit(punit);
 
@@ -853,9 +851,9 @@ void handle_city_info(const struct packet_city_info *packet)
                      popup, packet->diplomat_investigate);
 
   if (city_is_new && !city_has_changed_owner) {
-    agents_city_new(pcity);
-  } else {
-    agents_city_changed(pcity);
+    governor::i()->add_city_new(pcity);
+  } else { //city new and changed is the same call :P
+    governor::i()->add_city_changed(pcity);
   }
 
   /* Update the description if necessary. */
@@ -1193,9 +1191,9 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
                      FALSE, FALSE);
 
   if (city_is_new && !city_has_changed_owner) {
-    agents_city_new(pcity);
-  } else {
-    agents_city_changed(pcity);
+    governor::i()->add_city_new(pcity);
+  } else { // its the same
+    governor::i()->add_city_changed(pcity);
   }
 
   /* Update the description if necessary. */
@@ -1294,8 +1292,6 @@ void handle_new_year(int year, int fragments, int turn)
                  game.info.turn);
   }
 
-  agents_new_turn();
-
   if (last_turn != turn) {
     start_turn();
     last_turn = turn;
@@ -1347,7 +1343,6 @@ void handle_start_phase(int phase)
 
   if (NULL != client.conn.playing
       && is_player_phase(client.conn.playing, phase)) {
-    agents_start_turn();
     non_ai_unit_focus = FALSE;
 
     update_turn_done_button_state();
@@ -1413,7 +1408,6 @@ void handle_end_turn(void)
    * the game.info.turn in handle_new_year() we will check it.
    */
   game.info.turn++;
-  agents_before_new_turn();
 }
 
 /************************************************************************/ /**
@@ -1835,8 +1829,6 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       check_focus = TRUE;
     }
 
-    /* This won't change punit; it enqueues the call for later handling. */
-    agents_unit_changed(punit);
     editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, FALSE);
 
     punit->action_decision_tile = packet_unit->action_decision_tile;
@@ -1867,7 +1859,6 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
               (pcity ? city_name_get(pcity) : "(unknown)"));
 
     repaint_unit = !unit_transported(punit);
-    agents_unit_new(punit);
 
     /* Check if we should link cargo units.
      * (This might be necessary if the cargo info was sent to us before
@@ -3128,17 +3119,6 @@ void handle_tile_info(const struct packet_tile_info *packet)
   }
 
   if (known_changed || tile_changed) {
-    /*
-     * A tile can only change if it was known before and is still
-     * known. In the other cases the tile is new or removed.
-     */
-    if (known_changed && TILE_KNOWN_SEEN == new_known) {
-      agents_tile_new(ptile);
-    } else if (known_changed && TILE_KNOWN_UNSEEN == new_known) {
-      agents_tile_remove(ptile);
-    } else {
-      agents_tile_changed(ptile);
-    }
     editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile), FALSE);
   }
 
@@ -5118,7 +5098,7 @@ void handle_player_attribute_chunk(
  ****************************************************************************/
 void handle_processing_started(void)
 {
-  agents_processing_started();
+  governor::i()->freeze();
 
   fc_assert(client.conn.client.request_id_of_currently_handled_packet == 0);
   client.conn.client.request_id_of_currently_handled_packet =
@@ -5147,7 +5127,7 @@ void handle_processing_finished(void)
 
   client.conn.client.request_id_of_currently_handled_packet = 0;
 
-  agents_processing_finished();
+  governor::i()->unfreeze();
 }
 
 /************************************************************************/ /**
@@ -5180,7 +5160,7 @@ void handle_freeze_client(void)
 {
   log_debug("handle_freeze_client");
 
-  agents_freeze_hint();
+  governor::i()->freeze();
 }
 
 /************************************************************************/ /**
@@ -5190,7 +5170,7 @@ void handle_thaw_client(void)
 {
   log_debug("handle_thaw_client");
 
-  agents_thaw_hint();
+  governor::i()->unfreeze();
   update_turn_done_button_state();
 }
 

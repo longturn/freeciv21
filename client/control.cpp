@@ -33,7 +33,6 @@
 #include "unitlist.h"
 
 /* common/aicore */
-#include "cma_core.h"
 #include "path_finding.h"
 /* client/include */
 #include "chatline_g.h"
@@ -45,6 +44,7 @@
 #include "menu_g.h"
 
 /* client */
+#include "governor.h"
 #include "audio.h"
 #include "client_main.h"
 #include "climap.h"

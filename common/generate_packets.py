@@ -266,7 +266,7 @@ class Field:
         if self.dataio_type in ["string", "estring"] and self.is_array==1:
             return "  differ = (strcmp(old->%(name)s, real_packet->%(name)s) != 0);"%self.__dict__
         if self.dataio_type == "cm_parameter":
-            return "  differ = !cm_are_parameter_equal(&old->%(name)s, &real_packet->%(name)s);" % self.__dict__
+            return "  differ = (&old->%(name)s != &real_packet->%(name)s);" % self.__dict__
         if self.is_struct and self.is_array==0:
             return "  differ = !are_%(dataio_type)ss_equal(&old->%(name)s, &real_packet->%(name)s);"%self.__dict__
         if not self.is_array:

@@ -16,10 +16,10 @@
 #include "fcintl.h"
 // common
 #include "citydlg_common.h"
-#include "cma_fec.h"
 #include "game.h"
 #include "global_worklist.h"
 // client
+#include "governor.h"
 #include "cityrep_g.h"
 #include "client_main.h"
 #include "mapview_common.h"

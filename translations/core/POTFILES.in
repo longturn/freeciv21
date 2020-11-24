@@ -4,8 +4,6 @@ ai/default/daicity.cpp
 ai/default/daidiplomacy.cpp
 ai/difficulty.cpp
 ai/handicaps.cpp
-client/agents/cma_core.cpp
-client/agents/cma_fec.cpp
 client/attribute.cpp
 client/audio.cpp
 client/chatline_common.cpp
@@ -62,6 +60,7 @@ client/gui-qt/unitselect.cpp
 client/gui-qt/voteinfo_bar.cpp
 client/gui-qt/widgetdecorations.cpp
 client/helpdata.cpp
+client/governor.cpp
 client/include/helpdlg_g.h
 client/luaconsole_common.cpp
 client/mapctrl_common.cpp

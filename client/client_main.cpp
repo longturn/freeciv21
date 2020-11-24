@@ -77,6 +77,7 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
+#include "governor.h"
 #include "attribute.h"
 #include "audio.h"
 #include "cityrepdata.h"
@@ -96,10 +97,6 @@
 #include "tilespec.h"
 #include "update_queue.h"
 #include "voteinfo.h"
-
-/* client/agents */
-#include "agents.h"
-#include "cma_core.h" /* kludge */
 
 /* client/luascript */
 #include "script_client.h"
@@ -245,7 +242,6 @@ static void client_game_init(void)
 
   game_init(FALSE);
   attribute_init();
-  agents_init();
   control_init();
   link_marks_init();
   voteinfo_queue_init();
@@ -274,7 +270,7 @@ static void client_game_free(void)
   control_free();
   free_help_texts();
   attribute_free();
-  agents_free();
+  governor::i()->drop();
   game.client.ruleset_init = FALSE;
   game.client.ruleset_ready = FALSE;
   game_free();
@@ -299,13 +295,12 @@ static void client_game_reset(void)
   link_marks_free();
   control_free();
   attribute_free();
-  agents_free();
+  governor::i()->drop();
 
   game_reset();
   mapimg_reset();
 
   attribute_init();
-  agents_init();
   control_init();
   link_marks_init();
 }
@@ -714,7 +709,7 @@ void send_turn_done(void)
      * the return key.
      */
 
-    if (agents_busy()) {
+    if (!governor::i()->hot()) {
       waiting_for_end_turn = TRUE;
     }
 
@@ -799,7 +794,6 @@ void set_client_state(enum client_states newstate)
 
     if (oldstate > C_S_DISCONNECTED) {
       unit_focus_set(NULL);
-      agents_disconnect();
       editor_clear();
       global_worklists_unbuild();
       client_remove_all_cli_conn();
@@ -857,7 +851,6 @@ void set_client_state(enum client_states newstate)
     /* Find something sensible to display instead of the intro gfx. */
     center_on_something();
     free_intro_radar_sprites();
-    agents_game_start();
     editgui_tileset_changed();
     voteinfo_gui_update();
 
@@ -966,13 +959,6 @@ void send_attribute_block_request(void)
   send_packet_player_attribute_block(&client.conn);
 }
 
-/**********************************************************************/ /**
-   Wait until server has responsed to given request id.
- **************************************************************************/
-void wait_till_request_got_processed(int request_id)
-{
-  input_from_server_till_request_got_processed(client.conn.sock, request_id);
-}
 
 /**********************************************************************/ /**
    Returns whether client is observer.

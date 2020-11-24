@@ -304,13 +304,6 @@ void cm_init_citymap(void)
   /* In the B&B algorithm there's not really anything to initialize. */
 }
 
-/************************************************************************/ /**
-   Clear the cache for a city.
- ****************************************************************************/
-void cm_clear_cache(struct city *pcity)
-{
-  /* The B&B algorithm doesn't have city caches so there's nothing to do. */
-}
 
 /************************************************************************/ /**
    Called at the end of a game to free any CM data.
@@ -2129,35 +2122,29 @@ void cm_query_result(struct city *pcity, const struct cm_parameter *param,
   cm_state_free(state);
 }
 
-/************************************************************************/ /**
-   Returns true if the two cm_parameters are equal.
- ****************************************************************************/
-bool cm_are_parameter_equal(const struct cm_parameter *const p1,
-                            const struct cm_parameter *const p2)
+
+bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
 {
   output_type_iterate(i)
   {
-    if (p1->minimal_surplus[i] != p2->minimal_surplus[i]) {
+    if (p1.minimal_surplus[i] != p2.minimal_surplus[i]) {
       return FALSE;
     }
-    if (p1->factor[i] != p2->factor[i]) {
+    if (p1.factor[i] != p2.factor[i]) {
       return FALSE;
     }
   }
   output_type_iterate_end;
-  if (p1->require_happy != p2->require_happy) {
+  if (p1.require_happy != p2.require_happy) {
     return FALSE;
   }
-  if (p1->allow_disorder != p2->allow_disorder) {
+  if (p1.allow_disorder != p2.allow_disorder) {
     return FALSE;
   }
-  if (p1->allow_specialists != p2->allow_specialists) {
+  if (p1.allow_specialists != p2.allow_specialists) {
     return FALSE;
   }
-  if (p1->happy_factor != p2->happy_factor) {
-    return FALSE;
-  }
-  if (p1->max_growth != p2->max_growth) {
+  if (p1.happy_factor != p2.happy_factor) {
     return FALSE;
   }
 
