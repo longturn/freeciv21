@@ -2593,6 +2593,7 @@ void city_dialog::update_improvements()
   struct worklist queue;
   impr_item *ii;
 
+  cost = 0;
   upkeep = 0;
   ui.city_buildings->setUpdatesEnabled(false);
   ui.city_buildings->clear_layout();

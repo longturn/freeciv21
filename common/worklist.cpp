@@ -56,7 +56,7 @@ void worklist_init(struct worklist *pwl)
  ****************************************************************************/
 int worklist_length(const struct worklist *pwl)
 {
-  fc_assert_ret_val(pwl->length >= 0 && pwl->length <= MAX_LEN_WORKLIST, -1);
+  fc_assert_ret_val(pwl->length >= 0 && pwl->length <= MAX_LEN_WORKLIST, 0);
   return pwl->length;
 }
 

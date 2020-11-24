@@ -260,7 +260,8 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
         citizens_iterate(self, pslot, nat) { total += nat; }
         citizens_iterate_end;
 
-        if ((own * 100 / total) >= game.info.citizen_partisans_pct) {
+        if (total != 0
+            && ((own * 100 / total) >= game.info.citizen_partisans_pct)) {
           inspired = TRUE;
         }
       }

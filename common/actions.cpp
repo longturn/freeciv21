@@ -2108,6 +2108,7 @@ enabler_tile_tgt_local_diplrel_implies_claimed(
   }
 
   /* Tile is unclaimed as a requirement. */
+  tile_is_claimed.quiet = false;
   tile_is_unclaimed.range = REQ_RANGE_LOCAL;
   tile_is_unclaimed.survives = FALSE;
   tile_is_unclaimed.source.kind = VUT_CITYTILE;

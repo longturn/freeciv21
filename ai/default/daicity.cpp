@@ -769,7 +769,7 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
 {
   struct unit *virtualunit;
   int want;
-  enum unit_activity best_act;
+  enum unit_activity best_act = ACTIVITY_IDLE;
   struct extra_type *best_target;
   struct tile *best_tile = NULL; /* May be accessed by log_*() calls. */
   struct tile *pcenter = city_tile(pcity);

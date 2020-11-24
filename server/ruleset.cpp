@@ -6441,7 +6441,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
         }
 
         if (psize) {
-          FC_FREE(protecor_flag);
+          FCPP_FREE(protecor_flag);
         }
       }
     }

@@ -192,7 +192,8 @@ void minimap_view::update_pixmap(const QImage &image)
    Minimap thread's contructor
  **************************************************************************/
 minimap_thread::minimap_thread(QObject *parent)
-    : QThread(parent), mini_width(20), mini_height(20), scale(1.0f)
+    : QThread(parent), mini_width(20), mini_height(20), scale(1.0f),
+      restart(false), abort(false)
 {
 }
 

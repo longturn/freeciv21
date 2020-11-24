@@ -102,7 +102,7 @@ int player_distance_to_player(struct player *pplayer, struct player *target)
   }
   city_list_iterate_end;
 
-  return MAX(dists / cities, 1);
+  return MAX(dists / qMax(cities, 1), 1);
 }
 
 /*******************************************************************/ /**
