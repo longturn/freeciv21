@@ -122,7 +122,7 @@ governor::~governor() {}
 // instance for governor
 governor *governor::i()
 {
-  if (m_instance != nullptr) {
+  if (m_instance == nullptr) {
     m_instance = new governor;
   }
   return m_instance;
