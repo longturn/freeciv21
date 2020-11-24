@@ -1444,7 +1444,7 @@ static void adjust_ai_unit_choice(struct city *pcity,
         choice->want
         * (0.5
            + double((ai_trait_get_value(TRAIT_BUILDER, city_owner(pcity)))
-                    / TRAIT_DEFAULT_VALUE / 2));
+                    / static_cast<double>(TRAIT_DEFAULT_VALUE) / 2));
     choice->type = CT_BUILDING;
     adv_choice_set_use(choice, "veterancy building");
   }
@@ -1576,7 +1576,7 @@ struct adv_choice *military_advisor_choose_build(
               choice->want
               * (0.5
                  + double((ai_trait_get_value(TRAIT_BUILDER, pplayer))
-                          / TRAIT_DEFAULT_VALUE / 2));
+                          / static_cast<double>(TRAIT_DEFAULT_VALUE) / 2));
           if (urgency == 0 && choice->want > 100) {
             choice->want = 100;
           }
