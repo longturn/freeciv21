@@ -370,9 +370,6 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
         cost = game.server.conquercost;
       } else if (cost == -3) {
         cost = game.server.diplbulbcost;
-      } else {
-
-        cost = 0;
       }
     }
     research_apply_penalty(presearch, id, cost);

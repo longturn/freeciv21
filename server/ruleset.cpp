@@ -3527,11 +3527,6 @@ static bool load_ruleset_terrain(struct section_file *file,
         ok = FALSE;
         break;
       }
-
-      if (!ok) {
-        break;
-      }
-
       i++;
     }
     extra_type_by_cause_iterate_end;

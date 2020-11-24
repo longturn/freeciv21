@@ -6600,7 +6600,7 @@ void tileset_use_preferred_theme(const struct tileset *t)
   size_t default_theme_name_sz = 0;
   int i;
 
-  if (NULL == default_theme_name || 0 == default_theme_name_sz) {
+  if (NULL == default_theme_name) {
     /* Theme is not supported by this client. */
     return;
   }

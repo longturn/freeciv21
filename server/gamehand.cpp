@@ -197,12 +197,8 @@ static struct tile *place_starting_unit(struct tile *starttile,
   /* Expose visible area. */
   map_show_circle(pplayer, ptile, game.server.init_vis_radius_sq);
 
-  if (utype != NULL) {
-    (void) create_unit(pplayer, ptile, utype, FALSE, 0, 0);
-    return ptile;
-  }
-
-  return NULL;
+  (void) create_unit(pplayer, ptile, utype, FALSE, 0, 0);
+  return ptile;
 }
 
 /************************************************************************/ /**
