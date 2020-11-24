@@ -467,7 +467,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
    * savegames that store these values. */
 
   len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
-  if (len == 0q) {
+  if (len == 0) {
     return FALSE;
   }
 
