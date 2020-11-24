@@ -1,4 +1,4 @@
-/**************************************************************************
+/*########################################################################
  Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
  __    __          part of Freeciv21. Freeciv21 is free software: you can
 / \\..// \    redistribute it and/or modify it under the terms of the GNU
@@ -7,7 +7,7 @@
                       option) any later version. You should have received
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
-**************************************************************************/
+#########################################################################*/
 
 #include <QElapsedTimer>
 
@@ -113,7 +113,7 @@ void governor::drop()
 {
   if (m_instance) {
     delete m_instance;
-    m_instance = 0;
+    m_instance = nullptr;
   }
 }
 
@@ -122,7 +122,7 @@ governor::~governor() {}
 // instance for governor
 governor *governor::i()
 {
-  if (!m_instance)
+  if (m_instance != nullptr)
     m_instance = new governor;
   return m_instance;
 }
@@ -172,19 +172,25 @@ void governor::run()
 inline bool operator==(const struct cm_result &result1,
                        const struct cm_result &result2)
 {
-#define T(x)                                                                \
-  if (result1.x != result2.x) {                                             \
-    log_results_are_equal(#x);                                              \
-    return FALSE;                                                           \
+  if ((result1.disorder != result2.disorder)
+      || (result1.happy != result2.happy)) {
+    return false;
   }
 
-  T(disorder);
-  T(happy);
-
-  specialist_type_iterate(sp) { T(specialists[sp]); }
+  specialist_type_iterate(sp)
+  {
+    if (result1.specialists[sp] != result2.specialists[sp]) {
+      return false;
+    }
+  }
   specialist_type_iterate_end;
 
-  output_type_iterate(ot) { T(surplus[ot]); }
+  output_type_iterate(ot)
+  {
+    if (result1.surplus[ot] != result2.surplus[ot]) {
+      return false;
+    }
+  }
   output_type_iterate_end;
 
   fc_assert_ret_val(result1.city_radius_sq == result2.city_radius_sq, FALSE);
@@ -203,7 +209,6 @@ inline bool operator==(const struct cm_result &result1,
   city_map_iterate_end;
 
   return TRUE;
-#undef T
 }
 
 // yet another abstraction layer
@@ -442,8 +447,9 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
     return FALSE;
   }
 
-  if (parameter) {
-    memcpy(parameter, &my_parameter, sizeof(struct cm_parameter));
+  int codacybs = sizeof(struct cm_parameter);
+  if (parameter && sizeof(*parameter) >= codacybs) {
+    memcpy(parameter, &my_parameter, codacybs);
   }
   return TRUE;
 }
@@ -459,7 +465,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
    * savegames that store these values. */
 
   len = attr_city_get(attr, city_id, sizeof(buffer), buffer);
-  if (len == 0) {
+  if (len < 1) {
     return FALSE;
   }
 
@@ -854,7 +860,8 @@ cmafec_get_short_descr(const struct cm_parameter *const parameter)
 static const char *get_city_growth_string(struct city *pcity, int surplus)
 {
   int stock, cost, turns;
-  static char buffer[50];
+  char *buffer;
+  buffer = new char[50];
 
   if (surplus == 0) {
     fc_snprintf(buffer, sizeof(buffer), _("never"));
@@ -925,7 +932,7 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
   int j;
   char buf[RESULT_COLUMNS][BUFFER_SIZE];
   char citizen_types[BUFFER_SIZE];
-  static char buffer[600];
+  char *buffer = new char[600];
 
   /* TRANS: "W" is worker citizens, as opposed to specialists;
    * %s will represent the specialist types, for instance "E/S/T" */
@@ -933,8 +940,9 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
               specialists_abbreviation_string());
 
   if (!result->found_a_valid) {
-    for (j = 0; j < RESULT_COLUMNS; ++j)
+    for (j = 0; j < RESULT_COLUMNS; ++j) {
       fc_snprintf(buf[j], BUFFER_SIZE, "---");
+    }
   } else {
     output_type_iterate(o)
     {
@@ -947,9 +955,9 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
                 specialists_string(result->specialists),
                 /* TRANS: preserve leading space */
                 result->happy ? _(" happy") : "");
-
-    fc_snprintf(buf[7], BUFFER_SIZE, "%s",
-                get_city_growth_string(pcity, result->surplus[O_FOOD]));
+    const char *d = get_city_growth_string(pcity, result->surplus[O_FOOD]);
+    fc_snprintf(buf[7], BUFFER_SIZE, "%s", d);
+    delete[] d;
     fc_snprintf(buf[8], BUFFER_SIZE, "%s",
                 get_prod_complete_string(pcity, result->surplus[O_SHIELD]));
     fc_snprintf(buf[9], BUFFER_SIZE, "%s",
