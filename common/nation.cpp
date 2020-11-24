@@ -469,7 +469,7 @@ struct nation_type *nation_by_number(const Nation_type_id nation)
  ****************************************************************************/
 Nation_type_id nation_number(const struct nation_type *pnation)
 {
-  fc_assert_ret_val(NULL != pnation, -1);
+  fc_assert_ret_val(NULL != pnation, 0);
   return pnation->item_number;
 }
 
@@ -481,7 +481,7 @@ Nation_type_id nation_number(const struct nation_type *pnation)
  ****************************************************************************/
 Nation_type_id nation_index(const struct nation_type *pnation)
 {
-  fc_assert_ret_val(NULL != pnation, -1);
+  fc_assert_ret_val(NULL != pnation, 0);
   return pnation - nations;
 }
 
@@ -669,7 +669,7 @@ int nation_set_count(void) { return num_nation_sets; }
  ****************************************************************************/
 int nation_set_index(const struct nation_set *pset)
 {
-  fc_assert_ret_val(NULL != pset, -1);
+  fc_assert_ret_val(NULL != pset, 0);
   return pset - nation_sets;
 }
 
@@ -904,7 +904,7 @@ int nation_group_count(void) { return num_nation_groups; }
  ****************************************************************************/
 int nation_group_index(const struct nation_group *pgroup)
 {
-  fc_assert_ret_val(NULL != pgroup, -1);
+  fc_assert_ret_val(NULL != pgroup, 0);
   return pgroup - nation_groups;
 }
 

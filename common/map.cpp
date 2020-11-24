@@ -1462,7 +1462,7 @@ struct startpos *map_startpos_by_number(int id)
  ***********************************************************************/
 int startpos_number(const struct startpos *psp)
 {
-  fc_assert_ret_val(NULL != psp, -1);
+  fc_assert_ret_val(NULL != psp, 0);
   return tile_index(psp->location);
 }
 

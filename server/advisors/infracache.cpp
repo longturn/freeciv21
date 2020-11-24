@@ -64,7 +64,7 @@ static int adv_calc_irrigate_transform(const struct city *pcity,
   int goodness;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, -1);
+  fc_assert_ret_val(ptile != NULL, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->irrigation_result;
@@ -104,7 +104,7 @@ static int adv_calc_mine_transform(const struct city *pcity,
   int goodness;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, -1);
+  fc_assert_ret_val(ptile != NULL, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->mining_result;
@@ -145,7 +145,7 @@ static int adv_calc_transform(const struct city *pcity,
   struct tile *vtile;
   struct terrain *old_terrain, *new_terrain;
 
-  fc_assert_ret_val(ptile != NULL, -1);
+  fc_assert_ret_val(ptile != NULL, 0);
 
   old_terrain = tile_terrain(ptile);
   new_terrain = old_terrain->transform_result;
@@ -188,7 +188,7 @@ static int adv_calc_extra(const struct city *pcity, const struct tile *ptile,
 {
   int goodness = -1;
 
-  fc_assert_ret_val(ptile != NULL, -1);
+  fc_assert_ret_val(ptile != NULL, 0);
 
   if (player_can_build_extra(pextra, city_owner(pcity), ptile)) {
     struct tile *vtile = tile_virtual_new(ptile);
@@ -225,7 +225,7 @@ static int adv_calc_rmextra(const struct city *pcity,
 {
   int goodness = -1;
 
-  fc_assert_ret_val(ptile != NULL, -1);
+  fc_assert_ret_val(ptile != NULL, 0);
 
   if (player_can_remove_extra(pextra, city_owner(pcity), ptile)) {
     struct tile *vtile = tile_virtual_new(ptile);

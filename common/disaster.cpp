@@ -54,7 +54,7 @@ void disaster_types_free(void)
  ****************************************************************************/
 Disaster_type_id disaster_number(const struct disaster_type *pdis)
 {
-  fc_assert_ret_val(NULL != pdis, -1);
+  fc_assert_ret_val(NULL != pdis, 0);
 
   return pdis->id;
 }
@@ -67,7 +67,7 @@ Disaster_type_id disaster_number(const struct disaster_type *pdis)
  ****************************************************************************/
 Disaster_type_id disaster_index(const struct disaster_type *pdis)
 {
-  fc_assert_ret_val(NULL != pdis, -1);
+  fc_assert_ret_val(NULL != pdis, 0);
 
   return pdis - disaster_types;
 }

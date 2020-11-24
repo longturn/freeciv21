@@ -64,7 +64,7 @@ int style_count(void) { return game.control.num_styles; }
  **************************************************************************/
 int style_number(const struct nation_style *pstyle)
 {
-  fc_assert_ret_val(NULL != pstyle, -1);
+  fc_assert_ret_val(NULL != pstyle, 0);
 
   return pstyle->id;
 }
@@ -74,7 +74,7 @@ int style_number(const struct nation_style *pstyle)
  **************************************************************************/
 int style_index(const struct nation_style *pstyle)
 {
-  fc_assert_ret_val(NULL != pstyle, -1);
+  fc_assert_ret_val(NULL != pstyle, 0);
 
   return pstyle - styles;
 }

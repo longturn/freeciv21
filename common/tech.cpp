@@ -84,7 +84,7 @@ Tech_type_id advance_count(void) { return game.control.num_tech_types; }
  **************************************************************************/
 Tech_type_id advance_index(const struct advance *padvance)
 {
-  fc_assert_ret_val(NULL != padvance, -1);
+  fc_assert_ret_val(NULL != padvance, 0);
   return padvance - advances;
 }
 
@@ -93,7 +93,7 @@ Tech_type_id advance_index(const struct advance *padvance)
  **************************************************************************/
 Tech_type_id advance_number(const struct advance *padvance)
 {
-  fc_assert_ret_val(NULL != padvance, -1);
+  fc_assert_ret_val(NULL != padvance, 0);
   return padvance->item_number;
 }
 

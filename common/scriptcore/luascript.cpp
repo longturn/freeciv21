@@ -126,8 +126,8 @@ static void luascript_blacklist(lua_State *L, const char *lsymbols[]);
  *****************************************************************************/
 static int luascript_report(struct fc_lua *fcl, int status, const char *code)
 {
-  fc_assert_ret_val(fcl, -1);
-  fc_assert_ret_val(fcl->state, -1);
+  fc_assert_ret_val(fcl, 0);
+  fc_assert_ret_val(fcl->state, 0);
 
   if (status) {
     struct astring str = ASTRING_INIT;
@@ -302,7 +302,7 @@ int luascript_error(lua_State *L, const char *format, ...)
  *****************************************************************************/
 int luascript_error_vargs(lua_State *L, const char *format, va_list vargs)
 {
-  fc_assert_ret_val(L != NULL, -1);
+  fc_assert_ret_val(L != NULL, 0);
 
   luaL_where(L, 1);
   lua_pushvfstring(L, format, vargs);
@@ -558,8 +558,8 @@ int luascript_call(struct fc_lua *fcl, int narg, int nret, const char *code)
   int base;          /* Index of function to call */
   int traceback = 0; /* Index of traceback function  */
 
-  fc_assert_ret_val(fcl, -1);
-  fc_assert_ret_val(fcl->state, -1);
+  fc_assert_ret_val(fcl, 0);
+  fc_assert_ret_val(fcl->state, 0);
 
   base = lua_gettop(fcl->state) - narg;
 
@@ -595,8 +595,8 @@ int luascript_do_string(struct fc_lua *fcl, const char *str,
 {
   int status;
 
-  fc_assert_ret_val(fcl, -1);
-  fc_assert_ret_val(fcl->state, -1);
+  fc_assert_ret_val(fcl, 0);
+  fc_assert_ret_val(fcl->state, 0);
 
   status = luaL_loadbuffer(fcl->state, str, strlen(str), name);
   if (status) {
@@ -614,8 +614,8 @@ int luascript_do_file(struct fc_lua *fcl, const char *filename)
 {
   int status;
 
-  fc_assert_ret_val(fcl, -1);
-  fc_assert_ret_val(fcl->state, -1);
+  fc_assert_ret_val(fcl, 0);
+  fc_assert_ret_val(fcl->state, 0);
 
   status = luaL_loadfile(fcl->state, filename);
   if (status) {

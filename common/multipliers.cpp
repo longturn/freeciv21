@@ -72,7 +72,7 @@ struct multiplier *multiplier_by_number(Multiplier_type_id id)
  ****************************************************************************/
 Multiplier_type_id multiplier_number(const struct multiplier *pmul)
 {
-  fc_assert_ret_val(NULL != pmul, -1);
+  fc_assert_ret_val(NULL != pmul, 0);
 
   return pmul - multipliers;
 }

@@ -433,7 +433,7 @@ const struct option_set *option_optset(const struct option *poption)
  ****************************************************************************/
 int option_number(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, -1);
+  fc_assert_ret_val(NULL != poption, 0);
 
   return poption->common_vtable->number(poption);
 }
@@ -473,7 +473,7 @@ const char *option_help_text(const struct option *poption)
  ****************************************************************************/
 enum option_type option_type(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, static_cast<enum option_type>(-1));
+  fc_assert_ret_val(NULL != poption, static_cast<enum option_type>(0));
 
   return poption->type;
 }
@@ -483,7 +483,7 @@ enum option_type option_type(const struct option *poption)
  ****************************************************************************/
 int option_category(const struct option *poption)
 {
-  fc_assert_ret_val(NULL != poption, (-1));
+  fc_assert_ret_val(NULL != poption, 0);
 
   return poption->common_vtable->category(poption);
 }
@@ -759,10 +759,10 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
   const struct strvec *values;
   int val;
 
-  fc_assert_ret_val(NULL != poption, -1);
-  fc_assert_ret_val(OT_ENUM == poption->type, -1);
+  fc_assert_ret_val(NULL != poption, 0);
+  fc_assert_ret_val(OT_ENUM == poption->type, 0);
   values = poption->enum_vtable->values(poption);
-  fc_assert_ret_val(NULL != values, -1);
+  fc_assert_ret_val(NULL != values, 0);
 
   for (val = 0; val < strvec_size(values); val++) {
     if (0 == poption->enum_vtable->cmp(strvec_get(values, val), str)) {

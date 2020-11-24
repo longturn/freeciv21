@@ -108,7 +108,7 @@ void researches_free(void)
  ****************************************************************************/
 int research_number(const struct research *presearch)
 {
-  fc_assert_ret_val(NULL != presearch, -1);
+  fc_assert_ret_val(NULL != presearch, 0);
   return presearch - research_array;
 }
 

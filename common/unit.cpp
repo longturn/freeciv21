@@ -1652,7 +1652,7 @@ void free_unit_orders(struct unit *punit)
  **************************************************************************/
 int get_transporter_occupancy(const struct unit *ptrans)
 {
-  fc_assert_ret_val(ptrans, -1);
+  fc_assert_ret_val(ptrans, 0);
 
   return unit_list_size(ptrans->transporting);
 }

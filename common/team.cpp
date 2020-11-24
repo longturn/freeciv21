@@ -129,8 +129,8 @@ struct team_slot *team_slot_next(struct team_slot *tslot)
  ****************************************************************************/
 int team_slot_index(const struct team_slot *tslot)
 {
-  fc_assert_ret_val(team_slots_initialised(), -1);
-  fc_assert_ret_val(tslot != NULL, -1);
+  fc_assert_ret_val(team_slots_initialised(), 0);
+  fc_assert_ret_val(tslot != NULL, 0);
 
   return tslot - team_slots.tslots;
 }
@@ -379,7 +379,7 @@ int team_index(const struct team *pteam) { return team_number(pteam); }
  ****************************************************************************/
 int team_number(const struct team *pteam)
 {
-  fc_assert_ret_val(NULL != pteam, -1);
+  fc_assert_ret_val(NULL != pteam, 0);
   return team_slot_index(pteam->slot);
 }
 

@@ -168,7 +168,7 @@ Impr_type_id improvement_count(void) { return game.control.num_impr_types; }
  **************************************************************************/
 Impr_type_id improvement_index(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pimprove, -1);
+  fc_assert_ret_val(NULL != pimprove, 0);
   return pimprove - improvement_types;
 }
 
@@ -177,7 +177,7 @@ Impr_type_id improvement_index(const struct impr_type *pimprove)
  **************************************************************************/
 Impr_type_id improvement_number(const struct impr_type *pimprove)
 {
-  fc_assert_ret_val(NULL != pimprove, -1);
+  fc_assert_ret_val(NULL != pimprove, 0);
   return pimprove->item_number;
 }
 

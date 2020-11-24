@@ -379,7 +379,7 @@ int player_slot_count(void) { return (MAX_NUM_PLAYER_SLOTS); }
  ***********************************************************************/
 int player_slot_index(const struct player_slot *pslot)
 {
-  fc_assert_ret_val(NULL != pslot, -1);
+  fc_assert_ret_val(NULL != pslot, 0);
 
   return pslot - player_slots.pslots;
 }
@@ -776,7 +776,7 @@ int player_index(const struct player *pplayer)
  ***********************************************************************/
 int player_number(const struct player *pplayer)
 {
-  fc_assert_ret_val(NULL != pplayer, -1);
+  fc_assert_ret_val(NULL != pplayer, 0);
   return player_slot_index(pplayer->slot);
 }
 
