@@ -56,7 +56,7 @@ void mark_item(QListWidgetItem *item,
  **************************************************************************/
 req_vec_fix_problem::req_vec_fix_problem(
     const struct req_vec_problem *problem, req_vec_fix_item *item_info)
-    : QWidget()
+    : QWidget(), solutions(nullptr)
 {
   int i;
   QLabel *description;

@@ -1208,7 +1208,8 @@ void city_info::update_labels(struct city *pcity)
   }
 }
 
-governor_sliders::governor_sliders(QWidget *parent) : QGroupBox(parent)
+governor_sliders::governor_sliders(QWidget *parent)
+    : QGroupBox(parent), cma_celeb_checkbox(nullptr)
 {
   QStringList str_list;
   QSlider *slider;

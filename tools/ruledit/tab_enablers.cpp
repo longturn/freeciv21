@@ -415,6 +415,7 @@ void tab_enabler::edit_actor_reqs()
    unique stuff.
  **************************************************************************/
 fix_enabler_item::fix_enabler_item(struct action_enabler *enabler)
+    : local_copy(nullptr)
 {
   char buf[MAX_LEN_NAME * 2];
   struct action *paction = action_by_number(enabler->action);

@@ -354,7 +354,7 @@ void qfc_dialog::mouseReleaseEvent(QMouseEvent *event)
   Constructor for selecting nations
  ***************************************************************************/
 races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
-    : qfc_dialog(parent)
+    : qfc_dialog(parent), nations_tabs_list(nullptr)
 {
   int i;
   QGridLayout *qgroupbox_layout;
@@ -1130,7 +1130,7 @@ void Choice_dialog_button::setData2(QVariant wariat) { data2 = wariat; }
  ***************************************************************************/
 choice_dialog::choice_dialog(const QString title, const QString text,
                              QWidget *parent, void (*run_on_close_in)(int))
-    : QWidget(parent)
+    : QWidget(parent), target_unit_button(nullptr), unit_skip(nullptr)
 {
   QLabel *l = new QLabel(text);
 
