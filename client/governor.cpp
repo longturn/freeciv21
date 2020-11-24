@@ -74,7 +74,7 @@ static struct {
   int apply_result_ignored, apply_result_applied, refresh_forced;
 } stats;
 
-governor *governor::m_instance = nullptr;
+governor *governor::m_instance = 0;
 
 // yolo class
 class cma_yoloswag {
@@ -113,7 +113,7 @@ void governor::drop()
 {
   if (m_instance) {
     delete m_instance;
-    m_instance = nullptr;
+    m_instance = 0;
   }
 }
 
@@ -122,7 +122,7 @@ governor::~governor() {}
 // instance for governor
 governor *governor::i()
 {
-  if (m_instance != nullptr) {
+  if (!m_instance) {
     m_instance = new governor;
   }
   return m_instance;
