@@ -42,7 +42,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QString fake_dir;
   QString data_dir;
   QFile f;
-  QString lnb = "LittleFinger";
+  QString lnb = QStringLiteral("LittleFinger");
   QPalette pal;
 
   if (def_app_style->isEmpty()) {
@@ -56,22 +56,22 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   f.setFileName(name);
 
   if (!f.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    if (QString(theme_name) != QString(FC_QT_DEFAULT_THEME_NAME)) {
+    if (QString(theme_name) != QStringLiteral(FC_QT_DEFAULT_THEME_NAME)) {
       qtg_gui_clear_theme();
     }
     return;
   }
   /* Stylesheet uses UNIX separators */
   fake_dir = data_dir;
-  fake_dir.replace(QString(DIR_SEPARATOR), "/");
+  fake_dir.replace(QStringLiteral(DIR_SEPARATOR), QLatin1String("/"));
   QTextStream in(&f);
   *stylestring = in.readAll();
   stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");
 
-  if (QString(theme_name) == QString("System")) {
+  if (QString(theme_name) == QStringLiteral("System")) {
     QApplication::setStyle(QStyleFactory::create(*def_app_style));
   } else {
-    QStyle *fstyle = QStyleFactory::create("Fusion");
+    QStyle *fstyle = QStyleFactory::create(QStringLiteral("Fusion"));
 
     if (fstyle != nullptr) {
       QApplication::setStyle(fstyle);
@@ -99,8 +99,8 @@ void qtg_gui_clear_theme()
   if (!load_theme(FC_QT_DEFAULT_THEME_NAME)) {
     /* TRANS: No full stop after the URL, could cause confusion. */
     qFatal(_("No Qt-client theme was found. For instructions on how to "
-                "get one, please visit %s"),
-              WIKI_URL);
+             "get one, please visit %s"),
+           WIKI_URL);
     exit(EXIT_FAILURE);
   }
 }

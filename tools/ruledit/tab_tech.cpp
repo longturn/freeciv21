@@ -65,7 +65,7 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
+  rname->setText(QStringLiteral("None"));
   connect(rname, &QLineEdit::returnPressed, this, &tab_tech::name_given);
   tech_layout->addWidget(label, 0, 0);
   tech_layout->addWidget(rname, 0, 2);
@@ -76,7 +76,7 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   connect(same_name, &QAbstractButton::toggled, this,
           &tab_tech::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
+  name->setText(QStringLiteral("None"));
   connect(name, &QLineEdit::returnPressed, this, &tab_tech::name_given);
   tech_layout->addWidget(label, 1, 0);
   tech_layout->addWidget(same_name, 1, 1);
@@ -238,11 +238,11 @@ void tab_tech::update_tech_info(struct advance *adv)
     req2_button->setText(tech_name(adv->require[AR_TWO]));
     root_req_button->setText(tech_name(adv->require[AR_ROOT]));
   } else {
-    name->setText("None");
-    rname->setText("None");
-    req1_button->setText("None");
-    req2_button->setText("None");
-    root_req_button->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
+    req1_button->setText(QStringLiteral("None"));
+    req2_button->setText(QStringLiteral("None"));
+    root_req_button->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

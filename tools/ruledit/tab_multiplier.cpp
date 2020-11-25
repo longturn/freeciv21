@@ -66,7 +66,7 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
+  rname->setText(QStringLiteral("None"));
   connect(rname, &QLineEdit::returnPressed, this,
           &tab_multiplier::name_given);
   mpr_layout->addWidget(label, 0, 0);
@@ -78,7 +78,7 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   connect(same_name, &QAbstractButton::toggled, this,
           &tab_multiplier::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
+  name->setText(QStringLiteral("None"));
   connect(name, &QLineEdit::returnPressed, this,
           &tab_multiplier::name_given);
   mpr_layout->addWidget(label, 1, 0);
@@ -152,8 +152,8 @@ void tab_multiplier::update_multiplier_info(struct multiplier *pmul)
       name->setEnabled(true);
     }
   } else {
-    name->setText("None");
-    rname->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

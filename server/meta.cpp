@@ -204,10 +204,10 @@ static inline bool meta_insert_setting(QUrlQuery *query,
 
   fc_assert_ret_val_msg(NULL != pset, FALSE, "Setting \"%s\" not found!",
                         set_name);
-  query->addQueryItem(QLatin1String("vn[]"),
+  query->addQueryItem(QStringLiteral("vn[]"),
                       QString::fromUtf8(setting_name(pset)));
   query->addQueryItem(
-      QLatin1String("vv[]"),
+      QStringLiteral("vv[]"),
       QString::fromUtf8(setting_value_name(pset, false, buf, sizeof(buf))));
   return true;
 }
@@ -291,33 +291,34 @@ static bool send_to_metaserver(enum meta_flag flag)
 
   QUrlQuery *post = new QUrlQuery;
 
-  post->addQueryItem(QLatin1String("host"), QString::fromUtf8(host));
-  post->addQueryItem(QLatin1String("port"), QString("%1").arg(srvarg.port));
-  post->addQueryItem(QLatin1String("state"), QString::fromUtf8(state));
-  post->addQueryItem(QLatin1String("ruleset"), QString::fromUtf8(rs));
+  post->addQueryItem(QStringLiteral("host"), QString::fromUtf8(host));
+  post->addQueryItem(QStringLiteral("port"),
+                     QStringLiteral("%1").arg(srvarg.port));
+  post->addQueryItem(QStringLiteral("state"), QString::fromUtf8(state));
+  post->addQueryItem(QStringLiteral("ruleset"), QString::fromUtf8(rs));
 
   if (flag == META_GOODBYE) {
-    post->addQueryItem(QLatin1String("bye"), QLatin1String("1"));
+    post->addQueryItem(QStringLiteral("bye"), QStringLiteral("1"));
   } else {
     const char *srvtype = get_meta_type_string();
 
     if (srvtype != NULL) {
-      post->addQueryItem(QLatin1String("type"), QString::fromUtf8(srvtype));
+      post->addQueryItem(QStringLiteral("type"), QString::fromUtf8(srvtype));
     }
-    post->addQueryItem(QLatin1String("version"),
-                       QLatin1String(VERSION_STRING));
-    post->addQueryItem(QLatin1String("patches"),
+    post->addQueryItem(QStringLiteral("version"),
+                       QStringLiteral(VERSION_STRING));
+    post->addQueryItem(QStringLiteral("patches"),
                        QString::fromUtf8(get_meta_patches_string()));
-    post->addQueryItem(QLatin1String("capability"),
+    post->addQueryItem(QStringLiteral("capability"),
                        QString::fromUtf8(our_capability));
 
-    post->addQueryItem(QLatin1String("serverid"), srvarg.serverid);
-    post->addQueryItem(QLatin1String("message"),
+    post->addQueryItem(QStringLiteral("serverid"), srvarg.serverid);
+    post->addQueryItem(QStringLiteral("message"),
                        QString::fromUtf8(get_meta_message_string()));
 
     /* NOTE: send info for ALL players or none at all. */
     if (normal_player_count() == 0) {
-      post->addQueryItem(QLatin1String("dropplrs"), QLatin1String("1"));
+      post->addQueryItem(QStringLiteral("dropplrs"), QStringLiteral("1"));
     } else {
       players = 0; /* a counter for players_available */
       humans = 0;
@@ -340,22 +341,23 @@ static bool send_to_metaserver(enum meta_flag flag)
           type = QLatin1String("-");
         }
 
-        post->addQueryItem(QLatin1String("plu[]"),
+        post->addQueryItem(QStringLiteral("plu[]"),
                            QString::fromUtf8(plr->username));
-        post->addQueryItem(QLatin1String("plt[]"), type);
-        post->addQueryItem(QLatin1String("pll[]"),
+        post->addQueryItem(QStringLiteral("plt[]"), type);
+        post->addQueryItem(QStringLiteral("pll[]"),
                            QString::fromUtf8(player_name(plr)));
         post->addQueryItem(
-            QLatin1String("pln[]"),
+            QStringLiteral("pln[]"),
             QString::fromUtf8(plr->nation != NO_NATION_SELECTED
                                   ? nation_plural_for_player(plr)
                                   : "none"));
         post->addQueryItem(
-            QLatin1String("plf[]"),
+            QStringLiteral("plf[]"),
             QString::fromUtf8(plr->nation != NO_NATION_SELECTED
                                   ? nation_of_player(plr)->flag_graphic_str
                                   : "none"));
-        post->addQueryItem(QLatin1String("plh[]"), pconn ? pconn->addr : "");
+        post->addQueryItem(QStringLiteral("plh[]"),
+                           pconn ? pconn->addr : QLatin1String(""));
 
         /* is this player available to take?
          * TODO: there's some duplication here with
@@ -389,9 +391,10 @@ static bool send_to_metaserver(enum meta_flag flag)
       players_iterate_end;
 
       /* send the number of available players. */
-      post->addQueryItem(QLatin1String("available"),
-                         QString("%1").arg(players));
-      post->addQueryItem(QLatin1String("humans"), QString("%1").arg(humans));
+      post->addQueryItem(QStringLiteral("available"),
+                         QStringLiteral("%1").arg(players));
+      post->addQueryItem(QStringLiteral("humans"),
+                         QStringLiteral("%1").arg(humans));
     }
 
     /* Send some variables: should be listed in inverted order? */
@@ -421,17 +424,17 @@ static bool send_to_metaserver(enum meta_flag flag)
     }
 
     /* Turn and year. */
-    post->addQueryItem(QLatin1String("vn[]"), QLatin1String("turn"));
-    post->addQueryItem(QLatin1String("vv[]"),
-                       QString("%1").arg(game.info.turn));
-    post->addQueryItem(QLatin1String("vn[]"), QLatin1String("year"));
+    post->addQueryItem(QStringLiteral("vn[]"), QStringLiteral("turn"));
+    post->addQueryItem(QStringLiteral("vv[]"),
+                       QStringLiteral("%1").arg(game.info.turn));
+    post->addQueryItem(QStringLiteral("vn[]"), QStringLiteral("year"));
 
     if (server_state() != S_S_INITIAL) {
-      post->addQueryItem(QLatin1String("vv[]"),
-                         QString("%1").arg(game.info.year));
+      post->addQueryItem(QStringLiteral("vv[]"),
+                         QStringLiteral("%1").arg(game.info.year));
     } else {
-      post->addQueryItem(QLatin1String("vv[]"),
-                         QLatin1String("Calendar not set up"));
+      post->addQueryItem(QStringLiteral("vv[]"),
+                         QStringLiteral("Calendar not set up"));
     }
   }
 

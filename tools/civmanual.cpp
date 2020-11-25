@@ -803,20 +803,20 @@ int main(int argc, char **argv)
   if (!log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
-  fc_assert_set_fatal(parser.isSet("Fatal"));
-  if (parser.isSet("ruleset")) {
-    if (parser.values("ruleset").size() > 1) {
+  fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
+  if (parser.isSet(QStringLiteral("ruleset"))) {
+    if (parser.values(QStringLiteral("ruleset")).size() > 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
                            "at time supported.\n"));
       exit(EXIT_FAILURE);
     } else {
-      ruleset = parser.value("ruleset");
+      ruleset = parser.value(QStringLiteral("ruleset"));
     }
   }
-  if (parser.isSet("log")) {
-    srvarg.log_filename = parser.value("log");
+  if (parser.isSet(QStringLiteral("log"))) {
+    srvarg.log_filename = parser.value(QStringLiteral("log"));
   }
-  if (parser.isSet("wiki")) {
+  if (parser.isSet(QStringLiteral("wiki"))) {
     tag_info = &wiki_tags;
   }
 

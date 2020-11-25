@@ -47,7 +47,7 @@
 #include "mpgui_qt.h"
 
 struct fcmp_params fcmp = {
-    QUrl::fromUserInput(QLatin1String(MODPACK_LIST_URL)), QLatin1String(),
+    QUrl::fromUserInput(QStringLiteral(MODPACK_LIST_URL)), QLatin1String(),
     QLatin1String()};
 
 static mpgui *gui;
@@ -197,7 +197,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
           << QString::fromUtf8(Q_("?modpack:Type"));
   headers << QString::fromUtf8(_("Subtype"))
           << QString::fromUtf8(_("License"));
-  headers << QString::fromUtf8(_("URL")) << "typeint";
+  headers << QString::fromUtf8(_("URL")) << QStringLiteral("typeint");
   mplist_table->setHorizontalHeaderLabels(headers);
   mplist_table->verticalHeader()->setVisible(false);
   mplist_table->setEditTriggers(QAbstractItemView::NoEditTriggers);

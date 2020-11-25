@@ -120,8 +120,8 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   edit_present_button->setPopupMode(QToolButton::MenuButtonPopup);
   connect(menu, &QMenu::triggered, this, &req_edit::req_present_menu);
   edit_present_button->setMenu(menu);
-  menu->addAction("Allows");
-  menu->addAction("Prevents");
+  menu->addAction(QStringLiteral("Allows"));
+  menu->addAction(QStringLiteral("Prevents"));
   active_layout->addWidget(edit_present_button, 7, 0);
 
   main_layout->addLayout(active_layout);
@@ -289,9 +289,9 @@ void req_edit::fill_active()
     universal_kind_values(&selected->source, universal_value_cb, &data);
     edit_range_button->setText(req_range_name(selected->range));
     if (selected->present) {
-      edit_present_button->setText("Allows");
+      edit_present_button->setText(QStringLiteral("Allows"));
     } else {
-      edit_present_button->setText("Prevents");
+      edit_present_button->setText(QStringLiteral("Prevents"));
     }
   }
 }
@@ -340,7 +340,7 @@ void req_edit::req_range_menu(QAction *action)
 void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
-    if (action->text() == "Prevents") {
+    if (action->text() == QLatin1String("Prevents")) {
       selected->present = FALSE;
     } else {
       selected->present = TRUE;

@@ -22,8 +22,8 @@
 // gui-qt
 #include "canvas.h"
 #include "fc_client.h"
-#include "qtg_cxxside.h"
 #include "page_game.h"
+#include "qtg_cxxside.h"
 #include "spaceshipdlg.h"
 
 class QGridLayout;
@@ -59,7 +59,7 @@ ss_report::ss_report(struct player *pplayer)
  ****************************************************************************/
 ss_report::~ss_report()
 {
-  queen()->remove_repo_dlg("SPS");
+  queen()->remove_repo_dlg(QStringLiteral("SPS"));
   qtg_canvas_free(can);
 }
 
@@ -69,7 +69,7 @@ ss_report::~ss_report()
 void ss_report::init()
 {
   int index;
-  queen()->gimme_place(this, "SPS");
+  queen()->gimme_place(this, QStringLiteral("SPS"));
   index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
@@ -115,11 +115,11 @@ void popup_spaceship_dialog(struct player *pplayer)
   if (client_is_global_observer()) {
     return;
   }
-  if (!queen()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("SPS"))) {
     ss_rep = new ss_report(pplayer);
     ss_rep->init();
   } else {
-    i = queen()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of(QStringLiteral("SPS"));
     fc_assert(i != -1);
     if (queen()->game_tab_widget->currentIndex() == i) {
       return;
@@ -146,10 +146,10 @@ void refresh_spaceship_dialog(struct player *pplayer)
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("SPS"))) {
     return;
   } else {
-    i = queen()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of(QStringLiteral("SPS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);
@@ -167,10 +167,10 @@ void popdown_all_spaceships_dialogs()
   ss_report *ss_rep;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open("SPS")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("SPS"))) {
     return;
   } else {
-    i = queen()->gimme_index_of("SPS");
+    i = queen()->gimme_index_of(QStringLiteral("SPS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     ss_rep = reinterpret_cast<ss_report *>(w);

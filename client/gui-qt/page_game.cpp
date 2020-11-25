@@ -66,31 +66,36 @@ page_game::page_game(QWidget *parent)
   mapview_wdg = new map_view();
   mapview_wdg->setFocusPolicy(Qt::WheelFocus);
   sidebar_wdg = new fc_sidebar();
-  sw_map = new fc_sidewidget(fc_icons::instance()->get_pixmap("view"),
-                             Q_("?noun:View"), "MAP", side_show_map);
-  sw_tax = new fc_sidewidget(nullptr, nullptr, "", side_rates_wdg, SW_TAX);
-  sw_indicators =
-      new fc_sidewidget(nullptr, nullptr, "", side_show_map, SW_INDICATORS);
+  sw_map = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("view")),
+      Q_("?noun:View"), QStringLiteral("MAP"), side_show_map);
+  sw_tax = new fc_sidewidget(nullptr, nullptr, QLatin1String(""),
+                             side_rates_wdg, SW_TAX);
+  sw_indicators = new fc_sidewidget(nullptr, nullptr, QLatin1String(""),
+                                    side_show_map, SW_INDICATORS);
   sw_indicators->set_right_click(side_indicators_menu);
-  sw_cunit = new fc_sidewidget(fc_icons::instance()->get_pixmap("units"),
-                               _("Units"), "", toggle_units_report);
-  sw_cities =
-      new fc_sidewidget(fc_icons::instance()->get_pixmap("cities"),
-                        _("Cities"), "CTS", city_report_dialog_popup);
+  sw_cunit = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("units")), _("Units"),
+      QLatin1String(""), toggle_units_report);
+  sw_cities = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("cities")),
+      _("Cities"), QStringLiteral("CTS"), city_report_dialog_popup);
   sw_cities->set_wheel_up(center_next_enemy_city);
   sw_cities->set_wheel_down(center_next_player_city);
-  sw_diplo = new fc_sidewidget(fc_icons::instance()->get_pixmap("nations"),
-                               _("Nations"), "PLR", popup_players_dialog);
+  sw_diplo = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("nations")),
+      _("Nations"), QStringLiteral("PLR"), popup_players_dialog);
   sw_diplo->set_wheel_up(center_next_player_capital);
   sw_diplo->set_wheel_down(key_center_capital);
-  sw_science =
-      new fc_sidewidget(fc_icons::instance()->get_pixmap("research"),
-                        _("Research"), "SCI", side_left_click_science);
-  sw_economy =
-      new fc_sidewidget(fc_icons::instance()->get_pixmap("economy"),
-                        _("Economy"), "ECO", economy_report_dialog_popup);
-  sw_endturn = new fc_sidewidget(fc_icons::instance()->get_pixmap("endturn"),
-                                 _("Turn Done"), "", side_finish_turn);
+  sw_science = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("research")),
+      _("Research"), QStringLiteral("SCI"), side_left_click_science);
+  sw_economy = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("economy")),
+      _("Economy"), QStringLiteral("ECO"), economy_report_dialog_popup);
+  sw_endturn = new fc_sidewidget(
+      fc_icons::instance()->get_pixmap(QStringLiteral("endturn")),
+      _("Turn Done"), QLatin1String(""), side_finish_turn);
   sw_cunit->set_right_click(side_center_unit);
   sw_cunit->set_wheel_up(cycle_enemy_units);
   sw_cunit->set_wheel_down(key_unit_wait);
@@ -145,13 +150,20 @@ page_game::~page_game() {}
  **************************************************************************/
 void page_game::reload_sidebar_icons()
 {
-  sw_map->set_pixmap(fc_icons::instance()->get_pixmap("view"));
-  sw_cunit->set_pixmap(fc_icons::instance()->get_pixmap("units"));
-  sw_cities->set_pixmap(fc_icons::instance()->get_pixmap("cities"));
-  sw_diplo->set_pixmap(fc_icons::instance()->get_pixmap("nations"));
-  sw_science->set_pixmap(fc_icons::instance()->get_pixmap("research"));
-  sw_economy->set_pixmap(fc_icons::instance()->get_pixmap("economy"));
-  sw_endturn->set_pixmap(fc_icons::instance()->get_pixmap("endturn"));
+  sw_map->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("view")));
+  sw_cunit->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("units")));
+  sw_cities->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("cities")));
+  sw_diplo->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("nations")));
+  sw_science->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("research")));
+  sw_economy->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("economy")));
+  sw_endturn->set_pixmap(
+      fc_icons::instance()->get_pixmap(QStringLiteral("endturn")));
   sidebar_wdg->resize_me(game_tab_widget->height(), true);
 }
 
@@ -223,7 +235,7 @@ void page_game::update_info_label_timeout(void)
     }
     sw_economy->set_custom_labels(eco_info);
   } else {
-    sw_economy->set_custom_labels("");
+    sw_economy->set_custom_labels(QLatin1String(""));
   }
   sw_tax->update_final_pixmap();
   sw_economy->update_final_pixmap();
@@ -279,10 +291,10 @@ void page_game::update_sidebar_tooltips()
           text_happiness_cities(player_primary_capital(client_player())));
     }
   } else {
-    sw_tax->set_tooltip("");
-    sw_science->set_tooltip("");
-    sw_map->set_tooltip("");
-    sw_economy->set_tooltip("");
+    sw_tax->set_tooltip(QLatin1String(""));
+    sw_science->set_tooltip(QLatin1String(""));
+    sw_map->set_tooltip(QLatin1String(""));
+    sw_economy->set_tooltip(QLatin1String(""));
   }
   sw_indicators->set_tooltip(QString(get_info_label_text_popup()));
 }
@@ -576,7 +588,7 @@ int page_game::gimme_index_of(const QString &str)
   int i;
   QWidget *w;
 
-  if (str == "MAP") {
+  if (str == QLatin1String("MAP")) {
     return 0;
   }
 

@@ -51,7 +51,7 @@ QString split_text(const QString &text, bool cut)
   int i;
   int j = 0;
 
-  sl = text.split("\n");
+  sl = text.split(QStringLiteral("\n"));
   for (const QString &s : qAsConst(sl)) {
     st = s;
     while (st.count() >= 80) {
@@ -70,7 +70,7 @@ QString split_text(const QString &text, bool cut)
       }
     }
     str = st;
-    if (str.left(str.count()) != "") {
+    if (str.left(str.count()) != QLatin1String("")) {
       result = result + str.left(str.count()) + '\n';
     }
     j++;
@@ -131,7 +131,8 @@ option_dialog::option_dialog(const QString &name, const option_set *options,
   QObject::connect(but, &QPushButton::clicked,
                    [this]() { apply_option(RESPONSE_RESET); });
 
-  but = new QPushButton(QIcon::fromTheme("view-refresh"), _("Refresh"));
+  but = new QPushButton(QIcon::fromTheme(QStringLiteral("view-refresh")),
+                        _("Refresh"));
   button_box->addButton(but, QDialogButtonBox::ActionRole);
   QObject::connect(but, &QPushButton::clicked,
                    [this]() { apply_option(RESPONSE_REFRESH); });
@@ -218,10 +219,10 @@ void option_dialog::get_color(struct option *poption, QByteArray &a1,
   QPushButton *but;
 
   w = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
-  but = w->findChild<QPushButton *>("text_color");
+  but = w->findChild<QPushButton *>(QStringLiteral("text_color"));
   pal = but->palette();
   col1 = pal.color(QPalette::Button);
-  but = w->findChild<QPushButton *>("text_background");
+  but = w->findChild<QPushButton *>(QStringLiteral("text_background"));
   pal = but->palette();
   col2 = pal.color(QPalette::Button);
   a1 = col1.name().toUtf8();
@@ -321,7 +322,7 @@ void option_dialog::set_font(struct option *poption, const QString &s)
   fp->fromString(s);
   qApp->processEvents();
   qp = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
-  ql = s.split(",");
+  ql = s.split(QStringLiteral(","));
   if (!s.isEmpty()) {
     qp->setText(ql[0] + " " + ql[1]);
     qp->setFont(*fp);
@@ -464,17 +465,17 @@ void option_dialog::set_color(struct option *poption, struct ft_color color)
   QColor col;
   QWidget *w;
   QPushButton *but;
-  QString s1 = "QPushButton { background-color: ";
-  QString s2 = ";}";
+  QString s1 = QStringLiteral("QPushButton { background-color: ");
+  QString s2 = QStringLiteral(";}");
 
   w = reinterpret_cast<QPushButton *>(option_get_gui_data(poption));
-  but = w->findChild<QPushButton *>("text_color");
+  but = w->findChild<QPushButton *>(QStringLiteral("text_color"));
   if (NULL != but && NULL != color.foreground
       && '\0' != color.foreground[0]) {
     col.setNamedColor(color.foreground);
     but->setStyleSheet(s1 + col.name() + s2);
   }
-  but = w->findChild<QPushButton *>("text_background");
+  but = w->findChild<QPushButton *>(QStringLiteral("text_background"));
   if (NULL != but && NULL != color.background
       && '\0' != color.background[0]) {
     col.setNamedColor(color.background);
@@ -674,7 +675,7 @@ void option_dialog::add_option(struct option *poption)
     qf = get_font(poption);
     qstr = option_font_get(poption);
     qstr = qf.toString();
-    qlist = qstr.split(",");
+    qlist = qstr.split(QStringLiteral(","));
     button->setFont(qf);
     button->setText(qlist[0] + " " + qlist[1]);
     connect(button, SIGNAL(clicked()), this, SLOT(set_font()));
@@ -684,7 +685,7 @@ void option_dialog::add_option(struct option *poption)
   case OT_COLOR:
     button = new QPushButton();
     button->setToolTip(_("Select the text color"));
-    button->setObjectName("text_color");
+    button->setObjectName(QStringLiteral("text_color"));
     button->setAutoFillBackground(true);
     button->setAutoDefault(false);
     connect(button, SIGNAL(clicked()), this, SLOT(set_color()));
@@ -692,7 +693,7 @@ void option_dialog::add_option(struct option *poption)
     hbox_layout->addWidget(button);
     button = new QPushButton();
     button->setToolTip(_("Select the background color"));
-    button->setObjectName("text_background");
+    button->setObjectName(QStringLiteral("text_background"));
     button->setAutoFillBackground(true);
     button->setAutoDefault(false);
     connect(button, SIGNAL(clicked()), this, SLOT(set_color()));
@@ -753,7 +754,7 @@ void option_dialog::set_font()
   qf = pb->font();
   qf = QFontDialog::getFont(&ok, qf, this);
   pb->setFont(qf);
-  ql = qf.toString().split(",");
+  ql = qf.toString().split(QStringLiteral(","));
   pb->setText(ql[0] + " " + ql[1]);
 }
 
@@ -798,14 +799,14 @@ void option_dialog::set_color()
   ft_color = option_color_get(color_option);
   but = qobject_cast<QPushButton *>(QObject::sender());
 
-  if (but->objectName() == "text_color") {
+  if (but->objectName() == QLatin1String("text_color")) {
     c.setNamedColor(ft_color.foreground);
     color = QColorDialog::getColor(c, this);
     if (color.isValid()) {
       pal.setColor(QPalette::Button, color);
       but->setPalette(pal);
     }
-  } else if (but->objectName() == "text_background") {
+  } else if (but->objectName() == QLatin1String("text_background")) {
     c.setNamedColor(ft_color.background);
     color = QColorDialog::getColor(c, this);
     if (color.isValid()) {

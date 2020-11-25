@@ -425,7 +425,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
 
   // Post the request
   QUrlQuery post;
-  post.addQueryItem(QLatin1String("client_cap"),
+  post.addQueryItem(QStringLiteral("client_cap"),
                     QString::fromUtf8(our_capability));
 
   QNetworkRequest request(cmd_metaserver);

@@ -81,16 +81,16 @@ void city_item_delegate::paint(QPainter *painter,
   struct city_report_spec *spec;
   spec = city_report_specs + index.column();
   txt = spec->tagname;
-  if (txt == "cityname") {
+  if (txt == QLatin1String("cityname")) {
     font.setCapitalization(QFont::SmallCaps);
     font.setBold(true);
     opt.font = font;
   }
-  if (txt == "hstate_verbose") {
+  if (txt == QLatin1String("hstate_verbose")) {
     font.setItalic(true);
     opt.font = font;
   }
-  if (txt == "prodplus") {
+  if (txt == QLatin1String("prodplus")) {
     txt = index.data().toString();
     if (txt.toInt() < 0) {
       font.setBold(true);
@@ -898,14 +898,17 @@ void city_widget::select_building_something()
     qvar = act->data();
     str = qvar.toString();
     if (NULL != pcity) {
-      if (str == "impr" && VUT_IMPROVEMENT == pcity->production.kind
+      if (str == QLatin1String("impr")
+          && VUT_IMPROVEMENT == pcity->production.kind
           && !is_wonder(pcity->production.value.building)
           && !improvement_has_flag(pcity->production.value.building,
                                    IF_GOLD)) {
         selection.append(QItemSelectionRange(i));
-      } else if (str == "unit" && VUT_UTYPE == pcity->production.kind) {
+      } else if (str == QLatin1String("unit")
+                 && VUT_UTYPE == pcity->production.kind) {
         selection.append(QItemSelectionRange(i));
-      } else if (str == "wonder" && VUT_IMPROVEMENT == pcity->production.kind
+      } else if (str == QLatin1String("wonder")
+                 && VUT_IMPROVEMENT == pcity->production.kind
                  && is_wonder(pcity->production.value.building)) {
         selection.append(QItemSelectionRange(i));
       }
@@ -1218,14 +1221,17 @@ city_report::city_report() : QWidget()
 /***********************************************************************/ /**
    Destructor for city report
  ***************************************************************************/
-city_report::~city_report() { queen()->remove_repo_dlg("CTS"); }
+city_report::~city_report()
+{
+  queen()->remove_repo_dlg(QStringLiteral("CTS"));
+}
 
 /***********************************************************************/ /**
    Inits place in game tab widget
  ***************************************************************************/
 void city_report::init()
 {
-  queen()->gimme_place(this, "CTS");
+  queen()->gimme_place(this, QStringLiteral("CTS"));
   index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
@@ -1252,12 +1258,12 @@ void city_report_dialog_popup(bool raise)
   city_report *cr;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open("CTS")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
     cr = new city_report;
     cr->init();
     cr->update_report();
   } else {
-    i = queen()->gimme_index_of("CTS");
+    i = queen()->gimme_index_of(QStringLiteral("CTS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
@@ -1279,8 +1285,8 @@ void real_city_report_dialog_update(void *unused)
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("CTS")) {
-    i = queen()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
+    i = queen()->gimme_index_of(QStringLiteral("CTS"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1298,8 +1304,8 @@ void real_city_report_update_city(struct city *pcity)
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("CTS")) {
-    i = queen()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
+    i = queen()->gimme_index_of(QStringLiteral("CTS"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1317,8 +1323,8 @@ void popdown_city_report()
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("CTS")) {
-    i = queen()->gimme_index_of("CTS");
+  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
+    i = queen()->gimme_index_of(QStringLiteral("CTS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     cr = reinterpret_cast<city_report *>(w);

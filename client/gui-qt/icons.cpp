@@ -54,7 +54,7 @@ QIcon fc_icons::get_icon(const QString &id)
   QByteArray pn_bytes;
   QByteArray png_bytes;
 
-  str = QString("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
+  str = QStringLiteral("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
   /* Try custom icon from theme */
   pn_bytes = str.toLocal8Bit();
   png_bytes =
@@ -86,7 +86,7 @@ QPixmap *fc_icons::get_pixmap(const QString &id)
   if (QPixmapCache::find(id, pm)) {
     return pm;
   }
-  str = QString("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
+  str = QStringLiteral("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR;
   png_bytes = QString(str + current_theme + DIR_SEPARATOR + id + ".png")
                   .toLocal8Bit();
   status = pm->load(fileinfoname(get_data_dirs(), png_bytes.data()));
@@ -109,7 +109,7 @@ QString fc_icons::get_path(const QString &id)
   QString str;
   QByteArray png_bytes;
 
-  str = QString("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR
+  str = QStringLiteral("themes") + DIR_SEPARATOR + "gui-qt" + DIR_SEPARATOR
         + "icons" + DIR_SEPARATOR;
   png_bytes = QString(str + id + ".png").toLocal8Bit();
 

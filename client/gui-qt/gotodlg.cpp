@@ -245,7 +245,7 @@ void goto_dialog::fill_tab(player *pplayer)
       case 2:
         at = get_airlift_text(get_units_in_focus(), pcity);
         if (at == NULL) {
-          str = "-";
+          str = QStringLiteral("-");
         } else {
           str = at;
         }

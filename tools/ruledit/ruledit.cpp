@@ -151,13 +151,13 @@ static void re_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  fc_assert_set_fatal(parser.isSet("Fatal"));
-  if (parser.isSet("ruleset")) {
-    if (parser.values("ruleset").size() >= 1) {
+  fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
+  if (parser.isSet(QStringLiteral("ruleset"))) {
+    if (parser.values(QStringLiteral("ruleset")).size() >= 1) {
       fc_fprintf(stderr, R__("Can only edit one ruleset at a time.\n"));
       exit(EXIT_FAILURE);
     } else {
-      reargs.ruleset = parser.value("ruleset");
+      reargs.ruleset = parser.value(QStringLiteral("ruleset"));
     }
   }
 }

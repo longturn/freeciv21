@@ -38,7 +38,7 @@
 #include "modinst.h"
 
 struct fcmp_params fcmp = {
-    QUrl::fromUserInput(QLatin1String(MODPACK_LIST_URL)), QLatin1String(),
+    QUrl::fromUserInput(QStringLiteral(MODPACK_LIST_URL)), QLatin1String(),
     QLatin1String()};
 
 /**********************************************************************/ /**

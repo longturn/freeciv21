@@ -227,8 +227,7 @@ void help_dialog::make_tree()
   struct unit_type *f_type;
   struct drawn_sprite sprs[80];
 
-  for (auto pitem : *help_nodes)
-  {
+  for (auto pitem : *help_nodes) {
     const char *s;
     int last;
     title = pitem->topic;
@@ -697,7 +696,8 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
 QString help_widget::link_me(const char *str, help_page_type hpt)
 {
   QString s;
-  s = QString(str).toHtmlEscaped().replace(" ", "&nbsp;");
+  s = QString(str).toHtmlEscaped().replace(QLatin1String(" "),
+                                           QLatin1String("&nbsp;"));
   return " <a href=" + QString::number(hpt) + "," + s + ">" + s + "</a> ";
 }
 
@@ -725,11 +725,11 @@ void help_widget::anchor_clicked(const QString &link)
   QString st;
   enum help_page_type type;
 
-  sl = link.split(",");
+  sl = link.split(QStringLiteral(","));
   n = sl.at(0).toInt();
   type = static_cast<help_page_type>(n);
   st = sl.at(1);
-  st = st.replace("\u00A0", " ");
+  st = st.replace("\u00A0", QLatin1String(" "));
 
   if (strcmp(qPrintable(st), REQ_LABEL_NEVER) != 0
       && strcmp(qPrintable(st), skip_intl_qualifier_prefix(REQ_LABEL_NONE))
@@ -814,7 +814,8 @@ void help_widget::set_topic_other(const help_item *topic, const char *title)
   if (topic->text) {
     text_browser->setPlainText(topic->text);
   } else {
-    text_browser->setPlainText(""); // Something better to do ?
+    text_browser->setPlainText(
+        QLatin1String("")); // Something better to do ?
   }
 }
 

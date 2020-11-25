@@ -202,8 +202,9 @@ void gov_menu::create()
     gov = government_by_number(i);
     if (gov != revol_gov) { // Skip revolution goverment
       // Defeat keyboard shortcut mnemonics
-      action = addAction(
-          QString(government_name_translation(gov)).replace("&", "&&"));
+      action =
+          addAction(QString(government_name_translation(gov))
+                        .replace(QLatin1String("&"), QLatin1String("&&")));
       // We need to keep track of the gov <-> action mapping to be able to
       // set enabled/disabled depending on available govs.
       actions.append(action);
@@ -241,7 +242,8 @@ void gov_menu::update()
 /**********************************************************************/ /**
    Shows the dialog asking for confirmation before starting a revolution.
  **************************************************************************/
-void gov_menu::revolution() {
+void gov_menu::revolution()
+{
   popup_revolution_dialog(game.government_during_revolution);
 }
 
@@ -341,7 +343,8 @@ void go_act_menu::create()
     {
       struct action *paction = action_by_number(act_id);
       QString action_name =
-          (QString(action_name_translation(paction)).replace("&", "&&"));
+          (QString(action_name_translation(paction))
+               .replace(QLatin1String("&"), QLatin1String("&&")));
 
       if (action_id_get_actor_kind(act_id) != AAK_UNIT) {
         /* This action isn't performed by a unit. */
@@ -415,7 +418,7 @@ void go_act_menu::create()
 #define ADD_OLD_SHORTCUT(wanted_action_id, sc_id)                           \
   if (act_id == wanted_action_id) {                                         \
     item->setShortcut(QKeySequence(                                         \
-        shortcut_to_string(fc_shortcuts::sc()->get_shortcut(sc_id))));        \
+        shortcut_to_string(fc_shortcuts::sc()->get_shortcut(sc_id))));      \
   }
 
       /* Create and add the menu item. It will be hidden or shown based on
@@ -808,8 +811,9 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_unload_all);
   menu->addSeparator();
   // Defeat keyboard shortcut mnemonics
-  act = menu->addAction(QString(action_id_name_translation(ACTION_HOME_CITY))
-                            .replace("&", "&&"));
+  act =
+      menu->addAction(QString(action_id_name_translation(ACTION_HOME_CITY))
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   menu_list.insert(HOMECITY, act);
   act->setShortcut(shortcut2key(SC_SETHOME));
   connect(act, &QAction::triggered, this, &mr_menu::slot_set_home);
@@ -832,13 +836,15 @@ void mr_menu::setup_menus()
   menu_list.insert(FORTIFY, act);
   act->setShortcut(shortcut2key(SC_FORTIFY));
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_fortify);
-  act = menu->addAction(
-      QString(Q_(terrain_control.gui_type_base0)).replace("&", "&&"));
+  act =
+      menu->addAction(QString(Q_(terrain_control.gui_type_base0))
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   menu_list.insert(FORTRESS, act);
   act->setShortcut(QKeySequence(tr("shift+f")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_fortress);
-  act = menu->addAction(
-      QString(Q_(terrain_control.gui_type_base1)).replace("&", "&&"));
+  act =
+      menu->addAction(QString(Q_(terrain_control.gui_type_base1))
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   menu_list.insert(AIRBASE, act);
   act->setShortcut(QKeySequence(tr("shift+e")));
   connect(act, &QAction::triggered, this, &mr_menu::slot_unit_airbase);
@@ -858,7 +864,7 @@ void mr_menu::setup_menus()
   menu = this->addMenu(_("Work"));
   act =
       menu->addAction(QString(action_id_name_translation(ACTION_FOUND_CITY))
-                          .replace("&", "&&"));
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   act->setShortcut(shortcut2key(SC_BUILDCITY));
   menu_list.insert(BUILD, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_city);
@@ -916,13 +922,13 @@ void mr_menu::setup_menus()
   connect(act, &QAction::triggered, this, &mr_menu::slot_clean_fallout);
   act =
       menu->addAction(QString(action_id_name_translation(ACTION_HELP_WONDER))
-                          .replace("&", "&&"));
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   act->setShortcut(QKeySequence(tr("b")));
   menu_list.insert(BUILD_WONDER, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_city);
   act =
       menu->addAction(QString(action_id_name_translation(ACTION_TRADE_ROUTE))
-                          .replace("&", "&&"));
+                          .replace(QLatin1String("&"), QLatin1String("&&")));
   act->setShortcut(QKeySequence(tr("r")));
   menu_list.insert(ORDER_TRADEROUTE, act);
   connect(act, &QAction::triggered, this, &mr_menu::slot_build_road);
@@ -1348,7 +1354,8 @@ void mr_menu::update_airlift_menu()
   Unit_type_id utype_id;
   QAction *act;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   airlift_menu->clear();
   if (client_is_observer()) {
     return;
@@ -1367,7 +1374,8 @@ void mr_menu::update_airlift_menu()
     }
     // Defeat keyboard shortcut mnemonics
     act = airlift_menu->addAction(
-        QString(utype_name_translation(utype)).replace("&", "&&"));
+        QString(utype_name_translation(utype))
+            .replace(QLatin1String("&"), QLatin1String("&&")));
     act->setCheckable(true);
     act->setData(utype_id);
     if (airlift_type_id == utype_id) {
@@ -1388,7 +1396,8 @@ void mr_menu::update_roads_menu()
   struct unit_list *punits = nullptr;
   bool enabled = false;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   QList<QAction *> actions = roads_menu->actions();
   for (auto act : qAsConst(actions)) {
     removeAction(act);
@@ -1408,7 +1417,8 @@ void mr_menu::update_roads_menu()
 
       // Defeat keyboard shortcut mnemonics
       act = roads_menu->addAction(
-          QString(extra_name_translation(pextra)).replace("&", "&&"));
+          QString(extra_name_translation(pextra))
+              .replace(QLatin1String("&"), QLatin1String("&&")));
       road_id = pextra->id;
       act->setData(road_id);
       QObject::connect(act, &QAction::triggered,
@@ -1437,7 +1447,8 @@ void mr_menu::update_bases_menu()
   QAction *act;
   struct unit_list *punits = nullptr;
   bool enabled = false;
-  if (!initialized) return;
+  if (!initialized)
+    return;
 
   QList<QAction *> actions = bases_menu->actions();
   for (auto act : qAsConst(actions)) {
@@ -1459,7 +1470,8 @@ void mr_menu::update_bases_menu()
 
       // Defeat keyboard shortcut mnemonics
       act = bases_menu->addAction(
-          QString(extra_name_translation(pextra)).replace("&", "&&"));
+          QString(extra_name_translation(pextra))
+              .replace(QLatin1String("&"), QLatin1String("&&")));
       base_id = pextra->id;
       act->setData(base_id);
       QObject::connect(act, &QAction::triggered,
@@ -1496,7 +1508,8 @@ void mr_menu::menus_sensitive()
   struct terrain *pterrain;
   const struct unit_type *ptype = NULL;
 
-  if (!initialized) return;
+  if (!initialized)
+    return;
   players_iterate(pplayer)
   {
     if (city_list_size(pplayer->cities)) {
@@ -1542,7 +1555,7 @@ void mr_menu::menus_sensitive()
         }
         break;
       case ENDGAME:
-        if (queen()->is_repo_dlg_open("END")) {
+        if (queen()->is_repo_dlg_open(QStringLiteral("END"))) {
           i.value()->setEnabled(true);
           i.value()->setVisible(true);
         } else {
@@ -1654,7 +1667,7 @@ void mr_menu::menus_sensitive()
                   /* TRANS: Build mine of specific type */
                   QString(_("Build %1"))
                       .arg(extra_name_translation(pextra))
-                      .replace("&", "&&"));
+                      .replace(QLatin1String("&"), QLatin1String("&&")));
             } else {
               i.value()->setText(QString(_("Build Mine")));
             }
@@ -1693,7 +1706,7 @@ void mr_menu::menus_sensitive()
                   /* TRANS: Build irrigation of specific type */
                   QString(_("Build %1"))
                       .arg(extra_name_translation(pextra))
-                      .replace("&", "&&"));
+                      .replace(QLatin1String("&"), QLatin1String("&&")));
             } else {
               i.value()->setText(QString(_("Build Irrigation")));
             }
@@ -1718,7 +1731,7 @@ void mr_menu::menus_sensitive()
                 QString(_("Cultivate to %1"))
                     .arg(QString(get_tile_change_menu_text(
                         unit_tile(punit), ACTIVITY_CULTIVATE)))
-                    .replace("&", "&&"));
+                    .replace(QLatin1String("&"), QLatin1String("&&")));
           } else {
             i.value()->setText(QString(_("Cultivate")));
           }
@@ -1742,7 +1755,7 @@ void mr_menu::menus_sensitive()
                 QString(_("Plant to %1"))
                     .arg(QString(get_tile_change_menu_text(unit_tile(punit),
                                                            ACTIVITY_PLANT)))
-                    .replace("&", "&&"));
+                    .replace(QLatin1String("&"), QLatin1String("&&")));
           } else {
             i.value()->setText(QString(_("Plant")));
           }
@@ -1769,7 +1782,7 @@ void mr_menu::menus_sensitive()
                 QString(_("Transform to %1"))
                     .arg(QString(get_tile_change_menu_text(
                         unit_tile(punit), ACTIVITY_TRANSFORM)))
-                    .replace("&", "&&"));
+                    .replace(QLatin1String("&"), QLatin1String("&&")));
           } else {
             i.value()->setText(_("Transform Terrain"));
           }
@@ -1784,11 +1797,11 @@ void mr_menu::menus_sensitive()
             && units_can_do_action(punits, ACTION_JOIN_CITY, true)) {
           i.value()->setText(
               QString(action_id_name_translation(ACTION_JOIN_CITY))
-                  .replace("&", "&&"));
+                  .replace(QLatin1String("&"), QLatin1String("&&")));
         } else {
           i.value()->setText(
               QString(action_id_name_translation(ACTION_FOUND_CITY))
-                  .replace("&", "&&"));
+                  .replace(QLatin1String("&"), QLatin1String("&&")));
         }
         break;
 
@@ -1813,7 +1826,7 @@ void mr_menu::menus_sensitive()
               /* TRANS: Build road of specific type */
               QString(_("Build %1"))
                   .arg(extra_name_translation(pextra))
-                  .replace("&", "&&"));
+                  .replace(QLatin1String("&"), QLatin1String("&&")));
         }
       } break;
 
@@ -1843,7 +1856,7 @@ void mr_menu::menus_sensitive()
         if (units_can_do_action(punits, ACTION_PARADROP, true)) {
           i.value()->setText(
               QString(action_id_name_translation(ACTION_PARADROP))
-                  .replace("&", "&&"));
+                  .replace(QLatin1String("&"), QLatin1String("&&")));
         } else {
           i.value()->setText(_("Clean Pollution"));
         }
@@ -1949,7 +1962,7 @@ void mr_menu::menus_sensitive()
       case BUILD_WONDER:
         i.value()->setText(
             QString(action_id_name_translation(ACTION_HELP_WONDER))
-                .replace("&", "&&"));
+                .replace(QLatin1String("&"), QLatin1String("&&")));
         if (can_units_do(punits, unit_can_help_build_wonder_here)) {
           i.value()->setEnabled(true);
         }
@@ -1964,7 +1977,7 @@ void mr_menu::menus_sensitive()
       case ORDER_TRADEROUTE:
         i.value()->setText(
             QString(action_id_name_translation(ACTION_TRADE_ROUTE))
-                .replace("&", "&&"));
+                .replace(QLatin1String("&"), QLatin1String("&&")));
         if (can_units_do(punits, unit_can_est_trade_route_here)) {
           i.value()->setEnabled(true);
         }
@@ -2795,10 +2808,10 @@ void mr_menu::tileset_custom_load()
   const struct option *poption;
   QStringList sl;
 
-  sl << "default_tileset_overhead_name"
-     << "default_tileset_iso_name"
-     << "default_tileset_hex_name"
-     << "default_tileset_isohex_name";
+  sl << QStringLiteral("default_tileset_overhead_name")
+     << QStringLiteral("default_tileset_iso_name")
+     << QStringLiteral("default_tileset_hex_name")
+     << QStringLiteral("default_tileset_isohex_name");
   layout = new QVBoxLayout;
   dialog->setWindowTitle(_("Available tilesets"));
   label = new QLabel;
@@ -2958,7 +2971,7 @@ void mr_menu::save_image()
     full_size_y = full_size_y / 2;
   }
   map_canvas_resized(full_size_x, full_size_y);
-  img_name = QString("Freeciv-Turn%1").arg(game.info.turn);
+  img_name = QStringLiteral("Freeciv-Turn%1").arg(game.info.turn);
   if (client_has_player()) {
     img_name =
         img_name + "-" + QString(nation_plural_for_player(client_player()));
@@ -3008,7 +3021,7 @@ void mr_menu::save_game_as()
   strvec_iterate_end;
 
   str = QString(_("Save Games"))
-        + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
   current_file = QFileDialog::getSaveFileName(
       king()->central_wdg, _("Save Game As..."), location, str);
   if (!current_file.isEmpty()) {
@@ -3029,7 +3042,7 @@ void mr_menu::back_to_menu()
   if (is_server_running()) {
     ask = new hud_message_box(king()->central_wdg);
     ask->set_text_title(_("Leaving a local game will end it!"),
-                        "Leave game");
+                        QStringLiteral("Leave game"));
     ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
     ask->setDefaultButton(QMessageBox::Cancel);
     ask->setAttribute(Qt::WA_DeleteOnClose);

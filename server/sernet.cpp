@@ -522,7 +522,7 @@ void handle_conn_pong(struct connection *pconn)
   pconn->ping_time = timer_read_seconds(timer);
   pconn->server.ping_timers->removeFirst();
 
-  log_time(QString("got pong from %1 (open=%2); ping time = %3s")
+  log_time(QStringLiteral("got pong from %1 (open=%2); ping time = %3s")
                .arg(conn_description(pconn))
                .arg(pconn->server.ping_timers->size())
                .arg(pconn->ping_time));

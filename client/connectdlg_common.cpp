@@ -206,11 +206,10 @@ static int find_next_free_port(int starting_port, int highest_port)
  **************************************************************************/
 bool client_start_server(void)
 {
-  QStringList program = {"freeciv-server.exe", "./freeciv-server",
-                         "freeciv-server"};
+  QStringList program = {QStringLiteral("freeciv-server.exe"),
+                         "./freeciv-server", "freeciv-server"};
   QStringList arguments;
-  QString trueFcser, ruleset, storage, port_buf, savesdir,
-      scensdir;
+  QString trueFcser, ruleset, storage, port_buf, savesdir, scensdir;
   char buf[512];
   int connect_tries = 0;
 
@@ -247,27 +246,27 @@ bool client_start_server(void)
 
   /* Set up the command-line parameters. */
   port_buf = QString::number(internal_server_port);
-  savesdir = QString("%1%2saves").arg(storage, DIR_SEPARATOR);
-  scensdir = QString("%1%2scenarios").arg(storage, DIR_SEPARATOR);
+  savesdir = QStringLiteral("%1%2saves").arg(storage, DIR_SEPARATOR);
+  scensdir = QStringLiteral("%1%2scenarios").arg(storage, DIR_SEPARATOR);
 
-  arguments << "-p" << port_buf << "--bind"
-            << "localhost"
-            << "-q"
-            << "1"
-            << "-e"
-            << "--saves" << savesdir << "--scenarios" << scensdir << "-A"
-            << "none";
+  arguments << QStringLiteral("-p") << port_buf << QStringLiteral("--bind")
+            << QStringLiteral("localhost") << QStringLiteral("-q")
+            << QStringLiteral("1") << QStringLiteral("-e")
+            << QStringLiteral("--saves") << savesdir
+            << QStringLiteral("--scenarios") << scensdir
+            << QStringLiteral("-A") << QStringLiteral("none");
   if (!logfile.isEmpty()) {
-    arguments << "--debug" << log_get_level() << "--log" << logfile;
+    arguments << QStringLiteral("--debug") << log_get_level()
+              << QStringLiteral("--log") << logfile;
   }
   if (scriptfile.isEmpty()) {
-    arguments << "--read" << scriptfile;
+    arguments << QStringLiteral("--read") << scriptfile;
   }
   if (savefile.isEmpty()) {
-    arguments << "--file" << savefile;
+    arguments << QStringLiteral("--file") << savefile;
   }
   if (ruleset != NULL) {
-    arguments << "--ruleset" << ruleset;
+    arguments << QStringLiteral("--ruleset") << ruleset;
   }
 
   for (auto const &trueServer : qAsConst(program)) {
@@ -281,7 +280,7 @@ bool client_start_server(void)
   serverProcess::i()->waitForReadyRead();
   server_quitting = FALSE;
   /* a reasonable number of tries */
-  QString srv = "localhost";
+  QString srv = QStringLiteral("localhost");
   while (connect_to_server(
              user_name, srv, internal_server_port, buf,
              sizeof(buf) && serverProcess::i()->state() == QProcess::Running)
@@ -301,7 +300,9 @@ bool client_start_server(void)
     qCritical("Failed to connect to spawned server!");
 #ifdef FREECIV_DEBUG
     qDebug("Tried with commandline: '%s'",
-           QString(trueFcser + arguments.join(" ")).toLocal8Bit().data());
+           QString(trueFcser + arguments.join(QStringLiteral(" ")))
+               .toLocal8Bit()
+               .data());
 #endif
     output_window_append(ftc_client, _("Couldn't connect to the server."));
     output_window_append(ftc_client,

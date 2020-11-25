@@ -267,7 +267,7 @@ qfc_dialog::qfc_dialog(QWidget *parent)
   titlebar_height = 0;
   moving_now = false;
   setSizeGripEnabled(true);
-  close_pix = fc_icons::instance()->get_pixmap("cclose");
+  close_pix = fc_icons::instance()->get_pixmap(QStringLiteral("cclose"));
 }
 
 qfc_dialog::~qfc_dialog() { delete close_pix; }
@@ -872,9 +872,10 @@ notify_goto::notify_goto(const char *headline, const char *lines,
   QString qlines;
   setAttribute(Qt::WA_DeleteOnClose);
   goto_but = this->addButton(_("Goto Location"), QMessageBox::ActionRole);
-  goto_but->setIcon(fc_icons::instance()->get_icon("go-up"));
+  goto_but->setIcon(fc_icons::instance()->get_icon(QStringLiteral("go-up")));
   inspect_but = this->addButton(_("Inspect City"), QMessageBox::ActionRole);
-  inspect_but->setIcon(fc_icons::instance()->get_icon("plus"));
+  inspect_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("plus")));
 
   close_but = this->addButton(QMessageBox::Close);
   gtile = ptile;
@@ -888,7 +889,7 @@ notify_goto::notify_goto(const char *headline, const char *lines,
   }
   setWindowTitle(headline);
   qlines = lines;
-  qlines.replace("\n", " ");
+  qlines.replace(QLatin1String("\n"), QLatin1String(" "));
   setText(qlines);
   connect(goto_but, &QAbstractButton::pressed, this,
           &notify_goto::goto_tile);
@@ -1183,11 +1184,13 @@ void choice_dialog::set_layout()
     QPushButton *next, *prev;
     unit_skip = new QHBoxLayout;
     next = new QPushButton();
-    next->setIcon(fc_icons::instance()->get_icon("city-right"));
+    next->setIcon(
+        fc_icons::instance()->get_icon(QStringLiteral("city-right")));
     next->setIconSize(QSize(32, 32));
     next->setFixedSize(QSize(36, 36));
     prev = new QPushButton();
-    prev->setIcon(fc_icons::instance()->get_icon("city-left"));
+    prev->setIcon(
+        fc_icons::instance()->get_icon(QStringLiteral("city-left")));
     prev->setIconSize(QSize(32, 32));
     prev->setFixedSize(QSize(36, 36));
     target_unit_button = new QPushButton;
@@ -1218,7 +1221,8 @@ void choice_dialog::set_layout()
    Adds new action for choice dialog
  ***************************************************************************/
 void choice_dialog::add_item(QString title, pfcn_void func, QVariant data1,
-                             QVariant data2, QString tool_tip = "",
+                             QVariant data2,
+                             QString tool_tip = QLatin1String(""),
                              const int button_id = -1)
 {
   Choice_dialog_button *button =
@@ -1917,14 +1921,17 @@ void popup_action_selection(struct unit *actor_unit,
     qv2 = target_tile->index;
 
     func = act_sel_keep_moving;
-    cd->add_item(QString(_("Keep moving")), func, qv1, qv2, "", BUTTON_MOVE);
+    cd->add_item(QString(_("Keep moving")), func, qv1, qv2,
+                 QLatin1String(""), BUTTON_MOVE);
   }
 
   func = act_sel_wait;
-  cd->add_item(QString(_("&Wait")), func, qv1, qv2, "", BUTTON_WAIT);
+  cd->add_item(QString(_("&Wait")), func, qv1, qv2, QLatin1String(""),
+               BUTTON_WAIT);
 
   func = keep_moving;
-  cd->add_item(QString(_("Do nothing")), func, qv1, qv2, "", BUTTON_CANCEL);
+  cd->add_item(QString(_("Do nothing")), func, qv1, qv2, QLatin1String(""),
+               BUTTON_CANCEL);
 
   cd->set_layout();
   cd->show_me();
@@ -2575,7 +2582,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
         func = spy_steal_something;
         // Defeat keyboard shortcut mnemonics
         str = QString(research_advance_name_translation(presearch, i))
-                  .replace("&", "&&");
+                  .replace(QLatin1String("&"), QLatin1String("&&"));
         cd->add_item(str, func, qv1, i);
       }
     }
@@ -2587,7 +2594,8 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
       astr_set(&stra, _("At %s's Discretion"),
                unit_name_translation(actor_unit));
       func = spy_steal_something;
-      str = QString(astr_str(&stra)).replace("&", "&&");
+      str = QString(astr_str(&stra))
+                .replace(QLatin1String("&"), QLatin1String("&&"));
       cd->add_item(str, func, qv1, A_UNSET);
     }
 
@@ -3042,7 +3050,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
 
     fc_snprintf(buf2, ARRAY_SIZE(buf2),
                 _("You can't incite a revolt in %s."), city_name_get(tcity));
-    impossible->set_text_title(buf2, "!");
+    impossible->set_text_title(buf2, QStringLiteral("!"));
     impossible->setStandardButtons(QMessageBox::Ok);
     impossible->setAttribute(Qt::WA_DeleteOnClose);
     impossible->show();
@@ -3070,7 +3078,7 @@ void popup_incite_dialog(struct unit *actor, struct city *tcity, int cost,
                 PL_("Inciting a revolt costs %d gold.\n%s",
                     "Inciting a revolt costs %d gold.\n%s", cost),
                 cost, buf);
-    too_much->set_text_title(buf2, "!");
+    too_much->set_text_title(buf2, QStringLiteral("!"));
     too_much->setStandardButtons(QMessageBox::Ok);
     too_much->setAttribute(Qt::WA_DeleteOnClose);
     too_much->show();
@@ -3217,7 +3225,7 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
       func = spy_sabotage;
       // Defeat keyboard shortcut mnemonics
       str = QString(city_improvement_name_translation(tcity, pimprove))
-                .replace("&", "&&");
+                .replace(QLatin1String("&"), QLatin1String("&&"));
       qv2 = nr;
       cd->add_item(str, func, qv1, improvement_number(pimprove));
       nr++;
@@ -3230,7 +3238,8 @@ void popup_sabotage_dialog(struct unit *actor, struct city *tcity,
               .act_prob_cache[get_non_targeted_action_id(paction->id)])) {
     astr_set(&stra, _("At %s's Discretion"), unit_name_translation(actor));
     func = spy_sabotage;
-    str = QString(astr_str(&stra)).replace("&", "&&");
+    str = QString(astr_str(&stra))
+              .replace(QLatin1String("&"), QLatin1String("&&"));
     cd->add_item(str, func, qv1, B_LAST);
   }
 
@@ -3265,7 +3274,8 @@ void popup_pillage_dialog(struct unit *punit, bv_extras extras)
 
     func = pillage_something;
     // Defeat keyboard shortcut mnemonics
-    str = QString(extra_name_translation(tgt)).replace("&", "&&");
+    str = QString(extra_name_translation(tgt))
+              .replace(QLatin1String("&"), QLatin1String("&&"));
     qv1 = what;
     cd->add_item(str, func, qv1, qv2);
   }
@@ -3340,8 +3350,8 @@ void popup_tileset_suggestion_dialog(void)
 
   title = QString(_("Modpack suggests using %1 tileset."))
               .arg(game.control.preferred_tileset);
-  text = QString("It might not work with other tilesets.\n"
-                 "You are currently using tileset %1.")
+  text = QStringLiteral("It might not work with other tilesets.\n"
+                        "You are currently using tileset %1.")
              .arg(tileset_basename(tileset));
   ask->addButton(_("Keep current tileset"), QMessageBox::RejectRole);
   ask->addButton(_("Load tileset"), QMessageBox::AcceptRole);
@@ -3371,8 +3381,8 @@ void popup_soundset_suggestion_dialog(void)
 
   title = QString(_("Modpack suggests using %1 soundset."))
               .arg(game.control.preferred_soundset);
-  text = QString("It might not work with other tilesets.\n"
-                 "You are currently using soundset %1.")
+  text = QStringLiteral("It might not work with other tilesets.\n"
+                        "You are currently using soundset %1.")
              .arg(sound_set_name);
   ask->addButton(_("Keep current soundset"), QMessageBox::RejectRole);
   ask->addButton(_("Load soundset"), QMessageBox::AcceptRole);
@@ -3396,8 +3406,8 @@ void popup_musicset_suggestion_dialog(void)
 
   title = QString(_("Modpack suggests using %1 musicset."))
               .arg(game.control.preferred_musicset);
-  text = QString("It might not work with other tilesets.\n"
-                 "You are currently using musicset %1.")
+  text = QStringLiteral("It might not work with other tilesets.\n"
+                        "You are currently using musicset %1.")
              .arg(music_set_name);
   ask->addButton(_("Keep current musicset"), QMessageBox::RejectRole);
   ask->addButton(_("Load musicset"), QMessageBox::AcceptRole);

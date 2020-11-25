@@ -46,13 +46,13 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
-#include "governor.h"
 #include "audio.h"
 #include "cityrepdata.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
 #include "global_worklist.h"
+#include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "music.h"
@@ -201,7 +201,7 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,75,0,0,0,0,0", //.gui_qt_font_city_names =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
-    TRUE,                              //.gui_qt_show_titlebar =
+    TRUE                               //.gui_qt_show_titlebar =
                                        // sveinung
                                        //.gui_qt_wakeup_text =
                                        //"Wake up %1",
@@ -2074,8 +2074,8 @@ static struct client_option client_options[] = {
         COC_INTERFACE, GUI_QT, TRUE, NULL),
     GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
                    N_("Change size of all fonts at once by given percent."
-                   "That options is not unsaveable. Hit Apply button"
-                   "after changing this."),
+                      "That options is not unsaveable. Hit Apply button"
+                      "after changing this."),
                    COC_FONT, GUI_QT, 0, -100, 100, allfont_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT, GUI_QT,
@@ -4296,12 +4296,13 @@ static void settable_options_save(struct section_file *sf)
 {
   optionsHash::const_iterator it = settable_options->constBegin();
   while (it != settable_options->constEnd()) {
-    if (!it.key().compare("gameseed") || !it.key().compare("mapseed")) {
+    if (!it.key().compare(QLatin1String("gameseed"))
+        || !it.key().compare(QLatin1String("mapseed"))) {
       /* Do not save mapseed or gameseed. */
       it++;
       continue;
     }
-    if (!it.key().compare("topology")) {
+    if (!it.key().compare(QLatin1String("topology"))) {
       /* client_start_server() sets topology based on tileset. Don't store
        * its choice. The tileset is already stored. Storing topology leads
        * to all sort of breakage:

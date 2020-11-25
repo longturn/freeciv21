@@ -47,7 +47,7 @@ endgame_report::endgame_report(const struct packet_endgame_report *packet)
   end_widget->horizontalHeader()->setSectionResizeMode(
       QHeaderView::ResizeToContents);
   end_layout->addWidget(end_widget, 1, 0, 5, 5);
-  queen()->gimme_place(this, "END");
+  queen()->gimme_place(this, QStringLiteral("END"));
   index = queen()->add_game_tab(this);
   setLayout(end_layout);
 }
@@ -55,7 +55,10 @@ endgame_report::endgame_report(const struct packet_endgame_report *packet)
 /************************************************************************/ /**
    Destructor for endgame report
  ****************************************************************************/
-endgame_report::~endgame_report() { queen()->remove_repo_dlg("END"); }
+endgame_report::~endgame_report()
+{
+  queen()->remove_repo_dlg(QStringLiteral("END"));
+}
 
 /************************************************************************/ /**
    Initializes place in tab for endgame report
@@ -120,8 +123,8 @@ void endgame_report_dialog_start(const struct packet_endgame_report *packet)
 void popdown_endgame_report()
 {
   int i;
-  if (queen()->is_repo_dlg_open("END")) {
-    i = queen()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open(QStringLiteral("END"))) {
+    i = queen()->gimme_index_of(QStringLiteral("END"));
     fc_assert(i != -1);
     delete queen()->game_tab_widget->widget(i);
   }
@@ -133,8 +136,8 @@ void popdown_endgame_report()
 void popup_endgame_report()
 {
   int i;
-  if (queen()->is_repo_dlg_open("END")) {
-    i = queen()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open(QStringLiteral("END"))) {
+    i = queen()->gimme_index_of(QStringLiteral("END"));
     queen()->game_tab_widget->setCurrentIndex(i);
   }
 }
@@ -148,8 +151,8 @@ void endgame_report_dialog_player(const struct packet_endgame_player *packet)
   endgame_report *end_rep;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("END")) {
-    i = queen()->gimme_index_of("END");
+  if (queen()->is_repo_dlg_open(QStringLiteral("END"))) {
+    i = queen()->gimme_index_of(QStringLiteral("END"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     end_rep = reinterpret_cast<endgame_report *>(w);

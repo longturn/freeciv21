@@ -201,7 +201,7 @@ static const char *audiospec_fullname(QString &audioset_name, bool music)
 {
   const char *suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
-      music ? QString("stdmusic") : QString("stdsounds");
+      music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
   char *fname = new char[audioset_name.size() + strlen(suffix) + 1];
   const char *dname;
 
@@ -269,7 +269,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   char us_ss_capstr[] = SOUNDSPEC_CAPSTR;
   char us_ms_capstr[] = MUSICSPEC_CAPSTR;
 
-  if (preferred_plugin_name == "none") {
+  if (preferred_plugin_name == QLatin1String("none")) {
     /* We explicitly choose none plugin, silently skip the code below */
     qDebug("Proceeding with sound support disabled.");
     ss_tagfile = NULL;
@@ -346,7 +346,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   }
 
 #ifdef AUDIO_SDL
-  QString audio_str = "sdl";
+  QString audio_str = QStringLiteral("sdl");
   if (audio_select_plugin(audio_str))
     return;
 #endif

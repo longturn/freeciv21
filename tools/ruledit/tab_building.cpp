@@ -66,7 +66,7 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
+  rname->setText(QStringLiteral("None"));
   connect(rname, &QLineEdit::returnPressed, this, &tab_building::name_given);
   bldg_layout->addWidget(label, 0, 0);
   bldg_layout->addWidget(rname, 0, 2);
@@ -77,7 +77,7 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   connect(same_name, &QAbstractButton::toggled, this,
           &tab_building::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
+  name->setText(QStringLiteral("None"));
   connect(name, &QLineEdit::returnPressed, this, &tab_building::name_given);
   bldg_layout->addWidget(label, 1, 0);
   bldg_layout->addWidget(same_name, 1, 1);
@@ -154,8 +154,8 @@ void tab_building::update_bldg_info(struct impr_type *pimpr)
       name->setEnabled(true);
     }
   } else {
-    name->setText("None");
-    rname->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }
