@@ -222,8 +222,6 @@ static void send_metaserver_post(void *arg)
 
   // Post the request
   auto post = static_cast<QUrlQuery *>(arg);
-  auto addr = (srvarg.bind_meta_addr != nullptr ? srvarg.bind_meta_addr
-                                                : srvarg.bind_addr);
 
   QNetworkRequest request(QUrl(srvarg.metaserver_addr));
   request.setHeader(QNetworkRequest::UserAgentHeader,

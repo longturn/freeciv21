@@ -209,7 +209,7 @@ bool client_start_server(void)
   QStringList program = {"freeciv-server.exe", "./freeciv-server",
                          "freeciv-server"};
   QStringList arguments;
-  QString trueFcser, ruleset, storage, dbg_lvl_buf, port_buf, savesdir,
+  QString trueFcser, ruleset, storage, port_buf, savesdir,
       scensdir;
   char buf[512];
   int connect_tries = 0;
@@ -270,7 +270,7 @@ bool client_start_server(void)
     arguments << "--ruleset" << ruleset;
   }
 
-  for (auto trueServer : qAsConst(program)) {
+  for (auto const &trueServer : qAsConst(program)) {
     serverProcess::i()->start(trueServer, arguments);
     trueFcser = trueServer;
     if (serverProcess::i()->waitForStarted(3000) == true) {

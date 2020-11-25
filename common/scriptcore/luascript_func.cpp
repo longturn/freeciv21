@@ -91,7 +91,7 @@ bool luascript_func_check(struct fc_lua *fcl,
   fc_assert_ret_val(fcl, FALSE);
   fc_assert_ret_val(fcl->funcs, FALSE);
 
-  for (auto qfunc_name : fcl->funcs->keys()) {
+  for (auto const &qfunc_name : fcl->funcs->keys()) {
     char *func_name = qfunc_name.toLocal8Bit().data();
     if (!luascript_check_function(fcl, func_name)) {
       fc_assert_ret_val(fcl->funcs->contains(func_name), FALSE);
@@ -164,7 +164,7 @@ void luascript_func_add(struct fc_lua *fcl, const char *func_name,
 void luascript_func_free(struct fc_lua *fcl)
 {
   if (fcl && fcl->funcs) {
-    for (auto a : fcl->funcs->values()) {
+    for (auto a : *fcl->funcs) {
       func_destroy(a);
     }
     delete fcl->funcs;

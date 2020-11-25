@@ -83,7 +83,7 @@ enum pf_zoc_type {
 struct pf_map {
 #ifdef PF_DEBUG
   enum pf_mode mode; /* The mode of the map, for conversion checking. */
-#endif /* PF_DEBUG */
+#endif               /* PF_DEBUG */
 
   /* "Virtual" function table. */
   void (*destroy)(struct pf_map *pfm); /* Destructor. */
@@ -3541,11 +3541,12 @@ pf_reverse_map_new_for_city(const struct city *pcity,
 void pf_reverse_map_destroy(struct pf_reverse_map *pfrm)
 {
   fc_assert_ret(NULL != pfrm);
-  for (auto a : pfrm->hash->values()) {
-    delete a;
-  }
-  for (auto a : pfrm->hash->keys()) {
-    delete a;
+  QHash<const pf_parameter *, pf_position *>::const_iterator it =
+      pfrm->hash->constBegin();
+  while (it != pfrm->hash->constEnd()) {
+    delete it.key();
+    delete it.value();
+    ++it;
   }
   delete pfrm->hash;
   delete pfrm;

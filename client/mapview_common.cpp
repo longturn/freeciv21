@@ -3263,7 +3263,7 @@ void mapdeco_init(void)
  ****************************************************************************/
 void mapdeco_free(void)
 {
-  for (auto a : mapdeco_gotoline->values()) {
+  for (auto a : *mapdeco_gotoline) {
     delete a;
   }
   mapdeco_gotoline->clear();
@@ -3313,7 +3313,7 @@ bool mapdeco_is_highlight_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_highlights(void)
 {
-  for (auto ptile : mapdeco_highlight_set->values()) {
+  for (auto ptile : *mapdeco_highlight_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), TRUE, FALSE);
   }
   mapdeco_highlight_set->clear();
@@ -3360,7 +3360,7 @@ bool mapdeco_is_crosshair_set(const struct tile *ptile)
  ****************************************************************************/
 void mapdeco_clear_crosshairs(void)
 {
-  for (auto ptile : mapdeco_crosshair_set->values()) {
+  for (auto ptile : *mapdeco_crosshair_set) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(ptile), FALSE, FALSE);
   }
   mapdeco_crosshair_set->clear();
@@ -3510,7 +3510,7 @@ void mapdeco_clear_gotoroutes(void)
     adjc_dir_iterate_end;
     ++i;
   }
-  for (auto a : mapdeco_gotoline->values()) {
+  for (auto a : *mapdeco_gotoline) {
     delete a;
   }
   mapdeco_gotoline->clear();

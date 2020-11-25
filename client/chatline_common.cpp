@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QGlobalStatic>
 #include <stdarg.h>
 #include <string.h>
 
@@ -38,7 +39,7 @@
 
 #include "chatline_common.h"
 
-static QMutex ow_mutex;
+Q_GLOBAL_STATIC(QMutex, ow_mutex);
 
 /**********************************************************************/ /**
    Send the message as a chat to the server.
@@ -68,12 +69,12 @@ int send_chat_printf(const char *format, ...)
 /**********************************************************************/ /**
    Allocate output window mutex
  **************************************************************************/
-void fc_allocate_ow_mutex(void) { ow_mutex.lock(); }
+void fc_allocate_ow_mutex(void) { ow_mutex->lock(); }
 
 /**********************************************************************/ /**
    Release output window mutex
  **************************************************************************/
-void fc_release_ow_mutex(void) { ow_mutex.unlock(); }
+void fc_release_ow_mutex(void) { ow_mutex->unlock(); }
 
 /**********************************************************************/ /**
    Initialize output window mutex
