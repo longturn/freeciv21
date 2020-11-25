@@ -32,12 +32,12 @@
 #include "game.h"
 
 // client
-#include "governor.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"
 #include "global_worklist.h"
+#include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "mapview_g.h"
@@ -1421,11 +1421,9 @@ city_dialog::city_dialog(QWidget *parent)
           &city_dialog::worklist_del);
   connect(ui.p_table_p, &QTableWidget::itemDoubleClicked, this,
           &city_dialog::dbl_click_p);
-  connect(
-      ui.p_table_p->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
+  connect(ui.p_table_p->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &city_dialog::item_selected);
   setSizeGripEnabled(true);
 
   /* governor tab */
@@ -1435,11 +1433,9 @@ city_dialog::city_dialog(QWidget *parent)
   ui.cma_table->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
 
-  connect(
-      ui.cma_table->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(cma_selected(const QItemSelection &, const QItemSelection &)));
+  connect(ui.cma_table->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &city_dialog::cma_selected);
   connect(ui.cma_table, &QWidget::customContextMenuRequested, this,
           &city_dialog::cma_context_menu);
   connect(ui.cma_table, &QTableWidget::cellDoubleClicked, this,
@@ -3389,11 +3385,8 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
   setModel(list_model);
   viewport()->installEventFilter(fc_tt);
   installEventFilter(this);
-  connect(
-      selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(prod_selected(const QItemSelection &, const QItemSelection &)));
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &production_widget::prod_selected);
   resizeRowsToContents();
   resizeColumnsToContents();
   setFixedWidth(3 * sh.x() + 6);

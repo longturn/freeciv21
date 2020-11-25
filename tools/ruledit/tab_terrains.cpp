@@ -57,8 +57,8 @@ tab_terrains::tab_terrains(ruledit_gui *ui_in) : QWidget()
 
   terrain_list = new QListWidget(this);
 
-  connect(terrain_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_terrain()));
+  connect(terrain_list, &QListWidget::itemSelectionChanged, this,
+          &tab_terrains::select_terrain);
   main_layout->addWidget(terrain_list);
 
   terrains_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -67,34 +67,37 @@ tab_terrains::tab_terrains(ruledit_gui *ui_in) : QWidget()
   label->setParent(this);
   rname = new QLineEdit(this);
   rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_terrains::name_given);
   terrains_layout->addWidget(label, 0, 0);
   terrains_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_terrains::same_name_toggle);
   name = new QLineEdit(this);
   name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(name, &QLineEdit::returnPressed, this, &tab_terrains::name_given);
   terrains_layout->addWidget(label, 1, 0);
   terrains_layout->addWidget(same_name, 1, 1);
   terrains_layout->addWidget(name, 1, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_terrains::edit_effects);
   terrains_layout->addWidget(effects_button, 2, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Terrain")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this,
+          &tab_terrains::add_now);
   terrains_layout->addWidget(add_button, 3, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Terrain")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_terrains::delete_now);
   terrains_layout->addWidget(delete_button, 3, 2);
   show_experimental(delete_button);
 

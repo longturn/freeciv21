@@ -314,17 +314,11 @@ plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
   connect(header(), &QWidget::customContextMenuRequested, this,
           &plr_widget::display_header_menu);
 
-  connect(
-      selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(nation_selected(const QItemSelection &, const QItemSelection &)));
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &plr_widget::nation_selected);
 }
 
-void plr_widget::set_pr_rep(plr_report *pr)
-{
-  plr = pr;
-}
+void plr_widget::set_pr_rep(plr_report *pr) { plr = pr; }
 /**********************************************************************/ /**
    Restores selection of previously selected nation
  **************************************************************************/
@@ -650,7 +644,8 @@ plr_widget::~plr_widget()
   delete pid;
   delete list_model;
   delete filter_model;
-  king()->qt_settings.player_repo_sort_col = header()->sortIndicatorSection();
+  king()->qt_settings.player_repo_sort_col =
+      header()->sortIndicatorSection();
   king()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
 }
 
@@ -678,7 +673,7 @@ plr_report::plr_report() : QWidget()
   index = 0;
   if (king()->qt_settings.player_repo_sort_col != -1) {
     ui.plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
-                          king()->qt_settings.player_report_sort);
+                             king()->qt_settings.player_report_sort);
   }
   ui.plr_wdg->set_pr_rep(this);
 }
@@ -922,14 +917,8 @@ void popdown_players_report()
    Update the intelligence dialog for the given player.  This is called by
    the core client code when that player's information changes.
  **************************************************************************/
-void update_intel_dialog(struct player *p)
-{
-  real_players_dialog_update(p);
-}
+void update_intel_dialog(struct player *p) { real_players_dialog_update(p); }
 /**********************************************************************/ /**
    Close an intelligence dialog for the given player.
  **************************************************************************/
-void close_intel_dialog(struct player *p)
-{
-  real_players_dialog_update(p);
-}
+void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }

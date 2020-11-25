@@ -116,7 +116,8 @@ req_vec_fix_problem::req_vec_fix_problem(
 
   /* TRANS: Apply the selected requirement vector problem fix. */
   accept = new QPushButton(R__("Accept selected solution"));
-  connect(accept, SIGNAL(pressed()), this, SLOT(accept_solution()));
+  connect(accept, &QAbstractButton::pressed, this,
+          &req_vec_fix_problem::accept_solution);
   layout_main->addWidget(accept);
 
   this->setLayout(layout_main);
@@ -145,8 +146,8 @@ req_vec_fix::req_vec_fix(ruledit_gui *ui_in, req_vec_fix_item *item_info)
   QHBoxLayout *layout_buttons = new QHBoxLayout();
 
   this->ui = ui_in;
-  connect(ui, SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
-          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+  connect(ui, &ruledit_gui::rec_vec_may_have_changed, this,
+          &req_vec_fix::incoming_rec_vec_change);
 
   this->item_info = item_info;
 
@@ -169,7 +170,8 @@ req_vec_fix::req_vec_fix(ruledit_gui *ui_in, req_vec_fix_item *item_info)
   abort->setToolTip(R__("Undo all accepted solutions since you started or"
                         " since last time you ordered all accepted changes"
                         " done."));
-  connect(abort, SIGNAL(pressed()), this, SLOT(reject_applied_solutions()));
+  connect(abort, &QAbstractButton::pressed, this,
+          &req_vec_fix::reject_applied_solutions);
   layout_buttons->addWidget(abort);
 
   /* TRANS: Perform all the changes to the ruleset item the user has
@@ -181,12 +183,12 @@ req_vec_fix::req_vec_fix(ruledit_gui *ui_in, req_vec_fix_item *item_info)
                                 " to the ruleset item. You can then fix the"
                                 " current issue by hand and come back here"
                                 " to find the next issue."));
-  connect(apply_changes, SIGNAL(pressed()), this,
-          SLOT(accept_applied_solutions()));
+  connect(apply_changes, &QAbstractButton::pressed, this,
+          &req_vec_fix::accept_applied_solutions);
   layout_buttons->addWidget(apply_changes);
 
   close = new QPushButton(R__("Close"));
-  connect(close, SIGNAL(pressed()), this, SLOT(close()));
+  connect(close, &QAbstractButton::pressed, this, &QWidget::close);
   layout_buttons->addWidget(close);
 
   layout_main->addLayout(layout_buttons);
@@ -236,8 +238,8 @@ bool req_vec_fix::refresh()
   }
   current_problem_viewer =
       new req_vec_fix_problem(current_problem, item_info);
-  connect(current_problem_viewer, SIGNAL(solution_accepted(int)), this,
-          SLOT(apply_solution(int)));
+  connect(current_problem_viewer, &req_vec_fix_problem::solution_accepted,
+          this, &req_vec_fix::apply_solution);
   current_problem_area->addWidget(current_problem_viewer);
   current_problem_area->setCurrentWidget(current_problem_viewer);
 

@@ -57,8 +57,8 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
 
   mpr_list = new QListWidget(this);
 
-  connect(mpr_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_multiplier()));
+  connect(mpr_list, &QListWidget::itemSelectionChanged, this,
+          &tab_multiplier::select_multiplier);
   main_layout->addWidget(mpr_list);
 
   mpr_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -67,36 +67,41 @@ tab_multiplier::tab_multiplier(ruledit_gui *ui_in) : QWidget()
   label->setParent(this);
   rname = new QLineEdit(this);
   rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(rname, &QLineEdit::returnPressed, this,
+          &tab_multiplier::name_given);
   mpr_layout->addWidget(label, 0, 0);
   mpr_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_multiplier::same_name_toggle);
   name = new QLineEdit(this);
   name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(name, &QLineEdit::returnPressed, this,
+          &tab_multiplier::name_given);
   mpr_layout->addWidget(label, 1, 0);
   mpr_layout->addWidget(same_name, 1, 1);
   mpr_layout->addWidget(name, 1, 2);
 
   reqs_button =
       new QPushButton(QString::fromUtf8(R__("Requirements")), this);
-  connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
+  connect(reqs_button, &QAbstractButton::pressed, this,
+          &tab_multiplier::edit_reqs);
   mpr_layout->addWidget(reqs_button, 2, 2);
 
   add_button =
       new QPushButton(QString::fromUtf8(R__("Add Multiplier")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this,
+          &tab_multiplier::add_now);
   mpr_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
   delete_button = new QPushButton(
       QString::fromUtf8(R__("Remove this Multiplier")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_multiplier::delete_now);
   mpr_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
 

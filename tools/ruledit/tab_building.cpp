@@ -57,8 +57,8 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
 
   bldg_list = new QListWidget(this);
 
-  connect(bldg_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_bldg()));
+  connect(bldg_list, &QListWidget::itemSelectionChanged, this,
+          &tab_building::select_bldg);
   main_layout->addWidget(bldg_list);
 
   bldg_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -67,39 +67,43 @@ tab_building::tab_building(ruledit_gui *ui_in) : QWidget()
   label->setParent(this);
   rname = new QLineEdit(this);
   rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_building::name_given);
   bldg_layout->addWidget(label, 0, 0);
   bldg_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_building::same_name_toggle);
   name = new QLineEdit(this);
   name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  connect(name, &QLineEdit::returnPressed, this, &tab_building::name_given);
   bldg_layout->addWidget(label, 1, 0);
   bldg_layout->addWidget(same_name, 1, 1);
   bldg_layout->addWidget(name, 1, 2);
 
   reqs_button =
       new QPushButton(QString::fromUtf8(R__("Requirements")), this);
-  connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
+  connect(reqs_button, &QAbstractButton::pressed, this,
+          &tab_building::edit_reqs);
   bldg_layout->addWidget(reqs_button, 2, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_building::edit_effects);
   bldg_layout->addWidget(effects_button, 3, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Building")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now2()));
+  connect(add_button, &QAbstractButton::pressed, this,
+          &tab_building::add_now2);
   bldg_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Building")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_building::delete_now);
   bldg_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
 

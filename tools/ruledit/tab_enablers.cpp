@@ -98,15 +98,15 @@ tab_enabler::tab_enabler(ruledit_gui *ui_in) : QWidget()
   QPushButton *add_button;
 
   ui = ui_in;
-  connect(ui, SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
-          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+  connect(ui, &ruledit_gui::rec_vec_may_have_changed, this,
+          &tab_enabler::incoming_rec_vec_change);
 
   selected = 0;
 
   enabler_list = new QListWidget(this);
 
-  connect(enabler_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_enabler()));
+  connect(enabler_list, &QListWidget::itemSelectionChanged, this,
+          &tab_enabler::select_enabler);
   main_layout->addWidget(enabler_list);
 
   enabler_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -121,8 +121,7 @@ tab_enabler::tab_enabler(ruledit_gui *ui_in) : QWidget()
   action_iterate(act) { type_menu->addAction(action_id_rule_name(act)); }
   action_iterate_end;
 
-  connect(type_menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(edit_type(QAction *)));
+  connect(type_menu, &QMenu::triggered, this, &tab_enabler::edit_type);
 
   type_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   type_button->setPopupMode(QToolButton::MenuButtonPopup);
@@ -134,31 +133,35 @@ tab_enabler::tab_enabler(ruledit_gui *ui_in) : QWidget()
 
   act_reqs_button =
       new QPushButton(QString::fromUtf8(R__("Actor Requirements")), this);
-  connect(act_reqs_button, SIGNAL(pressed()), this, SLOT(edit_actor_reqs()));
+  connect(act_reqs_button, &QAbstractButton::pressed, this,
+          &tab_enabler::edit_actor_reqs);
   act_reqs_button->setEnabled(false);
   enabler_layout->addWidget(act_reqs_button, 1, 2);
 
   tgt_reqs_button =
       new QPushButton(QString::fromUtf8(R__("Target Requirements")), this);
-  connect(tgt_reqs_button, SIGNAL(pressed()), this,
-          SLOT(edit_target_reqs()));
+  connect(tgt_reqs_button, &QAbstractButton::pressed, this,
+          &tab_enabler::edit_target_reqs);
   tgt_reqs_button->setEnabled(false);
   enabler_layout->addWidget(tgt_reqs_button, 2, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Enabler")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this,
+          &tab_enabler::add_now);
   enabler_layout->addWidget(add_button, 3, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Enabler")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_enabler::delete_now);
   delete_button->setEnabled(false);
   enabler_layout->addWidget(delete_button, 3, 2);
   show_experimental(delete_button);
 
   repair_button = new QPushButton(this);
-  connect(repair_button, SIGNAL(pressed()), this, SLOT(repair_now()));
+  connect(repair_button, &QAbstractButton::pressed, this,
+          &tab_enabler::repair_now);
   repair_button->setEnabled(false);
   enabler_layout->addWidget(repair_button, 3, 1);
 

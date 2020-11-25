@@ -468,27 +468,20 @@ races_dialog::races_dialog(struct player *pplayer, QWidget *parent)
   /* create nation sets */
   refresh();
 
-  connect(
-      styles->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(style_selected(const QItemSelection &, const QItemSelection &)));
-  connect(
-      selected_nation_tabs->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(nation_selected(const QItemSelection &, const QItemSelection &)));
+  connect(styles->selectionModel(), &QItemSelectionModel::selectionChanged,
+          this, &races_dialog::style_selected);
+  connect(selected_nation_tabs->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &races_dialog::nation_selected);
   connect(leader_name, SIGNAL(currentIndexChanged(int)),
           SLOT(leader_selected(int)));
   connect(leader_name->lineEdit(), &QLineEdit::returnPressed, this,
           &races_dialog::ok_pressed);
   connect(qnation_set, SIGNAL(currentIndexChanged(int)),
           SLOT(nationset_changed(int)));
-  connect(
-      nation_tabs->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(group_selected(const QItemSelection &, const QItemSelection &)));
+  connect(nation_tabs->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &races_dialog::group_selected);
 
   ok_button = new QPushButton;
   ok_button->setText(_("Cancel"));

@@ -48,8 +48,8 @@ tab_nation::tab_nation(ruledit_gui *ui_in) : QWidget()
 
   via_include = new QRadioButton(QString::fromUtf8(R__("Use nationlist")));
   main_layout->addWidget(via_include, row++, 0);
-  connect(via_include, SIGNAL(toggled(bool)), this,
-          SLOT(nationlist_toggle(bool)));
+  connect(via_include, &QAbstractButton::toggled, this,
+          &tab_nation::nationlist_toggle);
 
   nationlist_label = new QLabel(QString::fromUtf8(R__("Nationlist")));
   nationlist_label->setParent(this);

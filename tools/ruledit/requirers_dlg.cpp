@@ -41,7 +41,8 @@ requirers_dlg::requirers_dlg(ruledit_gui *ui_in) : QDialog()
   main_layout->addWidget(area, row++, 0);
 
   close_button = new QPushButton(QString::fromUtf8(R__("Close")), this);
-  connect(close_button, SIGNAL(pressed()), this, SLOT(close_now()));
+  connect(close_button, &QAbstractButton::pressed, this,
+          &requirers_dlg::close_now);
   main_layout->addWidget(close_button, row++, 0);
 
   setLayout(main_layout);

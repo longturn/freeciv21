@@ -90,15 +90,16 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   savedir_version = new QRadioButton(this);
   main_layout->addWidget(savedir_version, row++, 1);
   save_button = new QPushButton(QString::fromUtf8(R__("Save now")), this);
-  connect(save_button, SIGNAL(pressed()), this, SLOT(save_now()));
+  connect(save_button, &QAbstractButton::pressed, this, &tab_misc::save_now);
   main_layout->addWidget(save_button, row++, 1);
   always_active_effects =
       new QPushButton(QString::fromUtf8(R__("Always active Effects")), this);
-  connect(always_active_effects, SIGNAL(pressed()), this,
-          SLOT(edit_aae_effects()));
+  connect(always_active_effects, &QAbstractButton::pressed, this,
+          &tab_misc::edit_aae_effects);
   main_layout->addWidget(always_active_effects, row++, 1);
   all_effects = new QPushButton(QString::fromUtf8(R__("All Effects")), this);
-  connect(all_effects, SIGNAL(pressed()), this, SLOT(edit_all_effects()));
+  connect(all_effects, &QAbstractButton::pressed, this,
+          &tab_misc::edit_all_effects);
   main_layout->addWidget(all_effects, row++, 1);
 
   stats = new QTableWidget(this);
@@ -182,7 +183,8 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   main_layout->addWidget(stats, row++, 0, 1, 2);
   refresh_button =
       new QPushButton(QString::fromUtf8(R__("Refresh Stats")), this);
-  connect(refresh_button, SIGNAL(pressed()), this, SLOT(refresh_stats()));
+  connect(refresh_button, &QAbstractButton::pressed, this,
+          &tab_misc::refresh_stats);
   main_layout->addWidget(refresh_button, row++, 0, 1, 2);
 
   // Stats never change except with experimental features. Hide useless

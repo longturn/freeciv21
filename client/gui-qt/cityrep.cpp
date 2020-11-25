@@ -19,9 +19,9 @@
 #include "game.h"
 #include "global_worklist.h"
 // client
-#include "governor.h"
 #include "cityrep_g.h"
 #include "client_main.h"
+#include "governor.h"
 #include "mapview_common.h"
 // gui-qt
 #include "cityrep.h"
@@ -378,11 +378,8 @@ city_widget::city_widget(city_report *ctr) : QTreeView()
   hide_columns();
   connect(header(), &QWidget::customContextMenuRequested, this,
           &city_widget::display_header_menu);
-  connect(
-      selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(cities_selected(const QItemSelection &, const QItemSelection &)));
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &city_widget::cities_selected);
   connect(this, &QAbstractItemView::doubleClicked, this,
           &city_widget::city_doubleclick);
   connect(this, &QWidget::customContextMenuRequested, this,

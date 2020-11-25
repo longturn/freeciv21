@@ -69,8 +69,8 @@ effect_edit::effect_edit(ruledit_gui *ui_in, QString target,
   list_widget = new QListWidget(this);
   effects = effect_list_new();
 
-  connect(list_widget, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_effect()));
+  connect(list_widget, &QListWidget::itemSelectionChanged, this,
+          &effect_edit::select_effect);
   main_layout->addWidget(list_widget);
 
   lbl = new QLabel(R__("Type:"));
@@ -79,8 +79,7 @@ effect_edit::effect_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_type_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_type_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(effect_type_menu(QAction *)));
+  connect(menu, &QMenu::triggered, this, &effect_edit::effect_type_menu);
   edit_type_button->setMenu(menu);
   for (eff = (enum effect_type) 0; eff < EFT_COUNT;
        eff = (enum effect_type)(eff + 1)) {
@@ -98,11 +97,13 @@ effect_edit::effect_edit(ruledit_gui *ui_in, QString target,
 
   reqs_button =
       new QPushButton(QString::fromUtf8(R__("Requirements")), this);
-  connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
+  connect(reqs_button, &QAbstractButton::pressed, this,
+          &effect_edit::edit_reqs);
   effect_edit_layout->addWidget(reqs_button, 0, 0);
 
   close_button = new QPushButton(QString::fromUtf8(R__("Close")), this);
-  connect(close_button, SIGNAL(pressed()), this, SLOT(close_now()));
+  connect(close_button, &QAbstractButton::pressed, this,
+          &effect_edit::close_now);
   effect_edit_layout->addWidget(close_button, 1, 0);
 
   refresh();
