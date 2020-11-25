@@ -119,6 +119,7 @@ resize_widget::resize_widget(QWidget *parent) : QLabel()
   setParent(parent);
   setCursor(Qt::SizeFDiagCursor);
   pix = fc_icons::instance()->get_pixmap("resize");
+  *pix = pix->scaledToHeight(12);
   setPixmap(*pix);
   delete pix;
 }
@@ -176,6 +177,7 @@ close_widget::close_widget(QWidget *parent) : QLabel()
   setParent(parent);
   setCursor(Qt::ArrowCursor);
   pix = fc_icons::instance()->get_pixmap("close");
+  *pix = pix->scaledToHeight(12);
   setPixmap(*pix);
   delete pix;
 }
