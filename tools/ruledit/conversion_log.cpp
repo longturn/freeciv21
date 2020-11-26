@@ -39,7 +39,8 @@ conversion_log::conversion_log() : QDialog()
   main_layout->addWidget(area, row++, 0);
 
   close_button = new QPushButton(QString::fromUtf8(R__("Close")), this);
-  connect(close_button, SIGNAL(pressed()), this, SLOT(close_now()));
+  connect(close_button, &QAbstractButton::pressed, this,
+          &conversion_log::close_now);
   main_layout->addWidget(close_button, row++, 0);
 
   setLayout(main_layout);

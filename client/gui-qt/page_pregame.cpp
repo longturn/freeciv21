@@ -64,11 +64,12 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   connect(ui.bdisc, &QAbstractButton::clicked, gui,
           &fc_client::slot_disconnect);
   ui.bpick->setText(_("Pick Nation"));
-  ui.bpick->setIcon(fc_icons::instance()->get_icon("flag"));
+  ui.bpick->setIcon(fc_icons::instance()->get_icon(QStringLiteral("flag")));
   connect(ui.bpick, &QAbstractButton::clicked, this,
           &page_pregame::slot_pick_nation);
   ui.bops->setText(_("Observe"));
-  ui.bops->setIcon(fc_icons::instance()->get_icon("meeting-observer"));
+  ui.bops->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("meeting-observer")));
   connect(ui.bops, &QAbstractButton::clicked, this,
           &page_pregame::slot_pregame_observe);
   ui.bstart->setText(_("Start"));
@@ -133,7 +134,7 @@ void page_pregame::update_start_page()
 
   players_iterate(pplayer)
   {
-    host = "";
+    host = QLatin1String("");
     if (!player_has_flag(pplayer, PLRF_SCENARIO_RESERVED)) {
       conn_id = -1;
       conn_list_iterate(pplayer->connections, pconn)
@@ -160,7 +161,7 @@ void page_pregame::update_start_page()
         if (pplayer->was_created) {
           leader = player_name(pplayer);
         } else {
-          leader = "";
+          leader = QLatin1String("");
         }
       } else {
         nation = nation_adjective_for_player(pplayer);
@@ -170,7 +171,7 @@ void page_pregame::update_start_page()
       if (pplayer->team) {
         team = team_name_translation(pplayer->team);
       } else {
-        team = "";
+        team = QLatin1String("");
       }
 
       item = new QTreeWidgetItem();
@@ -184,9 +185,11 @@ void page_pregame::update_start_page()
                 str + " <"
                 + (ai_level_translated_name(pplayer->ai_common.skill_level))
                 + ">";
-            item->setIcon(col, fc_icons::instance()->get_icon("ai"));
+            item->setIcon(
+                col, fc_icons::instance()->get_icon(QStringLiteral("ai")));
           } else {
-            item->setIcon(col, fc_icons::instance()->get_icon("human"));
+            item->setIcon(col, fc_icons::instance()->get_icon(
+                                   QStringLiteral("human")));
           }
 
           item->setText(col, str);

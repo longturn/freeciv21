@@ -161,17 +161,12 @@ void configure_fonts()
   default_size = qRound(scale * 14);
 
   /* default and help label*/
-  sl << "Segoe UI"
-     << "Cousine"
-     << "Liberation Sans"
-     << "Droid Sans"
-     << "Ubuntu"
-     << "Noto Sans"
-     << "DejaVu Sans"
-     << "Luxi Sans"
-     << "Lucida Sans"
-     << "Trebuchet MS"
-     << "Times New Roman";
+  sl << QStringLiteral("Segoe UI") << QStringLiteral("Cousine")
+     << QStringLiteral("Liberation Sans") << QStringLiteral("Droid Sans")
+     << QStringLiteral("Ubuntu") << QStringLiteral("Noto Sans")
+     << QStringLiteral("DejaVu Sans") << QStringLiteral("Luxi Sans")
+     << QStringLiteral("Lucida Sans") << QStringLiteral("Trebuchet MS")
+     << QStringLiteral("Times New Roman");
   font_name = configure_font(fonts::default_font, sl, max);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
@@ -191,13 +186,11 @@ void configure_fonts()
   sl.clear();
 
   /* notify */
-  sl << "Cousine"
-     << "Liberation Mono"
-     << "Source Code Pro"
-     << "Source Code Pro [ADBO]"
-     << "Noto Mono"
-     << "Ubuntu Mono"
-     << "Courier New";
+  sl << QStringLiteral("Cousine") << QStringLiteral("Liberation Mono")
+     << QStringLiteral("Source Code Pro")
+     << QStringLiteral("Source Code Pro [ADBO]")
+     << QStringLiteral("Noto Mono") << QStringLiteral("Ubuntu Mono")
+     << QStringLiteral("Courier New");
   font_name = configure_font(fonts::notify_label, sl, default_size);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
@@ -213,13 +206,10 @@ void configure_fonts()
 
   /* City production */
   sl.clear();
-  sl << "Arimo"
-     << "Play"
-     << "Tinos"
-     << "Ubuntu"
-     << "Times New Roman"
-     << "Droid Sans"
-     << "Noto Sans";
+  sl << QStringLiteral("Arimo") << QStringLiteral("Play")
+     << QStringLiteral("Tinos") << QStringLiteral("Ubuntu")
+     << QStringLiteral("Times New Roman") << QStringLiteral("Droid Sans")
+     << QStringLiteral("Noto Sans");
   font_name =
       configure_font(fonts::city_productions, sl, default_size, true);
   if (!font_name.isEmpty()) {
@@ -229,12 +219,9 @@ void configure_fonts()
   }
   /* Reqtree */
   sl.clear();
-  sl << "Papyrus"
-     << "Segoe Script"
-     << "Comic Sans MS"
-     << "Droid Sans"
-     << "Noto Sans"
-     << "Ubuntu";
+  sl << QStringLiteral("Papyrus") << QStringLiteral("Segoe Script")
+     << QStringLiteral("Comic Sans MS") << QStringLiteral("Droid Sans")
+     << QStringLiteral("Noto Sans") << QStringLiteral("Ubuntu");
   font_name = configure_font(fonts::reqtree_text, sl, max, true);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();

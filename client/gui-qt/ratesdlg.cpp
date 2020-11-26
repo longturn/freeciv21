@@ -301,7 +301,7 @@ fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
   } else {
     max_rates = 10;
   }
-  cursor_pix = *fc_icons::instance()->get_pixmap("control");
+  cursor_pix = *fc_icons::instance()->get_pixmap(QStringLiteral("control"));
   setMouseTracking(true);
 }
 

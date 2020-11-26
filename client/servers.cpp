@@ -159,8 +159,10 @@ void fcUdpScan::readPendingDatagrams()
   while (hasPendingDatagrams()) {
     bool add = true;
     QNetworkDatagram qn = receiveDatagram();
-    for (auto d : datagram_list) {
-      if (d.data().data() == qn.data().data()) {
+    for (auto const &d : qAsConst(datagram_list)) {
+      QByteArray d1 = d.data();
+      QByteArray d2 = qn.data();
+      if (d1.data() == d2.data()) {
         add = false;
       }
     }
@@ -190,7 +192,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
 
   struct server *pserver;
 
-  for (auto datagram : datagram_list) {
+  for (auto const &datagram : qAsConst(datagram_list)) {
     if (datagram.isNull() || !datagram.isValid()) {
       continue;
     }
@@ -423,7 +425,7 @@ static bool begin_metaserver_scan(struct server_scan *scan)
 
   // Post the request
   QUrlQuery post;
-  post.addQueryItem(QLatin1String("client_cap"),
+  post.addQueryItem(QStringLiteral("client_cap"),
                     QString::fromUtf8(our_capability));
 
   QNetworkRequest request(cmd_metaserver);

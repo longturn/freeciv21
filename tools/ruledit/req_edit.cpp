@@ -53,16 +53,16 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   QLabel *lbl;
 
   ui = ui_in;
-  connect(ui, SIGNAL(rec_vec_may_have_changed(const requirement_vector *)),
-          this, SLOT(incoming_rec_vec_change(const requirement_vector *)));
+  connect(ui, &ruledit_gui::rec_vec_may_have_changed, this,
+          &req_edit::incoming_rec_vec_change);
 
   clear_selected();
   req_vector = preqs;
 
   req_list = new QListWidget(this);
 
-  connect(req_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_req()));
+  connect(req_list, &QListWidget::itemSelectionChanged, this,
+          &req_edit::select_req);
   main_layout->addWidget(req_list);
 
   lbl = new QLabel(R__("Type:"));
@@ -71,8 +71,7 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_type_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_type_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(req_type_menu(QAction *)));
+  connect(menu, &QMenu::triggered, this, &req_edit::req_type_menu);
   edit_type_button->setMenu(menu);
   universals_iterate(univ_id)
   {
@@ -92,15 +91,15 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   edit_value_enum_menu = new QMenu();
   edit_value_enum_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_value_enum_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(edit_value_enum_menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(univ_value_enum_menu(QAction *)));
+  connect(edit_value_enum_menu, &QMenu::triggered, this,
+          &req_edit::univ_value_enum_menu);
   edit_value_enum_button->setMenu(edit_value_enum_menu);
   edit_value_enum_menu->setVisible(false);
   active_layout->addWidget(edit_value_enum_button, 3, 0);
   edit_value_nbr_field = new QLineEdit();
   edit_value_nbr_field->setVisible(false);
-  connect(edit_value_nbr_field, SIGNAL(returnPressed()), this,
-          SLOT(univ_value_edit()));
+  connect(edit_value_nbr_field, &QLineEdit::returnPressed, this,
+          &req_edit::univ_value_edit);
   active_layout->addWidget(edit_value_nbr_field, 4, 0);
 
   lbl = new QLabel(R__("Range:"));
@@ -109,8 +108,7 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_range_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_range_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(req_range_menu(QAction *)));
+  connect(menu, &QMenu::triggered, this, &req_edit::req_range_menu);
   edit_range_button->setMenu(menu);
   req_range_iterate(range_id) { menu->addAction(req_range_name(range_id)); }
   req_range_iterate_end;
@@ -120,27 +118,28 @@ req_edit::req_edit(ruledit_gui *ui_in, QString target,
   menu = new QMenu();
   edit_present_button->setToolButtonStyle(Qt::ToolButtonTextOnly);
   edit_present_button->setPopupMode(QToolButton::MenuButtonPopup);
-  connect(menu, SIGNAL(triggered(QAction *)), this,
-          SLOT(req_present_menu(QAction *)));
+  connect(menu, &QMenu::triggered, this, &req_edit::req_present_menu);
   edit_present_button->setMenu(menu);
-  menu->addAction("Allows");
-  menu->addAction("Prevents");
+  menu->addAction(QStringLiteral("Allows"));
+  menu->addAction(QStringLiteral("Prevents"));
   active_layout->addWidget(edit_present_button, 7, 0);
 
   main_layout->addLayout(active_layout);
 
   add_button =
       new QPushButton(QString::fromUtf8(R__("Add Requirement")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this, &req_edit::add_now);
   reqedit_layout->addWidget(add_button, 0, 0);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Delete Requirement")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &req_edit::delete_now);
   reqedit_layout->addWidget(delete_button, 1, 0);
 
   close_button = new QPushButton(QString::fromUtf8(R__("Close")), this);
-  connect(close_button, SIGNAL(pressed()), this, SLOT(close_now()));
+  connect(close_button, &QAbstractButton::pressed, this,
+          &req_edit::close_now);
   reqedit_layout->addWidget(close_button, 2, 0);
 
   refresh();
@@ -290,9 +289,9 @@ void req_edit::fill_active()
     universal_kind_values(&selected->source, universal_value_cb, &data);
     edit_range_button->setText(req_range_name(selected->range));
     if (selected->present) {
-      edit_present_button->setText("Allows");
+      edit_present_button->setText(QStringLiteral("Allows"));
     } else {
-      edit_present_button->setText("Prevents");
+      edit_present_button->setText(QStringLiteral("Prevents"));
     }
   }
 }
@@ -341,7 +340,7 @@ void req_edit::req_range_menu(QAction *action)
 void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
-    if (action->text() == "Prevents") {
+    if (action->text() == QLatin1String("Prevents")) {
       selected->present = FALSE;
     } else {
       selected->present = TRUE;

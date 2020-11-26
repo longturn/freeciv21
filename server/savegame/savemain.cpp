@@ -274,14 +274,12 @@ void save_game(const char *orig_filename, const char *save_reason,
     save_thread->start(QThread::LowestPriority);
   }
 
-  log_time(
-      QString("Save time: %1 seconds").arg(timer_read_seconds(timer_cpu)));
+  log_time(QStringLiteral("Save time: %1 seconds")
+               .arg(timer_read_seconds(timer_cpu)));
   timer_destroy(timer_cpu);
 }
 
 /************************************************************************/ /**
    Close saving system.
  ****************************************************************************/
-void save_system_close(void) {
-  save_thread->wait();
-}
+void save_system_close(void) { save_thread->wait(); }

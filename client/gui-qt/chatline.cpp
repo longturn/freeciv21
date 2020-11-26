@@ -114,8 +114,8 @@ void chat_listener::send_chat_message(const QString &message)
   /*
    * If client send commands to take ai, set /away to disable AI
    */
-  if (message.startsWith("/take ")) {
-    s = s.remove("/take ");
+  if (message.startsWith(QLatin1String("/take "))) {
+    s = s.remove(QStringLiteral("/take "));
     players_iterate(pplayer)
     {
       splayer = QString(pplayer->name);
@@ -158,7 +158,7 @@ QString chat_listener::back_in_history()
   } else if (position > 0) {
     position--;
   }
-  return history.empty() ? "" : history.at(position);
+  return history.empty() ? QLatin1String("") : history.at(position);
 }
 
 /***********************************************************************/ /**
@@ -168,12 +168,12 @@ QString chat_listener::back_in_history()
 QString chat_listener::forward_in_history()
 {
   if (position == HISTORY_END) {
-    return "";
+    return QLatin1String("");
   }
   position++;
   if (position >= history.size()) {
     position = HISTORY_END;
-    return "";
+    return QLatin1String("");
   } else {
     return history.at(position);
   }
@@ -247,14 +247,14 @@ chatwdg::chatwdg(QWidget *parent)
   QGridLayout *gl;
 
   setParent(parent);
-  cb = new QCheckBox("");
+  cb = new QCheckBox(QLatin1String(""));
   cb->setToolTip(_("Allies only"));
   cb->setChecked(gui_options.gui_qt_allied_chat_only);
   gl = new QGridLayout;
   chat_line = new chat_input;
   chat_output = new text_browser_dblclck(this);
   chat_output->setFont(*fc_font::instance()->get_font(fonts::chatline));
-  remove_links = new QPushButton("");
+  remove_links = new QPushButton(QLatin1String(""));
   remove_links->setIcon(
       style()->standardPixmap(QStyle::SP_DialogCancelButton));
   remove_links->setToolTip(_("Clear links"));
@@ -343,7 +343,7 @@ void chatwdg::anchor_clicked(const QUrl &link)
   QStringList sl;
   int id;
   enum text_link_type type;
-  sl = link.toString().split(",");
+  sl = link.toString().split(QStringLiteral(","));
   n = sl.at(0).toInt();
   id = sl.at(1).toInt();
 
@@ -552,40 +552,41 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
     }
     switch (text_tag_type(ptag)) {
     case TTT_BOLD:
-      mm.insert(stop, "</b>");
-      mm.insert(start, "<b>");
+      mm.insert(stop, QStringLiteral("</b>"));
+      mm.insert(start, QStringLiteral("<b>"));
       break;
     case TTT_ITALIC:
-      mm.insert(stop, "</i>");
-      mm.insert(start, "<i>");
+      mm.insert(stop, QStringLiteral("</i>"));
+      mm.insert(start, QStringLiteral("<i>"));
       break;
     case TTT_STRIKE:
-      mm.insert(stop, "</s>");
-      mm.insert(start, "<s>");
+      mm.insert(stop, QStringLiteral("</s>"));
+      mm.insert(start, QStringLiteral("<s>"));
       break;
     case TTT_UNDERLINE:
-      mm.insert(stop, "</u>");
-      mm.insert(start, "<u>");
+      mm.insert(stop, QStringLiteral("</u>"));
+      mm.insert(start, QStringLiteral("<u>"));
       break;
     case TTT_COLOR:
       if (text_tag_color_foreground(ptag)) {
         color = text_tag_color_foreground(ptag);
-        if (color == "#00008B") {
+        if (color == QLatin1String("#00008B")) {
           color = bg_color.name();
         } else {
           qc.setNamedColor(color);
           qc = qc.lighter(200);
           color = qc.name();
         }
-        str_col = QString("<span style=color:%1>").arg(color);
-        mm.insert(stop, "</span>");
+        str_col = QStringLiteral("<span style=color:%1>").arg(color);
+        mm.insert(stop, QStringLiteral("</span>"));
         mm.insert(start, str_col);
       }
       if (text_tag_color_background(ptag)) {
         color = text_tag_color_background(ptag);
         if (QColor::isValidColor(color)) {
-          str_col = QString("<span style= background-color:%1;>").arg(color);
-          mm.insert(stop, "</span>");
+          str_col = QStringLiteral("<span style= background-color:%1;>")
+                        .arg(color);
+          mm.insert(stop, QStringLiteral("</span>"));
           mm.insert(start, str_col);
         }
       }
@@ -611,8 +612,8 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
         break; /* Not a valid link type case. */
       }
       color = pcolor->qcolor.name(QColor::HexRgb);
-      str_col = QString("<font color=\"%1\">").arg(color);
-      mm.insert(stop, "</a></font>");
+      str_col = QStringLiteral("<font color=\"%1\">").arg(color);
+      mm.insert(stop, QStringLiteral("</a></font>"));
 
       color = QString(str_col + "<a href=%1,%2>")
                   .arg(QString::number(text_tag_link_type(ptag)),
@@ -721,7 +722,7 @@ void qtg_real_output_window_append(const char *astring,
   wakeup = gui_options.gui_qt_wakeup_text;
 
   /* Format wakeup string if needed */
-  if (wakeup.contains("%1")) {
+  if (wakeup.contains(QLatin1String("%1"))) {
     wakeup = wakeup.arg(client.conn.username);
   }
 

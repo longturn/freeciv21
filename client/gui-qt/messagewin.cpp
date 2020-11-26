@@ -202,11 +202,9 @@ messagewdg::messagewdg(QWidget *parent) : QWidget(parent)
   palette.setColor(QPalette::Text, QColor(205, 206, 173));
   pix = nullptr;
   mesg_table->setPalette(palette);
-  connect(
-      mesg_table->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
+  connect(mesg_table->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &messagewdg::item_selected);
   setMouseTracking(true);
 }
 
@@ -247,7 +245,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     }
     if (QApplication::mouseButtons() == Qt::RightButton
         && pmsg->event == E_DIPLOMACY) {
-      j = queen()->gimme_index_of("DDI");
+      j = queen()->gimme_index_of(QStringLiteral("DDI"));
       queen()->game_tab_widget->setCurrentIndex(j);
     }
   }

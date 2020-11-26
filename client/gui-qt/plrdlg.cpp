@@ -114,7 +114,7 @@ void plr_item_delegate::paint(QPainter *painter,
     rct.setBottom((rct.top() + rct.bottom()) / 2
                   + opt.fontMetrics.height() / 2);
     if (index.data().toInt() == -1) {
-      str = "?";
+      str = QStringLiteral("?");
     } else {
       str = index.data().toString();
     }
@@ -182,7 +182,7 @@ QVariant plr_item::data(int column, int role) const
     str = pdc->func(ipplayer);
     if (str.toInt() != 0) {
       return str.toInt();
-    } else if (str == "?") {
+    } else if (str == QLatin1String("?")) {
       return -1;
     }
     return str;
@@ -314,17 +314,11 @@ plr_widget::plr_widget(QWidget *widget) : QTreeView(widget)
   connect(header(), &QWidget::customContextMenuRequested, this,
           &plr_widget::display_header_menu);
 
-  connect(
-      selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(nation_selected(const QItemSelection &, const QItemSelection &)));
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &plr_widget::nation_selected);
 }
 
-void plr_widget::set_pr_rep(plr_report *pr)
-{
-  plr = pr;
-}
+void plr_widget::set_pr_rep(plr_report *pr) { plr = pr; }
 /**********************************************************************/ /**
    Restores selection of previously selected nation
  **************************************************************************/
@@ -430,10 +424,10 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   struct research *my_research, *research;
   char tbuf[256];
   QString res;
-  QString sp = " ";
+  QString sp = QStringLiteral(" ");
   QString etax, esci, elux, egold, egov;
   QString cult;
-  QString nl = "<br>";
+  QString nl = QStringLiteral("<br>");
   QStringList sorted_list_a;
   QStringList sorted_list_b;
   struct player *pplayer;
@@ -504,8 +498,8 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     egov = _("(Unknown)");
   }
 
-  intel_str = "<table>";
-  QString line = "<tr><td><b>%1</b></td><td>%2</td></tr>";
+  intel_str = QStringLiteral("<table>");
+  QString line = QStringLiteral("<tr><td><b>%1</b></td><td>%2</td></tr>");
 
   intel_str +=
       line.arg(_("Nation"))
@@ -526,12 +520,12 @@ void plr_widget::nation_selected(const QItemSelection &sl,
   intel_str += line.arg(_("Luxury")).arg(elux.toHtmlEscaped());
   intel_str += line.arg(_("Researching")).arg(res.toHtmlEscaped());
   intel_str += line.arg(_("Culture:")).arg(cult.toHtmlEscaped());
-  intel_str += "</table>";
+  intel_str += QLatin1String("</table>");
 
   for (int i = 0; i < static_cast<int>(DS_LAST); i++) {
     added = false;
     if (entry_exist) {
-      ally_str += "<br>";
+      ally_str += QLatin1String("<br>");
     }
     entry_exist = false;
     players_iterate_alive(other)
@@ -543,11 +537,11 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       if (static_cast<int>(state->type) == i
           && (global_observer || could_intel_with_player(me, pplayer))) {
         if (!added) {
-          ally_str = ally_str + QString("<b>")
+          ally_str = ally_str + QStringLiteral("<b>")
                      + QString(diplstate_type_translated_name(
                                    static_cast<diplstate_type>(i)))
                            .toHtmlEscaped()
-                     + ": " + QString("</b>") + nl;
+                     + ": " + QStringLiteral("</b>") + nl;
           added = true;
         }
         if (gives_shared_vision(pplayer, other)) {
@@ -561,7 +555,8 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     }
     players_iterate_alive_end;
     if (entry_exist) {
-      ally_str.replace(ally_str.lastIndexOf(","), 1, ".");
+      ally_str.replace(ally_str.lastIndexOf(QLatin1String(",")), 1,
+                       QStringLiteral("."));
     }
   }
   my_research = research_get(me);
@@ -594,24 +589,28 @@ void plr_widget::nation_selected(const QItemSelection &sl,
       sorted_list_a.sort(Qt::CaseInsensitive);
       sorted_list_b.sort(Qt::CaseInsensitive);
       for (auto const &res : qAsConst(sorted_list_a)) {
-        techs_known = techs_known + QString("<i>") + res.toHtmlEscaped()
-                      + "," + QString("</i>") + sp;
+        techs_known = techs_known + QStringLiteral("<i>")
+                      + res.toHtmlEscaped() + "," + QStringLiteral("</i>")
+                      + sp;
       }
       for (auto const &res : qAsConst(sorted_list_b)) {
-        techs_unknown = techs_unknown + QString("<i>") + res.toHtmlEscaped()
-                        + "," + QString("</i>") + sp;
+        techs_unknown = techs_unknown + QStringLiteral("<i>")
+                        + res.toHtmlEscaped() + "," + QStringLiteral("</i>")
+                        + sp;
       }
       if (a == 0) {
-        techs_known = techs_known + QString("<i>") + sp
-                      + QString(Q_("?tech:None")) + QString("</i>");
+        techs_known = techs_known + QStringLiteral("<i>") + sp
+                      + QString(Q_("?tech:None")) + QStringLiteral("</i>");
       } else {
-        techs_known.replace(techs_known.lastIndexOf(","), 1, ".");
+        techs_known.replace(techs_known.lastIndexOf(QLatin1String(",")), 1,
+                            QStringLiteral("."));
       }
       if (b == 0) {
-        techs_unknown = techs_unknown + QString("<i>") + sp
-                        + QString(Q_("?tech:None")) + QString("</i>");
+        techs_unknown = techs_unknown + QStringLiteral("<i>") + sp
+                        + QString(Q_("?tech:None")) + QStringLiteral("</i>");
       } else {
-        techs_unknown.replace(techs_unknown.lastIndexOf(","), 1, ".");
+        techs_unknown.replace(techs_unknown.lastIndexOf(QLatin1String(",")),
+                              1, QStringLiteral("."));
       }
       tech_str = techs_known + nl + techs_unknown;
     }
@@ -630,8 +629,8 @@ void plr_widget::nation_selected(const QItemSelection &sl,
     advance_iterate_end;
     sorted_list_a.sort(Qt::CaseInsensitive);
     for (auto const &res : qAsConst(sorted_list_a)) {
-      tech_str = tech_str + QString("<i>") + res.toHtmlEscaped() + ","
-                 + QString("</i>") + sp;
+      tech_str = tech_str + QStringLiteral("<i>") + res.toHtmlEscaped() + ","
+                 + QStringLiteral("</i>") + sp;
     }
   }
   plr->update_report(false);
@@ -650,7 +649,8 @@ plr_widget::~plr_widget()
   delete pid;
   delete list_model;
   delete filter_model;
-  king()->qt_settings.player_repo_sort_col = header()->sortIndicatorSection();
+  king()->qt_settings.player_repo_sort_col =
+      header()->sortIndicatorSection();
   king()->qt_settings.player_report_sort = header()->sortIndicatorOrder();
 }
 
@@ -678,7 +678,7 @@ plr_report::plr_report() : QWidget()
   index = 0;
   if (king()->qt_settings.player_repo_sort_col != -1) {
     ui.plr_wdg->sortByColumn(king()->qt_settings.player_repo_sort_col,
-                          king()->qt_settings.player_report_sort);
+                             king()->qt_settings.player_report_sort);
   }
   ui.plr_wdg->set_pr_rep(this);
 }
@@ -686,14 +686,17 @@ plr_report::plr_report() : QWidget()
 /**********************************************************************/ /**
    Destructor for plr_report
  **************************************************************************/
-plr_report::~plr_report() { queen()->remove_repo_dlg("PLR"); }
+plr_report::~plr_report()
+{
+  queen()->remove_repo_dlg(QStringLiteral("PLR"));
+}
 
 /**********************************************************************/ /**
    Adds plr_report to tab widget
  **************************************************************************/
 void plr_report::init()
 {
-  queen()->gimme_place(this, "PLR");
+  queen()->gimme_place(this, QStringLiteral("PLR"));
   index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
@@ -862,7 +865,7 @@ void popup_players_dialog(bool raise)
   int i;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open("PLR")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
     plr_report *pr = new plr_report;
 
     pr->init();
@@ -870,7 +873,7 @@ void popup_players_dialog(bool raise)
   } else {
     plr_report *pr;
 
-    i = queen()->gimme_index_of("PLR");
+    i = queen()->gimme_index_of(QStringLiteral("PLR"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);
@@ -891,8 +894,8 @@ void real_players_dialog_update(void *unused)
   plr_report *pr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("PLR")) {
-    i = queen()->gimme_index_of("PLR");
+  if (queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
+    i = queen()->gimme_index_of(QStringLiteral("PLR"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       pr = reinterpret_cast<plr_report *>(w);
@@ -910,8 +913,8 @@ void popdown_players_report()
   plr_report *pr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("PLR")) {
-    i = queen()->gimme_index_of("PLR");
+  if (queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
+    i = queen()->gimme_index_of(QStringLiteral("PLR"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     pr = reinterpret_cast<plr_report *>(w);
@@ -922,14 +925,8 @@ void popdown_players_report()
    Update the intelligence dialog for the given player.  This is called by
    the core client code when that player's information changes.
  **************************************************************************/
-void update_intel_dialog(struct player *p)
-{
-  real_players_dialog_update(p);
-}
+void update_intel_dialog(struct player *p) { real_players_dialog_update(p); }
 /**********************************************************************/ /**
    Close an intelligence dialog for the given player.
  **************************************************************************/
-void close_intel_dialog(struct player *p)
-{
-  real_players_dialog_update(p);
-}
+void close_intel_dialog(struct player *p) { real_players_dialog_update(p); }

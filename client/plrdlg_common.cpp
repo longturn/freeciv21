@@ -108,7 +108,7 @@ static QString col_diplstate(const struct player *player)
   const struct player_diplstate *pds;
 
   if (NULL == client.conn.playing || player == client.conn.playing) {
-    return "-";
+    return QStringLiteral("-");
   } else {
     pds = player_diplstate_get(client.conn.playing, player);
     if (pds->type == DS_CEASEFIRE || pds->type == DS_ARMISTICE) {
@@ -177,7 +177,7 @@ static QString col_love(const struct player *player)
 {
   if (NULL == client.conn.playing || player == client.conn.playing
       || is_human(player)) {
-    return "-";
+    return QStringLiteral("-");
   } else {
     return love_text(
         player->ai_common.love[player_index(client.conn.playing)]);
@@ -234,7 +234,7 @@ QString plrdlg_col_state(const struct player *plr)
     bool consider_tb = FALSE;
 
     if (is_ai(plr)) {
-      return "";
+      return QLatin1String("");
     }
 
     opt = optset_option_by_name(server_optset, "turnblock");

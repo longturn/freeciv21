@@ -105,7 +105,7 @@ static QString log_prefix()
 {
   // TRANS: T for turn
   return game.info.turn > 0 ? QString::asprintf(_("T%03d: "), game.info.turn)
-                            : QStringLiteral("");
+                            : QLatin1String("");
 }
 } // anonymous namespace
 

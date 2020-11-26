@@ -77,7 +77,6 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
-#include "governor.h"
 #include "attribute.h"
 #include "audio.h"
 #include "cityrepdata.h"
@@ -87,6 +86,7 @@
 #include "control.h"
 #include "editor.h"
 #include "global_worklist.h"
+#include "governor.h"
 #include "helpdata.h" /* boot_help_texts() */
 #include "mapview_common.h"
 #include "music.h"
@@ -404,58 +404,59 @@ int client_main(int argc, char *argv[])
   if (!log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
-  if (parser.isSet("version")) {
+  if (parser.isSet(QStringLiteral("version"))) {
     fc_fprintf(stderr, "%s %s\n", freeciv_name_version(), client_string);
     exit(EXIT_SUCCESS);
   }
 #ifdef FREECIV_DEBUG
-  if (parser.isSet("Hackless")) {
+  if (parser.isSet(QStringLiteral("Hackless"))) {
     hackless = TRUE;
   }
 #endif
-  if (parser.isSet("log")) {
-    logfile = parser.value("log");
+  if (parser.isSet(QStringLiteral("log"))) {
+    logfile = parser.value(QStringLiteral("log"));
   }
-  fc_assert_set_fatal(parser.isSet("Fatal"));
-  if (parser.isSet("read")) {
-    scriptfile = parser.value("read");
+  fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
+  if (parser.isSet(QStringLiteral("read"))) {
+    scriptfile = parser.value(QStringLiteral("read"));
   }
-  if (parser.isSet("file")) {
-    savefile = parser.value("file");
+  if (parser.isSet(QStringLiteral("file"))) {
+    savefile = parser.value(QStringLiteral("file"));
     auto_spawn = TRUE;
   }
-  if (parser.isSet("name")) {
-    user_name = parser.value("name");
+  if (parser.isSet(QStringLiteral("name"))) {
+    user_name = parser.value(QStringLiteral("name"));
   }
-  if (parser.isSet("Meta")) {
-    cmd_metaserver = parser.value("Meta");
+  if (parser.isSet(QStringLiteral("Meta"))) {
+    cmd_metaserver = parser.value(QStringLiteral("Meta"));
   }
-  if (parser.isSet("Sound")) {
-    sound_set_name = parser.value("Sound");
+  if (parser.isSet(QStringLiteral("Sound"))) {
+    sound_set_name = parser.value(QStringLiteral("Sound"));
   }
-  if (parser.isSet("music")) {
-    music_set_name = parser.value("music");
+  if (parser.isSet(QStringLiteral("music"))) {
+    music_set_name = parser.value(QStringLiteral("music"));
   }
-  if (parser.isSet("Plugin")) {
-    sound_plugin_name = parser.value("Plugin");
+  if (parser.isSet(QStringLiteral("Plugin"))) {
+    sound_plugin_name = parser.value(QStringLiteral("Plugin"));
   }
-  if (parser.isSet("port")) {
+  if (parser.isSet(QStringLiteral("port"))) {
     bool conversion_ok;
-    server_port = parser.value("port").toUInt(&conversion_ok);
+    server_port =
+        parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
     if (!conversion_ok) {
       qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
-  if (parser.isSet("autoconnect")) {
+  if (parser.isSet(QStringLiteral("autoconnect"))) {
     auto_connect = TRUE;
   }
-  if (parser.isSet("tiles")) {
-    forced_tileset_name = parser.value("tiles");
+  if (parser.isSet(QStringLiteral("tiles"))) {
+    forced_tileset_name = parser.value(QStringLiteral("tiles"));
   }
   announce = ANNOUNCE_DEFAULT;
-  if (parser.isSet("Announce")) {
-    auto value = parser.value("Announce").toLower();
+  if (parser.isSet(QStringLiteral("Announce"))) {
+    auto value = parser.value(QStringLiteral("Announce")).toLower();
     if (value == QLatin1String("ipv4")) {
       announce = ANNOUNCE_IPV4;
     } else if (value == QLatin1String("ipv6")) {
@@ -467,7 +468,7 @@ int client_main(int argc, char *argv[])
                 qPrintable(parser.value("Announce")));
     }
   }
-  if (parser.isSet("warnings")) {
+  if (parser.isSet(QStringLiteral("warnings"))) {
     qCWarning(deprecations_category,
               // TRANS: Do not translate --warnings
               _("The --warnings option is deprecated."));
@@ -958,7 +959,6 @@ void send_attribute_block_request(void)
 {
   send_packet_player_attribute_block(&client.conn);
 }
-
 
 /**********************************************************************/ /**
    Returns whether client is observer.

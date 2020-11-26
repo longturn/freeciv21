@@ -40,14 +40,15 @@ notify_dialog::notify_dialog(const char *caption, const char *headline,
   qcaption = QString(caption);
   qheadline = QString(headline);
   qlines = QString(lines);
-  qlist = qlines.split("\n");
-  small_font = *fc_font::instance()->get_font("gui_qt_font_notify_label");
+  qlist = qlines.split(QStringLiteral("\n"));
+  small_font = *fc_font::instance()->get_font(
+      QStringLiteral("gui_qt_font_notify_label"));
   x = 0;
   y = 0;
   calc_size(x, y);
   resize(x, y);
-  queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4, x,
-                                 y, x, y, 0);
+  queen()->mapview_wdg->find_place(queen()->mapview_wdg->width() - x - 4, 4,
+                                   x, y, x, y, 0);
   move(x, y);
   was_destroyed = false;
 }

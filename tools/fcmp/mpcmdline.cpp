@@ -80,14 +80,15 @@ void fcmp_parse_cmdline(const QCoreApplication &app)
   if (log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
-  if (parser.isSet("List")) {
-    fcmp.list_url = QUrl::fromUserInput(parser.value("List"));
+  if (parser.isSet(QStringLiteral("List"))) {
+    fcmp.list_url =
+        QUrl::fromUserInput(parser.value(QStringLiteral("List")));
   }
-  if (parser.isSet("prefix")) {
-    fcmp.inst_prefix = parser.value("prefix");
+  if (parser.isSet(QStringLiteral("prefix"))) {
+    fcmp.inst_prefix = parser.value(QStringLiteral("prefix"));
   }
-  if (parser.isSet("install")) {
-    fcmp.autoinstall = parser.value("install");
+  if (parser.isSet(QStringLiteral("install"))) {
+    fcmp.autoinstall = parser.value(QStringLiteral("install"));
   }
 
   if (fcmp.inst_prefix.isNull()) {

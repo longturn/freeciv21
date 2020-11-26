@@ -206,7 +206,7 @@ void srv_init(void)
   /* init server arguments... */
 
   srvarg.metaserver_no_send = DEFAULT_META_SERVER_NO_SEND;
-  srvarg.metaserver_addr = QLatin1String(DEFAULT_META_SERVER_ADDR);
+  srvarg.metaserver_addr = QStringLiteral(DEFAULT_META_SERVER_ADDR);
   srvarg.metaconnection_persistent = FALSE;
 
   srvarg.port = DEFAULT_SOCK_PORT;
@@ -1190,7 +1190,8 @@ void begin_turn(bool is_new_turn)
     // begin_phase() only after AI players have finished their actions.
     lsend_packet_begin_turn(game.est_connections);
   }
-  log_time(QString("Begin turn:%1 milliseconds").arg(timer.elapsed()));
+  log_time(
+      QStringLiteral("Begin turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1358,7 +1359,8 @@ void begin_phase(bool is_new_phase)
      * will be responsive again */
     lsend_packet_begin_turn(game.est_connections);
   }
-  log_time(QString("Start phase:%1 milliseconds").arg(timer.elapsed()));
+  log_time(
+      QStringLiteral("Start phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1516,7 +1518,7 @@ void end_phase()
     adv_data_phase_done(pplayer);
   }
   phase_players_iterate_end;
-  log_time(QString("End phase:%1 milliseconds").arg(timer.elapsed()));
+  log_time(QStringLiteral("End phase:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -1758,7 +1760,7 @@ void end_turn()
 
   log_debug("Sendyeartoclients");
   send_year_to_clients();
-  log_time(QString("End turn:%1 milliseconds").arg(timer.elapsed()));
+  log_time(QStringLiteral("End turn:%1 milliseconds").arg(timer.elapsed()));
 }
 
 /**********************************************************************/ /**
@@ -2252,7 +2254,7 @@ void update_nations_with_startpos(void)
          * If there are no start positions for a nation, remove it from the
          * available set. */
         pnation->server.no_startpos = TRUE;
-        for (auto psp : wld.map.startpos_table->values()) {
+        for (auto psp : *wld.map.startpos_table) {
           if (psp->exclude)
             continue;
           if (startpos_nation_allowed(psp, pnation)) {
@@ -2634,7 +2636,7 @@ static void generate_players(void)
     int i, min;
 
     /* Initialization. */
-    for (auto psp : wld.map.startpos_table->values()) {
+    for (auto psp : *wld.map.startpos_table) {
       if (psp->exclude)
         continue;
       if (startpos_allows_all(psp)) {

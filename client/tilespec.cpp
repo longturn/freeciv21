@@ -1068,7 +1068,7 @@ static void tileset_free_toplevel(struct tileset *t)
   t->num_preferred_themes = 0;
 
   if (t->tile_hash) {
-    for (auto a : t->tile_hash->values()) {
+    for (auto a : *t->tile_hash) {
       drawing_data_destroy(a);
     }
     FC_FREE(t->tile_hash);
@@ -3308,7 +3308,7 @@ static bool load_river_sprites(struct tileset *t,
  ****************************************************************************/
 void finish_loading_sprites(struct tileset *t)
 {
-  for (auto sf : t->specfiles->values()) {
+  for (auto sf : *t->specfiles) {
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
       sf->big_sprite = NULL;
@@ -6204,17 +6204,16 @@ void tileset_free_tiles(struct tileset *t)
     t->sprite_hash = NULL;
   }
 
-  for (auto ss : t->small_sprites->values()) {
-    t->small_sprites->remove(ss);
+  for (auto ss : *t->small_sprites) {
     if (ss->file) {
       delete[] ss->file;
     }
     fc_assert(ss->sprite == NULL);
     delete ss;
   }
+  t->small_sprites->clear();
 
-  for (auto sf : t->specfiles->values()) {
-    t->specfiles->remove(sf);
+  for (auto sf : *t->specfiles) {
     delete[] sf->file_name;
     if (sf->big_sprite) {
       free_sprite(sf->big_sprite);
@@ -6222,6 +6221,7 @@ void tileset_free_tiles(struct tileset *t)
     }
     delete sf;
   }
+  t->specfiles->clear();
 
   sprite_vector_iterate(&t->sprites.city.worked_tile_overlay, psprite)
   {

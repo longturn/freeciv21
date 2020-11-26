@@ -58,8 +58,8 @@ tab_good::tab_good(ruledit_gui *ui_in) : QWidget()
 
   good_list = new QListWidget(this);
 
-  connect(good_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_good()));
+  connect(good_list, &QListWidget::itemSelectionChanged, this,
+          &tab_good::select_good);
   main_layout->addWidget(good_list);
 
   good_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -67,40 +67,43 @@ tab_good::tab_good(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  rname->setText(QStringLiteral("None"));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_good::name_given);
   good_layout->addWidget(label, 0, 0);
   good_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_good::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  name->setText(QStringLiteral("None"));
+  connect(name, &QLineEdit::returnPressed, this, &tab_good::name_given);
   good_layout->addWidget(label, 1, 0);
   good_layout->addWidget(same_name, 1, 1);
   good_layout->addWidget(name, 1, 2);
 
   reqs_button =
       new QPushButton(QString::fromUtf8(R__("Requirements")), this);
-  connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
+  connect(reqs_button, &QAbstractButton::pressed, this,
+          &tab_good::edit_reqs);
   good_layout->addWidget(reqs_button, 2, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_good::edit_effects);
   good_layout->addWidget(effects_button, 3, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Good")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this, &tab_good::add_now);
   good_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Good")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_good::delete_now);
   good_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
 
@@ -151,8 +154,8 @@ void tab_good::update_good_info(struct goods_type *pgood)
       name->setEnabled(true);
     }
   } else {
-    name->setText("None");
-    rname->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

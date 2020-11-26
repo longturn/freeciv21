@@ -32,12 +32,12 @@
 #include "game.h"
 
 // client
-#include "governor.h"
 #include "citydlg_common.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "control.h"
 #include "global_worklist.h"
+#include "governor.h"
 #include "mapctrl_common.h"
 #include "mapview_common.h"
 #include "mapview_g.h"
@@ -1229,7 +1229,7 @@ governor_sliders::governor_sliders(QWidget *parent)
   for (int i = 0; i < str_list.count(); i++) {
     some_label = new QLabel(str_list.at(i));
     slider_grid->addWidget(some_label, i + 1, 0, 1, 1);
-    some_label = new QLabel("0");
+    some_label = new QLabel(QStringLiteral("0"));
     some_label->setMinimumWidth(25);
 
     if (i != str_list.count() - 1) {
@@ -1252,7 +1252,7 @@ governor_sliders::governor_sliders(QWidget *parent)
               &governor_sliders::cma_celebrate_changed);
     }
 
-    some_label = new QLabel("0");
+    some_label = new QLabel(QStringLiteral("0"));
     some_label->setMinimumWidth(25);
     slider = new QSlider(Qt::Horizontal);
     slider->setFocusPolicy(Qt::TabFocus);
@@ -1358,7 +1358,8 @@ city_dialog::city_dialog(QWidget *parent)
 
   // main tab
   ui.lcity_name->setToolTip(_("Click to change city name"));
-  ui.buy_button->setIcon(fc_icons::instance()->get_icon("help-donate"));
+  ui.buy_button->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("help-donate")));
   connect(ui.buy_button, &QAbstractButton::clicked, this, &city_dialog::buy);
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
@@ -1382,23 +1383,29 @@ city_dialog::city_dialog(QWidget *parent)
   ui.scroll->setProperty("city_scroll", true);
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
-  ui.bclose->setIcon(fc_icons::instance()->get_icon("city-close"));
+  ui.bclose->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("city-close")));
   ui.bclose->setIconSize(QSize(56, 56));
   ui.bclose->setToolTip(_("Close city dialog"));
   connect(ui.bclose, &QAbstractButton::clicked, this, &QWidget::hide);
-  ui.next_city_but->setIcon(fc_icons::instance()->get_icon("city-right"));
+  ui.next_city_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("city-right")));
   ui.next_city_but->setIconSize(QSize(56, 56));
   ui.next_city_but->setToolTip(_("Show next city"));
   connect(ui.next_city_but, &QAbstractButton::clicked, this,
           &city_dialog::next_city);
   connect(ui.prev_city_but, &QAbstractButton::clicked, this,
           &city_dialog::prev_city);
-  ui.prev_city_but->setIcon(fc_icons::instance()->get_icon("city-left"));
+  ui.prev_city_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("city-left")));
   ui.prev_city_but->setIconSize(QSize(56, 56));
   ui.prev_city_but->setToolTip(_("Show previous city"));
-  ui.work_next_but->setIcon(fc_icons::instance()->get_icon("go-down"));
-  ui.work_prev_but->setIcon(fc_icons::instance()->get_icon("go-up"));
-  ui.work_add_but->setIcon(fc_icons::instance()->get_icon("list-add"));
+  ui.work_next_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("go-down")));
+  ui.work_prev_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("go-up")));
+  ui.work_add_but->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("list-add")));
   ui.work_rem_but->setIcon(
       style()->standardIcon(QStyle::SP_DialogDiscardButton));
   ui.production_combo_p->setToolTip(_("Click to change current production"));
@@ -1421,11 +1428,9 @@ city_dialog::city_dialog(QWidget *parent)
           &city_dialog::worklist_del);
   connect(ui.p_table_p, &QTableWidget::itemDoubleClicked, this,
           &city_dialog::dbl_click_p);
-  connect(
-      ui.p_table_p->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
+  connect(ui.p_table_p->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &city_dialog::item_selected);
   setSizeGripEnabled(true);
 
   /* governor tab */
@@ -1435,11 +1440,9 @@ city_dialog::city_dialog(QWidget *parent)
   ui.cma_table->horizontalHeader()->setSectionResizeMode(
       QHeaderView::Stretch);
 
-  connect(
-      ui.cma_table->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(cma_selected(const QItemSelection &, const QItemSelection &)));
+  connect(ui.cma_table->selectionModel(),
+          &QItemSelectionModel::selectionChanged, this,
+          &city_dialog::cma_selected);
   connect(ui.cma_table, &QWidget::customContextMenuRequested, this,
           &city_dialog::cma_context_menu);
   connect(ui.cma_table, &QTableWidget::cellDoubleClicked, this,
@@ -2252,7 +2255,7 @@ void city_dialog::update_nation_table()
         nationality_i = citizens_nation_get(pcity, pslot);
 
         if (nationality_i == 0) {
-          str = "-";
+          str = QStringLiteral("-");
         } else {
           fc_snprintf(buf, sizeof(buf), "%d", nationality_i);
           str = QString(buf);
@@ -2270,7 +2273,7 @@ void city_dialog::update_nation_table()
           pix_scaled = pix->scaledToHeight(h);
           item->setData(Qt::DecorationRole, pix_scaled);
         } else {
-          item->setText("FLAG MISSING");
+          item->setText(QStringLiteral("FLAG MISSING"));
         }
         break;
 
@@ -2529,7 +2532,7 @@ void city_dialog::update_building()
   str = str.simplified();
 
   ui.production_combo_p->setFormat(
-      QString("(%p%) %2\n%1")
+      QStringLiteral("(%p%) %2\n%1")
           .arg(city_production_name_translation(pcity), str));
 
   ui.production_combo_p->updateGeometry();
@@ -2623,7 +2626,7 @@ void city_dialog::update_improvements()
   for (int i = 0; i < worklist_length(&queue); i++) {
     struct universal target = queue.entries[i];
 
-    tooltip = "";
+    tooltip = QLatin1String("");
 
     if (VUT_UTYPE == target.kind) {
       str = utype_values_translation(target.value.utype);
@@ -2861,7 +2864,9 @@ void city_dialog::update_title()
   QString buf;
 
   // Defeat keyboard shortcut mnemonics
-  ui.lcity_name->setText(QString(city_name_get(pcity)).replace("&", "&&"));
+  ui.lcity_name->setText(
+      QString(city_name_get(pcity))
+          .replace(QLatin1String("&"), QLatin1String("&&")));
 
   if (city_unhappy(pcity)) {
     /* TRANS: city dialog title */
@@ -3389,11 +3394,8 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
   setModel(list_model);
   viewport()->installEventFilter(fc_tt);
   installEventFilter(this);
-  connect(
-      selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(prod_selected(const QItemSelection &, const QItemSelection &)));
+  connect(selectionModel(), &QItemSelectionModel::selectionChanged, this,
+          &production_widget::prod_selected);
   resizeRowsToContents();
   resizeColumnsToContents();
   setFixedWidth(3 * sh.x() + 6);

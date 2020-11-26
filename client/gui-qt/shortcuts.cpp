@@ -164,7 +164,7 @@ QString shortcut_to_string(fc_shortcut *sc)
   QString ret, m, bn, k;
 
   if (sc == nullptr) {
-    return "";
+    return QLatin1String("");
   }
   if (sc->mod != Qt::NoModifier) {
     m = QKeySequence(sc->mod).toString(QKeySequence::NativeText);
@@ -377,7 +377,7 @@ bool fc_shortcut_popup::check_if_exist()
   QString desc;
   int id = 0;
 
-  desc = "";
+  desc = QLatin1String("");
   if (sc != nullptr) {
     for (auto fsc : qAsConst(fc_shortcuts::sc()->hash)) {
       if (id == 0) {
@@ -467,7 +467,7 @@ QString button_name(Qt::MouseButton bt)
   case Qt::ExtraButton24:
     return _("ExtraButton24");
   default:
-    return "";
+    return QLatin1String("");
   }
 }
 
@@ -516,7 +516,7 @@ void fc_sc_button::popup_error()
   /* wait until shortcut popup is destroyed */
   fsb_list = findChildren<fc_shortcut_popup *>();
   if (fsb_list.count() > 0) {
-    QTimer::singleShot(20, this, SLOT(popup_error()));
+    QTimer::singleShot(20, this, &fc_sc_button::popup_error);
     return;
   }
 
@@ -745,15 +745,15 @@ void write_shortcuts()
   fc_shortcut *sc;
   QMap<shortcut_id, fc_shortcut *> h = fc_shortcuts::sc()->hash;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              "freeciv-qt-client");
-  s.beginWriteArray("Shortcuts");
+              QStringLiteral("freeciv-qt-client"));
+  s.beginWriteArray(QStringLiteral("Shortcuts"));
   for (int i = 0; i < num_shortcuts; ++i) {
     s.setArrayIndex(i);
     sc = h.value(static_cast<shortcut_id>(i + 1));
-    s.setValue("id", sc->id);
-    s.setValue("key", sc->key);
-    s.setValue("mouse", sc->mouse);
-    s.setValue("mod", QVariant(sc->mod));
+    s.setValue(QStringLiteral("id"), sc->id);
+    s.setValue(QStringLiteral("key"), sc->key);
+    s.setValue(QStringLiteral("mouse"), sc->mouse);
+    s.setValue(QStringLiteral("mod"), QVariant(sc->mod));
   }
   s.endArray();
 }
@@ -766,16 +766,19 @@ bool read_shortcuts()
   int num, i;
   fc_shortcut *sc;
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              "freeciv-qt-client");
-  num = s.beginReadArray("Shortcuts");
+              QStringLiteral("freeciv-qt-client"));
+  num = s.beginReadArray(QStringLiteral("Shortcuts"));
   if (num == num_shortcuts) {
     for (i = 0; i < num_shortcuts; ++i) {
       s.setArrayIndex(i);
       sc = new fc_shortcut();
-      sc->id = static_cast<shortcut_id>(s.value("id").toInt());
-      sc->key = s.value("key").toInt();
-      sc->mouse = static_cast<Qt::MouseButton>(s.value("mouse").toInt());
-      sc->mod = static_cast<Qt::KeyboardModifiers>(s.value("mod").toInt());
+      sc->id =
+          static_cast<shortcut_id>(s.value(QStringLiteral("id")).toInt());
+      sc->key = s.value(QStringLiteral("key")).toInt();
+      sc->mouse = static_cast<Qt::MouseButton>(
+          s.value(QStringLiteral("mouse")).toInt());
+      sc->mod = static_cast<Qt::KeyboardModifiers>(
+          s.value(QStringLiteral("mod")).toInt());
       sc->str = default_shortcuts[i].str;
       fc_shortcuts::hash.insert(sc->id, sc);
     }

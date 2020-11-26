@@ -83,11 +83,8 @@ goto_dialog::goto_dialog(QWidget *parent)
           &goto_dialog::airlift_to);
   connect(show_all, &QCheckBox::stateChanged, this,
           &goto_dialog::checkbox_changed);
-  connect(
-      goto_tab->selectionModel(),
-      SIGNAL(
-          selectionChanged(const QItemSelection &, const QItemSelection &)),
-      SLOT(item_selected(const QItemSelection &, const QItemSelection &)));
+  connect(goto_tab->selectionModel(), &QItemSelectionModel::selectionChanged,
+          this, &goto_dialog::item_selected);
 
   setLayout(layout);
   original_tile = NULL;
@@ -248,7 +245,7 @@ void goto_dialog::fill_tab(player *pplayer)
       case 2:
         at = get_airlift_text(get_units_in_focus(), pcity);
         if (at == NULL) {
-          str = "-";
+          str = QStringLiteral("-");
         } else {
           str = at;
         }

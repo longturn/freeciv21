@@ -34,14 +34,14 @@
 #include "version.h"
 
 /* client */
-#include "governor.h"
 #include "attribute.h"
 #include "chatline_g.h"
 #include "client_main.h"
 #include "climisc.h"
 #include "connectdlg_common.h"
 #include "connectdlg_g.h"
-#include "dialogs_g.h"      /* popdown_races_dialog() */
+#include "dialogs_g.h" /* popdown_races_dialog() */
+#include "governor.h"
 #include "gui_main_g.h"     /* add_net_input(), remove_net_input() */
 #include "mapview_common.h" /* unqueue_mapview_update */
 #include "menu_g.h"
@@ -115,7 +115,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
 {
   // Apply defaults
   if (hostname == nullptr) {
-    hostname = "localhost";
+    hostname = QStringLiteral("localhost");
   }
 
   if (port == 0) {

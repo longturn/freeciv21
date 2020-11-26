@@ -80,7 +80,7 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   save_label->setParent(this);
   main_layout->addWidget(save_label, row, 0);
   savedir = new QLineEdit(this);
-  savedir->setText("ruledit-tmp");
+  savedir->setText(QStringLiteral("ruledit-tmp"));
   savedir->setFocus();
   main_layout->addWidget(savedir, row++, 1);
   save_ver_label =
@@ -90,15 +90,16 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   savedir_version = new QRadioButton(this);
   main_layout->addWidget(savedir_version, row++, 1);
   save_button = new QPushButton(QString::fromUtf8(R__("Save now")), this);
-  connect(save_button, SIGNAL(pressed()), this, SLOT(save_now()));
+  connect(save_button, &QAbstractButton::pressed, this, &tab_misc::save_now);
   main_layout->addWidget(save_button, row++, 1);
   always_active_effects =
       new QPushButton(QString::fromUtf8(R__("Always active Effects")), this);
-  connect(always_active_effects, SIGNAL(pressed()), this,
-          SLOT(edit_aae_effects()));
+  connect(always_active_effects, &QAbstractButton::pressed, this,
+          &tab_misc::edit_aae_effects);
   main_layout->addWidget(always_active_effects, row++, 1);
   all_effects = new QPushButton(QString::fromUtf8(R__("All Effects")), this);
-  connect(all_effects, SIGNAL(pressed()), this, SLOT(edit_all_effects()));
+  connect(all_effects, &QAbstractButton::pressed, this,
+          &tab_misc::edit_all_effects);
   main_layout->addWidget(all_effects, row++, 1);
 
   stats = new QTableWidget(this);
@@ -106,75 +107,75 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   stats->setRowCount(6);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Terrains")));
   stats->setItem(0, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(0, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Resources")));
   stats->setItem(1, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(1, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Tech Classes")));
   stats->setItem(2, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(2, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Techs")));
   stats->setItem(3, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(3, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Unit Classes")));
   stats->setItem(4, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(4, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Unit Types")));
   stats->setItem(5, 0, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(5, 1, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Buildings")));
   stats->setItem(0, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(0, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Nations")));
   stats->setItem(1, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(1, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Styles")));
   stats->setItem(2, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(2, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Specialists")));
   stats->setItem(3, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(3, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Governments")));
   stats->setItem(4, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(4, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Disasters")));
   stats->setItem(5, 3, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(5, 4, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Achievements")));
   stats->setItem(0, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(0, 7, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Extras")));
   stats->setItem(1, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(1, 7, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Bases")));
   stats->setItem(2, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(2, 7, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Roads")));
   stats->setItem(3, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(3, 7, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Goods")));
   stats->setItem(4, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(4, 7, item);
   item = new QTableWidgetItem(QString::fromUtf8(RQ_("?stat:Multipliers")));
   stats->setItem(5, 6, item);
-  item = new QTableWidgetItem("-");
+  item = new QTableWidgetItem(QStringLiteral("-"));
   stats->setItem(5, 7, item);
   stats->verticalHeader()->setVisible(false);
   stats->horizontalHeader()->setVisible(false);
@@ -182,7 +183,8 @@ tab_misc::tab_misc(ruledit_gui *ui_in) : QWidget()
   main_layout->addWidget(stats, row++, 0, 1, 2);
   refresh_button =
       new QPushButton(QString::fromUtf8(R__("Refresh Stats")), this);
-  connect(refresh_button, SIGNAL(pressed()), this, SLOT(refresh_stats()));
+  connect(refresh_button, &QAbstractButton::pressed, this,
+          &tab_misc::refresh_stats);
   main_layout->addWidget(refresh_button, row++, 0, 1, 2);
 
   // Stats never change except with experimental features. Hide useless
@@ -229,7 +231,8 @@ void tab_misc::save_now()
   if (!autoadjust_ruleset_data() || !sanity_check_ruleset_data(false)) {
     QMessageBox *box = new QMessageBox();
 
-    box->setText("Current data fails sanity checks. Save anyway?");
+    box->setText(
+        QStringLiteral("Current data fails sanity checks. Save anyway?"));
     box->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     box->exec();
 

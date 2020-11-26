@@ -70,7 +70,8 @@ bool log_init(const QString &level_str)
   original_handler = qInstallMessageHandler(&handle_message);
 
   // Set the default format (override with QT_MESSAGE_PATTERN)
-  qSetMessagePattern("[%{type}] %{appname} (%{file}:%{line}) - %{message}");
+  qSetMessagePattern(
+      QStringLiteral("[%{type}] %{appname} (%{file}:%{line}) - %{message}"));
 
   // Create default filter rules to pass to Qt. We do it this way so the user
   // can override our simplistic rules with environment variables.

@@ -77,22 +77,22 @@ static void rup_parse_cmdline(const QCoreApplication &app)
   parser.process(app);
 
   // Process the parsed options
-  fc_assert_set_fatal(parser.isSet("Fatal"));
-  if (parser.isSet("ruleset")) {
-    if (parser.values("ruleset").size() >= 1) {
+  fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
+  if (parser.isSet(QStringLiteral("ruleset"))) {
+    if (parser.values(QStringLiteral("ruleset")).size() >= 1) {
       fc_fprintf(stderr, _("Multiple rulesets requested. Only one ruleset "
                            "at time supported.\n"));
       exit(EXIT_FAILURE);
     } else {
-      rs_selected = parser.value("ruleset");
+      rs_selected = parser.value(QStringLiteral("ruleset"));
     }
   }
-  if (parser.isSet("output")) {
-    if (parser.values("output").size() > 1) {
+  if (parser.isSet(QStringLiteral("output"))) {
+    if (parser.values(QStringLiteral("output")).size() > 1) {
       fc_fprintf(stderr, _("Multiple output directories given.\n"));
       exit(EXIT_FAILURE);
     } else {
-      od_selected = parser.value("output");
+      od_selected = parser.value(QStringLiteral("output"));
     }
   }
 }

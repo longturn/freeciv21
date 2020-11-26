@@ -54,8 +54,7 @@ edit_utype::edit_utype(ruledit_gui *ui_in, struct unit_type *utype_in)
   req_button->setParent(this);
   req_button->setMenu(req);
   tab_tech::techs_to_menu(req);
-  connect(req_button, SIGNAL(triggered(QAction *)), this,
-          SLOT(req_menu(QAction *)));
+  connect(req_button, &QToolButton::triggered, this, &edit_utype::req_menu);
 
   unit_layout->addWidget(label, 0, 0);
   unit_layout->addWidget(req_button, 0, 1);

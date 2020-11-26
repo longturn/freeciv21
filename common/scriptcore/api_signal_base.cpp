@@ -104,6 +104,6 @@ const char *api_signal_by_index(lua_State *L, int sindex)
   fcl = luascript_get_fcl(L);
 
   LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!", NULL);
-  QByteArray ba = luascript_signal_by_index(fcl, sindex).toLocal8Bit();
-  return ba.data();
+  char *ba = luascript_signal_by_index(fcl, sindex).toLocal8Bit().data();
+  return ba;
 }

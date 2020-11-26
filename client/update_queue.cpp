@@ -168,7 +168,7 @@ void update_queue_free(void)
   }
 
   if (processing_started_waiting_queue.exists())
-    for (auto a : processing_started_waiting_queue->values()) {
+    for (auto a : *processing_started_waiting_queue) {
       waiting_queue_list_iterate(a, data)
       {
         waiting_queue_data_destroy(data);
@@ -176,7 +176,7 @@ void update_queue_free(void)
       waiting_queue_list_iterate_end;
     }
   if (processing_finished_waiting_queue.exists())
-    for (auto a : processing_finished_waiting_queue->values()) {
+    for (auto a : *processing_finished_waiting_queue) {
       waiting_queue_list_iterate(a, data)
       {
         waiting_queue_data_destroy(data);
@@ -291,7 +291,7 @@ static void update_queue_push(uq_callback_t callback,
                               struct update_queue_data *uq_data)
 {
   struct update_queue_data *uqr_data = nullptr;
-  for (auto p : update_queue->toVector()) {
+  for (auto p : *update_queue) {
     if (p.first == callback)
       uqr_data = p.second;
   }
@@ -335,7 +335,7 @@ void update_queue_add_full(uq_callback_t callback, void *data,
  ****************************************************************************/
 bool update_queue_has_callback(uq_callback_t callback)
 {
-  for (auto p : update_queue->toVector()) {
+  for (auto p : *update_queue) {
     if (p.first == callback)
       return true;
   }
@@ -352,7 +352,7 @@ bool update_queue_has_callback_full(uq_callback_t callback,
                                     uq_free_fn_t *free_data_func)
 {
   struct update_queue_data *uq_data = nullptr;
-  for (auto p : update_queue->toVector()) {
+  for (auto p : *update_queue) {
     if (p.first == callback)
       uq_data = p.second;
   }

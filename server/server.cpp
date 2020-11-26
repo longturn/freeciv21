@@ -305,7 +305,7 @@ server::~server()
   if (m_interactive) {
     // Save history
     auto history_file = QString::fromUtf8(freeciv_storage_dir())
-                        + QLatin1String("/")
+                        + QStringLiteral("/")
                         + QLatin1String(HISTORY_FILENAME);
     auto history_file_encoded = history_file.toLocal8Bit();
     write_history(history_file_encoded.constData());
@@ -334,7 +334,7 @@ void server::init_interactive()
   auto storage_dir = QString::fromUtf8(freeciv_storage_dir());
   if (QDir().mkpath(storage_dir)) {
     auto history_file =
-        storage_dir + QLatin1String("/") + QLatin1String(HISTORY_FILENAME);
+        storage_dir + QStringLiteral("/") + QLatin1String(HISTORY_FILENAME);
     using_history();
     read_history(history_file.toLocal8Bit().constData());
   }
@@ -624,7 +624,7 @@ void server::begin_phase()
   // This will thaw the reports and agents at the client.
   lsend_packet_thaw_client(game.est_connections);
 
-  log_time(QString("End/start-turn server/ai activities: %1 seconds")
+  log_time(QStringLiteral("End/start-turn server/ai activities: %1 seconds")
                .arg(timer_read_seconds(m_eot_timer)));
 
   // Do auto-saves just before starting server_sniff_all_input(), so that

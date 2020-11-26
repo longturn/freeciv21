@@ -29,10 +29,10 @@ scale_widget::scale_widget(QRubberBand::Shape s, QWidget *p)
   QPixmap *pix;
 
   size = 12;
-  pix = fc_icons::instance()->get_pixmap("plus");
+  pix = fc_icons::instance()->get_pixmap(QStringLiteral("plus"));
   plus = pix->scaledToWidth(size);
   delete pix;
-  pix = fc_icons::instance()->get_pixmap("minus");
+  pix = fc_icons::instance()->get_pixmap(QStringLiteral("minus"));
   minus = plus = pix->scaledToWidth(size);
   delete pix;
   setFixedSize(2 * size, size);
@@ -77,7 +77,7 @@ move_widget::move_widget(QWidget *parent) : QLabel()
 
   setParent(parent);
   setCursor(Qt::SizeAllCursor);
-  pix = fc_icons::instance()->get_pixmap("move");
+  pix = fc_icons::instance()->get_pixmap(QStringLiteral("move"));
   setPixmap(*pix);
   delete pix;
   setFixedSize(16, 16);
@@ -118,7 +118,7 @@ resize_widget::resize_widget(QWidget *parent) : QLabel()
 
   setParent(parent);
   setCursor(Qt::SizeFDiagCursor);
-  pix = fc_icons::instance()->get_pixmap("resize");
+  pix = fc_icons::instance()->get_pixmap(QStringLiteral("resize"));
   setPixmap(*pix);
   delete pix;
 }
@@ -175,7 +175,7 @@ close_widget::close_widget(QWidget *parent) : QLabel()
 
   setParent(parent);
   setCursor(Qt::ArrowCursor);
-  pix = fc_icons::instance()->get_pixmap("close");
+  pix = fc_icons::instance()->get_pixmap(QStringLiteral("close"));
   setPixmap(*pix);
   delete pix;
 }
