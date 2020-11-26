@@ -2522,8 +2522,9 @@ void handle_research_info(const struct packet_research_info *packet)
     }
   }
   advance_index_iterate_end;
-
-  research_update(presearch);
+  if (!client_is_global_observer()) {
+    research_update(presearch);
+  }
 
   if (C_S_RUNNING == client_state()) {
     if (presearch == research_get(client_player())) {
