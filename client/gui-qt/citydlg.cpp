@@ -1629,7 +1629,7 @@ void city_dialog::hideEvent(QHideEvent *event)
     key_city_hide_open(pcity);
     if (!dont_focus)
       unit_focus_update();
-    map_canvas_resized(mapview.width, mapview.height);
+    update_map_canvas_visible();
   }
 }
 
@@ -1643,7 +1643,7 @@ void city_dialog::showEvent(QShowEvent *event)
   if (pcity) {
     key_city_show_open(pcity);
     unit_focus_set(nullptr);
-    map_canvas_resized(mapview.width, mapview.height);
+    update_map_canvas_visible();
   }
 }
 
