@@ -430,8 +430,7 @@ void update_animation(void)
  ****************************************************************************/
 static inline struct gotoline_counter *gotoline_counter_new(void)
 {
-  struct gotoline_counter *pglc =
-      static_cast<gotoline_counter *>(fc_calloc(1, sizeof(*pglc)));
+  struct gotoline_counter *pglc = new gotoline_counter[1]();
   return pglc;
 }
 
@@ -3264,7 +3263,7 @@ void mapdeco_init(void)
 void mapdeco_free(void)
 {
   for (auto a : *mapdeco_gotoline) {
-    delete a;
+    delete[] a;
   }
   mapdeco_gotoline->clear();
   mapdeco_highlight_set->clear();
@@ -3284,10 +3283,9 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
   }
 
   changed = mapdeco_highlight_set->contains(ptile);
+  mapdeco_highlight_set->remove(ptile);
   if (highlight) {
     mapdeco_highlight_set->insert(ptile);
-  } else {
-    mapdeco_highlight_set->remove(ptile);
   }
 
   if (!changed) {
@@ -3331,10 +3329,9 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
   }
 
   changed = mapdeco_crosshair_set->contains(ptile);
+  mapdeco_crosshair_set->remove(ptile);
   if (crosshair) {
     mapdeco_crosshair_set->insert(ptile);
-  } else {
-    mapdeco_crosshair_set->remove(ptile);
   }
 
   if (!changed) {
@@ -3386,7 +3383,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
   }
 
   if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
-    pglc = gotoline_counter_new();
+    pglc = new gotoline_counter[1]();
     mapdeco_gotoline->insert(ptile, pglc);
   }
   changed = (pglc->line_count[dir] < 1);
@@ -3511,7 +3508,7 @@ void mapdeco_clear_gotoroutes(void)
     ++i;
   }
   for (auto a : *mapdeco_gotoline) {
-    delete a;
+    delete[] a;
   }
   mapdeco_gotoline->clear();
 }
