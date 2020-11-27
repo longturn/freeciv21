@@ -57,10 +57,6 @@ struct fc_settings {
   Qt::SortOrder player_report_sort;
   int city_repo_sort_col;
   Qt::SortOrder city_report_sort;
-  QByteArray city_geometry;
-  QByteArray city_splitter1;
-  QByteArray city_splitter2;
-  QByteArray city_splitter3;
   QByteArray help_geometry;
   QByteArray help_splitter1;
   float unit_info_pos_fx;

@@ -1628,7 +1628,6 @@ void city_dialog::hideEvent(QHideEvent *event)
     unit_focus_update();
     map_canvas_resized(mapview.width, mapview.height);
   }
-  king()->qt_settings.city_geometry = saveGeometry();
 }
 
 /************************************************************************/ /**
@@ -1636,14 +1635,6 @@ void city_dialog::hideEvent(QHideEvent *event)
  ****************************************************************************/
 void city_dialog::showEvent(QShowEvent *event)
 {
-  if (!king()->qt_settings.city_geometry.isNull()) {
-    restoreGeometry(king()->qt_settings.city_geometry);
-  } else {
-    QList<QScreen *> screens = QGuiApplication::screens();
-    QRect rect = screens[0]->availableGeometry();
-
-    resize((rect.width() * 4) / 5, (rect.height() * 5) / 6);
-  }
   if (pcity) {
     key_city_show_open(pcity);
     unit_focus_set(nullptr);
@@ -1656,7 +1647,9 @@ void city_dialog::showEvent(QShowEvent *event)
  ****************************************************************************/
 void city_dialog::closeEvent(QCloseEvent *event)
 {
-  king()->qt_settings.city_geometry = saveGeometry();
+  if (pcity) {
+    key_city_hide_open(pcity);
+  }
 }
 
 /************************************************************************/ /**
