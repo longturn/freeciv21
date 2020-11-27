@@ -706,7 +706,8 @@ void real_science_report_dialog_update(void *unused)
   }
   queen()->update_sidebar_tooltips();
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
+  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))
+      && !client_is_global_observer()) {
     i = queen()->gimme_index_of(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
