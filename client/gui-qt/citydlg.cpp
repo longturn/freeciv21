@@ -851,6 +851,7 @@ void unit_item::activate_and_close_dialog()
 {
   if (qunit) {
     unit_focus_set(qunit);
+    city_dialog::instance()->dont_focus = true;
     qtg_popdown_all_city_dialogs();
   }
 }
@@ -1341,7 +1342,8 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
     : qfc_dialog(parent), future_targets(false), show_units(true),
-      show_wonders(true), show_buildings(true), current_building(0)
+      show_wonders(true), show_buildings(true), dont_focus(false),
+      current_building(0)
 {
   QFont f = QApplication::font();
   QFont *small_font;
@@ -1352,6 +1354,7 @@ city_dialog::city_dialog(QWidget *parent)
   small_font = fc_font::instance()->get_font(fonts::notify_label);
   ui.setupUi(this);
 
+  setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
   setMouseTracking(true);
   selected_row_p = -1;
   pcity = NULL;
@@ -1374,7 +1377,6 @@ city_dialog::city_dialog(QWidget *parent)
   ui.scroll->setMaximumHeight(tileset_unit_height(get_tileset()) + 6
                               + ui.scroll->horizontalScrollBar()->height());
   ui.scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  scroll_height = ui.scroll->horizontalScrollBar()->height();
   ui.scroll3->setWidgetResizable(true);
   ui.scroll3->setMaximumHeight(
       tileset_unit_height(tileset) + 6
@@ -1625,7 +1627,8 @@ void city_dialog::hideEvent(QHideEvent *event)
 {
   if (pcity) {
     key_city_hide_open(pcity);
-    unit_focus_update();
+    if (!dont_focus)
+      unit_focus_update();
     map_canvas_resized(mapview.width, mapview.height);
   }
 }
@@ -1635,6 +1638,8 @@ void city_dialog::hideEvent(QHideEvent *event)
  ****************************************************************************/
 void city_dialog::showEvent(QShowEvent *event)
 {
+  dont_focus = false;
+  resize(200, 400); // It will resize to minimum
   if (pcity) {
     key_city_show_open(pcity);
     unit_focus_set(nullptr);

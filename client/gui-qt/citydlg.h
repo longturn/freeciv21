@@ -369,7 +369,7 @@ public:
   void cma_check_agent();
   static bool exist();
   struct city *pcity;
-  int scroll_height;
+  bool dont_focus;
 
 private:
   city_dialog(QWidget *parent = 0);
