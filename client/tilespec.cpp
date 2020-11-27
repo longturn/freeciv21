@@ -1700,7 +1700,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   size_t num_spec_files;
   const char **spec_filenames;
   size_t num_layers;
-  const char **layer_order;
+  const char **layer_order = nullptr;
   size_t num_preferred_themes;
   struct section_list *sections = NULL;
   const char *file_capstr;

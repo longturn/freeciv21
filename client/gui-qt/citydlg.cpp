@@ -978,6 +978,7 @@ void unit_info::update_units()
   layout->setContentsMargins(0, 0, 0, 0);
 
   if (unit_list.count() > 0) {
+    ui = unit_list[0];
     parentWidget()->parentWidget()->setFixedHeight(ui->height() + 12);
   } else {
     parentWidget()->parentWidget()->setFixedHeight(0);
