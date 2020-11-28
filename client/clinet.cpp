@@ -359,7 +359,7 @@ double try_to_autoconnect(void)
     return FC_INFINITY;
   } else {
     // All errors are fatal
-    qFatal(_("Error contacting server \"%s\" at port %d "
+    qCritical(_("Error contacting server \"%s\" at port %d "
              "as \"%s\":\n %s\n"),
            qUtf8Printable(server_host), server_port,
            qUtf8Printable(user_name), errbuf);

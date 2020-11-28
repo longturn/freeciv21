@@ -430,8 +430,7 @@ void update_animation(void)
  ****************************************************************************/
 static inline struct gotoline_counter *gotoline_counter_new(void)
 {
-  struct gotoline_counter *pglc =
-      static_cast<gotoline_counter *>(fc_calloc(1, sizeof(*pglc)));
+  struct gotoline_counter *pglc = new gotoline_counter[1]();
   return pglc;
 }
 
@@ -3264,11 +3263,9 @@ void mapdeco_init(void)
 void mapdeco_free(void)
 {
   for (auto a : *mapdeco_gotoline) {
-    delete a;
+    NFCPP_FREE(a);
+    a = nullptr;
   }
-  mapdeco_gotoline->clear();
-  mapdeco_highlight_set->clear();
-  mapdeco_crosshair_set->clear();
 }
 
 /************************************************************************/ /**
@@ -3284,10 +3281,11 @@ void mapdeco_set_highlight(const struct tile *ptile, bool highlight)
   }
 
   changed = mapdeco_highlight_set->contains(ptile);
+  if (changed) {
+    mapdeco_highlight_set->remove(ptile);
+  }
   if (highlight) {
     mapdeco_highlight_set->insert(ptile);
-  } else {
-    mapdeco_highlight_set->remove(ptile);
   }
 
   if (!changed) {
@@ -3331,10 +3329,11 @@ void mapdeco_set_crosshair(const struct tile *ptile, bool crosshair)
   }
 
   changed = mapdeco_crosshair_set->contains(ptile);
+  if (changed) {
+    mapdeco_crosshair_set->remove(ptile);
+  }
   if (crosshair) {
     mapdeco_crosshair_set->insert(ptile);
-  } else {
-    mapdeco_crosshair_set->remove(ptile);
   }
 
   if (!changed) {
@@ -3377,7 +3376,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
   const struct tile *ptile_dest;
   bool changed;
 
-  if (!mapdeco_gotoline || !ptile || !(dir <= direction8_max())) {
+  if (!ptile || !(dir <= direction8_max())) {
     return;
   }
   ptile_dest = mapstep(&(wld.map), ptile, dir);
@@ -3386,7 +3385,7 @@ void mapdeco_add_gotoline(const struct tile *ptile, enum direction8 dir)
   }
 
   if (!(pglc = mapdeco_gotoline->value(ptile, nullptr))) {
-    pglc = gotoline_counter_new();
+    pglc = new gotoline_counter[1]();
     mapdeco_gotoline->insert(ptile, pglc);
   }
   changed = (pglc->line_count[dir] < 1);
@@ -3409,7 +3408,7 @@ void mapdeco_remove_gotoline(const struct tile *ptile, enum direction8 dir)
   struct gotoline_counter *pglc;
   bool changed = FALSE;
 
-  if (!mapdeco_gotoline || !ptile || !(dir <= direction8_max())) {
+  if (!ptile || !(dir <= direction8_max())) {
     return;
   }
 
@@ -3477,7 +3476,7 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
 {
   struct gotoline_counter *pglc;
 
-  if (!ptile || !(dir <= direction8_max()) || !mapdeco_gotoline) {
+  if (!ptile || !(dir <= direction8_max())) {
     return FALSE;
   }
 
@@ -3494,10 +3493,6 @@ bool mapdeco_is_gotoline_set(const struct tile *ptile, enum direction8 dir)
  ****************************************************************************/
 void mapdeco_clear_gotoroutes(void)
 {
-  if (!mapdeco_gotoline) {
-    return;
-  }
-
   gotohash::const_iterator i = mapdeco_gotoline->constBegin();
   while (i != mapdeco_gotoline->constEnd()) {
     refresh_tile_mapcanvas(const_cast<struct tile *>(i.key()), FALSE, FALSE);
@@ -3510,9 +3505,7 @@ void mapdeco_clear_gotoroutes(void)
     adjc_dir_iterate_end;
     ++i;
   }
-  for (auto a : *mapdeco_gotoline) {
-    delete a;
-  }
+  mapdeco_free();
   mapdeco_gotoline->clear();
 }
 
@@ -3662,9 +3655,9 @@ void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 

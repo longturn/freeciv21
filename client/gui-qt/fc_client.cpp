@@ -434,22 +434,6 @@ void fc_client::read_settings()
     qt_settings.battlelog_scale = 1;
   }
 
-  if (s.contains(QStringLiteral("City-dialog"))) {
-    qt_settings.city_geometry =
-        s.value(QStringLiteral("City-dialog")).toByteArray();
-  }
-  if (s.contains(QStringLiteral("splitter1"))) {
-    qt_settings.city_splitter1 =
-        s.value(QStringLiteral("splitter1")).toByteArray();
-  }
-  if (s.contains(QStringLiteral("splitter2"))) {
-    qt_settings.city_splitter2 =
-        s.value(QStringLiteral("splitter2")).toByteArray();
-  }
-  if (s.contains(QStringLiteral("splitter3"))) {
-    qt_settings.city_splitter3 =
-        s.value(QStringLiteral("splitter3")).toByteArray();
-  }
   if (s.contains(QStringLiteral("help-dialog"))) {
     qt_settings.help_geometry =
         s.value(QStringLiteral("help-dialog")).toByteArray();
@@ -526,10 +510,6 @@ void fc_client::write_settings()
   s.setValue(QStringLiteral("Chat-fy-size"), qt_settings.chat_fheight);
   s.setValue(QStringLiteral("Chat-fx-pos"), qt_settings.chat_fx_pos);
   s.setValue(QStringLiteral("Chat-fy-pos"), qt_settings.chat_fy_pos);
-  s.setValue(QStringLiteral("City-dialog"), qt_settings.city_geometry);
-  s.setValue(QStringLiteral("splitter1"), qt_settings.city_splitter1);
-  s.setValue(QStringLiteral("splitter2"), qt_settings.city_splitter2);
-  s.setValue(QStringLiteral("splitter3"), qt_settings.city_splitter3);
   s.setValue(QStringLiteral("help-dialog"), qt_settings.help_geometry);
   s.setValue(QStringLiteral("help_splitter1"), qt_settings.help_splitter1);
   s.setValue(QStringLiteral("unit_fx"), qt_settings.unit_info_pos_fx);

@@ -1700,7 +1700,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   size_t num_spec_files;
   const char **spec_filenames;
   size_t num_layers;
-  const char **layer_order;
+  const char **layer_order = nullptr;
   size_t num_preferred_themes;
   struct section_list *sections = NULL;
   const char *file_capstr;
@@ -2386,12 +2386,14 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
   secfile_destroy(file);
   qDebug("finished reading \"%s\".", fname);
   delete[] fname;
+  NFCPP_FREE(layer_order);
 
   return t;
 
 ON_ERROR:
   secfile_destroy(file);
   delete[] fname;
+  NFCPP_FREE(layer_order)
   delete[] t;
   if (NULL != sections) {
     section_list_destroy(sections);
