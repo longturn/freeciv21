@@ -13,7 +13,6 @@
 #ifndef FC__FCINTL_H
 #define FC__FCINTL_H
 
-#include "freeciv_config.h"
 
 #include <locale.h>
 

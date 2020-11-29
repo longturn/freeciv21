@@ -21,8 +21,6 @@
 
 #include <stdio.h> /* FILE */
 
-#include <freeciv_config.h>
-
 #include "shared.h" /* fc__attribute */
 
 // Forward declarations
