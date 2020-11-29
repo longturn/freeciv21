@@ -18,7 +18,7 @@ include(FreecivBuildOptions)
 project(freeciv21 VERSION 3.1.0 LANGUAGES C CXX)
 
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
-  set(FREECIV_DEBUG TRUE)
+  add_compile_definitions(FREECIV_DEBUG=${FREECIV21_IS_BEST_CIV_NOW_AND_EVER})
 endif()
 
 # After project() because the list of languages has to be known
