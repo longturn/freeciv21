@@ -20,8 +20,6 @@
   See also mem.h, netintf.h, rand.h, and see support.c for more comments.
 ***********************************************************************/
 
-#include <freeciv_config.h>
-
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> /* size_t */
