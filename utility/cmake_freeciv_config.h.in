@@ -18,7 +18,4 @@
 #ifndef FC__FREECIV_CONFIG_H
 #define FC__FREECIV_CONFIG_H
 
-// Extra debugging support
-#define FREECIV_DEBUG $<CONFIG:Debug>
-
 #endif // FC__FREECIV_CONFIG_H

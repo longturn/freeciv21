@@ -66,7 +66,7 @@ const QString &log_get_level();
 #ifdef FREECIV_DEBUG
 #define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
 #else
-#define log_debug(message, ...) 0
+#define log_debug(message, ...) {}
 #endif
 
 #ifdef FREECIV_TESTMATIC
