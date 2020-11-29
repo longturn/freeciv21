@@ -1,4 +1,3 @@
-#include "freeciv_config.h"
 #include "version_gen.h"
 
 #define CMAKE_BUILD

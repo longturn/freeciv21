@@ -397,7 +397,6 @@ int main(int argc, char *argv[])
   /* TRANS: No full stop after the URL, could cause confusion. */
   con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
             WIKI_URL);
-
 #ifdef HAVE_FCDB
   if (srvarg.auth_enabled && !srvarg.fcdb_enabled) {
     fc_fprintf(stderr, _("Requested authentication with --auth, "
