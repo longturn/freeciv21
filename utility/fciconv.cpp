@@ -28,17 +28,8 @@
 #include "mem.h"
 #include "support.h"
 
-static bool is_init = FALSE;
 static const char *transliteration_string;
-
-#ifdef HAVE_ICONV
 static const char *local_encoding, *data_encoding, *internal_encoding;
-#else /* HAVE_ICONV */
-/* Hack to confuse the compiler into working. */
-#define local_encoding get_local_encoding()
-#define data_encoding get_local_encoding()
-#define internal_encoding get_local_encoding()
-#endif /* HAVE_ICONV */
 
 /***********************************************************************/ /**
    Must be called during the initialization phase of server and client to
@@ -50,7 +41,6 @@ void init_character_encodings(const char *my_internal_encoding,
                               bool my_use_transliteration)
 {
   transliteration_string = "";
-#ifdef HAVE_ICONV
   if (my_use_transliteration) {
     transliteration_string = "//TRANSLIT";
   }
@@ -89,17 +79,6 @@ void init_character_encodings(const char *my_internal_encoding,
   fprintf(stderr, "Encodings: Data=%s, Local=%s, Internal=%s\n",
           data_encoding, local_encoding, internal_encoding);
 #endif /* FREECIV_DEBUG */
-
-#else  /* HAVE_ICONV */
-  /* log_* may not work at this point. */
-  fprintf(stderr,
-          _("You are running Freeciv without using iconv. Unless\n"
-            "you are using the UTF-8 character set, some characters\n"
-            "may not be displayed properly. You can download iconv\n"
-            "at http://gnu.org/.\n"));
-#endif /* HAVE_ICONV */
-
-  is_init = TRUE;
 }
 
 /***********************************************************************/ /**
@@ -117,7 +96,6 @@ const char *get_local_encoding(void)
  ***************************************************************************/
 const char *get_internal_encoding(void)
 {
-  fc_assert_ret_val(is_init, NULL);
   return internal_encoding;
 }
 
