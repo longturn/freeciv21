@@ -40,7 +40,6 @@
 #include "support.h"
 
 static bool is_init = FALSE;
-static char convert_buffer[4096];
 static const char *transliteration_string;
 
 #ifdef HAVE_ICONV
@@ -136,14 +135,6 @@ void init_character_encodings(const char *my_internal_encoding,
   is_init = TRUE;
 }
 
-/***********************************************************************/ /**
-   Return the data encoding (usually UTF-8).
- ***************************************************************************/
-const char *get_data_encoding(void)
-{
-  fc_assert_ret_val(is_init, NULL);
-  return data_encoding;
-}
 
 /***********************************************************************/ /**
    Return the local encoding (dependent on the system).
@@ -320,8 +311,6 @@ CONV_FUNC_MALLOC(local, internal)
 
 CONV_FUNC_BUFFER(local, internal)
 CONV_FUNC_BUFFER(internal, local)
-
-static CONV_FUNC_STATIC(internal, local)
 
     /***********************************************************************/ /**
        Do a fprintf from the internal charset into the local charset.
