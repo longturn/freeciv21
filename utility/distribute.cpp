@@ -13,6 +13,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QVector>
 /* utility */
 #include "log.h" /* fc_assert */
 
@@ -31,7 +32,10 @@
  ****************************************************************************/
 void distribute(int number, int groups, int *ratios, int *result)
 {
-  int i, sum = 0, rest[groups], max_groups[groups], max_count, max;
+  int i, sum = 0, max_count, max;
+  QVector<int> rest, max_groups;
+  rest.reserve(groups);
+  max_groups.reserve(groups);
 #ifdef FREECIV_DEBUG
   const int original_number = number;
 #endif
