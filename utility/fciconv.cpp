@@ -329,32 +329,12 @@ static CONV_FUNC_STATIC(internal, local)
     void fc_fprintf(FILE *stream, const char *format, ...)
 {
   va_list ap;
-  char string[4096];
-  const char *output;
-  static bool recursion = FALSE;
-
-  /* The recursion variable is used to prevent a recursive loop.  If
-   * an iconv conversion fails, then log_* will be called and an
-   * fc_fprintf will be done.  But below we do another iconv conversion
-   * on the error messages, which is of course likely to fail also. */
-  if (recursion) {
-    return;
-  }
 
   va_start(ap, format);
-  fc_vsnprintf(string, sizeof(string), format, ap);
+  auto str = QString::vasprintf(format, ap);
   va_end(ap);
 
-  recursion = TRUE;
-  if (is_init) {
-    output = internal_to_local_string_static(string);
-  } else {
-    output = string;
-  }
-  recursion = FALSE;
-
-  fputs(output, stream);
-  fflush(stream);
+  QTextStream(stream) << str << endl;
 }
 
 /***********************************************************************/ /**
