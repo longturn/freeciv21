@@ -89,7 +89,6 @@
 void init_character_encodings(const char *internal_encoding,
                               bool use_transliteration);
 
-const char *get_local_encoding(void);
 const char *get_internal_encoding(void);
 
 char *data_to_internal_string_malloc(const char *text);
