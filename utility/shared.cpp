@@ -141,7 +141,8 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
   /* We have to convert the encoding here (rather than when the locale
    * is initialized) because it can't be done before the charsets are
    * initialized. */
-  local_to_internal_string_buffer(grouping_sep, sep, sizeof(sep));
+  QByteArray ba = QString(grouping_sep).toLocal8Bit();
+  qstrncpy(sep,ba.data(), sizeof(sep));
   seplen = strlen(sep);
 
 #if 0 /* Not needed while the values are unsigned. */

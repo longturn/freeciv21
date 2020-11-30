@@ -409,9 +409,8 @@ const char *fc_strerror(fc_errno err)
   }
   return buf;
 #else /* FREECIV_MSWINDOWS */
-  static char buf[256];
 
-  return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
+  return strerror(err);
 #endif /* FREECIV_MSWINDOWS */
 }
 

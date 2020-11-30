@@ -166,7 +166,7 @@ static bool client_quitting = FALSE;
  **************************************************************************/
 static char *put_conv(const char *src, size_t *length)
 {
-  char *out = internal_to_data_string_malloc(src);
+  char *out = qstrdup(src);
 
   if (out) {
     *length = strlen(out);
