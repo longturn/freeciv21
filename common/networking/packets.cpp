@@ -274,14 +274,14 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     packets_stats[packet_type].size += size;
 
     packet_counter++;
-    if (packet_type == PACKET_START_TURN
-        && last_start_turn_seen != game.turn) {
+    if (packet_type == PACKET_BEGIN_TURN
+        && last_start_turn_seen != game.info.turn) {
       start_turn_seen = TRUE;
-      last_start_turn_seen = game.turn;
+      last_start_turn_seen = game.info.turn;
     }
 
     if ((packet_type == PACKET_PROCESSING_FINISHED
-         || packet_type == PACKET_THAW_HINT)
+         || packet_type == PACKET_THAW_CLIENT)
         && start_turn_seen) {
       start_turn_seen = FALSE;
       print = TRUE;
@@ -290,29 +290,28 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
 
     if (print) {
       int i, sum = 0;
-#define log_ll log_debug
 
 #if PACKET_SIZE_STATISTICS == 2
       delta_stats_report();
 #endif
-      log_ll("Transmitted packets:");
-      log_ll("%8s %8s %8s %s", "Packets", "Bytes", "Byt/Pac", "Name");
+      printf("Transmitted packets:\n");
+      printf("%8s %8s %8s %s", "Packets", "Bytes", "Byt/Pac", "Name\n");
 
       for (i = 0; i < PACKET_LAST; i++) {
         if (packets_stats[i].counter == 0) {
           continue;
         }
         sum += packets_stats[i].size;
-        log_ll("%8d %8d %8d %s(%i)", packets_stats[i].counter,
+        printf("%8d %8d %8d %s(%i)\n", packets_stats[i].counter,
                packets_stats[i].size,
                packets_stats[i].size / packets_stats[i].counter,
-               packet_name(i), i);
+               packet_name(static_cast<enum packet_type>(i)), i);
       }
-      log_test("turn=%d; transmitted %d bytes in %d packets;average size "
-               "per packet %d bytes",
-               game.turn, sum, packet_counter, sum / packet_counter);
-      log_test("turn=%d; transmitted %d bytes", game.turn,
-               pc->statistics.bytes_send);
+      printf("turn=%d; transmitted %d bytes in %d packets;average size "
+             "per packet %d bytes\n",
+             game.info.turn, sum, packet_counter, sum / packet_counter);
+      printf("turn=%d; transmitted %d bytes\n", game.info.turn,
+             pc->statistics.bytes_send);
     }
     if (clear) {
       int i;
@@ -326,7 +325,6 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
       delta_stats_reset();
     }
   }
-#undef log_ll
 #endif /* PACKET_SIZE_STATISTICS */
 
   return result;
@@ -532,20 +530,20 @@ void *get_packet_from_connection_raw(struct connection *pc,
     if (packet_counter % 100 == 0) {
       int i, sum = 0;
 
-      log_test("Received packets:");
+      printf("Received packets:\n");
       for (i = 0; i < PACKET_LAST; i++) {
         if (packets_stats[i].counter == 0)
           continue;
         sum += packets_stats[i].size;
-        log_test("  [%-25.25s %3d]: %6d packets; %8d bytes total; "
-                 "%5d bytes/packet average",
-                 packet_name(i), i, packets_stats[i].counter,
-                 packets_stats[i].size,
-                 packets_stats[i].size / packets_stats[i].counter);
+        printf("  [%-25.25s %3d]: %6d packets; %8d bytes total; "
+               "%5d bytes/packet average\n",
+               packet_name(static_cast<enum packet_type>(i)), i,
+               packets_stats[i].counter, packets_stats[i].size,
+               packets_stats[i].size / packets_stats[i].counter);
       }
-      log_test("received %d bytes in %d packets;average size "
-               "per packet %d bytes",
-               sum, packet_counter, sum / packet_counter);
+      printf("received %d bytes in %d packets;average size "
+             "per packet %d bytes\n",
+             sum, packet_counter, sum / packet_counter);
     }
   }
 #endif /* PACKET_SIZE_STATISTICS */
