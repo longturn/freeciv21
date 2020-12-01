@@ -19,9 +19,10 @@
 #ifndef FC__ASTRING_H
 #define FC__ASTRING_H
 
-
-
 #include <string.h> /* strlen() */
+
+// Qt
+#include <QString>
 
 /* utility */
 #include "support.h" /* bool, fc__attribute() */
@@ -79,6 +80,7 @@ const char *astr_build_or_list(struct astring *astr,
                                const char *const *items, size_t number);
 const char *astr_build_and_list(struct astring *astr,
                                 const char *const *items, size_t number);
+QString build_and_list(const QStringList &items);
 void astr_copy(struct astring *dest, const struct astring *src)
     fc__attribute((nonnull(1, 2)));
 
@@ -125,7 +127,5 @@ static inline bool astr_empty(const struct astring *astr)
 #undef str
 #undef n
 #undef n_alloc
-
-
 
 #endif /* FC__ASTRING_H */

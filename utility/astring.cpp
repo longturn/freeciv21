@@ -347,6 +347,34 @@ const char *astr_build_and_list(struct astring *astr,
 }
 
 /************************************************************************/ /**
+   Build a localized string with the given items. Items will be
+   "and"-separated.
+
+   See also astr_build_or_list(), strvec_to_and_list().
+ ****************************************************************************/
+QString build_and_list(const QStringList &items)
+{
+  if (items.size() == 1) {
+    // TRANS: "and"-separated string list with one single item.
+    return QString(Q_("?and-list-single:%1")).arg(items[0]);
+  } else if (items.size() == 2) {
+    // TRANS: "and"-separated string list with 2 items.
+    return QString(Q_("?and-list:%1 and %2")).arg(items[0], items[1]);
+  } else {
+    // TRANS: start of an "and"-separated string list with more than two
+    // items.
+    auto result = QString(Q_("?and-list:%1")).arg(items[0]);
+    for (int i = 1; i < items.size() - 1; ++i) {
+      // TRANS: next elements of an "and"-separated string list with more
+      // than two items.
+      result += QString(Q_("?and-list:, %1")).arg(items[i]);
+    }
+    // TRANS: end of an "and"-separated string list with more than two items.
+    return result + QString(Q_("?and-list:, and %1")).arg(items.back());
+  }
+}
+
+/************************************************************************/ /**
    Copy one astring in another.
  ****************************************************************************/
 void astr_copy(struct astring *dest, const struct astring *src)
