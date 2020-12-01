@@ -61,9 +61,12 @@ if (SDL2_MIXER_LIBRARIES AND SDL2_LIBRARY)
 endif()
 if (NOT SDL2_LIBRARY)
   message("SDL2 not found")
+  set(SDL2_INCLUDE_DIR "")
 endif()
 if (NOT SDL2_MIXER_LIBRARIES)
   message("SDL2_mixer not found")
+  set(SDL2_MIXER_LIBRARIES "")
+  set(SDL2_MIXER_INCLUDE_DIR "")
 endif()
 
 # Lua
