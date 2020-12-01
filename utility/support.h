@@ -83,8 +83,6 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n);
 
 size_t effectivestrlenquote(const char *str);
 
-char *fc_strcasestr(const char *haystack, const char *needle);
-
 int fc_strcoll(const char *str0, const char *str1);
 int fc_stricoll(const char *str0, const char *str1);
 

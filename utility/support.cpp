@@ -198,40 +198,6 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 }
 
 /************************************************************************/ /**
-   Return the needle in the haystack (or NULL).
-   Naive implementation.
- ****************************************************************************/
-char *fc_strcasestr(const char *haystack, const char *needle)
-{
-#ifdef HAVE_STRCASESTR
-  return strcasestr(haystack, needle);
-#else
-  size_t haystacks;
-  size_t needles;
-  const char *p;
-
-  if (NULL == needle || '\0' == *needle) {
-    return (char *) haystack;
-  }
-  if (NULL == haystack || '\0' == *haystack) {
-    return NULL;
-  }
-  haystacks = strlen(haystack);
-  needles = strlen(needle);
-  if (haystacks < needles) {
-    return NULL;
-  }
-
-  for (p = haystack; p <= &haystack[haystacks - needles]; p++) {
-    if (0 == fc_strncasecmp(p, needle, needles)) {
-      return (char *) p;
-    }
-  }
-  return NULL;
-#endif /* HAVE_STRCASESTR */
-}
-
-/************************************************************************/ /**
    Wrapper function for strcoll().
  ****************************************************************************/
 int fc_strcoll(const char *str0, const char *str1)
