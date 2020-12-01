@@ -207,7 +207,7 @@ static bool find_option(const char *buf_in, const char *option,
         }
         return TRUE;
       } else {
-        while (fc_isalnum(*buf_in) && write_len > 1) {
+        while (QChar::isLetterOrNumber(*buf_in) && write_len > 1) {
           *buf_out++ = *buf_in++;
           write_len--;
         }

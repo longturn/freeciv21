@@ -892,7 +892,7 @@ static const char *get_token_value(struct inputfile *inf)
              && border_character != '$') {
     /* A one-word string: maybe FALSE or TRUE. */
     start = c;
-    while (fc_isalnum(*c)) {
+    while (QChar::isLetterOrNumber(*c)) {
       c++;
     }
     /* check that the trailing stuff is ok: */

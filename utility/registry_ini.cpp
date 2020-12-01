@@ -235,7 +235,7 @@ static bool is_secfile_entry_name_valid(const char *name)
   static const char *const allowed = "_.,-[]";
 
   while ('\0' != *name) {
-    if (!fc_isalnum(*name) && NULL == strchr(allowed, *name)) {
+    if (!QChar::isLetterOrNumber(*name) && NULL == strchr(allowed, *name)) {
       return FALSE;
     }
     name++;
@@ -606,7 +606,7 @@ struct section_file *secfile_from_stream(fz_FILE *stream,
  **************************************************************************/
 static bool is_legal_table_entry_name(char c, bool num)
 {
-  return (num ? fc_isalnum(c) : QChar::isLetter(c)) || c == '_';
+  return (num ? QChar::isLetterOrNumber(c) : QChar::isLetter(c)) || c == '_';
 }
 
 /**********************************************************************/ /**

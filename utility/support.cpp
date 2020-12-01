@@ -775,17 +775,6 @@ top:
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
 
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isalnum(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isalnum((int) ((unsigned char) c)) != 0;
-}
-
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.
