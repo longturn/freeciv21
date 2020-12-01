@@ -21,7 +21,6 @@
 
 /* utility */
 #include "astring.h"
-#include "fc_utf8.h"
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
@@ -57,11 +56,14 @@ int send_chat_printf(const char *format, ...)
 {
   struct packet_chat_msg_req packet;
   va_list args;
+  QByteArray ba;
 
   va_start(args, format);
-  fc_utf8_vsnprintf_trunc(packet.message, sizeof(packet.message), format,
-                          args);
+  auto str = QString::vasprintf(format, args);
   va_end(args);
+
+  ba = str.toLocal8Bit();
+  qstrncpy(packet.message, ba.data(), sizeof(packet.message));
 
   return send_packet_chat_msg_req(&client.conn, &packet);
 }

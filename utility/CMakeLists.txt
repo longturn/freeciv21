@@ -39,7 +39,6 @@ add_library(
   deprecations.cpp
   distribute.cpp
   fc_cmdline.cpp
-  fc_utf8.cpp
   fcbacktrace.cpp
   fciconv.cpp
   fcintl.cpp
