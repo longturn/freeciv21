@@ -799,18 +799,6 @@ bool fc_isalpha(char c)
 
 
 /************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isprint(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isprint((int) ((unsigned char) c)) != 0;
-}
-
-
-/************************************************************************/ /**
    basename() replacement that always takes const parameter.
    POSIX basename() modifies its parameter, GNU one does not.
    Ideally we would like to use GNU one, when available, directly

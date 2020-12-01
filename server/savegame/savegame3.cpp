@@ -176,7 +176,7 @@ extern bool sg_success;
             native_pos_to_tile(&(wld.map), _nat_x, _nat_y);                 \
         fc_assert_action(ptile != NULL, continue);                          \
         _line[_nat_x] = (GET_XY_CHAR);                                      \
-        sg_failure_ret(fc_isprint(_line[_nat_x] & 0x7f),                    \
+        sg_failure_ret(QChar::isPrint(_line[_nat_x] & 0x7f),                \
                        "Trying to write invalid map data at position "      \
                        "(%d, %d) for path %s: '%c' (%d)",                   \
                        _nat_x, _nat_y, secpath, _line[_nat_x],              \
