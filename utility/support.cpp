@@ -830,17 +830,6 @@ bool fc_isspace(char c)
   return isspace((int) ((unsigned char) c)) != 0;
 }
 
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isupper(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isupper((int) ((unsigned char) c)) != 0;
-}
-
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.
