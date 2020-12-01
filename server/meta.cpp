@@ -77,7 +77,7 @@ const char *default_meta_message_string(void)
 #else /* IS_BETA_VERSION */
 #if IS_DEVEL_VERSION
   return "development version: beware";
-#else  /* IS_DEVEL_VERSION */
+#else /* IS_DEVEL_VERSION */
   return "-";
 #endif /* IS_DEVEL_VERSION */
 #endif /* IS_BETA_VERSION */
@@ -200,15 +200,13 @@ static inline bool meta_insert_setting(QUrlQuery *query,
                                        const char *set_name)
 {
   const struct setting *pset = setting_by_name(set_name);
-  char buf[256];
 
   fc_assert_ret_val_msg(NULL != pset, FALSE, "Setting \"%s\" not found!",
                         set_name);
   query->addQueryItem(QStringLiteral("vn[]"),
                       QString::fromUtf8(setting_name(pset)));
-  query->addQueryItem(
-      QStringLiteral("vv[]"),
-      QString::fromUtf8(setting_value_name(pset, false, buf, sizeof(buf))));
+  query->addQueryItem(QStringLiteral("vv[]"),
+                      setting_value_name(pset, false));
   return true;
 }
 

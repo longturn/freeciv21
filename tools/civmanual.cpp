@@ -307,7 +307,6 @@ static bool manual_command(struct tag_types *tag_info)
               tag_info->title_end);
       settings_iterate(SSET_ALL, pset)
       {
-        char buf[256];
         const char *sethelp;
 
         fprintf(doc, tag_info->item_begin, "setting", setting_number(pset));
@@ -339,32 +338,35 @@ static bool manual_command(struct tag_types *tag_info)
         }
 
         fprintf(doc, "</p>\n");
-        setting_default_name(pset, TRUE, buf, sizeof(buf));
+        auto def = setting_default_name(pset, TRUE);
         switch (setting_type(pset)) {
         case SST_INT:
           fprintf(doc, "\n<p class=\"bounds\">%s %d, %s %s, %s %d</p>\n",
-                  _("Minimum:"), setting_int_min(pset), _("Default:"), buf,
-                  _("Maximum:"), setting_int_max(pset));
+                  _("Minimum:"), setting_int_min(pset), _("Default:"),
+                  qPrintable(def), _("Maximum:"), setting_int_max(pset));
           break;
         case SST_ENUM: {
-          const char *value;
+          QString value;
 
           fprintf(doc, "\n<p class=\"bounds\">%s</p>",
                   _("Possible values:"));
-          for (i = 0; (value = setting_enum_val(pset, i, FALSE)); i++) {
-            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
-                    setting_enum_val(pset, i, TRUE));
+          for (i = 0; (value = setting_enum_val(pset, i, FALSE)).isEmpty();
+               i++) {
+            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", qPrintable(value),
+                    qPrintable(setting_enum_val(pset, i, TRUE)));
           }
         } break;
         case SST_BITWISE: {
-          const char *value;
+          QString value;
 
           fprintf(
               doc, "\n<p class=\"bounds\">%s</p>",
               _("Possible values (option can take any number of these):"));
-          for (i = 0; (value = setting_bitwise_bit(pset, i, FALSE)); i++) {
-            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
-                    setting_bitwise_bit(pset, i, TRUE));
+          for (i = 0;
+               (value = setting_bitwise_bit(pset, i, FALSE)).isEmpty();
+               i++) {
+            fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", qPrintable(value),
+                    qPrintable(setting_bitwise_bit(pset, i, TRUE)));
           }
         } break;
         case SST_BOOL:
@@ -376,11 +378,11 @@ static bool manual_command(struct tag_types *tag_info)
         }
         if (SST_INT != setting_type(pset)) {
           fprintf(doc, "\n<p class=\"bounds\">%s %s</p>\n", _("Default:"),
-                  buf);
+                  qPrintable(def));
         }
         if (setting_non_default(pset)) {
           fprintf(doc, _("\n<p class=\"changed\">Value set to %s</p>\n"),
-                  setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                  qPrintable(setting_value_name(pset, TRUE)));
         }
 
         fprintf(doc, "%s", tag_info->item_end);

@@ -94,7 +94,6 @@ bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
 const char *api_server_setting_get(lua_State *L, const char *sett_name)
 {
   struct setting *pset;
-  static char buf[512];
 
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_ARG_NIL(L, sett_name, 2, API_TYPE_STRING, NULL);
@@ -105,5 +104,5 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name)
     return NULL;
   }
 
-  return setting_value_name(pset, FALSE, buf, sizeof(buf));
+  return qstrdup(qPrintable(setting_value_name(pset, FALSE)));
 }

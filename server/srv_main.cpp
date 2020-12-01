@@ -166,7 +166,7 @@ void init_game_seed(void)
 #ifdef FREECIV_TESTMATIC
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
-#else  /* FREECIV_TESTMATIC */
+#else /* FREECIV_TESTMATIC */
     log_debug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
@@ -2907,8 +2907,8 @@ void srv_ready()
           && game.info.is_new_game)) {
     struct {
       const char *name;
-      char value[MAX_LEN_NAME * 2];
-      char pretty[MAX_LEN_NAME * 2];
+      QString value;
+      QString pretty;
     } mapgen_settings[] = {{
                                "generator",
                            },
@@ -2943,10 +2943,8 @@ void srv_ready()
       const struct setting *pset = setting_by_name(mapgen_settings[i].name);
 
       fc_assert_action(pset != NULL, continue);
-      (void) setting_value_name(pset, FALSE, mapgen_settings[i].value,
-                                sizeof(mapgen_settings[i].value));
-      (void) setting_value_name(pset, TRUE, mapgen_settings[i].pretty,
-                                sizeof(mapgen_settings[i].pretty));
+      mapgen_settings[i].value = setting_value_name(pset, FALSE);
+      mapgen_settings[i].pretty = setting_value_name(pset, FALSE);
     }
 
     for (i = 0; !created && i < max; i++) {
@@ -3008,16 +3006,16 @@ void srv_ready()
       char pretty[sizeof(mapgen_settings[i].pretty)];
 
       fc_assert_action(pset != NULL, continue);
-      if (0
-          == strcmp(setting_value_name(pset, TRUE, pretty, sizeof(pretty)),
-                    mapgen_settings[i].pretty)) {
+      if (setting_value_name(pset, TRUE) == mapgen_settings[i].pretty) {
         continue; /* Setting didn't change. */
       }
       notify_conn(NULL, NULL, E_SETTING, ftc_server,
                   _("Setting '%s' has been adjusted from %s to %s."),
-                  setting_name(pset), mapgen_settings[i].pretty, pretty);
+                  qPrintable(setting_name(pset)),
+                  qPrintable(mapgen_settings[i].pretty), pretty);
       qInfo(_("Setting '%s' has been adjusted from %s to %s."),
-            setting_name(pset), mapgen_settings[i].pretty, pretty);
+            qPrintable(setting_name(pset)),
+            qPrintable(mapgen_settings[i].pretty), pretty);
     }
   }
 

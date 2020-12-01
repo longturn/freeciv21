@@ -14,8 +14,6 @@
 #ifndef FC__SETTINGS_H
 #define FC__SETTINGS_H
 
-
-
 /* utility */
 #include "shared.h"
 
@@ -24,10 +22,8 @@
 #include "server_settings.h"
 
 struct sset_val_name {
-  const char *support; /* Untranslated long support name, used
-                        * for saving. */
-  const char *pretty;  /* Translated, used to display to the
-                        * users. */
+  QString support; // Untranslated long support name, used for saving.
+  QString pretty;  // Translated, used to display to the users.
 };
 
 /* Categories allow options to be usefully organized when presented to the
@@ -93,10 +89,8 @@ bool setting_is_visible_at_level(const struct setting *pset,
 bool setting_is_visible(const struct setting *pset,
                         struct connection *caller);
 
-const char *setting_value_name(const struct setting *pset, bool pretty,
-                               char *buf, size_t buf_len);
-const char *setting_default_name(const struct setting *pset, bool pretty,
-                                 char *buf, size_t buf_len);
+QString setting_value_name(const struct setting *pset, bool pretty);
+QString setting_default_name(const struct setting *pset, bool pretty);
 
 void setting_set_to_default(struct setting *pset);
 
@@ -105,10 +99,10 @@ const char *setting_enum_secfile_str(secfile_data_t data, int val);
 const char *setting_bitwise_secfile_str(secfile_data_t data, int bit);
 
 /* Type SST_BOOL setting functions. */
-bool setting_bool_set(struct setting *pset, const char *val,
+bool setting_bool_set(struct setting *pset, const QString &val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len);
-bool setting_bool_validate(const struct setting *pset, const char *val,
+bool setting_bool_validate(const struct setting *pset, const QString &val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len);
 bool setting_bool_get(struct setting *pset);
@@ -125,31 +119,30 @@ bool setting_int_validate(const struct setting *pset, int val,
 int setting_int_get(struct setting *pset);
 
 /* Type SST_STRING setting functions. */
-bool setting_str_set(struct setting *pset, const char *val,
+bool setting_str_set(struct setting *pset, const QString &val,
                      struct connection *caller, char *reject_msg,
                      size_t reject_msg_len);
-bool setting_str_validate(const struct setting *pset, const char *val,
+bool setting_str_validate(const struct setting *pset, const QString &val,
                           struct connection *caller, char *reject_msg,
                           size_t reject_msg_len);
 char *setting_str_get(struct setting *pset);
 
 /* Type SST_ENUM setting functions. */
-const char *setting_enum_val(const struct setting *pset, int val,
-                             bool pretty);
-bool setting_enum_set(struct setting *pset, const char *val,
+QString setting_enum_val(const struct setting *pset, int val, bool pretty);
+bool setting_enum_set(struct setting *pset, const QString &val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len);
-bool setting_enum_validate(const struct setting *pset, const char *val,
+bool setting_enum_validate(const struct setting *pset, const QString &val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len);
 
 /* Type SST_BITWISE setting functions. */
-const char *setting_bitwise_bit(const struct setting *pset, int bit,
-                                bool pretty);
-bool setting_bitwise_set(struct setting *pset, const char *val,
+QString setting_bitwise_bit(const struct setting *pset, int bit,
+                            bool pretty);
+bool setting_bitwise_set(struct setting *pset, const QString &val,
                          struct connection *caller, char *reject_msg,
                          size_t reject_msg_len);
-bool setting_bitwise_validate(const struct setting *pset, const char *val,
+bool setting_bitwise_validate(const struct setting *pset, const QString &val,
                               struct connection *caller, char *reject_msg,
                               size_t reject_msg_len);
 int setting_bitwise_get(struct setting *pset);
@@ -210,7 +203,5 @@ void send_server_setting_control(struct connection *pconn);
 
 void setting_changed(struct setting *pset);
 enum setting_default_level setting_get_setdef(const struct setting *pset);
-
-
 
 #endif /* FC__SETTINGS_H */

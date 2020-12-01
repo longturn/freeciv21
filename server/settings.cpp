@@ -587,7 +587,7 @@ static const char *phasemode_help(const struct setting *pset)
                 "moves at the same time during a turn. Change "
                 "in setting takes effect next turn. Currently, at least "
                 "to the end of this turn, mode is \"%s\"."),
-              phasemode_name(game.info.phase_mode)->pretty);
+              qPrintable(phasemode_name(game.info.phase_mode)->pretty));
 
   return pmhelp;
 }
@@ -1330,7 +1330,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    scateg,                                                                  \
    slevel,                                                                  \
    INIT_BRACE_BEGIN.string = {value, _default, sizeof(value),               \
-                              func_validate, ""} INIT_BRACE_END,   \
+                              func_validate, ""} INIT_BRACE_END,            \
    func_action,                                                             \
    FALSE},
 
@@ -5138,31 +5138,25 @@ bool setting_is_visible(const struct setting *pset,
    FIXME: this mostly duplicate match_prefix_full().
  ****************************************************************************/
 static enum m_pre_result
-setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
-                          int *ind_result, const char **matches,
-                          size_t max_matches, size_t *pnum_matches)
+setting_match_prefix_base(const val_name_func_t name_fn,
+                          const QString &prefix, int *ind_result,
+                          QStringList &matches)
 {
   const struct sset_val_name *name;
-  size_t len = strlen(prefix);
   size_t num_matches;
   int i;
 
-  *pnum_matches = 0;
-
-  if (0 == len) {
+  if (prefix.isEmpty()) {
     return M_PRE_EMPTY;
   }
 
   for (i = 0, num_matches = 0; (name = name_fn(i)); i++) {
-    if (0 == fc_strncasecmp(name->support, prefix, len)) {
-      if (strlen(name->support) == len) {
+    if (name->support.startsWith(prefix, Qt::CaseInsensitive)) {
+      if (name->support == prefix) {
         *ind_result = i;
         return M_PRE_EXACT;
       }
-      if (num_matches < max_matches) {
-        matches[num_matches] = name->support;
-        (*pnum_matches)++;
-      }
+      matches.append(name->support);
       if (0 == num_matches++) {
         *ind_result = i;
       }
@@ -5183,27 +5177,20 @@ setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
    NB: This function is used for SST_ENUM *and* SST_BITWISE.
  ****************************************************************************/
 static bool setting_match_prefix(const val_name_func_t name_fn,
-                                 const char *prefix, int *pvalue,
+                                 const QString &prefix, int *pvalue,
                                  char *reject_msg, size_t reject_msg_len)
 {
-  const char *matches[16];
-  size_t num_matches;
+  QStringList matches;
 
-  switch (setting_match_prefix_base(name_fn, prefix, pvalue, matches,
-                                    ARRAY_SIZE(matches), &num_matches)) {
+  switch (setting_match_prefix_base(name_fn, prefix, pvalue, matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
     return TRUE; /* Ok. */
-  case M_PRE_AMBIGUOUS: {
-    struct astring astr = ASTRING_INIT;
-
-    fc_assert(2 <= num_matches);
+  case M_PRE_AMBIGUOUS:
     settings_snprintf(reject_msg, reject_msg_len,
                       _("\"%s\" prefix is ambiguous. Candidates are: %s."),
-                      prefix,
-                      astr_build_and_list(&astr, matches, num_matches));
-    astr_free(&astr);
-  }
+                      qPrintable(prefix),
+                      qPrintable(build_and_list(matches)));
     return FALSE;
   case M_PRE_EMPTY:
     settings_snprintf(reject_msg, reject_msg_len, _("Missing value."));
@@ -5215,25 +5202,23 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
   }
 
   settings_snprintf(reject_msg, reject_msg_len, _("No match for \"%s\"."),
-                    prefix);
+                    qPrintable(prefix));
   return FALSE;
 }
 
 /************************************************************************/ /**
    Compute the string representation of the value for this boolean setting.
  ****************************************************************************/
-static const char *setting_bool_to_str(const struct setting *pset,
-                                       bool value, bool pretty, char *buf,
-                                       size_t buf_len)
+static QString setting_bool_to_str(const struct setting *pset, bool value,
+                                   bool pretty)
 {
   const struct sset_val_name *name = pset->boolean.name(value);
 
   if (pretty) {
-    fc_snprintf(buf, buf_len, "%s", Q_(name->pretty));
+    return Q_(qPrintable(name->pretty));
   } else {
-    fc_strlcpy(buf, name->support, buf_len);
+    return name->support;
   }
-  return buf;
 }
 
 /************************************************************************/ /**
@@ -5244,24 +5229,21 @@ static const char *setting_bool_to_str(const struct setting *pset,
    FIXME: also check the access level of pconn.
  ****************************************************************************/
 static bool setting_bool_validate_base(const struct setting *pset,
-                                       const char *val, int *pint_val,
+                                       const QString &val, int *pint_val,
                                        struct connection *caller,
                                        char *reject_msg,
                                        size_t reject_msg_len)
 {
-  char buf[256];
-
   if (SST_BOOL != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not a boolean."));
     return FALSE;
   }
 
-  sz_strlcpy(buf, val);
-  remove_leading_trailing_spaces(buf);
+  auto trimmed = val.trimmed();
 
-  return (setting_match_prefix(pset->boolean.name, buf, pint_val, reject_msg,
-                               reject_msg_len)
+  return (setting_match_prefix(pset->boolean.name, trimmed, pint_val,
+                               reject_msg, reject_msg_len)
           && (NULL == pset->boolean.validate
               || pset->boolean.validate(0 != *pint_val, caller, reject_msg,
                                         reject_msg_len)));
@@ -5272,7 +5254,7 @@ static bool setting_bool_validate_base(const struct setting *pset,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_bool_set(struct setting *pset, const char *val,
+bool setting_bool_set(struct setting *pset, const QString &val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len)
 {
@@ -5303,7 +5285,7 @@ bool setting_bool_get(struct setting *pset)
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_bool_validate(const struct setting *pset, const char *val,
+bool setting_bool_validate(const struct setting *pset, const QString &val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len)
 {
@@ -5322,17 +5304,17 @@ static const char *setting_bool_secfile_str(secfile_data_t data, int val)
   const struct sset_val_name *name =
       ((const struct setting *) data)->boolean.name(val);
 
-  return (NULL != name ? name->support : NULL);
+  // FIXME mem leak
+  return (NULL != name ? qstrdup(qPrintable(name->support)) : NULL);
 }
 
 /************************************************************************/ /**
    Compute the string representation of the value for this integer setting.
  ****************************************************************************/
-static const char *setting_int_to_str(const struct setting *pset, int value,
-                                      bool pretty, char *buf, size_t buf_len)
+static QString setting_int_to_str(const struct setting *pset, int value,
+                                  bool pretty)
 {
-  fc_snprintf(buf, buf_len, "%d", value);
-  return buf;
+  return QStringLiteral("%1").arg(value);
 }
 
 /************************************************************************/ /**
@@ -5412,23 +5394,21 @@ int setting_int_get(struct setting *pset)
 /************************************************************************/ /**
    Compute the string representation of the value for this string setting.
  ****************************************************************************/
-static const char *setting_str_to_str(const struct setting *pset,
-                                      const char *value, bool pretty,
-                                      char *buf, size_t buf_len)
+static QString setting_str_to_str(const struct setting *pset,
+                                  const char *value, bool pretty)
 {
   if (pretty) {
-    fc_snprintf(buf, buf_len, "\"%s\"", value);
+    return QStringLiteral("\"%1\"").arg(value);
   } else {
-    fc_strlcpy(buf, value, buf_len);
+    return value;
   }
-  return buf;
 }
 
 /************************************************************************/ /**
    Set the setting to 'val'. Returns TRUE on success. If it fails, the
    reason of the failure is available by the function setting_error().
  ****************************************************************************/
-bool setting_str_set(struct setting *pset, const char *val,
+bool setting_str_set(struct setting *pset, const QString &val,
                      struct connection *caller, char *reject_msg,
                      size_t reject_msg_len)
 {
@@ -5438,7 +5418,7 @@ bool setting_str_set(struct setting *pset, const char *val,
     return FALSE;
   }
 
-  fc_strlcpy(pset->string.value, val, pset->string.value_size);
+  fc_strlcpy(pset->string.value, qPrintable(val), pset->string.value_size);
   return TRUE;
 }
 
@@ -5448,7 +5428,7 @@ bool setting_str_set(struct setting *pset, const char *val,
 
    FIXME: also check the access level of pconn.
  ****************************************************************************/
-bool setting_str_validate(const struct setting *pset, const char *val,
+bool setting_str_validate(const struct setting *pset, const QString &val,
                           struct connection *caller, char *reject_msg,
                           size_t reject_msg_len)
 {
@@ -5458,7 +5438,7 @@ bool setting_str_validate(const struct setting *pset, const char *val,
     return FALSE;
   }
 
-  if (strlen(val) >= pset->string.value_size) {
+  if (val.length() >= pset->string.value_size) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("String value too long (max length: %lu)."),
                       (unsigned long) pset->string.value_size);
@@ -5466,7 +5446,8 @@ bool setting_str_validate(const struct setting *pset, const char *val,
   }
 
   return (!pset->string.validate
-          || pset->string.validate(val, caller, reject_msg, reject_msg_len));
+          || pset->string.validate(qPrintable(val), caller, reject_msg,
+                                   reject_msg_len));
 }
 
 /************************************************************************/ /**
@@ -5488,24 +5469,23 @@ const char *setting_enum_secfile_str(secfile_data_t data, int val)
   const struct sset_val_name *name =
       ((const struct setting *) data)->enumerator.name(val);
 
-  return (NULL != name ? name->support : NULL);
+  return (NULL != name ? qstrdup(qPrintable(name->support)) : NULL);
 }
 
 /************************************************************************/ /**
    Convert the integer to the string representation of an enumerator.
    Return NULL if 'val' is not a valid enumerator.
  ****************************************************************************/
-const char *setting_enum_val(const struct setting *pset, int val,
-                             bool pretty)
+QString setting_enum_val(const struct setting *pset, int val, bool pretty)
 {
   const struct sset_val_name *name;
 
-  fc_assert_ret_val(SST_ENUM == pset->stype, NULL);
+  fc_assert_ret_val(SST_ENUM == pset->stype, QString());
   name = pset->enumerator.name(val);
   if (NULL == name) {
-    return NULL;
+    return QString();
   } else if (pretty) {
-    return _(name->pretty);
+    return _(qPrintable(name->pretty));
   } else {
     return name->support;
   }
@@ -5515,19 +5495,17 @@ const char *setting_enum_val(const struct setting *pset, int val,
    Compute the string representation of the value for this enumerator
    setting.
  ****************************************************************************/
-static const char *setting_enum_to_str(const struct setting *pset, int value,
-                                       bool pretty, char *buf,
-                                       size_t buf_len)
+static QString setting_enum_to_str(const struct setting *pset, int value,
+                                   bool pretty)
 {
   const struct sset_val_name *name = pset->enumerator.name(value);
 
   if (pretty) {
-    fc_snprintf(buf, buf_len, "\"%s\" (%s)", Q_(name->pretty),
-                name->support);
+    return QStringLiteral("\"%1\" (%2)")
+        .arg(Q_(qPrintable(name->pretty)), name->support);
   } else {
-    fc_strlcpy(buf, name->support, buf_len);
+    return name->support;
   }
-  return buf;
 }
 
 /************************************************************************/ /**
@@ -5538,23 +5516,20 @@ static const char *setting_enum_to_str(const struct setting *pset, int value,
    FIXME: also check the access level of pconn.
  ****************************************************************************/
 static bool setting_enum_validate_base(const struct setting *pset,
-                                       const char *val, int *pint_val,
+                                       const QString &val, int *pint_val,
                                        struct connection *caller,
                                        char *reject_msg,
                                        size_t reject_msg_len)
 {
-  char buf[256];
-
   if (SST_ENUM != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not an enumerator."));
     return FALSE;
   }
 
-  sz_strlcpy(buf, val);
-  remove_leading_trailing_spaces(buf);
+  QString trimmed = val.trimmed();
 
-  return (setting_match_prefix(pset->enumerator.name, buf, pint_val,
+  return (setting_match_prefix(pset->enumerator.name, trimmed, pint_val,
                                reject_msg, reject_msg_len)
           && (NULL == pset->enumerator.validate
               || pset->enumerator.validate(*pint_val, caller, reject_msg,
@@ -5620,7 +5595,7 @@ int read_enum_value(const struct setting *pset)
    reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_enum_set(struct setting *pset, const char *val,
+bool setting_enum_set(struct setting *pset, const QString &val,
                       struct connection *caller, char *reject_msg,
                       size_t reject_msg_len)
 {
@@ -5637,7 +5612,7 @@ bool setting_enum_set(struct setting *pset, const char *val,
 
   if (!set_enum_value(pset, int_val)) {
     qCritical("Illegal enumerator value size %d for %s",
-              pset->enumerator.store_size, val);
+              pset->enumerator.store_size, qPrintable(val));
     return FALSE;
   }
 
@@ -5649,7 +5624,7 @@ bool setting_enum_set(struct setting *pset, const char *val,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_enum_validate(const struct setting *pset, const char *val,
+bool setting_enum_validate(const struct setting *pset, const QString &val,
                            struct connection *caller, char *reject_msg,
                            size_t reject_msg_len)
 {
@@ -5668,15 +5643,15 @@ const char *setting_bitwise_secfile_str(secfile_data_t data, int bit)
   const struct sset_val_name *name =
       ((const struct setting *) data)->bitwise.name(bit);
 
-  return (NULL != name ? name->support : NULL);
+  // FIXME mem leak
+  return (NULL != name ? qstrdup(qPrintable(name->support)) : NULL);
 }
 
 /************************************************************************/ /**
    Convert the bit number to its string representation.
    Return NULL if 'bit' is not a valid bit.
  ****************************************************************************/
-const char *setting_bitwise_bit(const struct setting *pset, int bit,
-                                bool pretty)
+QString setting_bitwise_bit(const struct setting *pset, int bit, bool pretty)
 {
   const struct sset_val_name *name;
 
@@ -5685,7 +5660,7 @@ const char *setting_bitwise_bit(const struct setting *pset, int bit,
   if (NULL == name) {
     return NULL;
   } else if (pretty) {
-    return _(name->pretty);
+    return _(qPrintable(name->pretty));
   } else {
     return name->support;
   }
@@ -5694,62 +5669,47 @@ const char *setting_bitwise_bit(const struct setting *pset, int bit,
 /************************************************************************/ /**
    Compute the string representation of the value for this bitwise setting.
  ****************************************************************************/
-static const char *setting_bitwise_to_str(const struct setting *pset,
-                                          unsigned value, bool pretty,
-                                          char *buf, size_t buf_len)
+static QString setting_bitwise_to_str(const struct setting *pset,
+                                      unsigned value, bool pretty)
 {
   const struct sset_val_name *name;
-  char *old_buf = buf;
+  QString result;
   int bit;
 
   if (pretty) {
-    char buf2[256];
-    struct astring astr = ASTRING_INIT;
-    struct strvec *vec = strvec_new();
-    size_t len;
+    QStringList list;
 
     for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
       if ((1 << bit) & value) {
         /* TRANS: only emphasizing a string. */
-        fc_snprintf(buf2, sizeof(buf2), _("\"%s\""), Q_(name->pretty));
-        strvec_append(vec, buf2);
+        list.append(QString(_("\"%1\"")).arg(Q_(qPrintable(name->pretty))));
       }
     }
 
-    if (0 == strvec_size(vec)) {
+    if (list.isEmpty()) {
       /* No value. */
       fc_assert(0 == value);
       /* TRANS: Bitwise setting has no bits set. */
-      fc_strlcpy(buf, _("empty value"), buf_len);
-      strvec_destroy(vec);
-      return buf;
+      return _("empty value");
     }
 
-    strvec_to_and_list(vec, &astr);
-    strvec_destroy(vec);
-    fc_strlcpy(buf, astr_str(&astr), buf_len);
-    astr_free(&astr);
-    fc_strlcat(buf, " (", buf_len);
-    len = strlen(buf);
-    buf += len;
-    buf_len -= len;
+    result = build_and_list(list) + QStringLiteral(" (");
   }
 
   /* Long support part. */
-  buf[0] = '\0';
   for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
     if ((1 << bit) & value) {
-      if ('\0' != buf[0]) {
-        fc_strlcat(buf, "|", buf_len);
+      if (!result.isEmpty()) {
+        result += QStringLiteral("|");
       }
-      fc_strlcat(buf, name->support, buf_len);
+      result += name->support;
     }
   }
 
   if (pretty) {
-    fc_strlcat(buf, ")", buf_len);
+    result += QStringLiteral(")");
   }
-  return old_buf;
+  return result;
 }
 
 /************************************************************************/ /**
@@ -5760,14 +5720,10 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
    FIXME: also check the access level of pconn.
  ****************************************************************************/
 static bool
-setting_bitwise_validate_base(const struct setting *pset, const char *val,
+setting_bitwise_validate_base(const struct setting *pset, const QString &val,
                               unsigned *pint_val, struct connection *caller,
                               char *reject_msg, size_t reject_msg_len)
 {
-  char buf[256];
-  const char *p;
-  int bit;
-
   if (SST_BITWISE != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not a bitwise."));
@@ -5777,26 +5733,17 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
   *pint_val = 0;
 
   /* Value names are separated by '|'. */
-  do {
-    p = strchr(val, '|');
-    if (NULL != p) {
-      p++;
-      fc_strlcpy(buf, val, MIN(p - val, sizeof(buf)));
-    } else {
-      /* Last segment, full copy. */
-      sz_strlcpy(buf, val);
-    }
-    remove_leading_trailing_spaces(buf);
-    if (NULL == p && '\0' == buf[0] && 0 == *pint_val) {
-      /* Empty string = value 0. */
-      break;
-    } else if (!setting_match_prefix(pset->bitwise.name, buf, &bit,
-                                     reject_msg, reject_msg_len)) {
+  QStringList list = val.split('|');
+  for (auto name : qAsConst(list)) {
+    name = name.trimmed();
+
+    int bit = 0;
+    if (!setting_match_prefix(pset->bitwise.name, name, &bit, reject_msg,
+                              reject_msg_len)) {
       return FALSE;
     }
     *pint_val |= 1 << bit;
-    val = p;
-  } while (NULL != p);
+  }
 
   return (NULL == pset->bitwise.validate
           || pset->bitwise.validate(*pint_val, caller, reject_msg,
@@ -5808,7 +5755,7 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
    reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_bitwise_set(struct setting *pset, const char *val,
+bool setting_bitwise_set(struct setting *pset, const QString &val,
                          struct connection *caller, char *reject_msg,
                          size_t reject_msg_len)
 {
@@ -5829,7 +5776,7 @@ bool setting_bitwise_set(struct setting *pset, const char *val,
    the reason of the failure is available in the optionnal parameter
    'reject_msg'.
  ****************************************************************************/
-bool setting_bitwise_validate(const struct setting *pset, const char *val,
+bool setting_bitwise_validate(const struct setting *pset, const QString &val,
                               struct connection *caller, char *reject_msg,
                               size_t reject_msg_len)
 {
@@ -5852,29 +5799,21 @@ int setting_bitwise_get(struct setting *pset)
 /************************************************************************/ /**
    Compute the name of the current value of the setting.
  ****************************************************************************/
-const char *setting_value_name(const struct setting *pset, bool pretty,
-                               char *buf, size_t buf_len)
+QString setting_value_name(const struct setting *pset, bool pretty)
 {
   fc_assert_ret_val(NULL != pset, NULL);
-  fc_assert_ret_val(NULL != buf, NULL);
-  fc_assert_ret_val(0 < buf_len, NULL);
 
   switch (pset->stype) {
   case SST_BOOL:
-    return setting_bool_to_str(pset, *pset->boolean.pvalue, pretty, buf,
-                               buf_len);
+    return setting_bool_to_str(pset, *pset->boolean.pvalue, pretty);
   case SST_INT:
-    return setting_int_to_str(pset, *pset->integer.pvalue, pretty, buf,
-                              buf_len);
+    return setting_int_to_str(pset, *pset->integer.pvalue, pretty);
   case SST_STRING:
-    return setting_str_to_str(pset, pset->string.value, pretty, buf,
-                              buf_len);
+    return setting_str_to_str(pset, pset->string.value, pretty);
   case SST_ENUM:
-    return setting_enum_to_str(pset, read_enum_value(pset), pretty, buf,
-                               buf_len);
+    return setting_enum_to_str(pset, read_enum_value(pset), pretty);
   case SST_BITWISE:
-    return setting_bitwise_to_str(pset, *pset->bitwise.pvalue, pretty, buf,
-                                  buf_len);
+    return setting_bitwise_to_str(pset, *pset->bitwise.pvalue, pretty);
   case SST_COUNT:
     /* Error logged below. */
     break;
@@ -5888,29 +5827,21 @@ const char *setting_value_name(const struct setting *pset, bool pretty,
 /************************************************************************/ /**
    Compute the name of the default value of the setting.
  ****************************************************************************/
-const char *setting_default_name(const struct setting *pset, bool pretty,
-                                 char *buf, size_t buf_len)
+QString setting_default_name(const struct setting *pset, bool pretty)
 {
   fc_assert_ret_val(NULL != pset, NULL);
-  fc_assert_ret_val(NULL != buf, NULL);
-  fc_assert_ret_val(0 < buf_len, NULL);
 
   switch (pset->stype) {
   case SST_BOOL:
-    return setting_bool_to_str(pset, pset->boolean.default_value, pretty,
-                               buf, buf_len);
+    return setting_bool_to_str(pset, pset->boolean.default_value, pretty);
   case SST_INT:
-    return setting_int_to_str(pset, pset->integer.default_value, pretty, buf,
-                              buf_len);
+    return setting_int_to_str(pset, pset->integer.default_value, pretty);
   case SST_STRING:
-    return setting_str_to_str(pset, pset->string.default_value, pretty, buf,
-                              buf_len);
+    return setting_str_to_str(pset, pset->string.default_value, pretty);
   case SST_ENUM:
-    return setting_enum_to_str(pset, pset->enumerator.default_value, pretty,
-                               buf, buf_len);
+    return setting_enum_to_str(pset, pset->enumerator.default_value, pretty);
   case SST_BITWISE:
-    return setting_bitwise_to_str(pset, pset->bitwise.default_value, pretty,
-                                  buf, buf_len);
+    return setting_bitwise_to_str(pset, pset->bitwise.default_value, pretty);
   case SST_COUNT:
     /* Error logged below. */
     break;
@@ -6018,7 +5949,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                 const char *path)
 {
   struct setting *pset = NULL;
-  char reject_msg[256], buf[256];
+  char reject_msg[256];
   bool lock;
 
   settings_iterate(SSET_ALL, pset_check)
@@ -6057,7 +5988,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                     sizeof(reject_msg))) {
         *pset->boolean.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, TRUE)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6073,7 +6004,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     } else if (val != *pset->integer.pvalue) {
       if (setting_int_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, TRUE)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6089,7 +6020,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     } else if (0 != strcmp(val, pset->string.value)) {
       if (setting_str_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, TRUE)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6110,7 +6041,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                        sizeof(reject_msg))) {
         set_enum_value(pset, val);
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, TRUE)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6131,7 +6062,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                     sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, TRUE)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6258,13 +6189,12 @@ static void setting_game_restore(struct setting *pset)
   }
 
   switch (setting_type(pset)) {
-  case SST_BOOL:
-    res = (NULL
-               != setting_bool_to_str(pset, pset->boolean.game_value, FALSE,
-                                      buf, sizeof(buf))
-           && setting_bool_set(pset, buf, NULL, reject_msg,
-                               sizeof(reject_msg)));
-    break;
+  case SST_BOOL: {
+    auto str = setting_bool_to_str(pset, pset->boolean.game_value, false);
+    res =
+        !str.isEmpty()
+        && setting_bool_set(pset, str, NULL, reject_msg, sizeof(reject_msg));
+  } break;
 
   case SST_INT:
     res = setting_int_set(pset, pset->integer.game_value, NULL, reject_msg,
@@ -6276,21 +6206,19 @@ static void setting_game_restore(struct setting *pset)
                           sizeof(reject_msg));
     break;
 
-  case SST_ENUM:
-    res = (NULL
-               != setting_enum_to_str(pset, pset->enumerator.game_value,
-                                      FALSE, buf, sizeof(buf))
-           && setting_enum_set(pset, buf, NULL, reject_msg,
-                               sizeof(reject_msg)));
-    break;
+  case SST_ENUM: {
+    auto str = setting_enum_to_str(pset, pset->enumerator.game_value, FALSE);
+    res =
+        !str.isEmpty()
+        && setting_enum_set(pset, buf, NULL, reject_msg, sizeof(reject_msg));
+  } break;
 
-  case SST_BITWISE:
-    res = (NULL
-               != setting_bitwise_to_str(pset, pset->bitwise.game_value,
-                                         FALSE, buf, sizeof(buf))
-           && setting_bitwise_set(pset, buf, NULL, reject_msg,
-                                  sizeof(reject_msg)));
-    break;
+  case SST_BITWISE: {
+    auto str = setting_bitwise_to_str(pset, pset->bitwise.game_value, FALSE);
+    res = !str.isEmpty()
+          && setting_bitwise_set(pset, buf, NULL, reject_msg,
+                                 sizeof(reject_msg));
+  } break;
 
   case SST_COUNT:
     res = FALSE;
@@ -6393,7 +6321,7 @@ void settings_game_save(struct section_file *file, const char *section)
 void settings_game_load(struct section_file *file, const char *section)
 {
   const char *name;
-  char reject_msg[256], buf[256];
+  char reject_msg[256];
   int i, set_count;
   int oldcitymindist =
       game.info.citymindist; /* backwards compat, see below */
@@ -6440,7 +6368,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->boolean.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    qPrintable(setting_value_name(pset, TRUE)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6471,7 +6399,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->integer.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    qPrintable(setting_value_name(pset, TRUE)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6499,7 +6427,7 @@ void settings_game_load(struct section_file *file, const char *section)
                                 sizeof(reject_msg))) {
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    qPrintable(setting_value_name(pset, TRUE)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6532,7 +6460,7 @@ void settings_game_load(struct section_file *file, const char *section)
               set_enum_value(pset, val);
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    qPrintable(setting_value_name(pset, TRUE)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6565,7 +6493,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->bitwise.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    qPrintable(setting_value_name(pset, TRUE)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6797,9 +6725,9 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.val = read_enum_value(pset);
         packet.default_val = pset->enumerator.default_value;
         for (i = 0; (val_name = pset->enumerator.name(i)); i++) {
-          sz_strlcpy(packet.support_names[i], val_name->support);
+          sz_strlcpy(packet.support_names[i], qPrintable(val_name->support));
           /* Send untranslated string */
-          sz_strlcpy(packet.pretty_names[i], val_name->pretty);
+          sz_strlcpy(packet.pretty_names[i], qPrintable(val_name->pretty));
         }
         packet.values_num = i;
         fc_assert(i <= ARRAY_SIZE(packet.support_names));
@@ -6821,9 +6749,9 @@ void send_server_setting(struct conn_list *dest, const struct setting *pset)
         packet.val = *pset->bitwise.pvalue;
         packet.default_val = pset->bitwise.default_value;
         for (i = 0; (val_name = pset->bitwise.name(i)); i++) {
-          sz_strlcpy(packet.support_names[i], val_name->support);
+          sz_strlcpy(packet.support_names[i], qPrintable(val_name->support));
           /* Send untranslated string */
-          sz_strlcpy(packet.pretty_names[i], val_name->pretty);
+          sz_strlcpy(packet.pretty_names[i], qPrintable(val_name->pretty));
         }
         packet.bits_num = i;
         fc_assert(i <= ARRAY_SIZE(packet.support_names));

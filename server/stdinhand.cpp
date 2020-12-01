@@ -1226,7 +1226,7 @@ struct strvec *get_init_script_choices(void)
  **************************************************************************/
 static void write_init_script(char *script_filename)
 {
-  char real_filename[1024], buf[256];
+  char real_filename[1024];
   FILE *script_file;
 
   interpret_tilde(real_filename, sizeof(real_filename), script_filename);
@@ -1277,7 +1277,7 @@ static void write_init_script(char *script_filename)
     settings_iterate(SSET_ALL, pset)
     {
       fprintf(script_file, "set %s \"%s\"\n", setting_name(pset),
-              setting_value_name(pset, FALSE, buf, sizeof(buf)));
+              qPrintable(setting_value_name(pset, FALSE)));
     }
     settings_iterate_end;
 
@@ -1705,7 +1705,6 @@ static int lookup_option(const char *name)
 static void show_help_option(struct connection *caller,
                              enum command_id help_cmd, int id)
 {
-  char val_buf[256], def_buf[256];
   struct setting *pset = setting_by_number(id);
   const char *sethelp;
 
@@ -1734,45 +1733,50 @@ static void show_help_option(struct connection *caller,
                                                         : _("fixed")));
 
   if (setting_is_visible(pset, caller)) {
-    setting_value_name(pset, TRUE, val_buf, sizeof(val_buf));
-    setting_default_name(pset, TRUE, def_buf, sizeof(def_buf));
+    auto val = setting_value_name(pset, TRUE);
+    auto def = setting_default_name(pset, TRUE);
 
     switch (setting_type(pset)) {
     case SST_INT:
       cmd_reply(help_cmd, caller, C_COMMENT, "%s %s, %s %d, %s %s, %s %d",
-                _("Value:"), val_buf, _("Minimum:"), setting_int_min(pset),
-                _("Default:"), def_buf, _("Maximum:"),
-                setting_int_max(pset));
+                _("Value:"), qPrintable(val), _("Minimum:"),
+                setting_int_min(pset), _("Default:"), qPrintable(def),
+                _("Maximum:"), setting_int_max(pset));
       break;
     case SST_ENUM: {
       int i;
-      const char *value;
+      QString value;
 
       cmd_reply(help_cmd, caller, C_COMMENT, _("Possible values:"));
-      for (i = 0; (value = setting_enum_val(pset, i, FALSE)); i++) {
-        cmd_reply(help_cmd, caller, C_COMMENT, "- %s: \"%s\"", value,
-                  setting_enum_val(pset, i, TRUE));
+      for (i = 0; !(value = setting_enum_val(pset, i, FALSE)).isEmpty();
+           i++) {
+        cmd_reply(help_cmd, caller, C_COMMENT, "- %s: \"%s\"",
+                  qPrintable(value),
+                  qPrintable(setting_enum_val(pset, i, TRUE)));
       }
     }
       /* Fall through. */
     case SST_BOOL:
     case SST_STRING:
       cmd_reply(help_cmd, caller, C_COMMENT, "%s %s, %s %s", _("Value:"),
-                val_buf, _("Default:"), def_buf);
+                qPrintable(val), _("Default:"), qPrintable(def));
       break;
     case SST_BITWISE: {
       int i;
-      const char *value;
+      QString value;
 
       cmd_reply(help_cmd, caller, C_COMMENT,
                 _("Possible values (option can take any number of these):"));
-      for (i = 0; (value = setting_bitwise_bit(pset, i, FALSE)); i++) {
-        cmd_reply(help_cmd, caller, C_COMMENT, "- %s: \"%s\"", value,
-                  setting_bitwise_bit(pset, i, TRUE));
+      for (i = 0; !(value = setting_bitwise_bit(pset, i, FALSE)).isEmpty();
+           i++) {
+        cmd_reply(help_cmd, caller, C_COMMENT, "- %s: \"%s\"",
+                  qPrintable(val),
+                  qPrintable(setting_bitwise_bit(pset, i, TRUE)));
       }
-      cmd_reply(help_cmd, caller, C_COMMENT, "%s %s", _("Value:"), val_buf);
+      cmd_reply(help_cmd, caller, C_COMMENT, "%s %s", _("Value:"),
+                qPrintable(val));
       cmd_reply(help_cmd, caller, C_COMMENT, "%s %s", _("Default:"),
-                def_buf);
+                qPrintable(def));
     } break;
     case SST_COUNT:
       fc_assert(setting_type(pset) != SST_COUNT);
@@ -2279,7 +2283,7 @@ static bool show_settings(struct connection *caller,
 static void show_settings_one(struct connection *caller, enum command_id cmd,
                               struct setting *pset)
 {
-  char buf[MAX_LEN_CONSOLE_LINE] = "", value[MAX_LEN_CONSOLE_LINE] = "";
+  char buf[MAX_LEN_CONSOLE_LINE] = "";
   bool is_changed;
   static char prefix[OPTION_NAME_SPACE + 4 + 1] = "";
   char defaultness;
@@ -2287,10 +2291,10 @@ static void show_settings_one(struct connection *caller, enum command_id cmd,
   fc_assert_ret(pset != NULL);
 
   is_changed = setting_non_default(pset);
-  setting_value_name(pset, TRUE, value, sizeof(value));
+  auto value = setting_value_name(pset, TRUE).toLocal8Bit();
 
   /* Wrap long option values, such as bitwise options */
-  fc_break_lines(value, LINE_BREAK - (sizeof(prefix) - 1));
+  fc_break_lines(value.data(), LINE_BREAK - (sizeof(prefix) - 1));
 
   if (prefix[0] == '\0') {
     memset(prefix, ' ', sizeof(prefix) - 1);
@@ -2302,23 +2306,23 @@ static void show_settings_one(struct connection *caller, enum command_id cmd,
     size_t startpos = 0;
     char *nl;
     do {
-      nl = strchr(value + startpos, '\n');
-      featured_text_apply_tag(value, buf, sizeof(buf), TTT_COLOR, startpos,
-                              nl ? nl - value : FT_OFFSET_UNSET,
-                              ftc_changed);
-      sz_strlcpy(value, buf);
+      nl = strchr(value.data() + startpos, '\n');
+      featured_text_apply_tag(
+          value.constData(), buf, sizeof(buf), TTT_COLOR, startpos,
+          nl ? nl - value.constData() : FT_OFFSET_UNSET, ftc_changed);
+      sz_strlcpy(value.data(), buf);
       if (nl) {
         char *p = strchr(nl, '\n');
         fc_assert_action(p != NULL, break);
-        startpos = p + 1 - value;
+        startpos = p + 1 - value.constData();
       }
     } while (nl);
   }
 
   if (SST_INT == setting_type(pset)) {
     /* Add the range. */
-    cat_snprintf(value, sizeof(value), " (%d, %d)", setting_int_min(pset),
-                 setting_int_max(pset));
+    cat_snprintf(value.data(), value.size(), " (%d, %d)",
+                 setting_int_min(pset), setting_int_max(pset));
   }
 
   if (setting_get_setdef(pset) == SETDEF_INTERNAL) {
@@ -2330,8 +2334,9 @@ static void show_settings_one(struct connection *caller, enum command_id cmd,
   }
 
   cmd_reply_prefix(cmd, caller, C_COMMENT, prefix, "%-*s %c%c %s",
-                   OPTION_NAME_SPACE, setting_name(pset),
-                   setting_status(caller, pset), defaultness, value);
+                   OPTION_NAME_SPACE, qPrintable(setting_name(pset)),
+                   setting_status(caller, pset), defaultness,
+                   value.constData());
 }
 
 /**********************************************************************/ /**
@@ -3052,12 +3057,12 @@ static bool set_command(struct connection *caller, char *str, bool check)
 
   if (!check && do_update) {
     /* Send only to connections able to see that. */
-    char buf[256];
     struct packet_chat_msg packet;
 
     package_event(&packet, NULL, E_SETTING, ftc_server,
-                  _("Console: '%s' has been set to %s."), setting_name(pset),
-                  setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                  _("Console: '%s' has been set to %s."),
+                  qPrintable(setting_name(pset)),
+                  qPrintable(setting_value_name(pset, TRUE)));
     conn_list_iterate(game.est_connections, pconn)
     {
       if (setting_is_visible(pset, pconn)) {
@@ -7096,14 +7101,16 @@ static const char *option_value_accessor(int idx)
   const struct setting *pset = setting_by_number(completion_option);
   switch (setting_type(pset)) {
   case SST_ENUM:
-    return setting_enum_val(pset, idx, FALSE);
+    // FIXME mem leak
+    return qstrdup(qPrintable(setting_enum_val(pset, idx, FALSE)));
     break;
   case SST_BITWISE:
-    return setting_bitwise_bit(pset, idx, FALSE);
+    // FIXME mem leak
+    return qstrdup(qPrintable(setting_bitwise_bit(pset, idx, FALSE)));
     break;
   default:
     fc_assert(false);
-    return nullptr;
+    return NULL;
   }
 }
 
