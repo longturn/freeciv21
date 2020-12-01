@@ -60,7 +60,6 @@ add_library(
   string_vector.cpp
   support.cpp
   timing.cpp
-  md5.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
