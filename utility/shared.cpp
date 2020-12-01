@@ -361,7 +361,7 @@ char *skip_leading_spaces(char *s)
 {
   fc_assert_ret_val(NULL != s, NULL);
 
-  while (*s != '\0' && fc_isspace(*s)) {
+  while (*s != '\0' && QChar::isSpace(*s)) {
     s++;
   }
 
@@ -399,7 +399,7 @@ void remove_trailing_spaces(char *s)
   len = strlen(s);
   if (len > 0) {
     t = s + len - 1;
-    while (fc_isspace(*t)) {
+    while (QChar::isSpace(*t)) {
       *t = '\0';
       if (t == s) {
         break;
@@ -488,7 +488,7 @@ bool str_to_int(const char *str, int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -503,7 +503,7 @@ bool str_to_int(const char *str, int *pint)
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -521,7 +521,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -536,7 +536,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -555,7 +555,7 @@ bool str_to_float(const char *str, float *pfloat)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -583,7 +583,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = FALSE;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }

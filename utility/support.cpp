@@ -741,7 +741,7 @@ top:
 
     /* find space and break: */
     for (c = str + desired_len; c > str; c--) {
-      if (fc_isspace(*c)) {
+      if (QChar::isSpace(*c)) {
         *c = '\n';
         slen -= c + 1 - str;
         str = c + 1;
@@ -751,7 +751,7 @@ top:
 
     /* couldn't find a good break; settle for a bad one... */
     for (c = str + desired_len + 1; *c != '\0'; c++) {
-      if (fc_isspace(*c)) {
+      if (QChar::isSpace(*c)) {
         *c = '\n';
         slen -= c + 1 - str;
         str = c + 1;
@@ -817,17 +817,6 @@ bool fc_isprint(char c)
     return FALSE;
   }
   return isprint((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isspace(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isspace((int) ((unsigned char) c)) != 0;
 }
 
 

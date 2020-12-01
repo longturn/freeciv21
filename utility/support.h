@@ -130,7 +130,6 @@ bool fc_isalnum(char c);
 bool fc_isalpha(char c);
 bool fc_isdigit(char c);
 bool fc_isprint(char c);
-bool fc_isspace(char c);
 
 const char *fc_basename(const char *path);
 

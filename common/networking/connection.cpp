@@ -832,7 +832,7 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
   }
 
   /* Remove leading spaces. */
-  while (fc_isspace(*p)) {
+  while (QChar::isSpace(*p)) {
     p++;
   }
 

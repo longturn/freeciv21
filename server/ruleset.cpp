@@ -4441,7 +4441,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
         ok = FALSE;
       } else {
         for (*end++ = '\0'; '\0' != *end; end++) {
-          if (!fc_isspace(*end)) {
+          if (!QChar::isSpace(*end)) {
             qCCritical(ruleset_category,
                        "\"%s\" [%s] %s: city name \"%s\" "
                        "contains characters after last parenthesis.",
