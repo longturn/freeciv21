@@ -42,6 +42,7 @@
 #include "gui_main_g.h"
 #include "menu_g.h"
 #include "optiondlg_g.h"
+#include "ratesdlg_g.h"
 #include "repodlgs_g.h"
 #include "voteinfo_bar_g.h"
 
@@ -1503,6 +1504,7 @@ static void manual_turn_done_callback(struct option *poption);
 static void voteinfo_bar_callback(struct option *poption);
 static void font_changed_callback(struct option *poption);
 static void allfont_changed_callback(struct option *poption);
+static void sidebar_changed_callback(struct option *poption);
 static void mapimg_changed_callback(struct option *poption);
 static void game_music_enable_callback(struct option *poption);
 static void menu_music_enable_callback(struct option *poption);
@@ -2077,6 +2079,9 @@ static struct client_option client_options[] = {
                       "That options is not unsaveable. Hit Apply button"
                       "after changing this."),
                    COC_FONT, GUI_QT, 0, -100, 100, allfont_changed_callback),
+    GEN_INT_OPTION(gui_qt_sidebar_width, N_("Sidebar width"),
+                   N_("Change width of sidebar. 1 - narrow, 9 - fat"),
+                   COC_INTERFACE, GUI_QT, 5, 1, 9, sidebar_changed_callback),
     GEN_FONT_OPTION(gui_qt_font_default, "default_font", N_("Default font"),
                     N_("This is default font"), COC_FONT, GUI_QT,
                     "Sans Serif,10,-1,5,75,0,0,0,0,0",
@@ -5035,6 +5040,11 @@ static void voteinfo_bar_callback(struct option *poption)
 static void allfont_changed_callback(struct option *poption)
 {
   gui_update_allfonts();
+}
+
+static void sidebar_changed_callback(struct option *poption)
+{
+  gui_update_sidebar();
 }
 
 /************************************************************************/ /**

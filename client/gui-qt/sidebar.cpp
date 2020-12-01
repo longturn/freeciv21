@@ -502,7 +502,7 @@ void fc_sidebar::paint(QPainter *painter, QPaintEvent *event)
 }
 
 /**************************************************************************
-  Resize sidebar to take at least 80 pixels width and 100 pixels for FullHD
+  Resize sidebar to take at least 20 pixels width and 100 pixels for FullHD
   desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
   desktop.
 **************************************************************************/
@@ -513,8 +513,9 @@ void fc_sidebar::resize_me(int hght, bool force)
   h = hght;
   auto temp = (QGuiApplication::screens());
   hres = temp[0]->availableGeometry().width();
-  w = (100 * hres) / 1920;
-  w = qMax(w, 80);
+
+  w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
+  w = qMax(w, 20);
 
   if (!force && w == width() && h == height()) {
     return;
@@ -739,4 +740,10 @@ void side_left_click_science(bool nothing)
     sci_rep = reinterpret_cast<science_report *>(w);
     queen()->game_tab_widget->setCurrentWidget(sci_rep);
   }
+}
+
+// Reloads all icons and resize sidebar width to new value
+void gui_update_sidebar()
+{
+  queen()->reload_sidebar_icons();
 }
