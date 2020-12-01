@@ -721,44 +721,55 @@ int fc_break_lines(char *str, size_t desired_len)
 {
   size_t slen = (size_t) strlen(str);
   int num_lines = 0;
-
+  bool not_end = true;
   /* At top of this loop, s points to the rest of string,
    * either at start or after inserted newline: */
-top:
-  if (str && *str != '\0' && slen > desired_len) {
-    char *c;
+  do {
+    bool double_break = false;
+    if (str && *str != '\0' && slen > desired_len) {
+      char *c;
 
-    num_lines++;
+      num_lines++;
 
-    /* check if there is already a newline: */
-    for (c = str; c < str + desired_len; c++) {
-      if (*c == '\n') {
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
+      /* check if there is already a newline: */
+      for (c = str; c < str + desired_len; c++) {
+        if (*c == '\n') {
+          slen -= c + 1 - str;
+          str = c + 1;
+          double_break = true;
+          break;
+        }
+      }
+      if (double_break) {
+        continue;
+      }
+
+      /* find space and break: */
+      for (c = str + desired_len; c > str; c--) {
+        if (QChar::isSpace(*c)) {
+          *c = '\n';
+          slen -= c + 1 - str;
+          str = c + 1;
+          double_break = true;
+          break;
+        }
+      }
+      if (double_break) {
+        continue;
+      }
+
+      /* couldn't find a good break; settle for a bad one... */
+      for (c = str + desired_len + 1; *c != '\0'; c++) {
+        if (QChar::isSpace(*c)) {
+          *c = '\n';
+          slen -= c + 1 - str;
+          str = c + 1;
+          break;
+        }
       }
     }
-
-    /* find space and break: */
-    for (c = str + desired_len; c > str; c--) {
-      if (QChar::isSpace(*c)) {
-        *c = '\n';
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
-      }
-    }
-
-    /* couldn't find a good break; settle for a bad one... */
-    for (c = str + desired_len + 1; *c != '\0'; c++) {
-      if (QChar::isSpace(*c)) {
-        *c = '\n';
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
-      }
-    }
-  }
+    not_end = false;
+  } while (not_end);
 
   return num_lines;
 }
@@ -774,7 +785,6 @@ top:
   forsingle-byte 8-bit- or UTF-8 encoded text; in UTF-8, any byte that is
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
-
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.
