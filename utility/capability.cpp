@@ -26,11 +26,11 @@
 #define GET_TOKEN(start, end)                                               \
   {                                                                         \
     /* skip leading whitespace */                                           \
-    while (fc_isspace(*start)) {                                            \
+    while (QChar::isSpace(*start)) {                                            \
       start++;                                                              \
     }                                                                       \
     /* skip to end of token */                                              \
-    for (end = start; *end != '\0' && !fc_isspace(*end) && *end != ',';     \
+    for (end = start; *end != '\0' && !QChar::isSpace(*end) && *end != ',';     \
          end++) {                                                           \
       /* nothing */                                                         \
     }                                                                       \

@@ -361,7 +361,7 @@ char *skip_leading_spaces(char *s)
 {
   fc_assert_ret_val(NULL != s, NULL);
 
-  while (*s != '\0' && fc_isspace(*s)) {
+  while (*s != '\0' && QChar::isSpace(*s)) {
     s++;
   }
 
@@ -399,7 +399,7 @@ void remove_trailing_spaces(char *s)
   len = strlen(s);
   if (len > 0) {
     t = s + len - 1;
-    while (fc_isspace(*t)) {
+    while (QChar::isSpace(*t)) {
       *t = '\0';
       if (t == s) {
         break;
@@ -488,7 +488,7 @@ bool str_to_int(const char *str, int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -498,12 +498,12 @@ bool str_to_int(const char *str, int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -521,7 +521,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -531,12 +531,12 @@ bool str_to_uint(const char *str, unsigned int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -555,7 +555,7 @@ bool str_to_float(const char *str, float *pfloat)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -566,7 +566,7 @@ bool str_to_float(const char *str, float *pfloat)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
@@ -575,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = TRUE;
     str++;
 
-    while (fc_isdigit(*str)) {
+    while (QChar::isDigit(*str)) {
       /* Digits. */
       str++;
     }
@@ -583,7 +583,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = FALSE;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -2022,11 +2022,11 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
       /* Make format. */
       c = cformat;
       *c++ = '%';
-      for (; !fc_isalpha(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
+      for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
         *c++ = *f;
       }
 
-      if (!fc_isalpha(*f)) {
+      if (!QChar::isLetter(*f)) {
         /* Beginning of a new sequence, end of the format, or too long
          * sequence. */
         *c = '\0';
@@ -2187,12 +2187,12 @@ static size_t extract_escapes(const char *format, char *escapes,
     if ('%' == *format) {
       /* Double, not a sequence. */
       continue;
-    } else if (fc_isdigit(*format)) {
+    } else if (QChar::isDigit(*format)) {
       const char *start = format;
 
       do {
         format++;
-      } while (fc_isdigit(*format));
+      } while (QChar::isDigit(*format));
       if ('$' == *format) {
         /* Strings are reordered. */
         sscanf(start, "%d", &idx);

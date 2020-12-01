@@ -362,7 +362,7 @@ static bool check_include(struct inputfile *inf)
   /* skip any whitespace: */
   inf->cur_line_pos = len;
   c = astr_str(&inf->cur_line) + len;
-  while (*c != '\0' && fc_isspace(*c)) {
+  while (*c != '\0' && QChar::isSpace(*c)) {
     c++;
   }
 
@@ -390,7 +390,7 @@ static bool check_include(struct inputfile *inf)
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
   /* check rest of line is well-formed: */
-  while (*c != '\0' && fc_isspace(*c) && !is_comment(*c)) {
+  while (*c != '\0' && QChar::isSpace(*c) && !is_comment(*c)) {
     c++;
   }
   if (!(*c == '\0' || is_comment(*c))) {
@@ -661,17 +661,17 @@ static const char *get_token_entry_name(struct inputfile *inf)
   fc_assert_ret_val(have_line(inf), NULL);
 
   c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && fc_isspace(*c)) {
+  while (*c != '\0' && QChar::isSpace(*c)) {
     c++;
   }
   if (*c == '\0') {
     return NULL;
   }
   start = c;
-  while (*c != '\0' && !fc_isspace(*c) && *c != '=' && !is_comment(*c)) {
+  while (*c != '\0' && !QChar::isSpace(*c) && *c != '=' && !is_comment(*c)) {
     c++;
   }
-  if (!(*c != '\0' && (fc_isspace(*c) || *c == '='))) {
+  if (!(*c != '\0' && (QChar::isSpace(*c) || *c == '='))) {
     return NULL;
   }
   end = c;
@@ -701,7 +701,7 @@ static const char *get_token_eol(struct inputfile *inf)
 
   if (!at_eol(inf)) {
     c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-    while (*c != '\0' && fc_isspace(*c)) {
+    while (*c != '\0' && QChar::isSpace(*c)) {
       c++;
     }
     if (*c != '\0' && !is_comment(*c)) {
@@ -728,7 +728,7 @@ static const char *get_token_white_char(struct inputfile *inf, char target)
   fc_assert_ret_val(have_line(inf), NULL);
 
   c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && fc_isspace(*c)) {
+  while (*c != '\0' && QChar::isSpace(*c)) {
     c++;
   }
   if (*c != target) {
@@ -777,28 +777,28 @@ static const char *get_token_value(struct inputfile *inf)
   fc_assert_ret_val(have_line(inf), NULL);
 
   c = astr_str(&inf->cur_line) + inf->cur_line_pos;
-  while (*c != '\0' && fc_isspace(*c)) {
+  while (*c != '\0' && QChar::isSpace(*c)) {
     c++;
   }
   if (*c == '\0') {
     return NULL;
   }
 
-  if (*c == '-' || *c == '+' || fc_isdigit(*c)) {
+  if (*c == '-' || *c == '+' || QChar::isDigit(*c)) {
     /* a number: */
     start = c++;
-    while (*c != '\0' && fc_isdigit(*c)) {
+    while (*c != '\0' && QChar::isDigit(*c)) {
       c++;
     }
     if (*c == '.') {
       /* Float maybe */
       c++;
-      while (*c != '\0' && fc_isdigit(*c)) {
+      while (*c != '\0' && QChar::isDigit(*c)) {
         c++;
       }
     }
     /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || fc_isspace(*c) || is_comment(*c))) {
+    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
       return NULL;
     }
     /* If its a comma, we don't want to obliterate it permanently,
@@ -817,7 +817,7 @@ static const char *get_token_value(struct inputfile *inf)
   if (*c == '_' && *(c + 1) == '(') {
     has_i18n_marking = TRUE;
     c += 2;
-    while (*c != '\0' && fc_isspace(*c)) {
+    while (*c != '\0' && QChar::isSpace(*c)) {
       c++;
     }
     if (*c == '\0') {
@@ -844,7 +844,7 @@ static const char *get_token_value(struct inputfile *inf)
     }
     c++;
     /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || fc_isspace(*c) || is_comment(*c))) {
+    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
       return NULL;
     }
     /* We don't want to obliterate ending '*' permanently,
@@ -892,11 +892,11 @@ static const char *get_token_value(struct inputfile *inf)
              && border_character != '$') {
     /* A one-word string: maybe FALSE or TRUE. */
     start = c;
-    while (fc_isalnum(*c)) {
+    while (QChar::isLetterOrNumber(*c)) {
       c++;
     }
     /* check that the trailing stuff is ok: */
-    if (!(*c == '\0' || *c == ',' || fc_isspace(*c) || is_comment(*c))) {
+    if (!(*c == '\0' || *c == ',' || QChar::isSpace(*c) || is_comment(*c))) {
       return NULL;
     }
     /* If its a comma, we don't want to obliterate it permanently,

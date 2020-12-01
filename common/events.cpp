@@ -349,7 +349,7 @@ void events_init(void)
     event_to_index[events[i].event] = i;
     events[i].tag_name = fc_strdup(events[i].enum_name);
     for (j = 0; j < strlen(events[i].tag_name); j++) {
-      events[i].tag_name[j] = fc_tolower(events[i].tag_name[j]);
+      events[i].tag_name[j] = QChar::toLower(events[i].tag_name[j]);
     }
     log_debug("event[%d]=%d: name='%s' / '%s'\n"
               "\tdescr_orig='%s'\n"

@@ -185,92 +185,16 @@ size_t effectivestrlenquote(const char *str)
  ****************************************************************************/
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
-  size_t i;
-  size_t len0;
-  size_t len1;
-  size_t cmplen;
 
-  if (str0 == NULL) {
-    return -1;
+  auto left = QString::fromUtf8(str0);
+  auto right = QString::fromUtf8(str1);
+  if (left.startsWith("\"") && left.endsWith("\"")) {
+    left = left.mid(1, left.length() - 2);
   }
-  if (str1 == NULL) {
-    return 1;
+  if (right.startsWith("\"") && right.endsWith("\"")) {
+    left = left.mid(1, left.length() - 2);
   }
-
-  len0 = strlen(str0); /* TODO: We iterate string once already here, */
-  len1 = strlen(str1); /*       could iterate only once */
-
-  if (str0[0] == '"') {
-    if (str0[len0 - 1] == '"') {
-      /* Surrounded with quotes */
-      str0++;
-      len0 -= 2;
-    }
-  }
-
-  if (str1[0] == '"') {
-    if (str1[len1 - 1] == '"') {
-      /* Surrounded with quotes */
-      str1++;
-      len1 -= 2;
-    }
-  }
-
-  if (len0 < n || len1 < n) {
-    /* One of the strings is shorter than what should be compared... */
-    if (len0 != len1) {
-      /* ...and another is longer than it. */
-      return len0 - len1;
-    }
-
-    cmplen = len0; /* This avoids comparing ending quote */
-  } else {
-    cmplen = n;
-  }
-
-  for (i = 0; i < cmplen; i++, str0++, str1++) {
-    if (fc_tolower(*str0) != fc_tolower(*str1)) {
-      return ((int) (unsigned char) fc_tolower(*str0))
-             - ((int) (unsigned char) fc_tolower(*str1));
-    }
-  }
-
-  /* All characters compared and all matched */
-  return 0;
-}
-
-/************************************************************************/ /**
-   Return the needle in the haystack (or NULL).
-   Naive implementation.
- ****************************************************************************/
-char *fc_strcasestr(const char *haystack, const char *needle)
-{
-#ifdef HAVE_STRCASESTR
-  return strcasestr(haystack, needle);
-#else
-  size_t haystacks;
-  size_t needles;
-  const char *p;
-
-  if (NULL == needle || '\0' == *needle) {
-    return (char *) haystack;
-  }
-  if (NULL == haystack || '\0' == *haystack) {
-    return NULL;
-  }
-  haystacks = strlen(haystack);
-  needles = strlen(needle);
-  if (haystacks < needles) {
-    return NULL;
-  }
-
-  for (p = haystack; p <= &haystack[haystacks - needles]; p++) {
-    if (0 == fc_strncasecmp(p, needle, needles)) {
-      return (char *) p;
-    }
-  }
-  return NULL;
-#endif /* HAVE_STRCASESTR */
+  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
 /************************************************************************/ /**
@@ -721,44 +645,55 @@ int fc_break_lines(char *str, size_t desired_len)
 {
   size_t slen = (size_t) strlen(str);
   int num_lines = 0;
-
+  bool not_end = true;
   /* At top of this loop, s points to the rest of string,
    * either at start or after inserted newline: */
-top:
-  if (str && *str != '\0' && slen > desired_len) {
-    char *c;
+  do {
+    bool double_break = false;
+    if (str && *str != '\0' && slen > desired_len) {
+      char *c;
 
-    num_lines++;
+      num_lines++;
 
-    /* check if there is already a newline: */
-    for (c = str; c < str + desired_len; c++) {
-      if (*c == '\n') {
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
+      /* check if there is already a newline: */
+      for (c = str; c < str + desired_len; c++) {
+        if (*c == '\n') {
+          slen -= c + 1 - str;
+          str = c + 1;
+          double_break = true;
+          break;
+        }
+      }
+      if (double_break) {
+        continue;
+      }
+
+      /* find space and break: */
+      for (c = str + desired_len; c > str; c--) {
+        if (QChar::isSpace(*c)) {
+          *c = '\n';
+          slen -= c + 1 - str;
+          str = c + 1;
+          double_break = true;
+          break;
+        }
+      }
+      if (double_break) {
+        continue;
+      }
+
+      /* couldn't find a good break; settle for a bad one... */
+      for (c = str + desired_len + 1; *c != '\0'; c++) {
+        if (QChar::isSpace(*c)) {
+          *c = '\n';
+          slen -= c + 1 - str;
+          str = c + 1;
+          break;
+        }
       }
     }
-
-    /* find space and break: */
-    for (c = str + desired_len; c > str; c--) {
-      if (fc_isspace(*c)) {
-        *c = '\n';
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
-      }
-    }
-
-    /* couldn't find a good break; settle for a bad one... */
-    for (c = str + desired_len + 1; *c != '\0'; c++) {
-      if (fc_isspace(*c)) {
-        *c = '\n';
-        slen -= c + 1 - str;
-        str = c + 1;
-        goto top;
-      }
-    }
-  }
+    not_end = false;
+  } while (not_end);
 
   return num_lines;
 }
@@ -774,94 +709,6 @@ top:
   forsingle-byte 8-bit- or UTF-8 encoded text; in UTF-8, any byte that is
   part of a multibyte sequence is non-ASCII.
 ****************************************************************************/
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isalnum(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isalnum((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isalpha(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isalpha((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isdigit(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isdigit((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isprint(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isprint((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isspace(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isspace((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isupper(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isupper((int) ((unsigned char) c)) != 0;
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-char fc_toupper(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return c;
-  }
-  return (char) toupper((int) ((unsigned char) c));
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-char fc_tolower(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return c;
-  }
-  return (char) tolower((int) ((unsigned char) c));
-}
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.

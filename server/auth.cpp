@@ -330,10 +330,10 @@ static bool is_good_password(const char *password, char *msg)
               MIN_PASSWORD_CAPS, MIN_PASSWORD_NUMS, MIN_PASSWORD_LEN);
 
   for (i = 0; i < strlen(password); i++) {
-    if (fc_isupper(password[i])) {
+    if (QChar::isUpper(password[i])) {
       num_caps++;
     }
-    if (fc_isdigit(password[i])) {
+    if (QChar::isDigit(password[i])) {
       num_nums++;
     }
   }

@@ -744,7 +744,7 @@ static char *year_suffix(void)
 
   /* Remove all non alphanumeric characters from the year suffix. */
   for (; '\0' != *suffix && c < max; suffix++) {
-    if (fc_isalnum(*suffix)) {
+    if (QChar::isLetterOrNumber(*suffix)) {
       *c++ = *suffix;
     }
   }

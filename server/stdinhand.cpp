@@ -4373,7 +4373,7 @@ static bool handle_stdin_input_real(struct connection *caller, char *str,
    * skipped leading whitespace, the SERVER_COMMAND_PREFIX and any
    * other non-alphanumeric characters.
    */
-  for (cptr_d = command; *cptr_s != '\0' && fc_isalnum(*cptr_s)
+  for (cptr_d = command; *cptr_s != '\0' && QChar::isLetterOrNumber(*cptr_s)
                          && cptr_d < command + sizeof(command) - 1;
        cptr_s++, cptr_d++) {
     *cptr_d = *cptr_s;
@@ -7292,16 +7292,16 @@ static bool contains_token_before_start(int start, int token,
 
   /* Swallow unwanted tokens and their preceding delimiters */
   while (token--) {
-    while (str_itr < rl_line_buffer + start && !fc_isalnum(*str_itr)) {
+    while (str_itr < rl_line_buffer + start && !QChar::isLetterOrNumber(*str_itr)) {
       str_itr++;
     }
-    while (str_itr < rl_line_buffer + start && fc_isalnum(*str_itr)) {
+    while (str_itr < rl_line_buffer + start && QChar::isLetterOrNumber(*str_itr)) {
       str_itr++;
     }
   }
 
   /* Swallow any delimiters before the token we're interested in */
-  while (str_itr < rl_line_buffer + start && !fc_isalnum(*str_itr)) {
+  while (str_itr < rl_line_buffer + start && !QChar::isLetterOrNumber(*str_itr)) {
     str_itr++;
   }
 
@@ -7310,14 +7310,14 @@ static bool contains_token_before_start(int start, int token,
   }
   str_itr += arg_len;
 
-  if (fc_isalnum(*str_itr)) {
+  if (QChar::isLetterOrNumber(*str_itr)) {
     /* Not a distinct word. */
     return FALSE;
   }
 
   if (!allow_fluff) {
     for (; str_itr < rl_line_buffer + start; str_itr++) {
-      if (fc_isalnum(*str_itr)) {
+      if (QChar::isLetterOrNumber(*str_itr)) {
         return FALSE;
       }
     }
@@ -7352,7 +7352,7 @@ static bool is_command(int start)
   /* if there is only it is also OK */
   str_itr = rl_line_buffer;
   while (str_itr - rl_line_buffer < start) {
-    if (fc_isalnum(*str_itr)) {
+    if (QChar::isLetterOrNumber(*str_itr)) {
       return FALSE;
     }
     str_itr++;
@@ -7370,7 +7370,7 @@ static int num_tokens(int start)
   char *chptr = rl_line_buffer;
 
   while (chptr - rl_line_buffer < start) {
-    if (fc_isalnum(*chptr)) {
+    if (QChar::isLetterOrNumber(*chptr)) {
       if (!alnum) {
         alnum = TRUE;
         res++;

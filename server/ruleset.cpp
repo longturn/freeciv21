@@ -4441,7 +4441,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
         ok = FALSE;
       } else {
         for (*end++ = '\0'; '\0' != *end; end++) {
-          if (!fc_isspace(*end)) {
+          if (!QChar::isSpace(*end)) {
             qCCritical(ruleset_category,
                        "\"%s\" [%s] %s: city name \"%s\" "
                        "contains characters after last parenthesis.",
@@ -4508,7 +4508,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
             /* Try with removing frequent trailing 's'. */
             size_t l = strlen(p);
 
-            if (0 < l && 's' == fc_tolower(p[l - 1])) {
+            if (0 < l && 's' == QChar::toLower(p[l - 1])) {
               char saved = p[l - 1];
 
               p[l - 1] = '\0';
