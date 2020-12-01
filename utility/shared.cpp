@@ -498,7 +498,7 @@ bool str_to_int(const char *str, int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
@@ -531,7 +531,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
@@ -566,7 +566,7 @@ bool str_to_float(const char *str, float *pfloat)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
@@ -575,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = TRUE;
     str++;
 
-    while (fc_isdigit(*str)) {
+    while (QChar::isDigit(*str)) {
       /* Digits. */
       str++;
     }
@@ -2187,12 +2187,12 @@ static size_t extract_escapes(const char *format, char *escapes,
     if ('%' == *format) {
       /* Double, not a sequence. */
       continue;
-    } else if (fc_isdigit(*format)) {
+    } else if (QChar::isDigit(*format)) {
       const char *start = format;
 
       do {
         format++;
-      } while (fc_isdigit(*format));
+      } while (QChar::isDigit(*format));
       if ('$' == *format) {
         /* Strings are reordered. */
         sscanf(start, "%d", &idx);

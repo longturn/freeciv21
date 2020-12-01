@@ -128,7 +128,6 @@ int fc_break_lines(char *str, size_t desired_len);
 
 bool fc_isalnum(char c);
 bool fc_isalpha(char c);
-bool fc_isdigit(char c);
 bool fc_isprint(char c);
 
 const char *fc_basename(const char *path);

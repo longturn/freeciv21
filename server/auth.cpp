@@ -334,7 +334,7 @@ static bool is_good_password(const char *password, char *msg)
     if (QChar::isUpper(password[i])) {
       num_caps++;
     }
-    if (fc_isdigit(password[i])) {
+    if (QChar::isDigit(password[i])) {
       num_nums++;
     }
   }

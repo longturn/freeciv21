@@ -784,16 +784,16 @@ static const char *get_token_value(struct inputfile *inf)
     return NULL;
   }
 
-  if (*c == '-' || *c == '+' || fc_isdigit(*c)) {
+  if (*c == '-' || *c == '+' || QChar::isDigit(*c)) {
     /* a number: */
     start = c++;
-    while (*c != '\0' && fc_isdigit(*c)) {
+    while (*c != '\0' && QChar::isDigit(*c)) {
       c++;
     }
     if (*c == '.') {
       /* Float maybe */
       c++;
-      while (*c != '\0' && fc_isdigit(*c)) {
+      while (*c != '\0' && QChar::isDigit(*c)) {
         c++;
       }
     }

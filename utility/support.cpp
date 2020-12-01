@@ -797,16 +797,6 @@ bool fc_isalpha(char c)
   return isalpha((int) ((unsigned char) c)) != 0;
 }
 
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isdigit(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isdigit((int) ((unsigned char) c)) != 0;
-}
 
 /************************************************************************/ /**
    Wrapper function to work around broken libc implementations. See above.
