@@ -841,16 +841,6 @@ bool fc_isupper(char c)
   return isupper((int) ((unsigned char) c)) != 0;
 }
 
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-char fc_toupper(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return c;
-  }
-  return (char) toupper((int) ((unsigned char) c));
-}
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.
