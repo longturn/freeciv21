@@ -606,7 +606,7 @@ struct section_file *secfile_from_stream(fz_FILE *stream,
  **************************************************************************/
 static bool is_legal_table_entry_name(char c, bool num)
 {
-  return (num ? fc_isalnum(c) : fc_isalpha(c)) || c == '_';
+  return (num ? fc_isalnum(c) : QChar::isLetter(c)) || c == '_';
 }
 
 /**********************************************************************/ /**

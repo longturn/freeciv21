@@ -127,7 +127,6 @@ bool is_reg_file_for_access(const char *name, bool write_access);
 int fc_break_lines(char *str, size_t desired_len);
 
 bool fc_isalnum(char c);
-bool fc_isalpha(char c);
 
 const char *fc_basename(const char *path);
 

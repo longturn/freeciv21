@@ -786,17 +786,6 @@ bool fc_isalnum(char c)
   return isalnum((int) ((unsigned char) c)) != 0;
 }
 
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-bool fc_isalpha(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return FALSE;
-  }
-  return isalpha((int) ((unsigned char) c)) != 0;
-}
-
 
 /************************************************************************/ /**
    basename() replacement that always takes const parameter.

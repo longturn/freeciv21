@@ -2022,11 +2022,11 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
       /* Make format. */
       c = cformat;
       *c++ = '%';
-      for (; !fc_isalpha(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
+      for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
         *c++ = *f;
       }
 
-      if (!fc_isalpha(*f)) {
+      if (!QChar::isLetter(*f)) {
         /* Beginning of a new sequence, end of the format, or too long
          * sequence. */
         *c = '\0';

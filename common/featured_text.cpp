@@ -800,7 +800,7 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
 
   /* Check the length of the type name. */
   for (name = buf_in; name < stop; name++) {
-    if (!fc_isalpha(*name)) {
+    if (!QChar::isLetter(*name)) {
       break;
     }
   }
