@@ -185,58 +185,16 @@ size_t effectivestrlenquote(const char *str)
  ****************************************************************************/
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
-  size_t i;
-  size_t len0;
-  size_t len1;
-  size_t cmplen;
 
-  if (str0 == NULL) {
-    return -1;
+  auto left = QString::fromUtf8(str0);
+  auto right = QString::fromUtf8(str1);
+  if (left.startsWith("\"") && left.endsWith("\"")) {
+    left = left.mid(1, left.length() - 2);
   }
-  if (str1 == NULL) {
-    return 1;
+  if (right.startsWith("\"") && right.endsWith("\"")) {
+    left = left.mid(1, left.length() - 2);
   }
-
-  len0 = strlen(str0); /* TODO: We iterate string once already here, */
-  len1 = strlen(str1); /*       could iterate only once */
-
-  if (str0[0] == '"') {
-    if (str0[len0 - 1] == '"') {
-      /* Surrounded with quotes */
-      str0++;
-      len0 -= 2;
-    }
-  }
-
-  if (str1[0] == '"') {
-    if (str1[len1 - 1] == '"') {
-      /* Surrounded with quotes */
-      str1++;
-      len1 -= 2;
-    }
-  }
-
-  if (len0 < n || len1 < n) {
-    /* One of the strings is shorter than what should be compared... */
-    if (len0 != len1) {
-      /* ...and another is longer than it. */
-      return len0 - len1;
-    }
-
-    cmplen = len0; /* This avoids comparing ending quote */
-  } else {
-    cmplen = n;
-  }
-
-  for (i = 0; i < cmplen; i++, str0++, str1++) {
-    if (QChar::toLower(*str0) != QChar::toLower(*str1)) {
-      return ((int) (unsigned char) QChar::toLower(*str0))
-             - ((int) (unsigned char) QChar::toLower(*str1));
-    }
-  }
-
-  /* All characters compared and all matched */
-  return 0;
+  return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
 
 /************************************************************************/ /**
