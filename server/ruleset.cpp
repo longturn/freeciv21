@@ -4508,7 +4508,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
             /* Try with removing frequent trailing 's'. */
             size_t l = strlen(p);
 
-            if (0 < l && 's' == fc_tolower(p[l - 1])) {
+            if (0 < l && 's' == QChar::toLower(p[l - 1])) {
               char saved = p[l - 1];
 
               p[l - 1] = '\0';

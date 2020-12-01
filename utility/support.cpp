@@ -229,9 +229,9 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
   }
 
   for (i = 0; i < cmplen; i++, str0++, str1++) {
-    if (fc_tolower(*str0) != fc_tolower(*str1)) {
-      return ((int) (unsigned char) fc_tolower(*str0))
-             - ((int) (unsigned char) fc_tolower(*str1));
+    if (QChar::toLower(*str0) != QChar::toLower(*str1)) {
+      return ((int) (unsigned char) QChar::toLower(*str0))
+             - ((int) (unsigned char) QChar::toLower(*str1));
     }
   }
 
@@ -850,17 +850,6 @@ char fc_toupper(char c)
     return c;
   }
   return (char) toupper((int) ((unsigned char) c));
-}
-
-/************************************************************************/ /**
-   Wrapper function to work around broken libc implementations. See above.
- ****************************************************************************/
-char fc_tolower(char c)
-{
-  if (128 <= (unsigned char) c) {
-    return c;
-  }
-  return (char) tolower((int) ((unsigned char) c));
 }
 
 /************************************************************************/ /**

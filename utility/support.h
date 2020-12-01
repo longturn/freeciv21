@@ -133,7 +133,6 @@ bool fc_isprint(char c);
 bool fc_isspace(char c);
 bool fc_isupper(char c);
 char fc_toupper(char c);
-char fc_tolower(char c);
 
 const char *fc_basename(const char *path);
 
