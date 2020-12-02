@@ -53,10 +53,6 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
                      << _("Host");
   ui.start_players_tree->setColumnCount(player_widget_list.count());
   ui.start_players_tree->setHeaderLabels(player_widget_list);
-  ui.start_players_tree->setContextMenuPolicy(Qt::CustomContextMenu);
-  ui.start_players_tree->setProperty("selectionBehavior", "SelectRows");
-  ui.start_players_tree->setEditTriggers(QAbstractItemView::NoEditTriggers);
-  ui.start_players_tree->setRootIsDecorated(false);
   connect(ui.start_players_tree, &QWidget::customContextMenuRequested, this,
           &page_pregame::start_page_menu);
   ui.bdisc->setText(_("Disconnect"));
@@ -414,48 +410,60 @@ void page_pregame::start_page_menu(QPoint pos)
   QAction *action;
   QMenu *menu, *submenu_AI, *submenu_team;
   QPoint global_pos = ui.start_players_tree->mapToGlobal(pos);
-  QString me, splayer, str, sp;
+  QString me, splayer, str;
+  QStringList spl;
+  int hacky_counter = 0;
   bool need_empty_team;
   const char *level_cmd, *level_name;
   int level, count;
-  player *selected_player;
+  QList<player *> selected_players;
   QVariant qvar, qvar2;
 
   me = client.conn.username;
-  QTreeWidgetItem *item = ui.start_players_tree->itemAt(pos);
+  QList<QTreeWidgetItem *> sel_items =
+      ui.start_players_tree->selectedItems();
 
   menu = new QMenu(this);
   submenu_AI = new QMenu(this);
   submenu_team = new QMenu(this);
-  if (!item) {
+
+  if (sel_items.isEmpty()) {
     return;
   }
 
-  qvar = item->data(0, Qt::UserRole);
-  qvar2 = item->data(1, Qt::UserRole);
+  for (auto item : sel_items) {
+    qvar = item->data(0, Qt::UserRole);
+    qvar2 = item->data(1, Qt::UserRole);
 
-  /**
-   * qvar = 0 -> selected label -> do nothing
-   * qvar = 1 -> selected player (stored in qvar2)
-   */
-
-  selected_player = NULL;
-  if (qvar == 0) {
-    return;
-  }
-  if (qvar == 1) {
-    selected_player = (player *) qvar2.value<void *>();
+    /**
+     * qvar = 0 -> selected label -> do nothing
+     * qvar = 1 -> selected player (stored in qvar2)
+     */
+    if (qvar == 0) {
+      return;
+    }
+    if (qvar == 1) {
+      selected_players.append((player *) qvar2.value<void *>());
+    }
   }
 
   players_iterate(pplayer)
   {
-    if (selected_player && selected_player == pplayer) {
+    if (selected_players.contains(pplayer)) {
+      // I have no idea what Im doing = yes
+      ++hacky_counter;
       splayer = QString(pplayer->name);
-      sp = "\"" + splayer + "\"";
-      if (me != splayer) {
+      spl.append("\"" + splayer + "\"");
+      if (hacky_counter != sel_items.count()) {
+        continue;
+      }
+    }
+
+    if (selected_players.contains(pplayer)) {
+      if (me != splayer && sel_items.count() == 1) {
         str = QString(_("Observe"));
         action = new QAction(str, ui.start_players_tree);
-        str = "/observe " + sp;
+        str = "/observe " + spl.first();
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
@@ -463,23 +471,24 @@ void page_pregame::start_page_menu(QPoint pos)
         if (ALLOW_CTRL <= client.conn.access_level) {
           str = QString(_("Remove player"));
           action = new QAction(str, ui.start_players_tree);
-          str = "/remove " + sp;
+          str = "/remove " + spl.first();
           QObject::connect(action, &QAction::triggered,
                            [this, str]() { send_fake_chat_message(str); });
           menu->addAction(action);
         }
         str = QString(_("Take this player"));
         action = new QAction(str, ui.start_players_tree);
-        str = "/take " + sp;
+        str = "/take " + spl.first();
         QObject::connect(action, &QAction::triggered,
                          [this, str]() { send_fake_chat_message(str); });
         menu->addAction(action);
       }
 
-      if (can_conn_edit_players_nation(&client.conn, pplayer)) {
+      if (can_conn_edit_players_nation(&client.conn, pplayer)
+          && sel_items.count() == 1) {
         str = QString(_("Pick nation"));
         action = new QAction(str, ui.start_players_tree);
-        str = QString(player_name(pplayer)); /* PICK is a key */
+        str = QString(player_name(pplayer));
         QObject::connect(action, &QAction::triggered, [str]() {
           QString splayer;
           players_iterate(pplayer)
@@ -509,10 +518,14 @@ void page_pregame::start_page_menu(QPoint pos)
               level_cmd = ai_level_cmd(static_cast<ai_level>(level));
               action =
                   new QAction(QString(level_name), ui.start_players_tree);
-              str = "/" + QString(level_cmd) + " " + sp;
-              QObject::connect(action, &QAction::triggered, [this, str]() {
-                send_fake_chat_message(str);
-              });
+              QObject::connect(action, &QAction::triggered,
+                               [this, spl, level_cmd]() {
+                                 for (auto sp : spl) {
+                                   QString str;
+                                   str = "/" + QString(level_cmd) + " " + sp;
+                                   send_fake_chat_message(str);
+                                 }
+                               });
               submenu_AI->addAction(action);
             }
           }
@@ -539,29 +552,36 @@ void page_pregame::start_page_menu(QPoint pos)
           }
           str = team_slot_name_translation(tslot);
           action = new QAction(str, ui.start_players_tree);
-          str = "/team" + sp + " \"" + QString(team_slot_rule_name(tslot))
-                + "\"";
-          QObject::connect(action, &QAction::triggered,
-                           [this, str]() { send_fake_chat_message(str); });
+          QObject::connect(
+              action, &QAction::triggered, [this, spl, tslot]() {
+                for (auto sp : spl) {
+                  QString str = "/team" + sp + " \""
+                                + QString(team_slot_rule_name(tslot)) + "\"";
+                  send_fake_chat_message(str);
+                }
+              });
           submenu_team->addAction(action);
         }
         team_slots_iterate_end;
       }
 
-      if (ALLOW_CTRL <= client.conn.access_level && NULL != pplayer) {
+      if (ALLOW_CTRL <= client.conn.access_level && NULL != pplayer
+          && sel_items.count() == 1) {
         str = QString(_("Aitoggle player"));
         action = new QAction(str, ui.start_players_tree);
-        str = "/aitoggle " + sp;
-        QObject::connect(action, &QAction::triggered,
-                         [this, str]() { send_fake_chat_message(str); });
+        QObject::connect(action, &QAction::triggered, [this, spl]() {
+          for (auto sp : spl) {
+            QString str = "/aitoggle " + sp;
+            send_fake_chat_message(str);
+          }
+        });
         menu->addAction(action);
       }
-
-      menu->popup(global_pos);
-      return;
     }
   }
   players_iterate_end;
+
+  menu->popup(global_pos);
 }
 
 /************************************************************************/ /**
