@@ -622,9 +622,12 @@ void genlist_sort(struct genlist *pgenlist,
 void genlist_shuffle(struct genlist *pgenlist)
 {
   const int n = genlist_size(pgenlist);
-  void *sortbuf[n];
+  QVector<void *> sortbuf;
   struct genlist_link *myiter;
-  int i, shuffle[n];
+  QVector<int> shuffle;
+  int i;
+  sortbuf.reserve(n);
+  shuffle.reserve(n);
 
   if (n <= 1) {
     return;
@@ -638,7 +641,7 @@ void genlist_shuffle(struct genlist *pgenlist)
   }
 
   /* randomize it */
-  array_shuffle(shuffle, n);
+  std::random_shuffle(shuffle.begin(), shuffle.end());
 
   /* create the shuffled list */
   myiter = genlist_head(pgenlist);
