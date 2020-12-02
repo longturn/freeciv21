@@ -192,7 +192,7 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
     left = left.mid(1, left.length() - 2);
   }
   if (right.startsWith("\"") && right.endsWith("\"")) {
-    left = left.mid(1, left.length() - 2);
+    right = right.mid(1, right.length() - 2);
   }
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
 }
