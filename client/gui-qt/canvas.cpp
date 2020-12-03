@@ -258,7 +258,6 @@ void qtg_canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
   QPainter p;
 
   pen.setColor(pcolor->qcolor);
-
   switch (ltype) {
   case LINE_NORMAL:
     pen.setWidth(1);

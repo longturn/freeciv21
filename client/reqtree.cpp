@@ -833,57 +833,59 @@ void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
   }
 }
 
+
 /*********************************************************************/ /**
    Return a background color of node's rectangle
  *************************************************************************/
-static enum color_std node_color(struct tree_node *node)
+static color* node_color(struct tree_node *node)
 {
   if (!node->is_dummy) {
     struct research *research = research_get(client_player());
 
     if (!research) {
-      return COLOR_REQTREE_KNOWN;
+      return get_diag_color(30);
     }
 
     if (!research_invention_reachable(research, node->tech)) {
-      return COLOR_REQTREE_UNREACHABLE;
+      return get_diag_color(30);
     }
 
     if (!research_invention_gettable(research, node->tech, TRUE)) {
       if (research_goal_tech_req(research, research->tech_goal, node->tech)
           || node->tech == research->tech_goal) {
-        return COLOR_REQTREE_GOAL_NOT_GETTABLE;
+        return get_diag_color(7);
       } else {
-        return COLOR_REQTREE_NOT_GETTABLE;
+        return get_diag_color(8);
       }
     }
 
     if (research->researching == node->tech) {
-      return COLOR_REQTREE_RESEARCHING;
+      return get_diag_color(8);
     }
 
+    // tech researched
     if (TECH_KNOWN == research_invention_state(research, node->tech)) {
-      return COLOR_REQTREE_KNOWN;
+      return get_diag_color(7);
     }
 
     if (research_goal_tech_req(research, research->tech_goal, node->tech)
         || node->tech == research->tech_goal) {
       if (TECH_PREREQS_KNOWN
           == research_invention_state(research, node->tech)) {
-        return COLOR_REQTREE_GOAL_PREREQS_KNOWN;
+        return get_diag_color(5);
       } else {
-        return COLOR_REQTREE_GOAL_UNKNOWN;
+        return get_diag_color(6);
       }
     }
 
     if (TECH_PREREQS_KNOWN
         == research_invention_state(research, node->tech)) {
-      return COLOR_REQTREE_PREREQS_KNOWN;
+      return get_diag_color(0);
     }
 
-    return COLOR_REQTREE_UNKNOWN;
+    return get_diag_color(0);
   } else {
-    return COLOR_REQTREE_BACKGROUND;
+    return get_diag_color(0);
   }
 }
 
@@ -962,23 +964,23 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
    Return a stroke color for an edge between two nodes
    if node is a dummy, dest_node can be NULL
  *************************************************************************/
-static enum color_std edge_color(struct tree_node *node,
+static color* edge_color(struct tree_node *node,
                                  struct tree_node *dest_node)
 {
   enum reqtree_edge_type type = get_edge_type(node, dest_node);
 
   switch (type) {
   case REQTREE_ACTIVE_EDGE:
-    return COLOR_REQTREE_RESEARCHING;
+    return get_diag_color(27);
   case REQTREE_GOAL_EDGE:
-    return COLOR_REQTREE_GOAL_UNKNOWN;
+    return get_diag_color(26);
   case REQTREE_KNOWN_EDGE:
     /* using "text" black instead of "known" white/ground/green */
-    return COLOR_REQTREE_TEXT;
+    return get_diag_color(20);
   case REQTREE_READY_EDGE:
-    return COLOR_REQTREE_PREREQS_KNOWN;
+    return get_diag_color(28);
   default:
-    return COLOR_REQTREE_EDGE;
+    return get_diag_color(20);
   };
 }
 
@@ -1009,7 +1011,7 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
 
       if (node->is_dummy) {
         /* Use the same layout as lines for dummy nodes */
-        canvas_put_line(pcanvas, get_color(tileset, edge_color(node, NULL)),
+        canvas_put_line(pcanvas, get_diag_color(20),
                         LINE_GOTO, startx, starty, width, 0);
       } else {
         const char *text = research_advance_name_translation(
@@ -1018,11 +1020,10 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
         int icon_startx;
 
         canvas_put_rectangle(pcanvas,
-                             get_color(tileset, COLOR_REQTREE_BACKGROUND),
+                             get_diag_color(10),
                              startx, starty, width, height);
-
         /* Print color rectangle with text inside. */
-        canvas_put_rectangle(pcanvas, get_color(tileset, node_color(node)),
+        canvas_put_rectangle(pcanvas, node_color(node),
                              startx + 1, starty + 1, width - 2, height - 2);
         /* The following code is similar to the one in
          * node_rectangle_minimum_size(). If you change something here,
@@ -1105,7 +1106,7 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
       starty = node->node_y + node->node_height / 2;
       for (k = 0; k < node->nprovide; k++) {
         struct tree_node *dest_node = node->provide[k];
-        color = get_color(tileset, edge_color(node, dest_node));
+        color = edge_color(node, dest_node);
 
         endx = dest_node->node_x;
         endy = dest_node->node_y + dest_node->node_height / 2;

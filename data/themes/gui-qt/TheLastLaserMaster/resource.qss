@@ -154,17 +154,18 @@ hud_message_box QDialogButtonBox QPushButton:disabled {
   border: none;
 }
 
-hud_message_box QDialogButtonBox QPushButton:hover {
-  color: white;
-  background: black;
-  border: 2px solid #fbff00;
-}
 
 hud_message_box QDialogButtonBox QPushButton:default {
   color: white;
   background: black;
   border: 1px solid #6a6a00;
   padding: 2px;
+}
+
+hud_message_box QDialogButtonBox QPushButton:hover {
+  color: white;
+  background: black;
+  border: 2px solid #fbff00;
 }
 
 QLabel {
@@ -821,7 +822,7 @@ xvote QPushButton:hover {
 hud_message_box {
   background-color: transparent;
   color: white;
-  selection-background-color: rgba(50, 150, 250,220);
+  selection-background-color: rgba(50, 50, 200,220);
   alternate-background-color: rgba(0, 0, 60,220);
   border: 2px solid #3399FF;
 }
@@ -878,4 +879,10 @@ tax_rates_dialog {
   color: white;
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 75,195) stop:1 rgba(25, 25, 45, 225));
   border: 2px solid #0000AA;
+}
+
+research_color {
+  selection-background-color: #6779c5 /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
 }

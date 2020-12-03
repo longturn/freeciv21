@@ -23,5 +23,6 @@ GUI_FUNC_PROTO(struct color *, color_alloc, int r, int g, int b)
 GUI_FUNC_PROTO(void, color_free, struct color *color)
 
 GUI_FUNC_PROTO(int, color_brightness_score, struct color *color)
+color *get_diag_color(int);
 
 #endif /* FC__COLORS_G_H */

@@ -901,7 +901,7 @@ fc_sidewidget {
 }
 
 hud_action {
-  selection-background-color: rgba(250,75,25, 150);
+  selection-background-color: rgba(25,75,125, 150);
   color: rgb(5,5,185);
 }
 
@@ -922,4 +922,10 @@ tax_rates_dialog {
   color: white;
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 75,195) stop:1 rgba(25, 25, 45, 225));
   border: 2px solid #0000AA;
+}
+
+research_color {
+  selection-background-color: rgba(125, 125, 0, 200);
+  color: rgb(100,100,0);
+  alternate-background-color: rgb(100,100,190);
 }

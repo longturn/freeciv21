@@ -34,6 +34,7 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 // gui-qt
+#include "colors.h"
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
@@ -91,6 +92,9 @@ fc_client::fc_client()
   status_bar->addWidget(status_bar_label, 1);
   set_status_bar(_("Welcome to Freeciv"));
   create_cursors();
+  // fake color init for research diagram
+  research_color::i()->setFixedSize(1,1);
+  research_color::i()->hide();
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
   pages[PAGE_START] = new page_pregame(central_wdg, this);
