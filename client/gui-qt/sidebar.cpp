@@ -495,7 +495,7 @@ void fc_sidebar::paintEvent(QPaintEvent *event)
  ***************************************************************************/
 void fc_sidebar::paint(QPainter *painter, QPaintEvent *event)
 {
-  painter->setBrush(QBrush(QColor(40, 40, 40)));
+  painter->setBrush(QBrush(QColor(14, 14, 14)));
   painter->drawRect(event->rect());
 }
 

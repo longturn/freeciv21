@@ -173,16 +173,16 @@ QLabel {
 
 QTableWidget {
   alternate-background-color: #475060;
-  background-color: #3d4552;
-  border-top: 1px solid #3399FF;
-  border-left: 1px solid #3399FF;
-  border-bottom: 1px solid #3399FF;
-  border-right: 1px solid #3399FF;
+  background-color: #282828;
+  border-top: 1px solid #6a6a00;
+  border-left: 1px solid #6a6a00;
+  border-bottom: 1px solid #6a6a00;
+  border-right: 1px solid #6a6a00;
   border-radius: 1px;
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #3399FF;
+  selection-background-color:  #398bac;
 }
 
 QTableWidget::item:selected {
@@ -193,9 +193,9 @@ QTableWidget::item:selected {
 
 
 QHeaderView::section {
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #474747, stop: 1 #323232);
+  background: #131313;
   color: #FFFFFF;
-  border: 1px solid #1d5994;
+  border: none;
 }
 
 QLineEdit {
@@ -212,7 +212,8 @@ QTabWidget {
 QSpinBox {
   background: black;
   color: #ffffff;
-  selection-background-color: none;
+  selection-color: #fbff00;
+  border: 1px solid #6a6a00;
 }
 
 QComboBox {
@@ -222,7 +223,7 @@ QComboBox {
   padding-left: 10px;
   padding-top: 0px;
   padding-bottom: 2px;
-  border: none;
+  border: 1px solid #6a6a00;
   border-radius: 2px;
   margin-top: .1em;
   margin-bottom: 0em;
@@ -331,21 +332,22 @@ minimap_view
 
 QTreeWidget {
   color: white;
-  background-color: #353b47;
+  background-color: #282828;
   border: none;
 }
 
+
 QTreeWidget::item:selected {
   border: none;
-  background: #3399FF;
+  background: #398bac;
 }
 
 QComboBox QAbstractItemView {
   color: white;
   background: #171a1f;
-  border: 1px outset #1f5d9c;
+  border: 1px outset #fbff00;
   border-radius: 3px;
-  selection-background-color: #3399FF;
+  selection-color: #fbff00;
 }
 
 QComboBox:editable {
@@ -354,7 +356,7 @@ QComboBox:editable {
 
 QComboBox:!editable, QComboBox::drop-down:editable {
   background: #171a1f;
-  selection-background-color: #3399FF;
+  selection-color: #fbff00;
 }
 
 QLineEdit:disabled, QComboBox:disabled, QSpinBox:disabled {
@@ -379,8 +381,8 @@ notify_dialog {
 
 QProgressBar {
   color: white;
-  background: #4a5464;
-  selection-background-color: #3399FF;
+  background: #282828;
+  selection-background-color: #398bac;
 }
 
 QRadioButton {
@@ -488,7 +490,7 @@ QTabBar QToolButton::right-arrow {
 
 QTreeView {
   alternate-background-color: #475060;
-  background-color: #3d4552;
+  background-color: #282828;
   border-top: 1px solid #3399FF;
   border-left: 1px solid #3399FF;
   border-bottom: 1px solid #3399FF;
@@ -497,13 +499,13 @@ QTreeView {
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #3399FF;
+  selection-background-color:  #398bac;
 }
 
 QTreeView::item:selected {
   border: none;
   padding: 0 0;
-  background: #3399FF;
+  background: #398bac;
 }
 
 QItemDelegate:selected {
@@ -570,25 +572,30 @@ QGroupBox {
 }
 
 QComboBox:hover {
-  color: #3399FF;
+  color: #fbff00;
 }
 
+city_dialog QFrame {
+  background: #2F2F2F;
+}
+
+
 city_dialog QScrollArea QWidget {
-  background: #414a57;
+  background: #282828;
 }
 
 city_dialog QScrollArea QFrame {
-  background: #414a57;
+  background: #282828;
 }
 
 city_dialog QScrollArea {
-  background: #414a57;
+  background: #282828;
 }
 
 city_dialog QPushButton {
   color: #FFFFFF;
-  background: #414a57;
-  border: 2px solid #47515f;
+  background: #282828;
+  border: 2px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
 }
@@ -600,19 +607,19 @@ city_dialog QPushButton:disabled {
 
 city_dialog QPushButton:hover {
   color: white;
-  background: #414a57;
-  border: 2px solid #3399FF;
+  background: #282828;
+  border: 2px solid #fbff00;
 }
 
 city_dialog QGroupBox {
   color: yellow;
-  background-color: #414a57;
+  background-color: #282828;
   border: 1px solid #4f5a6a;
   border-radius: 5px;
 }
 
 city_dialog QTableWidget {
-  background-color: #414a57;
+  background-color: #282828;
   border-top: none;
   border-left: none;
   border-bottom: none;
@@ -621,7 +628,7 @@ city_dialog QTableWidget {
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #3399FF;
+  selection-background-color:  #398bac;
 }
 
 info_tab {
@@ -672,11 +679,11 @@ QFontListView {
 }
 
 QScrollBar:vertical {
-  border: 1px solid #b9b20f;
+  border: 1px solid #209ff0;
 }
 
 QScrollBar:horizontal {
-  border: 1px solid #b9b20f;
+  border: 1px solid #209ff0;
 }
 
 QScrollBar::sub-line:vertical {
@@ -698,7 +705,7 @@ QScrollBar::add-page:vertical {
 }
 
 QScrollBar::handle:vertical {
-  background: #6a6a00; min-height: 20px
+  background: #209ff0; min-height: 20px
 }
 
 QScrollBar::sub-line:horizontal {
@@ -720,7 +727,7 @@ QScrollBar::add-page:horizontal {
 }
 
 QScrollBar::handle:horizontal {
-  background: #6a6a00; min-width: 20px
+  background: #209ff0; min-width: 20px
 }
 
 
@@ -844,7 +851,7 @@ fc_sidewidget {
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);
   /* Hover effect */
-  alternate-background-color: rgba(75, 0, 75, 125);
+  alternate-background-color: rgba(25, 0, 0, 125);
   /* blink */
   selection-color: rgba(85, 25, 25, 185);
 }
