@@ -87,8 +87,8 @@ QDialogButtonBox {
 
 hud_input_box QDialogButtonBox QPushButton {
   color: #FFFFFF;
-  background: #323843;
-  border: 2px solid #47515f;
+  background: black;
+  border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
   min-width: 160px;
@@ -102,8 +102,8 @@ unit_hud_selector {
 
 unit_hud_selector, tax_rates_dialog QPushButton {
   color: #FFFFFF;
-  background: #323843;
-  border: 2px solid #47515f;
+  background: black;
+  border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
   min-width: 160px;
@@ -116,8 +116,8 @@ qfc_dialog::title {
 
 unit_hud_selector, tax_rates_dialog QPushButton:hover {
   color: white;
-  background: #414a57;
-  border: 2px solid #3399FF;
+  background: black;
+  border: 2px solid #fbff00;
 }
 
 unit_hud_selector QGroupBox {
@@ -134,16 +134,16 @@ hud_input_box QDialogButtonBox QPushButton:disabled {
 
 hud_input_box QDialogButtonBox QPushButton:hover {
   color: white;
-  background: #414a57;
-  border: 2px solid #3399FF;
+  background: black;
+  border: 2px solid #fbff00;
 }
 
 
 
 hud_message_box QDialogButtonBox QPushButton {
   color: #FFFFFF;
-  background: #323843;
-  border: 2px solid #47515f;
+  background: black;
+  border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
   min-width: 160px;
@@ -156,14 +156,14 @@ hud_message_box QDialogButtonBox QPushButton:disabled {
 
 hud_message_box QDialogButtonBox QPushButton:hover {
   color: white;
-  background: #414a57;
-  border: 2px solid #3399FF;
+  background: black;
+  border: 2px solid #fbff00;
 }
 
 hud_message_box QDialogButtonBox QPushButton:default {
   color: white;
-  background: #414a57;
-  border: 2px solid #3399FF;
+  background: black;
+  border: 1px solid #6a6a00;
   padding: 2px;
 }
 
@@ -172,7 +172,7 @@ QLabel {
 }
 
 QTableWidget {
-  alternate-background-color: #475060;
+  alternate-background-color: #2F2F2F;
   background-color: #282828;
   border-top: 1px solid #6a6a00;
   border-left: 1px solid #6a6a00;
@@ -182,13 +182,13 @@ QTableWidget {
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #398bac;
+  selection-background-color:  #1155bb;
 }
 
 QTableWidget::item:selected {
   border: none;
   padding: 0 0;
-  background: #3399FF;
+  background: #1155bb;
 }
 
 
@@ -283,7 +283,7 @@ QSplitter::handle:horizontal {
 }
 
 QMenuBar {
-  background-color: #3A3A3A;
+  background-color: #141414;
 }
 
 QMenuBar::item {
@@ -304,7 +304,7 @@ QMenuBar::item:pressed {
 }
 
 QMenu {
-  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(84, 85, 86, 225), stop:1 rgba(55, 55, 54, 255));
+  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(44, 45, 46, 225), stop:1 rgba(25, 25, 24, 255));
   border:none;
 }
 QMenu::item {
@@ -339,7 +339,7 @@ QTreeWidget {
 
 QTreeWidget::item:selected {
   border: none;
-  background: #398bac;
+  background: #1155bb;
 }
 
 QComboBox QAbstractItemView {
@@ -382,7 +382,7 @@ notify_dialog {
 QProgressBar {
   color: white;
   background: #282828;
-  selection-background-color: #398bac;
+  selection-background-color: #1155bb;
 }
 
 QRadioButton {
@@ -489,7 +489,7 @@ QTabBar QToolButton::right-arrow {
 
 
 QTreeView {
-  alternate-background-color: #475060;
+  alternate-background-color: #2F2F2F;
   background-color: #282828;
   border-top: 1px solid #3399FF;
   border-left: 1px solid #3399FF;
@@ -499,13 +499,13 @@ QTreeView {
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #398bac;
+  selection-background-color:  #1155bb;
 }
 
 QTreeView::item:selected {
   border: none;
   padding: 0 0;
-  background: #398bac;
+  background: #1155bb;
 }
 
 QItemDelegate:selected {
@@ -595,7 +595,7 @@ city_dialog QScrollArea {
 city_dialog QPushButton {
   color: #FFFFFF;
   background: #282828;
-  border: 2px solid #6a6a00;
+  border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
 }
@@ -628,7 +628,7 @@ city_dialog QTableWidget {
   padding: 2 3px;
   color: white;
   selection-color: yellow;
-  selection-background-color:  #398bac;
+  selection-background-color:  #1155bb;
 }
 
 info_tab {
@@ -738,29 +738,29 @@ fc_game_tab_widget {
 
 help_widget QTextBrowser
 {
-  background-color: #414a57;
+  background-color: #282828;
   color: white;
 }
 
 help_widget QWidget
 {
-  background-color: #414a57;
+  background-color: #282828;
   color: white;
 }
 
 help_widget QTreeWidget
 {
-  background-color: #414a57;
+  background-color: #282828;
   color: white;
 }
 
 help_widget QScrollArea QFrame {
-  background-color: #414a57;
+  background-color: #282828;
   color: white;
 }
 
 help_widget QScrollArea {
-  background-color: #414a57;
+  background-color: #282828;
   color: white;
 }
 
