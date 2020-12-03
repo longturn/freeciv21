@@ -822,7 +822,7 @@ void hud_action::paintEvent(QPaintEvent *event)
 
   rx = QRect(0, 0, width(), height());
   ry = QRect(0, 0, action_pixmap->width(), action_pixmap->height());
-  rz = QRect(0, 0, width() - 1, height() - 3);
+  rz = QRect(0, 2, width(), height() - 6);
   p.begin(this);
   p.setCompositionMode(QPainter::CompositionMode_Source);
   p.setRenderHint(QPainter::SmoothPixmapTransform);

@@ -851,14 +851,14 @@ fc_sidewidget {
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);
   /* Hover effect */
-  alternate-background-color: rgba(25, 0, 0, 125);
+  alternate-background-color: rgba(125, 125, 0, 125);
   /* blink */
   selection-color: rgba(85, 25, 25, 185);
 }
 
 hud_action {
-  selection-background-color: rgba(250,75,25, 150);
-  color: rgb(5,5,185);
+  selection-background-color: rgba(125, 125, 0, 200);
+  color: rgb(100,100,0);
 }
 
 hud_units {
