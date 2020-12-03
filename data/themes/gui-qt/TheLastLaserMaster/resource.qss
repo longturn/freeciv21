@@ -419,7 +419,6 @@ QRadioButton::indicator:checked:pressed {
 }
 
 
-
 QDialog {
   color: #b9b20f;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #111111, stop: 1 #111111);
@@ -577,6 +576,7 @@ QComboBox:hover {
 
 city_dialog QFrame {
   background: #2F2F2F;
+  border: none;
 }
 
 
