@@ -2998,8 +2998,7 @@ void handle_server_setting_control(
   /* Allocate server option categories. */
   if (0 < packet->categories_num) {
     server_options_categories_num = packet->categories_num;
-    server_options_categories = static_cast<char **>(fc_calloc(
-        server_options_categories_num, sizeof(*server_options_categories)));
+    server_options_categories = new char*[server_options_categories_num]();
 
     for (i = 0; i < server_options_categories_num; i++) {
       /* NB: Translate now. */
@@ -3010,8 +3009,7 @@ void handle_server_setting_control(
   /* Allocate server options. */
   if (0 < packet->settings_num) {
     server_options_num = packet->settings_num;
-    server_options = static_cast<server_option *>(
-        fc_calloc(server_options_num, sizeof(*server_options)));
+    server_options =  new server_option[server_options_num]();
   }
 }
 

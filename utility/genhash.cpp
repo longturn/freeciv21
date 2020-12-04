@@ -208,8 +208,7 @@ static struct genhash *genhash_new_nbuckets(genhash_val_fn_t key_val_func,
   log_debug("New genhash table with %lu buckets",
             (long unsigned) num_buckets);
 
-  pgenhash->buckets = static_cast<genhash_entry **>(
-      fc_calloc(num_buckets, sizeof(*pgenhash->buckets)));
+  pgenhash->buckets = new genhash_entry *[num_buckets]();
   pgenhash->key_val_func = key_val_func;
   pgenhash->key_comp_func = key_comp_func;
   pgenhash->key_copy_func = key_copy_func;
@@ -304,9 +303,7 @@ static void genhash_resize_table(struct genhash *pgenhash,
 
   fc_assert(new_nbuckets >= pgenhash->num_entries);
 
-  new_buckets = static_cast<genhash_entry **>(
-      fc_calloc(new_nbuckets, sizeof(*pgenhash->buckets)));
-
+  new_buckets = new genhash_entry *[new_nbuckets]();
   bucket = pgenhash->buckets;
   end = bucket + pgenhash->num_buckets;
   for (; bucket < end; bucket++) {
@@ -553,8 +550,7 @@ struct genhash *genhash_copy(const struct genhash *pgenhash)
   *new_genhash = *pgenhash;
 
   /* But make fresh buckets. */
-  new_genhash->buckets = static_cast<genhash_entry **>(
-      fc_calloc(new_genhash->num_buckets, sizeof(*new_genhash->buckets)));
+  new_genhash->buckets = new genhash_entry *[new_genhash->num_buckets]();
 
   /* Let's re-insert all data */
   src_bucket = pgenhash->buckets;

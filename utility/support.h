@@ -71,7 +71,6 @@ typedef int fc_errno;
 
 #define fc_malloc(sz) malloc(sz)
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
-#define fc_calloc(n, esz) calloc(n, esz)
 
 #define NFCPP_FREE(ptr)                                                     \
 if (ptr) delete[] (ptr);                                                    \

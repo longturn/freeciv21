@@ -1998,8 +1998,7 @@ static void compat_load_dev(struct loaddata *loading)
         modname = secfile_lookup_str_vec(
             loading->file, &loading->action.size, "savefile.action_vector");
 
-        modname_new = fc_calloc(action_count, sizeof(*modname_new));
-
+        modname_new = new action_count();
         for (j = 0; j < action_count; j++) {
           const char *aname = modname[j];
 
