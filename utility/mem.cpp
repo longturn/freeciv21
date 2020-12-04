@@ -119,27 +119,6 @@ void *fc_real_realloc(void *ptr, size_t size, const char *called_as,
 }
 
 /******************************************************************/ /**
-   Function used by fc_calloc macro, calloc() replacement
-   No need to check return value.
-
-   I'm pretty sure only the product of nelem and elsize can ever
-   matter here, and not their individual values.  (As a matter of C.)
-   Except this function doesn't support calloc-ing more memory than
-   can be expressing using a single size_t, but that's not likely
-   to be a problem.
- **********************************************************************/
-void *fc_real_calloc(size_t nelem, size_t elsize, const char *called_as,
-                     int line, const char *file)
-{
-  size_t size = nelem * elsize; /* potential overflow */
-  void *ptr;
-
-  ptr = fc_real_malloc(size, called_as, line, file);
-  memset(ptr, 0, size);
-  return ptr;
-}
-
-/******************************************************************/ /**
    Function used by fc_strdup macro, strdup() replacement
    No need to check return value.
  **********************************************************************/
