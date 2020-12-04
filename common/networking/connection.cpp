@@ -22,7 +22,6 @@
 #include "fcintl.h"
 #include "genhash.h"
 #include "log.h"
-#include "mem.h"
 #include "support.h" /* fc_str(n)casecmp */
 
 /* common */

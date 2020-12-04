@@ -24,7 +24,6 @@
 #include "bitvector.h"
 #include "deprecations.h"
 #include "fcintl.h"
-#include "mem.h"
 #include "registry.h"
 #include "shared.h"
 #include "string_vector.h"

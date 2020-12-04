@@ -16,7 +16,6 @@
 #endif
 
 /* utility */
-#include "mem.h"
 #include "rand.h"
 
 /* common */

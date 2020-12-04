@@ -34,7 +34,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "registry.h"
 #include "support.h"

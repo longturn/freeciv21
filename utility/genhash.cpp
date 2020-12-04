@@ -63,7 +63,6 @@
 
 /* utility */
 #include "log.h"
-#include "mem.h"
 #include "shared.h" /* ARRAY_SIZE */
 #include "support.h"
 

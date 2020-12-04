@@ -24,7 +24,6 @@
 #include "dataio.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 #include "support.h"
 

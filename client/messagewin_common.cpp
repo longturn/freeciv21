@@ -19,7 +19,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "mem.h"
 
 /* common */
 #include "featured_text.h"

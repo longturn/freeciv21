@@ -26,7 +26,6 @@
 #include "fcintl.h"
 #include "ioz.h"
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 #include "shared.h"
 #include "string_vector.h"

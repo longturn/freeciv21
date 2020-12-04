@@ -22,7 +22,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "support.h"
 

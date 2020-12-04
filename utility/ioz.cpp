@@ -53,7 +53,6 @@
 
 /* utility */
 #include "log.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 

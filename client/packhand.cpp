@@ -23,7 +23,6 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "string_vector.h"
 #include "support.h"

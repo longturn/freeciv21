@@ -78,7 +78,6 @@
 #include "astring.h"
 #include "fcintl.h"
 #include "ioz.h"
-#include "mem.h"
 #include "shared.h" /* TRUE, FALSE */
 #include "support.h"
 

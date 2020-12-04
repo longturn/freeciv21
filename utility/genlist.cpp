@@ -20,7 +20,6 @@
 /* utility */
 #include "fcthread.h"
 #include "log.h"
-#include "mem.h"
 #include "shared.h" /* array_shuffle */
 
 #include "genlist.h"

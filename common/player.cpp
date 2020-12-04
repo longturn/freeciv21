@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 

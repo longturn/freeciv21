@@ -24,7 +24,6 @@
 #include "distribute.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "support.h"
 
 /* common */

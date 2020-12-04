@@ -16,7 +16,6 @@
 #endif
 
 /* utility */
-#include "mem.h"
 #include "registry.h"
 #include "section_file.h"
 

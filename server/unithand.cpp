@@ -22,7 +22,6 @@
 /* utility */
 #include "astring.h"
 #include "fcintl.h"
-#include "mem.h"
 #include "rand.h"
 #include "shared.h"
 
