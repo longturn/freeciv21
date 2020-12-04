@@ -44,9 +44,6 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
 void get_city_dialog_production_full(char *buffer, size_t buffer_len,
                                      struct universal *target,
                                      struct city *pcity);
-void get_city_dialog_production_row(char *buf[], size_t column_size,
-                                    struct universal *target,
-                                    struct city *pcity);
 
 void get_city_dialog_output_text(const struct city *pcity,
                                  Output_type_id otype, char *buffer,
