@@ -514,8 +514,8 @@ void tileset_changed(void)
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
   /* Update science report if open */
-  if (queen()->is_repo_dlg_open("SCI")) {
-    i = queen()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -574,7 +574,7 @@ void info_tile::calc_size()
   int w = 0;
 
   str = popup_info_text(itile);
-  str_list = str.split("\n");
+  str_list = str.split(QStringLiteral("\n"));
 
   for (auto const &str : qAsConst(str_list)) {
     w = qMax(w, fm.horizontalAdvance(str));

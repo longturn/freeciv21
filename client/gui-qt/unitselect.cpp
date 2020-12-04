@@ -63,7 +63,7 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
   setFocus();
   /* Build fails with qt5 connect style for static functions
    * Qt5.2 so dont update */
-  QTimer::singleShot(10, this, SLOT(update_img()));
+  QTimer::singleShot(10, this, &units_select::update_img);
 }
 
 /***********************************************************************/ /**

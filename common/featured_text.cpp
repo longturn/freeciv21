@@ -182,7 +182,7 @@ static bool find_option(const char *buf_in, const char *option,
   size_t option_len = strlen(option);
 
   while (*buf_in != '\0') {
-    while (fc_isspace(*buf_in) && *buf_in != '\0') {
+    while (QChar::isSpace(*buf_in) && *buf_in != '\0') {
       buf_in++;
     }
 
@@ -190,7 +190,7 @@ static bool find_option(const char *buf_in, const char *option,
       /* This is this one. */
       buf_in += option_len;
 
-      while ((fc_isspace(*buf_in) || *buf_in == '=') && *buf_in != '\0') {
+      while ((QChar::isSpace(*buf_in) || *buf_in == '=') && *buf_in != '\0') {
         buf_in++;
       }
       if (*buf_in == '"') {
@@ -207,7 +207,7 @@ static bool find_option(const char *buf_in, const char *option,
         }
         return TRUE;
       } else {
-        while (fc_isalnum(*buf_in) && write_len > 1) {
+        while (QChar::isLetterOrNumber(*buf_in) && write_len > 1) {
           *buf_out++ = *buf_in++;
           write_len--;
         }
@@ -774,33 +774,33 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
   }
 
   /* Check sequence type. */
-  for (buf_in++; fc_isspace(*buf_in); buf_in++)
+  for (buf_in++; QChar::isSpace(*buf_in); buf_in++)
     ;
 
   if (*buf_in == SEQ_END) {
     *seq_type = ST_STOP;
     buf_in++;
   } else {
-    for (end--; fc_isspace(*end); end--)
+    for (end--; QChar::isSpace(*end); end--)
       ;
 
     if (*end == SEQ_END) {
       *seq_type = ST_SINGLE;
 
-      for (end--; fc_isspace(*end); end--)
+      for (end--; QChar::isSpace(*end); end--)
         ;
     } else {
       *seq_type = ST_START;
     }
   }
 
-  while (fc_isspace(*buf_in)) {
+  while (QChar::isSpace(*buf_in)) {
     buf_in++;
   }
 
   /* Check the length of the type name. */
   for (name = buf_in; name < stop; name++) {
-    if (!fc_isalpha(*name)) {
+    if (!QChar::isLetter(*name)) {
       break;
     }
   }
@@ -836,7 +836,7 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
     }
   }
 
-  while (fc_isspace(*buf_in)) {
+  while (QChar::isSpace(*buf_in)) {
     buf_in++;
   }
 

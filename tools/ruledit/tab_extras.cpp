@@ -57,8 +57,8 @@ tab_extras::tab_extras(ruledit_gui *ui_in) : QWidget()
 
   extra_list = new QListWidget(this);
 
-  connect(extra_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_extra()));
+  connect(extra_list, &QListWidget::itemSelectionChanged, this,
+          &tab_extras::select_extra);
   main_layout->addWidget(extra_list);
 
   extra_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -66,40 +66,43 @@ tab_extras::tab_extras(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  rname->setText(QStringLiteral("None"));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_extras::name_given);
   extra_layout->addWidget(label, 0, 0);
   extra_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_extras::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  name->setText(QStringLiteral("None"));
+  connect(name, &QLineEdit::returnPressed, this, &tab_extras::name_given);
   extra_layout->addWidget(label, 1, 0);
   extra_layout->addWidget(same_name, 1, 1);
   extra_layout->addWidget(name, 1, 2);
 
   reqs_button =
       new QPushButton(QString::fromUtf8(R__("Requirements")), this);
-  connect(reqs_button, SIGNAL(pressed()), this, SLOT(edit_reqs()));
+  connect(reqs_button, &QAbstractButton::pressed, this,
+          &tab_extras::edit_reqs);
   extra_layout->addWidget(reqs_button, 2, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_extras::edit_effects);
   extra_layout->addWidget(effects_button, 3, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Extra")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this, &tab_extras::add_now);
   extra_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Extra")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_extras::delete_now);
   extra_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
 
@@ -150,8 +153,8 @@ void tab_extras::update_extra_info(struct extra_type *pextra)
       name->setEnabled(true);
     }
   } else {
-    name->setText("None");
-    rname->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

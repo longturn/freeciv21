@@ -62,7 +62,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   hbox = new QHBoxLayout();
   vbox = new QVBoxLayout();
   hbox_top = new QHBoxLayout();
-  upgrade_button.setText("★");
+  upgrade_button.setText(QStringLiteral("★"));
   upgrade_button.setVisible(false);
   connect(&upgrade_button, &QAbstractButton::pressed, this,
           &unittype_item::upgrade_units);
@@ -77,7 +77,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   vbox_main->addLayout(hbox);
   hbox_upkeep = new QHBoxLayout;
   hbox_upkeep->addWidget(&shield_upkeep);
-  lab = new QLabel("");
+  lab = new QLabel(QLatin1String(""));
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "upkeep.shield",
                                     "citybar.shields", "", "", false);
   img = spr->pm->toImage();
@@ -91,14 +91,14 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   hbox_upkeep->addSpacerItem(spacer);
   hbox_upkeep->addWidget(&gold_upkeep);
   spr = get_tax_sprite(tileset, O_GOLD);
-  lab = new QLabel("");
+  lab = new QLabel(QLatin1String(""));
   lab->setPixmap(spr->pm->scaledToHeight(isize));
   hbox_upkeep->addWidget(lab);
   spacer = new QSpacerItem(0, isize, QSizePolicy::Expanding,
                            QSizePolicy::Minimum);
   hbox_upkeep->addSpacerItem(spacer);
   hbox_upkeep->addWidget(&food_upkeep);
-  lab = new QLabel("");
+  lab = new QLabel(QLatin1String(""));
   spr = tiles_lookup_sprite_tag_alt(tileset, LOG_VERBOSE, "citybar.food",
                                     "citybar.food", "", "", false);
   img = spr->pm->toImage();

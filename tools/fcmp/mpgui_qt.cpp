@@ -47,7 +47,7 @@
 #include "mpgui_qt.h"
 
 struct fcmp_params fcmp = {
-    QUrl::fromUserInput(QLatin1String(MODPACK_LIST_URL)), QLatin1String(),
+    QUrl::fromUserInput(QStringLiteral(MODPACK_LIST_URL)), QLatin1String(),
     QLatin1String()};
 
 static mpgui *gui;
@@ -197,7 +197,7 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
           << QString::fromUtf8(Q_("?modpack:Type"));
   headers << QString::fromUtf8(_("Subtype"))
           << QString::fromUtf8(_("License"));
-  headers << QString::fromUtf8(_("URL")) << "typeint";
+  headers << QString::fromUtf8(_("URL")) << QStringLiteral("typeint");
   mplist_table->setHorizontalHeaderLabels(headers);
   mplist_table->verticalHeader()->setVisible(false);
   mplist_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -205,16 +205,14 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   mplist_table->setSelectionMode(QAbstractItemView::SingleSelection);
   mplist_table->hideColumn(ML_TYPE);
 
-  connect(mplist_table, SIGNAL(cellClicked(int, int)), this,
-          SLOT(row_selected(int, int)));
-  connect(mplist_table, SIGNAL(doubleClicked(QModelIndex)), this,
-          SLOT(row_download(QModelIndex)));
-  connect(this, SIGNAL(display_msg_thr_signal(QString)), this,
-          SLOT(display_msg(QString)));
-  connect(this, SIGNAL(progress_thr_signal(int, int)), this,
-          SLOT(progress(int, int)));
-  connect(this, SIGNAL(refresh_list_versions_thr_signal()), this,
-          SLOT(refresh_list_versions()));
+  connect(mplist_table, &QTableWidget::cellClicked, this,
+          &mpgui::row_selected);
+  connect(mplist_table, &QAbstractItemView::doubleClicked, this,
+          &mpgui::row_download);
+  connect(this, &mpgui::display_msg_thr_signal, this, &mpgui::display_msg);
+  connect(this, &mpgui::progress_thr_signal, this, &mpgui::progress);
+  connect(this, &mpgui::refresh_list_versions_thr_signal, this,
+          &mpgui::refresh_list_versions);
 
   main_layout->addWidget(mplist_table);
 
@@ -230,12 +228,13 @@ void mpgui::setup(QWidget *central, struct fcmp_params *params)
   }
   URLedit->setFocus();
 
-  connect(URLedit, SIGNAL(returnPressed()), this, SLOT(URL_given()));
+  connect(URLedit, &QLineEdit::returnPressed, this, &mpgui::URL_given);
 
   hl->addWidget(URLedit);
   main_layout->addLayout(hl);
 
-  connect(install_button, SIGNAL(pressed()), this, SLOT(URL_given()));
+  connect(install_button, &QAbstractButton::pressed, this,
+          &mpgui::URL_given);
   main_layout->addWidget(install_button);
 
   bar = new QProgressBar(central);

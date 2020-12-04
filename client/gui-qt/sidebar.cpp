@@ -62,7 +62,9 @@ fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
       wheel_down(nullptr), wheel_up(nullptr), left_click(func),
       def_pixmap(pix), desc(label)
 {
-  if (def_pixmap == nullptr)  { def_pixmap = new QPixmap(5,5); }
+  if (def_pixmap == nullptr) {
+    def_pixmap = new QPixmap(5, 5);
+  }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
   sfont = new QFont(*fc_font::instance()->get_font(fonts::notify_label));
@@ -317,7 +319,7 @@ void fc_sidewidget::some_slot()
     QString s;
     QByteArray cn_bytes;
 
-    s = QString("/observe \"%1\"").arg(obs_player->name);
+    s = QStringLiteral("/observe \"%1\"").arg(obs_player->name);
     cn_bytes = s.toLocal8Bit();
     send_chat(cn_bytes.data());
   }
@@ -500,7 +502,7 @@ void fc_sidebar::paint(QPainter *painter, QPaintEvent *event)
 }
 
 /**************************************************************************
-  Resize sidebar to take at least 80 pixels width and 100 pixels for FullHD
+  Resize sidebar to take at least 20 pixels width and 100 pixels for FullHD
   desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
   desktop.
 **************************************************************************/
@@ -511,8 +513,9 @@ void fc_sidebar::resize_me(int hght, bool force)
   h = hght;
   auto temp = (QGuiApplication::screens());
   hres = temp[0]->availableGeometry().width();
-  w = (100 * hres) / 1920;
-  w = qMax(w, 80);
+
+  w = (20 * gui_options.gui_qt_sidebar_width * hres) / 1920;
+  w = qMax(w, 20);
 
   if (!force && w == width() && h == height()) {
     return;
@@ -653,7 +656,7 @@ void side_right_click_diplomacy(void)
     menu->popup(QCursor::pos());
   } else {
     int i;
-    i = queen()->gimme_index_of("DDI");
+    i = queen()->gimme_index_of(QStringLiteral("DDI"));
     if (i < 0) {
       return;
     }
@@ -724,11 +727,11 @@ void side_left_click_science(bool nothing)
   if (client_is_global_observer()) {
     return;
   }
-  if (!queen()->is_repo_dlg_open("SCI")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
     sci_rep = new science_report;
     sci_rep->init(true);
   } else {
-    i = queen()->gimme_index_of("SCI");
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);
@@ -737,4 +740,10 @@ void side_left_click_science(bool nothing)
     sci_rep = reinterpret_cast<science_report *>(w);
     queen()->game_tab_widget->setCurrentWidget(sci_rep);
   }
+}
+
+// Reloads all icons and resize sidebar width to new value
+void gui_update_sidebar()
+{
+  queen()->reload_sidebar_icons();
 }

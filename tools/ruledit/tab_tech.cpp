@@ -56,8 +56,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
 
   tech_list = new QListWidget(this);
 
-  connect(tech_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_tech()));
+  connect(tech_list, &QListWidget::itemSelectionChanged, this,
+          &tab_tech::select_tech);
   main_layout->addWidget(tech_list);
 
   tech_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -65,19 +65,19 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  rname->setText(QStringLiteral("None"));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_tech::name_given);
   tech_layout->addWidget(label, 0, 0);
   tech_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_tech::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  name->setText(QStringLiteral("None"));
+  connect(name, &QLineEdit::returnPressed, this, &tab_tech::name_given);
   tech_layout->addWidget(label, 1, 0);
   tech_layout->addWidget(same_name, 1, 1);
   tech_layout->addWidget(name, 1, 2);
@@ -87,7 +87,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   req1_button = new QToolButton();
   req1_button->setParent(this);
   req1 = prepare_req_button(req1_button, AR_ONE);
-  connect(req1_button, SIGNAL(pressed()), this, SLOT(req1_jump()));
+  connect(req1_button, &QAbstractButton::pressed, this,
+          &tab_tech::req1_jump);
   tech_layout->addWidget(label, 2, 0);
   tech_layout->addWidget(req1_button, 2, 2);
 
@@ -95,7 +96,8 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   label->setParent(this);
   req2_button = new QToolButton();
   req2 = prepare_req_button(req2_button, AR_TWO);
-  connect(req2_button, SIGNAL(pressed()), this, SLOT(req2_jump()));
+  connect(req2_button, &QAbstractButton::pressed, this,
+          &tab_tech::req2_jump);
   tech_layout->addWidget(label, 3, 0);
   tech_layout->addWidget(req2_button, 3, 2);
 
@@ -104,23 +106,26 @@ tab_tech::tab_tech(ruledit_gui *ui_in) : QWidget()
   root_req_button = new QToolButton();
   root_req_button->setParent(this);
   root_req = prepare_req_button(root_req_button, AR_ROOT);
-  connect(root_req_button, SIGNAL(pressed()), this, SLOT(root_req_jump()));
+  connect(root_req_button, &QAbstractButton::pressed, this,
+          &tab_tech::root_req_jump);
   tech_layout->addWidget(label, 4, 0);
   tech_layout->addWidget(root_req_button, 4, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_tech::edit_effects);
   tech_layout->addWidget(effects_button, 5, 2);
   show_experimental(effects_button);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add tech")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this, &tab_tech::add_now);
   tech_layout->addWidget(add_button, 6, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this tech")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_tech::delete_now);
   tech_layout->addWidget(delete_button, 6, 2);
   show_experimental(delete_button);
 
@@ -166,16 +171,13 @@ QMenu *tab_tech::prepare_req_button(QToolButton *button, enum tech_req rn)
 
   switch (rn) {
   case AR_ONE:
-    connect(menu, SIGNAL(triggered(QAction *)), this,
-            SLOT(req1_menu(QAction *)));
+    connect(menu, &QMenu::triggered, this, &tab_tech::req1_menu);
     break;
   case AR_TWO:
-    connect(menu, SIGNAL(triggered(QAction *)), this,
-            SLOT(req2_menu(QAction *)));
+    connect(menu, &QMenu::triggered, this, &tab_tech::req2_menu);
     break;
   case AR_ROOT:
-    connect(menu, SIGNAL(triggered(QAction *)), this,
-            SLOT(root_req_menu(QAction *)));
+    connect(menu, &QMenu::triggered, this, &tab_tech::root_req_menu);
     break;
   case AR_SIZE:
     fc_assert(rn != AR_SIZE);
@@ -236,11 +238,11 @@ void tab_tech::update_tech_info(struct advance *adv)
     req2_button->setText(tech_name(adv->require[AR_TWO]));
     root_req_button->setText(tech_name(adv->require[AR_ROOT]));
   } else {
-    name->setText("None");
-    rname->setText("None");
-    req1_button->setText("None");
-    req2_button->setText("None");
-    root_req_button->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
+    req1_button->setText(QStringLiteral("None"));
+    req2_button->setText(QStringLiteral("None"));
+    root_req_button->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

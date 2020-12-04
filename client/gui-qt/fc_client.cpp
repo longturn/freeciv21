@@ -61,10 +61,10 @@ extern void write_shortcuts();
  ****************************************************************************/
 fc_client::fc_client()
     : QMainWindow(), status_bar_label(nullptr), server_notifier(nullptr),
-      central_layout(nullptr), status_bar(nullptr), current_file(""),
-      quitting(false), opened_dialog(nullptr), central_wdg(nullptr),
-      interface_locked(false), map_font_scale(true), map_scale(1.0f),
-      menu_bar(nullptr)
+      central_layout(nullptr), status_bar(nullptr),
+      current_file(QLatin1String("")), quitting(false),
+      opened_dialog(nullptr), central_wdg(nullptr), interface_locked(false),
+      map_font_scale(true), map_scale(1.0f), menu_bar(nullptr)
 {
   QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
   status_bar_queue.clear();
@@ -189,7 +189,7 @@ void fc_client::switch_page(int new_pg)
 
   if ((new_page == PAGE_SCENARIO || new_page == PAGE_LOAD)
       && !is_server_running()) {
-    current_file = "";
+    current_file = QLatin1String("");
     client_start_server_and_set_page(new_page);
     return;
   }
@@ -370,101 +370,104 @@ void fc_client::delete_cursors(void)
 void fc_client::read_settings()
 {
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              "freeciv-qt-client");
-  if (!s.contains("Fonts-set")) {
+              QStringLiteral("freeciv-qt-client"));
+  if (!s.contains(QStringLiteral("Fonts-set"))) {
     configure_fonts();
   }
-  if (s.contains("Chat-fx-size")) {
-    qt_settings.chat_fwidth = s.value("Chat-fx-size").toFloat();
+  if (s.contains(QStringLiteral("Chat-fx-size"))) {
+    qt_settings.chat_fwidth =
+        s.value(QStringLiteral("Chat-fx-size")).toFloat();
   } else {
     qt_settings.chat_fwidth = 0.2;
   }
-  if (s.contains("Chat-fy-size")) {
-    qt_settings.chat_fheight = s.value("Chat-fy-size").toFloat();
+  if (s.contains(QStringLiteral("Chat-fy-size"))) {
+    qt_settings.chat_fheight =
+        s.value(QStringLiteral("Chat-fy-size")).toFloat();
   } else {
     qt_settings.chat_fheight = 0.4;
   }
-  if (s.contains("Chat-fx-pos")) {
-    qt_settings.chat_fx_pos = s.value("Chat-fx-pos").toFloat();
+  if (s.contains(QStringLiteral("Chat-fx-pos"))) {
+    qt_settings.chat_fx_pos =
+        s.value(QStringLiteral("Chat-fx-pos")).toFloat();
   } else {
     qt_settings.chat_fx_pos = 0.0;
   }
-  if (s.contains("Chat-fy-pos")) {
-    qt_settings.chat_fy_pos = s.value("Chat-fy-pos").toFloat();
+  if (s.contains(QStringLiteral("Chat-fy-pos"))) {
+    qt_settings.chat_fy_pos =
+        s.value(QStringLiteral("Chat-fy-pos")).toFloat();
   } else {
     qt_settings.chat_fy_pos = 0.6;
   }
-  if (s.contains("unit_fx")) {
-    qt_settings.unit_info_pos_fx = s.value("unit_fx").toFloat();
+  if (s.contains(QStringLiteral("unit_fx"))) {
+    qt_settings.unit_info_pos_fx =
+        s.value(QStringLiteral("unit_fx")).toFloat();
   } else {
     qt_settings.unit_info_pos_fx = 0.33;
   }
-  if (s.contains("unit_fy")) {
-    qt_settings.unit_info_pos_fy = s.value("unit_fy").toFloat();
+  if (s.contains(QStringLiteral("unit_fy"))) {
+    qt_settings.unit_info_pos_fy =
+        s.value(QStringLiteral("unit_fy")).toFloat();
   } else {
     qt_settings.unit_info_pos_fy = 0.88;
   }
-  if (s.contains("minimap_x")) {
-    qt_settings.minimap_x = s.value("minimap_x").toFloat();
+  if (s.contains(QStringLiteral("minimap_x"))) {
+    qt_settings.minimap_x = s.value(QStringLiteral("minimap_x")).toFloat();
   } else {
     qt_settings.minimap_x = 0.84;
   }
-  if (s.contains("minimap_y")) {
-    qt_settings.minimap_y = s.value("minimap_y").toFloat();
+  if (s.contains(QStringLiteral("minimap_y"))) {
+    qt_settings.minimap_y = s.value(QStringLiteral("minimap_y")).toFloat();
   } else {
     qt_settings.minimap_y = 0.79;
   }
-  if (s.contains("minimap_width")) {
-    qt_settings.minimap_width = s.value("minimap_width").toFloat();
+  if (s.contains(QStringLiteral("minimap_width"))) {
+    qt_settings.minimap_width =
+        s.value(QStringLiteral("minimap_width")).toFloat();
   } else {
     qt_settings.minimap_width = 0.15;
   }
-  if (s.contains("minimap_height")) {
-    qt_settings.minimap_height = s.value("minimap_height").toFloat();
+  if (s.contains(QStringLiteral("minimap_height"))) {
+    qt_settings.minimap_height =
+        s.value(QStringLiteral("minimap_height")).toFloat();
   } else {
     qt_settings.minimap_height = 0.2;
   }
-  if (s.contains("battlelog_scale")) {
-    qt_settings.battlelog_scale = s.value("battlelog_scale").toFloat();
+  if (s.contains(QStringLiteral("battlelog_scale"))) {
+    qt_settings.battlelog_scale =
+        s.value(QStringLiteral("battlelog_scale")).toFloat();
   } else {
     qt_settings.battlelog_scale = 1;
   }
 
-  if (s.contains("City-dialog")) {
-    qt_settings.city_geometry = s.value("City-dialog").toByteArray();
+  if (s.contains(QStringLiteral("help-dialog"))) {
+    qt_settings.help_geometry =
+        s.value(QStringLiteral("help-dialog")).toByteArray();
   }
-  if (s.contains("splitter1")) {
-    qt_settings.city_splitter1 = s.value("splitter1").toByteArray();
+  if (s.contains(QStringLiteral("help_splitter1"))) {
+    qt_settings.help_splitter1 =
+        s.value(QStringLiteral("help_splitter1")).toByteArray();
   }
-  if (s.contains("splitter2")) {
-    qt_settings.city_splitter2 = s.value("splitter2").toByteArray();
-  }
-  if (s.contains("splitter3")) {
-    qt_settings.city_splitter3 = s.value("splitter3").toByteArray();
-  }
-  if (s.contains("help-dialog")) {
-    qt_settings.help_geometry = s.value("help-dialog").toByteArray();
-  }
-  if (s.contains("help_splitter1")) {
-    qt_settings.help_splitter1 = s.value("help_splitter1").toByteArray();
-  }
-  if (s.contains("new_turn_text")) {
-    qt_settings.show_new_turn_text = s.value("new_turn_text").toBool();
+  if (s.contains(QStringLiteral("new_turn_text"))) {
+    qt_settings.show_new_turn_text =
+        s.value(QStringLiteral("new_turn_text")).toBool();
   } else {
     qt_settings.show_new_turn_text = true;
   }
-  if (s.contains("show_battle_log")) {
-    qt_settings.show_battle_log = s.value("show_battle_log").toBool();
+  if (s.contains(QStringLiteral("show_battle_log"))) {
+    qt_settings.show_battle_log =
+        s.value(QStringLiteral("show_battle_log")).toBool();
   } else {
     qt_settings.show_battle_log = false;
   }
-  if (s.contains("battlelog_x")) {
-    qt_settings.battlelog_x = s.value("battlelog_x").toFloat();
+  if (s.contains(QStringLiteral("battlelog_x"))) {
+    qt_settings.battlelog_x =
+        s.value(QStringLiteral("battlelog_x")).toFloat();
   } else {
     qt_settings.battlelog_x = 0.0;
   }
-  if (s.contains("minimap_y")) {
-    qt_settings.battlelog_y = s.value("battlelog_y").toFloat();
+  if (s.contains(QStringLiteral("minimap_y"))) {
+    qt_settings.battlelog_y =
+        s.value(QStringLiteral("battlelog_y")).toFloat();
   } else {
     qt_settings.battlelog_y = 0.0;
   }
@@ -506,29 +509,26 @@ void fc_client::read_settings()
 void fc_client::write_settings()
 {
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
-              "freeciv-qt-client");
-  s.setValue("Fonts-set", true);
-  s.setValue("Chat-fx-size", qt_settings.chat_fwidth);
-  s.setValue("Chat-fy-size", qt_settings.chat_fheight);
-  s.setValue("Chat-fx-pos", qt_settings.chat_fx_pos);
-  s.setValue("Chat-fy-pos", qt_settings.chat_fy_pos);
-  s.setValue("City-dialog", qt_settings.city_geometry);
-  s.setValue("splitter1", qt_settings.city_splitter1);
-  s.setValue("splitter2", qt_settings.city_splitter2);
-  s.setValue("splitter3", qt_settings.city_splitter3);
-  s.setValue("help-dialog", qt_settings.help_geometry);
-  s.setValue("help_splitter1", qt_settings.help_splitter1);
-  s.setValue("unit_fx", qt_settings.unit_info_pos_fx);
-  s.setValue("unit_fy", qt_settings.unit_info_pos_fy);
-  s.setValue("minimap_x", qt_settings.minimap_x);
-  s.setValue("minimap_y", qt_settings.minimap_y);
-  s.setValue("minimap_width", qt_settings.minimap_width);
-  s.setValue("minimap_height", qt_settings.minimap_height);
-  s.setValue("battlelog_scale", qt_settings.battlelog_scale);
-  s.setValue("battlelog_x", qt_settings.battlelog_x);
-  s.setValue("battlelog_y", qt_settings.battlelog_y);
-  s.setValue("new_turn_text", qt_settings.show_new_turn_text);
-  s.setValue("show_battle_log", qt_settings.show_battle_log);
+              QStringLiteral("freeciv-qt-client"));
+  s.setValue(QStringLiteral("Fonts-set"), true);
+  s.setValue(QStringLiteral("Chat-fx-size"), qt_settings.chat_fwidth);
+  s.setValue(QStringLiteral("Chat-fy-size"), qt_settings.chat_fheight);
+  s.setValue(QStringLiteral("Chat-fx-pos"), qt_settings.chat_fx_pos);
+  s.setValue(QStringLiteral("Chat-fy-pos"), qt_settings.chat_fy_pos);
+  s.setValue(QStringLiteral("help-dialog"), qt_settings.help_geometry);
+  s.setValue(QStringLiteral("help_splitter1"), qt_settings.help_splitter1);
+  s.setValue(QStringLiteral("unit_fx"), qt_settings.unit_info_pos_fx);
+  s.setValue(QStringLiteral("unit_fy"), qt_settings.unit_info_pos_fy);
+  s.setValue(QStringLiteral("minimap_x"), qt_settings.minimap_x);
+  s.setValue(QStringLiteral("minimap_y"), qt_settings.minimap_y);
+  s.setValue(QStringLiteral("minimap_width"), qt_settings.minimap_width);
+  s.setValue(QStringLiteral("minimap_height"), qt_settings.minimap_height);
+  s.setValue(QStringLiteral("battlelog_scale"), qt_settings.battlelog_scale);
+  s.setValue(QStringLiteral("battlelog_x"), qt_settings.battlelog_x);
+  s.setValue(QStringLiteral("battlelog_y"), qt_settings.battlelog_y);
+  s.setValue(QStringLiteral("new_turn_text"),
+             qt_settings.show_new_turn_text);
+  s.setValue(QStringLiteral("show_battle_log"), qt_settings.show_battle_log);
   write_shortcuts();
 }
 
@@ -606,7 +606,7 @@ void fc_client::set_status_bar(QString message, int timeout)
 {
   if (status_bar_label->text().isEmpty()) {
     status_bar_label->setText(message);
-    QTimer::singleShot(timeout, this, SLOT(clear_status_bar()));
+    QTimer::singleShot(timeout, this, &fc_client::clear_status_bar);
   } else {
     status_bar_queue.append(message);
     while (status_bar_queue.count() > 3) {
@@ -625,9 +625,9 @@ void fc_client::clear_status_bar()
   if (!status_bar_queue.isEmpty()) {
     str = status_bar_queue.takeFirst();
     status_bar_label->setText(str);
-    QTimer::singleShot(2000, this, SLOT(clear_status_bar()));
+    QTimer::singleShot(2000, this, &fc_client::clear_status_bar);
   } else {
-    status_bar_label->setText("");
+    status_bar_label->setText(QLatin1String(""));
   }
 }
 
@@ -670,15 +670,21 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   }
   mw = qmw;
   hb = new QHBoxLayout();
-  qpb = new QPushButton(fc_icons::instance()->get_icon("cmin"), "");
+  qpb =
+      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmin")),
+                      QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::minimize);
   hb->addWidget(qpb);
-  qpb = new QPushButton(fc_icons::instance()->get_icon("cmax"), "");
+  qpb =
+      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmax")),
+                      QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::maximize);
   hb->addWidget(qpb);
-  qpb = new QPushButton(fc_icons::instance()->get_icon("cclose"), "");
+  qpb = new QPushButton(
+      fc_icons::instance()->get_icon(QStringLiteral("cclose")),
+      QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::close_fc);
   hb->addWidget(qpb);

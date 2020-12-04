@@ -57,7 +57,7 @@ page_load::page_load(QWidget *parent, fc_client *c) : QWidget(parent)
   ui.load_pix->setProperty("themed_border", true);
   ui.load_pix->setFixedSize(0, 0);
   sav << _("Choose Saved Game to Load") << _("Date");
-  ui.load_save_text->setText("");
+  ui.load_save_text->setText(QLatin1String(""));
   ui.load_save_text->setTextFormat(Qt::RichText);
   ui.load_save_text->setWordWrap(true);
   ui.show_preview->setChecked(gui_options.gui_qt_show_preview);
@@ -161,7 +161,7 @@ void page_load::browse_saves(void)
 {
   QString str;
   str = QString(_("Save Files"))
-        + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
   current_file = QFileDialog::getOpenFileName(this, _("Open Save File"),
                                               QDir::homePath(), str);
   if (!current_file.isEmpty()) {
@@ -212,7 +212,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
   current_file = qvar.toString();
   if (ui.show_preview->checkState() == Qt::Unchecked) {
     ui.load_pix->setPixmap(*(new QPixmap));
-    ui.load_save_text->setText("");
+    ui.load_save_text->setText(QLatin1String(""));
     return;
   }
   fn_bytes = current_file.toLocal8Bit();
@@ -228,7 +228,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
 
     integer = secfile_lookup_int_default(sf, -1, "game.turn");
     if (integer >= 0) {
-      final_str = QString("<b>") + _("Turn") + ":</b> "
+      final_str = QStringLiteral("<b>") + _("Turn") + ":</b> "
                   + QString::number(integer).toHtmlEscaped() + "<br>";
     }
     if ((sf = secfile_load_section(fn_bytes.data(), "players", TRUE))) {
@@ -240,7 +240,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       num_players = integer;
     }
     for (int i = 0; i < num_players; i++) {
-      pl_str = QString("player") + QString::number(i);
+      pl_str = QStringLiteral("player") + QString::number(i);
       pl_bytes = pl_str.toLocal8Bit();
       if ((sf = secfile_load_section(fn_bytes.data(), pl_bytes.data(),
                                      true))) {

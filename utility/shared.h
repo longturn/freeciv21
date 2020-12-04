@@ -14,9 +14,6 @@
 #define FC__SHARED_H
 
 
-
-#include <freeciv_config.h>
-
 #include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
 #include <time.h>   /* time_t */

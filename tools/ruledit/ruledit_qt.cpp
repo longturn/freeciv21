@@ -121,10 +121,12 @@ ruledit_gui::ruledit_gui(ruledit_main *main) : QObject(main)
   } else {
     ruleset_select->setText(GAME_DEFAULT_RULESETDIR);
   }
-  connect(ruleset_select, SIGNAL(returnPressed()), this, SLOT(launch_now()));
+  connect(ruleset_select, &QLineEdit::returnPressed, this,
+          &ruledit_gui::launch_now);
   preload_layout->addWidget(ruleset_select);
   ruleset_accept = new QPushButton(QString::fromUtf8(R__("Start editing")));
-  connect(ruleset_accept, SIGNAL(pressed()), this, SLOT(launch_now()));
+  connect(ruleset_accept, &QAbstractButton::pressed, this,
+          &ruledit_gui::launch_now);
   preload_layout->addWidget(ruleset_accept);
 
   preload_widget->setLayout(preload_layout);
@@ -290,9 +292,8 @@ void ruledit_gui::open_req_edit(QString target,
 
   redit->show();
 
-  connect(redit,
-          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)), this,
-          SLOT(incoming_rec_vec_change(const requirement_vector *)));
+  connect(redit, &req_edit::rec_vec_may_have_changed, this,
+          &ruledit_gui::incoming_rec_vec_change);
 
   req_edit_list_append(req_edits, redit);
 }
@@ -328,9 +329,8 @@ void ruledit_gui::open_req_vec_fix(req_vec_fix_item *item_info)
   fixer->refresh();
   fixer->show();
 
-  connect(fixer,
-          SIGNAL(rec_vec_may_have_changed(const requirement_vector *)), this,
-          SLOT(incoming_rec_vec_change(const requirement_vector *)));
+  connect(fixer, &req_vec_fix::rec_vec_may_have_changed, this,
+          &ruledit_gui::incoming_rec_vec_change);
 
   req_vec_fix_list_append(req_vec_fixers, fixer);
 }

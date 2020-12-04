@@ -274,64 +274,66 @@ int main(int argc, char *argv[])
   if (!log_init(parser.value(QStringLiteral("debug")))) {
     exit(EXIT_FAILURE);
   }
-  if (parser.isSet("file")) {
-    srvarg.load_filename = parser.value("file");
+  if (parser.isSet(QStringLiteral("file"))) {
+    srvarg.load_filename = parser.value(QStringLiteral("file"));
   }
-  if (parser.isSet("log")) {
-    srvarg.log_filename = parser.value("log");
+  if (parser.isSet(QStringLiteral("log"))) {
+    srvarg.log_filename = parser.value(QStringLiteral("log"));
   }
-  fc_assert_set_fatal(parser.isSet("Fatal"));
-  if (parser.isSet("Ranklog")) {
-    srvarg.ranklog_filename = parser.value("Ranklog");
+  fc_assert_set_fatal(parser.isSet(QStringLiteral("Fatal")));
+  if (parser.isSet(QStringLiteral("Ranklog"))) {
+    srvarg.ranklog_filename = parser.value(QStringLiteral("Ranklog"));
   }
-  if (parser.isSet("keep")) {
+  if (parser.isSet(QStringLiteral("keep"))) {
     srvarg.metaconnection_persistent = true;
     // Implies --meta
     srvarg.metaserver_no_send = false;
   }
-  if (parser.isSet("meta")) {
+  if (parser.isSet(QStringLiteral("meta"))) {
     srvarg.metaserver_no_send = false;
   }
-  if (parser.isSet("Metaserver")) {
-    srvarg.ranklog_filename = parser.value("Metaserver");
+  if (parser.isSet(QStringLiteral("Metaserver"))) {
+    srvarg.ranklog_filename = parser.value(QStringLiteral("Metaserver"));
     // Implies --meta
     srvarg.metaserver_no_send = false;
   }
-  if (parser.isSet("identity")) {
-    srvarg.ranklog_filename = parser.value("identity");
+  if (parser.isSet(QStringLiteral("identity"))) {
+    srvarg.ranklog_filename = parser.value(QStringLiteral("identity"));
   }
-  if (parser.isSet("port")) {
+  if (parser.isSet(QStringLiteral("port"))) {
     bool conversion_ok;
-    srvarg.port = parser.value("port").toUInt(&conversion_ok);
+    srvarg.port =
+        parser.value(QStringLiteral("port")).toUInt(&conversion_ok);
     srvarg.user_specified_port = true;
     if (!conversion_ok) {
       qFatal(_("Invalid port number %s"), qPrintable(parser.value("port")));
       exit(EXIT_FAILURE);
     }
   }
-  if (parser.isSet("bind")) {
-    srvarg.bind_addr = parser.value("bind");
+  if (parser.isSet(QStringLiteral("bind"))) {
+    srvarg.bind_addr = parser.value(QStringLiteral("bind"));
   }
-  if (parser.isSet("Bind-meta")) {
-    srvarg.bind_meta_addr = parser.value("Bind-meta");
+  if (parser.isSet(QStringLiteral("Bind-meta"))) {
+    srvarg.bind_meta_addr = parser.value(QStringLiteral("Bind-meta"));
   }
-  if (parser.isSet("read")) {
-    srvarg.script_filename = parser.value("read");
+  if (parser.isSet(QStringLiteral("read"))) {
+    srvarg.script_filename = parser.value(QStringLiteral("read"));
   }
-  if (parser.isSet("quitidle")) {
+  if (parser.isSet(QStringLiteral("quitidle"))) {
     bool conversion_ok;
-    srvarg.quitidle = parser.value("quitidle").toUInt(&conversion_ok);
+    srvarg.quitidle =
+        parser.value(QStringLiteral("quitidle")).toUInt(&conversion_ok);
     if (!conversion_ok) {
       qFatal(_("Invalid number %s"), qPrintable(parser.value("quitidle")));
       exit(EXIT_FAILURE);
     }
   }
-  if (parser.isSet("exit-on-end")) {
+  if (parser.isSet(QStringLiteral("exit-on-end"))) {
     srvarg.exit_on_end = true;
   }
-  if (parser.isSet("timetrack")) {
+  if (parser.isSet(QStringLiteral("timetrack"))) {
     srvarg.timetrack = true;
-    log_time("Time tracking enabled", true);
+    log_time(QStringLiteral("Time tracking enabled"), true);
   }
 #ifdef HAVE_FCDB
   if (parser.isSet("Database")) {
@@ -348,20 +350,21 @@ int main(int argc, char *argv[])
     srvarg.auth_allow_newusers = true;
   }
 #endif // HAVE_FCDB
-  if (parser.isSet("Serverid")) {
-    srvarg.serverid = parser.value("Serverid");
+  if (parser.isSet(QStringLiteral("Serverid"))) {
+    srvarg.serverid = parser.value(QStringLiteral("Serverid"));
   }
-  if (parser.isSet("saves")) {
-    srvarg.saves_pathname = parser.value("saves");
+  if (parser.isSet(QStringLiteral("saves"))) {
+    srvarg.saves_pathname = parser.value(QStringLiteral("saves"));
   }
-  if (parser.isSet("scenarios")) {
-    srvarg.scenarios_pathname = parser.value("scenarios_pathname");
+  if (parser.isSet(QStringLiteral("scenarios"))) {
+    srvarg.scenarios_pathname =
+        parser.value(QStringLiteral("scenarios_pathname"));
   }
-  if (parser.isSet("ruleset")) {
-    srvarg.ruleset = parser.value("ruleset");
+  if (parser.isSet(QStringLiteral("ruleset"))) {
+    srvarg.ruleset = parser.value(QStringLiteral("ruleset"));
   }
-  if (parser.isSet("Announce")) {
-    auto value = parser.value("Announce").toLower();
+  if (parser.isSet(QStringLiteral("Announce"))) {
+    auto value = parser.value(QStringLiteral("Announce")).toLower();
     if (value == QLatin1String("ipv4")) {
       srvarg.announce = ANNOUNCE_IPV4;
     } else if (value == QLatin1String("ipv6")) {
@@ -373,7 +376,7 @@ int main(int argc, char *argv[])
                 qPrintable(parser.value("Announce")));
     }
   }
-  if (parser.isSet("warnings")) {
+  if (parser.isSet(QStringLiteral("warnings"))) {
     qCWarning(deprecations_category,
               // TRANS: Do not translate --warnings
               _("The --warnings option is deprecated."));
@@ -394,7 +397,6 @@ int main(int argc, char *argv[])
   /* TRANS: No full stop after the URL, could cause confusion. */
   con_write(C_COMMENT, _("You can learn a lot about Freeciv at %s"),
             WIKI_URL);
-
 #ifdef HAVE_FCDB
   if (srvarg.auth_enabled && !srvarg.fcdb_enabled) {
     fc_fprintf(stderr, _("Requested authentication with --auth, "

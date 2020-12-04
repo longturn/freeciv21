@@ -613,12 +613,12 @@ void hud_units::update_actions(unit_list *punits)
   text_str = text_str + " ";
   mp = QString(move_points_text(punit->moves_left, false));
   if (utype_fuel(unit_type_get(punit))) {
-    mp = mp + QString("(")
+    mp = mp + QStringLiteral("(")
          + QString(move_points_text(
              (unit_type_get(punit)->move_rate * ((punit->fuel) - 1)
               + punit->moves_left),
              false))
-         + QString(")");
+         + QStringLiteral(")");
   }
   /* TRANS: MP = Movement points */
   mp = QString(_("MP: ")) + mp;
@@ -700,11 +700,11 @@ void hud_units::update_actions(unit_list *punits)
     fuel = punit->fuel - 1;
     fuel = fuel * punit->utype->move_rate / SINGLE_MOVE;
     p.drawText(bounding_rect, Qt::AlignCenter,
-               QString("+") + QString::number(fuel));
+               QStringLiteral("+") + QString::number(fuel));
   }
 
   if (move_pt_text.isEmpty()) {
-    move_pt_text = " ";
+    move_pt_text = QStringLiteral(" ");
   }
   bounding_rect =
       p.boundingRect(crop, Qt::AlignLeft | Qt::AlignBottom, move_pt_text);
@@ -968,42 +968,46 @@ int unit_actions::update_actions()
   if (unit_can_add_or_build_city(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDCITY;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("home"));
+    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("home")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_MINE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDMINE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("mine"));
+    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("mine")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_PLANT)) {
     a = new hud_action(this);
     a->action_shortcut = SC_PLANT;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("plantforest"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("plantforest")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_IRRIGATE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDIRRIGATION;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("irrigation"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("irrigation")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_CULTIVATE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_CULTIVATE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("chopchop"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("chopchop")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_TRANSFORM)) {
     a = new hud_action(this);
     a->action_shortcut = SC_TRANSFORM;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("transform"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("transform")));
     actions.append(a);
   }
 
@@ -1021,27 +1025,30 @@ int unit_actions::update_actions()
     if (ok) {
       a = new hud_action(this);
       a->action_shortcut = SC_BUILDROAD;
-      a->set_pixmap(fc_icons::instance()->get_pixmap("buildroad"));
+      a->set_pixmap(
+          fc_icons::instance()->get_pixmap(QStringLiteral("buildroad")));
       actions.append(a);
     }
   }
   /* Goto */
   a = new hud_action(this);
   a->action_shortcut = SC_GOTO;
-  a->set_pixmap(fc_icons::instance()->get_pixmap("goto"));
+  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("goto")));
   actions.append(a);
 
   if (can_unit_do_activity(current_unit, ACTIVITY_FORTIFYING)) {
     a = new hud_action(this);
     a->action_shortcut = SC_FORTIFY;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("fortify"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("fortify")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_SENTRY)) {
     a = new hud_action(this);
     a->action_shortcut = SC_SENTRY;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("sentry"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("sentry")));
     actions.append(a);
   }
 
@@ -1049,7 +1056,7 @@ int unit_actions::update_actions()
   if (unit_can_load(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_LOAD;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("load"));
+    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("load")));
     actions.append(a);
   }
 
@@ -1059,7 +1066,8 @@ int unit_actions::update_actions()
                                     tile_city(unit_tile(current_unit)))) {
       a = new hud_action(this);
       a->action_shortcut = SC_SETHOME;
-      a->set_pixmap(fc_icons::instance()->get_pixmap("set_homecity"));
+      a->set_pixmap(
+          fc_icons::instance()->get_pixmap(QStringLiteral("set_homecity")));
       actions.append(a);
     }
   }
@@ -1068,7 +1076,8 @@ int unit_actions::update_actions()
   if (UU_OK == unit_upgrade_test(current_unit, FALSE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_UPGRADE_UNIT;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("upgrade"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("upgrade")));
     actions.append(a);
   }
 
@@ -1076,7 +1085,8 @@ int unit_actions::update_actions()
   if (can_unit_do_autosettlers(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_AUTOMATE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("automate"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("automate")));
     actions.append(a);
   }
 
@@ -1084,7 +1094,8 @@ int unit_actions::update_actions()
   if (can_unit_paradrop(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_PARADROP;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("paradrop"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("paradrop")));
     actions.append(a);
   }
 
@@ -1092,7 +1103,8 @@ int unit_actions::update_actions()
   if (can_unit_do_activity(current_unit, ACTIVITY_POLLUTION)) {
     a = new hud_action(this);
     a->action_shortcut = SC_PARADROP;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("pollution"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("pollution")));
     actions.append(a);
   }
 
@@ -1103,7 +1115,8 @@ int unit_actions::update_actions()
                                 unit_tile(current_unit))) {
     a = new hud_action(this);
     a->action_shortcut = SC_UNLOAD;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("unload"));
+    a->set_pixmap(
+        fc_icons::instance()->get_pixmap(QStringLiteral("unload")));
     actions.append(a);
   }
 
@@ -1111,20 +1124,20 @@ int unit_actions::update_actions()
   if (unit_can_do_action(current_unit, ACTION_NUKE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_NUKE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap("nuke"));
+    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("nuke")));
     actions.append(a);
   }
 
   /* Wait */
   a = new hud_action(this);
   a->action_shortcut = SC_WAIT;
-  a->set_pixmap(fc_icons::instance()->get_pixmap("wait"));
+  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("wait")));
   actions.append(a);
 
   /* Done moving */
   a = new hud_action(this);
   a->action_shortcut = SC_DONE_MOVING;
-  a->set_pixmap(fc_icons::instance()->get_pixmap("done"));
+  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("done")));
   actions.append(a);
 
   for (auto a : qAsConst(actions)) {
@@ -1234,7 +1247,7 @@ void hud_unit_loader::show_me()
     {
       spite =
           get_unittype_sprite(tileset, tunit->utype, direction8_invalid());
-      new_item = new QTableWidgetItem(QIcon(*spite->pm), "");
+      new_item = new QTableWidgetItem(QIcon(*spite->pm), QLatin1String(""));
       setItem(i, j, new_item);
       j++;
     }
@@ -1596,7 +1609,7 @@ QString popup_terrain_info(struct tile *ptile)
       ret
       + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
   t = get_infrastructure_text(ptile->extras);
-  if (t != "") {
+  if (t != QLatin1String("")) {
     ret = ret + QString(_("Infrastructure: %1\n")).arg(t);
   }
   ret = ret + QString(_("Defense bonus: %1%\n")).arg(terr->defense_bonus);
@@ -1817,12 +1830,12 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   if (att_hp_loss > 0) {
     ahploss = "-" + QString::number(att_hp_loss);
   } else {
-    ahploss = "0";
+    ahploss = QStringLiteral("0");
   }
   if (def_hp_loss > 0) {
     dhploss = "-" + QString::number(def_hp_loss);
   } else {
-    dhploss = "0";
+    dhploss = QStringLiteral("0");
   }
   f.setBold(true);
 
@@ -1857,11 +1870,12 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   p.setPen(QColor(Qt::white));
   if (def_veteran) {
     p.drawText(right,
-               Qt::AlignHCenter | Qt::AlignJustify | Qt::AlignAbsolute, "*");
+               Qt::AlignHCenter | Qt::AlignJustify | Qt::AlignAbsolute,
+               QStringLiteral("*"));
   }
   if (att_veteran) {
     p.drawText(left, Qt::AlignHCenter | Qt::AlignJustify | Qt::AlignAbsolute,
-               "*");
+               QStringLiteral("*"));
   }
   p.drawText(left, Qt::AlignHorizontal_Mask, ahploss);
   p.drawImage(right, dimg);

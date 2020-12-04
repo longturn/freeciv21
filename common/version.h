@@ -15,10 +15,6 @@
 
 #include <QString>
 
-#if !defined(FC__FREECIV_CONFIG_H) && !defined(FC_CONFIG_H)
-#error Files including versions.h should also include freeciv_config.h directly
-#endif
-
 /* This is only used in version.c, and only if IS_BETA_VERSION is true.
  * The month[] array is defined in version.c (index: 1 == Jan, 2 == Feb,
  * ...).

@@ -176,7 +176,7 @@ extern bool sg_success;
             native_pos_to_tile(&(wld.map), _nat_x, _nat_y);                 \
         fc_assert_action(ptile != NULL, continue);                          \
         _line[_nat_x] = (GET_XY_CHAR);                                      \
-        sg_failure_ret(fc_isprint(_line[_nat_x] & 0x7f),                    \
+        sg_failure_ret(QChar::isPrint(_line[_nat_x] & 0x7f),                \
                        "Trying to write invalid map data at position "      \
                        "(%d, %d) for path %s: '%c' (%d)",                   \
                        _nat_x, _nat_y, secpath, _line[_nat_x],              \
@@ -2845,7 +2845,7 @@ static void sg_save_map_startpos(struct savedata *saving)
   secfile_insert_int(saving->file, map_startpos_count(),
                      "map.startpos_count");
 
-  for (auto psp : wld.map.startpos_table->values())
+  for (auto psp : *wld.map.startpos_table)
   {
     int nat_x, nat_y;
     if (psp->exclude) continue;
@@ -2864,7 +2864,7 @@ static void sg_save_map_startpos(struct savedata *saving)
       char nation_names[MAX_LEN_NAME * nations->size()];
 
       nation_names[0] = '\0';
-      for (auto pnation : nations->values())
+      for (auto pnation : *nations)
       {
         if ('\0' == nation_names[0]) {
           fc_strlcpy(nation_names, nation_rule_name(pnation),

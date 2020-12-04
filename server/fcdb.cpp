@@ -22,7 +22,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "md5.h"
 #include "shared.h"
 #include "support.h"
 

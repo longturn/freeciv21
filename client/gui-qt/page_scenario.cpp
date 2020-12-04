@@ -25,14 +25,15 @@
 #include "dialogs.h"
 #include "fc_client.h"
 
-page_scenario::page_scenario(QWidget *parent, fc_client *gui) : QWidget(parent)
+page_scenario::page_scenario(QWidget *parent, fc_client *gui)
+    : QWidget(parent)
 {
   QHeaderView *header;
   QStringList sav;
 
   ui.setupUi(this);
   king = gui;
-  ui.scenarios_view->setObjectName("scenarios_view");
+  ui.scenarios_view->setObjectName(QStringLiteral("scenarios_view"));
   ui.scenarios_text->setTextFormat(Qt::RichText);
   ui.scenarios_text->setWordWrap(true);
   sav << _("Choose a Scenario");
@@ -56,18 +57,21 @@ page_scenario::page_scenario(QWidget *parent, fc_client *gui) : QWidget(parent)
           &page_scenario::slot_selection_changed);
 
   ui.bbrowse->setText(_("Browse..."));
-  ui.bbrowse->setIcon(QApplication::style()->standardIcon(QStyle::SP_DirIcon));
+  ui.bbrowse->setIcon(
+      QApplication::style()->standardIcon(QStyle::SP_DirIcon));
   connect(ui.bbrowse, &QAbstractButton::clicked, this,
           &page_scenario::browse_scenarios);
 
   ui.bcancel->setText(_("Cancel"));
   ui.bcancel->setIcon(
       QApplication::style()->standardIcon(QStyle::SP_DialogCancelButton));
-  connect(ui.bcancel, &QAbstractButton::clicked, gui, &fc_client::slot_disconnect);
+  connect(ui.bcancel, &QAbstractButton::clicked, gui,
+          &fc_client::slot_disconnect);
   ui.bload->setText(_("Load Scenario"));
   ui.bload->setIcon(
       QApplication::style()->standardIcon(QStyle::SP_DialogOkButton));
-  connect(ui.bload, &QAbstractButton::clicked, this, &page_scenario::start_scenario);
+  connect(ui.bload, &QAbstractButton::clicked, this,
+          &page_scenario::start_scenario);
   setLayout(ui.gridLayout);
 }
 
@@ -81,9 +85,9 @@ void page_scenario::browse_scenarios(void)
   QString str;
 
   str = QString(_("Scenarios Files"))
-        + QString(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
-  current_file = QFileDialog::getOpenFileName(
-      this, _("Open Scenario File"), QDir::homePath(), str);
+        + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
+  current_file = QFileDialog::getOpenFileName(this, _("Open Scenario File"),
+                                              QDir::homePath(), str);
   if (!current_file.isEmpty()) {
     start_scenario();
   }
@@ -117,8 +121,8 @@ void page_scenario::update_scenarios_page(void)
 
   ui.scenarios_load->clearContents();
   ui.scenarios_load->setRowCount(0);
-  ui.scenarios_text->setText("");
-  ui.scenarios_view->setText("");
+  ui.scenarios_text->setText(QLatin1String(""));
+  ui.scenarios_view->setText(QLatin1String(""));
 
   files = fileinfolist_infix(get_scenario_dirs(), ".sav", false);
   fileinfo_list_iterate(files, pfile)
@@ -165,7 +169,7 @@ void page_scenario::update_scenarios_page(void)
           maj = fcver / 1000000;
           fcver %= 1000000;
           min = fcver / 10000;
-          version = QString("%1.%2").arg(maj).arg(min);
+          version = QStringLiteral("%1.%2").arg(maj).arg(min);
         } else {
           /* TRANS: Unknown scenario format */
           version = QString(_("pre-2.6"));
@@ -194,13 +198,13 @@ void page_scenario::update_scenarios_page(void)
           ui.scenarios_load->insertRow(row);
         }
         item->setText(QString(pfile->name));
-        format = QString("<br>") + QString(_("Format:")) + " "
+        format = QStringLiteral("<br>") + QString(_("Format:")) + " "
                  + version.toHtmlEscaped();
         if (sauthors) {
-          st = QString("\n") + QString("<b>") + _("Authors: ")
-               + QString("</b>") + QString(sauthors).toHtmlEscaped();
+          st = QStringLiteral("\n") + QStringLiteral("<b>") + _("Authors: ")
+               + QStringLiteral("</b>") + QString(sauthors).toHtmlEscaped();
         } else {
-          st = "";
+          st = QLatin1String("");
         }
         sl << "<b>"
                   + QString(sname && strlen(sname) ? Q_(sname) : pfile->name)
@@ -213,7 +217,7 @@ void page_scenario::update_scenarios_page(void)
                       .toHtmlEscaped()
                   + st + format
            << QString::number(fcver).toHtmlEscaped();
-        sl.replaceInStrings("\n", "<br>");
+        sl.replaceInStrings(QStringLiteral("\n"), QStringLiteral("<br>"));
         item->setData(Qt::UserRole, sl);
         if (add_item) {
           ui.scenarios_load->setItem(row, 0, item);
@@ -232,18 +236,18 @@ void page_scenario::update_scenarios_page(void)
 }
 
 void page_scenario::slot_selection_changed(const QItemSelection &selected,
-                                          const QItemSelection &deselected)
+                                           const QItemSelection &deselected)
 {
   QModelIndexList indexes = selected.indexes();
   QStringList sl;
   QModelIndex index;
   QVariant qvar;
-    index = indexes.at(0);
-    qvar = index.data(Qt::UserRole);
-    sl = qvar.toStringList();
-    ui.scenarios_text->setText(sl.at(0));
-    if (sl.count() > 1) {
-      ui.scenarios_view->setText(sl.at(2));
-      current_file = sl.at(1);
-    }
+  index = indexes.at(0);
+  qvar = index.data(Qt::UserRole);
+  sl = qvar.toStringList();
+  ui.scenarios_text->setText(sl.at(0));
+  if (sl.count() > 1) {
+    ui.scenarios_view->setText(sl.at(2));
+    current_file = sl.at(1);
+  }
 }

@@ -361,7 +361,7 @@ char *skip_leading_spaces(char *s)
 {
   fc_assert_ret_val(NULL != s, NULL);
 
-  while (*s != '\0' && fc_isspace(*s)) {
+  while (*s != '\0' && QChar::isSpace(*s)) {
     s++;
   }
 
@@ -399,7 +399,7 @@ void remove_trailing_spaces(char *s)
   len = strlen(s);
   if (len > 0) {
     t = s + len - 1;
-    while (fc_isspace(*t)) {
+    while (QChar::isSpace(*t)) {
       *t = '\0';
       if (t == s) {
         break;
@@ -488,7 +488,7 @@ bool str_to_int(const char *str, int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -498,12 +498,12 @@ bool str_to_int(const char *str, int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -521,7 +521,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -531,12 +531,12 @@ bool str_to_uint(const char *str, unsigned int *pint)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -555,7 +555,7 @@ bool str_to_float(const char *str, float *pfloat)
 
   fc_assert_ret_val(NULL != str, FALSE);
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
     str++;
   }
@@ -566,7 +566,7 @@ bool str_to_float(const char *str, float *pfloat)
     /* Handle sign. */
     str++;
   }
-  while (fc_isdigit(*str)) {
+  while (QChar::isDigit(*str)) {
     /* Digits. */
     str++;
   }
@@ -575,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = TRUE;
     str++;
 
-    while (fc_isdigit(*str)) {
+    while (QChar::isDigit(*str)) {
       /* Digits. */
       str++;
     }
@@ -583,7 +583,7 @@ bool str_to_float(const char *str, float *pfloat)
     dot = FALSE;
   }
 
-  while (fc_isspace(*str)) {
+  while (QChar::isSpace(*str)) {
     /* Ignore trailing spaces. */
     str++;
   }
@@ -994,7 +994,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
     }
 
     // Get all entries in the directory matching the pattern
-    dir.setNameFilters({QLatin1String("*") + QString::fromUtf8(suffix)});
+    dir.setNameFilters({QStringLiteral("*") + QString::fromUtf8(suffix)});
     for (auto name : dir.entryList()) {
       name.truncate(name.length() - strlen(suffix));
       strvec_append(files, name.toUtf8().data());
@@ -1030,7 +1030,7 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? strlen(filename) + 1 : 1];
   int i;
-#else /* DIR_SEPARATOR_IS_DEFAULT */
+#else  /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
@@ -1159,8 +1159,8 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
     }
 
     // Get all entries in the directory matching the pattern
-    QStringList name_filters = {QLatin1String("*") + infix_str
-                                + QLatin1String("*")};
+    QStringList name_filters = {QStringLiteral("*") + infix_str
+                                + QStringLiteral("*")};
     for (const auto &info : dir.entryInfoList(name_filters, QDir::NoFilter,
                                               QDir::Name | QDir::Time)) {
       // Clip the infix.
@@ -1358,7 +1358,7 @@ void switch_lang(const char *lang)
   autocap_update();
 
   qInfo("LANG set to %s", lang);
-#else /* FREECIV_ENABLE_NLS */
+#else  /* FREECIV_ENABLE_NLS */
   fc_assert(FALSE);
 #endif /* FREECIV_ENABLE_NLS */
 }
@@ -1380,7 +1380,7 @@ void init_nls(void)
 
 #ifdef FREECIV_MSWINDOWS
   setup_langname(); /* Makes sure LANG env variable has been set */
-#endif /* FREECIV_MSWINDOWS */
+#endif              /* FREECIV_MSWINDOWS */
 
   (void) setlocale(LC_ALL, "");
   (void) bindtextdomain("freeciv-core", get_locale_dir());
@@ -1452,9 +1452,7 @@ void dont_run_as_root(const char *argv0, const char *fallback)
   if (getuid() == 0 || geteuid() == 0) {
     fc_fprintf(stderr,
                _("%s: Fatal error: you're trying to run me as superuser!\n"),
-               (argv0      ? argv0
-                : fallback ? fallback
-                           : "freeciv"));
+               (argv0 ? argv0 : fallback ? fallback : "freeciv"));
     fc_fprintf(stderr, _("Use a non-privileged account instead.\n"));
     exit(EXIT_FAILURE);
   }
@@ -1682,7 +1680,7 @@ bool path_is_absolute(const char *filename)
   if (strchr(filename, ':')) {
     return TRUE;
   }
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
     return TRUE;
   }
@@ -2024,11 +2022,11 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
       /* Make format. */
       c = cformat;
       *c++ = '%';
-      for (; !fc_isalpha(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
+      for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
         *c++ = *f;
       }
 
-      if (!fc_isalpha(*f)) {
+      if (!QChar::isLetter(*f)) {
         /* Beginning of a new sequence, end of the format, or too long
          * sequence. */
         *c = '\0';
@@ -2189,12 +2187,12 @@ static size_t extract_escapes(const char *format, char *escapes,
     if ('%' == *format) {
       /* Double, not a sequence. */
       continue;
-    } else if (fc_isdigit(*format)) {
+    } else if (QChar::isDigit(*format)) {
       const char *start = format;
 
       do {
         format++;
-      } while (fc_isdigit(*format));
+      } while (QChar::isDigit(*format));
       if ('$' == *format) {
         /* Strings are reordered. */
         sscanf(start, "%d", &idx);

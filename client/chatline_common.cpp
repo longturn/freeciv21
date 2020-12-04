@@ -15,12 +15,12 @@
 #include <fc_config.h>
 #endif
 
+#include <QGlobalStatic>
 #include <stdarg.h>
 #include <string.h>
 
 /* utility */
 #include "astring.h"
-#include "fc_utf8.h"
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
@@ -38,7 +38,7 @@
 
 #include "chatline_common.h"
 
-static QMutex ow_mutex;
+Q_GLOBAL_STATIC(QMutex, ow_mutex);
 
 /**********************************************************************/ /**
    Send the message as a chat to the server.
@@ -56,11 +56,14 @@ int send_chat_printf(const char *format, ...)
 {
   struct packet_chat_msg_req packet;
   va_list args;
+  QByteArray ba;
 
   va_start(args, format);
-  fc_utf8_vsnprintf_trunc(packet.message, sizeof(packet.message), format,
-                          args);
+  auto str = QString::vasprintf(format, args);
   va_end(args);
+
+  ba = str.toLocal8Bit();
+  qstrncpy(packet.message, ba.data(), sizeof(packet.message));
 
   return send_packet_chat_msg_req(&client.conn, &packet);
 }
@@ -68,12 +71,12 @@ int send_chat_printf(const char *format, ...)
 /**********************************************************************/ /**
    Allocate output window mutex
  **************************************************************************/
-void fc_allocate_ow_mutex(void) { ow_mutex.lock(); }
+void fc_allocate_ow_mutex(void) { ow_mutex->lock(); }
 
 /**********************************************************************/ /**
    Release output window mutex
  **************************************************************************/
-void fc_release_ow_mutex(void) { ow_mutex.unlock(); }
+void fc_release_ow_mutex(void) { ow_mutex->unlock(); }
 
 /**********************************************************************/ /**
    Initialize output window mutex

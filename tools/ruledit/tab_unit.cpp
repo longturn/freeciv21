@@ -58,8 +58,8 @@ tab_unit::tab_unit(ruledit_gui *ui_in) : QWidget()
 
   unit_list = new QListWidget(this);
 
-  connect(unit_list, SIGNAL(itemSelectionChanged()), this,
-          SLOT(select_unit()));
+  connect(unit_list, &QListWidget::itemSelectionChanged, this,
+          &tab_unit::select_unit);
   main_layout->addWidget(unit_list);
 
   unit_layout->setSizeConstraint(QLayout::SetMaximumSize);
@@ -67,39 +67,41 @@ tab_unit::tab_unit(ruledit_gui *ui_in) : QWidget()
   label = new QLabel(QString::fromUtf8(R__("Rule Name")));
   label->setParent(this);
   rname = new QLineEdit(this);
-  rname->setText("None");
-  connect(rname, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  rname->setText(QStringLiteral("None"));
+  connect(rname, &QLineEdit::returnPressed, this, &tab_unit::name_given);
   unit_layout->addWidget(label, 0, 0);
   unit_layout->addWidget(rname, 0, 2);
 
   label = new QLabel(QString::fromUtf8(R__("Name")));
   label->setParent(this);
   same_name = new QRadioButton();
-  connect(same_name, SIGNAL(toggled(bool)), this,
-          SLOT(same_name_toggle(bool)));
+  connect(same_name, &QAbstractButton::toggled, this,
+          &tab_unit::same_name_toggle);
   name = new QLineEdit(this);
-  name->setText("None");
-  connect(name, SIGNAL(returnPressed()), this, SLOT(name_given()));
+  name->setText(QStringLiteral("None"));
+  connect(name, &QLineEdit::returnPressed, this, &tab_unit::name_given);
   unit_layout->addWidget(label, 1, 0);
   unit_layout->addWidget(same_name, 1, 1);
   unit_layout->addWidget(name, 1, 2);
 
   edit_button = new QPushButton(QString::fromUtf8(R__("Edit Unit")), this);
-  connect(edit_button, SIGNAL(pressed()), this, SLOT(edit_now()));
+  connect(edit_button, &QAbstractButton::pressed, this, &tab_unit::edit_now);
   unit_layout->addWidget(edit_button, 2, 2);
 
   effects_button = new QPushButton(QString::fromUtf8(R__("Effects")), this);
-  connect(effects_button, SIGNAL(pressed()), this, SLOT(edit_effects()));
+  connect(effects_button, &QAbstractButton::pressed, this,
+          &tab_unit::edit_effects);
   unit_layout->addWidget(effects_button, 3, 2);
 
   add_button = new QPushButton(QString::fromUtf8(R__("Add Unit")), this);
-  connect(add_button, SIGNAL(pressed()), this, SLOT(add_now()));
+  connect(add_button, &QAbstractButton::pressed, this, &tab_unit::add_now);
   unit_layout->addWidget(add_button, 4, 0);
   show_experimental(add_button);
 
   delete_button =
       new QPushButton(QString::fromUtf8(R__("Remove this Unit")), this);
-  connect(delete_button, SIGNAL(pressed()), this, SLOT(delete_now()));
+  connect(delete_button, &QAbstractButton::pressed, this,
+          &tab_unit::delete_now);
   unit_layout->addWidget(delete_button, 4, 2);
   show_experimental(delete_button);
 
@@ -149,8 +151,8 @@ void tab_unit::update_utype_info(struct unit_type *ptype)
       name->setEnabled(true);
     }
   } else {
-    name->setText("None");
-    rname->setText("None");
+    name->setText(QStringLiteral("None"));
+    rname->setText(QStringLiteral("None"));
     same_name->setChecked(true);
     name->setEnabled(false);
   }

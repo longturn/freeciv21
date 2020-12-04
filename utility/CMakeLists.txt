@@ -27,7 +27,6 @@ add_custom_command(
 set(BUG_URL ${FREECIV_BUG_URL})
 # The first one is intended for public usage but we don't support shared
 # libfreeciv
-file(GENERATE OUTPUT freeciv_config.h INPUT cmake_freeciv_config.h.in)
 configure_file(cmake_fc_config.h.in fc_config.h)
 
 add_library(
@@ -40,7 +39,6 @@ add_library(
   deprecations.cpp
   distribute.cpp
   fc_cmdline.cpp
-  fc_utf8.cpp
   fcbacktrace.cpp
   fciconv.cpp
   fcintl.cpp
@@ -61,7 +59,6 @@ add_library(
   string_vector.cpp
   support.cpp
   timing.cpp
-  md5.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
   ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h

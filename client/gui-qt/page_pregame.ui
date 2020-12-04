@@ -56,6 +56,18 @@
     </item>
     <item row="0" column="0" colspan="3">
      <widget class="QTreeWidget" name="start_players_tree">
+      <property name="contextMenuPolicy">
+       <enum>Qt::CustomContextMenu</enum>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::ExtendedSelection</enum>
+      </property>
+      <property name="rootIsDecorated">
+       <bool>false</bool>
+      </property>
       <column>
        <property name="text">
         <string notr="true">1</string>

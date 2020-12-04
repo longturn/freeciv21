@@ -377,6 +377,14 @@ static unsigned int assess_danger_unit(const struct city *pcity,
 
   *move_time = PF_IMPOSSIBLE_MC;
 
+  int dist = real_map_distance(punit->tile, pcity->tile);
+  if (dist > 30) {
+    return 0;
+  }
+  if (dist > 15 && punit->tile->continent != pcity->tile->continent) {
+    return 0;
+  }
+
   if (utype_can_do_action(punittype, ACTION_PARADROP)
       && 0 < punittype->paratroopers_range) {
     *move_time = (real_map_distance(ptile, unit_tile(punit))

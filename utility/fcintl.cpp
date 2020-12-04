@@ -67,7 +67,7 @@ char *capitalized_string(const char *str)
 
   if (autocap) {
     if ((unsigned char) result[0] < 128) {
-      result[0] = fc_toupper(result[0]);
+      result[0] = QChar::toUpper(result[0]);
     }
   }
 

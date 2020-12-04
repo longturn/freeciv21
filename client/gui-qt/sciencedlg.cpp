@@ -328,7 +328,7 @@ void research_diagram::mouseMoveEvent(QMouseEvent *event)
       tooltip_pos = event->globalPos();
       if (!QToolTip::isVisible() && !timer_active) {
         timer_active = true;
-        QTimer::singleShot(500, this, SLOT(show_tooltip()));
+        QTimer::singleShot(500, this, &research_diagram::show_tooltip);
       }
     }
   }
@@ -437,7 +437,7 @@ science_report::~science_report()
   if (goal_list) {
     delete goal_list;
   }
-  queen()->remove_repo_dlg("SCI");
+  queen()->remove_repo_dlg(QStringLiteral("SCI"));
 }
 
 /************************************************************************/ /**
@@ -447,7 +447,7 @@ science_report::~science_report()
  ****************************************************************************/
 void science_report::init(bool raise)
 {
-  queen()->gimme_place(this, "SCI");
+  queen()->gimme_place(this, QStringLiteral("SCI"));
   index = queen()->add_game_tab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
   update_report();
@@ -692,7 +692,7 @@ void real_science_report_dialog_update(void *unused)
       blk = true;
     }
   } else {
-    str = " ";
+    str = QStringLiteral(" ");
   }
 
   if (blk) {
@@ -706,8 +706,9 @@ void real_science_report_dialog_update(void *unused)
   }
   queen()->update_sidebar_tooltips();
 
-  if (queen()->is_repo_dlg_open("SCI")) {
-    i = queen()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))
+      && !client_is_global_observer()) {
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -724,8 +725,8 @@ void popdown_science_report()
   science_report *sci_rep;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("SCI")) {
-    i = queen()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -742,8 +743,8 @@ void science_report_dialog_redraw(void)
   science_report *sci_rep;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open("SCI")) {
-    i = queen()->gimme_index_of("SCI");
+  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       sci_rep = reinterpret_cast<science_report *>(w);
@@ -765,11 +766,11 @@ void science_report_dialog_popup(bool raise)
   if (client_is_global_observer()) {
     return;
   }
-  if (!queen()->is_repo_dlg_open("SCI")) {
+  if (!queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
     sci_rep = new science_report;
     sci_rep->init(raise);
   } else {
-    i = queen()->gimme_index_of("SCI");
+    i = queen()->gimme_index_of(QStringLiteral("SCI"));
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
     if (queen()->game_tab_widget->currentIndex() == i) {

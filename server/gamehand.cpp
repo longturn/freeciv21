@@ -448,7 +448,7 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto psp : wld.map.startpos_table->values())
+  for (auto psp : *wld.map.startpos_table)
   {
     if (psp->exclude) continue;
     if (startpos_allows_all(psp)) {

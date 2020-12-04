@@ -15,9 +15,9 @@
 #include <QPainter>
 #include <QPushButton>
 // client
-#include "voteinfo.h"
 #include "page_game.h"
 #include "page_pregame.h"
+#include "voteinfo.h"
 // gui-qt
 #include "fc_client.h"
 
@@ -145,15 +145,15 @@ void pregamevote::update_vote()
       label_text->setText(QString(_("<b>%1 called a vote for:</b>"))
                               .arg(QString(vi->user).toHtmlEscaped()));
     }
-    label_vote_text->setText(QString("</b><p style=\"color:"
-                                     " red\"> %1</p></b>")
+    label_vote_text->setText(QStringLiteral("</b><p style=\"color:"
+                                            " red\"> %1</p></b>")
                                  .arg(QString(vi->desc).toHtmlEscaped()));
-    voters->setText(QString(" /%1").arg(vi->num_voters));
+    voters->setText(QStringLiteral(" /%1").arg(vi->num_voters));
   } else {
-    label_text->setText("");
-    lab_yes->setText("-");
-    lab_no->setText("-");
-    lab_abstain->setText("-");
+    label_text->setText(QLatin1String(""));
+    lab_yes->setText(QStringLiteral("-"));
+    lab_no->setText(QStringLiteral("-"));
+    lab_abstain->setText(QStringLiteral("-"));
   }
   running = vi != NULL && !vi->resolved && vi->remove_time == 0;
   vote_yes->setEnabled(running);
@@ -219,7 +219,8 @@ void xvote::paintEvent(QPaintEvent *event)
 void voteinfo_gui_update(void)
 {
   if (king()->current_page() == PAGE_START) {
-    qobject_cast<page_pregame *>(king()->pages[PAGE_START])->pre_vote->update_vote();
+    qobject_cast<page_pregame *>(king()->pages[PAGE_START])
+        ->pre_vote->update_vote();
   }
   if (king()->current_page() == PAGE_GAME) {
 

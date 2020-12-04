@@ -153,7 +153,7 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
   obsolete = utype->obsoleted_by;
   if (obsolete) {
     tech = obsolete->require_advance;
-    obsolete_str = QString("</td></tr><tr><td colspan=\"3\">");
+    obsolete_str = QStringLiteral("</td></tr><tr><td colspan=\"3\">");
     if (tech && tech != advance_by_number(0)) {
       /* TRANS: this and nearby literal strings are interpreted
        * as (Qt) HTML */
@@ -172,24 +172,25 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
   def_str +=
       "<table width=\"100\%\"><tr><td>" + bold(QString(_("Attack:"))) + " "
       + QString::number(utype->attack_strength).toHtmlEscaped()
-      + QString("</td><td>") + bold(QString(_("Defense:"))) + " "
+      + QStringLiteral("</td><td>") + bold(QString(_("Defense:"))) + " "
       + QString::number(utype->defense_strength).toHtmlEscaped()
-      + QString("</td><td>") + bold(QString(_("Move:"))) + " "
+      + QStringLiteral("</td><td>") + bold(QString(_("Move:"))) + " "
       + QString(move_points_text(utype->move_rate, TRUE)).toHtmlEscaped()
-      + QString("</td></tr><tr><td>") + bold(QString(_("Cost:"))) + " "
+      + QStringLiteral("</td></tr><tr><td>") + bold(QString(_("Cost:")))
+      + " "
       + QString::number(utype_build_shield_cost_base(utype)).toHtmlEscaped()
-      + QString("</td><td colspan=\"2\">")
+      + QStringLiteral("</td><td colspan=\"2\">")
       + bold(QString(_("Basic Upkeep:"))) + " "
       + QString(helptext_unit_upkeep_str(utype)).toHtmlEscaped()
-      + QString("</td></tr><tr><td>") + bold(QString(_("Hitpoints:"))) + " "
-      + QString::number(utype->hp).toHtmlEscaped() + QString("</td><td>")
-      + bold(QString(_("FirePower:"))) + " "
+      + QStringLiteral("</td></tr><tr><td>") + bold(QString(_("Hitpoints:")))
+      + " " + QString::number(utype->hp).toHtmlEscaped()
+      + QStringLiteral("</td><td>") + bold(QString(_("FirePower:"))) + " "
       + QString::number(utype->firepower).toHtmlEscaped()
-      + QString("</td><td>") + bold(QString(_("Vision:"))) + " "
+      + QStringLiteral("</td><td>") + bold(QString(_("Vision:"))) + " "
       + QString::number((int) sqrt((double) utype->vision_radius_sq))
             .toHtmlEscaped()
       + obsolete_str
-      + QString("</td></tr></table><p style='white-space:pre'>");
+      + QStringLiteral("</td></tr></table><p style='white-space:pre'>");
   if (ext) {
     char buffer[8192];
     char buf2[1];

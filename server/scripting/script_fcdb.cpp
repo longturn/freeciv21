@@ -40,9 +40,10 @@
 #include "ls_sqlite3.h"
 #endif
 
+#include <QCryptographicHash>
+
 /* utility */
 #include "log.h"
-#include "md5.h"
 #include "registry.h"
 #include "string_vector.h"
 
@@ -187,9 +188,6 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
   case LOG_NORMAL:
     rfc_status = C_COMMENT;
     break;
-  case LOG_VERBOSE:
-    rfc_status = C_LOG_BASE;
-    break;
   case LOG_DEBUG:
     rfc_status = C_DEBUG;
     break;
@@ -204,8 +202,9 @@ static void script_fcdb_cmd_reply(struct fc_lua *lfcl, QtMsgType level,
 static int md5sum(lua_State *L)
 {
   int n = lua_gettop(L);
-  char sum[MD5_HEX_BYTES + 1];
+  char sum[16 + 1];
   const char *plaintext;
+  QByteArray ba;
   size_t len;
 
   if (n != 1 || lua_type(L, -1) != LUA_TSTRING) {
@@ -214,7 +213,10 @@ static int md5sum(lua_State *L)
   }
 
   plaintext = lua_tolstring(L, -1, &len);
-  create_md5sum((unsigned char *) plaintext, len, sum);
+  QCryptographicHash hash(QCryptographicHash::Md5);
+  hash.addData(plaintext, len);
+  ba = hash.result();
+  qstrncpy(sum, ba.data(), sizeof(sum));
 
   lua_pushstring(L, sum);
   return 1;

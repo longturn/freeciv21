@@ -154,13 +154,13 @@ void governor::run()
     return;
   }
 
-  for (auto pcity : scity_changed) {
+  for (auto pcity : qAsConst(scity_changed)) {
     if (pcity) {
       city_changed(pcity->id);
     }
   }
   scity_changed.clear();
-  for (auto pcity : scity_remove) {
+  for (auto pcity : qAsConst(scity_remove)) {
     if (pcity) {
       attr_city_set(ATTR_CITY_CMAFE_PARAMETER, pcity->id, 0, NULL);
       city_remove(pcity->id);

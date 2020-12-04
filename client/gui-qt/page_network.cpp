@@ -137,29 +137,29 @@ void page_network::set_connection_state(enum connection_state state)
 {
   switch (state) {
   case LOGIN_TYPE:
-    king->set_status_bar("");
-    ui.connect_password_edit->setText("");
+    king->set_status_bar(QLatin1String(""));
+    ui.connect_password_edit->setText(QLatin1String(""));
     ui.connect_password_edit->setDisabled(true);
-    ui.connect_confirm_password_edit->setText("");
+    ui.connect_confirm_password_edit->setText(QLatin1String(""));
     ui.connect_confirm_password_edit->setDisabled(true);
     break;
   case NEW_PASSWORD_TYPE:
-    ui.connect_password_edit->setText("");
-    ui.connect_confirm_password_edit->setText("");
+    ui.connect_password_edit->setText(QLatin1String(""));
+    ui.connect_confirm_password_edit->setText(QLatin1String(""));
     ui.connect_password_edit->setDisabled(false);
     ui.connect_confirm_password_edit->setDisabled(false);
     ui.connect_password_edit->setFocus(Qt::OtherFocusReason);
     break;
   case ENTER_PASSWORD_TYPE:
-    ui.connect_password_edit->setText("");
-    ui.connect_confirm_password_edit->setText("");
+    ui.connect_password_edit->setText(QLatin1String(""));
+    ui.connect_confirm_password_edit->setText(QLatin1String(""));
     ui.connect_password_edit->setDisabled(false);
     ui.connect_confirm_password_edit->setDisabled(true);
     ui.connect_password_edit->setFocus(Qt::OtherFocusReason);
 
     break;
   case WAITING_TYPE:
-    king->set_status_bar("");
+    king->set_status_bar(QLatin1String(""));
     break;
   }
 

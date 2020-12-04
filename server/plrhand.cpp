@@ -2007,7 +2007,7 @@ bool server_player_set_name_full(const struct connection *caller,
     /* Ensure this is a correct name. */
     sz_strlcpy(real_name, name);
     remove_leading_trailing_spaces(real_name);
-    real_name[0] = fc_toupper(real_name[0]);
+    real_name[0] = QChar::toUpper(real_name[0]);
 
     if (server_player_name_is_allowed(caller, pplayer, pnation, real_name,
                                       error_buf, error_buf_len)) {

@@ -48,17 +48,18 @@ extern "C" void option_dialog_popup(const char *name,
 /************************************************************************/ /**
    Pregame options contructor
  ****************************************************************************/
-pregame_options::pregame_options(QWidget *parent) : QWidget(parent) {
-    int level;
-    ui.setupUi(this);
+pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
+{
+  int level;
+  ui.setupUi(this);
 
   ui.max_players->setRange(1, MAX_NUM_PLAYERS);
-    connect(ui.nation, &QPushButton::clicked, this,
+  connect(ui.nation, &QPushButton::clicked, this,
           &pregame_options::pick_nation);
-    ui.qclientoptions->setText(_("Client Options"));
-    connect(ui.qclientoptions, &QAbstractButton::clicked,
+  ui.qclientoptions->setText(_("Client Options"));
+  connect(ui.qclientoptions, &QAbstractButton::clicked,
           [=]() { popup_client_options(); });
-    for (level = 0; level < AI_LEVEL_COUNT; level++) {
+  for (level = 0; level < AI_LEVEL_COUNT; level++) {
     if (is_settable_ai_level(static_cast<ai_level>(level))) {
       const char *level_name =
           ai_level_translated_name(static_cast<ai_level>(level));
@@ -73,7 +74,8 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent) {
   connect(ui.cruleset, SIGNAL(currentIndexChanged(int)),
           SLOT(ruleset_change(int)));
   ui.qserveroptions->setText(_("More Game Options"));
-  ui.qserveroptions->setIcon(fc_icons::instance()->get_icon("preferences-other"));
+  ui.qserveroptions->setIcon(
+      fc_icons::instance()->get_icon(QStringLiteral("preferences-other")));
   connect(ui.qserveroptions, &QPushButton::clicked, [=]() {
     option_dialog_popup(_("Set server options"), server_optset);
   });
@@ -83,7 +85,6 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent) {
   setLayout(ui.gridLayout);
   update_buttons();
 }
-
 
 /************************************************************************/ /**
    Update the ruleset list
@@ -132,14 +133,16 @@ void pregame_options::update_buttons()
     if (pplayer->nation != nullptr) {
       // Defeat keyboard shortcut mnemonics
       ui.nation->setText(
-          QString(nation_adjective_for_player(pplayer)).replace("&", "&&"));
+          QString(nation_adjective_for_player(pplayer))
+              .replace(QLatin1String("&"), QLatin1String("&&")));
       psprite = get_nation_shield_sprite(tileset, pplayer->nation);
       pixmap = psprite->pm;
       ui.nation->setIconSize(pixmap->size());
       ui.nation->setIcon(QIcon(*pixmap));
     } else {
       ui.nation->setText(_("Random"));
-      ui.nation->setIcon(fc_icons::instance()->get_icon("flush-random"));
+      ui.nation->setIcon(
+          fc_icons::instance()->get_icon(QStringLiteral("flush-random")));
     }
   }
 }
