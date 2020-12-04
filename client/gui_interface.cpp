@@ -63,7 +63,7 @@ void version_message(const char *vertext) { funcs.version_message(vertext); }
 /**********************************************************************/ /**
    Call real_output_window_append callback
  **************************************************************************/
-void real_output_window_append(const char *astring,
+void real_output_window_append(const QString& astring,
                                const struct text_tag_list *tags, int conn_id)
 {
   funcs.real_output_window_append(astring, tags, conn_id);
