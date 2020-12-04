@@ -79,10 +79,10 @@ void qtg_canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy);
 void qtg_get_text_size(int *width, int *height, enum client_font font,
-                       const char *text);
+                       const QString&);
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, struct color *pcolor,
-                         const char *text);
+                         const QString& text);
 
 void qtg_set_rulesets(int num_rulesets, char **rulesets);
 void qtg_options_extra_init();

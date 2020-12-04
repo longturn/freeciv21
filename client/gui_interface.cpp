@@ -261,7 +261,7 @@ void canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
    Call get_text_size callback
  **************************************************************************/
 void get_text_size(int *width, int *height, enum client_font font,
-                   const char *text)
+                   const QString& text)
 {
   funcs.get_text_size(width, height, font, text);
 }
@@ -271,7 +271,7 @@ void get_text_size(int *width, int *height, enum client_font font,
  **************************************************************************/
 void canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                      enum client_font font, struct color *pcolor,
-                     const char *text)
+                     const QString& text)
 {
   funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, pcolor, text);
 }
