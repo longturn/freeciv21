@@ -177,44 +177,6 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
   gui_rect_iterate_coord_end;                                               \
   }
 
-/**********************************************************************/ /**
-   Draw the full city map onto the canvas store.  Works for both isometric
-   and orthogonal views.
- **************************************************************************/
-void city_dialog_redraw_map(struct city *pcity, struct canvas *pcanvas)
-{
-  struct tileset *tmp;
-
-  tmp = NULL;
-  if (unscaled_tileset) {
-    tmp = tileset;
-    tileset = unscaled_tileset;
-  }
-
-  /* First make it all black. */
-  canvas_put_rectangle(pcanvas, get_color(tileset, COLOR_MAPVIEW_UNKNOWN), 0,
-                       0, get_citydlg_canvas_width(),
-                       get_citydlg_canvas_height());
-
-  mapview_layer_iterate(layer)
-  {
-    citydlg_iterate(pcity, ptile, pedge, pcorner, canvas_x, canvas_y)
-    {
-      struct unit *punit =
-          ptile ? get_drawable_unit(tileset, ptile, pcity) : NULL;
-      struct city *pcity_draw = ptile ? tile_city(ptile) : NULL;
-
-      put_one_element(pcanvas, layer, ptile, pedge, pcorner, punit,
-                      pcity_draw, canvas_x, canvas_y, pcity, NULL);
-    }
-    citydlg_iterate_end;
-  }
-  mapview_layer_iterate_end;
-
-  if (tmp != NULL) {
-    tileset = tmp;
-  }
-}
 
 /**********************************************************************/ /**
    Return a string describing the cost for the production of the city
