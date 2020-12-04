@@ -53,14 +53,6 @@ delete[] (ptr);                                                             \
 
 /***********************************************************************/
 
-/* You shouldn't call these functions directly;
- * use the macros above instead.
- */
-void *fc_real_malloc(size_t size, const char *called_as, int line,
-                     const char *file) fc__warn_unused_result;
-void *fc_real_realloc(void *ptr, size_t size, const char *called_as,
-                      int line, const char *file) fc__warn_unused_result;
-
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file) fc__warn_unused_result;
 
