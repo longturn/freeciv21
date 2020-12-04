@@ -41,9 +41,6 @@ void city_dialog_redraw_map(struct city *pcity, struct canvas *pcanvas);
 char *city_production_cost_str(const struct city *pcity);
 void get_city_dialog_production(struct city *pcity, char *buffer,
                                 size_t buffer_len);
-void get_city_dialog_production_full(char *buffer, size_t buffer_len,
-                                     struct universal *target,
-                                     struct city *pcity);
 
 void get_city_dialog_output_text(const struct city *pcity,
                                  Output_type_id otype, char *buffer,

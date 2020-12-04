@@ -310,51 +310,6 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
 }
 
 /**********************************************************************/ /**
-  Pretty sprints the info about a production (name, info, cost, turns
-  to build) into a single text string.
-
-  This is very similar to get_city_dialog_production_row(); the
-  difference is that instead of placing the data into an array of
-  strings it all goes into one long string.  This means it can be used
-  by frontends that do not use a tabled structure, but it also gives
-  less flexibility.
- **************************************************************************/
-void get_city_dialog_production_full(char *buffer, size_t buffer_len,
-                                     struct universal *target,
-                                     struct city *pcity)
-{
-  int turns = city_turns_to_build(pcity, target, TRUE);
-  int cost = universal_build_shield_cost(pcity, target);
-
-  switch (target->kind) {
-  case VUT_IMPROVEMENT:
-    fc_strlcpy(
-        buffer,
-        city_improvement_name_translation(pcity, target->value.building),
-        buffer_len);
-
-    if (improvement_has_flag(target->value.building, IF_GOLD)) {
-      cat_snprintf(buffer, buffer_len, " (--) ");
-      cat_snprintf(buffer, buffer_len, _("%d/turn"),
-                   MAX(0, pcity->surplus[O_SHIELD]));
-      return;
-    }
-    break;
-  default:
-    universal_name_translation(target, buffer, buffer_len);
-    break;
-  };
-  cat_snprintf(buffer, buffer_len, " (%d) ", cost);
-
-  if (turns < FC_INFINITY) {
-    cat_snprintf(buffer, buffer_len, PL_("%d turn", "%d turns", turns),
-                 turns);
-  } else {
-    cat_snprintf(buffer, buffer_len, _("never"));
-  }
-}
-
-/**********************************************************************/ /**
    Helper structure to accumulate a breakdown of the constributions
    to some numeric city property. Contributions are returned in order,
    with duplicates merged.
