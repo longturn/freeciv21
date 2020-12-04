@@ -576,7 +576,7 @@ QComboBox:hover {
 }
 
 city_dialog QFrame {
-  background: #2F2F2F;
+  background: #282828;
   border: none;
 }
 

@@ -81,7 +81,7 @@ QPushButton[main_pagebt="true"] {
   min-height: 40px;
   min-width: 200px;
   background: #000330;
-  border: 2px solid #12375c;
+  border: 2px solid #1237FF;
   border-radius: 0px;
   padding: 0px;
 }
