@@ -94,3 +94,9 @@ hud_unit_combat {
   selection-background-color: rgba(0, 0, 75,165);
   alternate-background-color: #0000AA;
 }
+
+research_color {
+  selection-background-color: #6779c5 /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
+}

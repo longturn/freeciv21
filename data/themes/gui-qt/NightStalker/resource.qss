@@ -925,7 +925,7 @@ tax_rates_dialog {
 }
 
 research_color {
-  selection-background-color: rgba(125, 125, 0, 200);
-  color: rgb(100,100,0);
-  alternate-background-color: rgb(100,100,190);
+  selection-background-color: #6779c5 /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
 }

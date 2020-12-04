@@ -808,3 +808,9 @@ hud_unit_combat {
 unit_item, impr_item {
   selection-background-color: #5d8869;
 }
+
+research_color {
+  selection-background-color: #58d66d /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
+}
