@@ -869,7 +869,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   int i;
   diplo_dlg *dd;
   QPainter p;
-  QPixmap *pix, *def_pix, *pix2, *pix3, *def_pix_del;
+  QPixmap *pix, *pix2, *pix3;
   QWidget *w;
   QWidget *fw;
 
@@ -882,7 +882,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
 
   pix2 = new QPixmap();
-  def_pix_del = new QPixmap();
   pix = get_nation_flag_sprite(
             tileset, nation_of_player(player_by_number(counterpart)))
             ->pm;
@@ -894,13 +893,10 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
   pix3 = new QPixmap(queen()->sw_diplo->width(), queen()->sw_diplo->height());
   pix3->fill(Qt::transparent);
-  def_pix = fc_icons::instance()->get_pixmap("nations");
-  *def_pix_del =
-      def_pix->scaled(queen()->sw_diplo->width(), queen()->sw_diplo->height(),
-                      Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   p.begin(pix3);
-  p.drawPixmap(1, 1, *pix2);
-  p.drawPixmap(0, 0, *def_pix_del);
+  int hmid = (queen()->sw_diplo->height() - pix2->height()) / 2;
+  hmid = qMax(1, hmid);
+  p.drawPixmap(1, hmid, *pix2);
   p.end();
   queen()->sw_diplo->set_pixmap(pix3);
   queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
@@ -909,8 +905,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
       QString(nation_plural_for_player(player_by_number(counterpart))));
   queen()->sw_diplo->update_final_pixmap();
   delete pix2;
-  delete def_pix_del;
-
   if (!queen()->is_repo_dlg_open("DDI")) {
     dd = new diplo_dlg(counterpart, initiated_from);
 
