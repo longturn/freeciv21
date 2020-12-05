@@ -968,14 +968,14 @@ int unit_actions::update_actions()
   if (unit_can_add_or_build_city(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDCITY;
-    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("home")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("home")));
     actions.append(a);
   }
 
   if (can_unit_do_activity(current_unit, ACTIVITY_MINE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDMINE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("mine")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("mine")));
     actions.append(a);
   }
 
@@ -983,7 +983,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_PLANT;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("plantforest")));
+        fcIcons::instance()->getPixmap(QStringLiteral("plantforest")));
     actions.append(a);
   }
 
@@ -991,7 +991,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_BUILDIRRIGATION;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("irrigation")));
+        fcIcons::instance()->getPixmap(QStringLiteral("irrigation")));
     actions.append(a);
   }
 
@@ -999,7 +999,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_CULTIVATE;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("chopchop")));
+        fcIcons::instance()->getPixmap(QStringLiteral("chopchop")));
     actions.append(a);
   }
 
@@ -1007,7 +1007,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_TRANSFORM;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("transform")));
+        fcIcons::instance()->getPixmap(QStringLiteral("transform")));
     actions.append(a);
   }
 
@@ -1026,21 +1026,21 @@ int unit_actions::update_actions()
       a = new hud_action(this);
       a->action_shortcut = SC_BUILDROAD;
       a->set_pixmap(
-          fc_icons::instance()->get_pixmap(QStringLiteral("buildroad")));
+          fcIcons::instance()->getPixmap(QStringLiteral("buildroad")));
       actions.append(a);
     }
   }
   /* Goto */
   a = new hud_action(this);
   a->action_shortcut = SC_GOTO;
-  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("goto")));
+  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("goto")));
   actions.append(a);
 
   if (can_unit_do_activity(current_unit, ACTIVITY_FORTIFYING)) {
     a = new hud_action(this);
     a->action_shortcut = SC_FORTIFY;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("fortify")));
+        fcIcons::instance()->getPixmap(QStringLiteral("fortify")));
     actions.append(a);
   }
 
@@ -1048,7 +1048,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_SENTRY;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("sentry")));
+        fcIcons::instance()->getPixmap(QStringLiteral("sentry")));
     actions.append(a);
   }
 
@@ -1056,7 +1056,7 @@ int unit_actions::update_actions()
   if (unit_can_load(current_unit)) {
     a = new hud_action(this);
     a->action_shortcut = SC_LOAD;
-    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("load")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("load")));
     actions.append(a);
   }
 
@@ -1067,7 +1067,7 @@ int unit_actions::update_actions()
       a = new hud_action(this);
       a->action_shortcut = SC_SETHOME;
       a->set_pixmap(
-          fc_icons::instance()->get_pixmap(QStringLiteral("set_homecity")));
+          fcIcons::instance()->getPixmap(QStringLiteral("set_homecity")));
       actions.append(a);
     }
   }
@@ -1077,7 +1077,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_UPGRADE_UNIT;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("upgrade")));
+        fcIcons::instance()->getPixmap(QStringLiteral("upgrade")));
     actions.append(a);
   }
 
@@ -1086,7 +1086,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_AUTOMATE;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("automate")));
+        fcIcons::instance()->getPixmap(QStringLiteral("automate")));
     actions.append(a);
   }
 
@@ -1095,7 +1095,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_PARADROP;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("paradrop")));
+        fcIcons::instance()->getPixmap(QStringLiteral("paradrop")));
     actions.append(a);
   }
 
@@ -1104,7 +1104,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_PARADROP;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("pollution")));
+        fcIcons::instance()->getPixmap(QStringLiteral("pollution")));
     actions.append(a);
   }
 
@@ -1116,7 +1116,7 @@ int unit_actions::update_actions()
     a = new hud_action(this);
     a->action_shortcut = SC_UNLOAD;
     a->set_pixmap(
-        fc_icons::instance()->get_pixmap(QStringLiteral("unload")));
+        fcIcons::instance()->getPixmap(QStringLiteral("unload")));
     actions.append(a);
   }
 
@@ -1124,20 +1124,20 @@ int unit_actions::update_actions()
   if (unit_can_do_action(current_unit, ACTION_NUKE)) {
     a = new hud_action(this);
     a->action_shortcut = SC_NUKE;
-    a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("nuke")));
+    a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("nuke")));
     actions.append(a);
   }
 
   /* Wait */
   a = new hud_action(this);
   a->action_shortcut = SC_WAIT;
-  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("wait")));
+  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("wait")));
   actions.append(a);
 
   /* Done moving */
   a = new hud_action(this);
   a->action_shortcut = SC_DONE_MOVING;
-  a->set_pixmap(fc_icons::instance()->get_pixmap(QStringLiteral("done")));
+  a->set_pixmap(fcIcons::instance()->getPixmap(QStringLiteral("done")));
   actions.append(a);
 
   for (auto a : qAsConst(actions)) {

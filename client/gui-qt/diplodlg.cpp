@@ -684,7 +684,7 @@ void diplo_wdg::update_wdg()
 void diplo_wdg::restore_pixmap()
 {
   queen()->sw_diplo->set_pixmap(
-      fc_icons::instance()->get_pixmap(QStringLiteral("nations")));
+      fcIcons::instance()->getPixmap(QStringLiteral("nations")));
   queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
                                    queen()->sw_diplo->height());
   queen()->sw_diplo->set_custom_labels(QString());

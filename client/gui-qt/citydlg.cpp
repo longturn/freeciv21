@@ -1363,7 +1363,7 @@ city_dialog::city_dialog(QWidget *parent)
   // main tab
   ui.lcity_name->setToolTip(_("Click to change city name"));
   ui.buy_button->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("help-donate")));
+      fcIcons::instance()->getIcon(QStringLiteral("help-donate")));
   connect(ui.buy_button, &QAbstractButton::clicked, this, &city_dialog::buy);
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
@@ -1387,12 +1387,12 @@ city_dialog::city_dialog(QWidget *parent)
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
   ui.bclose->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-close")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-close")));
   ui.bclose->setIconSize(QSize(56, 56));
   ui.bclose->setToolTip(_("Close city dialog"));
   connect(ui.bclose, &QAbstractButton::clicked, this, &QWidget::hide);
   ui.next_city_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-right")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-right")));
   ui.next_city_but->setIconSize(QSize(56, 56));
   ui.next_city_but->setToolTip(_("Show next city"));
   connect(ui.next_city_but, &QAbstractButton::clicked, this,
@@ -1400,15 +1400,15 @@ city_dialog::city_dialog(QWidget *parent)
   connect(ui.prev_city_but, &QAbstractButton::clicked, this,
           &city_dialog::prev_city);
   ui.prev_city_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-left")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-left")));
   ui.prev_city_but->setIconSize(QSize(56, 56));
   ui.prev_city_but->setToolTip(_("Show previous city"));
   ui.work_next_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("go-down")));
+      fcIcons::instance()->getIcon(QStringLiteral("go-down")));
   ui.work_prev_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("go-up")));
+      fcIcons::instance()->getIcon(QStringLiteral("go-up")));
   ui.work_add_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("list-add")));
+      fcIcons::instance()->getIcon(QStringLiteral("list-add")));
   ui.work_rem_but->setIcon(
       style()->standardIcon(QStyle::SP_DialogDiscardButton));
   ui.production_combo_p->setToolTip(_("Click to change current production"));

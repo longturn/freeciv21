@@ -671,19 +671,19 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   mw = qmw;
   hb = new QHBoxLayout();
   qpb =
-      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmin")),
+      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmin")),
                       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::minimize);
   hb->addWidget(qpb);
   qpb =
-      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmax")),
+      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmax")),
                       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::maximize);
   hb->addWidget(qpb);
   qpb = new QPushButton(
-      fc_icons::instance()->get_icon(QStringLiteral("cclose")),
+      fcIcons::instance()->getIcon(QStringLiteral("cclose")),
       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::close_fc);

@@ -267,7 +267,7 @@ qfc_dialog::qfc_dialog(QWidget *parent)
   titlebar_height = 0;
   moving_now = false;
   setSizeGripEnabled(true);
-  close_pix = fc_icons::instance()->get_pixmap(QStringLiteral("cclose"));
+  close_pix = fcIcons::instance()->getPixmap(QStringLiteral("cclose"));
 }
 
 qfc_dialog::~qfc_dialog() { delete close_pix; }
@@ -872,10 +872,10 @@ notify_goto::notify_goto(const char *headline, const char *lines,
   QString qlines;
   setAttribute(Qt::WA_DeleteOnClose);
   goto_but = this->addButton(_("Goto Location"), QMessageBox::ActionRole);
-  goto_but->setIcon(fc_icons::instance()->get_icon(QStringLiteral("go-up")));
+  goto_but->setIcon(fcIcons::instance()->getIcon(QStringLiteral("go-up")));
   inspect_but = this->addButton(_("Inspect City"), QMessageBox::ActionRole);
   inspect_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("plus")));
+      fcIcons::instance()->getIcon(QStringLiteral("plus")));
 
   close_but = this->addButton(QMessageBox::Close);
   gtile = ptile;
@@ -1185,12 +1185,12 @@ void choice_dialog::set_layout()
     unit_skip = new QHBoxLayout;
     next = new QPushButton();
     next->setIcon(
-        fc_icons::instance()->get_icon(QStringLiteral("city-right")));
+        fcIcons::instance()->getIcon(QStringLiteral("city-right")));
     next->setIconSize(QSize(32, 32));
     next->setFixedSize(QSize(36, 36));
     prev = new QPushButton();
     prev->setIcon(
-        fc_icons::instance()->get_icon(QStringLiteral("city-left")));
+        fcIcons::instance()->getIcon(QStringLiteral("city-left")));
     prev->setIconSize(QSize(32, 32));
     prev->setFixedSize(QSize(36, 36));
     target_unit_button = new QPushButton;
