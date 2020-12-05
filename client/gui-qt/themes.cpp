@@ -16,7 +16,6 @@
 #include <QStyleFactory>
 #include <QTextStream>
 /* utility */
-#include "mem.h"
 #include "shared.h"
 #include "string_vector.h"
 /* client */

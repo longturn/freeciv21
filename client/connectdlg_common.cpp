@@ -37,7 +37,6 @@
 #include "fcintl.h"
 #include "ioz.h"
 #include "log.h"
-#include "mem.h"
 #include "net_types.h"
 #include "rand.h"
 #include "registry.h"

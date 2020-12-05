@@ -128,7 +128,7 @@ void voteinfo_queue_add(int vote_no, const char *user, const char *desc,
                     "%s() called before votinfo_queue_init()!",
                     __FUNCTION__);
 
-  vi = static_cast<voteinfo *>(fc_calloc(1, sizeof(struct voteinfo)));
+  vi = new voteinfo[1]();
   vi->vote_no = vote_no;
   sz_strlcpy(vi->user, user);
   sz_strlcpy(vi->desc, desc);

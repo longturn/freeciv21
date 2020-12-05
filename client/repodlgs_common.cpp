@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"     /* free() */
 #include "support.h" /* fc_snprintf() */
 
 /* common */

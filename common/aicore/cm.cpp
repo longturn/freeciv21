@@ -23,7 +23,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 #include "timing.h"

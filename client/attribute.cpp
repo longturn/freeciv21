@@ -22,7 +22,6 @@
 #include "fcintl.h"
 #include "genhash.h" /* genhash_val_t */
 #include "log.h"
-#include "mem.h"
 
 /* common */
 #include "packets.h"

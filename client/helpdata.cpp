@@ -31,7 +31,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 #include "requirements.h"
 #include "string_vector.h"

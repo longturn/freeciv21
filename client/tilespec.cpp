@@ -35,7 +35,6 @@ publishedtileset_layer by the Free Software Foundation; either version 2, or
 #include "deprecations.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"

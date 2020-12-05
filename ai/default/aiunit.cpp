@@ -20,7 +20,6 @@
 /* utility */
 #include "bitvector.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"

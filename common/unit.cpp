@@ -19,7 +19,6 @@
 #include "astring.h"
 #include "bitvector.h"
 #include "fcintl.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 

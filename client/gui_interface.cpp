@@ -63,7 +63,7 @@ void version_message(const char *vertext) { funcs.version_message(vertext); }
 /**********************************************************************/ /**
    Call real_output_window_append callback
  **************************************************************************/
-void real_output_window_append(const char *astring,
+void real_output_window_append(const QString& astring,
                                const struct text_tag_list *tags, int conn_id)
 {
   funcs.real_output_window_append(astring, tags, conn_id);
@@ -261,7 +261,7 @@ void canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
    Call get_text_size callback
  **************************************************************************/
 void get_text_size(int *width, int *height, enum client_font font,
-                   const char *text)
+                   const QString& text)
 {
   funcs.get_text_size(width, height, font, text);
 }
@@ -271,7 +271,7 @@ void get_text_size(int *width, int *height, enum client_font font,
  **************************************************************************/
 void canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                      enum client_font font, struct color *pcolor,
-                     const char *text)
+                     const QString& text)
 {
   funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, pcolor, text);
 }

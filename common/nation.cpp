@@ -21,7 +21,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "mem.h"
 #include "support.h"
 
 /* common */

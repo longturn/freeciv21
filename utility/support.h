@@ -1,24 +1,16 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
-
-#ifndef FC__SUPPORT_H
-#define FC__SUPPORT_H
-
-/***********************************************************************
-  Replacements for functions which are not available on all platforms.
-  Where the functions are available natively, these are just wrappers.
-  See also mem.h, netintf.h, rand.h, and see support.c for more comments.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
+#pragma once
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -77,6 +69,31 @@ typedef long int fc_errno;
 typedef int fc_errno;
 #endif
 
+#define fc_malloc(sz) malloc(sz)
+#define fc_realloc(ptr, sz) realloc(ptr, sz)
+
+#define NFCPP_FREE(ptr)                                                     \
+if (ptr) delete[] (ptr);                                                    \
+
+#define NFC_FREE(ptr)                                                       \
+if (ptr) delete (ptr);                                                      \
+
+#define FCPP_FREE(ptr)                                                      \
+delete[] (ptr);                                                             \
+(ptr) = NULL;
+
+#define FC_FREE(ptr)                                                        \
+  do {                                                                      \
+    delete (ptr);                                                           \
+    (ptr) = NULL;                                                           \
+  } while (FALSE)
+
+#define fc_strdup(str) real_fc_strdup((str), "strdup", __FC_LINE__, __FILE__)
+
+char *real_fc_strdup(const char *str, const char *called_as, int line,
+                     const char *file) fc__warn_unused_result;
+
+
 int fc_strcasecmp(const char *str0, const char *str1);
 int fc_strncasecmp(const char *str0, const char *str1, size_t n);
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n);
@@ -131,5 +148,3 @@ void remove_escapes(const char *str, bool full_escapes, char *buf,
                     size_t buf_len);
 
 int fc_at_quick_exit(void (*func)(void));
-
-#endif /* FC__SUPPORT_H */

@@ -78,7 +78,6 @@
 #include "fcintl.h"
 #include "idex.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"

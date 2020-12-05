@@ -50,8 +50,6 @@
 
 
 
-/* utility */
-#include "mem.h"
 
 #ifndef SPECPQ_TAG
 #error Must define a SPECPQ_TAG to use this header

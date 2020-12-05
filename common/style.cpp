@@ -17,7 +17,6 @@
 
 /* utility */
 #include "fcintl.h"
-#include "mem.h"
 
 /* common */
 #include "fc_types.h"

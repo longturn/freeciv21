@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h" /* fc_assert */
-#include "mem.h" /* free */
 #include "rand.h"
 #include "shared.h"
 #include "string_vector.h"

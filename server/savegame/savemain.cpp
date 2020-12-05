@@ -22,7 +22,6 @@
 
 /* utility */
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 
 /* common */

@@ -334,7 +334,7 @@ void qtg_canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
    may be NULL in which case those values simply shouldn't be filled out.
  ****************************************************************************/
 void qtg_get_text_size(int *width, int *height, enum client_font font,
-                       const char *text)
+                       const QString& text)
 {
   QFont *afont;
   QFontMetrics *fm;
@@ -342,7 +342,7 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
   afont = get_font(font);
   fm = new QFontMetrics(*afont);
   if (width) {
-    *width = fm->horizontalAdvance(QString::fromUtf8(text));
+    *width = fm->horizontalAdvance(text);
   }
 
   if (height) {
@@ -358,7 +358,7 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
  ****************************************************************************/
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, struct color *pcolor,
-                         const char *text)
+                         const QString& text)
 {
   QPainter p;
   QPen pen;
@@ -373,7 +373,7 @@ void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
   p.begin(&pcanvas->map_pixmap);
   p.setPen(pen);
   p.setFont(*afont);
-  p.drawText(canvas_x, canvas_y + fm->ascent(), QString::fromUtf8(text));
+  p.drawText(canvas_x, canvas_y + fm->ascent(), text);
   p.end();
   delete fm;
 }

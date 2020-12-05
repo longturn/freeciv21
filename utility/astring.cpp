@@ -65,7 +65,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h" /* fc_assert */
-#include "mem.h"
 #include "support.h" /* fc_vsnprintf, fc_strlcat */
 
 #include "astring.h"

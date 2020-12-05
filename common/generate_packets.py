@@ -1700,7 +1700,6 @@ void delta_stats_reset(void);
 #include "capability.h"
 #include "genhash.h"
 #include "log.h"
-#include "mem.h"
 #include "support.h"
 
 /* common */

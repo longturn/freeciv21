@@ -25,7 +25,6 @@
 #include "fc_cmdline.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "support.h"
 
 /* commmon */

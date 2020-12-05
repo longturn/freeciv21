@@ -49,7 +49,6 @@ add_library(
   ioz.cpp
   iterator.cpp
   log.cpp
-  mem.cpp
   netfile.cpp
   rand.cpp
   registry.cpp
