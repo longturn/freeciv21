@@ -882,7 +882,7 @@ tax_rates_dialog {
 }
 
 research_color {
-  selection-background-color: #6779c5 /*box*/;
+  selection-background-color: #acb187 /*box*/;
   color: #96b62e /*lines*/;
   alternate-background-color: white /* box edge */;
 }

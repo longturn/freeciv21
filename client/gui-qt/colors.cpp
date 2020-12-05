@@ -38,8 +38,16 @@ void research_color::init_colors()
   // 4 lighter
   *colors[5] = QColor(palette().color(QPalette::Highlight)).lighter(120);
   *colors[6] = QColor(palette().color(QPalette::Highlight)).lighter(140);
-  *colors[7] = QColor(palette().color(QPalette::Highlight)).lighter(160);
+  *colors[7] = QColor(palette().color(QPalette::Highlight)).lighter(120);
+  // tech goal - green boost
+  colors[7]->setRgb(colors[0]->red() * 0.9,
+                    qMax(static_cast<int>(colors[0]->green() * 1.1), 254),
+                    colors[0]->blue() * 0.9);
   *colors[8] = QColor(palette().color(QPalette::Highlight)).lighter(180);
+  *colors[9] = QColor(*colors[0]);
+  // red boost - current tech
+  colors[9]->setRgb(qMax(static_cast<int>(colors[9]->red() * 1.1), 254),
+                    colors[9]->green() * 0.9, colors[9]->blue() * 0.9);
   *colors[10] = QColor(palette().color(QPalette::AlternateBase));
   *colors[20] = QColor(palette().color(QPalette::Text));
   *colors[21] = QColor(palette().color(QPalette::Text)).lighter(20);

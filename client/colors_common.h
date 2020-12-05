@@ -14,8 +14,6 @@
 #ifndef FC__COLORS_COMMON_H
 #define FC__COLORS_COMMON_H
 
-
-
 /* utility */
 #include "registry.h"
 
@@ -121,9 +119,9 @@ struct rgbcolor;
 QColor *get_color(const struct tileset *t, enum color_std stdcolor);
 bool player_has_color(const struct tileset *t, const struct player *pplayer);
 QColor *get_player_color(const struct tileset *t,
-                               const struct player *pplayer);
+                         const struct player *pplayer);
 QColor *get_terrain_color(const struct tileset *t,
-                                const struct terrain *pterrain);
+                          const struct terrain *pterrain);
 QColor *ensure_color(struct rgbcolor *rgb);
 
 /* Functions used by the tileset to allocate the color system. */
@@ -131,10 +129,7 @@ struct color_system *color_system_read(struct section_file *file);
 void color_system_free(struct color_system *colors);
 
 /* Utilities for color values */
-QColor *color_best_contrast(QColor *subject,
-                                  QColor **candidates,
-                                  int ncandidates);
-
-
+QColor *color_best_contrast(QColor *subject, QColor **candidates,
+                            int ncandidates);
 
 #endif /* FC__COLORS_COMMON_H */

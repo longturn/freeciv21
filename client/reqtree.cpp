@@ -859,21 +859,21 @@ static QColor* node_color(struct tree_node *node)
     }
 
     if (research->researching == node->tech) {
-      return get_diag_color(8);
+      return get_diag_color(9);
     }
 
     // tech researched
     if (TECH_KNOWN == research_invention_state(research, node->tech)) {
-      return get_diag_color(7);
+      return get_diag_color(8);
     }
 
     if (research_goal_tech_req(research, research->tech_goal, node->tech)
         || node->tech == research->tech_goal) {
       if (TECH_PREREQS_KNOWN
           == research_invention_state(research, node->tech)) {
-        return get_diag_color(5);
+        return get_diag_color(7); // first tech in queue
       } else {
-        return get_diag_color(6);
+        return get_diag_color(7); // rest techs in queue
       }
     }
 
