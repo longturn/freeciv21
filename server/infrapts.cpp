@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - 2004 The Freeciv Project Team
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/**************************************************************************
+\^~~~~\   )  (   /~~~~^/ *     _      Copyright (c) 1996-2020 Freeciv21 and
+ ) *** \  {**}  / *** (  *  _ {o} _      Freeciv contributors. This file is
+  ) *** \_ ^^ _/ *** (   * {o}{o}{o}   part of Freeciv21. Freeciv21 is free
+  ) ****   vv   **** (   *  ~\ | /~software: you can redistribute it and/or
+   )_****      ****_(    *    OoO      modify it under the terms of the GNU
+     )*** m  m ***(      *    /|\      General Public License  as published
+       by the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version. You should have received  a copy of
+                        the GNU General Public License along with Freeciv21.
+                                 If not, see https://www.gnu.org/licenses/.
+**************************************************************************/
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
 #endif

@@ -1,13 +1,10 @@
--- Freeciv - Copyright (C) 2007 - The Freeciv Project
---   This program is free software; you can redistribute it and/or modify
---   it under the terms of the GNU General Public License as published by
---   the Free Software Foundation; either version 2, or (at your option)
---   any later version.
---
---   This program is distributed in the hope that it will be useful,
---   but WITHOUT ANY WARRANTY; without even the implied warranty of
---   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
---   GNU General Public License for more details.
+-- Copyright (c) 2007-2020 Freeciv21 and Freeciv contributors. This file is
+--   part of Freeciv21. Freeciv21 is free software: you can redistribute it
+--   and/or modify it under the terms of the GNU General Public License
+--   as published by the Free Software Foundation, either version 3
+--   of the License,  or (at your option) any later version.
+--   You should have received a copy of the GNU General Public License
+--   along with Freeciv21. If not, see https://www.gnu.org/licenses/.
 
 -- This file is for lua-functionality that is specific to a given
 -- ruleset. When freeciv loads a ruleset, it also loads script
@@ -52,7 +49,7 @@ signal.connect("hut_enter", "hermit_nest")
 function hermit_nest_blown(unit, extra)
   if extra == "Hermit" then
     notify.event(unit.owner, unit.tile, E.HUT_BARB,
-                 _("Your %s has overflied a Hermit's Place" 
+                 _("Your %s has overflied a Hermit's Place"
                    .. " and destroyed it!"), unit.utype:name_translation())
     -- do not process default.lua
     return true
