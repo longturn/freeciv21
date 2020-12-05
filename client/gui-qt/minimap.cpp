@@ -298,7 +298,7 @@ void minimap_view::update_image()
     return;
   }
   // There might be some map updates lurking around
-  mr_idle::idlecb()->run_now();
+  mrIdle::idlecb()->runNow();
   thread.render(scale_factor, width(), height());
 }
 

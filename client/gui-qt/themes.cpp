@@ -83,7 +83,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   QPixmapCache::clear();
   current_app()->setStyleSheet(*stylestring);
   if (king()) {
-    queen()->reload_sidebar_icons();
+    queen()->reloadSidebarIcons();
   }
   pal.setBrush(QPalette::Link, QColor(92, 170, 229));
   pal.setBrush(QPalette::LinkVisited, QColor(54, 150, 229));

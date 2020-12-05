@@ -340,7 +340,7 @@ void fc_sidewidget::update_final_pixmap()
     delete final_pixmap;
   }
 
-  i = queen()->gimme_index_of(page);
+  i = queen()->gimmeIndexOf(page);
   if (i == queen()->game_tab_widget->currentIndex()) {
     current = true;
   }
@@ -656,7 +656,7 @@ void side_right_click_diplomacy(void)
     menu->popup(QCursor::pos());
   } else {
     int i;
-    i = queen()->gimme_index_of(QStringLiteral("DDI"));
+    i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
     if (i < 0) {
       return;
     }
@@ -727,11 +727,11 @@ void side_left_click_science(bool nothing)
   if (client_is_global_observer()) {
     return;
   }
-  if (!queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("SCI"))) {
     sci_rep = new science_report;
     sci_rep->init(true);
   } else {
-    i = queen()->gimme_index_of(QStringLiteral("SCI"));
+    i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);
@@ -745,5 +745,5 @@ void side_left_click_science(bool nothing)
 // Reloads all icons and resize sidebar width to new value
 void gui_update_sidebar()
 {
-  queen()->reload_sidebar_icons();
+  queen()->reloadSidebarIcons();
 }

@@ -514,8 +514,8 @@ void tileset_changed(void)
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
   /* Update science report if open */
-  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
-    i = queen()->gimme_index_of(QStringLiteral("SCI"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("SCI"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);

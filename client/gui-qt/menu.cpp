@@ -1555,7 +1555,7 @@ void mr_menu::menus_sensitive()
         }
         break;
       case ENDGAME:
-        if (queen()->is_repo_dlg_open(QStringLiteral("END"))) {
+        if (queen()->isRepoDlgOpen(QStringLiteral("END"))) {
           i.value()->setEnabled(true);
           i.value()->setVisible(true);
         } else {

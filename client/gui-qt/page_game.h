@@ -44,21 +44,21 @@ private slots:
   void current_changed(int index);
 };
 
-class page_game : public QWidget {
+class pageGame : public QWidget {
   Q_OBJECT
 public:
-  page_game(QWidget *);
-  ~page_game();
-  void update_sidebar_position();
-  void reload_sidebar_icons();
-  void update_sidebar_tooltips();
-  int add_game_tab(QWidget *widget);
-  void rm_game_tab(int index); /* doesn't delete widget */
-  void gimme_place(QWidget *widget, const QString &str);
-  int gimme_index_of(const QString &str);
-  void remove_repo_dlg(const QString &str);
-  bool is_repo_dlg_open(const QString &str);
-  void update_info_label();
+  pageGame(QWidget *);
+  ~pageGame();
+  void updateSidebarPosition();
+  void reloadSidebarIcons();
+  void updateSidebarTooltips();
+  int addGameTab(QWidget *widget);
+  void rmGameTab(int index); /* doesn't delete widget */
+  void gimmePlace(QWidget *widget, const QString &str);
+  int gimmeIndexOf(const QString &str);
+  void removeRepoDlg(const QString &str);
+  bool isRepoDlgOpen(const QString &str);
+  void updateInfoLabel();
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
   fc_sidebar *sidebar_wdg;
@@ -76,7 +76,7 @@ public:
   fc_sidewidget *sw_science;
 public slots:
 private slots:
-  void update_info_label_timeout();
+  void updateInfoLabelTimeout();
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;
@@ -90,4 +90,4 @@ private:
 /**********************************************************************/ /**
    Return game instandce
  **************************************************************************/
-page_game *queen();
+pageGame *queen();

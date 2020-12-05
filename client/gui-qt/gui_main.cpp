@@ -239,7 +239,7 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
 
   cb->callback = callback;
   cb->data = data;
-  mr_idle::idlecb()->add_callback(cb);
+  mrIdle::idlecb()->addCallback(cb);
 }
 
 /**********************************************************************/ /**
@@ -276,7 +276,7 @@ void apply_titlebar(struct option *poption)
  **************************************************************************/
 void apply_sidebar(struct option *poption)
 {
-  queen()->update_sidebar_position();
+  queen()->updateSidebarPosition();
 }
 
 /**********************************************************************/ /**

@@ -108,7 +108,7 @@ fc_client::fc_client()
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
   }
   init_mapcanvas_and_overview();
-  pages[PAGE_GAME] = new page_game(central_wdg);
+  pages[PAGE_GAME] = new pageGame(central_wdg);
   pages[PAGE_GAME + 1] = new QWidget(central_wdg);
   create_loading_page();
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
@@ -135,7 +135,7 @@ fc_client::~fc_client()
   if (fc_shortcuts::sc()) {
     delete fc_shortcuts::sc();
   }
-  mr_idle::idlecb()->drop();
+  mrIdle::idlecb()->drop();
   delete_cursors();
 }
 
@@ -236,7 +236,7 @@ void fc_client::switch_page(int new_pg)
     update_info_label();
     queen()->minimapview_wdg->reset();
     update_minimap();
-    queen()->update_sidebar_tooltips();
+    queen()->updateSidebarTooltips();
     real_science_report_dialog_update(nullptr);
     show_new_turn_info();
     break;
