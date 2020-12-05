@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -111,7 +111,7 @@ struct sprite *load_gfxfile(const char *filename)
 /**********************************************************************/ /**
    Call create_sprite callback
  **************************************************************************/
-struct sprite *create_sprite(int width, int height, struct color *pcolor)
+struct sprite *create_sprite(int width, int height, QColor *pcolor)
 {
   return funcs.create_sprite(width, height, pcolor);
 }
@@ -144,7 +144,7 @@ void free_sprite(struct sprite *s) { funcs.free_sprite(s); }
 /**********************************************************************/ /**
    Call color_alloc callback
  **************************************************************************/
-struct color *color_alloc(int r, int g, int b)
+QColor *color_alloc(int r, int g, int b)
 {
   return funcs.color_alloc(r, g, b);
 }
@@ -152,7 +152,7 @@ struct color *color_alloc(int r, int g, int b)
 /**********************************************************************/ /**
    Call color_free callback
  **************************************************************************/
-void color_free(struct color *pcolor) { return funcs.color_free(pcolor); }
+void color_free(QColor *pcolor) { return funcs.color_free(pcolor); }
 
 /**********************************************************************/ /**
    Call canvas_create callback
@@ -218,7 +218,7 @@ void canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
 /**********************************************************************/ /**
    Call canvas_put_rectangle callback
  **************************************************************************/
-void canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
+void canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
                           int canvas_x, int canvas_y, int width, int height)
 {
   funcs.canvas_put_rectangle(pcanvas, pcolor, canvas_x, canvas_y, width,
@@ -229,7 +229,7 @@ void canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
    Call canvas_fill_sprite_area callback
  **************************************************************************/
 void canvas_fill_sprite_area(struct canvas *pcanvas, struct sprite *psprite,
-                             struct color *pcolor, int canvas_x,
+                             QColor *pcolor, int canvas_x,
                              int canvas_y)
 {
   funcs.canvas_fill_sprite_area(pcanvas, psprite, pcolor, canvas_x,
@@ -239,7 +239,7 @@ void canvas_fill_sprite_area(struct canvas *pcanvas, struct sprite *psprite,
 /**********************************************************************/ /**
    Call canvas_put_line callback
  **************************************************************************/
-void canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
+void canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
                      enum line_type ltype, int start_x, int start_y, int dx,
                      int dy)
 {
@@ -249,7 +249,7 @@ void canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
 /**********************************************************************/ /**
    Call canvas_put_curved_line callback
  **************************************************************************/
-void canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
+void canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
                             enum line_type ltype, int start_x, int start_y,
                             int dx, int dy)
 {
@@ -270,7 +270,7 @@ void get_text_size(int *width, int *height, enum client_font font,
    Call canvas_put_text callback
  **************************************************************************/
 void canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
-                     enum client_font font, struct color *pcolor,
+                     enum client_font font, QColor *pcolor,
                      const QString& text)
 {
   funcs.canvas_put_text(pcanvas, canvas_x, canvas_y, font, pcolor, text);

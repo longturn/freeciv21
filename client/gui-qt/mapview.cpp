@@ -77,7 +77,7 @@ void draw_calculated_trade_routes(QPainter *painter)
   int dx, dy;
   float w, h;
   float x1, y1, x2, y2;
-  struct color *pcolor;
+  QColor *pcolor;
   QPen pen;
 
   if (!can_client_control() || king()->trade_gen.cities.empty()) {
@@ -106,7 +106,7 @@ void draw_calculated_trade_routes(QPainter *painter)
         pcolor = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_SOME_BUILT);
       }
 
-      pen.setColor(pcolor->qcolor);
+      pen.setColor(*pcolor);
       pen.setStyle(Qt::DashLine);
       pen.setDashOffset(4);
       pen.setWidth(1);
@@ -356,8 +356,8 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
  **************************************************************************/
 void qtg_update_timeout_label(void)
 {
-  queen()->sw_endturn->set_custom_labels(QString(get_timeout_label_text()));
-  queen()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
+  queen()->sw_endturn->updateFinalPixmap();
 }
 
 /**********************************************************************/ /**
@@ -371,7 +371,7 @@ void update_turn_done_button(bool do_restore)
   if (!get_turn_done_button_state()) {
     return;
   }
-  side_blink_endturn(do_restore);
+  sidebarBlinkEndturn(do_restore);
 }
 
 /**********************************************************************/ /**
@@ -382,7 +382,7 @@ void update_turn_done_button(bool do_restore)
 void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
                          struct sprite *flake, struct sprite *gov)
 {
-  queen()->sw_indicators->update_final_pixmap();
+  queen()->sw_indicators->updateFinalPixmap();
 }
 
 /**********************************************************************/ /**
@@ -514,8 +514,8 @@ void tileset_changed(void)
   update_unit_info_label(get_units_in_focus());
   destroy_city_dialog();
   /* Update science report if open */
-  if (queen()->is_repo_dlg_open(QStringLiteral("SCI"))) {
-    i = queen()->gimme_index_of(QStringLiteral("SCI"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("SCI"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("SCI"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     sci_rep = reinterpret_cast<science_report *>(w);
@@ -555,7 +555,7 @@ void mapview_thaw(void)
 info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
 {
   setParent(parent);
-  info_font = *fc_font::instance()->get_font(fonts::notify_label);
+  info_font = *fcFont::instance()->getFont(fonts::notify_label);
   itile = ptile;
   calc_size();
 }

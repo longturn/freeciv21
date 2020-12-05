@@ -239,7 +239,7 @@ void qtg_add_idle_callback(void(callback)(void *), void *data)
 
   cb->callback = callback;
   cb->data = data;
-  mr_idle::idlecb()->add_callback(cb);
+  mrIdle::idlecb()->addCallback(cb);
 }
 
 /**********************************************************************/ /**
@@ -276,7 +276,7 @@ void apply_titlebar(struct option *poption)
  **************************************************************************/
 void apply_sidebar(struct option *poption)
 {
-  queen()->update_sidebar_position();
+  queen()->updateSidebarPosition();
 }
 
 /**********************************************************************/ /**
@@ -293,15 +293,15 @@ void gui_qt_apply_font(struct option *poption)
     s = option_font_get(poption);
     f->fromString(s);
     s = option_name(poption);
-    remove_old = fc_font::instance()->get_font(s);
+    remove_old = fcFont::instance()->getFont(s);
     delete remove_old;
-    fc_font::instance()->set_font(s, f);
+    fcFont::instance()->setFont(s, f);
     update_city_descriptions();
     queen()->infotab->chtwdg->update_font();
     QApplication::setFont(
-        *fc_font::instance()->get_font(fonts::default_font));
+        *fcFont::instance()->getFont(fonts::default_font));
     real_science_report_dialog_update(nullptr);
-    fc_font::instance()->get_mapfont_size();
+    fcFont::instance()->getMapfontSize();
   }
   apply_help_font(poption);
 }
@@ -320,9 +320,9 @@ static void apply_help_font(struct option *poption)
     s = option_font_get(poption);
     f->fromString(s);
     s = option_name(poption);
-    remove_old = fc_font::instance()->get_font(s);
+    remove_old = fcFont::instance()->getFont(s);
     delete remove_old;
-    fc_font::instance()->set_font(s, f);
+    fcFont::instance()->setFont(s, f);
     update_help_fonts();
   }
 }
@@ -389,15 +389,15 @@ void qtg_gui_update_font(const char *font_name, const char *font_value)
   fname = "gui_qt_font_" + QString(font_name);
   f = new QFont;
   f->fromString(font_value);
-  remove_old = fc_font::instance()->get_font(fname);
+  remove_old = fcFont::instance()->getFont(fname);
   delete remove_old;
-  fc_font::instance()->set_font(fname, f);
-  fc_font::instance()->get_mapfont_size();
+  fcFont::instance()->setFont(fname, f);
+  fcFont::instance()->getMapfontSize();
 }
 
 void gui_update_allfonts()
 {
-  fc_font::instance()->set_size_all(gui_options.gui_qt_increase_fonts);
+  fcFont::instance()->setSizeAll(gui_options.gui_qt_increase_fonts);
   gui_options.gui_qt_increase_fonts = 0;
 }
 

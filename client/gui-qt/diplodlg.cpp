@@ -48,7 +48,7 @@ extern QApplication *qapp;
  ****************************************************************************/
 diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
 {
-  color *colr;
+  QColor *colr;
   QString text;
   QString text2;
   QString text_tooltip;
@@ -67,7 +67,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;
   QHeaderView *header;
-  struct color *textcolors[2] = {
+  QColor *textcolors[2] = {
       get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
       get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
   if (counterpart == initiated_from) {
@@ -99,10 +99,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
             .toHtmlEscaped()
       + "</center></h3></b>";
   colr = get_player_color(tileset, player_by_number(initiated_from));
-  text = "<style>h3{background-color: " + colr->qcolor.name() + ";"
+  text = "<style>h3{background-color: " + colr->name() + ";"
          + "color: "
          + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->qcolor.name()
+               ->name()
          + "}</style>" + text;
   label3->setText(text);
   label3->setMinimumWidth(300);
@@ -112,10 +112,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
                .toHtmlEscaped()
          + "</center></h3></b></body>";
   colr = get_player_color(tileset, player_by_number(counterpart));
-  text = "<style>h3{background-color: " + colr->qcolor.name() + ";"
+  text = "<style>h3{background-color: " + colr->name() + ";"
          + "color: "
          + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->qcolor.name()
+               ->name()
          + "}</style>" + text;
   label4->setMinimumWidth(300);
   label4->setText(text);
@@ -683,12 +683,12 @@ void diplo_wdg::update_wdg()
  ****************************************************************************/
 void diplo_wdg::restore_pixmap()
 {
-  queen()->sw_diplo->set_pixmap(
-      fc_icons::instance()->get_pixmap(QStringLiteral("nations")));
-  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+  queen()->sw_diplo->setPixmap(
+      fcIcons::instance()->getPixmap(QStringLiteral("nations")));
+  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
                                    queen()->sw_diplo->height());
-  queen()->sw_diplo->set_custom_labels(QString());
-  queen()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->setCustomLabels(QString());
+  queen()->sw_diplo->updateFinalPixmap();
 }
 
 /************************************************************************/ /**
@@ -771,8 +771,8 @@ bool diplo_dlg::init(bool raise)
     return false;
   }
   setAttribute(Qt::WA_DeleteOnClose);
-  queen()->gimme_place(this, QStringLiteral("DDI"));
-  index = queen()->add_game_tab(this);
+  queen()->gimmePlace(this, QStringLiteral("DDI"));
+  index = queen()->addGameTab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 
   return true;
@@ -793,7 +793,7 @@ diplo_dlg::~diplo_dlg()
     removeTab(dw->get_index());
     dw->deleteLater();
   }
-  queen()->remove_repo_dlg(QStringLiteral("DDI"));
+  queen()->removeRepoDlg(QStringLiteral("DDI"));
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
@@ -847,10 +847,10 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -870,7 +870,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   int i;
   diplo_dlg *dd;
   QPainter p;
-  QPixmap *pix, *def_pix, *pix2, *pix3, *def_pix_del;
+  QPixmap *pix, *pix2, *pix3;
   QWidget *w;
   QWidget *fw;
 
@@ -883,7 +883,6 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   }
 
   pix2 = new QPixmap();
-  def_pix_del = new QPixmap();
   pix = get_nation_flag_sprite(
             tileset, nation_of_player(player_by_number(counterpart)))
             ->pm;
@@ -896,24 +895,19 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   pix3 =
       new QPixmap(queen()->sw_diplo->width(), queen()->sw_diplo->height());
   pix3->fill(Qt::transparent);
-  def_pix = fc_icons::instance()->get_pixmap(QStringLiteral("nations"));
-  *def_pix_del = def_pix->scaled(
-      queen()->sw_diplo->width(), queen()->sw_diplo->height(),
-      Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
   p.begin(pix3);
-  p.drawPixmap(1, 1, *pix2);
-  p.drawPixmap(0, 0, *def_pix_del);
+  int hmid = (queen()->sw_diplo->height() - pix2->height()) / 2;
+  hmid = qMax(1, hmid);
+  p.drawPixmap(1, hmid, *pix2);
   p.end();
-  queen()->sw_diplo->set_pixmap(pix3);
-  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+  queen()->sw_diplo->setPixmap(pix3);
+  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
                                    queen()->sw_diplo->height());
-  queen()->sw_diplo->set_custom_labels(
+  queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
-  queen()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->updateFinalPixmap();
   delete pix2;
-  delete def_pix_del;
-
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     dd = new diplo_dlg(counterpart, initiated_from);
 
     if (!dd->init(false)) {
@@ -923,7 +917,7 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
     dd->update_dlg();
     dd->make_active(counterpart);
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -951,10 +945,10 @@ void handle_diplomacy_create_clause(int counterpart, int giver,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -973,10 +967,10 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
   diplo_dlg *dd;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -995,10 +989,10 @@ void handle_diplomacy_remove_clause(int counterpart, int giver,
   diplo_wdg *dw;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);
@@ -1019,10 +1013,10 @@ void close_all_diplomacy_dialogs(void)
   QWidget *w;
 
   qapp->alert(king()->central_wdg);
-  if (!queen()->is_repo_dlg_open(QStringLiteral("DDI"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     return;
   }
-  i = queen()->gimme_index_of(QStringLiteral("DDI"));
+  i = queen()->gimmeIndexOf(QStringLiteral("DDI"));
   fc_assert(i != -1);
   w = queen()->game_tab_widget->widget(i);
   dd = qobject_cast<diplo_dlg *>(w);

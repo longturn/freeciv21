@@ -1,15 +1,14 @@
-/***********************************************************************
- Freeciv - Copyright (C) 2005 - The Freeciv Project
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/**************************************************************************
+    Copyright (c) 1996-2020 Freeciv21 and Freeciv  contributors. This file
+                         is part of Freeciv21. Freeciv21 is free software:
+|\_/|,,_____,~~`        you can redistribute it and/or modify it under the
+(.".)~~     )`~}}    terms of the GNU General Public License  as published
+ \o/\ /---~\\ ~}}     by the Free Software Foundation, either version 3 of
+   _//    _// ~}       the License, or (at your option) any later version.
+                        You should have received a copy of the GNU General
+                          Public License along with Freeciv21. If not, see
+                                            https://www.gnu.org/licenses/.
+**************************************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -86,7 +85,7 @@ void color_system_free(struct color_system *colors)
 /************************************************************************/ /**
    Return the RGB color, allocating it if necessary.
  ****************************************************************************/
-struct color *ensure_color(struct rgbcolor *rgb)
+QColor *ensure_color(struct rgbcolor *rgb)
 {
   fc_assert_ret_val(rgb != NULL, NULL);
 
@@ -99,7 +98,7 @@ struct color *ensure_color(struct rgbcolor *rgb)
 /************************************************************************/ /**
    Return a pointer to the given "standard" color.
  ****************************************************************************/
-struct color *get_color(const struct tileset *t, enum color_std stdcolor)
+QColor *get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
 
@@ -124,7 +123,7 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
    In pregame, callers should check player_has_color() before calling
    this.
  ****************************************************************************/
-struct color *get_player_color(const struct tileset *t,
+QColor *get_player_color(const struct tileset *t,
                                const struct player *pplayer)
 {
   fc_assert_ret_val(pplayer != NULL, NULL);
@@ -136,7 +135,7 @@ struct color *get_player_color(const struct tileset *t,
 /************************************************************************/ /**
    Return a pointer to the given "terrain" color.
  ****************************************************************************/
-struct color *get_terrain_color(const struct tileset *t,
+QColor *get_terrain_color(const struct tileset *t,
                                 const struct terrain *pterrain)
 {
   fc_assert_ret_val(pterrain != NULL, NULL);
@@ -149,12 +148,12 @@ struct color *get_terrain_color(const struct tileset *t,
    Find the colour from 'candidates' with the best perceptual contrast from
    'subject'.
  ****************************************************************************/
-struct color *color_best_contrast(struct color *subject,
-                                  struct color **candidates, int ncandidates)
+QColor *color_best_contrast(QColor *subject,
+                                  QColor **candidates, int ncandidates)
 {
   int sbright = color_brightness_score(subject), bestdiff = 0;
   int i;
-  struct color *best = NULL;
+  QColor *best = NULL;
 
   fc_assert_ret_val(candidates != NULL, NULL);
   fc_assert_ret_val(ncandidates > 0, NULL);

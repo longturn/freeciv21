@@ -34,6 +34,7 @@
 #include "clinet.h"
 #include "connectdlg_common.h"
 // gui-qt
+#include "colors.h"
 #include "fonts.h"
 #include "gui_main.h"
 #include "icons.h"
@@ -51,7 +52,7 @@
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-fc_font *fc_font::m_instance = 0;
+fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
 extern void write_shortcuts();
 
@@ -71,9 +72,9 @@ fc_client::fc_client()
     pages_layout[i] = NULL;
     pages[i] = NULL;
   }
-  fc_font::instance()->init_fonts();
+  fcFont::instance()->initFonts();
   read_settings();
-  QApplication::setFont(*fc_font::instance()->get_font(fonts::default_font));
+  QApplication::setFont(*fcFont::instance()->getFont(fonts::default_font));
   QString path;
 
   central_wdg = new QWidget;
@@ -91,6 +92,9 @@ fc_client::fc_client()
   status_bar->addWidget(status_bar_label, 1);
   set_status_bar(_("Welcome to Freeciv"));
   create_cursors();
+  // fake color init for research diagram
+  research_color::i()->setFixedSize(1,1);
+  research_color::i()->hide();
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
   pages[PAGE_START] = new page_pregame(central_wdg, this);
@@ -104,7 +108,7 @@ fc_client::fc_client()
     QSettings::setPath(QSettings::NativeFormat, QSettings::UserScope, path);
   }
   init_mapcanvas_and_overview();
-  pages[PAGE_GAME] = new page_game(central_wdg);
+  pages[PAGE_GAME] = new pageGame(central_wdg);
   pages[PAGE_GAME + 1] = new QWidget(central_wdg);
   create_loading_page();
   pages[PAGE_GAME + 1]->setLayout(pages_layout[PAGE_GAME + 1]);
@@ -131,7 +135,7 @@ fc_client::~fc_client()
   if (fc_shortcuts::sc()) {
     delete fc_shortcuts::sc();
   }
-  mr_idle::idlecb()->drop();
+  mrIdle::idlecb()->drop();
   delete_cursors();
 }
 
@@ -216,6 +220,7 @@ void fc_client::switch_page(int new_pg)
       setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     }
     showMaximized();
+    QCoreApplication::processEvents();
     /* For MS Windows, it might ingore first */
     showMaximized();
     queen()->infotab->chtwdg->update_widgets();
@@ -231,7 +236,7 @@ void fc_client::switch_page(int new_pg)
     update_info_label();
     queen()->minimapview_wdg->reset();
     update_minimap();
-    queen()->update_sidebar_tooltips();
+    queen()->updateSidebarTooltips();
     real_science_report_dialog_update(nullptr);
     show_new_turn_info();
     break;
@@ -656,7 +661,7 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   QHBoxLayout *hb;
   QPushButton *qpb;
   int h;
-  QFont *f = fc_font::instance()->get_font(fonts::default_font);
+  QFont *f = fcFont::instance()->getFont(fonts::default_font);
 
   if (f->pointSize() > 0) {
     h = f->pointSize();
@@ -666,19 +671,19 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   mw = qmw;
   hb = new QHBoxLayout();
   qpb =
-      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmin")),
+      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmin")),
                       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::minimize);
   hb->addWidget(qpb);
   qpb =
-      new QPushButton(fc_icons::instance()->get_icon(QStringLiteral("cmax")),
+      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmax")),
                       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::maximize);
   hb->addWidget(qpb);
   qpb = new QPushButton(
-      fc_icons::instance()->get_icon(QStringLiteral("cclose")),
+      fcIcons::instance()->getIcon(QStringLiteral("cclose")),
       QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::close_fc);

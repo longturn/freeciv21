@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 #ifndef FC__SRV_MAIN_H
 #define FC__SRV_MAIN_H
 
@@ -96,7 +96,7 @@ void check_for_full_turn_done(void);
 bool check_for_game_over(void);
 bool game_was_started(void);
 
-void server_gui_color_free(struct color *pcolor);
+void server_gui_color_free(QColor *pcolor);
 int server_plr_tile_city_id_get(const struct tile *ptile,
                                 const struct player *pplayer);
 

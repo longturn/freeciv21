@@ -163,14 +163,14 @@ QVariant plr_item::data(int column, int role) const
   switch (player_dlg_columns[column].type) {
   case COL_FLAG:
     pix = get_nation_flag_sprite(tileset, nation_of_player(ipplayer))->pm;
-    f = *fc_font::instance()->get_font(fonts::default_font);
+    f = *fcFont::instance()->getFont(fonts::default_font);
     fm = new QFontMetrics(f);
     *pix = pix->scaledToHeight(fm->height());
     delete fm;
     return *pix;
     break;
   case COL_COLOR:
-    return get_player_color(tileset, ipplayer)->qcolor;
+    return *get_player_color(tileset, ipplayer);
     break;
   case COL_BOOLEAN:
     return pdc->bool_func(ipplayer);
@@ -688,7 +688,7 @@ plr_report::plr_report() : QWidget()
  **************************************************************************/
 plr_report::~plr_report()
 {
-  queen()->remove_repo_dlg(QStringLiteral("PLR"));
+  queen()->removeRepoDlg(QStringLiteral("PLR"));
 }
 
 /**********************************************************************/ /**
@@ -696,8 +696,8 @@ plr_report::~plr_report()
  **************************************************************************/
 void plr_report::init()
 {
-  queen()->gimme_place(this, QStringLiteral("PLR"));
-  index = queen()->add_game_tab(this);
+  queen()->gimmePlace(this, QStringLiteral("PLR"));
+  index = queen()->addGameTab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -865,7 +865,7 @@ void popup_players_dialog(bool raise)
   int i;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("PLR"))) {
     plr_report *pr = new plr_report;
 
     pr->init();
@@ -873,7 +873,7 @@ void popup_players_dialog(bool raise)
   } else {
     plr_report *pr;
 
-    i = queen()->gimme_index_of(QStringLiteral("PLR"));
+    i = queen()->gimmeIndexOf(QStringLiteral("PLR"));
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
       queen()->game_tab_widget->setCurrentIndex(0);
@@ -894,8 +894,8 @@ void real_players_dialog_update(void *unused)
   plr_report *pr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
-    i = queen()->gimme_index_of(QStringLiteral("PLR"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("PLR"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("PLR"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       pr = reinterpret_cast<plr_report *>(w);
@@ -913,8 +913,8 @@ void popdown_players_report()
   plr_report *pr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("PLR"))) {
-    i = queen()->gimme_index_of(QStringLiteral("PLR"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("PLR"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("PLR"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     pr = reinterpret_cast<plr_report *>(w);

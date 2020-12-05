@@ -70,8 +70,8 @@ message_dlg::message_dlg()
   layout->setColumnStretch(1, 10);
   layout->setColumnStretch(3, 1);
   setLayout(layout);
-  queen()->gimme_place(this, QStringLiteral("MSD"));
-  index = queen()->add_game_tab(this);
+  queen()->gimmePlace(this, QStringLiteral("MSD"));
+  index = queen()->addGameTab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 
   fill_data();
@@ -90,7 +90,7 @@ message_dlg::message_dlg()
  **************************************************************************/
 message_dlg::~message_dlg()
 {
-  queen()->remove_repo_dlg(QStringLiteral("MSD"));
+  queen()->removeRepoDlg(QStringLiteral("MSD"));
 }
 
 /**********************************************************************/ /**
@@ -171,10 +171,10 @@ void popup_messageopt_dialog(void)
   int i;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("MSD"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("MSD"))) {
     mdlg = new message_dlg;
   } else {
-    i = queen()->gimme_index_of(QStringLiteral("MSD"));
+    i = queen()->gimmeIndexOf(QStringLiteral("MSD"));
     fc_assert(i != -1);
     if (queen()->game_tab_widget->currentIndex() == i) {
       return;

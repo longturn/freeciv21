@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -1603,7 +1603,7 @@ static void draw_trade_route_line(const struct tile *ptile1,
 {
   struct trade_route_line lines[MAX_TRADE_ROUTE_DRAW_LINES];
   int line_count, i;
-  struct color *pcolor;
+  QColor *pcolor;
 
   if (!ptile1 || !ptile2) {
     return;
@@ -1858,7 +1858,7 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
    * go away also by *not* setting it to values other than
    * COLOR_MAPVIEW_CITYTEXT in get_city_mapview_trade_routes() */
   enum color_std trade_routes_color = COLOR_MAPVIEW_CITYTEXT;
-  struct color *owner_color;
+  QColor *owner_color;
   struct {
     int x, y, w, h;
   } name_rect = {0, 0, 0, 0}, growth_rect = {0, 0, 0, 0},
@@ -2071,7 +2071,7 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
     {
       /* Try to pick a color for city size text that contrasts with
        * player color */
-      struct color *textcolors[2] = {
+      QColor *textcolors[2] = {
           get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
           get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
 
@@ -3774,7 +3774,7 @@ static struct tile *link_mark_tile(const struct link_mark *pmark)
 /************************************************************************/ /**
    Returns the color of the pointed mark.
  ****************************************************************************/
-static struct color *link_mark_color(const struct link_mark *pmark)
+static QColor *link_mark_color(const struct link_mark *pmark)
 {
   switch (pmark->type) {
   case TLT_CITY:
@@ -3801,7 +3801,7 @@ static void link_mark_draw(const struct link_mark *pmark)
   float canvas_x, canvas_y;
   int x_left, x_right, y_top, y_bottom;
   struct tile *ptile = link_mark_tile(pmark);
-  struct color *pcolor = link_mark_color(pmark);
+  QColor *pcolor = link_mark_color(pmark);
 
   if (!ptile || !tile_to_canvas_pos(&canvas_x, &canvas_y, ptile)) {
     return;

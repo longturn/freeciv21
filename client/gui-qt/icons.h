@@ -14,17 +14,17 @@
 /****************************************************************************
   Class helping reading icons/pixmaps from themes/gui-qt/icons folder
 ****************************************************************************/
-class fc_icons {
-  Q_DISABLE_COPY(fc_icons);
+class fcIcons {
+  Q_DISABLE_COPY(fcIcons);
 
 private:
-  explicit fc_icons();
-  static fc_icons *m_instance;
+  explicit fcIcons();
+  static fcIcons *m_instance;
 
 public:
-  static fc_icons *instance();
+  static fcIcons *instance();
   static void drop();
-  QIcon get_icon(const QString &id);
-  QPixmap *get_pixmap(const QString &id);
-  QString get_path(const QString &id);
+  QIcon getIcon(const QString &id);
+  QPixmap *getPixmap(const QString &id);
+  QString getPath(const QString &id);
 };

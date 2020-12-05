@@ -60,12 +60,12 @@ page_pregame::page_pregame(QWidget *parent, fc_client *gui) : QWidget(parent)
   connect(ui.bdisc, &QAbstractButton::clicked, gui,
           &fc_client::slot_disconnect);
   ui.bpick->setText(_("Pick Nation"));
-  ui.bpick->setIcon(fc_icons::instance()->get_icon(QStringLiteral("flag")));
+  ui.bpick->setIcon(fcIcons::instance()->getIcon(QStringLiteral("flag")));
   connect(ui.bpick, &QAbstractButton::clicked, this,
           &page_pregame::slot_pick_nation);
   ui.bops->setText(_("Observe"));
   ui.bops->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("meeting-observer")));
+      fcIcons::instance()->getIcon(QStringLiteral("meeting-observer")));
   connect(ui.bops, &QAbstractButton::clicked, this,
           &page_pregame::slot_pregame_observe);
   ui.bstart->setText(_("Start"));
@@ -182,9 +182,9 @@ void page_pregame::update_start_page()
                 + (ai_level_translated_name(pplayer->ai_common.skill_level))
                 + ">";
             item->setIcon(
-                col, fc_icons::instance()->get_icon(QStringLiteral("ai")));
+                col, fcIcons::instance()->getIcon(QStringLiteral("ai")));
           } else {
-            item->setIcon(col, fc_icons::instance()->get_icon(
+            item->setIcon(col, fcIcons::instance()->getIcon(
                                    QStringLiteral("human")));
           }
 
@@ -222,7 +222,7 @@ void page_pregame::update_start_page()
           p.begin(pixmap);
           p.fillRect(pixmap->width() / 2 - 8, 0, 16, 16, Qt::black);
           p.fillRect(pixmap->width() / 2 - 7, 1, 14, 14,
-                     get_player_color(tileset, pplayer)->qcolor);
+                     *get_player_color(tileset, pplayer));
           p.end();
           item->setData(col, Qt::DecorationRole, *pixmap);
           delete pixmap;

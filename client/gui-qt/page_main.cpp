@@ -29,9 +29,6 @@ page_main::page_main(QWidget *parent, fc_client *gui) : QWidget(parent)
   ui.bconnect->setText(_("Connect to network game"));
   ui.bquit->setText(_("Quit"));
 
-  QPixmap main_graphics(tileset_main_intro_filename(tileset));
-  ui.lintro->setPixmap(main_graphics);
-  ui.lintro->setFixedSize(main_graphics.size());
   connect(ui.bstart, &QAbstractButton::clicked, gui,
           &fc_client::start_new_game);
   connect(ui.bscenario, &QPushButton::clicked,

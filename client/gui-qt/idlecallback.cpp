@@ -12,21 +12,21 @@
 
 #include "idlecallback.h"
 
-mr_idle *mr_idle::m_instance = 0;
+mrIdle *mrIdle::m_instance = 0;
 
 /**********************************************************************/ /**
    Constructor for idle callbacks
  **************************************************************************/
-mr_idle::mr_idle()
+mrIdle::mrIdle()
 {
-  connect(&timer, &QTimer::timeout, this, &mr_idle::idling);
+  connect(&timer, &QTimer::timeout, this, &mrIdle::idling);
   timer.start(5);
 }
 
 /**********************************************************************/ /**
    Destructor for idle callbacks
  **************************************************************************/
-mr_idle::~mr_idle()
+mrIdle::~mrIdle()
 {
   call_me_back *cb;
 
@@ -39,7 +39,7 @@ mr_idle::~mr_idle()
 /**********************************************************************/ /**
    Deletes current instance
  **************************************************************************/
-void mr_idle::drop()
+void mrIdle::drop()
 {
   if (m_instance) {
     delete m_instance;
@@ -50,17 +50,17 @@ void mr_idle::drop()
 /**********************************************************************/ /**
    Returns given instance
  **************************************************************************/
-mr_idle *mr_idle::idlecb()
+mrIdle *mrIdle::idlecb()
 {
   if (!m_instance)
-    m_instance = new mr_idle;
+    m_instance = new mrIdle;
   return m_instance;
 }
 
 /**********************************************************************/ /**
    Slot used to execute 1 callback from callbacks stored in idle list
  **************************************************************************/
-void mr_idle::idling()
+void mrIdle::idling()
 {
   call_me_back *cb;
 
@@ -73,7 +73,7 @@ void mr_idle::idling()
 /**********************************************************************/ /**
    Execute all callbacks now
  **************************************************************************/
-void mr_idle::run_now()
+void mrIdle::runNow()
 {
   idling();
 }
@@ -81,4 +81,4 @@ void mr_idle::run_now()
 /**********************************************************************/ /**
    Adds one callback to execute later
  **************************************************************************/
-void mr_idle::add_callback(call_me_back *cb) { callback_list.enqueue(cb); }
+void mrIdle::addCallback(call_me_back *cb) { callback_list.enqueue(cb); }

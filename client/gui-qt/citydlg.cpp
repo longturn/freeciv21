@@ -1064,7 +1064,7 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   QStringList info_list;
 
   QGridLayout *info_grid_layout = new QGridLayout();
-  small_font = fc_font::instance()->get_font(fonts::notify_label);
+  small_font = fcFont::instance()->getFont(fonts::notify_label);
   info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
             << _("Luxury:") << _("Science:") << _("Granary:")
             << _("Change in:") << _("Corruption:") << _("Waste:")
@@ -1220,11 +1220,11 @@ governor_sliders::governor_sliders(QWidget *parent)
   str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
            << _("Luxury") << _("Science") << _("Celebrate");
   some_label = new QLabel(_("Minimal Surplus"));
-  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 0, 1, 3);
   some_label = new QLabel(_("Priority"));
-  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 3, 1, 3);
 
@@ -1352,7 +1352,7 @@ city_dialog::city_dialog(QWidget *parent)
   QHeaderView *header;
 
   int h = 2 * fm.height() + 2;
-  small_font = fc_font::instance()->get_font(fonts::notify_label);
+  small_font = fcFont::instance()->getFont(fonts::notify_label);
   ui.setupUi(this);
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -1363,7 +1363,7 @@ city_dialog::city_dialog(QWidget *parent)
   // main tab
   ui.lcity_name->setToolTip(_("Click to change city name"));
   ui.buy_button->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("help-donate")));
+      fcIcons::instance()->getIcon(QStringLiteral("help-donate")));
   connect(ui.buy_button, &QAbstractButton::clicked, this, &city_dialog::buy);
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
@@ -1387,12 +1387,12 @@ city_dialog::city_dialog(QWidget *parent)
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
   ui.bclose->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-close")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-close")));
   ui.bclose->setIconSize(QSize(56, 56));
   ui.bclose->setToolTip(_("Close city dialog"));
   connect(ui.bclose, &QAbstractButton::clicked, this, &QWidget::hide);
   ui.next_city_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-right")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-right")));
   ui.next_city_but->setIconSize(QSize(56, 56));
   ui.next_city_but->setToolTip(_("Show next city"));
   connect(ui.next_city_but, &QAbstractButton::clicked, this,
@@ -1400,15 +1400,15 @@ city_dialog::city_dialog(QWidget *parent)
   connect(ui.prev_city_but, &QAbstractButton::clicked, this,
           &city_dialog::prev_city);
   ui.prev_city_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("city-left")));
+      fcIcons::instance()->getIcon(QStringLiteral("city-left")));
   ui.prev_city_but->setIconSize(QSize(56, 56));
   ui.prev_city_but->setToolTip(_("Show previous city"));
   ui.work_next_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("go-down")));
+      fcIcons::instance()->getIcon(QStringLiteral("go-down")));
   ui.work_prev_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("go-up")));
+      fcIcons::instance()->getIcon(QStringLiteral("go-up")));
   ui.work_add_but->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("list-add")));
+      fcIcons::instance()->getIcon(QStringLiteral("list-add")));
   ui.work_rem_but->setIcon(
       style()->standardIcon(QStyle::SP_DialogDiscardButton));
   ui.production_combo_p->setToolTip(_("Click to change current production"));
@@ -2947,7 +2947,7 @@ void city_font_update()
 
   l = city_dialog::instance()->findChildren<QLabel *>();
 
-  f = fc_font::instance()->get_font(fonts::notify_label);
+  f = fcFont::instance()->getFont(fonts::notify_label);
 
   for (int i = 0; i < l.size(); ++i) {
     if (l.at(i)->property(fonts::notify_label).isValid()) {
@@ -3042,7 +3042,7 @@ void city_production_delegate::paint(QPainter *painter,
   bool is_unit = true;
   QPixmap pix_dec(option.rect.width(), option.rect.height());
   QStyleOptionViewItem opt;
-  color col;
+  QColor col;
   QIcon icon = qapp->style()->standardIcon(QStyle::SP_DialogCancelButton);
   bool free_sprite = false;
   struct unit_class *pclass;
@@ -3060,7 +3060,7 @@ void city_production_delegate::paint(QPainter *painter,
   target = reinterpret_cast<universal *>(qvar.value<void *>());
 
   if (target == NULL) {
-    col.qcolor = Qt::white;
+    col = QColor(Qt::white);
     sprite = qtg_create_sprite(100, 100, &col);
     free_sprite = true;
     *sprite->pm = icon.pixmap(100, 100);
@@ -3289,7 +3289,7 @@ void city_production_model::populate()
   struct universal *renegade;
   int item, targets_used;
   QString str;
-  QFont f = *fc_font::instance()->get_font(fonts::default_font);
+  QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   sh.setY(fm.height() * 2);

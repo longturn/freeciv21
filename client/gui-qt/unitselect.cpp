@@ -44,7 +44,7 @@ units_select::units_select(struct tile *ptile, QWidget *parent)
   show_line = 0;
   highligh_num = -1;
   ufont.setItalic(true);
-  info_font = *fc_font::instance()->get_font(fonts::notify_label);
+  info_font = *fcFont::instance()->getFont(fonts::notify_label);
   update_units();
   h_pix = NULL;
   create_pixmap();

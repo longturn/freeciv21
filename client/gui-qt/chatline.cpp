@@ -253,7 +253,7 @@ chatwdg::chatwdg(QWidget *parent)
   gl = new QGridLayout;
   chat_line = new chat_input;
   chat_output = new text_browser_dblclck(this);
-  chat_output->setFont(*fc_font::instance()->get_font(fonts::chatline));
+  chat_output->setFont(*fcFont::instance()->getFont(fonts::chatline));
   remove_links = new QPushButton(QLatin1String(""));
   remove_links->setIcon(
       style()->standardPixmap(QStyle::SP_DialogCancelButton));
@@ -325,7 +325,7 @@ void chatwdg::scroll_to_bottom()
 void chatwdg::update_font()
 {
   QFont *qf;
-  qf = fc_font::instance()->get_font(fonts::chatline);
+  qf = fcFont::instance()->getFont(fonts::chatline);
   chat_output->setFont(*qf);
 }
 
@@ -592,7 +592,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       }
       break;
     case TTT_LINK: {
-      struct color *pcolor = NULL;
+      QColor *pcolor = NULL;
 
       switch (text_tag_link_type(ptag)) {
       case TLT_CITY:
@@ -611,7 +611,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       if (!pcolor) {
         break; /* Not a valid link type case. */
       }
-      color = pcolor->qcolor.name(QColor::HexRgb);
+      color = pcolor->name(QColor::HexRgb);
       str_col = QStringLiteral("<font color=\"%1\">").arg(color);
       mm.insert(stop, QStringLiteral("</a></font>"));
 

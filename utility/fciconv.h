@@ -1,19 +1,17 @@
-/***********************************************************************
- Freeciv - Copyright (C) 2003-2004 - The Freeciv Project
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/**************************************************************************
+             ____             Copyright (c) 1996-2020 Freeciv21 and Freeciv
+            /    \__          contributors. This file is part of Freeciv21.
+|\         /    @   \   Freeciv21 is free software: you can redistribute it
+\ \_______|    \  .:|>         and/or modify it under the terms of the GNU
+ \      ##|    | \__/     General Public License  as published by the Free
+  |    ####\__/   \   Software Foundation, either version 3 of the License,
+  /  /  ##       \|                  or (at your option) any later version.
+ /  /__________\  \                 You should have received a copy of the
+ L_JJ           \__JJ      GNU General Public License along with Freeciv21.
+                                 If not, see https://www.gnu.org/licenses/.
+**************************************************************************/
 #ifndef FC__FCICONV_H
 #define FC__FCICONV_H
-
-
 
 #include <stdio.h>
 
@@ -104,7 +102,5 @@ void fc_fprintf(FILE *stream, const char *format, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 
 size_t get_internal_string_length(const char *text);
-
-
 
 #endif /* FC__FCICONV_H */

@@ -1,20 +1,15 @@
-/**********************************************************************
- Freeciv - Copyright (C) 2005 - The Freeciv Project
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/**************************************************************************
+ Copyright (c) 1996-2020 Freeciv21 and Freeciv contributors. This file is
+ part of Freeciv21. Freeciv21 is free software: you can redistribute it
+ and/or modify it under the terms of the GNU  General Public License  as
+ published by the Free Software Foundation, either version 3 of the
+ License,  or (at your option) any later version. You should have received
+ a copy of the GNU General Public License along with Freeciv21. If not,
+ see https://www.gnu.org/licenses/.
+**************************************************************************/
 
 #ifndef FC__COLORS_COMMON_H
 #define FC__COLORS_COMMON_H
-
-
 
 /* utility */
 #include "registry.h"
@@ -118,23 +113,20 @@ struct rgbcolor;
 #define SPECENUM_COUNT COLOR_LAST
 #include "specenum_gen.h"
 
-struct color *get_color(const struct tileset *t, enum color_std stdcolor);
+QColor *get_color(const struct tileset *t, enum color_std stdcolor);
 bool player_has_color(const struct tileset *t, const struct player *pplayer);
-struct color *get_player_color(const struct tileset *t,
-                               const struct player *pplayer);
-struct color *get_terrain_color(const struct tileset *t,
-                                const struct terrain *pterrain);
-struct color *ensure_color(struct rgbcolor *rgb);
+QColor *get_player_color(const struct tileset *t,
+                         const struct player *pplayer);
+QColor *get_terrain_color(const struct tileset *t,
+                          const struct terrain *pterrain);
+QColor *ensure_color(struct rgbcolor *rgb);
 
 /* Functions used by the tileset to allocate the color system. */
 struct color_system *color_system_read(struct section_file *file);
 void color_system_free(struct color_system *colors);
 
 /* Utilities for color values */
-struct color *color_best_contrast(struct color *subject,
-                                  struct color **candidates,
-                                  int ncandidates);
-
-
+QColor *color_best_contrast(QColor *subject, QColor **candidates,
+                            int ncandidates);
 
 #endif /* FC__COLORS_COMMON_H */

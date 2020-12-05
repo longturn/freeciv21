@@ -170,13 +170,13 @@ void qtg_free_sprite(struct sprite *s)
 /************************************************************************/ /**
    Create a new sprite with the given height, width and color.
  ****************************************************************************/
-struct sprite *qtg_create_sprite(int width, int height, struct color *pcolor)
+struct sprite *qtg_create_sprite(int width, int height, QColor *pcolor)
 {
   struct sprite *created = new sprite;
 
   created->pm = new QPixmap(width, height);
 
-  created->pm->fill(pcolor->qcolor);
+  created->pm->fill(*pcolor);
 
   return created;
 }

@@ -26,21 +26,21 @@ struct call_me_back {
 /**************************************************************************
   Class to handle idle callbacks
 **************************************************************************/
-class mr_idle : public QObject {
+class mrIdle : public QObject {
   Q_OBJECT
-  Q_DISABLE_COPY(mr_idle);
+  Q_DISABLE_COPY(mrIdle);
 public:
-  ~mr_idle();
-  static mr_idle *idlecb();
+  ~mrIdle();
+  static mrIdle *idlecb();
   static void drop();
-  void add_callback(call_me_back *cb);
-  void run_now();
+  void addCallback(call_me_back *cb);
+  void runNow();
 private slots:
   void idling();
 
 private:
-  static mr_idle *m_instance;
-  mr_idle();
+  static mrIdle *m_instance;
+  mrIdle();
   QQueue<call_me_back *> callback_list;
   QTimer timer;
 };

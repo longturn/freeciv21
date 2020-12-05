@@ -1210,7 +1210,7 @@ city_report::city_report() : QWidget()
  ***************************************************************************/
 city_report::~city_report()
 {
-  queen()->remove_repo_dlg(QStringLiteral("CTS"));
+  queen()->removeRepoDlg(QStringLiteral("CTS"));
 }
 
 /***********************************************************************/ /**
@@ -1218,8 +1218,8 @@ city_report::~city_report()
  ***************************************************************************/
 void city_report::init()
 {
-  queen()->gimme_place(this, QStringLiteral("CTS"));
-  index = queen()->add_game_tab(this);
+  queen()->gimmePlace(this, QStringLiteral("CTS"));
+  index = queen()->addGameTab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
 }
 
@@ -1245,12 +1245,12 @@ void city_report_dialog_popup(bool raise)
   city_report *cr;
   QWidget *w;
 
-  if (!queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("CTS"))) {
     cr = new city_report;
     cr->init();
     cr->update_report();
   } else {
-    i = queen()->gimme_index_of(QStringLiteral("CTS"));
+    i = queen()->gimmeIndexOf(QStringLiteral("CTS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
@@ -1272,8 +1272,8 @@ void real_city_report_dialog_update(void *unused)
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
-    i = queen()->gimme_index_of(QStringLiteral("CTS"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("CTS"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("CTS"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1291,8 +1291,8 @@ void real_city_report_update_city(struct city *pcity)
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
-    i = queen()->gimme_index_of(QStringLiteral("CTS"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("CTS"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("CTS"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       cr = reinterpret_cast<city_report *>(w);
@@ -1310,8 +1310,8 @@ void popdown_city_report()
   city_report *cr;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("CTS"))) {
-    i = queen()->gimme_index_of(QStringLiteral("CTS"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("CTS"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("CTS"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     cr = reinterpret_cast<city_report *>(w);

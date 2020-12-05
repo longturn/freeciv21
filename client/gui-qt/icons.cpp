@@ -15,20 +15,20 @@
 #include "shared.h"
 
 QString current_theme;
-fc_icons *fc_icons::m_instance = 0;
+fcIcons *fcIcons::m_instance = 0;
 
 /************************************************************************/ /**
    Icon provider constructor
  ****************************************************************************/
-fc_icons::fc_icons() {}
+fcIcons::fcIcons() {}
 
 /************************************************************************/ /**
    Returns instance of fc_icons
  ****************************************************************************/
-fc_icons *fc_icons::instance()
+fcIcons *fcIcons::instance()
 {
   if (!m_instance) {
-    m_instance = new fc_icons;
+    m_instance = new fcIcons;
   }
   return m_instance;
 }
@@ -36,7 +36,7 @@ fc_icons *fc_icons::instance()
 /************************************************************************/ /**
    Deletes fc_icons instance
  ****************************************************************************/
-void fc_icons::drop()
+void fcIcons::drop()
 {
   if (m_instance) {
     delete m_instance;
@@ -47,7 +47,7 @@ void fc_icons::drop()
 /************************************************************************/ /**
    Returns icon by given name
  ****************************************************************************/
-QIcon fc_icons::get_icon(const QString &id)
+QIcon fcIcons::getIcon(const QString &id)
 {
   QIcon icon;
   QString str;
@@ -75,7 +75,7 @@ QIcon fc_icons::get_icon(const QString &id)
 /************************************************************************/ /**
    Returns pixmap by given name, pixmap needs to be deleted by someone else
  ****************************************************************************/
-QPixmap *fc_icons::get_pixmap(const QString &id)
+QPixmap *fcIcons::getPixmap(const QString &id)
 {
   QPixmap *pm;
   bool status;
@@ -104,7 +104,7 @@ QPixmap *fc_icons::get_pixmap(const QString &id)
 /************************************************************************/ /**
    Returns path for icon
  ****************************************************************************/
-QString fc_icons::get_path(const QString &id)
+QString fcIcons::getPath(const QString &id)
 {
   QString str;
   QByteArray png_bytes;

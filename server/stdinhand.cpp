@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2, or (at your option)
-   any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 
 #ifdef HAVE_CONFIG_H
 #include <fc_config.h>
@@ -302,14 +302,15 @@ static void cmd_reply_line(enum command_id cmd, struct connection *caller,
                            enum rfc_status rfc_status, const char *prefix,
                            const char *line)
 {
-  const char *cmdname = cmd < CMD_NUM ? command_name_by_number(cmd)
-                        : cmd == CMD_AMBIGUOUS
-                            /* TRANS: ambiguous command */
-                            ? _("(ambiguous)")
-                            : cmd == CMD_UNRECOGNIZED
-                                  /* TRANS: unrecognized command */
-                                  ? _("(unknown)")
-                                  : "(?!?)"; /* this case is a bug! */
+  const char *cmdname = cmd < CMD_NUM
+                            ? command_name_by_number(cmd)
+                            : cmd == CMD_AMBIGUOUS
+                                  /* TRANS: ambiguous command */
+                                  ? _("(ambiguous)")
+                                  : cmd == CMD_UNRECOGNIZED
+                                        /* TRANS: unrecognized command */
+                                        ? _("(unknown)")
+                                        : "(?!?)"; /* this case is a bug! */
 
   if (caller) {
     notify_conn(caller->self, NULL, E_SETTING, ftc_command, "/%s: %s%s",
@@ -725,33 +726,31 @@ static bool create_command(struct connection *caller, const char *str,
   char buf[MAX_LEN_CONSOLE_LINE];
 
   /* 2 legal arguments, and extra space for stuffing illegal part */
-  char *arg[3];
+  QStringList arg;
   int ntokens;
   const char *ai_type_name;
 
   sz_strlcpy(buf, str);
-  ntokens = get_tokens(buf, arg, 3, TOKEN_DELIMITERS);
+  arg = QString(buf).split(TOKEN_DELIMITERS);
+  ntokens = arg.count();
 
   if (ntokens == 1) {
     ai_type_name = default_ai_type_name();
   } else if (ntokens == 2) {
-    ai_type_name = arg[1];
+    ai_type_name = qUtf8Printable(arg.at(1));
   } else {
     cmd_reply(CMD_CREATE, caller, C_SYNTAX,
               _("Wrong number of arguments to create command."));
-    free_tokens(arg, ntokens);
     return FALSE;
   }
 
   if (game_was_started()) {
-    status = create_command_newcomer(arg[0], ai_type_name, check, NULL, NULL,
-                                     buf, sizeof(buf));
+    status = create_command_newcomer(qUtf8Printable(arg.at(0)), ai_type_name,
+                                     check, NULL, NULL, buf, sizeof(buf));
   } else {
-    status = create_command_pregame(arg[0], ai_type_name, check, NULL, buf,
-                                    sizeof(buf));
+    status = create_command_pregame(qUtf8Printable(arg.at(0)), ai_type_name,
+                                    check, NULL, buf, sizeof(buf));
   }
-
-  free_tokens(arg, ntokens);
 
   if (status != C_OK) {
     /* No player created. */
@@ -1393,14 +1392,15 @@ void notify_if_first_access_level_is_available(void)
 static bool cmdlevel_command(struct connection *caller, char *str,
                              bool check)
 {
-  char *arg[2];
+  QStringList arg;
   int ntokens;
   bool ret = FALSE;
   enum m_pre_result match_result;
   enum cmdlevel level;
   struct connection *ptarget;
 
-  ntokens = get_tokens(str, arg, 2, TOKEN_DELIMITERS);
+  arg = QString(str).split(TOKEN_DELIMITERS);
+  ntokens = arg.count();
 
   if (ntokens == 0) {
     /* No argument supplied; list the levels */
@@ -1431,7 +1431,7 @@ static bool cmdlevel_command(struct connection *caller, char *str,
   }
 
   /* A level name was supplied; set the level. */
-  level = cmdlevel_by_name(arg[0], fc_strcasecmp);
+  level = cmdlevel_by_name(qUtf8Printable(arg.at(0)), fc_strcasecmp);
   if (!cmdlevel_is_valid(level)) {
     const char *cmdlevel_names[CMDLEVEL_COUNT];
     struct astring astr = ASTRING_INIT;
@@ -1446,13 +1446,14 @@ static bool cmdlevel_command(struct connection *caller, char *str,
               _("Command access level must be one of %s."),
               astr_build_or_list(&astr, cmdlevel_names, i));
     astr_free(&astr);
-    goto CLEAN_UP;
+    return ret;
   } else if (caller && level > conn_get_access(caller)) {
     cmd_reply(CMD_CMDLEVEL, caller, C_FAIL,
               _("Cannot increase command access level to '%s';"
                 " you only have '%s' yourself."),
-              arg[0], cmdlevel_name(conn_get_access(caller)));
-    goto CLEAN_UP;
+              qUtf8Printable(arg.at(0)),
+              cmdlevel_name(conn_get_access(caller)));
+    return ret;
   }
 
   if (check) {
@@ -1489,7 +1490,7 @@ static bool cmdlevel_command(struct connection *caller, char *str,
 
     ret = TRUE;
 
-  } else if (fc_strcasecmp(arg[1], "new") == 0) {
+  } else if (fc_strcasecmp(qUtf8Printable(arg.at(1)), "new") == 0) {
     default_access_level = level;
     cmd_reply(CMD_CMDLEVEL, caller, C_OK,
               _("Command access level set to '%s' for new players."),
@@ -1504,7 +1505,7 @@ static bool cmdlevel_command(struct connection *caller, char *str,
 
     ret = TRUE;
 
-  } else if (fc_strcasecmp(arg[1], "first") == 0) {
+  } else if (fc_strcasecmp(qUtf8Printable(arg.at(1)), "first") == 0) {
     first_access_level = level;
     cmd_reply(CMD_CMDLEVEL, caller, C_OK,
               _("Command access level set to '%s' "
@@ -1519,16 +1520,16 @@ static bool cmdlevel_command(struct connection *caller, char *str,
 
     ret = TRUE;
 
-  } else if ((ptarget = conn_by_user_prefix(arg[1], &match_result))) {
+  } else if ((ptarget = conn_by_user_prefix(qUtf8Printable(arg.at(1)),
+                                            &match_result))) {
     if (set_cmdlevel(caller, ptarget, level)) {
       ret = TRUE;
     }
   } else {
-    cmd_reply_no_such_conn(CMD_CMDLEVEL, caller, arg[1], match_result);
+    cmd_reply_no_such_conn(CMD_CMDLEVEL, caller, qUtf8Printable(arg.at(1)),
+                           match_result);
   }
 
-CLEAN_UP:
-  free_tokens(arg, ntokens);
   return ret;
 }
 
@@ -1604,8 +1605,8 @@ static const char *olvlname_accessor(int i)
 static bool timeout_command(struct connection *caller, char *str, bool check)
 {
   char buf[MAX_LEN_CONSOLE_LINE];
-  char *arg[4];
-  int i = 0, ntokens;
+  QStringList arg;
+  int i = 0;
   int *timeouts[4];
 
   timeouts[0] = &game.server.timeoutint;
@@ -1614,17 +1615,16 @@ static bool timeout_command(struct connection *caller, char *str, bool check)
   timeouts[3] = &game.server.timeoutincmult;
 
   sz_strlcpy(buf, str);
-  ntokens = get_tokens(buf, arg, 4, TOKEN_DELIMITERS);
+  arg = QString(buf).split(TOKEN_DELIMITERS);
 
-  for (i = 0; i < ntokens; i++) {
-    if (!str_to_int(arg[i], timeouts[i])) {
+  for (i = 0; i < arg.count(); i++) {
+    if (!str_to_int(qUtf8Printable(arg.at(i)), timeouts[i])) {
       cmd_reply(CMD_TIMEOUT, caller, C_FAIL, _("Invalid argument %d."),
                 i + 1);
     }
-    free(arg[i]);
   }
 
-  if (ntokens == 0) {
+  if (arg.isEmpty()) {
     cmd_reply(CMD_TIMEOUT, caller, C_SYNTAX, _("Usage:\n%s"),
               command_synopsis(command_by_number(CMD_TIMEOUT)));
     return FALSE;
@@ -2341,8 +2341,7 @@ static bool team_command(struct connection *caller, char *str, bool check)
   struct player *pplayer;
   enum m_pre_result match_result;
   char buf[MAX_LEN_CONSOLE_LINE];
-  char *arg[2];
-  int ntokens = 0, i;
+  QStringList arg;
   bool res = FALSE;
   struct team_slot *tslot;
 
@@ -2354,26 +2353,27 @@ static bool team_command(struct connection *caller, char *str, bool check)
 
   if (str != NULL || strlen(str) > 0) {
     sz_strlcpy(buf, str);
-    ntokens = get_tokens(buf, arg, 2, TOKEN_DELIMITERS);
+    arg = QString(buf).split(TOKEN_DELIMITERS);
   }
-  if (ntokens != 2) {
+  if (arg.count() != 2) {
     cmd_reply(CMD_TEAM, caller, C_SYNTAX,
               _("Undefined argument.  Usage:\n%s"),
               command_synopsis(command_by_number(CMD_TEAM)));
-    goto cleanup;
+    return res;
   }
 
-  pplayer = player_by_name_prefix(arg[0], &match_result);
+  pplayer = player_by_name_prefix(qUtf8Printable(arg.at(0)), &match_result);
   if (pplayer == NULL) {
-    cmd_reply_no_such_player(CMD_TEAM, caller, arg[0], match_result);
-    goto cleanup;
+    cmd_reply_no_such_player(CMD_TEAM, caller, qUtf8Printable(arg.at(0)),
+                             match_result);
+    return res;
   }
 
-  tslot = team_slot_by_rule_name(arg[1]);
+  tslot = team_slot_by_rule_name(qUtf8Printable(arg.at(1)));
   if (NULL == tslot) {
     int teamno;
 
-    if (str_to_int(arg[1], &teamno)) {
+    if (str_to_int(qUtf8Printable(arg.at(1)), &teamno)) {
       tslot = team_slot_by_number(teamno);
     }
   }
@@ -2381,14 +2381,14 @@ static bool team_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TEAM, caller, C_SYNTAX,
               _("No such team %s.  Please give a "
                 "valid team name or number."),
-              arg[1]);
-    goto cleanup;
+              qUtf8Printable(arg.at(1)));
+    return res;
   }
 
   if (is_barbarian(pplayer)) {
     /* This can happen if we change team settings on a loaded game. */
     cmd_reply(CMD_TEAM, caller, C_SYNTAX, _("Cannot team a barbarian."));
-    goto cleanup;
+    return res;
   }
   if (!check) {
     team_add_player(pplayer, team_new(tslot));
@@ -2398,10 +2398,6 @@ static bool team_command(struct connection *caller, char *str, bool check)
   }
   res = TRUE;
 
-cleanup:
-  for (i = 0; i < ntokens; i++) {
-    free(arg[i]);
-  }
   return res;
 }
 
@@ -2455,8 +2451,8 @@ static const char *vote_arg_accessor(int i) { return vote_args[i]; }
 static bool vote_command(struct connection *caller, char *str, bool check)
 {
   char buf[MAX_LEN_CONSOLE_LINE];
-  char *arg[2];
-  int ntokens = 0, i = 0, which = -1;
+  QStringList arg;
+  int i = 0, which = -1;
   enum m_pre_result match_result;
   struct vote *pvote = NULL;
   bool res = FALSE;
@@ -2468,33 +2464,34 @@ static bool vote_command(struct connection *caller, char *str, bool check)
   }
 
   sz_strlcpy(buf, str);
-  ntokens = get_tokens(buf, arg, 2, TOKEN_DELIMITERS);
+  arg = QString(buf).split(TOKEN_DELIMITERS);
 
-  if (ntokens == 0) {
+  if (arg.isEmpty()) {
     show_votes(caller);
-    goto CLEANUP;
+    return res;
   } else if (!conn_can_vote(caller, NULL)) {
     cmd_reply(CMD_VOTE, caller, C_FAIL,
               _("You are not allowed to use this command."));
-    goto CLEANUP;
+    return res;
   }
 
   match_result = match_prefix(vote_arg_accessor, VOTE_NUM, 0, fc_strncasecmp,
-                              NULL, arg[0], &i);
+                              NULL, qUtf8Printable(arg.at(0)), &i);
 
   if (match_result == M_PRE_AMBIGUOUS) {
     cmd_reply(CMD_VOTE, caller, C_SYNTAX,
-              _("The argument \"%s\" is ambiguous."), arg[0]);
-    goto CLEANUP;
+              _("The argument \"%s\" is ambiguous."),
+              qUtf8Printable(arg.at(0)));
+    return res;
   } else if (match_result > M_PRE_AMBIGUOUS) {
     /* Failed */
     cmd_reply(CMD_VOTE, caller, C_SYNTAX,
               _("Undefined argument.  Usage:\n%s"),
               command_synopsis(command_by_number(CMD_VOTE)));
-    goto CLEANUP;
+    return res;
   }
 
-  if (ntokens == 1) {
+  if (arg.count() == 1) {
     /* Applies to last vote */
     if (vote_number_sequence > 0 && get_vote_by_no(vote_number_sequence)) {
       which = vote_number_sequence;
@@ -2510,25 +2507,25 @@ static bool vote_command(struct connection *caller, char *str, bool check)
             num_votes,
             PL_("other vote running", "other votes running", num_votes));
       }
-      goto CLEANUP;
+      return res;
     }
   } else {
-    if (!str_to_int(arg[1], &which)) {
+    if (!str_to_int(qUtf8Printable(arg.at(1)), &which)) {
       cmd_reply(CMD_VOTE, caller, C_SYNTAX, _("Value must be an integer."));
-      goto CLEANUP;
+      return res;
     }
   }
 
   if (!(pvote = get_vote_by_no(which))) {
     /* TRANS: "vote" as a process */
     cmd_reply(CMD_VOTE, caller, C_FAIL, _("No such vote (%d)."), which);
-    goto CLEANUP;
+    return res;
   }
 
   if (!conn_can_vote(caller, pvote)) {
     cmd_reply(CMD_VOTE, caller, C_FAIL,
               _("You are not allowed to vote on that."));
-    goto CLEANUP;
+    return res;
   }
 
   if (i == VOTE_YES) {
@@ -2543,15 +2540,10 @@ static bool vote_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_VOTE, caller, C_COMMENT,
               _("You abstained from voting on \"%s\""), pvote->cmdline);
     connection_vote(caller, pvote, VOTE_ABSTAIN);
-  } else {
-    /* Must never happen. */
-    fc_assert_action(FALSE, goto CLEANUP);
   }
 
   res = TRUE;
 
-CLEANUP:
-  free_tokens(arg, ntokens);
   return res;
 }
 
@@ -2655,8 +2647,7 @@ static bool cancelvote_command(struct connection *caller, char *arg,
 static bool debug_command(struct connection *caller, char *str, bool check)
 {
   char buf[MAX_LEN_CONSOLE_LINE];
-  char *arg[3];
-  int ntokens = 0, i;
+  QStringList arg;
 
   if (game.info.is_new_game) {
     cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
@@ -2669,25 +2660,26 @@ static bool debug_command(struct connection *caller, char *str, bool check)
 
   if (str != NULL && strlen(str) > 0) {
     sz_strlcpy(buf, str);
-    ntokens = get_tokens(buf, arg, 3, TOKEN_DELIMITERS);
-  } else {
-    ntokens = 0;
+    arg = QString(buf).split(TOKEN_DELIMITERS);
   }
 
-  if (ntokens > 0 && strcmp(arg[0], "diplomacy") == 0) {
+  if (!arg.isEmpty()
+      && strcmp(qUtf8Printable(arg.at(0)), "diplomacy") == 0) {
     struct player *pplayer;
     enum m_pre_result match_result;
 
-    if (ntokens != 2) {
+    if (arg.count() != 2) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Undefined argument.  Usage:\n%s"),
                 command_synopsis(command_by_number(CMD_DEBUG)));
-      goto cleanup;
+      return TRUE;
     }
-    pplayer = player_by_name_prefix(arg[1], &match_result);
+    pplayer =
+        player_by_name_prefix(qUtf8Printable(arg.at(1)), &match_result);
     if (pplayer == NULL) {
-      cmd_reply_no_such_player(CMD_DEBUG, caller, arg[1], match_result);
-      goto cleanup;
+      cmd_reply_no_such_player(CMD_DEBUG, caller, qUtf8Printable(arg.at(1)),
+                               match_result);
+      return TRUE;
     }
     if (BV_ISSET(pplayer->server.debug, PLAYER_DEBUG_DIPLOMACY)) {
       BV_CLR(pplayer->server.debug, PLAYER_DEBUG_DIPLOMACY);
@@ -2699,20 +2691,23 @@ static bool debug_command(struct connection *caller, char *str, bool check)
                 player_name(pplayer));
       /* TODO: print some info about the player here */
     }
-  } else if (ntokens > 0 && strcmp(arg[0], "tech") == 0) {
+  } else if (arg.count() > 0
+             && strcmp(qUtf8Printable(arg.at(0)), "tech") == 0) {
     struct player *pplayer;
     enum m_pre_result match_result;
 
-    if (ntokens != 2) {
+    if (arg.count() != 2) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Undefined argument.  Usage:\n%s"),
                 command_synopsis(command_by_number(CMD_DEBUG)));
-      goto cleanup;
+      return TRUE;
     }
-    pplayer = player_by_name_prefix(arg[1], &match_result);
+    pplayer =
+        player_by_name_prefix(qUtf8Printable(arg.at(1)), &match_result);
     if (pplayer == NULL) {
-      cmd_reply_no_such_player(CMD_DEBUG, caller, arg[1], match_result);
-      goto cleanup;
+      cmd_reply_no_such_player(CMD_DEBUG, caller, qUtf8Printable(arg.at(1)),
+                               match_result);
+      return TRUE;
     }
     if (BV_ISSET(pplayer->server.debug, PLAYER_DEBUG_TECH)) {
       BV_CLR(pplayer->server.debug, PLAYER_DEBUG_TECH);
@@ -2724,7 +2719,7 @@ static bool debug_command(struct connection *caller, char *str, bool check)
                 player_name(pplayer));
       /* TODO: print some info about the player here */
     }
-  } else if (ntokens > 0 && strcmp(arg[0], "info") == 0) {
+  } else if (arg.count() && strcmp(qUtf8Printable(arg.at(0)), "info") == 0) {
     int cities = 0, players = 0, units = 0, citizen_count = 0;
 
     players_iterate(plr)
@@ -2744,31 +2739,32 @@ static bool debug_command(struct connection *caller, char *str, bool check)
     notify_conn(game.est_connections, NULL, E_AI_DEBUG, ftc_log,
                 _("players=%d cities=%d citizens=%d units=%d"), players,
                 cities, citizen_count, units);
-  } else if (ntokens > 0 && strcmp(arg[0], "city") == 0) {
+  } else if (arg.count() && strcmp(qUtf8Printable(arg.at(0)), "city") == 0) {
     int x, y;
     struct tile *ptile;
     struct city *pcity;
 
-    if (ntokens != 3) {
+    if (arg.count() != 3) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Undefined argument.  Usage:\n%s"),
                 command_synopsis(command_by_number(CMD_DEBUG)));
-      goto cleanup;
+      return TRUE;
     }
-    if (!str_to_int(arg[1], &x) || !str_to_int(arg[2], &y)) {
+    if (!str_to_int(qUtf8Printable(arg.at(1)), &x)
+        || !str_to_int(qUtf8Printable(arg.at(2)), &y)) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Value 2 & 3 must be integer."));
-      goto cleanup;
+      return TRUE;
     }
     if (!(ptile = map_pos_to_tile(&(wld.map), x, y))) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX, _("Bad map coordinates."));
-      goto cleanup;
+      return TRUE;
     }
     pcity = tile_city(ptile);
     if (!pcity) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("No city at this coordinate."));
-      goto cleanup;
+      return TRUE;
     }
     if (pcity->server.debug) {
       pcity->server.debug = FALSE;
@@ -2778,24 +2774,26 @@ static bool debug_command(struct connection *caller, char *str, bool check)
       pcity->server.debug = TRUE;
       CITY_LOG(LOG_NORMAL, pcity, "debugged");
     }
-  } else if (ntokens > 0 && strcmp(arg[0], "units") == 0) {
+  } else if (arg.count()
+             && strcmp(qUtf8Printable(arg.at(0)), "units") == 0) {
     int x, y;
     struct tile *ptile;
 
-    if (ntokens != 3) {
+    if (arg.count() != 3) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Undefined argument.  Usage:\n%s"),
                 command_synopsis(command_by_number(CMD_DEBUG)));
-      goto cleanup;
+      return TRUE;
     }
-    if (!str_to_int(arg[1], &x) || !str_to_int(arg[2], &y)) {
+    if (!str_to_int(qUtf8Printable(arg.at(1)), &x)
+        || !str_to_int(qUtf8Printable(arg.at(2)), &y)) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Value 2 & 3 must be integer."));
-      goto cleanup;
+      return TRUE;
     }
     if (!(ptile = map_pos_to_tile(&(wld.map), x, y))) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX, _("Bad map coordinates."));
-      goto cleanup;
+      return TRUE;
     }
     unit_list_iterate(ptile->units, punit)
     {
@@ -2812,9 +2810,11 @@ static bool debug_command(struct connection *caller, char *str, bool check)
       }
     }
     unit_list_iterate_end;
-  } else if (ntokens > 0 && strcmp(arg[0], "timing") == 0) {
+  } else if (arg.count()
+             && strcmp(qUtf8Printable(arg.at(0)), "timing") == 0) {
     TIMING_RESULTS();
-  } else if (ntokens > 0 && strcmp(arg[0], "ferries") == 0) {
+  } else if (arg.count() > 0
+             && strcmp(qUtf8Printable(arg.at(0)), "ferries") == 0) {
     if (game.server.debug[DEBUG_FERRIES]) {
       game.server.debug[DEBUG_FERRIES] = FALSE;
       cmd_reply(CMD_DEBUG, caller, C_OK,
@@ -2824,24 +2824,25 @@ static bool debug_command(struct connection *caller, char *str, bool check)
       game.server.debug[DEBUG_FERRIES] = TRUE;
       cmd_reply(CMD_DEBUG, caller, C_OK, _("Ferry system in debug mode."));
     }
-  } else if (ntokens > 0 && strcmp(arg[0], "unit") == 0) {
+  } else if (arg.count() > 0
+             && strcmp(qUtf8Printable(arg.at(0)), "unit") == 0) {
     int id;
     struct unit *punit;
 
-    if (ntokens != 2) {
+    if (arg.count() != 2) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
                 _("Undefined argument.  Usage:\n%s"),
                 command_synopsis(command_by_number(CMD_DEBUG)));
-      goto cleanup;
+      return TRUE;
     }
-    if (!str_to_int(arg[1], &id)) {
+    if (!str_to_int(qUtf8Printable(arg.at(1)), &id)) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX, _("Value 2 must be integer."));
-      goto cleanup;
+      return TRUE;
     }
     if (!(punit = game_unit_by_number(id))) {
       cmd_reply(CMD_DEBUG, caller, C_SYNTAX, _("Unit %d does not exist."),
                 id);
-      goto cleanup;
+      return TRUE;
     }
     if (punit->server.debug) {
       punit->server.debug = FALSE;
@@ -2858,10 +2859,6 @@ static bool debug_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_DEBUG, caller, C_SYNTAX,
               _("Undefined argument.  Usage:\n%s"),
               command_synopsis(command_by_number(CMD_DEBUG)));
-  }
-cleanup:
-  for (i = 0; i < ntokens; i++) {
-    free(arg[i]);
   }
   return TRUE;
 }
@@ -2908,34 +2905,35 @@ static struct setting *validate_setting_arg(enum command_id cmd,
  **************************************************************************/
 static bool set_command(struct connection *caller, char *str, bool check)
 {
-  char *args[2];
-  int val, nargs;
+  QStringList args;
+  int val;
   struct setting *pset;
   bool do_update;
   char reject_msg[256] = "";
   bool ret = FALSE;
 
   /* '=' is also a valid delimiter for this function. */
-  nargs = get_tokens(str, args, ARRAY_SIZE(args), TOKEN_DELIMITERS "=");
+  args = QString(str).split(TOKEN_DELIMITERS);
 
-  if (nargs < 2) {
+  if (args.count() < 2) {
     cmd_reply(CMD_SET, caller, C_SYNTAX,
               _("Undefined argument.  Usage:\n%s"),
               command_synopsis(command_by_number(CMD_SET)));
-    goto cleanup;
+    return ret;
   }
 
-  pset = validate_setting_arg(CMD_SET, caller, args[0]);
+  pset = validate_setting_arg(CMD_SET, caller,
+                              (char *) qUtf8Printable(args.at(0)));
 
   if (!pset) {
     /* Reason already reported. */
-    goto cleanup;
+    return ret;
   }
 
   if (!setting_is_changeable(pset, caller, reject_msg, sizeof(reject_msg))
       && !check) {
     cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-    goto cleanup;
+    return ret;
   }
 
   do_update = FALSE;
@@ -2945,26 +2943,27 @@ static bool set_command(struct connection *caller, char *str, bool check)
     if (check) {
       if (!setting_is_changeable(pset, caller, reject_msg,
                                  sizeof(reject_msg))
-          || (!setting_bool_validate(pset, args[1], caller, reject_msg,
+          || (!setting_bool_validate(pset, qUtf8Printable(args.at(1)),
+                                     caller, reject_msg,
                                      sizeof(reject_msg)))) {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
-    } else if (setting_bool_set(pset, args[1], caller, reject_msg,
-                                sizeof(reject_msg))) {
+    } else if (setting_bool_set(pset, qUtf8Printable(args.at(1)), caller,
+                                reject_msg, sizeof(reject_msg))) {
       do_update = TRUE;
     } else {
       cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-      goto cleanup;
+      return ret;
     }
     break;
 
   case SST_INT:
-    if (!str_to_int(args[1], &val)) {
+    if (!str_to_int(qUtf8Printable(args.at(1)), &val)) {
       cmd_reply(CMD_SET, caller, C_SYNTAX,
                 _("The parameter %s should only contain +- and 0-9."),
                 setting_name(pset));
-      goto cleanup;
+      return ret;
     }
     if (check) {
       if (!setting_is_changeable(pset, caller, reject_msg,
@@ -2972,7 +2971,7 @@ static bool set_command(struct connection *caller, char *str, bool check)
           || !setting_int_validate(pset, val, caller, reject_msg,
                                    sizeof(reject_msg))) {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
     } else {
       if (setting_int_set(pset, val, caller, reject_msg,
@@ -2980,7 +2979,7 @@ static bool set_command(struct connection *caller, char *str, bool check)
         do_update = TRUE;
       } else {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
     }
     break;
@@ -2989,18 +2988,18 @@ static bool set_command(struct connection *caller, char *str, bool check)
     if (check) {
       if (!setting_is_changeable(pset, caller, reject_msg,
                                  sizeof(reject_msg))
-          || !setting_str_validate(pset, args[1], caller, reject_msg,
-                                   sizeof(reject_msg))) {
+          || !setting_str_validate(pset, qUtf8Printable(args.at(1)), caller,
+                                   reject_msg, sizeof(reject_msg))) {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
     } else {
-      if (setting_str_set(pset, args[1], caller, reject_msg,
-                          sizeof(reject_msg))) {
+      if (setting_str_set(pset, qUtf8Printable(args.at(1)), caller,
+                          reject_msg, sizeof(reject_msg))) {
         do_update = TRUE;
       } else {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
     }
     break;
@@ -3009,17 +3008,18 @@ static bool set_command(struct connection *caller, char *str, bool check)
     if (check) {
       if (!setting_is_changeable(pset, caller, reject_msg,
                                  sizeof(reject_msg))
-          || (!setting_enum_validate(pset, args[1], caller, reject_msg,
+          || (!setting_enum_validate(pset, qUtf8Printable(args.at(1)),
+                                     caller, reject_msg,
                                      sizeof(reject_msg)))) {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
-    } else if (setting_enum_set(pset, args[1], caller, reject_msg,
-                                sizeof(reject_msg))) {
+    } else if (setting_enum_set(pset, qUtf8Printable(args.at(1)), caller,
+                                reject_msg, sizeof(reject_msg))) {
       do_update = TRUE;
     } else {
       cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-      goto cleanup;
+      return ret;
     }
     break;
 
@@ -3027,24 +3027,24 @@ static bool set_command(struct connection *caller, char *str, bool check)
     if (check) {
       if (!setting_is_changeable(pset, caller, reject_msg,
                                  sizeof(reject_msg))
-          || (!setting_bitwise_validate(pset, args[1], caller, reject_msg,
+          || (!setting_bitwise_validate(pset, qUtf8Printable(args.at(1)),
+                                        caller, reject_msg,
                                         sizeof(reject_msg)))) {
         cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-        goto cleanup;
+        return ret;
       }
-    } else if (setting_bitwise_set(pset, args[1], caller, reject_msg,
-                                   sizeof(reject_msg))) {
+    } else if (setting_bitwise_set(pset, qUtf8Printable(args.at(1)), caller,
+                                   reject_msg, sizeof(reject_msg))) {
       do_update = TRUE;
     } else {
       cmd_reply(CMD_SET, caller, C_FAIL, "%s", reject_msg);
-      goto cleanup;
+      return ret;
     }
     break;
 
   case SST_COUNT:
     fc_assert(setting_type(pset) != SST_COUNT);
-    goto cleanup;
-    break;
+    return ret;
   }
 
   ret = TRUE; /* Looks like a success. */
@@ -3080,8 +3080,6 @@ static bool set_command(struct connection *caller, char *str, bool check)
     send_server_info_to_metaserver(META_INFO);
   }
 
-cleanup:
-  free_tokens(args, nargs);
   return ret;
 }
 
@@ -3538,8 +3536,7 @@ static bool take_command(struct connection *caller, char *str, bool check)
     cmd_reply(CMD_TAKE, caller, C_OK, _("%s now controls %s (%s, %s)."),
               pconn->username, player_name(pplayer),
               is_barbarian(pplayer) ? _("Barbarian")
-              : is_ai(pplayer)      ? _("AI")
-                                    : _("Human"),
+                                    : is_ai(pplayer) ? _("AI") : _("Human"),
               pplayer->is_alive ? _("Alive") : _("Dead"));
   } else {
     cmd_reply(CMD_TAKE, caller, C_FAIL,
@@ -7179,9 +7176,9 @@ static char *cmdlevel_arg1_generator(const char *text, int state)
  **************************************************************************/
 static const char *cmdlevel_arg2_accessor(int idx)
 {
-  return ((idx == 0)   ? "first"
-          : (idx == 1) ? "new"
-                       : connection_name_accessor(idx - 2));
+  return ((idx == 0)
+              ? "first"
+              : (idx == 1) ? "new" : connection_name_accessor(idx - 2));
 }
 
 /**********************************************************************/ /**
@@ -7291,16 +7288,19 @@ static bool contains_token_before_start(int start, int token,
 
   /* Swallow unwanted tokens and their preceding delimiters */
   while (token--) {
-    while (str_itr < rl_line_buffer + start && !QChar::isLetterOrNumber(*str_itr)) {
+    while (str_itr < rl_line_buffer + start
+           && !QChar::isLetterOrNumber(*str_itr)) {
       str_itr++;
     }
-    while (str_itr < rl_line_buffer + start && QChar::isLetterOrNumber(*str_itr)) {
+    while (str_itr < rl_line_buffer + start
+           && QChar::isLetterOrNumber(*str_itr)) {
       str_itr++;
     }
   }
 
   /* Swallow any delimiters before the token we're interested in */
-  while (str_itr < rl_line_buffer + start && !QChar::isLetterOrNumber(*str_itr)) {
+  while (str_itr < rl_line_buffer + start
+         && !QChar::isLetterOrNumber(*str_itr)) {
     str_itr++;
   }
 

@@ -41,7 +41,7 @@ notify_dialog::notify_dialog(const char *caption, const char *headline,
   qheadline = QString(headline);
   qlines = QString(lines);
   qlist = qlines.split(QStringLiteral("\n"));
-  small_font = *fc_font::instance()->get_font(
+  small_font = *fcFont::instance()->getFont(
       QStringLiteral("gui_qt_font_notify_label"));
   x = 0;
   y = 0;

@@ -76,6 +76,22 @@ resize_widget
   background: #1155BB;
 }
 
+QPushButton[main_pagebt="true"] {
+  color: white;
+  min-height: 40px;
+  min-width: 200px;
+  background: #000330;
+  border: 2px solid #1237FF;
+  border-radius: 0px;
+  padding: 0px;
+}
+QPushButton:hover[main_pagebt="true"] {
+  color: white;
+  background: #000330;
+  border: 3px solid #3399FF;
+}
+
+
 QPushButton {
   color: #FFFFFF;
   background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #474747, stop: 1 #323232);
@@ -874,7 +890,7 @@ hud_unit_loader::item:hover {
   background: #3399FF;
 }
 
-fc_sidewidget {
+sideWidget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);
@@ -885,12 +901,12 @@ fc_sidewidget {
 }
 
 hud_action {
-  selection-background-color: rgba(250,75,25, 150);
+  selection-background-color: rgba(25,75,125, 150);
   color: rgb(5,5,185);
 }
 
 hud_units {
-  background: rgba(40, 10, 30, 200);
+  background: rgba(0, 0, 0, 185);
 }
 
 hud_units QLabel {
@@ -906,4 +922,10 @@ tax_rates_dialog {
   color: white;
   background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 75,195) stop:1 rgba(25, 25, 45, 225));
   border: 2px solid #0000AA;
+}
+
+research_color {
+  selection-background-color: #6bb6c5 /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
 }

@@ -75,7 +75,7 @@ pregame_options::pregame_options(QWidget *parent) : QWidget(parent)
           SLOT(ruleset_change(int)));
   ui.qserveroptions->setText(_("More Game Options"));
   ui.qserveroptions->setIcon(
-      fc_icons::instance()->get_icon(QStringLiteral("preferences-other")));
+      fcIcons::instance()->getIcon(QStringLiteral("preferences-other")));
   connect(ui.qserveroptions, &QPushButton::clicked, [=]() {
     option_dialog_popup(_("Set server options"), server_optset);
   });
@@ -142,7 +142,7 @@ void pregame_options::update_buttons()
     } else {
       ui.nation->setText(_("Random"));
       ui.nation->setIcon(
-          fc_icons::instance()->get_icon(QStringLiteral("flush-random")));
+          fcIcons::instance()->getIcon(QStringLiteral("flush-random")));
     }
   }
 }

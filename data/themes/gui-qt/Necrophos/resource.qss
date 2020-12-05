@@ -753,7 +753,7 @@ hud_input_box {
 }
 
 
-fc_sidewidget {
+sideWidget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(34, 150, 4);
@@ -807,4 +807,10 @@ hud_unit_combat {
 
 unit_item, impr_item {
   selection-background-color: #5d8869;
+}
+
+research_color {
+  selection-background-color: #58d66d /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
 }

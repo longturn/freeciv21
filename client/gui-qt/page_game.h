@@ -18,9 +18,9 @@
 
 class fc_client;
 class map_view;
-class fc_sidebar;
+class sidebar;
 class minimap_view;
-class fc_sidewidget;
+class sidebarWidget;
 class hud_units;
 class info_tab;
 class hud_battle_log;
@@ -44,24 +44,24 @@ private slots:
   void current_changed(int index);
 };
 
-class page_game : public QWidget {
+class pageGame : public QWidget {
   Q_OBJECT
 public:
-  page_game(QWidget *);
-  ~page_game();
-  void update_sidebar_position();
-  void reload_sidebar_icons();
-  void update_sidebar_tooltips();
-  int add_game_tab(QWidget *widget);
-  void rm_game_tab(int index); /* doesn't delete widget */
-  void gimme_place(QWidget *widget, const QString &str);
-  int gimme_index_of(const QString &str);
-  void remove_repo_dlg(const QString &str);
-  bool is_repo_dlg_open(const QString &str);
-  void update_info_label();
+  pageGame(QWidget *);
+  ~pageGame();
+  void updateSidebarPosition();
+  void reloadSidebarIcons();
+  void updateSidebarTooltips();
+  int addGameTab(QWidget *widget);
+  void rmGameTab(int index); /* doesn't delete widget */
+  void gimmePlace(QWidget *widget, const QString &str);
+  int gimmeIndexOf(const QString &str);
+  void removeRepoDlg(const QString &str);
+  bool isRepoDlgOpen(const QString &str);
+  void updateInfoLabel();
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
-  fc_sidebar *sidebar_wdg;
+  sidebar *sidebar_wdg;
   goto_dialog *gtd;
   units_select *unit_selector;
   hud_battle_log *battlelog_wdg;
@@ -70,24 +70,24 @@ public:
   map_view *mapview_wdg;
   minimap_view *minimapview_wdg;
   xvote *x_vote;
-  fc_sidewidget *sw_diplo;
-  fc_sidewidget *sw_indicators;
-  fc_sidewidget *sw_endturn;
-  fc_sidewidget *sw_science;
+  sidebarWidget *sw_diplo;
+  sidebarWidget *sw_indicators;
+  sidebarWidget *sw_endturn;
+  sidebarWidget *sw_science;
 public slots:
 private slots:
-  void update_info_label_timeout();
+  void updateInfoLabelTimeout();
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;
-  fc_sidewidget *sw_cities;
-  fc_sidewidget *sw_cunit;
-  fc_sidewidget *sw_economy;
-  fc_sidewidget *sw_map;
-  fc_sidewidget *sw_tax;
+  sidebarWidget *sw_cities;
+  sidebarWidget *sw_cunit;
+  sidebarWidget *sw_economy;
+  sidebarWidget *sw_map;
+  sidebarWidget *sw_tax;
 };
 
 /**********************************************************************/ /**
    Return game instandce
  **************************************************************************/
-page_game *queen();
+pageGame *queen();

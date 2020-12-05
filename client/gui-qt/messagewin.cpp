@@ -245,7 +245,7 @@ void messagewdg::item_selected(const QItemSelection &sl,
     }
     if (QApplication::mouseButtons() == Qt::RightButton
         && pmsg->event == E_DIPLOMACY) {
-      j = queen()->gimme_index_of(QStringLiteral("DDI"));
+      j = queen()->gimmeIndexOf(QStringLiteral("DDI"));
       queen()->game_tab_widget->setCurrentIndex(j);
     }
   }

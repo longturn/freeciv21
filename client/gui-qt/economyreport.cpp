@@ -45,8 +45,8 @@ eco_report::eco_report()
           SLOT(selection_changed(const QItemSelection &,
                                  const QItemSelection &)));
   setLayout(ui.eco_layout);
-  queen()->gimme_place(this, QStringLiteral("ECO"));
-  index = queen()->add_game_tab(this);
+  queen()->gimmePlace(this, QStringLiteral("ECO"));
+  index = queen()->addGameTab(this);
 }
 
 /************************************************************************/ /**
@@ -54,7 +54,7 @@ eco_report::eco_report()
  ****************************************************************************/
 eco_report::~eco_report()
 {
-  queen()->remove_repo_dlg(QStringLiteral("ECO"));
+  queen()->removeRepoDlg(QStringLiteral("ECO"));
 }
 
 /************************************************************************/ /**
@@ -362,15 +362,15 @@ void real_economy_report_dialog_update(void *unused)
   eco_report *eco_rep;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("ECO"))) {
-    i = queen()->gimme_index_of(QStringLiteral("ECO"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("ECO"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("ECO"));
     if (queen()->game_tab_widget->currentIndex() == i) {
       w = queen()->game_tab_widget->widget(i);
       eco_rep = reinterpret_cast<eco_report *>(w);
       eco_rep->update_report();
     }
   }
-  queen()->update_sidebar_tooltips();
+  queen()->updateSidebarTooltips();
 }
 
 /************************************************************************/ /**
@@ -382,12 +382,12 @@ void economy_report_dialog_popup(bool raise)
   int i;
   eco_report *eco_rep;
   QWidget *w;
-  if (!queen()->is_repo_dlg_open(QStringLiteral("ECO"))) {
+  if (!queen()->isRepoDlgOpen(QStringLiteral("ECO"))) {
     eco_rep = new eco_report;
     eco_rep->init();
     eco_rep->update_report();
   } else {
-    i = queen()->gimme_index_of(QStringLiteral("ECO"));
+    i = queen()->gimmeIndexOf(QStringLiteral("ECO"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     if (w->isVisible()) {
@@ -409,8 +409,8 @@ void popdown_economy_report()
   eco_report *eco_rep;
   QWidget *w;
 
-  if (queen()->is_repo_dlg_open(QStringLiteral("ECO"))) {
-    i = queen()->gimme_index_of(QStringLiteral("ECO"));
+  if (queen()->isRepoDlgOpen(QStringLiteral("ECO"))) {
+    i = queen()->gimmeIndexOf(QStringLiteral("ECO"));
     fc_assert(i != -1);
     w = queen()->game_tab_widget->widget(i);
     eco_rep = reinterpret_cast<eco_report *>(w);

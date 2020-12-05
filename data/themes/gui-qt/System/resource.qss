@@ -80,7 +80,7 @@ QProgressBar {
   selection-background-color: #36c620;
 }
 
-fc_sidewidget {
+sideWidget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(34, 150, 4);
@@ -93,4 +93,10 @@ fc_sidewidget {
 hud_unit_combat {
   selection-background-color: rgba(0, 0, 75,165);
   alternate-background-color: #0000AA;
+}
+
+research_color {
+  selection-background-color: #6779c5 /*box*/;
+  color: #96b62e /*lines*/;
+  alternate-background-color: white /* box edge */;
 }

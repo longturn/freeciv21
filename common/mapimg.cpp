@@ -727,13 +727,11 @@ const char *mapimg_error(void) { return error_buffer; }
 /************************************************************************/ /**
    Define on map image.
  ****************************************************************************/
-#define NUM_MAX_MAPARGS 10
-#define NUM_MAX_MAPOPTS 2
 bool mapimg_define(const char *maparg, bool check)
 {
   struct mapdef *pmapdef = NULL;
-  char *mapargs[NUM_MAX_MAPARGS], *mapopts[NUM_MAX_MAPOPTS];
-  int nmapargs, nmapopts, i;
+  QStringList mapargs, mapopts;
+  int i;
   bool ret = TRUE;
 
   MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), FALSE);
@@ -768,33 +766,32 @@ bool mapimg_define(const char *maparg, bool check)
   pmapdef = mapdef_new(FALSE);
 
   /* get map options */
-  nmapargs = get_tokens(maparg, mapargs, NUM_MAX_MAPARGS, ":");
+  mapargs = QString(maparg).split(":");
 
-  for (i = 0; i < nmapargs; i++) {
+  for (auto str : mapargs) {
     /* split map options into variable and value */
-    nmapopts = get_tokens(mapargs[i], mapopts, NUM_MAX_MAPOPTS, "=");
+    mapopts = str.split("=");
 
-    if (nmapopts == 2) {
-      enum mapdef_arg arg = mapdef_arg_by_name(mapopts[0], strcmp);
+    if (mapopts.count() == 2) {
+      enum mapdef_arg arg =
+          mapdef_arg_by_name(qUtf8Printable(mapopts.at(0)), strcmp);
       if (mapdef_arg_is_valid(arg)) {
         /* If ret is FALSE an error message is set by mapimg_define_arg(). */
-        ret = mapimg_define_arg(pmapdef, arg, mapopts[1], check);
+        ret = mapimg_define_arg(pmapdef, arg, qUtf8Printable(mapopts.at(1)),
+                                check);
       } else {
-        MAPIMG_LOG(_("unknown map option: '%s'"), mapargs[i]);
+        MAPIMG_LOG(_("unknown map option: '%s'"), qUtf8Printable(str));
         ret = FALSE;
       }
     } else {
-      MAPIMG_LOG(_("unknown map option: '%s'"), mapargs[i]);
+      MAPIMG_LOG(_("unknown map option: '%s'"), qUtf8Printable(str));
       ret = FALSE;
     }
-
-    free_tokens(mapopts, nmapopts);
 
     if (!ret) {
       break;
     }
   }
-  free_tokens(mapargs, nmapargs);
 
   /* sanity check */
   switch (pmapdef->player.show) {
@@ -851,7 +848,6 @@ bool mapimg_define(const char *maparg, bool check)
 /************************************************************************/ /**
    Helper function for mapimg_define().
  ****************************************************************************/
-#define NUM_MAX_FORMATARGS 2
 static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
                               const char *val, bool check)
 {
@@ -867,18 +863,19 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
   case MAPDEF_FORMAT:
     /* file format */
     {
-      char *formatargs[NUM_MAX_FORMATARGS];
-      int nformatargs;
+      QStringList formatargs;
       enum imageformat format;
       enum imagetool tool;
       bool error = TRUE;
 
       /* get format options */
-      nformatargs = get_tokens(val, formatargs, NUM_MAX_FORMATARGS, "|");
 
-      if (nformatargs == 2) {
-        tool = imagetool_by_name(formatargs[0], strcmp);
-        format = imageformat_by_name(formatargs[1], strcmp);
+      formatargs = QString(val).split("|");
+
+      if (formatargs.count() == 2) {
+        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
+        format =
+            imageformat_by_name(qUtf8Printable(formatargs.at(1)), strcmp);
 
         if (imageformat_is_valid(format) && imagetool_is_valid(tool)) {
           const struct toolkit *toolkit = img_toolkit_get(tool);
@@ -892,7 +889,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
         }
       } else {
         /* Only one argument to format. */
-        tool = imagetool_by_name(formatargs[0], strcmp);
+        tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
         if (imagetool_is_valid(tool)) {
           /* toolkit defined */
           const struct toolkit *toolkit = img_toolkit_get(tool);
@@ -904,7 +901,8 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
             error = FALSE;
           }
         } else {
-          format = imageformat_by_name(formatargs[0], strcmp);
+          format =
+              imageformat_by_name(qUtf8Printable(formatargs.at(0)), strcmp);
           if (imageformat_is_valid(format)) {
             /* format defined */
             img_toolkit_iterate(toolkit)
@@ -921,8 +919,6 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
           }
         }
       }
-
-      free_tokens(formatargs, nformatargs);
 
       if (error) {
         goto INVALID;
