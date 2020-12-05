@@ -825,7 +825,7 @@ hud_input_box QPushButton {
   padding: 2px;
 }
 
-sideWidget {
+sidebarWidget {
   color: white;
   selection-background-color: rgb(34, 150, 4);
   alternate-background-color: rgba(125, 25, 125, 125);
