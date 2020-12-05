@@ -27,7 +27,7 @@ GUI_FUNC_PROTO(struct sprite *, crop_sprite, struct sprite *source, int x,
                int mask_offset_x, int mask_offset_y, float scale,
                bool smooth)
 GUI_FUNC_PROTO(struct sprite *, create_sprite, int width, int height,
-               struct color *pcolor)
+               QColor *pcolor)
 GUI_FUNC_PROTO(void, get_sprite_dimensions, struct sprite *sprite,
                int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, struct sprite *s)

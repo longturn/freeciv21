@@ -592,7 +592,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       }
       break;
     case TTT_LINK: {
-      struct color *pcolor = NULL;
+      QColor *pcolor = NULL;
 
       switch (text_tag_link_type(ptag)) {
       case TLT_CITY:
@@ -611,7 +611,7 @@ QString apply_tags(QString str, const struct text_tag_list *tags,
       if (!pcolor) {
         break; /* Not a valid link type case. */
       }
-      color = pcolor->qcolor.name(QColor::HexRgb);
+      color = pcolor->name(QColor::HexRgb);
       str_col = QStringLiteral("<font color=\"%1\">").arg(color);
       mm.insert(stop, QStringLiteral("</a></font>"));
 

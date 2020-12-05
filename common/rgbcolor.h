@@ -28,7 +28,7 @@ struct color;
  * on demand at runtime). */
 struct rgbcolor {
   int r, g, b;
-  struct color *color;
+  QColor *color;
 };
 
 /* get 'struct color_list' and related functions: */

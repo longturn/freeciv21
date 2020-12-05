@@ -77,7 +77,7 @@ void draw_calculated_trade_routes(QPainter *painter)
   int dx, dy;
   float w, h;
   float x1, y1, x2, y2;
-  struct color *pcolor;
+  QColor *pcolor;
   QPen pen;
 
   if (!can_client_control() || king()->trade_gen.cities.empty()) {
@@ -106,7 +106,7 @@ void draw_calculated_trade_routes(QPainter *painter)
         pcolor = get_color(tileset, COLOR_MAPVIEW_TRADE_ROUTES_SOME_BUILT);
       }
 
-      pen.setColor(pcolor->qcolor);
+      pen.setColor(*pcolor);
       pen.setStyle(Qt::DashLine);
       pen.setDashOffset(4);
       pen.setWidth(1);

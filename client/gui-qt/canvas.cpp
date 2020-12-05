@@ -207,13 +207,13 @@ void canvas_put_unit_fogged(struct canvas *pcanvas,
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
  ****************************************************************************/
-void qtg_canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
                               int canvas_x, int canvas_y, int width,
                               int height)
 {
 
-  QBrush brush(pcolor->qcolor);
-  QPen pen(pcolor->qcolor);
+  QBrush brush(*pcolor);
+  QPen pen(*pcolor);
   QPainter p;
 
   p.begin(&pcanvas->map_pixmap);
@@ -237,7 +237,7 @@ void qtg_canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
  ****************************************************************************/
 void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
                                  struct sprite *psprite,
-                                 struct color *pcolor, int canvas_x,
+                                 QColor *pcolor, int canvas_x,
                                  int canvas_y)
 {
   int width, height;
@@ -250,14 +250,14 @@ void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
 /************************************************************************/ /**
    Draw a 1-pixel-width colored line onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy)
 {
   QPen pen;
   QPainter p;
 
-  pen.setColor(pcolor->qcolor);
+  pen.setColor(*pcolor);
   switch (ltype) {
   case LINE_NORMAL:
     pen.setWidth(1);
@@ -288,12 +288,12 @@ void qtg_canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
 /************************************************************************/ /**
    Draw a 1-pixel-width colored curved line onto the canvas.
  ****************************************************************************/
-void qtg_canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy)
 {
   QPen pen;
-  pen.setColor(pcolor->qcolor);
+  pen.setColor(*pcolor);
   QPainter p;
   QPainterPath path;
 
@@ -357,17 +357,16 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
    take care of this manually.  The text will not be NULL but may be empty.
  ****************************************************************************/
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
-                         enum client_font font, struct color *pcolor,
+                         enum client_font font, QColor *pcolor,
                          const QString& text)
 {
   QPainter p;
   QPen pen;
   QFont *afont;
-  QColor color(pcolor->qcolor);
   QFontMetrics *fm;
 
   afont = get_font(font);
-  pen.setColor(color);
+  pen.setColor(*pcolor);
   fm = new QFontMetrics(*afont);
 
   p.begin(&pcanvas->map_pixmap);

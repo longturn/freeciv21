@@ -170,7 +170,7 @@ QVariant plr_item::data(int column, int role) const
     return *pix;
     break;
   case COL_COLOR:
-    return get_player_color(tileset, ipplayer)->qcolor;
+    return *get_player_color(tileset, ipplayer);
     break;
   case COL_BOOLEAN:
     return pdc->bool_func(ipplayer);

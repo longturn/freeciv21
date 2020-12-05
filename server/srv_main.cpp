@@ -3219,7 +3219,7 @@ void server_game_free(void)
    Initialize client specific functions.
  **************************************************************************/
 struct color;
-void server_gui_color_free(struct color *pcolor)
+void server_gui_color_free(QColor *pcolor)
 {
   fc_assert_ret(pcolor == NULL);
 

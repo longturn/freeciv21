@@ -17,7 +17,7 @@
 
 #include "gui_proto_constructor.h"
 
-struct color;
+struct QColor;
 struct sprite;
 class QString;
 struct canvas; /* opaque type, real type is gui-dep */
@@ -44,16 +44,16 @@ GUI_FUNC_PROTO(void, canvas_put_sprite_citymode, struct canvas *pcanvas,
                int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
                int fog_x, int fog_y)
 GUI_FUNC_PROTO(void, canvas_put_rectangle, struct canvas *pcanvas,
-               struct color *pcolor, int canvas_x, int canvas_y, int width,
+               QColor *pcolor, int canvas_x, int canvas_y, int width,
                int height)
 GUI_FUNC_PROTO(void, canvas_fill_sprite_area, struct canvas *pcanvas,
-               struct sprite *psprite, struct color *pcolor, int canvas_x,
+               struct sprite *psprite, QColor *pcolor, int canvas_x,
                int canvas_y)
 GUI_FUNC_PROTO(void, canvas_put_line, struct canvas *pcanvas,
-               struct color *pcolor, enum line_type ltype, int start_x,
+               QColor *pcolor, enum line_type ltype, int start_x,
                int start_y, int dx, int dy)
 GUI_FUNC_PROTO(void, canvas_put_curved_line, struct canvas *pcanvas,
-               struct color *pcolor, enum line_type ltype, int start_x,
+               QColor *pcolor, enum line_type ltype, int start_x,
                int start_y, int dx, int dy)
 void canvas_put_unit_fogged(struct canvas *pcanvas,
                int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
@@ -68,7 +68,7 @@ enum client_font {
 GUI_FUNC_PROTO(void, get_text_size, int *width, int *height,
                enum client_font font, const QString &text)
 GUI_FUNC_PROTO(void, canvas_put_text, struct canvas *pcanvas, int canvas_x,
-               int canvas_y, enum client_font font, struct color *pcolor,
+               int canvas_y, enum client_font font, QColor *pcolor,
                const QString& text)
 
 #endif /* FC__CANVAS_G_H */

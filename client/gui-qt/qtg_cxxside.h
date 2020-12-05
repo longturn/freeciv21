@@ -37,7 +37,7 @@ void qtg_tileset_type_set(enum ts_type type);
 void qtg_free_intro_radar_sprites();
 struct sprite *qtg_load_gfxfile(const char *filename);
 struct sprite *qtg_create_sprite(int width, int height,
-                                 struct color *pcolor);
+                                 QColor *pcolor);
 void qtg_get_sprite_dimensions(struct sprite *sprite, int *width,
                                int *height);
 struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
@@ -46,8 +46,8 @@ struct sprite *qtg_crop_sprite(struct sprite *source, int x, int y,
                                float scale, bool smooth);
 void qtg_free_sprite(struct sprite *s);
 
-struct color *qtg_color_alloc(int r, int g, int b);
-void qtg_color_free(struct color *pcolor);
+QColor *qtg_color_alloc(int r, int g, int b);
+void qtg_color_free(QColor *pcolor);
 
 struct canvas *qtg_canvas_create(int width, int height);
 void qtg_canvas_free(struct canvas *store);
@@ -65,23 +65,23 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
 void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
                                   int canvas_y, struct sprite *psprite,
                                   bool fog, int fog_x, int fog_y);
-void qtg_canvas_put_rectangle(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
                               int canvas_x, int canvas_y, int width,
                               int height);
 void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
                                  struct sprite *psprite,
-                                 struct color *pcolor, int canvas_x,
+                                 QColor *pcolor, int canvas_x,
                                  int canvas_y);
-void qtg_canvas_put_line(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_line(struct canvas *pcanvas, QColor *pcolor,
                          enum line_type ltype, int start_x, int start_y,
                          int dx, int dy);
-void qtg_canvas_put_curved_line(struct canvas *pcanvas, struct color *pcolor,
+void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
                                 enum line_type ltype, int start_x,
                                 int start_y, int dx, int dy);
 void qtg_get_text_size(int *width, int *height, enum client_font font,
                        const QString&);
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
-                         enum client_font font, struct color *pcolor,
+                         enum client_font font, QColor *pcolor,
                          const QString& text);
 
 void qtg_set_rulesets(int num_rulesets, char **rulesets);

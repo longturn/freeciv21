@@ -47,7 +47,7 @@ struct gui_funcs {
   void (*free_intro_radar_sprites)(void);
   struct sprite *(*load_gfxfile)(const char *filename);
   struct sprite *(*create_sprite)(int width, int height,
-                                  struct color *pcolor);
+                                  QColor *pcolor);
   void (*get_sprite_dimensions)(struct sprite *sprite, int *width,
                                 int *height);
   struct sprite *(*crop_sprite)(struct sprite *source, int x, int y,
@@ -56,8 +56,8 @@ struct gui_funcs {
                                 float scale, bool smooth);
   void (*free_sprite)(struct sprite *s);
 
-  struct color *(*color_alloc)(int r, int g, int b);
-  void (*color_free)(struct color *pcolor);
+  QColor *(*color_alloc)(int r, int g, int b);
+  void (*color_free)(QColor *pcolor);
 
   struct canvas *(*canvas_create)(int width, int height);
   void (*canvas_free)(struct canvas *store);
@@ -76,23 +76,23 @@ struct gui_funcs {
   void (*canvas_put_sprite_citymode)(struct canvas *pcanvas, int canvas_x,
                                    int canvas_y, struct sprite *psprite,
                                    bool fog, int fog_x, int fog_y);
-  void (*canvas_put_rectangle)(struct canvas *pcanvas, struct color *pcolor,
+  void (*canvas_put_rectangle)(struct canvas *pcanvas, QColor *pcolor,
                                int canvas_x, int canvas_y, int width,
                                int height);
   void (*canvas_fill_sprite_area)(struct canvas *pcanvas,
                                   struct sprite *psprite,
-                                  struct color *pcolor, int canvas_x,
+                                  QColor *pcolor, int canvas_x,
                                   int canvas_y);
-  void (*canvas_put_line)(struct canvas *pcanvas, struct color *pcolor,
+  void (*canvas_put_line)(struct canvas *pcanvas, QColor *pcolor,
                           enum line_type ltype, int start_x, int start_y,
                           int dx, int dy);
   void (*canvas_put_curved_line)(struct canvas *pcanvas,
-                                 struct color *pcolor, enum line_type ltype,
+                                 QColor *pcolor, enum line_type ltype,
                                  int start_x, int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
                         const QString& text);
   void (*canvas_put_text)(struct canvas *pcanvas, int canvas_x, int canvas_y,
-                          enum client_font font, struct color *pcolor,
+                          enum client_font font, QColor *pcolor,
                           const QString&);
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);

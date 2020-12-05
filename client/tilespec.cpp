@@ -1422,7 +1422,7 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
   }
 
   qCritical("Could not load gfx file \"%s\".", gfx_filename);
-  color *c = color_alloc(255, 0, 0);
+  QColor *c = color_alloc(255, 0, 0);
   return create_sprite(20, 20, c);
 }
 
@@ -2537,7 +2537,7 @@ static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
 /************************************************************************/ /**
    Create a sprite with the given color and tag.
  ****************************************************************************/
-static struct sprite *create_plr_sprite(struct color *pcolor)
+static struct sprite *create_plr_sprite(QColor *pcolor)
 {
   struct sprite *sprite;
 

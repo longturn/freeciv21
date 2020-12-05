@@ -113,7 +113,7 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x,
 /************************************************************************/ /**
    Return color for overview map tile.
  ****************************************************************************/
-static struct color *overview_tile_color(struct tile *ptile)
+static QColor *overview_tile_color(struct tile *ptile)
 {
   if (gui_options.overview.layers[OLAYER_CITIES]) {
     struct city *pcity = tile_city(ptile);

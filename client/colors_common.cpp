@@ -86,7 +86,7 @@ void color_system_free(struct color_system *colors)
 /************************************************************************/ /**
    Return the RGB color, allocating it if necessary.
  ****************************************************************************/
-struct color *ensure_color(struct rgbcolor *rgb)
+QColor *ensure_color(struct rgbcolor *rgb)
 {
   fc_assert_ret_val(rgb != NULL, NULL);
 
@@ -99,7 +99,7 @@ struct color *ensure_color(struct rgbcolor *rgb)
 /************************************************************************/ /**
    Return a pointer to the given "standard" color.
  ****************************************************************************/
-struct color *get_color(const struct tileset *t, enum color_std stdcolor)
+QColor *get_color(const struct tileset *t, enum color_std stdcolor)
 {
   struct color_system *colors = get_color_system(t);
 
@@ -124,7 +124,7 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
    In pregame, callers should check player_has_color() before calling
    this.
  ****************************************************************************/
-struct color *get_player_color(const struct tileset *t,
+QColor *get_player_color(const struct tileset *t,
                                const struct player *pplayer)
 {
   fc_assert_ret_val(pplayer != NULL, NULL);
@@ -136,7 +136,7 @@ struct color *get_player_color(const struct tileset *t,
 /************************************************************************/ /**
    Return a pointer to the given "terrain" color.
  ****************************************************************************/
-struct color *get_terrain_color(const struct tileset *t,
+QColor *get_terrain_color(const struct tileset *t,
                                 const struct terrain *pterrain)
 {
   fc_assert_ret_val(pterrain != NULL, NULL);
@@ -149,12 +149,12 @@ struct color *get_terrain_color(const struct tileset *t,
    Find the colour from 'candidates' with the best perceptual contrast from
    'subject'.
  ****************************************************************************/
-struct color *color_best_contrast(struct color *subject,
-                                  struct color **candidates, int ncandidates)
+QColor *color_best_contrast(QColor *subject,
+                                  QColor **candidates, int ncandidates)
 {
   int sbright = color_brightness_score(subject), bestdiff = 0;
   int i;
-  struct color *best = NULL;
+  QColor *best = NULL;
 
   fc_assert_ret_val(candidates != NULL, NULL);
   fc_assert_ret_val(ncandidates > 0, NULL);

@@ -118,21 +118,21 @@ struct rgbcolor;
 #define SPECENUM_COUNT COLOR_LAST
 #include "specenum_gen.h"
 
-struct color *get_color(const struct tileset *t, enum color_std stdcolor);
+QColor *get_color(const struct tileset *t, enum color_std stdcolor);
 bool player_has_color(const struct tileset *t, const struct player *pplayer);
-struct color *get_player_color(const struct tileset *t,
+QColor *get_player_color(const struct tileset *t,
                                const struct player *pplayer);
-struct color *get_terrain_color(const struct tileset *t,
+QColor *get_terrain_color(const struct tileset *t,
                                 const struct terrain *pterrain);
-struct color *ensure_color(struct rgbcolor *rgb);
+QColor *ensure_color(struct rgbcolor *rgb);
 
 /* Functions used by the tileset to allocate the color system. */
 struct color_system *color_system_read(struct section_file *file);
 void color_system_free(struct color_system *colors);
 
 /* Utilities for color values */
-struct color *color_best_contrast(struct color *subject,
-                                  struct color **candidates,
+QColor *color_best_contrast(QColor *subject,
+                                  QColor **candidates,
                                   int ncandidates);
 
 

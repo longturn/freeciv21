@@ -836,7 +836,7 @@ void get_reqtree_dimensions(struct reqtree *reqtree, int *width, int *height)
 /*********************************************************************/ /**
    Return a background color of node's rectangle
  *************************************************************************/
-static color* node_color(struct tree_node *node)
+static QColor* node_color(struct tree_node *node)
 {
   if (!node->is_dummy) {
     struct research *research = research_get(client_player());
@@ -963,7 +963,7 @@ static enum reqtree_edge_type get_edge_type(struct tree_node *node,
    Return a stroke color for an edge between two nodes
    if node is a dummy, dest_node can be NULL
  *************************************************************************/
-static color* edge_color(struct tree_node *node,
+static QColor* edge_color(struct tree_node *node,
                                  struct tree_node *dest_node)
 {
   enum reqtree_edge_type type = get_edge_type(node, dest_node);
@@ -995,7 +995,7 @@ void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
   int i, j, k;
   int swidth, sheight;
   struct sprite *sprite;
-  struct color *color;
+  QColor *color;
 
   /* draw the diagram */
   for (i = 0; i < tree->num_layers; i++) {

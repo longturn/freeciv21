@@ -48,7 +48,7 @@ extern QApplication *qapp;
  ****************************************************************************/
 diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
 {
-  color *colr;
+  QColor *colr;
   QString text;
   QString text2;
   QString text_tooltip;
@@ -67,7 +67,7 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
   char plr_buf[4 * MAX_LEN_NAME];
   const struct player_diplstate *state;
   QHeaderView *header;
-  struct color *textcolors[2] = {
+  QColor *textcolors[2] = {
       get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
       get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
   if (counterpart == initiated_from) {
@@ -99,10 +99,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
             .toHtmlEscaped()
       + "</center></h3></b>";
   colr = get_player_color(tileset, player_by_number(initiated_from));
-  text = "<style>h3{background-color: " + colr->qcolor.name() + ";"
+  text = "<style>h3{background-color: " + colr->name() + ";"
          + "color: "
          + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->qcolor.name()
+               ->name()
          + "}</style>" + text;
   label3->setText(text);
   label3->setMinimumWidth(300);
@@ -112,10 +112,10 @@ diplo_wdg::diplo_wdg(int counterpart, int initiated_from) : QWidget()
                .toHtmlEscaped()
          + "</center></h3></b></body>";
   colr = get_player_color(tileset, player_by_number(counterpart));
-  text = "<style>h3{background-color: " + colr->qcolor.name() + ";"
+  text = "<style>h3{background-color: " + colr->name() + ";"
          + "color: "
          + color_best_contrast(colr, textcolors, ARRAY_SIZE(textcolors))
-               ->qcolor.name()
+               ->name()
          + "}</style>" + text;
   label4->setMinimumWidth(300);
   label4->setText(text);

@@ -47,7 +47,7 @@ static int tool_player_tile_city_id_get(const struct tile *ptile,
 /***********************************************************************/ /**
    Unused but required by fc_interface_init()
  ***************************************************************************/
-static void tool_gui_color_free(struct color *pcolor)
+static void tool_gui_color_free(QColor *pcolor)
 {
   qCritical("Assumed unused function %s called.", __FUNCTION__);
 }
