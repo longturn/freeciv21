@@ -139,7 +139,6 @@ bool city_item::setData(int column, const QVariant &value, int role)
 QVariant city_item::data(int column, int role) const
 {
   struct city_report_spec *spec;
-  char buf[64];
 
   if (role == Qt::UserRole && column == 0) {
     return QVariant::fromValue((void *) i_city);
@@ -148,9 +147,8 @@ QVariant city_item::data(int column, int role) const
     return QVariant();
   }
   spec = city_report_specs + column;
-  fc_snprintf(buf, sizeof(buf), "%*s", NEG_VAL(spec->width),
-              spec->func(i_city, spec->data));
-  return QString(buf).trimmed();
+  QString buf = QString("%1").arg(spec->func(i_city, spec->data));
+  return buf.trimmed();
 }
 
 /***********************************************************************/ /**
@@ -221,16 +219,14 @@ bool city_model::setData(const QModelIndex &index, const QVariant &value,
 QVariant city_model::headerData(int section, Qt::Orientation orientation,
                                 int role) const
 {
-  char buf[64];
   struct city_report_spec *spec;
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
       spec = city_report_specs + section;
-      fc_snprintf(buf, sizeof(buf), "%*s\n%*s", NEG_VAL(spec->width),
-                  spec->title1 ? spec->title1 : "", NEG_VAL(spec->width),
-                  spec->title2 ? spec->title2 : "");
-      return QString(buf).trimmed();
+      QString buf = QString("%1\n%2").arg(spec->title1 ? spec->title1 : "",
+                                          spec->title2 ? spec->title2 : "");
+      return buf.trimmed();
     }
     if (role == Qt::ToolTipRole) {
       spec = city_report_specs + section;
@@ -462,7 +458,6 @@ void city_widget::display_list_menu(const QPoint)
   QMenu *tmp2_menu;
   QMenu *tmp_menu;
   bool select_only = false;
-  char buf[200];
   int sell_gold;
   QMenu *list_menu;
   QAction cty_view(style()->standardIcon(QStyle::SP_CommandLink),
@@ -474,7 +469,7 @@ void city_widget::display_list_menu(const QPoint)
   for (auto pcity : qAsConst(selected_cities)) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
-  fc_snprintf(buf, sizeof(buf), _("Buy ( Cost: %d )"), sell_gold);
+  QString buf = QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
 
   QAction cty_buy(QString(buf), 0);
   QAction cty_center(style()->standardIcon(QStyle::SP_ArrowRight),
@@ -545,8 +540,7 @@ void city_widget::display_list_menu(const QPoint)
     enum menu_labels m_state;
     cid id;
     struct universal target;
-    char buf[200];
-    const char *imprname;
+    QString imprname;
     const struct impr_type *building;
     Impr_type_id impr_id;
     int city_id;
@@ -658,9 +652,7 @@ void city_widget::display_list_menu(const QPoint)
           if (sell_ask) {
             hud_message_box *ask = new hud_message_box(king()->central_wdg);
             imprname = improvement_name_translation(building);
-            fc_snprintf(buf, sizeof(buf),
-                        _("Are you sure you want to sell those %s?"),
-                        imprname);
+            QString buf = QString(_("Are you sure you want to sell those %1?")).arg(imprname);
             sell_ask = false;
             ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             ask->setDefaultButton(QMessageBox::Cancel);
@@ -1025,8 +1017,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   int i, item, targets_used;
   QString str;
-  char *row[4];
-  char buf[4][64];
+  char buf[64];
   struct city **city_data;
   int num_sel = 0;
 
@@ -1055,18 +1046,14 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
       collect_production_targets(targets, city_data, num_sel, append_units,
                                  append_wonders, true, test_func);
   name_and_sort_items(targets, targets_used, items, true, NULL);
-  for (i = 0; i < 4; i++) {
-    row[i] = buf[i];
-  }
   list.clear();
   for (item = 0; item < targets_used; item++) {
     struct universal target = items[item].item;
-    char txt[256];
 
     str.clear();
-    get_city_dialog_production_row(row, sizeof(buf[0]), &target, NULL);
-    fc_snprintf(txt, ARRAY_SIZE(txt), "%s ", row[0]);
-    str = str + QString(txt);
+    universal_name_translation(&target, buf, sizeof(buf));
+    QString txt = QString("%1 ").arg(buf);
+    str = str + txt;
     list.insert(str, cid_encode(target));
   }
 }

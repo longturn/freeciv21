@@ -20,7 +20,6 @@
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"
-#include "mem.h"
 #include "support.h"
 
 #include "fc_cmdline.h"

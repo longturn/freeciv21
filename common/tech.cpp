@@ -23,7 +23,6 @@
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
-#include "mem.h"    /* free */
 #include "shared.h" /* ARRAY_SIZE */
 #include "string_vector.h"
 #include "support.h"

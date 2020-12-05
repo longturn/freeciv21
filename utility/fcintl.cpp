@@ -17,9 +17,6 @@
 
 #include <string.h>
 
-/* utility */
-#include "mem.h"
-
 #include "fcintl.h"
 
 static bool autocap = FALSE;

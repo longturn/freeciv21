@@ -412,8 +412,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
 
   /* Copy nodes from local array to dynamically allocated one.
    * Skip non-existing entries */
-  tree->nodes = static_cast<tree_node **>(
-      fc_calloc(advance_count(), sizeof(*tree->nodes)));
+  tree->nodes = new tree_node*[advance_count()]();
   j = 0;
   advance_index_iterate(A_FIRST, tech)
   {

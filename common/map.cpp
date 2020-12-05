@@ -23,7 +23,6 @@
 #include "fcintl.h"
 #include "iterator.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "shared.h"
 #include "support.h"

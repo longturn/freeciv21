@@ -109,8 +109,8 @@ void research_diagram::create_tooltip_help()
       nheight = node->node_height;
 
       if (!node->is_dummy) {
-        const char *text = research_advance_name_translation(
-            research_get(client_player()), node->tech);
+        QString text = QString(research_advance_name_translation(
+            research_get(client_player()), node->tech));
         int text_w, text_h;
         int icon_startx;
 

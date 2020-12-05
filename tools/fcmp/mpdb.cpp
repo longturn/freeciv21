@@ -20,7 +20,6 @@
 /* utility */
 #include "capability.h"
 #include "fcintl.h"
-#include "mem.h"
 #include "registry.h"
 
 /* modinst */

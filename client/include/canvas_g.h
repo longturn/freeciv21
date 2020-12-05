@@ -19,7 +19,7 @@
 
 struct color;
 struct sprite;
-
+class QString;
 struct canvas; /* opaque type, real type is gui-dep */
 
 enum line_type { LINE_NORMAL, LINE_BORDER, LINE_TILE_FRAME, LINE_GOTO };
@@ -66,9 +66,9 @@ enum client_font {
   FONT_COUNT
 };
 GUI_FUNC_PROTO(void, get_text_size, int *width, int *height,
-               enum client_font font, const char *text)
+               enum client_font font, const QString &text)
 GUI_FUNC_PROTO(void, canvas_put_text, struct canvas *pcanvas, int canvas_x,
                int canvas_y, enum client_font font, struct color *pcolor,
-               const char *text)
+               const QString& text)
 
 #endif /* FC__CANVAS_G_H */

@@ -20,9 +20,6 @@
 // Qt
 #include <QLoggingCategory>
 
-/* utility */
-#include "mem.h"
-
 /* common */
 #include "game.h"
 #include "map.h"

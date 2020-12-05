@@ -29,7 +29,6 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "netfile.h"
 #include "registry.h"
 

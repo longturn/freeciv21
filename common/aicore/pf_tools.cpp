@@ -20,7 +20,6 @@
 /* utility */
 #include "bitvector.h"
 #include "log.h"
-#include "mem.h"
 
 /* common */
 #include "base.h"

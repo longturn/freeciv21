@@ -502,17 +502,17 @@ int chatwdg::default_size(int lines)
 void chatwdg::make_link(struct tile *ptile)
 {
   struct unit *punit;
-  char buf[MAX_LEN_MSG];
+  QString buf;
 
   punit = find_visible_unit(ptile);
   if (tile_city(ptile)) {
-    sz_strlcpy(buf, city_link(tile_city(ptile)));
+    buf = city_link(tile_city(ptile));
   } else if (punit) {
-    sz_strlcpy(buf, unit_link(punit));
+    buf = unit_link(punit);
   } else {
-    sz_strlcpy(buf, tile_link(ptile));
+    buf =  tile_link(ptile);
   }
-  chat_line->insert(QString(buf));
+  chat_line->insert(buf);
   chat_line->setFocus();
 }
 
@@ -709,15 +709,13 @@ static bool is_plain_public_message(const QString &s)
    Appends the string to the chat output window.  The string should be
    inserted on its own line, although it will have no newline.
  ***************************************************************************/
-void qtg_real_output_window_append(const char *astring,
+void qtg_real_output_window_append(const QString& astring,
                                    const struct text_tag_list *tags,
                                    int conn_id)
 {
-  QString str;
   QString wakeup;
 
-  str = QString::fromUtf8(astring);
-  king()->set_status_bar(str);
+  king()->set_status_bar(astring);
 
   wakeup = gui_options.gui_qt_wakeup_text;
 
@@ -726,19 +724,19 @@ void qtg_real_output_window_append(const char *astring,
     wakeup = wakeup.arg(client.conn.username);
   }
 
-  if (str.contains(client.conn.username)) {
+  if (astring.contains(client.conn.username)) {
     qapp->alert(king()->central_wdg);
   }
 
   /* Play sound if we encountered wakeup string */
-  if (str.contains(wakeup) && client_state() < C_S_RUNNING
+  if (astring.contains(wakeup) && client_state() < C_S_RUNNING
       && !wakeup.isEmpty()) {
     qapp->alert(king()->central_wdg);
     audio_play_sound("e_player_wake", NULL);
   }
 
   chat_listener::update_word_list();
-  chat_listener::invoke(&chat_listener::chat_message_received, str, tags);
+  chat_listener::invoke(&chat_listener::chat_message_received, astring, tags);
 }
 
 /***********************************************************************/ /**

@@ -17,7 +17,6 @@
 
 /* utility */
 #include "log.h"
-#include "mem.h"
 
 /* common */
 #include "game.h"

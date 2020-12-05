@@ -24,7 +24,6 @@
 /* utility */
 #include "bitvector.h"
 #include "log.h"
-#include "mem.h"
 #include "shared.h"
 
 /* common */

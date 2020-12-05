@@ -23,7 +23,6 @@
 #include "capability.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "rand.h"
 #include "string_vector.h"
 #include "support.h"
@@ -163,8 +162,7 @@ static void packhand_init(void)
   invisible.cities = city_list_new();
 
   /* Can't use player_new() here, as it will register the player. */
-  invisible.placeholder =
-      static_cast<player *>(fc_calloc(1, sizeof(*invisible.placeholder)));
+  invisible.placeholder = new player[1]();
   memset(invisible.placeholder, 0, sizeof(*invisible.placeholder));
   /* Set some values to prevent bugs ... */
   sz_strlcpy(invisible.placeholder->name, ANON_PLAYER_NAME);
@@ -3824,8 +3822,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   if (pterrain->resources != NULL) {
     delete[] pterrain->resources;
   }
-  pterrain->resources = static_cast<extra_type **>(
-      fc_calloc(p->num_resources + 1, sizeof(*pterrain->resources)));
+  pterrain->resources = new extra_type*[p->num_resources + 1]();
   for (j = 0; j < p->num_resources; j++) {
     pterrain->resources[j] = extra_by_number(p->resources[j]);
     if (!pterrain->resources[j]) {

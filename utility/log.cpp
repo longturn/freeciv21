@@ -34,7 +34,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "fcthread.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 

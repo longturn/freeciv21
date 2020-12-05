@@ -30,7 +30,6 @@ extern "C" {
 /* utility */
 #include "astring.h"
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 
 /* common/scriptcore */

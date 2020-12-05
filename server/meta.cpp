@@ -33,7 +33,6 @@
 #include "fcintl.h"
 #include "fcthread.h"
 #include "log.h"
-#include "mem.h"
 #include "support.h"
 #include "timing.h"
 

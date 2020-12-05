@@ -27,7 +27,6 @@
 #include "fc_cmdline.h"
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "string_vector.h"
 #include "timing.h"
 

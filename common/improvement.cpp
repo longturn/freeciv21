@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "mem.h"
 #include "shared.h" /* ARRAY_SIZE */
 #include "string_vector.h"
 #include "support.h"

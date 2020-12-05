@@ -159,7 +159,6 @@
 #include "inputfile.h"
 #include "ioz.h"
 #include "log.h"
-#include "mem.h"
 #include "registry.h"
 #include "section_file.h"
 #include "shared.h"

@@ -22,7 +22,6 @@
 
 /* utility */
 #include "astring.h"
-#include "mem.h"
 #include "shared.h"
 #include "support.h"
 

@@ -38,7 +38,7 @@ struct gui_funcs {
   void (*insert_client_build_info)(char *outbuf, size_t outlen);
 
   void (*version_message)(const char *vertext);
-  void (*real_output_window_append)(const char *astring,
+  void (*real_output_window_append)(const QString& astring,
                                     const struct text_tag_list *tags,
                                     int conn_id);
 
@@ -90,10 +90,10 @@ struct gui_funcs {
                                  struct color *pcolor, enum line_type ltype,
                                  int start_x, int start_y, int dx, int dy);
   void (*get_text_size)(int *width, int *height, enum client_font font,
-                        const char *text);
+                        const QString& text);
   void (*canvas_put_text)(struct canvas *pcanvas, int canvas_x, int canvas_y,
                           enum client_font font, struct color *pcolor,
-                          const char *text);
+                          const QString&);
 
   void (*set_rulesets)(int num_rulesets, char **rulesets);
   void (*options_extra_init)(void);
