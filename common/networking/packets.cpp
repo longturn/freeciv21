@@ -22,7 +22,6 @@
 
 /* utility */
 #include "capability.h"
-#include "fc_cmdline.h"
 #include "fcintl.h"
 #include "log.h"
 #include "support.h"
