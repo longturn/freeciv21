@@ -697,12 +697,12 @@ void real_science_report_dialog_update(void *unused)
 
   if (blk) {
     queen()->sw_science->keep_blinking = true;
-    queen()->sw_science->set_custom_labels(str);
+    queen()->sw_science->setCustomLabels(str);
     queen()->sw_science->sblink();
   } else {
     queen()->sw_science->keep_blinking = false;
-    queen()->sw_science->set_custom_labels(str);
-    queen()->sw_science->update_final_pixmap();
+    queen()->sw_science->setCustomLabels(str);
+    queen()->sw_science->updateFinalPixmap();
   }
   queen()->updateSidebarTooltips();
 

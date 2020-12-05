@@ -356,8 +356,8 @@ void update_mouse_cursor(enum cursor_type new_cursor_type)
  **************************************************************************/
 void qtg_update_timeout_label(void)
 {
-  queen()->sw_endturn->set_custom_labels(QString(get_timeout_label_text()));
-  queen()->sw_endturn->update_final_pixmap();
+  queen()->sw_endturn->setCustomLabels(QString(get_timeout_label_text()));
+  queen()->sw_endturn->updateFinalPixmap();
 }
 
 /**********************************************************************/ /**
@@ -371,7 +371,7 @@ void update_turn_done_button(bool do_restore)
   if (!get_turn_done_button_state()) {
     return;
   }
-  side_blink_endturn(do_restore);
+  sidebarBlinkEndturn(do_restore);
 }
 
 /**********************************************************************/ /**
@@ -382,7 +382,7 @@ void update_turn_done_button(bool do_restore)
 void set_indicator_icons(struct sprite *bulb, struct sprite *sol,
                          struct sprite *flake, struct sprite *gov)
 {
-  queen()->sw_indicators->update_final_pixmap();
+  queen()->sw_indicators->updateFinalPixmap();
 }
 
 /**********************************************************************/ /**

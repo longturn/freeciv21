@@ -18,9 +18,9 @@
 
 class fc_client;
 class map_view;
-class fc_sidebar;
+class sidebar;
 class minimap_view;
-class fc_sidewidget;
+class sidebarWidget;
 class hud_units;
 class info_tab;
 class hud_battle_log;
@@ -61,7 +61,7 @@ public:
   void updateInfoLabel();
   QWidget *game_main_widget;
   fc_game_tab_widget *game_tab_widget;
-  fc_sidebar *sidebar_wdg;
+  sidebar *sidebar_wdg;
   goto_dialog *gtd;
   units_select *unit_selector;
   hud_battle_log *battlelog_wdg;
@@ -70,21 +70,21 @@ public:
   map_view *mapview_wdg;
   minimap_view *minimapview_wdg;
   xvote *x_vote;
-  fc_sidewidget *sw_diplo;
-  fc_sidewidget *sw_indicators;
-  fc_sidewidget *sw_endturn;
-  fc_sidewidget *sw_science;
+  sidebarWidget *sw_diplo;
+  sidebarWidget *sw_indicators;
+  sidebarWidget *sw_endturn;
+  sidebarWidget *sw_science;
 public slots:
 private slots:
   void updateInfoLabelTimeout();
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;
-  fc_sidewidget *sw_cities;
-  fc_sidewidget *sw_cunit;
-  fc_sidewidget *sw_economy;
-  fc_sidewidget *sw_map;
-  fc_sidewidget *sw_tax;
+  sidebarWidget *sw_cities;
+  sidebarWidget *sw_cunit;
+  sidebarWidget *sw_economy;
+  sidebarWidget *sw_map;
+  sidebarWidget *sw_tax;
 };
 
 /**********************************************************************/ /**

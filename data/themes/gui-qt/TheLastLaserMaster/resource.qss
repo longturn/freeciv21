@@ -847,7 +847,7 @@ hud_unit_loader::item:hover {
   background: #3399FF;
 }
 
-fc_sidewidget {
+sideWidget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(100, 30, 30);

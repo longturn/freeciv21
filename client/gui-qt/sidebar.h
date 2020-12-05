@@ -20,39 +20,39 @@ class QVBoxLayout;
 typedef void (*pfcn_bool)(bool);
 typedef void (*pfcn)(void);
 
-void side_blink_endturn(bool do_restore);
-void side_center_unit();
-void side_disable_endturn(bool do_restore);
-void side_finish_turn(bool nothing);
-void side_indicators_menu();
-void side_rates_wdg(bool nothing);
-void side_right_click_diplomacy();
-void side_right_click_science();
-void side_left_click_science(bool nothing);
-void side_show_map(bool nothing);
+void sidebarBlinkEndturn(bool do_restore);
+void sidebarCenterUnit();
+void sidebarDisableEndturn(bool do_restore);
+void sidebarFinishTurn(bool nothing);
+void sidebarIndicatorsMenu();
+void sidebarRatesWdg(bool nothing);
+void sidebarRightClickDiplomacy();
+void sidebarRightClickScience();
+void sidebarLeftClickScience(bool nothing);
+void sidebarShowMap(bool nothing);
 
 /***************************************************************************
   Class representing single widget(icon) on sidebar
 ***************************************************************************/
-class fc_sidewidget : public QWidget {
+class sidebarWidget : public QWidget {
   Q_OBJECT
 public:
-  fc_sidewidget(QPixmap *pix, const QString &label, const QString &pg,
+  sidebarWidget(QPixmap *pix, const QString &label, const QString &pg,
                 pfcn_bool func, int type = SW_STD);
-  ~fc_sidewidget();
-  int get_priority();
+  ~sidebarWidget();
+  int getPriority();
   QPixmap *get_pixmap();
   void paint(QPainter *painter, QPaintEvent *event);
-  void resize_pixmap(int width, int height);
-  void set_custom_labels(const QString &);
-  void set_label(const QString &str);
-  void set_left_click(pfcn_bool func);
-  void set_pixmap(QPixmap *pm);
-  void set_right_click(pfcn func);
-  void set_tooltip(const QString &tooltip);
-  void set_wheel_down(pfcn func);
-  void set_wheel_up(pfcn func);
-  void update_final_pixmap();
+  void resizePixmap(int width, int height);
+  void setCustomLabels(const QString &);
+  void setLabel(const QString &str);
+  void setLeftClick(pfcn_bool func);
+  void setPixmap(QPixmap *pm);
+  void setRightClick(pfcn func);
+  void setTooltip(const QString &tooltip);
+  void setWheelDown(pfcn func);
+  void setWheelUp(pfcn func);
+  void updateFinalPixmap();
 
   bool blink;
   bool keep_blinking;
@@ -61,7 +61,7 @@ public:
   QString page;
 public slots:
   void sblink();
-  void some_slot();
+  void someSlot();
 
 protected:
   void contextMenuEvent(QContextMenuEvent *event);
@@ -91,15 +91,15 @@ private:
 /***************************************************************************
   Freeciv sidebar
 ***************************************************************************/
-class fc_sidebar : public QWidget {
+class sidebar : public QWidget {
   Q_OBJECT
 public:
-  fc_sidebar();
-  ~fc_sidebar();
-  void add_widget(fc_sidewidget *fsw);
+  sidebar();
+  ~sidebar();
+  void addWidget(sidebarWidget *fsw);
   void paint(QPainter *painter, QPaintEvent *event);
-  void resize_me(int height, bool force = false);
-  QList<fc_sidewidget *> objects;
+  void resizeMe(int height, bool force = false);
+  QList<sidebarWidget *> objects;
 
 protected:
   void paintEvent(QPaintEvent *event);

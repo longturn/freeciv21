@@ -683,12 +683,12 @@ void diplo_wdg::update_wdg()
  ****************************************************************************/
 void diplo_wdg::restore_pixmap()
 {
-  queen()->sw_diplo->set_pixmap(
+  queen()->sw_diplo->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("nations")));
-  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
                                    queen()->sw_diplo->height());
-  queen()->sw_diplo->set_custom_labels(QString());
-  queen()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->setCustomLabels(QString());
+  queen()->sw_diplo->updateFinalPixmap();
 }
 
 /************************************************************************/ /**
@@ -900,12 +900,12 @@ void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
   hmid = qMax(1, hmid);
   p.drawPixmap(1, hmid, *pix2);
   p.end();
-  queen()->sw_diplo->set_pixmap(pix3);
-  queen()->sw_diplo->resize_pixmap(queen()->sw_diplo->width(),
+  queen()->sw_diplo->setPixmap(pix3);
+  queen()->sw_diplo->resizePixmap(queen()->sw_diplo->width(),
                                    queen()->sw_diplo->height());
-  queen()->sw_diplo->set_custom_labels(
+  queen()->sw_diplo->setCustomLabels(
       QString(nation_plural_for_player(player_by_number(counterpart))));
-  queen()->sw_diplo->update_final_pixmap();
+  queen()->sw_diplo->updateFinalPixmap();
   delete pix2;
   if (!queen()->isRepoDlgOpen(QStringLiteral("DDI"))) {
     dd = new diplo_dlg(counterpart, initiated_from);
