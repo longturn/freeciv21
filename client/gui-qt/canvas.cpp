@@ -387,25 +387,25 @@ QFont *get_font(client_font font)
 
   switch (font) {
   case FONT_CITY_NAME:
-    qf = fc_font::instance()->get_font(fonts::city_names);
+    qf = fcFont::instance()->getFont(fonts::city_names);
     if (king()->map_scale != 1.0f && king()->map_font_scale) {
-      ssize = ceil(king()->map_scale * fc_font::instance()->city_fontsize);
+      ssize = ceil(king()->map_scale * fcFont::instance()->city_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
       }
     }
     break;
   case FONT_CITY_PROD:
-    qf = fc_font::instance()->get_font(fonts::city_productions);
+    qf = fcFont::instance()->getFont(fonts::city_productions);
     if (king()->map_scale != 1.0f && king()->map_font_scale) {
-      ssize = ceil(king()->map_scale * fc_font::instance()->prod_fontsize);
+      ssize = ceil(king()->map_scale * fcFont::instance()->prod_fontsize);
       if (qf->pointSize() != ssize) {
         qf->setPointSize(ssize);
       }
     }
     break;
   case FONT_REQTREE_TEXT:
-    qf = fc_font::instance()->get_font(fonts::reqtree_text);
+    qf = fcFont::instance()->getFont(fonts::reqtree_text);
     break;
   case FONT_COUNT:
     qf = NULL;

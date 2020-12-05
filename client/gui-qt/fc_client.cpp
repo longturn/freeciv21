@@ -52,7 +52,7 @@
 #include "sprite.h"
 #include "voteinfo_bar.h"
 
-fc_font *fc_font::m_instance = 0;
+fcFont *fcFont::m_instance = 0;
 extern "C" void real_science_report_dialog_update(void *);
 extern void write_shortcuts();
 
@@ -72,9 +72,9 @@ fc_client::fc_client()
     pages_layout[i] = NULL;
     pages[i] = NULL;
   }
-  fc_font::instance()->init_fonts();
+  fcFont::instance()->initFonts();
   read_settings();
-  QApplication::setFont(*fc_font::instance()->get_font(fonts::default_font));
+  QApplication::setFont(*fcFont::instance()->getFont(fonts::default_font));
   QString path;
 
   central_wdg = new QWidget;
@@ -661,7 +661,7 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   QHBoxLayout *hb;
   QPushButton *qpb;
   int h;
-  QFont *f = fc_font::instance()->get_font(fonts::default_font);
+  QFont *f = fcFont::instance()->getFont(fonts::default_font);
 
   if (f->pointSize() > 0) {
     h = f->pointSize();

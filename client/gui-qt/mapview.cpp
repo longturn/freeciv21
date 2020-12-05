@@ -555,7 +555,7 @@ void mapview_thaw(void)
 info_tile::info_tile(struct tile *ptile, QWidget *parent) : QLabel(parent)
 {
   setParent(parent);
-  info_font = *fc_font::instance()->get_font(fonts::notify_label);
+  info_font = *fcFont::instance()->getFont(fonts::notify_label);
   itile = ptile;
   calc_size();
 }

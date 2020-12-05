@@ -67,8 +67,8 @@ hud_message_box::hud_message_box(QWidget *parent) : QMessageBox(parent)
   int size;
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog
                  | Qt::FramelessWindowHint);
-  f_text = *fc_font::instance()->get_font(fonts::default_font);
-  f_title = *fc_font::instance()->get_font(fonts::default_font);
+  f_text = *fcFont::instance()->getFont(fonts::default_font);
+  f_title = *fcFont::instance()->getFont(fonts::default_font);
 
   size = f_text.pointSize();
   if (size > 0) {
@@ -232,7 +232,7 @@ hud_text::hud_text(const QString &s, int time_secs, QWidget *parent)
   timeout = time_secs;
 
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::FramelessWindowHint);
-  f_text = *fc_font::instance()->get_font(fonts::default_font);
+  f_text = *fcFont::instance()->getFont(fonts::default_font);
   f_text.setBold(true);
   f_text.setCapitalization(QFont::SmallCaps);
   size = f_text.pointSize();
@@ -341,8 +341,8 @@ hud_input_box::hud_input_box(QWidget *parent) : QDialog(parent)
   setWindowFlags(Qt::WindowStaysOnTopHint | Qt::Dialog
                  | Qt::FramelessWindowHint);
 
-  f_text = *fc_font::instance()->get_font(fonts::default_font);
-  f_title = *fc_font::instance()->get_font(fonts::default_font);
+  f_text = *fcFont::instance()->getFont(fonts::default_font);
+  f_title = *fcFont::instance()->getFont(fonts::default_font);
 
   size = f_text.pointSize();
   if (size > 0) {
@@ -561,7 +561,7 @@ void hud_units::update_actions(unit_list *punits)
   int wwidth;
   int font_width;
   int expanded_unit_width;
-  QFont font = *fc_font::instance()->get_font(fonts::notify_label);
+  QFont font = *fcFont::instance()->getFont(fonts::notify_label);
   QFontMetrics *fm;
   QImage cropped_img;
   QImage img;
@@ -1824,7 +1824,7 @@ void hud_unit_combat::paintEvent(QPaintEvent *event)
   QRect left, right;
   QColor c1, c2;
   QPen pen;
-  QFont f = *fc_font::instance()->get_font(fonts::default_font);
+  QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QString ahploss, dhploss;
 
   if (att_hp_loss > 0) {

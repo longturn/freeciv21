@@ -521,19 +521,19 @@ void help_widget::update_fonts()
 
   l = findChildren<QWidget *>();
 
-  f = fc_font::instance()->get_font(fonts::notify_label);
+  f = fcFont::instance()->getFont(fonts::notify_label);
   for (int i = 0; i < l.size(); ++i) {
     if (l.at(i)->property(fonts::help_label).isValid()) {
       l.at(i)->setFont(*f);
     }
   }
-  f = fc_font::instance()->get_font(fonts::help_text);
+  f = fcFont::instance()->getFont(fonts::help_text);
   for (int i = 0; i < l.size(); ++i) {
     if (l.at(i)->property(fonts::help_text).isValid()) {
       l.at(i)->setFont(*f);
     }
   }
-  f = fc_font::instance()->get_font(fonts::default_font);
+  f = fcFont::instance()->getFont(fonts::default_font);
   for (int i = 0; i < l.size(); ++i) {
     if (l.at(i)->property(fonts::default_font).isValid()) {
       l.at(i)->setFont(*f);
@@ -1212,7 +1212,7 @@ static QLabel *make_helplabel(QString title, const QString &tooltip,
   int isize;
 
   label = new QLabel(title);
-  f = *fc_font::instance()->get_font(fonts::help_text);
+  f = *fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
   isize = fm->height() * 2 / 3;
   label->setFixedHeight(isize + 4);
@@ -1239,7 +1239,7 @@ static void make_helppiclabel(struct sprite *spr, const QString &tooltip,
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
   pix = QPixmap::fromImage(cropped_img);
-  f = *fc_font::instance()->get_font(fonts::help_text);
+  f = *fcFont::instance()->getFont(fonts::help_text);
   fm = new QFontMetrics(f);
   isize = fm->height() * 2 / 3;
   label = new QLabel();

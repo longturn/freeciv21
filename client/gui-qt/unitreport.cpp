@@ -55,7 +55,7 @@ unittype_item::unittype_item(QWidget *parent, struct unit_type *ut)
   init_img();
   unit_scroll = 0;
   setSizePolicy(size_fixed_policy);
-  f = *fc_font::instance()->get_font(fonts::default_font);
+  f = *fcFont::instance()->getFont(fonts::default_font);
   fm = new QFontMetrics(f);
   isize = fm->height() * 2 / 3;
   vbox_main = new QVBoxLayout();

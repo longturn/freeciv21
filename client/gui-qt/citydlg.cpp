@@ -1064,7 +1064,7 @@ city_info::city_info(QWidget *parent) : QWidget(parent)
   QStringList info_list;
 
   QGridLayout *info_grid_layout = new QGridLayout();
-  small_font = fc_font::instance()->get_font(fonts::notify_label);
+  small_font = fcFont::instance()->getFont(fonts::notify_label);
   info_list << _("Food:") << _("Prod:") << _("Trade:") << _("Gold:")
             << _("Luxury:") << _("Science:") << _("Granary:")
             << _("Change in:") << _("Corruption:") << _("Waste:")
@@ -1220,11 +1220,11 @@ governor_sliders::governor_sliders(QWidget *parent)
   str_list << _("Food") << _("Shield") << _("Trade") << _("Gold")
            << _("Luxury") << _("Science") << _("Celebrate");
   some_label = new QLabel(_("Minimal Surplus"));
-  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 0, 1, 3);
   some_label = new QLabel(_("Priority"));
-  some_label->setFont(*fc_font::instance()->get_font(fonts::notify_label));
+  some_label->setFont(*fcFont::instance()->getFont(fonts::notify_label));
   some_label->setAlignment(Qt::AlignCenter | Qt::AlignVCenter);
   slider_grid->addWidget(some_label, 0, 3, 1, 3);
 
@@ -1352,7 +1352,7 @@ city_dialog::city_dialog(QWidget *parent)
   QHeaderView *header;
 
   int h = 2 * fm.height() + 2;
-  small_font = fc_font::instance()->get_font(fonts::notify_label);
+  small_font = fcFont::instance()->getFont(fonts::notify_label);
   ui.setupUi(this);
 
   setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
@@ -2947,7 +2947,7 @@ void city_font_update()
 
   l = city_dialog::instance()->findChildren<QLabel *>();
 
-  f = fc_font::instance()->get_font(fonts::notify_label);
+  f = fcFont::instance()->getFont(fonts::notify_label);
 
   for (int i = 0; i < l.size(); ++i) {
     if (l.at(i)->property(fonts::notify_label).isValid()) {
@@ -3289,7 +3289,7 @@ void city_production_model::populate()
   struct universal *renegade;
   int item, targets_used;
   QString str;
-  QFont f = *fc_font::instance()->get_font(fonts::default_font);
+  QFont f = *fcFont::instance()->getFont(fonts::default_font);
   QFontMetrics fm(f);
 
   sh.setY(fm.height() * 2);

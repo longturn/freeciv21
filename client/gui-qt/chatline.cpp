@@ -253,7 +253,7 @@ chatwdg::chatwdg(QWidget *parent)
   gl = new QGridLayout;
   chat_line = new chat_input;
   chat_output = new text_browser_dblclck(this);
-  chat_output->setFont(*fc_font::instance()->get_font(fonts::chatline));
+  chat_output->setFont(*fcFont::instance()->getFont(fonts::chatline));
   remove_links = new QPushButton(QLatin1String(""));
   remove_links->setIcon(
       style()->standardPixmap(QStyle::SP_DialogCancelButton));
@@ -325,7 +325,7 @@ void chatwdg::scroll_to_bottom()
 void chatwdg::update_font()
 {
   QFont *qf;
-  qf = fc_font::instance()->get_font(fonts::chatline);
+  qf = fcFont::instance()->getFont(fonts::chatline);
   chat_output->setFont(*qf);
 }
 

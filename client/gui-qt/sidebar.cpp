@@ -67,7 +67,7 @@ fc_sidewidget::fc_sidewidget(QPixmap *pix, const QString &label,
   }
   scaled_pixmap = new QPixmap;
   final_pixmap = new QPixmap;
-  sfont = new QFont(*fc_font::instance()->get_font(fonts::notify_label));
+  sfont = new QFont(*fcFont::instance()->getFont(fonts::notify_label));
   setContextMenuPolicy(Qt::CustomContextMenu);
   timer = new QTimer;
   timer->setSingleShot(false);

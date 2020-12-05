@@ -20,25 +20,25 @@
 /************************************************************************/ /**
    Font provider constructor
  ****************************************************************************/
-fc_font::fc_font() : city_fontsize(12), prod_fontsize(12) {}
+fcFont::fcFont() : city_fontsize(12), prod_fontsize(12) {}
 
 /************************************************************************/ /**
    Returns instance of fc_font
  ****************************************************************************/
-fc_font *fc_font::instance()
+fcFont *fcFont::instance()
 {
   if (!m_instance)
-    m_instance = new fc_font;
+    m_instance = new fcFont;
   return m_instance;
 }
 
 /************************************************************************/ /**
    Deletes fc_icons instance
  ****************************************************************************/
-void fc_font::drop()
+void fcFont::drop()
 {
   if (m_instance) {
-    m_instance->release_fonts();
+    m_instance->releaseFonts();
     delete m_instance;
     m_instance = 0;
   }
@@ -47,7 +47,7 @@ void fc_font::drop()
 /************************************************************************/ /**
    Returns desired font
  ****************************************************************************/
-QFont *fc_font::get_font(const QString &name)
+QFont *fcFont::getFont(const QString &name)
 {
   /**
    * example: get_font("gui_qt_font_notify_label")
@@ -63,7 +63,7 @@ QFont *fc_font::get_font(const QString &name)
 /************************************************************************/ /**
    Initiazlizes fonts from client options
  ****************************************************************************/
-void fc_font::init_fonts()
+void fcFont::initFonts()
 {
   QFont *f;
   QString s;
@@ -81,20 +81,20 @@ void fc_font::init_fonts()
       s = option_font_get(poption);
       if (f->fromString(s)) {
         s = option_name(poption);
-        set_font(s, f);
+        setFont(s, f);
       } else {
         delete f;
       }
     }
   }
   options_iterate_end;
-  get_mapfont_size();
+  getMapfontSize();
 }
 
 /*****************************************************************************
    Increases/decreases all fonts sizes
  ****************************************************************************/
-void fc_font::set_size_all(int new_size)
+void fcFont::setSizeAll(int new_size)
 {
   options_iterate(client_optset, poption)
   {
@@ -115,7 +115,7 @@ void fc_font::set_size_all(int new_size)
 /************************************************************************/ /**
    Deletes all fonts
  ****************************************************************************/
-void fc_font::release_fonts()
+void fcFont::releaseFonts()
 {
   for (QFont *f : qAsConst(font_map)) {
     delete f;
@@ -125,16 +125,16 @@ void fc_font::release_fonts()
 /************************************************************************/ /**
    Stores default font sizes
  ****************************************************************************/
-void fc_font::get_mapfont_size()
+void fcFont::getMapfontSize()
 {
-  city_fontsize = get_font(fonts::city_names)->pointSize();
-  prod_fontsize = get_font(fonts::city_productions)->pointSize();
+  city_fontsize = getFont(fonts::city_names)->pointSize();
+  prod_fontsize = getFont(fonts::city_productions)->pointSize();
 }
 
 /************************************************************************/ /**
    Adds new font or overwrite old one
  ****************************************************************************/
-void fc_font::set_font(const QString &name, QFont *qf)
+void fcFont::setFont(const QString &name, QFont *qf)
 {
   font_map.insert(name, qf);
 }
@@ -246,7 +246,7 @@ QString configure_font(const QString &font_name, const QStringList &sl,
       if (bold) {
         f->setBold(true);
       }
-      fc_font::instance()->set_font(font_name, f);
+      fcFont::instance()->setFont(font_name, f);
       fn_bytes = f->toString().toLocal8Bit();
 
       return fn_bytes.data();

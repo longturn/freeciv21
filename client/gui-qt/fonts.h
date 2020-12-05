@@ -26,23 +26,23 @@ const char *const city_productions = "gui_qt_font_city_productions";
 const char *const reqtree_text = "gui_qt_font_reqtree_text";
 } // namespace fonts
 
-class fc_font {
-  Q_DISABLE_COPY(fc_font);
+class fcFont {
+  Q_DISABLE_COPY(fcFont);
 
 private:
   QMap<QString, QFont *> font_map;
-  static fc_font *m_instance;
-  explicit fc_font();
+  static fcFont *m_instance;
+  explicit fcFont();
 
 public:
-  static fc_font *instance();
+  static fcFont *instance();
   static void drop();
-  void set_font(const QString &name, QFont *qf);
-  void set_size_all(int);
-  QFont *get_font(const QString &name);
-  void init_fonts();
-  void release_fonts();
-  void get_mapfont_size();
+  void setFont(const QString &name, QFont *qf);
+  void setSizeAll(int);
+  QFont *getFont(const QString &name);
+  void initFonts();
+  void releaseFonts();
+  void getMapfontSize();
   int city_fontsize;
   int prod_fontsize;
 };

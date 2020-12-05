@@ -163,7 +163,7 @@ QVariant plr_item::data(int column, int role) const
   switch (player_dlg_columns[column].type) {
   case COL_FLAG:
     pix = get_nation_flag_sprite(tileset, nation_of_player(ipplayer))->pm;
-    f = *fc_font::instance()->get_font(fonts::default_font);
+    f = *fcFont::instance()->getFont(fonts::default_font);
     fm = new QFontMetrics(f);
     *pix = pix->scaledToHeight(fm->height());
     delete fm;
