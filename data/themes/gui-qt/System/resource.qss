@@ -80,7 +80,7 @@ QProgressBar {
   selection-background-color: #36c620;
 }
 
-sideWidget {
+sidebarWidget {
   color: white;
   /* Box around current widget */
   selection-background-color: rgb(34, 150, 4);
