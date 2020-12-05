@@ -788,25 +788,23 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
 {
   struct packet_handlers *phandlers;
   char functional_capability[MAX_LEN_CAPSTR] = "";
-  char *tokens[MAX_LEN_CAPSTR / 2];
-  int tokens_num;
-  int i;
+  QStringList tokens;
 
   fc_assert(strlen(capability) < sizeof(functional_capability));
 
   /* Get functional network capability string. */
-  tokens_num = get_tokens(capability, tokens, ARRAY_SIZE(tokens), " \t\n,");
-  qsort(tokens, tokens_num, sizeof(*tokens), compare_strings_ptrs);
-  for (i = 0; i < tokens_num; i++) {
-    if (!has_capability(tokens[i], packet_functional_capability)) {
+  tokens = QString(capability).split(" \t\n,");
+  tokens.sort();
+
+  for (auto str : tokens) {
+    if (!has_capability(qUtf8Printable(str), packet_functional_capability)) {
       continue;
     }
     if (functional_capability[0] != '\0') {
       sz_strlcat(functional_capability, " ");
     }
-    sz_strlcat(functional_capability, tokens[i]);
+    sz_strlcat(functional_capability, qUtf8Printable(str));
   }
-  free_tokens(tokens, tokens_num);
 
   /* Lookup handlers for the capabilities or create new handlers. */
   if (!packet_handlers_hash->contains(functional_capability)) {
