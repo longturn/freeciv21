@@ -384,7 +384,7 @@ static bool check_include(struct inputfile *inf)
   c++;
   bare_name_len = c - bare_name_start;
   bare_name = static_cast<char *>(fc_malloc(bare_name_len));
-  strncpy(bare_name, bare_name_start, bare_name_len - 1);
+  qstrncpy(bare_name, bare_name_start, bare_name_len - 1);
   bare_name[bare_name_len - 1] = '\0';
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
 

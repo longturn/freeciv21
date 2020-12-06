@@ -1699,7 +1699,7 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
     int plen;
 
     plen = MIN(len, (MAX_LEN_CONTENT - 1));
-    strncpy(part.lines, &(lines[(MAX_LEN_CONTENT - 1) * i]), plen);
+    qstrncpy(part.lines, &(lines[(MAX_LEN_CONTENT - 1) * i]), plen);
     part.lines[plen] = '\0';
 
     lsend_packet_page_msg_part(dest, &part);

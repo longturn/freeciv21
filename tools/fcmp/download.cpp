@@ -165,7 +165,7 @@ static const char *download_modpack_recursive(const char *URL,
   if (baseURLpart[0] == '.') {
     char URLstart[start_idx];
 
-    strncpy(URLstart, URL, start_idx - 1);
+    qstrncpy(URLstart, URL, start_idx - 1);
     URLstart[start_idx - 1] = '\0';
     fc_snprintf(baseURL, sizeof(baseURL), "%s%s", URLstart, baseURLpart + 1);
   } else {
@@ -223,7 +223,7 @@ static const char *download_modpack_recursive(const char *URL,
         if (dep_URL[0] == '.') {
           char URLstart[start_idx];
 
-          strncpy(URLstart, URL, start_idx - 1);
+          qstrncpy(URLstart, URL, start_idx - 1);
           URLstart[start_idx - 1] = '\0';
           fc_snprintf(dep_URL_full, sizeof(dep_URL_full), "%s%s", URLstart,
                       dep_URL + 1);

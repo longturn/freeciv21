@@ -434,7 +434,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
 
 /************************************************************************/ /**
    fc_strlcpy() provides utf-8 version of (non-standard) function strlcpy()
-   It is intended as more user-friendly version of strncpy(), in particular
+   It is intended as more user-friendly version of qstrncpy(), in particular
    easier to use safely and correctly, and ensuring nul-terminated results
    while being able to detect truncation.
 

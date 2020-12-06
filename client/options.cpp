@@ -5207,11 +5207,11 @@ void fill_topo_ts_default(void)
 {
   if (is_ts_option_unset("default_tileset_square_name")) {
     if (gui_options.default_tileset_iso_name[0] != '\0') {
-      strncpy(gui_options.default_tileset_square_name,
+      qstrncpy(gui_options.default_tileset_square_name,
               gui_options.default_tileset_iso_name,
               sizeof(gui_options.default_tileset_square_name));
     } else if (gui_options.default_tileset_overhead_name[0] != '\0') {
-      strncpy(gui_options.default_tileset_square_name,
+      qstrncpy(gui_options.default_tileset_square_name,
               gui_options.default_tileset_overhead_name,
               sizeof(gui_options.default_tileset_square_name));
     } else {

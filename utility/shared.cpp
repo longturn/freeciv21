@@ -1603,9 +1603,9 @@ void interpret_tilde(char *buf, size_t buf_size, const char *filename)
     fc_snprintf(buf, buf_size, "%s" DIR_SEPARATOR "%s", user_home_dir(),
                 filename + 2);
   } else if (filename[0] == '~' && filename[1] == '\0') {
-    strncpy(buf, user_home_dir(), buf_size);
+    qstrncpy(buf, user_home_dir(), buf_size);
   } else {
-    strncpy(buf, filename, buf_size);
+    qstrncpy(buf, filename, buf_size);
   }
 }
 
@@ -1721,7 +1721,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
   }
 
   if (dest) {
-    strncpy(dest, *buf, size - 1);
+    qstrncpy(dest, *buf, size - 1);
     dest[size - 1] = '\0';
     remove_leading_trailing_spaces(dest);
     ptr = strpbrk(dest, delimiters);

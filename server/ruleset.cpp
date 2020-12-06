@@ -4207,7 +4207,7 @@ static void send_ruleset_control(struct conn_list *dest)
 
     part.text[this_len] = '\0';
 
-    strncpy(part.text, &game.ruleset_description[idx], this_len);
+    qstrncpy(part.text, &game.ruleset_description[idx], this_len);
     idx += this_len;
     desc_left -= this_len;
 
@@ -6839,7 +6839,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       fname = secfile_lookup_str_default(file, NULL,
                                          "calendar.fragment_name%d", cf);
       if (fname != NULL) {
-        strncpy(game.calendar.calendar_fragment_name[cf], fname,
+        qstrncpy(game.calendar.calendar_fragment_name[cf], fname,
                 sizeof(game.calendar.calendar_fragment_name[cf]));
       }
     }
