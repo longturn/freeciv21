@@ -29,6 +29,7 @@
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
+#include "citydlg_g.h"
 // gui-qt
 #include "colors.h"
 #include "fc_client.h"
@@ -1114,6 +1115,11 @@ static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
 void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
                     struct city *pcity, int *width, int *height)
 {
+  if (is_any_city_dialog_open()) {
+    return;
+  }
+
+
   if (gui_options.draw_full_citybar) {
     show_full_citybar(pcanvas, canvas_x, canvas_y, pcity, width, height);
   } else {
