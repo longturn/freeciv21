@@ -220,7 +220,9 @@ void fc_client::switch_page(int new_pg)
       setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     }
     showMaximized();
-    QCoreApplication::processEvents();
+    // Uncommenting will fix some resizing errors but will cause some problems
+    // with no focus caused by update_queue or something
+    // QCoreApplication::processEvents();
     /* For MS Windows, it might ingore first */
     showMaximized();
     queen()->infotab->chtwdg->update_widgets();

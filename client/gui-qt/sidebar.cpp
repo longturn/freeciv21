@@ -501,6 +501,13 @@ void sidebar::paint(QPainter *painter, QPaintEvent *event)
   painter->drawRect(event->rect());
 }
 
+void sidebar::resizeEvent(QResizeEvent *event)
+{
+  if (C_S_RUNNING <= client_state()) {
+    resizeMe(event->size().height(), true);
+  }
+}
+
 /**************************************************************************
   Resize sidebar to take at least 20 pixels width and 100 pixels for FullHD
   desktop and scaled accordingly for bigger resolutions eg 200 pixels for 4k
