@@ -23,6 +23,6 @@ public:
   void init_colors();
 private:
   static research_color *m_instance;
-  QColor *colors[31];
+  QColor colors[31];
   bool colors_init;
 };

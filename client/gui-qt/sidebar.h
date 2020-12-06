@@ -103,6 +103,7 @@ public:
 
 protected:
   void paintEvent(QPaintEvent *event);
+  void resizeEvent(QResizeEvent *event);
 
 private:
   QVBoxLayout *layout;

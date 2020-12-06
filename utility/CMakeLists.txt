@@ -27,7 +27,6 @@ add_library(
   capability.cpp
   deprecations.cpp
   distribute.cpp
-  fc_cmdline.cpp
   fcbacktrace.cpp
   fciconv.cpp
   fcintl.cpp
