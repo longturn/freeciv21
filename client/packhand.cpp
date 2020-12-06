@@ -3280,7 +3280,7 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
     delete[] game.ruleset_summary;
   }
 
-  len = strlen(packet->text);
+  len = qstrlen(packet->text);
 
   game.ruleset_summary = new char[len + 1];
 
@@ -4356,7 +4356,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
   fc_assert_ret_msg(NULL != pnation, "Bad nation %d.", packet->id);
 
   if (packet->translation_domain[0] != '\0') {
-    size_t len = strlen(packet->translation_domain) + 1;
+    size_t len = qstrlen(packet->translation_domain) + 1;
     pnation->translation_domain = new char[len];
     fc_strlcpy(pnation->translation_domain, packet->translation_domain, len);
   } else {

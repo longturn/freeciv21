@@ -771,7 +771,7 @@ void init_move_fragments(void)
   /* String length of maximum denominator for fractional representation of
    * movement points, for padding of text representation */
   fc_snprintf(denomstr, sizeof(denomstr), "%d", SINGLE_MOVE);
-  move_points_denomlen = strlen(denomstr);
+  move_points_denomlen = qstrlen(denomstr);
 }
 
 /************************************************************************/ /**

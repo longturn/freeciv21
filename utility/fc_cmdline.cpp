@@ -31,7 +31,7 @@
 static size_t fc_strcspn(const char *s, const char *reject)
 {
   bool in_single_quotes = FALSE, in_double_quotes = FALSE;
-  size_t i, len = strlen(s);
+  size_t i, len = qstrlen(s);
 
   for (i = 0; i < len; i++) {
     if (s[i] == '"' && !in_single_quotes) {

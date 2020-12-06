@@ -94,7 +94,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
                 int phase)
 {
   const size_t min_msg_len = 50;
-  size_t msg_len = strlen(message);
+  size_t msg_len = qstrlen(message);
 
   char *s = new char[MAX(msg_len, min_msg_len) + 1];
   int i, nspc;
@@ -109,7 +109,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
   msg = new struct message();
   strcpy(s, message);
 
-  nspc = min_msg_len - strlen(s);
+  nspc = min_msg_len - qstrlen(s);
   if (nspc > 0) {
     strncat(s, "                                                  ", nspc);
   }

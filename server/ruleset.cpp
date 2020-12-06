@@ -4417,7 +4417,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
    * it. The parentheses are optional (but necessary to have the settings,
    * of course). Our job is now to parse it. */
   for (j = 0; j < dim; j++) {
-    size_t len = strlen(cities[j]);
+    size_t len = qstrlen(cities[j]);
     char city_name[len + 1], *p, *next, *end;
     struct nation_city *pncity;
 
@@ -4505,7 +4505,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
 
           if (NULL == pterrain) {
             /* Try with removing frequent trailing 's'. */
-            size_t l = strlen(p);
+            size_t l = qstrlen(p);
 
             if (0 < l && 's' == QChar::toLower(p[l - 1])) {
               char saved = p[l - 1];
@@ -6109,7 +6109,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     int len;
 
     /* Ruleset/modpack summary found */
-    len = strlen(pref_text);
+    len = qstrlen(pref_text);
     game.ruleset_summary = new char[len + 1];
     fc_strlcpy(game.ruleset_summary, pref_text, len + 1);
   } else {
@@ -6125,7 +6125,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     int len;
 
     /* Ruleset/modpack description found */
-    len = strlen(pref_text);
+    len = qstrlen(pref_text);
     game.ruleset_description = new char[len + 1];
     fc_strlcpy(game.ruleset_description, pref_text, len + 1);
     game.control.desc_length = len;
@@ -6140,7 +6140,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
   pref_text = secfile_lookup_str_default(file, "", "about.capabilities");
   if (pref_text[0] != '\0') {
-    int len = strlen(pref_text);
+    int len = qstrlen(pref_text);
 
     game.ruleset_capabilities = new char[len + 1];
     fc_strlcpy(game.ruleset_capabilities, pref_text, len + 1);

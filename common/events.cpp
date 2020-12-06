@@ -334,7 +334,7 @@ void events_init(void)
 
     if (E_S_XYZZY > events[i].esn) {
       const char *event_format = Q_(event_sections[events[i].esn]);
-      int l = 1 + strlen(event_format) + strlen(_(events[i].descr_orig));
+      int l = 1 + qstrlen(event_format) + qstrlen(_(events[i].descr_orig));
 
       // Need a temporary because full_descr is a const char *
       char *tmp = new char[l];
@@ -347,7 +347,7 @@ void events_init(void)
 
     event_to_index[events[i].event] = i;
     events[i].tag_name = fc_strdup(events[i].enum_name);
-    for (j = 0; j < strlen(events[i].tag_name); j++) {
+    for (j = 0; j < qstrlen(events[i].tag_name); j++) {
       events[i].tag_name[j] = QChar::toLower(events[i].tag_name[j]);
     }
     log_debug("event[%d]=%d: name='%s' / '%s'\n"

@@ -201,7 +201,7 @@ static const char *audiospec_fullname(QString &audioset_name, bool music)
   const char *suffix = music ? MUSICSPEC_SUFFIX : SNDSPEC_SUFFIX;
   QString audioset_default =
       music ? QStringLiteral("stdmusic") : QStringLiteral("stdsounds");
-  char *fname = new char[audioset_name.size() + strlen(suffix) + 1];
+  char *fname = new char[audioset_name.size() + qstrlen(suffix) + 1];
   const char *dname;
 
   sprintf(fname, "%s%s", qUtf8Printable(audioset_name), suffix);

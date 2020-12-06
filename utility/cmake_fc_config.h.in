@@ -149,7 +149,7 @@
 /* C11 static assert supported */
 #cmakedefine FREECIV_C11_STATIC_ASSERT
 
-/* strlen() in static assert supported */
+/* qstrlen() in static assert supported */
 #cmakedefine FREECIV_STATIC_STRLEN
 
 /* C++11 static assert supported */

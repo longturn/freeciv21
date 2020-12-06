@@ -176,7 +176,7 @@ static bool is_restricted(struct connection *caller)
  **************************************************************************/
 static bool player_name_check(const char *name, char *buf, size_t buflen)
 {
-  size_t len = strlen(name);
+  size_t len = qstrlen(name);
 
   if (len == 0) {
     fc_snprintf(buf, buflen, _("Can't use an empty name."));
@@ -1135,7 +1135,7 @@ static bool read_init_script_real(struct connection *caller,
 {
   FILE *script_file;
   const char extension[] = ".serv";
-  char serv_filename[strlen(extension) + strlen(script_filename) + 2];
+  char serv_filename[strlen(extension) + qstrlen(script_filename) + 2];
   char tilde_filename[4096];
   const char *real_filename;
 
@@ -1146,8 +1146,8 @@ static bool read_init_script_real(struct connection *caller,
   }
 
   /* abuse real_filename to find if we already have a .serv extension */
-  real_filename = script_filename + strlen(script_filename)
-                  - MIN(strlen(extension), strlen(script_filename));
+  real_filename = script_filename + qstrlen(script_filename)
+                  - MIN(strlen(extension), qstrlen(script_filename));
   if (strcmp(real_filename, extension) != 0) {
     fc_snprintf(serv_filename, sizeof(serv_filename), "%s%s",
                 script_filename, extension);
@@ -1689,7 +1689,7 @@ static int lookup_option(const char *name)
   } else if (M_PRE_AMBIGUOUS == result) {
     return LOOKUP_OPTION_AMBIGUOUS;
   } else if ('\0' != name[0]
-             && 0 == fc_strncasecmp("rulesetdir", name, strlen(name))) {
+             && 0 == fc_strncasecmp("rulesetdir", name, qstrlen(name))) {
     return LOOKUP_OPTION_RULESETDIR;
   } else {
     return LOOKUP_OPTION_NO_RESULT;
@@ -2131,7 +2131,7 @@ static bool show_settings(struct connection *caller,
       return FALSE;
     case LOOKUP_OPTION_AMBIGUOUS:
       /* Allow ambiguous: show all matching. */
-      clen = strlen(str);
+      clen = qstrlen(str);
       break;
     case LOOKUP_OPTION_LEVEL_NAME:
       /* Option level. */
@@ -2351,7 +2351,7 @@ static bool team_command(struct connection *caller, char *str, bool check)
     return FALSE;
   }
 
-  if (str != NULL || strlen(str) > 0) {
+  if (str != NULL || qstrlen(str) > 0) {
     sz_strlcpy(buf, str);
     arg = QString(buf).split(TOKEN_DELIMITERS);
   }
@@ -2658,7 +2658,7 @@ static bool debug_command(struct connection *caller, char *str, bool check)
     return TRUE; /* whatever! */
   }
 
-  if (str != NULL && strlen(str) > 0) {
+  if (str != NULL && qstrlen(str) > 0) {
     sz_strlcpy(buf, str);
     arg = QString(buf).split(TOKEN_DELIMITERS);
   }
@@ -4895,7 +4895,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
     case M_PRE_EXACT:
     case M_PRE_ONLY:
       /* We have a match */
-      luaarg = arg + strlen(lua_args_name(lua_args(ind)));
+      luaarg = arg + qstrlen(lua_args_name(lua_args(ind)));
       luaarg = skip_leading_spaces(luaarg);
       break;
     case M_PRE_EMPTY:
@@ -4956,7 +4956,7 @@ static bool lua_command(struct connection *caller, char *arg, bool check,
   case LUA_FILE:
     /* Abuse real_filename to find if we already have a .lua extension. */
     real_filename =
-        luaarg + strlen(luaarg) - MIN(strlen(extension), strlen(luaarg));
+        luaarg + qstrlen(luaarg) - MIN(strlen(extension), qstrlen(luaarg));
     if (strcmp(real_filename, extension) != 0) {
       fc_snprintf(luafile, sizeof(luafile), "%s%s", luaarg, extension);
     } else {
@@ -5824,7 +5824,7 @@ static bool aicmd_command(struct connection *caller, char *arg, bool check)
   }
 
   /* We have a player - extract the command. */
-  cmd = arg + strlen(tokens[0]);
+  cmd = arg + qstrlen(tokens[0]);
   cmd = skip_leading_spaces(cmd);
 
   if (strlen(cmd) == 0) {
@@ -6339,7 +6339,7 @@ static void show_help_command(struct connection *caller,
   if (command_synopsis(cmd)) {
     /* line up the synopsis lines: */
     const char *syn = _("Synopsis: ");
-    size_t synlen = strlen(syn);
+    size_t synlen = qstrlen(syn);
     char prefix[40];
 
     fc_snprintf(prefix, sizeof(prefix), "%*s", (int) synlen, " ");
@@ -6678,7 +6678,7 @@ void show_players(struct connection *caller)
           sz_strlcat(buf, _(", ready"));
         } else {
           /* Emphasizes this */
-          n = strlen(buf);
+          n = qstrlen(buf);
           featured_text_apply_tag(_(", not ready"), buf + n, sizeof(buf) - n,
                                   TTT_COLOR, 1, FT_OFFSET_UNSET,
                                   ftc_changed);
@@ -7038,7 +7038,7 @@ static char *generic_generator(const char *text, int state, int num,
      variable to 0. */
   if (state == 0) {
     list_index = 0;
-    len = strlen(mytext);
+    len = qstrlen(mytext);
   }
 
   /* Return the next name which partially matches: */
@@ -7284,7 +7284,7 @@ static bool contains_token_before_start(int start, int token,
                                         const char *arg, bool allow_fluff)
 {
   char *str_itr = rl_line_buffer;
-  int arg_len = strlen(arg);
+  int arg_len = qstrlen(arg);
 
   /* Swallow unwanted tokens and their preceding delimiters */
   while (token--) {

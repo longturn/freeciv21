@@ -4158,8 +4158,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
             qInfo(_("Didn't find '%s' option file, "
                     "loading from '%s' instead."),
-                  get_current_option_file_name() + strlen(name) + 1,
-                  name_buffer + strlen(name) + 1);
+                  get_current_option_file_name() + qstrlen(name) + 1,
+                  name_buffer + qstrlen(name) + 1);
           }
 
           return name_buffer;
@@ -4189,8 +4189,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
-              get_current_option_file_name() + strlen(name) + 1,
-              name_buffer + strlen(name) + 1);
+              get_current_option_file_name() + qstrlen(name) + 1,
+              name_buffer + qstrlen(name) + 1);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
           *allow_digital_boolean = TRUE;
@@ -4205,7 +4205,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
-            get_current_option_file_name() + strlen(name) + 1,
+            get_current_option_file_name() + qstrlen(name) + 1,
             OLD_OPTION_FILE_NAME);
       *allow_digital_boolean = TRUE;
       return name_buffer;
@@ -4539,7 +4539,7 @@ static void options_dialogs_load(struct section_file *sf)
     entry_list_iterate(entries, pentry)
     {
       for (prefix = prefixes; NULL != *prefix; prefix++) {
-        if (0 == strncmp(*prefix, entry_name(pentry), strlen(*prefix))
+        if (0 == strncmp(*prefix, entry_name(pentry), qstrlen(*prefix))
             && secfile_lookup_bool(sf, &visible, "client.%s",
                                    entry_name(pentry))) {
           dialog_options->insert(entry_name(pentry), visible);
@@ -4809,7 +4809,7 @@ void options_save(option_save_log_callback log_cb)
 
   /* Directory name */
   sz_strlcpy(dir_name, name);
-  for (i = strlen(dir_name) - 1; dir_name[i] != DIR_SEPARATOR_CHAR && i >= 0;
+  for (i = qstrlen(dir_name) - 1; dir_name[i] != DIR_SEPARATOR_CHAR && i >= 0;
        i--) {
     /* Nothing */
   }

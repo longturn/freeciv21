@@ -134,7 +134,7 @@ void create_mpdb(const char *filename, bool scenario_db)
 {
   sqlite3 **handle;
   int ret;
-  int llen = strlen(filename) + 1;
+  int llen = qstrlen(filename) + 1;
   char *local_name = new char[llen];
   int i;
 

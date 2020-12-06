@@ -182,7 +182,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
             "-\n");
     terrain_type_iterate(pterrain)
     {
-      if (0 != strlen(terrain_rule_name(pterrain))) {
+      if (0 != qstrlen(terrain_rule_name(pterrain))) {
         char irrigation_time[4], mining_time[4], transform_time[4];
         const char *terrain, *irrigation_result, *mining_result,
             *transform_result;
@@ -783,7 +783,7 @@ void boot_help_texts(void)
           case HELP_TERRAIN:
             terrain_type_iterate(pterrain)
             {
-              if (0 != strlen(terrain_rule_name(pterrain))) {
+              if (0 != qstrlen(terrain_rule_name(pterrain))) {
                 pitem = new_help_item(current_type);
                 fc_snprintf(name, sizeof(name), "%*s%s", level, "",
                             terrain_name_translation(pterrain));
@@ -904,23 +904,23 @@ void boot_help_texts(void)
                         Q_(HELP_RULESET_ITEM));
             pitem->topic = qstrdup(name);
             if (game.ruleset_description != NULL) {
-              desc_len = strlen("\n\n") + strlen(game.ruleset_description);
+              desc_len = qstrlen("\n\n") + qstrlen(game.ruleset_description);
             } else {
               desc_len = 0;
             }
             if (game.ruleset_summary != NULL) {
               if (game.control.version[0] != '\0') {
-                len = strlen(_(game.control.name)) + strlen(" ")
-                      + strlen(game.control.version) + strlen("\n\n")
-                      + strlen(_(game.ruleset_summary)) + 1;
+                len = qstrlen(_(game.control.name)) + qstrlen(" ")
+                      + qstrlen(game.control.version) + qstrlen("\n\n")
+                      + qstrlen(_(game.ruleset_summary)) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             _(game.ruleset_summary));
               } else {
-                len = strlen(_(game.control.name)) + strlen("\n\n")
-                      + strlen(_(game.ruleset_summary)) + 1;
+                len = qstrlen(_(game.control.name)) + qstrlen("\n\n")
+                      + qstrlen(_(game.ruleset_summary)) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
@@ -930,17 +930,17 @@ void boot_help_texts(void)
               const char *nodesc = _("Current ruleset contains no summary.");
 
               if (game.control.version[0] != '\0') {
-                len = strlen(_(game.control.name)) + strlen(" ")
-                      + strlen(game.control.version) + strlen("\n\n")
-                      + strlen(nodesc) + 1;
+                len = qstrlen(_(game.control.name)) + qstrlen(" ")
+                      + qstrlen(game.control.version) + qstrlen("\n\n")
+                      + qstrlen(nodesc) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s",
                             _(game.control.name), game.control.version,
                             nodesc);
               } else {
-                len = strlen(_(game.control.name)) + strlen("\n\n")
-                      + strlen(nodesc) + 1;
+                len = qstrlen(_(game.control.name)) + qstrlen("\n\n")
+                      + qstrlen(nodesc) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s",
@@ -967,21 +967,21 @@ void boot_help_texts(void)
                         Q_(HELP_TILESET_ITEM));
             pitem->topic = qstrdup(name);
             if (description != NULL) {
-              desc_len = strlen("\n\n") + strlen(description);
+              desc_len = qstrlen("\n\n") + qstrlen(description);
             } else {
               desc_len = 0;
             }
             if (summary != NULL) {
               if (version[0] != '\0') {
-                len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
-                      + strlen("\n\n") + strlen(_(summary)) + 1;
+                len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
+                      + qstrlen("\n\n") + qstrlen(_(summary)) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, _(summary));
               } else {
-                len = strlen(_(ts_name)) + strlen("\n\n")
-                      + strlen(_(summary)) + 1;
+                len = qstrlen(_(ts_name)) + qstrlen("\n\n")
+                      + qstrlen(_(summary)) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
@@ -991,15 +991,15 @@ void boot_help_texts(void)
               const char *nodesc = _("Current tileset contains no summary.");
 
               if (version[0] != '\0') {
-                len = strlen(_(ts_name)) + strlen(" ") + strlen(version)
-                      + strlen("\n\n") + strlen(nodesc) + 1;
+                len = qstrlen(_(ts_name)) + qstrlen(" ") + qstrlen(version)
+                      + qstrlen("\n\n") + qstrlen(nodesc) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, nodesc);
               } else {
                 len =
-                    strlen(_(ts_name)) + strlen("\n\n") + strlen(nodesc) + 1;
+                    qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(nodesc) + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
@@ -1298,7 +1298,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
 
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf),
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf),
                 /* TRANS: bullet point; note trailing space */
                 Q_("?bullet:* "));
 
@@ -3054,7 +3054,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     CATLSTR(buf, bufsz, "\n");
   }
 
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf),
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf),
                 /* TRANS: bullet point; note trailing space */
                 Q_("?bullet:* "));
 
@@ -3220,7 +3220,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     return;
   }
 
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf),
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf),
                 /* TRANS: bullet point; note trailing space */
                 Q_("?bullet:* "));
   if (terrain_has_flag(pterrain, TER_NO_CITIES)) {
@@ -3529,7 +3529,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Describe how extra is created and destroyed */
 
-  group_start = strlen(buf);
+  group_start = qstrlen(buf);
 
   if (pextra->buildable) {
     if (is_extra_caused_by(pextra, EC_IRRIGATION)) {
@@ -3619,7 +3619,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
     CATLSTR(buf, bufsz, "\n"); /* group separator */
   }
 
-  group_start = strlen(buf);
+  group_start = qstrlen(buf);
 
   if (is_extra_removed_by(pextra, ERM_PILLAGE)) {
     int pillage_time = -1;
@@ -3727,9 +3727,9 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Describe what other elements are enabled by extra */
 
-  group_start = strlen(buf);
+  group_start = qstrlen(buf);
 
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf), "");
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf), "");
 
   if (buf[group_start] != '\0') {
     CATLSTR(buf, bufsz, "\n"); /* group separator */
@@ -4082,7 +4082,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Effects */
   CATLSTR(buf, bufsz, _("Features:\n"));
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf),
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf),
                 /* TRANS: bullet point; note trailing space */
                 Q_("?bullet:* "));
   effect_list_iterate(get_req_source_effects(&source), peffect)
@@ -4929,7 +4929,7 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
   if (buf[0] != '\0') {
     CATLSTR(buf, bufsz, "\n");
   }
-  insert_allows(&source, buf + strlen(buf), bufsz - strlen(buf), "");
+  insert_allows(&source, buf + qstrlen(buf), bufsz - qstrlen(buf), "");
 
   if (user_text && user_text[0] != '\0') {
     if (buf[0] != '\0') {

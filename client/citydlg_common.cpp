@@ -524,7 +524,7 @@ static void fc__attribute((__format__(__printf__, 5, 6)))
   }
 
   va_start(args, totalfmt);
-  fc_vsnprintf(buf + strlen(buf), bufsz - strlen(buf), totalfmt, args);
+  fc_vsnprintf(buf + qstrlen(buf), bufsz - qstrlen(buf), totalfmt, args);
   va_end(args);
 
   free(sum->sums);

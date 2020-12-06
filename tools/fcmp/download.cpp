@@ -88,13 +88,13 @@ static const char *download_modpack_recursive(const char *URL,
     return _("No URL given");
   }
 
-  if (strlen(URL) < strlen(MODPACKDL_SUFFIX)
-      || strcmp(URL + strlen(URL) - strlen(MODPACKDL_SUFFIX),
+  if (strlen(URL) < qstrlen(MODPACKDL_SUFFIX)
+      || strcmp(URL + qstrlen(URL) - qstrlen(MODPACKDL_SUFFIX),
                 MODPACKDL_SUFFIX)) {
     return _("This does not look like modpack URL");
   }
 
-  for (start_idx = strlen(URL) - strlen(MODPACKDL_SUFFIX);
+  for (start_idx = qstrlen(URL) - qstrlen(MODPACKDL_SUFFIX);
        start_idx > 0 && URL[start_idx - 1] != '/'; start_idx--) {
     /* Nothing */
   }
@@ -320,7 +320,7 @@ static const char *download_modpack_recursive(const char *URL,
       free(dest_name_copy);
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
-      for (i = strlen(local_name) - 1; local_name[i] != DIR_SEPARATOR_CHAR;
+      for (i = qstrlen(local_name) - 1; local_name[i] != DIR_SEPARATOR_CHAR;
            i--) {
         /* Nothing */
       }

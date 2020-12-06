@@ -1027,8 +1027,8 @@ void get_effect_req_text(const struct effect *peffect, char *buf,
       fc_strlcat(buf, Q_("?req-list-separator:+"), buf_len);
     }
 
-    universal_name_translation(&preq->source, buf + strlen(buf),
-                               buf_len - strlen(buf));
+    universal_name_translation(&preq->source, buf + qstrlen(buf),
+                               buf_len - qstrlen(buf));
   }
   requirement_vector_iterate_end;
 }

@@ -58,7 +58,7 @@ const char *skip_intl_qualifier_prefix(const char *str)
  ***********************************************************************/
 char *capitalized_string(const char *str)
 {
-  int len = strlen(str);
+  int len = qstrlen(str);
   char *result = new char[len + 1];
   fc_strlcpy(result, str, len + 1);
 

@@ -792,7 +792,7 @@ void init_new_game(void)
   startpos_list_destroy(targeted_list);
   startpos_list_destroy(flexible_list);
 
-  sulen = strlen(game.server.start_units);
+  sulen = qstrlen(game.server.start_units);
 
   /* Loop over all players, creating their initial units... */
   players_iterate(pplayer)

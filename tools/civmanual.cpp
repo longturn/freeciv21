@@ -314,7 +314,7 @@ static bool manual_command(struct tag_types *tag_info)
         sethelp = _(setting_extra_help(pset, TRUE));
         if (strlen(sethelp) > 0) {
           char *help = fc_strdup(sethelp);
-          size_t help_len = strlen(help) + 1;
+          size_t help_len = qstrlen(help) + 1;
 
           fc_break_lines(help, LINE_BREAK);
           help = html_special_chars(help, &help_len);
@@ -398,7 +398,7 @@ static bool manual_command(struct tag_types *tag_info)
                 tag_info->sect_title_end);
         if (command_synopsis(cmd)) {
           char *cmdstr = fc_strdup(command_synopsis(cmd));
-          size_t cmdstr_len = strlen(cmdstr) + 1;
+          size_t cmdstr_len = qstrlen(cmdstr) + 1;
 
           cmdstr = html_special_chars(cmdstr, &cmdstr_len);
           fprintf(doc, _("<table>\n<tr>\n<td valign=\"top\">"
@@ -411,7 +411,7 @@ static bool manual_command(struct tag_types *tag_info)
         {
           char *help = command_extra_help(cmd);
           if (help) {
-            size_t help_len = strlen(help) + 1;
+            size_t help_len = qstrlen(help) + 1;
 
             fc_break_lines(help, LINE_BREAK);
             help = html_special_chars(help, &help_len);
@@ -461,7 +461,7 @@ static bool manual_command(struct tag_types *tag_info)
       {
         struct extra_type **r;
 
-        if (0 == strlen(terrain_rule_name(pterrain))) {
+        if (0 == qstrlen(terrain_rule_name(pterrain))) {
           /* Must be a disabled piece of terrain */
           continue;
         }

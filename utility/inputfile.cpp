@@ -212,7 +212,7 @@ struct inputfile *inf_from_file(const char *filename,
   fz_FILE *fp;
 
   fc_assert_ret_val(NULL != filename, NULL);
-  fc_assert_ret_val(0 < strlen(filename), NULL);
+  fc_assert_ret_val(0 < qstrlen(filename), NULL);
   fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
   if (!fp) {
     return NULL;
@@ -345,7 +345,7 @@ static bool check_include(struct inputfile *inf)
   struct inputfile *new_inf, temp;
 
   if (len == 0) {
-    len = strlen(include_prefix);
+    len = qstrlen(include_prefix);
   }
   fc_assert_ret_val(inf_sanity_check(inf), FALSE);
   if (inf->in_string || astr_len(&inf->cur_line) <= len

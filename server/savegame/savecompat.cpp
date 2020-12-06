@@ -433,9 +433,9 @@ static void compat_load_020400(struct loaddata *loading,
             if (s) {
               found = TRUE;
               if (xsize == 0) {
-                xsize = strlen(s);
+                xsize = qstrlen(s);
               }
-              sg_failure_ret(xsize == strlen(s),
+              sg_failure_ret(xsize == qstrlen(s),
                              "Inconsistent xsize in map.k%02d_%04d",
                              l * 8 + j, y);
               for (x = 0; x < xsize; x++) {
@@ -1532,8 +1532,8 @@ static void compat_load_030100(struct loaddata *loading,
                unit))) {
         int order_num;
 
-        if (order_len > strlen(action_unitstr)) {
-          order_len = strlen(action_unitstr);
+        if (order_len > qstrlen(action_unitstr)) {
+          order_len = qstrlen(action_unitstr);
         }
 
         for (order_num = 0; order_num < order_len; order_num++) {
@@ -2045,8 +2045,8 @@ static void compat_load_dev(struct loaddata *loading)
                  unit))) {
           int order_num;
 
-          if (order_len > strlen(action_unitstr)) {
-            order_len = strlen(action_unitstr);
+          if (order_len > qstrlen(action_unitstr)) {
+            order_len = qstrlen(action_unitstr);
           }
 
           for (order_num = 0; order_num < order_len; order_num++) {
@@ -2099,8 +2099,8 @@ static void compat_load_dev(struct loaddata *loading)
                  plrno, city))) {
           int order_num;
 
-          if (order_len > strlen(action_citystr)) {
-            order_len = strlen(action_citystr);
+          if (order_len > qstrlen(action_citystr)) {
+            order_len = qstrlen(action_citystr);
           }
 
           for (order_num = 0; order_num < order_len; order_num++) {

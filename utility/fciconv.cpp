@@ -147,7 +147,7 @@ void fc_fprintf(FILE *stream, const char *format, ...)
 
 /***********************************************************************/ /**
    Return the length, in *characters*, of the string.  This can be used in
-   place of strlen in some places because it returns the number of characters
+   place of qstrlen in some places because it returns the number of characters
    not the number of bytes (with multi-byte characters in UTF-8, the two
    may not be the same).
 

@@ -990,7 +990,7 @@ const struct strvec *get_tileset_list(const struct option *poption)
 static char *tilespec_fullname(const char *tileset_name)
 {
   if (tileset_name) {
-    char fname[strlen(tileset_name) + strlen(TILESPEC_SUFFIX) + 1];
+    char fname[strlen(tileset_name) + qstrlen(TILESPEC_SUFFIX) + 1];
     const char *dname;
 
     fc_snprintf(fname, sizeof(fname), "%s%s", tileset_name, TILESPEC_SUFFIX);
@@ -1408,7 +1408,7 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
   /* Try out all supported file extensions to find one that works. */
   while ((gfx_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char full_name[strlen(gfx_filename) + strlen(".") + strlen(gfx_fileext)
+    char full_name[strlen(gfx_filename) + qstrlen(".") + qstrlen(gfx_fileext)
                    + 1];
 
     sprintf(full_name, "%s.%s", gfx_filename, gfx_fileext);
@@ -1643,8 +1643,8 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char *full_name = new char[strlen(gfx_filename) + strlen(".")
-                               + strlen(gfx_current_fileext) + 1];
+    char *full_name = new char[strlen(gfx_filename) + qstrlen(".")
+                               + qstrlen(gfx_current_fileext) + 1];
 
     sprintf(full_name, "%s.%s", gfx_filename, gfx_current_fileext);
 
@@ -1755,7 +1755,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     int len;
 
     /* Tileset summary found */
-    len = strlen(tstr);
+    len = qstrlen(tstr);
     t->summary = new char[len + 1];
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
@@ -1771,7 +1771,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     int len;
 
     /* Tileset description found */
-    len = strlen(tstr);
+    len = qstrlen(tstr);
     t->description = new char[len + 1];
     fc_strlcpy(t->description, tstr, len + 1);
   } else {
@@ -3640,7 +3640,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
                                const char *tag)
 {
-  char full_tag_name[MAX_LEN_NAME + strlen("_isolated")];
+  char full_tag_name[MAX_LEN_NAME + qstrlen("_isolated")];
   const int id = extra_index(pextra);
   int i;
   int extrastyle = t->sprites.extras[id].extrastyle;
@@ -3746,7 +3746,7 @@ static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
                                const char *tag)
 {
-  char full_tag_name[MAX_LEN_NAME + strlen("_fg")];
+  char full_tag_name[MAX_LEN_NAME + qstrlen("_fg")];
   const int id = extra_index(pextra);
 
   fc_assert_ret(id >= 0 && id < extra_count());

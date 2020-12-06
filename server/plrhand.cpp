@@ -1683,7 +1683,7 @@ const char *player_color_ftstr(struct player *pplayer)
  **************************************************************************/
 void give_midgame_initial_units(struct player *pplayer, struct tile *ptile)
 {
-  int sucount = strlen(game.server.start_units);
+  int sucount = qstrlen(game.server.start_units);
   int i;
 
   for (i = 0; i < sucount; i++) {
@@ -1928,7 +1928,7 @@ static bool server_player_name_is_allowed(const struct connection *caller,
                                           size_t error_buf_len)
 {
   /* An empty name is surely not allowed. */
-  if (0 == strlen(name)) {
+  if (0 == qstrlen(name)) {
     fc_strlcpy(error_buf, _("Please choose a non-blank name."),
                error_buf_len);
     return FALSE;
@@ -3074,7 +3074,7 @@ void player_status_reset(struct player *plr)
  **************************************************************************/
 const char *player_delegation_get(const struct player *pplayer)
 {
-  if (pplayer == NULL || strlen(pplayer->server.delegate_to) == 0) {
+  if (pplayer == NULL || qstrlen(pplayer->server.delegate_to) == 0) {
     /* No delegation if there is no player. */
     return NULL;
   } else {
@@ -3089,7 +3089,7 @@ void player_delegation_set(struct player *pplayer, const char *username)
 {
   fc_assert_ret(pplayer != NULL);
 
-  if (username == NULL || strlen(username) == 0) {
+  if (username == NULL || qstrlen(username) == 0) {
     pplayer->server.delegate_to[0] = '\0';
   } else {
     sz_strlcpy(pplayer->server.delegate_to, username);
@@ -3103,7 +3103,7 @@ void player_delegation_set(struct player *pplayer, const char *username)
  **************************************************************************/
 bool player_delegation_active(const struct player *pplayer)
 {
-  return (pplayer && strlen(pplayer->server.orig_username) != 0);
+  return (pplayer && qstrlen(pplayer->server.orig_username) != 0);
 }
 
 /**********************************************************************/ /**

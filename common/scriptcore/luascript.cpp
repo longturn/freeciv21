@@ -155,7 +155,7 @@ static int luascript_report(struct fc_lua *fcl, int status, const char *code)
           if (end) {
             len = end - begin;
           } else {
-            len = strlen(begin);
+            len = qstrlen(begin);
           }
 
           if (abs(lineno - i) <= 3) {
@@ -595,7 +595,7 @@ int luascript_do_string(struct fc_lua *fcl, const char *str,
   fc_assert_ret_val(fcl, 0);
   fc_assert_ret_val(fcl->state, 0);
 
-  status = luaL_loadbuffer(fcl->state, str, strlen(str), name);
+  status = luaL_loadbuffer(fcl->state, str, qstrlen(str), name);
   if (status) {
     luascript_report(fcl, status, str);
   } else {

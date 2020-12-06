@@ -292,7 +292,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
         if (line == nullptr) {
           break;
         }
-        nat_x = strlen(line);
+        nat_x = qstrlen(line);
         str_pixmap = str_pixmap + line;
       }
 

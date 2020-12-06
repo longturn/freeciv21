@@ -141,7 +141,7 @@ const char *big_int_to_text(unsigned int mantissa, unsigned int exponent)
    * is initialized) because it can't be done before the charsets are
    * initialized. */
   local_to_internal_string_buffer(grouping_sep, sep, sizeof(sep));
-  seplen = strlen(sep);
+  seplen = qstrlen(sep);
 
 #if 0 /* Not needed while the values are unsigned. */
   fc_assert_ret_val(0 <= mantissa, NULL);
@@ -395,7 +395,7 @@ void remove_trailing_spaces(char *s)
   size_t len;
 
   fc_assert_ret(NULL != s);
-  len = strlen(s);
+  len = qstrlen(s);
   if (len > 0) {
     t = s + len - 1;
     while (QChar::isSpace(*t)) {
@@ -427,7 +427,7 @@ static void remove_trailing_char(char *s, char trailing)
 
   fc_assert_ret(NULL != s);
 
-  t = s + strlen(s) - 1;
+  t = s + qstrlen(s) - 1;
   while (t >= s && (*t) == trailing) {
     *t = '\0';
     t--;
@@ -450,7 +450,7 @@ static void remove_trailing_char(char *s, char trailing)
  ****************************************************************************/
 char *end_of_strn(char *str, int *nleft)
 {
-  int len = strlen(str);
+  int len = qstrlen(str);
   *nleft -= len;
   fc_assert_ret_val(0 < (*nleft), NULL); /* space for the terminating nul */
   return str + len;
@@ -747,7 +747,7 @@ char *user_username(char *buf, size_t bufsz)
  ****************************************************************************/
 static char *expand_dir(char *tok_in, bool ok_to_free)
 {
-  int i; /* strlen(tok), or -1 as flag */
+  int i; /* qstrlen(tok), or -1 as flag */
   char *tok;
   char **ret = &tok; /* Return tok by default */
   char *allocated;
@@ -758,7 +758,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
     remove_trailing_char(tok, DIR_SEPARATOR_CHAR);
   }
 
-  i = strlen(tok);
+  i = qstrlen(tok);
   if (tok[0] == '~') {
     if (i > 1 && tok[1] != DIR_SEPARATOR_CHAR) {
       qCritical("For \"%s\" in path cannot expand '~'"
@@ -772,7 +772,7 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
         qDebug("No HOME, skipping path component %s", tok);
         i = 0;
       } else {
-        int len = strlen(home) + i; /* +1 -1 */
+        int len = qstrlen(home) + i; /* +1 -1 */
 
         allocated = new char[len];
         ret = &allocated;
@@ -995,7 +995,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
     // Get all entries in the directory matching the pattern
     dir.setNameFilters({QStringLiteral("*") + QString::fromUtf8(suffix)});
     for (auto name : dir.entryList()) {
-      name.truncate(name.length() - strlen(suffix));
+      name.truncate(name.length() - qstrlen(suffix));
       strvec_append(files, name.toUtf8().data());
     }
   }
@@ -1027,7 +1027,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
 const char *fileinfoname(const struct strvec *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
-  char fnbuf[filename != NULL ? strlen(filename) + 1 : 1];
+  char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
   int i;
 #else  /* DIR_SEPARATOR_IS_DEFAULT */
   const char *fnbuf = filename;
@@ -1509,7 +1509,7 @@ enum m_pre_result match_prefix_full(m_pre_accessor_fn_t accessor_fn,
   int i, len, nmatches;
 
   if (len_fn == NULL) {
-    len = strlen(prefix);
+    len = qstrlen(prefix);
   } else {
     len = len_fn(prefix);
   }
@@ -1623,7 +1623,7 @@ char *interpret_tilde_alloc(const char *filename)
     char *buf;
 
     filename += 2; /* Skip past "~/" */
-    sz = strlen(home) + strlen(filename) + 2;
+    sz = qstrlen(home) + qstrlen(filename) + 2;
     buf = static_cast<char *>(fc_malloc(sz));
     fc_snprintf(buf, sz, "%s/%s", home, filename);
     return buf;
@@ -1643,7 +1643,7 @@ char *skip_to_basename(char *filepath)
   int j;
   fc_assert_ret_val(NULL != filepath, NULL);
 
-  for (j = strlen(filepath); j >= 0; j--) {
+  for (j = qstrlen(filepath); j >= 0; j--) {
     if (filepath[j] == DIR_SEPARATOR_CHAR) {
       return &filepath[j + 1];
     }
@@ -1712,7 +1712,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
 {
   char *ptr, found = '?';
 
-  if (*buf == NULL || strlen(*buf) == 0 || size == 0) {
+  if (*buf == NULL || qstrlen(*buf) == 0 || size == 0) {
     if (dest) {
       dest[0] = '\0';
     }

@@ -219,7 +219,7 @@ extern bool sg_success;
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
         qDebug("Line too short (expected %d got %lu)='%s'", wld.map.xsize,  \
-               (unsigned long) strlen(_line), buf);                         \
+               (unsigned long) qstrlen(_line), buf);                         \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       }                                                                     \
@@ -1599,7 +1599,7 @@ static void sg_load_game(struct loaddata *loading)
   if (string != NULL) {
     sg_failure_ret(strlen(string) == loading->technology.size,
                    "Invalid length of 'game.global_advances' (%lu ~= %lu).",
-                   (unsigned long) strlen(string),
+                   (unsigned long) qstrlen(string),
                    (unsigned long) loading->technology.size);
     for (i = 0; i < loading->technology.size; i++) {
       sg_failure_ret(string[i] == '1' || string[i] == '0',
@@ -2108,7 +2108,7 @@ static void sg_load_map_startpos(struct loaddata *loading)
     nation_names =
         secfile_lookup_str(loading->file, "map.startpos%d.nations", i);
     if (NULL != nation_names && '\0' != nation_names[0]) {
-      const size_t size = strlen(nation_names) + 1;
+      const size_t size = qstrlen(nation_names) + 1;
       char buf[size], *start, *end;
 
       memcpy(buf, nation_names, size);
@@ -2370,7 +2370,7 @@ static void sg_load_players_basic(struct loaddata *loading)
   sg_failure_ret(strlen(string) == loading->improvement.size,
                  "Invalid length for 'players.destroyed_wonders' "
                  "(%lu ~= %lu)",
-                 (unsigned long) strlen(string),
+                 (unsigned long) qstrlen(string),
                  (unsigned long) loading->improvement.size);
   for (k = 0; k < loading->improvement.size; k++) {
     sg_failure_ret(string[k] == '1' || string[k] == '0',
@@ -3247,7 +3247,7 @@ static void sg_load_player_main(struct loaddata *loading, struct player *plr)
     sg_failure_ret(strlen(string) == loading->improvement.size,
                    "Invalid length for 'player%d.lost_wonders' "
                    "(%lu ~= %lu)",
-                   plrno, (unsigned long) strlen(string),
+                   plrno, (unsigned long) qstrlen(string),
                    (unsigned long) loading->improvement.size);
     for (k = 0; k < loading->improvement.size; k++) {
       sg_failure_ret(string[k] == '1' || string[k] == '0',
@@ -3550,7 +3550,7 @@ static bool sg_load_player_city(struct loaddata *loading, struct player *plr,
   sg_warn_ret_val(string != NULL, FALSE, "%s", secfile_error());
   sg_warn_ret_val(strlen(string) == loading->improvement.size, FALSE,
                   "Invalid length of '%s.improvements' (%lu ~= %lu).",
-                  citystr, (unsigned long) strlen(string),
+                  citystr, (unsigned long) qstrlen(string),
                   (unsigned long) loading->improvement.size);
   for (i = 0; i < loading->improvement.size; i++) {
     sg_warn_ret_val(string[i] == '1' || string[i] == '0', FALSE,
@@ -4463,15 +4463,15 @@ static void sg_load_player_attributes(struct loaddata *loading,
       }
       log_debug("attribute_v2_block_length_quoted=%lu have=%lu part=%lu",
                 (unsigned long) quoted_length,
-                (unsigned long) strlen(quoted),
-                (unsigned long) strlen(current));
-      fc_assert(strlen(quoted) + strlen(current) <= quoted_length);
+                (unsigned long) qstrlen(quoted),
+                (unsigned long) qstrlen(current));
+      fc_assert(strlen(quoted) + qstrlen(current) <= quoted_length);
       strcat(quoted, current);
     }
-    fc_assert_msg(quoted_length == strlen(quoted),
+    fc_assert_msg(quoted_length == qstrlen(quoted),
                   "attribute_v2_block_length_quoted=%lu actual=%lu",
                   (unsigned long) quoted_length,
-                  (unsigned long) strlen(quoted));
+                  (unsigned long) qstrlen(quoted));
 
     actual_length = unquote_block(quoted, plr->attribute_block.data,
                                   plr->attribute_block.length);
@@ -4761,7 +4761,7 @@ static bool sg_load_player_vision_city(struct loaddata *loading,
   sg_warn_ret_val(string != NULL, FALSE, "%s", secfile_error());
   sg_warn_ret_val(strlen(string) == loading->improvement.size, FALSE,
                   "Invalid length of '%s.improvements' (%lu ~= %lu).",
-                  citystr, (unsigned long) strlen(string),
+                  citystr, (unsigned long) qstrlen(string),
                   (unsigned long) loading->improvement.size);
   for (i = 0; i < loading->improvement.size; i++) {
     sg_warn_ret_val(string[i] == '1' || string[i] == '0', FALSE,
@@ -4871,7 +4871,7 @@ static void sg_load_researches(struct loaddata *loading)
     sg_failure_ret(string != NULL, "%s", secfile_error());
     sg_failure_ret(strlen(string) == loading->technology.size,
                    "Invalid length of 'research.r%d.done' (%lu ~= %lu).", i,
-                   (unsigned long) strlen(string),
+                   (unsigned long) qstrlen(string),
                    (unsigned long) loading->technology.size);
     for (j = 0; j < loading->technology.size; j++) {
       sg_failure_ret(string[j] == '1' || string[j] == '0',
@@ -5203,7 +5203,7 @@ static void sg_load_sanitycheck(struct loaddata *loading)
   }
   players_iterate_end;
 
-  if (0 == strlen(server.game_identifier)
+  if (0 == qstrlen(server.game_identifier)
       || !is_base64url(server.game_identifier)) {
     /* This uses fc_rand(), so random state has to be initialized before. */
     randomize_base64url_string(server.game_identifier,

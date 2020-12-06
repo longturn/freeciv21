@@ -1007,11 +1007,11 @@ void handle_event(const char *featured_text, struct tile *ptile,
   if (-1 != conn_id && client.conn.id != conn_id
       && ft_color_requested(gui_options.highlight_our_names)) {
     const char *username = client.conn.username;
-    size_t userlen = strlen(username);
+    size_t userlen = qstrlen(username);
     const char *playername = ((client_player() && !client_is_observer())
                                   ? player_name(client_player())
                                   : NULL);
-    size_t playerlen = playername ? strlen(playername) : 0;
+    size_t playerlen = playername ? qstrlen(playername) : 0;
     const char *p;
 
     if (playername && playername[0] == '\0') {

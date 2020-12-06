@@ -178,7 +178,7 @@ static const char *text_link_type_name(enum text_link_type type)
 static bool find_option(const char *buf_in, const char *option,
                         char *buf_out, size_t write_len)
 {
-  size_t option_len = strlen(option);
+  size_t option_len = qstrlen(option);
 
   while (*buf_in != '\0') {
     while (QChar::isSpace(*buf_in) && *buf_in != '\0') {
@@ -268,7 +268,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
 
     ptag->link.type = TLT_INVALID;
     for (i = 0; (name = text_link_type_name(text_link_type(i))); i++) {
-      if (0 == fc_strncasecmp(buf, name, strlen(name))) {
+      if (0 == fc_strncasecmp(buf, name, qstrlen(name))) {
         ptag->link.type = text_link_type(i);
         break;
       }
@@ -809,7 +809,7 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
   for (i = 0;
        (name = text_tag_type_name(static_cast<enum text_tag_type>(i)));
        i++) {
-    name_len = strlen(name);
+    name_len = qstrlen(name);
     if (name_len == type_len
         && 0 == fc_strncasecmp(name, buf_in, name_len)) {
       buf_in += name_len;
@@ -822,7 +822,7 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
     for (i = 0; (name = text_tag_type_short_name(
                      static_cast<enum text_tag_type>(i)));
          i++) {
-      name_len = strlen(name);
+      name_len = qstrlen(name);
       if (name_len == type_len
           && 0 == fc_strncasecmp(name, buf_in, name_len)) {
         buf_in += name_len;
@@ -987,7 +987,7 @@ size_t featured_text_apply_tag(const char *text_source, char *featured_text,
   size_t len, total_len = 0;
   va_list args;
 
-  if (start_offset == FT_OFFSET_UNSET || start_offset > strlen(text_source)
+  if (start_offset == FT_OFFSET_UNSET || start_offset > qstrlen(text_source)
       || (stop_offset != FT_OFFSET_UNSET && stop_offset < start_offset)) {
     log_featured_text("featured_text_apply_tag(): invalid offsets.");
     return 0;

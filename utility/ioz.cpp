@@ -783,7 +783,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
     if (!xz_outbuffer_to_file(fp, LZMA_RUN)) {
       return 0;
     } else {
-      return strlen((char *) fp->u.xz.in_buf);
+      return qstrlen((char *) fp->u.xz.in_buf);
     }
   } break;
 #endif /* FREECIV_HAVE_LIBLZMA */
@@ -798,11 +798,11 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
       qCritical("Too much data: truncated in fz_fprintf (%lu)",
                 (unsigned long) sizeof(buffer));
     }
-    BZ2_bzWrite(&fp->u.bz2.error, fp->u.bz2.file, buffer, strlen(buffer));
+    BZ2_bzWrite(&fp->u.bz2.error, fp->u.bz2.file, buffer, qstrlen(buffer));
     if (fp->u.bz2.error != BZ_OK) {
       return 0;
     } else {
-      return strlen(buffer);
+      return qstrlen(buffer);
     }
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
@@ -816,7 +816,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
       qCritical("Too much data: truncated in fz_fprintf (%lu)",
                 (unsigned long) sizeof(buffer));
     }
-    return gzwrite(fp->u.zlib, buffer, (unsigned int) strlen(buffer));
+    return gzwrite(fp->u.zlib, buffer, (unsigned int) qstrlen(buffer));
   }
   case FZ_PLAIN:
     va_start(ap, format);
