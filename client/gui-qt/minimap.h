@@ -54,8 +54,8 @@ private:
   int mini_width, mini_height;
   double scale;
   QMutex mutex;
-  bool restart;
-  bool abort;
+  bool threadrestart;
+  bool threadabort;
   QWaitCondition condition;
 };
 
