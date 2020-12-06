@@ -1733,7 +1733,7 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
                  + qstrlen(")")
                  + MAX_NUM_TERRAINS * (strlen(", ") + MAX_LEN_NAME)];
 
-    strcpy(city_str[set_count], nation_city_name(pncity));
+    qstrcpy(city_str[set_count], nation_city_name(pncity));
     switch (nation_city_river_preference(pncity)) {
     case NCP_DISLIKE:
       strcat(city_str[set_count], " (!river");

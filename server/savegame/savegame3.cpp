@@ -3030,7 +3030,7 @@ static void sg_save_map_owner(struct savedata *saving)
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
       if (!saving->save_players || tile_owner(ptile) == NULL) {
-        strcpy(token, "-");
+        qstrcpy(token, "-");
       } else {
         fc_snprintf(token, sizeof(token), "%d",
                     player_number(tile_owner(ptile)));
@@ -3052,7 +3052,7 @@ static void sg_save_map_owner(struct savedata *saving)
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
       if (ptile->claimer == NULL) {
-        strcpy(token, "-");
+        qstrcpy(token, "-");
       } else {
         fc_snprintf(token, sizeof(token), "%d", tile_index(ptile->claimer));
       }
@@ -3073,7 +3073,7 @@ static void sg_save_map_owner(struct savedata *saving)
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
       if (!saving->save_players || extra_owner(ptile) == NULL) {
-        strcpy(token, "-");
+        qstrcpy(token, "-");
       } else {
         fc_snprintf(token, sizeof(token), "%d",
                     player_number(extra_owner(ptile)));
@@ -3095,7 +3095,7 @@ static void sg_save_map_owner(struct savedata *saving)
       struct tile *ptile = native_pos_to_tile(&(wld.map), x, y);
 
       if (ptile->placing == NULL) {
-        strcpy(token, "-");
+        qstrcpy(token, "-");
       } else {
         fc_snprintf(token, sizeof(token), "%d",
                     extra_number(ptile->placing));
@@ -3200,7 +3200,7 @@ static void sg_save_map_worked(struct savedata *saving)
       struct city *pcity = tile_worked(ptile);
 
       if (pcity == NULL) {
-        strcpy(token, "-");
+        qstrcpy(token, "-");
       } else {
         fc_snprintf(token, sizeof(token), "%d", pcity->id);
       }
@@ -6909,7 +6909,7 @@ static void sg_save_player_vision(struct savedata *saving,
         struct player_tile *plrtile = map_get_player_tile(ptile, plr);
 
         if (plrtile == NULL || plrtile->owner == NULL) {
-          strcpy(token, "-");
+          qstrcpy(token, "-");
         } else {
           fc_snprintf(token, sizeof(token), "%d",
                       player_number(plrtile->owner));
@@ -6933,7 +6933,7 @@ static void sg_save_player_vision(struct savedata *saving,
         struct player_tile *plrtile = map_get_player_tile(ptile, plr);
 
         if (plrtile == NULL || plrtile->extras_owner == NULL) {
-          strcpy(token, "-");
+          qstrcpy(token, "-");
         } else {
           fc_snprintf(token, sizeof(token), "%d",
                       player_number(plrtile->extras_owner));

@@ -843,7 +843,7 @@ static char *lookup_string(struct section_file *file, const char *prefix,
   if (NULL != sval) {
     char copy[strlen(sval) + 1];
 
-    strcpy(copy, sval);
+    qstrcpy(copy, sval);
     remove_leading_trailing_spaces(copy);
     if (strlen(copy) > 0) {
       return fc_strdup(copy);
@@ -4289,7 +4289,7 @@ static bool load_nation_names(struct section_file *file,
         pl->translation_domain = NULL;
       } else if (!strcmp("freeciv-nations", domain)) {
         pl->translation_domain = new char[strlen(domain) + 1];
-        strcpy(pl->translation_domain, domain);
+        qstrcpy(pl->translation_domain, domain);
       } else {
         qCCritical(ruleset_category,
                    "Unsupported translation domain \"%s\" for %s", domain,

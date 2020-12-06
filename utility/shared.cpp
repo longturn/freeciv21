@@ -644,7 +644,7 @@ char *freeciv_storage_dir(void)
   if (storage_dir_freeciv == NULL) {
     storage_dir_freeciv = new char[strlen(FREECIV_STORAGE_DIR) + 1];
 
-    strcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
+    qstrcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
     storage_dir_freeciv = expand_dir(storage_dir_freeciv, TRUE);
 

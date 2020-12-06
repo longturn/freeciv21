@@ -4766,7 +4766,7 @@ char *helptext_unit_upkeep_str(const struct unit_type *utype)
   }
 
   if (any == 0) {
-    /* strcpy(buf, _("None")); */
+    /* qstrcpy(buf, _("None")); */
     fc_snprintf(buf, sizeof(buf), "%d", 0);
   }
   delete empty;
