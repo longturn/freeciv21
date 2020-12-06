@@ -576,7 +576,7 @@ bool fc_ai_tex_setup(struct ai_type *ai)
     return FALSE;
   }
 
-  strncpy(ai->name, "tex", sizeof(ai->name));
+  qstrncpy(ai->name, "tex", sizeof(ai->name));
 
 private
   = fc_malloc(sizeof(struct dai_private_data));

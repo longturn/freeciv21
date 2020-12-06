@@ -74,7 +74,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
  ***************************************************************************/
 bool has_capability(const char *cap, const char *capstr)
 {
-  return fc_has_capability(cap, capstr, strlen(cap));
+  return fc_has_capability(cap, capstr, qstrlen(cap));
 }
 
 /***********************************************************************/ /**

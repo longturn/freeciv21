@@ -74,7 +74,7 @@ void minimap_view::paintEvent(QPaintEvent *event)
 void minimap_view::scale(double factor)
 {
   scale_factor *= factor;
-  if (scale_factor < 1) {
+  if (scale_factor < 1.0) {
     scale_factor = 1.0;
   };
   update_image();
@@ -123,17 +123,17 @@ void minimap_view::draw_viewport(QPainter *painter)
                       mapview.gui_y0 + mapview.height);
   painter->setPen(QColor(Qt::white));
 
-  if (scale_factor > 1) {
+  if (scale_factor > 1.0) {
     for (i = 0; i < 4; i++) {
       scale_point(x[i], y[i]);
     }
   }
 
   for (i = 0; i < 4; i++) {
-    src_x = x[i] * w_ratio;
-    src_y = y[i] * h_ratio;
-    dst_x = x[(i + 1) % 4] * w_ratio;
-    dst_y = y[(i + 1) % 4] * h_ratio;
+    src_x = static_cast<int>(x[i] * w_ratio);
+    src_y = static_cast<int>(y[i] * h_ratio);
+    dst_x = static_cast<int>(x[(i + 1) % 4] * w_ratio);
+    dst_y = static_cast<int>(y[(i + 1) % 4] * h_ratio);
     painter->drawLine(src_x, src_y, dst_x, dst_y);
   }
 }
@@ -148,8 +148,8 @@ void minimap_view::scale_point(int &x, int &y)
 
   gui_to_overview_pos(tileset, &ax, &bx, mapview.gui_x0 + mapview.width / 2,
                       mapview.gui_y0 + mapview.height / 2);
-  x = qRound(x * scale_factor);
-  y = qRound(y * scale_factor);
+  x = qRound(static_cast<double>(x) * scale_factor);
+  y = qRound(static_cast<double>(y) * scale_factor);
   dx = qRound(ax * scale_factor - gui_options.overview.width / 2);
   dy = qRound(bx * scale_factor - gui_options.overview.height / 2);
   x = x - dx;
@@ -193,7 +193,7 @@ void minimap_view::update_pixmap(const QImage &image)
  **************************************************************************/
 minimap_thread::minimap_thread(QObject *parent)
     : QThread(parent), mini_width(20), mini_height(20), scale(1.0f),
-      restart(false), abort(false)
+      threadrestart(false), threadabort(false)
 {
 }
 
@@ -203,7 +203,7 @@ minimap_thread::minimap_thread(QObject *parent)
 minimap_thread::~minimap_thread()
 {
   mutex.lock();
-  abort = true;
+  threadabort = true;
   condition.wakeOne();
   mutex.unlock();
   wait();
@@ -214,15 +214,15 @@ minimap_thread::~minimap_thread()
  **************************************************************************/
 void minimap_thread::render(double scale_factor, int width, int height)
 {
-  restart = false;
-  abort = false;
+  threadrestart = false;
+  threadabort = false;
   mini_width = width;
   mini_height = height;
   scale = scale_factor;
   if (!isRunning()) {
     start(LowPriority);
   } else {
-    restart = true;
+    threadrestart = true;
     condition.wakeOne();
   }
 }
@@ -244,7 +244,7 @@ void minimap_thread::run()
     float wf, hf;
     QPixmap *src, *dst;
 
-    if (abort)
+    if (threadabort)
       return;
     mutex.lock();
     if (gui_options.overview.map != nullptr) {
@@ -282,9 +282,9 @@ void minimap_thread::run()
       }
     }
     emit rendered_image(image);
-    if (!restart)
+    if (!threadrestart)
       condition.wait(&mutex);
-    restart = false;
+    threadrestart = false;
     mutex.unlock();
   }
 }

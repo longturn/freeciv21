@@ -119,7 +119,7 @@ char **qtg_get_gui_specific_themes_directories(int *count)
   *count = strvec_size(data_dirs);
   strvec_iterate(data_dirs, data_dir)
   {
-    char buf[strlen(data_dir) + strlen("/themes/gui-qt") + 1];
+    char buf[strlen(data_dir) + qstrlen("/themes/gui-qt") + 1];
 
     fc_snprintf(buf, sizeof(buf), "%s/themes/gui-qt", data_dir);
 
@@ -174,7 +174,7 @@ char **qtg_get_useable_themes_in_directory(const char *directory, int *count)
     qba = theme_list[i].toLocal8Bit();
     data = new char[theme_list[i].toLocal8Bit().count() + 1];
     tn_bytes = theme_list[i].toLocal8Bit();
-    strcpy(data, tn_bytes.data());
+    qstrcpy(data, tn_bytes.data());
     array[i] = data;
   }
 

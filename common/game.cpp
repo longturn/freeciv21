@@ -799,7 +799,7 @@ int generate_save_name(const char *format, char *buf, int buflen,
 
   log_debug("save name generated from '%s': %s", format, buf);
 
-  return strlen(buf);
+  return qstrlen(buf);
 }
 
 /**********************************************************************/ /**

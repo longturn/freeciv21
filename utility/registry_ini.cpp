@@ -702,7 +702,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
            *  first points to the original string pentry->name
            *  base contains "xyz";
            *  offset = 5 (so first+offset gives "blah")
-           *  note strlen(base) = offset - 2
+           *  note qstrlen(base) = offset - 2
            */
 
           if (!SAVE_TABLES) {
@@ -1700,7 +1700,7 @@ struct entry *secfile_entry_by_path(const struct section_file *secfile,
   sz_strlcpy(fullpath, path);
 
   /* treat "sec.foo,0" as "sec.foo": */
-  len = strlen(fullpath);
+  len = qstrlen(fullpath);
   if (len > 2 && fullpath[len - 2] == ',' && fullpath[len - 1] == '0') {
     fullpath[len - 2] = '\0';
   }
@@ -2723,7 +2723,7 @@ secfile_sections_by_name_prefix(const struct section_file *secfile,
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, NULL);
   SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != prefix, NULL);
 
-  len = strlen(prefix);
+  len = qstrlen(prefix);
   if (0 == len) {
     return NULL;
   }

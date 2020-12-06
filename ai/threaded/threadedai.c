@@ -571,7 +571,7 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
     return FALSE;
   }
 
-  strncpy(ai->name, "threaded", sizeof(ai->name));
+  qstrncpy(ai->name, "threaded", sizeof(ai->name));
 
 private
   = fc_malloc(sizeof(struct dai_private_data));

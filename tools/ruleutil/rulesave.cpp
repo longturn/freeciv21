@@ -1729,11 +1729,11 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
     bool list_started = FALSE;
 
     city_str[set_count] =
-        new char[strlen(nation_city_name(pncity)) + strlen(" (!river")
-                 + strlen(")")
+        new char[strlen(nation_city_name(pncity)) + qstrlen(" (!river")
+                 + qstrlen(")")
                  + MAX_NUM_TERRAINS * (strlen(", ") + MAX_LEN_NAME)];
 
-    strcpy(city_str[set_count], nation_city_name(pncity));
+    qstrcpy(city_str[set_count], nation_city_name(pncity));
     switch (nation_city_river_preference(pncity)) {
     case NCP_DISLIKE:
       strcat(city_str[set_count], " (!river");
@@ -2982,7 +2982,7 @@ static bool save_script_lua(const char *filename, const char *name,
 {
   if (buffer != NULL) {
     FILE *ffile = fc_fopen(filename, "w");
-    int full_len = strlen(buffer);
+    int full_len = qstrlen(buffer);
     int len;
 
     if (ffile != NULL) {

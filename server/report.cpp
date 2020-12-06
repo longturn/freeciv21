@@ -963,7 +963,7 @@ static void dem_line_item(char *outptr, size_t out_size,
  **************************************************************************/
 bool is_valid_demography(const char *demography, int *error)
 {
-  int len = strlen(demography), i;
+  int len = qstrlen(demography), i;
 
   /* We check each character individually to see if it's valid.  This
    * does not check for duplicate entries. */
@@ -1167,19 +1167,19 @@ static bool scan_score_log(char *id)
     *ptr = '\0';
 
     if (line_nr == 1) {
-      if (strncmp(line, scorelog_magic, strlen(scorelog_magic)) != 0) {
+      if (strncmp(line, scorelog_magic, qstrlen(scorelog_magic)) != 0) {
         qCritical("[%s:%d] Bad file magic!", game.server.scorefile, line_nr);
         return FALSE;
       }
     }
 
-    if (strncmp(line, "id ", strlen("id ")) == 0) {
+    if (strncmp(line, "id ", qstrlen("id ")) == 0) {
       if (strlen(id) > 0) {
         qCritical("[%s:%d] Multiple ID entries!", game.server.scorefile,
                   line_nr);
         return FALSE;
       }
-      fc_strlcpy(id, line + strlen("id "), MAX_LEN_GAME_IDENTIFIER);
+      fc_strlcpy(id, line + qstrlen("id "), MAX_LEN_GAME_IDENTIFIER);
       if (strcmp(id, server.game_identifier) != 0) {
         qCritical("[%s:%d] IDs don't match! game='%s' scorelog='%s'",
                   game.server.scorefile, line_nr, server.game_identifier,
@@ -1188,8 +1188,8 @@ static bool scan_score_log(char *id)
       }
     }
 
-    if (strncmp(line, "turn ", strlen("turn ")) == 0) {
-      if (sscanf(line + strlen("turn "), "%d", &turn) != 1) {
+    if (strncmp(line, "turn ", qstrlen("turn ")) == 0) {
+      if (sscanf(line + qstrlen("turn "), "%d", &turn) != 1) {
         qCritical("[%s:%d] Bad line (turn)!", game.server.scorefile,
                   line_nr);
         return FALSE;
@@ -1199,9 +1199,9 @@ static bool scan_score_log(char *id)
       score_log->last_turn = turn;
     }
 
-    if (strncmp(line, "addplayer ", strlen("addplayer ")) == 0) {
+    if (strncmp(line, "addplayer ", qstrlen("addplayer ")) == 0) {
       if (3
-          != sscanf(line + strlen("addplayer "), "%d %d %s", &turn, &plr_no,
+          != sscanf(line + qstrlen("addplayer "), "%d %d %s", &turn, &plr_no,
                     plr_name)) {
         qCritical("[%s:%d] Bad line (addplayer)!", game.server.scorefile,
                   line_nr);
@@ -1209,7 +1209,7 @@ static bool scan_score_log(char *id)
       }
 
       /* Now get the complete player name if there are several parts. */
-      ptr = line + strlen("addplayer ");
+      ptr = line + qstrlen("addplayer ");
       spaces = 0;
       while (*ptr != '\0' && spaces < 2) {
         if (*ptr == ' ') {
@@ -1237,9 +1237,9 @@ static bool scan_score_log(char *id)
       plrdata_slot_init(plrdata, plr_name);
     }
 
-    if (strncmp(line, "delplayer ", strlen("delplayer ")) == 0) {
+    if (strncmp(line, "delplayer ", qstrlen("delplayer ")) == 0) {
       if (2
-          != sscanf(line + strlen("delplayer "), "%d %d", &turn, &plr_no)) {
+          != sscanf(line + qstrlen("delplayer "), "%d %d", &turn, &plr_no)) {
         qCritical("[%s:%d] Bad line (delplayer)!", game.server.scorefile,
                   line_nr);
         return FALSE;
@@ -1684,7 +1684,7 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
   sz_strlcpy(packet.caption, caption);
   sz_strlcpy(packet.headline, headline);
   packet.event = event;
-  len = strlen(lines);
+  len = qstrlen(lines);
   if ((len % (MAX_LEN_CONTENT - 1)) == 0) {
     packet.parts = len / (MAX_LEN_CONTENT - 1);
   } else {
@@ -1699,7 +1699,7 @@ static void page_conn_etype(struct conn_list *dest, const char *caption,
     int plen;
 
     plen = MIN(len, (MAX_LEN_CONTENT - 1));
-    strncpy(part.lines, &(lines[(MAX_LEN_CONTENT - 1) * i]), plen);
+    qstrncpy(part.lines, &(lines[(MAX_LEN_CONTENT - 1) * i]), plen);
     part.lines[plen] = '\0';
 
     lsend_packet_page_msg_part(dest, &part);

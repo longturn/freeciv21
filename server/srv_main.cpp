@@ -1792,7 +1792,7 @@ void save_game_auto(const char *save_reason, enum autosave_type type)
     break;
   }
 
-  fc_assert(256 > strlen(game.server.save_name));
+  fc_assert(256 > qstrlen(game.server.save_name));
 
   if (type != AS_TIMER) {
     generate_save_name(game.server.save_name, filename, sizeof(filename),
@@ -2925,7 +2925,7 @@ void srv_ready()
     int max = retry_ok ? 3 : 1;
     bool created = FALSE;
     struct unit_type *utype = NULL;
-    int sucount = strlen(game.server.start_units);
+    int sucount = qstrlen(game.server.start_units);
 
     if (sucount > 0) {
       for (i = 0; utype == NULL && i < sucount; i++) {

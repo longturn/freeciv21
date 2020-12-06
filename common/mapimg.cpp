@@ -928,7 +928,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
   case MAPDEF_MAP:
     /* map definition */
     {
-      int len = strlen(val), l;
+      int len = qstrlen(val), l;
       enum mapimg_layer layer;
       bool error;
 
@@ -962,7 +962,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
 
       if (strlen(val) < MAX_NUM_PLAYER_SLOTS + 1) {
         BV_CLR_ALL(pmapdef->player.plrbv);
-        for (i = 0; i < strlen(val); i++) {
+        for (i = 0; i < qstrlen(val); i++) {
           if (!strchr("01", val[i])) {
             MAPIMG_LOG(_("invalid character in bitvector: '%c' (%s)"),
                        val[i], val);

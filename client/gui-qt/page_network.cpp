@@ -216,7 +216,7 @@ void page_network::update_server_list(enum server_scan_type sstype,
     if (pserver->humans >= 0) {
       fc_snprintf(buf, sizeof(buf), "%d", pserver->humans);
     } else {
-      strncpy(buf, _("Unknown"), sizeof(buf) - 1);
+      qstrncpy(buf, _("Unknown"), sizeof(buf) - 1);
     }
 
     tmp = pserver->port;

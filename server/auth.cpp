@@ -268,7 +268,7 @@ void auth_process_status(struct connection *pconn)
  ****************************************************************************/
 static bool is_guest_name(const char *name)
 {
-  return (fc_strncasecmp(name, GUEST_NAME, strlen(GUEST_NAME)) == 0);
+  return (fc_strncasecmp(name, GUEST_NAME, qstrlen(GUEST_NAME)) == 0);
 }
 
 /************************************************************************/ /**
@@ -329,7 +329,7 @@ static bool is_good_password(const char *password, char *msg)
                 "Try again."),
               MIN_PASSWORD_CAPS, MIN_PASSWORD_NUMS, MIN_PASSWORD_LEN);
 
-  for (i = 0; i < strlen(password); i++) {
+  for (i = 0; i < qstrlen(password); i++) {
     if (QChar::isUpper(password[i])) {
       num_caps++;
     }

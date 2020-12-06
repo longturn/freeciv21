@@ -168,7 +168,7 @@ static char *put_conv(const char *src, size_t *length)
   char *out = internal_to_data_string_malloc(src);
 
   if (out) {
-    *length = strlen(out);
+    *length = qstrlen(out);
     return out;
   } else {
     *length = 0;
@@ -192,7 +192,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
     return FALSE;
   }
 
-  len = strlen(out);
+  len = qstrlen(out);
   if (ndst > 0 && len >= ndst) {
     ret = FALSE;
     len = ndst - 1;

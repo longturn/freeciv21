@@ -44,7 +44,7 @@
 static bool sanity_check_metadata(void)
 {
   if (game.ruleset_summary != NULL
-      && strlen(game.ruleset_summary) > MAX_LEN_CONTENT) {
+      && qstrlen(game.ruleset_summary) > MAX_LEN_CONTENT) {
     qCritical("Too long ruleset summary. It can be only %d bytes long. "
               "Put longer explanations to ruleset description.",
               MAX_LEN_CONTENT);

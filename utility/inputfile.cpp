@@ -212,7 +212,7 @@ struct inputfile *inf_from_file(const char *filename,
   fz_FILE *fp;
 
   fc_assert_ret_val(NULL != filename, NULL);
-  fc_assert_ret_val(0 < strlen(filename), NULL);
+  fc_assert_ret_val(0 < qstrlen(filename), NULL);
   fp = fz_from_file(filename, "r", FZ_PLAIN, 0);
   if (!fp) {
     return NULL;
@@ -345,7 +345,7 @@ static bool check_include(struct inputfile *inf)
   struct inputfile *new_inf, temp;
 
   if (len == 0) {
-    len = strlen(include_prefix);
+    len = qstrlen(include_prefix);
   }
   fc_assert_ret_val(inf_sanity_check(inf), FALSE);
   if (inf->in_string || astr_len(&inf->cur_line) <= len
@@ -383,8 +383,8 @@ static bool check_include(struct inputfile *inf)
   }
   c++;
   bare_name_len = c - bare_name_start;
-  bare_name = static_cast<char *>(fc_malloc(bare_name_len));
-  strncpy(bare_name, bare_name_start, bare_name_len - 1);
+  bare_name = new char[bare_name_len + 1];
+  qstrncpy(bare_name, bare_name_start, bare_name_len);
   bare_name[bare_name_len - 1] = '\0';
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
 
@@ -394,7 +394,7 @@ static bool check_include(struct inputfile *inf)
   }
   if (!(*c == '\0' || is_comment(*c))) {
     qCCritical(inf_category, "Junk after filename for '*include' line");
-    free(bare_name);
+    delete[] bare_name;
     return FALSE;
   }
   inf->cur_line_pos = astr_len(&inf->cur_line) - 1;
@@ -402,10 +402,10 @@ static bool check_include(struct inputfile *inf)
   full_name = inf->datafn(bare_name);
   if (!full_name) {
     qCritical("Could not find included file \"%s\"", bare_name);
-    free(bare_name);
+    delete[] bare_name;
     return FALSE;
   }
-  free(bare_name);
+  delete[] bare_name;
 
   /* avoid recursion: (first filename may not have the same path,
    * but will at least stop infinite recursion) */

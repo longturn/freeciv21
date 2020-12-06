@@ -207,7 +207,7 @@ void page_scenario::update_scenarios_page(void)
           st = QLatin1String("");
         }
         sl << "<b>"
-                  + QString(sname && strlen(sname) ? Q_(sname) : pfile->name)
+                  + QString(sname && qstrlen(sname) ? Q_(sname) : pfile->name)
                         .toHtmlEscaped()
                   + "</b>"
            << QString(pfile->fullname).toHtmlEscaped()

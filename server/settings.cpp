@@ -904,7 +904,7 @@ static bool autosaves_callback(unsigned value, struct connection *caller,
 static bool allowtake_callback(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
-  int len = strlen(value), i;
+  int len = qstrlen(value), i;
   bool havecharacter_state = FALSE;
 
   /* We check each character individually to see if it's valid.  This
@@ -948,7 +948,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
 static bool startunits_callback(const char *value, struct connection *caller,
                                 char *reject_msg, size_t reject_msg_len)
 {
-  int len = strlen(value), i;
+  int len = qstrlen(value), i;
   Unit_Class_id first_role;
   bool firstnative = FALSE;
 
@@ -5141,7 +5141,7 @@ setting_match_prefix_base(const val_name_func_t name_fn, const char *prefix,
                           size_t max_matches, size_t *pnum_matches)
 {
   const struct sset_val_name *name;
-  size_t len = strlen(prefix);
+  size_t len = qstrlen(prefix);
   size_t num_matches;
   int i;
 
@@ -5728,7 +5728,7 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
     fc_strlcpy(buf, astr_str(&astr), buf_len);
     astr_free(&astr);
     fc_strlcat(buf, " (", buf_len);
-    len = strlen(buf);
+    len = qstrlen(buf);
     buf += len;
     buf_len -= len;
   }

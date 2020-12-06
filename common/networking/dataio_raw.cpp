@@ -485,7 +485,7 @@ void dio_put_string_raw(struct raw_data_out *dout, const char *value)
       delete[] buffer;
     }
   } else {
-    dio_put_memory_raw(dout, value, strlen(value) + 1);
+    dio_put_memory_raw(dout, value, qstrlen(value) + 1);
   }
 }
 
@@ -797,7 +797,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
   remaining = dio_input_remaining(din);
   c = static_cast<char *>(ADD_TO_POINTER(din->src, din->current));
 
-  /* avoid using strlen (or strcpy) on an (unsigned char*)  --dwp */
+  /* avoid using qstrlen (or qstrcpy) on an (unsigned char*)  --dwp */
   for (offset = 0; offset < remaining && c[offset] != '\0'; offset++) {
     /* nothing */
   }

@@ -451,10 +451,10 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
   char *rulesets[packet->ruleset_count];
   int i;
-  size_t suf_len = strlen(RULESET_SUFFIX);
+  size_t suf_len = qstrlen(RULESET_SUFFIX);
 
   for (i = 0; i < packet->ruleset_count; i++) {
-    size_t len = strlen(packet->rulesets[i]);
+    size_t len = qstrlen(packet->rulesets[i]);
 
     rulesets[i] = fc_strdup(packet->rulesets[i]);
 

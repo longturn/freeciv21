@@ -1519,7 +1519,7 @@ const char *action_prepare_ui_name(action_id act_id, const char *mnemonic,
       while ((hit = strstr(ui_name, mnemonic))) {
         astr_add(&fmtstr, "%.*s%s%s", (int) (hit - ui_name), ui_name,
                  mnemonic, mnemonic);
-        ui_name = hit + strlen(mnemonic);
+        ui_name = hit + qstrlen(mnemonic);
       }
     }
     astr_add(&fmtstr, "%s", ui_name);

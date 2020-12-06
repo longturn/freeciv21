@@ -83,7 +83,7 @@ char *real_fc_strdup(const char *str, const char *called_as, int line,
   char *dest = new char[strlen(str) + 1];
 
   // no need to check whether dest is non-NULL (raises std::bad_alloc)
-  strcpy(dest, str);
+  qstrcpy(dest, str);
   return dest;
 }
 
@@ -183,7 +183,7 @@ size_t effectivestrlenquote(const char *str)
     return 0;
   }
 
-  len = strlen(str);
+  len = qstrlen(str);
 
   if (str[0] == '"' && str[len - 1] == '"') {
     return len - 2;
@@ -374,7 +374,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
   }
 
   len_max =
-      ceil((double) strlen(str) * strlen(replace) / strlen(search)) + 1;
+      ceil((double) qstrlen(str) * qstrlen(replace) / qstrlen(search)) + 1;
   if ((*len) < len_max) {
     /* replace string is longer than search string; allocated enough memory
      * for the worst case */
@@ -408,8 +408,8 @@ bool fc_strrep(char *str, size_t len, const char *search,
     return TRUE;
   }
 
-  len_search = strlen(search);
-  len_replace = strlen(replace);
+  len_search = qstrlen(search);
+  len_replace = qstrlen(replace);
 
   s = str;
   while (s != NULL) {
@@ -424,7 +424,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
       return FALSE;
     }
 
-    memmove(p + len_replace, p + len_search, strlen(p + len_search) + 1);
+    memmove(p + len_replace, p + len_search, qstrlen(p + len_search) + 1);
     memcpy(p, replace, len_replace);
     s = p + len_replace;
   }
@@ -444,7 +444,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
    or exact size malloc-ed.
 
    Result is always nul-terminated, whether or not truncation occurs,
-   and the return value is the strlen the destination would have had
+   and the return value is the qstrlen the destination would have had
    without truncation.  I.e., a return value >= input n indicates
    truncation occurred.
 
@@ -493,7 +493,7 @@ size_t fc_strlcat(char *dest, const char *src, size_t n)
 {
   size_t start;
 
-  start = strlen(dest);
+  start = qstrlen(dest);
 
   fc_assert(start < n);
 
@@ -615,7 +615,7 @@ int cat_snprintf(char *str, size_t n, const char *format, ...)
   fc_assert_ret_val(NULL != str, -1);
   fc_assert_ret_val(0 < n, -1);
 
-  len = strlen(str);
+  len = qstrlen(str);
   fc_assert_ret_val(len < n, -1);
 
   va_start(ap, format);
@@ -655,7 +655,7 @@ bool is_reg_file_for_access(const char *name, bool write_access)
  ****************************************************************************/
 int fc_break_lines(char *str, size_t desired_len)
 {
-  size_t slen = (size_t) strlen(str);
+  size_t slen = (size_t) qstrlen(str);
   int num_lines = 0;
   bool not_end = true;
   /* At top of this loop, s points to the rest of string,

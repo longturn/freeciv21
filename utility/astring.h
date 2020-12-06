@@ -18,8 +18,8 @@
 #define FC__ASTRING_H
 
 
-
-#include <string.h> /* strlen() */
+#include <QByteArray>
+#include <string.h> /* qstrlen() */
 
 /* utility */
 #include "support.h" /* bool, fc__attribute() */
@@ -93,7 +93,7 @@ static inline const char *astr_str(const struct astring *astr)
 ****************************************************************************/
 static inline size_t astr_len(const struct astring *astr)
 {
-  return (NULL != astr->str ? strlen(astr->str) : 0);
+  return (NULL != astr->str ? qstrlen(astr->str) : 0);
 }
 
 /****************************************************************************

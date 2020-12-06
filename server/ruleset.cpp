@@ -843,7 +843,7 @@ static char *lookup_string(struct section_file *file, const char *prefix,
   if (NULL != sval) {
     char copy[strlen(sval) + 1];
 
-    strcpy(copy, sval);
+    qstrcpy(copy, sval);
     remove_leading_trailing_spaces(copy);
     if (strlen(copy) > 0) {
       return fc_strdup(copy);
@@ -4207,7 +4207,7 @@ static void send_ruleset_control(struct conn_list *dest)
 
     part.text[this_len] = '\0';
 
-    strncpy(part.text, &game.ruleset_description[idx], this_len);
+    qstrncpy(part.text, &game.ruleset_description[idx], this_len);
     idx += this_len;
     desc_left -= this_len;
 
@@ -4289,7 +4289,7 @@ static bool load_nation_names(struct section_file *file,
         pl->translation_domain = NULL;
       } else if (!strcmp("freeciv-nations", domain)) {
         pl->translation_domain = new char[strlen(domain) + 1];
-        strcpy(pl->translation_domain, domain);
+        qstrcpy(pl->translation_domain, domain);
       } else {
         qCCritical(ruleset_category,
                    "Unsupported translation domain \"%s\" for %s", domain,
@@ -4417,7 +4417,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
    * it. The parentheses are optional (but necessary to have the settings,
    * of course). Our job is now to parse it. */
   for (j = 0; j < dim; j++) {
-    size_t len = strlen(cities[j]);
+    size_t len = qstrlen(cities[j]);
     char city_name[len + 1], *p, *next, *end;
     struct nation_city *pncity;
 
@@ -4505,7 +4505,7 @@ load_city_name_list(struct section_file *file, struct nation_type *pnation,
 
           if (NULL == pterrain) {
             /* Try with removing frequent trailing 's'. */
-            size_t l = strlen(p);
+            size_t l = qstrlen(p);
 
             if (0 < l && 's' == QChar::toLower(p[l - 1])) {
               char saved = p[l - 1];
@@ -6109,7 +6109,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     int len;
 
     /* Ruleset/modpack summary found */
-    len = strlen(pref_text);
+    len = qstrlen(pref_text);
     game.ruleset_summary = new char[len + 1];
     fc_strlcpy(game.ruleset_summary, pref_text, len + 1);
   } else {
@@ -6125,7 +6125,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
     int len;
 
     /* Ruleset/modpack description found */
-    len = strlen(pref_text);
+    len = qstrlen(pref_text);
     game.ruleset_description = new char[len + 1];
     fc_strlcpy(game.ruleset_description, pref_text, len + 1);
     game.control.desc_length = len;
@@ -6140,7 +6140,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
 
   pref_text = secfile_lookup_str_default(file, "", "about.capabilities");
   if (pref_text[0] != '\0') {
-    int len = strlen(pref_text);
+    int len = qstrlen(pref_text);
 
     game.ruleset_capabilities = new char[len + 1];
     fc_strlcpy(game.ruleset_capabilities, pref_text, len + 1);
@@ -6839,7 +6839,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
       fname = secfile_lookup_str_default(file, NULL,
                                          "calendar.fragment_name%d", cf);
       if (fname != NULL) {
-        strncpy(game.calendar.calendar_fragment_name[cf], fname,
+        qstrncpy(game.calendar.calendar_fragment_name[cf], fname,
                 sizeof(game.calendar.calendar_fragment_name[cf]));
       }
     }

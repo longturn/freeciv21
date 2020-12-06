@@ -550,7 +550,7 @@ const char *get_infrastructure_text(bv_extras extras)
   }
   extra_type_iterate_end;
 
-  len = strlen(s);
+  len = qstrlen(s);
   p = s + len - 1;
   if (len > 0 && *p == '/') {
     *p = '\0';
