@@ -471,11 +471,11 @@ void city_widget::display_list_menu(const QPoint)
   }
   QString buf = QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
 
-  QAction cty_buy(QString(buf), 0);
-  QAction cty_center(style()->standardIcon(QStyle::SP_ArrowRight),
-                     _("Center"), 0);
-  QAction wl_clear(_("Clear"), 0);
-  QAction wl_empty(_("(no worklists defined)"), 0);
+  QAction *cty_buy = new QAction(QString(buf), this);
+  QAction *cty_center = new QAction(style()->standardIcon(QStyle::SP_ArrowRight),
+                     _("Center"), this);
+  QAction *wl_clear = new QAction(_("Clear"), this);
+  QAction *wl_empty = new QAction(_("(no worklists defined)"), this);
   bool worklist_defined = true;
 
   if (!can_client_issue_orders()) {
@@ -498,19 +498,19 @@ void city_widget::display_list_menu(const QPoint)
                           can_city_build_now, tmp_menu);
 
     tmp_menu = some_menu->addMenu(_("Worklist"));
-    tmp_menu->addAction(&wl_clear);
-    connect(&wl_clear, &QAction::triggered, this,
+    tmp_menu->addAction(wl_clear);
+    connect(wl_clear, &QAction::triggered, this,
             &city_widget::clear_worlist);
     tmp2_menu = tmp_menu->addMenu(_("Add"));
     gen_worklist_labels(cma_labels);
     if (cma_labels.count() == 0) {
-      tmp2_menu->addAction(&wl_empty);
+      tmp2_menu->addAction(wl_empty);
       worklist_defined = false;
     }
     fill_data(WORKLIST_ADD, cma_labels, tmp2_menu);
     tmp2_menu = tmp_menu->addMenu(_("Change"));
     if (cma_labels.count() == 0) {
-      tmp2_menu->addAction(&wl_empty);
+      tmp2_menu->addAction(wl_empty);
       worklist_defined = false;
     }
     fill_data(WORKLIST_CHANGE, cma_labels, tmp2_menu);
@@ -527,10 +527,10 @@ void city_widget::display_list_menu(const QPoint)
   if (!select_only) {
     list_menu->addAction(&cty_view);
     connect(&cty_view, &QAction::triggered, this, &city_widget::city_view);
-    list_menu->addAction(&cty_buy);
-    connect(&cty_buy, &QAction::triggered, this, &city_widget::buy);
-    list_menu->addAction(&cty_center);
-    connect(&cty_center, &QAction::triggered, this, &city_widget::center);
+    list_menu->addAction(cty_buy);
+    connect(cty_buy, &QAction::triggered, this, &city_widget::buy);
+    list_menu->addAction(cty_center);
+    connect(cty_center, &QAction::triggered, this, &city_widget::center);
   }
   sell_gold = 0;
 
