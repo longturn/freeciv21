@@ -797,7 +797,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
   remaining = dio_input_remaining(din);
   c = static_cast<char *>(ADD_TO_POINTER(din->src, din->current));
 
-  /* avoid using qstrlen (or strcpy) on an (unsigned char*)  --dwp */
+  /* avoid using qstrlen (or qstrcpy) on an (unsigned char*)  --dwp */
   for (offset = 0; offset < remaining && c[offset] != '\0'; offset++) {
     /* nothing */
   }

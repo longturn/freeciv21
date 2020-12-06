@@ -83,7 +83,7 @@ char *real_fc_strdup(const char *str, const char *called_as, int line,
   char *dest = new char[strlen(str) + 1];
 
   // no need to check whether dest is non-NULL (raises std::bad_alloc)
-  strcpy(dest, str);
+  qstrcpy(dest, str);
   return dest;
 }
 
