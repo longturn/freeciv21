@@ -1,4 +1,4 @@
-#include "version_gen.h"
+#include "fc_version.h"
 
 #define CMAKE_BUILD
 

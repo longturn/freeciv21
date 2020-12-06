@@ -11,17 +11,6 @@ add_custom_command(
     generate_specenum.py
 )
 
-# Generate version_gen.h
-add_custom_command(
-  OUTPUT
-    ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
-  COMMAND
-    ${CMAKE_SOURCE_DIR}/gen_headers/generate_version_header.sh
-    ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
-  VERBATIM
-  DEPENDS
-    ${CMAKE_SOURCE_DIR}/gen_headers/generate_version_header.sh
-)
 
 # Configuration headers
 set(BUG_URL ${FREECIV_BUG_URL})
@@ -60,7 +49,6 @@ add_library(
   timing.cpp
   # Generated
   ${CMAKE_CURRENT_BINARY_DIR}/specenum_gen.h
-  ${CMAKE_CURRENT_BINARY_DIR}/version_gen.h
 )
 
 # Add backward.hpp to the include path
