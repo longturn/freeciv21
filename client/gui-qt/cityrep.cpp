@@ -469,19 +469,19 @@ void city_widget::display_list_menu(const QPoint)
   for (auto pcity : qAsConst(selected_cities)) {
     sell_gold = sell_gold + pcity->client.buy_cost;
   }
-  QString buf = QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
-
-  QAction *cty_buy = new QAction(QString(buf), this);
-  QAction *cty_center = new QAction(style()->standardIcon(QStyle::SP_ArrowRight),
-                     _("Center"), this);
-  QAction *wl_clear = new QAction(_("Clear"), this);
-  QAction *wl_empty = new QAction(_("(no worklists defined)"), this);
-  bool worklist_defined = true;
-
   if (!can_client_issue_orders()) {
     return;
   }
   list_menu = new QMenu(this);
+  QString buf = QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
+
+  QAction *cty_buy = new QAction(QString(buf), list_menu);
+  QAction *cty_center = new QAction(style()->standardIcon(QStyle::SP_ArrowRight),
+                     _("Center"), list_menu);
+  QAction *wl_clear = new QAction(_("Clear"), list_menu);
+  QAction *wl_empty = new QAction(_("(no worklists defined)"), list_menu);
+  bool worklist_defined = true;
+
   if (!select_only) {
     some_menu = list_menu->addMenu(_("Production"));
     tmp_menu = some_menu->addMenu(_("Change"));
