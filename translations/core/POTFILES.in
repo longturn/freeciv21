@@ -309,7 +309,6 @@ server/unittools.cpp
 server/voting.cpp
 utility/astring.cpp
 utility/bugs.cpp
-utility/fc_cmdline.cpp
 utility/fciconv.cpp
 utility/inputfile.cpp
 utility/log.cpp

@@ -10,13 +10,4 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__SRVDEFS_H
-#define FC__SRVDEFS_H
-
-
-
-#define TOKEN_DELIMITERS " \t\n,"
-
-
-
-#endif /* FC__SRVDEFS_H */
+#pragma once
