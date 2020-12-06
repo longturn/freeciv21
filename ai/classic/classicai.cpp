@@ -587,7 +587,7 @@ bool fc_ai_classic_setup(struct ai_type *ai)
 
   classic_ai_set_self(ai);
 
-  strncpy(ai->name, "classic", sizeof(ai->name));
+  qstrncpy(ai->name, "classic", sizeof(ai->name));
 
   pprivate = new dai_private_data;
   pprivate->contemplace_workers = TRUE;

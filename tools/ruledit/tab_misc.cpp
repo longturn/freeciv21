@@ -218,14 +218,14 @@ void tab_misc::save_now()
   ui->flush_widgets();
 
   ba_bytes = name->text().toUtf8();
-  strncpy(nameUTF8, ba_bytes.data(), sizeof(nameUTF8) - 1);
+  qstrncpy(nameUTF8, ba_bytes.data(), sizeof(nameUTF8) - 1);
 
   if (nameUTF8[0] != '\0') {
-    strncpy(game.control.name, nameUTF8, sizeof(game.control.name));
+    qstrncpy(game.control.name, nameUTF8, sizeof(game.control.name));
   }
 
   ba_bytes = version->text().toUtf8();
-  strncpy(game.control.version, ba_bytes.data(),
+  qstrncpy(game.control.version, ba_bytes.data(),
           sizeof(game.control.version) - 1);
 
   if (!autoadjust_ruleset_data() || !sanity_check_ruleset_data(false)) {

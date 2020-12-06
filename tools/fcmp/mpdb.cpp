@@ -138,7 +138,7 @@ void create_mpdb(const char *filename, bool scenario_db)
   char *local_name = new char[llen];
   int i;
 
-  strncpy(local_name, filename, llen);
+  qstrncpy(local_name, filename, llen);
   for (i = llen - 1; local_name[i] != DIR_SEPARATOR_CHAR; i--) {
     /* Nothing */
   }

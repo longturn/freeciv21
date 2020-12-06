@@ -1264,7 +1264,7 @@ static void sg_load_savefile(struct loaddata *loading)
 
     req_caps = secfile_lookup_str_default(loading->file, "",
                                           "scenario.ruleset_caps");
-    strncpy(game.scenario.req_caps, req_caps,
+    qstrncpy(game.scenario.req_caps, req_caps,
             sizeof(game.scenario.req_caps) - 1);
     game.scenario.req_caps[sizeof(game.scenario.req_caps) - 1] = '\0';
 

@@ -340,7 +340,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
 #else
     client_info.emerg_version = 0;
 #endif
-    strncpy(client_info.distribution, FREECIV_DISTRIBUTOR,
+    qstrncpy(client_info.distribution, FREECIV_DISTRIBUTOR,
             sizeof(client_info.distribution));
     send_packet_client_info(&client.conn, &client_info);
 
