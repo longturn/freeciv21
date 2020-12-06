@@ -20,6 +20,7 @@
 #include <QEventLoop>
 #include <QGlobalStatic>
 #include <QHash>
+#include <QLoggingCategory>
 #include <QSet>
 #include <QTimer>
 
@@ -54,6 +55,8 @@
 #include "tilespec.h"
 
 #include "mapview_common.h"
+
+Q_LOGGING_CATEGORY(graphics_category, "freeciv.graphics")
 
 Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_highlight_set)
 Q_GLOBAL_STATIC(QSet<const struct tile *>, mapdeco_crosshair_set)
@@ -993,9 +996,10 @@ void set_mapview_origin(float gui_x0, float gui_y0)
       currtime = double(anim_timer->elapsed()) / 1000;
       total_frames += frames;
       total_time += currtime;
-      log_debug("Got %d frames in %f seconds: %f FPS (avg %f).", frames,
-                currtime, (double) frames / currtime,
-                total_frames / total_time);
+      qCDebug(graphics_category,
+              "Got %d frames in %f seconds: %f FPS (avg %f).", frames,
+              currtime, (double) frames / currtime,
+              total_frames / total_time);
 
       /* A very small decay factor to make things more accurate when
        * something changes (mapview size, tileset change, etc.).  This gives
@@ -3655,9 +3659,9 @@ void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
     x = modules_info[i].x * w / 4 - w / 2;
     y = modules_info[i].y * h / 4 - h / 2;
 
-    spr = (k == 0 ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
-                  : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
-                           : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
+    spr = (k == 0   ? get_spaceship_sprite(t, SPACESHIP_HABITATION)
+           : k == 1 ? get_spaceship_sprite(t, SPACESHIP_LIFE_SUPPORT)
+                    : get_spaceship_sprite(t, SPACESHIP_SOLAR_PANEL));
     canvas_put_sprite_full(pcanvas, x, y, spr);
   }
 
