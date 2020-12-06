@@ -327,7 +327,7 @@ void map_view::find_place(int pos_x, int pos_y, int &w, int &h, int wdth,
    and the tile under the current unit, for specified unit.  Note that
    in practice punit is always the focus unit.
 
-   Clears label if punit is NULL.
+   Clears label if punit is nullptr.
 
    Typically also updates the cursor for the map_canvas (this is
    related because the info label may includes "select destination"
@@ -663,7 +663,7 @@ info_tile *info_tile::i(struct tile *p)
  **************************************************************************/
 void popup_tile_info(struct tile *ptile)
 {
-  struct unit *punit = NULL;
+  struct unit *punit = nullptr;
 
   if (TILE_UNKNOWN != client_tile_get_known(ptile)) {
     mapdeco_set_crosshair(ptile, true);
@@ -698,4 +698,425 @@ void qtg_start_turn()
   last_center_capital = 0;
   last_center_player_city = 0;
   last_center_enemy_city = 0;
+}
+
+/************************************************************************/ /**
+   Draw a "full" city bar for the city.  This is a subcase of show_city_desc
+   (see that function for more info) for tilesets that have a full city bar.
+ ****************************************************************************/
+static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
+                              const int canvas_y0, struct city *pcity,
+                              int *width, int *height)
+{
+  const struct citybar_sprites *citybar = get_citybar_sprites(tileset);
+  static char name[512], growth[32], prod[512], size[32], trade_routes[32];
+  enum color_std growth_color;
+  enum color_std production_color;
+  // trade_routes_color initialized just to get rid of gcc warning
+  enum color_std trade_routes_color = COLOR_MAPVIEW_CITYTEXT;
+  QColor *owner_color;
+  struct {
+    int x, y, w, h;
+  } name_rect = {0, 0, 0, 0}, growth_rect = {0, 0, 0, 0},
+    prod_rect = {0, 0, 0, 0}, size_rect = {0, 0, 0, 0},
+    flag_rect = {0, 0, 0, 0}, occupy_rect = {0, 0, 0, 0},
+    food_rect = {0, 0, 0, 0}, shield_rect = {0, 0, 0, 0},
+    trade_routes_rect =
+        {
+            0,
+        },
+    trade_rect = {
+        0,
+    };
+  int width1 = 0, width2 = 0, height1 = 0, height2 = 0;
+  struct sprite *bg = citybar->background;
+  struct sprite *flag = get_city_flag_sprite(tileset, pcity);
+  struct sprite *occupy = nullptr;
+  int bg_w, bg_h, x, y;
+  const int canvas_x = canvas_x0 + tileset_tile_width(tileset) / 2;
+  const int canvas_y = canvas_y0 + tileset_citybar_offset_y(tileset);
+  const int border = 6;
+  const enum client_font FONT_CITY_SIZE =
+      FONT_CITY_NAME; /* TODO: new font */
+
+  /* We can see the city's production or growth values if
+   * we are observing or playing as the owner of the city. */
+  const bool can_see_inside =
+      (client_is_global_observer() || city_owner(pcity) == client_player());
+  const bool should_draw_productions =
+      can_see_inside && gui_options.draw_city_productions;
+  const bool should_draw_growth =
+      can_see_inside && gui_options.draw_city_growth;
+  const bool should_draw_trade_routes =
+      can_see_inside && gui_options.draw_city_trade_routes;
+  const bool should_draw_lower_bar = should_draw_productions
+                                     || should_draw_growth
+                                     || should_draw_trade_routes;
+
+  if (width != nullptr) {
+    *width = 0;
+  }
+  if (height != nullptr) {
+    *height = 0;
+  }
+
+  if (!gui_options.draw_city_names && !should_draw_lower_bar) {
+    return;
+  }
+
+  /* First: calculate rect dimensions (but not positioning). */
+
+  get_sprite_dimensions(bg, &bg_w, &bg_h);
+  bg_w *= 1.0f;
+  bg_h *= 1.0f;
+  get_city_mapview_name_and_growth(pcity, name, sizeof(name), growth,
+                                   sizeof(growth), &growth_color,
+                                   &production_color);
+
+  if (gui_options.draw_city_names) {
+    fc_snprintf(size, sizeof(size), "%d", city_size_get(pcity));
+
+    get_text_size(&size_rect.w, &size_rect.h, FONT_CITY_SIZE, size);
+    get_text_size(&name_rect.w, &name_rect.h, FONT_CITY_NAME, name);
+
+    if (can_player_see_units_in_city(client.conn.playing, pcity)) {
+      int count = unit_list_size(pcity->tile->units);
+
+      count = CLIP(0, count, citybar->occupancy.size - 1);
+      occupy = citybar->occupancy.p[count];
+    } else {
+      if (pcity->client.occupied) {
+        occupy = citybar->occupied;
+      } else {
+        occupy = citybar->occupancy.p[0];
+      }
+    }
+
+    get_sprite_dimensions(flag, &flag_rect.w, &flag_rect.h);
+    flag_rect.w *= 1.0f;
+    flag_rect.h *= 1.0f;
+    get_sprite_dimensions(occupy, &occupy_rect.w, &occupy_rect.h);
+    occupy_rect.w *= 1.0f;
+    occupy_rect.h *= 1.0f;
+
+    width1 = (flag_rect.w + occupy_rect.w + name_rect.w + 2 * border
+              + size_rect.w);
+    height1 = qMax(flag_rect.h,
+                   qMax(occupy_rect.h,
+                        qMax(name_rect.h + border, size_rect.h + border)));
+  }
+
+  if (should_draw_lower_bar) {
+    width2 = 0;
+    height2 = 0;
+
+    if (should_draw_productions) {
+      get_city_mapview_production(pcity, prod, sizeof(prod));
+      get_text_size(&prod_rect.w, &prod_rect.h, FONT_CITY_PROD, prod);
+
+      get_sprite_dimensions(citybar->shields, &shield_rect.w,
+                            &shield_rect.h);
+      shield_rect.w *= 1.0f;
+      shield_rect.h *= 1.0f;
+      width2 += shield_rect.w + prod_rect.w + border;
+      height2 = qMax(height2, shield_rect.h);
+      height2 = qMax(height2, prod_rect.h + border);
+    }
+
+    if (should_draw_growth) {
+      get_text_size(&growth_rect.w, &growth_rect.h, FONT_CITY_PROD, growth);
+      get_sprite_dimensions(citybar->food, &food_rect.w, &food_rect.h);
+      food_rect.w *= 1.0f;
+      food_rect.h *= 1.0f;
+      width2 += food_rect.w + growth_rect.w + border;
+      height2 = qMax(height2, food_rect.h);
+      height2 = qMax(height2, growth_rect.h + border);
+    }
+
+    if (should_draw_trade_routes) {
+      get_city_mapview_trade_routes(
+          pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
+      get_text_size(&trade_routes_rect.w, &trade_routes_rect.h,
+                    FONT_CITY_PROD, trade_routes);
+      get_sprite_dimensions(citybar->trade, &trade_rect.w, &trade_rect.h);
+      trade_rect.w *= 1.0f;
+      trade_rect.h *= 1.0f;
+      width2 += trade_rect.w + trade_routes_rect.w + border;
+      height2 = qMax(height2, trade_rect.h);
+      height2 = qMax(height2, trade_routes_rect.h + border);
+    }
+  }
+
+  *width = qMax(width1, width2);
+  *height = height1 + height2;
+
+  /* Next fill in X and Y locations. */
+
+  if (gui_options.draw_city_names) {
+    flag_rect.x = canvas_x - *width / 2;
+    flag_rect.y = canvas_y + (height1 - flag_rect.h) / 2;
+
+    occupy_rect.x = flag_rect.x + flag_rect.w;
+    occupy_rect.y = canvas_y + (height1 - occupy_rect.h) / 2;
+
+    name_rect.x =
+        canvas_x
+        + (flag_rect.w + occupy_rect.w - name_rect.w - size_rect.w - border)
+              / 2;
+    name_rect.y = canvas_y + (height1 - name_rect.h) / 2;
+
+    size_rect.x = canvas_x + (*width + 1) / 2 - size_rect.w - border / 2;
+    size_rect.y = canvas_y + (height1 - size_rect.h) / 2;
+  }
+
+  if (should_draw_lower_bar) {
+    if (should_draw_productions) {
+      shield_rect.x = canvas_x - *width / 2;
+      shield_rect.y = canvas_y + height1 + (height2 - shield_rect.h) / 2;
+
+      prod_rect.x = shield_rect.x + shield_rect.w + border / 2;
+      prod_rect.y = canvas_y + height1 + (height2 - prod_rect.h) / 2;
+    }
+
+    if (should_draw_trade_routes) {
+      trade_routes_rect.x =
+          canvas_x + (*width + 1) / 2 - trade_routes_rect.w - border / 2;
+      trade_routes_rect.y =
+          canvas_y + height1 + (height2 - trade_routes_rect.h) / 2;
+
+      trade_rect.x = trade_routes_rect.x - border / 2 - trade_rect.w;
+      trade_rect.y = canvas_y + height1 + (height2 - trade_rect.h) / 2;
+    }
+
+    if (should_draw_growth) {
+      growth_rect.x =
+          canvas_x + (*width + 1) / 2 - growth_rect.w - border / 2;
+      if (trade_routes_rect.w > 0) {
+        growth_rect.x = growth_rect.x - trade_routes_rect.w - border / 2
+                        - trade_rect.w - border / 2;
+      }
+      growth_rect.y = canvas_y + height1 + (height2 - growth_rect.h) / 2;
+
+      food_rect.x = growth_rect.x - border / 2 - food_rect.w;
+      food_rect.y = canvas_y + height1 + (height2 - food_rect.h) / 2;
+    }
+  }
+
+  /* Now draw. */
+
+  /* Draw the city bar's background. */
+  for (x = 0; x < *width; x += bg_w) {
+    for (y = 0; y < *height; y += bg_h) {
+      canvas_put_sprite(pcanvas, (canvas_x - *width / 2 + x), (canvas_y + y),
+                        bg, 0, 0, (*width - x), (*height - y));
+    }
+  }
+
+  owner_color = get_player_color(tileset, city_owner(pcity));
+
+  if (gui_options.draw_city_names) {
+    canvas_put_sprite_full(pcanvas, flag_rect.x, flag_rect.y, flag);
+    canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                    (flag_rect.x + flag_rect.w) /* */ - 1, canvas_y /* */, 0,
+                    height1 /* */);
+    canvas_put_sprite_full(pcanvas, occupy_rect.x, occupy_rect.y, occupy);
+    canvas_put_text(pcanvas, name_rect.x, name_rect.y, FONT_CITY_NAME,
+                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
+    canvas_put_rectangle(pcanvas, owner_color, (size_rect.x - border / 2),
+                         canvas_y, (size_rect.w + border), height1);
+    {
+      /* Try to pick a color for city size text that contrasts with
+       * player color */
+      QColor *textcolors[2] = {
+          get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+          get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+
+      canvas_put_text(pcanvas, size_rect.x, size_rect.y, FONT_CITY_NAME,
+                      color_best_contrast(owner_color, textcolors,
+                                          ARRAY_SIZE(textcolors)),
+                      size);
+    }
+  }
+
+  if (should_draw_lower_bar) {
+
+    if (should_draw_productions) {
+      canvas_put_sprite_full(pcanvas, shield_rect.x, shield_rect.y,
+                             citybar->shields);
+      canvas_put_text(pcanvas, prod_rect.x, prod_rect.y, FONT_CITY_PROD,
+                      get_color(tileset, production_color), prod);
+    }
+
+    if (should_draw_trade_routes) {
+      canvas_put_sprite_full(pcanvas, trade_rect.x, trade_rect.y,
+                             citybar->trade);
+      canvas_put_text(pcanvas, trade_routes_rect.x, trade_routes_rect.y,
+                      FONT_CITY_PROD, get_color(tileset, trade_routes_color),
+                      trade_routes);
+    }
+
+    if (should_draw_growth) {
+      canvas_put_sprite_full(pcanvas, food_rect.x, food_rect.y,
+                             citybar->food);
+      canvas_put_text(pcanvas, growth_rect.x, growth_rect.y, FONT_CITY_PROD,
+                      get_color(tileset, growth_color), growth);
+    }
+  }
+
+  /* Draw the city bar's outline. */
+  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                  (canvas_x - *width / 2) /* */, canvas_y /* */,
+                  *width /* */, 0);
+  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                  (canvas_x - *width / 2) /* */, canvas_y /* */, 0,
+                  *height /* */);
+  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                  (canvas_x - *width / 2) /* */,
+                  (canvas_y + *height) /* */ - 1, *width /* */, 0);
+  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                  (canvas_x - *width / 2 + *width) /* */, canvas_y /* */, 0,
+                  *height /* */);
+
+  /* Draw the dividing line if we drew both the
+   * upper and lower parts. */
+  if (gui_options.draw_city_names && should_draw_lower_bar) {
+    canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+                    (canvas_x - *width / 2) /* */,
+                    (canvas_y + height1) /* */ - 1, *width /* */, 0);
+  }
+}
+
+/************************************************************************/ /**
+   Draw a "small" city bar for the city.  This is a subcase of show_city_desc
+   (see that function for more info) for tilesets that do not have a full
+   city bar.
+ ****************************************************************************/
+static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
+                               int canvas_y, struct city *pcity, int *width,
+                               int *height)
+{
+  static char name[512], growth[32], prod[512], trade_routes[32];
+  enum color_std growth_color;
+  enum color_std production_color;
+  /* trade_routes_color initialized just to get rid off gcc warning
+   * on optimization level 3 when it misdiagnoses that it would be used
+   * uninitialized otherwise. Funny thing here is that warning would
+   * go away also by *not* setting it to values other than
+   * COLOR_MAPVIEW_CITYTEXT in get_city_mapview_trade_routes() */
+  enum color_std trade_routes_color = COLOR_MAPVIEW_CITYTEXT;
+  struct {
+    int x, y, w, h;
+  } name_rect = {0, 0, 0, 0}, growth_rect = {0, 0, 0, 0},
+    prod_rect = {0, 0, 0, 0},
+    trade_routes_rect = {
+        0,
+    };
+  int total_width, total_height;
+  int spacer_width = 0;
+  const bool can_see_inside =
+      (client_is_global_observer() || city_owner(pcity) == client_player());
+
+  *width = *height = 0;
+
+  canvas_x += tileset_tile_width(tileset) / 2;
+  canvas_y += tileset_citybar_offset_y(tileset);
+
+  get_city_mapview_name_and_growth(pcity, name, sizeof(name), growth,
+                                   sizeof(growth), &growth_color,
+                                   &production_color);
+
+  if (gui_options.draw_city_names) {
+    int drawposx;
+
+    /* HACK: put a character's worth of space between the two
+     * strings if needed. */
+    get_text_size(&spacer_width, nullptr, FONT_CITY_NAME, "M");
+
+    total_width = 0;
+    total_height = 0;
+
+    get_text_size(&name_rect.w, &name_rect.h, FONT_CITY_NAME, name);
+    total_width += name_rect.w;
+    total_height = qMax(total_height, name_rect.h);
+
+    if (gui_options.draw_city_growth && can_see_inside) {
+      get_text_size(&growth_rect.w, &growth_rect.h, FONT_CITY_PROD, growth);
+      total_width += spacer_width + growth_rect.w;
+      total_height = qMax(total_height, growth_rect.h);
+    }
+
+    if (gui_options.draw_city_trade_routes && can_see_inside) {
+      get_city_mapview_trade_routes(
+          pcity, trade_routes, sizeof(trade_routes), &trade_routes_color);
+      get_text_size(&trade_routes_rect.w, &trade_routes_rect.h,
+                    FONT_CITY_PROD, trade_routes);
+      total_width += spacer_width + trade_routes_rect.w;
+      total_height = qMax(total_height, trade_routes_rect.h);
+    }
+
+    drawposx = canvas_x;
+    drawposx -= total_width / 2;
+    canvas_put_text(pcanvas, drawposx, canvas_y, FONT_CITY_NAME,
+                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
+    drawposx += name_rect.w;
+
+    if (gui_options.draw_city_growth && can_see_inside) {
+      drawposx += spacer_width;
+      canvas_put_text(
+          pcanvas, drawposx, (canvas_y + total_height - growth_rect.h),
+          FONT_CITY_PROD, get_color(tileset, growth_color), growth);
+      drawposx += growth_rect.w;
+    }
+
+    if (gui_options.draw_city_trade_routes && can_see_inside) {
+      drawposx += spacer_width;
+      canvas_put_text(pcanvas, drawposx,
+                      (canvas_y + total_height - trade_routes_rect.h),
+                      FONT_CITY_PROD, get_color(tileset, trade_routes_color),
+                      trade_routes);
+      drawposx += trade_routes_rect.w;
+    }
+
+    canvas_y += total_height + 3;
+
+    *width = qMax(*width, total_width);
+    *height += total_height + 3;
+  }
+  if (gui_options.draw_city_productions && can_see_inside) {
+    get_city_mapview_production(pcity, prod, sizeof(prod));
+    get_text_size(&prod_rect.w, &prod_rect.h, FONT_CITY_PROD, prod);
+
+    total_width = prod_rect.w;
+    total_height = prod_rect.h;
+
+    canvas_put_text(pcanvas, (canvas_x - total_width / 2), canvas_y,
+                    FONT_CITY_PROD, get_color(tileset, production_color),
+                    prod);
+
+    canvas_y += total_height;
+    *width = qMax(*width, total_width);
+    *height += total_height;
+  }
+}
+
+/************************************************************************/ /**
+   Draw a description for the given city.  This description may include the
+   name, turns-to-grow, production, and city turns-to-build (depending on
+   client options).
+
+   (canvas_x, canvas_y) gives the location on the given canvas at which to
+   draw the description.  This is the location of the city itself so the
+   text must be drawn underneath it.  pcity gives the city to be drawn,
+   while (*width, *height) should be set by show_city_desc to contain the
+   width and height of the text block (centered directly underneath the
+   city's tile).
+ ****************************************************************************/
+void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
+                    struct city *pcity, int *width, int *height)
+{
+  if (gui_options.draw_full_citybar) {
+    show_full_citybar(pcanvas, canvas_x, canvas_y, pcity, width, height);
+  } else {
+    show_small_citybar(pcanvas, canvas_x, canvas_y, pcity, width, height);
+  }
 }
