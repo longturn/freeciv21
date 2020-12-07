@@ -24,8 +24,12 @@
 #include <QFontMetrics>
 #include <QPainter>
 #include <QPainterPath>
+
+#include "client_main.h"
+#include "tilespec.h"
 // qt-client
 #include "colors.h"
+#include "colors_common.h"
 #include "fc_client.h"
 #include "fonts.h"
 #include "qtg_cxxside.h"
@@ -192,9 +196,9 @@ void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
 /*****************************************************************************
    Put unit in city area when city dialog is open
  ****************************************************************************/
-void canvas_put_unit_fogged(struct canvas *pcanvas,
-               int canvas_x, int canvas_y, struct sprite *psprite, bool fog,
-               int fog_x, int fog_y)
+void canvas_put_unit_fogged(struct canvas *pcanvas, int canvas_x,
+                            int canvas_y, struct sprite *psprite, bool fog,
+                            int fog_x, int fog_y)
 {
   QPainter p;
 
@@ -202,7 +206,6 @@ void canvas_put_unit_fogged(struct canvas *pcanvas,
   p.setOpacity(0.7);
   p.drawPixmap(canvas_x, canvas_y, *psprite->pm);
   p.end();
-
 }
 /************************************************************************/ /**
    Draw a filled-in colored rectangle onto canvas.
@@ -236,9 +239,8 @@ void qtg_canvas_put_rectangle(struct canvas *pcanvas, QColor *pcolor,
    Fill the area covered by the sprite with the given color.
  ****************************************************************************/
 void qtg_canvas_fill_sprite_area(struct canvas *pcanvas,
-                                 struct sprite *psprite,
-                                 QColor *pcolor, int canvas_x,
-                                 int canvas_y)
+                                 struct sprite *psprite, QColor *pcolor,
+                                 int canvas_x, int canvas_y)
 {
   int width, height;
 
@@ -334,7 +336,7 @@ void qtg_canvas_put_curved_line(struct canvas *pcanvas, QColor *pcolor,
    may be NULL in which case those values simply shouldn't be filled out.
  ****************************************************************************/
 void qtg_get_text_size(int *width, int *height, enum client_font font,
-                       const QString& text)
+                       const QString &text)
 {
   QFont *afont;
   QFontMetrics *fm;
@@ -358,7 +360,7 @@ void qtg_get_text_size(int *width, int *height, enum client_font font,
  ****************************************************************************/
 void qtg_canvas_put_text(struct canvas *pcanvas, int canvas_x, int canvas_y,
                          enum client_font font, QColor *pcolor,
-                         const QString& text)
+                         const QString &text)
 {
   QPainter p;
   QPen pen;
@@ -456,4 +458,232 @@ QRect zealous_crop_rect(QImage &p)
     }
   }
   return QRect(l, t, qMax(0, r - l + 1), qMax(0, b - t + 1));
+}
+
+void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
+                        int y)
+{
+  // Brush and pen attack
+  QBrush blackBrush;
+  QBrush brush;
+  QBrush grow2Brush;
+  QBrush growBrush;
+  QBrush prod2Brush;
+  QBrush prodBrush;
+  QFont *afont;
+  QFontMetrics *fm;
+  QPainter p;
+  QPen blackPen;
+  QPen grow2Pen;
+  QPen growPen;
+  QPen pen;
+  QPen prod2Pen;
+  QPen prodPen;
+  QPen ownerPen;
+  QBrush ownerBrush;
+  QPen playerPen;
+  QBrush playerBrush;
+  QPixmap bsPix;
+  QColor *owner_color = get_player_color(tileset, city_owner(pcity));
+  owner_color->setAlpha(90);
+  QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+                           get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
+  QColor *pcolor =
+      color_best_contrast(owner_color, textcolors, ARRAY_SIZE(textcolors));
+  int myHeight, cWidth;
+
+  afont = get_font(FONT_CITY_NAME);
+  pen.setColor(*pcolor);
+  ownerPen.setColor(*owner_color);
+
+  playerPen.setColor(QColor(0, 0, 0, 100));
+  playerBrush = QBrush(Qt::SolidPattern);
+  playerBrush.setColor(QColor(0, 0, 0, 100));
+  growPen.setColor(QColor(170,220, 120));
+  grow2Pen.setColor(QColor(200,200, 60));
+  prodPen.setColor(Qt::blue);
+  prod2Pen.setColor(QColor(200,200, 60));
+  blackPen.setColor(Qt::black);
+  brush = QBrush(Qt::SolidPattern);
+  brush.setColor(*pcolor);
+  ownerBrush = QBrush(Qt::SolidPattern);
+  ownerBrush.setColor(*owner_color);
+  growBrush = QBrush(Qt::SolidPattern);
+  growBrush.setColor(QColor(170,220, 120));
+  grow2Brush = QBrush(Qt::SolidPattern);
+  grow2Brush.setColor(QColor(200,200, 60));
+  prodBrush = QBrush(Qt::SolidPattern);
+  prodBrush.setColor(Qt::blue);
+  prod2Brush = QBrush(Qt::SolidPattern);
+  prod2Brush.setColor(QColor(200,200, 60));
+  blackBrush = QBrush(Qt::SolidPattern);
+  blackBrush.setColor(Qt::black);
+  fm = new QFontMetrics(*afont);
+
+  QString text = pcity->name;
+  struct sprite *flag = get_city_flag_sprite(tileset, pcity);
+  myHeight = fm->ascent();
+  QString city_size = QString::number(pcity->size);
+  const struct citybar_sprites *citybar = get_citybar_sprites(tileset);
+  struct sprite *occupy = nullptr;
+  QPixmap abullPix;
+
+  if (can_player_see_units_in_city(client.conn.playing, pcity)) {
+    int count = unit_list_size(pcity->tile->units);
+
+    count = CLIP(0, count, citybar->occupancy.size - 1);
+    occupy = citybar->occupancy.p[count];
+  } else {
+    if (pcity->client.occupied) {
+      occupy = citybar->occupied;
+    } else {
+      occupy = citybar->occupancy.p[0];
+    }
+  }
+  const bool can_see =
+      (client_is_global_observer() || city_owner(pcity) == client_player());
+  QString growth_time;
+  int granary_max = 0;
+
+  struct universal *target;
+  target = &pcity->production;
+  struct sprite *xsprite = nullptr;
+  if (can_see && (VUT_UTYPE == target->kind)) {
+    xsprite = get_unittype_sprite(get_tileset(), target->value.utype,
+                                  direction8_invalid());
+  } else if (can_see && (target->kind == VUT_IMPROVEMENT)) {
+    xsprite = get_building_sprite(get_tileset(), target->value.building);
+  }
+  QPixmap xfuck;
+  if (xsprite) {
+    xfuck = xsprite->pm->scaledToHeight(myHeight, Qt::SmoothTransformation);
+  } else {
+    xfuck = QPixmap(1, 1);
+  }
+
+  bsPix = (*flag->pm).scaledToHeight(myHeight, Qt::SmoothTransformation);
+  abullPix =
+      (*occupy->pm)
+          .scaledToHeight((myHeight * 3) / 2, Qt::SmoothTransformation);
+
+  // count width
+  int ffswidth;
+  ffswidth = fm->horizontalAdvance(city_size) + abullPix.width()
+             + bsPix.width() + fm->horizontalAdvance(text);
+
+  if (can_see) {
+    ffswidth = ffswidth + 6 + 6 + xfuck.width();
+    if (city_owner(pcity) == client_player()) {
+      ffswidth -=  bsPix.width();
+    }
+  }
+
+  x = x - ffswidth / 2;
+
+  // draw
+  p.begin(&pcanvas->map_pixmap);
+
+  p.setRenderHints(QPainter::Antialiasing);
+  if (city_owner(pcity) == client_player()) {
+    p.setPen(playerPen);
+    p.setBrush(playerBrush);
+  } else {
+    p.setPen(ownerPen);
+    p.setBrush(ownerBrush);
+  }
+  p.drawRoundedRect(x - 3, y - 3, ffswidth + 6, myHeight + 6, 7, 7);
+
+  p.setPen(pen);
+  p.setBrush(brush);
+  p.setFont(*afont);
+
+  // city size
+  p.drawText(x, y + fm->ascent() - 4, city_size);
+  cWidth = fm->horizontalAdvance(city_size);
+  x = x + cWidth;
+
+  // grow
+  if (can_see) {
+
+    growth_time = QString::number(city_turns_to_grow(pcity));
+    granary_max = city_granary_size(city_size_get(pcity));
+
+    int hstock = (myHeight * pcity->food_stock) / granary_max;
+    int hhstock = (myHeight * pcity->surplus[O_FOOD]) / granary_max;
+
+    p.setPen(blackPen);
+    p.setBrush(blackBrush);
+    int miss_stock = myHeight - hstock - hhstock;
+    if (miss_stock > 0) {
+      p.drawRect(x, y, 6, miss_stock);
+    } else {
+      miss_stock = 0;
+    }
+
+    p.setPen(grow2Pen);
+    p.setBrush(grow2Brush);
+    p.drawRect(x, y + miss_stock, 6, hhstock);
+
+    p.setPen(growPen);
+    p.setBrush(growBrush);
+    p.drawRect(x, y + miss_stock + hhstock, 6, hstock);
+
+    p.setPen(pen);
+    p.setBrush(brush);
+
+    x = x + 6;
+  }
+
+  // occupy
+  int wtfHeiht = (abullPix.height() - myHeight) / 2;
+  p.drawPixmap(x, y - wtfHeiht, abullPix);
+  cWidth = abullPix.width();
+  x = x + cWidth;
+
+  // flag
+  if (city_owner(pcity) != client_player()) {
+  p.drawPixmap(x, y, bsPix);
+  cWidth = bsPix.width();
+  x = x + cWidth;
+  }
+
+  // city name
+  p.drawText(x, y + fm->ascent() - 4, text);
+  cWidth = fm->horizontalAdvance(text);
+  myHeight = fm->ascent();
+  x = x + cWidth;
+
+  if (can_see) {
+    QString prod_time;
+    int prod_max;
+    prod_time = QString::number(city_production_turns_to_build(pcity, true));
+    prod_max = universal_build_shield_cost(pcity, &pcity->production);
+
+    int hstock = (myHeight * pcity->shield_stock) / prod_max;
+    int hhstock = (myHeight * pcity->surplus[O_SHIELD]) / prod_max;
+
+    p.setPen(blackPen);
+    p.setBrush(blackBrush);
+    int miss_stock = myHeight - hstock - hhstock;
+    if (miss_stock > 0) {
+      p.drawRect(x, y, 6, miss_stock);
+    } else {
+      miss_stock = 0;
+    }
+
+    p.setPen(prod2Pen);
+    p.setBrush(prod2Brush);
+    p.drawRect(x, y + miss_stock, 6, hhstock);
+
+    p.setPen(prodPen);
+    p.setBrush(prodBrush);
+    p.drawRect(x, y + miss_stock + hhstock, 6, hstock);
+
+    x = x + 6;
+
+    p.drawPixmap(x, y, xfuck);
+  }
+
+  p.end();
+  delete fm;
 }

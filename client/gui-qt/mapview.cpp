@@ -31,6 +31,7 @@
 #include "tilespec.h"
 #include "citydlg_g.h"
 // gui-qt
+#include "canvas.h"
 #include "colors.h"
 #include "fc_client.h"
 #include "fonts.h"
@@ -740,6 +741,7 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
   const enum client_font FONT_CITY_SIZE =
       FONT_CITY_NAME; /* TODO: new font */
 
+  int myHeight;
   /* We can see the city's production or growth values if
    * we are observing or playing as the owner of the city. */
   const bool can_see_inside =
@@ -905,86 +907,90 @@ static void show_full_citybar(struct canvas *pcanvas, const int canvas_x0,
 
   /* Now draw. */
 
-  /* Draw the city bar's background. */
-  for (x = 0; x < *width; x += bg_w) {
-    for (y = 0; y < *height; y += bg_h) {
-      canvas_put_sprite(pcanvas, (canvas_x - *width / 2 + x), (canvas_y + y),
-                        bg, 0, 0, (*width - x), (*height - y));
-    }
-  }
+  // /* Draw the city bar's background. */
+  // for (x = 0; x < *width; x += bg_w) {
+  //   for (y = 0; y < *height; y += bg_h) {
+  //     canvas_put_sprite(pcanvas, (canvas_x - *width / 2 + x), (canvas_y + y),
+  //                       bg, 0, 0, (*width - x), (*height - y));
+  //   }
+  // }
 
-  owner_color = get_player_color(tileset, city_owner(pcity));
+  draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y);
+  // owner_color = get_player_color(tileset, city_owner(pcity));
 
-  if (gui_options.draw_city_names) {
-    canvas_put_sprite_full(pcanvas, flag_rect.x, flag_rect.y, flag);
-    canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                    (flag_rect.x + flag_rect.w) /* */ - 1, canvas_y /* */, 0,
-                    height1 /* */);
-    canvas_put_sprite_full(pcanvas, occupy_rect.x, occupy_rect.y, occupy);
-    canvas_put_text(pcanvas, name_rect.x, name_rect.y, FONT_CITY_NAME,
-                    get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
-    canvas_put_rectangle(pcanvas, owner_color, (size_rect.x - border / 2),
-                         canvas_y, (size_rect.w + border), height1);
-    {
-      /* Try to pick a color for city size text that contrasts with
-       * player color */
-      QColor *textcolors[2] = {
-          get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
-          get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
 
-      canvas_put_text(pcanvas, size_rect.x, size_rect.y, FONT_CITY_NAME,
-                      color_best_contrast(owner_color, textcolors,
-                                          ARRAY_SIZE(textcolors)),
-                      size);
-    }
-  }
 
-  if (should_draw_lower_bar) {
 
-    if (should_draw_productions) {
-      canvas_put_sprite_full(pcanvas, shield_rect.x, shield_rect.y,
-                             citybar->shields);
-      canvas_put_text(pcanvas, prod_rect.x, prod_rect.y, FONT_CITY_PROD,
-                      get_color(tileset, production_color), prod);
-    }
+  // if (gui_options.draw_city_names) {
+  //   canvas_put_sprite_full(pcanvas, flag_rect.x, flag_rect.y, flag);
+  //   canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                   (flag_rect.x + flag_rect.w) /* */ - 1, canvas_y /* */, 0,
+  //                   height1 /* */);
+  //   canvas_put_sprite_full(pcanvas, occupy_rect.x, occupy_rect.y, occupy);
+  //   canvas_put_text(pcanvas, name_rect.x, name_rect.y, FONT_CITY_NAME,
+  //                   get_color(tileset, COLOR_MAPVIEW_CITYTEXT), name);
+  //   canvas_put_rectangle(pcanvas, owner_color, (size_rect.x - border / 2),
+  //                        canvas_y, (size_rect.w + border), height1);
+  //   {
+  //     /* Try to pick a color for city size text that contrasts with
+  //      * player color */
+  //     QColor *textcolors[2] = {
+  //         get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
+  //         get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
 
-    if (should_draw_trade_routes) {
-      canvas_put_sprite_full(pcanvas, trade_rect.x, trade_rect.y,
-                             citybar->trade);
-      canvas_put_text(pcanvas, trade_routes_rect.x, trade_routes_rect.y,
-                      FONT_CITY_PROD, get_color(tileset, trade_routes_color),
-                      trade_routes);
-    }
+  //     canvas_put_text(pcanvas, size_rect.x, size_rect.y, FONT_CITY_NAME,
+  //                     color_best_contrast(owner_color, textcolors,
+  //                                         ARRAY_SIZE(textcolors)),
+  //                     size);
+  //   }
+  // }
 
-    if (should_draw_growth) {
-      canvas_put_sprite_full(pcanvas, food_rect.x, food_rect.y,
-                             citybar->food);
-      canvas_put_text(pcanvas, growth_rect.x, growth_rect.y, FONT_CITY_PROD,
-                      get_color(tileset, growth_color), growth);
-    }
-  }
+  // if (should_draw_lower_bar) {
 
-  /* Draw the city bar's outline. */
-  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                  (canvas_x - *width / 2) /* */, canvas_y /* */,
-                  *width /* */, 0);
-  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                  (canvas_x - *width / 2) /* */, canvas_y /* */, 0,
-                  *height /* */);
-  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                  (canvas_x - *width / 2) /* */,
-                  (canvas_y + *height) /* */ - 1, *width /* */, 0);
-  canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                  (canvas_x - *width / 2 + *width) /* */, canvas_y /* */, 0,
-                  *height /* */);
+  //   if (should_draw_productions) {
+  //     canvas_put_sprite_full(pcanvas, shield_rect.x, shield_rect.y,
+  //                            citybar->shields);
+  //     canvas_put_text(pcanvas, prod_rect.x, prod_rect.y, FONT_CITY_PROD,
+  //                     get_color(tileset, production_color), prod);
+  //   }
 
-  /* Draw the dividing line if we drew both the
-   * upper and lower parts. */
-  if (gui_options.draw_city_names && should_draw_lower_bar) {
-    canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
-                    (canvas_x - *width / 2) /* */,
-                    (canvas_y + height1) /* */ - 1, *width /* */, 0);
-  }
+  //   if (should_draw_trade_routes) {
+  //     canvas_put_sprite_full(pcanvas, trade_rect.x, trade_rect.y,
+  //                            citybar->trade);
+  //     canvas_put_text(pcanvas, trade_routes_rect.x, trade_routes_rect.y,
+  //                     FONT_CITY_PROD, get_color(tileset, trade_routes_color),
+  //                     trade_routes);
+  //   }
+
+  //   if (should_draw_growth) {
+  //     canvas_put_sprite_full(pcanvas, food_rect.x, food_rect.y,
+  //                            citybar->food);
+  //     canvas_put_text(pcanvas, growth_rect.x, growth_rect.y, FONT_CITY_PROD,
+  //                     get_color(tileset, growth_color), growth);
+  //   }
+  // }
+
+  // /* Draw the city bar's outline. */
+  // canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                 (canvas_x - *width / 2) /* */, canvas_y /* */,
+  //                 *width /* */, 0);
+  // canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                 (canvas_x - *width / 2) /* */, canvas_y /* */, 0,
+  //                 *height /* */);
+  // canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                 (canvas_x - *width / 2) /* */,
+  //                 (canvas_y + *height) /* */ - 1, *width /* */, 0);
+  // canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                 (canvas_x - *width / 2 + *width) /* */, canvas_y /* */, 0,
+  //                 *height /* */);
+
+  // /* Draw the dividing line if we drew both the
+  //  * upper and lower parts. */
+  // if (gui_options.draw_city_names && should_draw_lower_bar) {
+  //   canvas_put_line(pcanvas, owner_color, LINE_NORMAL,
+  //                   (canvas_x - *width / 2) /* */,
+  //                   (canvas_y + height1) /* */ - 1, *width /* */, 0);
+  // }
 }
 
 /************************************************************************/ /**
