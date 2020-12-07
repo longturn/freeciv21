@@ -481,9 +481,8 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   QPen prodPen;
   QPen ownerPen;
   QBrush ownerBrush;
-  QPen playerPen;
-  QBrush playerBrush;
-  QPixmap bsPix;
+
+  QPixmap flagPix;
   QColor *owner_color = get_player_color(tileset, city_owner(pcity));
   owner_color->setAlpha(90);
   QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
@@ -493,32 +492,34 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   int myHeight, cWidth;
 
   afont = get_font(FONT_CITY_NAME);
-  pen.setColor(*pcolor);
-  ownerPen.setColor(*owner_color);
-
-  playerPen.setColor(QColor(0, 0, 0, 100));
-  playerBrush = QBrush(Qt::SolidPattern);
-  playerBrush.setColor(QColor(0, 0, 0, 100));
-  growPen.setColor(QColor(170,220, 120));
-  grow2Pen.setColor(QColor(200,200, 60));
-  prodPen.setColor(Qt::blue);
-  prod2Pen.setColor(QColor(200,200, 60));
+  blackBrush = QBrush(Qt::SolidPattern);
+  blackBrush.setColor(Qt::black);
   blackPen.setColor(Qt::black);
   brush = QBrush(Qt::SolidPattern);
   brush.setColor(*pcolor);
+  fm = new QFontMetrics(*afont);
+  grow2Brush = QBrush(Qt::SolidPattern);
+  grow2Brush.setColor(QColor(200, 200, 60));
+  grow2Pen.setColor(QColor(200, 200, 60));
+  growBrush = QBrush(Qt::SolidPattern);
+  growBrush.setColor(QColor(70, 120, 50));
+  growPen.setColor(QColor(70, 120, 50));
   ownerBrush = QBrush(Qt::SolidPattern);
   ownerBrush.setColor(*owner_color);
-  growBrush = QBrush(Qt::SolidPattern);
-  growBrush.setColor(QColor(170,220, 120));
-  grow2Brush = QBrush(Qt::SolidPattern);
-  grow2Brush.setColor(QColor(200,200, 60));
+  ownerPen.setColor(QColor(*owner_color));
+  pen.setColor(QColor(*pcolor));
+  prod2Brush = QBrush(Qt::SolidPattern);
+  prod2Brush.setColor(QColor(200, 200, 60));
+  prod2Pen.setColor(QColor(200, 200, 60));
   prodBrush = QBrush(Qt::SolidPattern);
   prodBrush.setColor(Qt::blue);
-  prod2Brush = QBrush(Qt::SolidPattern);
-  prod2Brush.setColor(QColor(200,200, 60));
-  blackBrush = QBrush(Qt::SolidPattern);
-  blackBrush.setColor(Qt::black);
-  fm = new QFontMetrics(*afont);
+  prodPen.setColor(Qt::blue);
+
+  if (city_owner(pcity) == client_player()) {
+    ownerPen.setColor(QColor(0, 0, 0, 100));
+    ownerBrush.setColor(QColor(0, 0, 0, 100));
+    pen.setColor(QColor(255, 255, 255));
+  }
 
   QString text = pcity->name;
   struct sprite *flag = get_city_flag_sprite(tileset, pcity);
@@ -526,7 +527,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   QString city_size = QString::number(pcity->size);
   const struct citybar_sprites *citybar = get_citybar_sprites(tileset);
   struct sprite *occupy = nullptr;
-  QPixmap abullPix;
+  QPixmap occupyPix;
 
   if (can_player_see_units_in_city(client.conn.playing, pcity)) {
     int count = unit_list_size(pcity->tile->units);
@@ -554,44 +555,39 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   } else if (can_see && (target->kind == VUT_IMPROVEMENT)) {
     xsprite = get_building_sprite(get_tileset(), target->value.building);
   }
-  QPixmap xfuck;
+  QPixmap prodPix;
   if (xsprite) {
-    xfuck = xsprite->pm->scaledToHeight(myHeight, Qt::SmoothTransformation);
+    prodPix = xsprite->pm->scaledToHeight(myHeight, Qt::SmoothTransformation);
   } else {
-    xfuck = QPixmap(1, 1);
+    prodPix = QPixmap(1, 1);
   }
 
-  bsPix = (*flag->pm).scaledToHeight(myHeight, Qt::SmoothTransformation);
-  abullPix =
+  flagPix = (*flag->pm).scaledToHeight(myHeight, Qt::SmoothTransformation);
+  occupyPix =
       (*occupy->pm)
           .scaledToHeight((myHeight * 3) / 2, Qt::SmoothTransformation);
 
   // count width
-  int ffswidth;
-  ffswidth = fm->horizontalAdvance(city_size) + abullPix.width()
-             + bsPix.width() + fm->horizontalAdvance(text);
+  int draw_width;
+  draw_width = fm->horizontalAdvance(city_size) + occupyPix.width()
+             + flagPix.width() + fm->horizontalAdvance(text) + 2 + 2;
 
   if (can_see) {
-    ffswidth = ffswidth + 6 + 6 + xfuck.width();
+    draw_width = draw_width + 6 + 6 + prodPix.width();
     if (city_owner(pcity) == client_player()) {
-      ffswidth -=  bsPix.width();
+      draw_width -= flagPix.width();
     }
   }
 
-  x = x - ffswidth / 2;
+  x = x - draw_width / 2;
 
   // draw
-  p.begin(&pcanvas->map_pixmap);
+  //afont->setCapitalization(QFont::SmallCaps);
 
-  p.setRenderHints(QPainter::Antialiasing);
-  if (city_owner(pcity) == client_player()) {
-    p.setPen(playerPen);
-    p.setBrush(playerBrush);
-  } else {
-    p.setPen(ownerPen);
-    p.setBrush(ownerBrush);
-  }
-  p.drawRoundedRect(x - 3, y - 3, ffswidth + 6, myHeight + 6, 7, 7);
+  p.begin(&pcanvas->map_pixmap);
+  p.setPen(ownerPen);
+  p.setBrush(ownerBrush);
+  p.drawRoundedRect(x - 3, y - 3, draw_width + 6, myHeight + 6, 7, 7);
 
   p.setPen(pen);
   p.setBrush(brush);
@@ -600,7 +596,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   // city size
   p.drawText(x, y + fm->ascent() - 4, city_size);
   cWidth = fm->horizontalAdvance(city_size);
-  x = x + cWidth;
+  x = x + cWidth + 2;
 
   // grow
   if (can_see) {
@@ -619,15 +615,18 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     } else {
       miss_stock = 0;
     }
-
+    // surplus
     p.setPen(grow2Pen);
     p.setBrush(grow2Brush);
     p.drawRect(x, y + miss_stock, 6, hhstock);
 
+    // food in stock
+    int max_height = qMin(myHeight, miss_stock + hhstock);
     p.setPen(growPen);
     p.setBrush(growBrush);
-    p.drawRect(x, y + miss_stock + hhstock, 6, hstock);
+    p.drawRect(x, y + max_height, 6, hstock);
 
+    // reset pens
     p.setPen(pen);
     p.setBrush(brush);
 
@@ -635,23 +634,23 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   }
 
   // occupy
-  int wtfHeiht = (abullPix.height() - myHeight) / 2;
-  p.drawPixmap(x, y - wtfHeiht, abullPix);
-  cWidth = abullPix.width();
+  int wtfHeiht = (occupyPix.height() - myHeight) / 2;
+  p.drawPixmap(x, y - wtfHeiht, occupyPix);
+  cWidth = occupyPix.width();
   x = x + cWidth;
 
   // flag
   if (city_owner(pcity) != client_player()) {
-  p.drawPixmap(x, y, bsPix);
-  cWidth = bsPix.width();
-  x = x + cWidth;
+    p.drawPixmap(x, y, flagPix);
+    cWidth = flagPix.width();
+    x = x + cWidth;
   }
 
   // city name
   p.drawText(x, y + fm->ascent() - 4, text);
   cWidth = fm->horizontalAdvance(text);
   myHeight = fm->ascent();
-  x = x + cWidth;
+  x = x + cWidth + 2;
 
   if (can_see) {
     QString prod_time;
@@ -670,18 +669,23 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     } else {
       miss_stock = 0;
     }
-
+    // surplus prod
+    hhstock = qMax(0 , hhstock); // it shouldn't be lower probably
+    hhstock = qMin(myHeight - hstock, hhstock);
     p.setPen(prod2Pen);
     p.setBrush(prod2Brush);
     p.drawRect(x, y + miss_stock, 6, hhstock);
 
+    // produced by now
     p.setPen(prodPen);
     p.setBrush(prodBrush);
     p.drawRect(x, y + miss_stock + hhstock, 6, hstock);
 
     x = x + 6;
 
-    p.drawPixmap(x, y, xfuck);
+    p.setBrush(QColor(200, 200, 200));
+    p.drawRect(x, y, prodPix.width(), prodPix.height());
+    p.drawPixmap(x, y, prodPix);
   }
 
   p.end();
