@@ -1632,6 +1632,7 @@ void city_dialog::hideEvent(QHideEvent *event)
       unit_focus_update();
     update_map_canvas_visible();
   }
+  queen()->mapview_wdg->show_all_fcwidgets();
 }
 
 /************************************************************************/ /**
@@ -2898,6 +2899,9 @@ void city_dialog::update_title()
  ****************************************************************************/
 void qtg_real_city_dialog_popup(struct city *pcity)
 {
+  queen()->mapview_wdg->hide_all_fcwidgets();
+  center_tile_mapcanvas(pcity->tile);
+
   city_dialog::instance()->setup_ui(pcity);
   city_dialog::instance()->show();
   city_dialog::instance()->activateWindow();
@@ -2919,7 +2923,9 @@ void destroy_city_dialog()
  ****************************************************************************/
 void qtg_popdown_city_dialog(struct city *pcity)
 {
-  city_dialog::instance()->hide();
+  Q_UNUSED(pcity)
+
+  qtg_popdown_all_city_dialogs(); // We only ever have one city dialog
 }
 
 /************************************************************************/ /**

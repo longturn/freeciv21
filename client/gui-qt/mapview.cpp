@@ -174,6 +174,26 @@ void map_view::update_cursor(enum cursor_type ct)
 }
 
 /**********************************************************************/ /**
+   Hides all fcwidgets (reports etc). Used to make room for the city dialog.
+ **************************************************************************/
+void map_view::hide_all_fcwidgets()
+{
+  for (auto widget : this->findChildren<fcwidget *>()) {
+    widget->hide();
+  }
+}
+
+/**********************************************************************/ /**
+   Shows all fcwidgets (reports etc). Used when closing the city dialog.
+ **************************************************************************/
+void map_view::show_all_fcwidgets()
+{
+  for (auto widget : this->findChildren<fcwidget *>()) {
+    widget->show();
+  }
+}
+
+/**********************************************************************/ /**
    Timer for cursor
  **************************************************************************/
 void map_view::timer_event()

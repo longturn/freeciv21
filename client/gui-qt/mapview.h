@@ -46,6 +46,10 @@ public:
   void resume_searching(int pos_x, int pos_y, int &w, int &h, int wdtht,
                         int hght, int recursive_nr);
   void update_cursor(enum cursor_type);
+
+  void hide_all_fcwidgets();
+  void show_all_fcwidgets();
+
   bool menu_click;
 
 protected:
