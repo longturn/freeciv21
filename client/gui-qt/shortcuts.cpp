@@ -67,7 +67,7 @@ fc_shortcut default_shortcuts[] = {
      _("Select button")},
     {SC_ADJUST_WORKERS, 0, Qt::LeftButton,
      Qt::MetaModifier | Qt::ControlModifier, _("Adjust workers")},
-    {SC_APPEND_FOCUS, 0, Qt::LeftButton, Qt::MetaModifier,
+    {SC_APPEND_FOCUS, 0, Qt::LeftButton, Qt::ShiftModifier,
      _("Append focus")},
     {SC_POPUP_INFO, 0, Qt::MiddleButton, Qt::NoModifier,
      _("Popup tile info")},
