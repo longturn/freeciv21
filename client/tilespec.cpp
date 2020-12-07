@@ -56,6 +56,7 @@ publishedtileset_layer by the Free Software Foundation; either version 2, or
 #include "unitlist.h"
 
 /* client/include */
+#include "citydlg_g.h"
 #include "dialogs_g.h"
 #include "graphics_g.h"
 #include "gui_main_g.h"
@@ -5177,7 +5178,7 @@ static int fill_grid_sprite_array(
           worked[i] = (NULL != tile_worked(tile));
         }
       }
-      if (tile) {
+      if (tile && is_any_city_dialog_open()) {
         { // Draw city grid for main citymap
           xcity = find_city_near_tile(tile);
           if (xcity && xcity->client.city_opened
