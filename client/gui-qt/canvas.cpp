@@ -489,7 +489,10 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
                            get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
   QColor *pcolor =
       color_best_contrast(owner_color, textcolors, ARRAY_SIZE(textcolors));
-  int myHeight, cWidth;
+  int fonttext_height, cWidth;
+
+  x = x + tileset_tile_width(tileset) / 2;
+  y = y + tileset_citybar_offset_y(tileset);
 
   afont = get_font(FONT_CITY_NAME);
   blackBrush = QBrush(Qt::SolidPattern);
@@ -523,7 +526,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
 
   QString text = pcity->name;
   struct sprite *flag = get_city_flag_sprite(tileset, pcity);
-  myHeight = fm->ascent();
+  fonttext_height = fm->ascent();
   QString city_size = QString::number(pcity->size);
   const struct citybar_sprites *citybar = get_citybar_sprites(tileset);
   struct sprite *occupy = nullptr;
@@ -557,20 +560,22 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   }
   QPixmap prodPix;
   if (xsprite) {
-    prodPix = xsprite->pm->scaledToHeight(myHeight, Qt::SmoothTransformation);
+    prodPix = xsprite->pm->scaledToHeight(fonttext_height,
+                                          Qt::SmoothTransformation);
   } else {
     prodPix = QPixmap(1, 1);
   }
 
-  flagPix = (*flag->pm).scaledToHeight(myHeight, Qt::SmoothTransformation);
-  occupyPix =
-      (*occupy->pm)
-          .scaledToHeight((myHeight * 3) / 2, Qt::SmoothTransformation);
+  flagPix =
+      (*flag->pm).scaledToHeight(fonttext_height, Qt::SmoothTransformation);
+  occupyPix = (*occupy->pm)
+                  .scaledToHeight((fonttext_height * 3) / 2,
+                                  Qt::SmoothTransformation);
 
   // count width
   int draw_width;
   draw_width = fm->horizontalAdvance(city_size) + occupyPix.width()
-             + flagPix.width() + fm->horizontalAdvance(text) + 2 + 2;
+               + flagPix.width() + fm->horizontalAdvance(text) + 2 + 2;
 
   if (can_see) {
     draw_width = draw_width + 6 + 6 + prodPix.width();
@@ -582,12 +587,11 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   x = x - draw_width / 2;
 
   // draw
-  //afont->setCapitalization(QFont::SmallCaps);
 
   p.begin(&pcanvas->map_pixmap);
   p.setPen(ownerPen);
   p.setBrush(ownerBrush);
-  p.drawRoundedRect(x - 3, y - 3, draw_width + 6, myHeight + 6, 7, 7);
+  p.drawRoundedRect(x - 3, y - 3, draw_width + 3, fonttext_height + 3, 7, 7);
 
   p.setPen(pen);
   p.setBrush(brush);
@@ -604,12 +608,12 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     growth_time = QString::number(city_turns_to_grow(pcity));
     granary_max = city_granary_size(city_size_get(pcity));
 
-    int hstock = (myHeight * pcity->food_stock) / granary_max;
-    int hhstock = (myHeight * pcity->surplus[O_FOOD]) / granary_max;
+    int hstock = (fonttext_height * pcity->food_stock) / granary_max;
+    int hhstock = (fonttext_height * pcity->surplus[O_FOOD]) / granary_max;
 
     p.setPen(blackPen);
     p.setBrush(blackBrush);
-    int miss_stock = myHeight - hstock - hhstock;
+    int miss_stock = fonttext_height - hstock - hhstock;
     if (miss_stock > 0) {
       p.drawRect(x, y, 6, miss_stock);
     } else {
@@ -621,21 +625,33 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     p.drawRect(x, y + miss_stock, 6, hhstock);
 
     // food in stock
-    int max_height = qMin(myHeight, miss_stock + hhstock);
+    int max_height = qMin(fonttext_height, miss_stock + hhstock);
     p.setPen(growPen);
     p.setBrush(growBrush);
     p.drawRect(x, y + max_height, 6, hstock);
 
     // reset pens
-    p.setPen(pen);
-    p.setBrush(brush);
+    p.setPen(ownerPen);
+    p.setBrush(ownerBrush);
 
+    // draw number of turns for city to grow
+    int font_size;
+    QFont font;
+    font = p.font();
+    font_size = font.pointSize();
+    font.setPointSize((font_size * 2) / 3);
+    p.setFont(font);
+    p.setPen(pen);
+    p.drawText(x, y + fonttext_height + fm->ascent() / 3, growth_time);
+    font.setPointSize(font_size);
+    p.setFont(font);
+    p.setBrush(brush);
     x = x + 6;
   }
 
   // occupy
-  int wtfHeiht = (occupyPix.height() - myHeight) / 2;
-  p.drawPixmap(x, y - wtfHeiht, occupyPix);
+  int half_miss_height = (occupyPix.height() - fonttext_height) / 2;
+  p.drawPixmap(x, y - half_miss_height, occupyPix);
   cWidth = occupyPix.width();
   x = x + cWidth;
 
@@ -649,7 +665,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   // city name
   p.drawText(x, y + fm->ascent() - 4, text);
   cWidth = fm->horizontalAdvance(text);
-  myHeight = fm->ascent();
+  fonttext_height = fm->ascent();
   x = x + cWidth + 2;
 
   if (can_see) {
@@ -658,20 +674,20 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     prod_time = QString::number(city_production_turns_to_build(pcity, true));
     prod_max = universal_build_shield_cost(pcity, &pcity->production);
 
-    int hstock = (myHeight * pcity->shield_stock) / prod_max;
-    int hhstock = (myHeight * pcity->surplus[O_SHIELD]) / prod_max;
+    int hstock = (fonttext_height * pcity->shield_stock) / prod_max;
+    int hhstock = (fonttext_height * pcity->surplus[O_SHIELD]) / prod_max;
 
     p.setPen(blackPen);
     p.setBrush(blackBrush);
-    int miss_stock = myHeight - hstock - hhstock;
+    int miss_stock = fonttext_height - hstock - hhstock;
     if (miss_stock > 0) {
       p.drawRect(x, y, 6, miss_stock);
     } else {
       miss_stock = 0;
     }
     // surplus prod
-    hhstock = qMax(0 , hhstock); // it shouldn't be lower probably
-    hhstock = qMin(myHeight - hstock, hhstock);
+    hhstock = qMax(0, hhstock); // it shouldn't be lower probably
+    hhstock = qMin(fonttext_height - hstock, hhstock);
     p.setPen(prod2Pen);
     p.setBrush(prod2Brush);
     p.drawRect(x, y + miss_stock, 6, hhstock);
@@ -686,6 +702,20 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     p.setBrush(QColor(200, 200, 200));
     p.drawRect(x, y, prodPix.width(), prodPix.height());
     p.drawPixmap(x, y, prodPix);
+
+    x = x - 10;
+    // draw number of turns to finish prod
+    int font_size;
+    QFont font;
+    font = p.font();
+    font_size = font.pointSize();
+    font.setPointSize((font_size * 2) / 3);
+    p.setFont(font);
+    p.setPen(pen);
+    p.drawText(x, y + fonttext_height + fm->ascent() / 3, prod_time);
+    font.setPointSize(font_size);
+    p.setFont(font);
+    p.setBrush(brush);
   }
 
   p.end();
