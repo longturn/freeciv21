@@ -463,32 +463,19 @@ QRect zealous_crop_rect(QImage &p)
 void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
                         int y)
 {
-  // Brush and pen attack
-  QBrush blackBrush;
-  QBrush brush;
-  QBrush grow2Brush;
-  QBrush growBrush;
-  QBrush prod2Brush;
-  QBrush prodBrush;
-  QFont *afont;
-  QFontMetrics *fm;
-  QPainter p;
-  QPen blackPen;
-  QPen grow2Pen;
-  QPen growPen;
-  QPen pen;
-  QPen prod2Pen;
-  QPen prodPen;
-  QPen ownerPen;
-  QBrush ownerBrush;
-
-  QPixmap flagPix;
+  QBrush blackBrush, brush, grow2Brush, growBrush, prod2Brush, prodBrush,
+      ownerBrush;
   QColor *owner_color = get_player_color(tileset, city_owner(pcity));
   owner_color->setAlpha(90);
   QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
                            get_color(tileset, COLOR_MAPVIEW_CITYTEXT_DARK)};
   QColor *pcolor =
       color_best_contrast(owner_color, textcolors, ARRAY_SIZE(textcolors));
+  QFont *afont;
+  QFontMetrics *fm;
+  QPainter p;
+  QPen blackPen, grow2Pen, growPen, pen, prod2Pen, prodPen, ownerPen;
+  QPixmap flagPix;
   int fonttext_height, cWidth;
 
   x = x + tileset_tile_width(tileset) / 2;
@@ -677,6 +664,9 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     int prod_max;
 
     int ptime = city_production_turns_to_build(pcity, true);
+    if (pcity->surplus[O_SHIELD] < 0) {
+      prodPix.fill(Qt::red);
+    }
     if (ptime < 1000) {
       prod_time = QString::number(ptime);
     } else {
@@ -685,6 +675,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     prod_max = universal_build_shield_cost(pcity, &pcity->production);
 
     int hstock = (fonttext_height * pcity->shield_stock) / prod_max;
+    hstock = qMin(fonttext_height, hstock);
     int hhstock = (fonttext_height * pcity->surplus[O_SHIELD]) / prod_max;
 
     p.setPen(blackPen);
