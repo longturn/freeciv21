@@ -351,7 +351,7 @@ private slots:
 /****************************************************************************
   City dialog
 ****************************************************************************/
-class city_dialog : public qfc_dialog {
+class city_dialog : public QWidget {
 
   Q_OBJECT
   Q_DISABLE_COPY(city_dialog);

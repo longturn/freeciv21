@@ -1342,7 +1342,7 @@ void governor_sliders::update_sliders(struct cm_parameter &param)
    Constructor for city_dialog, sets layouts, policies ...
  ****************************************************************************/
 city_dialog::city_dialog(QWidget *parent)
-    : qfc_dialog(parent), future_targets(false), show_units(true),
+    : QWidget(parent), future_targets(false), show_units(true),
       show_wonders(true), show_buildings(true), dont_focus(false),
       current_building(0)
 {
@@ -1434,7 +1434,6 @@ city_dialog::city_dialog(QWidget *parent)
   connect(ui.p_table_p->selectionModel(),
           &QItemSelectionModel::selectionChanged, this,
           &city_dialog::item_selected);
-  setSizeGripEnabled(true);
 
   /* governor tab */
   ui.qgbox->setTitle(_("Presets:"));
@@ -2903,9 +2902,10 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   center_tile_mapcanvas(pcity->tile);
 
   city_dialog::instance()->setup_ui(pcity);
+  city_dialog::instance()->setParent(queen()->mapview_wdg);
+  // TODO use layout
   city_dialog::instance()->show();
-  city_dialog::instance()->activateWindow();
-  city_dialog::instance()->raise();
+  city_dialog::instance()->resize(queen()->mapview_wdg->size());
 }
 
 /************************************************************************/ /**
