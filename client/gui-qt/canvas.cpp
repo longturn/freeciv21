@@ -26,6 +26,7 @@
 #include <QPainterPath>
 
 #include "client_main.h"
+#include "mapview_common.h"
 #include "tilespec.h"
 // qt-client
 #include "colors.h"
@@ -536,6 +537,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   }
   const bool can_see =
       (client_is_global_observer() || city_owner(pcity) == client_player());
+
   QString growth_time;
   int granary_max = 0;
 
@@ -576,14 +578,35 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   *ref_width = draw_width + 10;
   *ref_height = fm->height() * 3;
 
+  int mid = x;
   x = x - draw_width / 2;
 
   // draw
 
   p.begin(&pcanvas->map_pixmap);
+
   p.setPen(ownerPen);
   p.setBrush(ownerBrush);
   p.drawRoundedRect(x - 3, y - 3, draw_width + 3, fonttext_height + 3, 7, 7);
+
+  if (can_see && gui_options.draw_city_trade_routes) {
+    char trade_routes[32];
+    enum color_std trade_routes_color = COLOR_MAPVIEW_CITYTEXT;
+    get_city_mapview_trade_routes(pcity, trade_routes, sizeof(trade_routes),
+                                  &trade_routes_color);
+
+    QString trade_text = QString(trade_routes);
+    mid = mid - fm->horizontalAdvance(trade_text) / 2;
+    QPixmap tradePix = citybar->trade->pm->scaledToHeight(fonttext_height);
+
+    p.drawRoundedRect(mid - 3, y + fonttext_height,
+                      tradePix.width() + fm->horizontalAdvance(trade_text),
+                      fonttext_height + 3, 4, 4);
+    p.drawPixmap(mid, y + fonttext_height + 3, tradePix);
+    p.setPen(*get_color(tileset, trade_routes_color));
+    p.drawText(mid + tradePix.width(), y + 2 * fonttext_height - 2,
+               trade_text);
+  }
 
   p.setPen(pen);
   p.setBrush(brush);
