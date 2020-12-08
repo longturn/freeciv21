@@ -24,4 +24,5 @@ void image_copy(QImage *dest, QImage *src, int src_x, int src_y, int dest_x,
                 int dest_y, int width, int height);
 QRect zealous_crop_rect(QImage &p);
 
-void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x, int y);
+void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
+                        int y, int *width, int *height);

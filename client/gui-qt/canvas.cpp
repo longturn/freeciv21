@@ -461,7 +461,7 @@ QRect zealous_crop_rect(QImage &p)
 }
 
 void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
-                        int y)
+                        int y, int *ref_width, int *ref_height)
 {
   QBrush blackBrush, brush, grow2Brush, growBrush, prod2Brush, prodBrush,
       ownerBrush;
@@ -570,6 +570,8 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
       draw_width -= flagPix.width();
     }
   }
+  *ref_width = draw_width + 10;
+  *ref_height = fm->height() * 3;
 
   x = x - draw_width / 2;
 

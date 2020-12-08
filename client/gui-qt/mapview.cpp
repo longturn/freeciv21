@@ -836,10 +836,7 @@ void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
 
 
   if (gui_options.draw_full_citybar) {
-    draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y);
-    // values to refresh
-    *width = 80;
-    *height = 40;
+    draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y, width, height);
   } else {
     show_small_citybar(pcanvas, canvas_x, canvas_y, pcity, width, height);
   }
