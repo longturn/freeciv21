@@ -2301,7 +2301,6 @@ void city_dialog::update_nation_table()
 void city_dialog::update_info_label()
 {
   ui.info_wdg->update_labels(pcity);
-  ui.cma_city_info->update_labels(pcity);
 }
 
 /************************************************************************/ /**
