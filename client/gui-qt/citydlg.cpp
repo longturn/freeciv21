@@ -1663,21 +1663,8 @@ bool city_dialog::eventFilter(QObject *obj, QEvent *event)
 {
 
   if (obj == this) {
-    if (event->type() == QEvent::KeyPress) {
-    }
-
     if (event->type() == QEvent::ShortcutOverride) {
       QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
-      if (key_event->key() == Qt::Key_Right) {
-        next_city();
-        event->setAccepted(true);
-        return true;
-      }
-      if (key_event->key() == Qt::Key_Left) {
-        prev_city();
-        event->setAccepted(true);
-        return true;
-      }
       if (key_event->key() == Qt::Key_Up) {
         change_production(true);
         event->setAccepted(true);
