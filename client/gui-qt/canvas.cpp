@@ -463,8 +463,8 @@ QRect zealous_crop_rect(QImage &p)
 void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
                         int y, int *ref_width, int *ref_height)
 {
-  QBrush blackBrush, brush, grow2Brush, growBrush, prod2Brush, prodBrush,
-      ownerBrush;
+  QBrush blackBrush, brush, grow2Brush, growBrush, redBrush, prod2Brush,
+      prodBrush, ownerBrush;
   QColor *owner_color = get_player_color(tileset, city_owner(pcity));
   owner_color->setAlpha(90);
   QColor *textcolors[2] = {get_color(tileset, COLOR_MAPVIEW_CITYTEXT),
@@ -474,7 +474,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   QFont *afont;
   QFontMetrics *fm;
   QPainter p;
-  QPen blackPen, grow2Pen, growPen, pen, prod2Pen, prodPen, ownerPen;
+  QPen blackPen, grow2Pen, growPen, pen, prod2Pen, prodPen, ownerPen, redPen;
   QPixmap flagPix;
   int fonttext_height, cWidth;
 
@@ -504,6 +504,9 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   prodBrush = QBrush(Qt::SolidPattern);
   prodBrush.setColor(Qt::blue);
   prodPen.setColor(Qt::blue);
+  redPen.setColor(Qt::red);
+  redBrush = QBrush(Qt::SolidPattern);
+  redBrush.setColor(Qt::red);
 
   if (city_owner(pcity) == client_player()) {
     ownerPen.setColor(QColor(0, 0, 0, 100));
@@ -613,15 +616,23 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
       miss_stock = 0;
     }
     // surplus
-    p.setPen(grow2Pen);
-    p.setBrush(grow2Brush);
-    p.drawRect(x, y + miss_stock, 6, hhstock);
+    if (hhstock > 0) {
+      p.setPen(grow2Pen);
+      p.setBrush(grow2Brush);
+      p.drawRect(x, y + miss_stock, 6, hhstock);
+    }
 
     // food in stock
     int max_height = qMin(fonttext_height, miss_stock + hhstock);
     p.setPen(growPen);
     p.setBrush(growBrush);
     p.drawRect(x, y + max_height, 6, hstock);
+
+    if (hhstock < 0) {
+      p.setPen(redPen);
+      p.setBrush(redBrush);
+      p.drawRect(x, y + fonttext_height - hstock, 6, -hhstock);
+    }
 
     // reset pens
     p.setPen(ownerPen);
