@@ -823,6 +823,9 @@
           <property name="text">
            <string/>
           </property>
+          <property name="shortcut">
+           <string>Esc</string>
+          </property>
           <property name="flat">
            <bool>true</bool>
           </property>
