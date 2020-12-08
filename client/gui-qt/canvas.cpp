@@ -617,8 +617,15 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   cWidth = fm->horizontalAdvance(city_size);
   x = x + cWidth + 2;
 
+  x = x + 6;
+  // occupy
+  int half_miss_height = (occupyPix.height() - fonttext_height) / 2;
+  p.drawPixmap(x, y - half_miss_height, occupyPix);
+  cWidth = occupyPix.width();
+
   // grow
   if (can_see) {
+    x = x - 6;
     int gtime = city_turns_to_grow(pcity);
     if (gtime < 1000) {
       growth_time = QString::number(gtime);
@@ -673,15 +680,9 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     font.setPointSize(font_size);
     p.setFont(font);
     p.setBrush(brush);
-    x = x + 6;
+    x = x + 12;
   }
-
-  // occupy
-  int half_miss_height = (occupyPix.height() - fonttext_height) / 2;
-  p.drawPixmap(x, y - half_miss_height, occupyPix);
-  cWidth = occupyPix.width();
   x = x + cWidth;
-
   // flag
   if (city_owner(pcity) != client_player()) {
     p.drawPixmap(x, y, flagPix);
