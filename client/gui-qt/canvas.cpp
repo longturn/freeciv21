@@ -604,8 +604,12 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
 
   // grow
   if (can_see) {
-
-    growth_time = QString::number(city_turns_to_grow(pcity));
+    int gtime = city_turns_to_grow(pcity);
+    if (gtime < 1000) {
+      growth_time = QString::number(gtime);
+    } else {
+      growth_time = "∞";
+    }
     granary_max = city_granary_size(city_size_get(pcity));
 
     int hstock = (fonttext_height * pcity->food_stock) / granary_max;
@@ -671,7 +675,13 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   if (can_see) {
     QString prod_time;
     int prod_max;
-    prod_time = QString::number(city_production_turns_to_build(pcity, true));
+
+    int ptime = city_production_turns_to_build(pcity, true);
+    if (ptime < 1000) {
+      prod_time = QString::number(ptime);
+    } else {
+      prod_time = "∞";
+    }
     prod_max = universal_build_shield_cost(pcity, &pcity->production);
 
     int hstock = (fonttext_height * pcity->shield_stock) / prod_max;
