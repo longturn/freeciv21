@@ -1483,10 +1483,9 @@ city_dialog::city_dialog(QWidget *parent)
     lab_table[5]->set_type(x);
   }
 
-  ui.tabWidget->setTabText(2, _("Happiness"));
+  ui.tabWidget->setTabText(0, _("Production"));
   ui.tabWidget->setTabText(1, _("Governor"));
-  ui.tabWidget->setTabText(0, _("General"));
-  ui.tabs_right->setTabText(0, _("Output"));
+  ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
   setLayout(ui.vlayout);
   ui.tabWidget->setCurrentIndex(0);
