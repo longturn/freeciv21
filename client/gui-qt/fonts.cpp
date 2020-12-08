@@ -172,7 +172,7 @@ void configure_fonts()
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_default, fn_bytes.data(), 512);
   }
-  font_name = configure_font(fonts::city_names, sl, smaller, true);
+  font_name = configure_font(fonts::city_names, sl, max, true);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_city_names, fn_bytes.data(), 512);
