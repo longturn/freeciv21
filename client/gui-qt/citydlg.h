@@ -153,7 +153,6 @@ public:
 
 private:
   bool supports;
-
 };
 
 /****************************************************************************
@@ -328,11 +327,11 @@ class city_info : public QWidget {
 public:
   city_info(QWidget *parent = 0);
   void update_labels(struct city *ci_city);
+
 private:
   QLabel *qlt[NUM_INFO_FIELDS];
   int positions;
 };
-
 
 class governor_sliders : public QGroupBox {
   Q_OBJECT
@@ -345,7 +344,6 @@ private slots:
   void cma_slider(int val);
   void cma_celebrate_changed(int val);
 };
-
 
 #include "ui_citydlg.h"
 /****************************************************************************
@@ -360,20 +358,18 @@ class city_dialog : public QWidget {
   bool future_targets, show_units, show_wonders, show_buildings;
   int selected_row_p;
   city_label *lab_table[6];
+
 public:
-  static city_dialog *instance();
-  static void drop();
+  city_dialog(QWidget *parent = 0);
+
   ~city_dialog();
   void setup_ui(struct city *qcity);
   void refresh();
   void cma_check_agent();
-  static bool exist();
   struct city *pcity;
   bool dont_focus;
 
 private:
-  city_dialog(QWidget *parent = 0);
-  static city_dialog *m_instance;
   int current_building;
   void update_title();
   void update_building();

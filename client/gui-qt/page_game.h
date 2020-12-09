@@ -12,10 +12,11 @@
 ******    '"   **********************************************************/
 #pragma once
 
+#include <QMap>
 #include <QStackedWidget>
 #include <QWidget>
-#include <QMap>
 
+class city_dialog;
 class fc_client;
 class map_view;
 class sidebar;
@@ -69,6 +70,7 @@ public:
   info_tab *infotab;
   map_view *mapview_wdg;
   minimap_view *minimapview_wdg;
+  city_dialog *city_overlay;
   xvote *x_vote;
   sidebarWidget *sw_diplo;
   sidebarWidget *sw_indicators;
@@ -77,6 +79,7 @@ public:
 public slots:
 private slots:
   void updateInfoLabelTimeout();
+
 private:
   QMap<QString, QWidget *> opened_repo_dlgs;
   QTimer *update_info_timer;

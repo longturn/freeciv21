@@ -57,7 +57,6 @@
 #include "tooltips.h"
 
 extern QApplication *qapp;
-city_dialog *city_dialog::m_instance = 0;
 extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 
@@ -540,7 +539,7 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
   }
 
   if (event->button() == Qt::LeftButton) {
-    ask = new hud_message_box(city_dialog::instance());
+    ask = new hud_message_box(queen()->city_overlay);
     if (test_player_sell_building_now(client.conn.playing, pcity, impr)
         != TR_SUCCESS) {
       return;
@@ -851,7 +850,7 @@ void unit_item::activate_and_close_dialog()
 {
   if (qunit) {
     unit_focus_set(qunit);
-    city_dialog::instance()->dont_focus = true;
+    queen()->city_overlay->dont_focus = true;
     qtg_popdown_all_city_dialogs();
   }
 }
@@ -1288,7 +1287,7 @@ void governor_sliders::cma_slider(int value)
   label = reinterpret_cast<QLabel *>(qvar.value<void *>());
   label->setText(QString::number(value));
 
-  city_dialog::instance()->cma_check_agent();
+  queen()->city_overlay->cma_check_agent();
 }
 
 /************************************************************************/ /**
@@ -1296,7 +1295,7 @@ void governor_sliders::cma_slider(int value)
  ****************************************************************************/
 void governor_sliders::cma_celebrate_changed(int val)
 {
-  city_dialog::instance()->cma_check_agent();
+  queen()->city_overlay->cma_check_agent();
 }
 
 /************************************************************************/ /**
@@ -1487,8 +1486,6 @@ city_dialog::city_dialog(QWidget *parent)
   ui.tabWidget->setTabText(1, _("Governor"));
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
-  setLayout(ui.vlayout);
-  ui.tabWidget->setCurrentIndex(0);
 
   installEventFilter(this);
 }
@@ -1906,7 +1903,7 @@ void city_dialog::cma_remove()
     return;
   }
 
-  ask = new hud_message_box(city_dialog::instance());
+  ask = new hud_message_box(this);
   ask->set_text_title(_("Remove this preset?"), cmafec_preset_get_descr(i));
   ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
   ask->setDefaultButton(QMessageBox::Cancel);
@@ -2283,10 +2280,7 @@ void city_dialog::update_nation_table()
 /************************************************************************/ /**
    Updates information label ( food, prod ... surpluses ...)
  ****************************************************************************/
-void city_dialog::update_info_label()
-{
-  ui.info_wdg->update_labels(pcity);
-}
+void city_dialog::update_info_label() { ui.info_wdg->update_labels(pcity); }
 
 /************************************************************************/ /**
    Setups whole city dialog, public function
@@ -2302,30 +2296,6 @@ void city_dialog::setup_ui(struct city *qcity)
   refresh();
   ui.production_combo_p->blockSignals(false);
 }
-
-/****************************************************************************
-  Returns instance of city_dialog
-****************************************************************************/
-city_dialog *city_dialog::instance()
-{
-  if (!m_instance) {
-    m_instance = new city_dialog(queen()->mapview_wdg);
-  }
-  return m_instance;
-}
-
-/****************************************************************************
-  Deletes city_dialog instance
-****************************************************************************/
-void city_dialog::drop()
-{
-  if (m_instance) {
-    delete m_instance;
-    m_instance = 0;
-  }
-}
-
-bool city_dialog::exist() { return m_instance ? true : false; }
 
 /************************************************************************/ /**
    Removes selected item from city worklist
@@ -2536,7 +2506,7 @@ void city_dialog::buy()
     return;
   }
 
-  ask = new hud_message_box(city_dialog::instance());
+  ask = new hud_message_box(queen()->city_overlay);
   fc_snprintf(buf2, ARRAY_SIZE(buf2),
               PL_("Treasury contains %d gold.", "Treasury contains %d gold.",
                   client_player()->economic.gold),
@@ -2885,11 +2855,10 @@ void qtg_real_city_dialog_popup(struct city *pcity)
   queen()->mapview_wdg->hide_all_fcwidgets();
   center_tile_mapcanvas(pcity->tile);
 
-  city_dialog::instance()->setup_ui(pcity);
-  city_dialog::instance()->setParent(queen()->mapview_wdg);
-  // TODO use layout
-  city_dialog::instance()->show();
-  city_dialog::instance()->resize(queen()->mapview_wdg->size());
+  auto widget = queen()->city_overlay;
+  widget->setup_ui(pcity);
+  widget->show();
+  widget->resize(queen()->mapview_wdg->size());
 }
 
 /************************************************************************/ /**
@@ -2898,8 +2867,9 @@ void qtg_real_city_dialog_popup(struct city *pcity)
 void destroy_city_dialog()
 {
   // Only tyrans destroy cities instead building
-  if (king()->current_page() >= PAGE_GAME)
-    city_dialog::instance()->drop();
+  if (king()->current_page() >= PAGE_GAME) {
+    queen()->city_overlay->hide();
+  }
 }
 
 /************************************************************************/ /**
@@ -2915,7 +2885,7 @@ void qtg_popdown_city_dialog(struct city *pcity)
 /************************************************************************/ /**
    Close the dialogs for all cities.
  ****************************************************************************/
-void qtg_popdown_all_city_dialogs() { city_dialog::instance()->hide(); }
+void qtg_popdown_all_city_dialogs() { queen()->city_overlay->hide(); }
 
 /************************************************************************/ /**
    Refresh (update) all data for the given city's dialog.
@@ -2923,7 +2893,7 @@ void qtg_popdown_all_city_dialogs() { city_dialog::instance()->hide(); }
 void qtg_real_city_dialog_refresh(struct city *pcity)
 {
   if (qtg_city_dialog_is_open(pcity)) {
-    city_dialog::instance()->refresh();
+    queen()->city_overlay->refresh();
   }
 }
 
@@ -2935,7 +2905,7 @@ void city_font_update()
   QList<QLabel *> l;
   QFont *f;
 
-  l = city_dialog::instance()->findChildren<QLabel *>();
+  l = queen()->city_overlay->findChildren<QLabel *>();
 
   f = fcFont::instance()->getFont(fonts::notify_label);
 
@@ -2966,9 +2936,7 @@ void qtg_refresh_unit_city_dialogs(struct unit *punit)
 struct city *is_any_city_dialog_open()
 {
   // some checks not to iterate cities
-  if (!city_dialog::exist())
-    return nullptr;
-  if (!city_dialog::instance()->isVisible())
+  if (!queen()->city_overlay->isVisible())
     return nullptr;
   if (client_is_global_observer() || client_is_observer())
     return nullptr;
@@ -2987,10 +2955,8 @@ struct city *is_any_city_dialog_open()
  ****************************************************************************/
 bool qtg_city_dialog_is_open(struct city *pcity)
 {
-  if (!city_dialog::exist())
-    return false;
-  if (city_dialog::instance()->pcity == pcity
-      && city_dialog::instance()->isVisible()) {
+  if (queen()->city_overlay->pcity == pcity
+      && queen()->city_overlay->isVisible()) {
     return true;
   }
 

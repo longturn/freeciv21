@@ -28,6 +28,7 @@
 #include "mapview_common.h"
 #include "text.h"
 // gui-qt - Eye of Storm
+#include "citydlg.h"
 #include "fc_client.h"
 #include "gotodlg.h"
 #include "hudwidget.h"
@@ -78,8 +79,8 @@ pageGame::pageGame(QWidget *parent)
       fcIcons::instance()->getPixmap(QStringLiteral("units")), _("Units"),
       QLatin1String(""), toggle_units_report);
   sw_cities = new sidebarWidget(
-      fcIcons::instance()->getPixmap(QStringLiteral("cities")),
-      _("Cities"), QStringLiteral("CTS"), city_report_dialog_popup);
+      fcIcons::instance()->getPixmap(QStringLiteral("cities")), _("Cities"),
+      QStringLiteral("CTS"), city_report_dialog_popup);
   sw_cities->setWheelUp(center_next_enemy_city);
   sw_cities->setWheelDown(center_next_player_city);
   sw_diplo = new sidebarWidget(
@@ -112,6 +113,8 @@ pageGame::pageGame(QWidget *parent)
   sidebar_wdg->addWidget(sw_indicators);
   sidebar_wdg->addWidget(sw_endturn);
 
+  city_overlay = new city_dialog(mapview_wdg);
+  city_overlay->hide();
   minimapview_wdg = new minimap_view(mapview_wdg);
   minimapview_wdg->show();
   unitinfo_wdg = new hud_units(mapview_wdg);
@@ -150,8 +153,7 @@ pageGame::~pageGame() {}
  **************************************************************************/
 void pageGame::reloadSidebarIcons()
 {
-  sw_map->setPixmap(
-      fcIcons::instance()->getPixmap(QStringLiteral("view")));
+  sw_map->setPixmap(fcIcons::instance()->getPixmap(QStringLiteral("view")));
   sw_cunit->setPixmap(
       fcIcons::instance()->getPixmap(QStringLiteral("units")));
   sw_cities->setPixmap(
@@ -511,6 +513,7 @@ void fc_game_tab_widget::resizeEvent(QResizeEvent *event)
     queen()->updateSidebarTooltips();
     sidebarDisableEndturn(get_turn_done_button_state());
     queen()->mapview_wdg->resize(event->size().width(), size.height());
+    queen()->city_overlay->resize(queen()->mapview_wdg->size());
     queen()->unitinfo_wdg->update_actions(nullptr);
     /* It could be resized before mapview, so delayed it a bit */
     QTimer::singleShot(20, [] { queen()->infotab->restore_chat(); });
