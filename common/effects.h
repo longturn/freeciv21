@@ -14,7 +14,6 @@
 #define FC__EFFECTS_H
 
 
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -436,7 +435,6 @@ struct effect_list *get_effects(enum effect_type effect_type);
 
 typedef bool (*iec_cb)(struct effect *, void *data);
 bool iterate_effect_cache(iec_cb cb, void *data);
-
 
 
 #endif /* FC__EFFECTS_H */

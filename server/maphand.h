@@ -143,5 +143,4 @@ void give_distorted_map(struct player *pfrom, struct player *pto, int prob,
                         bool reveal_cities);
 
 
-
 #endif /* FC__MAPHAND_H */

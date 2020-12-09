@@ -36,5 +36,4 @@ const char *freeciv_motto(void);
 const char *beta_message(void);
 
 
-
 #endif /* FC__VERSION_H */

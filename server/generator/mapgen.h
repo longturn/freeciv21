@@ -14,9 +14,7 @@
 #include "support.h" /* bool type */
 
 
-
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
-
 
 
 #endif /* FC__MAPGEN_H */

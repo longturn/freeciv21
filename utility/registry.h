@@ -12,7 +12,6 @@
 #define FC__REGISTRY_H
 
 
-
 #include "shared.h"
 
 struct section;
@@ -32,7 +31,6 @@ const char *secfile_error(void);
 const char *section_name(const struct section *psection);
 
 #include "registry_ini.h"
-
 
 
 #endif /* FC__REGISTRY_H */

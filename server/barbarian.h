@@ -21,7 +21,6 @@
 #include "fc_types.h"
 
 
-
 #define MIN_UNREST_DIST 5
 #define MAX_UNREST_DIST 8
 
@@ -37,7 +36,6 @@ bool is_land_barbarian(struct player *pplayer);
 bool is_sea_barbarian(struct player *pplayer);
 
 struct player *create_barbarian_player(enum barbarian_type type);
-
 
 
 #endif /* FC__BARBARIAN_H */

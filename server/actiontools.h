@@ -19,7 +19,6 @@
 #include "unit.h"
 
 
-
 void action_consequence_caught(const struct action *paction,
                                struct player *offender,
                                struct player *victim_player,
@@ -82,7 +81,6 @@ bool action_failed_dice_roll(const struct player *act_player,
                              const struct city *tgt_city,
                              const struct player *tgt_player,
                              const struct action *paction);
-
 
 
 #endif /* FC__ACTIONTOOLS_H */

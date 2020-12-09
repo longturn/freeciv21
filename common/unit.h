@@ -14,7 +14,6 @@
 #define FC__UNIT_H
 
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -452,7 +451,6 @@ struct iterator *cargo_iter_init(struct cargo_iter *iter,
   generic_iterate(struct cargo_iter, struct unit *, _pcargo,                \
                   cargo_iter_sizeof, cargo_iter_init, _ptrans)
 #define unit_cargo_iterate_end generic_iterate_end
-
 
 
 #endif /* FC__UNIT_H */

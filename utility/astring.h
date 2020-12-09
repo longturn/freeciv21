@@ -125,5 +125,4 @@ static inline bool astr_empty(const struct astring *astr)
 #undef n_alloc
 
 
-
 #endif /* FC__ASTRING_H */

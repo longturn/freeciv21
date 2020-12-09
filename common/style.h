@@ -14,7 +14,6 @@
 #define FC__STYLE_H
 
 
-
 struct nation_style {
   int id;
   struct name_translation name;
@@ -83,7 +82,6 @@ int style_of_city(const struct city *pcity);
 int basic_city_style_for_style(struct nation_style *pstyle);
 
 int city_style(struct city *pcity);
-
 
 
 #endif /* FC__STYLE_H */

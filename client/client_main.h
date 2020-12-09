@@ -123,5 +123,4 @@ extern const char *const gui_character_encoding;
 extern const bool gui_use_transliteration;
 
 
-
 #endif /* FC__CLIENT_MAIN_H */

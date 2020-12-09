@@ -14,11 +14,9 @@
 #define FC__CAPSTR_H
 
 
-
 extern const char *const our_capability;
 
 void init_our_capability(void);
-
 
 
 #endif /* FC__CAPSTR_H */

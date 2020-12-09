@@ -14,9 +14,7 @@
 #define FC__ANIMALS_H
 
 
-
 void create_animals(void);
-
 
 
 #endif /* FC__ANIMALS_H */

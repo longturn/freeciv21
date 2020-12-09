@@ -12,7 +12,6 @@
 #define FC__CITYMAP_H
 
 
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -27,7 +26,6 @@ int citymap_read(struct tile *ptile);
 bool citymap_is_reserved(struct tile *ptile);
 
 void citymap_free(void);
-
 
 
 #endif /* FC__CITYMAP_H */

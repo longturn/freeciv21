@@ -14,7 +14,6 @@
 #define FC__TERRAIN_H
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -363,7 +362,6 @@ const struct terrain *terrain_array_last(void);
   }                                                                         \
   }                                                                         \
   terrain_type_iterate_end;
-
 
 
 #endif /* FC__TERRAIN_H */

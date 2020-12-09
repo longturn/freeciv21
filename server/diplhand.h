@@ -43,5 +43,4 @@ void reject_all_treaties(struct player *pplayer);
 struct treaty_list *get_all_treaties(void);
 
 
-
 #endif /* FC__DIPLHAND_H */

@@ -12,7 +12,6 @@
 #define FC__MUSIC_H
 
 
-
 void start_style_music(void);
 void stop_style_music(void);
 void start_menu_music(const char *const tag, char *const alt_tag);
@@ -20,7 +19,6 @@ void stop_menu_music(void);
 void play_single_track(const char *const tag);
 
 void musicspec_reread_callback(struct option *poption);
-
 
 
 #endif /* FC__MUSIC_H */

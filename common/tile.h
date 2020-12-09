@@ -14,7 +14,6 @@
 #define FC__TILE_H
 
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -181,7 +180,6 @@ void *tile_hash_key(const struct tile *ptile);
 bool tile_set_label(struct tile *ptile, const char *label);
 
 bool tile_is_placing(const struct tile *ptile);
-
 
 
 #endif /* FC__TILE_H */

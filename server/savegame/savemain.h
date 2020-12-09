@@ -17,7 +17,6 @@
 #include "support.h"
 
 
-
 struct section_file;
 
 void savegame_load(struct section_file *sfile);
@@ -28,7 +27,6 @@ void save_game(const char *orig_filename, const char *save_reason,
                bool scenario);
 
 void save_system_close(void);
-
 
 
 #endif /* FC__SAVEMAIN_H */

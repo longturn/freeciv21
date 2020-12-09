@@ -12,7 +12,6 @@
 #define FC__API_COMMON_INTL_H
 
 
-
 struct lua_State;
 
 const char *api_intl__(lua_State *L, const char *untranslated);

@@ -14,7 +14,6 @@
 #define FC__EVENTS_H
 
 
-
 #include "support.h" /* bool type */
 
 /* Used in the network protocol. */
@@ -207,7 +206,6 @@ void events_free(void);
   }                                                                         \
   }                                                                         \
   }
-
 
 
 #endif /* FC__EVENTS_H */

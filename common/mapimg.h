@@ -53,7 +53,6 @@
 #define FC__MAPIMG_H
 
 
-
 /* utility */
 #include "support.h"
 
@@ -123,7 +122,6 @@ struct mapdef *mapimg_isvalid(int id);
 
 const struct strvec *mapimg_get_format_list(void);
 const char *mapimg_get_format_default(void);
-
 
 
 #endif /* FC__MAPIMG_H */

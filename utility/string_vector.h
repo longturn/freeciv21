@@ -14,7 +14,6 @@
 #define FC__STRING_VECTOR_H
 
 
-
 /* utility */
 #include "support.h" /* bool type. */
 
@@ -65,7 +64,6 @@ const char *strvec_to_and_list(const struct strvec *psv,
 #define strvec_iterate_end                                                  \
   }                                                                         \
   }
-
 
 
 #endif /* FC__STRING_VECTOR_H */

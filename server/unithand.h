@@ -20,7 +20,6 @@
 #include "hand_gen.h"
 
 
-
 bool unit_activity_handling(struct unit *punit,
                             enum unit_activity new_activity);
 bool unit_activity_handling_targeted(struct unit *punit,

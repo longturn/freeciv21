@@ -20,7 +20,6 @@
 #include "requirements.h"
 
 
-
 #define SPECENUM_NAME action_actor_kind
 #define SPECENUM_VALUE0 AAK_UNIT
 #define SPECENUM_VALUE0NAME N_("a unit")
@@ -790,7 +789,6 @@ void action_list_add_all_by_result(action_id *act_list, int *position,
 /* Action auto performers */
 const struct action_auto_perf *action_auto_perf_by_number(const int num);
 struct action_auto_perf *action_auto_perf_slot_number(const int num);
-
 
 
 #endif /* FC_ACTIONS_H */

@@ -26,7 +26,6 @@
 #include "srv_main.h" /* enum server_states */
 
 
-
 struct research;
 
 void package_chat_msg(struct packet_chat_msg *packet,
@@ -104,7 +103,6 @@ void event_cache_phases_invalidate(void);
 struct section_file;
 void event_cache_load(struct section_file *file, const char *section);
 void event_cache_save(struct section_file *file, const char *section);
-
 
 
 #endif /* FC__NOTIFY_H */

@@ -12,7 +12,6 @@
 #define FC__TOOLS_H
 
 
-
 #include "fc_types.h"
 
 /* See client/gui-gtk-3.0/editprop.c for instructions
@@ -184,7 +183,6 @@ int edit_buffer_get_status_string(const struct edit_buffer *ebuf, char *buf,
   }                                                                         \
   }                                                                         \
   while (FALSE)
-
 
 
 #endif /* FC__TOOLS_H */

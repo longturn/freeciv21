@@ -14,7 +14,6 @@
 #define FC__IMPROVEMENT_H
 
 
-
 /* City Improvements, including Wonders.  (Alternatively "Buildings".) */
 
 /* utility */
@@ -220,7 +219,6 @@ const struct impr_type *improvement_array_last(void);
   }                                                                         \
   }                                                                         \
   improvement_iterate_end;
-
 
 
 #endif /* FC__IMPROVEMENT_H */

@@ -12,7 +12,6 @@
 #define FC__PF_TOOLS_H
 
 
-
 /* common/aicore */
 #include "path_finding.h"
 
@@ -67,7 +66,6 @@ enum tile_behavior no_fights(const struct tile *ptile, enum known_type known,
 enum tile_behavior no_intermediate_fights(const struct tile *ptile,
                                           enum known_type known,
                                           const struct pf_parameter *param);
-
 
 
 #endif /* FC__PF_TOOLS_H */

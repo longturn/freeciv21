@@ -14,7 +14,6 @@
 #define FC__ROAD_H
 
 
-
 /* Used in the network protocol. */
 #define SPECENUM_NAME road_flag_id
 #define SPECENUM_VALUE0 RF_RIVER
@@ -144,7 +143,6 @@ void road_types_free(void);
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
 
 
 #endif /* FC__ROAD_H */

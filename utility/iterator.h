@@ -14,7 +14,6 @@
 #define FC__ITERATOR_H
 
 
-
 #include "support.h" /* bool */
 
 /***********************************************************************
@@ -98,7 +97,6 @@ static inline bool iterator_valid(const struct iterator *it)
   will fit into any iterator's allocated stack memory.
 ***************************************************************************/
 struct iterator *invalid_iter_init(struct iterator *it);
-
 
 
 #endif /* FC__ITERATOR_H */

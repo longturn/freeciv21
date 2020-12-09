@@ -13,7 +13,6 @@
 #define FC__UNITLIST_H
 
 
-
 #include "fc_types.h"
 #include "unit.h"     /* for diplomat_actions */
 #include "unittype.h" /* for unit_type_flag_id */
@@ -86,7 +85,6 @@ bool units_have_activity_on_tile(const struct unit_list *punits,
 
 bool units_can_upgrade(const struct unit_list *punits);
 bool units_can_convert(const struct unit_list *punits);
-
 
 
 #endif /* FC__UNITLIST_H */

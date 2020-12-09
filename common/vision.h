@@ -14,7 +14,6 @@
 #define FC__VISION_H
 
 
-
 /* common */
 #include "fc_types.h"
 
@@ -142,7 +141,6 @@ void vision_site_update_from_city(struct vision_site *psite,
 
 citizens vision_site_size_get(const struct vision_site *psite);
 void vision_site_size_set(struct vision_site *psite, citizens size);
-
 
 
 #endif /* FC__VISION_H */

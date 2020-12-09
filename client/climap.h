@@ -12,7 +12,6 @@
 #define FC__CLIMAP_H
 
 
-
 /* common */
 #include "fc_types.h" /* enum direction8, struct tile */
 #include "tile.h"     /* enum known_type */
@@ -25,7 +24,6 @@ enum direction8 map_to_gui_dir(enum direction8 map_dir);
 struct tile *client_city_tile(const struct city *pcity);
 bool client_city_can_work_tile(const struct city *pcity,
                                const struct tile *ptile);
-
 
 
 #endif /* FC__CLIMAP_H */

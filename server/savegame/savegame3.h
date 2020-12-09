@@ -12,11 +12,9 @@
 #define FC__SAVEGAME3_H
 
 
-
 void savegame3_load(struct section_file *sfile);
 void savegame3_save(struct section_file *sfile, const char *save_reason,
                     bool scenario);
-
 
 
 #endif /* FC__SAVEGAME3_H */

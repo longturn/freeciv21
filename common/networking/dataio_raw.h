@@ -14,7 +14,6 @@
 #define FC__DATAIO_RAW_H
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "support.h" /* bool type */

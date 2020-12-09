@@ -18,14 +18,12 @@
 #include "fcdb.h"
 
 
-
 /* fcdb script functions. */
 bool script_fcdb_init(const char *fcdb_luafile);
 bool script_fcdb_call(const char *func_name, ...);
 void script_fcdb_free(void);
 
 bool script_fcdb_do_string(struct connection *caller, const char *str);
-
 
 
 #endif /* FC__SCRIPT_FCDB_H */

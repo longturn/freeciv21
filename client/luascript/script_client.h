@@ -12,7 +12,6 @@
 #define FC__SCRIPT_CLIENT_H
 
 
-
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -39,7 +38,6 @@ void script_client_signal_connect(const char *signal_name,
                                   const char *callback_name);
 void script_client_signal_emit(const char *signal_name, ...);
 const char *script_client_signal_list(void);
-
 
 
 #endif /* FC__SCRIPT_CLIENT_H */

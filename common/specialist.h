@@ -14,7 +14,6 @@
 #define FC__SPECIALIST_H
 
 
-
 /* utility */
 #include "shared.h"
 
@@ -87,7 +86,6 @@ void specialists_free(void);
   }                                                                         \
   }                                                                         \
   specialist_type_iterate_end;
-
 
 
 #endif /* FC__SPECIALIST_H */

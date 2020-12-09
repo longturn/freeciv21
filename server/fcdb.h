@@ -16,11 +16,9 @@
 #include "shared.h"
 
 
-
 bool fcdb_init(const char *conf_file);
 const char *fcdb_option_get(const char *type);
 void fcdb_free(void);
-
 
 
 #endif /* FC__FCDB_H */

@@ -14,7 +14,6 @@
 #define FC__TRAITS_H
 
 
-
 #define SPECENUM_NAME trait
 #define SPECENUM_VALUE0 TRAIT_EXPANSIONIST
 #define SPECENUM_VALUE0NAME "Expansionist"
@@ -41,7 +40,6 @@ struct trait_limits {
   int max;
   int fixed;
 };
-
 
 
 #endif /* FC__TRAITS_H */

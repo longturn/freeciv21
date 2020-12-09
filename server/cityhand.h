@@ -23,5 +23,4 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
 void really_handle_city_buy(struct player *pplayer, struct city *pcity);
 
 
-
 #endif /* FC__CITYHAND_H */

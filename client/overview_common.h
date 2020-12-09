@@ -15,7 +15,6 @@
 #define FC__OVERVIEW_COMMON_H
 
 
-
 #include "fc_types.h"
 
 #include "canvas_g.h"

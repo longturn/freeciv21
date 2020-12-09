@@ -12,7 +12,6 @@
 #define FC__GENLIST_H
 
 
-
 /****************************************************************************
   MODULE: genlist
 
@@ -154,7 +153,6 @@ genlist_link_next(const struct genlist_link *plink)
 {
   return plink->next;
 }
-
 
 
 #endif /* FC__GENLIST_H */

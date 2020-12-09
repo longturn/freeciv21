@@ -14,7 +14,6 @@
 #include "support.h" /* bool type */
 
 
-
 struct connection;
 struct conn_list;
 
@@ -44,7 +43,6 @@ void report_achievements(struct connection *pconn);
 void report_final_scores(struct conn_list *dest);
 
 struct history_report *history_report_get(void);
-
 
 
 #endif /* FC__REPORT_H */

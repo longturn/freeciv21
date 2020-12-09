@@ -16,7 +16,6 @@
 #include "shared.h"
 
 
-
 struct connection;
 
 bool auth_user(struct connection *pconn, char *username);
@@ -29,7 +28,6 @@ bool auth_set_password(struct connection *pconn, const char *password);
 const char *auth_get_password(struct connection *pconn);
 bool auth_set_salt(struct connection *pconn, int salt);
 int auth_get_salt(struct connection *pconn);
-
 
 
 #endif /* FC__AUTH_H */

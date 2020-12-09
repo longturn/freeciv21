@@ -113,5 +113,4 @@ struct civ_map {
 };
 
 
-
 #endif /* FC__MAP_H */

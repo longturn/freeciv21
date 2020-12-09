@@ -12,7 +12,6 @@
 #define FC__DISASTER_H
 
 
-
 /* common */
 #include "name_translation.h"
 #include "requirements.h"
@@ -82,7 +81,6 @@ bool can_disaster_happen(const struct disaster_type *pdis,
 #define disaster_type_iterate_end                                           \
   }                                                                         \
   }
-
 
 
 #endif /* FC__DISASTER_H */

@@ -14,7 +14,6 @@
 #define FC__CLIMISC_H
 
 
-
 /* common */
 #include "events.h"
 #include "fc_types.h"
@@ -142,7 +141,6 @@ struct nation_set *client_current_nation_set(void);
 bool client_nation_is_in_current_set(const struct nation_type *pnation);
 
 enum ai_level server_ai_level(void);
-
 
 
 #endif /* FC__CLIMISC_H */

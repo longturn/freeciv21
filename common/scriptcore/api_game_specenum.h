@@ -12,11 +12,9 @@
 #define FC__API_GAME_SPECENUM_H
 
 
-
 struct lua_State;
 
 int api_specenum_open(lua_State *L);
-
 
 
 #endif /* FC__API_GAME_SPECENUM_H */

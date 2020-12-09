@@ -12,7 +12,6 @@
 #define FC__CHATLINE_COMMON_H
 
 
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -39,7 +38,6 @@ void fc_allocate_ow_mutex(void);
 void fc_release_ow_mutex(void);
 void fc_init_ow_mutex(void);
 void fc_destroy_ow_mutex(void);
-
 
 
 #endif /* FC__CHATLINE_COMMON_H */

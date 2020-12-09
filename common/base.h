@@ -14,7 +14,6 @@
 #define FC__BASE_H
 
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -112,7 +111,6 @@ void base_types_free(void);
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
 
 
 #endif /* FC__BASE_H */

@@ -14,9 +14,7 @@
 #define FC__AUDIO_NONE_H
 
 
-
 void audio_none_init(void);
-
 
 
 #endif /* FC__AUDIO_NONE_H */

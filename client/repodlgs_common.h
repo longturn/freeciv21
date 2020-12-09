@@ -15,7 +15,6 @@
 #define FC__REPODLGS_COMMON_H
 
 
-
 #include "fc_types.h"
 #include "improvement.h"
 #include "unittype.h"
@@ -50,7 +49,6 @@ void sell_all_improvements(const struct impr_type *pimprove,
 void disband_all_units(const struct unit_type *punittype,
                        bool in_cities_only, char *message,
                        size_t message_sz);
-
 
 
 #endif /* FC__REPODLGS_COMMON_H */

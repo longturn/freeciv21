@@ -12,7 +12,6 @@
 #define FC__CLIENTUTILS_H
 
 
-
 /* common */
 #include "fc_types.h"
 
@@ -24,7 +23,6 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
                            const struct extra_type *tgt,
                            const struct unit *pnewunit);
 const char *concat_tile_activity_text(struct tile *ptile);
-
 
 
 #endif /* FC__CLIENTUTILS_H */

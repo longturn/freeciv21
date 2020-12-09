@@ -14,7 +14,6 @@
 #define FC__VOTEINFO_H
 
 
-
 #include "fc_types.h"
 
 enum client_vote_type { CVT_NONE = 0, CVT_YES, CVT_NO, CVT_ABSTAIN };
@@ -52,7 +51,6 @@ void voteinfo_queue_next(void);
 int voteinfo_queue_size(void);
 
 bool voteinfo_bar_can_be_shown(void);
-
 
 
 #endif /* FC__VOTEINFO_H */

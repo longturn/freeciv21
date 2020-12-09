@@ -13,7 +13,6 @@
 #define FC__FC_TYPES_H
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -1141,7 +1140,6 @@ enum setting_default_level {
 #define SPECENUM_VALUE2 CAPITAL_PRIMARY
 #define SPECENUM_VALUE2NAME "Primary"
 #include "specenum_gen.h"
-
 
 
 #endif /* FC__FC_TYPES_H */

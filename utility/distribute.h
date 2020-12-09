@@ -15,9 +15,7 @@
 #define FC__DISTRIBUTE_H
 
 
-
 void distribute(int number, int groups, int *ratios, int *result);
-
 
 
 #endif /* FC__DISTRIBUTE_H */

@@ -12,11 +12,9 @@
 #define FC__API_SERVER_LUADATA_H
 
 
-
 struct lua_State;
 
 const char *api_luadata_get_str(lua_State *L, const char *field);
-
 
 
 #endif /* API_SERVER_LUADATA_H */

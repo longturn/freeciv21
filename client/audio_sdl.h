@@ -12,9 +12,7 @@
 #define FC__AUDIO_SDL_H
 
 
-
 void audio_sdl_init(void);
-
 
 
 #endif /* FC__AUDIO_SDL_H */

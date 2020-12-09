@@ -12,7 +12,6 @@
 #define FC__CULTURE_H
 
 
-
 struct city;
 struct player;
 
@@ -21,7 +20,6 @@ int city_history_gain(const struct city *pcity);
 
 int player_culture(const struct player *plr);
 int nation_history_gain(const struct player *pplayer);
-
 
 
 #endif /* FC__CULTURE_H */

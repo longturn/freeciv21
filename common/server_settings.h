@@ -15,7 +15,6 @@
 #define FC_SERVER_SETTINGS_H
 
 
-
 /* common */
 #include "fc_types.h"
 
@@ -47,7 +46,6 @@ const char *ssetv_rule_name(ssetv val);
 const char *ssetv_human_readable(ssetv val, bool present);
 
 bool ssetv_setting_has_value(ssetv val);
-
 
 
 #endif /* FC_SERVER_SETTINGS_H */

@@ -14,7 +14,6 @@
 #define FC__EXTRAS_H
 
 
-
 /* common */
 #include "base.h"
 #include "fc_types.h"
@@ -352,7 +351,6 @@ bool player_knows_extra_exist(const struct player *pplayer,
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
 
 
 #endif /* FC__EXTRAS_H */

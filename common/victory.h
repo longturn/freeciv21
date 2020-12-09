@@ -12,9 +12,7 @@
 #define FC__VICTORY_H
 
 
-
 bool victory_enabled(enum victory_condition_type victory);
-
 
 
 #endif /* FC__VICTORY_H */
