@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GOTO_H
-#define FC__GOTO_H
+#pragma once
 
 
 
@@ -62,4 +61,4 @@ struct tile *tile_before_end_path(struct unit *punit, struct tile *ptile);
 
 
 
-#endif /* FC__GOTO_H */
+

@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__NAME_TRANSLATION_H
-#define FC__NAME_TRANSLATION_H
+#pragma once
 
 
 
@@ -129,4 +128,4 @@ name_translation_get(const struct name_translation *ptrans)
 
 
 
-#endif /* FC__NAME_TRANSLATION_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAPGEN_TOPOLOGY_H
-#define FC__MAPGEN_TOPOLOGY_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -57,4 +56,4 @@ void generator_init_topology(bool autosize);
 
 
 
-#endif /* FC__MAPGEN_TOPOLOGY_H */
+

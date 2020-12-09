@@ -11,8 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__DEPRECATIONS_H
-#define FC__DEPRECATIONS_H
+#pragma once
 
 // Qt
 #include <QLoggingCategory>
@@ -23,4 +22,4 @@ typedef void (*deprecation_warn_callback)(const char *msg);
 
 void deprecation_warn_cb_set(deprecation_warn_callback new_cb);
 
-#endif /* FC__DEPRECATIONS_H */
+

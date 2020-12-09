@@ -10,8 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC_DAI_ACTIONS_H
-#define FC_DAI_ACTIONS_H
+#pragma once
 
 /* common */
 #include "actions.h"
@@ -30,4 +29,4 @@ int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
 
 
 
-#endif /* FC_DAI_ACTIONS_H */
+

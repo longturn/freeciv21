@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__REPODLGS_G_H
-#define FC__REPODLGS_G_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -40,4 +39,4 @@ void science_report_dialog_update(void);
 void economy_report_dialog_update(void);
 void units_report_dialog_update(void);
 
-#endif /* FC__REPODLGS_G_H */
+

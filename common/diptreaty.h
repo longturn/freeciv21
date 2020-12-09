@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DIPTREATY_H
-#define FC__DIPTREATY_H
+#pragma once
 
 
 
@@ -100,4 +99,4 @@ bool clause_enabled(enum clause_type type, struct player *from,
 
 
 
-#endif /* FC__DIPTREATY_H */
+

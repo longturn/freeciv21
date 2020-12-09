@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TEXAIMSG_H
-#define FC__TEXAIMSG_H
+#pragma once
 
 #define SPECENUM_NAME texaimsgtype
 #define SPECENUM_VALUE0 TEXAI_MSG_THR_EXIT
@@ -79,4 +78,4 @@ void texai_send_req(enum texaireqtype type, struct player *pplayer,
 void texai_first_activities(struct ai_type *ait, struct player *pplayer);
 void texai_phase_finished(struct ai_type *ait, struct player *pplayer);
 
-#endif /* FC__TEXAIMSG_H */
+

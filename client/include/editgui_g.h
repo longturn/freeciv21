@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__EDITGUI_G_H
-#define FC__EDITGUI_G_H
+#pragma once
 
 #include "gui_proto_constructor.h"
 
@@ -28,4 +27,4 @@ GUI_FUNC_PROTO(void, editgui_notify_object_changed, int objtype, int id,
                bool removal)
 GUI_FUNC_PROTO(void, editgui_notify_object_created, int tag, int id)
 
-#endif /* FC__EDITGUI_G_H */
+

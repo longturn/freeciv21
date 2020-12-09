@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__RSCOMPAT_H
-#define FC__RSCOMPAT_H
+#pragma once
 
 
 
@@ -79,4 +78,4 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
 
 
 
-#endif /* FC__RSCOMPAT_H */
+

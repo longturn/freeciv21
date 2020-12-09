@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CITY_H
-#define FC__CITY_H
+#pragma once
 
 /* utility */
 #include "bitvector.h"
@@ -774,4 +773,4 @@ void *city_ai_data(const struct city *pcity, const struct ai_type *ai);
 void city_set_ai_data(struct city *pcity, const struct ai_type *ai,
                       void *data);
 
-#endif /* FC__CITY_H */
+

@@ -11,8 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__BARBARIAN_H
-#define FC__BARBARIAN_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -40,4 +39,4 @@ struct player *create_barbarian_player(enum barbarian_type type);
 
 
 
-#endif /* FC__BARBARIAN_H */
+

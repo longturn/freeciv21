@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AITOOLS_H
-#define FC__AITOOLS_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -83,4 +82,4 @@ void dai_consider_plr_dangerous(struct ai_type *ait, struct player *plr1,
                                 struct player *plr2,
                                 enum override_bool *result);
 
-#endif /* FC__AITOOLS_H */
+

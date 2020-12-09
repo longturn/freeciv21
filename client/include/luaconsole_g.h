@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifndef FC__LUACONSOLE_G_H
-#define FC__LUACONSOLE_G_H
+#pragma once
 
 #include "packets.h"
 
@@ -26,4 +25,4 @@ GUI_FUNC_PROTO(void, real_luaconsole_dialog_update, void)
 GUI_FUNC_PROTO(void, real_luaconsole_append, const char *astring,
                const struct text_tag_list *tags)
 
-#endif /* FC__LUACONSOLE_G_H */
+

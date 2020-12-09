@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__COLORS_COMMON_H
-#define FC__COLORS_COMMON_H
+#pragma once
 
 /* utility */
 #include "registry.h"
@@ -129,4 +128,4 @@ void color_system_free(struct color_system *colors);
 QColor *color_best_contrast(QColor *subject, QColor **candidates,
                             int ncandidates);
 
-#endif /* FC__COLORS_COMMON_H */
+

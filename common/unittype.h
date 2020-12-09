@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UNITTYPE_H
-#define FC__UNITTYPE_H
+#pragma once
 
 
 
@@ -872,4 +871,4 @@ const struct unit_class *unit_class_array_last(void);
 
 
 
-#endif /* FC__UNITTYPE_H */
+

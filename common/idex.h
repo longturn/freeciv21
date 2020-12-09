@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__IDEX_H
-#define FC__IDEX_H
+#pragma once
 
 
 
@@ -38,4 +37,4 @@ struct unit *idex_lookup_unit(struct world *iworld, int id);
 
 
 
-#endif /* FC__IDEX_H */
+

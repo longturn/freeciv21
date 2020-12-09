@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__BACKTRACE_H
-#define FC__BACKTRACE_H
+#pragma once
 
 /* utility */
 #include "log.h"
@@ -18,4 +17,4 @@
 void backtrace_init();
 void backtrace_deinit();
 
-#endif /* FC__BACKTRACE_H */
+

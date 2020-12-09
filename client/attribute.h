@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ATTRIBUTE_H
-#define FC__ATTRIBUTE_H
+#pragma once
 
 
 
@@ -87,4 +86,4 @@ size_t attr_tile_get(enum attr_tile what, int x, int y,
 
 
 
-#endif /* FC__ATTRIBUTE_H */
+

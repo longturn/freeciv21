@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__IMPROVEMENT_H
-#define FC__IMPROVEMENT_H
+#pragma once
 
 
 
@@ -223,4 +222,4 @@ const struct impr_type *improvement_array_last(void);
 
 
 
-#endif /* FC__IMPROVEMENT_H */
+

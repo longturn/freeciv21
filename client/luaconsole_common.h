@@ -11,8 +11,7 @@
    GNU General Public License for more details.
 *****************************************************************************/
 
-#ifndef FC__LUACONSOLE_COMMON_H
-#define FC__LUACONSOLE_COMMON_H
+#pragma once
 
 
 
@@ -34,4 +33,4 @@ void luaconsole_welcome_message(void);
 
 
 
-#endif /* FC__LUACONSOLE_COMMON_H */
+

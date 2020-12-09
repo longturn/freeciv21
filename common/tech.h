@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TECH_H
-#define FC__TECH_H
+#pragma once
 
 
 
@@ -287,4 +286,4 @@ struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
 
 
 
-#endif /* FC__TECH_H */
+

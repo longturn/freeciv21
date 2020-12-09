@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__LUASCRIPT_TYPES_H
-#define FC__LUASCRIPT_TYPES_H
+#pragma once
 
 
 
@@ -104,4 +103,4 @@ typedef const struct city_list_link City_List_Link;
 
 
 
-#endif /* FC__LUASCRIPT_TYPES_H */
+

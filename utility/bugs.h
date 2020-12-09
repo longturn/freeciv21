@@ -11,11 +11,10 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__BUGS_H
-#define FC__BUGS_H
+#pragma once
 
 #include <QLoggingCategory>
 
 Q_DECLARE_LOGGING_CATEGORY(bugs_category)
 
-#endif /* FC__BUGS_H */
+

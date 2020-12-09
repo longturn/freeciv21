@@ -15,8 +15,7 @@
   Reading and using the tilespec files, which describe
   the files and contents of tilesets.
 ***********************************************************************/
-#ifndef FC__TILESPEC_H
-#define FC__TILESPEC_H
+#pragma once
 
 /* utility */
 #include "log.h" /* QtMsgType */
@@ -417,4 +416,4 @@ const char *tileset_description(struct tileset *t);
 char *tileset_what_ruleset(struct tileset *t);
 int tileset_topo_index(struct tileset *t);
 
-#endif /* FC__TILESPEC_H */
+

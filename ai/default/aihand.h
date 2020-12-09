@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AIHAND_H
-#define FC__AIHAND_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -19,4 +18,4 @@ void dai_do_last_activities(struct ai_type *ait, struct player *pplayer);
 void dai_calc_data(const struct player *pplayer, int *trade, int *expenses,
                    int *income);
 
-#endif /* FC__AIHAND_H */
+

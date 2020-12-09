@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__FCINTL_H
-#define FC__FCINTL_H
+#pragma once
 
 
 #include <locale.h>
@@ -77,4 +76,4 @@ bool is_capitalization_enabled(void);
 
 const char *get_locale_dir(void);
 
-#endif /* FC__FCINTL_H */
+

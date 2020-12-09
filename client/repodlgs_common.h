@@ -11,8 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__REPODLGS_COMMON_H
-#define FC__REPODLGS_COMMON_H
+#pragma once
 
 
 
@@ -53,4 +52,4 @@ void disband_all_units(const struct unit_type *punittype,
 
 
 
-#endif /* FC__REPODLGS_COMMON_H */
+

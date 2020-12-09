@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC_EXPLANATION_H
-#define FC_EXPLANATION_H
+#pragma once
 
 
 
@@ -96,4 +95,4 @@ enum ane_kind {
 
 
 
-#endif /* FC_EXPLANATION_H */
+

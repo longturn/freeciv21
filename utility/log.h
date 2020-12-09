@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__LOG_H
-#define FC__LOG_H
+#pragma once
 
 #include <stdarg.h>
 #include <stdlib.h>
@@ -171,4 +170,4 @@ void fc_assert_handle_failure(const char *condition, const char *file,
 
 void log_time(QString msg, bool log = false);
 
-#endif /* FC__LOG_H */
+

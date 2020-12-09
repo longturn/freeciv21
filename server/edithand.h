@@ -9,8 +9,7 @@
                           Public License along with Freeciv21. If not, see
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__EDITHAND_H
-#define FC__EDITHAND_H
+#pragma once
 
 
 
@@ -23,4 +22,4 @@ void edithand_send_initial_packets(struct conn_list *dest);
 
 
 
-#endif /* FC__EDITHAND_H */
+

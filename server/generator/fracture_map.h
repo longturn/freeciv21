@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__FRACTURE_MAP_H
-#define FC__FRACTURE_MAP_H
+#pragma once
 
 
 
@@ -33,4 +32,4 @@ void make_fracture_relief(void);
 
 
 
-#endif /* FC__FRACTURE__MAP_H */
+

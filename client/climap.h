@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CLIMAP_H
-#define FC__CLIMAP_H
+#pragma once
 
 
 
@@ -28,4 +27,4 @@ bool client_city_can_work_tile(const struct city *pcity,
 
 
 
-#endif /* FC__CLIMAP_H */
+

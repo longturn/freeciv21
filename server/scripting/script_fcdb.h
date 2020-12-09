@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SCRIPT_FCDB_H
-#define FC__SCRIPT_FCDB_H
+#pragma once
 
 /* utility */
 #include "support.h" /* fc__attribute() */
@@ -28,4 +27,4 @@ bool script_fcdb_do_string(struct connection *caller, const char *str);
 
 
 
-#endif /* FC__SCRIPT_FCDB_H */
+

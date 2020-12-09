@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CLINET_H
-#define FC__CLINET_H
+#pragma once
 
 // Forward declarations
 class QTcpSocket;
@@ -25,4 +24,4 @@ void disconnect_from_server(void);
 double try_to_autoconnect(void);
 void start_autoconnecting_to_server(void);
 
-#endif /* FC__CLINET_H */
+

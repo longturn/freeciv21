@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__TEAM_H
-#define FC__TEAM_H
+#pragma once
 
 
 
@@ -83,4 +82,4 @@ void team_remove_player(struct player *pplayer);
 
 
 
-#endif /* FC__TEAM_H */
+

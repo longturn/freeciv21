@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GENHASH_H
-#define FC__GENHASH_H
+#pragma once
 
 
 
@@ -118,4 +117,4 @@ void *genhash_iter_value(const struct iterator *genhash_iter);
 
 
 
-#endif /* FC__GENHASH_H */
+

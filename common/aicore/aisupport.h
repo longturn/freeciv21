@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AISUPPORT_H
-#define FC__AISUPPORT_H
+#pragma once
 
 
 
@@ -22,4 +21,4 @@ int city_gold_worth(struct city *pcity);
 
 
 
-#endif /* FC__AISUPPORT_H */
+

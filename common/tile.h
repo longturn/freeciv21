@@ -10,8 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__TILE_H
-#define FC__TILE_H
+#pragma once
 
 
 
@@ -184,4 +183,4 @@ bool tile_is_placing(const struct tile *ptile);
 
 
 
-#endif /* FC__TILE_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AIPARATROOPER_H
-#define FC__AIPARATROOPER_H
+#pragma once
 
 struct adv_choice;
 struct city;
@@ -24,4 +23,4 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
                             struct city *pcity, struct adv_choice *choice,
                             bool allow_gold_upkeep);
 
-#endif /* FC__AIPARATROOPER_H */
+

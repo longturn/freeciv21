@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CONSOLE_H
-#define FC__CONSOLE_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type and fc__attribute */
@@ -88,4 +87,4 @@ void con_set_style(bool i);
 /* return server output style */
 bool con_get_style(void);
 
-#endif /* FC__CONSOLE_H */
+

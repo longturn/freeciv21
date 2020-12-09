@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_GAME_FIND_H
-#define FC__API_GAME_FIND_H
+#pragma once
 
 
 
@@ -55,4 +54,4 @@ Nonexistent *api_find_nonexistent(lua_State *L);
 
 
 
-#endif /* API_GAME_FIND */
+

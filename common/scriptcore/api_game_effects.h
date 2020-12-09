@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_GAME_EFFECTS_H
-#define FC__API_GAME_EFFECTS_H
+#pragma once
 
 
 
@@ -26,4 +25,4 @@ int api_effects_city_bonus(lua_State *L, City *pcity,
 
 
 
-#endif /* API_GAME_EFFECTS */
+

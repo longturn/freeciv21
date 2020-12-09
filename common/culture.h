@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CULTURE_H
-#define FC__CULTURE_H
+#pragma once
 
 
 
@@ -24,4 +23,4 @@ int nation_history_gain(const struct player *pplayer);
 
 
 
-#endif /* FC__CULTURE_H */
+

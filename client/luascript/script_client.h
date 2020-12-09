@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SCRIPT_CLIENT_H
-#define FC__SCRIPT_CLIENT_H
+#pragma once
 
 
 
@@ -42,4 +41,4 @@ const char *script_client_signal_list(void);
 
 
 
-#endif /* FC__SCRIPT_CLIENT_H */
+

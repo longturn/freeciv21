@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PAGES_G_H
-#define FC__PAGES_G_H
+#pragma once
 
 /**************************************************************************
   Toplevel window pages modes.
@@ -34,4 +33,4 @@ void set_client_page(enum client_pages page);
 void client_start_server_and_set_page(enum client_pages page);
 enum client_pages get_client_page(void);
 
-#endif /* FC__PAGES_G_H */
+

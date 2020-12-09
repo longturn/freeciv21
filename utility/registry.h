@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__REGISTRY_H
-#define FC__REGISTRY_H
+#pragma once
 
 
 
@@ -35,4 +34,4 @@ const char *section_name(const struct section *psection);
 
 
 
-#endif /* FC__REGISTRY_H */
+

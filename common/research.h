@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ****************************************************************************/
-#ifndef FC__RESEARCH_H
-#define FC__RESEARCH_H
+#pragma once
 
 
 
@@ -170,4 +169,4 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
 
 
 
-#endif /* FC__RESEARCH_H */
+

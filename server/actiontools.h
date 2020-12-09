@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__ACTIONTOOLS_H
-#define FC__ACTIONTOOLS_H
+#pragma once
 
 /* common */
 #include "actions.h"
@@ -85,4 +84,4 @@ bool action_failed_dice_roll(const struct player *act_player,
 
 
 
-#endif /* FC__ACTIONTOOLS_H */
+

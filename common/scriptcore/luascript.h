@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__LUASCRIPT_H
-#define FC__LUASCRIPT_H
+#pragma once
 
 #include <QHash>
 #include <QVector>
@@ -142,4 +141,4 @@ const Direction *luascript_dir(enum direction8);
     return LUASCRIPT_ASSERT_CAT(, __VA_ARGS__);                             \
   }
 
-#endif /* FC__LUASCRIPT_H */
+

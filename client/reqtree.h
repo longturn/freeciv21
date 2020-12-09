@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__REQTREE_H
-#define FC__REQTREE_H
+#pragma once
 
 
 
@@ -87,4 +86,4 @@ bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
 
 
 
-#endif /* FC__REQTREE_H */
+

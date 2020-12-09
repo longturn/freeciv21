@@ -8,11 +8,10 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MESSAGEDLG_G_H
-#define FC__MESSAGEDLG_G_H
+#pragma once
 
 #include "gui_proto_constructor.h"
 
 GUI_FUNC_PROTO(void, popup_messageopt_dialog, void)
 
-#endif /* FC__MESSAGEDLG_G_H */
+

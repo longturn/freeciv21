@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UNITTOOLS_H
-#define FC__UNITTOOLS_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -180,4 +179,4 @@ struct unit_order *create_unit_orders(int length,
 
 
 
-#endif /* FC__UNITTOOLS_H */
+

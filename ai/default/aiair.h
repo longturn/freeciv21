@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AIAIR_H
-#define FC__AIAIR_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -27,4 +26,4 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
 
 int dai_evaluate_tile_for_attack(struct unit *punit, struct tile *dst_tile);
 
-#endif /* FC__AIAIR_H */
+

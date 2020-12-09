@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__NATION_H
-#define FC__NATION_H
+#pragma once
 
 
 
@@ -321,4 +320,4 @@ struct iterator *nation_iter_init(struct nation_iter *it);
 
 
 
-#endif /* FC__NATION_H */
+

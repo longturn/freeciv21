@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__DAIDIPLOMACY_H
-#define FC__DAIDIPLOMACY_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -40,4 +39,4 @@ bool dai_on_war_footing(struct ai_type *ait, struct player *pplayer);
 void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
                                  struct player *aplayer);
 
-#endif /* FC__DAIDIPLOMACY_H */
+

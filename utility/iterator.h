@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__ITERATOR_H
-#define FC__ITERATOR_H
+#pragma once
 
 
 
@@ -101,4 +100,4 @@ struct iterator *invalid_iter_init(struct iterator *it);
 
 
 
-#endif /* FC__ITERATOR_H */
+

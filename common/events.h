@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__EVENTS_H
-#define FC__EVENTS_H
+#pragma once
 
 
 
@@ -210,4 +209,4 @@ void events_free(void);
 
 
 
-#endif /* FC__EVENTS_H */
+

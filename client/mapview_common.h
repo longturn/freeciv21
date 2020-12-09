@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__MAPVIEW_COMMON_H
-#define FC__MAPVIEW_COMMON_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -355,4 +354,4 @@ void animations_free(void);
 void set_frame_by_frame_animation(void);
 void update_animation(void);
 
-#endif /* FC__MAPVIEW_COMMON_H */
+

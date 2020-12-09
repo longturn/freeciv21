@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AUDIO_SDL_H
-#define FC__AUDIO_SDL_H
+#pragma once
 
 
 
@@ -17,4 +16,4 @@ void audio_sdl_init(void);
 
 
 
-#endif /* FC__AUDIO_SDL_H */
+

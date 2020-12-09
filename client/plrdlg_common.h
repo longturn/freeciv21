@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PLRDLG_COMMON_H
-#define FC__PLRDLG_COMMON_H
+#pragma once
 
 // Qt
 #include <QString>
@@ -52,4 +51,4 @@ int player_dlg_default_sort_column(void);
 
 QString player_addr_hack(const struct player *pplayer);
 
-#endif /* FC__PLRDLG_COMMON_H */
+

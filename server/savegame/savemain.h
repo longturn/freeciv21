@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__SAVEMAIN_H
-#define FC__SAVEMAIN_H
+#pragma once
 
 /* utility */
 #include "support.h"
@@ -31,4 +30,4 @@ void save_system_close(void);
 
 
 
-#endif /* FC__SAVEMAIN_H */
+

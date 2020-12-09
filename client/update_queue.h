@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UPDATE_QUEUE_H
-#define FC__UPDATE_QUEUE_H
+#pragma once
 
 
 
@@ -57,4 +56,4 @@ bool update_queue_is_switching_page(void);
 
 
 
-#endif /* FC__UPDATE_QUEUE_H */
+

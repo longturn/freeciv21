@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__AUTH_H
-#define FC__AUTH_H
+#pragma once
 
 #include "shared.h"
 
@@ -32,4 +31,4 @@ int auth_get_salt(struct connection *pconn);
 
 
 
-#endif /* FC__AUTH_H */
+

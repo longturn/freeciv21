@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DIFFICULTY_H
-#define FC__DIFFICULTY_H
+#pragma once
 
 
 
@@ -23,4 +22,4 @@ bool ai_fuzzy(const struct player *pplayer, bool normal_decision);
 
 
 
-#endif /* FC__DIFFICULTY_H */
+

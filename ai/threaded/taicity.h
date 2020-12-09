@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TAICITY_H
-#define FC__TAICITY_H
+#pragma once
 
 struct city;
 struct tai_req;
@@ -21,4 +20,4 @@ void tai_city_worker_requests_create(struct ai_type *ait,
                                      struct city *pcity);
 void tai_req_worker_task_rcv(struct tai_req *req);
 
-#endif /* FC__TAICITY_H */
+

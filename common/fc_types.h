@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__FC_TYPES_H
-#define FC__FC_TYPES_H
+#pragma once
 
 
 
@@ -1144,4 +1143,4 @@ enum setting_default_level {
 
 
 
-#endif /* FC__FC_TYPES_H */
+

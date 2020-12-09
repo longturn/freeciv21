@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AI_H
-#define FC__AI_H
+#pragma once
 
 
 
@@ -408,4 +407,4 @@ void ai_timer_player_stop(const struct player *pplayer);
 
 
 
-#endif /* FC__AI_H */
+

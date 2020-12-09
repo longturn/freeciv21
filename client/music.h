@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MUSIC_H
-#define FC__MUSIC_H
+#pragma once
 
 
 
@@ -23,4 +22,4 @@ void musicspec_reread_callback(struct option *poption);
 
 
 
-#endif /* FC__MUSIC_H */
+

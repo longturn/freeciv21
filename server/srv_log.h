@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SRV_LOG_H
-#define FC__SRV_LOG_H
+#pragma once
 
 // Qt
 #include <QString>
@@ -125,4 +124,4 @@ void timing_results_real(void);
 #define TIMING_RESULTS()
 #endif /* FREECIV_DEBUG */
 
-#endif /* FC__SRV_LOG_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__SHARED_H
-#define FC__SHARED_H
+#pragma once
 
 
 #include <stdlib.h> /* size_t */
@@ -424,4 +423,4 @@ bool formats_match(const char *format1, const char *format2);
 
 
 
-#endif /* FC__SHARED_H */
+

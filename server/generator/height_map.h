@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__HEIGHT_MAP_H
-#define FC__HEIGHT_MAP_H
+#pragma once
 
 
 
@@ -43,4 +42,4 @@ bool area_is_too_flat(struct tile *ptile, int thill, int my_height);
 
 
 
-#endif /* FC__HEIGHT__MAP_H */
+

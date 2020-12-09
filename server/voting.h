@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__VOTING_H
-#define FC__VOTING_H
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -95,4 +94,4 @@ void send_updated_vote_totals(struct conn_list *dest);
 
 
 
-#endif /* FC__VOTING_H */
+

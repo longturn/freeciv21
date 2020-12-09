@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__ADVCHOICE_H
-#define FC__ADVCHOICE_H
+#pragma once
 
 /* Uncomment to have choice information tracked */
 /* #define ADV_CHOICE_TRACK */
@@ -89,4 +88,4 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
     }                                                                       \
   } while (FALSE);
 
-#endif /* FC__ADVCHOICE_H */
+

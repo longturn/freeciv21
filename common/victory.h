@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__VICTORY_H
-#define FC__VICTORY_H
+#pragma once
 
 
 
@@ -17,4 +16,4 @@ bool victory_enabled(enum victory_condition_type victory);
 
 
 
-#endif /* FC__VICTORY_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CLIMISC_H
-#define FC__CLIMISC_H
+#pragma once
 
 
 
@@ -145,4 +144,4 @@ enum ai_level server_ai_level(void);
 
 
 
-#endif /* FC__CLIMISC_H */
+

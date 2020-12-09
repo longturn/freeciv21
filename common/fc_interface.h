@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__FC_INTERFACE_H
-#define FC__FC_INTERFACE_H
+#pragma once
 
 
 
@@ -59,4 +58,4 @@ void free_libfreeciv(void);
 
 
 
-#endif /* FC__FC_INTERFACE_H */
+

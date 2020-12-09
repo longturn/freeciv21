@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__BASE_H
-#define FC__BASE_H
+#pragma once
 
 
 
@@ -115,4 +114,4 @@ void base_types_free(void);
 
 
 
-#endif /* FC__BASE_H */
+

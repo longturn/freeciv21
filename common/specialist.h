@@ -10,8 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SPECIALIST_H
-#define FC__SPECIALIST_H
+#pragma once
 
 
 
@@ -90,4 +89,4 @@ void specialists_free(void);
 
 
 
-#endif /* FC__SPECIALIST_H */
+

@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CAPABILITY_H
-#define FC__CAPABILITY_H
+#pragma once
 
 
 
@@ -21,4 +20,4 @@ bool has_capabilities(const char *us, const char *them);
 
 
 
-#endif /* FC__CAPABILITY_H */
+

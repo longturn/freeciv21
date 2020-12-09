@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_FCDB_BASE_H
-#define FC__API_FCDB_BASE_H
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -25,4 +24,4 @@ const char *api_fcdb_option(lua_State *L, const char *type);
 
 
 
-#endif /* FC__API_FCDB_BASE_H */
+

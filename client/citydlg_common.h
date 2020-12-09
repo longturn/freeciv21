@@ -11,8 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__CITYDLG_COMMON_H
-#define FC__CITYDLG_COMMON_H
+#pragma once
 
 
 
@@ -83,4 +82,4 @@ int city_rename(struct city *pcity, const char *name);
 
 
 
-#endif /* FC__CITYDLG_COMMON_H */
+

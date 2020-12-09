@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TRADEROUTES_H
-#define FC__TRADEROUTES_H
+#pragma once
 
 
 
@@ -234,4 +233,4 @@ bool city_receives_goods(const struct city *pcity,
 
 
 
-#endif /* FC__TRADEROUTES_H */
+

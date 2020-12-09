@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CALENDAR_H
-#define FC__CALENDAR_H
+#pragma once
 
 
 
@@ -23,4 +22,4 @@ const char *calendar_text(void);
 
 
 
-#endif /* FC__CALENDAR_H */
+

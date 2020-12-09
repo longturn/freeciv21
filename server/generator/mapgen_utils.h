@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__MAPGEN_UTILS_H
-#define FC__MAPGEN_UTILS_H
+#pragma once
 
 
 
@@ -124,4 +123,4 @@ void set_placed_near_pos(struct tile *ptile, int dist);
 
 
 
-#endif /* FC__MAPGEN_UTILS_H */
+

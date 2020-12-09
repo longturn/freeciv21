@@ -8,9 +8,8 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVRULESET_H
-#define FC__ADVRULESET_H
+#pragma once
 
 void adv_units_ruleset_init(void);
 
-#endif /* FC__ADVRULESET_H */
+

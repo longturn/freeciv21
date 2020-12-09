@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__RAND_H
-#define FC__RAND_H
+#pragma once
 
 
 
@@ -53,4 +52,4 @@ RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
 
 
 
-#endif /* FC__RAND_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CLIENT_MAIN_H
-#define FC__CLIENT_MAIN_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -124,4 +123,4 @@ extern const bool gui_use_transliteration;
 
 
 
-#endif /* FC__CLIENT_MAIN_H */
+

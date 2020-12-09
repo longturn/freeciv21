@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SPACESHIPDLG_G_H
-#define FC__SPACESHIPDLG_G_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -19,4 +18,4 @@ void popup_spaceship_dialog(struct player *pplayer);
 GUI_FUNC_PROTO(void, popdown_spaceship_dialog, struct player *pplayer)
 GUI_FUNC_PROTO(void, refresh_spaceship_dialog, struct player *pplayer)
 
-#endif /* FC__SPACESHIPDLG_G_H */
+

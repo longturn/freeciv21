@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AITRAITS_H
-#define FC__AITRAITS_H
+#pragma once
 
 /* common */
 #include "traits.h"
@@ -25,4 +24,4 @@ void ai_traits_close(struct player *pplayer);
 
 
 
-#endif /* FC__AITRAITS_H */
+

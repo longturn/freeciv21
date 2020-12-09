@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__ANIMALS_H
-#define FC__ANIMALS_H
+#pragma once
 
 
 
@@ -19,4 +18,4 @@ void create_animals(void);
 
 
 
-#endif /* FC__ANIMALS_H */
+

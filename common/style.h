@@ -10,8 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__STYLE_H
-#define FC__STYLE_H
+#pragma once
 
 
 
@@ -86,4 +85,4 @@ int city_style(struct city *pcity);
 
 
 
-#endif /* FC__STYLE_H */
+

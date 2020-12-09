@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__DIPLHAND_H
-#define FC__DIPLHAND_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -44,4 +43,4 @@ struct treaty_list *get_all_treaties(void);
 
 
 
-#endif /* FC__DIPLHAND_H */
+

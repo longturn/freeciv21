@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__REPORT_H
-#define FC__REPORT_H
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -47,4 +46,4 @@ struct history_report *history_report_get(void);
 
 
 
-#endif /* FC__REPORT_H */
+

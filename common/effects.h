@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__EFFECTS_H
-#define FC__EFFECTS_H
+#pragma once
 
 
 
@@ -439,4 +438,4 @@ bool iterate_effect_cache(iec_cb cb, void *data);
 
 
 
-#endif /* FC__EFFECTS_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TRAITS_H
-#define FC__TRAITS_H
+#pragma once
 
 
 
@@ -44,4 +43,4 @@ struct trait_limits {
 
 
 
-#endif /* FC__TRAITS_H */
+

@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__AISETTLER_H
-#define FC__AISETTLER_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -36,4 +35,4 @@ void dai_auto_settler_cont(struct ai_type *ait, struct player *pplayer,
 
 void contemplate_new_city(struct ai_type *ait, struct city *pcity);
 
-#endif /* FC__AISETTLER_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAPVIEW_G_H
-#define FC__MAPVIEW_G_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -55,4 +54,4 @@ GUI_FUNC_PROTO(void, draw_selection_rectangle, int canvas_x, int canvas_y,
                int w, int h)
 GUI_FUNC_PROTO(void, tileset_changed, void)
 
-#endif /* FC__MAPVIEW_G_H */
+

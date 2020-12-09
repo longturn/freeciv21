@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__OPTIONS_H
-#define FC__OPTIONS_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -333,4 +332,4 @@ const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default(void);
 
-#endif /* FC__OPTIONS_H */
+

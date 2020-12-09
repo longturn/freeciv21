@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__STRING_VECTOR_H
-#define FC__STRING_VECTOR_H
+#pragma once
 
 
 
@@ -68,4 +67,4 @@ const char *strvec_to_and_list(const struct strvec *psv,
 
 
 
-#endif /* FC__STRING_VECTOR_H */
+

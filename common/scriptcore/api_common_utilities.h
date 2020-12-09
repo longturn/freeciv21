@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_COMMON_UTILITIES_H
-#define FC__API_COMMON_UTILITIES_H
+#pragma once
 
 
 
@@ -35,4 +34,4 @@ void api_utilities_deprecation_warning(lua_State *L, char *method,
 
 
 
-#endif /* FC__API_COMMON_UTILITIES_H */
+

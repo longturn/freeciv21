@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DAICITY_H
-#define FC__DAICITY_H
+#pragma once
 
 /* common */
 #include "effects.h" /* enum effect_type */
@@ -108,4 +107,4 @@ Impr_type_id dai_find_source_building(struct city *pcity,
 adv_want dai_city_want(struct player *pplayer, struct city *acity,
                        struct adv_data *adv, struct impr_type *pimprove);
 
-#endif /* FC__DAICITY_H */
+
