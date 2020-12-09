@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__GRAPHICS_G_H
-#define FC__GRAPHICS_G_H
-
+#pragma once
 /* utility */
 #include "support.h" /* bool type */
 
@@ -32,4 +30,3 @@ GUI_FUNC_PROTO(void, load_cursors, void)
 
 GUI_FUNC_PROTO(void, free_intro_radar_sprites, void)
 
-#endif /* FC__GRAPHICS_G_H */

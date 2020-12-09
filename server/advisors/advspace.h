@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVSPACE_H
-#define FC__ADVSPACE_H
-
+#pragma once
 /* utility */
 #include "shared.h"
 
@@ -22,4 +20,3 @@ struct player_spaceship;
 bool adv_spaceship_autoplace(struct player *pplayer,
                              struct player_spaceship *ship);
 
-#endif /* FC__ADVSPACE_H */

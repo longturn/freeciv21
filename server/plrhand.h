@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__PLRHAND_H
-#define FC__PLRHAND_H
-
+#pragma once
 struct connection;
 struct conn_list;
 struct nation_type;
@@ -177,4 +175,3 @@ void player_set_to_ai_mode(struct player *pplayer,
                            enum ai_level skill_level);
 void player_set_under_human_control(struct player *pplayer);
 
-#endif /* FC__PLRHAND_H */

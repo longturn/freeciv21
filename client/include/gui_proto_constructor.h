@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__GUI_PROTO_CONSTRUCTOR_H
-#define FC__GUI_PROTO_CONSTRUCTOR_H
-
+#pragma once
 #ifdef __cplusplus
 #define EXTERN_C extern "C"
 #else
@@ -26,4 +24,3 @@
 #define GUI_FUNC_PROTO(_type, _func, ...) EXTERN_C _type _func(__VA_ARGS__);
 #endif
 
-#endif /* FC__GUI_PROTO_CONSTRUCTOR_H */

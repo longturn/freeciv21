@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVDATA_H
-#define FC__ADVDATA_H
-
+#pragma once
 /* utility */
 #include "bitvector.h"
 #include "support.h" /* bool type */
@@ -153,4 +151,3 @@ bool adv_wants_science(struct player *pplayer);
 
 bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer);
 
-#endif /* FC__ADVDATA_H */

@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AIFERRY_H
-#define FC__AIFERRY_H
-
+#pragma once
 #include "support.h" /* bool type */
 
 #include "fc_types.h"
@@ -81,4 +79,3 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit);
 void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
                           struct unit *punit);
 
-#endif /* FC__AIFERRY_H */

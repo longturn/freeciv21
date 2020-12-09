@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TAIMSG_H
-#define FC__TAIMSG_H
-
+#pragma once
 #define SPECENUM_NAME taimsgtype
 #define SPECENUM_VALUE0 TAI_MSG_THR_EXIT
 #define SPECENUM_VALUE0NAME "Exit"
@@ -55,4 +53,3 @@ void tai_send_req(enum taireqtype type, struct player *pplayer, void *data);
 void tai_first_activities(struct ai_type *ait, struct player *pplayer);
 void tai_phase_finished(struct ai_type *ait, struct player *pplayer);
 
-#endif /* FC__TAIMSG_H */

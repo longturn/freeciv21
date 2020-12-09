@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__HELPDLG_G_H
-#define FC__HELPDLG_G_H
-
+#pragma once
 #include "gui_proto_constructor.h"
 
 /* This must be in same order as names in helpdata.c */
@@ -69,4 +67,3 @@ GUI_FUNC_PROTO(void, popdown_help_dialog, void)
 #define HELP_ABOUT_ITEM N_("About Freeciv")
 #define HELP_MULTIPLIER_ITEM N_("Policies")
 
-#endif /* FC__HELPDLG_G_H */

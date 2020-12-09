@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SPACERACE_H
-#define FC__SPACERACE_H
-
+#pragma once
 /* common */
 #include "fc_types.h"
 #include "packets.h"
@@ -33,4 +31,3 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
                         enum spaceship_place_type type, int num);
 
 
-#endif /* FC__SPACERACE_H */

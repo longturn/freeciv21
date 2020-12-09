@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__EXTRAS_H
-#define FC__EXTRAS_H
-
+#pragma once
 
 /* common */
 #include "base.h"
@@ -353,4 +351,3 @@ bool player_knows_extra_exist(const struct player *pplayer,
   }
 
 
-#endif /* FC__EXTRAS_H */

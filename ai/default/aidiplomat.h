@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AIDIPLOMAT_H
-#define FC__AIDIPLOMAT_H
-
+#pragma once
 #include "fc_types.h"
 
 void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
@@ -24,4 +22,3 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
                                    struct city *pcity,
                                    struct adv_choice *choice);
 
-#endif /* FC__AIDIPLOMAT_H */

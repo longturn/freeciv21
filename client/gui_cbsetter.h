@@ -11,9 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__GUI_CBSETTER_H
-#define FC__GUI_CBSETTER_H
-
+#pragma once
 void setup_gui_funcs(void);
 
-#endif /* FC__GUI_CBSETTER_H */

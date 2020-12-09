@@ -11,9 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef FC_SERVER_SETTINGS_H
-#define FC_SERVER_SETTINGS_H
-
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -48,4 +46,3 @@ const char *ssetv_human_readable(ssetv val, bool present);
 bool ssetv_setting_has_value(ssetv val);
 
 
-#endif /* FC_SERVER_SETTINGS_H */

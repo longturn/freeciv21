@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__REQTREE_H
-#define FC__REQTREE_H
-
+#pragma once
 
 #include "canvas_g.h"
 
@@ -85,4 +83,3 @@ bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
                           int *y, int *w, int *h);
 
 
-#endif /* FC__REQTREE_H */

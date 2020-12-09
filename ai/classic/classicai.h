@@ -10,15 +10,10 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CLASSICAI_H
-#define FC__CLASSICAI_H
-
-
+#pragma once
 
 struct ai_type;
 
 bool fc_ai_classic_setup(struct ai_type *ai);
 
 
-
-#endif /* FC__CLASSICAI_H */

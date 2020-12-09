@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CITYTOOLS_H
-#define FC__CITYTOOLS_H
-
+#pragma once
 /* common */
 #include "events.h" /* enum event_type */
 #include "packets.h"
@@ -116,4 +114,3 @@ void package_and_send_worker_tasks(struct city *pcity);
 
 int city_production_buy_gold_cost(const struct city *pcity);
 
-#endif /* FC__CITYTOOLS_H */

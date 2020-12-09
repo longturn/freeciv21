@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__RULESET_H
-#define FC__RULESET_H
-
+#pragma once
 #include <QLoggingCategory>
 
 #define RULESET_CAPABILITIES "+Freeciv-ruleset-Devel-2017.Jan.02"
@@ -77,4 +75,3 @@ char *get_parser_buffer(void);
 #define RS_DEFAULT_EXTRA_APPEARANCE 15
 #define RS_DEFAULT_EXTRA_DISAPPEARANCE 15
 
-#endif /* FC__RULESET_H */

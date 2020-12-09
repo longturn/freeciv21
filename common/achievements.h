@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__ACHIEVEMENTS_H
-#define FC__ACHIEVEMENTS_H
-
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -80,4 +78,3 @@ bool achievement_claimed(const struct achievement *pach);
 int get_literacy(const struct player *pplayer);
 
 
-#endif /* FC__ACHIEVEMENTS_H */

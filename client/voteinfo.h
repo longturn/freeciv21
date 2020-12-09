@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__VOTEINFO_H
-#define FC__VOTEINFO_H
-
+#pragma once
 
 #include "fc_types.h"
 
@@ -53,4 +51,3 @@ int voteinfo_queue_size(void);
 bool voteinfo_bar_can_be_shown(void);
 
 
-#endif /* FC__VOTEINFO_H */

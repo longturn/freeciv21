@@ -11,9 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef FC__MULTIPLIERS_H
-#define FC__MULTIPLIERS_H
-
+#pragma once
 
 /* utility */
 #include "bitvector.h"
@@ -76,4 +74,3 @@ bool multiplier_can_be_changed(struct multiplier *pmul,
   multipliers_iterate_end;
 
 
-#endif /* FC__MULTIPLIERS_H */

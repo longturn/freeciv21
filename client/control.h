@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CONTROL_H
-#define FC__CONTROL_H
-
+#pragma once
 
 /* common */
 #include "actions.h"
@@ -273,4 +271,3 @@ void cancel_city(struct tile *ptile);
 extern int num_units_below;
 
 
-#endif /* FC__CONTROL_H */

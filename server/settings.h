@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SETTINGS_H
-#define FC__SETTINGS_H
-
+#pragma once
 
 /* utility */
 #include "shared.h"
@@ -209,4 +207,3 @@ void setting_changed(struct setting *pset);
 enum setting_default_level setting_get_setdef(const struct setting *pset);
 
 
-#endif /* FC__SETTINGS_H */

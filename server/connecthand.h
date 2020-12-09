@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CONNECTHAND_H
-#define FC__CONNECTHAND_H
-
+#pragma once
 #include "connection.h" // cmdlevel
 #include "support.h" /* bool type */
 
@@ -47,4 +45,3 @@ bool connection_delegate_restore(struct connection *pconn);
 
 void connection_close_server(struct connection *pconn, const char *reason);
 
-#endif /* FC__CONNECTHAND_H */

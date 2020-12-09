@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AIUNIT_H
-#define FC__AIUNIT_H
-
+#pragma once
 /* common */
 #include "combat.h"
 #include "fc_types.h"
@@ -172,4 +170,3 @@ bool dai_unit_can_strike_my_unit(const struct unit *attacker,
 void dai_switch_to_explore(struct ai_type *ait, struct unit *punit,
                            struct tile *target, enum override_bool *allow);
 
-#endif /* FC__AIUNIT_H */

@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_SIGNAL_BASE_H
-#define FC__API_SIGNAL_BASE_H
-
+#pragma once
 
 /* utility */
 #include "support.h"
@@ -31,4 +29,3 @@ const char *api_signal_callback_by_index(lua_State *L,
 const char *api_signal_by_index(lua_State *L, int sindex);
 
 
-#endif /* FC__API_SIGNAL_BASE_H */

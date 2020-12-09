@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_FCDB_AUTH_H
-#define FC__API_FCDB_AUTH_H
-
+#pragma once
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -22,4 +20,3 @@ const char *api_auth_get_username(lua_State *L, Connection *pconn);
 const char *api_auth_get_ipaddr(lua_State *L, Connection *pconn);
 
 
-#endif /* FC__API_FCDB_AUTH_H */

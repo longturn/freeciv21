@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__BUILDINGADV_H
-#define FC__BUILDINGADV_H
-
+#pragma once
 /* server/advisors */
 #include "advchoice.h"
 
@@ -35,4 +33,3 @@ void building_advisor(struct player *pplayer);
 void advisor_choose_build(struct player *pplayer, struct city *pcity);
 void building_advisor_choose(struct city *pcity, struct adv_choice *choice);
 
-#endif /* FC__BUILDINGADV_H */

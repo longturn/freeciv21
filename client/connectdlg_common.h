@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CONNECTDLG_COMMON_H
-#define FC__CONNECTDLG_COMMON_H
-
+#pragma once
 /* utility */
 #include "support.h" /* bool */
 
@@ -25,4 +23,3 @@ void send_save_game(const char *filename);
 
 void set_ruleset(const char *ruleset);
 
-#endif /* FC__CONNECTDLG_COMMON_H */

@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__DIPLODLG_G_H
-#define FC__DIPLODLG_G_H
-
+#pragma once
 #include "shared.h"
 
 #include "diptreaty.h"
@@ -30,4 +28,3 @@ void handle_diplomacy_accept_treaty( int counterpart,
 
 void close_all_diplomacy_dialogs(void);
 
-#endif /* FC__DIPLODLG_G_H */

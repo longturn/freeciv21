@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AUDIO_H
-#define FC__AUDIO_H
-
+#pragma once
 #include "support.h" /* bool type */
 
 #define MAX_AUDIO_NAME_LEN 20
@@ -64,4 +62,3 @@ void audio_set_volume(double volume);
 bool audio_select_plugin(QString &name);
 const char *audio_get_all_plugin_names(void);
 
-#endif /* FC__AUDIO_H */

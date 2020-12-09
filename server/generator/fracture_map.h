@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__FRACTURE_MAP_H
-#define FC__FRACTURE_MAP_H
-
+#pragma once
 
 /*
  * Height map information
@@ -31,4 +29,3 @@ void make_fracture_relief(void);
 #define MG_UNUSED mapgen_terrain_property_invalid()
 
 
-#endif /* FC__FRACTURE__MAP_H */

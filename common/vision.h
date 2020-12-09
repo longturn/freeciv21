@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__VISION_H
-#define FC__VISION_H
-
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -143,4 +141,3 @@ citizens vision_site_size_get(const struct vision_site *psite);
 void vision_site_size_set(struct vision_site *psite, citizens size);
 
 
-#endif /* FC__VISION_H */

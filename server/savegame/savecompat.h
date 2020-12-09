@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__SAVECOMPAT_H
-#define FC__SAVECOMPAT_H
-
+#pragma once
 /* utility */
 #include "rand.h"
 
@@ -204,4 +202,3 @@ void set_unit_activity_road(struct unit *punit, Road_type_id road);
 int sg_order_to_action(int order, struct unit *act_unit,
                        struct tile *tgt_tile);
 
-#endif /* FC__SAVECOMPAT_H */

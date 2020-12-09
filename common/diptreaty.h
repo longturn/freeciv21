@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DIPTREATY_H
-#define FC__DIPTREATY_H
-
+#pragma once
 
 /* utility */
 #include "requirements.h"
@@ -98,4 +96,3 @@ bool clause_enabled(enum clause_type type, struct player *from,
                     struct player *to);
 
 
-#endif /* FC__DIPTREATY_H */

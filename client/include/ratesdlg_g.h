@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__RATESDLG_G_H
-#define FC__RATESDLG_G_H
-
+#pragma once
 #include "gui_proto_constructor.h"
 
 void popup_rates_dialog();
@@ -20,4 +18,3 @@ void real_multipliers_dialog_update(void *unused);
 void multipliers_dialog_update(void);
 void gui_update_sidebar();
 
-#endif /* FC__RATESDLG_G_H */

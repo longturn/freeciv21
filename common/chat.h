@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CHAT_H
-#define FC__CHAT_H
-
+#pragma once
 /* Definitions related to interpreting chat messages.
  * Behaviour generally can't be changed at whim because client and
  * server are assumed to agree on these details. */
@@ -27,4 +25,3 @@
 #define CHAT_DIRECT_PREFIX ':'
 
 
-#endif /* FC__CHAT_H */

@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PATH_FINDING_H
-#define FC__PATH_FINDING_H
-
+#pragma once
 /* common */
 #include "map.h"
 #include "tile.h"
@@ -606,4 +604,3 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
     ;                                                                       \
   }
 
-#endif /* FC__PATH_FINDING_H */

@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__TEXT_H
-#define FC__TEXT_H
-
+#pragma once
 #include "fc_types.h"
 #include "unitlist.h"
 
@@ -63,4 +61,3 @@ const char *text_happiness_luxuries(const struct city *pcity);
 const char *text_happiness_units(const struct city *pcity);
 const char *text_happiness_wonders(const struct city *pcity);
 
-#endif /* FC__TEXT_H */

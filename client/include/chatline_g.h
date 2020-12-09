@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CHATLINE_G_H
-#define FC__CHATLINE_G_H
-
+#pragma once
 #include "chatline_common.h"
 
 #include "gui_proto_constructor.h"
@@ -19,4 +17,3 @@ GUI_FUNC_PROTO(void, real_output_window_append, const QString& astring,
                const struct text_tag_list *tags, int conn_id)
 GUI_FUNC_PROTO(void, version_message, const char *vertext)
 
-#endif /* FC__CHATLINE_G_H */

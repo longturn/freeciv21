@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SERNET_H
-#define FC__SERNET_H
-
+#pragma once
 // Forward declarations
 class QTcpServer;
 class QTcpSocket;
@@ -37,4 +35,3 @@ void handle_client_heartbeat(struct connection *pconn);
 void send_ping_times_to_all();
 void get_lanserver_announcement();
 
-#endif /* FC__SERNET_H */

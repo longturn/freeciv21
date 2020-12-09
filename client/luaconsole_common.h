@@ -11,9 +11,7 @@
    GNU General Public License for more details.
 *****************************************************************************/
 
-#ifndef FC__LUACONSOLE_COMMON_H
-#define FC__LUACONSOLE_COMMON_H
-
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -32,4 +30,3 @@ void luaconsole_event(const char *plain_text,
 void luaconsole_welcome_message(void);
 
 
-#endif /* FC__LUACONSOLE_COMMON_H */

@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TAIPLAYER_H
-#define FC__TAIPLAYER_H
-
+#pragma once
 /* utility */
 #include "fcthread.h"
 
@@ -61,4 +59,3 @@ static inline struct tai_plr *tai_player_data(struct ai_type *ait,
   return (struct tai_plr *) player_ai_data(pplayer, ait);
 }
 
-#endif /* FC__TAIPLAYER_H */

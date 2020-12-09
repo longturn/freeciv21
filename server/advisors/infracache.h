@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__INFRACACHE_H
-#define FC__INFRACACHE_H
-
+#pragma once
 /* server/advisors */
 #include "advtools.h"
 
@@ -57,4 +55,3 @@ int adv_city_worker_rmextra_get(const struct city *pcity,
                                 int city_tile_index,
                                 const struct extra_type *pextra);
 
-#endif /* FC__INFRACACHE_H */

@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CITYHAND_H
-#define FC__CITYHAND_H
-
+#pragma once
 #include "fc_types.h"
 
 #include "hand_gen.h"
@@ -23,4 +21,3 @@ void really_handle_city_sell(struct player *pplayer, struct city *pcity,
 void really_handle_city_buy(struct player *pplayer, struct city *pcity);
 
 
-#endif /* FC__CITYHAND_H */

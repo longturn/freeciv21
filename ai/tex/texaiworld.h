@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TEXAIWORLD_H
-#define FC__TEXAIWORLD_H
-
+#pragma once
 #include "texaimsg.h"
 
 void texai_world_init(void);
@@ -40,4 +38,3 @@ void texai_unit_destruction_recv(void *data);
 void texai_unit_move_seen(struct unit *punit);
 void texai_unit_moved_recv(void *data);
 
-#endif /* FC__TEXAIWORLD_H */

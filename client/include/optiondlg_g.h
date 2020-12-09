@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__OPTIONDLG_G_H
-#define FC__OPTIONDLG_G_H
-
+#pragma once
 #include "gui_proto_constructor.h"
 
 struct option;
@@ -24,4 +22,3 @@ GUI_FUNC_PROTO(void, option_gui_update, struct option *poption)
 GUI_FUNC_PROTO(void, option_gui_add, struct option *poption)
 GUI_FUNC_PROTO(void, option_gui_remove, struct option *poption)
 
-#endif /* FC__OPTIONDLG_G_H */

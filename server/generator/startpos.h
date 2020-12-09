@@ -10,12 +10,9 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__STARTPOS_H
-#define FC__STARTPOS_H
-
+#pragma once
 
 bool create_start_positions(enum map_startpos mode,
                             struct unit_type *initial_unit);
 
 
-#endif /* FC_STARTPOS_H */

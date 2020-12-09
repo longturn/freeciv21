@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__GAME_H
-#define FC__GAME_H
-
+#pragma once
 #include <time.h> /* time_t */
 
 /* utility */
@@ -839,4 +837,3 @@ extern struct world wld;
 
 #define RS_ACTION_NO_MAX_DISTANCE "unlimited"
 
-#endif /* FC__GAME_H */

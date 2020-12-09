@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAP_H
-#define FC__MAP_H
-
+#pragma once
 #include <math.h> /* sqrt */
 
 /* utility */
@@ -670,4 +668,3 @@ static inline bool is_border_tile(const struct tile *ptile, int dist)
 enum direction8 rand_direction(void);
 enum direction8 opposite_direction(enum direction8 dir);
 
-#endif /* FC__MAP_H */

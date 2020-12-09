@@ -8,13 +8,10 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SAVEGAME3_H
-#define FC__SAVEGAME3_H
-
+#pragma once
 
 void savegame3_load(struct section_file *sfile);
 void savegame3_save(struct section_file *sfile, const char *save_reason,
                     bool scenario);
 
 
-#endif /* FC__SAVEGAME3_H */

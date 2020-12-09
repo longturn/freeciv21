@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CITYDLG_G_H
-#define FC__CITYDLG_G_H
-
+#pragma once
 #include "fc_types.h"
 
 #include "citydlg_common.h"
@@ -29,4 +27,3 @@ void popup_city_dialog(struct city *pcity);
 void refresh_city_dialog(struct city *pcity);
 struct city * is_any_city_dialog_open();
 
-#endif /* FC__CITYDLG_G_H */

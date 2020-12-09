@@ -8,13 +8,10 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MAPGEN_H
-#define FC__MAPGEN_H
-
+#pragma once
 #include "support.h" /* bool type */
 
 
 bool map_fractal_generate(bool autosize, struct unit_type *initial_unit);
 
 
-#endif /* FC__MAPGEN_H */

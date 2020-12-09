@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CITYTURN_H
-#define FC__CITYTURN_H
-
+#pragma once
 #include "support.h" /* bool type */
 
 #include "fc_types.h"
@@ -52,4 +50,3 @@ void check_disasters(void);
 
 void city_style_refresh(struct city *pcity);
 
-#endif /* FC__CITYTURN_H */

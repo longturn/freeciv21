@@ -17,9 +17,7 @@
  * along with Freeciv21.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef FC__SERVER_H
-#define FC__SERVER_H
-
+#pragma once
 // Qt
 #include <QObject>
 
@@ -77,4 +75,3 @@ private:
 
 } // namespace freeciv
 
-#endif // FC__SERVER_H

@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__DAI_EFFECTS_H
-#define FC__DAI_EFFECTS_H
-
+#pragma once
 adv_want dai_effect_value(struct player *pplayer, struct government *gov,
                           const struct adv_data *adv,
                           const struct city *pcity, const bool capital,
@@ -24,4 +22,3 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                         const struct player *pplayer,
                                         const struct city *pcity);
 
-#endif /* FC__DAI_EFFECTS_H */

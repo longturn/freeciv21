@@ -11,9 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef FC_META_KNOWLEDGE_H
-#define FC_META_KNOWLEDGE_H
-
+#pragma once
 /* common */
 #include "requirements.h"
 
@@ -39,4 +37,3 @@ bool can_see_techs_of_target(const struct player *pow_player,
                              const struct player *target_player);
 
 
-#endif /* FC_META_KNOWLEDGE_H */

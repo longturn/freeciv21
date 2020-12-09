@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAP_TYPES_H
-#define FC__MAP_TYPES_H
-
+#pragma once
 #include <QHash>
 
 /* common */
@@ -113,4 +111,3 @@ struct civ_map {
 };
 
 
-#endif /* FC__MAP_H */

@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AITECH_H
-#define FC__AITECH_H
-
+#pragma once
 /* common */
 #include "fc_types.h"
 #include "unittype.h"
@@ -30,4 +28,3 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
                                              const struct unit_type *att,
                                              int want);
 
-#endif /* FC__AITECH_H */

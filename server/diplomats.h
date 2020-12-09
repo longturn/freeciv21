@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__DIPLOMATS_H
-#define FC__DIPLOMATS_H
-
+#pragma once
 #include "fc_types.h"
 
 bool diplomat_embassy(struct player *pplayer, struct unit *pdiplomat,
@@ -50,4 +48,3 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
 
 int count_diplomats_on_tile(struct tile *ptile);
 
-#endif /* FC__DIPLOMATS_H */

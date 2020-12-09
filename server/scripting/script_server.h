@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SCRIPT_SERVER_H
-#define FC__SCRIPT_SERVER_H
-
+#pragma once
 /* utility */
 #include "support.h"
 
@@ -47,4 +45,3 @@ void script_server_signal_emit(const char *signal_name, ...);
 bool script_server_call(const char *func_name, ...);
 
 
-#endif /* FC__SCRIPT_SERVER_H */

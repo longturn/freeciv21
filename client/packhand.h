@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PACKHAND_H
-#define FC__PACKHAND_H
-
+#pragma once
 
 #include "fc_types.h" /* struct connection, struct government */
 
@@ -33,4 +31,3 @@ void set_government_choice(struct government *government);
 void start_revolution(void);
 
 
-#endif /* FC__PACKHAND_H */

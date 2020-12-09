@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__STDINHAND_H
-#define FC__STDINHAND_H
-
+#pragma once
 /* common */
 #include "chat.h"       /* SERVER_COMMAND_PREFIX */
 #include "connection.h" /* enum cmdlevel */
@@ -64,4 +62,3 @@ void set_running_game_access_level(void);
 
 char **freeciv_completion(const char *text, int start, int end);
 
-#endif /* FC__STDINHAND_H */

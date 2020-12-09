@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__SCRIPT_CLIENT_H
-#define FC__SCRIPT_CLIENT_H
-
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
@@ -40,4 +38,3 @@ void script_client_signal_emit(const char *signal_name, ...);
 const char *script_client_signal_list(void);
 
 
-#endif /* FC__SCRIPT_CLIENT_H */

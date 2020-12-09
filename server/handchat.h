@@ -8,13 +8,10 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__HANDCHAT_H
-#define FC__HANDCHAT_H
-
+#pragma once
 
 struct connection;
 
 void handle_chat_msg_req(struct connection *pc, const char *message);
 
 
-#endif /* FC__HANDCHAT_H */

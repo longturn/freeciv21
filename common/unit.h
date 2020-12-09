@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UNIT_H
-#define FC__UNIT_H
-
+#pragma once
 
 /* utility */
 #include "bitvector.h"
@@ -453,4 +451,3 @@ struct iterator *cargo_iter_init(struct cargo_iter *iter,
 #define unit_cargo_iterate_end generic_iterate_end
 
 
-#endif /* FC__UNIT_H */

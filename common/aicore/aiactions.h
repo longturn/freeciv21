@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC_AI_ACTIONS_H
-#define FC_AI_ACTIONS_H
-
+#pragma once
 /* common */
 #include "fc_types.h"
 
@@ -23,4 +21,3 @@ bool aia_utype_is_considered_caravan_trade(const struct unit_type *putype);
 bool aia_utype_is_considered_caravan(const struct unit_type *putype);
 
 
-#endif /* FC_AI_ACTIONS_H */

@@ -10,9 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__THEMES_COMMON_H
-#define FC__THEMES_COMMON_H
-
+#pragma once
 
 /* client */
 #include "options.h"
@@ -24,4 +22,3 @@ bool load_theme(const char *theme_name);
 void theme_reread_callback(struct option *option);
 
 
-#endif /* FC__THEMES_COMMON_H */

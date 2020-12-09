@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CLIMAP_H
-#define FC__CLIMAP_H
-
+#pragma once
 
 /* common */
 #include "fc_types.h" /* enum direction8, struct tile */
@@ -26,4 +24,3 @@ bool client_city_can_work_tile(const struct city *pcity,
                                const struct tile *ptile);
 
 
-#endif /* FC__CLIMAP_H */

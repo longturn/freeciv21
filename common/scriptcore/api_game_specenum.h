@@ -8,13 +8,10 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__API_GAME_SPECENUM_H
-#define FC__API_GAME_SPECENUM_H
-
+#pragma once
 
 struct lua_State;
 
 int api_specenum_open(lua_State *L);
 
 
-#endif /* FC__API_GAME_SPECENUM_H */

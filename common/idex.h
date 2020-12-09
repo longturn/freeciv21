@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__IDEX_H
-#define FC__IDEX_H
-
+#pragma once
 
 /**************************************************************************
    idex = ident index: a lookup table for quick mapping of unit and city
@@ -36,4 +34,3 @@ struct city *idex_lookup_city(struct world *iworld, int id);
 struct unit *idex_lookup_unit(struct world *iworld, int id);
 
 
-#endif /* FC__IDEX_H */

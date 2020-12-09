@@ -11,9 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__REPODLGS_COMMON_H
-#define FC__REPODLGS_COMMON_H
-
+#pragma once
 
 #include "fc_types.h"
 #include "improvement.h"
@@ -51,4 +49,3 @@ void disband_all_units(const struct unit_type *punittype,
                        size_t message_sz);
 
 
-#endif /* FC__REPODLGS_COMMON_H */

@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__RSSANITY_H
-#define FC__RSSANITY_H
-
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -24,4 +22,3 @@ bool sanity_check_ruleset_data(bool ignore_retired);
 bool sanity_check_server_setting_value_in_req(ssetv ssetval);
 
 
-#endif /* FC__RSSANITY_H */

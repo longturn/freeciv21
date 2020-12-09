@@ -11,9 +11,7 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef FC__OVERVIEW_COMMON_H
-#define FC__OVERVIEW_COMMON_H
-
+#pragma once
 
 #include "fc_types.h"
 
@@ -49,4 +47,3 @@ void gui_to_overview_pos(const struct tileset *t, int *ovr_x,
                                 int *ovr_y, int gui_x, int gui_y);
 
 
-#endif /* FC__OVERVIEW_COMMON_H */

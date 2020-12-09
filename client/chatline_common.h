@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CHATLINE_COMMON_H
-#define FC__CHATLINE_COMMON_H
-
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -40,4 +38,3 @@ void fc_init_ow_mutex(void);
 void fc_destroy_ow_mutex(void);
 
 
-#endif /* FC__CHATLINE_COMMON_H */

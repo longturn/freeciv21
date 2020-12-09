@@ -10,9 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__SPRITE_G_H
-#define FC__SPRITE_G_H
-
+#pragma once
 #include "gui_proto_constructor.h"
 #include "support.h"
 
@@ -32,4 +30,3 @@ GUI_FUNC_PROTO(void, get_sprite_dimensions, struct sprite *sprite,
                int *width, int *height)
 GUI_FUNC_PROTO(void, free_sprite, struct sprite *s)
 
-#endif /* FC__SPRITE_G_H */

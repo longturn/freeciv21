@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SANITYCHECK_H
-#define FC__SANITYCHECK_H
-
+#pragma once
 #include "fc_types.h"
 
 #if (IS_BETA_VERSION || IS_DEVEL_VERSION) || defined(FREECIV_DEBUG)
@@ -40,4 +38,3 @@ void real_sanity_check(const char *file, const char *function, int line);
 
 #endif /* SANITY_CHECKING */
 
-#endif /* FC__SANITYCHECK_H */

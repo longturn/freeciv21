@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__PACKETS_H
-#define FC__PACKETS_H
-
+#pragma once
 struct connection;
 struct data_in;
 
@@ -192,4 +190,3 @@ bool packet_check(struct data_in *din, struct connection *pc);
     strvec = NULL;                                                          \
   }
 
-#endif /* FC__PACKETS_H */

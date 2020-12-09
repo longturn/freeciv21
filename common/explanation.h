@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC_EXPLANATION_H
-#define FC_EXPLANATION_H
-
+#pragma once
 
 /* A category of reasons why an action isn't enabled. */
 enum ane_kind {
@@ -94,4 +92,3 @@ enum ane_kind {
 };
 
 
-#endif /* FC_EXPLANATION_H */

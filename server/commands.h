@@ -11,9 +11,7 @@
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__COMMANDS_H
-#define FC__COMMANDS_H
-
+#pragma once
 #include "connection.h" /* enum cmdlevel */
 
 enum cmd_echo {
@@ -121,4 +119,3 @@ int command_vote_flags(const struct command *pcommand);
 int command_vote_percent(const struct command *pcommand);
 
 
-#endif /* FC__COMMANDS_H */

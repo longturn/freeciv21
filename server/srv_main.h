@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__SRV_MAIN_H
-#define FC__SRV_MAIN_H
-
+#pragma once
 /* utility */
 #include "log.h"       /* QtMsgType */
 #include "net_types.h" /* announce_type */
@@ -155,4 +153,3 @@ player *mapimg_server_tile_unit(const struct tile *ptile,
 int mapimg_server_plrcolor_count(void);
 rgbcolor *mapimg_server_plrcolor_get(int i);
 
-#endif /* FC__SRV_MAIN_H */

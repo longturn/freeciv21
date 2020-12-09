@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__BORDERS_H
-#define FC__BORDERS_H
-
+#pragma once
 
 #include "fc_types.h"
 
@@ -20,4 +18,3 @@ int tile_border_source_strength(struct tile *ptile);
 int tile_border_strength(struct tile *ptile, struct tile *source);
 
 
-#endif /* FC__BORDERS_H */

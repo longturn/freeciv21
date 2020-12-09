@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TEXAICITY_H
-#define FC__TEXAICITY_H
-
+#pragma once
 /* ai/default */
 #include "daicity.h"
 
@@ -40,4 +38,3 @@ static inline struct texai_city *texai_city_data(struct ai_type *ait,
   return (struct texai_city *) city_ai_data(pcity, ait);
 }
 
-#endif /* FC__TEXAICITY_H */

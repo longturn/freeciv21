@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PLRDLG_G_H
-#define FC__PLRDLG_G_H
-
+#pragma once
 #include "plrdlg_common.h"
 
 #include "gui_proto_constructor.h"
@@ -21,4 +19,3 @@ GUI_FUNC_PROTO(void, real_players_dialog_update, void *)
 /* Actually defined in update_queue.c */
 void players_dialog_update(void);
 
-#endif /* FC__PLRDLG_G_H */

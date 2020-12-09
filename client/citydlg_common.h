@@ -11,9 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__CITYDLG_COMMON_H
-#define FC__CITYDLG_COMMON_H
-
+#pragma once
 
 #include <stddef.h> /* size_t */
 
@@ -81,4 +79,3 @@ int city_toggle_worker(struct city *pcity, int city_x, int city_y);
 int city_rename(struct city *pcity, const char *name);
 
 
-#endif /* FC__CITYDLG_COMMON_H */

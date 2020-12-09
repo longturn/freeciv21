@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CITYREPDATA_H
-#define FC__CITYREPDATA_H
-
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -68,4 +66,3 @@ bool can_city_sell_universal(const struct city *pcity,
                              const struct universal *target);
 
 
-#endif /* FC__CITYREPDATA_H */
