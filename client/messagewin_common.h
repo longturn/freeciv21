@@ -14,7 +14,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "support.h" /* bool type */
 
@@ -48,7 +47,5 @@ void meswin_set_visited_state(int message_index, bool state);
 void meswin_popup_city(int message_index);
 void meswin_goto(int message_index);
 void meswin_double_click(int message_index);
-
-
 
 

@@ -25,5 +25,3 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
                              bool allow_gold_upkeep);
 
 int dai_evaluate_tile_for_attack(struct unit *punit, struct tile *dst_tile);
-
-

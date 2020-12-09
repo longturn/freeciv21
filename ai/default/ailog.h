@@ -73,5 +73,3 @@ QString bodyguard_log_prefix(ai_type *ait, const unit *punit);
       qCDebug(ai_category).noquote() << message;                            \
     }                                                                       \
   }
-
-

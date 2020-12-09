@@ -13,9 +13,6 @@
 #pragma once
 
 
-
 void create_animals(void);
-
-
 
 

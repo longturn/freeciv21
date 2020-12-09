@@ -38,5 +38,3 @@ static inline struct texai_city *texai_city_data(struct ai_type *ait,
 {
   return (struct texai_city *) city_ai_data(pcity, ait);
 }
-
-

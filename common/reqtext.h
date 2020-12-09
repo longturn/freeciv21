@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 enum rt_verbosity { VERB_DEFAULT, VERB_ACTUAL };
 
 bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
@@ -23,7 +22,5 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
 bool req_text_insert_nl(char *buf, size_t bufsz, struct player *pplayer,
                         const struct requirement *preq,
                         enum rt_verbosity verb, const char *prefix);
-
-
 
 

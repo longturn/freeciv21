@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "iterator.h"
 
@@ -317,7 +316,5 @@ struct iterator *nation_iter_init(struct nation_iter *it);
   generic_iterate(struct nation_iter, struct nation_type *, NAME_pnation,   \
                   nation_iter_sizeof, nation_iter_init)
 #define nations_iterate_end generic_iterate_end
-
-
 
 

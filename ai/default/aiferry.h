@@ -79,5 +79,3 @@ bool is_boss_of_boat(struct ai_type *ait, struct unit *punit);
  */
 void dai_manage_ferryboat(struct ai_type *ait, struct player *pplayer,
                           struct unit *punit);
-
-

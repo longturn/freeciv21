@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "fc_types.h"
 #include "name_translation.h"
@@ -78,7 +77,5 @@ bool achievement_claimed(const struct achievement *pach);
   achievements_iterate_end;
 
 int get_literacy(const struct player *pplayer);
-
-
 
 

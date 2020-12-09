@@ -112,5 +112,3 @@ struct civ_map {
 };
 
 
-
-

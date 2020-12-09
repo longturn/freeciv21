@@ -12,7 +12,6 @@
 #pragma once
 
 
-
 /* common */
 #include "fc_types.h"
 
@@ -332,7 +331,5 @@ int requirement_kind_ereq(const int value, const enum req_range range,
 
 #define requirement_diplrel_ereq(_id_, _range_, _present_)                  \
   requirement_kind_ereq(_id_, _range_, _present_, DRO_LAST)
-
-
 
 

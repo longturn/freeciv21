@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "actions.h"
 #include "packets.h"
@@ -271,7 +270,5 @@ void cancel_city(struct tile *ptile);
 #define MAX_NUM_UNITS_BELOW 4
 
 extern int num_units_below;
-
-
 
 

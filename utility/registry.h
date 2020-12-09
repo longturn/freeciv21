@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 #include "shared.h"
 
 struct section;
@@ -31,7 +30,5 @@ const char *secfile_error(void);
 const char *section_name(const struct section *psection);
 
 #include "registry_ini.h"
-
-
 
 

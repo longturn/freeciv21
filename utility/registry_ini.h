@@ -568,5 +568,3 @@ bool entry_str_set_escaped(struct entry *pentry, bool escaped);
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking);
 
 
-
-

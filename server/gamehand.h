@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 struct section_file;
 struct connection;
 struct conn_list;
@@ -30,7 +29,5 @@ int update_timeout(void);
 void increase_timeout_because_unit_moved(void);
 
 const char *new_challenge_filename(struct connection *pc);
-
-
 
 

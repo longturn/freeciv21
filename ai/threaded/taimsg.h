@@ -53,5 +53,3 @@ void tai_send_req(enum taireqtype type, struct player *pplayer, void *data);
 
 void tai_first_activities(struct ai_type *ait, struct player *pplayer);
 void tai_phase_finished(struct ai_type *ait, struct player *pplayer);
-
-

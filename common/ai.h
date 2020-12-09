@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "fc_types.h" /* MAX_LEN_NAME */
 
@@ -404,7 +403,5 @@ void ai_timer_player_stop(const struct player *pplayer);
     }                                                                       \
     ai_type_iterate_end;                                                    \
   } while (FALSE)
-
-
 
 

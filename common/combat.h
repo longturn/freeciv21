@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "fc_types.h"
 #include "unittype.h"
@@ -89,7 +88,5 @@ bool is_stack_vulnerable(const struct tile *ptile);
 int combat_bonus_against(const struct combat_bonus_list *list,
                          const struct unit_type *enemy,
                          enum combat_bonus_type type);
-
-
 
 

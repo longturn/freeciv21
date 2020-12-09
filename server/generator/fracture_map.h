@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /*
  * Height map information
  *
@@ -29,7 +28,5 @@ extern int hmap_shore_level, hmap_mountain_level;
 void make_fracture_map(void);
 void make_fracture_relief(void);
 #define MG_UNUSED mapgen_terrain_property_invalid()
-
-
 
 

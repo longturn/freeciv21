@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /**************************************************************************
    idex = ident index: a lookup table for quick mapping of unit and city
    id values to unit and city pointers.
@@ -34,7 +33,5 @@ void idex_unregister_unit(struct world *iworld, struct unit *punit);
 
 struct city *idex_lookup_city(struct world *iworld, int id);
 struct unit *idex_lookup_unit(struct world *iworld, int id);
-
-
 
 

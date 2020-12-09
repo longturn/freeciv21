@@ -24,5 +24,3 @@ void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
 bool dai_hunter_qualify(struct player *pplayer, struct unit *punit);
 int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                       struct unit *punit);
-
-

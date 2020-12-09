@@ -16,12 +16,7 @@
 #include "traits.h"
 
 
-
 int ai_trait_get_value(enum trait tr, struct player *pplayer);
 
 void ai_traits_init(struct player *pplayer);
 void ai_traits_close(struct player *pplayer);
-
-
-
-

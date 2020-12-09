@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 #include <stdint.h>
 
 /* Utility */
@@ -49,7 +48,5 @@ void test_random1(int n);
 RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
                               const char *called_as, int line,
                               const char *file);
-
-
 
 

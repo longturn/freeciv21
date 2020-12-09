@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "support.h" /* bool type */
@@ -135,7 +134,5 @@ struct spaceship_component {
 bool next_spaceship_component(struct player *pplayer,
                               struct player_spaceship *ship,
                               struct spaceship_component *fill);
-
-
 
 

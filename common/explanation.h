@@ -12,7 +12,6 @@
 #pragma once
 
 
-
 /* A category of reasons why an action isn't enabled. */
 enum ane_kind {
   /* Explanation: wrong actor unit. */
@@ -92,7 +91,5 @@ enum ane_kind {
   /* Explanation not detected. */
   ANEK_UNKNOWN,
 };
-
-
 
 

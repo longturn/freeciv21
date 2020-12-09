@@ -75,4 +75,3 @@ bool multiplier_can_be_changed(struct multiplier *pmul,
   multipliers_iterate_end;
 
 
-

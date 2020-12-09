@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "base.h"
 #include "fc_types.h"
@@ -351,7 +350,5 @@ bool player_knows_extra_exist(const struct player *pplayer,
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
-
 
 

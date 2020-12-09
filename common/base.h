@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "bitvector.h"
 
@@ -111,7 +110,5 @@ void base_types_free(void);
   }                                                                         \
   requirement_vector_iterate_end;                                           \
   }
-
-
 
 

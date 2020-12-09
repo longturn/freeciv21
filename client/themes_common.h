@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* client */
 #include "options.h"
 
@@ -22,7 +21,5 @@ struct strvec;
 const struct strvec *get_themes_list(const struct option *poption);
 bool load_theme(const char *theme_name);
 void theme_reread_callback(struct option *option);
-
-
 
 

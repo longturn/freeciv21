@@ -12,7 +12,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "shared.h"
 
@@ -207,7 +206,5 @@ void send_server_setting_control(struct connection *pconn);
 
 void setting_changed(struct setting *pset);
 enum setting_default_level setting_get_setdef(const struct setting *pset);
-
-
 
 

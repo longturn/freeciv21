@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* City Improvements, including Wonders.  (Alternatively "Buildings".) */
 
 /* utility */
@@ -219,7 +218,5 @@ const struct impr_type *improvement_array_last(void);
   }                                                                         \
   }                                                                         \
   improvement_iterate_end;
-
-
 
 

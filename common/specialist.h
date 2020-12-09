@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "shared.h"
 
@@ -86,7 +85,5 @@ void specialists_free(void);
   }                                                                         \
   }                                                                         \
   specialist_type_iterate_end;
-
-
 
 

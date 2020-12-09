@@ -81,5 +81,3 @@ bool dai_assess_military_unhappiness(struct city *pcity);
 void dai_consider_plr_dangerous(struct ai_type *ait, struct player *plr1,
                                 struct player *plr2,
                                 enum override_bool *result);
-
-

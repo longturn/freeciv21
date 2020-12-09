@@ -34,5 +34,3 @@ void dai_auto_settler_cont(struct ai_type *ait, struct player *pplayer,
                            struct unit *punit, struct settlermap *state);
 
 void contemplate_new_city(struct ai_type *ait, struct city *pcity);
-
-

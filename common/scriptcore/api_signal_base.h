@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "support.h"
 
@@ -29,7 +28,5 @@ const char *api_signal_callback_by_index(lua_State *L,
                                          int sindex);
 
 const char *api_signal_by_index(lua_State *L, int sindex);
-
-
 
 

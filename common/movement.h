@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 #include "fc_types.h"
 #include "map.h"
 #include "tile.h"
@@ -123,7 +122,5 @@ void init_move_fragments(void);
 const char *move_points_text_full(int mp, bool reduce, const char *prefix,
                                   const char *none, bool align);
 const char *move_points_text(int mp, bool reduce);
-
-
 
 

@@ -45,5 +45,3 @@ int dai_unit_attack_desirability(struct ai_type *ait,
 bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                                struct city *pcity, unsigned int danger,
                                struct adv_choice *choice);
-
-

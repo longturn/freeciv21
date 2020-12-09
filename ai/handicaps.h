@@ -44,5 +44,3 @@ void handicaps_set(struct player *pplayer, bv_handicap handicaps);
 bool has_handicap(const struct player *pplayer, enum handicap_type htype);
 
 const char *handicap_desc(enum handicap_type htype, bool *inverted);
-
-

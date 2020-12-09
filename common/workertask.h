@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 struct worker_task {
   struct tile *ptile;
   enum unit_activity act;
@@ -29,7 +28,5 @@ struct worker_task {
 #define worker_task_list_iterate_end LIST_ITERATE_END
 
 void worker_task_init(struct worker_task *ptask);
-
-
 
 

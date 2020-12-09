@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* common */
 #include "fc_types.h"
 
@@ -22,7 +21,5 @@ bool autolock_settings(void);
 bool sanity_check_ruleset_data(bool ignore_retired);
 
 bool sanity_check_server_setting_value_in_req(ssetv ssetval);
-
-
 
 

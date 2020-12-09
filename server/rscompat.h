@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "support.h"
 
@@ -75,7 +74,5 @@ void rscompat_extra_adjust_3_1(struct rscompat_info *compat,
                                struct extra_type *pextra);
 bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
                                      bool slow_invasions);
-
-
 
 

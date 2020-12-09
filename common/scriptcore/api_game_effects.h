@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -22,7 +21,5 @@ int api_effects_player_bonus(lua_State *L, Player *pplayer,
                              const char *effect_type);
 int api_effects_city_bonus(lua_State *L, City *pcity,
                            const char *effect_type);
-
-
 
 

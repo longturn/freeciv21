@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "support.h" /* bool type */

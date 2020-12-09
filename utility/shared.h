@@ -422,5 +422,3 @@ static inline struct cf_sequence cf_end(void)
 bool formats_match(const char *format1, const char *format2);
 
 
-
-

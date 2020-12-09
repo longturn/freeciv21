@@ -28,5 +28,3 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
                                              struct city *pcity,
                                              const struct unit_type *att,
                                              int want);
-
-

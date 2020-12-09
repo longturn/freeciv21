@@ -14,7 +14,6 @@
 #pragma once
 
 
-
 #include <stddef.h> /* size_t */
 
 /* utility */
@@ -79,7 +78,5 @@ int city_change_specialist(struct city *pcity, Specialist_type_id from,
                            Specialist_type_id to);
 int city_toggle_worker(struct city *pcity, int city_x, int city_y);
 int city_rename(struct city *pcity, const char *name);
-
-
 
 

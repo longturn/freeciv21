@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 #include "fc_types.h" /* struct connection, struct government */
 
 #include "events.h" /* enum event_type */
@@ -31,7 +30,5 @@ void play_sound_for_event(enum event_type type);
 void target_government_init(void);
 void set_government_choice(struct government *government);
 void start_revolution(void);
-
-
 
 

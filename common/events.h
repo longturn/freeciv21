@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 #include "support.h" /* bool type */
 
 /* Used in the network protocol. */
@@ -206,7 +205,5 @@ void events_free(void);
   }                                                                         \
   }                                                                         \
   }
-
-
 
 

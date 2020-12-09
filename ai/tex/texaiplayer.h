@@ -69,5 +69,3 @@ texai_player_data(struct ai_type *ait, const struct player *pplayer)
 }
 
 struct unit_list *texai_player_units(struct player *pplayer);
-
-

@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* common/scriptcore */
 #include "luascript_types.h"
 
@@ -38,7 +37,5 @@ void script_client_signal_connect(const char *signal_name,
                                   const char *callback_name);
 void script_client_signal_emit(const char *signal_name, ...);
 const char *script_client_signal_list(void);
-
-
 
 

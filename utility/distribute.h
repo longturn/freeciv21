@@ -14,9 +14,6 @@
 #pragma once
 
 
-
 void distribute(int number, int groups, int *ratios, int *result);
-
-
 
 

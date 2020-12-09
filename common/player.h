@@ -574,5 +574,3 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
 }
 
 
-
-

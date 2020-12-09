@@ -11,7 +11,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "registry.h"
 #include "shared.h"
@@ -67,7 +66,5 @@ const char *global_worklist_name(const struct global_worklist *pgwl);
   }                                                                         \
   }                                                                         \
   global_worklists_iterate_all_end;
-
-
 
 

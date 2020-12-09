@@ -35,5 +35,3 @@ const char *freeciv_motto(void);
 const char *beta_message(void);
 
 
-
-

@@ -33,5 +33,3 @@ struct unit *aiguard_guard_of(struct ai_type *ait, struct unit *charge);
 struct unit *aiguard_charge_unit(struct ai_type *ait, struct unit *guard);
 struct city *aiguard_charge_city(struct ai_type *ait, struct unit *guard);
 void aiguard_update_charge(struct ai_type *ait, struct unit *guard);
-
-

@@ -119,5 +119,3 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
                    struct government *gov, adv_want *val, bool *override);
 
 void dai_adjust_policies(struct ai_type *ait, struct player *pplayer);
-
-

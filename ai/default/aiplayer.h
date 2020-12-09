@@ -58,5 +58,3 @@ static inline struct ai_plr *def_ai_player_data(const struct player *pplayer,
 struct dai_private_data {
   bool contemplace_workers;
 };
-
-

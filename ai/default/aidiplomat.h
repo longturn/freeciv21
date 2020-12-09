@@ -23,4 +23,3 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
                                    struct city *pcity,
                                    struct adv_choice *choice);
 
-

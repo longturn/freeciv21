@@ -13,11 +13,8 @@
 #pragma once
 
 
-
 extern const char *const our_capability;
 
 void init_our_capability(void);
-
-
 
 

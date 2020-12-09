@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 #include "support.h" /* bool */
 
 struct city;
@@ -230,7 +229,5 @@ bool city_receives_goods(const struct city *pcity,
   }                                                                         \
   }                                                                         \
   goods_type_iterate_end;
-
-
 
 

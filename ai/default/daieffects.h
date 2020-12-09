@@ -22,5 +22,3 @@ adv_want dai_content_effect_value(const struct player *pplayer,
 bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
                                         const struct player *pplayer,
                                         const struct city *pcity);
-
-

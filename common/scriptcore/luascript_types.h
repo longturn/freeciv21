@@ -10,7 +10,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "genlist.h"
 
@@ -100,7 +99,5 @@ typedef const struct city_list_link City_List_Link;
 #define SPECENUM_VALUE17 API_TYPE_ACTION
 #define SPECENUM_VALUE17NAME "Action"
 #include "specenum_gen.h"
-
-
 
 

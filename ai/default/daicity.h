@@ -106,5 +106,3 @@ Impr_type_id dai_find_source_building(struct city *pcity,
 
 adv_want dai_city_want(struct player *pplayer, struct city *acity,
                        struct adv_data *adv, struct impr_type *pimprove);
-
-

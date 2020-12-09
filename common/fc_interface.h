@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "support.h"
 
@@ -55,7 +54,5 @@ extern const struct functions *fc_funcs;
 struct functions *fc_interface_funcs(void);
 void fc_interface_init(void);
 void free_libfreeciv(void);
-
-
 
 

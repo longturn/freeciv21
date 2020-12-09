@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 typedef void (*uq_callback_t)(void *data);
 typedef void (*uq_free_fn_t)(void *data);
 #define UQ_FREEDATA(fn) ((uq_free_fn_t) fn)
@@ -53,7 +52,5 @@ void update_queue_connect_processing_finished_full(
     uq_free_fn_t free_data_func);
 
 bool update_queue_is_switching_page(void);
-
-
 
 

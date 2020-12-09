@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -362,7 +361,5 @@ const struct terrain *terrain_array_last(void);
   }                                                                         \
   }                                                                         \
   terrain_type_iterate_end;
-
-
 
 

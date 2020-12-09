@@ -14,7 +14,6 @@
 #pragma once
 
 
-
 #include "fc_types.h"
 
 #include "canvas_g.h"
@@ -47,6 +46,5 @@ void flush_dirty_overview(void);
 void overview_redraw_callback(struct option *option);
 void gui_to_overview_pos(const struct tileset *t, int *ovr_x,
                                 int *ovr_y, int gui_x, int gui_y);
-
 
 

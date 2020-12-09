@@ -77,5 +77,3 @@ void texai_send_req(enum texaireqtype type, struct player *pplayer,
 
 void texai_first_activities(struct ai_type *ait, struct player *pplayer);
 void texai_phase_finished(struct ai_type *ait, struct player *pplayer);
-
-

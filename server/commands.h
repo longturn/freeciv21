@@ -120,4 +120,3 @@ int command_vote_flags(const struct command *pcommand);
 int command_vote_percent(const struct command *pcommand);
 
 
-

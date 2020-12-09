@@ -59,5 +59,3 @@ static inline struct tai_plr *tai_player_data(struct ai_type *ait,
 {
   return (struct tai_plr *) player_ai_data(pplayer, ait);
 }
-
-

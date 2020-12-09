@@ -13,7 +13,6 @@
 #pragma once
 
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -868,7 +867,5 @@ const struct unit_class *unit_class_array_last(void);
 #define unit_type_list_iterate(utype_list, ptype)                           \
   TYPED_LIST_ITERATE(struct unit_type, utype_list, ptype)
 #define unit_type_list_iterate_end LIST_ITERATE_END
-
-
 
 
