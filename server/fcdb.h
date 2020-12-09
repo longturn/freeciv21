@@ -10,11 +10,9 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__FCDB_H
-#define FC__FCDB_H
+#pragma once
 
 #include "shared.h"
-
 
 
 bool fcdb_init(const char *conf_file);
@@ -22,5 +20,3 @@ const char *fcdb_option_get(const char *type);
 void fcdb_free(void);
 
 
-
-#endif /* FC__FCDB_H */

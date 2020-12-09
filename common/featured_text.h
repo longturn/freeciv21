@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__FEATURED_TEXT_H
-#define FC__FEATURED_TEXT_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type. */
@@ -239,4 +238,4 @@ const char *tile_link(const struct tile *ptile);
 const char *unit_link(const struct unit *punit);
 const char *unit_tile_link(const struct unit *punit);
 
-#endif /* FC__FEATURED_TEXT_H */
+

@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__BITVECTOR_H
-#define FC__BITVECTOR_H
+#pragma once
 
 #include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
@@ -100,4 +99,4 @@ void bv_clr_all_from(unsigned char *vec_to, const unsigned char *vec_from,
     unsigned char vec[_BV_BYTES(bits)];                                     \
   } name
 
-#endif /* FC__BITVECTOR_H */
+

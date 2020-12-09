@@ -49,9 +49,7 @@
 
 ****************************************************************************/
 
-#ifndef FC__MAPIMG_H
-#define FC__MAPIMG_H
-
+#pragma once
 
 
 /* utility */
@@ -125,5 +123,3 @@ const struct strvec *mapimg_get_format_list(void);
 const char *mapimg_get_format_default(void);
 
 
-
-#endif /* FC__MAPIMG_H */

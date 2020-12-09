@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MOOD_H
-#define FC__MOOD_H
-
+#pragma once
 
 
 /* How many turns after latest combat war mood lasts */
@@ -21,5 +19,3 @@
 enum mood_type player_mood(struct player *pplayer);
 
 
-
-#endif /* FC__MOOD_H */

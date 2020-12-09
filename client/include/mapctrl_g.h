@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MAPCTRL_G_H
-#define FC__MAPCTRL_G_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -30,4 +29,4 @@ GUI_FUNC_PROTO(void, set_turn_done_button_state, bool state)
 GUI_FUNC_PROTO(void, create_line_at_mouse_pos, void)
 GUI_FUNC_PROTO(void, update_rect_at_mouse_pos, void)
 
-#endif /* FC__MAPCTRL_G_H */
+

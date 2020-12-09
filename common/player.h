@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__PLAYER_H
-#define FC__PLAYER_H
+#pragma once
 
 #include <QBitArray>
 
@@ -575,5 +574,3 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
 }
 
 
-
-#endif /* FC__PLAYER_H */

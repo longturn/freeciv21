@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__CANVAS_G_H
-#define FC__CANVAS_G_H
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -71,4 +70,4 @@ GUI_FUNC_PROTO(void, canvas_put_text, struct canvas *pcanvas, int canvas_x,
                int canvas_y, enum client_font font, QColor *pcolor,
                const QString& text)
 
-#endif /* FC__CANVAS_G_H */
+

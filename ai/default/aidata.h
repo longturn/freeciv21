@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AIDATA_H
-#define FC__AIDATA_H
+#pragma once
 
 /* utility */
 #include "support.h"
@@ -120,5 +119,3 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
                    struct government *gov, adv_want *val, bool *override);
 
 void dai_adjust_policies(struct ai_type *ait, struct player *pplayer);
-
-#endif /* FC__AIDATA_H */

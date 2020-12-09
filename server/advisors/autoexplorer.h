@@ -10,11 +10,10 @@
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AUTOEXPLORER_H
-#define FC__AUTOEXPLORER_H
+#pragma once
 
 struct unit;
 
 enum unit_move_result manage_auto_explorer(struct unit *punit);
 
-#endif /* FC__AUTOEXPLORER_H */
+

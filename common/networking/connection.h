@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CONNECTION_H
-#define FC__CONNECTION_H
+#pragma once
 
 #include <time.h> /* time_t */
 
@@ -345,4 +344,4 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
 
 bool conn_is_valid(const struct connection *pconn);
 
-#endif /* FC__CONNECTION_H */
+

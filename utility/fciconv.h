@@ -10,8 +10,7 @@
  L_JJ           \__JJ      GNU General Public License along with Freeciv21.
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__FCICONV_H
-#define FC__FCICONV_H
+#pragma once
 
 #include <stdio.h>
 
@@ -103,4 +102,4 @@ void fc_fprintf(FILE *stream, const char *format, ...)
 
 size_t get_internal_string_length(const char *text);
 
-#endif /* FC__FCICONV_H */
+

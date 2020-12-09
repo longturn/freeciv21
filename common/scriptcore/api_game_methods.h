@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_GAME_METHODS_H
-#define FC__API_GAME_METHODS_H
-
+#pragma once
 
 
 /* common/scriptcore */
@@ -178,5 +176,3 @@ City_List_Link *api_methods_city_list_next_link(lua_State *L,
                                                 City_List_Link *link);
 
 
-
-#endif /* FC__API_GAME_METHODS_H */

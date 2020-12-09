@@ -8,12 +8,10 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_SERVER_NOTIFY_H
-#define FC__API_SERVER_NOTIFY_H
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
-
 
 
 struct lua_State;
@@ -28,5 +26,3 @@ void api_notify_research_embassies_msg(lua_State *L, Player *pplayer,
                                        int event, const char *message);
 
 
-
-#endif /* API_SERVER_NOTIFY */

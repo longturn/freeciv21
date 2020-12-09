@@ -9,15 +9,13 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_SERVER_GAME_METHODS_H
-#define FC__API_SERVER_GAME_METHODS_H
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
 
 /* server/scripting */
 #include "api_server_edit.h"
-
 
 
 /* Server-only methods added to the modules defined in
@@ -38,5 +36,3 @@ int api_methods_nation_trait_default(lua_State *L, Nation_Type *pnation,
                                      const char *tname);
 
 
-
-#endif /* FC__API_SERVER_GAME_METHODS_H */

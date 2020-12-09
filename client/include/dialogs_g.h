@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DIALOGS_G_H
-#define FC__DIALOGS_G_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -91,4 +90,4 @@ GUI_FUNC_PROTO(bool, request_transport, struct unit *pcargo,
 
 GUI_FUNC_PROTO(void, update_infra_dialog, void)
 
-#endif /* FC__DIALOGS_G_H */
+

@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CLIENTUTILS_H
-#define FC__CLIENTUTILS_H
-
+#pragma once
 
 
 /* common */
@@ -26,5 +24,3 @@ int turns_to_activity_done(const struct tile *ptile, Activity_type_id act,
 const char *concat_tile_activity_text(struct tile *ptile);
 
 
-
-#endif /* FC__CLIENTUTILS_H */

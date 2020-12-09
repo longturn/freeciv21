@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAPHAND_H
-#define FC__MAPHAND_H
+#pragma once
 
 #include "fc_types.h"
 
@@ -143,5 +142,3 @@ void give_distorted_map(struct player *pfrom, struct player *pto, int prob,
                         bool reveal_cities);
 
 
-
-#endif /* FC__MAPHAND_H */

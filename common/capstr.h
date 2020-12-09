@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__CAPSTR_H
-#define FC__CAPSTR_H
-
+#pragma once
 
 
 extern const char *const our_capability;
@@ -20,5 +18,3 @@ extern const char *const our_capability;
 void init_our_capability(void);
 
 
-
-#endif /* FC__CAPSTR_H */

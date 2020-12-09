@@ -8,8 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CM_H
-#define FC__CM_H
+#pragma once
 
 /*
  * The purpose of this module is to manage the citizens of a city. The
@@ -87,4 +86,4 @@ int cm_result_workers(const struct cm_result *result);
 void cm_result_from_main_map(struct cm_result *result,
                              const struct city *pcity);
 
-#endif /* FC__CM_H */
+

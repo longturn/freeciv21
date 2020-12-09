@@ -46,8 +46,6 @@
  * against multiple inclusions. */
 
 
-
-
 #ifndef SPECPQ_TAG
 #error Must define a SPECPQ_TAG to use this header
 #endif

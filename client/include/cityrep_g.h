@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CITYREP_G_H
-#define FC__CITYREP_G_H
+#pragma once
 
 #include "support.h" /* bool type */
 
@@ -26,4 +25,4 @@ GUI_FUNC_PROTO(void, real_city_report_update_city, struct city *pcity)
 void city_report_dialog_update_city(struct city *pcity);
 void city_report_dialog_update(void);
 
-#endif /* FC__CITYREP_G_H */
+

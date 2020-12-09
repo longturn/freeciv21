@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MOVEMENT_H
-#define FC__MOVEMENT_H
-
+#pragma once
 
 
 #include "fc_types.h"
@@ -126,5 +124,3 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
 const char *move_points_text(int mp, bool reduce);
 
 
-
-#endif /* FC__MOVEMENT_H */

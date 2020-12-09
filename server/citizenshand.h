@@ -10,9 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifndef FC__CITIZENSHAND_H
-#define FC__CITIZENSHAND_H
-
+#pragma once
 
 
 struct city;
@@ -24,5 +22,3 @@ void citizens_convert_conquest(struct city *pcity);
 void citizens_print(const struct city *pcity);
 
 
-
-#endif /* FC__CITIZENSHAND_H */

@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__REQTEXT_H
-#define FC__REQTEXT_H
-
+#pragma once
 
 
 enum rt_verbosity { VERB_DEFAULT, VERB_ACTUAL };
@@ -26,5 +24,3 @@ bool req_text_insert_nl(char *buf, size_t bufsz, struct player *pplayer,
                         enum rt_verbosity verb, const char *prefix);
 
 
-
-#endif /* FC__REQTEXT_H */

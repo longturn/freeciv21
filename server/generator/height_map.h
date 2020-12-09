@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__HEIGHT_MAP_H
-#define FC__HEIGHT_MAP_H
-
+#pragma once
 
 
 /* Wrappers for easy access.  They are a macros so they can be a lvalues.*/
@@ -42,5 +40,3 @@ void make_pseudofractal1_hmap(int extra_div);
 bool area_is_too_flat(struct tile *ptile, int thill, int my_height);
 
 
-
-#endif /* FC__HEIGHT__MAP_H */

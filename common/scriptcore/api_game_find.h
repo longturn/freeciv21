@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_GAME_FIND_H
-#define FC__API_GAME_FIND_H
-
+#pragma once
 
 
 /* dependencies/lua */
@@ -54,5 +52,3 @@ Terrain *api_find_terrain_by_name(lua_State *L, const char *name_orig);
 Nonexistent *api_find_nonexistent(lua_State *L);
 
 
-
-#endif /* API_GAME_FIND */

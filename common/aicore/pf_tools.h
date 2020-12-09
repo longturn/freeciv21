@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__PF_TOOLS_H
-#define FC__PF_TOOLS_H
-
+#pragma once
 
 
 /* common/aicore */
@@ -69,5 +67,3 @@ enum tile_behavior no_intermediate_fights(const struct tile *ptile,
                                           const struct pf_parameter *param);
 
 
-
-#endif /* FC__PF_TOOLS_H */

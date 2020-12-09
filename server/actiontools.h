@@ -9,15 +9,13 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__ACTIONTOOLS_H
-#define FC__ACTIONTOOLS_H
+#pragma once
 
 /* common */
 #include "actions.h"
 #include "player.h"
 #include "tile.h"
 #include "unit.h"
-
 
 
 void action_consequence_caught(const struct action *paction,
@@ -84,5 +82,3 @@ bool action_failed_dice_roll(const struct player *act_player,
                              const struct action *paction);
 
 
-
-#endif /* FC__ACTIONTOOLS_H */

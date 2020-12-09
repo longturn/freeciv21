@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__NOTIFY_H
-#define FC__NOTIFY_H
+#pragma once
 
 #include <stdarg.h>
 
@@ -24,7 +23,6 @@
 
 /* server */
 #include "srv_main.h" /* enum server_states */
-
 
 
 struct research;
@@ -106,5 +104,3 @@ void event_cache_load(struct section_file *file, const char *section);
 void event_cache_save(struct section_file *file, const char *section);
 
 
-
-#endif /* FC__NOTIFY_H */

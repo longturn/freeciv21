@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__MAPVIEW_G_H
-#define FC__MAPVIEW_G_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
@@ -59,4 +58,4 @@ void show_city_desc(struct canvas *pcanvas, int canvas_x,
                            int *height);
 
 
-#endif /* FC__MAPVIEW_G_H */
+

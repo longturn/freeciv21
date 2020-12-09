@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__MAPCTRL_COMMON_H
-#define FC__MAPCTRL_COMMON_H
-
+#pragma once
 
 
 /* utility */
@@ -65,5 +63,3 @@ void fill_tile_unit_list(const struct tile *ptile, struct unit **unit_list);
 extern struct city *city_workers_display;
 
 
-
-#endif /* FC__MAPCTRL_COMMON_H */

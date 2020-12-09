@@ -11,8 +11,7 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__QTG_CSIDE_H
-#define FC__QTG_CSIDE_H
+#pragma once
 
 // Forward declarations
 class QTcpSocket;
@@ -147,4 +146,4 @@ struct gui_funcs {
 
 struct gui_funcs *get_gui_funcs(void);
 
-#endif /* FC__QTG_CSIDE_H */
+

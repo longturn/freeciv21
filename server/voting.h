@@ -10,11 +10,9 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__VOTING_H
-#define FC__VOTING_H
+#pragma once
 
 #include "support.h" /* bool type */
-
 
 
 enum vote_condition_flags {
@@ -94,5 +92,3 @@ void send_remove_team_votes(struct connection *pconn);
 void send_updated_vote_totals(struct conn_list *dest);
 
 
-
-#endif /* FC__VOTING_H */

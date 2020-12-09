@@ -10,9 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 *****************************************************************************/
-#ifndef FC__CITIZENS_H
-#define FC__CITIZENS_H
-
+#pragma once
 
 
 /* utility */
@@ -65,5 +63,3 @@ struct player_slot *citizens_random(const struct city *pcity);
   citizens_iterate_end;
 
 
-
-#endif /* FC__CITIZENS_H */

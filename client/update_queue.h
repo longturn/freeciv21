@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UPDATE_QUEUE_H
-#define FC__UPDATE_QUEUE_H
-
+#pragma once
 
 
 typedef void (*uq_callback_t)(void *data);
@@ -56,5 +54,3 @@ void update_queue_connect_processing_finished_full(
 bool update_queue_is_switching_page(void);
 
 
-
-#endif /* FC__UPDATE_QUEUE_H */

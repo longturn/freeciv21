@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GUI_MAIN_G_H
-#define FC__GUI_MAIN_G_H
+#pragma once
 
 // Forward declarations
 class QTcpSocket;
@@ -50,4 +49,4 @@ extern const char *client_string;
 void gui_update_allfonts();
 void conn_list_dialog_update(void);
 
-#endif /* FC__GUI_MAIN_G_H */
+

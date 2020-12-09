@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__REGISTRY_H
-#define FC__REGISTRY_H
-
+#pragma once
 
 
 #include "shared.h"
@@ -34,5 +32,3 @@ const char *section_name(const struct section *psection);
 #include "registry_ini.h"
 
 
-
-#endif /* FC__REGISTRY_H */

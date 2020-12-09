@@ -8,12 +8,10 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_SERVER_BASE_H
-#define FC__API_SERVER_BASE_H
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
-
 
 
 struct lua_State;
@@ -30,5 +28,3 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name);
 bool api_play_music(lua_State *L, Player *pplayer, const char *tag);
 
 
-
-#endif /* FC__API_SERVER_BASE_H */

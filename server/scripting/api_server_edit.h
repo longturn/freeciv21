@@ -8,12 +8,10 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_SERVER_EDIT_H
-#define FC__API_SERVER_EDIT_H
+#pragma once
 
 /* common/scriptcore */
 #include "luascript_types.h"
-
 
 
 struct lua_State;
@@ -78,5 +76,3 @@ void api_edit_city_add_history(lua_State *L, City *pcity, int amount);
 void api_edit_player_add_history(lua_State *L, Player *pplayer, int amount);
 
 
-
-#endif /* API_SERVER_EDIT_H */

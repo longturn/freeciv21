@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__LUASCRIPT_FUNC_H
-#define FC__LUASCRIPT_FUNC_H
-
+#pragma once
 
 
 /* utility */
@@ -35,5 +33,3 @@ bool luascript_func_call(struct fc_lua *fcl, const char *func_name, ...);
 bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name);
 
 
-
-#endif /* FC__LUASCRIPT_FUNC_H */

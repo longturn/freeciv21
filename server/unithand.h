@@ -10,15 +10,13 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__UNITHAND_H
-#define FC__UNITHAND_H
+#pragma once
 
 /* common */
 #include "explanation.h"
 #include "unit.h"
 
 #include "hand_gen.h"
-
 
 
 bool unit_activity_handling(struct unit *punit,
@@ -56,4 +54,3 @@ bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
                                 enum server_side_agent agent);
 
 
-#endif /* FC__UNITHAND_H */

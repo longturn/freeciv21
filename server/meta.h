@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__META_H
-#define FC__META_H
+#pragma once
 
 
 #include "support.h" /* bool type */
@@ -47,4 +46,4 @@ bool is_metaserver_open(void);
 
 bool send_server_info_to_metaserver(enum meta_flag flag);
 
-#endif /* FC__META_H */
+

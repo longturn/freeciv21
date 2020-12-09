@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__THEMES_G_H
-#define FC__THEMES_G_H
+#pragma once
 
 #include "gui_proto_constructor.h"
 
@@ -22,4 +21,4 @@ GUI_FUNC_PROTO(char **, get_gui_specific_themes_directories, int *count)
 GUI_FUNC_PROTO(char **, get_useable_themes_in_directory,
                const char *directory, int *count)
 
-#endif /* FC__THEMES_G_H */
+

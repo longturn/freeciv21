@@ -10,13 +10,11 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC_DAI_ACTIONS_H
-#define FC_DAI_ACTIONS_H
+#pragma once
 
 /* common */
 #include "actions.h"
 #include "fc_types.h"
-
 
 
 adv_want dai_action_value_unit_vs_city(struct action *paction,
@@ -27,7 +25,3 @@ adv_want dai_action_value_unit_vs_city(struct action *paction,
 int dai_action_choose_sub_tgt_unit_vs_city(struct action *paction,
                                            struct unit *actor_unit,
                                            struct city *target_city);
-
-
-
-#endif /* FC_DAI_ACTIONS_H */

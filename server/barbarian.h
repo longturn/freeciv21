@@ -11,15 +11,13 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 
-#ifndef FC__BARBARIAN_H
-#define FC__BARBARIAN_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
 
 /* common */
 #include "fc_types.h"
-
 
 
 #define MIN_UNREST_DIST 5
@@ -39,5 +37,3 @@ bool is_sea_barbarian(struct player *pplayer);
 struct player *create_barbarian_player(enum barbarian_type type);
 
 
-
-#endif /* FC__BARBARIAN_H */

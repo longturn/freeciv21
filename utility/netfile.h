@@ -9,8 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__NETFILE_H
-#define FC__NETFILE_H
+#pragma once
 
 #include <functional>
 
@@ -27,4 +26,4 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb);
 bool netfile_download_file(const QUrl &url, const char *filename,
                            const nf_errmsg &cb);
 
-#endif /* FC__NETFILE_H */
+

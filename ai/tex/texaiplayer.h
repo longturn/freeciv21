@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TEXAIPLAYER_H
-#define FC__TEXAIPLAYER_H
+#pragma once
 
 #include <QMutex>
 #include <QWaitCondition>
@@ -70,5 +69,3 @@ texai_player_data(struct ai_type *ait, const struct player *pplayer)
 }
 
 struct unit_list *texai_player_units(struct player *pplayer);
-
-#endif /* FC__TEXAIPLAYER_H */

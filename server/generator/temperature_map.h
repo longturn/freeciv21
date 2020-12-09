@@ -10,12 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__TEMPERATURE_MAP_H
-#define FC__TEMPERATURE_MAP_H
+#pragma once
 
 /* utility */
 #include "support.h" /* bool type */
-
 
 
 /*
@@ -42,5 +40,3 @@ void destroy_tmap(void);
 void create_tmap(bool real);
 
 
-
-#endif /* FC__TEMPERATURE_MAP_H */

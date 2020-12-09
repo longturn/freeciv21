@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__REQUIREMENTS_H
-#define FC__REQUIREMENTS_H
-
+#pragma once
 
 
 /* common */
@@ -335,5 +333,3 @@ int requirement_kind_ereq(const int value, const enum req_range range,
   requirement_kind_ereq(_id_, _range_, _present_, DRO_LAST)
 
 
-
-#endif /* FC__REQUIREMENTS_H */

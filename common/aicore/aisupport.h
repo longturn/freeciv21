@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AISUPPORT_H
-#define FC__AISUPPORT_H
-
+#pragma once
 
 
 /* common */
@@ -21,5 +19,3 @@ int player_distance_to_player(struct player *pplayer, struct player *target);
 int city_gold_worth(struct city *pcity);
 
 
-
-#endif /* FC__AISUPPORT_H */

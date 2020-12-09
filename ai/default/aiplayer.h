@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AIPLAYER_H
-#define FC__AIPLAYER_H
+#pragma once
 
 /* common */
 #include "player.h"
@@ -59,5 +58,3 @@ static inline struct ai_plr *def_ai_player_data(const struct player *pplayer,
 struct dai_private_data {
   bool contemplace_workers;
 };
-
-#endif /* FC__AIPLAYER_H */

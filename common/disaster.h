@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__DISASTER_H
-#define FC__DISASTER_H
-
+#pragma once
 
 
 /* common */
@@ -84,5 +82,3 @@ bool can_disaster_happen(const struct disaster_type *pdis,
   }
 
 
-
-#endif /* FC__DISASTER_H */

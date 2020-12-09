@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__REGISTRY_INI_H
-#define FC__REGISTRY_INI_H
+#pragma once
 
 #include <vector>
 
@@ -569,5 +568,3 @@ bool entry_str_set_escaped(struct entry *pentry, bool escaped);
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking);
 
 
-
-#endif /* FC__REGISTRY_INI_H */

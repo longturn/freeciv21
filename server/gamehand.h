@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GAMEHAND_H
-#define FC__GAMEHAND_H
-
+#pragma once
 
 
 struct section_file;
@@ -33,5 +31,3 @@ void increase_timeout_because_unit_moved(void);
 const char *new_challenge_filename(struct connection *pc);
 
 
-
-#endif /* FC__GAMEHAND_H */

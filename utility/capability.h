@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__CAPABILITY_H
-#define FC__CAPABILITY_H
-
+#pragma once
 
 
 #include "support.h" /* bool type */
@@ -20,5 +18,3 @@ bool has_capability(const char *cap, const char *capstr);
 bool has_capabilities(const char *us, const char *them);
 
 
-
-#endif /* FC__CAPABILITY_H */

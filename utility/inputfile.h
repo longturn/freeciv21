@@ -14,8 +14,7 @@
   See comments in inputfile.c
 ***********************************************************************/
 
-#ifndef FC__INPUTFILE_H
-#define FC__INPUTFILE_H
+#pragma once
 
 /* utility */
 #include "ioz.h"
@@ -50,4 +49,4 @@ int inf_discard_tokens(struct inputfile *inf, enum inf_token_type type);
 char *inf_log_str(struct inputfile *inf, const char *message, ...)
     fc__attribute((__format__(__printf__, 2, 3)));
 
-#endif /* FC__INPUTFILE_H */
+

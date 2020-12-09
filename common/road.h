@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__ROAD_H
-#define FC__ROAD_H
-
+#pragma once
 
 
 /* Used in the network protocol. */
@@ -146,5 +144,3 @@ void road_types_free(void);
   }
 
 
-
-#endif /* FC__ROAD_H */

@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__COLORS_G_H
-#define FC__COLORS_G_H
+#pragma once
 
 #include "colors_common.h"
 
@@ -23,4 +22,4 @@ GUI_FUNC_PROTO(void, color_free, QColor *color)
 GUI_FUNC_PROTO(int, color_brightness_score, QColor *color)
 QColor *get_diag_color(int);
 
-#endif /* FC__COLORS_G_H */
+

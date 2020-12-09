@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__COMBAT_H
-#define FC__COMBAT_H
-
+#pragma once
 
 
 /* common */
@@ -92,5 +90,3 @@ int combat_bonus_against(const struct combat_bonus_list *list,
                          enum combat_bonus_type type);
 
 
-
-#endif /* FC__COMBAT_H */

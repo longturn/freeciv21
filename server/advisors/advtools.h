@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVTOOLS_H
-#define FC__ADVTOOLS_H
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -25,4 +24,4 @@ adv_want amortize(adv_want benefit, int delay);
  */
 #define POWER_DIVIDER (POWER_FACTOR * 3)
 
-#endif /* FC__ADVTOOLS_H */
+

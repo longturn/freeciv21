@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GENLIST_H
-#define FC__GENLIST_H
-
+#pragma once
 
 
 /****************************************************************************
@@ -156,5 +154,3 @@ genlist_link_next(const struct genlist_link *plink)
 }
 
 
-
-#endif /* FC__GENLIST_H */

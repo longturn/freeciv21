@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__SPACESHIP_H
-#define FC__SPACESHIP_H
-
+#pragma once
 
 
 /* utility */
@@ -138,5 +136,3 @@ bool next_spaceship_component(struct player *pplayer,
                               struct spaceship_component *fill);
 
 
-
-#endif /* FC__SPACESHIP_H */

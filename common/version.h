@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__VERSION_H
-#define FC__VERSION_H
+#pragma once
 
 #include <QString>
 
@@ -36,5 +35,3 @@ const char *freeciv_motto(void);
 const char *beta_message(void);
 
 
-
-#endif /* FC__VERSION_H */

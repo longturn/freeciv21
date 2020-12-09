@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_COMMON_UTILITIES_H
-#define FC__API_COMMON_UTILITIES_H
-
+#pragma once
 
 
 /* common/scriptcore */
@@ -34,5 +32,3 @@ void api_utilities_deprecation_warning(lua_State *L, char *method,
                                        char *deprecated_since);
 
 
-
-#endif /* FC__API_COMMON_UTILITIES_H */

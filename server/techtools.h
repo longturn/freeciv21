@@ -10,12 +10,10 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ***********************************************************************/
-#ifndef FC__TECHTOOLS_H
-#define FC__TECHTOOLS_H
+#pragma once
 
 #include "player.h"
 #include "tech.h"
-
 
 
 struct research;
@@ -48,5 +46,3 @@ bool tech_transfer(struct player *plr_recv, struct player *plr_donor,
                    Tech_type_id tech);
 
 
-
-#endif /* FC__TECHTOOLS_H */

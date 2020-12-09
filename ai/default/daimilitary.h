@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DAIMILITARY_H
-#define FC__DAIMILITARY_H
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -46,5 +45,3 @@ int dai_unit_attack_desirability(struct ai_type *ait,
 bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
                                struct city *pcity, unsigned int danger,
                                struct adv_choice *choice);
-
-#endif /* FC__DAIMILITARY_H */

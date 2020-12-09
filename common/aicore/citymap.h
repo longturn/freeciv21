@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__CITYMAP_H
-#define FC__CITYMAP_H
-
+#pragma once
 
 
 /* utility */
@@ -29,5 +27,3 @@ bool citymap_is_reserved(struct tile *ptile);
 void citymap_free(void);
 
 
-
-#endif /* FC__CITYMAP_H */

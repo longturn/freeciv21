@@ -10,8 +10,7 @@
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
 ****************************************************************************/
-#ifndef FC__RGBCOLOR_H
-#define FC__RGBCOLOR_H
+#pragma once
 
 /* utility */
 #include "shared.h"
@@ -79,4 +78,4 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex);
 
 int rgbcolor_brightness_score(struct rgbcolor *prgbcolor);
 
-#endif /* FC__RGBCOLOR_H */
+

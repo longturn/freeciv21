@@ -8,12 +8,11 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVCITY_H
-#define FC__ADVCITY_H
+#pragma once
 
 struct city;
 struct adv_data;
 
 int adv_eval_calc_city(struct city *pcity, struct adv_data *adv);
 
-#endif /* FC__ADVCITY_H */
+

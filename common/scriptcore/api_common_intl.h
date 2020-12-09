@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__API_COMMON_INTL_H
-#define FC__API_COMMON_INTL_H
-
+#pragma once
 
 
 struct lua_State;
@@ -22,4 +20,3 @@ const char *api_intl_PL_(lua_State *L, const char *singular,
                          const char *plural, int n);
 
 
-#endif /* FC__API_COMMON_INTL_H */

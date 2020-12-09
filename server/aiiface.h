@@ -10,11 +10,9 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AIIFACE_H
-#define FC__AIIFACE_H
+#pragma once
 
 #include "ai.h" /* incident_type */
-
 
 
 void ai_init(void);
@@ -29,5 +27,3 @@ void call_incident(enum incident_type type, enum casus_belli_range scope,
 void call_ai_refresh(void);
 
 
-
-#endif /* FC__AIIFACE_H */

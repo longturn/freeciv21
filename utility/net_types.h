@@ -13,12 +13,11 @@
  * now reduced to some definitions related to LAN scans that don't have a
  * direct Qt equivalent. */
 
-#ifndef FC__NET_TYPES_H
-#define FC__NET_TYPES_H
+#pragma once
 
 /* Which protocol will be used for LAN announcements */
 enum announce_type { ANNOUNCE_NONE, ANNOUNCE_IPV4, ANNOUNCE_IPV6 };
 
 #define ANNOUNCE_DEFAULT ANNOUNCE_IPV4
 
-#endif /* FC__NET_TYPES_H */
+

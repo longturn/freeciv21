@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__TERRAIN_H
-#define FC__TERRAIN_H
-
+#pragma once
 
 
 /* utility */
@@ -365,5 +363,3 @@ const struct terrain *terrain_array_last(void);
   terrain_type_iterate_end;
 
 
-
-#endif /* FC__TERRAIN_H */

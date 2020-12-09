@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__WORKERTASK_H
-#define FC__WORKERTASK_H
-
+#pragma once
 
 
 struct worker_task {
@@ -32,5 +30,3 @@ struct worker_task {
 void worker_task_init(struct worker_task *ptask);
 
 
-
-#endif /* FC__WORKERTASK_H */

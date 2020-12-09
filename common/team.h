@@ -8,9 +8,7 @@
  see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__TEAM_H
-#define FC__TEAM_H
-
+#pragma once
 
 
 #include "fc_types.h"
@@ -82,5 +80,3 @@ void team_remove_player(struct player *pplayer);
   team_slots_iterate_end;
 
 
-
-#endif /* FC__TEAM_H */

@@ -10,9 +10,7 @@
                                             https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__TILE_H
-#define FC__TILE_H
-
+#pragma once
 
 
 /* utility */
@@ -183,5 +181,3 @@ bool tile_set_label(struct tile *ptile, const char *label);
 bool tile_is_placing(const struct tile *ptile);
 
 
-
-#endif /* FC__TILE_H */

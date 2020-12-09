@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DATAIO_RAW_H
-#define FC__DATAIO_RAW_H
-
+#pragma once
 
 
 /* utility */
@@ -207,4 +205,4 @@ void dio_put_uint16_vec8_raw(struct raw_data_out *dout, int *values,
 
 #define DIO_PUT(f, d, l, ...) dio_put_##f##_raw(d, ##__VA_ARGS__)
 
-#endif /* FC__DATAIO_RAW_H */
+

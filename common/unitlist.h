@@ -9,9 +9,7 @@
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__UNITLIST_H
-#define FC__UNITLIST_H
-
+#pragma once
 
 
 #include "fc_types.h"
@@ -88,5 +86,3 @@ bool units_can_upgrade(const struct unit_list *punits);
 bool units_can_convert(const struct unit_list *punits);
 
 
-
-#endif /* FC__UNITLIST_H */

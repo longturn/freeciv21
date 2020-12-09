@@ -11,14 +11,12 @@
    GNU General Public License for more details.
 ***********************************************************************/
 
-#ifndef FC_ACTIONS_H
-#define FC_ACTIONS_H
+#pragma once
 
 /* common */
 #include "fc_types.h"
 #include "metaknowledge.h"
 #include "requirements.h"
-
 
 
 #define SPECENUM_NAME action_actor_kind
@@ -792,5 +790,3 @@ const struct action_auto_perf *action_auto_perf_by_number(const int num);
 struct action_auto_perf *action_auto_perf_slot_number(const int num);
 
 
-
-#endif /* FC_ACTIONS_H */

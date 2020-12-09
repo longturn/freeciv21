@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__LUASCRIPT_TYPES_H
-#define FC__LUASCRIPT_TYPES_H
-
+#pragma once
 
 
 /* utility */
@@ -103,5 +101,3 @@ typedef const struct city_list_link City_List_Link;
 #include "specenum_gen.h"
 
 
-
-#endif /* FC__LUASCRIPT_TYPES_H */

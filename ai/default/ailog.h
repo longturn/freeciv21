@@ -7,8 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__AILOG_H
-#define FC__AILOG_H
+#pragma once
 
 /* utility */
 #include "support.h"
@@ -74,5 +73,3 @@ QString bodyguard_log_prefix(ai_type *ait, const unit *punit);
       qCDebug(ai_category).noquote() << message;                            \
     }                                                                       \
   }
-
-#endif /* FC__AILOG_H */

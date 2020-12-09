@@ -8,9 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__GLOBAL_WORKLIST_H
-#define FC__GLOBAL_WORKLIST_H
-
+#pragma once
 
 
 /* utility */
@@ -70,5 +68,3 @@ const char *global_worklist_name(const struct global_worklist *pgwl);
   global_worklists_iterate_all_end;
 
 
-
-#endif /* FC__GLOBAL_WORKLIST_H */

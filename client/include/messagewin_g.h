@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__MESSAGEWIN_G_H
-#define FC__MESSAGEWIN_G_H
+#pragma once
 
 #include "packets.h"
 
@@ -19,4 +18,4 @@
 
 GUI_FUNC_PROTO(void, real_meswin_dialog_update, void *unused)
 
-#endif /* FC__MESSAGEWIN_G_H */
+

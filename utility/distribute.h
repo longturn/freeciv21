@@ -11,13 +11,9 @@
                                  If not, see https://www.gnu.org/licenses/.
 **************************************************************************/
 
-#ifndef FC__DISTRIBUTE_H
-#define FC__DISTRIBUTE_H
-
+#pragma once
 
 
 void distribute(int number, int groups, int *ratios, int *result);
 
 
-
-#endif /* FC__DISTRIBUTE_H */

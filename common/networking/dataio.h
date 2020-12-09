@@ -10,12 +10,11 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__DATAIO_H
-#define FC__DATAIO_H
+#pragma once
 
 /* This dataio.h header exist only as a interface to include.
  * Currently dataio_raw.h has all the functionality, including the
  * #include of the dataio_json.h at correct spot. */
 #include "dataio_raw.h"
 
-#endif /* FC__DATAIO_H */
+

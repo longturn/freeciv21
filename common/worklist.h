@@ -10,9 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__WORKLIST_H
-#define FC__WORKLIST_H
-
+#pragma once
 
 
 #include "registry.h"
@@ -59,5 +57,3 @@ bool are_worklists_equal(const struct worklist *wlist1,
   }
 
 
-
-#endif /* FC__WORKLIST_H */

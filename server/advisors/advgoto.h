@@ -8,8 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-#ifndef FC__ADVGOTO_H
-#define FC__ADVGOTO_H
+#pragma once
 
 /* common/aicore */
 #include "path_finding.h"
@@ -45,4 +44,4 @@ int adv_unit_att_rating(const struct unit *punit);
 int adv_unit_def_rating_basic(const struct unit *punit);
 int adv_unit_def_rating_basic_squared(const struct unit *punit);
 
-#endif /* FC__ADVGOTO_H */
+

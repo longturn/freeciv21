@@ -10,8 +10,7 @@
     /o)  (o/\ \_                General Public License along with Freeciv21.
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
-#ifndef FC__AUTOSETTLERS_H
-#define FC__AUTOSETTLERS_H
+#pragma once
 
 /* common */
 #include "fc_types.h"
@@ -93,4 +92,4 @@ extern action_id as_actions_rmextra[MAX_NUM_ACTIONS];
   action_list_iterate_end                                                   \
   }
 
-#endif /* FC__AUTOSETTLERS_H */
+
