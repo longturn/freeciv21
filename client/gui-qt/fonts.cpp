@@ -144,7 +144,7 @@ void fcFont::setFont(const QString &name, QFont *qf)
  ****************************************************************************/
 void configure_fonts()
 {
-  int max, smaller, default_size;
+  int max, default_size;
   QStringList sl;
   QString font_name;
   const QList<QScreen *> screens = QGuiApplication::screens();
@@ -157,7 +157,6 @@ void configure_fonts()
   QByteArray fn_bytes;
 
   max = qRound(scale * 16);
-  smaller = qRound(scale * 12);
   default_size = qRound(scale * 14);
 
   /* default and help label*/
@@ -172,7 +171,7 @@ void configure_fonts()
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_default, fn_bytes.data(), 512);
   }
-  font_name = configure_font(fonts::city_names, sl, smaller, true);
+  font_name = configure_font(fonts::city_names, sl, max, true);
   if (!font_name.isEmpty()) {
     fn_bytes = font_name.toLocal8Bit();
     fc_strlcpy(gui_options.gui_qt_font_city_names, fn_bytes.data(), 512);
