@@ -617,7 +617,9 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
   cWidth = fm->horizontalAdvance(city_size);
   x = x + cWidth + 2;
 
-  x = x + 6;
+  if (can_see) { // draw grow later bc it overlaps occupy
+    x = x + 6;
+  }
   // occupy
   int half_miss_height = (occupyPix.height() - fonttext_height) / 2;
   p.drawPixmap(x, y - half_miss_height, occupyPix);
@@ -680,7 +682,7 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     font.setPointSize(font_size);
     p.setFont(font);
     p.setBrush(brush);
-    x = x + 12;
+    x = x + 6;
   }
   x = x + cWidth;
   // flag
