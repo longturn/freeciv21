@@ -175,12 +175,12 @@ int research_pretty_name(const struct research *presearch, char *buf,
     const struct team *pteam = team_by_number(research_number(presearch));
 
     if (1 != player_list_size(team_members(pteam))) {
-      char buf2[buf_len];
+      QString buf2;
 
-      team_pretty_name(pteam, buf2, sizeof(buf2));
+      team_pretty_name(pteam, buf2);
       /* TRANS: e.g. "members of team 1", or even "members of team Red".
        * Used in many places where a nation plural might be used. */
-      return fc_snprintf(buf, buf_len, _("members of %s"), buf2);
+      return fc_snprintf(buf, buf_len, _("members of %s"), qUtf8Printable(buf2));
     } else {
       pplayer = player_list_front(team_members(pteam));
     }
