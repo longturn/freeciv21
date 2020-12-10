@@ -233,7 +233,9 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   ptag->start_offset = start_offset;
   ptag->stop_offset = FT_OFFSET_UNSET;
 
-  const char *sequence = qUtf8Printable(qsequence);
+  QByteArray ba = qsequence.toUtf8();
+  const char *sequence = ba.constData();
+
   switch (type) {
   case TTT_BOLD:
   case TTT_ITALIC:
