@@ -404,7 +404,8 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
                                          Tech_type_id tech)
 {
   bv_techs done;
-  Tech_type_id techs[game.control.num_tech_types];
+  std::vector<Tech_type_id> techs;
+  techs.reserve(game.control.num_tech_types);
   int techs_num;
   int i;
 
@@ -437,7 +438,6 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       if (valid_advance_by_number(req_tech) == NULL) {
         return FALSE;
       } else if (!BV_ISSET(done, req_tech)) {
-        fc_assert(techs_num < ARRAY_SIZE(techs));
         techs[techs_num] = req_tech;
         techs_num++;
 
@@ -593,7 +593,7 @@ void research_update(struct research *presearch)
 #ifdef FREECIV_DEBUG
   advance_index_iterate(A_FIRST, i)
   {
-    char buf[advance_count() + 1];
+    QString buf;
 
     advance_index_iterate(A_NONE, j)
     {
@@ -613,7 +613,7 @@ void research_update(struct research *presearch)
               presearch->inventions[i].root_reqs_known
                   ? ""
                   : " [root reqs aren't known]");
-    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, buf);
+    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, qUtf8Printable(buf));
   }
   advance_index_iterate_end;
 #endif /* FREECIV_DEBUG */

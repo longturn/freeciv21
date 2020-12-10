@@ -387,7 +387,8 @@ static int max_tile_trade(const struct city *pcity)
 {
   int i, total = 0;
   int radius_sq = city_map_radius_sq_get(pcity);
-  int tile_trade[city_map_tiles(radius_sq)];
+  std::vector<int> tile_trade;
+  tile_trade.reserve(city_map_tiles(radius_sq));
   size_t size = 0;
   bool is_celebrating = base_city_celebrating(pcity);
 
@@ -417,7 +418,7 @@ static int max_tile_trade(const struct city *pcity)
   }
   city_map_iterate_end;
 
-  qsort(tile_trade, size, sizeof(*tile_trade), best_value);
+  std::sort(tile_trade.begin(), tile_trade.end());
 
   for (i = 0; i < pcity->size && i < size; i++) {
     total += tile_trade[i];
