@@ -34,7 +34,7 @@
     int _unit##_size = unit_list_size(unitlist);                            \
                                                                             \
     if (_unit##_size > 0) {                                                 \
-      int _unit##_numbers[999];                                    \
+      int _unit##_numbers[9999];                                    \
       int _unit##_index = 0;                                                \
                                                                             \
       unit_list_iterate(unitlist, _unit)                                    \
