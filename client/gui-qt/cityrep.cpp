@@ -1026,7 +1026,8 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
   } else {
     num_sel = selected_cities.count();
   }
-  struct city *array[num_sel];
+  std::vector<struct city*> array;
+  array.reserve(num_sel);
 
   if (global) {
     i = 0;

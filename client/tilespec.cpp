@@ -991,12 +991,10 @@ const struct strvec *get_tileset_list(const struct option *poption)
 static char *tilespec_fullname(const char *tileset_name)
 {
   if (tileset_name) {
-    char fname[strlen(tileset_name) + qstrlen(TILESPEC_SUFFIX) + 1];
     const char *dname;
+    QString fname = QString("%1%2").arg(tileset_name, TILESPEC_SUFFIX);
 
-    fc_snprintf(fname, sizeof(fname), "%s%s", tileset_name, TILESPEC_SUFFIX);
-
-    dname = fileinfoname(get_data_dirs(), fname);
+    dname = fileinfoname(get_data_dirs(), qUtf8Printable(fname));
 
     if (dname) {
       return fc_strdup(dname);
@@ -1214,14 +1212,13 @@ bool tilespec_reread(const char *new_tileset_name,
   struct tile *center_tile;
   enum client_states state = client_state();
   const char *name = new_tileset_name ? new_tileset_name : tileset->name;
-  char tileset_name[strlen(name) + 1], old_name[strlen(tileset->name) + 1];
   bool new_tileset_in_use;
 
   /* Make local copies since these values may be freed down below */
-  sz_strlcpy(tileset_name, name);
-  sz_strlcpy(old_name, tileset->name);
+  QString tileset_name = name;
+  QString old_name = tileset->name;
 
-  qInfo(_("Loading tileset \"%s\"."), tileset_name);
+  qInfo(_("Loading tileset \"%s\"."), qUtf8Printable(tileset_name));
 
   /* Step 0:  Record old data.
    *
@@ -1235,7 +1232,7 @@ bool tilespec_reread(const char *new_tileset_name,
    * tileset with scaling and old one was not scaled.
    */
 
-  if (strcmp(tileset_name, old_name) == 0 && tileset->scale == 1.0f
+  if (tileset_name == old_name && tileset->scale == 1.0f
       && scale != 1.0f) {
     if (unscaled_tileset) {
       tileset_free(unscaled_tileset);
@@ -1249,13 +1246,13 @@ bool tilespec_reread(const char *new_tileset_name,
    *
    * We read in the new tileset.  This should be pretty straightforward.
    */
-  tileset = tileset_read_toplevel(tileset_name, FALSE, -1, scale);
+  tileset = tileset_read_toplevel(qUtf8Printable(tileset_name), FALSE, -1, scale);
   if (tileset != NULL) {
     new_tileset_in_use = TRUE;
   } else {
     new_tileset_in_use = FALSE;
 
-    if (!(tileset = tileset_read_toplevel(old_name, FALSE, -1, scale))) {
+    if (!(tileset = tileset_read_toplevel(qUtf8Printable(old_name), FALSE, -1, scale))) {
       /* Always fails. */
       fc_assert_exit_msg(NULL != tileset,
                          "Failed to re-read the currently loaded tileset.");
@@ -1409,11 +1406,9 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
   /* Try out all supported file extensions to find one that works. */
   while ((gfx_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char full_name[strlen(gfx_filename) + qstrlen(".") + qstrlen(gfx_fileext)
-                   + 1];
+    QString full_name = QString("%1.%2").arg(gfx_filename, gfx_fileext);
 
-    sprintf(full_name, "%s.%s", gfx_filename, gfx_fileext);
-    if ((real_full_name = fileinfoname(get_data_dirs(), full_name))) {
+    if ((real_full_name = fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
       log_debug("trying to load gfx file \"%s\".", real_full_name);
       s = load_gfxfile(real_full_name);
       if (s) {
@@ -3641,7 +3636,7 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
                                const char *tag)
 {
-  char full_tag_name[MAX_LEN_NAME + qstrlen("_isolated")];
+  QString full_tag_name;
   const int id = extra_index(pextra);
   int i;
   int extrastyle = t->sprites.extras[id].extrastyle;
@@ -3650,9 +3645,8 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
      ESTYLE_ROAD_PARITY_COMBINED. */
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE
       || extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
-    fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_isolated", tag);
-
-    SET_SPRITE(extras[id].u.road.isolated, full_tag_name);
+    full_tag_name = QString("%1_isolated").arg(tag);
+    SET_SPRITE(extras[id].u.road.isolated, qUtf8Printable(full_tag_name));
   }
 
   if (extrastyle == ESTYLE_ROAD_ALL_SEPARATE) {
@@ -3662,10 +3656,9 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
       enum direction8 dir = t->valid_tileset_dirs[i];
       const char *dir_name = dir_get_tileset_name(dir);
 
-      fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_%s", tag,
-                  dir_name);
+      full_tag_name = QString("%1_%2").arg(tag, dir_name);
 
-      SET_SPRITE(extras[id].u.road.ru.dir[i], full_tag_name);
+      SET_SPRITE(extras[id].u.road.ru.dir[i], qUtf8Printable(full_tag_name));
     }
   } else if (extrastyle == ESTYLE_ROAD_PARITY_COMBINED) {
     int num_index = 1 << (t->num_valid_tileset_dirs / 2), j;
@@ -3689,14 +3682,12 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
                      dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
                      value);
       }
+      full_tag_name = QString("%1_c_%2").arg(tag, c);
 
-      fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_c_%s", tag, c);
+      SET_SPRITE(extras[id].u.road.ru.combo.even[i], qUtf8Printable(full_tag_name));
+      full_tag_name = QString("%1_d_%2").arg(tag, d);
 
-      SET_SPRITE(extras[id].u.road.ru.combo.even[i], full_tag_name);
-
-      fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_d_%s", tag, d);
-
-      SET_SPRITE(extras[id].u.road.ru.combo.odd[i], full_tag_name);
+      SET_SPRITE(extras[id].u.road.ru.combo.odd[i], qUtf8Printable(full_tag_name));
     }
   } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
     /* ESTYLE_ROAD_ALL_COMBINED includes 256 sprites, one for every
@@ -3704,10 +3695,9 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
     for (i = 0; i < t->num_index_valid; i++) {
       char *idx_str = valid_index_str(t, i);
 
-      fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_%s", tag,
-                  idx_str);
+      full_tag_name = QString("%1_%2").arg(tag, idx_str);
 
-      SET_SPRITE(extras[id].u.road.ru.total[i], full_tag_name);
+      SET_SPRITE(extras[id].u.road.ru.total[i], qUtf8Printable(full_tag_name));
     }
   } else if (extrastyle == ESTYLE_RIVER) {
     if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
@@ -3730,10 +3720,9 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
       if (!is_cardinal_tileset_dir(t, dir)) {
         const char *dtn = dir_get_tileset_name(dir);
 
-        fc_snprintf(full_tag_name, sizeof(full_tag_name), "%s_c_%s",
-                    pextra->graphic_str, dtn);
+        full_tag_name = QString("%1_c_%2").arg(pextra->graphic_str, dtn);
 
-        SET_SPRITE_OPT(extras[id].u.road.corner[dir], full_tag_name);
+        SET_SPRITE_OPT(extras[id].u.road.corner[dir], qUtf8Printable(full_tag_name));
       }
     }
   }
@@ -3747,25 +3736,21 @@ static void tileset_setup_base(struct tileset *t,
                                const struct extra_type *pextra,
                                const char *tag)
 {
-  char full_tag_name[MAX_LEN_NAME + qstrlen("_fg")];
   const int id = extra_index(pextra);
 
   fc_assert_ret(id >= 0 && id < extra_count());
 
-  sz_strlcpy(full_tag_name, tag);
-  strcat(full_tag_name, "_bg");
+  QString full_tag_name = QString(tag) + QString("_bg");
   t->sprites.extras[id].u.bmf.background =
-      load_sprite(t, full_tag_name, TRUE, TRUE);
+      load_sprite(t, qUtf8Printable(full_tag_name), TRUE, TRUE);
 
-  sz_strlcpy(full_tag_name, tag);
-  strcat(full_tag_name, "_mg");
+  full_tag_name = QString(tag) + QString("_mg");
   t->sprites.extras[id].u.bmf.middleground =
-      load_sprite(t, full_tag_name, TRUE, TRUE);
+      load_sprite(t, qUtf8Printable(full_tag_name), TRUE, TRUE);
 
-  sz_strlcpy(full_tag_name, tag);
-  strcat(full_tag_name, "_fg");
+  full_tag_name = QString(tag) + QString("_fg");
   t->sprites.extras[id].u.bmf.foreground =
-      load_sprite(t, full_tag_name, TRUE, TRUE);
+      load_sprite(t, qUtf8Printable(full_tag_name), TRUE, TRUE);
 
   if (t->sprites.extras[id].u.bmf.background == NULL
       && t->sprites.extras[id].u.bmf.middleground == NULL

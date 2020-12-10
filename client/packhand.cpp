@@ -2480,7 +2480,8 @@ void handle_research_info(const struct packet_research_info *packet)
   struct research *presearch;
   bool tech_changed = FALSE;
   bool poptechup = FALSE;
-  Tech_type_id gained_techs[advance_count()];
+  std::vector<Tech_type_id> gained_techs;
+  gained_techs.reserve(advance_count());
   int gained_techs_num = 0, i;
   enum tech_state newstate, oldstate;
 
