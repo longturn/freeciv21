@@ -1785,7 +1785,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
    * when a unit type has multiple combat bonuses of the same kind. */
   combat_bonus_list_iterate(utype->bonuses, cbonus)
   {
-    const char *against[utype_count()];
+    const char **against = new const char*[utype_count()];
     int targets = 0;
 
     if (cbonus->quiet) {
@@ -1847,6 +1847,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
       astr_free(&list);
     }
+    delete[] against;
   }
   combat_bonus_list_iterate_end;
 
@@ -1913,7 +1914,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   nations_iterate_end;
   {
-    const char *types[utype_count()];
+    const char **types = new const char*[utype_count()];
     int i = 0;
 
     unit_type_iterate(utype2)
@@ -1934,6 +1935,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                    astr_str(&list));
       astr_free(&list);
     }
+    delete[] types;
   }
   if (utype_has_flag(utype, UTYF_NOHOME)) {
     CATLSTR(buf, bufsz, _("* Never has a home city.\n"));
@@ -1965,7 +1967,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                  utype->pop_cost);
   }
   if (0 < utype->transport_capacity) {
-    const char *classes[uclass_count()];
+    const char **classes = new const char*[uclass_count()];
     int i = 0;
     struct astring list = ASTRING_INIT;
 
@@ -2038,6 +2040,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         }
       } /* else, no restricted cargo exists; keep quiet */
     }
+    delete[] classes;
   }
   if (utype_has_flag(utype, UTYF_COAST_STRICT)) {
     CATLSTR(buf, bufsz, _("* Must stay next to safe coast.\n"));
@@ -2089,7 +2092,8 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
     if (BV_ISSET_ANY(embarks)) {
       /* Build list of embark exceptions */
-      const char *eclasses[uclass_count()];
+      const char **eclasses = new const char*[uclass_count()];
+
       int i = 0;
       struct astring elist = ASTRING_INIT;
 
@@ -2118,10 +2122,11 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
             astr_str(&elist));
       }
       astr_free(&elist);
+      delete[] eclasses;
     }
     if (BV_ISSET_ANY(disembarks) && !BV_ARE_EQUAL(embarks, disembarks)) {
       /* Build list of disembark exceptions (if different from embarking) */
-      const char *dclasses[uclass_count()];
+      const char **dclasses = new const char*[uclass_count()];
       int i = 0;
       struct astring dlist = ASTRING_INIT;
 
@@ -2140,6 +2145,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
           _("* May unload from %s transports even when underway.\n"),
           astr_str(&dlist));
       astr_free(&dlist);
+      delete[] dclasses;
     }
   }
 
@@ -2244,7 +2250,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
   fuel = utype_fuel(utype);
   if (fuel > 0) {
-    const char *types[utype_count()];
+    const char **types = new const char*[utype_count()];
     int i = 0;
 
     unit_type_iterate(transport)
@@ -2311,6 +2317,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       }
       astr_free(&list);
     }
+    delete[] types;
   }
 
   /* Auto attack immunity. (auto_attack.if_attacker ruleset setting) */
@@ -3258,7 +3265,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     CATLSTR(buf, bufsz, "\n");
   }
   {
-    const char *classes[uclass_count()];
+    const char **classes = new const char*[uclass_count()];
     int i = 0;
 
     unit_class_iterate(uclass)
@@ -3277,6 +3284,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                    astr_build_and_list(&list, classes, i));
       astr_free(&list);
     }
+    delete[] classes;
   }
   if (terrain_has_flag(pterrain, TER_NO_ZOC)) {
     CATLSTR(buf, bufsz,
@@ -3753,7 +3761,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   {
-    const char *classes[uclass_count()];
+    const char **classes = new const char*[uclass_count()];
     int i = 0;
 
     unit_class_iterate(uclass)
@@ -3808,6 +3816,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                      pextra->defense_bonus);
       }
     }
+    delete[] classes;
   }
 
   if (proad != NULL && road_provides_move_bonus(proad)) {
