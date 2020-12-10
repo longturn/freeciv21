@@ -873,7 +873,6 @@ size_t featured_text_to_plain_text(const char *featured_text,
   while (*text_in != '\0' && text_out_len > 1) {
     if (SEQ_START == *text_in) {
       /* Escape sequence... */
-      //char buf[text_out_len];
       QString buf;
       enum sequence_type seq_type;
       enum text_tag_type type;
