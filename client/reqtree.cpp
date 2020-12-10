@@ -645,7 +645,7 @@ struct node_and_float {
  *************************************************************************/
 static int cmp_func(const node_and_float &a, const node_and_float &b)
 {
-  return a.value > b.value;
+  return a.value < b.value;
 }
 
 /*********************************************************************/ /**
@@ -655,7 +655,8 @@ static int cmp_func(const node_and_float &a, const node_and_float &b)
 static void barycentric_sort(struct reqtree *tree, int layer)
 {
   std::vector<struct node_and_float> T;
-  T.reserve(tree->layer_size[layer]);
+  T.resize(tree->layer_size[layer]);
+
   int i, j;
   float v;
 
@@ -673,7 +674,6 @@ static void barycentric_sort(struct reqtree *tree, int layer)
     T[i].value = v;
   }
   std::sort(T.begin(), T.end(), cmp_func);
-  //qsort(T, tree->layer_size[layer], sizeof(*T), cmp_func);
 
   for (i = 0; i < tree->layer_size[layer]; i++) {
     tree->layers[layer][i] = T[i].node;

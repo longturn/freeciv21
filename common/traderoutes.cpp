@@ -372,13 +372,6 @@ int city_num_trade_routes(const struct city *pcity)
   return trade_route_list_size(pcity->routes);
 }
 
-/*********************************************************************/ /**
-   Comparator used in max_tile_trade.
- **************************************************************************/
-static int best_value(const void *a, const void *b)
-{
-  return *(int *) a < *(int *) b;
-}
 
 /*********************************************************************/ /**
    Returns the maximum trade production of the tiles of the city.
