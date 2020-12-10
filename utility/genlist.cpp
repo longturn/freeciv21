@@ -626,8 +626,8 @@ void genlist_shuffle(struct genlist *pgenlist)
   struct genlist_link *myiter;
   std::vector<int> shuffle;
   int i;
-  sortbuf.reserve(n);
-  shuffle.reserve(n);
+  sortbuf.resize(n);
+  shuffle.resize(n);
 
   if (n <= 1) {
     return;
