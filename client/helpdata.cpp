@@ -503,7 +503,7 @@ static void insert_allows_single(struct universal *psource,
   struct strvec *conoreqs = strvec_new();
   struct astring coreqstr = ASTRING_INIT;
   struct astring conoreqstr = ASTRING_INIT;
-  char buf2[bufsz];
+  char *buf2 = new char[bufsz];
 
   /* FIXME: show other data like range and survives. */
 
@@ -560,6 +560,7 @@ static void insert_allows_single(struct universal *psource,
   strvec_destroy(conoreqs);
   astr_free(&coreqstr);
   astr_free(&conoreqstr);
+  delete[] buf2;
 }
 
 /************************************************************************/ /**
