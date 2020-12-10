@@ -91,7 +91,6 @@ class unit_item : public QLabel {
   Q_OBJECT
   QAction *disband_action;
   QAction *change_home;
-  QAction *activate;
   QAction *activate_and_close;
   QAction *sentry;
   QAction *fortify;
@@ -118,7 +117,6 @@ private:
 private slots:
   void disband();
   void change_homecity();
-  void activate_unit();
   void activate_and_close_dialog();
   void sentry_unit();
   void fortify_unit();

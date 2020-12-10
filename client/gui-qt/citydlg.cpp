@@ -668,7 +668,6 @@ void unit_item::contextMenuEvent(QContextMenuEvent *event)
   }
 
   menu = new QMenu(king()->central_wdg);
-  menu->addAction(activate);
   menu->addAction(activate_and_close);
 
   if (sentry) {
@@ -719,9 +718,7 @@ void unit_item::create_actions()
 
   qunits = unit_list_new();
   unit_list_append(qunits, qunit);
-  activate = new QAction(_("Activate unit"), this);
-  connect(activate, &QAction::triggered, this, &unit_item::activate_unit);
-  activate_and_close = new QAction(_("Activate and close dialog"), this);
+  activate_and_close = new QAction(_("Activate unit"), this);
   connect(activate_and_close, &QAction::triggered, this,
           &unit_item::activate_and_close_dialog);
 
@@ -852,16 +849,6 @@ void unit_item::activate_and_close_dialog()
     unit_focus_set(qunit);
     queen()->city_overlay->dont_focus = true;
     qtg_popdown_all_city_dialogs();
-  }
-}
-
-/************************************************************************/ /**
-   Activates unit in city dialog
- ****************************************************************************/
-void unit_item::activate_unit()
-{
-  if (qunit) {
-    unit_focus_set(qunit);
   }
 }
 
