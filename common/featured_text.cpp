@@ -227,12 +227,13 @@ static bool find_option(const char *buf_in, const char *option,
 static bool text_tag_init_from_sequence(struct text_tag *ptag,
                                         enum text_tag_type type,
                                         ft_offset_t start_offset,
-                                        const char *sequence)
+                                        QString& qsequence)
 {
   ptag->type = type;
   ptag->start_offset = start_offset;
   ptag->stop_offset = FT_OFFSET_UNSET;
 
+  const char *sequence = qUtf8Printable(qsequence);
   switch (type) {
   case TTT_BOLD:
   case TTT_ITALIC:
@@ -756,7 +757,7 @@ int text_tag_link_id(const struct text_tag *ptag)
    Extract a sequence from a string.  Also, determine the type and the text
    tag type of the sequence.  Return 0 on error.
  **************************************************************************/
-static size_t extract_sequence_text(const char *featured_text, char *buf,
+static size_t extract_sequence_text(const char *featured_text, QString &buf,
                                     size_t len, enum sequence_type *seq_type,
                                     enum text_tag_type *type)
 {
@@ -840,9 +841,9 @@ static size_t extract_sequence_text(const char *featured_text, char *buf,
   }
 
   if (end - buf_in + 2 > 0) {
-    fc_strlcpy(buf, buf_in, MIN(end - buf_in + 2, len));
+    buf = QString(buf_in).left(MIN(end - buf_in + 2, len));
   } else {
-    buf[0] = '\0';
+    buf = "";
   }
   return stop - featured_text + 1;
 }
@@ -872,7 +873,8 @@ size_t featured_text_to_plain_text(const char *featured_text,
   while (*text_in != '\0' && text_out_len > 1) {
     if (SEQ_START == *text_in) {
       /* Escape sequence... */
-      char buf[text_out_len];
+      //char buf[text_out_len];
+      QString buf;
       enum sequence_type seq_type;
       enum text_tag_type type;
       size_t len = extract_sequence_text(text_in, buf, text_out_len,
@@ -893,7 +895,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
             } else {
               text_tag_destroy(ptag);
               log_featured_text("Couldn't create a text tag with \"%s\".",
-                                buf);
+                                qUtf8Printable(buf));
             }
           }
           break;
@@ -928,7 +930,7 @@ size_t featured_text_to_plain_text(const char *featured_text,
           if (!text_tag_init_from_sequence(&tag, type, text_out - plain_text,
                                            buf)) {
             log_featured_text("Couldn't create a text tag with \"%s\".",
-                              buf);
+                              qUtf8Printable(buf));
           } else {
             len = text_tag_replace_text(&tag, text_out, text_out_len,
                                         replace_link_text);

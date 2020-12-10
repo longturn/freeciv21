@@ -76,7 +76,7 @@ static inline bool iterator_valid(const struct iterator *it)
 ***************************************************************************/
 #define generic_iterate(TYPE_it, TYPE_a, NAME_a, FUNC_size, FUNC_init, ...) \
   do {                                                                      \
-    char MY_mem_##NAME_a[FUNC_size()];                                      \
+    char MY_mem_##NAME_a[999];                                      \
     struct iterator *MY_it_##NAME_a;                                        \
     TYPE_a NAME_a;                                                          \
     MY_it_##NAME_a =                                                        \
