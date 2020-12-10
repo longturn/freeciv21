@@ -196,7 +196,7 @@ QTableWidget::item:selected {
 QHeaderView::section {
   background: #131313;
   color: #FFFFFF;
-  border: none;
+  border: 1px solid #3b3b3b;
 }
 
 QLineEdit {
@@ -383,7 +383,7 @@ notify_dialog {
 QProgressBar {
   color: white;
   background: #282828;
-  selection-background-color: #1155bb;
+  selection-background-color: #d3d066;
 }
 
 QRadioButton {
@@ -565,7 +565,7 @@ QCheckBox::indicator:checked:hover {
 
 QGroupBox {
   color: yellow;
-  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #3d4552, stop: 1 #383f4c);
+  background-color: #17171f;
   border: 1px solid #454545;
   border-radius: 5px;
   margin-top: 2ex;
@@ -576,7 +576,7 @@ QComboBox:hover {
 }
 
 city_dialog QFrame {
-  background: #383c4a;
+  background: #282c3b;
   border: none;
 }
 
@@ -587,25 +587,25 @@ production_widget {
 
 city_dialog QProgressBar {
   color: white;
-  background: #404552;
-  selection-background-color: #1155bb;
+  background: #1e212c;
+  selection-background-color: #d3d066;
 }
 
 city_dialog QScrollArea QWidget {
-  background: #444a58;
+  background: #1e212c;
 }
 
 city_dialog QScrollArea QFrame {
-  background: #444a58;
+  background: #1e212c;
 }
 
 city_dialog QScrollArea {
-  background: #444a58;
+  background: #1e212c;
 }
 
 city_dialog QPushButton {
   color: #FFFFFF;
-  background: #444a58;
+  background: #1e212c;
   border: 1px solid #6a6a00;
   border-radius: 0px;
   padding: 0px;
@@ -618,19 +618,19 @@ city_dialog QPushButton:disabled {
 
 city_dialog QPushButton:hover {
   color: white;
-  background: #444a58;
+  background: #1e212c;
   border: 2px solid #fbff00;
 }
 
 city_dialog QGroupBox {
   color: yellow;
-  background-color: #383c4a;
+  background-color: #282c3b;
   border: 1px solid #4f5a6a;
   border-radius: 5px;
 }
 
 city_dialog QTableWidget {
-  background-color: #444a58;
+  background-color: #1e212c;
   border-top: none;
   border-left: none;
   border-bottom: none;
@@ -657,14 +657,16 @@ units_reports QScrollArea QWidget{
 
 unittype_item {
   border: none;
-  background-color: rgba(0,0,0,95);
-  selection-background-color: rgba(50, 150, 250,220);
+  background: transparent;
+  selection-background-color: #ccd300; /*hover*/
 }
+
 
 units_reports {
   border: 1px solid #1d5994;
   background-color: rgba(0,0,75,95);
 }
+
 
 science_report QScrollArea {
   background-image:url(LittleFingersun.png);
@@ -749,29 +751,31 @@ fc_game_tab_widget {
 
 help_widget QTextBrowser
 {
-  background-color: #282828;
+  background-color: #1e212c;
   color: white;
 }
 
 help_widget QWidget
 {
-  background-color: #282828;
+  background-color: #1e212c;
   color: white;
 }
 
-help_widget QTreeWidget
+
+
+help_dialog QTreeWidget
 {
-  background-color: #282828;
+  background-color: #1e212c;
   color: white;
 }
 
 help_widget QScrollArea QFrame {
-  background-color: #282828;
+  background-color: #1e212c;
   color: white;
 }
 
 help_widget QScrollArea {
-  background-color: #282828;
+  background-color: #1e212c;
   color: white;
 }
 
@@ -837,6 +841,11 @@ hud_message_box {
   border: 2px solid #5294e2;
 }
 
+hud_message_box QFrame {
+  background-color: transparent;
+  color: white;
+}
+
 
 hud_input_box {
   background-color: transparent;
@@ -887,8 +896,8 @@ hud_unit_combat {
 
 tax_rates_dialog {
   color: white;
-  background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,stop:0 rgba(0, 0, 75,195) stop:1 rgba(25, 25, 45, 225));
-  border: 2px solid #0000AA;
+  background-color: #282828;
+  border: 1px solid #d8d800;
 }
 
 research_color {
