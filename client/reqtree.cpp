@@ -350,7 +350,8 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
   const struct research *presearch = research_get(pplayer);
   struct reqtree *tree = new reqtree();
   int j;
-  struct tree_node *nodes[advance_count()];
+  std::vector<struct tree_node *> nodes;
+  nodes.reserve(advance_count());
 
   nodes[A_NONE] = NULL;
   advance_index_iterate(A_FIRST, tech)
@@ -608,7 +609,8 @@ static void set_layers(struct reqtree *tree)
 
   {
     /* Counters for order - order number for the next node in the layer */
-    int T[num_layers];
+    std::vector<int> T;
+    T.reserve(num_layers);
 
     tree->layers = new tree_node **[num_layers];
     tree->layer_size = new int[num_layers];
@@ -641,18 +643,9 @@ struct node_and_float {
 /*********************************************************************/ /**
    Comparison function used by barycentric_sort.
  *************************************************************************/
-static int cmp_func(const void *_a, const void *_b)
+static int cmp_func(const node_and_float &a, const node_and_float &b)
 {
-  const struct node_and_float *a = static_cast<const node_and_float *>(_a),
-                              *b = static_cast<const node_and_float *>(_b);
-
-  if (a->value > b->value) {
-    return 1;
-  }
-  if (a->value < b->value) {
-    return -1;
-  }
-  return 0;
+  return a.value > b.value;
 }
 
 /*********************************************************************/ /**
@@ -661,7 +654,8 @@ static int cmp_func(const void *_a, const void *_b)
  *************************************************************************/
 static void barycentric_sort(struct reqtree *tree, int layer)
 {
-  struct node_and_float T[tree->layer_size[layer]];
+  std::vector<struct node_and_float> T;
+  T.reserve(tree->layer_size[layer]);
   int i, j;
   float v;
 
@@ -678,7 +672,8 @@ static void barycentric_sort(struct reqtree *tree, int layer)
     }
     T[i].value = v;
   }
-  qsort(T, tree->layer_size[layer], sizeof(*T), cmp_func);
+  std::sort(T.begin(), T.end(), cmp_func);
+  //qsort(T, tree->layer_size[layer], sizeof(*T), cmp_func);
 
   for (i = 0; i < tree->layer_size[layer]; i++) {
     tree->layers[layer][i] = T[i].node;
@@ -693,7 +688,8 @@ static int count_crossings(struct reqtree *tree, int layer)
 {
   int layer1_size = tree->layer_size[layer];
   int layer2_size = tree->layer_size[layer + 1];
-  int X[layer2_size];
+  std::vector<int> X;
+  X.reserve(layer2_size);
   int i, j, k;
   int sum = 0;
 
@@ -737,7 +733,8 @@ static void swap(struct reqtree *tree, int layer, int order1, int order2)
  *************************************************************************/
 static void improve(struct reqtree *tree)
 {
-  int crossings[tree->num_layers - 1];
+  std::vector<int> crossings;
+  crossings.reserve(tree->num_layers - 1);
   int i, x1, x2, layer;
 
   for (i = 0; i < tree->num_layers - 1; i++) {
