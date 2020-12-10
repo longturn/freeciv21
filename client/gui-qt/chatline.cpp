@@ -713,26 +713,10 @@ void qtg_real_output_window_append(const QString& astring,
                                    const struct text_tag_list *tags,
                                    int conn_id)
 {
-  QString wakeup;
-
   king()->set_status_bar(astring);
-
-  wakeup = gui_options.gui_qt_wakeup_text;
-
-  /* Format wakeup string if needed */
-  if (wakeup.contains(QLatin1String("%1"))) {
-    wakeup = wakeup.arg(client.conn.username);
-  }
 
   if (astring.contains(client.conn.username)) {
     qapp->alert(king()->central_wdg);
-  }
-
-  /* Play sound if we encountered wakeup string */
-  if (astring.contains(wakeup) && client_state() < C_S_RUNNING
-      && !wakeup.isEmpty()) {
-    qapp->alert(king()->central_wdg);
-    audio_play_sound("e_player_wake", NULL);
   }
 
   chat_listener::update_word_list();

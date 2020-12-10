@@ -337,4 +337,3 @@ e_log_fatal = "stdsounds/LrgExpl.ogg" ; [warzone]
 
 ; Those pseudo-events are only used in the sound system.
 ;e_game_quit = ""
-e_player_wake = "stdsounds/wakeup.ogg" ; [jt]
