@@ -44,7 +44,7 @@ enum {
   RESPONSE_SAVE
 };
 
-static int num_shortcuts = 57;
+static int num_shortcuts = 59;
 fc_shortcut default_shortcuts[] = {
     {SC_SCROLL_MAP, 0, Qt::RightButton, Qt::NoModifier, "Scroll map"},
     {SC_CENTER_VIEW, Qt::Key_C, Qt::AllButtons, Qt::NoModifier,
