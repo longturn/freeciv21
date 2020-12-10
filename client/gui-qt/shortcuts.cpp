@@ -767,10 +767,10 @@ bool read_shortcuts()
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv-qt-client"));
   num = s.beginReadArray(QStringLiteral("Shortcuts"));
-  if (num == SC_LAST_SC - 1) {
-    for (i = 0; i < SC_LAST_SC - 1; ++i) {
-      s.setArrayIndex(i);
+  if (num <= SC_LAST_SC - 1) {
+    for (i = 0; i < num; ++i) {
       sc = new fc_shortcut();
+      s.setArrayIndex(i);
       sc->id =
           static_cast<shortcut_id>(s.value(QStringLiteral("id")).toInt());
       sc->key = s.value(QStringLiteral("key")).toInt();
@@ -780,6 +780,16 @@ bool read_shortcuts()
           s.value(QStringLiteral("mod")).toInt());
       sc->str = default_shortcuts[i].str;
       fc_shortcuts::hash.insert(sc->id, sc);
+    }
+    if (i < SC_LAST_SC - 1) {
+      // initialize missing shortcuts
+      sc = new fc_shortcut();
+      sc->id = default_shortcuts[i].id;
+      sc->key = default_shortcuts[i].key;
+      sc->mouse = default_shortcuts[i].mouse;
+      sc->mod = default_shortcuts[i].mod;
+      sc->str = default_shortcuts[i].str;
+      fc_shortcuts::hash.insert(default_shortcuts[i].id, sc);
     }
   } else {
     s.endArray();
