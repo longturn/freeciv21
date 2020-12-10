@@ -510,11 +510,11 @@ QTabBar::tab::selected {
   padding: 5px;
 }
 
-QTabWidget[documentMode=false] QTabBar::tab::first {
+QTabWidget QTabBar[documentMode=false]::tab::first {
   margin-left: 0;
 }
 
-QTabWidget[documentMode=true] QTabBar::tab::first {
+QTabWidget QTabBar[documentMode=true]::tab::first {
   margin-left: 3px;
 }
 
