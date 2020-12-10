@@ -624,7 +624,7 @@ void genlist_shuffle(struct genlist *pgenlist)
   const int n = genlist_size(pgenlist);
   std::vector<void *> sortbuf;
   struct genlist_link *myiter;
-  QVector<int> shuffle;
+  std::vector<int> shuffle;
   int i;
   sortbuf.reserve(n);
   shuffle.reserve(n);
