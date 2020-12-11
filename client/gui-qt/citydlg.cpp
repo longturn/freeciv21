@@ -2168,6 +2168,11 @@ void city_dialog::refresh()
 
   ui.production_combo_p->blockSignals(false);
   setUpdatesEnabled(true);
+
+  ui.middleSpacer->changeSize(
+      get_citydlg_canvas_width(), get_citydlg_canvas_height(),
+      QSizePolicy::Expanding, QSizePolicy::Expanding);
+
   updateGeometry();
   update();
 }
