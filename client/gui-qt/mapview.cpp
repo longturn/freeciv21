@@ -178,8 +178,12 @@ void map_view::update_cursor(enum cursor_type ct)
  **************************************************************************/
 void map_view::hide_all_fcwidgets()
 {
+  m_hidden_fcwidgets.clear();
   for (auto widget : this->findChildren<fcwidget *>()) {
-    widget->hide();
+    if (widget->isVisible()) {
+      widget->hide();
+      m_hidden_fcwidgets.push_back(widget);
+    }
   }
 }
 
@@ -188,9 +192,10 @@ void map_view::hide_all_fcwidgets()
  **************************************************************************/
 void map_view::show_all_fcwidgets()
 {
-  for (auto widget : this->findChildren<fcwidget *>()) {
+  for (auto widget : m_hidden_fcwidgets) {
     widget->show();
   }
+  m_hidden_fcwidgets.clear();
 }
 
 /**********************************************************************/ /**

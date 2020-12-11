@@ -26,6 +26,8 @@ class QObject;
 class QPaintEvent;
 class QPainter;
 
+class fcwidget;
+
 bool is_point_in_area(int x, int y, int px, int py, int pxe, int pye);
 void unscale_point(double scale_factor, int &x, int &y);
 void draw_calculated_trade_routes(QPainter *painter);
@@ -69,6 +71,7 @@ private:
   bool stored_autocenter;
   int cursor_frame;
   int cursor;
+  std::vector<fcwidget *> m_hidden_fcwidgets;
 };
 
 /**************************************************************************
