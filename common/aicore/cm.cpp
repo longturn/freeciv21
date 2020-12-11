@@ -1028,13 +1028,14 @@ static void init_specialist_lattice_nodes(struct tile_type_vector *lattice,
 static void top_sort_lattice(struct tile_type_vector *lattice)
 {
   int i;
-  bool marked[lattice->size];
-  bool will_mark[lattice->size];
+  std::vector<bool> marked;
+  std::vector<bool> will_mark;
+  marked.reserve(lattice->size);
+  will_mark.reserve(lattice->size);
+
   struct tile_type_vector vectors[2];
   struct tile_type_vector *current, *next;
 
-  memset(marked, 0, sizeof(marked));
-  memset(will_mark, 0, sizeof(will_mark));
 
   tile_type_vector_init(&vectors[0]);
   tile_type_vector_init(&vectors[1]);

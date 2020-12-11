@@ -233,7 +233,7 @@ const char *popup_info_text(struct tile *ptile)
     /* Look at city owner, not tile owner (the two should be the same, if
      * borders are in use). */
     struct player *owner = city_owner(pcity);
-    const char *improvements[improvement_count()];
+    const char **improvements = new const char*[improvement_count()];
     int has_improvements = 0;
 
     get_full_username(username, sizeof(username), owner);
@@ -326,6 +326,7 @@ const char *popup_info_text(struct tile *ptile)
       }
     }
     unit_list_iterate_end;
+    delete[] improvements;
   }
   {
     const char *infratext = get_infrastructure_text(ptile->extras);

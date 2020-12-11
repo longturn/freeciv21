@@ -426,24 +426,17 @@ QFont *get_font(client_font font)
 QRect zealous_crop_rect(QImage &p)
 {
   int r, t, b, l;
-  int oh, ow;
 
-  ow = p.width();
-  l = ow;
+  l = p.width();
   r = 0;
-  oh = p.height();
-  t = oh;
+  t = p.height();
   b = 0;
-  for (int y = 0; y < oh; y++) {
-    QRgb row[ow];
+  for (int y = 0; y < p.height(); ++y) {
+    QRgb *row = (QRgb *)p.scanLine(y);
     bool row_filled = false;
     int x;
 
-    /* Copy to a location with guaranteed QRgb suitable alignment.
-     * That fixes clang compiler warning. */
-    memcpy(row, p.scanLine(y), ow * sizeof(QRgb));
-
-    for (x = 0; x < ow; ++x) {
+    for (x = 0; x < p.width(); ++x) {
       if (qAlpha(row[x])) {
         row_filled = true;
         r = qMax(r, x);

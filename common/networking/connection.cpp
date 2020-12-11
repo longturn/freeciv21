@@ -805,16 +805,14 @@ struct conn_pattern *conn_pattern_from_string(const char *pattern,
   /* Determine pattern type. */
   if ((p = strchr(pattern, '='))) {
     /* Special character to separate the type of the pattern. */
-    const size_t pattern_type_len = ++p - pattern;
-    char pattern_type[pattern_type_len];
+    QString pattern_type;
 
-    fc_strlcpy(pattern_type, pattern, pattern_type_len);
-    remove_leading_trailing_spaces(pattern_type);
-    type = conn_pattern_type_by_name(pattern_type, fc_strcasecmp);
+    pattern_type = QString(pattern).trimmed();
+    type = conn_pattern_type_by_name(qUtf8Printable(pattern_type), fc_strcasecmp);
     if (!conn_pattern_type_is_valid(type)) {
       if (NULL != error_buf) {
         fc_snprintf(error_buf, error_buf_len,
-                    _("\"%s\" is not a valid pattern type"), pattern_type);
+                    _("\"%s\" is not a valid pattern type"), qUtf8Printable(pattern_type));
       }
       return NULL;
     }

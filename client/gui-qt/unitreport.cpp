@@ -357,13 +357,12 @@ void units_reports::update_units(bool show)
   int output;
   int total_len = 0;
   struct urd_info *info;
-  struct urd_info unit_array[utype_count()];
+  struct urd_info *unit_array = new struct urd_info[utype_count()]();
   struct urd_info unit_totals;
   Unit_type_id utype_id;
   unittype_item *ui = nullptr;
 
   clear_layout();
-  memset(unit_array, '\0', sizeof(unit_array));
   memset(&unit_totals, '\0', sizeof(unit_totals));
   /* Count units. */
   players_iterate(pplayer)
@@ -446,6 +445,7 @@ void units_reports::update_units(bool show)
   }
   layout->update();
   updateGeometry();
+  delete[] unit_array;
 }
 
 /************************************************************************/ /**

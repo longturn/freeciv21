@@ -127,21 +127,22 @@ bool entry_from_token(struct section *psection, const char *name,
                       const char *tok)
 {
   if ('*' == tok[0]) {
-    char buf[strlen(tok) + 1];
-
-    remove_escapes(tok + 1, FALSE, buf, sizeof(buf));
+    char *buf = new char[strlen(tok) + 1];
+    remove_escapes(tok + 1, FALSE, buf , strlen(tok) + 1);
     (void) section_entry_str_new(psection, name, buf, FALSE);
     DEBUG_ENTRIES("entry %s '%s'", name, buf);
+    delete[] buf;
     return TRUE;
   }
 
   if ('$' == tok[0] || '"' == tok[0]) {
-    char buf[strlen(tok) + 1];
+    char *buf = new char[strlen(tok) + 1];
     bool escaped = ('"' == tok[0]);
 
-    remove_escapes(tok + 1, escaped, buf, sizeof(buf));
+    remove_escapes(tok + 1, escaped, buf, strlen(tok) + 1);
     (void) section_entry_str_new(psection, name, buf, escaped);
     DEBUG_ENTRIES("entry %s '%s'", name, buf);
+    delete[] buf;
     return TRUE;
   }
 

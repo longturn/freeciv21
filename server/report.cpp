@@ -361,15 +361,14 @@ void report_top_five_cities(struct conn_list *dest)
 
     if (player_count() > team_count()) {
       /* There exists a team with more than one member. */
-      char team_name[2 * MAX_LEN_NAME];
+      QString team_name;
 
-      team_pretty_name(city_owner(size[i].city)->team, team_name,
-                       sizeof(team_name));
+      team_pretty_name(city_owner(size[i].city)->team, team_name);
       cat_snprintf(buffer, sizeof(buffer),
                    /* TRANS:"The French City of Lyon (team 3) of size 18". */
                    _("%2d: The %s City of %s (%s) of size %d, "), i + 1,
                    nation_adjective_for_player(city_owner(size[i].city)),
-                   city_name_get(size[i].city), team_name,
+                   city_name_get(size[i].city), qUtf8Printable(team_name),
                    city_size_get(size[i].city));
     } else {
       cat_snprintf(buffer, sizeof(buffer),
@@ -410,17 +409,16 @@ void report_wonders_of_the_world(struct conn_list *dest)
       if (pcity) {
         if (player_count() > team_count()) {
           /* There exists a team with more than one member. */
-          char team_name[2 * MAX_LEN_NAME];
+          QString team_name;
 
-          team_pretty_name(city_owner(pcity)->team, team_name,
-                           sizeof(team_name));
+          team_pretty_name(city_owner(pcity)->team, team_name);
           cat_snprintf(buffer, sizeof(buffer),
                        /* TRANS: "Colossus in Rhodes (Greek, team 2)". */
                        _("%s in %s (%s, %s)\n"),
                        city_improvement_name_translation(pcity, i),
                        city_name_get(pcity),
                        nation_adjective_for_player(city_owner(pcity)),
-                       team_name);
+                       qUtf8Printable(team_name));
         } else {
           cat_snprintf(buffer, sizeof(buffer), _("%s in %s (%s)\n"),
                        city_improvement_name_translation(pcity, i),
@@ -446,16 +444,15 @@ void report_wonders_of_the_world(struct conn_list *dest)
               && pcity->production.value.building == i) {
             if (player_count() > team_count()) {
               /* There exists a team with more than one member. */
-              char team_name[2 * MAX_LEN_NAME];
+              QString team_name;
 
-              team_pretty_name(city_owner(pcity)->team, team_name,
-                               sizeof(team_name));
+              team_pretty_name(city_owner(pcity)->team, team_name);
               cat_snprintf(buffer, sizeof(buffer),
                            /* TRANS: "([...] (Roman, team 4))". */
                            _("(building %s in %s (%s, %s))\n"),
                            improvement_name_translation(i),
                            city_name_get(pcity),
-                           nation_adjective_for_player(pplayer), team_name);
+                           nation_adjective_for_player(pplayer), qUtf8Printable(team_name));
             } else {
               cat_snprintf(
                   buffer, sizeof(buffer), _("(building %s in %s (%s))\n"),

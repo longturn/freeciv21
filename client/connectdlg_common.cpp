@@ -449,7 +449,7 @@ void send_save_game(const char *filename)
  **************************************************************************/
 void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
 {
-  char *rulesets[packet->ruleset_count];
+  char **rulesets = new char*[packet->ruleset_count];
   int i;
   size_t suf_len = qstrlen(RULESET_SUFFIX);
 
@@ -468,6 +468,7 @@ void handle_ruleset_choices(const struct packet_ruleset_choices *packet)
   for (i = 0; i < packet->ruleset_count; i++) {
     delete[] rulesets[i];
   }
+  delete[] rulesets;
 }
 
 /**********************************************************************/ /**

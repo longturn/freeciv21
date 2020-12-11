@@ -1402,7 +1402,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     break;
 
   case VUT_UCFLAG: {
-    const char *classes[uclass_count()];
+    const char** classes = new const char*[uclass_count()];
     int i = 0;
     bool done = FALSE;
     struct astring list = ASTRING_INIT;
@@ -1450,6 +1450,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
     if (done) {
       return TRUE;
     }
+    delete[] classes;
   } break;
 
   case VUT_UNITSTATE: {

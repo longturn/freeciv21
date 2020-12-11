@@ -417,20 +417,21 @@ const char *team_name_translation(const struct team *pteam)
    "team <team_name>". To avoid to see "team Team 0", it only prints the
    the team number when the name of this team is not defined in the ruleset.
  ****************************************************************************/
-int team_pretty_name(const struct team *pteam, char *buf, size_t buf_len)
+int team_pretty_name(const struct team *pteam, QString &buf)
 {
   if (NULL != pteam) {
     if (NULL != pteam->slot->defined_name) {
       /* TRANS: %s is ruleset-chosen team name (e.g. "Red") */
-      return fc_snprintf(buf, buf_len, _("team %s"),
-                         team_slot_name_translation(pteam->slot));
+      buf = QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
+      return 1;
     } else {
-      return fc_snprintf(buf, buf_len, _("team %d"), team_number(pteam));
+      buf = QString(_("team %1")).arg(QString::number(team_number(pteam)));
+      return 1;
     }
   }
 
   /* No need to translate, it's an error. */
-  fc_strlcpy(buf, "(null team)", buf_len);
+  buf = "(null team)";
   return -1;
 }
 

@@ -175,12 +175,12 @@ int research_pretty_name(const struct research *presearch, char *buf,
     const struct team *pteam = team_by_number(research_number(presearch));
 
     if (1 != player_list_size(team_members(pteam))) {
-      char buf2[buf_len];
+      QString buf2;
 
-      team_pretty_name(pteam, buf2, sizeof(buf2));
+      team_pretty_name(pteam, buf2);
       /* TRANS: e.g. "members of team 1", or even "members of team Red".
        * Used in many places where a nation plural might be used. */
-      return fc_snprintf(buf, buf_len, _("members of %s"), buf2);
+      return fc_snprintf(buf, buf_len, _("members of %s"), qUtf8Printable(buf2));
     } else {
       pplayer = player_list_front(team_members(pteam));
     }
@@ -404,7 +404,8 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
                                          Tech_type_id tech)
 {
   bv_techs done;
-  Tech_type_id techs[game.control.num_tech_types];
+  std::vector<Tech_type_id> techs;
+  techs.reserve(game.control.num_tech_types);
   int techs_num;
   int i;
 
@@ -437,7 +438,6 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       if (valid_advance_by_number(req_tech) == NULL) {
         return FALSE;
       } else if (!BV_ISSET(done, req_tech)) {
-        fc_assert(techs_num < ARRAY_SIZE(techs));
         techs[techs_num] = req_tech;
         techs_num++;
 
@@ -593,18 +593,19 @@ void research_update(struct research *presearch)
 #ifdef FREECIV_DEBUG
   advance_index_iterate(A_FIRST, i)
   {
-    char buf[advance_count() + 1];
+    QByteArray buf;
+    buf.reserve(advance_count() + 1);
 
     advance_index_iterate(A_NONE, j)
     {
       if (BV_ISSET(presearch->inventions[i].required_techs, j)) {
-        buf[j] = '1';
+        buf.insert(j, '1');
       } else {
-        buf[j] = '0';
+        buf.insert(j, '0');
       }
     }
     advance_index_iterate_end;
-    buf[advance_count()] = '\0';
+    buf.insert(advance_count(), '\0');
 
     log_debug("%s: [%3d] %-25s => %s%s%s", research_rule_name(presearch), i,
               advance_rule_name(advance_by_number(i)),
@@ -613,7 +614,7 @@ void research_update(struct research *presearch)
               presearch->inventions[i].root_reqs_known
                   ? ""
                   : " [root reqs aren't known]");
-    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, buf);
+    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, qUtf8Printable(buf));
   }
   advance_index_iterate_end;
 #endif /* FREECIV_DEBUG */

@@ -119,11 +119,9 @@ char **qtg_get_gui_specific_themes_directories(int *count)
   *count = strvec_size(data_dirs);
   strvec_iterate(data_dirs, data_dir)
   {
-    char buf[strlen(data_dir) + qstrlen("/themes/gui-qt") + 1];
+    QString buf = QString("%1/themes/gui-qt").arg(data_dir);
 
-    fc_snprintf(buf, sizeof(buf), "%s/themes/gui-qt", data_dir);
-
-    directories[i++] = fc_strdup(buf);
+    directories[i++] = qstrdup(qUtf8Printable(buf));
   }
   strvec_iterate_end;
 
