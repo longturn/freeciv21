@@ -608,161 +608,178 @@
             <string>Citizens</string>
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
+            <item row="1" column="0">
+             <widget class="QGroupBox" name="nationality_group">
+              <property name="title">
+               <string>GroupBox</string>
+              </property>
+              <layout class="QHBoxLayout" name="horizontalLayout_4">
+               <item>
+                <widget class="QTableWidget" name="nationality_table">
+                 <property name="editTriggers">
+                  <set>QAbstractItemView::NoEditTriggers</set>
+                 </property>
+                 <property name="selectionMode">
+                  <enum>QAbstractItemView::SingleSelection</enum>
+                 </property>
+                 <property name="selectionBehavior">
+                  <enum>QAbstractItemView::SelectRows</enum>
+                 </property>
+                 <property name="showGrid">
+                  <bool>false</bool>
+                 </property>
+                 <property name="columnCount">
+                  <number>3</number>
+                 </property>
+                 <attribute name="horizontalHeaderStretchLastSection">
+                  <bool>true</bool>
+                 </attribute>
+                 <attribute name="verticalHeaderVisible">
+                  <bool>false</bool>
+                 </attribute>
+                 <column/>
+                 <column/>
+                 <column/>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
             <item row="0" column="0">
-             <layout class="QGridLayout" name="tabLayout3">
-              <item row="0" column="0">
-               <widget class="QGroupBox" name="happiness_group">
-                <property name="title">
-                 <string>GroupBox</string>
-                </property>
-                <layout class="QFormLayout" name="formLayout">
-                 <item row="0" column="0">
-                  <widget class="QLabel" name="label1">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="0">
-                  <widget class="QLabel" name="label4">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="8" column="0">
-                  <widget class="QLabel" name="label5">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="10" column="0">
-                  <widget class="QLabel" name="label6">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="0">
-                  <widget class="QLabel" name="label3">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="0">
-                  <widget class="QLabel" name="label2">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                   <property name="fonts::notify_label" stdset="0">
-                    <bool>true</bool>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="0" column="1">
-                  <widget class="city_label" name="lab_table1">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="2" column="1">
-                  <widget class="city_label" name="lab_table2">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="4" column="1">
-                  <widget class="city_label" name="lab_table3">
-                   <property name="text">
-                    <string>lab_table3</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="6" column="1">
-                  <widget class="city_label" name="lab_table4">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="8" column="1">
-                  <widget class="city_label" name="lab_table5">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
-                 </item>
-                 <item row="10" column="1">
-                  <widget class="city_label" name="lab_table6">
-                   <property name="text">
-                    <string>TextLabel</string>
-                   </property>
-                  </widget>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QGroupBox" name="nationality_group">
-                <property name="title">
-                 <string>GroupBox</string>
-                </property>
-                <layout class="QHBoxLayout" name="horizontalLayout_4">
-                 <item>
-                  <layout class="QVBoxLayout" name="verticalLayout_2">
-                   <item>
-                    <widget class="QTableWidget" name="nationality_table">
-                     <property name="editTriggers">
-                      <set>QAbstractItemView::NoEditTriggers</set>
+             <widget class="QGroupBox" name="happiness_group">
+              <property name="title">
+               <string>GroupBox</string>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_10">
+               <item>
+                <widget class="QScrollArea" name="scrollArea">
+                 <property name="frameShape">
+                  <enum>QFrame::NoFrame</enum>
+                 </property>
+                 <property name="sizeAdjustPolicy">
+                  <enum>QAbstractScrollArea::AdjustToContents</enum>
+                 </property>
+                 <property name="widgetResizable">
+                  <bool>true</bool>
+                 </property>
+                 <widget class="QWidget" name="scrollAreaWidgetContents">
+                  <property name="geometry">
+                   <rect>
+                    <x>0</x>
+                    <y>0</y>
+                    <width>264</width>
+                    <height>183</height>
+                   </rect>
+                  </property>
+                  <layout class="QFormLayout" name="formLayout_2">
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="label1">
+                     <property name="text">
+                      <string>TextLabel</string>
                      </property>
-                     <property name="selectionMode">
-                      <enum>QAbstractItemView::SingleSelection</enum>
-                     </property>
-                     <property name="selectionBehavior">
-                      <enum>QAbstractItemView::SelectRows</enum>
-                     </property>
-                     <property name="showGrid">
-                      <bool>false</bool>
-                     </property>
-                     <property name="columnCount">
-                      <number>3</number>
-                     </property>
-                     <attribute name="horizontalHeaderStretchLastSection">
+                     <property name="fonts::notify_label" stdset="0">
                       <bool>true</bool>
-                     </attribute>
-                     <attribute name="verticalHeaderVisible">
-                      <bool>false</bool>
-                     </attribute>
-                     <column/>
-                     <column/>
-                     <column/>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="city_label" name="lab_table1">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="label2">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                     <property name="fonts::notify_label" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="city_label" name="lab_table2">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="label3">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                     <property name="fonts::notify_label" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="1">
+                    <widget class="city_label" name="lab_table3">
+                     <property name="text">
+                      <string>lab_table3</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="0">
+                    <widget class="QLabel" name="label4">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                     <property name="fonts::notify_label" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="3" column="1">
+                    <widget class="city_label" name="lab_table4">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="0">
+                    <widget class="QLabel" name="label5">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                     <property name="fonts::notify_label" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="4" column="1">
+                    <widget class="city_label" name="lab_table5">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="0">
+                    <widget class="QLabel" name="label6">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
+                     <property name="fonts::notify_label" stdset="0">
+                      <bool>true</bool>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="5" column="1">
+                    <widget class="city_label" name="lab_table6">
+                     <property name="text">
+                      <string>TextLabel</string>
+                     </property>
                     </widget>
                    </item>
                   </layout>
-                 </item>
-                </layout>
-               </widget>
-              </item>
-             </layout>
+                 </widget>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
