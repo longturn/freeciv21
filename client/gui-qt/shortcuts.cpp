@@ -44,7 +44,6 @@ enum {
   RESPONSE_SAVE
 };
 
-static int num_shortcuts = 57;
 fc_shortcut default_shortcuts[] = {
     {SC_SCROLL_MAP, 0, Qt::RightButton, Qt::NoModifier, "Scroll map"},
     {SC_CENTER_VIEW, Qt::Key_C, Qt::AllButtons, Qt::NoModifier,
@@ -270,7 +269,7 @@ void fc_shortcuts::init_default(bool read)
     suc = read_shortcuts();
   }
   if (!suc) {
-    for (i = 0; i < num_shortcuts; i++) {
+    for (i = 0; i < SC_LAST_SC - 1; i++) {
       s = new fc_shortcut();
       s->id = default_shortcuts[i].id;
       s->key = default_shortcuts[i].key;
@@ -722,7 +721,7 @@ hash_copy(QMap<shortcut_id, fc_shortcut *> *h)
   shortcut_id id;
   new_hash = new QMap<shortcut_id, fc_shortcut *>;
 
-  for (i = 1; i < num_shortcuts + 1; i++) {
+  for (i = 1; i < SC_LAST_SC; i++) {
     sc = new fc_shortcut();
     id = static_cast<shortcut_id>(i);
     s = h->value(id);
@@ -747,7 +746,7 @@ void write_shortcuts()
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv-qt-client"));
   s.beginWriteArray(QStringLiteral("Shortcuts"));
-  for (int i = 0; i < num_shortcuts; ++i) {
+  for (int i = 0; i < SC_LAST_SC - 1; ++i) {
     s.setArrayIndex(i);
     sc = h.value(static_cast<shortcut_id>(i + 1));
     s.setValue(QStringLiteral("id"), sc->id);
@@ -768,10 +767,10 @@ bool read_shortcuts()
   QSettings s(QSettings::IniFormat, QSettings::UserScope,
               QStringLiteral("freeciv-qt-client"));
   num = s.beginReadArray(QStringLiteral("Shortcuts"));
-  if (num == num_shortcuts) {
-    for (i = 0; i < num_shortcuts; ++i) {
-      s.setArrayIndex(i);
+  if (num <= SC_LAST_SC - 1) {
+    for (i = 0; i < num; ++i) {
       sc = new fc_shortcut();
+      s.setArrayIndex(i);
       sc->id =
           static_cast<shortcut_id>(s.value(QStringLiteral("id")).toInt());
       sc->key = s.value(QStringLiteral("key")).toInt();
@@ -781,6 +780,16 @@ bool read_shortcuts()
           s.value(QStringLiteral("mod")).toInt());
       sc->str = default_shortcuts[i].str;
       fc_shortcuts::hash.insert(sc->id, sc);
+    }
+    if (i < SC_LAST_SC - 1) {
+      // initialize missing shortcuts
+      sc = new fc_shortcut();
+      sc->id = default_shortcuts[i].id;
+      sc->key = default_shortcuts[i].key;
+      sc->mouse = default_shortcuts[i].mouse;
+      sc->mod = default_shortcuts[i].mod;
+      sc->str = default_shortcuts[i].str;
+      fc_shortcuts::hash.insert(default_shortcuts[i].id, sc);
     }
   } else {
     s.endArray();
