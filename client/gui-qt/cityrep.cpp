@@ -27,8 +27,56 @@
 #include "cityrep.h"
 #include "fc_client.h"
 #include "hudwidget.h"
+#include "icons.h"
 #include "page_game.h"
 #include "qtg_cxxside.h"
+
+// header city icons
+class hIcon {
+  Q_DISABLE_COPY(hIcon);
+
+private:
+  explicit hIcon(){};
+  static hIcon *m_instance;
+  QHash<QString, QIcon> hash;
+
+public:
+  static hIcon *i();
+  static void drop();
+  void createIcons();
+  QIcon get(const QString &id);
+};
+
+hIcon *hIcon::i()
+{
+  if (!m_instance) {
+    m_instance = new hIcon;
+    m_instance->createIcons();
+  }
+  return m_instance;
+}
+
+void hIcon::drop()
+{
+  if (m_instance) {
+    delete m_instance;
+    m_instance = nullptr;
+  }
+}
+
+void hIcon::createIcons()
+{
+  hash.insert("prodplus",
+              fcIcons::instance()->getIcon(QStringLiteral("hprod")));
+  hash.insert("foodplus",
+              fcIcons::instance()->getIcon(QStringLiteral("hfood")));
+  hash.insert("tradeplus",
+              fcIcons::instance()->getIcon(QStringLiteral("htrade")));
+}
+
+QIcon hIcon::get(const QString &id) { return hash.value(id, QIcon()); }
+
+hIcon *hIcon::m_instance = nullptr;
 
 /***********************************************************************/ /**
    Overriden compare for sorting items
@@ -219,18 +267,26 @@ bool city_model::setData(const QModelIndex &index, const QVariant &value,
 QVariant city_model::headerData(int section, Qt::Orientation orientation,
                                 int role) const
 {
-  struct city_report_spec *spec;
+  struct city_report_spec *spec = city_report_specs + section;
 
   if (orientation == Qt::Horizontal && section < NUM_CREPORT_COLS) {
     if (role == Qt::DisplayRole) {
-      spec = city_report_specs + section;
       QString buf = QString("%1\n%2").arg(spec->title1 ? spec->title1 : "",
                                           spec->title2 ? spec->title2 : "");
+      QIcon i = hIcon::i()->get(spec->tagname);
+      if (!i.isNull()) { // icon exists for that header
+        return QString();
+      }
       return buf.trimmed();
     }
     if (role == Qt::ToolTipRole) {
-      spec = city_report_specs + section;
       return QString(spec->explanation);
+    }
+    if (role == Qt::DecorationRole) {
+      QIcon i = hIcon::i()->get(spec->tagname);
+      if (!i.isNull()) {
+        return i;
+      }
     }
   }
   return QVariant();
@@ -473,11 +529,12 @@ void city_widget::display_list_menu(const QPoint)
     return;
   }
   list_menu = new QMenu(this);
-  QString buf = QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
+  QString buf =
+      QString(_("Buy ( Cost: %1 )")).arg(QString::number(sell_gold));
 
   QAction *cty_buy = new QAction(QString(buf), list_menu);
-  QAction *cty_center = new QAction(style()->standardIcon(QStyle::SP_ArrowRight),
-                     _("Center"), list_menu);
+  QAction *cty_center = new QAction(
+      style()->standardIcon(QStyle::SP_ArrowRight), _("Center"), list_menu);
   QAction *wl_clear = new QAction(_("Clear"), list_menu);
   QAction *wl_empty = new QAction(_("(no worklists defined)"), list_menu);
   bool worklist_defined = true;
@@ -652,7 +709,9 @@ void city_widget::display_list_menu(const QPoint)
           if (sell_ask) {
             hud_message_box *ask = new hud_message_box(king()->central_wdg);
             imprname = improvement_name_translation(building);
-            QString buf = QString(_("Are you sure you want to sell those %1?")).arg(imprname);
+            QString buf =
+                QString(_("Are you sure you want to sell those %1?"))
+                    .arg(imprname);
             sell_ask = false;
             ask->setStandardButtons(QMessageBox::Cancel | QMessageBox::Ok);
             ask->setDefaultButton(QMessageBox::Cancel);
@@ -1026,7 +1085,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
   } else {
     num_sel = selected_cities.count();
   }
-  std::vector<struct city*> array;
+  std::vector<struct city *> array;
   array.reserve(num_sel);
 
   if (global) {
@@ -1073,28 +1132,10 @@ void city_widget::update_city(city *pcity)
  ***************************************************************************/
 void city_widget::update_model()
 {
-  QFont f = QApplication::font();
-  QFontMetrics fm(f);
-  QStringList sl;
-  QString str;
-  int width;
-
   setUpdatesEnabled(false);
   list_model->all_changed();
   restore_selection();
   header()->resizeSections(QHeaderView::ResizeToContents);
-  for (int j = 0; j < filter_model->columnCount(); j++) {
-    str = list_model->headerData(j, Qt::Horizontal, Qt::DisplayRole)
-              .toString();
-    if (str.contains('\n')) {
-      sl = str.split('\n');
-      width = 0;
-      for (auto const &s : qAsConst(sl)) {
-        width = qMax(width, fm.horizontalAdvance(s));
-      }
-      header()->resizeSection(j, width + 10);
-    }
-  }
   setUpdatesEnabled(true);
 }
 
@@ -1318,4 +1359,5 @@ void popdown_city_report()
     cr = reinterpret_cast<city_report *>(w);
     cr->deleteLater();
   }
+  hIcon::drop();
 }
