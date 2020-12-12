@@ -61,6 +61,50 @@ extern QString split_text(const QString &text, bool cut);
 extern QString cut_helptext(const QString &text);
 
 /************************************************************************/ /**
+   Constructor
+ ****************************************************************************/
+icon_list::icon_list(QWidget *parent) : QListWidget(parent)
+{
+  // Make sure viewportSizeHint is used
+  setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+}
+
+/************************************************************************/ /**
+   Reimplemented virtual method.
+ ****************************************************************************/
+QSize icon_list::viewportSizeHint() const
+{
+  // Try to put everything on one line
+  QSize hint;
+  for (int i = 0; i < count(); ++i) {
+    hint = hint.expandedTo(sizeHintForIndex(indexFromItem(item(i))));
+  }
+  hint.setWidth(hint.width() * count());
+  return hint;
+}
+
+/************************************************************************/ /**
+   Reimplemented virtual method.
+ ****************************************************************************/
+int icon_list::heightForWidth(int width) const
+{
+  int height = 0, line_height = 0, line_width = 0;
+  for (int i = 0; i < count(); ++i) {
+    auto hint = sizeHintForIndex(indexFromItem(item(i)));
+    if (line_width + hint.width() > width) {
+      // New line
+      height += line_height;
+      line_width = 0;
+      line_height = 0;
+    }
+    line_width += hint.width();
+    line_height = qMax(line_height, hint.height());
+  }
+  // Add the last line and some extra room to make sure there's no scroll bar
+  return height + line_height + 5;
+}
+
+/************************************************************************/ /**
    Custom progressbar constructor
  ****************************************************************************/
 progress_bar::progress_bar(QWidget *parent) : QProgressBar(parent)
@@ -573,23 +617,16 @@ void impr_item::mouseDoubleClickEvent(QMouseEvent *event)
 }
 
 /************************************************************************/ /**
-   Class representing one unit, allows context menu, holds pixmap for it
+   Makes an image to represent some unit in the city dialog.
  ****************************************************************************/
-unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
-                     int hppy_cost)
-    : QLabel()
+static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
 {
-  happy_cost = hppy_cost;
   QImage cropped_img;
   QImage img;
   QRect crop;
-  qunit = punit;
   struct canvas *unit_pixmap;
   struct tileset *tmp;
   float isosize;
-
-  setParent(parent);
-  supported = supp;
 
   tmp = nullptr;
   if (unscaled_tileset) {
@@ -627,6 +664,8 @@ unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
   img = unit_pixmap->map_pixmap.toImage();
   crop = zealous_crop_rect(img);
   cropped_img = img.copy(crop);
+
+  QImage unit_img;
   if (tileset_is_isometric(tileset)) {
     unit_img = cropped_img.scaledToHeight(tileset_unit_width(get_tileset())
                                               * isosize,
@@ -640,6 +679,18 @@ unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
     tileset = tmp;
   }
 
+  return unit_img;
+}
+
+/************************************************************************/ /**
+   Class representing one unit, allows context menu, holds pixmap for it
+ ****************************************************************************/
+unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
+                     int hppy_cost)
+    : QLabel(parent), qunit(punit),
+      unit_img(create_unit_image(punit, supp, hppy_cost)),
+      happy_cost(hppy_cost), supported(supp)
+{
   create_actions();
   setFixedWidth(unit_img.width() + 4);
   setFixedHeight(unit_img.height());
@@ -927,7 +978,7 @@ void unit_item::sentry_unit()
 unit_info::unit_info() : QFrame()
 {
   layout = new QHBoxLayout(this);
-  init_layout();
+  setLayout(layout);
   supports = false;
 }
 void unit_info::set_supp(bool s) { supports = s; }
@@ -945,18 +996,6 @@ unit_info::~unit_info()
    Adds one unit to list
  ****************************************************************************/
 void unit_info::add_item(unit_item *item) { unit_list.append(item); }
-
-/************************************************************************/ /**
-   Initiazlizes layout ( layout needs to be changed after adding units )
- ****************************************************************************/
-void unit_info::init_layout()
-{
-  QSizePolicy size_fixed_policy(QSizePolicy::Fixed,
-                                QSizePolicy::MinimumExpanding,
-                                QSizePolicy::Slider);
-  setSizePolicy(size_fixed_policy);
-  setLayout(layout);
-}
 
 /************************************************************************/ /**
    Updates units
@@ -1374,16 +1413,11 @@ city_dialog::city_dialog(QWidget *parent)
       tileset_unit_with_upkeep_height(get_tileset()) + 6
       + ui.scroll2->horizontalScrollBar()->height());
   ui.scroll2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui.scroll->setWidgetResizable(true);
-  ui.scroll->setMaximumHeight(tileset_unit_height(get_tileset()) + 6
-                              + ui.scroll->horizontalScrollBar()->height());
-  ui.scroll->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   ui.scroll3->setWidgetResizable(true);
   ui.scroll3->setMaximumHeight(
       tileset_unit_height(tileset) + 6
       + ui.scroll3->horizontalScrollBar()->height());
   ui.scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui.scroll->setProperty("city_scroll", true);
   ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
   ui.bclose->setIcon(
@@ -1547,7 +1581,7 @@ void city_dialog::update_disabled()
     ui.buy_button->setDisabled(true);
     ui.cma_enable_but->setDisabled(true);
     ui.production_combo_p->setDisabled(true);
-    ui.current_units->setDisabled(true);
+    ui.present_units_list->setDisabled(true);
     ui.supported_units->setDisabled(true);
     if (!client_is_observer()) {
     }
@@ -1557,7 +1591,7 @@ void city_dialog::update_disabled()
     ui.buy_button->setEnabled(true);
     ui.cma_enable_but->setEnabled(true);
     ui.production_combo_p->setEnabled(true);
-    ui.current_units->setEnabled(true);
+    ui.present_units_list->setEnabled(true);
     ui.supported_units->setEnabled(true);
   }
 
@@ -1611,7 +1645,6 @@ city_dialog::~city_dialog()
   ui.cma_table->clear();
   ui.p_table_p->clear();
   ui.nationality_table->clear();
-  ui.current_units->clear_layout();
   ui.supported_units->clear_layout();
   removeEventFilter(this);
 }
@@ -2364,8 +2397,6 @@ void city_dialog::update_units()
   ui.supp_units->setText(QString(buf));
   ui.supported_units->update_units();
   ui.supported_units->setUpdatesEnabled(true);
-  ui.current_units->setUpdatesEnabled(true);
-  ui.current_units->clear_layout();
 
   if (NULL != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
@@ -2374,20 +2405,28 @@ void city_dialog::update_units()
     units = pcity->tile->units;
   }
 
-  unit_list_iterate(units, punit)
-  {
-    uic = new unit_item(this, punit, false);
-    uic->init_pix();
-    ui.current_units->add_item(uic);
+  ui.present_units_list->clear();
+  if (unit_list_size(units) == 0) {
+    ui.present_units_list->hide();
+  } else {
+    QSize icon_size;
+    unit_list_iterate(units, punit)
+    {
+      auto item = new QListWidgetItem;
+      auto image = create_unit_image(punit, false, 0);
+      icon_size = icon_size.expandedTo(image.size());
+      item->setIcon(QIcon(QPixmap::fromImage(image)));
+      item->setToolTip(utype_name_translation(punit->utype));
+      ui.present_units_list->addItem(item);
+    }
+    unit_list_iterate_end;
+    ui.present_units_list->show();
+    ui.present_units_list->setIconSize(icon_size);
   }
-  unit_list_iterate_end;
 
   n = unit_list_size(units);
   fc_snprintf(buf, sizeof(buf), _("Present units %d"), n);
   ui.curr_units->setText(QString(buf));
-
-  ui.current_units->update_units();
-  ui.current_units->setUpdatesEnabled(true);
 }
 
 /************************************************************************/ /**

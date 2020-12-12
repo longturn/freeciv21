@@ -17,6 +17,7 @@
 #include <QGroupBox>
 #include <QItemDelegate>
 #include <QLabel>
+#include <QListWidget>
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QToolTip>
@@ -53,6 +54,17 @@ class QVBoxLayout;
 class QVariant;
 class fc_tooltip;
 struct canvas;
+
+/****************************************************************************
+  A list widget that sets its size hint to the size of its contents.
+****************************************************************************/
+class icon_list : public QListWidget {
+public:
+  explicit icon_list(QWidget *parent = nullptr);
+  bool hasHeightForWidth() const override { return true; }
+  int heightForWidth(int width) const override;
+  QSize viewportSizeHint() const override;
+};
 
 #define NUM_INFO_FIELDS 15
 /****************************************************************************
@@ -146,7 +158,6 @@ public:
   unit_info();
   ~unit_info();
   void add_item(unit_item *item);
-  void init_layout();
   void update_units();
   void clear_layout();
   void set_supp(bool);
