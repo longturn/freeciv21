@@ -182,7 +182,7 @@ struct drawing_layer {
 struct drawing_data {
   bool init;
 
-  char *name;
+  QString name;
 
   int num_layers; /* 1 thru MAX_NUM_LAYERS. */
 #define MAX_NUM_LAYERS 3
@@ -501,14 +501,13 @@ static void tileset_player_free(struct tileset *t, int plrid);
  ****************************************************************************/
 void tileset_error(QtMsgType level, const char *format, ...)
 {
-  char buf[2048];
   va_list args;
 
   va_start(args, format);
-  fc_vsnprintf(buf, sizeof(buf), format, args);
+  auto buf = QString::vasprintf(format, args);
   va_end(args);
 
-  log_base(level, "%s", buf);
+  log_base(level, "%s", qUtf8Printable(buf));
 
   if (level == QtCriticalMsg || level == QtFatalMsg) {
     show_tileset_error(buf);
@@ -526,8 +525,6 @@ static struct drawing_data *drawing_data_new(void)
 {
   struct drawing_data *draw = new drawing_data[1]();
 
-  draw->name = NULL;
-
   return draw;
 }
 
@@ -540,9 +537,6 @@ static void drawing_data_destroy(struct drawing_data *draw)
 
   fc_assert_ret(NULL != draw);
 
-  if (draw->name != NULL) {
-    delete[] draw->name;
-  }
   for (i = 0; i < 4; i++) {
     if (draw->blend[i]) {
       free_sprite(draw->blend[i]);
@@ -851,7 +845,7 @@ static struct tileset *tileset_new(void)
    Return the tileset name of the direction.  This is similar to
    dir_get_name but you shouldn't change this or all tilesets will break.
  ****************************************************************************/
-static const char *dir_get_tileset_name(enum direction8 dir)
+static QString dir_get_tileset_name(enum direction8 dir)
 {
   switch (dir) {
   case DIR8_NORTH:
@@ -878,13 +872,13 @@ static const char *dir_get_tileset_name(enum direction8 dir)
 /************************************************************************/ /**
    Parse a direction name as a direction8.
  ****************************************************************************/
-static enum direction8 dir_by_tileset_name(const char *str)
+static enum direction8 dir_by_tileset_name(QString str)
 {
   enum direction8 dir;
 
   for (dir = direction8_begin(); dir != direction8_end();
        dir = direction8_next(dir)) {
-    if (strcmp(dir_get_tileset_name(dir), str) == 0) {
+    if (dir_get_tileset_name(dir) == str) {
       return dir;
     }
   }
@@ -1232,8 +1226,7 @@ bool tilespec_reread(const char *new_tileset_name,
    * tileset with scaling and old one was not scaled.
    */
 
-  if (tileset_name == old_name && tileset->scale == 1.0f
-      && scale != 1.0f) {
+  if (tileset_name == old_name && tileset->scale == 1.0f && scale != 1.0f) {
     if (unscaled_tileset) {
       tileset_free(unscaled_tileset);
     }
@@ -1246,13 +1239,15 @@ bool tilespec_reread(const char *new_tileset_name,
    *
    * We read in the new tileset.  This should be pretty straightforward.
    */
-  tileset = tileset_read_toplevel(qUtf8Printable(tileset_name), FALSE, -1, scale);
+  tileset =
+      tileset_read_toplevel(qUtf8Printable(tileset_name), FALSE, -1, scale);
   if (tileset != NULL) {
     new_tileset_in_use = TRUE;
   } else {
     new_tileset_in_use = FALSE;
 
-    if (!(tileset = tileset_read_toplevel(qUtf8Printable(old_name), FALSE, -1, scale))) {
+    if (!(tileset = tileset_read_toplevel(qUtf8Printable(old_name), FALSE,
+                                          -1, scale))) {
       /* Always fails. */
       fc_assert_exit_msg(NULL != tileset,
                          "Failed to re-read the currently loaded tileset.");
@@ -1408,7 +1403,8 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
     const char *real_full_name;
     QString full_name = QString("%1.%2").arg(gfx_filename, gfx_fileext);
 
-    if ((real_full_name = fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
+    if ((real_full_name =
+             fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
       log_debug("trying to load gfx file \"%s\".", real_full_name);
       s = load_gfxfile(real_full_name);
       if (s) {
@@ -1639,13 +1635,12 @@ static char *tilespec_gfx_filename(const char *gfx_filename)
 
   while ((gfx_current_fileext = *gfx_fileexts++)) {
     const char *real_full_name;
-    char *full_name = new char[strlen(gfx_filename) + qstrlen(".")
-                               + qstrlen(gfx_current_fileext) + 1];
+    QString full_name =
+        QString("%1.%2").arg(gfx_filename, gfx_current_fileext);
 
-    sprintf(full_name, "%s.%s", gfx_filename, gfx_current_fileext);
+    real_full_name =
+        fileinfoname(get_data_dirs(), qUtf8Printable(full_name));
 
-    real_full_name = fileinfoname(get_data_dirs(), full_name);
-    delete[] full_name;
     if (real_full_name) {
       return fc_strdup(real_full_name);
     }
@@ -2295,7 +2290,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     if (hc) {
       qCritical(
           "warning: multiple tile sections containing terrain tag \"%s\".",
-          draw->name);
+          qUtf8Printable(draw->name));
       goto ON_ERROR;
     }
   }
@@ -2424,17 +2419,18 @@ static const char *citizen_rule_name(enum citizen_category citizen)
    binary value 1000 will be converted into "n1e0s0w0".  This is in a
    clockwise ordering.
  ****************************************************************************/
-static const char *cardinal_index_str(const struct tileset *t, int idx)
+static QString &cardinal_index_str(const struct tileset *t, int idx)
 {
-  static char c[64];
+  static QString c;
   int i;
 
-  c[0] = '\0';
+  c = QString();
   for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
     int value = (idx >> i) & 1;
 
-    cat_snprintf(c, sizeof(c), "%s%d",
-                 dir_get_tileset_name(t->cardinal_tileset_dirs[i]), value);
+    c += QString("%1%2").arg(
+        dir_get_tileset_name(t->cardinal_tileset_dirs[i]),
+        QString::number(value));
   }
 
   return c;
@@ -2444,17 +2440,17 @@ static const char *cardinal_index_str(const struct tileset *t, int idx)
    Do the same thing as cardinal_str, except including all valid directions.
    The returned string is a pointer to static memory.
  ****************************************************************************/
-static char *valid_index_str(const struct tileset *t, int idx)
+static QString &valid_index_str(const struct tileset *t, int idx)
 {
-  static char c[64];
+  static QString c;
   int i;
 
-  c[0] = '\0';
+  c = QString();
   for (i = 0; i < t->num_valid_tileset_dirs; i++) {
     int value = (idx >> i) & 1;
 
-    cat_snprintf(c, sizeof(c), "%s%d",
-                 dir_get_tileset_name(t->valid_tileset_dirs[i]), value);
+    c += QString("%1%2").arg(dir_get_tileset_name(t->valid_tileset_dirs[i]),
+                             QString::number(value));
   }
 
   return c;
@@ -2586,7 +2582,8 @@ static bool sprite_exists(const struct tileset *t, QString tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, TRUE, TRUE);                     \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+                    qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (FALSE)
 
@@ -2594,15 +2591,17 @@ static bool sprite_exists(const struct tileset *t, QString tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, TRUE, FALSE);                    \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+                    qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (FALSE)
 
 #define SET_SPRITE_UNSCALED(field, tag)                                     \
   do {                                                                      \
-    t->sprites.field = load_sprite(t, qUtf8Printable(tag), FALSE, FALSE);                   \
+    t->sprites.field = load_sprite(t, qUtf8Printable(tag), FALSE, FALSE);   \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."),           \
+                    qUtf8Printable(tag));                                   \
     }                                                                       \
   } while (FALSE)
 
@@ -2617,7 +2616,7 @@ static bool sprite_exists(const struct tileset *t, QString tag_name)
       tileset_error(LOG_FATAL,                                              \
                     _("Sprite for tags '%s' and alternate '%s' are "        \
                       "both missing."),                                     \
-                    qUtf8Printable(tag), qUtf8Printable(alt));                                              \
+                    qUtf8Printable(tag), qUtf8Printable(alt));              \
     }                                                                       \
   } while (FALSE)
 
@@ -2628,7 +2627,8 @@ static bool sprite_exists(const struct tileset *t, QString tag_name)
 #define SET_SPRITE_ALT_OPT(field, tag, alt)                                 \
   do {                                                                      \
     t->sprites.field = tiles_lookup_sprite_tag_alt(                         \
-        t, LOG_VERBOSE, qUtf8Printable(tag), qUtf8Printable(alt), "sprite", #field, TRUE);                  \
+        t, LOG_VERBOSE, qUtf8Printable(tag), qUtf8Printable(alt), "sprite", \
+        #field, TRUE);                                                      \
   } while (FALSE)
 
 /************************************************************************/ /**
@@ -2637,7 +2637,7 @@ static bool sprite_exists(const struct tileset *t, QString tag_name)
 void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 {
   /* Load the specialist sprite graphics. */
-  char buffer[512];
+  QString buffer;
   int j;
   struct specialist *spe = specialist_by_number(id);
   const char *tag = spe->graphic_str;
@@ -2645,7 +2645,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 
   for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
     /* Try tag name + index number */
-    fc_snprintf(buffer, sizeof(buffer), "%s_%d", tag, j);
+    buffer = QString("%1_%2").arg(tag, QString::number(j));
     t->sprites.specialist[id].sprite[j] =
         load_sprite(t, buffer, FALSE, FALSE);
 
@@ -2668,7 +2668,7 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
     /* Try the alt tag */
     for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
       /* Try alt tag name + index number */
-      fc_snprintf(buffer, sizeof(buffer), "%s_%d", graphic_alt, j);
+      buffer = QString("%1_%2").arg(graphic_alt, QString::number(j));
       t->sprites.specialist[id].sprite[j] =
           load_sprite(t, buffer, FALSE, FALSE);
 
@@ -2703,14 +2703,14 @@ void tileset_setup_specialist_type(struct tileset *t, Specialist_type_id id)
 static void tileset_setup_citizen_types(struct tileset *t)
 {
   int i, j;
-  char buffer[512];
+  QString buffer;
 
   /* Load the citizen sprite graphics, no specialist. */
   for (i = 0; i < CITIZEN_LAST; i++) {
     const char *name = citizen_rule_name(static_cast<citizen_category>(i));
 
     for (j = 0; j < MAX_NUM_CITIZEN_SPRITES; j++) {
-      fc_snprintf(buffer, sizeof(buffer), "citizen.%s_%d", name, j);
+      buffer = QString("citizen.%1_%2").arg(name, QString::number(j));
       t->sprites.citizen[i].sprite[j] = load_sprite(t, buffer, FALSE, FALSE);
       if (!t->sprites.citizen[i].sprite[j]) {
         break;
@@ -2766,11 +2766,11 @@ static struct sprite *get_city_sprite(const struct city_sprite *city_sprite,
    Allocates one threshold set for city sprite
  ****************************************************************************/
 static int
-load_city_thresholds_sprites(struct tileset *t, const char *tag,
-                             char *graphic, char *graphic_alt,
+load_city_thresholds_sprites(struct tileset *t, QString tag, char *graphic,
+                             char *graphic_alt,
                              struct city_style_threshold **thresholds)
 {
-  char buffer[128];
+  QString buffer;
   char *gfx_in_use = graphic;
   int num_thresholds = 0;
   struct sprite *sprite;
@@ -2779,7 +2779,7 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
   *thresholds = NULL;
 
   for (size = 0; size < MAX_CITY_SIZE; size++) {
-    fc_snprintf(buffer, sizeof(buffer), "%s_%s_%d", gfx_in_use, tag, size);
+    buffer = QString("%1_%2_%3").arg(gfx_in_use, tag, QString::number(size));
     if ((sprite = load_sprite(t, buffer, TRUE, TRUE))) {
       num_thresholds++;
 
@@ -2808,8 +2808,7 @@ load_city_thresholds_sprites(struct tileset *t, const char *tag,
 
    See also get_city_sprite, free_city_sprite.
  ****************************************************************************/
-static struct city_sprite *load_city_sprite(struct tileset *t,
-                                            const char *tag)
+static struct city_sprite *load_city_sprite(struct tileset *t, QString tag)
 {
   struct city_sprite *city_sprite = new struct city_sprite;
   int style;
@@ -3045,7 +3044,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
    *   --> path.turns_%d
    *       --> city.size_%d */
 #define SET_GOTO_TURN_SPRITE(state, state_name, factor, factor_name)        \
-  buffer = QString("path." state_name "_%1" #factor).arg(i);   \
+  buffer = QString("path." state_name "_%1" #factor).arg(i);                \
   SET_SPRITE_OPT(path.s[state].turns##factor_name[i], buffer);              \
   if (t->sprites.path.s[state].turns##factor_name[i] == NULL) {             \
     t->sprites.path.s[state].turns##factor_name[i] =                        \
@@ -3060,7 +3059,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", , );
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", , );
 
-    buffer = QString("city.size_%10").arg(QString::number(i));  // %1 then 0
+    buffer = QString("city.size_%10").arg(QString::number(i)); // %1 then 0
     SET_SPRITE(city.size_tens[i], buffer);
     buffer2 = QString("path.turns_%10").arg(QString::number(i));
     SET_SPRITE_ALT(path.s[GTS_MP_LEFT].turns_tens[i], buffer2, buffer);
@@ -3100,10 +3099,14 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
   output_type_iterate(o)
   {
-    buffer = QString("upkeep.%1").arg(get_output_identifier(static_cast<Output_type_id>(o)));
+    buffer = QString("upkeep.%1")
+                 .arg(get_output_identifier(static_cast<Output_type_id>(o)));
     SET_SPRITE_OPT(upkeep.output[o][0], buffer);
     for (i = 1; i < MAX_NUM_UPKEEP_SPRITES; i++) {
-      buffer2 = QString("upkeep.%1%2").arg(get_output_identifier(static_cast<Output_type_id>(o)), QString::number(i+1));
+      buffer2 =
+          QString("upkeep.%1%2")
+              .arg(get_output_identifier(static_cast<Output_type_id>(o)),
+                   QString::number(i + 1));
       if (sprite_exists(t, buffer2)) {
         SET_SPRITE(upkeep.output[o][i], buffer2);
         buffer = buffer2;
@@ -3267,11 +3270,10 @@ static bool load_river_sprites(struct tileset *t,
                                const char *tag_pfx)
 {
   int i;
-  char buffer[512];
+  QString buffer;
 
   for (i = 0; i < t->num_index_cardinal; i++) {
-    fc_snprintf(buffer, sizeof(buffer), "%s_s_%s", tag_pfx,
-                cardinal_index_str(t, i));
+    buffer = QString("%1_s_%2").arg(tag_pfx, cardinal_index_str(t, i));
     store->spec[i] = load_sprite(t, buffer, TRUE, TRUE);
     if (store->spec[i] == NULL) {
       return FALSE;
@@ -3279,11 +3281,13 @@ static bool load_river_sprites(struct tileset *t,
   }
 
   for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
-    fc_snprintf(buffer, sizeof(buffer), "%s_outlet_%s", tag_pfx,
-                dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
+    buffer =
+        QString("%1_outlet_%2")
+            .arg(tag_pfx, dir_get_tileset_name(t->cardinal_tileset_dirs[i]));
     store->outlet[i] = load_sprite(t, buffer, TRUE, TRUE);
     if (store->outlet[i] == NULL) {
-      qCritical("Missing \"%s\" for \"%s\".", buffer, tag_pfx);
+      qCritical("Missing \"%s\" for \"%s\".", qUtf8Printable(buffer),
+                tag_pfx);
       return FALSE;
     }
   }
@@ -3363,7 +3367,7 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
                                          const char *base_str,
                                          enum direction8 dir, bool has_icon)
 {
-  char buf[2048];
+  QString buf;
   enum direction8 loaddir = dir;
 
   /*
@@ -3385,8 +3389,7 @@ static bool tileset_setup_unit_direction(struct tileset *t, int uidx,
     } while (!is_valid_tileset_dir(t, loaddir));
   }
 
-  fc_snprintf(buf, sizeof(buf), "%s_%s", base_str,
-              dir_get_tileset_name(loaddir));
+  buf = QString("%1_%2").arg(base_str, dir_get_tileset_name(loaddir));
 
   /* We don't use _alt graphics here, as that could lead to loading
    * real icon gfx, but alternative orientation gfx. Tileset author
@@ -3555,14 +3558,13 @@ void tileset_setup_extra(struct tileset *t, struct extra_type *pextra)
 
     case ESTYLE_CARDINALS: {
       int i;
-      char buffer[512];
+      QString buffer;
 
       /* We use direction-specific irrigation and farmland graphics, if they
        * are available.  If not, we just fall back to the basic irrigation
        * graphics. */
       for (i = 0; i < t->num_index_cardinal; i++) {
-        fc_snprintf(buffer, sizeof(buffer), "%s_%s", tag,
-                    cardinal_index_str(t, i));
+        buffer = QString("%1_%2").arg(tag, cardinal_index_str(t, i));
         t->sprites.extras[id].u.cardinals[i] =
             load_sprite(t, buffer, TRUE, TRUE);
         if (!t->sprites.extras[id].u.cardinals[i]) {
@@ -3648,7 +3650,7 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
      * road type: one going off in each direction. */
     for (i = 0; i < t->num_valid_tileset_dirs; i++) {
       enum direction8 dir = t->valid_tileset_dirs[i];
-      const char *dir_name = dir_get_tileset_name(dir);
+      QString dir_name = dir_get_tileset_name(dir);
 
       full_tag_name = QString("%1_%2").arg(tag, dir_name);
 
@@ -3664,34 +3666,36 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
      * unused (the "isolated" sprite is used instead). */
 
     for (i = 1; i < num_index; i++) {
-      char c[64] = "", d[64] = "";
+      QString c, d;
 
       for (j = 0; j < t->num_valid_tileset_dirs / 2; j++) {
         int value = (i >> j) & 1;
-
-        cat_snprintf(c, sizeof(c), "%s%d",
-                     dir_get_tileset_name(t->valid_tileset_dirs[2 * j]),
-                     value);
-        cat_snprintf(d, sizeof(d), "%s%d",
-                     dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
-                     value);
+        c += QString("%1%2").arg(
+            dir_get_tileset_name(t->valid_tileset_dirs[2 * j]),
+            QString::number(value));
+        d += QString("%1%2").arg(
+            dir_get_tileset_name(t->valid_tileset_dirs[2 * j + 1]),
+            QString::number(value));
       }
       full_tag_name = QString("%1_c_%2").arg(tag, c);
 
-      SET_SPRITE(extras[id].u.road.ru.combo.even[i], qUtf8Printable(full_tag_name));
+      SET_SPRITE(extras[id].u.road.ru.combo.even[i],
+                 qUtf8Printable(full_tag_name));
       full_tag_name = QString("%1_d_%2").arg(tag, d);
 
-      SET_SPRITE(extras[id].u.road.ru.combo.odd[i], qUtf8Printable(full_tag_name));
+      SET_SPRITE(extras[id].u.road.ru.combo.odd[i],
+                 qUtf8Printable(full_tag_name));
     }
   } else if (extrastyle == ESTYLE_ROAD_ALL_COMBINED) {
     /* ESTYLE_ROAD_ALL_COMBINED includes 256 sprites, one for every
      * possibility. Just go around clockwise, with all combinations. */
     for (i = 0; i < t->num_index_valid; i++) {
-      char *idx_str = valid_index_str(t, i);
+      QString idx_str = valid_index_str(t, i);
 
       full_tag_name = QString("%1_%2").arg(tag, idx_str);
 
-      SET_SPRITE(extras[id].u.road.ru.total[i], qUtf8Printable(full_tag_name));
+      SET_SPRITE(extras[id].u.road.ru.total[i],
+                 qUtf8Printable(full_tag_name));
     }
   } else if (extrastyle == ESTYLE_RIVER) {
     if (!load_river_sprites(t, &t->sprites.extras[id].u.road.ru.rivers,
@@ -3712,11 +3716,12 @@ static void tileset_setup_road(struct tileset *t, struct extra_type *pextra,
       enum direction8 dir = t->valid_tileset_dirs[i];
 
       if (!is_cardinal_tileset_dir(t, dir)) {
-        const char *dtn = dir_get_tileset_name(dir);
+        QString dtn = dir_get_tileset_name(dir);
 
         full_tag_name = QString("%1_c_%2").arg(pextra->graphic_str, dtn);
 
-        SET_SPRITE_OPT(extras[id].u.road.corner[dir], qUtf8Printable(full_tag_name));
+        SET_SPRITE_OPT(extras[id].u.road.corner[dir],
+                       qUtf8Printable(full_tag_name));
       }
     }
   }
@@ -3765,7 +3770,7 @@ void tileset_setup_tile_type(struct tileset *t,
 {
   struct drawing_data *draw;
   struct sprite *sprite;
-  char buffer[MAX_LEN_NAME + 20];
+  QString buffer;
   int i, l;
 
   if (!t->tile_hash->contains(pterrain->graphic_str)
@@ -3797,8 +3802,9 @@ void tileset_setup_tile_type(struct tileset *t,
       case MATCH_NONE:
         /* Load whole sprites for this tile. */
         for (i = 0;; i++) {
-          fc_snprintf(buffer, sizeof(buffer), "t.l%d.%s%d", l, draw->name,
-                      i + 1);
+          buffer = QString("t.l%1.%2%3")
+                       .arg(QString::number(l), draw->name,
+                            QString::number(i + 1));
           sprite = load_sprite(t, buffer, TRUE, FALSE);
           if (!sprite) {
             break;
@@ -3817,10 +3823,11 @@ void tileset_setup_tile_type(struct tileset *t,
       case MATCH_SAME:
         /* Load 16 cardinally-matched sprites. */
         for (i = 0; i < t->num_index_cardinal; i++) {
-          fc_snprintf(buffer, sizeof(buffer), "t.l%d.%s_%s", l, draw->name,
-                      cardinal_index_str(t, i));
+          buffer = QString("t.l%1.%2_%3")
+                       .arg(QString::number(l), draw->name,
+                            cardinal_index_str(t, i));
           dlp->match[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, buffer, "", "matched terrain",
+              t, LOG_FATAL, qUtf8Printable(buffer), "", "matched terrain",
               terrain_rule_name(pterrain), TRUE);
         }
         break;
@@ -3860,29 +3867,38 @@ void tileset_setup_tile_type(struct tileset *t,
 
         switch (dlp->match_style) {
         case MATCH_NONE:
-          fc_snprintf(buffer, sizeof(buffer), "t.l%d.%s_cell_%c", l,
-                      draw->name, direction4letters[dir]);
+          buffer = QString("t.l%1.%2_cell_%3")
+                       .arg(QString::number(l), draw->name,
+                            QString(direction4letters[dir]));
           dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, buffer, "", "cell terrain",
+              t, LOG_FATAL, qUtf8Printable(buffer), "", "cell terrain",
               terrain_rule_name(pterrain), TRUE);
           break;
         case MATCH_SAME:
-          fc_snprintf(buffer, sizeof(buffer), "t.l%d.%s_cell_%c%d%d%d", l,
-                      draw->name, direction4letters[dir], (value) &1,
-                      (value >> 1) & 1, (value >> 2) & 1);
+          buffer = QString("t.l%1.%2_cell_%3%4%5%6")
+                       .arg(QString::number(l), draw->name,
+                            QString(direction4letters[dir]),
+                            QString::number((value) &1),
+                            QString::number((value >> 1) & 1),
+                            QString::number((value >> 2) & 1));
           dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, buffer, "", "same cell terrain",
+              t, LOG_FATAL, qUtf8Printable(buffer), "", "same cell terrain",
               terrain_rule_name(pterrain), TRUE);
           break;
         case MATCH_PAIR:
-          fc_snprintf(
-              buffer, sizeof(buffer), "t.l%d.%s_cell_%c_%c_%c_%c", l,
-              draw->name, direction4letters[dir],
-              tslp->match_types[dlp->match_index[(value) &1]][0],
-              tslp->match_types[dlp->match_index[(value >> 1) & 1]][0],
-              tslp->match_types[dlp->match_index[(value >> 2) & 1]][0]);
+          buffer =
+              QString("t.l%1.%2_cell_%3_%4_%5_%6")
+                  .arg(QString::number(l), draw->name,
+                       QChar(direction4letters[dir]),
+                       QChar(tslp->match_types[dlp->match_index[(value) &1]]
+                                              [0]),
+                       QChar(tslp->match_types[dlp->match_index[(value >> 1)
+                                                                & 1]][0]),
+                       QChar(tslp->match_types[dlp->match_index[(value >> 2)
+                                                                & 1]][0]));
+
           dlp->cells[i] = tiles_lookup_sprite_tag_alt(
-              t, LOG_FATAL, buffer, "", "cell pair terrain",
+              t, LOG_FATAL, qUtf8Printable(buffer), "", "cell pair terrain",
               terrain_rule_name(pterrain), TRUE);
           break;
         case MATCH_FULL: {
@@ -3929,9 +3945,12 @@ void tileset_setup_tile_type(struct tileset *t,
 
           /* Use first character of match_types,
            * already checked for uniqueness. */
-          fc_snprintf(buffer, sizeof(buffer), "t.l%d.cellgroup_%c_%c_%c_%c",
-                      l, tslp->match_types[n][0], tslp->match_types[e][0],
-                      tslp->match_types[s][0], tslp->match_types[w][0]);
+          buffer =
+              QString("t.l%1.cellgroup_%2_%3_%4_%5")
+                  .arg(QString::number(l), QChar(tslp->match_types[n][0]),
+                       QChar(tslp->match_types[e][0]),
+                       QChar(tslp->match_types[s][0]),
+                       QChar(tslp->match_types[w][0]));
           sprite = load_sprite(t, buffer, TRUE, FALSE);
 
           if (sprite) {
@@ -3954,7 +3973,7 @@ void tileset_setup_tile_type(struct tileset *t,
             dlp->allocated.p[vec_size] = sprite;
           } else {
             qCritical("Terrain graphics sprite for tag \"%s\" missing.",
-                      buffer);
+                      qUtf8Printable(buffer));
           }
 
           dlp->cells[i] = sprite;
@@ -3966,9 +3985,9 @@ void tileset_setup_tile_type(struct tileset *t,
   }
 
   /* try an optional special name */
-  fc_snprintf(buffer, sizeof(buffer), "t.blend.%s", draw->name);
+  buffer = QString("t.blend.%1").arg(draw->name);
   draw->blender = tiles_lookup_sprite_tag_alt(
-      t, LOG_VERBOSE, buffer, "", "blend terrain",
+      t, LOG_VERBOSE, qUtf8Printable(buffer), "", "blend terrain",
       terrain_rule_name(pterrain), TRUE);
 
   if (draw->blending > 0) {
@@ -3986,9 +4005,9 @@ void tileset_setup_tile_type(struct tileset *t,
 
     if (NULL == draw->blender) {
       /* try an unloaded base name */
-      fc_snprintf(buffer, sizeof(buffer), "t.l%d.%s1", bl, draw->name);
+      buffer = QString("t.l%1.%21").arg(QString::number(bl), draw->name);
       draw->blender = tiles_lookup_sprite_tag_alt(
-          t, LOG_FATAL, buffer, "", "base (blend) terrain",
+          t, LOG_FATAL, qUtf8Printable(buffer), "", "base (blend) terrain",
           terrain_rule_name(pterrain), TRUE);
     }
   }
@@ -4035,14 +4054,14 @@ void tileset_setup_nation_flag(struct tileset *t, struct nation_type *nation)
                         "unknown", NULL};
   int i;
   struct sprite *flag = NULL, *shield = NULL;
-  char buf[1024];
+  QString buf;
 
   for (i = 0; tags[i] && !flag; i++) {
-    fc_snprintf(buf, sizeof(buf), "f.%s", tags[i]);
+    buf = QString("f.%1").arg(tags[i]);
     flag = load_sprite(t, buf, TRUE, TRUE);
   }
   for (i = 0; tags[i] && !shield; i++) {
-    fc_snprintf(buf, sizeof(buf), "f.shield.%s", tags[i]);
+    buf = QString("f.shield.%1").arg(tags[i]);
     shield = load_sprite(t, buf, TRUE, TRUE);
   }
   if (!flag || !shield) {
@@ -6046,9 +6065,9 @@ void tileset_setup_city_tiles(struct tileset *t, int style)
     t->sprites.city.tile = load_city_sprite(t, "city");
 
     for (i = 0; i < NUM_WALL_TYPES; i++) {
-      char buffer[256];
+      QString buffer;
 
-      fc_snprintf(buffer, sizeof(buffer), "bldg_%d", i);
+      buffer = QString("bldg_%1").arg(QString::number(i));
       t->sprites.city.wall[i] = load_city_sprite(t, buffer);
     }
     t->sprites.city.single_wall = load_city_sprite(t, "wall");

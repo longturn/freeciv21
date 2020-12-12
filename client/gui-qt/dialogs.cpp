@@ -3695,14 +3695,12 @@ void show_tech_gained_dialog(Tech_type_id tech) {}
 /***********************************************************************/ /**
    Show tileset error dialog.
  ***************************************************************************/
-void show_tileset_error(const char *msg)
+void show_tileset_error(QString msg)
 {
-  char buf[1024];
+  QString buf;
 
-  fc_snprintf(buf, sizeof(buf),
-              _("Tileset problem, it's probably incompatible with the"
-                " ruleset:\n%s"),
-              msg);
+  buf = QString(_("Tileset problem, it's probably incompatible with the"
+                " ruleset:\n%1")).arg(msg);
 
   if (king() != nullptr) {
     QMessageBox *ask = new QMessageBox(king()->central_wdg);
