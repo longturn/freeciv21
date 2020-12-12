@@ -233,6 +233,7 @@ bool script_client_init(void)
 static void script_client_output(struct fc_lua *fcl, QtMsgType level,
                                  const char *format, ...)
 {
+  Q_UNUSED(fcl)
   va_list args;
   struct ft_color ftc_luaconsole = ftc_luaconsole_error;
 

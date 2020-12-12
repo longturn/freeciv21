@@ -346,6 +346,7 @@ void qfc_dialog::mousePressEvent(QMouseEvent *event)
  ***************************************************************************/
 void qfc_dialog::mouseReleaseEvent(QMouseEvent *event)
 {
+  Q_UNUSED(event)
   moving_now = false;
   setCursor(Qt::ArrowCursor);
 }
@@ -603,6 +604,7 @@ void races_dialog::update_nationset_combo()
 void races_dialog::group_selected(const QItemSelection &sl,
                                   const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
   QModelIndexList indexes = sl.indexes();
   QModelIndex index;
 
@@ -675,6 +677,7 @@ void races_dialog::set_index(int index)
 void races_dialog::nation_selected(const QItemSelection &selected,
                                    const QItemSelection &deselcted)
 {
+  Q_UNUSED(deselcted)
   char buf[4096];
   QModelIndex index;
   QVariant qvar;
@@ -730,6 +733,7 @@ void races_dialog::nation_selected(const QItemSelection &selected,
 void races_dialog::style_selected(const QItemSelection &selected,
                                   const QItemSelection &deselcted)
 {
+  Q_UNUSED(deselcted)
   QModelIndex index;
   QVariant qvar;
   QModelIndexList indexes = selected.indexes();
@@ -869,6 +873,7 @@ notify_goto::notify_goto(const char *headline, const char *lines,
                          QWidget *parent)
     : QMessageBox(parent)
 {
+  Q_UNUSED(tags)
   QString qlines;
   setAttribute(Qt::WA_DeleteOnClose);
   goto_but = this->addButton(_("Goto Location"), QMessageBox::ActionRole);
@@ -1037,6 +1042,7 @@ void update_nationset_combo()
  ***************************************************************************/
 void races_update_pickable(bool nationset_change)
 {
+  Q_UNUSED(nationset_change)
   if (is_race_dialog_open) {
     race_dialog->refresh();
   }
@@ -1685,6 +1691,7 @@ static void diplomat_queue_handle_secondary(int actor_id)
  **************************************************************************/
 void action_selection_no_longer_in_progress_gui_specific(int actor_id)
 {
+  Q_UNUSED(actor_id)
   /* Stop assuming the answer to a follow up question will arrive. */
   is_more_user_input_needed = FALSE;
 }
@@ -3425,7 +3432,7 @@ void popup_musicset_suggestion_dialog(void)
  ***************************************************************************/
 bool popup_theme_suggestion_dialog(const char *theme_name)
 {
-  /* PORTME */
+  Q_UNUSED(theme_name)
   return false;
 }
 
@@ -3554,6 +3561,7 @@ void action_selection_refresh(struct unit *actor_unit,
                               struct extra_type *target_extra,
                               const struct act_prob *act_probs)
 {
+  Q_UNUSED(target_extra)
   choice_dialog *asd;
   Choice_dialog_button *keep_moving_button;
   Choice_dialog_button *wait_button;
@@ -3690,7 +3698,7 @@ void action_selection_close(void)
 /***********************************************************************/ /**
    Player has gained a new tech.
  ***************************************************************************/
-void show_tech_gained_dialog(Tech_type_id tech) {}
+void show_tech_gained_dialog(Tech_type_id tech) {Q_UNUSED(tech)}
 
 /***********************************************************************/ /**
    Show tileset error dialog.

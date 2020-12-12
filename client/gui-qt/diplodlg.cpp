@@ -764,6 +764,7 @@ void diplo_dlg::make_active(int party)
  ****************************************************************************/
 bool diplo_dlg::init(bool raise)
 {
+  Q_UNUSED(raise)
   if (!can_client_issue_orders()) {
     return false;
   }

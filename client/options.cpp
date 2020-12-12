@@ -201,7 +201,10 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,75,0,0,0,0,0", //.gui_qt_font_city_names =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
-    TRUE                               //.gui_qt_show_titlebar =
+    {true},                                //=?
+    true,                                   //.gui_qt_show_titlebar
+    5,
+    {}
 };
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
@@ -385,9 +388,8 @@ struct option {
                     spec_table, changed_cb, cb_data)                        \
   {                                                                         \
     .poptset = optset, .type = spec_type, .common_vtable = &common_table,   \
-    INIT_BRACE_BEGIN.spec_table_var = &spec_table INIT_BRACE_END,           \
-    .changed_callback = changed_cb, .callback_data = cb_data,               \
-    .gui_data = NULL                                                        \
+    .spec_table_var = &spec_table, .changed_callback = changed_cb,          \
+    .callback_data = cb_data, .gui_data = NULL                              \
   }
 #define OPTION_BOOL_INIT(optset, common_table, bool_table, changed_cb)      \
   OPTION_INIT(optset, OT_BOOLEAN, bool_vtable, common_table, bool_table,    \
@@ -1109,34 +1111,6 @@ static const struct option_str_vtable client_option_str_vtable = {
     .values = client_option_str_values,
     .set = client_option_str_set};
 
-static int client_option_enum_get(const struct option *poption);
-static int client_option_enum_def(const struct option *poption);
-static const struct strvec *
-client_option_enum_pretty_names(const struct option *poption);
-static bool client_option_enum_set(struct option *poption, int val);
-
-static const struct option_enum_vtable client_option_enum_vtable = {
-    .get = client_option_enum_get,
-    .def = client_option_enum_def,
-    .values = client_option_enum_pretty_names,
-    .set = client_option_enum_set,
-    .cmp = fc_strcasecmp};
-
-#if 0  /* There's no bitwise options currently */
-static unsigned client_option_bitwise_get(const struct option *poption);
-static unsigned client_option_bitwise_def(const struct option *poption);
-static const struct strvec *
-    client_option_bitwise_pretty_names(const struct option *poption);
-static bool client_option_bitwise_set(struct option *poption, unsigned val);
-
-static const struct option_bitwise_vtable client_option_bitwise_vtable = {
-  .get = client_option_bitwise_get,
-  .def = client_option_bitwise_def,
-  .values = client_option_bitwise_pretty_names,
-  .set = client_option_bitwise_set
-};
-#endif /* 0 */
-
 static const char *client_option_font_get(const struct option *poption);
 static const char *client_option_font_def(const struct option *poption);
 static const char *client_option_font_target(const struct option *poption);
@@ -1256,11 +1230,10 @@ struct client_option {
                                     client_option_common_vtable,            \
                                     client_option_bool_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.boolean = {                                            \
-        .pvalue = &gui_options.oname,                                       \
-        .def = odef,                                                        \
-    } INIT_BRACE_END                                                        \
+    .category = ocat, .specific = ospec, .boolean = {                       \
+      .pvalue = &gui_options.oname,                                         \
+      .def = odef,                                                          \
+    }                                                                       \
   }
 
 /*
@@ -1288,11 +1261,12 @@ struct client_option {
         OPTION_INT_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_int_vtable, ocb),                     \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.integer = {.pvalue = &gui_options.oname,               \
-                                .def = odef,                                \
-                                .min = omin,                                \
-                                .max = omax} INIT_BRACE_END                 \
+    .category = ocat, .specific = ospec, .integer = {                       \
+      .pvalue = &gui_options.oname,                                         \
+      .def = odef,                                                          \
+      .min = omin,                                                          \
+      .max = omax                                                           \
+    }                                                                       \
   }
 
 /*
@@ -1319,11 +1293,12 @@ struct client_option {
         OPTION_STR_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_str_vtable, ocb, cbd),                \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.string = {.pvalue = gui_options.oname,                 \
-                               .size = sizeof(gui_options.oname),           \
-                               .def = odef,                                 \
-                               .val_accessor = NULL} INIT_BRACE_END         \
+    .category = ocat, .specific = ospec, .string = {                        \
+      .pvalue = gui_options.oname,                                          \
+      .size = sizeof(gui_options.oname),                                    \
+      .def = odef,                                                          \
+      .val_accessor = NULL                                                  \
+    }                                                                       \
   }
 
 /*
@@ -1354,11 +1329,12 @@ struct client_option {
         OPTION_STR_INIT(&client_optset_static, client_option_common_vtable, \
                         client_option_str_vtable, ocb, cbd),                \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.string = {.pvalue = gui_options.oname,                 \
-                               .size = sizeof(gui_options.oname),           \
-                               .def = odef,                                 \
-                               .val_accessor = oacc} INIT_BRACE_END         \
+    .category = ocat, .specific = ospec, .string = {                        \
+      .pvalue = gui_options.oname,                                          \
+      .size = sizeof(gui_options.oname),                                    \
+      .def = odef,                                                          \
+      .val_accessor = oacc                                                  \
+    }                                                                       \
   }
 
 /*
@@ -1384,13 +1360,13 @@ struct client_option {
                                     client_option_common_vtable,            \
                                     client_option_enum_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.enumerator = {.pvalue = (int *) &gui_options.oname,    \
-                                   .def = odef,                             \
-                                   .support_names =                         \
-                                       NULL, /* Set in options_init(). */   \
-                                   .pretty_names = NULL,                    \
-                                   .name_accessor = oacc} INIT_BRACE_END    \
+    .category = ocat, .specific = ospec, .enumerator = {                    \
+      .pvalue = (int *) &gui_options.oname,                                 \
+      .def = odef,                                                          \
+      .support_names = NULL, /* Set in options_init(). */                   \
+      .pretty_names = NULL,                                                 \
+      .name_accessor = oacc                                                 \
+    }                                                                       \
   }
 
 /*
@@ -1417,13 +1393,13 @@ struct client_option {
                                        client_option_common_vtable,         \
                                        client_option_bitwise_vtable, ocb),  \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.bitwise = {.pvalue = &gui_options.oname,               \
-                                .def = odef,                                \
-                                .support_names =                            \
-                                    NULL, /* Set in options_init(). */      \
-                                .pretty_names = NULL,                       \
-                                .name_accessor = oacc} INIT_BRACE_END       \
+    .category = ocat, .specific = ospec, .bitwise = {                       \
+      .pvalue = &gui_options.oname,                                         \
+      .def = odef,                                                          \
+      .support_names = NULL, /* Set in options_init(). */                   \
+      .pretty_names = NULL,                                                 \
+      .name_accessor = oacc                                                 \
+    }                                                                       \
   }
 
 /*
@@ -1451,13 +1427,12 @@ struct client_option {
                                     client_option_common_vtable,            \
                                     client_option_font_vtable, ocb),        \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.font = {                                               \
-        .pvalue = gui_options.oname,                                        \
-        .size = sizeof(gui_options.oname),                                  \
-        .def = odef,                                                        \
-        .target = otgt,                                                     \
-    } INIT_BRACE_END                                                        \
+    .category = ocat, .specific = ospec, .font = {                          \
+      .pvalue = gui_options.oname,                                          \
+      .size = sizeof(gui_options.oname),                                    \
+      .def = odef,                                                          \
+      .target = otgt,                                                       \
+    }                                                                       \
   }
 
 /*
@@ -1483,10 +1458,10 @@ struct client_option {
                                      client_option_common_vtable,           \
                                      client_option_color_vtable, ocb),      \
     .name = #oname, .description = odesc, .help_text = ohelp,               \
-    .category = ocat, .specific = ospec,                                    \
-    INIT_BRACE_BEGIN.color = {                                              \
-        .pvalue = &gui_options.oname,                                       \
-        .def = FT_COLOR(odef_fg, odef_bg)} INIT_BRACE_END                   \
+    .category = ocat, .specific = ospec, .color = {                         \
+      .pvalue = &gui_options.oname,                                         \
+      .def = FT_COLOR(odef_fg, odef_bg)                                     \
+    }                                                                       \
   }
 
 /****************************************************************************
@@ -2128,8 +2103,7 @@ static struct client_option client_options[] = {
         gui_qt_sidebar_left, N_("Sidebar position"),
         N_("If this option is set, the sidebar will be to the left "
            "of the map, otherwise to the right."),
-        COC_INTERFACE, GUI_QT, TRUE, NULL)
-};
+        COC_INTERFACE, GUI_QT, TRUE, NULL)};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
 /* Iteration loop, including invalid options for the current gui type. */
@@ -2263,6 +2237,7 @@ static int client_option_category(const struct option *poption)
  ****************************************************************************/
 static bool client_option_is_changeable(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return TRUE;
 }
 
@@ -2401,49 +2376,6 @@ static bool client_option_str_set(struct option *poption, const char *str)
 }
 
 /************************************************************************/ /**
-   Returns the current value of this client option of type OT_ENUM.
- ****************************************************************************/
-static int client_option_enum_get(const struct option *poption)
-{
-  return *(CLIENT_OPTION(poption)->enumerator.pvalue);
-}
-
-/************************************************************************/ /**
-   Returns the default value of this client option of type OT_ENUM.
- ****************************************************************************/
-static int client_option_enum_def(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->enumerator.def;
-}
-
-/************************************************************************/ /**
-   Returns the possible values of this client option of type OT_ENUM, as
-   user-visible (translatable but not translated) strings.
- ****************************************************************************/
-static const struct strvec *
-client_option_enum_pretty_names(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->enumerator.pretty_names;
-}
-
-/************************************************************************/ /**
-   Set the value of this client option of type OT_ENUM.  Returns TRUE if
-   the value changed.
- ****************************************************************************/
-static bool client_option_enum_set(struct option *poption, int val)
-{
-  struct client_option *pcoption = CLIENT_OPTION(poption);
-
-  if (*pcoption->enumerator.pvalue == val || 0 > val
-      || val >= strvec_size(pcoption->enumerator.support_names)) {
-    return FALSE;
-  }
-
-  *pcoption->enumerator.pvalue = val;
-  return TRUE;
-}
-
-/************************************************************************/ /**
    Returns the "support" name of the value for this client option of type
    OT_ENUM (a string suitable for saving in a file).
    The prototype must match the 'secfile_enum_name_data_fn_t' type.
@@ -2456,50 +2388,6 @@ static const char *client_option_enum_secfile_str(secfile_data_t data,
   return (0 <= val && val < strvec_size(names) ? strvec_get(names, val)
                                                : NULL);
 }
-
-#if 0  /* There's no bitwise options currently */
-/************************************************************************//**
-  Returns the current value of this client option of type OT_BITWISE.
-****************************************************************************/
-static unsigned client_option_bitwise_get(const struct option *poption)
-{
-  return *(CLIENT_OPTION(poption)->bitwise.pvalue);
-}
-
-/************************************************************************//**
-  Returns the default value of this client option of type OT_BITWISE.
-****************************************************************************/
-static unsigned client_option_bitwise_def(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->bitwise.def;
-}
-
-/************************************************************************//**
-  Returns the possible values of this client option of type OT_BITWISE, as
-  user-visible (translatable but not translated) strings.
-****************************************************************************/
-static const struct strvec *
-    client_option_bitwise_pretty_names(const struct option *poption)
-{
-  return CLIENT_OPTION(poption)->bitwise.pretty_names;
-}
-
-/************************************************************************//**
-  Set the value of this client option of type OT_BITWISE.  Returns TRUE if
-  the value changed.
-****************************************************************************/
-static bool client_option_bitwise_set(struct option *poption, unsigned val)
-{
-  struct client_option *pcoption = CLIENT_OPTION(poption);
-
-  if (*pcoption->bitwise.pvalue == val) {
-    return FALSE;
-  }
-
-  *pcoption->bitwise.pvalue = val;
-  return TRUE;
-}
-#endif /* 0 */
 
 /************************************************************************/ /**
    Returns the "support" name of a single value for this client option of
@@ -2990,7 +2878,7 @@ void handle_server_setting_control(
   /* Allocate server option categories. */
   if (0 < packet->categories_num) {
     server_options_categories_num = packet->categories_num;
-    server_options_categories = new char*[server_options_categories_num]();
+    server_options_categories = new char *[server_options_categories_num]();
 
     for (i = 0; i < server_options_categories_num; i++) {
       /* NB: Translate now. */
@@ -3001,7 +2889,7 @@ void handle_server_setting_control(
   /* Allocate server options. */
   if (0 < packet->settings_num) {
     server_options_num = packet->settings_num;
-    server_options =  new server_option[server_options_num]();
+    server_options = new server_option[server_options_num]();
   }
 }
 
@@ -3056,9 +2944,7 @@ void handle_server_setting_const(
                                                                             \
   /* Update the GUI. */                                                     \
   if (need_gui_remove) {                                                    \
-    option_gui_remove(poption);                                             \
   } else if (need_gui_add) {                                                \
-    option_gui_add(poption);                                                \
   } else {                                                                  \
     option_gui_update(poption);                                             \
   }
@@ -3574,6 +3460,7 @@ static const char *server_option_str_def(const struct option *poption)
 static const struct strvec *
 server_option_str_values(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return NULL;
 }
 
@@ -3951,6 +3838,7 @@ static void message_options_load(struct section_file *file,
 static void message_options_save(struct section_file *file,
                                  const char *prefix)
 {
+  Q_UNUSED(prefix)
   enum event_type event;
   int i = 0;
 
@@ -4389,6 +4277,7 @@ void desired_settable_options_update(void)
 void desired_settable_option_update(const char *op_name,
                                     const char *op_value, bool allow_replace)
 {
+  Q_UNUSED(allow_replace)
   settable_options->insert(op_name, op_value);
 }
 
@@ -4736,6 +4625,7 @@ void options_load(void)
 static void option_save_output_window_callback(QtMsgType lvl,
                                                const QString &msg)
 {
+  Q_UNUSED(lvl)
   output_window_append(ftc_client, qUtf8Printable(msg));
 }
 
@@ -4802,8 +4692,8 @@ void options_save(option_save_log_callback log_cb)
 
   /* Directory name */
   sz_strlcpy(dir_name, name);
-  for (i = qstrlen(dir_name) - 1; dir_name[i] != DIR_SEPARATOR_CHAR && i >= 0;
-       i--) {
+  for (i = qstrlen(dir_name) - 1;
+       dir_name[i] != DIR_SEPARATOR_CHAR && i >= 0; i--) {
     /* Nothing */
   }
   if (i > 0) {
@@ -4983,6 +4873,7 @@ void options_free(void)
  ****************************************************************************/
 static void reqtree_show_icons_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   science_report_dialog_redraw();
 }
 
@@ -4991,6 +4882,7 @@ static void reqtree_show_icons_callback(struct option *poption)
  ****************************************************************************/
 static void view_option_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   menus_init();
   update_map_canvas_visible();
 }
@@ -5000,6 +4892,7 @@ static void view_option_changed_callback(struct option *poption)
  ****************************************************************************/
 static void manual_turn_done_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   update_turn_done_button_state();
   if (!gui_options.ai_manual_turn_done && is_ai(client.conn.playing)) {
     if (can_end_turn()) {
@@ -5013,6 +4906,7 @@ static void manual_turn_done_callback(struct option *poption)
 ****************************************************************************/
 static void sound_volume_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   audio_set_volume(gui_options.sound_effects_volume / 100.0);
 }
 
@@ -5021,6 +4915,7 @@ static void sound_volume_callback(struct option *poption)
  ****************************************************************************/
 static void voteinfo_bar_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   voteinfo_gui_update();
 }
 
@@ -5029,11 +4924,13 @@ static void voteinfo_bar_callback(struct option *poption)
  ****************************************************************************/
 static void allfont_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   gui_update_allfonts();
 }
 
 static void sidebar_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   gui_update_sidebar();
 }
 
@@ -5074,6 +4971,7 @@ static void mapimg_changed_callback(struct option *poption)
  ****************************************************************************/
 static void game_music_enable_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   if (client_state() == C_S_RUNNING) {
     if (gui_options.sound_enable_game_music) {
       start_style_music();
@@ -5088,6 +4986,7 @@ static void game_music_enable_callback(struct option *poption)
  ****************************************************************************/
 static void menu_music_enable_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   if (client_state() != C_S_RUNNING) {
     if (gui_options.sound_enable_menu_music) {
       start_menu_music("music_menu", NULL);
@@ -5103,6 +5002,7 @@ static void menu_music_enable_callback(struct option *poption)
 static const struct strvec *
 get_mapimg_format_list(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return mapimg_get_format_list();
 }
 
@@ -5201,12 +5101,12 @@ void fill_topo_ts_default(void)
   if (is_ts_option_unset("default_tileset_square_name")) {
     if (gui_options.default_tileset_iso_name[0] != '\0') {
       qstrncpy(gui_options.default_tileset_square_name,
-              gui_options.default_tileset_iso_name,
-              sizeof(gui_options.default_tileset_square_name));
+               gui_options.default_tileset_iso_name,
+               sizeof(gui_options.default_tileset_square_name));
     } else if (gui_options.default_tileset_overhead_name[0] != '\0') {
       qstrncpy(gui_options.default_tileset_square_name,
-              gui_options.default_tileset_overhead_name,
-              sizeof(gui_options.default_tileset_square_name));
+               gui_options.default_tileset_overhead_name,
+               sizeof(gui_options.default_tileset_square_name));
     } else {
       log_debug("Setting tileset for square topologies.");
       tilespec_try_read(NULL, FALSE, 0, FALSE);

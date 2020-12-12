@@ -1769,6 +1769,7 @@ is_extra_type_in_range(const struct tile *target_tile,
                        const struct city *target_city, enum req_range range,
                        bool survives, struct extra_type *pextra)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has extra of requested type. */
@@ -1852,6 +1853,8 @@ is_goods_type_in_range(const struct tile *target_tile,
                        const struct city *target_city, enum req_range range,
                        bool survives, struct goods_type *pgood)
 {
+  Q_UNUSED(target_tile)
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
   case REQ_RANGE_CITY:
@@ -1886,6 +1889,7 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
                                             bool survives,
                                             const struct terrain *pterrain)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has the terrain. */
@@ -1969,6 +1973,7 @@ static enum fc_tristate is_terrain_class_in_range(
     const struct tile *target_tile, const struct city *target_city,
     enum req_range range, bool survives, enum terrain_class pclass)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has the terrain of correct
@@ -2061,6 +2066,7 @@ is_terrainflag_in_range(const struct tile *target_tile,
                         const struct city *target_city, enum req_range range,
                         bool survives, enum terrain_flag_id terrflag)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is fulfilled if the tile has a terrain with
@@ -2151,6 +2157,7 @@ static enum fc_tristate is_baseflag_in_range(const struct tile *target_tile,
                                              bool survives,
                                              enum base_flag_id baseflag)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has a base with correct flag. */
@@ -2236,6 +2243,7 @@ static enum fc_tristate is_roadflag_in_range(const struct tile *target_tile,
                                              bool survives,
                                              enum road_flag_id roadflag)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has a road with correct flag. */
@@ -2321,6 +2329,7 @@ static enum fc_tristate is_extraflag_in_range(const struct tile *target_tile,
                                               bool survives,
                                               enum extra_flag_id extraflag)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_LOCAL:
     /* The requirement is filled if the tile has an extra with correct flag.
@@ -2407,6 +2416,7 @@ is_terrain_alter_possible_in_range(const struct tile *target_tile,
                                    enum req_range range, bool survives,
                                    enum terrain_alteration alteration)
 {
+  Q_UNUSED(survives)
   if (!target_tile) {
     return TRI_MAYBE;
   }
@@ -2491,6 +2501,7 @@ is_nation_group_in_range(const struct player *target_player,
                          enum req_range range, bool survives,
                          const struct nation_group *ngroup)
 {
+  Q_UNUSED(survives)
   switch (range) {
   case REQ_RANGE_PLAYER:
     if (target_player == NULL) {
@@ -2650,6 +2661,7 @@ is_unittype_in_range(const struct unit_type *target_unittype,
                      enum req_range range, bool survives,
                      const struct unit_type *punittype)
 {
+  Q_UNUSED(survives)
   /* If no target_unittype is given, we allow the req to be met.  This is
    * to allow querying of certain effect types (like the presence of city
    * walls) without actually knowing the target unit. */
@@ -2666,6 +2678,7 @@ is_unitflag_in_range(const struct unit_type *target_unittype,
                      enum req_range range, bool survives,
                      enum unit_type_flag_id unitflag)
 {
+  Q_UNUSED(survives)
   /* If no target_unittype is given, we allow the req to be met.  This is
    * to allow querying of certain effect types (like the presence of city
    * walls) without actually knowing the target unit. */
@@ -2687,6 +2700,7 @@ is_unitclass_in_range(const struct unit_type *target_unittype,
                       enum req_range range, bool survives,
                       struct unit_class *pclass)
 {
+  Q_UNUSED(survives)
   /* If no target_unittype is given, we allow the req to be met.  This is
    * to allow querying of certain effect types (like the presence of city
    * walls) without actually knowing the target unit. */
@@ -2703,6 +2717,7 @@ is_unitclassflag_in_range(const struct unit_type *target_unittype,
                           enum req_range range, bool survives,
                           enum unit_class_flag_id ucflag)
 {
+  Q_UNUSED(survives)
   /* If no target_unittype is given, we allow the req to be met.  This is
    * to allow querying of certain effect types (like the presence of city
    * walls) without actually knowing the target unit. */
@@ -2719,6 +2734,7 @@ static enum fc_tristate is_unit_state(const struct unit *target_unit,
                                       enum req_range range, bool survives,
                                       enum ustate_prop uprop)
 {
+  Q_UNUSED(survives)
   fc_assert_ret_val_msg(range == REQ_RANGE_LOCAL, TRI_NO,
                         "Unsupported range \"%s\"", req_range_name(range));
 
@@ -3505,6 +3521,7 @@ req_vec_num_in_item
 req_vec_vector_number(const void *parent_item,
                       const struct requirement_vector *vec)
 {
+  Q_UNUSED(parent_item)
   if (vec) {
     return 0;
   } else {

@@ -279,6 +279,7 @@ void units_select::update_img()
  ***************************************************************************/
 void units_select::paint(QPainter *painter, QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QFontMetrics fm(info_font);
   int h, i;
   int *f_size;

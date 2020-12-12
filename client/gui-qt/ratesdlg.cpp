@@ -176,6 +176,7 @@ multipler_rates_dialog::multipler_rates_dialog(QWidget *parent)
  **************************************************************************/
 void multipler_rates_dialog::slot_set_value(int i)
 {
+  Q_UNUSED(i)
   QSlider *qo;
   qo = (QSlider *) QObject::sender();
   QVariant qvar;
@@ -266,6 +267,7 @@ void popup_rates_dialog(void)
  **************************************************************************/
 void real_multipliers_dialog_update(void *unused)
 { /* PORTME */
+  Q_UNUSED(unused)
 }
 
 /**********************************************************************/ /**
@@ -324,6 +326,7 @@ QSize fc_double_edge::sizeHint() const
  **************************************************************************/
 void fc_double_edge::paintEvent(QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QPainter p;
   int i, j, pos;
   QPixmap *pix;

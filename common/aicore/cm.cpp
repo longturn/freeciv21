@@ -2021,6 +2021,7 @@ static void begin_search(struct cm_state *state,
  ****************************************************************************/
 static void end_search(struct cm_state *state)
 {
+  Q_UNUSED(state)
 #ifdef GATHER_TIME_STATS
   timer_stop(performance.current->wall_timer);
 
@@ -2312,6 +2313,10 @@ static void real_print_tile_type(QtMsgType level, const char *file,
                                  const struct cm_tile_type *ptype,
                                  const char *prefix)
 {
+  Q_UNUSED(level)
+  Q_UNUSED(line)
+  Q_UNUSED(function)
+  Q_UNUSED(file)
   char prodstr[256];
 
   snprint_production(prodstr, sizeof(prodstr), ptype->production);

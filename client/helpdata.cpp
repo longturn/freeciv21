@@ -3216,6 +3216,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
 void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
                       const char *user_text, struct terrain *pterrain)
 {
+  Q_UNUSED(pplayer)
   struct universal source = {.value = {.terrain = pterrain},
                              .kind = VUT_TERRAIN};
   int flagid;

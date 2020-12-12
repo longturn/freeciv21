@@ -168,6 +168,7 @@ void unittype_item::upgrade_units()
  ****************************************************************************/
 void unittype_item::enterEvent(QEvent *event)
 {
+  Q_UNUSED(event)
   entered = true;
   update();
 }
@@ -177,6 +178,7 @@ void unittype_item::enterEvent(QEvent *event)
  ****************************************************************************/
 void unittype_item::paintEvent(QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QRect rfull;
   QPainter p;
 
@@ -194,6 +196,7 @@ void unittype_item::paintEvent(QPaintEvent *event)
  ****************************************************************************/
 void unittype_item::leaveEvent(QEvent *event)
 {
+  Q_UNUSED(event)
   entered = false;
   update();
 }
@@ -340,7 +343,11 @@ void units_reports::init_layout()
 /************************************************************************/ /**
    Paint event
  ****************************************************************************/
-void units_reports::paintEvent(QPaintEvent *event) { cw->put_to_corner(); }
+void units_reports::paintEvent(QPaintEvent *event)
+{
+  Q_UNUSED(event);
+  cw->put_to_corner();
+}
 
 /************************************************************************/ /**
    Updates units
@@ -509,6 +516,7 @@ void toggle_units_report(bool x)
  ****************************************************************************/
 void real_units_report_dialog_update(void *unused)
 {
+  Q_UNUSED(unused)
   if (units_reports::instance()->isVisible()) {
     units_reports::instance()->update_units();
   }
@@ -520,6 +528,7 @@ void real_units_report_dialog_update(void *unused)
  ****************************************************************************/
 void units_report_dialog_popup(bool raise)
 {
+  Q_UNUSED(raise)
   queen()->game_tab_widget->setCurrentIndex(0);
   units_reports::instance()->update_units(true);
 }

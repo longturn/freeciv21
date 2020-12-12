@@ -65,7 +65,6 @@ struct gotoline_counter {
   int line_count[DIR8_MAGIC_MAX];
 };
 
-static inline struct gotoline_counter *gotoline_counter_new(void);
 typedef QHash<const struct tile *, struct gotoline_counter *> gotohash;
 Q_GLOBAL_STATIC(gotohash, mapdeco_gotoline)
 struct view mapview;
@@ -428,14 +427,6 @@ void update_animation(void)
   }
 }
 
-/************************************************************************/ /**
-   Create a new goto line counter.
- ****************************************************************************/
-static inline struct gotoline_counter *gotoline_counter_new(void)
-{
-  struct gotoline_counter *pglc = new gotoline_counter[1]();
-  return pglc;
-}
 
 /************************************************************************/ /**
    Refreshes a single tile on the map canvas.
@@ -481,6 +472,7 @@ void refresh_unit_mapcanvas(struct unit *punit, struct tile *ptile,
 void refresh_city_mapcanvas(struct city *pcity, struct tile *ptile,
                             bool full_refresh, bool write_to_screen)
 {
+  Q_UNUSED(pcity)
   if (full_refresh
       && (gui_options.draw_map_grid || gui_options.draw_borders)) {
     queue_mapview_tile_update(ptile, TILE_UPDATE_CITYMAP);
@@ -2523,6 +2515,7 @@ struct tile_list *tile_updates[TILE_UPDATE_COUNT];
  ****************************************************************************/
 static void queue_callback(void *data)
 {
+  Q_UNUSED(data)
   callback_queued = FALSE;
   unqueue_mapview_updates(TRUE);
 }
@@ -3209,6 +3202,8 @@ void get_spaceship_dimensions(int *width, int *height)
 void put_spaceship(struct canvas *pcanvas, int canvas_x, int canvas_y,
                    const struct player *pplayer)
 {
+  Q_UNUSED(canvas_x)
+  Q_UNUSED(canvas_y)
   int i, x, y;
   const struct player_spaceship *ship = &pplayer->spaceship;
   int w, h;

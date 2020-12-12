@@ -217,6 +217,7 @@ static void luascript_traceback_func_push(lua_State *L)
  *****************************************************************************/
 static void luascript_exec_check(lua_State *L, lua_Debug *ar)
 {
+  Q_UNUSED(ar)
   lua_Number exec_clock;
 
   lua_getfield(L, LUA_REGISTRYINDEX, "freeciv_exec_clock");

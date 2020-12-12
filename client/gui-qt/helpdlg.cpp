@@ -172,6 +172,7 @@ void help_dialog::update_fonts() { help_wdg->update_fonts(); }
 ****************************************************************************/
 void help_dialog::hideEvent(QHideEvent *event)
 {
+  Q_UNUSED(event)
   king()->qt_settings.help_geometry = saveGeometry();
   king()->qt_settings.help_splitter1 = splitter->saveState();
 }
@@ -181,6 +182,7 @@ void help_dialog::hideEvent(QHideEvent *event)
 ****************************************************************************/
 void help_dialog::showEvent(QShowEvent *event)
 {
+  Q_UNUSED(event)
   QList<int> sizes;
 
   if (!king()->qt_settings.help_geometry.isNull()) {
@@ -201,6 +203,7 @@ void help_dialog::showEvent(QShowEvent *event)
 ****************************************************************************/
 void help_dialog::closeEvent(QCloseEvent *event)
 {
+  Q_UNUSED(event)
   king()->qt_settings.help_geometry = saveGeometry();
   king()->qt_settings.help_splitter1 = splitter->saveState();
 }
@@ -811,6 +814,7 @@ void help_widget::set_bottom_panel(QWidget *widget)
  **************************************************************************/
 void help_widget::set_topic_other(const help_item *topic, const char *title)
 {
+  Q_UNUSED(title)
   if (topic->text) {
     text_browser->setPlainText(topic->text);
   } else {

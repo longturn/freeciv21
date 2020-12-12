@@ -410,6 +410,7 @@ void chatwdg::append(const QString &str)
  ***************************************************************************/
 void chatwdg::paint(QPainter *painter, QPaintEvent *event)
 {
+  Q_UNUSED(event)
   painter->setBrush(QColor(0, 0, 0, 35));
   painter->drawRect(0, 0, width(), height());
 }
@@ -713,6 +714,7 @@ void qtg_real_output_window_append(const QString& astring,
                                    const struct text_tag_list *tags,
                                    int conn_id)
 {
+  Q_UNUSED(conn_id)
   king()->set_status_bar(astring);
 
   if (astring.contains(client.conn.username)) {

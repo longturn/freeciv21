@@ -104,6 +104,7 @@ int api_methods_game_turn_deprecated(lua_State *L)
  *****************************************************************************/
 const char *api_methods_game_rulesetdir(lua_State *L)
 {
+  Q_UNUSED(L)
   return game.server.rulesetdir;
 }
 
@@ -112,6 +113,7 @@ const char *api_methods_game_rulesetdir(lua_State *L)
  *****************************************************************************/
 const char *api_methods_game_ruleset_name(lua_State *L)
 {
+  Q_UNUSED(L)
   return game.control.name;
 }
 
@@ -240,6 +242,7 @@ Tile *api_methods_city_tile_get(lua_State *L, City *pcity)
 int api_methods_city_inspire_partisans(lua_State *L, City *self,
                                        Player *inspirer)
 {
+  Q_UNUSED(L)
   bool inspired = FALSE;
 
   if (!game.info.citizen_nationality) {

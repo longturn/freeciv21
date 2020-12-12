@@ -90,6 +90,7 @@ fcUdpScan *fcUdpScan::i()
 **************************************************************************/
 void fcUdpScan::sockError(QAbstractSocket::SocketError socketError)
 {
+  Q_UNUSED(socketError)
   char *errstr;
   if (!fcudp_scan)
     return;

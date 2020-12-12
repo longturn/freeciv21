@@ -559,6 +559,7 @@ void sidebar::resizeMe(int hght, bool force)
  ***************************************************************************/
 void sidebarShowMap(bool nothing)
 {
+  Q_UNUSED(nothing)
   queen()->game_tab_widget->setCurrentIndex(0);
 }
 
@@ -572,6 +573,7 @@ void sidebarFinishTurn(bool nothing) { key_end_turn(); }
  ***************************************************************************/
 void sidebarRatesWdg(bool nothing)
 {
+  Q_UNUSED(nothing)
   if (!client_is_observer()) {
     popup_rates_dialog();
   }
@@ -727,6 +729,7 @@ void sidebarRightClickScience(void)
  ***************************************************************************/
 void sidebarLeftClickScience(bool nothing)
 {
+  Q_UNUSED(nothing)
   science_report *sci_rep;
   int i;
   QWidget *w;

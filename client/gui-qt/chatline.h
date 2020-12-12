@@ -79,6 +79,7 @@ public:
   ~chat_input();
   virtual void chat_word_list_changed(const QStringList &);
   bool event(QEvent *event);
+
 private:
   QCompleter *cmplt;
 };
@@ -97,7 +98,11 @@ signals:
   void dbl_clicked();
 
 protected:
-  void mouseDoubleClickEvent(QMouseEvent *event) { emit dbl_clicked(); }
+  void mouseDoubleClickEvent(QMouseEvent *event)
+  {
+    Q_UNUSED(event);
+    emit dbl_clicked();
+  }
 };
 
 /***************************************************************************

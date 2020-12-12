@@ -115,7 +115,11 @@ goto_dialog::~goto_dialog()
 /***********************************************************************/ /**
    Slot for checkbox 'all nations'
  ***************************************************************************/
-void goto_dialog::checkbox_changed(int state) { update_dlg(); }
+void goto_dialog::checkbox_changed(int state)
+{
+  Q_UNUSED(state);
+  update_dlg();
+}
 
 /***********************************************************************/ /**
    User has chosen some city on table
@@ -123,6 +127,7 @@ void goto_dialog::checkbox_changed(int state) { update_dlg(); }
 void goto_dialog::item_selected(const QItemSelection &sl,
                                 const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
   int i;
   int city_id;
   QModelIndex index;
@@ -320,6 +325,7 @@ void goto_dialog::close_dlg()
  ***************************************************************************/
 void goto_dialog::paint(QPainter *painter, QPaintEvent *event)
 {
+  Q_UNUSED(event)
   painter->setBrush(QColor(0, 0, 30, 85));
   painter->drawRect(0, 0, width(), height());
   painter->setBrush(QColor(0, 0, 0, 85));

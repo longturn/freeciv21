@@ -1769,6 +1769,7 @@ const char *get_act_sel_action_custom_text(struct action *paction,
 const char *act_sel_action_tool_tip(const struct action *paction,
                                     const struct act_prob prob)
 {
+  Q_UNUSED(paction)
   return action_prob_explain(prob);
 }
 

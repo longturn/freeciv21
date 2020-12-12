@@ -80,6 +80,7 @@ serverProcess::serverProcess()
   connect(this,
           QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
           [=](int exitCode, QProcess::ExitStatus exitStatus) {
+            Q_UNUSED(exitCode)
             qInfo() << _("Freeciv Server") << exitStatus;
             drop();
           });

@@ -194,6 +194,7 @@ xvote::xvote(QWidget *parent) : pregamevote(parent)
  ***************************************************************************/
 void xvote::paint(QPainter *painter, QPaintEvent *event)
 {
+  Q_UNUSED(event)
   painter->setBrush(QColor(90, 90, 192, 185));
   painter->drawRect(0, 0, width(), height());
   painter->setBrush(QColor(90, 90, 192, 185));

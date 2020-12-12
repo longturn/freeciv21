@@ -987,6 +987,12 @@ static QColor* edge_color(struct tree_node *node,
 void draw_reqtree(struct reqtree *tree, struct canvas *pcanvas, int canvas_x,
                   int canvas_y, int tt_x, int tt_y, int w, int h)
 {
+  Q_UNUSED(h)
+  Q_UNUSED(w)
+  Q_UNUSED(tt_x)
+  Q_UNUSED(tt_y)
+  Q_UNUSED(canvas_x)
+  Q_UNUSED(canvas_y)
   int i, j, k;
   int swidth, sheight;
   struct sprite *sprite;

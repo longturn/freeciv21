@@ -176,6 +176,7 @@ void pregame_options::max_players_change(int i)
  ****************************************************************************/
 void pregame_options::ailevel_change(int i)
 {
+  Q_UNUSED(i)
   QVariant v = ui.ailevel->currentData();
 
   if (v.isValid()) {
@@ -195,6 +196,7 @@ void pregame_options::ailevel_change(int i)
  ****************************************************************************/
 void pregame_options::ruleset_change(int i)
 {
+  Q_UNUSED(i)
   if (!ui.cruleset->currentText().isEmpty()) {
     QByteArray rn_bytes;
 

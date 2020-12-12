@@ -997,6 +997,7 @@ bool utype_may_act_tgt_city_tile(const struct unit_type *punit_type,
 bool utype_is_consumed_by_action(const struct action *paction,
                                  const struct unit_type *utype)
 {
+  Q_UNUSED(utype)
   return paction->actor_consuming_always;
 }
 
@@ -1029,6 +1030,7 @@ bool utype_is_consumed_by_action_result(enum action_result result,
 bool utype_is_moved_to_tgt_by_action(const struct action *paction,
                                      const struct unit_type *utype)
 {
+  Q_UNUSED(utype)
   fc_assert_ret_val(action_get_actor_kind(paction) == AAK_UNIT, FALSE);
 
   if (paction->actor_consuming_always) {
@@ -1068,6 +1070,7 @@ bool utype_is_moved_to_tgt_by_action(const struct action *paction,
 bool utype_is_unmoved_by_action(const struct action *paction,
                                 const struct unit_type *utype)
 {
+  Q_UNUSED(utype)
   fc_assert_ret_val(action_get_actor_kind(paction) == AAK_UNIT, FALSE);
 
   if (paction->actor_consuming_always) {

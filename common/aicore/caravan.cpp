@@ -542,6 +542,7 @@ struct cewt_data {
 static bool cewt_callback(void *vdata, const struct city *dest,
                           int arrival_time, int moves_left)
 {
+  Q_UNUSED(moves_left)
   cewt_data *data = static_cast<cewt_data *>(vdata);
 
   fc_assert_ret_val(data->result, FALSE);
@@ -635,6 +636,7 @@ struct cfbdw_data {
 static bool cfbdw_callback(void *vdata, const struct city *dest,
                            int arrival_time, int moves_left)
 {
+  Q_UNUSED(moves_left)
   cfbdw_data *data = static_cast<cfbdw_data *>(vdata);
   struct caravan_result current;
 
@@ -656,6 +658,7 @@ static void caravan_find_best_destination_withtransit(
     const struct city *src, int turns_before, int moves_left,
     bool omniscient, struct caravan_result *result)
 {
+  Q_UNUSED(moves_left)
   struct tile *start_tile;
   struct cfbdw_data data;
 

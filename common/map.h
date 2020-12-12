@@ -622,7 +622,7 @@ static inline int map_pos_to_index(struct civ_map *nmap, int map_x,
 {
   /* Note: writing this as a macro is hard; it needs temp variables. */
   int nat_x, nat_y;
-
+  Q_UNUSED(nmap)
   CHECK_MAP_POS(map_x, map_y);
   MAP_TO_NATIVE_POS(&nat_x, &nat_y, map_x, map_y);
   return native_pos_to_index(nat_x, nat_y);

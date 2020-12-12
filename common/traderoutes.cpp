@@ -357,6 +357,7 @@ int trade_base_between_cities(const struct city *pc1, const struct city *pc2)
 int trade_from_route(const struct city *pc1, const struct trade_route *route,
                      int base)
 {
+  Q_UNUSED(pc1)
   if (route->dir == RDIR_TO) {
     return base * route->goods->to_pct / 100;
   }

@@ -139,6 +139,7 @@ plr_item::plr_item(struct player *pplayer) : QObject()
  **************************************************************************/
 bool plr_item::setData(int column, const QVariant &value, int role)
 {
+  Q_UNUSED(role)
   return false;
 }
 
@@ -416,6 +417,7 @@ void plr_widget::hide_columns()
 void plr_widget::nation_selected(const QItemSelection &sl,
                                  const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
   QModelIndex index;
   QVariant qvar;
   QModelIndexList indexes = sl.indexes();
@@ -862,6 +864,7 @@ void plr_report::update_report(bool update_selection)
  **************************************************************************/
 void popup_players_dialog(bool raise)
 {
+  Q_UNUSED(raise)
   int i;
   QWidget *w;
 
@@ -890,6 +893,7 @@ void popup_players_dialog(bool raise)
  **************************************************************************/
 void real_players_dialog_update(void *unused)
 {
+  Q_UNUSED(unused)
   int i;
   plr_report *pr;
   QWidget *w;

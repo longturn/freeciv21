@@ -567,6 +567,7 @@ static const char *showname_help(enum show_player showplr)
  ****************************************************************************/
 char *mapimg_help(const char *cmdname)
 {
+  Q_UNUSED(cmdname)
   enum imagetool tool;
   enum show_player showplr;
   enum mapimg_layer layer;
@@ -850,6 +851,7 @@ bool mapimg_define(const char *maparg, bool check)
 static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
                               const char *val, bool check)
 {
+  Q_UNUSED(check)
   if (BV_ISSET(pmapdef->args, arg)) {
     log_debug("Option '%s' for mapimg used more than once.",
               mapdef_arg_name(arg));
@@ -2512,6 +2514,9 @@ static void img_createmap(struct img *pimg)
 static bv_pixel pixel_tile_rect(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_SET_ALL(pixel);
@@ -2530,6 +2535,9 @@ static bv_pixel pixel_tile_rect(const struct tile *ptile,
 static bv_pixel pixel_city_rect(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2565,6 +2573,9 @@ static bv_pixel pixel_city_rect(const struct tile *ptile,
 static bv_pixel pixel_unit_rect(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2588,6 +2599,9 @@ static bv_pixel pixel_fogofwar_rect(const struct tile *ptile,
                                     const struct player *pplayer,
                                     bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2706,6 +2720,7 @@ static bv_pixel pixel_border_rect(const struct tile *ptile,
 static void base_coor_rect(struct img *pimg, int *base_x, int *base_y, int x,
                            int y)
 {
+  Q_UNUSED(pimg)
   *base_x = x * TILE_SIZE;
   *base_y = y * TILE_SIZE;
 }
@@ -2723,6 +2738,9 @@ static void base_coor_rect(struct img *pimg, int *base_x, int *base_y, int x,
 static bv_pixel pixel_tile_hexa(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_SET_ALL(pixel);
@@ -2743,6 +2761,9 @@ static bv_pixel pixel_tile_hexa(const struct tile *ptile,
 static bv_pixel pixel_city_hexa(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2783,6 +2804,9 @@ static bv_pixel pixel_city_hexa(const struct tile *ptile,
 static bv_pixel pixel_unit_hexa(const struct tile *ptile,
                                 const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2808,6 +2832,9 @@ static bv_pixel pixel_fogofwar_hexa(const struct tile *ptile,
                                     const struct player *pplayer,
                                     bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -2935,6 +2962,7 @@ static bv_pixel pixel_border_hexa(const struct tile *ptile,
 static void base_coor_hexa(struct img *pimg, int *base_x, int *base_y, int x,
                            int y)
 {
+  Q_UNUSED(pimg)
   int nat_x, nat_y;
   MAP_TO_NATIVE_POS(&nat_x, &nat_y, x, y);
 
@@ -2954,6 +2982,9 @@ static bv_pixel pixel_tile_isohexa(const struct tile *ptile,
                                    const struct player *pplayer,
                                    bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_SET_ALL(pixel);
@@ -2973,6 +3004,9 @@ static bv_pixel pixel_city_isohexa(const struct tile *ptile,
                                    const struct player *pplayer,
                                    bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -3012,6 +3046,9 @@ static bv_pixel pixel_unit_isohexa(const struct tile *ptile,
                                    const struct player *pplayer,
                                    bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);
@@ -3035,6 +3072,10 @@ static bv_pixel pixel_fogofwar_isohexa(const struct tile *ptile,
                                        const struct player *pplayer,
                                        bool knowledge)
 {
+  Q_UNUSED(ptile)
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
+
   bv_pixel pixel;
 
   BV_CLR_ALL(pixel);

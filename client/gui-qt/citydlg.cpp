@@ -87,7 +87,11 @@ progress_bar::~progress_bar()
 /************************************************************************/ /**
    Custom progressbar resize event
  ****************************************************************************/
-void progress_bar::resizeEvent(QResizeEvent *event) { create_region(); }
+void progress_bar::resizeEvent(QResizeEvent *event)
+{
+  Q_UNUSED(event);
+  create_region();
+}
 
 /************************************************************************/ /**
    Sets pixmap from given universal for custom progressbar
@@ -155,6 +159,7 @@ void progress_bar::set_pixmap(int n)
  ****************************************************************************/
 void progress_bar::timerEvent(QTimerEvent *event)
 {
+  Q_UNUSED(event)
   if ((value() != minimum() && value() < maximum())
       || (0 == minimum() && 0 == maximum())) {
     m_animate_step = m_timer.elapsed() / 50;
@@ -167,6 +172,7 @@ void progress_bar::timerEvent(QTimerEvent *event)
  ****************************************************************************/
 void progress_bar::paintEvent(QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QPainter p;
   QLinearGradient g, gx;
   QColor c;
@@ -385,6 +391,7 @@ void impr_item::init_pix()
  ****************************************************************************/
 void impr_item::enterEvent(QEvent *event)
 {
+  Q_UNUSED(event)
   struct sprite *sprite;
   QPainter p;
 
@@ -414,6 +421,7 @@ void impr_item::enterEvent(QEvent *event)
  ****************************************************************************/
 void impr_item::leaveEvent(QEvent *event)
 {
+  Q_UNUSED(event)
   struct sprite *sprite;
 
   if (impr_pixmap) {
@@ -867,6 +875,7 @@ void unit_item::fortify_unit()
  ****************************************************************************/
 void unit_item::enterEvent(QEvent *event)
 {
+  Q_UNUSED(event)
   QImage temp_img(unit_img.size(), QImage::Format_ARGB32_Premultiplied);
   QPainter p;
 
@@ -883,7 +892,11 @@ void unit_item::enterEvent(QEvent *event)
 /************************************************************************/ /**
    Mouse left widget
  ****************************************************************************/
-void unit_item::leaveEvent(QEvent *event) { init_pix(); }
+void unit_item::leaveEvent(QEvent *event)
+{
+  Q_UNUSED(event);
+  init_pix();
+}
 
 /************************************************************************/ /**
    Mouse press event -activates unit and closes dialog
@@ -1282,6 +1295,7 @@ void governor_sliders::cma_slider(int value)
  ****************************************************************************/
 void governor_sliders::cma_celebrate_changed(int val)
 {
+  Q_UNUSED(val)
   queen()->city_overlay->cma_check_agent();
 }
 
@@ -1607,6 +1621,7 @@ city_dialog::~city_dialog()
  ****************************************************************************/
 void city_dialog::hideEvent(QHideEvent *event)
 {
+  Q_UNUSED(event)
   if (pcity) {
     key_city_hide_open(pcity);
     if (!dont_focus)
@@ -1621,6 +1636,7 @@ void city_dialog::hideEvent(QHideEvent *event)
  ****************************************************************************/
 void city_dialog::showEvent(QShowEvent *event)
 {
+  Q_UNUSED(event)
   dont_focus = false;
   resize(200, 400); // It will resize to minimum
   if (pcity) {
@@ -1635,6 +1651,7 @@ void city_dialog::showEvent(QShowEvent *event)
  ****************************************************************************/
 void city_dialog::closeEvent(QCloseEvent *event)
 {
+  Q_UNUSED(event)
   if (pcity) {
     key_city_hide_open(pcity);
   }
@@ -1767,6 +1784,7 @@ void city_dialog::cma_changed()
  ****************************************************************************/
 void city_dialog::cma_double_clicked(int row, int column)
 {
+  Q_UNUSED(column)
   const struct cm_parameter *param;
 
   if (!can_client_issue_orders()) {
@@ -1787,6 +1805,7 @@ void city_dialog::cma_double_clicked(int row, int column)
 void city_dialog::cma_selected(const QItemSelection &sl,
                                const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
   const struct cm_parameter *param;
   QModelIndex index;
   QModelIndexList indexes = sl.indexes();
@@ -2299,6 +2318,7 @@ void city_dialog::delete_prod() { display_worklist_menu(QCursor::pos()); }
  ****************************************************************************/
 void city_dialog::dbl_click_p(QTableWidgetItem *item)
 {
+  Q_UNUSED(item)
   struct worklist queue;
   city_get_queue(pcity, &queue);
 
@@ -2376,6 +2396,7 @@ void city_dialog::update_units()
 void city_dialog::item_selected(const QItemSelection &sl,
                                 const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
   QModelIndex index;
   QModelIndexList indexes = sl.indexes();
 
@@ -2644,6 +2665,7 @@ void city_dialog::update_improvements()
  ****************************************************************************/
 void city_dialog::production_changed(int index)
 {
+  Q_UNUSED(index)
   cid id;
   QVariant qvar;
 
@@ -3129,6 +3151,8 @@ void city_production_delegate::drawFocus(QPainter *painter,
 QSize city_production_delegate::sizeHint(const QStyleOptionViewItem &option,
                                          const QModelIndex &index) const
 {
+  Q_UNUSED(option)
+  Q_UNUSED(index)
   QSize s;
 
   s.setWidth(pd.x());
@@ -3292,6 +3316,7 @@ void city_production_model::populate()
 bool city_production_model::setData(const QModelIndex &index,
                                     const QVariant &value, int role)
 {
+  Q_UNUSED(value)
   if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole)
     return false;
 
@@ -3318,6 +3343,7 @@ production_widget::production_widget(QWidget *parent, struct city *pcity,
                                      bool show_wonders, bool show_buildings)
     : QTableView()
 {
+  Q_UNUSED(parent)
   QPoint pos, sh;
   auto temp = QGuiApplication::screens();
   int desk_width = temp[0]->availableGeometry().width();
@@ -3425,6 +3451,8 @@ bool production_widget::eventFilter(QObject *obj, QEvent *ev)
 void production_widget::prod_selected(const QItemSelection &sl,
                                       const QItemSelection &ds)
 {
+  Q_UNUSED(ds)
+  Q_UNUSED(sl)
   QModelIndexList indexes = selectionModel()->selectedIndexes();
   QModelIndex index;
   QVariant qvar;

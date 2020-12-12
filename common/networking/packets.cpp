@@ -747,6 +747,7 @@ void send_attribute_block(const struct player *pplayer,
 void pre_send_packet_player_attribute_chunk(
     struct connection *pc, struct packet_player_attribute_chunk *packet)
 {
+  Q_UNUSED(pc)
   fc_assert(packet->total_length > 0
             && packet->total_length < MAX_ATTRIBUTE_BLOCK);
   /* 500 bytes header, just to be sure */
