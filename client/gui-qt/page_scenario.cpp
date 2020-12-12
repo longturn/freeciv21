@@ -238,6 +238,7 @@ void page_scenario::update_scenarios_page(void)
 void page_scenario::slot_selection_changed(const QItemSelection &selected,
                                            const QItemSelection &deselected)
 {
+  Q_UNUSED(deselected)
   QModelIndexList indexes = selected.indexes();
   QStringList sl;
   QModelIndex index;

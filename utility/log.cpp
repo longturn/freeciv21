@@ -218,6 +218,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
                               int line, const char *function,
                               const QString &message)
 {
+  Q_UNUSED(function)
   QMessageLogger logger(file, line, assert_category().categoryName());
   logger.critical("Assertion %s failed", condition);
   if (!message.isEmpty()) {

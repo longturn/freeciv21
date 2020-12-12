@@ -35,7 +35,7 @@ bool qtg_is_view_supported(enum ts_type type)
 /************************************************************************/ /**
    Loading tileset of the specified type
  ****************************************************************************/
-void qtg_tileset_type_set(enum ts_type type) {}
+void qtg_tileset_type_set(enum ts_type type) {Q_UNUSED(type)}
 
 /************************************************************************/ /**
    Frees the introductory sprites.

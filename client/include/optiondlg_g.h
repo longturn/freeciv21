@@ -20,7 +20,3 @@ GUI_FUNC_PROTO(void, option_dialog_popup, const char *name,
 GUI_FUNC_PROTO(void, option_dialog_popdown, const struct option_set *poptset)
 
 GUI_FUNC_PROTO(void, option_gui_update, struct option *poption)
-GUI_FUNC_PROTO(void, option_gui_add, struct option *poption)
-GUI_FUNC_PROTO(void, option_gui_remove, struct option *poption)
-
-

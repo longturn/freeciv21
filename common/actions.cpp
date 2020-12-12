@@ -2270,6 +2270,7 @@ action_enabler_suggest_repair(const struct action_enabler *enabler)
 static struct req_vec_problem *
 enabler_first_clarification(const struct action_enabler *enabler)
 {
+  Q_UNUSED(enabler)
   struct req_vec_problem *out;
 
   out = NULL;
@@ -2835,6 +2836,11 @@ static enum fc_tristate action_hard_reqs_actor(
     const struct specialist *actor_specialist, const bool omniscient,
     const struct city *homecity)
 {
+  Q_UNUSED(actor_building)
+  Q_UNUSED(actor_tile)
+  Q_UNUSED(actor_output)
+  Q_UNUSED(homecity)
+  Q_UNUSED(actor_specialist)
   if (!action_actor_utype_hard_reqs_ok_full(result, actor_unittype, TRUE)) {
     /* Info leak: The actor player knows the type of his unit. */
     /* The actor unit type can't perform the action because of hard
@@ -3004,6 +3010,9 @@ static enum fc_tristate is_action_possible(
     const struct extra_type *target_extra, const bool omniscient,
     const struct city *homecity)
 {
+  Q_UNUSED(target_output)
+  Q_UNUSED(target_building)
+  Q_UNUSED(target_specialist)
   bool can_see_tgt_unit;
   bool can_see_tgt_tile;
   enum fc_tristate out;

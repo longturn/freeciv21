@@ -149,6 +149,8 @@ void qtg_canvas_put_sprite_fogged(struct canvas *pcanvas, int canvas_x,
                                   int canvas_y, struct sprite *psprite,
                                   bool fog, int fog_x, int fog_y)
 {
+  Q_UNUSED(fog_x)
+  Q_UNUSED(fog_y)
   QPainter p;
   /* TODO make proper fog from this, just guess good compositions :D,
    * probably use original black pixmap */
@@ -185,6 +187,8 @@ void qtg_canvas_put_sprite_citymode(struct canvas *pcanvas, int canvas_x,
                                     int canvas_y, struct sprite *psprite,
                                     bool fog, int fog_x, int fog_y)
 {
+  Q_UNUSED(fog_x)
+  Q_UNUSED(fog_y)
   QPainter p;
 
   p.begin(&pcanvas->map_pixmap);
@@ -201,6 +205,8 @@ void canvas_put_unit_fogged(struct canvas *pcanvas, int canvas_x,
                             int canvas_y, struct sprite *psprite, bool fog,
                             int fog_x, int fog_y)
 {
+  Q_UNUSED(fog_y)
+  Q_UNUSED(fog_x)
   QPainter p;
 
   p.begin(&pcanvas->map_pixmap);

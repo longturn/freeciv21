@@ -84,6 +84,7 @@ bool next_spaceship_component(struct player *pplayer,
                               struct player_spaceship *ship,
                               struct spaceship_component *fill)
 {
+  Q_UNUSED(pplayer)
   fc_assert_ret_val(fill != NULL, FALSE);
 
   if (ship->modules

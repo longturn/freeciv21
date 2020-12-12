@@ -174,6 +174,7 @@ void page_load::browse_saves(void)
  **************************************************************************/
 void page_load::state_preview(int new_state)
 {
+  Q_UNUSED(new_state)
   QItemSelection slctn;
 
   if (ui.show_preview->checkState() == Qt::Unchecked) {
@@ -190,7 +191,7 @@ void page_load::state_preview(int new_state)
 void page_load::slot_selection_changed(const QItemSelection &selected,
                                        const QItemSelection &deselected)
 {
-
+  Q_UNUSED(deselected)
   QModelIndexList indexes = selected.indexes();
   QStringList sl;
   QModelIndex index;

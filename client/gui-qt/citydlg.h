@@ -67,7 +67,11 @@ signals:
 public:
   progress_bar(QWidget *parent);
   ~progress_bar();
-  void mousePressEvent(QMouseEvent *event) { emit clicked(); }
+  void mousePressEvent(QMouseEvent *event)
+  {
+    Q_UNUSED(event);
+    emit clicked();
+  }
   void set_pixmap(struct universal *target);
   void set_pixmap(int n);
 

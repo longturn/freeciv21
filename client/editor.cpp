@@ -801,6 +801,7 @@ static void editor_draw_selrect(void)
 void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
                                  int modifiers)
 {
+  Q_UNUSED(modifiers)
   switch (button) {
 
   case MOUSE_BUTTON_LEFT:
@@ -868,6 +869,7 @@ static void editor_resize_selection_rectangle(int canvas_x, int canvas_y)
  ****************************************************************************/
 void editor_mouse_move(int canvas_x, int canvas_y, int modifiers)
 {
+  Q_UNUSED(modifiers)
   const struct tile *ptile, *old;
 
   if (!editor) {

@@ -201,7 +201,10 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,75,0,0,0,0,0", //.gui_qt_font_city_names =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
-    TRUE                               //.gui_qt_show_titlebar =
+    {true},                                //=?
+    true,                                   //.gui_qt_show_titlebar
+    5,
+    {}
 };
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
@@ -2234,6 +2237,7 @@ static int client_option_category(const struct option *poption)
  ****************************************************************************/
 static bool client_option_is_changeable(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return TRUE;
 }
 
@@ -2940,9 +2944,7 @@ void handle_server_setting_const(
                                                                             \
   /* Update the GUI. */                                                     \
   if (need_gui_remove) {                                                    \
-    option_gui_remove(poption);                                             \
   } else if (need_gui_add) {                                                \
-    option_gui_add(poption);                                                \
   } else {                                                                  \
     option_gui_update(poption);                                             \
   }
@@ -3458,6 +3460,7 @@ static const char *server_option_str_def(const struct option *poption)
 static const struct strvec *
 server_option_str_values(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return NULL;
 }
 
@@ -3835,6 +3838,7 @@ static void message_options_load(struct section_file *file,
 static void message_options_save(struct section_file *file,
                                  const char *prefix)
 {
+  Q_UNUSED(prefix)
   enum event_type event;
   int i = 0;
 
@@ -4273,6 +4277,7 @@ void desired_settable_options_update(void)
 void desired_settable_option_update(const char *op_name,
                                     const char *op_value, bool allow_replace)
 {
+  Q_UNUSED(allow_replace)
   settable_options->insert(op_name, op_value);
 }
 
@@ -4620,6 +4625,7 @@ void options_load(void)
 static void option_save_output_window_callback(QtMsgType lvl,
                                                const QString &msg)
 {
+  Q_UNUSED(lvl)
   output_window_append(ftc_client, qUtf8Printable(msg));
 }
 
@@ -4867,6 +4873,7 @@ void options_free(void)
  ****************************************************************************/
 static void reqtree_show_icons_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   science_report_dialog_redraw();
 }
 
@@ -4875,6 +4882,7 @@ static void reqtree_show_icons_callback(struct option *poption)
  ****************************************************************************/
 static void view_option_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   menus_init();
   update_map_canvas_visible();
 }
@@ -4884,6 +4892,7 @@ static void view_option_changed_callback(struct option *poption)
  ****************************************************************************/
 static void manual_turn_done_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   update_turn_done_button_state();
   if (!gui_options.ai_manual_turn_done && is_ai(client.conn.playing)) {
     if (can_end_turn()) {
@@ -4897,6 +4906,7 @@ static void manual_turn_done_callback(struct option *poption)
 ****************************************************************************/
 static void sound_volume_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   audio_set_volume(gui_options.sound_effects_volume / 100.0);
 }
 
@@ -4905,6 +4915,7 @@ static void sound_volume_callback(struct option *poption)
  ****************************************************************************/
 static void voteinfo_bar_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   voteinfo_gui_update();
 }
 
@@ -4913,11 +4924,13 @@ static void voteinfo_bar_callback(struct option *poption)
  ****************************************************************************/
 static void allfont_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   gui_update_allfonts();
 }
 
 static void sidebar_changed_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   gui_update_sidebar();
 }
 
@@ -4958,6 +4971,7 @@ static void mapimg_changed_callback(struct option *poption)
  ****************************************************************************/
 static void game_music_enable_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   if (client_state() == C_S_RUNNING) {
     if (gui_options.sound_enable_game_music) {
       start_style_music();
@@ -4972,6 +4986,7 @@ static void game_music_enable_callback(struct option *poption)
  ****************************************************************************/
 static void menu_music_enable_callback(struct option *poption)
 {
+  Q_UNUSED(poption)
   if (client_state() != C_S_RUNNING) {
     if (gui_options.sound_enable_menu_music) {
       start_menu_music("music_menu", NULL);
@@ -4987,6 +5002,7 @@ static void menu_music_enable_callback(struct option *poption)
 static const struct strvec *
 get_mapimg_format_list(const struct option *poption)
 {
+  Q_UNUSED(poption)
   return mapimg_get_format_list();
 }
 

@@ -3466,6 +3466,7 @@ inline uint qHash(const pf_parameter &key, uint seed)
   uint result = 0;
   size_t b, i;
   static const size_t signifiant_flags_num = ARRAY_SIZE(signifiant_flags);
+  Q_UNUSED(seed)
 
   for (i = 0, b = sizeof(result) * 8 - 1; i < signifiant_flags_num;
        i++, b--) {

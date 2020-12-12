@@ -354,6 +354,7 @@ void research_diagram::show_tooltip()
  ****************************************************************************/
 void research_diagram::paintEvent(QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QPainter painter;
 
   painter.begin(this);
@@ -447,6 +448,7 @@ science_report::~science_report()
  ****************************************************************************/
 void science_report::init(bool raise)
 {
+  Q_UNUSED(raise)
   queen()->gimmePlace(this, QStringLiteral("SCI"));
   index = queen()->addGameTab(this);
   queen()->game_tab_widget->setCurrentIndex(index);
@@ -669,6 +671,7 @@ void science_report::goal_tech_changed(int changed_index)
  ****************************************************************************/
 void real_science_report_dialog_update(void *unused)
 {
+  Q_UNUSED(unused)
   int i;
   int percent;
   science_report *sci_rep;

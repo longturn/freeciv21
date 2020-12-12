@@ -590,6 +590,7 @@ static const char *cr_entry_building(const struct city *pcity,
 static const char *cr_entry_build_cost(const struct city *pcity,
                                        const void *data)
 {
+  Q_UNUSED(data)
   char bufone[8];
   char buftwo[8];
   static char buf[32];
@@ -625,6 +626,7 @@ static const char *cr_entry_build_cost(const struct city *pcity,
 static const char *cr_entry_corruption(const struct city *pcity,
                                        const void *data)
 {
+  Q_UNUSED(data)
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", -(pcity->waste[O_TRADE]));
   return buf;
@@ -650,6 +652,7 @@ static const char *cr_entry_waste(const struct city *pcity, const void *data)
 static const char *cr_entry_plague_risk(const struct city *pcity,
                                         const void *data)
 {
+  Q_UNUSED(data)
   static char buf[8];
   if (!game.info.illness_on) {
     fc_snprintf(buf, sizeof(buf), " -.-");
@@ -667,6 +670,7 @@ static const char *cr_entry_plague_risk(const struct city *pcity,
 static const char *cr_entry_continent(const struct city *pcity,
                                       const void *data)
 {
+  Q_UNUSED(data)
   static char buf[8];
   fc_snprintf(buf, sizeof(buf), "%3d", pcity->tile->continent);
   return buf;
@@ -679,6 +683,7 @@ static const char *cr_entry_continent(const struct city *pcity,
  ************************************************************************/
 static const char *cr_entry_cma(const struct city *pcity, const void *data)
 {
+  Q_UNUSED(data)
   return cmafec_get_short_descr_of_city(pcity);
 }
 

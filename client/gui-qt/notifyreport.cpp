@@ -104,6 +104,7 @@ void notify_dialog::calc_size(int &x, int &y)
  ***************************************************************************/
 void notify_dialog::paintEvent(QPaintEvent *paint_event)
 {
+  Q_UNUSED(paint_event)
   QPainter painter(this);
   QPen pen;
   QFontMetrics fm(small_font);
@@ -147,6 +148,7 @@ void notify_dialog::mouseMoveEvent(QMouseEvent *event)
  ***************************************************************************/
 void notify_dialog::mouseReleaseEvent(QMouseEvent *event)
 {
+  Q_UNUSED(event)
   setCursor(Qt::ArrowCursor);
 }
 

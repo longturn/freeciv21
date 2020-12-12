@@ -113,6 +113,7 @@ QColor *get_color(const struct tileset *t, enum color_std stdcolor)
  ****************************************************************************/
 bool player_has_color(const struct tileset *t, const struct player *pplayer)
 {
+  Q_UNUSED(t)
   fc_assert_ret_val(pplayer != NULL, NULL);
 
   return pplayer->rgb != NULL;
@@ -126,6 +127,7 @@ bool player_has_color(const struct tileset *t, const struct player *pplayer)
 QColor *get_player_color(const struct tileset *t,
                                const struct player *pplayer)
 {
+  Q_UNUSED(t)
   fc_assert_ret_val(pplayer != NULL, NULL);
   fc_assert_ret_val(pplayer->rgb != NULL, NULL);
 
@@ -138,6 +140,7 @@ QColor *get_player_color(const struct tileset *t,
 QColor *get_terrain_color(const struct tileset *t,
                                 const struct terrain *pterrain)
 {
+  Q_UNUSED(t)
   fc_assert_ret_val(pterrain != NULL, NULL);
   fc_assert_ret_val(pterrain->rgb != NULL, NULL);
 

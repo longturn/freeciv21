@@ -854,24 +854,3 @@ void option_gui_update(struct option *poption)
   }
 }
 
-/************************************************************************/ /**
-   Add the GUI for the option.
- ****************************************************************************/
-void option_gui_add(struct option *poption)
-{
-  /**
-   * That function is unneeded cause dialog is not being hided/restored
-   * and options are populated while creating
-   */
-}
-
-/************************************************************************/ /**
-   Remove the GUI for the option.
- ****************************************************************************/
-void option_gui_remove(struct option *poption)
-{
-  /**
-   * That function is unneeded cause dialog is not being hided/restored
-   * and options are populated while creating
-   */
-}

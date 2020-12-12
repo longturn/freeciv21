@@ -169,6 +169,9 @@ static bool is_req_knowable(
     const struct specialist *target_specialist,
     const struct requirement *req, const enum req_problem_type prob_type)
 {
+  Q_UNUSED(target_output)
+  Q_UNUSED(target_specialist)
+  Q_UNUSED(target_building)
   fc_assert_ret_val_msg(NULL != pow_player, false, "No point of view");
 
   if (req->source.kind == VUT_UTFLAG || req->source.kind == VUT_UTYPE

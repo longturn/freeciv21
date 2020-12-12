@@ -348,6 +348,7 @@ static void tile_init(struct tile *ptile)
 struct tile *mapstep(const struct civ_map *nmap, const struct tile *ptile,
                      enum direction8 dir)
 {
+  Q_UNUSED(nmap)
   int dx, dy, tile_x, tile_y;
 
   if (!is_valid_dir(dir)) {
@@ -751,6 +752,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
                         const struct player *pplayer, const struct tile *t1,
                         const struct tile *t2)
 {
+  Q_UNUSED(punit)
   const struct unit_class *pclass = utype_class(punittype);
   int cost;
   bool cardinality_checked = FALSE;

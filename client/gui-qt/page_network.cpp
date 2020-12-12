@@ -272,6 +272,7 @@ void page_network::update_server_list(enum server_scan_type sstype,
  **************************************************************************/
 void server_scan_error(struct server_scan *scan, const char *message)
 {
+  Q_UNUSED(scan)
   qtg_version_message(message);
   qCritical("%s", message);
   qobject_cast<page_network *>(king()->pages[PAGE_NETWORK])
@@ -477,7 +478,7 @@ void page_network::slot_connect()
 void page_network::slot_selection_changed(const QItemSelection &selected,
                                           const QItemSelection &deselected)
 {
-
+  Q_UNUSED(deselected)
   QModelIndexList indexes = selected.indexes();
   QStringList sl;
   QModelIndex index;

@@ -742,6 +742,7 @@ int tileset_unit_with_upkeep_height(const struct tileset *t)
  ****************************************************************************/
 int tileset_unit_with_small_upkeep_height(const struct tileset *t)
 {
+  Q_UNUSED(t)
   int uk_bottom = tileset_unit_layout_small_offset_y(tileset)
                   + tileset_upkeep_height(tileset);
   int u_bottom = tileset_unit_height(tileset);
@@ -6532,6 +6533,7 @@ struct sprite *get_unit_unhappy_sprite(const struct tileset *t,
                                        const struct unit *punit,
                                        int happy_cost)
 {
+  Q_UNUSED(punit)
   const int unhappy = CLIP(0, happy_cost, MAX_NUM_UPKEEP_SPRITES + 1);
 
   if (unhappy > 0) {
@@ -6552,6 +6554,7 @@ struct sprite *get_unit_upkeep_sprite(const struct tileset *t,
                                       const struct unit *punit,
                                       const int *upkeep_cost)
 {
+  Q_UNUSED(punit)
   const int upkeep = CLIP(0, upkeep_cost[otype], MAX_NUM_UPKEEP_SPRITES);
 
   if (upkeep > 0) {

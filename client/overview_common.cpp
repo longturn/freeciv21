@@ -491,6 +491,7 @@ void overview_free(void)
  ****************************************************************************/
 void overview_redraw_callback(struct option *option)
 {
+  Q_UNUSED(option)
   /* This is called once for each option changed so it is slower than
    * necessary.  If this becomes a problem it could be switched to use a
    * queue system like the mapview drawing code does. */

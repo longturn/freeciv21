@@ -183,6 +183,8 @@ static char *put_conv(const char *src, size_t *length)
  **************************************************************************/
 static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 {
+  Q_UNUSED(nsrc)
+
   char *out = data_to_internal_string_malloc(src);
   bool ret = TRUE;
   size_t len;
@@ -1388,6 +1390,7 @@ static enum known_type mapimg_client_tile_known(const struct tile *ptile,
                                                 const struct player *pplayer,
                                                 bool knowledge)
 {
+  Q_UNUSED(knowledge)
   if (client_is_global_observer()) {
     return TILE_KNOWN_SEEN;
   }
@@ -1402,6 +1405,8 @@ static struct terrain *
 mapimg_client_tile_terrain(const struct tile *ptile,
                            const struct player *pplayer, bool knowledge)
 {
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   return tile_terrain(ptile);
 }
 
@@ -1412,6 +1417,8 @@ static struct player *mapimg_client_tile_owner(const struct tile *ptile,
                                                const struct player *pplayer,
                                                bool knowledge)
 {
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   return tile_owner(ptile);
 }
 
@@ -1422,6 +1429,8 @@ static struct player *mapimg_client_tile_city(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
 {
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   struct city *pcity = tile_city(ptile);
 
   if (!pcity) {
@@ -1438,6 +1447,8 @@ static struct player *mapimg_client_tile_unit(const struct tile *ptile,
                                               const struct player *pplayer,
                                               bool knowledge)
 {
+  Q_UNUSED(pplayer)
+  Q_UNUSED(knowledge)
   int unit_count = unit_list_size(ptile->units);
 
   if (unit_count == 0) {

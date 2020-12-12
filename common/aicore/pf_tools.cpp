@@ -133,6 +133,8 @@ static bool pf_action_possible(const struct tile *src,
                                const struct tile *dst, enum pf_action action,
                                const struct pf_parameter *param)
 {
+  Q_UNUSED(src)
+  Q_UNUSED(dst)
   if (PF_ACTION_ATTACK == action) {
     return (PF_MS_NATIVE & src_scope
             || can_attack_from_non_native(param->utype));
@@ -159,6 +161,7 @@ static enum pf_action pf_reverse_get_action(const struct tile *ptile,
                                             enum known_type known,
                                             const struct pf_parameter *param)
 {
+  Q_UNUSED(known)
   return (ptile == param->data ? PF_ACTION_ATTACK : PF_ACTION_NONE);
 }
 
@@ -485,6 +488,7 @@ enum tile_behavior no_fights_or_unknown(const struct tile *ptile,
 enum tile_behavior no_fights(const struct tile *ptile, enum known_type known,
                              const struct pf_parameter *param)
 {
+  Q_UNUSED(known)
   if (is_non_allied_unit_tile(ptile, param->owner)
       || is_non_allied_city_tile(ptile, param->owner)) {
     /* Can't attack */
@@ -500,6 +504,7 @@ enum tile_behavior no_intermediate_fights(const struct tile *ptile,
                                           enum known_type known,
                                           const struct pf_parameter *param)
 {
+  Q_UNUSED(known)
   if (is_non_allied_unit_tile(ptile, param->owner)
       || is_non_allied_city_tile(ptile, param->owner)) {
     return TB_DONT_LEAVE;
@@ -617,6 +622,7 @@ static int get_fuel_moves_left_req(const struct tile *ptile,
                                    enum known_type known,
                                    const struct pf_parameter *param)
 {
+   Q_UNUSED(known)
   int dist, max;
 
   if (is_possible_base_fuel(ptile, param)) {

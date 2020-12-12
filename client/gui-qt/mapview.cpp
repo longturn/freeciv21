@@ -18,6 +18,7 @@
 #include "game.h"
 #include "map.h"
 // client
+#include "citydlg_g.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
@@ -29,7 +30,6 @@
 #include "sprite.h"
 #include "text.h"
 #include "tilespec.h"
-#include "citydlg_g.h"
 // gui-qt
 #include "canvas.h"
 #include "colors.h"
@@ -233,13 +233,18 @@ void map_view::update_font(const QString &name, const QFont &font)
  **************************************************************************/
 void map_view::focusOutEvent(QFocusEvent *event)
 {
+  Q_UNUSED(event)
   update_cursor(CURSOR_DEFAULT);
 }
 
 /**********************************************************************/ /**
    Leave event
  **************************************************************************/
-void map_view::leaveEvent(QEvent *event) { update_cursor(CURSOR_DEFAULT); }
+void map_view::leaveEvent(QEvent *event)
+{
+  Q_UNUSED(event);
+  update_cursor(CURSOR_DEFAULT);
+}
 
 /**********************************************************************/ /**
    Slot inherited from QPixamp
@@ -627,6 +632,7 @@ void info_tile::calc_size()
  **************************************************************************/
 void info_tile::paint(QPainter *painter, QPaintEvent *event)
 {
+  Q_UNUSED(event)
   QFontMetrics fm(info_font);
   int pos, h;
 
@@ -857,7 +863,6 @@ void show_city_desc(struct canvas *pcanvas, int canvas_x, int canvas_y,
   if (is_any_city_dialog_open()) {
     return;
   }
-
 
   if (gui_options.draw_full_citybar) {
     draw_full_city_bar(pcity, pcanvas, canvas_x, canvas_y, width, height);

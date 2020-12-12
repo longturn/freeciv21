@@ -178,6 +178,9 @@ city *city_item::get_city() { return i_city; }
  ***************************************************************************/
 bool city_item::setData(int column, const QVariant &value, int role)
 {
+  Q_UNUSED(role)
+  Q_UNUSED(column)
+  Q_UNUSED(value)
   return false;
 }
 
@@ -441,7 +444,11 @@ city_widget::city_widget(city_report *ctr) : QTreeView()
 /***********************************************************************/ /**
    Slot for double clicking row
  ***************************************************************************/
-void city_widget::city_doubleclick(const QModelIndex &index) { city_view(); }
+void city_widget::city_doubleclick(const QModelIndex &index)
+{
+  Q_UNUSED(index);
+  city_view();
+}
 
 /***********************************************************************/ /**
    Shows first selected city
@@ -1072,6 +1079,7 @@ void city_widget::gen_production_labels(city_widget::menu_labels what,
                                         bool append_wonders,
                                         TestCityFunc test_func, bool global)
 {
+  Q_UNUSED(what)
   struct universal targets[MAX_NUM_PRODUCTION_TARGETS];
   struct item items[MAX_NUM_PRODUCTION_TARGETS];
   int i, item, targets_used;
@@ -1195,6 +1203,8 @@ void city_widget::hide_columns()
 void city_widget::cities_selected(const QItemSelection &sl,
                                   const QItemSelection &ds)
 {
+  Q_UNUSED(sl)
+  Q_UNUSED(ds)
   QModelIndexList indexes = selectionModel()->selectedIndexes();
   QVariant qvar;
   struct city *pcity;
@@ -1283,6 +1293,7 @@ void city_report::update_city(struct city *pcity)
  ***************************************************************************/
 void city_report_dialog_popup(bool raise)
 {
+  Q_UNUSED(raise)
   int i;
   city_report *cr;
   QWidget *w;
@@ -1310,6 +1321,7 @@ void city_report_dialog_popup(bool raise)
  ***************************************************************************/
 void real_city_report_dialog_update(void *unused)
 {
+  Q_UNUSED(unused)
   int i;
   city_report *cr;
   QWidget *w;

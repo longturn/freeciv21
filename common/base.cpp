@@ -83,6 +83,7 @@ bool is_base_flag_near_tile(const struct tile *ptile, enum base_flag_id flag)
  ****************************************************************************/
 bool base_flag_is_retired(enum base_flag_id flag)
 {
+  Q_UNUSED(flag)
   /* No new flags retired in 3.1. Flags that were retired in 3.0 are already
    * completely removed. */
   return FALSE;
