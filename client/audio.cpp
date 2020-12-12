@@ -149,7 +149,7 @@ bool audio_select_plugin(QString &name)
   }
 
   if (found && i != selected_plugin) {
-    log_debug("Shutting down %s", plugins[selected_plugin].name);
+    qDebug("Shutting down %s", plugins[selected_plugin].name);
     plugins[selected_plugin].stop();
     plugins[selected_plugin].wait();
     plugins[selected_plugin].shutdown();
@@ -502,7 +502,7 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
   if (gui_options.sound_enable_effects) {
     fc_assert_ret(tag != NULL);
 
-    log_debug("audio_play_sound('%s', '%s')", tag, pretty_alt_tag);
+    qDebug("audio_play_sound('%s', '%s')", tag, pretty_alt_tag);
 
     /* try playing primary tag first, if not go to alternative tag */
     if (!audio_play_sound_tag(tag, FALSE)
@@ -523,7 +523,7 @@ static void real_audio_play_music(const char *const tag, char *const alt_tag,
 
   fc_assert_ret(tag != NULL);
 
-  log_debug("audio_play_music('%s', '%s')", tag, pretty_alt_tag);
+  qDebug("audio_play_music('%s', '%s')", tag, pretty_alt_tag);
 
   /* try playing primary tag first, if not go to alternative tag */
   current_track = audio_play_music_tag(tag, TRUE, keepstyle);

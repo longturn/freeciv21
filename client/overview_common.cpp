@@ -446,7 +446,7 @@ void calculate_overview_dimensions(void)
                            (h - 1) / wld.map.ysize + 1);
   OVERVIEW_TILE_SIZE = MAX(OVERVIEW_TILE_SIZE, 1);
 
-  log_debug("Map size %d,%d - area size %d,%d - scale: %d", wld.map.xsize,
+  qDebug("Map size %d,%d - area size %d,%d - scale: %d", wld.map.xsize,
             wld.map.ysize, w, h, OVERVIEW_TILE_SIZE);
 
   gui_options.overview.width =

@@ -2228,7 +2228,7 @@ static void sg_load_map_owner(struct loaddata *loading)
 
       map_claim_ownership(ptile, owner, claimer, FALSE);
       tile_claim_bases(ptile, eowner);
-      log_debug("extras_owner(%d, %d) = %s", TILE_XY(ptile),
+      qDebug("extras_owner(%d, %d) = %s", TILE_XY(ptile),
                 player_name(eowner));
     }
   }
@@ -2588,11 +2588,11 @@ static void sg_load_players_basic(struct loaddata *loading)
       }
 
 #ifdef FREECIV_DEBUG
-      log_debug("[load shuffle] player_count() = %d", player_count());
+      qDebug("[load shuffle] player_count() = %d", player_count());
       player_slots_iterate(pslot)
       {
         int plrid = player_slot_index(pslot);
-        log_debug("[load shuffle] id: %3d => slot: %3d | slot %3d: %s",
+        qDebug("[load shuffle] id: %3d => slot: %3d | slot %3d: %s",
                   plrid, shuffled_players[plrid], plrid,
                   shuffled_player_set[plrid] ? "is used" : "-");
       }
@@ -4461,7 +4461,7 @@ static void sg_load_player_attributes(struct loaddata *loading,
         log_sg("attribute_v2_block_parts=%d actual=%d", parts, part_nr);
         break;
       }
-      log_debug("attribute_v2_block_length_quoted=%lu have=%lu part=%lu",
+      qDebug("attribute_v2_block_length_quoted=%lu have=%lu part=%lu",
                 (unsigned long) quoted_length,
                 (unsigned long) qstrlen(quoted),
                 (unsigned long) qstrlen(current));

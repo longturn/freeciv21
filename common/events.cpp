@@ -352,7 +352,7 @@ void events_init(void)
     for (j = 0; j < qstrlen(events[i].tag_name); j++) {
       events[i].tag_name[j] = QChar::toLower(events[i].tag_name[j]);
     }
-    log_debug("event[%d]=%d: name='%s' / '%s'\n"
+    qDebug("event[%d]=%d: name='%s' / '%s'\n"
               "\tdescr_orig='%s'\n"
               "\tdescr='%s'",
               i, events[i].event, events[i].enum_name, events[i].tag_name,

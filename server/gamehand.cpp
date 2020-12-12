@@ -1010,7 +1010,7 @@ int update_timeout(void)
       notify_conn(game.est_connections, NULL, E_SETTING, ftc_server,
                   _("The turn timeout has exceeded its maximum value, "
                     "fixing at its maximum."));
-      log_debug("game.info.timeout exceeded maximum value");
+      qDebug("game.info.timeout exceeded maximum value");
       game.info.timeout = GAME_MAX_TIMEOUT;
       game.server.timeoutint = 0;
       game.server.timeoutinc = 0;
@@ -1018,14 +1018,14 @@ int update_timeout(void)
       notify_conn(game.est_connections, NULL, E_SETTING, ftc_server,
                   _("The turn timeout is smaller than zero, "
                     "fixing at zero."));
-      log_debug("game.info.timeout less than zero");
+      qDebug("game.info.timeout less than zero");
       game.info.timeout = 0;
     }
   } else {
     game.server.timeoutcounter++;
   }
 
-  log_debug("timeout=%d, inc=%d incmult=%d\n   "
+  qDebug("timeout=%d, inc=%d incmult=%d\n   "
             "int=%d, intinc=%d, turns till next=%d",
             game.info.timeout, game.server.timeoutinc,
             game.server.timeoutincmult, game.server.timeoutint,
@@ -1160,12 +1160,12 @@ void handle_single_want_hack_req(
     you_have_hack = (token && strcmp(token, packet->token) == 0);
     secfile_destroy(secfile);
   } else {
-    log_debug("Error reading '%s':\n%s", get_challenge_fullname(pc),
+    qDebug("Error reading '%s':\n%s", get_challenge_fullname(pc),
               secfile_error());
   }
 
   if (!token) {
-    log_debug("Failed to read authentication token");
+    qDebug("Failed to read authentication token");
   }
 
   if (you_have_hack) {

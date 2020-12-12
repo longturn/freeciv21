@@ -1047,14 +1047,14 @@ void rscompat_postprocess(struct rscompat_info *info)
 
             action_enabler_list_append(ae_custom, enabler);
 
-            log_debug("paratroopers_mr_req upgrade: %s uses custom enabler",
+            qDebug("paratroopers_mr_req upgrade: %s uses custom enabler",
                       utype_rule_name(putype));
           } else {
             /* The old one works just fine */
 
             generic_in_use = TRUE;
 
-            log_debug("paratroopers_mr_req upgrade: %s uses generic enabler",
+            qDebug("paratroopers_mr_req upgrade: %s uses generic enabler",
                       utype_rule_name(putype));
           }
         }

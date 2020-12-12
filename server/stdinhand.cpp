@@ -885,7 +885,7 @@ enum rfc_status create_command_newcomer(const char *name, const char *ai,
       fc_assert(game.server.max_players < MAX_NUM_PLAYERS);
 
       game.server.max_players++;
-      log_debug("Increased 'maxplayers' for creation of a new player.");
+      qDebug("Increased 'maxplayers' for creation of a new player.");
     }
   }
 

@@ -49,7 +49,6 @@
 
 static int *citymap = NULL;
 
-#define log_citymap log_debug
 
 /**********************************************************************/ /**
    Initialize citymap by reserving worked tiles and establishing the
@@ -127,7 +126,7 @@ void citymap_free(void)
 void citymap_reserve_city_spot(struct tile *ptile, int id)
 {
 #ifdef FREECIV_DEBUG
-  log_citymap("id %d reserving (%d, %d), was %d", id, TILE_XY(ptile),
+  qDebug("id %d reserving (%d, %d), was %d", id, TILE_XY(ptile),
               citymap[tile_index(ptile)]);
   fc_assert_ret(0 <= citymap[tile_index(ptile)]);
 #endif /* FREECIV_DEBUG */

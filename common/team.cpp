@@ -329,7 +329,7 @@ struct team *team_new(struct team_slot *tslot)
   }
 
   /* Now create the team. */
-  log_debug("Create team for slot %d.", team_slot_index(tslot));
+  qDebug("Create team for slot %d.", team_slot_index(tslot));
   pteam = new team[1]();
   pteam->slot = tslot;
   tslot->team = pteam;
@@ -464,7 +464,7 @@ void team_add_player(struct player *pplayer, struct team *pteam)
     return;
   }
 
-  log_debug("Adding player %d/%s to team %s.", player_number(pplayer),
+  qDebug("Adding player %d/%s to team %s.", player_number(pplayer),
             pplayer->username, team_rule_name(pteam));
 
   /* Remove the player from the old team, if any. */
@@ -489,7 +489,7 @@ void team_remove_player(struct player *pplayer)
   if (pplayer->team) {
     pteam = pplayer->team;
 
-    log_debug("Removing player %d/%s from team %s (%d)",
+    qDebug("Removing player %d/%s from team %s (%d)",
               player_number(pplayer), player_name(pplayer),
               team_rule_name(pteam), player_list_size(pteam->plrlist));
     player_list_remove(pteam->plrlist, pplayer);

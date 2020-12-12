@@ -680,7 +680,7 @@ void update_bulbs(struct player *pplayer, int bulbs, bool check_tech)
         }
         research->researching_saved = A_UNKNOWN;
 
-        log_debug("%s: tech loss (%s)", research_rule_name(research),
+        qDebug("%s: tech loss (%s)", research_rule_name(research),
                   (is_future_tech(tech)
                        ? "Future Tech"
                        : research_advance_rule_name(research, tech)));
@@ -831,7 +831,7 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
   /* Remove technology. */
   research_invention_set(presearch, tech, TECH_UNKNOWN);
   research_update(presearch);
-  log_debug("%s lost tech id %d (%s)", research_rule_name(presearch), tech,
+  qDebug("%s lost tech id %d (%s)", research_rule_name(presearch), tech,
             advance_rule_name(advance_by_number(tech)));
 
   /* Inform players about their technology loss. */
@@ -875,7 +875,7 @@ static void research_tech_lost(struct research *presearch, Tech_type_id tech)
     unit_list_iterate(pplayer->units, punit)
     {
       if (!can_unit_continue_current_activity(punit)) {
-        log_debug("lost technology for activity of unit %s of %s (%d, %d)",
+        qDebug("lost technology for activity of unit %s of %s (%d, %d)",
                   unit_name_translation(punit), player_name(pplayer),
                   TILE_XY(unit_tile(punit)));
         set_unit_activity(punit, ACTIVITY_IDLE);
@@ -1118,7 +1118,7 @@ void init_tech(struct research *research, bool update)
     /* Show research costs. */
     advance_index_iterate(A_NONE, i)
     {
-      log_debug(
+      qDebug(
           "[research %d] %-25s (ID: %3d) cost: %6d - reachable: %-3s "
           "(now) / %-3s (ever)",
           research_number(research), advance_rule_name(advance_by_number(i)),
@@ -1150,7 +1150,7 @@ void init_tech(struct research *research, bool update)
 
         research_players_iterate(research, pplayer)
         {
-          log_debug("[player %d] researched: %-25s (ID: %4d) techs: %3d "
+          qDebug("[player %d] researched: %-25s (ID: %4d) techs: %3d "
                     "upkeep: %4d",
                     research_number(research),
                     advance_rule_name(advance_by_number(tech)), tech,

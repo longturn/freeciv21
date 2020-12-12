@@ -49,7 +49,7 @@ void load_install_info_list(const char *filename)
   if (file == NULL) {
     /* This happens in first run - or actually all runs until something is
      * installed. Previous run has not saved database. */
-    log_debug("No install info file");
+    qDebug("No install info file");
 
     return;
   }
@@ -172,7 +172,7 @@ void create_mpdb(const char *filename, bool scenario_db)
   }
 
   if (ret == SQLITE_OK) {
-    log_debug("Created %s", filename);
+    qDebug("Created %s", filename);
   } else {
     qCritical(_("Creating \"%s\" failed: %s"), filename,
               sqlite3_errstr(ret));

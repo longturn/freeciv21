@@ -82,7 +82,7 @@ static void texai_thread_start(void *arg)
   bool finished = FALSE;
   struct ai_type *texai = arg;
 
-  log_debug("New AI thread launched");
+  qDebug("New AI thread launched");
 
   texai_world_init();
   if (!map_is_empty()) {
@@ -102,7 +102,7 @@ static void texai_thread_start(void *arg)
 
   texai_world_close();
 
-  log_debug("AI thread exiting");
+  qDebug("AI thread exiting");
 }
 
 /**********************************************************************/ /**
@@ -163,7 +163,7 @@ static enum texai_abort_msg_class texai_check_messages(struct ai_type *ait)
     texaimsg_list_remove(exthrai.msgs_to.msglist, msg);
     texaimsg_list_release_mutex(exthrai.msgs_to.msglist);
 
-    log_debug("Plr thr got %s", texaimsgtype_name(msg->type));
+    qDebug("Plr thr got %s", texaimsgtype_name(msg->type));
 
     switch (msg->type) {
     case TEXAI_MSG_FIRST_ACTIVITIES:
@@ -299,7 +299,7 @@ void texai_control_gained(struct ai_type *ait, struct player *pplayer)
 {
   exthrai.num_players++;
 
-  log_debug("%s now under tex AI (%d)", pplayer->name, exthrai.num_players);
+  qDebug("%s now under tex AI (%d)", pplayer->name, exthrai.num_players);
 
   if (!exthrai.thread_running) {
     exthrai.msgs_to.msglist = texaimsg_list_new();
@@ -333,7 +333,7 @@ void texai_control_lost(struct ai_type *ait, struct player *pplayer)
 {
   exthrai.num_players--;
 
-  log_debug("%s no longer under threaded AI (%d)", pplayer->name,
+  qDebug("%s no longer under threaded AI (%d)", pplayer->name,
             exthrai.num_players);
 
   if (exthrai.num_players <= 0) {
@@ -364,7 +364,7 @@ void texai_refresh(struct ai_type *ait, struct player *pplayer)
 
       texaireq_list_release_mutex(exthrai.reqs_from.reqlist);
 
-      log_debug("Plr thr sent %s", texaireqtype_name(req->type));
+      qDebug("Plr thr sent %s", texaireqtype_name(req->type));
 
       switch (req->type) {
       case TEXAI_REQ_WORKER_TASK:

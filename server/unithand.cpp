@@ -308,7 +308,7 @@ static bool do_capture_units(struct player *pplayer, struct unit *punit,
     }
 
     if (unique_conflict) {
-      log_debug("capture units: already got unique unit");
+      qDebug("capture units: already got unique unit");
       notify_player(pplayer, pdesttile, E_UNIT_ILLEGAL_ACTION, ftc_server,
                     /* TRANS: You can only have one Leader. */
                     _("You can only have one %s."), unit_link(to_capture));
@@ -3580,7 +3580,7 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
   fc_assert_ret_val(pplayer, FALSE);
   fc_assert_ret_val(punit, FALSE);
 
-  log_debug("Start bombard: %s %s to %d, %d.",
+  qDebug("Start bombard: %s %s to %d, %d.",
             nation_rule_name(nation_of_player(pplayer)),
             unit_rule_name(punit), TILE_XY(ptile));
 
@@ -3685,7 +3685,7 @@ static bool unit_nuke(struct player *pplayer, struct unit *punit,
   fc_assert_ret_val(pplayer, FALSE);
   fc_assert_ret_val(punit, FALSE);
 
-  log_debug("Start nuclear attack: %s %s against (%d, %d).",
+  qDebug("Start nuclear attack: %s %s against (%d, %d).",
             nation_rule_name(nation_of_player(pplayer)),
             unit_rule_name(punit), TILE_XY(def_tile));
 
@@ -3843,7 +3843,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
     return FALSE;
   }
 
-  log_debug("Start attack: %s %s against %s %s.",
+  qDebug("Start attack: %s %s against %s %s.",
             nation_rule_name(nation_of_player(pplayer)),
             unit_rule_name(punit),
             nation_rule_name(nation_of_unit(pdefender)),
@@ -3950,7 +3950,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
 
   if (punit == ploser) {
     /* The attacker lost */
-    log_debug("Attacker lost: %s %s against %s %s.",
+    qDebug("Attacker lost: %s %s against %s %s.",
               nation_rule_name(nation_of_player(pplayer)),
               unit_rule_name(punit),
               nation_rule_name(nation_of_unit(pdefender)),
@@ -3974,7 +3974,7 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
   } else {
     /* The defender lost, the attacker punit lives! */
 
-    log_debug("Defender lost: %s %s against %s %s.",
+    qDebug("Defender lost: %s %s against %s %s.",
               nation_rule_name(nation_of_player(pplayer)),
               unit_rule_name(punit),
               nation_rule_name(nation_of_unit(pdefender)),
@@ -4338,7 +4338,7 @@ bool unit_move_handling(struct unit *punit, struct tile *pdesttile,
   /* this occurs often during lag, and to the AI due to some quirks -- Syela
    */
   if (!is_tiles_adjacent(unit_tile(punit), pdesttile)) {
-    log_debug("tiles not adjacent in move request");
+    qDebug("tiles not adjacent in move request");
     return FALSE;
   }
 
@@ -5370,9 +5370,9 @@ void handle_unit_orders(struct player *pplayer,
   }
 
 #ifdef FREECIV_DEBUG
-  log_debug("Orders for unit %d: length:%d", packet->unit_id, length);
+  qDebug("Orders for unit %d: length:%d", packet->unit_id, length);
   for (i = 0; i < length; i++) {
-    log_debug("  %d,%s,%s,%d,%d", packet->orders[i].order,
+    qDebug("  %d,%s,%s,%d,%d", packet->orders[i].order,
               dir_get_name(packet->orders[i].dir),
               packet->orders[i].order == ORDER_PERFORM_ACTION
                   ? action_id_rule_name(packet->orders[i].action)
@@ -5435,7 +5435,7 @@ void handle_worker_task(struct player *pplayer,
       if (packet->tgt < MAX_EXTRA_TYPES) {
         ptask->tgt = extra_by_number(packet->tgt);
       } else {
-        log_debug("Illegal worker task target %d", packet->tgt);
+        qDebug("Illegal worker task target %d", packet->tgt);
         ptask->tgt = NULL;
       }
     } else {

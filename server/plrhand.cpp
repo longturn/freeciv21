@@ -353,7 +353,7 @@ void government_change(struct player *pplayer, struct government *gov,
   pplayer->target_government = NULL;
 
   if (revolution_finished) {
-    log_debug("Revolution finished for %s. Government is %s. "
+    qDebug("Revolution finished for %s. Government is %s. "
               "Revofin %d (%d).",
               player_name(pplayer), government_rule_name(gov),
               pplayer->revolution_finishes, game.info.turn);
@@ -451,7 +451,7 @@ void handle_player_change_government(struct player *pplayer,
     return;
   }
 
-  log_debug("Government changed for %s. Target government is %s; "
+  qDebug("Government changed for %s. Target government is %s; "
             "old %s. Revofin %d, Turn %d.",
             player_name(pplayer), government_rule_name(gov),
             government_rule_name(government_of_player(pplayer)),
@@ -493,7 +493,7 @@ void handle_player_change_government(struct player *pplayer,
   pplayer->target_government = gov;
   pplayer->revolution_finishes = game.info.turn + turns;
 
-  log_debug("Revolution started for %s. Target government is %s. "
+  qDebug("Revolution started for %s. Target government is %s. "
             "Revofin %d (%d).",
             player_name(pplayer),
             government_rule_name(pplayer->target_government),
@@ -528,7 +528,7 @@ void handle_player_change_government(struct player *pplayer,
   city_refresh_for_player(pplayer);
   send_player_info_c(pplayer, pplayer->connections);
 
-  log_debug("Government change complete for %s. Target government is %s; "
+  qDebug("Government change complete for %s. Target government is %s; "
             "now %s. Turn %d; revofin %d.",
             player_name(pplayer),
             government_rule_name(pplayer->target_government),
@@ -563,7 +563,7 @@ void update_revolution(struct player *pplayer)
    *       is reset at the end of any turn when a non-anarchy government is
    *       chosen.
    */
-  log_debug("Update revolution for %s. Current government %s, "
+  qDebug("Update revolution for %s. Current government %s, "
             "target %s, revofin %d, turn %d.",
             player_name(pplayer),
             government_rule_name(government_of_player(pplayer)),
@@ -579,7 +579,7 @@ void update_revolution(struct player *pplayer)
     if (pplayer->target_government != game.government_during_revolution) {
       /* If the revolution is over and a target government is set, go into
        * the new government. */
-      log_debug("Update: finishing revolution for %s.",
+      qDebug("Update: finishing revolution for %s.",
                 player_name(pplayer));
       government_change(pplayer, pplayer->target_government, TRUE);
     } else {
@@ -594,7 +594,7 @@ void update_revolution(struct player *pplayer)
              && pplayer->revolution_finishes < game.info.turn) {
     /* Reset the revolution counter.  If the player has another revolution
      * they'll have to re-enter anarchy. */
-    log_debug("Update: resetting revofin for %s.", player_name(pplayer));
+    qDebug("Update: resetting revofin for %s.", player_name(pplayer));
     pplayer->revolution_finishes = -1;
     send_player_info_c(pplayer, pplayer->connections);
   }
@@ -2010,7 +2010,7 @@ bool server_player_set_name_full(const struct connection *caller,
 
     if (server_player_name_is_allowed(caller, pplayer, pnation, real_name,
                                       error_buf, error_buf_len)) {
-      log_debug("Name of player nb %d set to \"%s\".",
+      qDebug("Name of player nb %d set to \"%s\".",
                 player_number(pplayer), real_name);
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
       return TRUE; /* Success! */
@@ -2040,7 +2040,7 @@ bool server_player_set_name_full(const struct connection *caller,
         fc_strlcpy(pplayer->name, test, sizeof(pplayer->name));
         return TRUE;
       } else {
-        log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
+        qDebug("Failed to set the name of the player nb %d to \"%s\": %s",
                   player_number(pplayer), test, error_buf);
       }
     }
@@ -2056,7 +2056,7 @@ bool server_player_set_name_full(const struct connection *caller,
     fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
     return TRUE;
   } else {
-    log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
+    qDebug("Failed to set the name of the player nb %d to \"%s\": %s",
               player_number(pplayer), real_name, error_buf);
   }
 
@@ -2070,7 +2070,7 @@ bool server_player_set_name_full(const struct connection *caller,
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
       return TRUE;
     } else {
-      log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
+      qDebug("Failed to set the name of the player nb %d to \"%s\": %s",
                 player_number(pplayer), real_name, error_buf);
     }
   }
@@ -2201,7 +2201,7 @@ void shuffle_players(void)
   int n = player_slot_count();
   int i;
 
-  log_debug("shuffle_players: creating shuffled order");
+  qDebug("shuffle_players: creating shuffled order");
 
   for (i = 0; i < n; i++) {
     shuffled_order[i] = i;
@@ -2212,7 +2212,7 @@ void shuffle_players(void)
 
 #ifdef FREECIV_DEBUG
   for (i = 0; i < n; i++) {
-    log_debug("shuffled_order[%d] = %d", i, shuffled_order[i]);
+    qDebug("shuffled_order[%d] = %d", i, shuffled_order[i]);
   }
 #endif /* FREECIV_DEBUG */
 }
@@ -2224,12 +2224,12 @@ void set_shuffled_players(int *shuffled_players)
 {
   int i;
 
-  log_debug("set_shuffled_players: loading shuffled array %p",
+  qDebug("set_shuffled_players: loading shuffled array %p",
             shuffled_players);
 
   for (i = 0; i < player_slot_count(); i++) {
     shuffled_order[i] = shuffled_players[i];
-    log_debug("shuffled_order[%d] = %d", i, shuffled_order[i]);
+    qDebug("shuffled_order[%d] = %d", i, shuffled_order[i]);
   }
 }
 
@@ -2243,7 +2243,7 @@ struct player *shuffled_player(int i)
   struct player *pplayer;
 
   pplayer = player_by_number(shuffled_order[i]);
-  log_debug("shuffled_player(%d) = %d (%s)", i, shuffled_order[i],
+  qDebug("shuffled_player(%d) = %d (%s)", i, shuffled_order[i],
             player_name(pplayer));
   return pplayer;
 }
@@ -2318,7 +2318,7 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
         int x = nations_match(pnation, nation_of_player(pplayer),
                               ignore_conflicts);
         if (x < 0) {
-          log_debug("Nations '%s' (nb %d) and '%s' (nb %d) are in conflict.",
+          qDebug("Nations '%s' (nb %d) and '%s' (nb %d) are in conflict.",
                     nation_rule_name(pnation), nation_number(pnation),
                     nation_rule_name(nation_of_player(pplayer)),
                     nation_number(nation_of_player(pplayer)));
@@ -2357,13 +2357,13 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
       /* Use a preferred nation only. */
       pick = fc_rand(num_pref_nations);
       looking_for = PREFERRED;
-      log_debug("Picking a preferred nation.");
+      qDebug("Picking a preferred nation.");
     } else {
       /* Use any available nation. */
       fc_assert(0 < num_avail_nations);
       pick = fc_rand(num_avail_nations);
       looking_for = AVAILABLE;
-      log_debug("Picking an available nation.");
+      qDebug("Picking an available nation.");
     }
 
     nations_iterate(pnation)
@@ -2383,7 +2383,7 @@ struct nation_type *pick_a_nation(const struct nation_list *choices,
     struct nation_type *less_worst_nation = NO_NATION_SELECTED;
     int less_worst_score = -FC_INFINITY;
 
-    log_debug("Picking an unwanted nation.");
+    qDebug("Picking an unwanted nation.");
     nations_iterate(pnation)
     {
       idx = nation_index(pnation);
@@ -2917,7 +2917,7 @@ struct player *civil_war(struct player *pplayer)
     fc_assert_ret_val(game.server.max_players < MAX_NUM_PLAYERS, NULL);
 
     game.server.max_players++;
-    log_debug("Increased 'maxplayers' to allow the creation of a new player "
+    qDebug("Increased 'maxplayers' to allow the creation of a new player "
               "due to civil war.");
   }
 

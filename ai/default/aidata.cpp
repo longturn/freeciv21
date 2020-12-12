@@ -334,7 +334,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
       dai_data_phase_begin(ait, pplayer, FALSE);
     } else {
       /* wrong order */
-      log_debug("%s ai data phase closed when dai_plr_data_get() called",
+      qDebug("%s ai data phase closed when dai_plr_data_get() called",
                 player_name(pplayer));
       dai_data_phase_begin(ait, pplayer, FALSE);
       if (caller_closes != NULL) {

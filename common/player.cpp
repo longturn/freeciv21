@@ -467,7 +467,7 @@ struct player *player_new(struct player_slot *pslot)
   }
 
   /* Now create the player. */
-  log_debug("Create player for slot %d.", player_slot_index(pslot));
+  qDebug("Create player for slot %d.", player_slot_index(pslot));
   pplayer = new player[1]();
   pplayer->slot = pslot;
   pslot->player = pplayer;

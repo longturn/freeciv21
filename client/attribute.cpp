@@ -31,8 +31,6 @@
 
 #include "attribute.h"
 
-#define log_attribute log_debug
-
 enum attribute_serial {
   A_SERIAL_FAIL,
   A_SERIAL_OK,
@@ -175,7 +173,7 @@ static enum attribute_serial serialize_hash(attributeHash *hash,
    */
   *pdata = result;
   *pdata_length = total_length;
-  log_attribute("attribute.c serialize_hash() "
+  qDebug("attribute.c serialize_hash() "
                 "serialized %lu entries in %lu bytes",
                 (long unsigned) entries, (long unsigned) total_length);
   return A_SERIAL_OK;
@@ -219,7 +217,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     return A_SERIAL_FAIL;
   }
 
-  log_attribute("attribute.c unserialize_hash() "
+  qDebug("attribute.c unserialize_hash() "
                 "uint32 %lu entries, %lu data_length",
                 (long unsigned) entries, (long unsigned) data_length);
 
@@ -234,7 +232,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
              "uint32 value_length dio_input_too_short");
       return A_SERIAL_FAIL;
     }
-    log_attribute("attribute.c unserialize_hash() "
+    qDebug("attribute.c unserialize_hash() "
                   "uint32 %lu value_length",
                   (long unsigned) value_length);
 
@@ -273,7 +271,7 @@ unserialize_hash(attributeHash *hash, const void *data, size_t data_length)
     /* This is not an error, as old clients sent overlong serialized
      * attributes pre gna bug #21295, and these will be hanging around
      * in savefiles forever. */
-    log_attribute("attribute.c unserialize_hash() "
+    qDebug("attribute.c unserialize_hash() "
                   "ignored %lu trailing octets",
                   (long unsigned) dio_input_remaining(&din));
   }
@@ -343,7 +341,7 @@ void attribute_set(int key, int id, int x, int y, size_t data_length,
 {
   class attr_key akey(key, id, x, y);
 
-  log_attribute("attribute_set(key = %d, id = %d, x = %d, y = %d, "
+  qDebug("attribute_set(key = %d, id = %d, x = %d, y = %d, "
                 "data_length = %lu, data = %p)",
                 key, id, x, y, (long unsigned) data_length, data);
 
@@ -377,14 +375,14 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
   int length;
   struct data_in din;
 
-  log_attribute("attribute_get(key = %d, id = %d, x = %d, y = %d, "
+  qDebug("attribute_get(key = %d, id = %d, x = %d, y = %d, "
                 "max_data_length = %lu, data = %p)",
                 key, id, x, y, (long unsigned) max_data_length, data);
 
   fc_assert_ret_val(NULL != attribute_hash, 0);
 
   if (!attribute_hash->contains(akey)) {
-    log_attribute("  not found");
+    qDebug("  not found");
     return 0;
   }
 
@@ -397,7 +395,7 @@ size_t attribute_get(int key, int id, int x, int y, size_t max_data_length,
     dio_get_memory_raw(&din, data, length);
   }
 
-  log_attribute("  found length = %d", length);
+  qDebug("  found length = %d", length);
   return length;
 }
 

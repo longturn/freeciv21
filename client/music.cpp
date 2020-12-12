@@ -69,7 +69,7 @@ void start_style_music(void)
       }
 
       if (tag != NULL && tag[0] != '\0') {
-        log_debug("Play %s", tag);
+        qDebug("Play %s", tag);
         audio_play_music(tag, NULL, MU_INGAME);
       }
     }

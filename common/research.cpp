@@ -607,14 +607,14 @@ void research_update(struct research *presearch)
     advance_index_iterate_end;
     buf.insert(advance_count(), '\0');
 
-    log_debug("%s: [%3d] %-25s => %s%s%s", research_rule_name(presearch), i,
+    qDebug("%s: [%3d] %-25s => %s%s%s", research_rule_name(presearch), i,
               advance_rule_name(advance_by_number(i)),
               tech_state_name(research_invention_state(presearch, i)),
               presearch->inventions[i].reachable ? "" : " [unrechable]",
               presearch->inventions[i].root_reqs_known
                   ? ""
                   : " [root reqs aren't known]");
-    log_debug("%s: [%3d] %s", research_rule_name(presearch), i, qUtf8Printable(buf));
+    qDebug("%s: [%3d] %s", research_rule_name(presearch), i, qUtf8Printable(buf));
   }
   advance_index_iterate_end;
 #endif /* FREECIV_DEBUG */
@@ -1150,7 +1150,7 @@ int player_tech_upkeep(const struct player *pplayer)
     tech_upkeep = 0.0;
   }
 
-  log_debug("[%s (%d)] tech upkeep: %d", player_name(pplayer),
+  qDebug("[%s (%d)] tech upkeep: %d", player_name(pplayer),
             player_number(pplayer), (int) tech_upkeep);
   return (int) tech_upkeep;
 }

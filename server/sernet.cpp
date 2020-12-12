@@ -468,7 +468,7 @@ static void start_processing_request(struct connection *pconn,
 {
   fc_assert_ret(request_id);
   fc_assert_ret(pconn->server.currently_processed_request_id == 0);
-  log_debug("start processing packet %d from connection %d", request_id,
+  qDebug("start processing packet %d from connection %d", request_id,
             pconn->id);
   conn_compression_freeze(pconn);
   send_packet_processing_started(pconn);
@@ -484,7 +484,7 @@ static void finish_processing_request(struct connection *pconn)
     return;
   }
   fc_assert_ret(pconn->server.currently_processed_request_id);
-  log_debug("finish processing packet %d from connection %d",
+  qDebug("finish processing packet %d from connection %d",
             pconn->server.currently_processed_request_id, pconn->id);
   send_packet_processing_finished(pconn);
   pconn->server.currently_processed_request_id = 0;
@@ -498,7 +498,7 @@ void connection_ping(struct connection *pconn)
 {
   civtimer *timer = timer_new(TIMER_USER, TIMER_ACTIVE);
 
-  log_debug("sending ping to %s (open=%d)", conn_description(pconn),
+  qDebug("sending ping to %s (open=%d)", conn_description(pconn),
             pconn->server.ping_timers->size());
   timer_start(timer);
   pconn->server.ping_timers->append(timer);
@@ -532,7 +532,7 @@ void handle_conn_pong(struct connection *pconn)
  *****************************************************************************/
 void handle_client_heartbeat(struct connection *pconn)
 {
-  log_debug("Received heartbeat");
+  qDebug("Received heartbeat");
 }
 
 /*************************************************************************/ /**
@@ -579,10 +579,10 @@ void get_lanserver_announcement()
     dio_input_init(&din, data.constData(), 1);
     dio_get_uint8_raw(&din, &type);
     if (type == SERVER_LAN_VERSION) {
-      log_debug("Received request for server LAN announcement.");
+      qDebug("Received request for server LAN announcement.");
       send_lanserver_response();
     } else {
-      log_debug("Received invalid request for server LAN announcement.");
+      qDebug("Received invalid request for server LAN announcement.");
     }
   }
 }

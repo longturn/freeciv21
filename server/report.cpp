@@ -1215,7 +1215,7 @@ static bool scan_score_log(char *id)
         ptr++;
       }
       fc_snprintf(plr_name, sizeof(plr_name), "%s", ptr);
-      log_debug("add player '%s' (from line %d: '%s')", plr_name, line_nr,
+      qDebug("add player '%s' (from line %d: '%s')", plr_name, line_nr,
                 line);
 
       if (0 > plr_no || plr_no >= player_slot_count()) {
@@ -1510,7 +1510,7 @@ void log_civ_score_now(void)
                           * in SL_ALL case if reached here */
       case SL_ALL:
         if (strcmp(plrdata->name, player_name(pplayer)) != 0) {
-          log_debug("player names does not match '%s' != '%s'",
+          qDebug("player names does not match '%s' != '%s'",
                     plrdata->name, player_name(pplayer));
           fprintf(score_log->fp, "delplayer %d %d\n", game.info.turn - 1,
                   player_number(pplayer));

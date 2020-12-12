@@ -107,7 +107,7 @@ static bool dai_should_we_air_attack_tile(struct ai_type *ait,
       && def_ai_city_data(acity, ait)->invasion.occupy == 0
       && !unit_can_take_over(punit)) {
     /* No units capable of occupying are invading */
-    log_debug("Don't want to attack %s, although we could",
+    qDebug("Don't want to attack %s, although we could",
               city_name_get(acity));
     return FALSE;
   }
@@ -181,10 +181,10 @@ static int dai_evaluate_tile_for_air_attack(struct unit *punit,
     profit = military_amortize(unit_owner(punit),
                                game_city_by_number(punit->homecity), profit,
                                sortie_time, balanced_cost);
-    log_debug("%s at (%d, %d) is a worthy target with profit %d",
+    qDebug("%s at (%d, %d) is a worthy target with profit %d",
               unit_rule_name(pdefender), TILE_XY(dst_tile), profit);
   } else {
-    log_debug("%s(%d, %d): %s at (%d, %d) is unworthy with profit %d",
+    qDebug("%s(%d, %d): %s at (%d, %d) is unworthy with profit %d",
               unit_rule_name(punit), TILE_XY(unit_tile(punit)),
               unit_rule_name(pdefender), TILE_XY(dst_tile), profit);
     profit = 0;
@@ -243,7 +243,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
       if (new_best > best) {
         best_tile = ptile;
         best = new_best;
-        log_debug("%s wants to attack tile (%d, %d)", unit_rule_name(punit),
+        qDebug("%s wants to attack tile (%d, %d)", unit_rule_name(punit),
                   TILE_XY(ptile));
       }
     }
@@ -413,7 +413,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
         dai_unit_attack(ait, punit, dst_tile);
       }
     } else if ((dst_tile = dai_find_strategic_airbase(ait, punit, &path))) {
-      log_debug("%s will fly to (%i, %i) (%s) to fight there",
+      qDebug("%s will fly to (%i, %i) (%s) to fight there",
                 unit_rule_name(punit), TILE_XY(dst_tile),
                 tile_city(dst_tile) ? city_name_get(tile_city(dst_tile))
                                     : "");
@@ -424,7 +424,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
       }
       pf_path_destroy(path);
     } else {
-      log_debug("%s cannot find anything to kill and is staying put",
+      qDebug("%s cannot find anything to kill and is staying put",
                 unit_rule_name(punit));
       def_ai_unit_data(punit, ait)->done = TRUE;
       unit_activity_handling(punit, ACTIVITY_IDLE);
@@ -503,10 +503,10 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
         choice->need_boat = FALSE;
         adv_choice_set_use(choice, "offensive air");
         want_something = TRUE;
-        log_debug("%s wants to build %s (want=%d)", city_name_get(pcity),
+        qDebug("%s wants to build %s (want=%d)", city_name_get(pcity),
                   utype_rule_name(punittype), profit);
       } else {
-        log_debug("%s doesn't want to build %s (want=%d)",
+        qDebug("%s doesn't want to build %s (want=%d)",
                   city_name_get(pcity), utype_rule_name(punittype), profit);
       }
       unit_virtual_destroy(virtual_unit);

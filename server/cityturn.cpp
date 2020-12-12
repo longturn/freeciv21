@@ -2089,9 +2089,9 @@ void choose_build_target(struct player *pplayer, struct city *pcity)
   };
 
   /* Find *something* to do! */
-  log_debug("Trying advisor_choose_build.");
+  qDebug("Trying advisor_choose_build.");
   advisor_choose_build(pplayer, pcity);
-  log_debug("Advisor_choose_build didn't kill us.");
+  qDebug("Advisor_choose_build didn't kill us.");
 }
 
 /**********************************************************************/ /**
@@ -2630,7 +2630,7 @@ static bool sell_random_building(struct player *pplayer,
                 _("Can't afford to maintain %s in %s, building sold!"),
                 improvement_name_translation(pcityimpr->pimprove),
                 city_link(pcityimpr->pcity));
-  log_debug("%s: sold building (%s)", player_name(pplayer),
+  qDebug("%s: sold building (%s)", player_name(pplayer),
             improvement_name_translation(pcityimpr->pimprove));
 
   do_sell_building(pplayer, pcityimpr->pcity, pcityimpr->pimprove,
@@ -2782,7 +2782,7 @@ static struct unit *sell_random_unit(struct player *pplayer,
 
       notify_player(pplayer, utile, E_UNIT_LOST_MISC, ftc_server,
                     _("Not enough gold. %s disbanded."), punit_link);
-      log_debug("%s: unit sold (%s)", player_name(pplayer), punit_logname);
+      qDebug("%s: unit sold (%s)", player_name(pplayer), punit_logname);
     } else {
       /* Not able to get rid of punit */
       return NULL;
@@ -3019,7 +3019,7 @@ static bool place_pollution(struct city *pcity, enum extra_cause cause)
     }
     k--;
   }
-  log_debug("pollution not placed: city: %s", city_name_get(pcity));
+  qDebug("pollution not placed: city: %s", city_name_get(pcity));
 
   return FALSE;
 }
@@ -3145,7 +3145,7 @@ static void define_orig_production_values(struct city *pcity)
    * something different.  See city_change_production_penalty(). */
   pcity->changed_from = pcity->production;
 
-  log_debug("In %s, building %s.  Beg of Turn shields = %d",
+  qDebug("In %s, building %s.  Beg of Turn shields = %d",
             city_name_get(pcity), universal_rule_name(&pcity->changed_from),
             pcity->before_change_shields);
 }
@@ -3530,7 +3530,7 @@ static float city_migration_score(struct city *pcity)
   /* take into account effects */
   score *= (1.0 + get_city_bonus(pcity, EFT_MIGRATION_PCT) / 100.0);
 
-  log_debug("[M] %s score: %.3f", city_name_get(pcity), score);
+  qDebug("[M] %s score: %.3f", city_name_get(pcity), score);
 
   /* set migration score for the city */
   pcity->server.migration_score = score;
@@ -3773,7 +3773,7 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
     }
   }
 
-  log_debug("[M] T%d migration successful (%s -> %s)", game.info.turn,
+  qDebug("[M] T%d migration successful (%s -> %s)", game.info.turn,
             name_from, name_to);
 
   return TRUE;
@@ -3863,7 +3863,7 @@ static void apply_disaster(struct city *pcity, struct disaster_type *pdis)
   struct tile *ptile = city_tile(pcity);
   bool had_internal_effect = FALSE;
 
-  log_debug("%s at %s", disaster_rule_name(pdis), city_name_get(pcity));
+  qDebug("%s at %s", disaster_rule_name(pdis), city_name_get(pcity));
 
   notify_player(pplayer, ptile, E_DISASTER, ftc_server,
                 /* TRANS: Disasters such as Earthquake */
@@ -4046,7 +4046,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
      * taking into account a persistence factor of 3 */
     score_from = city_migration_score(pcity) * 3;
 
-    log_debug("[M] T%d check city: %s score: %6.3f (%s)", game.info.turn,
+    qDebug("[M] T%d check city: %s score: %6.3f (%s)", game.info.turn,
               city_name_get(pcity), score_from, player_name(pplayer));
 
     /* consider all cities within the maximal possible distance
@@ -4080,7 +4080,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
       weight = ((float) (mgr_dist + 1 - dist) / (float) (mgr_dist + 1));
       score_tmp = city_migration_score(acity) * weight;
 
-      log_debug("[M] T%d - compare city: %s (%s) dist: %d mgr_dist: %d "
+      qDebug("[M] T%d - compare city: %s (%s) dist: %d mgr_dist: %d "
                 "score: %6.3f",
                 game.info.turn, city_name_get(acity),
                 player_name(city_owner(acity)), dist, mgr_dist, score_tmp);
@@ -4092,7 +4092,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
           best_city_player_score = score_tmp;
           best_city_player = acity;
 
-          log_debug("[M] T%d - best city (player): %s (%s) score: "
+          qDebug("[M] T%d - best city (player): %s (%s) score: "
                     "%6.3f (> %6.3f)",
                     game.info.turn, city_name_get(best_city_player),
                     player_name(pplayer), best_city_player_score,
@@ -4114,7 +4114,7 @@ static bool check_city_migrations_player(const struct player *pplayer)
           best_city_world_score = score_tmp;
           best_city_world = acity;
 
-          log_debug("[M] T%d - best city (world): %s (%s) score: "
+          qDebug("[M] T%d - best city (world): %s (%s) score: "
                     "%6.3f (> %6.3f)",
                     game.info.turn, city_name_get(best_city_world),
                     player_name(city_owner(best_city_world)),

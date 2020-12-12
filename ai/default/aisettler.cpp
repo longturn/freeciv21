@@ -832,7 +832,7 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
       cr = NULL;
       best_turn = turns;
 
-      log_debug("settler map search (search): (%d,%d) %d",
+      qDebug("settler map search (search): (%d,%d) %d",
                 TILE_XY(best->tile), best->result);
     } else {
       /* Destroy the unused result. */
@@ -855,10 +855,10 @@ static struct cityresult *settler_map_iterate(struct ai_type *ait,
   pf_map_destroy(pfm);
 
   if (best) {
-    log_debug("settler map search (final): (%d,%d) %d", TILE_XY(best->tile),
+    qDebug("settler map search (final): (%d,%d) %d", TILE_XY(best->tile),
               best->result);
   } else {
-    log_debug("settler map search (final): no result");
+    qDebug("settler map search (final): no result");
   }
 
   return best;
@@ -1194,7 +1194,7 @@ void dai_auto_settler_reset(struct ai_type *ait, struct player *pplayer)
   fc_assert_ret(ai->settler->tdc_hash != NULL);
 
 #ifdef FREECIV_DEBUG
-  log_debug("[aisettler cache for %s] save: %d, miss: %d, old: %d, hit: %d",
+  qDebug("[aisettler cache for %s] save: %d, miss: %d, old: %d, hit: %d",
             player_name(pplayer), ai->settler->cache.save,
             ai->settler->cache.miss, ai->settler->cache.old,
             ai->settler->cache.hit);
@@ -1250,7 +1250,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
   if (pcity) {
     /* This can happen for instance when there was hut at this tile
      * and it turned in to a city when settler entered tile. */
-    log_debug("%s: There is already a city at (%d, %d)!",
+    qDebug("%s: There is already a city at (%d, %d)!",
               player_name(pplayer), TILE_XY(ptile));
     return FALSE;
   }
@@ -1264,7 +1264,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
     if (reason == ANEK_CITY_TOO_CLOSE_TGT) {
       /* This is acceptable. A hut in the path to the tile may have created
        * a city that now is too close. */
-      log_debug("%s: Failed to build city at (%d, %d)", player_name(pplayer),
+      qDebug("%s: Failed to build city at (%d, %d)", player_name(pplayer),
                 TILE_XY(ptile));
     } else {
       /* The request was illegal to begin with. */
@@ -1304,7 +1304,7 @@ void contemplate_new_city(struct ai_type *ait, struct city *pcity)
   unit_type = best_role_unit(pcity, action_id_get_role(ACTION_FOUND_CITY));
 
   if (unit_type == NULL) {
-    log_debug("No ACTION_FOUND_CITY role unit available");
+    qDebug("No ACTION_FOUND_CITY role unit available");
     return;
   }
 

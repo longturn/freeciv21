@@ -214,7 +214,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
                  datagram.senderAddress().toString().toLocal8Bit());
     }
 
-    log_debug("Received a valid announcement from a server on the LAN.");
+    qDebug("Received a valid announcement from a server on the LAN.");
 
     pserver = new server;
     pserver->host = fc_strdup(servername);

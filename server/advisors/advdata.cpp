@@ -676,7 +676,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
          case of being called in alternate movement mode for players
          other than currently moving one (for diplomacy between the two,
          for example) */
-      log_debug("%s advisor data phase closed when adv_data_get() called",
+      qDebug("%s advisor data phase closed when adv_data_get() called",
                 player_name(pplayer));
       adv_data_phase_init(pplayer, FALSE);
       if (caller_closes != NULL) {

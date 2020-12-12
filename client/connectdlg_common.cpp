@@ -480,6 +480,6 @@ void set_ruleset(const char *ruleset)
   char buf[4096];
 
   fc_snprintf(buf, sizeof(buf), "/read %s%s", ruleset, RULESET_SUFFIX);
-  log_debug("Executing '%s'", buf);
+  qDebug("Executing '%s'", buf);
   send_chat(buf);
 }

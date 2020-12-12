@@ -32,15 +32,13 @@
 
 #include "citizenshand.h"
 
-#define log_citizens log_debug
-
 /*************************************************************************/ /**
    Update the nationality according to the city size. New citiens are added
    using the nationality of the owner. If the city size is reduced, the
    citizens are removed first from the foreign citizens.
  *****************************************************************************/
 #define log_citizens_add(_pcity, _delta, _pplayer)                          \
-  log_citizens("%s (size %d; %s): %+d citizen(s) for %s (now: %d)",         \
+  qDebug("%s (size %d; %s): %+d citizen(s) for %s (now: %d)",         \
                city_name_get(_pcity), city_size_get(_pcity),                \
                player_name(city_owner(_pcity)), _delta,                     \
                player_name(_pplayer),                                       \
@@ -153,7 +151,7 @@ void citizens_print(const struct city *pcity)
     return;
   }
 
-  log_citizens("%s (size %d; %s): %d citizen(s)", city_name_get(pcity),
+  qDebug("%s (size %d; %s): %d citizen(s)", city_name_get(pcity),
                city_size_get(pcity), player_name(city_owner(pcity)),
                citizens_count(pcity));
 
@@ -163,7 +161,7 @@ void citizens_print(const struct city *pcity)
 
     fc_assert_ret(pplayer != NULL);
 
-    log_citizens("%s (size %d; %s): %d citizen(s) for %s",
+    qDebug("%s (size %d; %s): %d citizen(s) for %s",
                  city_name_get(pcity), city_size_get(pcity),
                  player_name(city_owner(pcity)), nationality,
                  player_name(pplayer));
@@ -222,7 +220,7 @@ void citizens_convert(struct city *pcity)
 
   fc_assert_ret(pplayer != NULL);
 
-  log_citizens("%s (size %d; %s): convert 1 citizen from %s",
+  qDebug("%s (size %d; %s): convert 1 citizen from %s",
                city_name_get(pcity), city_size_get(pcity),
                player_name(city_owner(pcity)), player_name(pplayer));
   citizens_nation_move(pcity, pslot, city_owner(pcity)->slot, 1);
@@ -251,7 +249,7 @@ void citizens_convert_conquest(struct city *pcity)
 
     fc_assert_ret(pplayer != NULL);
 
-    log_citizens("%s (size %d; %s): convert %d citizen from %s (conquered)",
+    qDebug("%s (size %d; %s): convert %d citizen from %s (conquered)",
                  city_name_get(pcity), city_size_get(pcity),
                  player_name(city_owner(pcity)), convert,
                  player_name(pplayer));

@@ -455,7 +455,7 @@ bool handle_login_request(struct connection *pconn,
   timer_destroy(deltimer);
 
   if (game.server.connectmsg[0] != '\0') {
-    log_debug("Sending connectmsg: %s", game.server.connectmsg);
+    qDebug("Sending connectmsg: %s", game.server.connectmsg);
     dsend_packet_connect_msg(pconn, game.server.connectmsg);
   }
 

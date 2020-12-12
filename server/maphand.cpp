@@ -692,11 +692,11 @@ void map_vision_update(struct player *pplayer, struct tile *ptile,
   vision_layer_iterate_end;
 
 #ifdef FREECIV_DEBUG
-  log_debug("Updating vision at (%d, %d) in a radius of %d.", TILE_XY(ptile),
+  qDebug("Updating vision at (%d, %d) in a radius of %d.", TILE_XY(ptile),
             max_radius);
   vision_layer_iterate(v)
   {
-    log_debug("  vision layer %d is changing from %d to %d.", v,
+    qDebug("  vision layer %d is changing from %d to %d.", v,
               old_radius_sq[v], new_radius_sq[v]);
   }
   vision_layer_iterate_end;
@@ -760,7 +760,7 @@ void map_show_tile(struct player *src_player, struct tile *ptile)
 {
   static int recurse = 0;
 
-  log_debug("Showing %i,%i to %s", TILE_XY(ptile), player_name(src_player));
+  qDebug("Showing %i,%i to %s", TILE_XY(ptile), player_name(src_player));
 
   fc_assert(recurse == 0);
   recurse++;
@@ -819,7 +819,7 @@ void map_hide_tile(struct player *src_player, struct tile *ptile)
 {
   static int recurse = 0;
 
-  log_debug("Hiding %d,%d to %s", TILE_XY(ptile), player_name(src_player));
+  qDebug("Hiding %d,%d to %s", TILE_XY(ptile), player_name(src_player));
 
   fc_assert(recurse == 0);
   recurse++;
@@ -941,11 +941,11 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   bool revealing_tile = FALSE;
 
 #ifdef FREECIV_DEBUG
-  log_debug("%s() for player %s (nb %d) at (%d, %d).", __FUNCTION__,
+  qDebug("%s() for player %s (nb %d) at (%d, %d).", __FUNCTION__,
             player_name(pplayer), player_number(pplayer), TILE_XY(ptile));
   vision_layer_iterate(v)
   {
-    log_debug("  vision layer %d is changing from %d to %d.", v,
+    qDebug("  vision layer %d is changing from %d to %d.", v,
               plrtile->seen_count[v], plrtile->seen_count[v] + change[v]);
   }
   vision_layer_iterate_end;
@@ -956,7 +956,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
    * the tile is empty when it is fogged. */
   if (0 > change[V_INVIS]
       && plrtile->seen_count[V_INVIS] == -change[V_INVIS]) {
-    log_debug("(%d, %d): hiding invisible units to player %s (nb %d).",
+    qDebug("(%d, %d): hiding invisible units to player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
 
     unit_list_iterate(ptile->units, punit)
@@ -970,7 +970,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   }
   if (0 > change[V_SUBSURFACE]
       && plrtile->seen_count[V_SUBSURFACE] == -change[V_SUBSURFACE]) {
-    log_debug("(%d, %d): hiding subsurface units to player %s (nb %d).",
+    qDebug("(%d, %d): hiding subsurface units to player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
 
     unit_list_iterate(ptile->units, punit)
@@ -984,7 +984,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   }
 
   if (0 > change[V_MAIN] && plrtile->seen_count[V_MAIN] == -change[V_MAIN]) {
-    log_debug("(%d, %d): hiding visible units to player %s (nb %d).",
+    qDebug("(%d, %d): hiding visible units to player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
 
     unit_list_iterate(ptile->units, punit)
@@ -1017,7 +1017,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
 
   if (!map_is_known(ptile, pplayer)) {
     if (0 < plrtile->seen_count[V_MAIN] && can_reveal_tiles) {
-      log_debug("(%d, %d): revealing tile to player %s (nb %d).",
+      qDebug("(%d, %d): revealing tile to player %s (nb %d).",
                 TILE_XY(ptile), player_name(pplayer),
                 player_number(pplayer));
 
@@ -1030,7 +1030,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
 
   /* Fog the tile. */
   if (0 > change[V_MAIN] && 0 == plrtile->seen_count[V_MAIN]) {
-    log_debug("(%d, %d): fogging tile for player %s (nb %d).",
+    qDebug("(%d, %d): fogging tile for player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
 
     update_player_tile_last_seen(pplayer, ptile);
@@ -1049,7 +1049,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
               == (plrtile->seen_count[V_MAIN])))) {
     struct city *pcity;
 
-    log_debug("(%d, %d): unfogging tile for player %s (nb %d).",
+    qDebug("(%d, %d): unfogging tile for player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
 
     /* Send info about the tile itself.
@@ -1079,7 +1079,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   if ((revealing_tile && 0 < plrtile->seen_count[V_INVIS])
       || (0 < change[V_INVIS]
           && change[V_INVIS] == plrtile->seen_count[V_INVIS])) {
-    log_debug("(%d, %d): revealing invisible units to player %s (nb %d).",
+    qDebug("(%d, %d): revealing invisible units to player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
     /* Discover units. */
     unit_list_iterate(ptile->units, punit)
@@ -1093,7 +1093,7 @@ void map_change_seen(struct player *pplayer, struct tile *ptile,
   if ((revealing_tile && 0 < plrtile->seen_count[V_SUBSURFACE])
       || (0 < change[V_SUBSURFACE]
           && change[V_SUBSURFACE] == plrtile->seen_count[V_SUBSURFACE])) {
-    log_debug("(%d, %d): revealing subsurface units to player %s (nb %d).",
+    qDebug("(%d, %d): revealing subsurface units to player %s (nb %d).",
               TILE_XY(ptile), player_name(pplayer), player_number(pplayer));
     /* Discover units. */
     unit_list_iterate(ptile->units, punit)
@@ -1630,7 +1630,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
 
   BV_SET(pfrom->gives_shared_vision, player_index(pto));
   create_vision_dependencies();
-  log_debug("giving shared vision from %s to %s", player_name(pfrom),
+  qDebug("giving shared vision from %s to %s", player_name(pfrom),
             player_name(pto));
 
   players_iterate(pplayer)
@@ -1641,7 +1641,7 @@ void give_shared_vision(struct player *pfrom, struct player *pto)
       if (really_gives_vision(pplayer, pplayer2)
           && !BV_ISSET(save_vision[player_index(pplayer)],
                        player_index(pplayer2))) {
-        log_debug("really giving shared vision from %s to %s",
+        qDebug("really giving shared vision from %s to %s",
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile)
         {
@@ -1693,7 +1693,7 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
   }
   players_iterate_end;
 
-  log_debug("removing shared vision from %s to %s", player_name(pfrom),
+  qDebug("removing shared vision from %s to %s", player_name(pfrom),
             player_name(pto));
 
   BV_CLR(pfrom->gives_shared_vision, player_index(pto));
@@ -1707,7 +1707,7 @@ void remove_shared_vision(struct player *pfrom, struct player *pto)
       if (!really_gives_vision(pplayer, pplayer2)
           && BV_ISSET(save_vision[player_index(pplayer)],
                       player_index(pplayer2))) {
-        log_debug("really removing shared vision from %s to %s",
+        qDebug("really removing shared vision from %s to %s",
                   player_name(pplayer), player_name(pplayer2));
         whole_map_iterate(&(wld.map), ptile)
         {

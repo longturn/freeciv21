@@ -4639,7 +4639,7 @@ void options_load(void)
     return;
   }
   if (!(sf = secfile_load(name, TRUE))) {
-    log_debug("Error loading option file '%s':\n%s", name, secfile_error());
+    qDebug("Error loading option file '%s':\n%s", name, secfile_error());
     /* try to create the rc file */
     sf = secfile_new(TRUE);
     secfile_insert_str(sf, VERSION_STRING, "client.version");
@@ -5208,16 +5208,16 @@ void fill_topo_ts_default(void)
               gui_options.default_tileset_overhead_name,
               sizeof(gui_options.default_tileset_square_name));
     } else {
-      log_debug("Setting tileset for square topologies.");
+      qDebug("Setting tileset for square topologies.");
       tilespec_try_read(NULL, FALSE, 0, FALSE);
     }
   }
   if (is_ts_option_unset("default_tileset_hex_name")) {
-    log_debug("Setting tileset for hex topology.");
+    qDebug("Setting tileset for hex topology.");
     tilespec_try_read(NULL, FALSE, TF_HEX, FALSE);
   }
   if (is_ts_option_unset("default_tileset_isohex_name")) {
-    log_debug("Setting tileset for isohex topology.");
+    qDebug("Setting tileset for isohex topology.");
     tilespec_try_read(NULL, FALSE, TF_ISO | TF_HEX, FALSE);
   }
 }

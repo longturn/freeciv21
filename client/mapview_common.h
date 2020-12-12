@@ -114,7 +114,7 @@ extern bool can_slide;
       const int _t##_count = (_t##_x1 - _t##_x0) * (_t##_y1 - _t##_y0);     \
       int _t##_index = 0;                                                   \
                                                                             \
-      log_debug("Iterating over %d-%d x %d-%d rectangle.", _t##_x1,         \
+      qDebug("Iterating over %d-%d x %d-%d rectangle.", _t##_x1,         \
                 _t##_x0, _t##_y1, _t##_y0);                                 \
       for (; _t##_index < _t##_count; _t##_index++) {                       \
         struct tile *_t = NULL;                                             \

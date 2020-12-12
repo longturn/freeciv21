@@ -646,7 +646,7 @@ static bool lookup_unit_list(struct section_file *file, const char *prefix,
         break;
       }
       output[i] = punittype;
-      log_debug("\"%s\" %s.%s (%d): %s (%d)", filename, prefix, entry, i,
+      qDebug("\"%s\" %s.%s (%d): %s (%d)", filename, prefix, entry, i,
                 sval, utype_number(punittype));
     }
   }
@@ -712,7 +712,7 @@ static bool lookup_tech_list(struct section_file *file, const char *prefix,
 
       if (ok) {
         output[i] = advance_number(padvance);
-        log_debug("\"%s\" %s.%s (%d): %s (%d)", filename, prefix, entry, i,
+        qDebug("\"%s\" %s.%s (%d): %s (%d)", filename, prefix, entry, i,
                   sval, advance_number(padvance));
       }
     }
@@ -768,7 +768,7 @@ static bool lookup_building_list(struct section_file *file,
         break;
       }
       output[i] = improvement_number(pimprove);
-      log_debug("%s.%s,%d %s %d", prefix, entry, i, sval, output[i]);
+      qDebug("%s.%s,%d %s %d", prefix, entry, i, sval, output[i]);
     }
   }
   delete[] slist;
@@ -1668,7 +1668,7 @@ static bool load_ruleset_veteran(struct section_file *file, const char *path,
   if (_condition) {                                                         \
     qCritical("Invalid veteran definition '%s.%s[%d]'!", _path, _entry,     \
               _i);                                                          \
-    log_debug("Failed check: '%s'. Update value: '%s'.", #_condition,       \
+    qDebug("Failed check: '%s'. Update value: '%s'.", #_condition,       \
               #_action);                                                    \
     _action;                                                                \
   }

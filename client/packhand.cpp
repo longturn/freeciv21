@@ -1012,7 +1012,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
   }
 
   if (is_new) {
-    log_debug("(%d,%d) creating city %d, %s %s", TILE_XY(pcenter), pcity->id,
+    qDebug("(%d,%d) creating city %d, %s %s", TILE_XY(pcenter), pcity->id,
               nation_rule_name(nation_of_city(pcity)), city_name_get(pcity));
   }
 
@@ -1376,7 +1376,7 @@ void handle_start_phase(int phase)
  ****************************************************************************/
 void handle_begin_turn(void)
 {
-  log_debug("handle_begin_turn()");
+  qDebug("handle_begin_turn()");
 
   /* Server is still considered busy until it handles also the beginning
    * of the first phase. */
@@ -1390,7 +1390,7 @@ void handle_begin_turn(void)
  ****************************************************************************/
 void handle_end_turn(void)
 {
-  log_debug("handle_end_turn()");
+  qDebug("handle_end_turn()");
 
   /* Make sure wait cursor is in use */
   set_server_busy(TRUE);
@@ -1851,7 +1851,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       unit_list_prepend(pcity->units_supported, punit);
     }
 
-    log_debug("New %s %s id %d (%d %d) hc %d %s",
+    qDebug("New %s %s id %d (%d %d) hc %d %s",
               nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               TILE_XY(unit_tile(punit)), punit->id, punit->homecity,
               (pcity ? city_name_get(pcity) : "(unknown)"));
@@ -1901,15 +1901,15 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       unit_transport_unload(punit);
       unit_transport_load(punit, ptrans, TRUE);
 #ifdef DEBUG_TRANSPORT
-      log_debug("load %s (ID: %d) onto %s (ID: %d)",
+      qDebug("load %s (ID: %d) onto %s (ID: %d)",
                 unit_name_translation(punit), punit->id,
                 unit_name_translation(ptrans), ptrans->id);
     } else if (ptrans && ptrans == unit_transport_get(punit)) {
-      log_debug("%s (ID: %d) is loaded onto %s (ID: %d)",
+      qDebug("%s (ID: %d) is loaded onto %s (ID: %d)",
                 unit_name_translation(punit), punit->id,
                 unit_name_translation(ptrans), ptrans->id);
     } else {
-      log_debug("%s (ID: %d) is not loaded", unit_name_translation(punit),
+      qDebug("%s (ID: %d) is not loaded", unit_name_translation(punit),
                 punit->id);
 #endif /* DEBUG_TRANSPORT */
     }
@@ -2669,10 +2669,10 @@ void handle_conn_info(const struct packet_conn_info *pinfo)
   struct connection *pconn = conn_by_number(pinfo->id);
   bool preparing_client_state = FALSE;
 
-  log_debug("conn_info id%d used%d est%d plr%d obs%d acc%d", pinfo->id,
+  qDebug("conn_info id%d used%d est%d plr%d obs%d acc%d", pinfo->id,
             pinfo->used, pinfo->established, pinfo->player_num,
             pinfo->observer, (int) pinfo->access_level);
-  log_debug("conn_info \"%s\" \"%s\" \"%s\"", pinfo->username, pinfo->addr,
+  qDebug("conn_info \"%s\" \"%s\" \"%s\"", pinfo->username, pinfo->addr,
             pinfo->capability);
 
   if (!pinfo->used) {
@@ -2783,7 +2783,7 @@ void handle_conn_ping_info(int connections, const int *conn_id,
     }
 
     pconn->ping_time = ping_time[i];
-    log_debug("conn-id=%d, ping=%fs", pconn->id, pconn->ping_time);
+    qDebug("conn-id=%d, ping=%fs", pconn->id, pconn->ping_time);
   }
   /* The old_ping_time data is ignored. */
 
@@ -2985,7 +2985,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
 
         city_list_prepend(invisible.cities, pwork);
 
-        log_debug("(%d,%d) invisible city %d, %s", TILE_XY(ptile), pwork->id,
+        qDebug("(%d,%d) invisible city %d, %s", TILE_XY(ptile), pwork->id,
                   city_name_get(pwork));
       } else if (NULL == city_tile(pwork)) {
         /* old unseen ("invisible") city, or before city_info */
@@ -3712,14 +3712,14 @@ void handle_ruleset_building(const struct packet_ruleset_building *p)
   if (p->id == improvement_count() - 1) {
     improvement_iterate(bdbg)
     {
-      log_debug("Improvement: %s...", improvement_rule_name(bdbg));
-      log_debug("  build_cost %3d", bdbg->build_cost);
-      log_debug("  upkeep      %2d", bdbg->upkeep);
-      log_debug("  sabotage   %3d", bdbg->sabotage);
+      qDebug("Improvement: %s...", improvement_rule_name(bdbg));
+      qDebug("  build_cost %3d", bdbg->build_cost);
+      qDebug("  upkeep      %2d", bdbg->upkeep);
+      qDebug("  sabotage   %3d", bdbg->sabotage);
       if (NULL != bdbg->helptext) {
         strvec_iterate(bdbg->helptext, text)
         {
-          log_debug("  helptext    %s", text);
+          qDebug("  helptext    %s", text);
         }
         strvec_iterate_end;
       }
@@ -4676,7 +4676,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
   }
 
   if (!pactor) {
-    log_debug("Bad actor %d.", actor_id);
+    qDebug("Bad actor %d.", actor_id);
 
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
@@ -4699,7 +4699,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
         qCritical("Unimplemented: received background unit bribe cost.");
       }
     } else {
-      log_debug("Bad target %d.", target_id);
+      qDebug("Bad target %d.", target_id);
       if (disturb_player) {
         action_selection_no_longer_in_progress(actor_id);
         action_decision_clear_want(actor_id);
@@ -4720,7 +4720,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
         qCritical("Unimplemented: received background city incite cost.");
       }
     } else {
-      log_debug("Bad target %d.", target_id);
+      qDebug("Bad target %d.", target_id);
       if (disturb_player) {
         action_selection_no_longer_in_progress(actor_id);
         action_decision_clear_want(actor_id);
@@ -4741,7 +4741,7 @@ void handle_unit_action_answer(int actor_id, int target_id, int cost,
     }
     break;
   case ACTION_NONE:
-    log_debug("Server didn't respond to query.");
+    qDebug("Server didn't respond to query.");
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
       action_decision_clear_want(actor_id);
@@ -4998,7 +4998,7 @@ void handle_city_sabotage_list(int actor_id, int city_id,
   struct action *paction = action_by_number(act_id);
 
   if (!pactor) {
-    log_debug("Bad diplomat %d.", actor_id);
+    qDebug("Bad diplomat %d.", actor_id);
 
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
@@ -5009,7 +5009,7 @@ void handle_city_sabotage_list(int actor_id, int city_id,
   }
 
   if (!pcity) {
-    log_debug("Bad city %d.", city_id);
+    qDebug("Bad city %d.", city_id);
 
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
@@ -5039,7 +5039,7 @@ void handle_city_sabotage_list(int actor_id, int city_id,
       qCritical("Unimplemented: received background city building list.");
     }
   } else {
-    log_debug("Can't issue orders");
+    qDebug("Can't issue orders");
     if (disturb_player) {
       action_selection_no_longer_in_progress(actor_id);
       action_decision_clear_want(actor_id);
@@ -5105,7 +5105,7 @@ void handle_processing_started(void)
   update_queue_processing_started(
       client.conn.client.request_id_of_currently_handled_packet);
 
-  log_debug("start processing packet %d",
+  qDebug("start processing packet %d",
             client.conn.client.request_id_of_currently_handled_packet);
 }
 
@@ -5114,7 +5114,7 @@ void handle_processing_started(void)
  ****************************************************************************/
 void handle_processing_finished(void)
 {
-  log_debug("finish processing packet %d",
+  qDebug("finish processing packet %d",
             client.conn.client.request_id_of_currently_handled_packet);
 
   fc_assert(client.conn.client.request_id_of_currently_handled_packet != 0);
@@ -5136,7 +5136,7 @@ void notify_about_incoming_packet(struct connection *pc, int packet_type,
                                   int size)
 {
   fc_assert(pc == &client.conn);
-  log_debug("incoming packet={type=%d, size=%d}", packet_type, size);
+  qDebug("incoming packet={type=%d, size=%d}", packet_type, size);
 }
 
 /************************************************************************/ /**
@@ -5146,7 +5146,7 @@ void notify_about_outgoing_packet(struct connection *pc, int packet_type,
                                   int size, int request_id)
 {
   fc_assert(pc == &client.conn);
-  log_debug("outgoing packet={type=%d, size=%d, request_id=%d}", packet_type,
+  qDebug("outgoing packet={type=%d, size=%d, request_id=%d}", packet_type,
             size, request_id);
 
   fc_assert(request_id);
@@ -5157,7 +5157,7 @@ void notify_about_outgoing_packet(struct connection *pc, int packet_type,
  ****************************************************************************/
 void handle_freeze_client(void)
 {
-  log_debug("handle_freeze_client");
+  qDebug("handle_freeze_client");
 
   governor::i()->freeze();
 }
@@ -5167,7 +5167,7 @@ void handle_freeze_client(void)
  ****************************************************************************/
 void handle_thaw_client(void)
 {
-  log_debug("handle_thaw_client");
+  qDebug("handle_thaw_client");
 
   governor::i()->unfreeze();
   update_turn_done_button_state();

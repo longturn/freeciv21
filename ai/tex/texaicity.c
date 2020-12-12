@@ -566,7 +566,7 @@ void texai_req_worker_task_rcv(struct texai_req *req)
       worker_task_list_append(pcity->task_reqs, ptask);
     }
 
-    log_debug("%s storing req for act %d at (%d,%d)", pcity->name,
+    qDebug("%s storing req for act %d at (%d,%d)", pcity->name,
               data->task.act, TILE_XY(data->task.ptile));
     ptask->ptile = data->task.ptile;
     ptask->act = data->task.act;

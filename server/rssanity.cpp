@@ -1398,7 +1398,7 @@ bool autoadjust_ruleset_data(void)
         int idx = extra_index(pextra2);
 
         if (!BV_ISSET(pextra->conflicts, idx)) {
-          log_debug("Autoconflicting resource %s with %s",
+          qDebug("Autoconflicting resource %s with %s",
                     extra_rule_name(pextra), extra_rule_name(pextra2));
           BV_SET(pextra->conflicts, extra_index(pextra2));
         }

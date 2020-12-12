@@ -98,7 +98,7 @@ void reset_all_start_commands(bool plrchange);
   do {                                                                      \
     int MY_i;                                                               \
     struct player *NAME_pplayer;                                            \
-    log_debug("shuffled_players_iterate @ %s line %d", __FILE__,            \
+    qDebug("shuffled_players_iterate @ %s line %d", __FILE__,            \
               __FC_LINE__);                                                 \
     for (MY_i = 0; MY_i < player_slot_count(); MY_i++) {                    \
       NAME_pplayer = shuffled_player(MY_i);                                 \

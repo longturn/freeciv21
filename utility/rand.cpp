@@ -42,8 +42,6 @@
 
 #include "rand.h"
 
-#define log_rand log_debug
-
 /* A global random state:
  * Initialized by fc_srand(), updated by fc_rand(),
  * Can be duplicated/saved/restored via fc_rand_state()
@@ -124,7 +122,7 @@ RANDOM_TYPE fc_rand_debug(RANDOM_TYPE size, const char *called_as, int line,
     new_rand = 0;
   }
 
-  log_rand("%s(%lu) = %lu at %s:%d", called_as, (unsigned long) size,
+  qDebug("%s(%lu) = %lu at %s:%d", called_as, (unsigned long) size,
            (unsigned long) new_rand, file, line);
 
   return new_rand;
@@ -178,10 +176,10 @@ RANDOM_STATE fc_rand_state(void)
 {
   int i;
 
-  log_rand("fc_rand_state J=%d K=%d X=%d", rand_state.j, rand_state.k,
+  qDebug("fc_rand_state J=%d K=%d X=%d", rand_state.j, rand_state.k,
            rand_state.x);
   for (i = 0; i < 8; i++) {
-    log_rand("fc_rand_state %d, %08x %08x %08x %08x %08x %08x %08x", i,
+    qDebug("fc_rand_state %d, %08x %08x %08x %08x %08x %08x %08x", i,
              rand_state.v[7 * i], rand_state.v[7 * i + 1],
              rand_state.v[7 * i + 2], rand_state.v[7 * i + 3],
              rand_state.v[7 * i + 4], rand_state.v[7 * i + 5],
@@ -201,10 +199,10 @@ void fc_rand_set_state(RANDOM_STATE &state)
 
   rand_state = state;
 
-  log_rand("fc_rand_set_state J=%d K=%d X=%d", rand_state.j, rand_state.k,
+  qDebug("fc_rand_set_state J=%d K=%d X=%d", rand_state.j, rand_state.k,
            rand_state.x);
   for (i = 0; i < 8; i++) {
-    log_rand("fc_rand_set_state %d, %08x %08x %08x %08x %08x %08x %08x", i,
+    qDebug("fc_rand_set_state %d, %08x %08x %08x %08x %08x %08x %08x", i,
              rand_state.v[7 * i], rand_state.v[7 * i + 1],
              rand_state.v[7 * i + 2], rand_state.v[7 * i + 3],
              rand_state.v[7 * i + 4], rand_state.v[7 * i + 5],
@@ -273,7 +271,7 @@ RANDOM_TYPE fc_randomly_debug(RANDOM_TYPE seed, RANDOM_TYPE size,
   fc_assert_ret_val(size > 0, 0);
   result = ((seed * LARGE_PRIME) % SMALL_PRIME) % size;
 
-  log_rand("%s(%lu,%lu) = %lu at %s:%d", called_as, (unsigned long) seed,
+  qDebug("%s(%lu,%lu) = %lu at %s:%d", called_as, (unsigned long) seed,
            (unsigned long) size, (unsigned long) result, file, line);
 
   return result;

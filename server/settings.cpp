@@ -6251,7 +6251,7 @@ static void setting_game_restore(struct setting *pset)
   bool res = FALSE;
 
   if (!setting_is_changeable(pset, NULL, reject_msg, sizeof(reject_msg))) {
-    log_debug("Can't restore '%s': %s", setting_name(pset), reject_msg);
+    qDebug("Can't restore '%s': %s", setting_name(pset), reject_msg);
     return;
   }
 
@@ -6650,7 +6650,7 @@ void settings_game_load(struct section_file *file, const char *section)
 bool settings_game_reset(void)
 {
   if (!game.server.settings_gamestart_valid) {
-    log_debug("No saved settings from the game start available.");
+    qDebug("No saved settings from the game start available.");
     return FALSE;
   }
 

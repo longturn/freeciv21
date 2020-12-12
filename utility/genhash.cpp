@@ -205,7 +205,7 @@ static struct genhash *genhash_new_nbuckets(genhash_val_fn_t key_val_func,
 {
   genhash *pgenhash = new genhash;
 
-  log_debug("New genhash table with %lu buckets",
+  qDebug("New genhash table with %lu buckets",
             (long unsigned) num_buckets);
 
   pgenhash->buckets = new genhash_entry *[num_buckets]();
@@ -353,7 +353,7 @@ static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
 
   new_nbuckets = genhash_calc_num_buckets(pgenhash->num_entries);
 
-  log_debug("%s genhash (entries = %lu, buckets =  %lu, new = %lu, "
+  qDebug("%s genhash (entries = %lu, buckets =  %lu, new = %lu, "
             "%s limit = %lu)",
             (new_nbuckets < pgenhash->num_buckets
                  ? "Shrinking"

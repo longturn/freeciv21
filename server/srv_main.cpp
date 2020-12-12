@@ -166,7 +166,7 @@ void init_game_seed(void)
     /* Log command to reproduce the gameseed */
     log_testmatic("set gameseed %d", game.server.seed);
 #else  /* FREECIV_TESTMATIC */
-    log_debug("Setting game.seed:%d", game.server.seed);
+    qDebug("Setting game.seed:%d", game.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
     game.server.seed = game.server.seed_setting;
@@ -247,12 +247,12 @@ void handle_client_info(struct connection *pc, enum gui_type gui,
                         int emerg_version, const char *distribution)
 {
   pc->client_gui = gui;
-  log_debug("%s's client has %s gui.", pc->username, gui_type_name(gui));
+  qDebug("%s's client has %s gui.", pc->username, gui_type_name(gui));
   if (emerg_version > 0) {
-    log_debug("It's emergency release .%d", emerg_version);
+    qDebug("It's emergency release .%d", emerg_version);
   }
   if (strcmp(distribution, "")) {
-    log_debug("It comes from %s distribution.", distribution);
+    qDebug("It comes from %s distribution.", distribution);
   }
 }
 
@@ -774,7 +774,7 @@ static void update_environmental_upset(enum environment_upset_type type,
     }
   }
 
-  log_debug("environmental_upset: type=%-4d current=%-2d "
+  qDebug("environmental_upset: type=%-4d current=%-2d "
             "level=%-2d accum=%-2d",
             type, *current, *level, *accum);
 }
@@ -1080,7 +1080,7 @@ void begin_turn(bool is_new_turn)
 {
   QElapsedTimer timer;
   timer.start();
-  log_debug("Begin turn");
+  qDebug("Begin turn");
 
   event_cache_remove_old();
 
@@ -1173,7 +1173,7 @@ void begin_turn(bool is_new_turn)
     }
 
     if (game.info.phase_mode == PMT_CONCURRENT) {
-      log_debug("Shuffleplayers");
+      qDebug("Shuffleplayers");
       shuffle_players();
     }
 
@@ -1201,7 +1201,7 @@ void begin_phase(bool is_new_phase)
 {
   QElapsedTimer timer;
   timer.start();
-  log_debug("Begin phase");
+  qDebug("Begin phase");
 
   conn_list_do_buffer(game.est_connections);
 
@@ -1300,7 +1300,7 @@ void begin_phase(bool is_new_phase)
 
   phase_players_iterate(pplayer)
   {
-    log_debug("beginning player turn for #%d (%s)", player_number(pplayer),
+    qDebug("beginning player turn for #%d (%s)", player_number(pplayer),
               player_name(pplayer));
     if (is_human(pplayer)) {
       building_advisor(pplayer);
@@ -1331,7 +1331,7 @@ void begin_phase(bool is_new_phase)
     }
     phase_players_iterate_end;
 
-    log_debug("Aistartturn");
+    qDebug("Aistartturn");
     ai_start_phase();
   } else {
     phase_players_iterate(pplayer)
@@ -1370,7 +1370,7 @@ void end_phase()
 {
   QElapsedTimer timer;
   timer.start();
-  log_debug("Endphase");
+  qDebug("Endphase");
 
   /*
    * This empties the client Messages window; put this before
@@ -1529,7 +1529,7 @@ void end_turn()
 
   QElapsedTimer timer;
   timer.start();
-  log_debug("Endturn");
+  qDebug("Endturn");
 
   /* Hack: because observer players never get an end-phase packet we send
    * one here. */
@@ -1565,7 +1565,7 @@ void end_turn()
       trade += pcity->prod[O_TRADE];
     }
     city_list_iterate_end;
-    log_debug("%s T%d cities:%d pop:%d food:%d prod:%d "
+    qDebug("%s T%d cities:%d pop:%d food:%d prod:%d "
               "trade:%d settlers:%d units:%d",
               player_name(pplayer), game.info.turn,
               city_list_size(pplayer->cities),
@@ -1574,12 +1574,12 @@ void end_turn()
   }
   players_iterate_end;
 
-  log_debug("Season of native unrests");
+  qDebug("Season of native unrests");
   summon_barbarians(); /* wild guess really, no idea where to put it, but
                         * I want to give them chance to move their units */
 
   if (game.server.migration) {
-    log_debug("Season of migrations");
+    qDebug("Season of migrations");
     if (check_city_migrations()) {
       /* Make sure everyone has updated information about BOTH ends of the
        * migration movements. */
@@ -1739,25 +1739,25 @@ void end_turn()
   voting_turn();
   send_city_turn_notifications(NULL);
 
-  log_debug("Gamenextyear");
+  qDebug("Gamenextyear");
   game_advance_year();
   players_iterate_alive(pplayer) { pplayer->turns_alive++; }
   players_iterate_alive_end;
 
-  log_debug("Updatetimeout");
+  qDebug("Updatetimeout");
   update_timeout();
 
-  log_debug("Sendgameinfo");
+  qDebug("Sendgameinfo");
   send_game_info(NULL);
 
-  log_debug("Sendplayerinfo");
+  qDebug("Sendplayerinfo");
   send_player_all_c(NULL, NULL);
 
-  log_debug("Sendresearchinfo");
+  qDebug("Sendresearchinfo");
   researches_iterate(presearch) { send_research_info(presearch, NULL); }
   researches_iterate_end;
 
-  log_debug("Sendyeartoclients");
+  qDebug("Sendyeartoclients");
   send_year_to_clients();
   log_time(QStringLiteral("End turn:%1 milliseconds").arg(timer.elapsed()));
 }
@@ -2114,8 +2114,8 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
       && type != PACKET_PLAYER_READY && type != PACKET_VOTE_SUBMIT) {
     if (S_S_OVER == server_state()) {
       /* This can happen by accident, so we don't want to print
-       * out lots of error messages. Ie, we use log_debug(). */
-      log_debug("Got a packet of type %s(%d) in %s.",
+       * out lots of error messages. Ie, we use qDebug(). */
+      qDebug("Got a packet of type %s(%d) in %s.",
                 packet_name(packet_type(type)), type,
                 server_states_name(S_S_OVER));
     } else {

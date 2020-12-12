@@ -75,7 +75,7 @@ static void tai_thread_start(void *arg)
   bool finished = FALSE;
   struct ai_type *ait = arg;
 
-  log_debug("New AI thread launched");
+  qDebug("New AI thread launched");
 
   /* Just wait until we are signaled to shutdown */
   QMutexLocker locker(&thrai.msgs_to.mutex);
@@ -87,7 +87,7 @@ static void tai_thread_start(void *arg)
     }
   }
 
-  log_debug("AI thread exiting");
+  qDebug("AI thread exiting");
 }
 
 /**********************************************************************/ /**
@@ -106,7 +106,7 @@ static enum tai_abort_msg_class tai_check_messages(struct ai_type *ait)
     taimsg_list_remove(thrai.msgs_to.msglist, msg);
     thrai.msgs_to.msglist.unlock();
 
-    log_debug("Plr thr got %s", taimsgtype_name(msg->type));
+    qDebug("Plr thr got %s", taimsgtype_name(msg->type));
 
     switch (msg->type) {
     case TAI_MSG_FIRST_ACTIVITIES:
@@ -198,7 +198,7 @@ void tai_control_gained(struct ai_type *ait, struct player *pplayer)
 {
   thrai.num_players++;
 
-  log_debug("%s now under threaded AI (%d)", pplayer->name,
+  qDebug("%s now under threaded AI (%d)", pplayer->name,
             thrai.num_players);
 
   if (!thrai.thread_running) {
@@ -219,7 +219,7 @@ void tai_control_lost(struct ai_type *ait, struct player *pplayer)
 {
   thrai.num_players--;
 
-  log_debug("%s no longer under threaded AI (%d)", pplayer->name,
+  qDebug("%s no longer under threaded AI (%d)", pplayer->name,
             thrai.num_players);
 
   if (thrai.num_players <= 0) {
@@ -248,7 +248,7 @@ void tai_refresh(struct ai_type *ait, struct player *pplayer)
 
       thrai.reqs_from.reqlist.unlock();
 
-      log_debug("Plr thr sent %s", taireqtype_name(req->type));
+      qDebug("Plr thr sent %s", taireqtype_name(req->type));
 
       switch (req->type) {
       case TAI_REQ_WORKER_TASK:

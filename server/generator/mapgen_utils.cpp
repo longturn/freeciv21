@@ -647,7 +647,7 @@ void smooth_water_depth(void)
       ocean = pick_ocean(dist * OCEAN_DEPTH_STEP + fc_rand(OCEAN_DEPTH_RAND),
                          terrain_has_flag(tile_terrain(ptile), TER_FROZEN));
       if (NULL != ocean && ocean != tile_terrain(ptile)) {
-        log_debug("Replacing %s by %s at (%d, %d) "
+        qDebug("Replacing %s by %s at (%d, %d) "
                   "to have shallow ocean on coast.",
                   terrain_rule_name(tile_terrain(ptile)),
                   terrain_rule_name(ocean), TILE_XY(ptile));
@@ -666,7 +666,7 @@ void smooth_water_depth(void)
 
     ocean = most_adjacent_ocean_type(ptile);
     if (NULL != ocean && ocean != tile_terrain(ptile)) {
-      log_debug("Replacing %s by %s at (%d, %d) "
+      qDebug("Replacing %s by %s at (%d, %d) "
                 "to smooth the ocean types.",
                 terrain_rule_name(tile_terrain(ptile)),
                 terrain_rule_name(ocean), TILE_XY(ptile));
@@ -803,19 +803,19 @@ struct terrain *pick_terrain(enum mapgen_terrain_property target,
   /* This can happen with sufficient quantities of preferred and avoided
    * characteristics.  Drop a requirement and try again. */
   if (prefer != MG_UNUSED) {
-    log_debug("pick_terrain(target: %s, [dropping prefer: %s], avoid: %s)",
+    qDebug("pick_terrain(target: %s, [dropping prefer: %s], avoid: %s)",
               mapgen_terrain_property_name(target),
               mapgen_terrain_property_name(prefer),
               mapgen_terrain_property_name(avoid));
     return pick_terrain(target, MG_UNUSED, avoid);
   } else if (avoid != MG_UNUSED) {
-    log_debug(
+    qDebug(
         "pick_terrain(target: %s, prefer: MG_UNUSED, [dropping avoid: %s])",
         mapgen_terrain_property_name(target),
         mapgen_terrain_property_name(avoid));
     return pick_terrain(target, prefer, MG_UNUSED);
   } else {
-    log_debug("pick_terrain([dropping target: %s], prefer: MG_UNUSED, "
+    qDebug("pick_terrain([dropping target: %s], prefer: MG_UNUSED, "
               "avoid: MG_UNUSED)",
               mapgen_terrain_property_name(target));
     return pick_terrain(MG_UNUSED, prefer, avoid);

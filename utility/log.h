@@ -62,11 +62,6 @@ const QString &log_get_level();
     }                                                                       \
   } while (false)
 
-#ifdef FREECIV_DEBUG
-#define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
-#else
-#define log_debug(message, ...) {}
-#endif
 
 #ifdef FREECIV_TESTMATIC
 #define log_testmatic(message, ...) qCritical(message, ##__VA_ARGS__)
@@ -79,7 +74,7 @@ const QString &log_get_level();
 /* Used by game debug command */
 #define log_test qInfo
 #define log_packet qDebug
-#define log_packet_detailed log_debug
+#define log_packet_detailed qDebug
 #define LOG_TEST LOG_NORMAL /* needed by citylog_*() functions */
 
 /* Assertions. */

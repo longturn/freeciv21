@@ -140,14 +140,14 @@ void game_remove_unit(struct world *gworld, struct unit *punit)
   if (pcity) {
     unit_list_remove(pcity->units_supported, punit);
 
-    log_debug("game_remove_unit()"
+    qDebug("game_remove_unit()"
               " at (%d,%d) unit %d, %s %s home (%d,%d) city %d, %s %s",
               TILE_XY(unit_tile(punit)), punit->id,
               nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               TILE_XY(pcity->tile), punit->homecity,
               nation_rule_name(nation_of_city(pcity)), city_name_get(pcity));
   } else if (IDENTITY_NUMBER_ZERO == punit->homecity) {
-    log_debug("game_remove_unit() at (%d,%d) unit %d, %s %s home %d",
+    qDebug("game_remove_unit() at (%d,%d) unit %d, %s %s home %d",
               TILE_XY(unit_tile(punit)), punit->id,
               nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
               punit->homecity);
@@ -183,10 +183,10 @@ void game_remove_city(struct world *gworld, struct city *pcity)
   }
 
   if (NULL == pcenter) {
-    log_debug("game_remove_city() virtual city %d, %s", pcity->id,
+    qDebug("game_remove_city() virtual city %d, %s", pcity->id,
               city_name_get(pcity));
   } else {
-    log_debug("game_remove_city() at (%d,%d) city %d, %s %s",
+    qDebug("game_remove_city() at (%d,%d) city %d, %s %s",
               TILE_XY(pcenter), pcity->id,
               nation_rule_name(nation_of_player(powner)),
               city_name_get(pcity));
@@ -797,7 +797,7 @@ int generate_save_name(const char *format, char *buf, int buflen,
     fc_vsnprintcf(buf, buflen, savename, sequences, -1);
   }
 
-  log_debug("save name generated from '%s': %s", format, buf);
+  qDebug("save name generated from '%s': %s", format, buf);
 
   return qstrlen(buf);
 }

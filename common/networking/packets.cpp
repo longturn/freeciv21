@@ -50,9 +50,6 @@
  */
 #define JUMBO_BORDER (64 * 1024 - COMPRESSION_BORDER - 1)
 
-#define log_compress log_debug
-#define log_compress2 log_debug
-
 #define MAX_DECOMPRESSION 400
 
 /*
@@ -117,7 +114,7 @@ static bool conn_compression_flush(struct connection *pconn)
   if (compressed_packet_len < pconn->compression.queue.size) {
     struct raw_data_out dout;
 
-    log_compress("COMPRESS: compressed %lu bytes to %ld (level %d)",
+    qDebug("COMPRESS: compressed %lu bytes to %ld (level %d)",
                  (unsigned long) pconn->compression.queue.size,
                  compressed_size, compression_level);
     stat_size_uncompressed += pconn->compression.queue.size;
@@ -128,7 +125,7 @@ static bool conn_compression_flush(struct connection *pconn)
       FC_STATIC_ASSERT(COMPRESSION_BORDER > MAX_LEN_PACKET,
                        uncompressed_compressed_packet_len_overlap);
 
-      log_compress("COMPRESS: sending %ld as normal", compressed_size);
+      qDebug("COMPRESS: sending %ld as normal", compressed_size);
 
       dio_output_init(&dout, header, sizeof(header));
       dio_put_uint16_raw(&dout, 2 + compressed_size + COMPRESSION_BORDER);
@@ -139,7 +136,7 @@ static bool conn_compression_flush(struct connection *pconn)
       FC_STATIC_ASSERT(JUMBO_SIZE >= JUMBO_BORDER + COMPRESSION_BORDER,
                        compressed_normal_jumbo_packet_len_overlap);
 
-      log_compress("COMPRESS: sending %ld as jumbo", compressed_size);
+      qDebug("COMPRESS: sending %ld as jumbo", compressed_size);
       dio_output_init(&dout, header, sizeof(header));
       dio_put_uint16_raw(&dout, JUMBO_SIZE);
       dio_put_uint32_raw(&dout, 6 + compressed_size);
@@ -147,7 +144,7 @@ static bool conn_compression_flush(struct connection *pconn)
       connection_send_data(pconn, compressed, compressed_size);
     }
   } else {
-    log_compress("COMPRESS: would enlarge %lu bytes to %ld; "
+    qDebug("COMPRESS: would enlarge %lu bytes to %ld; "
                  "sending uncompressed",
                  (unsigned long) pconn->compression.queue.size,
                  compressed_packet_len);
@@ -218,7 +215,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
        * everything that's in there already before queuing this one */
       if (MAX_LEN_COMPRESS_QUEUE
           < byte_vector_size(&pc->compression.queue) + len) {
-        log_compress2(
+        qDebug(
             "COMPRESS: huge queue, forcing to flush (%lu/%lu)",
             (long unsigned) byte_vector_size(&pc->compression.queue),
             (long unsigned) MAX_LEN_COMPRESS_QUEUE);
@@ -231,16 +228,16 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
       old_size = byte_vector_size(&pc->compression.queue);
       byte_vector_reserve(&pc->compression.queue, old_size + len);
       memcpy(pc->compression.queue.p + old_size, data, len);
-      log_compress2("COMPRESS: putting %s into the queue",
+      qDebug("COMPRESS: putting %s into the queue",
                     packet_name(packet_type));
     } else {
       stat_size_alone += size;
-      log_compress("COMPRESS: sending %s alone (%d bytes total)",
+      qDebug("COMPRESS: sending %s alone (%d bytes total)",
                    packet_name(packet_type), stat_size_alone);
       connection_send_data(pc, data, len);
     }
 
-    log_compress2("COMPRESS: STATS: alone=%d compression-expand=%d "
+    qDebug("COMPRESS: STATS: alone=%d compression-expand=%d "
                   "compression (before/after) = %d/%d",
                   stat_size_alone, stat_size_no_compression,
                   stat_size_uncompressed, stat_size_compressed);
@@ -373,7 +370,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     header_size = 6;
     if (dio_input_remaining(&din) >= 4) {
       dio_get_uint32_raw(&din, &whole_packet_len);
-      log_compress("COMPRESS: got a jumbo packet of size %d",
+      qDebug("COMPRESS: got a jumbo packet of size %d",
                    whole_packet_len);
     } else {
       /* to return NULL below */
@@ -383,7 +380,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     compressed_packet = TRUE;
     header_size = 2;
     whole_packet_len = len_read - COMPRESSION_BORDER;
-    log_compress("COMPRESS: got a normal packet of size %d",
+    qDebug("COMPRESS: got a normal packet of size %d",
                  whole_packet_len);
   }
 
@@ -461,7 +458,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
 
     buffer->ndata += decompressed_size;
 
-    log_compress("COMPRESS: decompressed %ld into %ld", compressed_size,
+    qDebug("COMPRESS: decompressed %ld into %ld", compressed_size,
                  decompressed_size);
 
     return get_packet_from_connection(pc, ptype);
@@ -567,7 +564,7 @@ void remove_packet_from_buffer(struct socket_packet_buffer *buffer)
   dio_get_uint16_raw(&din, &len);
   memmove(buffer->data, buffer->data + len, buffer->ndata - len);
   buffer->ndata -= len;
-  log_debug("remove_packet_from_buffer: remove %d; remaining %d", len,
+  qDebug("remove_packet_from_buffer: remove %d; remaining %d", len,
             buffer->ndata);
 }
 

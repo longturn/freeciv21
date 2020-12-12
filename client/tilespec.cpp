@@ -1409,7 +1409,7 @@ static struct sprite *load_gfx_file(const char *gfx_filename)
     QString full_name = QString("%1.%2").arg(gfx_filename, gfx_fileext);
 
     if ((real_full_name = fileinfoname(get_data_dirs(), qUtf8Printable(full_name)))) {
-      log_debug("trying to load gfx file \"%s\".", real_full_name);
+      qDebug("trying to load gfx file \"%s\".", real_full_name);
       s = load_gfxfile(real_full_name);
       if (s) {
         return s;
@@ -2052,7 +2052,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
 
   c = secfile_lookup_str(file, "tilespec.main_intro_file");
   t->main_intro_filename = tilespec_gfx_filename(c);
-  log_debug("intro file %s", t->main_intro_filename);
+  qDebug("intro file %s", t->main_intro_filename);
 
   /* Layer order */
   num_layers = 0;
@@ -2340,7 +2340,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     struct specfile *sf = new specfile();
     const char *dname;
 
-    log_debug("spec file %s", spec_filenames[i]);
+    qDebug("spec file %s", spec_filenames[i]);
 
     sf->big_sprite = NULL;
     dname = fileinfoname(get_data_dirs(), spec_filenames[i]);
@@ -2473,7 +2473,7 @@ static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
   struct small_sprite *ss;
   float sprite_scale = 1.0f;
 
-  log_debug("load_sprite(tag='%s')", tag_name);
+  qDebug("load_sprite(tag='%s')", tag_name);
   /* Lookup information about where the sprite is found. */
   if (!(ss = t->sprite_hash->value(tag_name, nullptr))) {
     return NULL;
@@ -2565,7 +2565,7 @@ static void unload_sprite(struct tileset *t, QString tag_name)
   if (ss->ref_count == 0) {
     /* Nobody's using the sprite anymore, so we should free it.  We know
      * where to find it if we need it again. */
-    // log_debug("freeing sprite '%s'.", tag_name);
+    // qDebug("freeing sprite '%s'.", tag_name);
     free_sprite(ss->sprite);
     ss->sprite = NULL;
   }
@@ -6169,7 +6169,7 @@ void tileset_free_tiles(struct tileset *t)
 {
   int i;
 
-  log_debug("tileset_free_tiles()");
+  qDebug("tileset_free_tiles()");
 
   unload_all_sprites(t);
 
@@ -6595,7 +6595,7 @@ void tileset_use_preferred_theme(const struct tileset *t)
   for (i = 0; i < t->num_preferred_themes; i++) {
     if (strcmp(t->preferred_themes[i], default_theme_name)) {
       if (popup_theme_suggestion_dialog(t->preferred_themes[i])) {
-        log_debug("trying theme \"%s\".", t->preferred_themes[i]);
+        qDebug("trying theme \"%s\".", t->preferred_themes[i]);
         if (load_theme(t->preferred_themes[i])) {
           (void) fc_strlcpy(default_theme_name, t->preferred_themes[i],
                             default_theme_name_sz);

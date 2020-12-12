@@ -671,7 +671,7 @@ static int river_test_height_map(struct river_map *privermap,
  **************************************************************************/
 static void river_blockmark(struct river_map *privermap, struct tile *ptile)
 {
-  log_debug("Blockmarking (%d, %d) and adjacent tiles.", TILE_XY(ptile));
+  qDebug("Blockmarking (%d, %d) and adjacent tiles.", TILE_XY(ptile));
 
   privermap->blocked.setBit(tile_index(ptile));
 
@@ -805,7 +805,7 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
   while (TRUE) {
     /* Mark the current tile as river. */
     privermap->ok.setBit(tile_index(ptile));
-    log_debug("The tile at (%d, %d) has been marked as river in river_map.",
+    qDebug("The tile at (%d, %d) has been marked as river in river_map.",
               TILE_XY(ptile));
 
     /* Test if the river is done. */
@@ -815,12 +815,12 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
         || (tile_terrain(ptile)->property[MG_FROZEN] > 0
             && map_colatitude(ptile) < 0.8 * COLD_LEVEL)) {
 
-      log_debug("The river ended at (%d, %d).", TILE_XY(ptile));
+      qDebug("The river ended at (%d, %d).", TILE_XY(ptile));
       return TRUE;
     }
 
     /* Else choose a direction to continue the river. */
-    log_debug("The river did not end at (%d, %d). Evaluating directions...",
+    qDebug("The river did not end at (%d, %d). Evaluating directions...",
               TILE_XY(ptile));
 
     /* Mark all available cardinal directions as available. */
@@ -885,10 +885,10 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
     }
 
     /* One or more valid directions: choose randomly. */
-    log_debug("mapgen.c: Had to let the random number"
+    qDebug("mapgen.c: Had to let the random number"
               " generator select a direction for a river.");
     direction = fc_rand(num_valid_directions);
-    log_debug("mapgen.c: direction: %d", direction);
+    qDebug("mapgen.c: direction: %d", direction);
 
     /* Find the direction that the random number generator selected. */
     cardinal_adjc_dir_iterate(&(wld.map), ptile, tile1, dir)
@@ -1021,7 +1021,7 @@ static void make_rivers(void)
       }
       extra_type_by_cause_iterate_end;
 
-      log_debug("Found a suitable starting tile for a river at (%d, %d)."
+      qDebug("Found a suitable starting tile for a river at (%d, %d)."
                 " Starting to make it.",
                 TILE_XY(ptile));
 
@@ -1043,17 +1043,17 @@ static void make_rivers(void)
             tile_add_extra(ptile1, road_river);
             current_riverlength++;
             map_set_placed(ptile1);
-            log_debug("Applied a river to (%d, %d).", TILE_XY(ptile1));
+            qDebug("Applied a river to (%d, %d).", TILE_XY(ptile1));
           }
         }
         whole_map_iterate_end;
       } else {
-        log_debug("mapgen.c: A river failed. It might have gotten stuck "
+        qDebug("mapgen.c: A river failed. It might have gotten stuck "
                   "in a helix.");
       }
     } /* end if; */
     iteration_counter++;
-    log_debug("current_riverlength: %d; desirable_riverlength: %d; "
+    qDebug("current_riverlength: %d; desirable_riverlength: %d; "
               "iteration_counter: %d",
               current_riverlength, desirable_riverlength, iteration_counter);
   } /* end while; */
@@ -1317,7 +1317,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
     /* Log command to reproduce the mapseed */
     log_testmatic("set mapseed %d", wld.map.server.seed);
 #else  /* FREECIV_TESTMATICE */
-    log_debug("Setting map.seed:%d", wld.map.server.seed);
+    qDebug("Setting map.seed:%d", wld.map.server.seed);
 #endif /* FREECIV_TESTMATIC */
   } else {
     wld.map.server.seed = wld.map.server.seed_setting;
@@ -1765,7 +1765,7 @@ static void fill_island(int coast, long int *bucket,
       tile_set_terrain(ptile, pterrain);
       map_set_placed(ptile);
 
-      log_debug("[fill_island] placed terrain '%s' at (%2d,%2d)",
+      qDebug("[fill_island] placed terrain '%s' at (%2d,%2d)",
                 terrain_rule_name(pterrain), TILE_XY(ptile));
     }
 
@@ -3140,7 +3140,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
   land_tiles[0] = pftile;
   i = 1;
 
-  log_debug("Generating an island with %d land tiles [fantasy=%d].", size,
+  qDebug("Generating an island with %d land tiles [fantasy=%d].", size,
             fantasy);
 
   /* Make land. */
@@ -3295,7 +3295,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
       }
 
       if (connectable_river_around) {
-        log_debug("Adding river at (%d, %d)",
+        qDebug("Adding river at (%d, %d)",
                   index_to_map_pos_x(pftile - pisland),
                   index_to_map_pos_y(pftile - pisland));
         BV_SET(pftile->extras, extra_idx);
@@ -3365,7 +3365,7 @@ static struct fair_tile *fair_map_island_new(int size, int startpos_num)
         continue;
       }
 
-      log_debug("Make river from (%d, %d) to (%d, %d) [dir=%s, length=%d]",
+      qDebug("Make river from (%d, %d) to (%d, %d) [dir=%s, length=%d]",
                 index_to_map_pos_x(pftile - pisland),
                 index_to_map_pos_y(pftile - pisland),
                 index_to_map_pos_x(pend - pisland),
@@ -3546,13 +3546,13 @@ static bool map_generate_fair_islands(void)
   }
 
   qDebug("Creating a map with fair island generator");
-  log_debug("max iterations=%d", iter);
-  log_debug("players_per_island=%d", players_per_island);
-  log_debug("team_placement=%s",
+  qDebug("max iterations=%d", iter);
+  qDebug("players_per_island=%d", players_per_island);
+  qDebug("team_placement=%s",
             team_placement_name(wld.map.server.team_placement));
-  log_debug("teams_num=%d, team_players_num=%d, single_players_num=%d",
+  qDebug("teams_num=%d, team_players_num=%d, single_players_num=%d",
             teams_num, team_players_num, single_players_num);
-  log_debug("playermass=%d, islandmass1=%d, islandmass2=%d, islandmass3=%d",
+  qDebug("playermass=%d, islandmass1=%d, islandmass2=%d, islandmass3=%d",
             playermass, islandmass1, islandmass2, islandmass3);
 
   pmap = new fair_tile[MAP_INDEX_SIZE]();
@@ -3586,10 +3586,10 @@ static bool map_generate_fair_islands(void)
     whole_map_iterate_end;
 
     /* Create main player island. */
-    log_debug("Making main island.");
+    qDebug("Making main island.");
     pisland = fair_map_island_new(islandmass1, players_per_island);
 
-    log_debug("Place main islands on the map.");
+    qDebug("Place main islands on the map.");
     i = 0;
 
     if (wld.map.server.team_placement != TEAM_PLACEMENT_DISABLED
@@ -3699,7 +3699,7 @@ static bool map_generate_fair_islands(void)
     fair_map_destroy(pisland);
 
     if (done) {
-      log_debug("Create and place small islands on the map.");
+      qDebug("Create and place small islands on the map.");
       for (i = 0; i < player_count(); i++) {
         pisland = fair_map_island_new(islandmass2, 0);
         if (!fair_map_place_island_rand(pmap, pisland)) {
@@ -3766,7 +3766,7 @@ static bool map_generate_fair_islands(void)
   }
 
   /* Apply the map. */
-  log_debug("Applying the map...");
+  qDebug("Applying the map...");
   whole_map_iterate(&(wld.map), ptile)
   {
     struct fair_tile *pftile = pmap + tile_index(ptile);

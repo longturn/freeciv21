@@ -217,7 +217,7 @@ struct inputfile *inf_from_file(const char *filename,
   if (!fp) {
     return NULL;
   }
-  log_debug("inputfile: opened \"%s\" ok", filename);
+  qDebug("inputfile: opened \"%s\" ok", filename);
   inf = inf_from_stream(fp, datafn);
   inf->filename = fc_strdup(filename);
   return inf;
@@ -239,7 +239,7 @@ struct inputfile *inf_from_stream(fz_FILE *stream, datafilename_fn_t datafn)
   inf->fp = stream;
   inf->datafn = datafn;
 
-  log_debug("inputfile: opened \"%s\" ok", inf_filename(inf));
+  qDebug("inputfile: opened \"%s\" ok", inf_filename(inf));
   return inf;
 }
 
@@ -253,7 +253,7 @@ static void inf_close_partial(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: sub-closing \"%s\"", inf_filename(inf));
+  qDebug("inputfile: sub-closing \"%s\"", inf_filename(inf));
 
   if (fz_ferror(inf->fp) != 0) {
     qCritical("Error before closing %s: %s", inf_filename(inf),
@@ -275,7 +275,7 @@ static void inf_close_partial(struct inputfile *inf)
   init_zeros(inf);
   inf->magic = ~INF_MAGIC;
 
-  log_debug("inputfile: sub-closed ok");
+  qDebug("inputfile: sub-closed ok");
 }
 
 /*******************************************************************/ /**
@@ -288,13 +288,13 @@ void inf_close(struct inputfile *inf)
 {
   fc_assert_ret(inf_sanity_check(inf));
 
-  log_debug("inputfile: closing \"%s\"", inf_filename(inf));
+  qDebug("inputfile: closing \"%s\"", inf_filename(inf));
   if (inf->included_from) {
     inf_close(inf->included_from);
   }
   inf_close_partial(inf);
   delete inf;
-  log_debug("inputfile: closed ok");
+  qDebug("inputfile: closed ok");
 }
 
 /*******************************************************************/ /**
@@ -599,7 +599,7 @@ const char *inf_token(struct inputfile *inf, enum inf_token_type type)
     }
   }
   if (c && INF_DEBUG_FOUND) {
-    log_debug("inputfile: found %s '%s'", name, astr_str(&inf->token));
+    qDebug("inputfile: found %s '%s'", name, astr_str(&inf->token));
   }
   return c;
 }
@@ -863,7 +863,7 @@ static const char *get_token_value(struct inputfile *inf)
       qCCritical(inf_category, _("Cannot open stringfile \"%s\"."), rfname);
       return NULL;
     }
-    log_debug("Stringfile \"%s\" opened ok", start);
+    qDebug("Stringfile \"%s\" opened ok", start);
     *((char *) (c - 1)) = trailing; /* Revert. */
     astr_set(&inf->token, "*");     /* Mark as a string read from a file */
 

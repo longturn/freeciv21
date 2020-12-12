@@ -118,16 +118,16 @@ int read_socket_data(QTcpSocket *sock, struct socket_packet_buffer *buffer)
     return 0;
   }
 
-  log_debug("try reading %d bytes", buffer->nsize - buffer->ndata);
+  qDebug("try reading %d bytes", buffer->nsize - buffer->ndata);
   didget = sock->read((char *) (buffer->data + buffer->ndata),
                       buffer->nsize - buffer->ndata);
 
   if (didget > 0) {
     buffer->ndata += didget;
-    log_debug("didget:%d", didget);
+    qDebug("didget:%d", didget);
     return didget;
   } else if (didget == 0) {
-    log_debug("EOF on socket read");
+    qDebug("EOF on socket read");
     return -2;
   }
 
@@ -153,7 +153,7 @@ static int write_socket_data(struct connection *pc,
     }
 
     nblock = MIN(buf->ndata - start, MAX_LEN_PACKET);
-    log_debug("trying to write %d limit=%d", nblock, limit);
+    qDebug("trying to write %d limit=%d", nblock, limit);
     if ((nput = pc->sock->write((const char *) buf->data + start, nblock))
         == -1) {
       connection_close(pc, pc->sock->errorString().toUtf8().data());
@@ -216,7 +216,7 @@ static bool add_connection_data(struct connection *pconn,
   }
 
   buf = pconn->send_buffer;
-  log_debug("add %d bytes to %d (space =%d)", len, buf->ndata, buf->nsize);
+  qDebug("add %d bytes to %d (space =%d)", len, buf->ndata, buf->nsize);
   if (!buffer_ensure_free_extra_space(buf, len)) {
     connection_close(pconn, _("buffer overflow"));
     return FALSE;

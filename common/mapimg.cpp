@@ -851,7 +851,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
                               const char *val, bool check)
 {
   if (BV_ISSET(pmapdef->args, arg)) {
-    log_debug("Option '%s' for mapimg used more than once.",
+    qDebug("Option '%s' for mapimg used more than once.",
               mapdef_arg_name(arg));
   }
 
@@ -1387,7 +1387,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
   }
 
 #ifdef FREECIV_DEBUG
-  log_debug("Image generation time: %g seconds (%g apparent)",
+  qDebug("Image generation time: %g seconds (%g apparent)",
             timer_read_seconds(timer_cpu), timer_read_seconds(timer_user));
 
   timer_destroy(timer_cpu);
@@ -1678,7 +1678,7 @@ static void mapimg_log(const char *file, const char *function, int line,
   va_end(args);
 
 #ifdef FREECIV_DEBUG
-  log_debug("In %s() [%s:%d]: %s", function, file, line, error_buffer);
+  qDebug("In %s() [%s:%d]: %s", function, file, line, error_buffer);
 #endif
 }
 

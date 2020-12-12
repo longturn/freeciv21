@@ -793,7 +793,7 @@ static void contemplate_terrain_improvements(struct ai_type *ait,
   utype = dai_role_utype_for_terrain_class(pcity, UTYF_SETTLERS, TC_LAND);
 
   if (utype == NULL) {
-    log_debug("No UTYF_SETTLERS role unit available");
+    qDebug("No UTYF_SETTLERS role unit available");
     return;
   }
 

@@ -161,7 +161,7 @@ bool fcdb_init(const char *conf_file)
       return FALSE;
     }
   } else {
-    log_debug("No fcdb config file.");
+    qDebug("No fcdb config file.");
   }
 
   return script_fcdb_init(NULL);

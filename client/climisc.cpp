@@ -78,7 +78,7 @@ void client_remove_unit(struct unit *punit)
   int old = get_num_units_in_focus();
   bool update;
 
-  log_debug("removing unit %d, %s %s (%d %d) hcity %d", punit->id,
+  qDebug("removing unit %d, %s %s (%d %d) hcity %d", punit->id,
             nation_rule_name(nation_of_unit(punit)), unit_rule_name(punit),
             TILE_XY(unit_tile(punit)), hc);
 
@@ -113,7 +113,7 @@ void client_remove_unit(struct unit *punit)
       refresh_city_dialog(pcity);
     }
 
-    log_debug("map city %s, %s, (%d %d)", city_name_get(pcity),
+    qDebug("map city %s, %s, (%d %d)", city_name_get(pcity),
               nation_rule_name(nation_of_city(pcity)),
               TILE_XY(city_tile(pcity)));
   }
@@ -122,7 +122,7 @@ void client_remove_unit(struct unit *punit)
     pcity = game_city_by_number(hc);
     if (NULL != pcity) {
       refresh_city_dialog(pcity);
-      log_debug("home city %s, %s, (%d %d)", city_name_get(pcity),
+      qDebug("home city %s, %s, (%d %d)", city_name_get(pcity),
                 nation_rule_name(nation_of_city(pcity)),
                 TILE_XY(city_tile(pcity)));
     }
@@ -141,7 +141,7 @@ void client_remove_city(struct city *pcity)
   struct tile *ptile = city_tile(pcity);
   struct city old_city = *pcity;
 
-  log_debug("client_remove_city() %d, %s", pcity->id, city_name_get(pcity));
+  qDebug("client_remove_city() %d, %s", pcity->id, city_name_get(pcity));
 
   /* Explicitly remove all improvements, to properly remove any global
      effects and to handle the preservation of "destroyed" effects. */
@@ -1324,7 +1324,7 @@ bool mapimg_client_define(void)
   }
   cat_snprintf(str, sizeof(str), ":map=%s", mi_map);
 
-  log_debug("client map image definition: %s", str);
+  qDebug("client map image definition: %s", str);
 
   if (!mapimg_define(str, FALSE) || !mapimg_isvalid(0)) {
     /* An error in the definition string or an error validation the string.

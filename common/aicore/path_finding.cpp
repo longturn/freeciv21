@@ -1663,10 +1663,10 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
 
     if (NS_WAITING == node->status) {
       /* We've already returned this node once, skip it. */
-      log_debug("Considering waiting at (%d, %d)", TILE_XY(tile));
+      qDebug("Considering waiting at (%d, %d)", TILE_XY(tile));
     } else if (node->is_dangerous) {
       /* We don't return dangerous tiles. */
-      log_debug("Reached dangerous tile (%d, %d)", TILE_XY(tile));
+      qDebug("Reached dangerous tile (%d, %d)", TILE_XY(tile));
     }
 #endif
 
@@ -2831,13 +2831,13 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
 
     if (NS_WAITING == node->status) {
       /* We've already returned this node once, skip it. */
-      log_debug("Considering waiting at (%d, %d)", TILE_XY(tile));
+      qDebug("Considering waiting at (%d, %d)", TILE_XY(tile));
     } else if (NS_PROCESSED == node->status) {
       /* We've already returned this node once, skip it. */
-      log_debug("Reprocessing tile (%d, %d)", TILE_XY(tile));
+      qDebug("Reprocessing tile (%d, %d)", TILE_XY(tile));
     } else if (pf_fuel_node_dangerous(node)) {
       /* We don't return dangerous tiles. */
-      log_debug("Reached dangerous tile (%d, %d)", TILE_XY(tile));
+      qDebug("Reached dangerous tile (%d, %d)", TILE_XY(tile));
     }
 #endif /* PF_DEBUG */
 

@@ -452,7 +452,7 @@ static void set_client_page_callback(void *data)
  ****************************************************************************/
 void set_client_page(enum client_pages page)
 {
-  log_debug("Requested page: %s.", client_pages_name(page));
+  qDebug("Requested page: %s.", client_pages_name(page));
 
   update_queue_add(set_client_page_callback, FC_INT_TO_PTR(page));
 }
@@ -462,7 +462,7 @@ void set_client_page(enum client_pages page)
  ****************************************************************************/
 void client_start_server_and_set_page(enum client_pages page)
 {
-  log_debug("Requested server start + page: %s.", client_pages_name(page));
+  qDebug("Requested server start + page: %s.", client_pages_name(page));
 
   if (client_start_server()) {
     update_queue_connect_processing_finished(

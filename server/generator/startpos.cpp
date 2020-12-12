@@ -511,7 +511,7 @@ bool create_start_positions(enum map_startpos mode,
     if ((ptile =
              rand_map_pos_filtered(&(wld.map), &data, is_valid_start_pos))) {
       islands[islands_index[(int) tile_continent(ptile)]].starters--;
-      log_debug("Adding (%d, %d) as starting position %d, %d goodies on "
+      qDebug("Adding (%d, %d) as starting position %d, %d goodies on "
                 "islands.",
                 TILE_XY(ptile), map_startpos_count(),
                 islands[islands_index[(int) tile_continent(ptile)]].goodies);

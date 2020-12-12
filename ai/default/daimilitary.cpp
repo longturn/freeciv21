@@ -1364,7 +1364,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
 #ifdef FREECIV_DEBUG
         struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
 
-        log_debug("kill_something_with() %s has chosen attacker ferry, "
+        qDebug("kill_something_with() %s has chosen attacker ferry, "
                   "%s, want=" ADV_WANT_PRINTF ", %d of %d free",
                   city_name_get(pcity), utype_rule_name(choice->value.utype),
                   choice->want, ai->stats.available_boats, ai->stats.boats);

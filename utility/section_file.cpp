@@ -24,7 +24,7 @@
 static char error_buffer[MAX_LEN_ERRORBUF] = "\0";
 
 /* Debug function for every new entry. */
-#define DEBUG_ENTRIES(...) /* log_debug(__VA_ARGS__); */
+#define DEBUG_ENTRIES(...) /* qDebug(__VA_ARGS__); */
 
 /**********************************************************************/ /**
    Returns the last error which occurred in a string.  It never returns NULL.

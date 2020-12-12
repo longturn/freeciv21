@@ -1115,7 +1115,7 @@ void get_mapview_scroll_window(float *xmin, float *ymin, float *xmax,
     *ymax += (diff + 1) / 2;
   }
 
-  log_debug("x: %f<-%d->%f; y: %f<-%f->%d", *xmin, *xsize, *xmax, *ymin,
+  qDebug("x: %f<-%d->%f; y: %f<-%f->%d", *xmin, *xsize, *xmax, *ymin,
             *ymax, *ysize);
 }
 
@@ -1710,7 +1710,7 @@ void update_map_canvas(int canvas_x, int canvas_y, int width, int height)
   full = (canvas_x == 0 && canvas_y == 0 && width == mapview.store_width
           && height == mapview.store_height);
 
-  log_debug("update_map_canvas(pos=(%d,%d), size=(%d,%d))", canvas_x,
+  qDebug("update_map_canvas(pos=(%d,%d), size=(%d,%d))", canvas_x,
             canvas_y, width, height);
 
   /* If a full redraw is done, we just draw everything onto the canvas.
@@ -1929,14 +1929,14 @@ void show_city_descriptions(int canvas_base_x, int canvas_base_y,
 
       show_city_desc(mapview.store, canvas_x, canvas_y, pcity, &width,
                      &height);
-      log_debug("Drawing %s.", city_name_get(pcity));
+      qDebug("Drawing %s.", city_name_get(pcity));
 
       if (width > max_desc_width || height > max_desc_height) {
         /* The update was incomplete! We queue a new update. Note that
          * this is recursively queueing an update within a dequeuing of an
          * update. This is allowed specifically because of the code in
          * unqueue_mapview_updates. See that function for more. */
-        log_debug("Re-queuing %s.", city_name_get(pcity));
+        qDebug("Re-queuing %s.", city_name_get(pcity));
         update_city_description(pcity);
       }
       new_max_width = MAX(width, new_max_width);
@@ -1974,14 +1974,14 @@ void show_tile_labels(int canvas_base_x, int canvas_base_y, int width_base,
 
       show_tile_label(mapview.store, canvas_x, canvas_y, ptile, &width,
                       &height);
-      log_debug("Drawing label %s.", ptile->label);
+      qDebug("Drawing label %s.", ptile->label);
 
       if (width > max_label_width || height > max_label_height) {
         /* The update was incomplete! We queue a new update. Note that
          * this is recursively queueing an update within a dequeuing of an
          * update. This is allowed specifically because of the code in
          * unqueue_mapview_updates. See that function for more. */
-        log_debug("Re-queuing tile label %s drawing.", ptile->label);
+        qDebug("Re-queuing tile label %s drawing.", ptile->label);
         update_tile_label(ptile);
       }
       new_max_width = MAX(width, new_max_width);
@@ -2632,7 +2632,7 @@ void unqueue_mapview_updates(bool write_to_screen)
     return;
   }
 
-  log_debug("unqueue_mapview_update: needed_updates=%d", needed_updates);
+  qDebug("unqueue_mapview_update: needed_updates=%d", needed_updates);
 
   /* This code "pops" the lists of tile updates off of the static array and
    * stores them locally.  This allows further updates to be queued within

@@ -108,7 +108,7 @@ bool spy_poison(struct player *pplayer, struct unit *pdiplomat,
   ctile = city_tile(pcity);
   clink = city_link(pcity);
 
-  log_debug("poison: unit: %d", pdiplomat->id);
+  qDebug("poison: unit: %d", pdiplomat->id);
 
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
@@ -116,8 +116,8 @@ bool spy_poison(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("poison: infiltrated");
-  log_debug("poison: succeeded");
+  qDebug("poison: infiltrated");
+  qDebug("poison: succeeded");
 
   /* Poison people! */
   if (city_reduce_size(pcity, 1, pplayer, "poison")) {
@@ -196,7 +196,7 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
 
-  log_debug("spread plague: unit: %d", act_unit->id);
+  qDebug("spread plague: unit: %d", act_unit->id);
 
   /* Battle all units capable of diplomatic defense. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
@@ -204,7 +204,7 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("spread plague: infiltrated");
+  qDebug("spread plague: infiltrated");
 
   /* The infector may get caught while trying to spread a plague in the
    * city. */
@@ -232,7 +232,7 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("spread plague: succeeded");
+  qDebug("spread plague: succeeded");
 
   /* Commit bio-terrorism. */
   city_illness_strike(tgt_city);
@@ -298,7 +298,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("investigate: unit: %d", pdiplomat->id);
+  qDebug("investigate: unit: %d", pdiplomat->id);
 
   /* Do It... */
   update_dumb_city(pplayer, pcity);
@@ -439,9 +439,9 @@ bool diplomat_embassy(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("embassy: unit: %d", pdiplomat->id);
+  qDebug("embassy: unit: %d", pdiplomat->id);
 
-  log_debug("embassy: succeeded");
+  qDebug("embassy: succeeded");
 
   establish_embassy(pplayer, cplayer);
 
@@ -493,7 +493,7 @@ bool spy_sabotage_unit(struct player *pplayer, struct unit *pdiplomat,
   fc_assert_ret_val(pplayer, FALSE);
   fc_assert_ret_val(pdiplomat, FALSE);
 
-  log_debug("sabotage-unit: unit: %d", pdiplomat->id);
+  qDebug("sabotage-unit: unit: %d", pdiplomat->id);
 
   /* N.B: unit_link() always returns the same pointer. */
   sz_strlcpy(victim_link, unit_link(pvictim));
@@ -505,7 +505,7 @@ bool spy_sabotage_unit(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("sabotage-unit: succeeded");
+  qDebug("sabotage-unit: succeeded");
 
   if (pvictim->hp < 2) {
     /* Not possible to halve the hit points. Kill it. */
@@ -594,7 +594,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
       !utype_player_already_has_this_unique(pplayer, unit_type_get(pvictim)),
       FALSE, "bribe-unit: already got unique unit");
 
-  log_debug("bribe-unit: unit: %d", pdiplomat->id);
+  qDebug("bribe-unit: unit: %d", pdiplomat->id);
 
   /* Get bribe cost, ignoring any previously saved value. */
   bribe_cost = unit_bribe_cost(pvictim, pplayer);
@@ -605,11 +605,11 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
                   ftc_server,
                   _("You don't have enough gold to bribe the %s %s."),
                   nation_adjective_for_player(uplayer), unit_link(pvictim));
-    log_debug("bribe-unit: not enough gold");
+    qDebug("bribe-unit: not enough gold");
     return FALSE;
   }
 
-  log_debug("bribe-unit: enough gold");
+  qDebug("bribe-unit: enough gold");
 
   /* Diplomatic battle against any diplomatic defender except the one that
    * will get the bribe. */
@@ -618,7 +618,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("bribe-unit: succeeded");
+  qDebug("bribe-unit: succeeded");
 
   victim_tile = unit_tile(pvictim);
   pvictim =
@@ -864,7 +864,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
     }
   }
 
-  log_debug("steal-tech: unit: %d", pdiplomat->id);
+  qDebug("steal-tech: unit: %d", pdiplomat->id);
 
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
@@ -872,7 +872,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("steal-tech: infiltrated");
+  qDebug("steal-tech: infiltrated");
 
   times = diplomats_unignored_tech_stealings(pdiplomat, pcity);
 
@@ -883,7 +883,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
   if (times > 0 && expected_kills) {
     /* Already stolen from: Diplomat always fails! */
     count = 1;
-    log_debug("steal-tech: difficulty: impossible");
+    qDebug("steal-tech: difficulty: impossible");
   } else {
     /* Determine difficulty. */
     count = 1;
@@ -892,7 +892,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
       count++;
     }
     count += times;
-    log_debug("steal-tech: difficulty: %d", count);
+    qDebug("steal-tech: difficulty: %d", count);
     /* Determine success or failure. */
     while (count > 0) {
       if (action_failed_dice_roll(pplayer, pdiplomat, pcity, cplayer,
@@ -1055,7 +1055,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
   ctile = city_tile(pcity);
   clink = city_link(pcity);
 
-  log_debug("incite: unit: %d", pdiplomat->id);
+  qDebug("incite: unit: %d", pdiplomat->id);
 
   /* Get incite cost, ignoring any previously saved value. */
   revolt_cost = city_incite_cost(pplayer, pcity);
@@ -1064,7 +1064,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
   if (pplayer->economic.gold < revolt_cost) {
     notify_player(pplayer, ctile, E_MY_DIPLOMAT_FAILED, ftc_server,
                   _("You don't have enough gold to subvert %s."), clink);
-    log_debug("incite: not enough gold");
+    qDebug("incite: not enough gold");
     return FALSE;
   }
 
@@ -1075,7 +1075,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("incite: infiltrated");
+  qDebug("incite: infiltrated");
 
   /* Check if the Diplomat/Spy succeeds with his/her task. */
   if (action_failed_dice_roll(pplayer, pdiplomat, pcity, cplayer, paction)) {
@@ -1098,7 +1098,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("incite: succeeded");
+  qDebug("incite: succeeded");
 
   /* Subvert the city to your cause... */
 
@@ -1183,7 +1183,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   fc_assert_ret_val(pplayer, FALSE);
   fc_assert_ret_val(pdiplomat, FALSE);
 
-  log_debug("sabotage: unit: %d", pdiplomat->id);
+  qDebug("sabotage: unit: %d", pdiplomat->id);
 
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
@@ -1191,7 +1191,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("sabotage: infiltrated");
+  qDebug("sabotage: infiltrated");
 
   /* Check if the Diplomat/Spy succeeds with his/her task. */
   if (action_failed_dice_roll(pplayer, pdiplomat, pcity, cplayer, paction)) {
@@ -1214,7 +1214,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
     return FALSE;
   }
 
-  log_debug("sabotage: succeeded");
+  qDebug("sabotage: succeeded");
 
   /* Examine the city for improvements to sabotage. */
   count = 0;
@@ -1226,7 +1226,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   }
   city_built_iterate_end;
 
-  log_debug("sabotage: count of improvements: %d", count);
+  qDebug("sabotage: count of improvements: %d", count);
 
   /* Determine the target (-1 is production). */
   if (action_has_result(paction, ACTRES_SPY_SABOTAGE_CITY)) {
@@ -1243,12 +1243,12 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                     unit_link(pdiplomat), city_link(pcity));
       diplomat_charge_movement(pdiplomat, pcity->tile);
       send_unit_info(NULL, pdiplomat);
-      log_debug("sabotage: random: nothing to do");
+      qDebug("sabotage: random: nothing to do");
       return FALSE;
     }
     if (count == 0 || fc_rand(2) == 1) {
       ptarget = NULL;
-      log_debug("sabotage: random: targeted production");
+      qDebug("sabotage: random: targeted production");
     } else {
       ptarget = NULL;
       which = fc_rand(count);
@@ -1267,7 +1267,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
       city_built_iterate_end;
 
       if (NULL != ptarget) {
-        log_debug("sabotage: random: targeted improvement: %d (%s)",
+        qDebug("sabotage: random: targeted improvement: %d (%s)",
                   improvement_number(ptarget),
                   improvement_rule_name(ptarget));
       } else {
@@ -1277,7 +1277,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   } else if (improvement < 0) {
     /* If told to sabotage production, do so. */
     ptarget = NULL;
-    log_debug("sabotage: specified target production");
+    qDebug("sabotage: specified target production");
   } else {
     struct impr_type *pimprove = improvement_by_number(improvement);
     if (pimprove == NULL) {
@@ -1293,7 +1293,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
     if (city_has_building(pcity, pimprove)) {
       if (pimprove->sabotage > 0) {
         ptarget = pimprove;
-        log_debug("sabotage: specified target improvement: %d (%s)",
+        qDebug("sabotage: specified target improvement: %d (%s)",
                   improvement, improvement_rule_name(pimprove));
       } else {
         notify_player(pplayer, city_tile(pcity), E_MY_DIPLOMAT_FAILED,
@@ -1301,7 +1301,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                       improvement_name_translation(pimprove));
         diplomat_charge_movement(pdiplomat, pcity->tile);
         send_unit_info(NULL, pdiplomat);
-        log_debug("sabotage: disallowed target improvement: %d (%s)",
+        qDebug("sabotage: disallowed target improvement: %d (%s)",
                   improvement, improvement_rule_name(pimprove));
         return FALSE;
       }
@@ -1313,7 +1313,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
           improvement_name_translation(pimprove), city_link(pcity));
       diplomat_charge_movement(pdiplomat, pcity->tile);
       send_unit_info(NULL, pdiplomat);
-      log_debug("sabotage: target improvement not found: %d (%s)",
+      qDebug("sabotage: target improvement not found: %d (%s)",
                 improvement, improvement_rule_name(pimprove));
       return FALSE;
     }
@@ -1340,7 +1340,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                   _("The production of %s was destroyed in %s,"
                     " %s are suspected."),
                   prod, city_link(pcity), nation_plural_for_player(pplayer));
-    log_debug("sabotage: sabotaged production");
+    qDebug("sabotage: sabotaged production");
   } else {
     int vulnerability = ptarget->sabotage;
 
@@ -1372,7 +1372,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                                 city_link(pcity));
 
       wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
-      log_debug("sabotage: caught in capital or on city walls");
+      qDebug("sabotage: caught in capital or on city walls");
       return FALSE;
     }
 
@@ -1385,7 +1385,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                   ftc_server, _("The %s destroyed the %s in %s."),
                   nation_plural_for_player(pplayer),
                   improvement_name_translation(ptarget), city_link(pcity));
-    log_debug("sabotage: sabotaged improvement: %d (%s)",
+    qDebug("sabotage: sabotaged improvement: %d (%s)",
               improvement_number(ptarget), improvement_rule_name(ptarget));
 
     /* Do it. */
@@ -1458,7 +1458,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
 
-  log_debug("steal gold: unit: %d", act_unit->id);
+  qDebug("steal gold: unit: %d", act_unit->id);
 
   /* Battle all units capable of diplomatic defence. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
@@ -1466,7 +1466,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("steal gold: infiltrated");
+  qDebug("steal gold: infiltrated");
 
   /* The thief may get caught while trying to steal the gold. */
   if (action_failed_dice_roll(act_player, act_unit, tgt_city, tgt_player,
@@ -1491,7 +1491,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("steal gold: succeeded");
+  qDebug("steal gold: succeeded");
 
   /* The upper limit on how much gold the thief can steal. */
   gold_take = (tgt_player->economic.gold
@@ -1503,7 +1503,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
    * something to steal sanity check would have aborted the theft. */
   gold_take = fc_rand(gold_take) + 1;
 
-  log_debug("steal gold: will take %d gold", gold_take);
+  qDebug("steal gold: will take %d gold", gold_take);
 
   /* Steal the gold. */
   tgt_player->economic.gold -= gold_take;
@@ -1513,7 +1513,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
       gold_take
       - (gold_take * get_unit_bonus(act_unit, EFT_THIEFS_SHARE_PM)) / 1000;
 
-  log_debug("steal gold: will give %d gold", gold_give);
+  qDebug("steal gold: will give %d gold", gold_give);
 
   /* Pocket the stolen money. */
   act_player->economic.gold += gold_give;
@@ -1587,7 +1587,7 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
 
-  log_debug("steal some maps: unit: %d", act_unit->id);
+  qDebug("steal some maps: unit: %d", act_unit->id);
 
   /* Battle all units capable of diplomatic defence. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
@@ -1595,7 +1595,7 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("steal some maps: infiltrated");
+  qDebug("steal some maps: infiltrated");
 
   /* Try to steal the map. */
   if (action_failed_dice_roll(act_player, act_unit, tgt_city, tgt_player,
@@ -1621,7 +1621,7 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("steal some maps: succeeded");
+  qDebug("steal some maps: succeeded");
 
   /* Steal it. */
   normal_tile_prob =
@@ -1700,7 +1700,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
 
-  log_debug("suitcase nuke: unit: %d", act_unit->id);
+  qDebug("suitcase nuke: unit: %d", act_unit->id);
 
   /* Battle all units capable of diplomatic defense. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
@@ -1708,7 +1708,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("suitcase nuke: infiltrated");
+  qDebug("suitcase nuke: infiltrated");
 
   /* Try to hide the nuke. */
   if (action_failed_dice_roll(act_player, act_unit, tgt_city, tgt_player,
@@ -1732,7 +1732,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
     return FALSE;
   }
 
-  log_debug("suitcase nuke: succeeded");
+  qDebug("suitcase nuke: succeeded");
 
   /* Notify everyone involved. */
   notify_player(act_player, tgt_tile, E_MY_SPY_NUKE, ftc_server,

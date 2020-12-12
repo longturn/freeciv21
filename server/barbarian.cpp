@@ -308,7 +308,7 @@ bool unleash_barbarians(struct tile *ptile)
       struct unit *barb_unit;
 
       barb_unit = create_unit(barbarians, ptile, punittype, 0, 0, -1);
-      log_debug("Created barbarian unit %s", utype_rule_name(punittype));
+      qDebug("Created barbarian unit %s", utype_rule_name(punittype));
       send_unit_info(NULL, barb_unit);
     }
   }
@@ -352,7 +352,7 @@ bool unleash_barbarians(struct tile *ptile)
                                     TRUE, FALSE)) {
             /* Move */
             (void) unit_move_handling(punit2, dir_tiles[rdir], TRUE, TRUE);
-            log_debug("Moved barbarian unit from (%d, %d) to (%d, %d)",
+            qDebug("Moved barbarian unit from (%d, %d) to (%d, %d)",
                       TILE_XY(ptile), TILE_XY(dir_tiles[rdir]));
             dest_found = TRUE;
           }
@@ -551,7 +551,7 @@ static void try_summon_barbarians(void)
   victim = city_owner(pc);
 
   dist = real_map_distance(ptile, pc->tile);
-  log_debug("Closest city (to %d,%d) is %s (at %d,%d) distance %d.",
+  qDebug("Closest city (to %d,%d) is %s (at %d,%d) distance %d.",
             TILE_XY(ptile), city_name_get(pc), TILE_XY(pc->tile), dist);
   if (dist > MAX_UNREST_DIST || dist < MIN_UNREST_DIST) {
     return;
@@ -573,7 +573,7 @@ static void try_summon_barbarians(void)
       || fc_rand(100) > get_player_bonus(victim, EFT_CIVIL_WAR_CHANCE)) {
     return;
   }
-  log_debug("Barbarians are willing to fight");
+  qDebug("Barbarians are willing to fight");
 
   /* Remove huts in place of uprising */
   /* FIXME: Should we really always do it? */
@@ -618,7 +618,7 @@ static void try_summon_barbarians(void)
       if (is_native_tile(punittype, utile)) {
         (void) create_unit(barbarians, utile, punittype, 0, 0, -1);
         really_created++;
-        log_debug("Created barbarian unit %s", utype_rule_name(punittype));
+        qDebug("Created barbarian unit %s", utype_rule_name(punittype));
       }
     }
 
@@ -671,7 +671,7 @@ static void try_summon_barbarians(void)
           (void) create_unit_full(barbarians, utile, barb, 0, 0, -1, -1,
                                   ptrans);
           really_created++;
-          log_debug("Created barbarian unit %s", utype_rule_name(barb));
+          qDebug("Created barbarian unit %s", utype_rule_name(barb));
         }
       }
 

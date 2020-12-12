@@ -76,7 +76,7 @@ static void lsend_vote_new(struct conn_list *dest, struct vote *pvote)
     return;
   }
 
-  log_debug("lsend_vote_new %p (%d) --> %p", pvote, pvote->vote_no, dest);
+  qDebug("lsend_vote_new %p (%d) --> %p", pvote, pvote->vote_no, dest);
 
   packet.vote_no = pvote->vote_no;
   sz_strlcpy(packet.user, pconn->username);
@@ -117,7 +117,7 @@ static void lsend_vote_update(struct conn_list *dest, struct vote *pvote,
     return;
   }
 
-  log_debug("lsend_vote_update %p (%d) --> %p", pvote, pvote->vote_no, dest);
+  qDebug("lsend_vote_update %p (%d) --> %p", pvote, pvote->vote_no, dest);
 
   packet.vote_no = pvote->vote_no;
   packet.yes = pvote->yes;
@@ -530,7 +530,7 @@ static void check_vote(struct vote *pvote)
     }
   }
 
-  log_debug("check_vote flags=%d need_pc=%0.2f yes_pc=%0.2f "
+  qDebug("check_vote flags=%d need_pc=%0.2f yes_pc=%0.2f "
             "no_pc=%0.2f rem_pc=%0.2f base=%0.2f resolve=%d",
             flags, need_pc, yes_pc, no_pc, rem_pc, base, resolve);
 
@@ -800,7 +800,7 @@ void handle_vote_submit(struct connection *pconn, int vote_no, int value)
   struct vote *pvote;
   enum vote_type type;
 
-  log_debug("Got vote submit (%d %d) from %s.", vote_no, value,
+  qDebug("Got vote submit (%d %d) from %s.", vote_no, value,
             conn_description(pconn));
 
   pvote = get_vote_by_no(vote_no);
@@ -838,7 +838,7 @@ void send_running_votes(struct connection *pconn, bool only_team_votes)
     return;
   }
 
-  log_debug("Sending %s running votes to %s.",
+  qDebug("Sending %s running votes to %s.",
             only_team_votes ? "team" : "all", conn_description(pconn));
 
   connection_do_buffer(pconn);
@@ -869,7 +869,7 @@ void send_remove_team_votes(struct connection *pconn)
     return;
   }
 
-  log_debug("Sending remove info of the team votes to %s.",
+  qDebug("Sending remove info of the team votes to %s.",
             conn_description(pconn));
 
   connection_do_buffer(pconn);
@@ -895,7 +895,7 @@ void send_updated_vote_totals(struct conn_list *dest)
     return;
   }
 
-  log_debug("Sending updated vote totals to conn_list %p", dest);
+  qDebug("Sending updated vote totals to conn_list %p", dest);
 
   if (dest == NULL) {
     dest = game.est_connections;

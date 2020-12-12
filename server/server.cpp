@@ -604,7 +604,7 @@ void server::begin_turn()
  *****************************************************************************/
 void server::begin_phase()
 {
-  log_debug("Starting phase %d/%d.", game.info.phase,
+  qDebug("Starting phase %d/%d.", game.info.phase,
             game.server.num_phases);
   ::begin_phase(m_is_new_turn);
   if (m_need_send_pending_events) {
@@ -656,12 +656,12 @@ void server::begin_phase()
     }
   }
 
-  log_debug("sniffingpackets");
+  qDebug("sniffingpackets");
   check_for_full_turn_done(); // HACK: don't wait during AI phases
 
   if (m_between_turns_timer != NULL) {
     game.server.turn_change_time = timer_read_seconds(m_between_turns_timer);
-    log_debug("Inresponsive between turns %g seconds",
+    qDebug("Inresponsive between turns %g seconds",
               game.server.turn_change_time);
   }
 
@@ -713,7 +713,7 @@ void server::end_phase()
 void server::end_turn()
 {
   ::end_turn();
-  log_debug("Sendinfotometaserver");
+  qDebug("Sendinfotometaserver");
   (void) send_server_info_to_metaserver(META_REFRESH);
 
   if (S_S_OVER != server_state() && check_for_game_over()) {

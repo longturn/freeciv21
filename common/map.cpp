@@ -262,7 +262,7 @@ static void generate_map_indices(void)
 
 #if 0
   for (i = 0; i < tiles; i++) {
-    log_debug("%5d : (%3d,%3d) : %d", i,
+    qDebug("%5d : (%3d,%3d) : %d", i,
               wld.map.iterate_outwards_indices[i].dx,
               wld.map.iterate_outwards_indices[i].dy,
               wld.map.iterate_outwards_indices[i].dist);
@@ -470,7 +470,7 @@ static void tile_free(struct tile *ptile)
  ***********************************************************************/
 void map_allocate(struct civ_map *amap)
 {
-  log_debug("map_allocate (was %p) (%d,%d)", (void *) amap->tiles,
+  qDebug("map_allocate (was %p) (%d,%d)", (void *) amap->tiles,
             amap->xsize, amap->ysize);
 
   fc_assert_ret(NULL == amap->tiles);

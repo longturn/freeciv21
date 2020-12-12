@@ -34,12 +34,8 @@
 
 #define log_request_ids(...) /* log_test(__VA_ARGS__) */
 #define log_todo_lists(...)  /* log_test(__VA_ARGS__) */
-#define log_meta_callback(...) log_debug(__VA_ARGS__)
+#define log_meta_callback(...) qDebug(__VA_ARGS__)
 #define log_debug_freeze(...) /* log_test(__VA_ARGS__) */
-#define log_apply_result log_debug
-#define log_handle_city log_debug
-#define log_handle_city2 log_debug
-#define log_results_are_equal log_debug
 
 #define SHOW_TIME_STATS FALSE
 #define SHOW_APPLY_RESULT_ON_SERVER_ERRORS FALSE
@@ -203,7 +199,7 @@ inline bool operator==(const struct cm_result &result1,
 
     if (result1.worker_positions[cindex]
         != result2.worker_positions[cindex]) {
-      log_results_are_equal("worker_positions");
+      qDebug("worker_positions");
       return FALSE;
     }
   }
@@ -267,7 +263,7 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
   }
   cm_result_destroy(cma_state_result);
   cm_result_destroy(const_cast<cm_result *>(cma_result_got));
-  log_apply_result("apply_result_on_server() return %d.", (int) success);
+  qDebug("apply_result_on_server() return %d.", (int) success);
   cma_state_result = nullptr;
   last_request = -9999;
   xcity = nullptr;
@@ -316,7 +312,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 
   stats.apply_result_applied++;
 
-  log_apply_result("apply_result_on_server(city %d=\"%s\")", pcity->id,
+  qDebug("apply_result_on_server(city %d=\"%s\")", pcity->id,
                    city_name_get(pcity));
 
   connection_do_buffer(&client.conn);
@@ -326,7 +322,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
                                      y)
   {
     if (tile_worked(ptile) == pcity && !result->worker_positions[idx]) {
-      log_apply_result("Removing worker at {%d,%d}.", x, y);
+      qDebug("Removing worker at {%d,%d}.", x, y);
 
       last_request_id = dsend_packet_city_make_specialist(
           &client.conn, pcity->id, ptile->index);
@@ -345,7 +341,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
     }
 
     for (i = 0; i < pcity->specialists[sp] - result->specialists[sp]; i++) {
-      log_apply_result("Change specialist from %d to %d.", sp,
+      qDebug("Change specialist from %d to %d.", sp,
                        DEFAULT_SPECIALIST);
       last_request_id =
           city_change_specialist(pcity, sp, DEFAULT_SPECIALIST);
@@ -365,7 +361,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
                                      y)
   {
     if (NULL == tile_worked(ptile) && result->worker_positions[idx]) {
-      log_apply_result("Putting worker at {%d,%d}.", x, y);
+      qDebug("Putting worker at {%d,%d}.", x, y);
       fc_assert_action(city_can_work_tile(pcity, ptile), break);
 
       last_request_id = dsend_packet_city_make_worker(
@@ -386,7 +382,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
     }
 
     for (i = 0; i < result->specialists[sp] - pcity->specialists[sp]; i++) {
-      log_apply_result("Changing specialist from %d to %d.",
+      qDebug("Changing specialist from %d to %d.",
                        DEFAULT_SPECIALIST, sp);
       last_request_id =
           city_change_specialist(pcity, DEFAULT_SPECIALIST, sp);
@@ -423,12 +419,12 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 void cma_yoloswag::put_city_under_agent(
     struct city *pcity, const struct cm_parameter *const parameter)
 {
-  log_debug("cma_put_city_under_agent(city %d=\"%s\")", pcity->id,
+  qDebug("cma_put_city_under_agent(city %d=\"%s\")", pcity->id,
             city_name_get(pcity));
   fc_assert_ret(city_owner(pcity) == client.conn.playing);
   cma_set_parameter(ATTR_CITY_CMA_PARAMETER, pcity->id, parameter);
   governor::i()->add_city_changed(pcity);
-  log_debug("cma_put_city_under_agent: return");
+  qDebug("cma_put_city_under_agent: return");
 }
 
 void cma_yoloswag::release_city(struct city *pcity)
@@ -562,18 +558,18 @@ void cma_yoloswag::handle_city(struct city *pcity)
   bool handled;
   int i, city_id = pcity->id;
 
-  log_handle_city("handle_city(city %d=\"%s\") pos=(%d,%d) owner=%s",
+  qDebug("handle_city(city %d=\"%s\") pos=(%d,%d) owner=%s",
                   pcity->id, city_name_get(pcity), TILE_XY(pcity->tile),
                   nation_rule_name(nation_of_city(pcity)));
 
-  log_handle_city2("START handle city %d=\"%s\"", pcity->id,
+  qDebug("START handle city %d=\"%s\"", pcity->id,
                    city_name_get(pcity));
 
   handled = FALSE;
   for (i = 0; i < 5; i++) {
     struct cm_parameter parameter;
 
-    log_handle_city2("  try %d", i);
+    qDebug("  try %d", i);
 
     if (pcity != check_city(city_id, &parameter)) {
       handled = TRUE;
@@ -582,7 +578,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
 
     cm_query_result(pcity, &parameter, result, FALSE);
     if (!result->found_a_valid) {
-      log_handle_city2("  no valid found result");
+      qDebug("  no valid found result");
 
       cma_release_city(pcity);
 
@@ -594,7 +590,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       break;
     } else {
       if (!apply_result_on_server(pcity, result)) {
-        log_handle_city2("  doesn't cleanly apply");
+        qDebug("  doesn't cleanly apply");
         if (pcity == check_city(city_id, NULL) && i == 0) {
           create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
                        _("The citizen governor has gotten confused dealing "
@@ -602,7 +598,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
                        city_link(pcity));
         }
       } else {
-        log_handle_city2("  ok");
+        qDebug("  ok");
         /* Everything ok */
         handled = TRUE;
         break;
@@ -612,7 +608,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
 
   if (!handled) {
     fc_assert_ret(pcity == check_city(city_id, NULL));
-    log_handle_city2("  not handled");
+    qDebug("  not handled");
 
     create_event(city_tile(pcity), E_CITY_CMA_RELEASE, ftc_client,
                  _("The citizen governor has gotten confused dealing "
@@ -626,7 +622,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
            city_name_get(pcity));
   }
 
-  log_handle_city2("END handle city=(%d)", city_id);
+  qDebug("END handle city=(%d)", city_id);
 }
 
 static void city_changed(int city_id)
@@ -975,7 +971,7 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
               MAX(0, 20 - (int) get_internal_string_length(citizen_types)),
               "", citizen_types, buf[6], buf[7], buf[8]);
 
-  log_debug("\n%s", buffer);
+  qDebug("\n%s", buffer);
   return buffer;
 }
 

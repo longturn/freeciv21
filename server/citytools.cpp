@@ -464,7 +464,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
   /* First try default city names. */
   name = search_for_city_name(ptile, nation_cities(pnation), pplayer);
   if (NULL != name) {
-    log_debug("Default city name found: %s.", name);
+    qDebug("Default city name found: %s.", name);
     return name;
   }
 
@@ -505,7 +505,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
           nation_list[which] = tmp;
 
           pnation = nation_list[i];
-          log_debug("Looking through %s.", nation_rule_name(pnation));
+          qDebug("Looking through %s.", nation_rule_name(pnation));
           name =
               search_for_city_name(ptile, nation_cities(pnation), pplayer);
 
@@ -522,7 +522,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
             nation_list[queue_size] = n;
             nations_selected[idx] = TRUE;
             queue_size++;
-            log_debug("Child %s.", nation_rule_name(n));
+            qDebug("Child %s.", nation_rule_name(n));
           }
         }
         nation_list_iterate_end;
@@ -535,7 +535,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
             nation_list[queue_size] = n;
             nations_selected[idx] = TRUE;
             queue_size++;
-            log_debug("Parent %s.", nation_rule_name(n));
+            qDebug("Parent %s.", nation_rule_name(n));
           }
         }
         nation_list_iterate_end;
@@ -549,7 +549,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
           nation_list[queue_size] = n;
           nations_selected[nation_index(n)] = TRUE;
           queue_size++;
-          log_debug("Misc nation %s.", nation_rule_name(n));
+          qDebug("Misc nation %s.", nation_rule_name(n));
         }
       }
       allowed_nations_iterate_end;
@@ -561,7 +561,7 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
     static char tempname[MAX_LEN_CITYNAME];
     int i;
 
-    log_debug("City name not found in rulesets.");
+    qDebug("City name not found in rulesets.");
     for (i = 1; i <= map_num_tiles(); i++) {
       fc_snprintf(tempname, MAX_LEN_CITYNAME, _("City no. %d"), i);
       if (NULL == game_city_by_name(tempname)) {
@@ -623,7 +623,7 @@ static void transfer_unit(struct unit *punit, struct city *tocity,
        * break the rule that a player only may have one unit of each unique
        * unit type. */
 
-      log_debug("%s already have a %s. Can't transfer from %s",
+      qDebug("%s already have a %s. Can't transfer from %s",
                 nation_rule_name(nation_of_player(to_player)),
                 unit_rule_name(punit),
                 nation_rule_name(nation_of_player(from_player)));
@@ -1516,7 +1516,7 @@ void create_city(struct player *pplayer, struct tile *ptile,
   const citizens old_content_citizens = player_content_citizens(pplayer);
   const citizens old_angry_citizens = player_angry_citizens(pplayer);
 
-  log_debug("create_city() %s", name);
+  qDebug("create_city() %s", name);
 
   pcity = create_city_virtual(pplayer, ptile, name);
 
@@ -3299,11 +3299,11 @@ bool city_map_update_radius_sq(struct city *pcity)
     ;
   }
 
-  log_debug("[%s (%d)] city_map_radius_sq: %d => %d", city_name_get(pcity),
+  qDebug("[%s (%d)] city_map_radius_sq: %d => %d", city_name_get(pcity),
             pcity->id, city_radius_sq_old, city_radius_sq_new);
 
   /* workers map before */
-  log_debug("[%s (%d)] city size: %d; specialists: %d (before change)",
+  qDebug("[%s (%d)] city size: %d; specialists: %d (before change)",
             city_name_get(pcity), pcity->id, city_size_get(pcity),
             city_specialists(pcity));
   citylog_map_workers(LOG_DEBUG, pcity);
@@ -3370,7 +3370,7 @@ bool city_map_update_radius_sq(struct city *pcity)
       city_tiles_old < city_tiles_new ? _("increased") : _("reduced"));
 
   /* workers map after */
-  log_debug("[%s (%d)] city size: %d; specialists: %d (after change)",
+  qDebug("[%s (%d)] city size: %d; specialists: %d (after change)",
             city_name_get(pcity), pcity->id, city_size_get(pcity),
             city_specialists(pcity));
   citylog_map_workers(LOG_DEBUG, pcity);

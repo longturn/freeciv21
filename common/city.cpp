@@ -470,7 +470,7 @@ static void citylog_map_index(QtMsgType level)
   }
   city_map_iterate_end;
 
-  log_debug("city map index:");
+  qDebug("city map index:");
   citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data.data());
 }
 
@@ -488,7 +488,7 @@ static void citylog_map_radius_sq(QtMsgType level)
   }
   city_map_iterate_end;
 
-  log_debug("city map squared radius:");
+  qDebug("city map squared radius:");
   citylog_map_data(level, CITY_MAP_MAX_RADIUS_SQ, city_map_data.data());
 }
 #endif /* FREECIV_DEBUG */
@@ -560,13 +560,13 @@ void generate_city_map_indices(void)
   citylog_map_index(LOG_DEBUG);
 
   for (i = CITY_MAP_MIN_RADIUS_SQ; i <= CITY_MAP_MAX_RADIUS_SQ; i++) {
-    log_debug("radius_sq = %2d, tiles = %2d", i, city_map_tiles(i));
+    qDebug("radius_sq = %2d, tiles = %2d", i, city_map_tiles(i));
   }
 
   for (i = 0; i < city_count_tiles; i++) {
     city_x = CITY_REL2ABS(city_map_index[i].dx);
     city_y = CITY_REL2ABS(city_map_index[i].dy);
-    log_debug("[%2d]: (dx,dy) = (%+2d,%+2d), (x,y) = (%2d,%2d), "
+    qDebug("[%2d]: (dx,dy) = (%+2d,%+2d), (x,y) = (%2d,%2d), "
               "dist = %2d, check = %2d",
               i, city_map_index[i].dx, city_map_index[i].dy, city_x, city_y,
               city_map_index[i].dist, city_map_xy[city_x][city_y]);
@@ -1704,8 +1704,6 @@ void city_production_caravan_shields_init(void)
 {
   struct requirement prod_as_req;
 
-#define log_ca_s_init log_debug
-
   /* Remove old data. */
   BV_CLR_ALL(caravan_helped_impr);
   BV_CLR_ALL(caravan_helped_utype);
@@ -1741,7 +1739,7 @@ void city_production_caravan_shields_init(void)
     }
     action_enabler_list_iterate_end;
 
-    log_ca_s_init("Help Wonder: %s for %s",
+    qDebug("Help Wonder: %s for %s",
                   (BV_ISSET(caravan_helped_impr, improvement_index(itype))
                        ? "possible"
                        : "impossible"),
@@ -1773,15 +1771,13 @@ void city_production_caravan_shields_init(void)
     }
     action_enabler_list_iterate_end;
 
-    log_ca_s_init("Help Wonder: %s for %s",
+    qDebug("Help Wonder: %s for %s",
                   (BV_ISSET(caravan_helped_utype, utype_index(putype))
                        ? "possible"
                        : "impossible"),
                   utype_rule_name(putype));
   }
   unit_type_iterate_end;
-
-#undef log_ca_s_init
 }
 
 /**********************************************************************/ /**
@@ -3273,7 +3269,7 @@ void city_add_improvement(struct city *pcity,
 void city_remove_improvement(struct city *pcity,
                              const struct impr_type *pimprove)
 {
-  log_debug("Improvement %s removed from city %s",
+  qDebug("Improvement %s removed from city %s",
             improvement_rule_name(pimprove), pcity->name);
 
   pcity->built[improvement_index(pimprove)].turn = I_DESTROYED;

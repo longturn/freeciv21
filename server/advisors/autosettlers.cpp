@@ -776,7 +776,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
   best_newv = MAX(best_newv, 0); /* sanity */
 
   if (best_newv > 0) {
-    log_debug("Settler %d@(%d,%d) wants to %s at (%d,%d) with "
+    qDebug("Settler %d@(%d,%d) wants to %s at (%d,%d) with "
               "desire " ADV_WANT_PRINTF,
               punit->id, TILE_XY(unit_tile(punit)),
               get_activity_text(*best_act), TILE_XY(*best_tile), best_newv);
@@ -1158,9 +1158,9 @@ void auto_settlers_player(struct player *pplayer)
                                   / ((game.info.coolinglevel + 1) / 2)
                               + game.info.nuclearwinter);
 
-  log_debug("Warmth = %d, game.globalwarming=%d", pplayer->ai_common.warmth,
+  qDebug("Warmth = %d, game.globalwarming=%d", pplayer->ai_common.warmth,
             game.info.globalwarming);
-  log_debug("Frost = %d, game.nuclearwinter=%d", pplayer->ai_common.frost,
+  qDebug("Frost = %d, game.nuclearwinter=%d", pplayer->ai_common.frost,
             game.info.nuclearwinter);
 
   /* Auto-settle with a settler unit if it's under AI control (e.g. human
@@ -1172,7 +1172,7 @@ void auto_settlers_player(struct player *pplayer)
     if ((punit->ssa_controller == SSA_AUTOSETTLER || is_ai(pplayer))
         && (unit_type_get(punit)->adv.worker || unit_is_cityfounder(punit))
         && !unit_has_orders(punit) && punit->moves_left > 0) {
-      log_debug("%s %s at (%d, %d) is controlled by server side agent %s.",
+      qDebug("%s %s at (%d, %d) is controlled by server side agent %s.",
                 nation_rule_name(nation_of_player(pplayer)),
                 unit_rule_name(punit), TILE_XY(unit_tile(punit)),
                 server_side_agent_name(SSA_AUTOSETTLER));

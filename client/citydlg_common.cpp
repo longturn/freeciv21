@@ -143,7 +143,7 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
   *city_x = CITY_REL2ABS(*city_x);
   *city_y = CITY_REL2ABS(*city_y);
 
-  log_debug("canvas_to_city_pos(pos=(%d,%d))=(%d,%d)@radius=%d",
+  qDebug("canvas_to_city_pos(pos=(%d,%d))=(%d,%d)@radius=%d",
             orig_canvas_x, orig_canvas_y, *city_x, *city_y, city_radius_sq);
 
   return is_valid_city_coords(city_radius_sq, *city_x, *city_y);
@@ -162,7 +162,7 @@ bool canvas_to_city_pos(int *city_x, int *city_y, int city_radius_sq,
     map_to_gui_vector(tileset, &_x##_0, &_y##_0, _tile_x, _tile_y);         \
     _x##_0 -= (_x##_w - tileset_tile_width(tileset)) / 2;                   \
     _y##_0 -= (_y##_h - tileset_tile_height(tileset)) / 2;                  \
-    log_debug("citydlg: %f,%f + %dx%d", _x##_0, _y##_0, _x##_w, _y##_h);    \
+    qDebug("citydlg: %f,%f + %dx%d", _x##_0, _y##_0, _x##_w, _y##_h);    \
                                                                             \
     gui_rect_iterate_coord(_x##_0, _y##_0, _x##_w, _y##_h, ptile, pedge,    \
                            pcorner, _x##_g, _y##_g)                         \

@@ -363,7 +363,7 @@ static void check_city_size(struct city *pcity, const char *file,
                 city_size_get(pcity));
 
     citylog_map_workers(LOG_DEBUG, pcity);
-    log_debug("[%s (%d)] specialists: %d", city_name_get(pcity), pcity->id,
+    qDebug("[%s (%d)] specialists: %d", city_name_get(pcity), pcity->id,
               city_specialists(pcity));
 
     city_repair_size(pcity, delta);

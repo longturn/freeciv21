@@ -516,7 +516,7 @@ void player_restore_units(struct player *pplayer)
                 /* Enemy units probably blocked our route
                  * FIXME: We should try find alternative route around
                  * the enemy unit instead of just giving up and crashing. */
-                log_debug("rescue plane: unit %d could not move to "
+                qDebug("rescue plane: unit %d could not move to "
                           "refuel point!",
                           punit->id);
               }
@@ -2225,7 +2225,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
     /* give map */
     give_distorted_map(pvictim, pvictor, 50, TRUE);
 
-    log_debug("victim has money: %d", pvictim->economic.gold);
+    qDebug("victim has money: %d", pvictim->economic.gold);
     pvictor->economic.gold += ransom;
     pvictim->economic.gold -= ransom;
 
@@ -2235,10 +2235,10 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
       Tech_type_id ttid = steal_a_tech(pvictor, pvictim, A_UNSET);
 
       if (ttid == A_NONE) {
-        log_debug("Worthless enemy doesn't have more techs to steal.");
+        qDebug("Worthless enemy doesn't have more techs to steal.");
         break;
       } else {
-        log_debug("Pressed tech %s from captured enemy",
+        qDebug("Pressed tech %s from captured enemy",
                   research_advance_rule_name(research_get(pvictor), ttid));
         if (!fc_rand(3)) {
           break; /* out of luck */
@@ -2260,7 +2260,7 @@ void kill_unit(struct unit *pkiller, struct unit *punit, bool vet)
       /* about a quarter on average with high numbers less probable */
       conqsize = fc_rand(fc_rand(evcsize));
 
-      log_debug("conqsize=%d", conqsize);
+      qDebug("conqsize=%d", conqsize);
 
       if (conqsize > 0) {
         bool palace = game.server.savepalace;
@@ -3343,7 +3343,7 @@ static void cancel_orders(struct unit *punit, const char *dbg_msg)
 {
   free_unit_orders(punit);
   send_unit_info(NULL, punit);
-  log_debug("%s", dbg_msg);
+  qDebug("%s", dbg_msg);
 }
 
 /**********************************************************************/ /**
@@ -4210,7 +4210,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
     return TRUE;
   }
 
-  log_debug("Executing orders for %s %d", unit_rule_name(punit), punit->id);
+  qDebug("Executing orders for %s %d", unit_rule_name(punit), punit->id);
 
   /* Any time the orders are canceled we should give the player a message. */
 
@@ -4227,7 +4227,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
     struct extra_type *pextra;
 
     if (punit->done_moving) {
-      log_debug("  stopping because we're done this turn");
+      qDebug("  stopping because we're done this turn");
       return TRUE;
     }
 
@@ -4242,7 +4242,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
 
     if (moves_made == punit->orders.length) {
       /* For repeating orders, don't repeat more than once per turn. */
-      log_debug("  stopping because we ran a round");
+      qDebug("  stopping because we ran a round");
       punit->done_moving = TRUE;
       send_unit_info(NULL, punit);
       return TRUE;
@@ -4262,13 +4262,13 @@ bool execute_orders(struct unit *punit, const bool fresh)
     case ORDER_ACTION_MOVE:
     case ORDER_FULL_MP:
       if (0 == punit->moves_left) {
-        log_debug("  stopping because of no more move points");
+        qDebug("  stopping because of no more move points");
         return TRUE;
       }
       break;
     case ORDER_PERFORM_ACTION:
       if (action_mp_full_makes_legal(punit, order.action)) {
-        log_debug("  stopping. Not enough move points this turn");
+        qDebug("  stopping. Not enough move points this turn");
         return TRUE;
       }
       break;
@@ -4302,7 +4302,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
          * next turn.  We assume that the next turn it will have full MP
          * (there's no check for that). */
         punit->done_moving = TRUE;
-        log_debug("  waiting this turn");
+        qDebug("  waiting this turn");
         send_unit_info(NULL, punit);
       }
       break;
@@ -4349,18 +4349,18 @@ bool execute_orders(struct unit *punit, const bool fresh)
         return TRUE;
       }
 
-      log_debug("  moving to %d,%d", TILE_XY(dst_tile));
+      qDebug("  moving to %d,%d", TILE_XY(dst_tile));
       res = unit_move_handling(punit, dst_tile, FALSE,
                                order.order != ORDER_ACTION_MOVE);
       if (!player_unit_by_number(pplayer, unitid)) {
-        log_debug("  unit died while moving.");
+        qDebug("  unit died while moving.");
         /* A player notification should already have been sent. */
         return FALSE;
       }
 
       if (res && !same_pos(dst_tile, unit_tile(punit))) {
         /* Movement succeeded but unit didn't move. */
-        log_debug("  orders resulted in combat.");
+        qDebug("  orders resulted in combat.");
         send_unit_info(NULL, punit);
         return TRUE;
       }
@@ -4399,7 +4399,7 @@ bool execute_orders(struct unit *punit, const bool fresh)
       /* Checked in unit_order_list_is_sane() */
       fc_assert_action(oaction != NULL, continue);
 
-      log_debug("  orders: doing action %s", action_rule_name(oaction));
+      qDebug("  orders: doing action %s", action_rule_name(oaction));
 
       dst_tile = index_to_tile(&(wld.map), order.target);
 
@@ -4577,14 +4577,14 @@ bool execute_orders(struct unit *punit, const bool fresh)
 
     if (last_order) {
       fc_assert(punit->has_orders == FALSE);
-      log_debug("  stopping because orders are complete");
+      qDebug("  stopping because orders are complete");
       return TRUE;
     }
 
     if (punit->orders.index == punit->orders.length) {
       fc_assert(punit->orders.repeat);
       /* Start over. */
-      log_debug("  repeating orders.");
+      qDebug("  repeating orders.");
       punit->orders.index = 0;
     }
   } /* end while */

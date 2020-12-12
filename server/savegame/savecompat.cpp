@@ -346,7 +346,7 @@ static void compat_load_020400(struct loaddata *loading,
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data from savegame to version 2.4.0");
+  qDebug("Upgrading data from savegame to version 2.4.0");
 
   /* Add the default player AI. */
   player_slots_iterate(pslot)
@@ -588,7 +588,7 @@ static void compat_load_020500(struct loaddata *loading,
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data from savegame to version 2.5.0");
+  qDebug("Upgrading data from savegame to version 2.5.0");
 
   secfile_insert_int(loading->file, 2, "savefile.roads_size");
   secfile_insert_int(loading->file, 0, "savefile.trait_size");
@@ -693,7 +693,7 @@ static void compat_load_020600(struct loaddata *loading,
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data from savegame to version 2.6.0");
+  qDebug("Upgrading data from savegame to version 2.6.0");
 
   /* Terrain mapping table - use current ruleset as we have no way to know
    * any other old values. */
@@ -1316,7 +1316,7 @@ static void compat_load_030000(struct loaddata *loading,
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data from savegame to version 3.0.0");
+  qDebug("Upgrading data from savegame to version 3.0.0");
 
   /* Rename "random.save" as "random.saved"
    * Note that it's not an error if a scenario does not have [random] at all.
@@ -1503,7 +1503,7 @@ static void compat_load_030100(struct loaddata *loading,
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data from savegame to version 3.1.0");
+  qDebug("Upgrading data from savegame to version 3.1.0");
 
   /* Actions are now stored by number. */
   player_slots_iterate(pslot)
@@ -1854,7 +1854,7 @@ static void compat_load_dev(struct loaddata *loading)
   /* Check status and return if not OK (sg_success != TRUE). */
   sg_check_ret();
 
-  log_debug("Upgrading data between development revisions");
+  qDebug("Upgrading data between development revisions");
 
   if (!secfile_lookup_int(loading->file, &game_version,
                           "scenario.game_version")) {

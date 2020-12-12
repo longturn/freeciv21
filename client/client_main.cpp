@@ -701,7 +701,7 @@ void user_ended_turn(void) { send_turn_done(); }
  **************************************************************************/
 void send_turn_done(void)
 {
-  log_debug("send_turn_done() can_end_turn=%d", can_end_turn());
+  qDebug("send_turn_done() can_end_turn=%d", can_end_turn());
 
   if (!can_end_turn()) {
     /*
