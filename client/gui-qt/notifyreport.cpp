@@ -95,6 +95,7 @@ void notify_dialog::calc_size(int &x, int &y)
     x = qMax(x, fm.horizontalAdvance(str_list.at(i)));
     y = y + 3 + fm.height();
   }
+  y += fm.height();
   x = x + 15;
 }
 
