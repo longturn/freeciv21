@@ -2467,13 +2467,13 @@ static char *valid_index_str(const struct tileset *t, int idx)
    Scale means if sprite should be scaled, smooth if scaling might use
    other scaling algorithm than nearest neighbor.
  ****************************************************************************/
-static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
+static struct sprite *load_sprite(struct tileset *t, QString tag_name,
                                   bool scale, bool smooth)
 {
   struct small_sprite *ss;
   float sprite_scale = 1.0f;
 
-  log_debug("load_sprite(tag='%s')", tag_name);
+  log_debug("load_sprite(tag='%s')", qUtf8Printable(tag_name));
   /* Lookup information about where the sprite is found. */
   if (!(ss = t->sprite_hash->value(tag_name, nullptr))) {
     return NULL;
@@ -2500,7 +2500,7 @@ static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
       if (!ss->sprite) {
         tileset_error(LOG_FATAL,
                       _("Couldn't load gfx file \"%s\" for sprite '%s'."),
-                      ss->file, tag_name);
+                      ss->file, qUtf8Printable(tag_name));
       }
     } else {
       int sf_w, sf_h;
@@ -2512,7 +2512,7 @@ static struct sprite *load_sprite(struct tileset *t, const char *tag_name,
         tileset_error(
             LOG_ERROR,
             _("Sprite '%s' in file \"%s\" isn't within the image!"),
-            tag_name, ss->sf->file_name);
+            qUtf8Printable(tag_name), ss->sf->file_name);
         return NULL;
       }
       if (scale) {
@@ -2575,7 +2575,7 @@ static void unload_sprite(struct tileset *t, QString tag_name)
    Return TRUE iff the specified sprite exists in the tileset (whether
    or not it is currently loaded).
  ****************************************************************************/
-static bool sprite_exists(const struct tileset *t, const char *tag_name)
+static bool sprite_exists(const struct tileset *t, QString tag_name)
 {
   /* Lookup information about where the sprite is found. */
   return t->sprite_hash->contains(tag_name);
@@ -2871,7 +2871,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     const char *names[] = {"science_bulb", "warming_sun", "cooling_flake"};
 
     for (i = 0; i < NUM_TILES_PROGRESS; i++) {
-      buffer = QString("s.%s_%d").arg(names[j], QString::number(j));
+      buffer = QString("s.%1_%2").arg(names[j], QString::number(j));
       SET_SPRITE_UNSCALED(indicator[j][i], buffer);
     }
   }
@@ -3045,7 +3045,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
    *   --> path.turns_%d
    *       --> city.size_%d */
 #define SET_GOTO_TURN_SPRITE(state, state_name, factor, factor_name)        \
-  fc_snprintf(buffer, sizeof(buffer), "path." state_name "_%d" #factor, i); \
+  buffer = QString("path." state_name "_%1" #factor).arg(i);   \
   SET_SPRITE_OPT(path.s[state].turns##factor_name[i], buffer);              \
   if (t->sprites.path.s[state].turns##factor_name[i] == NULL) {             \
     t->sprites.path.s[state].turns##factor_name[i] =                        \
