@@ -945,3 +945,11 @@ research_color {
   color: #96b62e /*lines*/;
   alternate-background-color: white /* box edge */;
 }
+
+message_dlg QTableWidget {
+  background-color: #525d6e;
+  alternate-background-color: #4b5565;
+}
+
+
+
