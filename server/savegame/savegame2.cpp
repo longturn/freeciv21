@@ -926,7 +926,7 @@ static void sg_special_set(struct tile *ptile, bv_extras *extras, char ch,
            * could not have made any difference. */
           /* Can't use next_extra_for_tile() as it works for buildable extras
            * only. */
-
+          Q_UNREACHABLE();
           if ((cause != EC_IRRIGATION || pterr->irrigation_result == pterr)
               && (cause != EC_MINE || pterr->mining_result == pterr)
               && (cause != EC_BASE || pterr->base_time != 0)

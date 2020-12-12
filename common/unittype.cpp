@@ -153,6 +153,7 @@ int utype_upkeep_cost(const struct unit_type *ut, struct player *pplayer,
         val = 0;
         break;
       default:
+        Q_UNREACHABLE();
         fc_assert(otype == O_GOLD || otype == O_SHIELD);
         break;
       }

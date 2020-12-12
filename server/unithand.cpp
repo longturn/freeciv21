@@ -5077,6 +5077,7 @@ bool unit_server_side_agent_set(struct player *pplayer, struct unit *punit,
     /* Always possible. */
     break;
   case SSA_COUNT:
+    Q_UNREACHABLE();
     fc_assert_ret_val(agent != SSA_COUNT, FALSE);
     break;
   }

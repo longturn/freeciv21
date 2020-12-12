@@ -345,6 +345,7 @@ static bool is_good_password(const char *password, char *msg)
 
   /* check number of numbers */
   if (num_nums < MIN_PASSWORD_NUMS) {
+    Q_UNREACHABLE();
     return FALSE;
   }
 

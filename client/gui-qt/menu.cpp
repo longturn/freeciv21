@@ -1587,6 +1587,7 @@ void mr_menu::menus_sensitive()
   {
     fc_assert((ptile == NULL) == (ptype == NULL));
     if (ptile || ptype) {
+      Q_UNREACHABLE();
       if (unit_tile(punit) != ptile) {
         units_all_same_tile = false;
       }
@@ -1760,6 +1761,7 @@ void mr_menu::menus_sensitive()
             i.value()->setText(QString(_("Plant")));
           }
         } else {
+          Q_UNREACHABLE();
           i.value()->setText(QString(_("Plant")));
         }
         break;

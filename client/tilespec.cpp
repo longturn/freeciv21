@@ -6591,7 +6591,7 @@ void tileset_use_preferred_theme(const struct tileset *t)
     /* Theme is not supported by this client. */
     return;
   }
-
+  Q_UNREACHABLE();
   for (i = 0; i < t->num_preferred_themes; i++) {
     if (strcmp(t->preferred_themes[i], default_theme_name)) {
       if (popup_theme_suggestion_dialog(t->preferred_themes[i])) {
