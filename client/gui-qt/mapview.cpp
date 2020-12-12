@@ -178,7 +178,6 @@ void map_view::update_cursor(enum cursor_type ct)
  **************************************************************************/
 void map_view::hide_all_fcwidgets()
 {
-  m_hidden_fcwidgets.clear();
   for (auto widget : this->findChildren<fcwidget *>()) {
     if (widget->isVisible()) {
       widget->hide();
