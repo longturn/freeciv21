@@ -175,6 +175,7 @@ static struct {
     GEN_EV(E_UNIT_WAS_EXPELLED, E_S_UNIT, N_("Was Expelled")),
     GEN_EV(E_UNIT_DID_EXPEL, E_S_UNIT, N_("Did Expel")),
     GEN_EV(E_UNIT_ACTION_FAILED, E_S_UNIT, N_("Action failed")),
+    GEN_EV(E_UNIT_WAKE, E_S_UNIT, N_("Sentried units awaken")),
     /* TRANS: "vote" as a process */
     GEN_EV(E_VOTE_NEW, E_S_VOTE, N_("New vote")),
     /* TRANS: "Vote" as a process */
@@ -310,6 +311,7 @@ bool is_city_event(enum event_type event)
   case E_UPRISING:
   case E_UNIT_RELOCATED:
   case E_UNIT_ILLEGAL_ACTION:
+  case E_UNIT_WAKE:
     return FALSE;
 
   default:
