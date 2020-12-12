@@ -50,8 +50,9 @@ message_dlg::message_dlg()
   msgtab->setEditTriggers(QAbstractItemView::NoEditTriggers);
   msgtab->horizontalHeader()->resizeSections(QHeaderView::ResizeToContents);
   msgtab->verticalHeader()->setVisible(false);
-  msgtab->setSelectionMode(QAbstractItemView::NoSelection);
-  msgtab->setSelectionBehavior(QAbstractItemView::SelectColumns);
+  msgtab->setSelectionMode(QAbstractItemView::SingleSelection);
+  msgtab->setSelectionBehavior(QAbstractItemView::SelectRows);
+  msgtab->setAlternatingRowColors(true);
 
   but1 = new QPushButton(
       style()->standardIcon(QStyle::SP_DialogCancelButton), _("Cancel"));
