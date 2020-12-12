@@ -391,6 +391,7 @@ void dai_choose_paratrooper(struct ai_type *ait, struct player *pplayer,
     tech_req = advance_index(u_type->require_advance);
     if (tech_req != A_NONE && tech_req != A_UNSET) {
       for (i = 0; i < num_requirements; i++) {
+        Q_UNREACHABLE();
         if (requirements[i] == tech_req) {
           break;
         }

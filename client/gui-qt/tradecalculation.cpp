@@ -307,7 +307,7 @@ bool trade_generator::discard_one(trade_city *tc)
   if (best == 0) {
     return false;
   }
-
+  Q_UNREACHABLE();
   ttc = cities.at(best_id);
   discard_trade(tc, ttc);
   return true;

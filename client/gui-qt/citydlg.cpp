@@ -3320,6 +3320,7 @@ bool city_production_model::setData(const QModelIndex &index,
   if (!index.isValid() || role != Qt::DisplayRole || role != Qt::ToolTipRole)
     return false;
 
+  Q_UNREACHABLE();
   if (index.row() >= 0 && index.row() < rowCount() && index.column() >= 0
       && index.column() < columnCount()) {
     bool change = city_target_list[index.row()]->setData();

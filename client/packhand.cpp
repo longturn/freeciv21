@@ -4844,6 +4844,7 @@ static action_id auto_attack_act(const struct act_prob *act_probs)
         /* Needs a target to be specified. */
         return ACTION_NONE;
         break;
+      Q_UNREACHABLE();
       case ACTION_COUNT:
         fc_assert(act != ACTION_COUNT);
         break;

@@ -165,6 +165,7 @@ static const char *text_link_type_name(enum text_link_type type)
   case TLT_UNIT:
     return "unit";
   case TLT_INVALID:
+    Q_UNREACHABLE();
     fc_assert_ret_val(type != TLT_INVALID, nullptr);
   };
   /* Don't handle the default case to be warned if a new value was added. */
