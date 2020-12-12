@@ -781,7 +781,7 @@ bool read_shortcuts()
       sc->str = default_shortcuts[i].str;
       fc_shortcuts::hash.insert(sc->id, sc);
     }
-    if (i < SC_LAST_SC - 1) {
+    while (i < SC_LAST_SC - 1) {
       // initialize missing shortcuts
       sc = new fc_shortcut();
       sc->id = default_shortcuts[i].id;
@@ -790,6 +790,7 @@ bool read_shortcuts()
       sc->mod = default_shortcuts[i].mod;
       sc->str = default_shortcuts[i].str;
       fc_shortcuts::hash.insert(default_shortcuts[i].id, sc);
+      ++i;
     }
   } else {
     s.endArray();
