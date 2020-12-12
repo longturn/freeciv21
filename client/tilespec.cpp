@@ -1,15 +1,15 @@
-/***********************************************************************
- Freeciv - Copyright (C) 1996 - A Kjeldberg, L Gregersen, P Unold
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as
-publishedtileset_layer by the Free Software Foundation; either version 2, or
-(at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-   GNU General Public License for more details.
-***********************************************************************/
+/*__            ___                 ***************************************
+/   \          /   \          Copyright (c) 1996-2020 Freeciv21 and Freeciv
+\_   \        /  __/          contributors. This file is part of Freeciv21.
+ _\   \      /  /__     Freeciv21 is free software: you can redistribute it
+ \___  \____/   __/    and/or modify it under the terms of the GNU  General
+     \_       _/          Public License  as published by the Free Software
+       | @ @  \_               Foundation, either version 3 of the  License,
+       |                              or (at your option) any later version.
+     _/     /\                  You should have received  a copy of the GNU
+    /o)  (o/\ \_                General Public License along with Freeciv21.
+    \_____/ /                     If not, see https://www.gnu.org/licenses/.
+      \____/        ********************************************************/
 
 /***********************************************************************
   Functions for handling the tilespec files which describe
@@ -988,9 +988,9 @@ const struct strvec *get_tileset_list(const struct option *poption)
    Falls back to default if can't find specified name;
    dies if can't find default.
  ****************************************************************************/
-static char *tilespec_fullname(const char *tileset_name)
+static char *tilespec_fullname(QString tileset_name)
 {
-  if (tileset_name) {
+  if (!tileset_name.isEmpty()) {
     const char *dname;
     QString fname = QString("%1%2").arg(tileset_name, TILESPEC_SUFFIX);
 
@@ -2586,7 +2586,7 @@ static bool sprite_exists(const struct tileset *t, const char *tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, TRUE, TRUE);                     \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), tag);     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
     }                                                                       \
   } while (FALSE)
 
@@ -2594,15 +2594,15 @@ static bool sprite_exists(const struct tileset *t, const char *tag_name)
   do {                                                                      \
     t->sprites.field = load_sprite(t, tag, TRUE, FALSE);                    \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), tag);     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
     }                                                                       \
   } while (FALSE)
 
 #define SET_SPRITE_UNSCALED(field, tag)                                     \
   do {                                                                      \
-    t->sprites.field = load_sprite(t, tag, FALSE, FALSE);                   \
+    t->sprites.field = load_sprite(t, qUtf8Printable(tag), FALSE, FALSE);                   \
     if (t->sprites.field == NULL) {                                         \
-      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), tag);     \
+      tileset_error(LOG_FATAL, _("Sprite for tag '%s' missing."), qUtf8Printable(tag));     \
     }                                                                       \
   } while (FALSE)
 
@@ -2617,7 +2617,7 @@ static bool sprite_exists(const struct tileset *t, const char *tag_name)
       tileset_error(LOG_FATAL,                                              \
                     _("Sprite for tags '%s' and alternate '%s' are "        \
                       "both missing."),                                     \
-                    tag, alt);                                              \
+                    qUtf8Printable(tag), qUtf8Printable(alt));                                              \
     }                                                                       \
   } while (FALSE)
 
@@ -2628,7 +2628,7 @@ static bool sprite_exists(const struct tileset *t, const char *tag_name)
 #define SET_SPRITE_ALT_OPT(field, tag, alt)                                 \
   do {                                                                      \
     t->sprites.field = tiles_lookup_sprite_tag_alt(                         \
-        t, LOG_VERBOSE, tag, alt, "sprite", #field, TRUE);                  \
+        t, LOG_VERBOSE, qUtf8Printable(tag), qUtf8Printable(alt), "sprite", #field, TRUE);                  \
   } while (FALSE)
 
 /************************************************************************/ /**
@@ -2858,7 +2858,7 @@ static void free_city_sprite(struct city_sprite *city_sprite)
  ****************************************************************************/
 static void tileset_lookup_sprite_tags(struct tileset *t)
 {
-  char buffer[512], buffer2[512];
+  QString buffer, buffer2;
   const int W = t->normal_tile_width, H = t->normal_tile_height;
   int i, j, f;
 
@@ -2871,7 +2871,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     const char *names[] = {"science_bulb", "warming_sun", "cooling_flake"};
 
     for (i = 0; i < NUM_TILES_PROGRESS; i++) {
-      fc_snprintf(buffer, sizeof(buffer), "s.%s_%d", names[j], i);
+      buffer = QString("s.%s_%d").arg(names[j], QString::number(j));
       SET_SPRITE_UNSCALED(indicator[j][i], buffer);
     }
   }
@@ -2902,7 +2902,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
         "solar_panels", "life_support", "habitation", "structural",
         "fuel",         "propulsion",   "exhaust"};
 
-    fc_snprintf(buffer, sizeof(buffer), "spaceship.%s", names[i]);
+    buffer = QString("spaceship.%1").arg(names[i]);
     SET_SPRITE(spaceship[i], buffer);
   }
 
@@ -2914,7 +2914,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
       struct small_sprite *ss;
 
       fc_assert(ARRAY_SIZE(names) == CURSOR_LAST);
-      fc_snprintf(buffer, sizeof(buffer), "cursor.%s%d", names[i], f);
+      buffer = QString("cursor.%1%2").arg(names[i], QString::number(f));
       SET_SPRITE(cursor[i].frame[f], buffer);
       ss = t->sprite_hash->value(buffer, nullptr);
       if (ss) {
@@ -2927,7 +2927,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   for (i = 0; i < ICON_COUNT; i++) {
     const char *names[ICON_COUNT] = {"freeciv", "citydlg"};
 
-    fc_snprintf(buffer, sizeof(buffer), "icon.%s", names[i]);
+    buffer = QString("icon.%1").arg(names[i]);
     SET_SPRITE(icon[i], buffer);
   }
 
@@ -2943,7 +2943,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   for (i = 0;; i++) {
     struct sprite *sprite;
 
-    fc_snprintf(buffer, sizeof(buffer), "explode.unit_%d", i);
+    buffer = QString("explode.unit_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, TRUE, TRUE);
     if (!sprite) {
       break;
@@ -2968,8 +2968,8 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   SET_SPRITE(unit.connect, "unit.connect");
   SET_SPRITE(unit.patrol, "unit.patrol");
   for (i = 0; i < MAX_NUM_BATTLEGROUPS; i++) {
-    fc_snprintf(buffer, sizeof(buffer), "unit.battlegroup_%d", i);
-    fc_snprintf(buffer2, sizeof(buffer2), "city.size_%d", i + 1);
+    buffer = QString("unit.battlegroup_%1").arg(QString::number(i));
+    buffer2 = QString("city.size_%1").arg(QString::number(i + 1));
     fc_assert(MAX_NUM_BATTLEGROUPS < NUM_TILES_DIGITS);
     SET_SPRITE_ALT(unit.battlegroup[i], buffer, buffer2);
   }
@@ -2979,21 +2979,21 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   SET_SPRITE_OPT(unit.action_decision_want, "unit.action_decision_want");
 
   for (i = 0; i < NUM_TILES_HP_BAR; i++) {
-    fc_snprintf(buffer, sizeof(buffer), "unit.hp_%d", i * 10);
+    buffer = QString("unit.hp_%1").arg(QString::number(i * 10));
     SET_SPRITE(unit.hp_bar[i], buffer);
   }
 
   for (i = 0; i < MAX_VET_LEVELS; i++) {
     /* Veteran level sprites are optional.  For instance "green" units
      * usually have no special graphic. */
-    fc_snprintf(buffer, sizeof(buffer), "unit.vet_%d", i);
+    buffer = QString("unit.vet_%1").arg(QString::number(i));
     t->sprites.unit.vet_lev[i] = load_sprite(t, buffer, TRUE, TRUE);
   }
 
   t->sprites.unit.select[0] = NULL;
   if (sprite_exists(t, "unit.select0")) {
     for (i = 0; i < NUM_TILES_SELECT; i++) {
-      fc_snprintf(buffer, sizeof(buffer), "unit.select%d", i);
+      buffer = QString("unit.select%1").arg(QString::number(i));
       SET_SPRITE(unit.select[i], buffer);
     }
   }
@@ -3007,7 +3007,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   for (i = 0;; i++) {
     struct sprite *sprite;
 
-    fc_snprintf(buffer, sizeof(buffer), "citybar.occupancy_%d", i);
+    buffer = QString("citybar.occupancy_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, TRUE, TRUE);
     if (!sprite) {
       break;
@@ -3053,33 +3053,33 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   }
 
   for (i = 0; i < NUM_TILES_DIGITS; i++) {
-    fc_snprintf(buffer, sizeof(buffer), "city.size_%d", i);
+    buffer = QString("city.size_%1").arg(QString::number(i));
     SET_SPRITE(city.size[i], buffer);
-    fc_snprintf(buffer2, sizeof(buffer2), "path.turns_%d", i);
+    buffer2 = QString("path.turns_%1").arg(QString::number(i));
     SET_SPRITE_ALT(path.s[GTS_MP_LEFT].turns[i], buffer2, buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", , );
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", , );
 
-    fc_snprintf(buffer, sizeof(buffer), "city.size_%d0", i);
+    buffer = QString("city.size_%10").arg(QString::number(i));  // %1 then 0
     SET_SPRITE(city.size_tens[i], buffer);
-    fc_snprintf(buffer2, sizeof(buffer2), "path.turns_%d0", i);
+    buffer2 = QString("path.turns_%10").arg(QString::number(i));
     SET_SPRITE_ALT(path.s[GTS_MP_LEFT].turns_tens[i], buffer2, buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", 0, _tens);
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", 0, _tens);
 
-    fc_snprintf(buffer, sizeof(buffer), "city.size_%d00", i);
+    buffer = QString("city.size_%100").arg(QString::number(i)); // %1 then 00
     SET_SPRITE_OPT(city.size_hundreds[i], buffer);
-    fc_snprintf(buffer2, sizeof(buffer2), "path.turns_%d00", i);
+    buffer2 = QString("path.turns_%100").arg(QString::number(i));
     SET_SPRITE_ALT_OPT(path.s[GTS_MP_LEFT].turns_hundreds[i], buffer2,
                        buffer);
     SET_GOTO_TURN_SPRITE(GTS_TURN_STEP, "step", 00, _hundreds);
     SET_GOTO_TURN_SPRITE(GTS_EXHAUSTED_MP, "exhausted_mp", 00, _hundreds);
 
-    fc_snprintf(buffer, sizeof(buffer), "city.t_food_%d", i);
+    buffer = QString("city.t_food_%1").arg(QString::number(i));
     SET_SPRITE(city.tile_foodnum[i], buffer);
-    fc_snprintf(buffer, sizeof(buffer), "city.t_shields_%d", i);
+    buffer = QString("city.t_shields_%1").arg(QString::number(i));
     SET_SPRITE(city.tile_shieldnum[i], buffer);
-    fc_snprintf(buffer, sizeof(buffer), "city.t_trade_%d", i);
+    buffer = QString("city.t_trade_%1").arg(QString::number(i));
     SET_SPRITE(city.tile_tradenum[i], buffer);
   }
 #undef SET_GOTO_TURN_SPRITE
@@ -3087,29 +3087,26 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   /* Must have at least one upkeep sprite per output type (and unhappy) */
   /* The rest are optional; we copy the previous sprite for unspecified ones
    */
-  fc_strlcpy(buffer, "upkeep.unhappy", sizeof(buffer));
+  buffer = QString("upkeep.unhappy");
   SET_SPRITE(upkeep.unhappy[0], buffer);
   for (i = 1; i < MAX_NUM_UPKEEP_SPRITES; i++) {
-    fc_snprintf(buffer2, sizeof(buffer2), "upkeep.unhappy%d", i + 1);
+    buffer2 = QString("upkeep.unhappy%1").arg(QString::number(i + 1));
     if (sprite_exists(t, buffer2)) {
       SET_SPRITE(upkeep.unhappy[i], buffer2);
-      fc_strlcpy(buffer, buffer2, sizeof(buffer));
+      buffer = buffer2;
     } else {
       SET_SPRITE(upkeep.unhappy[i], buffer);
     }
   }
   output_type_iterate(o)
   {
-    fc_snprintf(buffer, sizeof(buffer), "upkeep.%s",
-                get_output_identifier(static_cast<Output_type_id>(o)));
+    buffer = QString("upkeep.%1").arg(get_output_identifier(static_cast<Output_type_id>(o)));
     SET_SPRITE_OPT(upkeep.output[o][0], buffer);
     for (i = 1; i < MAX_NUM_UPKEEP_SPRITES; i++) {
-      fc_snprintf(buffer2, sizeof(buffer2), "upkeep.%s%d",
-                  get_output_identifier(static_cast<Output_type_id>(o)),
-                  i + 1);
+      buffer2 = QString("upkeep.%1%2").arg(get_output_identifier(static_cast<Output_type_id>(o)), QString::number(i+1));
       if (sprite_exists(t, buffer2)) {
         SET_SPRITE(upkeep.output[o][i], buffer2);
-        fc_strlcpy(buffer, buffer2, sizeof(buffer));
+        buffer = buffer2;
       } else {
         /* Optional, as maybe the upkeep 1 sprite didn't exist either */
         SET_SPRITE_OPT(upkeep.output[o][i], buffer);
@@ -3133,7 +3130,7 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
   for (i = 0;; i++) {
     struct sprite *sprite;
 
-    fc_snprintf(buffer, sizeof(buffer), "colors.overlay_%d", i);
+    buffer = QString("colors.overlay_%1").arg(QString::number(i));
     sprite = load_sprite(t, buffer, TRUE, TRUE);
     if (!sprite) {
       break;
@@ -3179,24 +3176,23 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
         continue;
       }
 
-      fc_snprintf(buffer, sizeof(buffer), "grid.main.%s", edge_name[i]);
+      buffer = QString("grid.main.%1").arg(edge_name[i]);
       SET_SPRITE(grid.main[i], buffer);
 
-      fc_snprintf(buffer, sizeof(buffer), "grid.city.%s", edge_name[i]);
+      buffer = QString("grid.city.%1").arg(edge_name[i]);
       SET_SPRITE(grid.city[i], buffer);
 
-      fc_snprintf(buffer, sizeof(buffer), "grid.worked.%s", edge_name[i]);
+      buffer = QString("grid.worked.%1").arg(edge_name[i]);
       SET_SPRITE(grid.worked[i], buffer);
 
-      fc_snprintf(buffer, sizeof(buffer), "grid.selected.%s", edge_name[i]);
+      buffer = QString("grid.selected.%1").arg(edge_name[i]);
       SET_SPRITE(grid.selected[i], buffer);
 
-      fc_snprintf(buffer, sizeof(buffer), "grid.coastline.%s", edge_name[i]);
+      buffer = QString("grid.coastline.%1").arg(edge_name[i]);
       SET_SPRITE(grid.coastline[i], buffer);
 
       for (be = 0; be < 2; be++) {
-        fc_snprintf(buffer, sizeof(buffer), "grid.borders.%c",
-                    edge_name[i][be]);
+        buffer = QString("grid.borders.%1").arg(edge_name[i][be]);
         SET_SPRITE(grid.borders[i][be], buffer);
       }
     }
@@ -3226,15 +3222,13 @@ static void tileset_lookup_sprite_tags(struct tileset *t)
     for (i = 0; i < t->num_cardinal_tileset_dirs; i++) {
       enum direction8 dir = t->cardinal_tileset_dirs[i];
 
-      fc_snprintf(buffer, sizeof(buffer), "tx.darkness_%s",
-                  dir_get_tileset_name(dir));
+      buffer = QString("tx.darkness_%1").arg(dir_get_tileset_name(dir));
       SET_SPRITE_NOTSMOOTH(tx.darkness[i], buffer);
     }
     break;
   case DARKNESS_CARD_FULL:
     for (i = 1; i < t->num_index_cardinal; i++) {
-      fc_snprintf(buffer, sizeof(buffer), "tx.darkness_%s",
-                  cardinal_index_str(t, i));
+      buffer = QString("tx.darkness_%1").arg(cardinal_index_str(t, i));
       SET_SPRITE_NOTSMOOTH(tx.darkness[i], buffer);
     }
     break;
