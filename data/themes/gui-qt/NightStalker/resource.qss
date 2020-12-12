@@ -10,7 +10,7 @@ QMainWindow {
 }
 
 *[doomed="true"] {
-  background-color: #485261;
+  background-color: transparent;
   border: none;
 }
 
@@ -235,10 +235,6 @@ QLineEdit {
   color: rgb( 210, 210, 210);
 }
 
-QTabWidget {
-  background: #343446;
-}
-
 QSpinBox {
   background: #343434;
   color: #ffffff;
@@ -454,64 +450,84 @@ QDialog {
   border: 3px solid #3399FF;
 }
 
-QTabWidget::pane {
-  margin: 1px, 1px, 1px, 1px;
-  border-left: 1px solid #454545;
-  border-top: 1px solid #454545;
-  border-bottom: 2px solid #454545;
-  border-right: 2px solid #454545;
-  border-radius: 8px;
-  border-top-left-radius: 0px;
-  padding: 0px;
+QTabWidget {
+  background: #343446;
 }
 
-QTabBar::tab {
-  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #485261, stop: 0.4 #262b33, stop: 0.4 #262b33, stop: 1.0 #485261);
+QTabWidget::pane {
+  margin: 1px, 1px, 1px, 1px;
   border-left: 1px solid #3399FF;
   border-top: 1px solid #3399FF;
   border-bottom: 1px solid #1f5d9c;
   border-right: 1px solid #1f5d9c;
-  border-top-right-radius: 15;
+  border-radius: 5px;
+  padding: 5px;
+  top: -2px;
+}
+
+QTabBar::tab {
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0   #485261,
+                                    stop: 0.6 #262b33,
+                                    stop: 1.0 #38404c);
+  border-left: 1px solid #3399FF;
+  border-top: 1px solid #3399FF;
+  border-bottom: 1px solid #3399FF;
+  border-right: 1px solid #1f5d9c;
+  border-top-right-radius: 5;
   border-top-left-radius: 5;
   color: white;
+  margin-left: -1px;
   padding: 5px;
   min-width: 80px;
 }
 
-
 QTabBar::tab:!selected {
-  margin-top: 3px;
-}
-
-QTabBar::tab:first {
-  border-left: 1px solid #3399FF;
-  border-top: 1px solid #3399FF;
-  border-bottom: 1px solid #3399FF;
-  border-right: 1px solid #3399FF;
-  border-top-right-radius: 15;
-  border-top-left-radius: 5;
-  color:white;
-  padding:5px;
-}
-
-QTabBar::tab::selected {
-  background-color:qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #434343, stop: 0.4 #212121, stop: 0.4 #212121, stop: 1.0 #434343);
-  border-left: 1px solid #3399FF;
-  border-top: 1px solid #3399FF;
-  border-bottom: 1px solid #2c84dc;
-  border-right: 2px solid #2c84dc;
-  border-top-right-radius: 15;
-  border-top-left-radius: 5;
-  color:white;
-  padding:5px;
-}
-
-QTabWidget::tab-bar {
-  left: 0px;
+  margin-top: 5px;
 }
 
 QTabBar::tab:hover {
-  background: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0  #474747, stop: 0.4 #323232, stop: 0.4 #323232, stop: 1.0 #474747);
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0   #00000055,
+                                    stop: 0.6 black,
+                                    stop: 1.0 #00000055);
+}
+
+QTabBar::tab::selected {
+  background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                    stop: 0   transparent,
+                                    stop: 0.6 #38404c,
+                                    stop: 0.9 #424b57);
+  border-left: 1px solid #3399FF;
+  border-top: 1px solid #3399FF;
+  border-right: 1px solid #2c84dc;
+  border-bottom: 1px solid #424b57;
+  border-top-right-radius: 5;
+  border-top-left-radius: 5;
+  color:white;
+  margin-bottom: -3px;
+  margin-top: 2px;
+  padding: 5px;
+}
+
+QTabWidget QTabBar[documentMode=false]::tab::first {
+  margin-left: 0;
+}
+
+QTabWidget QTabBar[documentMode=true]::tab::first {
+  margin-left: 3px;
+}
+
+QTabWidget::tab-bar {
+  left: 5px;
+}
+
+QTabWidget[documentMode=true]::tab-bar {
+  left: 0px;
+}
+
+QTabBar {
+  border-bottom: 1px solid #3399FF;
 }
 
 QTabBar QToolButton {
