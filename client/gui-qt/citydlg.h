@@ -17,6 +17,7 @@
 #include <QGroupBox>
 #include <QItemDelegate>
 #include <QLabel>
+#include <QListWidget>
 #include <QProgressBar>
 #include <QTableWidget>
 #include <QToolTip>
@@ -53,6 +54,17 @@ class QVBoxLayout;
 class QVariant;
 class fc_tooltip;
 struct canvas;
+
+/****************************************************************************
+  A list widget that sets its size hint to the size of its contents.
+****************************************************************************/
+class icon_list : public QListWidget {
+public:
+  explicit icon_list(QWidget *parent = nullptr);
+  bool hasHeightForWidth() const override { return true; }
+  int heightForWidth(int width) const override;
+  QSize viewportSizeHint() const override;
+};
 
 #define NUM_INFO_FIELDS 15
 /****************************************************************************
@@ -91,70 +103,44 @@ private:
 /****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
-class unit_item : public QLabel {
+class unit_list_item : public QObject, public QListWidgetItem {
   Q_OBJECT
-  QAction *disband_action;
-  QAction *change_home;
-  QAction *activate_and_close;
-  QAction *sentry;
-  QAction *fortify;
-  QAction *load;
-  QAction *unload;
-  QAction *upgrade;
-  QAction *unload_trans;
-  QMenu *unit_menu;
 
 public:
-  unit_item(QWidget *parent, struct unit *punit, bool supp = false,
-            int happy_cost = 0);
-  ~unit_item();
-  void init_pix();
+  unit_list_item(unit *punit);
 
-private:
-  struct unit *qunit;
-  QImage unit_img;
-  void contextMenuEvent(QContextMenuEvent *ev);
-  void create_actions();
-  int happy_cost;
-  bool supported;
+  bool can_issue_orders() const;
+  QMenu *menu() { return m_menu; }
 
-private slots:
+  // Will hopefully become slots in unit class one day
   void disband();
   void change_homecity();
   void activate_and_close_dialog();
-  void sentry_unit();
-  void fortify_unit();
-  void upgrade_unit();
-  void load_unit();
-  void unload_unit();
+  void sentry();
+  void fortify();
+  void upgrade();
+  void load();
+  void unload();
   void unload_all();
 
-protected:
-  void mousePressEvent(QMouseEvent *event);
-  void leaveEvent(QEvent *event);
-  void enterEvent(QEvent *event);
+private:
+  void create_menu();
+
+  QMenu *m_menu = nullptr;
+  struct unit *m_unit;
 };
 
 /****************************************************************************
-  Shows list of units ( as labels - unit_info )
+  Pops up unit context menu
 ****************************************************************************/
-class unit_info : public QFrame {
-
+class unit_list_event_filter : public QObject {
   Q_OBJECT
 
 public:
-  unit_info();
-  ~unit_info();
-  void add_item(unit_item *item);
-  void init_layout();
-  void update_units();
-  void clear_layout();
-  void set_supp(bool);
-  QHBoxLayout *layout;
-  QList<unit_item *> unit_list;
+  explicit unit_list_event_filter(QObject *parent = nullptr);
 
-private:
-  bool supports;
+protected:
+  bool eventFilter(QObject *object, QEvent *event) override;
 };
 
 /****************************************************************************

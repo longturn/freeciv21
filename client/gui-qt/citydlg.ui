@@ -557,41 +557,22 @@
              </widget>
             </item>
             <item>
-             <widget class="QScrollArea" name="scroll2">
+             <widget class="icon_list" name="supported_units">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
                 <horstretch>0</horstretch>
                 <verstretch>0</verstretch>
                </sizepolicy>
               </property>
-              <property name="minimumSize">
-               <size>
-                <width>0</width>
-                <height>32</height>
-               </size>
+              <property name="flow">
+               <enum>QListView::LeftToRight</enum>
               </property>
-              <property name="verticalScrollBarPolicy">
-               <enum>Qt::ScrollBarAlwaysOff</enum>
+              <property name="resizeMode">
+               <enum>QListView::Adjust</enum>
               </property>
-              <property name="widgetResizable">
-               <bool>true</bool>
+              <property name="viewMode">
+               <enum>QListView::IconMode</enum>
               </property>
-              <widget class="unit_info" name="supported_units">
-               <property name="geometry">
-                <rect>
-                 <x>0</x>
-                 <y>0</y>
-                 <width>16</width>
-                 <height>83</height>
-                </rect>
-               </property>
-               <property name="sizePolicy">
-                <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-                 <horstretch>0</horstretch>
-                 <verstretch>0</verstretch>
-                </sizepolicy>
-               </property>
-              </widget>
              </widget>
             </item>
             <item>
@@ -844,44 +825,22 @@
          </widget>
         </item>
         <item>
-         <widget class="QScrollArea" name="scroll">
+         <widget class="icon_list" name="present_units_list">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>32</height>
-           </size>
+          <property name="flow">
+           <enum>QListView::LeftToRight</enum>
           </property>
-          <property name="verticalScrollBarPolicy">
-           <enum>Qt::ScrollBarAlwaysOff</enum>
+          <property name="resizeMode">
+           <enum>QListView::Adjust</enum>
           </property>
-          <property name="horizontalScrollBarPolicy">
-           <enum>Qt::ScrollBarAsNeeded</enum>
+          <property name="viewMode">
+           <enum>QListView::IconMode</enum>
           </property>
-          <property name="widgetResizable">
-           <bool>true</bool>
-          </property>
-          <widget class="unit_info" name="current_units">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>16</width>
-             <height>83</height>
-            </rect>
-           </property>
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-          </widget>
          </widget>
         </item>
        </layout>
@@ -916,12 +875,6 @@
    <header>citydlg.h</header>
   </customwidget>
   <customwidget>
-   <class>unit_info</class>
-   <extends>QWidget</extends>
-   <header>citydlg.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>impr_info</class>
    <extends>QWidget</extends>
    <header>citydlg.h</header>
@@ -938,6 +891,11 @@
    <extends>QGroupBox</extends>
    <header>citydlg.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>icon_list</class>
+   <extends>QListWidget</extends>
+   <header>citydlg.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
