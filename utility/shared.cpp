@@ -806,7 +806,7 @@ static struct strvec *base_get_dirs(const char *dir_list)
   char *path, *tok;
 
   path = fc_strdup(dir_list); /* something we can strtok */
-  tok = strtok_r(path, PATH_SEPARATOR, &path);
+  tok = strtok(path, PATH_SEPARATOR);
   do {
     char *dir = expand_dir(tok, FALSE);
 
