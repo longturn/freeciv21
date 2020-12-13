@@ -103,6 +103,49 @@ private:
 /****************************************************************************
   Single item on unit_info in city dialog representing one unit
 ****************************************************************************/
+class unit_list_item : public QObject, public QListWidgetItem {
+  Q_OBJECT
+
+public:
+  unit_list_item(unit *punit);
+
+  bool can_issue_orders() const;
+  QMenu *menu() { return m_menu; }
+
+  // Will hopefully become slots in unit class one day
+  void disband();
+  void change_homecity();
+  void activate_and_close_dialog();
+  void sentry();
+  void fortify();
+  void upgrade();
+  void load();
+  void unload();
+  void unload_all();
+
+private:
+  void create_menu();
+
+  QMenu *m_menu = nullptr;
+  struct unit *m_unit;
+};
+
+/****************************************************************************
+  Pops up unit context menu
+****************************************************************************/
+class unit_list_event_filter : public QObject {
+  Q_OBJECT
+
+public:
+  explicit unit_list_event_filter(QObject *parent = nullptr);
+
+protected:
+  bool eventFilter(QObject *object, QEvent *event) override;
+};
+
+/****************************************************************************
+  Single item on unit_info in city dialog representing one unit
+****************************************************************************/
 class unit_item : public QLabel {
   Q_OBJECT
   QAction *disband_action;

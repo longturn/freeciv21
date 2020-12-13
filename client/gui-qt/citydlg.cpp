@@ -683,6 +683,230 @@ static QImage create_unit_image(unit *punit, bool supported, int happy_cost)
 }
 
 /************************************************************************/ /**
+   Class representing one unit, manages the context menu
+ ****************************************************************************/
+unit_list_item::unit_list_item(unit *punit) : m_unit(punit)
+{
+  create_menu();
+  setToolTip(unit_description(m_unit));
+}
+
+/************************************************************************/ /**
+   Initializes context menu
+ ****************************************************************************/
+void unit_list_item::create_menu()
+{
+  if (!can_issue_orders()) {
+    return;
+  }
+
+  m_menu = new QMenu;
+
+  auto units = unit_list_new();
+  unit_list_append(units, m_unit);
+
+  auto activate_and_close_action = new QAction(_("Activate unit"), this);
+  connect(activate_and_close_action, &QAction::triggered, this,
+          &unit_list_item::activate_and_close_dialog);
+  m_menu->addAction(activate_and_close_action);
+
+  if (can_unit_do_activity(m_unit, ACTIVITY_SENTRY)) {
+    auto sentry_action = new QAction(_("Sentry unit"), this);
+    connect(sentry_action, &QAction::triggered, this,
+            &unit_list_item::sentry);
+    m_menu->addAction(sentry_action);
+  }
+
+  if (can_unit_do_activity(m_unit, ACTIVITY_FORTIFYING)) {
+    auto fortify_action = new QAction(_("Fortify unit"), this);
+    connect(fortify_action, &QAction::triggered, this,
+            &unit_list_item::fortify);
+    m_menu->addAction(fortify_action);
+  }
+
+  if (unit_can_do_action(m_unit, ACTION_DISBAND_UNIT)) {
+    auto disband_action = new QAction(_("Disband unit"), this);
+    connect(disband_action, &QAction::triggered, this,
+            &unit_list_item::disband);
+    m_menu->addAction(disband_action);
+  }
+
+  if (can_unit_change_homecity(m_unit)) {
+    auto change_homecity_action =
+        new QAction(action_id_name_translation(ACTION_HOME_CITY), this);
+    connect(change_homecity_action, &QAction::triggered, this,
+            &unit_list_item::change_homecity);
+    m_menu->addAction(change_homecity_action);
+  }
+
+  if (units_can_load(units)) {
+    auto load_action = new QAction(_("Load"), this);
+    connect(load_action, &QAction::triggered, this, &unit_list_item::load);
+    m_menu->addAction(load_action);
+  }
+
+  if (units_can_unload(units)) {
+    auto unload_action = new QAction(_("Unload"), this);
+    connect(unload_action, &QAction::triggered, this,
+            &unit_list_item::unload);
+    m_menu->addAction(unload_action);
+  }
+
+  if (units_are_occupied(units)) {
+    auto unload_all_action =
+        new QAction(_("Unload All From Transporter"), this);
+    connect(unload_all_action, &QAction::triggered, this,
+            &unit_list_item::unload_all);
+    m_menu->addAction(unload_all_action);
+  }
+
+  if (units_can_upgrade(units)) {
+    auto upgrade_action = new QAction(_("Upgrade Unit"), this);
+    connect(upgrade_action, &QAction::triggered, this,
+            &unit_list_item::upgrade);
+    m_menu->addAction(upgrade_action);
+  }
+
+  unit_list_destroy(units);
+}
+
+/************************************************************************/ /**
+   Can we give orders to the unit?
+ ****************************************************************************/
+bool unit_list_item::can_issue_orders() const
+{
+  return can_client_issue_orders() && unit_owner(m_unit) == client_player();
+}
+
+/************************************************************************/ /**
+   Popups MessageBox for disbanding unit and disbands it
+ ****************************************************************************/
+void unit_list_item::disband()
+{
+  if (!can_issue_orders()) {
+    auto units = unit_list_new();
+    unit_list_append(units, m_unit);
+    popup_disband_dialog(units);
+    unit_list_destroy(units);
+  }
+}
+
+/************************************************************************/ /**
+   Loads unit into some tranport
+ ****************************************************************************/
+void unit_list_item::load()
+{
+  if (!can_issue_orders()) {
+    qtg_request_transport(m_unit, unit_tile(m_unit));
+  }
+}
+
+/************************************************************************/ /**
+   Unloads unit
+ ****************************************************************************/
+void unit_list_item::unload()
+{
+  if (!can_issue_orders()) {
+    request_unit_unload(m_unit);
+  }
+}
+
+/************************************************************************/ /**
+   Unloads all units from transporter
+ ****************************************************************************/
+void unit_list_item::unload_all()
+{
+  if (!can_issue_orders()) {
+    request_unit_unload_all(m_unit);
+  }
+}
+
+/************************************************************************/ /**
+   Upgrades unit
+ ****************************************************************************/
+void unit_list_item::upgrade()
+{
+  if (!can_issue_orders()) {
+    auto units = unit_list_new();
+    unit_list_append(units, m_unit);
+    popup_upgrade_dialog(units);
+    unit_list_destroy(units);
+  }
+}
+
+/************************************************************************/ /**
+   Changes homecity for given unit
+ ****************************************************************************/
+void unit_list_item::change_homecity()
+{
+  if (can_issue_orders()) {
+    request_unit_change_homecity(m_unit);
+  }
+}
+
+/************************************************************************/ /**
+   Activates unit and closes city dialog
+ ****************************************************************************/
+void unit_list_item::activate_and_close_dialog()
+{
+  if (can_issue_orders()) {
+    unit_focus_set(m_unit);
+    queen()->city_overlay->dont_focus = true;
+    qtg_popdown_all_city_dialogs();
+  }
+}
+
+/************************************************************************/ /**
+   Fortifies unit in city dialog
+ ****************************************************************************/
+void unit_list_item::fortify()
+{
+  if (can_issue_orders()) {
+    request_unit_fortify(m_unit);
+  }
+}
+
+/************************************************************************/ /**
+   Sentries unit in city dialog
+ ****************************************************************************/
+void unit_list_item::sentry()
+{
+  if (can_issue_orders()) {
+    request_unit_sentry(m_unit);
+  }
+}
+
+/************************************************************************/ /**
+   Constructor
+ ****************************************************************************/
+unit_list_event_filter::unit_list_event_filter(QObject *parent)
+    : QObject(parent)
+{
+}
+
+/************************************************************************/ /**
+   Filters out context menu events and shows the unit context menu
+ ****************************************************************************/
+bool unit_list_event_filter::eventFilter(QObject *object, QEvent *event)
+{
+  auto list = qobject_cast<QListWidget *>(object);
+  if (list != nullptr && event->type() == QEvent::ContextMenu) {
+    auto menu_event = static_cast<QContextMenuEvent *>(event);
+    auto item = list->itemAt(menu_event->pos());
+    // Maybe there was no unit under the mouse
+    if (auto unit_item = dynamic_cast<unit_list_item *>(item)) {
+      // Maybe we can't give orders to this unit
+      if (auto menu = unit_item->menu()) {
+        // OK, show the menu
+        menu->exec(menu_event->globalPos());
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+/************************************************************************/ /**
    Class representing one unit, allows context menu, holds pixmap for it
  ****************************************************************************/
 unit_item::unit_item(QWidget *parent, struct unit *punit, bool supp,
@@ -1521,6 +1745,15 @@ city_dialog::city_dialog(QWidget *parent)
   ui.tabWidget->setTabText(1, _("Governor"));
   ui.tabs_right->setTabText(0, _("General"));
   ui.tabs_right->setTabText(1, _("Citizens"));
+
+  connect(ui.present_units_list, &QListWidget::itemDoubleClicked,
+          [](QListWidgetItem *item) {
+            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+              uitem->activate_and_close_dialog();
+            }
+          });
+  ui.present_units_list->installEventFilter(
+      new unit_list_event_filter(this));
 
   installEventFilter(this);
 }
@@ -2412,11 +2645,11 @@ void city_dialog::update_units()
     QSize icon_size;
     unit_list_iterate(units, punit)
     {
-      auto item = new QListWidgetItem;
+      auto item = new unit_list_item(punit);
+
       auto image = create_unit_image(punit, false, 0);
       icon_size = icon_size.expandedTo(image.size());
       item->setIcon(QIcon(QPixmap::fromImage(image)));
-      item->setToolTip(utype_name_translation(punit->utype));
       ui.present_units_list->addItem(item);
     }
     unit_list_iterate_end;
