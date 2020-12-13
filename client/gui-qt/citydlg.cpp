@@ -68,6 +68,7 @@ icon_list::icon_list(QWidget *parent) : QListWidget(parent)
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
   setWrapping(true);
+  oneliner = false;
 }
 
 /************************************************************************/ /**
