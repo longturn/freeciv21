@@ -442,7 +442,14 @@ QRadioButton::indicator:checked:pressed {
   image: url(LittleFingerradio-checked.png);
 }
 
+QListView {
+  background-color: #414a57;
+  border: none;
+}
 
+QListView:item::hover {
+  background-color: #3399FF;
+}
 
 QDialog {
   color: #3399FF;
