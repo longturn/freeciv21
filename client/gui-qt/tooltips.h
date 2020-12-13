@@ -23,6 +23,7 @@ QString bold(const QString &text);
 
 class fc_tooltip : public QObject {
   Q_OBJECT
+
 public:
   explicit fc_tooltip(QObject *parent = NULL) : QObject(parent) {}
 

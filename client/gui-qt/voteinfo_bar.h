@@ -23,6 +23,7 @@ class QPushButton;
 ***************************************************************************/
 class pregamevote : public QWidget {
   Q_OBJECT
+
 public:
   explicit pregamevote(QWidget *parent = NULL);
   ~pregamevote();
@@ -48,6 +49,7 @@ public slots:
 ***************************************************************************/
 class xvote : public pregamevote {
   Q_OBJECT
+
 public:
   xvote(QWidget *parent);
 

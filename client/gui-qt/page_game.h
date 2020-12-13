@@ -35,6 +35,7 @@ class xvote;
 ****************************************************************************/
 class fc_game_tab_widget : public QStackedWidget {
   Q_OBJECT
+
 public:
   fc_game_tab_widget();
   void init();

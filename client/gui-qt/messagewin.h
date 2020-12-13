@@ -30,6 +30,7 @@ class chatwdg;
 ***************************************************************************/
 class messagewdg : public QWidget {
   Q_OBJECT
+
 public:
   messagewdg(QWidget *parent);
   void msg_update();

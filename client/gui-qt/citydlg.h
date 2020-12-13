@@ -171,6 +171,7 @@ protected:
 ****************************************************************************/
 class impr_info : public QFrame {
   Q_OBJECT
+
 public:
   impr_info();
   ~impr_info();
@@ -312,6 +313,7 @@ protected:
 
 class city_info : public QWidget {
   Q_OBJECT
+
 public:
   city_info(QWidget *parent = 0);
   void update_labels(struct city *ci_city);
@@ -323,6 +325,7 @@ private:
 
 class governor_sliders : public QGroupBox {
   Q_OBJECT
+
 public:
   governor_sliders(QWidget *parent = 0);
   void update_sliders(struct cm_parameter &param);

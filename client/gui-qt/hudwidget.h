@@ -80,6 +80,7 @@ private:
 ****************************************************************************/
 class hud_text : public QWidget {
   Q_OBJECT
+
 public:
   hud_text(const QString &s, int time_secs, QWidget *parent);
   ~hud_text();
@@ -137,6 +138,7 @@ private:
 ****************************************************************************/
 class click_label : public QLabel {
   Q_OBJECT
+
 public:
   click_label();
 signals:
@@ -181,6 +183,7 @@ private slots:
 ****************************************************************************/
 class unit_actions : public QWidget {
   Q_OBJECT
+
 public:
   unit_actions(QWidget *parent, unit *punit);
   ~unit_actions();
@@ -292,6 +295,7 @@ private:
 ****************************************************************************/
 class hud_unit_combat : public QWidget {
   Q_OBJECT
+
 public:
   hud_unit_combat(int attacker_unit_id, int defender_unit_id,
                   int attacker_hp, int defender_hp, bool make_att_veteran,

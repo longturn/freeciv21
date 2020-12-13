@@ -16,6 +16,7 @@
 // helper class to get color from qss
 class research_color : public QWidget {
   Q_OBJECT
+
 public:
   research_color();
   static research_color *i();

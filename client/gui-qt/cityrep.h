@@ -86,6 +86,7 @@ private:
 ***************************************************************************/
 class city_model : public QAbstractListModel {
   Q_OBJECT
+
 public:
   city_model(QObject *parent = 0);
   ~city_model();
