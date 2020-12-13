@@ -1631,18 +1631,11 @@ city_dialog::city_dialog(QWidget *parent)
   connect(ui.lcity_name, &QAbstractButton::clicked, this,
           &city_dialog::city_rename);
   citizen_pixmap = NULL;
-  ui.supported_units->set_supp(true);
-  ui.scroll2->setWidgetResizable(true);
-  ui.scroll2->setMaximumHeight(
-      tileset_unit_with_upkeep_height(get_tileset()) + 6
-      + ui.scroll2->horizontalScrollBar()->height());
-  ui.scroll2->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   ui.scroll3->setWidgetResizable(true);
   ui.scroll3->setMaximumHeight(
       tileset_unit_height(tileset) + 6
       + ui.scroll3->horizontalScrollBar()->height());
   ui.scroll3->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-  ui.scroll2->setProperty("city_scroll", true);
   ui.scroll3->setProperty("city_scroll", true);
   ui.bclose->setIcon(
       fcIcons::instance()->getIcon(QStringLiteral("city-close")));
@@ -1754,6 +1747,14 @@ city_dialog::city_dialog(QWidget *parent)
           });
   ui.present_units_list->installEventFilter(
       new unit_list_event_filter(this));
+
+  connect(ui.supported_units, &QListWidget::itemDoubleClicked,
+          [](QListWidgetItem *item) {
+            if (auto uitem = dynamic_cast<unit_list_item *>(item)) {
+              uitem->activate_and_close_dialog();
+            }
+          });
+  ui.supported_units->installEventFilter(new unit_list_event_filter(this));
 
   installEventFilter(this);
 }
@@ -1878,7 +1879,6 @@ city_dialog::~city_dialog()
   ui.cma_table->clear();
   ui.p_table_p->clear();
   ui.nationality_table->clear();
-  ui.supported_units->clear_layout();
   removeEventFilter(this);
 }
 
@@ -2601,14 +2601,11 @@ void city_dialog::dbl_click_p(QTableWidgetItem *item)
  ****************************************************************************/
 void city_dialog::update_units()
 {
-  unit_item *uic;
   struct unit_list *units;
   char buf[256];
   int n;
-  int happy_cost;
   int free_unhappy = get_city_bonus(pcity, EFT_MAKE_CONTENT_MIL);
   ui.supported_units->setUpdatesEnabled(false);
-  ui.supported_units->clear_layout();
 
   if (NULL != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
@@ -2617,18 +2614,29 @@ void city_dialog::update_units()
     units = pcity->units_supported;
   }
 
-  unit_list_iterate(units, punit)
-  {
-    happy_cost = city_unit_unhappiness(punit, &free_unhappy);
-    uic = new unit_item(this, punit, true, happy_cost);
-    uic->init_pix();
-    ui.supported_units->add_item(uic);
+  ui.supported_units->clear();
+  if (unit_list_size(units) == 0) {
+    ui.supported_units->hide();
+  } else {
+    QSize icon_size;
+    unit_list_iterate(units, punit)
+    {
+      auto item = new unit_list_item(punit);
+
+      auto happy_cost = city_unit_unhappiness(punit, &free_unhappy);
+      auto image = create_unit_image(punit, true, happy_cost);
+      icon_size = icon_size.expandedTo(image.size());
+      item->setIcon(QIcon(QPixmap::fromImage(image)));
+      ui.supported_units->addItem(item);
+    }
+    unit_list_iterate_end;
+    ui.supported_units->show();
+    ui.supported_units->setIconSize(icon_size);
   }
-  unit_list_iterate_end;
+
   n = unit_list_size(units);
   fc_snprintf(buf, sizeof(buf), _("Supported units %d"), n);
   ui.supp_units->setText(QString(buf));
-  ui.supported_units->update_units();
   ui.supported_units->setUpdatesEnabled(true);
 
   if (NULL != client.conn.playing
