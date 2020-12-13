@@ -678,7 +678,6 @@ void editor_mouse_button_press(int canvas_x, int canvas_y, int button,
   }
 
   switch (button) {
-
   case MOUSE_BUTTON_LEFT:
     if (modifiers == EKM_SHIFT) {
       editor_grab_tool(ptile);
@@ -803,7 +802,6 @@ void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
 {
   Q_UNUSED(modifiers)
   switch (button) {
-
   case MOUSE_BUTTON_LEFT:
     editor_set_current_tile(NULL);
     editor->tool_active = FALSE;
@@ -966,7 +964,6 @@ void editor_apply_tool(const struct tile *ptile, bool part_of_selection)
   tile = tile_index(ptile);
 
   switch (ett) {
-
   case ETT_TERRAIN:
     dsend_packet_edit_tile_terrain(my_conn, tile, erase ? 0 : value, size);
     break;

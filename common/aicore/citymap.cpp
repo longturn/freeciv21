@@ -93,7 +93,6 @@ void citymap_turn_init(struct player *pplayer)
   {
     if (unit_is_cityfounder(punit)
         && punit->server.adv->task == AUT_BUILD_CITY) {
-
       /* use default (squared) city radius */
       city_tile_iterate(CITY_MAP_DEFAULT_RADIUS_SQ, punit->goto_tile, ptile)
       {

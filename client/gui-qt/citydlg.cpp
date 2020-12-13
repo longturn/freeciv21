@@ -1394,7 +1394,6 @@ city_dialog::city_dialog(QWidget *parent)
  ****************************************************************************/
 void city_dialog::change_production(bool next)
 {
-
   cid cprod;
   int i, pos;
   int item, targets_used;
@@ -1558,7 +1557,6 @@ void city_dialog::closeEvent(QCloseEvent *event)
  ****************************************************************************/
 bool city_dialog::eventFilter(QObject *obj, QEvent *event)
 {
-
   if (obj == this) {
     if (event->type() == QEvent::ShortcutOverride) {
       QKeyEvent *key_event = static_cast<QKeyEvent *>(event);
@@ -2849,7 +2847,6 @@ void city_font_update()
  ****************************************************************************/
 void qtg_refresh_unit_city_dialogs(struct unit *punit)
 {
-
   struct city *pcity_sup, *pcity_pre;
 
   pcity_sup = game_city_by_number(punit->homecity);

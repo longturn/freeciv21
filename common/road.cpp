@@ -182,7 +182,6 @@ struct road_type *road_by_compat_special(enum road_compat compat)
 bool road_can_be_built(const struct road_type *proad,
                        const struct tile *ptile)
 {
-
   if (!(road_extra_get(proad)->buildable)) {
     /* Road type not buildable. */
     return FALSE;

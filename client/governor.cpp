@@ -250,7 +250,6 @@ void cma_yoloswag::result_came_from_server(int last_request_id)
 
   success = (*cma_state_result == *cma_result_got);
   if (!success) {
-
 #if SHOW_APPLY_RESULT_ON_SERVER_ERRORS
     qCritical("apply_result_on_server(city %d=\"%s\") no match!", pcity->id,
               city_name_get(pcity));
@@ -696,7 +695,6 @@ void cma_set_parameter(enum attr_city attr, int city_id,
  **************************************************************************/
 void cmafec_init(void)
 {
-
   if (preset_list == NULL) {
     preset_list = preset_list_new();
   }

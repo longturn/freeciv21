@@ -660,7 +660,6 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
       for (ent_iter = entry_list_head(section_entries(psection));
            ent_iter && (pentry = entry_list_link_data(ent_iter));
            ent_iter = entry_list_link_next(ent_iter)) {
-
         fc_assert(!strcmp(entry_name(pentry), "file"));
 
         fz_fprintf(fs, "*include ");
@@ -671,7 +670,6 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
       for (ent_iter = entry_list_head(section_entries(psection));
            ent_iter && (pentry = entry_list_link_data(ent_iter));
            ent_iter = entry_list_link_next(ent_iter)) {
-
         fc_assert(!strcmp(entry_name(pentry), "comment"));
 
         entry_to_file(pentry, fs);

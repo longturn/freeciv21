@@ -1595,7 +1595,6 @@ static void compute_max_stats_heuristic(const struct cm_state *state,
     output_type_iterate_end;
 
   } else {
-
     /* initialize solnplus here, after the shortcut check */
     init_partial_solution(&solnplus, num_types(state),
                           city_size_get(state->pcity), negative_ok);

@@ -959,7 +959,6 @@ static void update_diplomatics(void)
                         "with %s."),
                       plr1name, plr2name, plr2name);
                 } else if (players_on_same_team(plr3, plr2)) {
-
                   cancel1 = TRUE;
                   cancel2 = FALSE;
 
@@ -970,7 +969,6 @@ static void update_diplomatics(void)
                         "with %s."),
                       plr1name, plr2name, plr1name);
                 } else {
-
                   cancel1 = TRUE;
                   cancel2 = TRUE;
 
@@ -1703,7 +1701,6 @@ void end_turn()
       if (!tile_has_extra(ptile, pextra)
           && fc_rand(10000) < pextra->appearance_chance
           && can_extra_appear(pextra, ptile)) {
-
         tile_extra_apply(ptile, pextra);
 
         update_tile_knowledge(ptile);
@@ -2080,7 +2077,6 @@ bool server_packet_input(struct connection *pconn, void *packet, int type)
       || type == PACKET_CLIENT_INFO || type == PACKET_CONN_PONG
       || type == PACKET_CLIENT_HEARTBEAT || type == PACKET_SAVE_SCENARIO
       || is_client_edit_packet(type)) {
-
     /* Except for PACKET_EDIT_MODE (used to set edit mode), check
      * that the client is allowed to send the given edit packet. */
     if (is_client_edit_packet(type) && type != PACKET_EDIT_MODE

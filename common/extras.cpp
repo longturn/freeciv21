@@ -561,7 +561,6 @@ bool player_can_remove_extra(const struct extra_type *pextra,
 bool can_remove_extra(const struct extra_type *pextra,
                       const struct unit *punit, const struct tile *ptile)
 {
-
   if (!can_extra_be_removed(pextra, ptile)) {
     return FALSE;
   }

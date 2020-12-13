@@ -1372,7 +1372,6 @@ static bool plrcol_validate(int value, struct connection *caller,
 
 /* game settings */
 static struct setting settings[] = {
-
     /* These should be grouped by sclass */
 
     /* Map size parameters: adjustable if we don't yet have a map */

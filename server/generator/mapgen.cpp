@@ -515,7 +515,6 @@ static void make_terrains(void)
 
   /* the placement loop */
   do {
-
     PLACE_ONE_TYPE(forests_count, plains_count,
                    pick_terrain(MG_FOLIAGE, MG_TEMPERATE, MG_TROPICAL),
                    WC_ALL, TT_NFROZEN, MC_NONE, 60);
@@ -814,7 +813,6 @@ static bool make_river(struct river_map *privermap, struct tile *ptile,
         || count_terrain_class_near_tile(ptile, TRUE, TRUE, TC_OCEAN) > 0
         || (tile_terrain(ptile)->property[MG_FROZEN] > 0
             && map_colatitude(ptile) < 0.8 * COLD_LEVEL)) {
-
       log_debug("The river ended at (%d, %d).", TILE_XY(ptile));
       return TRUE;
     }
@@ -956,7 +954,6 @@ static void make_rivers(void)
   /* The main loop in this function. */
   while (current_riverlength < desirable_riverlength
          && iteration_counter < RIVERS_MAXTRIES) {
-
     if (!(ptile =
               rand_map_pos_characteristic(WC_ALL, TT_NFROZEN, MC_NLOW))) {
       break; /* mo more spring places */
@@ -1000,7 +997,6 @@ static void make_rivers(void)
            somewhere else to start it. */
         && (pterrain->property[MG_DRY] == 0
             || iteration_counter >= RIVERS_MAXTRIES / 10 * 9)) {
-
       /* Reset river map before making a new river. */
       rivermap.blocked.fill(false);
       rivermap.ok.fill(false);
@@ -1399,7 +1395,6 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
     if (MAPGEN_RANDOM == wld.map.server.generator
         || MAPGEN_FRACTAL == wld.map.server.generator
         || MAPGEN_FRACTURE == wld.map.server.generator) {
-
       make_land();
       delete[] height_map;
       height_map = NULL;
@@ -1576,7 +1571,6 @@ static void make_huts(int number)
   create_placed_map(); /* here it means placed huts */
 
   while (number > 0 && count++ < map_num_tiles() * 2) {
-
     /* Add a hut.  But not on a polar area, or too close to another hut. */
     if ((ptile = rand_map_pos_characteristic(WC_ALL, TT_NFROZEN, MC_NONE))) {
       struct extra_type *phut = rand_extra_for_tile(ptile, EC_HUT, TRUE);
@@ -2165,7 +2159,6 @@ static bool make_island(int islemass, int starters,
     swampbuck = -(long int) fc_rand(pstate->totalmass);
     lastplaced = pstate->totalmass;
   } else {
-
     /* makes the islands this big */
     islemass = islemass - balance;
 

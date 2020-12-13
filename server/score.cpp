@@ -506,7 +506,6 @@ void rank_users(bool interrupt)
     }
     players_iterate_end;
   } else {
-
     /* game ended via endturn */
     /* i) determine the winner team */
     teams_iterate(pteam)

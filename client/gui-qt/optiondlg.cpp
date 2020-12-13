@@ -488,7 +488,6 @@ void option_dialog::set_color(struct option *poption, struct ft_color color)
  ****************************************************************************/
 void option_dialog::option_dialog_refresh(struct option *poption)
 {
-
   switch (option_type(poption)) {
   case OT_BOOLEAN:
     set_bool(poption, option_bool_get(poption));

@@ -839,7 +839,6 @@ void plr_report::update_report(bool update_selection)
     return;
   }
   if (NULL != client.conn.playing && other_player != client.conn.playing) {
-
     // We keep button sensitive in case of DIPL_SENATE_BLOCKING, so that
     // player can request server side to check requirements of those effects
     // with omniscience

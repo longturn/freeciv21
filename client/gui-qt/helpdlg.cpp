@@ -381,7 +381,6 @@ void help_dialog::update_buttons()
  **************************************************************************/
 void help_dialog::item_changed(QTreeWidgetItem *item, QTreeWidgetItem *prev)
 {
-
   if (prev == item) {
     return;
   }
@@ -1056,7 +1055,6 @@ void help_widget::set_topic_tech(const help_item *topic, const char *title)
   if (padvance) {
     int n = advance_number(padvance);
     if (!is_future_tech(n)) {
-
       show_info_panel();
       spr = get_tech_sprite(tileset, n);
       if (spr) {

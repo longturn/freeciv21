@@ -956,7 +956,6 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
   {
     if (unit_type_get(punit)->transport_capacity > 0
         && unit_owner(punit) != pplayer) {
-
       /* An ally could transport a non ally */
       if (unit_list_size(punit->transporting) > 0) {
         return FALSE;

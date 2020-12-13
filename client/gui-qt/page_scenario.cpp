@@ -131,7 +131,6 @@ void page_scenario::update_scenarios_page(void)
 
     if ((sf = secfile_load_section(pfile->fullname, "scenario", TRUE))
         && secfile_lookup_bool_default(sf, TRUE, "scenario.is_scenario")) {
-
       const char *sname, *sdescription, *sauthors;
       QTableWidgetItem *item;
       QString format;

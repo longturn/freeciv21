@@ -507,7 +507,6 @@ adv_want settler_evaluate_improvements(struct unit *punit,
             || (pos.turn == eta
                 && (real_map_distance(ptile, unit_tile(punit))
                     < inbound_distance))) {
-
           if (enroute) {
             UNIT_LOG(LOG_DEBUG, punit,
                      "Considering (%d, %d) because we're closer "

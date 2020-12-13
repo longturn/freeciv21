@@ -1287,7 +1287,6 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
      worklist API wants it out for reasons unknown. Perhaps someone enjoyed
      making things more complicated than necessary? So I dance around it. */
   if (worklist_peek(&copy, &target)) {
-
     if (!city_can_change_build(pcity)
         && !are_universals_equal(&pcity->production, &target)) {
       /* We cannot change production to one from worklist.

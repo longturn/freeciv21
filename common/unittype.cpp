@@ -549,7 +549,6 @@ static void unit_state_action_cache_set(struct unit_type *putype)
        req.source.value.unit_state != ustate_prop_end();
        req.source.value.unit_state =
            ustate_prop_next(req.source.value.unit_state)) {
-
     /* No action will ever be possible in a specific unit state if the
      * opposite unit state is required in all action enablers.
      * No unit state except present and !present of the same property
@@ -624,7 +623,6 @@ static void local_dipl_rel_action_cache_set(struct unit_type *putype)
   /* DiplRel starts with diplstate_type and ends with diplrel_other */
   for (req.source.value.diplrel = diplstate_type_begin();
        req.source.value.diplrel != DRO_LAST; req.source.value.diplrel++) {
-
     /* No action will ever be possible in a specific diplomatic relation if
      * its presence contradicts all action enablers.
      * Everything was set to false above. It is therefore OK to only change
@@ -693,7 +691,6 @@ static void tgt_citytile_act_cache_set(struct unit_type *putype)
        req.source.value.citytile != citytile_type_end();
        req.source.value.citytile =
            citytile_type_next(req.source.value.citytile)) {
-
     /* No action will ever be possible in a target CityTile state if the
      * opposite target CityTile state is required in all action enablers.
      * No CityTile property state except present and !present of the same

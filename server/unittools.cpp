@@ -442,7 +442,6 @@ void player_restore_units(struct player *pplayer)
 
   unit_list_iterate_safe(pplayer->units, punit)
   {
-
     /* 2) Modify unit hitpoints. Helicopters can even lose them. */
     unit_restore_hitpoints(punit);
 
@@ -1112,7 +1111,6 @@ void unit_assign_specific_activity_target(struct unit *punit,
     bv_extras extras = *tile_extras(ptile);
 
     while ((tgt = get_preferred_pillage(extras))) {
-
       BV_CLR(extras, extra_index(tgt));
 
       if (can_unit_do_activity_targeted(punit, *activity, tgt)) {
@@ -2761,7 +2759,6 @@ static void do_nuke_tile(struct player *pplayer, struct tile *ptile)
 
   unit_list_iterate_safe(ptile->units, punit)
   {
-
     /* unit in a city may survive */
     if (pcity
         && fc_rand(100) < game.info.nuke_defender_survival_chance_pct) {
@@ -3291,7 +3288,6 @@ static bool unit_survive_autoattack(struct unit *punit)
     if ((penemywin > 1.0 - punitwin
          || unit_has_type_flag(punit, UTYF_PROVOKING))
         && penemywin > threshold) {
-
 #ifdef REALLY_DEBUG_THIS
       log_test("AA %s -> %s (%d,%d) %.2f > %.2f && > %.2f",
                unit_rule_name(penemy), unit_rule_name(punit),

@@ -146,7 +146,6 @@ void ai_init(void)
     failure = TRUE;
   }
   if (!failure) {
-
 #ifdef FREECIV_DEBUG
     /* First search ai modules under directory ai/<module> under
        current directory. This allows us to run freeciv without

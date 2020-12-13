@@ -3485,12 +3485,10 @@ static void see_combat(struct unit *pattacker, struct unit *pdefender)
     struct player *pplayer = pconn->playing;
 
     if (pplayer != NULL) {
-
       /* NOTE: this means the player can see combat between submarines even
        * if neither sub is visible.  See similar comment in send_combat. */
       if (map_is_known_and_seen(unit_tile(pattacker), pplayer, V_MAIN)
           || map_is_known_and_seen(unit_tile(pdefender), pplayer, V_MAIN)) {
-
         /* Units are sent even if they were visible already. They may
          * have changed orientation for combat. */
         if (pplayer == unit_owner(pattacker)) {
@@ -3586,7 +3584,6 @@ static bool unit_bombard(struct unit *punit, struct tile *ptile,
 
   unit_list_iterate_safe(ptile->units, pdefender)
   {
-
     /* Sanity checks */
     fc_assert_ret_val_msg(
         !pplayers_non_attack(unit_owner(punit), unit_owner(pdefender)),
@@ -3999,7 +3996,6 @@ static bool do_attack(struct unit *punit, struct tile *def_tile,
 
   if (pwinner == punit && fc_rand(100) < game.server.occupychance
       && !is_non_allied_unit_tile(def_tile, pplayer)) {
-
     /* Hack: make sure the unit has enough moves_left for the move to
        succeed, and adjust moves_left to afterward (if successful). */
 

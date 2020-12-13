@@ -199,7 +199,6 @@ size_t effectivestrlenquote(const char *str)
  ****************************************************************************/
 int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
-
   auto left = QString::fromUtf8(str0);
   auto right = QString::fromUtf8(str1);
   if (left.startsWith("\"") && left.endsWith("\"")) {

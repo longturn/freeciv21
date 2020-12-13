@@ -78,7 +78,6 @@ bool auth_user(struct connection *pconn, char *username)
   /* assign the client a unique guest name/reject if guests aren't allowed */
   if (is_guest_name(username)) {
     if (srvarg.auth_allow_guests) {
-
       sz_strlcpy(tmpname, username);
       get_unique_guest_name(username);
 
@@ -168,7 +167,6 @@ bool auth_handle_reply(struct connection *pconn, char *password)
   char msg[MAX_LEN_MSG];
 
   if (pconn->server.status == AS_REQUESTING_NEW_PASS) {
-
     /* check if the new password is acceptable */
     if (!is_good_password(password, msg)) {
       if (pconn->server.auth_tries++ >= MAX_AUTH_TRIES) {
@@ -226,7 +224,6 @@ void auth_process_status(struct connection *pconn)
      * we're throttling the connection to avoid password guessing */
     if (pconn->server.auth_settime > 0
         && time(NULL) >= pconn->server.auth_settime) {
-
       if (pconn->server.auth_tries >= MAX_AUTH_TRIES) {
         pconn->server.status = AS_NOT_ESTABLISHED;
         reject_new_connection(_("Sorry, too many wrong tries..."), pconn);

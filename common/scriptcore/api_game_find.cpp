@@ -193,7 +193,6 @@ Action *api_find_action(lua_State *L, action_id act_id)
  *****************************************************************************/
 Action *api_find_action_by_name(lua_State *L, const char *name_orig)
 {
-
   LUASCRIPT_CHECK_STATE(L, NULL);
   LUASCRIPT_CHECK_ARG_NIL(L, name_orig, 2, string, NULL);
 

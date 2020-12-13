@@ -219,7 +219,6 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
   /*  Adjust width, height if mapview has recentered.
    */
   if (diff_x != 0 || diff_y != 0) {
-
     if (tileset_is_isometric(tileset)) {
       rec_w += (diff_x - diff_y) * half_W;
       rec_h += (diff_x + diff_y) * half_H;
@@ -318,7 +317,6 @@ void key_city_overlay(int canvas_x, int canvas_y)
 void key_city_show_open(struct city *pcity)
 {
   if (can_client_change_view() && pcity) {
-
     if (pcity) {
       pcity->client.city_opened = true;
       refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
@@ -329,7 +327,6 @@ void key_city_show_open(struct city *pcity)
 void key_city_hide_open(struct city *pcity)
 {
   if (can_client_change_view() && pcity) {
-
     if (pcity) {
       pcity->client.city_opened = false;
       refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
