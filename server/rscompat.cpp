@@ -1394,9 +1394,6 @@ const char *rscompat_req_name_3_1(const char *type, const char *old_name)
 const char *rscompat_utype_flag_name_3_1(struct rscompat_info *compat,
                                          const char *old_type)
 {
-  if (compat->compat_mode) {
-  }
-
   return old_type;
 }
 
