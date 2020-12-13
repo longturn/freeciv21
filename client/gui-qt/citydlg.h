@@ -64,6 +64,7 @@ public:
   bool hasHeightForWidth() const override { return true; }
   int heightForWidth(int width) const override;
   QSize viewportSizeHint() const override;
+  bool oneliner = true;
 };
 
 #define NUM_INFO_FIELDS 15

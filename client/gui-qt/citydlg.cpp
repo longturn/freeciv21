@@ -67,6 +67,7 @@ icon_list::icon_list(QWidget *parent) : QListWidget(parent)
 {
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+  setWrapping(true);
 }
 
 /************************************************************************/ /**
@@ -74,6 +75,9 @@ icon_list::icon_list(QWidget *parent) : QListWidget(parent)
  ****************************************************************************/
 QSize icon_list::viewportSizeHint() const
 {
+  if (!oneliner) {
+    return QSize(100,100);
+  }
   // Try to put everything on one line
   QSize hint;
   for (int i = 0; i < count(); ++i) {
@@ -1385,7 +1389,7 @@ city_dialog::city_dialog(QWidget *parent)
             }
           });
   ui.supported_units->installEventFilter(new unit_list_event_filter(this));
-
+  ui.supported_units->oneliner = false;
   installEventFilter(this);
 }
 
