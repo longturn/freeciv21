@@ -2261,6 +2261,7 @@ void city_dialog::update_units()
     }
     unit_list_iterate_end;
     ui.supported_units->show();
+    ui.supported_units->setGridSize(icon_size);
     ui.supported_units->setIconSize(icon_size);
   }
 
@@ -2292,6 +2293,7 @@ void city_dialog::update_units()
     }
     unit_list_iterate_end;
     ui.present_units_list->show();
+    ui.present_units_list->setGridSize(icon_size);
     ui.present_units_list->setIconSize(icon_size);
   }
 
