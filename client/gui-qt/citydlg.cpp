@@ -67,6 +67,8 @@ icon_list::icon_list(QWidget *parent) : QListWidget(parent)
 {
   // Make sure viewportSizeHint is used
   setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+  setWrapping(true);
+  oneliner = true;
 }
 
 /************************************************************************/ /**
@@ -74,6 +76,9 @@ icon_list::icon_list(QWidget *parent) : QListWidget(parent)
  ****************************************************************************/
 QSize icon_list::viewportSizeHint() const
 {
+  if (!oneliner) {
+    return QSize(1, 5555);
+  }
   // Try to put everything on one line
   QSize hint;
   for (int i = 0; i < count(); ++i) {
@@ -1385,7 +1390,7 @@ city_dialog::city_dialog(QWidget *parent)
             }
           });
   ui.supported_units->installEventFilter(new unit_list_event_filter(this));
-
+  ui.supported_units->oneliner = false;
   installEventFilter(this);
 }
 
@@ -2269,6 +2274,7 @@ void city_dialog::update_units()
   fc_snprintf(buf, sizeof(buf), _("Supported units %d"), n);
   ui.supp_units->setText(QString(buf));
   ui.supported_units->setUpdatesEnabled(true);
+  ui.supported_units->updateGeometry();
 
   if (NULL != client.conn.playing
       && city_owner(pcity) != client.conn.playing) {
