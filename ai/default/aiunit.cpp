@@ -765,7 +765,6 @@ int look_for_charge(struct ai_type *ait, struct player *pplayer,
           || (utype_can_do_action_result(buddy_type, ACTRES_ATTACK)
               && 0 == get_transporter_capacity(buddy)
               && ATTACK_POWER(buddy_type) <= ATTACK_POWER(ptype))) {
-
         continue;
       }
 
@@ -1785,7 +1784,6 @@ static void dai_military_attack(struct ai_type *ait, struct player *pplayer,
     if (!same_pos(unit_tile(punit), dest_tile)) {
       if (!is_tiles_adjacent(unit_tile(punit), dest_tile)
           || !can_unit_attack_tile(punit, dest_tile)) {
-
         /* Adjacent and can't attack usually means we are not marines
          * and on a ferry. This fixes the problem (usually). */
         UNIT_LOG(LOG_DEBUG, punit, "mil att gothere -> (%d, %d)",

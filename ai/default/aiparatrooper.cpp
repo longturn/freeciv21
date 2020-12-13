@@ -327,7 +327,6 @@ static int calculate_want_for_paratrooper(struct unit *punit,
       profit += city_size_get(pcity) * multiplier
                 * real_map_distance(ptile_city, ptile) / 2;
     } else {
-
       profit += city_size_get(pcity) * multiplier
                 * real_map_distance(ptile_city, ptile);
     }

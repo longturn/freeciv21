@@ -528,7 +528,6 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
     if (founder_type
         && pcity->surplus[O_FOOD]
                >= utype_upkeep_cost(founder_type, pplayer, O_FOOD)) {
-
       if (founder_want > choice->want) {
         CITY_LOG(LOG_DEBUG, pcity,
                  "desires founders with passion " ADV_WANT_PRINTF,

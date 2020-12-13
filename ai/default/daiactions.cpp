@@ -75,7 +75,6 @@ static Tech_type_id choose_tech_to_steal(const struct player *actor_player,
             && (research_invention_state(actor_research, i) == TECH_UNKNOWN
                 || (research_invention_state(actor_research, i)
                     == TECH_PREREQS_KNOWN))) {
-
           return i;
         }
       }

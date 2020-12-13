@@ -1310,7 +1310,6 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
 
     /* end dealing with cities */
   } else {
-
     if (NULL != ferry_map) {
       pf_map_destroy(ferry_map);
       ferry_map = NULL;

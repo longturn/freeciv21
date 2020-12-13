@@ -456,7 +456,6 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
           if (!is_req_active(pplayer, NULL, pcity, building,
                              city_tile(pcity), NULL, deftype, NULL, NULL,
                              NULL, preq, RPT_CERTAIN)) {
-
             if (VUT_ADVANCE == preq->source.kind && preq->present) {
               int iimprtech = advance_number(preq->source.value.advance);
               int imprcost =

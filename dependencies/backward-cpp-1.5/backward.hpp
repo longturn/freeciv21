@@ -408,7 +408,6 @@ const char kBackwardPathDelimiter[] = ":";
 } // namespace backward
 
 namespace backward {
-
 namespace system_tag {
 struct linux_tag; // seems that I cannot call that "linux" because the name
 // is already defined... so I am adding _tag everywhere.
@@ -466,7 +465,6 @@ typedef pdb_symbol current;
 } // namespace trace_resolver_tag
 
 namespace details {
-
 template <typename T> struct rm_ptr { typedef T type; };
 
 template <typename T> struct rm_ptr<T *> { typedef T type; };
@@ -634,7 +632,6 @@ struct Trace {
 };
 
 struct ResolvedTrace : public Trace {
-
   struct SourceLoc {
     std::string function;
     std::string filename;
@@ -749,7 +746,6 @@ protected:
 #if BACKWARD_HAS_UNWIND == 1
 
 namespace details {
-
 template <typename F> class Unwinder {
 public:
   size_t operator()(F &f, size_t depth) {
@@ -889,7 +885,6 @@ public:
 
   NOINLINE
   size_t load_here(size_t depth = 32) {
-
     CONTEXT localCtx; // used when no context is provided
 
     if (depth == 0) {
@@ -1586,7 +1581,6 @@ public:
       Dwarf_Addr bias;
       while ((cudie = dwfl_module_nextcu(mod, cudie, &bias))) {
         if (dwarf_getsrc_die(cudie, trace_addr - bias)) {
-
           // ...but if we get a match, it might be a false positive
           // because our (address - bias) might as well be valid in a
           // different compilation unit. So we throw our last card on
@@ -2024,7 +2018,6 @@ private:
   }
 
   dwarf_fileobject &load_object_with_dwarf(const std::string &filename_object) {
-
     if (!_dwarf_loaded) {
       // Set the ELF library operating version
       // If that fails there's nothing we can do
@@ -2233,7 +2226,6 @@ private:
       if (dwarf_srclines_from_linecontext(de.line_context, &de.line_buffer,
                                           &de.line_count,
                                           &error) == DW_DLV_OK) {
-
         // Add all the addresses to our map
         for (int i = 0; i < de.line_count; i++) {
           if (dwarf_lineaddr(de.line_buffer[i], &line_addr, &error) !=
@@ -2265,7 +2257,6 @@ private:
 
         if (tag_value == DW_TAG_subprogram ||
             tag_value == DW_TAG_inlined_subroutine) {
-
           Dwarf_Bool has_attr = 0;
           if (dwarf_hasattr(current_die, DW_AT_specification, &has_attr,
                             &error) == DW_DLV_OK) {
@@ -2422,7 +2413,6 @@ private:
 
     Dwarf_Attribute attr;
     if (dwarf_attr(die, DW_AT_ranges, &attr, &error) == DW_DLV_OK) {
-
       Dwarf_Off offset;
       if (dwarf_global_formref(attr, &offset, &error) == DW_DLV_OK) {
         Dwarf_Ranges *ranges;
@@ -2510,7 +2500,6 @@ private:
 
     while (dwarf_next_cu_header_d(dwarf, 0, 0, 0, 0, 0, 0, 0, &tu_signature, 0,
                                   &next_cu_header, 0, &error) == DW_DLV_OK) {
-
       if (strncmp(signature.signature, tu_signature.signature, 8) == 0) {
         Dwarf_Die type_cu_die = 0;
         if (dwarf_siblingof_b(dwarf, 0, 0, &type_cu_die, &error) == DW_DLV_OK) {
@@ -3090,7 +3079,6 @@ private:
       Dwarf_Arange arange;
       if (dwarf_get_arange(aranges, arange_count, addr, &arange, &error) ==
           DW_DLV_OK) {
-
         // We found our address. Get the compilation-unit DIE offset
         // represented by the given address range.
         Dwarf_Off cu_die_offset;
@@ -3120,7 +3108,6 @@ private:
     while (!found &&
            dwarf_next_cu_header_d(dwarf, 1, 0, 0, 0, 0, 0, 0, 0, 0,
                                   &next_cu_header, 0, &error) == DW_DLV_OK) {
-
       if (returnDie)
         dwarf_dealloc(dwarf, returnDie, DW_DLA_DIE);
 
@@ -3315,7 +3302,6 @@ public:
 template <> class TraceResolverImpl<system_tag::windows_tag> {
 public:
   TraceResolverImpl() {
-
     HANDLE process = GetCurrentProcess();
 
     std::vector<module_data> modules;
@@ -3543,7 +3529,6 @@ public:
 
   lines_t get_snippet(const std::string &filename, unsigned line_start,
                       unsigned context_size) {
-
     SourceFile &src_file = get_src_file(filename);
     unsigned start = line_start - context_size / 2;
     return src_file.get_lines(start, context_size);
@@ -4108,7 +4093,6 @@ private:
   }
 
   NOINLINE static void crash_handler(int skip, CONTEXT *ct = nullptr) {
-
     if (ct == nullptr) {
       RtlCaptureContext(ctx());
     } else {
