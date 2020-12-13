@@ -881,7 +881,6 @@ enum rfc_status create_command_newcomer(const char *name, const char *ai,
 
   if (new_slot) {
     if (normal_player_count() == game.server.max_players) {
-
       fc_assert(game.server.max_players < MAX_NUM_PLAYERS);
 
       game.server.max_players++;

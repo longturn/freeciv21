@@ -601,7 +601,6 @@ void update_city_activities(struct player *pplayer)
 
     city_list_iterate(pplayer->cities, pcity)
     {
-
       citizens_convert(pcity);
 
       /* Cancel traderoutes that cannot exist any more */
@@ -806,7 +805,6 @@ bool city_reduce_size(struct city *pcity, citizens pop_loss,
   }
 
   if (city_size_get(pcity) <= pop_loss) {
-
     script_server_signal_emit("city_destroyed", pcity, pcity->owner,
                               destroyer);
 
@@ -1876,7 +1874,6 @@ static bool worklist_change_build_target(struct player *pplayer,
 
   i = 0;
   while (!success && i < worklist_length(pwl)) {
-
     if (!city_checked) {
       if (!city_exist(saved_id)) {
         /* Some script has removed useless city that cannot build
@@ -3661,7 +3658,6 @@ static bool do_city_migration(struct city *pcity_from, struct city *pcity_to)
 
   /* reduce size of giver */
   if (city_size_get(pcity_from) == 1) {
-
     if (game.info.citizen_nationality) {
       /* Preserve nationality of city's only citizen */
       pplayer_citizen = player_slot_get_player(citizens_random(pcity_from));

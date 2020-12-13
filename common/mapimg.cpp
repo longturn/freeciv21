@@ -2210,7 +2210,6 @@ static bool img_save_magickwand(const struct img *pimg,
   for (y = 0; y < pimg->imgsize.y; y++) {
     /* zoom for y */
     for (yyy = 0; yyy < pimg->def->zoom; yyy++) {
-
       pmw = PixelGetNextIteratorRow(imw, &map_width);
 
       /* x coordinate */

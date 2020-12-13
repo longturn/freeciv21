@@ -477,7 +477,6 @@ void science_report::reset_tree()
  ****************************************************************************/
 void science_report::update_report()
 {
-
   struct research *research = research_get(client_player());
   const char *text;
   int total;

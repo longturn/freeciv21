@@ -2256,7 +2256,6 @@ void move_unit_map_canvas(struct unit *punit, struct tile *src_tile, int dx,
       anim->height = tuh;
       animation_add(anim);
     } else {
-
       /* Start the timer (AFTER the unqueue above). */
       anim_timer->start();
 

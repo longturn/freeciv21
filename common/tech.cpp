@@ -631,7 +631,6 @@ static void advance_root_req_iter_next(struct iterator *it)
 
       if (NULL != preq && A_NONE != advance_number(preq)
           && !BV_ISSET(iter->done, advance_number(preq))) {
-
         BV_SET(iter->done, advance_number(preq));
         /* Do we need to look at this subtree at all? If it has A_NONE as
          * root_req, further root_reqs can't propagate through it, so no. */

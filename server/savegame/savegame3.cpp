@@ -6391,7 +6391,6 @@ static void sg_save_player_units(struct savedata *saving, struct player *plr)
         secfile_insert_int(saving->file, -1, "%s.sub_tgt_vec,%d", buf, j);
       }
     } else {
-
       /* Put all the same fields into the savegame - otherwise the
        * registry code can't correctly use a tabular format and the
        * savegame will be bigger. */

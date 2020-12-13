@@ -68,7 +68,6 @@ static bool netfile_download_file_core(const QUrl &url, QIODevice *out,
       retval = false;
 
       if (cb != nullptr) {
-
         // TRANS: %1 is URL, %2 is Curl error message (not in Freeciv
         // translation domain)
         auto msg = QString::fromUtf8(_("Failed to fetch %1: %2"))

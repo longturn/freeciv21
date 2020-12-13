@@ -791,13 +791,11 @@ void handle_edit_city(struct connection *pc,
      * logic duplication with city_build_building. */
 
     if (city_has_building(pcity, pimprove) && packet->built[id] < 0) {
-
       city_remove_improvement(pcity, pimprove);
       changed = TRUE;
 
     } else if (!city_has_building(pcity, pimprove)
                && packet->built[id] >= 0) {
-
       if (is_great_wonder(pimprove)) {
         oldcity = city_from_great_wonder(pimprove);
         if (oldcity != pcity) {
@@ -1205,7 +1203,6 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
   conn_list_do_buffer(game.est_connections);
   square_iterate(&(wld.map), ptile_center, size - 1, ptile)
   {
-
     if (!known) {
       struct city *pcity = tile_city(ptile);
       bool cannot_make_unknown = FALSE;

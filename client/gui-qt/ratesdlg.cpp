@@ -289,7 +289,6 @@ void popup_multiplier_dialog(void)
  **************************************************************************/
 fc_double_edge::fc_double_edge(QWidget *parent) : QWidget(parent)
 {
-
   current_min = client.conn.playing->economic.tax / 10;
   current_max = 10 - (client.conn.playing->economic.luxury / 10);
   mouse_x = 0.;

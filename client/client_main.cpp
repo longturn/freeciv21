@@ -1084,7 +1084,6 @@ double real_timer_callback(void)
   /* It is possible to have current_turn_timeout() > 0 but !turndone_timer,
    * in the first moments after the timeout is set. */
   if (current_turn_timeout() > 0 && turndone_timer) {
-
     if (turndone_timer->remainingTime() / 1000 < seconds_shown_to_turndone) {
       seconds_shown_to_turndone = turndone_timer->remainingTime() / 1000;
       update_timeout_label();

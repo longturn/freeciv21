@@ -484,7 +484,6 @@ static void check_vote(struct vote *pvote)
 
   /* Check if we should resolve the vote. */
   if (num_voters > 0) {
-
     /* Players that abstain essentially remove themselves from
      * the voting pool. */
     base = num_voters - pvote->abstain;

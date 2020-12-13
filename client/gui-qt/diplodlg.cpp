@@ -867,7 +867,6 @@ void handle_diplomacy_accept_treaty(int counterpart, bool I_accepted,
  ****************************************************************************/
 void handle_diplomacy_init_meeting(int counterpart, int initiated_from)
 {
-
   int i;
   diplo_dlg *dd;
   QPainter p;
@@ -984,7 +983,6 @@ void handle_diplomacy_cancel_meeting(int counterpart, int initiated_from)
 void handle_diplomacy_remove_clause(int counterpart, int giver,
                                     enum clause_type type, int value)
 {
-
   int i;
   diplo_dlg *dd;
   diplo_wdg *dw;

@@ -457,7 +457,6 @@ static bool impr_provides_buildable_units(const struct city *pcity,
 static bool impr_provides_buildable_extras(const struct city *pcity,
                                            const struct impr_type *pimprove)
 {
-
   /* Fast check */
   if (!pimprove->allows_extras) {
     return FALSE;

@@ -1407,7 +1407,6 @@ void rscompat_extra_adjust_3_1(struct rscompat_info *compat,
                                struct extra_type *pextra)
 {
   if (compat->compat_mode && compat->ver_terrain < 20) {
-
     /* Give remove cause ERM_ENTER for huts */
     if (is_extra_caused_by(pextra, EC_HUT)) {
       pextra->rmcauses |= (1 << ERM_ENTER);

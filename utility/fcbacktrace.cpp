@@ -86,7 +86,6 @@ static void backtrace_log(QtMsgType type, const QMessageLogContext &context,
 } // anonymous namespace
 
 namespace {
-
 /********************************************************************/ /**
    Print backtrace
  ************************************************************************/

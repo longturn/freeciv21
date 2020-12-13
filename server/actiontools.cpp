@@ -339,7 +339,6 @@ void action_consequence_caught(const struct action *paction,
                                const struct tile *victim_tile,
                                const char *victim_link)
 {
-
   action_consequence_common(paction, offender, victim_player, victim_tile,
                             victim_link, notify_actor_caught,
                             notify_victim_caught, notify_global_caught,

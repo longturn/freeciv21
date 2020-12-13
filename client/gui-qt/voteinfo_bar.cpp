@@ -224,7 +224,6 @@ void voteinfo_gui_update(void)
         ->pre_vote->update_vote();
   }
   if (king()->current_page() == PAGE_GAME) {
-
     if (queen()->x_vote != NULL) {
       queen()->x_vote->show();
       queen()->x_vote->update_vote();

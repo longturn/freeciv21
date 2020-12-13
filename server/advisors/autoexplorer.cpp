@@ -360,7 +360,6 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
      */
     if (log_desirable + move_cost * logDF
         > log_most_desirable + best_MC * logDF) {
-
       log_most_desirable = log_desirable;
       best_tile = ptile;
       best_MC = move_cost;

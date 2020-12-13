@@ -867,7 +867,6 @@ bool connection_delegate_take(struct connection *pconn,
 
   /* Try to attach to the new player */
   if (!connection_attach(pconn, dplayer, FALSE)) {
-
     /* Restore original connection. */
     bool success = connection_attach(pconn, pconn->server.delegation.playing,
                                      pconn->server.delegation.observer);

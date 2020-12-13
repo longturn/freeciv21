@@ -78,7 +78,6 @@ static const char *HISTORY_FILENAME = "freeciv-server_history";
 static const int HISTORY_LENGTH = 100;
 
 namespace {
-
 /*************************************************************************/ /**
    Readline callback for input.
  *****************************************************************************/
@@ -811,7 +810,6 @@ void server::update_game_state()
   // Set up the quitidle timer if not done already
   if (m_someone_ever_connected && m_quitidle_timer == nullptr
       && srvarg.quitidle != 0 && conn_list_size(game.est_connections) == 0) {
-
     if (srvarg.exit_on_end) {
       qInfo(_("Shutting down in %d seconds for lack of players."),
             srvarg.quitidle);

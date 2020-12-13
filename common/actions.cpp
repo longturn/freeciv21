@@ -2573,7 +2573,6 @@ struct action *action_is_blocked_by(const action_id act_id,
                                     const struct city *target_city_arg,
                                     const struct unit *target_unit)
 {
-
   const struct tile *target_tile = blocked_find_target_tile(
       act_id, actor_unit, target_tile_arg, target_city_arg, target_unit);
   const struct city *target_city = blocked_find_target_city(

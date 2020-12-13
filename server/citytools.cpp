@@ -495,7 +495,6 @@ const char *city_name_suggestion(struct player *pplayer, struct tile *ptile)
 
     while (i < nation_count()) {
       for (; i < queue_size; i++) {
-
         if (0 < i) {
           /* Pick a random nation from the queue. */
           const int which = i + fc_rand(queue_size - i);
@@ -3271,7 +3270,6 @@ void refresh_player_cities_vision(struct player *pplayer)
  ****************************************************************************/
 bool city_map_update_radius_sq(struct city *pcity)
 {
-
   fc_assert_ret_val(pcity != NULL, FALSE);
 
   int city_tiles_old, city_tiles_new;

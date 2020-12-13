@@ -99,7 +99,6 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     Mix_VolumeMusic(sdl_audio_volume * MIX_MAX_VOLUME);
 
   } else {
-
     /* see if we can cache on this one */
     for (j = 0; j < MIX_CHANNELS; j++) {
       if (samples[j].tag && (strcmp(samples[j].tag, tag) == 0)) {

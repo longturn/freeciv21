@@ -1357,7 +1357,6 @@ static enum fc_tristate is_building_in_range(
   }
 
   if (survives) {
-
     /* Check whether condition has ever held, using cached information. */
     switch (range) {
     case REQ_RANGE_WORLD:
@@ -1396,7 +1395,6 @@ static enum fc_tristate is_building_in_range(
     }
 
   } else {
-
     /* Non-surviving requirement. */
     switch (range) {
     case REQ_RANGE_WORLD:
