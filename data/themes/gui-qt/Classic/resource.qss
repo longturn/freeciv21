@@ -489,6 +489,15 @@ city_dialog QGroupBox {
   border: 1px solid #a5a5a5;
 }
 
+city_dialog QListView {
+  background-color: #e1cea1;
+  border: none;
+}
+
+QListView:item::hover {
+  background-color: #c3b48e;
+}
+
 QCheckBox:disabled, QRadioButton:disabled {
   background-color: transparent;
   color: #7b7b7b;

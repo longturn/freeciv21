@@ -525,6 +525,15 @@ city_dialog QGroupBox {
   border: 1px solid #a5a5a5;
 }
 
+city_dialog QListView {
+  background-color: #b7c1b4;
+  border: none;
+}
+
+QListView:item::hover {
+  background-color: #5d8869;
+}
+
 science_report QScrollArea {
   background-image:url(LittleFingersun.png);
 }

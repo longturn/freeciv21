@@ -168,6 +168,7 @@ hud_message_box QDialogButtonBox QPushButton:hover {
   border: 2px solid #fbff00;
 }
 
+
 QLabel {
  color: white;
 }
@@ -578,6 +579,15 @@ QComboBox:hover {
 city_dialog QFrame {
   background: #282c3b;
   border: none;
+}
+
+city_dialog QListView {
+  background-color: #1e212c;
+  border: none;
+}
+
+QListView:item::hover {
+  background-color: #5294e2;
 }
 
 production_widget {
