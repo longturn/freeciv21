@@ -328,5 +328,6 @@ private slots:
   void slot_traveler();
 
 private:
+  void nonunit_sensitivity();
   struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };

@@ -348,3 +348,33 @@ bool units_can_convert(const struct unit_list *punits)
 
   return FALSE;
 }
+
+// Return TRUE if any of the units is in city
+bool any_unit_in_city(const struct unit_list *punits)
+{
+  unit_list_iterate(punits, punit)
+  {
+    if (tile_city(unit_tile(punit))) {
+      return true;
+    }
+  }
+  unit_list_iterate_end;
+  return false;
+}
+
+bool units_on_the_same_tile(const struct unit_list *punits)
+{
+  struct tile *ptile = nullptr;
+
+  unit_list_iterate(punits, punit)
+  {
+    if (!ptile) {
+      ptile = punit->tile;
+    }
+    if (punit->tile != ptile) {
+      return false;
+    }
+  }
+  unit_list_iterate_end;
+  return true;
+}
