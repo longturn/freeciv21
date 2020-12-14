@@ -55,18 +55,16 @@
 /* If no default data path is defined use the default default one */
 #ifndef DEFAULT_DATA_PATH
 #define DEFAULT_DATA_PATH                                                   \
-  "." PATH_SEPARATOR                                                        \
-  "data" PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR DATASUBDIR
+  ".:data:" FREECIV_STORAGE_DIR "/" DATASUBDIR
 #endif
+
 #ifndef DEFAULT_SAVE_PATH
-#define DEFAULT_SAVE_PATH                                                   \
-  "." PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR "saves"
+#define DEFAULT_SAVE_PATH ".:" FREECIV_STORAGE_DIR "/saves"
 #endif
 #ifndef DEFAULT_SCENARIO_PATH
 #define DEFAULT_SCENARIO_PATH                                               \
-  "." PATH_SEPARATOR "data" DIR_SEPARATOR                                   \
-  "scenarios" PATH_SEPARATOR FREECIV_STORAGE_DIR DATASUBDIR DIR_SEPARATOR   \
-  "scenarios" PATH_SEPARATOR FREECIV_STORAGE_DIR DIR_SEPARATOR "scenarios"
+  ".:data/scenarios:" FREECIV_STORAGE_DIR "/" DATASUBDIR                    \
+  "/scenarios:" FREECIV_STORAGE_DIR "/scenarios"
 #endif /* DEFAULT_SCENARIO_PATH */
 
 /* environment */
@@ -801,7 +799,7 @@ static struct strvec *base_get_dirs(const char *dir_list)
   char *path, *tok;
 
   path = fc_strdup(dir_list); /* something we can strtok */
-  tok = strtok(path, PATH_SEPARATOR);
+  tok = strtok(path, ":");
   do {
     char *dir = expand_dir(tok, FALSE);
 
@@ -812,7 +810,7 @@ static struct strvec *base_get_dirs(const char *dir_list)
       }
     }
 
-    tok = strtok(NULL, PATH_SEPARATOR);
+    tok = strtok(NULL, ":");
   } while (tok);
 
   delete[] path;
@@ -1039,7 +1037,7 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
     strvec_iterate(dirs, dirname)
     {
       if (first) {
-        astr_add(&realfile, "%s%s", PATH_SEPARATOR, dirname);
+        astr_add(&realfile, "/%s", dirname);
         first = FALSE;
       } else {
         astr_add(&realfile, "%s", dirname);
@@ -1053,7 +1051,7 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   for (i = 0; filename[i] != '\0'; i++) {
     if (filename[i] == '/') {
-      fnbuf[i] = DIR_SEPARATOR_CHAR;
+      fnbuf[i] = '/';
     } else {
       fnbuf[i] = filename[i];
     }
@@ -2016,7 +2014,8 @@ int fc_vsnprintcf(char *buf, size_t buf_len, const char *format,
       /* Make format. */
       c = cformat;
       *c++ = '%';
-      for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c; f++) {
+      for (; !QChar::isLetter(*f) && '\0' != *f && '%' != *f && cmax > c;
+           f++) {
         *c++ = *f;
       }
 

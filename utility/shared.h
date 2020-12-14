@@ -103,17 +103,6 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
     }                                                                       \
   }
 
-#ifndef PATH_SEPARATOR
-#ifdef FREECIV_MSWINDOWS
-/* MS Windows */
-#define PATH_SEPARATOR ";"
-#else
-/* Unix */
-#define PATH_SEPARATOR ":"
-#endif
-#endif /* PATH_SEPARATOR */
-
-
 #define DIR_SEPARATOR qUtf8Printable(QDir::separator())
 #define DIR_SEPARATOR_CHAR QDir::separator().toLatin1()
 
