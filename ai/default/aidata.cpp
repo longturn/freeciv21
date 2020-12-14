@@ -229,7 +229,6 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
   {
     if (aia_utype_is_considered_spy_vs_city(unit_type_get(punit))
         && def_ai_unit_data(punit, ait)->task == AIUNIT_ATTACK) {
-
       fc_assert_msg(punit->goto_tile != NULL,
                     "No target city for spy action");
 

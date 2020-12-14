@@ -1446,8 +1446,6 @@ void city_dialog::update_disabled()
     ui.production_combo_p->setDisabled(true);
     ui.present_units_list->setDisabled(true);
     ui.supported_units->setDisabled(true);
-    if (!client_is_observer()) {
-    }
   } else {
     ui.prev_city_but->setEnabled(true);
     ui.next_city_but->setEnabled(true);

@@ -21,6 +21,7 @@
 **************************************************************************/
 class resize_widget : public QLabel {
   Q_OBJECT
+
 public:
   resize_widget(QWidget *parent);
   void put_to_corner();
@@ -55,6 +56,7 @@ private:
 ****************************************************************************/
 class scale_widget : public QRubberBand {
   Q_OBJECT
+
 public:
   scale_widget(Shape s, QWidget *p = 0);
   float scale;
@@ -75,6 +77,7 @@ private:
 **************************************************************************/
 class fcwidget : public QFrame {
   Q_OBJECT
+
 public:
   virtual void update_menu() = 0;
   bool was_destroyed;
@@ -85,6 +88,7 @@ public:
 **************************************************************************/
 class close_widget : public QLabel {
   Q_OBJECT
+
 public:
   close_widget(QWidget *parent);
   void put_to_corner();

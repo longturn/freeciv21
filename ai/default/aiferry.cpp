@@ -1057,7 +1057,6 @@ static bool aiferry_find_interested_city(struct ai_type *ait,
       {
         if (aunit != pferry && unit_owner(aunit) == unit_owner(pferry)
             && unit_has_type_role(aunit, L_FERRYBOAT)) {
-
           UNIT_LOG(LOGLEVEL_FERRY, pferry,
                    "%s is NOT suitable: "
                    "has another ferry",

@@ -182,6 +182,7 @@ class mr_menu : public QMenuBar {
   QMultiHash<munit, QAction*> menu_list;
   qfc_units_list units_list;
   bool initialized;
+
 public:
   mr_menu();
   void setup_menus();
@@ -327,5 +328,6 @@ private slots:
   void slot_traveler();
 
 private:
+  void nonunit_sensitivity();
   struct tile *find_last_unit_pos(struct unit *punit, int pos);
 };

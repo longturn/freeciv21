@@ -93,6 +93,7 @@ private:
 ***************************************************************************/
 class sidebar : public QWidget {
   Q_OBJECT
+
 public:
   sidebar();
   ~sidebar();

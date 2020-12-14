@@ -29,6 +29,7 @@ struct call_me_back {
 class mrIdle : public QObject {
   Q_OBJECT
   Q_DISABLE_COPY(mrIdle);
+
 public:
   ~mrIdle();
   static mrIdle *idlecb();

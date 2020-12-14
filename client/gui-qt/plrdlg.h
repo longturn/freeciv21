@@ -67,6 +67,7 @@ private:
 ***************************************************************************/
 class plr_model : public QAbstractListModel {
   Q_OBJECT
+
 public:
   plr_model(QObject *parent = 0);
   ~plr_model();
