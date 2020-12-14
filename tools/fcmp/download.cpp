@@ -153,11 +153,11 @@ static const char *download_modpack_recursive(const char *URL,
   }
 
   if (type == MPT_SCENARIO) {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s" DIR_SEPARATOR "scenarios",
-                qPrintable(fcmp->inst_prefix));
+    fc_snprintf(local_dir, sizeof(local_dir), "%s%cscenarios",
+                qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR);
   } else {
-    fc_snprintf(local_dir, sizeof(local_dir), "%s" DIR_SEPARATOR DATASUBDIR,
-                qPrintable(fcmp->inst_prefix));
+    fc_snprintf(local_dir, sizeof(local_dir), "%s%c" DATASUBDIR,
+                qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR);
   }
 
   baseURLpart = secfile_lookup_str(control, "info.baseURL");
@@ -313,8 +313,8 @@ static const char *download_modpack_recursive(const char *URL,
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
     if (!illegal_filename) {
-      fc_snprintf(local_name, sizeof(local_name), "%s" DIR_SEPARATOR "%s",
-                  local_dir, dest_name_copy);
+      fc_snprintf(local_name, sizeof(local_name), "%s%c%s",
+                  local_dir, DIR_SEPARATOR_CHAR, dest_name_copy);
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
       free(dest_name_copy);
