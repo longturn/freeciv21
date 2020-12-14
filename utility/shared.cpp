@@ -599,10 +599,6 @@ bool str_to_float(const char *str, float *pfloat)
  ****************************************************************************/
 char *user_home_dir(void)
 {
-#ifdef AMIGA
-  return "PROGDIR:";
-#else /* AMIGA */
-
   if (home_dir_user == NULL) {
     char *env = getenv("HOME");
 
@@ -620,7 +616,6 @@ char *user_home_dir(void)
   }
 
   return home_dir_user;
-#endif /* AMIGA */
 }
 
 /************************************************************************/ /**
