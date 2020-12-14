@@ -62,7 +62,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   }
   /* Stylesheet uses UNIX separators */
   fake_dir = data_dir;
-  fake_dir.replace(QStringLiteral(DIR_SEPARATOR), QLatin1String("/"));
+  fake_dir.replace(DIR_SEPARATOR_CHAR, QLatin1String("/"));
   QTextStream in(&f);
   *stylestring = in.readAll();
   stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");

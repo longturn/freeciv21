@@ -757,8 +757,8 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
   if (tok[0] == '~') {
     if (i > 1 && tok[1] != DIR_SEPARATOR_CHAR) {
       qCritical("For \"%s\" in path cannot expand '~'"
-                " except as '~" DIR_SEPARATOR "'; ignoring",
-                tok);
+                " except as '~%c'; ignoring",
+                tok, DIR_SEPARATOR_CHAR);
       i = 0; /* skip this one */
     } else {
       char *home = user_home_dir();
@@ -1065,7 +1065,7 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
   {
     struct stat buf; /* see if we can open the file or directory */
 
-    astr_set(&realfile, "%s" DIR_SEPARATOR "%s", dirname, fnbuf);
+    astr_set(&realfile, "%s%c%s", dirname, DIR_SEPARATOR_CHAR, fnbuf);
     if (fc_stat(astr_str(&realfile), &buf) == 0) {
       return astr_str(&realfile);
     }
@@ -1595,7 +1595,7 @@ void free_multicast_group(void)
 void interpret_tilde(char *buf, size_t buf_size, const char *filename)
 {
   if (filename[0] == '~' && filename[1] == DIR_SEPARATOR_CHAR) {
-    fc_snprintf(buf, buf_size, "%s" DIR_SEPARATOR "%s", user_home_dir(),
+    fc_snprintf(buf, buf_size, "%s%c%s", user_home_dir(), DIR_SEPARATOR_CHAR,
                 filename + 2);
   } else if (filename[0] == '~' && filename[1] == '\0') {
     qstrncpy(buf, user_home_dir(), buf_size);

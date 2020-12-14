@@ -210,16 +210,16 @@ static const char *valid_ruleset_filename(const char *subdir,
 
   fc_assert_ret_val(subdir && name && extension, NULL);
 
-  fc_snprintf(filename, sizeof(filename), "%s" DIR_SEPARATOR "%s.%s", subdir,
-              name, extension);
+  fc_snprintf(filename, sizeof(filename), "%s%c%s.%s", subdir,
+              DIR_SEPARATOR_CHAR, name, extension);
   qCDebug(ruleset_category, "Trying \"%s\".", filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
   if (dfilename) {
     return dfilename;
   }
 
-  fc_snprintf(filename, sizeof(filename), "default" DIR_SEPARATOR "%s.%s",
-              name, extension);
+  fc_snprintf(filename, sizeof(filename), "default%c%s.%s",
+              DIR_SEPARATOR_CHAR, name, extension);
   qCDebug(ruleset_category, "Trying \"%s\": default ruleset directory.",
           filename);
   dfilename = fileinfoname(get_data_dirs(), filename);
@@ -6840,7 +6840,7 @@ static bool load_ruleset_game(struct section_file *file, bool act,
                                          "calendar.fragment_name%d", cf);
       if (fname != NULL) {
         qstrncpy(game.calendar.calendar_fragment_name[cf], fname,
-                sizeof(game.calendar.calendar_fragment_name[cf]));
+                 sizeof(game.calendar.calendar_fragment_name[cf]));
       }
     }
   }

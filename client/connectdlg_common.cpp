@@ -387,7 +387,7 @@ void send_client_wants_hack(const char *filename)
     make_dir(sdir);
 
     fc_snprintf(challenge_fullname, sizeof(challenge_fullname),
-                "%s" DIR_SEPARATOR "%s", sdir, filename);
+                "%s%c%s", sdir, DIR_SEPARATOR_CHAR, filename);
 
     /* generate an authentication token */
     randomize_string(req.token, sizeof(req.token));
