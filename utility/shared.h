@@ -165,16 +165,16 @@ char *user_username(char *buf, size_t bufsz);
 char *freeciv_storage_dir(void);
 void free_freeciv_storage_dir(void);
 
-const struct strvec *get_data_dirs(void);
-const struct strvec *get_save_dirs(void);
-const struct strvec *get_scenario_dirs(void);
+const QStringList *get_data_dirs(void);
+const QStringList *get_save_dirs(void);
+const QStringList *get_scenario_dirs(void);
 
 void free_data_dir_names(void);
 
-struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix);
-struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
+struct strvec *fileinfolist(const QStringList *dirs, const char *suffix);
+struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
-const char *fileinfoname(const struct strvec *dirs, const char *filename);
+const char *fileinfoname(const QStringList *dirs, const char *filename);
 void free_fileinfo_data(void);
 
 void init_nls(void);

@@ -3722,12 +3722,12 @@ bool load_command(struct connection *caller, const char *filename,
   {
     /* it is a normal savegame or maybe a scenario */
     char testfile[MAX_LEN_PATH];
-    const struct strvec *pathes[] = {get_save_dirs(), get_scenario_dirs(),
+    const QStringList *pathes[] = {get_save_dirs(), get_scenario_dirs(),
                                      NULL};
     const char *exts[] = {"sav",    "gz",      "bz2",    "xz",
                           "sav.gz", "sav.bz2", "sav.xz", NULL};
     const char **ext, *found = NULL;
-    const struct strvec **path;
+    const QStringList **path;
 
     if (cmdline_load) {
       /* Allow plain names being loaded with '--file' option, but not

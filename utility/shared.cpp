@@ -54,8 +54,7 @@
 
 /* If no default data path is defined use the default default one */
 #ifndef DEFAULT_DATA_PATH
-#define DEFAULT_DATA_PATH                                                   \
-  ".:data:" FREECIV_STORAGE_DIR "/" DATASUBDIR
+#define DEFAULT_DATA_PATH ".:data:" FREECIV_STORAGE_DIR "/" DATASUBDIR
 #endif
 
 #ifndef DEFAULT_SAVE_PATH
@@ -88,9 +87,9 @@ static char *grouping_sep = NULL;
 static const char base64url[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-static struct strvec *data_dir_names = NULL;
-static struct strvec *save_dir_names = NULL;
-static struct strvec *scenario_dir_names = NULL;
+static QStringList *data_dir_names = NULL;
+static QStringList *save_dir_names = NULL;
+static QStringList *scenario_dir_names = NULL;
 
 static char *mc_group = NULL;
 static char *home_dir_user = NULL;
@@ -793,27 +792,13 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
    be searched.  Base function for get_data_dirs(), get_save_dirs(),
    get_scenario_dirs()
  ****************************************************************************/
-static struct strvec *base_get_dirs(const char *dir_list)
+static QStringList *base_get_dirs(const char *dir_list)
 {
-  struct strvec *dirs = strvec_new();
-  char *path, *tok;
+  QStringList *dirs = new QStringList;
 
-  path = fc_strdup(dir_list); /* something we can strtok */
-  tok = strtok(path, ":");
-  do {
-    char *dir = expand_dir(tok, FALSE);
+  *dirs = QString(dir_list).split(QDir::listSeparator(),
+                                  QString::SkipEmptyParts);
 
-    if (dir != NULL) {
-      strvec_append(dirs, dir);
-      if (dir != tok) {
-        delete[] dir;
-      }
-    }
-
-    tok = strtok(NULL, ":");
-  } while (tok);
-
-  delete[] path;
   return dirs;
 }
 
@@ -823,15 +808,15 @@ static struct strvec *base_get_dirs(const char *dir_list)
 void free_data_dir_names(void)
 {
   if (data_dir_names != NULL) {
-    strvec_destroy(data_dir_names);
+    delete data_dir_names;
     data_dir_names = NULL;
   }
   if (save_dir_names != NULL) {
-    strvec_destroy(save_dir_names);
+    delete save_dir_names;
     save_dir_names = NULL;
   }
   if (scenario_dir_names != NULL) {
-    strvec_destroy(scenario_dir_names);
+    delete scenario_dir_names;
     scenario_dir_names = NULL;
   }
 }
@@ -847,7 +832,7 @@ void free_data_dir_names(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const struct strvec *get_data_dirs(void)
+const QStringList *get_data_dirs(void)
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -863,13 +848,10 @@ const struct strvec *get_data_dirs(void)
       path = NULL;
     }
     data_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_DATA_PATH);
-    strvec_remove_duplicate(data_dir_names,
-                            strcmp); /* Don't set a path both. */
-    strvec_iterate(data_dir_names, dirname)
-    {
-      qDebug("Data path component: %s", dirname);
+    data_dir_names->removeDuplicates();
+    for (auto toyota : *data_dir_names) {
+      qDebug("Data path component: %s", qUtf8Printable(toyota));
     }
-    strvec_iterate_end;
   }
 
   return data_dir_names;
@@ -886,7 +868,7 @@ const struct strvec *get_data_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const struct strvec *get_save_dirs(void)
+const QStringList *get_save_dirs(void)
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -902,13 +884,10 @@ const struct strvec *get_save_dirs(void)
       path = NULL;
     }
     save_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_SAVE_PATH);
-    strvec_remove_duplicate(save_dir_names,
-                            strcmp); /* Don't set a path both. */
-    strvec_iterate(save_dir_names, dirname)
-    {
-      qDebug("Save path component: %s", dirname);
+    save_dir_names->removeDuplicates();
+    for (auto mercedes : *save_dir_names) {
+      qDebug("Save path component: %s", qUtf8Printable(mercedes));
     }
-    strvec_iterate_end;
   }
 
   return save_dir_names;
@@ -926,7 +905,7 @@ const struct strvec *get_save_dirs(void)
    The returned pointer is static and shouldn't be modified, nor destroyed
    by the user caller.
  ****************************************************************************/
-const struct strvec *get_scenario_dirs(void)
+const QStringList *get_scenario_dirs(void)
 {
   /* The first time this function is called it will search and
    * allocate the directory listing.  Subsequently we will already
@@ -943,13 +922,10 @@ const struct strvec *get_scenario_dirs(void)
     }
     scenario_dir_names =
         base_get_dirs(NULL != path ? path : DEFAULT_SCENARIO_PATH);
-    strvec_remove_duplicate(scenario_dir_names,
-                            strcmp); /* Don't set a path both. */
-    strvec_iterate(scenario_dir_names, dirname)
-    {
-      qDebug("Scenario path component: %s", dirname);
+    scenario_dir_names->removeDuplicates();
+    for (auto tesla : *scenario_dir_names) {
+      qDebug("Scenario path component: %s", qUtf8Printable(tesla));
     }
-    strvec_iterate_end;
   }
 
   return scenario_dir_names;
@@ -965,7 +941,7 @@ const struct strvec *get_scenario_dirs(void)
    The suffixes are removed from the filenames before the list is
    returned.
  ****************************************************************************/
-struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
+struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
 {
   struct strvec *files = strvec_new();
 
@@ -976,12 +952,12 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
   }
 
   /* First assemble a full list of names. */
-  strvec_iterate(dirs, dirname)
-  {
-    QDir dir(QString::fromUtf8(dirname));
+  for (auto dirname : *dirs) {
+    QDir dir(dirname);
 
     if (!dir.exists()) {
-      qDebug("Skipping non-existing data directory %s.", dirname);
+      qDebug("Skipping non-existing data directory %s.",
+             qUtf8Printable(dirname));
       continue;
     }
 
@@ -992,7 +968,6 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
       strvec_append(files, name.toUtf8().data());
     }
   }
-  strvec_iterate_end;
 
   /* Sort the list and remove duplications. */
   strvec_remove_duplicate(files, strcmp);
@@ -1017,7 +992,7 @@ struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix)
 
    TODO: Make this re-entrant
  ****************************************************************************/
-const char *fileinfoname(const struct strvec *dirs, const char *filename)
+const char *fileinfoname(const QStringList *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];
@@ -1034,16 +1009,14 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
     bool first = TRUE;
 
     astr_clear(&realfile);
-    strvec_iterate(dirs, dirname)
-    {
+    for (auto dirname : *dirs) {
       if (first) {
-        astr_add(&realfile, "/%s", dirname);
+        astr_add(&realfile, "/%s", qUtf8Printable(dirname));
         first = FALSE;
       } else {
-        astr_add(&realfile, "%s", dirname);
+        astr_add(&realfile, "%s", qUtf8Printable(dirname));
       }
     }
-    strvec_iterate_end;
 
     return astr_str(&realfile);
   }
@@ -1059,16 +1032,15 @@ const char *fileinfoname(const struct strvec *dirs, const char *filename)
   fnbuf[i] = '\0';
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
-  strvec_iterate(dirs, dirname)
-  {
+  for (auto dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
-    astr_set(&realfile, "%s%c%s", dirname, DIR_SEPARATOR_CHAR, fnbuf);
+    astr_set(&realfile, "%s%c%s", qUtf8Printable(dirname),
+             DIR_SEPARATOR_CHAR, fnbuf);
     if (fc_stat(astr_str(&realfile), &buf) == 0) {
       return astr_str(&realfile);
     }
   }
-  strvec_iterate_end;
 
   qDebug("Could not find readable file \"%s\" in data path.", filename);
 
@@ -1128,7 +1100,7 @@ static bool compare_fileinfo_name(const struct fileinfo *pa,
    second.  Returned "name"s will be truncated starting at the "infix"
    substring.  The returned list must be freed with fileinfo_list_destroy().
  ****************************************************************************/
-struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
+struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups)
 {
   struct fileinfo_list *res;
@@ -1142,9 +1114,8 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
   auto infix_str = QString::fromUtf8(infix);
 
   /* First assemble a full list of names. */
-  strvec_iterate(dirs, dirname)
-  {
-    QDir dir(QString::fromUtf8(dirname));
+  for (auto dirname : *dirs) {
+    QDir dir(dirname);
 
     if (!dir.exists()) {
       continue;
@@ -1168,7 +1139,6 @@ struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
       fileinfo_list_append(res, file);
     }
   }
-  strvec_iterate_end;
 
   /* Sort the list by name. */
   fileinfo_list_sort(res, compare_file_name_ptrs);
