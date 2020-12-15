@@ -124,29 +124,28 @@ static int try_to_connect(QString &hostname, int port, QString &username,
   connections_set_close_callback(client_conn_close_callback);
 
   /* connection in progress? wait. */
-  if (client.conn.used) {
+  if (client.conn.used ) {
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
-    return -1;
   }
   client.conn.used = true; // Now there will be a connection :)
 
   // Connect
-  client.conn.sock = new QTcpSocket;
-
-  QObject::connect(
+  if (!client.conn.sock) {
+    client.conn.sock = new QTcpSocket;
+      QObject::connect(
       client.conn.sock,
       QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
       [] {
         connection_close(&client.conn,
                          qUtf8Printable(client.conn.sock->errorString()));
       });
-
+  }
+  client.conn.sock->disconnect();
   client.conn.sock->connectToHost(hostname, port);
   if (!client.conn.sock->waitForConnected(-1)) {
     errbuf[0] = '\0';
     return -1;
   }
-
   make_connection(client.conn.sock, username);
 
   return 0;
