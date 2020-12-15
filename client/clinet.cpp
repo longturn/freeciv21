@@ -124,7 +124,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
   connections_set_close_callback(client_conn_close_callback);
 
   /* connection in progress? wait. */
-  if (client.conn.used ) {
+  if (client.conn.used) {
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
   }
   client.conn.used = true; // Now there will be a connection :)
@@ -132,15 +132,15 @@ static int try_to_connect(QString &hostname, int port, QString &username,
   // Connect
   if (!client.conn.sock) {
     client.conn.sock = new QTcpSocket;
-      QObject::connect(
-      client.conn.sock,
-      QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
-      [] {
-        connection_close(&client.conn,
-                         qUtf8Printable(client.conn.sock->errorString()));
-      });
+    QObject::connect(
+        client.conn.sock,
+        QOverload<QAbstractSocket::SocketError>::of(&QAbstractSocket::error),
+        [] {
+          log_debug(qUtf8Printable(client.conn.sock->errorString()));
+          real_output_window_append(client.conn.sock->errorString(), NULL,
+                                    -1);
+        });
   }
-  client.conn.sock->disconnect();
   client.conn.sock->connectToHost(hostname, port);
   if (!client.conn.sock->waitForConnected(-1)) {
     errbuf[0] = '\0';
@@ -358,9 +358,9 @@ double try_to_autoconnect(void)
   } else {
     // All errors are fatal
     qCritical(_("Error contacting server \"%s\" at port %d "
-             "as \"%s\":\n %s\n"),
-           qUtf8Printable(server_host), server_port,
-           qUtf8Printable(user_name), errbuf);
+                "as \"%s\":\n %s\n"),
+              qUtf8Printable(server_host), server_port,
+              qUtf8Printable(user_name), errbuf);
     exit(EXIT_FAILURE);
   }
 }
