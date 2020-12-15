@@ -1283,8 +1283,8 @@ static void sg_load_savefile(struct loaddata *loading)
     if (!fc_strcasecmp("none", game.scenario.datafile)) {
       game.server.luadata = NULL;
     } else {
-      const struct strvec *pathes[] = {get_scenario_dirs(), NULL};
-      const struct strvec **path;
+      const QStringList *pathes[] = {get_scenario_dirs(), NULL};
+      const QStringList **path;
       const char *found = NULL;
       char testfile[MAX_LEN_PATH];
       struct section_file *secfile;

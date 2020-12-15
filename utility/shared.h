@@ -12,7 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-
+#include <QDir>
 #include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
 #include <time.h>   /* time_t */
@@ -103,25 +103,11 @@ enum fc_tristate fc_tristate_and(enum fc_tristate one, enum fc_tristate two);
     }                                                                       \
   }
 
-#ifndef PATH_SEPARATOR
-#ifdef FREECIV_MSWINDOWS
-/* MS Windows */
-#define PATH_SEPARATOR ";"
-#else
-/* Unix */
-#define PATH_SEPARATOR ":"
-#endif
-#endif /* PATH_SEPARATOR */
+#define DIR_SEPARATOR qUtf8Printable(QDir::separator())
+#define DIR_SEPARATOR_CHAR QDir::separator().toLatin1()
 
-#ifdef FREECIV_MSWINDOWS
-/* MS Windows */
-#define DIR_SEPARATOR "\\"
-#define DIR_SEPARATOR_CHAR '\\'
-#else
-/* Unix */
+#ifndef FREECIV_MSWINDOWS
 #define DIR_SEPARATOR_IS_DEFAULT
-#define DIR_SEPARATOR "/"
-#define DIR_SEPARATOR_CHAR '/'
 #endif
 
 #define PARENT_DIR_OPERATOR ".."
@@ -179,16 +165,16 @@ char *user_username(char *buf, size_t bufsz);
 char *freeciv_storage_dir(void);
 void free_freeciv_storage_dir(void);
 
-const struct strvec *get_data_dirs(void);
-const struct strvec *get_save_dirs(void);
-const struct strvec *get_scenario_dirs(void);
+const QStringList *get_data_dirs(void);
+const QStringList *get_save_dirs(void);
+const QStringList *get_scenario_dirs(void);
 
 void free_data_dir_names(void);
 
-struct strvec *fileinfolist(const struct strvec *dirs, const char *suffix);
-struct fileinfo_list *fileinfolist_infix(const struct strvec *dirs,
+struct strvec *fileinfolist(const QStringList *dirs, const char *suffix);
+struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
-const char *fileinfoname(const struct strvec *dirs, const char *filename);
+const char *fileinfoname(const QStringList *dirs, const char *filename);
 void free_fileinfo_data(void);
 
 void init_nls(void);

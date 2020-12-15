@@ -44,26 +44,25 @@ void load_install_info_lists(struct fcmp_params *fcmp)
   char scenario_db_filename[500];
   struct stat buf;
 
-  fc_snprintf(
-      main_db_filename, sizeof(main_db_filename),
-      "%s" DIR_SEPARATOR DATASUBDIR DIR_SEPARATOR FCMP_CONTROLD DIR_SEPARATOR
-      "mp.db",
-      qPrintable(fcmp->inst_prefix));
+  fc_snprintf(main_db_filename, sizeof(main_db_filename),
+              "%s%c" DATASUBDIR "%c" FCMP_CONTROLD "%cmp.db",
+              qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR,
+              DIR_SEPARATOR_CHAR, DIR_SEPARATOR_CHAR);
   fc_snprintf(scenario_db_filename, sizeof(scenario_db_filename),
-              "%s" DIR_SEPARATOR
-              "scenarios" DIR_SEPARATOR FCMP_CONTROLD DIR_SEPARATOR "mp.db",
-              qPrintable(fcmp->inst_prefix));
+              "%s%c"
+              "scenarios%c" FCMP_CONTROLD "%cmp.db",
+              qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR,
+              DIR_SEPARATOR_CHAR, DIR_SEPARATOR_CHAR);
 
-  fc_snprintf(
-      main_ii_filename, sizeof(main_ii_filename),
-      "%s" DIR_SEPARATOR DATASUBDIR DIR_SEPARATOR FCMP_CONTROLD DIR_SEPARATOR
-      "modpacks.db",
-      qPrintable(fcmp->inst_prefix));
+  fc_snprintf(main_ii_filename, sizeof(main_ii_filename),
+              "%s%c" DATASUBDIR "%c" FCMP_CONTROLD "%cmodpacks.db",
+              qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR,
+              DIR_SEPARATOR_CHAR, DIR_SEPARATOR_CHAR);
   fc_snprintf(scenario_ii_filename, sizeof(scenario_ii_filename),
-              "%s" DIR_SEPARATOR
-              "scenarios" DIR_SEPARATOR FCMP_CONTROLD DIR_SEPARATOR
-              "modpacks.db",
-              qPrintable(fcmp->inst_prefix));
+              "%s%c"
+              "scenarios%c" FCMP_CONTROLD "%cmodpacks.db",
+              qPrintable(fcmp->inst_prefix), DIR_SEPARATOR_CHAR,
+              DIR_SEPARATOR_CHAR, DIR_SEPARATOR_CHAR);
 
   if (fc_stat(main_db_filename, &buf)) {
     create_mpdb(main_db_filename, FALSE);

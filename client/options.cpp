@@ -3972,7 +3972,7 @@ static const char *get_current_option_file_name(void)
       return NULL;
     }
     fc_snprintf(name_buffer, sizeof(name_buffer),
-                "%s" DIR_SEPARATOR NEW_OPTION_FILE_NAME, name,
+                "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
                 MAJOR_NEW_OPTION_FILE_NAME, MINOR_NEW_OPTION_FILE_NAME);
 #endif /* OPTION_FILE_NAME */
   }
@@ -4032,7 +4032,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s" DIR_SEPARATOR NEW_OPTION_FILE_NAME, name, major,
+                    "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR, major,
                     minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
@@ -4065,7 +4065,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         minor = FIRST_MINOR_NEW_OPTION_FILE_NAME;
          minor >= FIRST_MINOR_MID_OPTION_FILE_NAME; minor--) {
       fc_snprintf(name_buffer, sizeof(name_buffer),
-                  "%s" DIR_SEPARATOR MID_OPTION_FILE_NAME, name, major,
+                  "%s%c.freeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR, major,
                   minor);
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
@@ -4082,7 +4082,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
 
     /* Try with the old one. */
     fc_snprintf(name_buffer, sizeof(name_buffer),
-                "%s" DIR_SEPARATOR OLD_OPTION_FILE_NAME, name);
+                "%s%c%s", name, DIR_SEPARATOR_CHAR, OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),

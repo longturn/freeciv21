@@ -62,7 +62,7 @@ void qtg_gui_load_theme(const char *directory, const char *theme_name)
   }
   /* Stylesheet uses UNIX separators */
   fake_dir = data_dir;
-  fake_dir.replace(QStringLiteral(DIR_SEPARATOR), QLatin1String("/"));
+  fake_dir.replace(DIR_SEPARATOR_CHAR, QLatin1String("/"));
   QTextStream in(&f);
   *stylestring = in.readAll();
   stylestring->replace(lnb, fake_dir + "/" + theme_name + "/");
@@ -112,18 +112,17 @@ void qtg_gui_clear_theme()
  *****************************************************************************/
 char **qtg_get_gui_specific_themes_directories(int *count)
 {
-  const struct strvec *data_dirs = get_data_dirs();
-  char **directories = new char *[strvec_size(data_dirs)];
+  const QStringList *data_dirs = get_data_dirs();
+  char **directories = new char *[data_dirs->size()];
   int i = 0;
 
-  *count = strvec_size(data_dirs);
-  strvec_iterate(data_dirs, data_dir)
+  *count = data_dirs->size();
+  for (auto data_dir: *data_dirs)
   {
     QString buf = QString("%1/themes/gui-qt").arg(data_dir);
 
     directories[i++] = qstrdup(qUtf8Printable(buf));
   }
-  strvec_iterate_end;
 
   return directories;
 }

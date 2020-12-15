@@ -2939,12 +2939,11 @@ void mr_menu::save_game_as()
   QString current_file;
   QString location;
 
-  strvec_iterate(get_save_dirs(), dirname)
+  for (auto dirname : *get_save_dirs())
   {
     location = dirname;
     // choose last location
   }
-  strvec_iterate_end;
 
   str = QString(_("Save Games"))
         + QStringLiteral(" (*.sav *.sav.bz2 *.sav.gz *.sav.xz)");
