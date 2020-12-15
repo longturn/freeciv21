@@ -795,7 +795,8 @@ static char *expand_dir(char *tok_in, bool ok_to_free)
 static QStringList *base_get_dirs(const char *dir_list)
 {
   QStringList *dirs = new QStringList;
-  *dirs = QString(dir_list).split(":", QString::SkipEmptyParts);
+  *dirs = QString(dir_list).split(QDir::listSeparator(),
+                                  QString::SkipEmptyParts);
 
   return dirs;
 }
