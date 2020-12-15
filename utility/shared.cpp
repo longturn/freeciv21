@@ -1140,13 +1140,12 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
     for (const auto &info : dir.entryInfoList(name_filters, QDir::NoFilter,
                                               QDir::Name | QDir::Time)) {
       // Clip the infix.
-      auto name = info.fileName();
-      name.truncate(name.indexOf(infix_str));
+      auto name = info.baseName();
 
       // Create the fileinfo structure
       fileinfo *file = new fileinfo;
       file->name = fc_strdup(name.toUtf8().data());
-      file->fullname = fc_strdup(info.fileName().toUtf8().data());
+      file->fullname = fc_strdup(info.absoluteFilePath().toUtf8().data());
       file->mtime = info.lastModified().toSecsSinceEpoch();
 
       fileinfo_list_append(res, file);
