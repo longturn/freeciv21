@@ -126,6 +126,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
   /* connection in progress? wait. */
   if (client.conn.used) {
     (void) fc_strlcpy(errbuf, _("Connection in progress."), errbufsize);
+    return -1;
   }
   client.conn.used = true; // Now there will be a connection :)
 
@@ -139,6 +140,7 @@ static int try_to_connect(QString &hostname, int port, QString &username,
           log_debug(qUtf8Printable(client.conn.sock->errorString()));
           real_output_window_append(client.conn.sock->errorString(), NULL,
                                     -1);
+          client.conn.used = false;
         });
   }
   client.conn.sock->connectToHost(hostname, port);
