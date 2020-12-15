@@ -34,7 +34,10 @@ fold_bool_into_header=1
 # Please leave it so. In particular use the string
 # module and not the function of the string type.
 
-import re, string, os, sys
+import re
+import string
+import os
+import sys
 
 lazy_overwrite=0
 
@@ -42,8 +45,8 @@ def verbose(s):
     if "-v" in sys.argv:
         print(s)
 
-def prefix(prefix,str):
-    lines=str.split("\n")
+def prefix(prefix,string):
+    lines=string.split("\n")
     lines=map(lambda x,prefix=prefix: prefix+x,lines)
     return "\n".join(lines)
 
@@ -64,22 +67,22 @@ def fc_open(name):
     write_disclaimer(f)
     return f
 
-def get_choices(all):
-    def helper(helper,all, index, so_far):
-        if index>=len(all):
+def get_choices(allchoices):
+    def helper(helper,allchoices, index, so_far):
+        if index>=len(allchoices):
             return [so_far]
         t0=so_far[:]
         t1=so_far[:]
-        t1.append(list(all)[index])
-        return helper(helper,all,index+1,t1)+helper(helper,all,index+1,t0)
+        t1.append(list(allchoices)[index])
+        return helper(helper,allchoices,index+1,t1)+helper(helper,allchoices,index+1,t0)
 
-    result=helper(helper,all,0,[])
-    assert len(result)==2**len(all)
+    result=helper(helper,allchoices,0,[])
+    assert len(result)==2**len(allchoices)
     return result
 
-def without(all,part):
+def without(allparts,part):
     result=[]
-    for i in all:
+    for i in allparts:
         if i not in part:
             result.append(i)
     return result
@@ -93,32 +96,32 @@ class Type:
 # Parses a line of the form "COORD x, y; key" and returns a list of
 # Field objects. types is a list of Type objects which are used to
 # dereference type names.
-def parse_fields(str, types):
-    mo=re.search(r"^\s*(\S+(?:\(.*\))?)\s+([^;()]*)\s*;\s*(.*)\s*$",str)
-    assert mo,str
+def parse_fields(string, types):
+    mo=re.search(r"^\s*(\S+(?:\(.*\))?)\s+([^;()]*)\s*;\s*(.*)\s*$",string)
+    assert mo,string
     arr=[]
     for i in mo.groups():
         if i:
             arr.append(i.strip())
         else:
             arr.append("")
-    type,fields_,flags=arr
+    kind,fields_,flags=arr
     #print arr
 
     # analyze type
     while 1:
         found=0
         for i in types:
-            if i.alias==type:
-                type=i.dest
+            if i.alias==kind:
+                kind=i.dest
                 found=1
                 break
         if not found:
             break
 
     typeinfo={}
-    mo=re.search("^(.*)\((.*)\)$",type)
-    assert mo,repr(type)
+    mo=re.search("^(.*)\((.*)\)$",kind)
+    assert mo,repr(kind)
     typeinfo["dataio_type"],typeinfo["struct_type"]=mo.groups()
 
     if typeinfo["struct_type"]=="float":
@@ -165,9 +168,11 @@ def parse_fields(str, types):
     arr=list(item.strip() for item in flags.split(","))
     arr=list(filter(lambda x:len(x)>0,arr))
     flaginfo["is_key"]=("key" in arr)
-    if flaginfo["is_key"]: arr.remove("key")
+    if flaginfo["is_key"]:
+        arr.remove("key")
     flaginfo["diff"]=("diff" in arr)
-    if flaginfo["diff"]: arr.remove("diff")
+    if flaginfo["diff"]:
+         arr.remove("diff")
     adds=[]
     removes=[]
     remaining=[]
@@ -207,13 +212,13 @@ class Field:
     def __init__(self,fieldinfo,typeinfo,flaginfo):
         for i in fieldinfo,typeinfo,flaginfo:
             self.__dict__.update(i)
-        self.is_struct=not not re.search("^struct.*",self.struct_type)
+        self.is_struct=re.search('^struct.*', self.struct_type)
 
     # Helper function for the dictionary variant of the % operator
     # ("%(name)s"%dict).
-    def get_dict(self,vars):
+    def get_dict(self,params):
         result=self.__dict__.copy()
-        result.update(vars)
+        result.update(params)
         return result
 
     def get_handle_type(self):
@@ -679,9 +684,9 @@ class Variant:
         self.receive_handler='phandlers->receive[%(type)s] = (void *(*)(struct connection *)) receive_%(name)s;'%self.__dict__
 
     # See Field.get_dict
-    def get_dict(self,vars):
+    def get_dict(self,params):
         result=self.__dict__.copy()
-        result.update(vars)
+        result.update(params)
         return result
 
     # Returns a code fragment which contains the declarations of the
@@ -860,7 +865,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
         for i in range(2):
             for k,v in vars().items():
-                if type(v)==type(""):
+                if isinstance(v, str):
                     temp=temp.replace("<%s>"%k,v)
         return temp%self.get_dict(vars())
 
@@ -978,7 +983,7 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
         for i in range(2):
             for k,v in vars().items():
-                if type(v)==type(""):
+                if isinstance(v, str):
                     temp=temp.replace("<%s>"%k,v)
         return temp%self.get_dict(vars())
 
@@ -988,8 +993,10 @@ static char *stats_%(name)s_names[] = {%(names)s};
         key2=map(lambda x:"    real_packet->%s = %s;"%(x.name,x.name),self.key_fields)
         key1="\n".join(key1)
         key2="\n".join(key2)
-        if key1: key1=key1+"\n\n"
-        if key2: key2="\n\n"+key2
+        if key1:
+            key1=key1+"\n\n"
+        if key2:
+             key2="\n\n"+key2
         if self.gen_log:
             fl='    %(log_macro)s("  no old info");\n'
         else:
@@ -1034,13 +1041,13 @@ static char *stats_%(name)s_names[] = {%(names)s};
 
 # Class which represents a packet. A packet contains a list of fields.
 class Packet:
-    def __init__(self,str, types):
+    def __init__(self,string, types):
         self.types=types
         self.log_macro=use_log_macro
         self.gen_stats=generate_stats
         self.gen_log=generate_logs
-        str=str.strip()
-        lines=str.split("\n")
+        string=string.strip()
+        lines=string.split("\n")
 
         mo=re.search("^\s*(\S+)\s*=\s*(\d+)\s*;\s*(.*?)\s*$",lines[0])
         assert mo,repr(lines[0])
@@ -1077,37 +1084,48 @@ class Packet:
             arr.remove("is-game-info")
 
         self.want_pre_send="pre-send" in arr
-        if self.want_pre_send: arr.remove("pre-send")
+        if self.want_pre_send:
+             arr.remove("pre-send")
 
         self.want_post_recv="post-recv" in arr
-        if self.want_post_recv: arr.remove("post-recv")
+        if self.want_post_recv:
+             arr.remove("post-recv")
 
         self.want_post_send="post-send" in arr
-        if self.want_post_send: arr.remove("post-send")
+        if self.want_post_send:
+             arr.remove("post-send")
 
         self.delta="no-delta" not in arr
-        if not self.delta: arr.remove("no-delta")
+        if not self.delta:
+             arr.remove("no-delta")
 
         self.no_packet="no-packet" in arr
-        if self.no_packet: arr.remove("no-packet")
+        if self.no_packet:
+             arr.remove("no-packet")
 
         self.handle_via_packet="handle-via-packet" in arr
-        if self.handle_via_packet: arr.remove("handle-via-packet")
+        if self.handle_via_packet:
+             arr.remove("handle-via-packet")
 
         self.handle_per_conn="handle-per-conn" in arr
-        if self.handle_per_conn: arr.remove("handle-per-conn")
+        if self.handle_per_conn:
+             arr.remove("handle-per-conn")
 
         self.no_handle="no-handle" in arr
-        if self.no_handle: arr.remove("no-handle")
+        if self.no_handle:
+            arr.remove("no-handle")
 
         self.dsend_given="dsend" in arr
-        if self.dsend_given: arr.remove("dsend")
+        if self.dsend_given:
+            arr.remove("dsend")
 
         self.want_lsend="lsend" in arr
-        if self.want_lsend: arr.remove("lsend")
+        if self.want_lsend:
+            arr.remove("lsend")
 
         self.want_force="force" in arr
-        if self.want_force: arr.remove("force")
+        if self.want_force:
+            arr.remove("force")
 
         self.cancel=[]
         removes=[]
@@ -1173,14 +1191,15 @@ class Packet:
         # create cap variants
         all_caps={}
         for f in self.fields:
-            if f.add_cap:  all_caps[f.add_cap]=1
-            if f.remove_cap:  all_caps[f.remove_cap]=1
+            if f.add_cap:
+                 all_caps[f.add_cap]=1
+            if f.remove_cap:
+                  all_caps[f.remove_cap]=1
 
         all_caps=all_caps.keys()
         choices=get_choices(all_caps)
         self.variants=[]
-        for i in range(len(choices)):
-            poscaps=choices[i]
+        for i, poscaps in enumerate(choices):
             negcaps=without(all_caps,poscaps)
             fields=[]
             for field in self.fields:
@@ -1221,9 +1240,9 @@ class Packet:
         return result+"\n"
 
     # See Field.get_dict
-    def get_dict(self,vars):
+    def get_dict(self,params):
         result=self.__dict__.copy()
-        result.update(vars)
+        result.update(params)
         return result
 
     def get_send(self):
@@ -1265,7 +1284,8 @@ class Packet:
     # Returns a code fragment which is the implementation of the
     # lsend function.
     def get_lsend(self):
-        if not self.want_lsend: return ""
+        if not self.want_lsend:
+             return ""
         return '''%(lsend_prototype)s
 {
   conn_list_iterate(dest, pconn) {
@@ -1278,7 +1298,8 @@ class Packet:
     # Returns a code fragment which is the implementation of the
     # dsend function.
     def get_dsend(self):
-        if not self.want_dsend: return ""
+        if not self.want_dsend:
+             return ""
         fill="\n".join(map(lambda x:x.get_fill(),self.fields))
         return '''%(dsend_prototype)s
 {
@@ -1294,7 +1315,8 @@ class Packet:
     # Returns a code fragment which is the implementation of the
     # dlsend function.
     def get_dlsend(self):
-        if not (self.want_lsend and self.want_dsend): return ""
+        if not (self.want_lsend and self.want_dsend):
+             return ""
         fill="\n".join(map(lambda x:x.get_fill(),self.fields))
         return '''%(dlsend_prototype)s
 {
@@ -1313,8 +1335,10 @@ def get_packet_functional_capability(packets):
     all_caps={}
     for p in packets:
         for f in p.fields:
-            if f.add_cap:  all_caps[f.add_cap]=1
-            if f.remove_cap:  all_caps[f.remove_cap]=1
+            if f.add_cap:
+                 all_caps[f.add_cap]=1
+            if f.remove_cap:
+                 all_caps[f.remove_cap]=1
     return '''
 extern "C" const char *const packet_functional_capability = "%s";
 '''%' '.join(all_caps.keys())
@@ -1322,7 +1346,8 @@ extern "C" const char *const packet_functional_capability = "%s";
 # Returns a code fragment which is the implementation of the
 # delta_stats_report() function.
 def get_report(packets):
-    if not generate_stats: return 'void delta_stats_report(void) {}\n\n'
+    if not generate_stats:
+         return 'void delta_stats_report(void) {}\n\n'
 
     intro='''
 void delta_stats_report(void) {
@@ -1339,7 +1364,8 @@ void delta_stats_report(void) {
 # Returns a code fragment which is the implementation of the
 # delta_stats_reset() function.
 def get_reset(packets):
-    if not generate_stats: return 'void delta_stats_reset(void) {}\n\n'
+    if not generate_stats:
+         return 'void delta_stats_reset(void) {}\n\n'
     intro='''
 void delta_stats_reset(void) {
 '''
@@ -1361,12 +1387,12 @@ def get_packet_name(packets):
     mapping={}
     for p in packets:
         mapping[p.type_number]=p
-    sorted=list(mapping.keys())
-    sorted.sort()
+    msorted=list(mapping.keys())
+    msorted.sort()
 
     last=-1
     body=""
-    for n in sorted:
+    for n in msorted:
         for i in range(last + 1, n):
             body=body+'    "unknown",\n'
         body=body+'    "%s",\n'%mapping[n].type
@@ -1391,12 +1417,12 @@ def get_packet_has_game_info_flag(packets):
     mapping={}
     for p in packets:
         mapping[p.type_number]=p
-    sorted=list(mapping.keys())
-    sorted.sort()
+    msorted=list(mapping.keys())
+    msorted.sort()
 
     last=-1
     body=""
-    for n in sorted:
+    for n in msorted:
         for i in range(last + 1, n):
             body=body+'    FALSE,\n'
         if mapping[n].is_info!="game":
@@ -1422,8 +1448,10 @@ def get_packet_handlers_fill_initial(packets):
     all_caps={}
     for p in packets:
         for f in p.fields:
-            if f.add_cap:  all_caps[f.add_cap]=1
-            if f.remove_cap:  all_caps[f.remove_cap]=1
+            if f.add_cap:
+                  all_caps[f.add_cap]=1
+            if f.remove_cap:
+                  all_caps[f.remove_cap]=1
     for cap in all_caps.keys():
         intro=intro+'''  fc_assert_msg(has_capability("%s", our_capability),
                 "Packets have support for unknown '%s' capability!");
@@ -1574,12 +1602,12 @@ def get_enum_packet(packets):
             print(p.name,mapping[p.type_number].name)
             assert 0
         mapping[p.type_number]=p
-    sorted=list(mapping.keys())
-    sorted.sort()
+    msorted=list(mapping.keys())
+    msorted.sort()
 
     last=-1
     body=""
-    for i in sorted:
+    for i in msorted:
         p=mapping[i]
         if i!=last+1:
             line="  %s = %d,"%(p.type,i)
@@ -1634,10 +1662,10 @@ def main():
             lines2.append(i)
 
     packets=[]
-    for str in re.split("(?m)^end$","\n".join(lines2)):
-        str=str.strip()
-        if str:
-            packets.append(Packet(str,types))
+    for string in re.split("(?m)^end$","\n".join(lines2)):
+        string=string.strip()
+        if string:
+            packets.append(Packet(string,types))
 
     ### parsing finished
 
@@ -1788,7 +1816,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
         for p in packets:
             if "cs" in p.dirs and not p.no_handle:
                 a=p.name[len("packet_"):]
-                type=a.split("_")[0]
+                packtype=a.split("_")[0]
                 b=p.fields
                 b=map(lambda x:"%s%s"%(x.get_handle_type(), x.name),b)
                 b=", ".join(b)
@@ -1831,7 +1859,8 @@ bool client_handle_packet(enum packet_type type, const void *packet);
 
 ''')
         for p in packets:
-            if "sc" not in p.dirs: continue
+            if "sc" not in p.dirs:
+                 continue
 
             a=p.name[len("packet_"):]
             b=p.fields
@@ -1871,8 +1900,10 @@ bool server_handle_packet(enum packet_type type, const void *packet,
   switch (type) {
 ''')
         for p in packets:
-            if "cs" not in p.dirs: continue
-            if p.no_handle: continue
+            if "cs" not in p.dirs:
+                 continue
+            if p.no_handle:
+                 continue
             a=p.name[len("packet_"):]
             # python doesn't need comments :D
             c='((const struct %s *)packet)->'%p.name
@@ -1930,8 +1961,10 @@ bool client_handle_packet(enum packet_type type, const void *packet)
   switch (type) {
 ''')
         for p in packets:
-            if "sc" not in p.dirs: continue
-            if p.no_handle: continue
+            if "sc" not in p.dirs:
+                 continue
+            if p.no_handle:
+                 continue
             a=p.name[len("packet_"):]
             c='((const struct %s *)packet)->'%p.name
             d = '(static_cast<const struct {0}*>(packet))'.format(p.name)
