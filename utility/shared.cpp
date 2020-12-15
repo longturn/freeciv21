@@ -52,20 +52,6 @@
 
 #include "shared.h"
 
-/* If no default data path is defined use the default default one */
-#ifndef DEFAULT_DATA_PATH
-#define DEFAULT_DATA_PATH ".:data:" FREECIV_STORAGE_DIR "/" DATASUBDIR
-#endif
-
-#ifndef DEFAULT_SAVE_PATH
-#define DEFAULT_SAVE_PATH ".:" FREECIV_STORAGE_DIR "/saves"
-#endif
-#ifndef DEFAULT_SCENARIO_PATH
-#define DEFAULT_SCENARIO_PATH                                               \
-  ".:data/scenarios:" FREECIV_STORAGE_DIR "/" DATASUBDIR                    \
-  "/scenarios:" FREECIV_STORAGE_DIR "/scenarios"
-#endif /* DEFAULT_SCENARIO_PATH */
-
 /* environment */
 #ifndef FREECIV_DATA_PATH
 #define FREECIV_DATA_PATH "FREECIV_DATA_PATH"
@@ -76,6 +62,32 @@
 #ifndef FREECIV_SCENARIO_PATH
 #define FREECIV_SCENARIO_PATH "FREECIV_SCENARIO_PATH"
 #endif
+
+
+static QString default_data_path()
+{
+  QString path = QString(".%1data%1%2%3%4")
+                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
+                          QDir::separator(), DATASUBDIR);
+  return path;
+}
+
+static QString default_save_path()
+{
+  QString path = QString(".%1%2%3saves")
+                     .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
+                          QDir::separator());
+  return path;
+}
+
+static QString default_scenario_path()
+{
+  QString path =
+      QString(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
+          .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, QDir::separator(),
+               DATASUBDIR);
+  return path;
+}
 
 /* Both of these are stored in the local encoding.  The grouping_sep must
  * be converted to the internal encoding when it's used. */
@@ -841,12 +853,13 @@ const QStringList *get_data_dirs(void)
 
     if ((path = getenv(FREECIV_DATA_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_DATA_PATH> configuration error */
-      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default "
                   "data directories instead."),
-                FREECIV_DATA_PATH, DEFAULT_DATA_PATH);
+                FREECIV_DATA_PATH);
       path = NULL;
     }
-    data_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_DATA_PATH);
+    data_dir_names = base_get_dirs(
+        NULL != path ? path : qUtf8Printable(default_data_path()));
     data_dir_names->removeDuplicates();
     for (auto toyota : *data_dir_names) {
       qDebug("Data path component: %s", qUtf8Printable(toyota));
@@ -877,12 +890,13 @@ const QStringList *get_save_dirs(void)
 
     if ((path = getenv(FREECIV_SAVE_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_SAVE_PATH> configuration error */
-      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default"
                   "save directories instead."),
-                FREECIV_SAVE_PATH, DEFAULT_SAVE_PATH);
+                FREECIV_SAVE_PATH);
       path = NULL;
     }
-    save_dir_names = base_get_dirs(NULL != path ? path : DEFAULT_SAVE_PATH);
+    save_dir_names = base_get_dirs(
+        NULL != path ? path : qUtf8Printable(default_save_path()));
     save_dir_names->removeDuplicates();
     for (auto mercedes : *save_dir_names) {
       qDebug("Save path component: %s", qUtf8Printable(mercedes));
@@ -914,13 +928,13 @@ const QStringList *get_scenario_dirs(void)
 
     if ((path = getenv(FREECIV_SCENARIO_PATH)) && '\0' == path[0]) {
       /* TRANS: <FREECIV_SCENARIO_PATH> configuration error */
-      qCritical(_("\"%s\" is set but empty; using default \"%s\" "
+      qCritical(_("\"%s\" is set but empty; using default "
                   "scenario directories instead."),
-                FREECIV_SCENARIO_PATH, DEFAULT_SCENARIO_PATH);
+                FREECIV_SCENARIO_PATH);
       path = NULL;
     }
-    scenario_dir_names =
-        base_get_dirs(NULL != path ? path : DEFAULT_SCENARIO_PATH);
+    scenario_dir_names = base_get_dirs(
+        NULL != path ? path : qUtf8Printable(default_scenario_path()));
     scenario_dir_names->removeDuplicates();
     for (auto tesla : *scenario_dir_names) {
       qDebug("Scenario path component: %s", qUtf8Printable(tesla));
