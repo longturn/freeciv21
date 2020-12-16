@@ -1217,7 +1217,7 @@ static bool read_init_script_real(struct connection *caller,
    These are conventionally scripts that load rulesets (generally
    containing just a 'rulesetdir' command).
  **************************************************************************/
-struct strvec *get_init_script_choices(void)
+QVector<QString> *get_init_script_choices(void)
 {
   return fileinfolist(get_data_dirs(), RULESET_SUFFIX);
 }
@@ -3723,7 +3723,7 @@ bool load_command(struct connection *caller, const char *filename,
     /* it is a normal savegame or maybe a scenario */
     char testfile[MAX_LEN_PATH];
     const QStringList *pathes[] = {get_save_dirs(), get_scenario_dirs(),
-                                     NULL};
+                                   NULL};
     const char *exts[] = {"sav",    "gz",      "bz2",    "xz",
                           "sav.gz", "sav.bz2", "sav.xz", NULL};
     const char **ext, *found = NULL;
@@ -6753,7 +6753,7 @@ void show_players(struct connection *caller)
  **************************************************************************/
 static void show_rulesets(struct connection *caller)
 {
-  struct strvec *serv_list;
+  QVector<QString> *serv_list;
 
   cmd_reply(CMD_LIST, caller, C_COMMENT,
             /* TRANS: don't translate text between '' */
@@ -6762,12 +6762,10 @@ static void show_rulesets(struct connection *caller)
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
   serv_list = get_init_script_choices();
-  strvec_iterate(serv_list, s)
-  {
-    cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", s);
+  for (auto s : *serv_list) {
+    cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", qUtf8Printable(s));
   }
-  strvec_iterate_end;
-  strvec_destroy(serv_list);
+  delete serv_list;
 
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 }

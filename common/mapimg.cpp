@@ -1112,14 +1112,14 @@ struct mapdef *mapimg_isvalid(int id)
 /************************************************************************/ /**
    Return a list of all available tookits and formats for the client.
  ****************************************************************************/
-const struct strvec *mapimg_get_format_list(void)
+const QVector<QString> *mapimg_get_format_list(void)
 {
-  static struct strvec *format_list = NULL;
+  static QVector<QString> *format_list = NULL;
 
   if (NULL == format_list) {
     enum imagetool tool;
 
-    format_list = strvec_new();
+    format_list = new QVector<QString>();
 
     for (tool = imagetool_begin(); tool != imagetool_end();
          tool = imagetool_next(tool)) {
@@ -1137,7 +1137,8 @@ const struct strvec *mapimg_get_format_list(void)
 
           fc_snprintf(str_format, sizeof(str_format), "%s|%s",
                       imagetool_name(tool), imageformat_name(format));
-          strvec_append(format_list, str_format);
+
+          format_list->append(str_format);
         }
       }
     }

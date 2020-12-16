@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <QString>
+#include <QVector>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,17 +72,16 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
    available on the system.  This function is unfortunately similar to
    audio_get_all_plugin_names().
  **************************************************************************/
-const struct strvec *get_soundplugin_list(const struct option *poption)
+const QVector<QString> *get_soundplugin_list(const struct option *poption)
 {
-  static struct strvec *plugin_list = NULL;
+  static QVector<QString> *plugin_list = NULL;
 
   if (NULL == plugin_list) {
     int i;
 
-    plugin_list = strvec_new();
-    strvec_reserve(plugin_list, num_plugins_used);
+    plugin_list = new QVector<QString>;
     for (i = 0; i < num_plugins_used; i++) {
-      strvec_set(plugin_list, i, plugins[i].name);
+      plugin_list->append(plugins[i].name);
     }
   }
 
@@ -93,8 +94,8 @@ const struct strvec *get_soundplugin_list(const struct option *poption)
    suffix.
    The list is NULL-terminated.
  **************************************************************************/
-static const struct strvec *get_audio_speclist(const char *suffix,
-                                               struct strvec **audio_list)
+static const QVector<QString> *
+get_audio_speclist(const char *suffix, QVector<QString> **audio_list)
 {
   if (NULL == *audio_list) {
     *audio_list = fileinfolist(get_data_dirs(), suffix);
@@ -106,9 +107,9 @@ static const struct strvec *get_audio_speclist(const char *suffix,
 /**********************************************************************/ /**
    Returns a static string vector of soundsets available on the system.
  **************************************************************************/
-const struct strvec *get_soundset_list(const struct option *poption)
+const QVector<QString> *get_soundset_list(const struct option *poption)
 {
-  static struct strvec *sound_list = NULL;
+  static QVector<QString> *sound_list = NULL;
 
   return get_audio_speclist(SNDSPEC_SUFFIX, &sound_list);
 }
@@ -116,9 +117,9 @@ const struct strvec *get_soundset_list(const struct option *poption)
 /**********************************************************************/ /**
    Returns a static string vector of musicsets available on the system.
  **************************************************************************/
-const struct strvec *get_musicset_list(const struct option *poption)
+const QVector<QString> *get_musicset_list(const struct option *poption)
 {
-  static struct strvec *music_list = NULL;
+  static QVector<QString> *music_list = NULL;
 
   return get_audio_speclist(MUSICSPEC_SUFFIX, &music_list);
 }

@@ -447,9 +447,9 @@ void init_new_game(void)
   targeted_list = startpos_list_new();
   flexible_list = startpos_list_new();
 
-  for (auto psp : *wld.map.startpos_table)
-  {
-    if (psp->exclude) continue;
+  for (auto psp : *wld.map.startpos_table) {
+    if (psp->exclude)
+      continue;
     if (startpos_allows_all(psp)) {
       startpos_list_append(flexible_list, psp);
     } else {
@@ -1115,14 +1115,13 @@ const char *new_challenge_filename(struct connection *pc)
  ****************************************************************************/
 static void send_ruleset_choices(struct connection *pc)
 {
-  struct strvec *ruleset_choices;
+  QVector<QString> *ruleset_choices;
   struct packet_ruleset_choices packet;
   size_t i = 0;
 
   ruleset_choices = get_init_script_choices();
 
-  strvec_iterate(ruleset_choices, s)
-  {
+  for (auto s : *ruleset_choices) {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
       qDebug("Can't send more than %d ruleset names to client, "
@@ -1130,18 +1129,18 @@ static void send_ruleset_choices(struct connection *pc)
              MAX_NUM_RULESETS);
       break;
     }
-    if (fc_strlcpy(packet.rulesets[i], s, maxlen) < maxlen) {
+    if (fc_strlcpy(packet.rulesets[i], qUtf8Printable(s), maxlen) < maxlen) {
       i++;
     } else {
-      qDebug("Ruleset name '%s' too long to send to client, skipped", s);
+      qDebug("Ruleset name '%s' too long to send to client, skipped",
+             qUtf8Printable(s));
     }
   }
-  strvec_iterate_end;
   packet.ruleset_count = i;
 
   send_packet_ruleset_choices(pc, &packet);
 
-  strvec_destroy(ruleset_choices);
+  delete ruleset_choices;
 }
 
 /************************************************************************/ /**

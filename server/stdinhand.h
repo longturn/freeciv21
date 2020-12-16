@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QString>
+#include <QVector>
 /* common */
 #include "chat.h"       /* SERVER_COMMAND_PREFIX */
 #include "connection.h" /* enum cmdlevel */
@@ -33,7 +35,7 @@ bool handle_stdin_input(struct connection *caller, char *str);
 void set_ai_level_direct(struct player *pplayer, enum ai_level level);
 bool read_init_script(struct connection *caller, const char *script_filename,
                       bool from_cmdline, bool check);
-struct strvec *get_init_script_choices(void);
+QVector<QString> *get_init_script_choices(void);
 void show_players(struct connection *caller);
 
 enum rfc_status create_command_newcomer(const char *name, const char *ai,
@@ -62,5 +64,3 @@ bool conn_is_kicked(struct connection *pconn, int *time_remaining);
 void set_running_game_access_level(void);
 
 char **freeciv_completion(const char *text, int start, int end);
-
-

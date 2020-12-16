@@ -13,6 +13,8 @@
 #pragma once
 
 #include "support.h" /* bool type */
+#include <QString>
+#include <QVector>
 
 #define MAX_AUDIO_NAME_LEN 20
 #define MAX_AUDIO_DESCR_LEN 200
@@ -21,7 +23,6 @@
 
 typedef void (*audio_finished_callback)(void);
 
-class QString;
 struct audio_plugin {
   char name[MAX_AUDIO_NAME_LEN];
   char descr[MAX_AUDIO_DESCR_LEN];
@@ -37,11 +38,10 @@ struct audio_plugin {
 
 enum music_usage { MU_SINGLE, MU_MENU, MU_INGAME };
 
-struct strvec;
 struct option;
-const struct strvec *get_soundplugin_list(const struct option *poption);
-const struct strvec *get_soundset_list(const struct option *poption);
-const struct strvec *get_musicset_list(const struct option *poption);
+const QVector<QString> *get_soundplugin_list(const struct option *poption);
+const QVector<QString> *get_soundset_list(const struct option *poption);
+const QVector<QString> *get_musicset_list(const struct option *poption);
 
 void audio_init(void);
 void audio_real_init(QString &soundspec_name, QString &musicset_name,
@@ -62,5 +62,3 @@ void audio_set_volume(double volume);
 
 bool audio_select_plugin(QString &name);
 const char *audio_get_all_plugin_names(void);
-
-

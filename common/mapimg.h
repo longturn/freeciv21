@@ -51,7 +51,6 @@
 
 #pragma once
 
-
 /* utility */
 #include "support.h"
 
@@ -119,7 +118,5 @@ bool mapimg_colortest(const char *savename, const char *path);
 
 struct mapdef *mapimg_isvalid(int id);
 
-const struct strvec *mapimg_get_format_list(void);
+const QVector<QString> *mapimg_get_format_list(void);
 const char *mapimg_get_format_default(void);
-
-

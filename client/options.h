@@ -259,7 +259,7 @@ bool option_int_set(struct option *poption, int val);
 /* Option type OT_STRING functions. */
 const char *option_str_get(const struct option *poption);
 const char *option_str_def(const struct option *poption);
-const struct strvec *option_str_values(const struct option *poption);
+const QVector<QString> *option_str_values(const struct option *poption);
 bool option_str_set(struct option *poption, const char *str);
 
 /* Option type OT_ENUM functions. */
@@ -277,7 +277,7 @@ bool option_enum_set_str(struct option *poption, const char *str);
 unsigned option_bitwise_get(const struct option *poption);
 unsigned option_bitwise_def(const struct option *poption);
 unsigned option_bitwise_mask(const struct option *poption);
-const struct strvec *option_bitwise_values(const struct option *poption);
+const QVector<QString> *option_bitwise_values(const struct option *poption);
 bool option_bitwise_set(struct option *poption, unsigned val);
 
 /* Option type OT_FONT functions. */
@@ -330,5 +330,3 @@ struct tileset;
 const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default(void);
-
-

@@ -23,6 +23,8 @@
 
 #include <QHash>
 #include <QSet>
+#include <QString>
+#include <QVector>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h> /* exit */
@@ -944,9 +946,9 @@ static int ts_topology_index(int actual_topology)
    Returns a static list of tilesets available on the system by
    searching all data directories for files matching TILESPEC_SUFFIX.
  ****************************************************************************/
-const struct strvec *get_tileset_list(const struct option *poption)
+const QVector<QString> *get_tileset_list(const struct option *poption)
 {
-  static struct strvec *tilesets[3] = {NULL, NULL, NULL};
+  static QVector<QString> *tilesets[3] = {NULL, NULL, NULL};
   int topo = option_get_cb_data(poption);
   int idx;
 
@@ -957,20 +959,19 @@ const struct strvec *get_tileset_list(const struct option *poption)
   if (tilesets[idx] == NULL) {
     /* Note: this means you must restart the client after installing a new
        tileset. */
-    struct strvec *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
+    QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
-    tilesets[idx] = strvec_new();
-    strvec_iterate(list, file)
-    {
-      struct tileset *t = tileset_read_toplevel(file, FALSE, topo, 1.0f);
+    tilesets[idx] = new QVector<QString>;
+    for (auto file : *list) {
+      struct tileset *t =
+          tileset_read_toplevel(qUtf8Printable(file), FALSE, topo, 1.0f);
 
       if (t) {
-        strvec_append(tilesets[idx], file);
+        tilesets[idx]->append(file);
         tileset_free(t);
       }
     }
-    strvec_iterate_end;
-    strvec_destroy(list);
+    delete list;
   }
 
   return tilesets[idx];
@@ -1145,12 +1146,12 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
   if (tileset_name == NULL
       || !(tileset = tileset_read_toplevel(tileset_name, verbose, topo_id,
                                            1.0f))) {
-    struct strvec *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
+    QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     original = FALSE;
-    strvec_iterate(list, file)
-    {
-      struct tileset *t = tileset_read_toplevel(file, FALSE, topo_id, 1.0f);
+    for (auto file : *list) {
+      struct tileset *t =
+          tileset_read_toplevel(qUtf8Printable(file), FALSE, topo_id, 1.0f);
 
       if (t) {
         if (!tileset) {
@@ -1166,8 +1167,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
         }
       }
     }
-    strvec_iterate_end;
-    strvec_destroy(list);
+    delete list;
 
     if (!tileset) {
       tileset_error(LOG_FATAL,

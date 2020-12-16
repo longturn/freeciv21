@@ -84,24 +84,25 @@ void init_themes(void)
 /************************************************************************/ /**
    Return a static string vector of useable theme names.
  ****************************************************************************/
-const struct strvec *get_themes_list(const struct option *poption)
+const QVector<QString> *get_themes_list(const struct option *poption)
 {
-  static struct strvec *themes_list = NULL;
+  static QVector<QString> *themes_list = NULL;
 
   if (NULL == themes_list) {
     int i, j, k;
 
-    themes_list = strvec_new();
+    themes_list = new QVector<QString>;
     for (i = 0; i < num_directories; i++) {
       for (j = 0; j < directories[i].num_themes; j++) {
-        for (k = 0; k < strvec_size(themes_list); k++) {
-          if (strcmp(strvec_get(themes_list, k), directories[i].themes[j])
+        for (k = 0; k < themes_list->count(); k++) {
+          if (strcmp(qUtf8Printable(themes_list->at(k)),
+                     directories[i].themes[j])
               == 0) {
             break;
           }
         }
-        if (k == strvec_size(themes_list)) {
-          strvec_append(themes_list, directories[i].themes[j]);
+        if (k == themes_list->count()) {
+          themes_list->append(directories[i].themes[j]);
         }
       }
     }

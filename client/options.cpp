@@ -201,17 +201,16 @@ struct client_options gui_options = {
     "Sans Serif,10,-1,5,75,0,0,0,0,0", //.gui_qt_font_city_names =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_city_productions =
     "Sans Serif,10,-1,5,50,1,0,0,0,0", //.gui_qt_font_reqtree_text =
-    {true},                                //=?
-    true,                                   //.gui_qt_show_titlebar
+    {true},                            //=?
+    true,                              //.gui_qt_show_titlebar
     5,
-    {}
-};
+    {}};
 
 /* Set to TRUE after the first call to options_init(), to avoid the usage
  * of non-initialized datas when calling the changed callback. */
 static bool options_fully_initialized = FALSE;
 
-static const struct strvec *
+static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption);
 
 /****************************************************************************
@@ -312,7 +311,7 @@ struct option_int_vtable {
 struct option_str_vtable {
   const char *(*get)(const struct option *);
   const char *(*def)(const struct option *);
-  const struct strvec *(*values)(const struct option *);
+  const QVector<QString> *(*values)(const struct option *);
   bool (*set)(struct option *, const char *);
 };
 /* Specific enum accessors (OT_ENUM == type). */
@@ -327,7 +326,7 @@ struct option_enum_vtable {
 struct option_bitwise_vtable {
   unsigned (*get)(const struct option *);
   unsigned (*def)(const struct option *);
-  const struct strvec *(*values)(const struct option *);
+  const QVector<QString> *(*values)(const struct option *);
   bool (*set)(struct option *, unsigned);
 };
 /* Specific font accessors (OT_FONT == type). */
@@ -723,7 +722,7 @@ const char *option_str_def(const struct option *poption)
 /************************************************************************/ /**
    Returns the possible string values of this string option.
  ****************************************************************************/
-const struct strvec *option_str_values(const struct option *poption)
+const QVector<QString> *option_str_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_STRING == poption->type, NULL);
@@ -906,7 +905,7 @@ unsigned option_bitwise_def(const struct option *poption)
  ****************************************************************************/
 unsigned option_bitwise_mask(const struct option *poption)
 {
-  const struct strvec *values;
+  const QVector<QString> *values;
 
   fc_assert_ret_val(NULL != poption, 0);
   fc_assert_ret_val(OT_BITWISE == poption->type, 0);
@@ -914,14 +913,14 @@ unsigned option_bitwise_mask(const struct option *poption)
   values = poption->bitwise_vtable->values(poption);
   fc_assert_ret_val(NULL != values, 0);
 
-  return (1 << strvec_size(values)) - 1;
+  return (1 << values->count()) - 1;
 }
 
 /************************************************************************/ /**
    Returns a vector of strings describing every bit of this option, as
    user-visible (translatable but not translated) strings.
  ****************************************************************************/
-const struct strvec *option_bitwise_values(const struct option *poption)
+const QVector<QString> *option_bitwise_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_BITWISE == poption->type, NULL);
@@ -1101,7 +1100,7 @@ static const struct option_int_vtable client_option_int_vtable = {
 
 static const char *client_option_str_get(const struct option *poption);
 static const char *client_option_str_def(const struct option *poption);
-static const struct strvec *
+static const QVector<QString> *
 client_option_str_values(const struct option *poption);
 static bool client_option_str_set(struct option *poption, const char *str);
 
@@ -1175,7 +1174,7 @@ struct client_option {
        * A function to return a string vector of possible string values,
        * or NULL for none.
        */
-      const struct strvec *(*const val_accessor)(const struct option *);
+      const QVector<QString> *(*const val_accessor)(const struct option *);
     } string;
     /* OT_ENUM type option. */
     struct {
@@ -2350,7 +2349,7 @@ static const char *client_option_str_def(const struct option *poption)
    Returns the possible string values of this client option of type
    OT_STRING.
  ****************************************************************************/
-static const struct strvec *
+static const QVector<QString> *
 client_option_str_values(const struct option *poption)
 {
   return (CLIENT_OPTION(poption)->string.val_accessor
@@ -2677,7 +2676,7 @@ static const struct option_int_vtable server_option_int_vtable = {
 
 static const char *server_option_str_get(const struct option *poption);
 static const char *server_option_str_def(const struct option *poption);
-static const struct strvec *
+static const QVector<QString> *
 server_option_str_values(const struct option *poption);
 static bool server_option_str_set(struct option *poption, const char *str);
 
@@ -2702,7 +2701,7 @@ static const struct option_enum_vtable server_option_enum_vtable = {
 
 static unsigned server_option_bitwise_get(const struct option *poption);
 static unsigned server_option_bitwise_def(const struct option *poption);
-static const struct strvec *
+static const QVector<QString> *
 server_option_bitwise_pretty(const struct option *poption);
 static bool server_option_bitwise_set(struct option *poption, unsigned val);
 
@@ -2754,8 +2753,8 @@ struct server_option {
     struct {
       unsigned value;
       unsigned def;
-      struct strvec *support_names;
-      struct strvec *pretty_names; /* untranslated */
+      QVector<QString> *support_names;
+      QVector<QString> *pretty_names; /* untranslated */
     } bitwise;
   };
 };
@@ -2803,11 +2802,11 @@ static void server_option_free(struct server_option *poption)
 
   case OT_BITWISE:
     if (NULL != poption->bitwise.support_names) {
-      strvec_destroy(poption->bitwise.support_names);
+      delete poption->bitwise.support_names;
       poption->bitwise.support_names = NULL;
     }
     if (NULL != poption->bitwise.pretty_names) {
-      strvec_destroy(poption->bitwise.pretty_names);
+      delete poption->bitwise.pretty_names;
       poption->bitwise.pretty_names = NULL;
     }
     break;
@@ -3191,31 +3190,29 @@ void handle_server_setting_bitwise(
     if (NULL == psoption->bitwise.support_names) {
       /* First time we get this packet. */
       fc_assert(NULL == psoption->bitwise.pretty_names);
-      psoption->bitwise.support_names = strvec_new();
-      strvec_reserve(psoption->bitwise.support_names, packet->bits_num);
-      psoption->bitwise.pretty_names = strvec_new();
-      strvec_reserve(psoption->bitwise.pretty_names, packet->bits_num);
+      psoption->bitwise.support_names = new QVector<QString>;
+      psoption->bitwise.support_names->resize(packet->bits_num);
+      psoption->bitwise.pretty_names = new QVector<QString>;
+      psoption->bitwise.pretty_names->resize(packet->bits_num);
       for (i = 0; i < packet->bits_num; i++) {
-        strvec_set(psoption->bitwise.support_names, i,
-                   packet->support_names[i]);
+        psoption->bitwise.support_names->replace(i,
+                                                 packet->support_names[i]);
         /* Store untranslated string from server. */
-        strvec_set(psoption->bitwise.pretty_names, i,
-                   packet->pretty_names[i]);
+        psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
-    } else if (strvec_size(psoption->bitwise.support_names)
+    } else if (psoption->bitwise.support_names->count()
                != packet->bits_num) {
-      fc_assert(strvec_size(psoption->bitwise.support_names)
-                == strvec_size(psoption->bitwise.pretty_names));
+      fc_assert(psoption->bitwise.support_names->count()
+                == psoption->bitwise.pretty_names->count());
       /* The number of values have changed, we need to reset the list
        * of possible values. */
-      strvec_reserve(psoption->bitwise.support_names, packet->bits_num);
-      strvec_reserve(psoption->bitwise.pretty_names, packet->bits_num);
+      psoption->bitwise.support_names->resize(packet->bits_num);
+      psoption->bitwise.pretty_names->resize(packet->bits_num);
       for (i = 0; i < packet->bits_num; i++) {
-        strvec_set(psoption->bitwise.support_names, i,
-                   packet->support_names[i]);
+        psoption->bitwise.support_names->replace(i,
+                                                 packet->support_names[i]);
         /* Store untranslated string from server. */
-        strvec_set(psoption->bitwise.pretty_names, i,
-                   packet->pretty_names[i]);
+        psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
       need_gui_remove = TRUE;
       need_gui_add = TRUE;
@@ -3225,18 +3222,18 @@ void handle_server_setting_bitwise(
       const char *str;
 
       for (i = 0; i < packet->bits_num; i++) {
-        str = strvec_get(psoption->bitwise.pretty_names, i);
+        str = qUtf8Printable(psoption->bitwise.pretty_names->at(i));
         if (NULL == str || 0 != strcmp(str, packet->pretty_names[i])) {
           /* Store untranslated string from server. */
-          strvec_set(psoption->bitwise.pretty_names, i,
-                     packet->pretty_names[i]);
+          psoption->bitwise.pretty_names->replace(i,
+                                                  packet->pretty_names[i]);
           need_gui_remove = TRUE;
           need_gui_add = TRUE;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
-        strvec_set(psoption->bitwise.support_names, i,
-                   packet->support_names[i]);
+        psoption->bitwise.support_names->replace(i,
+                                                 packet->support_names[i]);
       }
     }
   }
@@ -3457,7 +3454,7 @@ static const char *server_option_str_def(const struct option *poption)
    Returns the possible string values of this server option of type
    OT_STRING.
  ****************************************************************************/
-static const struct strvec *
+static const QVector<QString> *
 server_option_str_values(const struct option *poption)
 {
   Q_UNUSED(poption)
@@ -3563,7 +3560,7 @@ static unsigned server_option_bitwise_def(const struct option *poption)
    Returns the user-visible, translatable (but untranslated) "pretty" names
    of this server option of type OT_BITWISE.
  ****************************************************************************/
-static const struct strvec *
+static const QVector<QString> *
 server_option_bitwise_pretty(const struct option *poption)
 {
   return SERVER_OPTION(poption)->bitwise.pretty_names;
@@ -3572,19 +3569,19 @@ server_option_bitwise_pretty(const struct option *poption)
 /************************************************************************/ /**
    Compute the long support names of a value.
  ****************************************************************************/
-static void server_option_bitwise_support_base(const struct strvec *values,
-                                               unsigned val, char *buf,
-                                               size_t buf_len)
+static void
+server_option_bitwise_support_base(const QVector<QString> *values,
+                                   unsigned val, char *buf, size_t buf_len)
 {
   int bit;
 
   buf[0] = '\0';
-  for (bit = 0; bit < strvec_size(values); bit++) {
+  for (bit = 0; bit < values->count(); bit++) {
     if ((1 << bit) & val) {
       if ('\0' != buf[0]) {
         fc_strlcat(buf, "|", buf_len);
       }
-      fc_strlcat(buf, strvec_get(values, bit), buf_len);
+      fc_strlcat(buf, qUtf8Printable(values->at(bit)), buf_len);
     }
   }
 }
@@ -3617,7 +3614,7 @@ static void server_option_bitwise_support_name(const struct option *poption,
                                                char *def_buf, size_t def_len)
 {
   const struct server_option *psoption = SERVER_OPTION(poption);
-  const struct strvec *values = psoption->bitwise.support_names;
+  const QVector<QString> *values = psoption->bitwise.support_names;
 
   if (NULL != val_buf && 0 < val_len) {
     server_option_bitwise_support_base(values, psoption->bitwise.value,
@@ -4032,8 +4029,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
                   : minor >= 0);
            minor--) {
         fc_snprintf(name_buffer, sizeof(name_buffer),
-                    "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR, major,
-                    minor);
+                    "%s%cfreeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
+                    major, minor);
         if (0 == fc_stat(name_buffer, &buf)) {
           if (MAJOR_NEW_OPTION_FILE_NAME != major
               || MINOR_NEW_OPTION_FILE_NAME != minor) {
@@ -4065,8 +4062,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
         minor = FIRST_MINOR_NEW_OPTION_FILE_NAME;
          minor >= FIRST_MINOR_MID_OPTION_FILE_NAME; minor--) {
       fc_snprintf(name_buffer, sizeof(name_buffer),
-                  "%s%c.freeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR, major,
-                  minor);
+                  "%s%c.freeciv-client-rc-%d.%d", name, DIR_SEPARATOR_CHAR,
+                  major, minor);
       if (0 == fc_stat(name_buffer, &buf)) {
         qInfo(_("Didn't find '%s' option file, "
                 "loading from '%s' instead."),
@@ -4081,8 +4078,8 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
     }
 
     /* Try with the old one. */
-    fc_snprintf(name_buffer, sizeof(name_buffer),
-                "%s%c%s", name, DIR_SEPARATOR_CHAR, OLD_OPTION_FILE_NAME);
+    fc_snprintf(name_buffer, sizeof(name_buffer), "%s%c%s", name,
+                DIR_SEPARATOR_CHAR, OLD_OPTION_FILE_NAME);
     if (0 == fc_stat(name_buffer, &buf)) {
       qInfo(_("Didn't find '%s' option file, "
               "loading from '%s' instead."),
@@ -4768,13 +4765,14 @@ void options_init(void)
       }
 
       if (NULL == option_str_def(poption)) {
-        const struct strvec *values = option_str_values(poption);
+        const QVector<QString> *values = option_str_values(poption);
 
-        if (NULL == values || strvec_size(values) == 0) {
+        if (NULL == values || values->count() == 0) {
           qCritical("Invalid NULL default string for option %s.",
                     option_name(poption));
         } else {
-          *((const char **) &(pcoption->string.def)) = strvec_get(values, 0);
+          *((const char **) &(pcoption->string.def)) =
+              qUtf8Printable(values->at(0));
         }
       }
       break;
@@ -4999,7 +4997,7 @@ static void menu_music_enable_callback(struct option *poption)
 /************************************************************************/ /**
    Option framework wrapper for mapimg_get_format_list()
  ****************************************************************************/
-static const struct strvec *
+static const QVector<QString> *
 get_mapimg_format_list(const struct option *poption)
 {
   Q_UNUSED(poption)

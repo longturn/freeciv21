@@ -63,7 +63,6 @@
 #define FREECIV_SCENARIO_PATH "FREECIV_SCENARIO_PATH"
 #endif
 
-
 static QString default_data_path()
 {
   QString path = QString(".%1data%1%2%3%4")
@@ -954,9 +953,9 @@ const QStringList *get_scenario_dirs(void)
    The suffixes are removed from the filenames before the list is
    returned.
  ****************************************************************************/
-struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
-{
-  struct strvec *files = strvec_new();
+struct QVector<QString> *fileinfolist(const QStringList *dirs,
+                                      const char *suffix) {
+  QVector<QString> *files = new QVector<QString>();
 
   fc_assert_ret_val(!strchr(suffix, DIR_SEPARATOR_CHAR), NULL);
 
@@ -978,14 +977,11 @@ struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
     dir.setNameFilters({QStringLiteral("*") + QString::fromUtf8(suffix)});
     for (auto name : dir.entryList()) {
       name.truncate(name.length() - qstrlen(suffix));
-      strvec_append(files, name.toUtf8().data());
+      files->append(name.toUtf8().data());
     }
   }
-
-  /* Sort the list and remove duplications. */
-  strvec_remove_duplicate(files, strcmp);
-  strvec_sort(files, compare_strings_strvec);
-
+  files->erase(std::unique(files->begin(), files->end() ), files->end());
+  std::sort(files->begin(), files->end() );
   return files;
 }
 
@@ -1005,7 +1001,8 @@ struct strvec *fileinfolist(const QStringList *dirs, const char *suffix)
 
    TODO: Make this re-entrant
  ****************************************************************************/
-const char *fileinfoname(const QStringList *dirs, const char *filename)
+const char *
+fileinfoname(const QStringList *dirs, const char *filename)
 {
 #ifndef DIR_SEPARATOR_IS_DEFAULT
   char fnbuf[filename != NULL ? qstrlen(filename) + 1 : 1];

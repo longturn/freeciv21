@@ -2730,7 +2730,7 @@ void mr_menu::tileset_custom_load()
   QLabel *label;
   QPushButton *but;
   QVBoxLayout *layout;
-  const struct strvec *tlset_list;
+  const QVector<QString> *tlset_list;
   const struct option *poption;
   QStringList sl;
 
@@ -2751,14 +2751,12 @@ void mr_menu::tileset_custom_load()
     on_bytes = s.toLocal8Bit();
     poption = optset_option_by_name(client_optset, on_bytes.data());
     tlset_list = get_tileset_list(poption);
-    strvec_iterate(tlset_list, value)
-    {
+    for (auto value : *tlset_list) {
       but = new QPushButton(value);
       connect(but, &QAbstractButton::clicked, this,
               &mr_menu::load_new_tileset);
       layout->addWidget(but);
     }
-    strvec_iterate_end;
   }
   dialog->setSizeGripEnabled(true);
   dialog->setLayout(layout);
@@ -2939,8 +2937,7 @@ void mr_menu::save_game_as()
   QString current_file;
   QString location;
 
-  for (auto dirname : *get_save_dirs())
-  {
+  for (auto dirname : *get_save_dirs()) {
     location = dirname;
     // choose last location
   }

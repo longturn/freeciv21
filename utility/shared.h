@@ -171,7 +171,8 @@ const QStringList *get_scenario_dirs(void);
 
 void free_data_dir_names(void);
 
-struct strvec *fileinfolist(const QStringList *dirs, const char *suffix);
+struct QVector<QString> *fileinfolist(const QStringList *dirs,
+                                      const char *suffix);
 struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
                                          const char *infix, bool nodups);
 const char *fileinfoname(const QStringList *dirs, const char *filename);
@@ -406,5 +407,3 @@ static inline struct cf_sequence cf_end(void)
 }
 
 bool formats_match(const char *format1, const char *format2);
-
-
