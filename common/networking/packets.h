@@ -177,3 +177,6 @@ bool packet_check(struct data_in *din, struct connection *pc);
 
 void packet_strvec_compute(char *str, QVector<QString> *qstrvec);
 void packet_strvec_extract(QVector<QString> *qstrvec, const char *str);
+void qstrvec_from_str(QVector<QString> *, char separator, const char *str);
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
+                    size_t buf_len);

@@ -843,5 +843,52 @@ void packet_strvec_extract(QVector<QString> *qstrvec, const char *str)
   }
 }
 
-// #define PACKET_STRVEC_COMPUTE(str, qstrvec)
-// #define PACKET_STRVEC_EXTRACT(qstrvec, str)
+/**********************************************************************/ /**
+   Build the string from a string vector.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_from_str().
+ **************************************************************************/
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
+                    size_t buf_len)
+{
+  QString s;
+
+  for (auto str : *psv) {
+    s = s + str + separator;
+  }
+  qstrncpy(buf, qUtf8Printable(s), s.count());
+  qInfo() << buf;
+}
+
+/**********************************************************************/ /**
+   Build the string vector from a string until 'str_size' bytes are read.
+   Passing -1 for 'str_size' will assume 'str' as the expected format. Note
+   it's a bit dangerous.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_to_str().
+ **************************************************************************/
+void qstrvec_from_str(QVector<QString> *psv, char separator, const char *str)
+{
+  const char *p;
+  char *new_str;
+
+  psv->clear();
+  while ((p = strchr(str, separator))) {
+    new_str = new char[p - str + 1];
+    memcpy(new_str, str, p - str);
+    new_str[p - str] = '\0';
+    qInfo() << "0:::" << new_str;
+    psv->append(new_str);
+    str = p + 1;
+    // delete new_str ?
+  }
+  if ('\0' != *str) {
+    qInfo() << "1:::" << str;
+    psv->append(str);
+  }
+}
+

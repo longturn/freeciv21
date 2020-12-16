@@ -12,9 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <QString>
-#include <QVector>
-
 /* utility */
 #include "support.h" /* bool type. */
 
@@ -50,12 +47,6 @@ const char *strvec_to_or_list(const struct strvec *psv,
                               struct astring *astr);
 const char *strvec_to_and_list(const struct strvec *psv,
                                struct astring *astr);
-
-void qstrvec_store(QVector<QString> *psv, const char *const *vec,
-                   size_t size);
-void qstrvec_from_str(QVector<QString> *, char separator, const char *str);
-void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
-                    size_t buf_len);
 
 /* Iteration macro. */
 #define strvec_iterate(psv, str)                                            \
