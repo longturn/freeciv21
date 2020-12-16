@@ -11,6 +11,7 @@
 #pragma once
 
 /* utility */
+#include "megaenums.h"
 #include "support.h" /* bool type */
 
 /* common */
@@ -181,15 +182,9 @@ struct client_options {
 
 extern struct client_options gui_options;
 
-#define SPECENUM_NAME option_type
-#define SPECENUM_VALUE0 OT_BOOLEAN
-#define SPECENUM_VALUE1 OT_INTEGER
-#define SPECENUM_VALUE2 OT_STRING
-#define SPECENUM_VALUE3 OT_ENUM
-#define SPECENUM_VALUE4 OT_BITWISE
-#define SPECENUM_VALUE5 OT_FONT
-#define SPECENUM_VALUE6 OT_COLOR
-#include "specenum_gen.h"
+DECLARE_ENUM_WITH_TYPE(option_type, int32_t, OT_BOOLEAN = 0, OT_INTEGER = 1,
+                       OT_STRING = 2, OT_ENUM = 3, OT_BITWISE = 4,
+                       OT_FONT = 5, OT_COLOR = 6);
 
 struct option;     /* Opaque type. */
 struct option_set; /* Opaque type. */
@@ -330,5 +325,3 @@ struct tileset;
 const char *tileset_name_for_topology(int topology_id);
 void option_set_default_ts(struct tileset *t);
 void fill_topo_ts_default(void);
-
-

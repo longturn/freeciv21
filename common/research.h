@@ -12,7 +12,6 @@
 ****************************************************************************/
 #pragma once
 
-
 /* utility */
 #include "iterator.h"
 #include "megaenums.h"
@@ -22,7 +21,8 @@
 #include "fc_types.h"
 #include "tech.h"
 
-DECLARE_ENUM_WITH_TYPE(tech_state, int32_t, TECH_UNKNOWN = 0, TECH_PREREQS_KNOWN = 1, TECH_KNOWN = 2);
+DECLARE_ENUM_WITH_TYPE(tech_state, int32_t, TECH_UNKNOWN = 0,
+                       TECH_PREREQS_KNOWN = 1, TECH_KNOWN = 2);
 
 struct research {
   /* The number of techs and future techs the player has
@@ -157,5 +157,3 @@ struct iterator *research_player_iter_init(struct research_player_iter *it,
                   research_player_iter_sizeof, research_player_iter_init,   \
                   _presearch)
 #define research_players_iterate_end generic_iterate_end
-
-
