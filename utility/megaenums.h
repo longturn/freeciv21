@@ -51,7 +51,20 @@ std::map<T, std::string> generateEnumMap(std::string strMap)
     static auto map = generateEnumMap<T>(#__VA_ARGS__);                     \
     return map;                                                             \
   }                                                                         \
-  inline std::string E##_name(E enumTmp)                                    \
+  inline const char *E##_name(E enumTmp)                                    \
   {                                                                         \
-    return E##MapName().at(static_cast<T>(enumTmp));                        \
+    return (E##MapName().at(static_cast<T>(enumTmp))).c_str();              \
+  }                                                                         \
+  inline const size_t E##_count(E enumTmp)                                  \
+  {                                                                         \
+    (void) enumTmp;                                                         \
+    return E##MapName().size();                                             \
+  }                                                                         \
+  inline const bool E##_is_valid(T value)                                   \
+  {                                                                         \
+    return (E##MapName().find(value) != E##MapName().end());                \
+  }                                                                         \
+  inline std::string E##_by_name(E value)                                   \
+  {                                                                         \
+    return (E##MapName().at(value));                                        \
   }
