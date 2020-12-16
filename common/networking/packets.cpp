@@ -833,14 +833,15 @@ void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
     str[0] = '\0';
   }
 }
-void packet_strvec_extract(QVector<QString> *qstrvec, const char *str)
+
+QVector<QString> *packet_strvec_extract(const char *str)
 {
+  QVector<QString> *qstrvec = nullptr;
   if ('\0' != str[0]) {
     qstrvec = new QVector<QString>;
     qstrvec_from_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
-  } else {
-    qstrvec = NULL;
   }
+  return qstrvec;
 }
 
 /**********************************************************************/ /**
@@ -859,7 +860,6 @@ void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
     s = s + str + separator;
   }
   qstrncpy(buf, qUtf8Printable(s), s.count());
-  qInfo() << buf;
 }
 
 /**********************************************************************/ /**
@@ -881,13 +881,11 @@ void qstrvec_from_str(QVector<QString> *psv, char separator, const char *str)
     new_str = new char[p - str + 1];
     memcpy(new_str, str, p - str);
     new_str[p - str] = '\0';
-    qInfo() << "0:::" << new_str;
     psv->append(new_str);
     str = p + 1;
-    // delete new_str ?
+    delete[] new_str;
   }
   if ('\0' != *str) {
-    qInfo() << "1:::" << str;
     psv->append(str);
   }
 }

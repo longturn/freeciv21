@@ -3361,7 +3361,7 @@ void handle_ruleset_unit_class(const struct packet_ruleset_unit_class *p)
   c->non_native_def_pct = p->non_native_def_pct;
   c->flags = p->flags;
 
-  packet_strvec_extract(c->helptext, p->helptext);
+  c->helptext = packet_strvec_extract(p->helptext);
 }
 
 /************************************************************************/ /**
@@ -3428,7 +3428,7 @@ void handle_ruleset_unit(const struct packet_ruleset_unit *p)
     }
   }
 
-  packet_strvec_extract(u->helptext, p->helptext);
+  u->helptext = packet_strvec_extract(p->helptext);
 
   u->adv.worker = p->worker;
 
@@ -3608,7 +3608,7 @@ void handle_ruleset_tech(const struct packet_ruleset_tech *p)
   a->flags = p->flags;
   a->cost = p->cost;
   a->num_reqs = p->num_reqs;
-  packet_strvec_extract(a->helptext, p->helptext);
+  a->helptext = packet_strvec_extract(p->helptext);
 
   tileset_setup_tech_type(tileset, a);
 }
@@ -3679,7 +3679,8 @@ void handle_ruleset_building(const struct packet_ruleset_building *p)
   b->upkeep = p->upkeep;
   b->sabotage = p->sabotage;
   b->flags = p->flags;
-  packet_strvec_extract(b->helptext, p->helptext);
+  b->helptext = packet_strvec_extract(p->helptext);
+
   sz_strlcpy(b->soundtag, p->soundtag);
   sz_strlcpy(b->soundtag_alt, p->soundtag_alt);
 
@@ -3728,7 +3729,7 @@ void handle_ruleset_multiplier(const struct packet_ruleset_multiplier *p)
   }
   fc_assert(pmul->reqs.size == p->reqs_count);
 
-  packet_strvec_extract(pmul->helptext, p->helptext);
+  pmul->helptext = packet_strvec_extract(p->helptext);
 }
 
 /************************************************************************/ /**
@@ -3752,7 +3753,7 @@ void handle_ruleset_government(const struct packet_ruleset_government *p)
   sz_strlcpy(gov->graphic_str, p->graphic_str);
   sz_strlcpy(gov->graphic_alt, p->graphic_alt);
 
-  packet_strvec_extract(gov->helptext, p->helptext);
+  gov->helptext = packet_strvec_extract(p->helptext);
 
   tileset_setup_government(tileset, gov);
 }
@@ -3840,7 +3841,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   fc_assert_ret(pterrain->rgb == NULL);
   pterrain->rgb = rgbcolor_new(p->color_red, p->color_green, p->color_blue);
 
-  packet_strvec_extract(pterrain->helptext, p->helptext);
+  pterrain->helptext = packet_strvec_extract(p->helptext);
 
   tileset_setup_tile_type(tileset, pterrain);
 }
@@ -4022,7 +4023,7 @@ void handle_ruleset_extra(const struct packet_ruleset_extra *p)
   pextra->bridged_over = p->bridged_over;
   pextra->conflicts = p->conflicts;
 
-  packet_strvec_extract(pextra->helptext, p->helptext);
+  pextra->helptext = packet_strvec_extract(p->helptext);
 
   tileset_setup_extra(tileset, pextra);
 }
@@ -4125,7 +4126,7 @@ void handle_ruleset_goods(const struct packet_ruleset_goods *p)
   pgood->onetime_pct = p->onetime_pct;
   pgood->flags = p->flags;
 
-  packet_strvec_extract(pgood->helptext, p->helptext);
+  pgood->helptext = packet_strvec_extract(p->helptext);
 }
 
 /************************************************************************/ /**
@@ -4581,7 +4582,7 @@ void handle_ruleset_specialist(const struct packet_ruleset_specialist *p)
   }
   fc_assert(s->reqs.size == p->reqs_count);
 
-  packet_strvec_extract(s->helptext, p->helptext);
+  s->helptext = packet_strvec_extract(p->helptext);
 
   tileset_setup_specialist_type(tileset, p->id);
 }
