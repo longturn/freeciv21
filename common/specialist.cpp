@@ -58,7 +58,7 @@ void specialists_free(void)
 
     requirement_vector_free(&p->reqs);
     if (NULL != p->helptext) {
-      strvec_destroy(p->helptext);
+      delete p->helptext;
       p->helptext = NULL;
     }
   }

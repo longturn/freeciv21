@@ -44,7 +44,7 @@
  * All values 0<=size<COMPRESSION_BORDER are uncompressed packets.
  */
 #define COMPRESSION_BORDER (16 * 1024 + 1)
-
+#define PACKET_STRVEC_SEPARATOR '\3'
 /*
  * All compressed packets this size or greater are sent as a jumbo packet.
  */
@@ -824,3 +824,24 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
    All connections must have been closed.
  **************************************************************************/
 void packets_deinit(void) { packet_handlers_free(); }
+
+void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
+{
+  if (NULL != qstrvec) {
+    qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str, sizeof(str));
+  } else {
+    str[0] = '\0';
+  }
+}
+void packet_strvec_extract(QVector<QString> *qstrvec, const char *str)
+{
+  if ('\0' != str[0]) {
+    qstrvec = new QVector<QString>;
+    qstrvec_from_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
+  } else {
+    qstrvec = NULL;
+  }
+}
+
+// #define PACKET_STRVEC_COMPUTE(str, qstrvec)
+// #define PACKET_STRVEC_EXTRACT(qstrvec, str)

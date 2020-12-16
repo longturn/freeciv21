@@ -118,7 +118,7 @@ void extras_free(void)
     requirement_vector_free(&(extras[i].disappearance_reqs));
 
     if (NULL != extras[i].helptext) {
-      strvec_destroy(extras[i].helptext);
+      delete extras[i].helptext;
       extras[i].helptext = NULL;
     }
   }

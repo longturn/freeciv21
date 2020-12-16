@@ -57,7 +57,7 @@ void terrains_free(void)
   terrain_type_iterate(pterrain)
   {
     if (NULL != pterrain->helptext) {
-      strvec_destroy(pterrain->helptext);
+      delete pterrain->helptext;
       pterrain->helptext = NULL;
     }
     if (pterrain->resources != NULL) {

@@ -855,17 +855,18 @@ static char *lookup_string(struct section_file *file, const char *prefix,
 /**********************************************************************/ /**
    Lookup optional string vector, returning allocated memory or NULL.
  **************************************************************************/
-static struct strvec *lookup_strvec(struct section_file *file,
-                                    const char *prefix, const char *suffix)
+static QVector<QString> *lookup_strvec(struct section_file *file,
+                                       const char *prefix,
+                                       const char *suffix)
 {
   size_t dim;
   const char **vec =
       secfile_lookup_str_vec(file, &dim, "%s.%s", prefix, suffix);
 
   if (NULL != vec) {
-    struct strvec *dest = strvec_new();
+    QVector<QString> *dest = new QVector<QString>;
+    qstrvec_store(dest, vec, dim);
 
-    strvec_store(dest, vec, dim);
     delete[] vec;
     return dest;
   }
@@ -7251,7 +7252,7 @@ static void send_ruleset_unit_classes(struct conn_list *dest)
     packet.non_native_def_pct = c->non_native_def_pct;
     packet.flags = c->flags;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, c->helptext);
+    packet_strvec_compute(packet.helptext, c->helptext);
 
     lsend_packet_ruleset_unit_class(dest, &packet);
   }
@@ -7364,7 +7365,7 @@ static void send_ruleset_units(struct conn_list *dest)
         packet.work_raise_chance[i] = vlevel->work_raise_chance;
       }
     }
-    PACKET_STRVEC_COMPUTE(packet.helptext, u->helptext);
+    packet_strvec_compute(packet.helptext, u->helptext);
 
     packet.worker = u->adv.worker;
 
@@ -7412,7 +7413,7 @@ static void send_ruleset_specialists(struct conn_list *dest)
     requirement_vector_iterate_end;
     packet.reqs_count = j;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, s->helptext);
+    packet_strvec_compute(packet.helptext, s->helptext);
 
     lsend_packet_ruleset_specialist(dest, &packet);
   }
@@ -7525,7 +7526,7 @@ static void send_ruleset_techs(struct conn_list *dest)
     packet.flags = a->flags;
     packet.cost = a->cost;
     packet.num_reqs = a->num_reqs;
-    PACKET_STRVEC_COMPUTE(packet.helptext, a->helptext);
+    packet_strvec_compute(packet.helptext, a->helptext);
 
     lsend_packet_ruleset_tech(dest, &packet);
   }
@@ -7566,7 +7567,7 @@ static void send_ruleset_buildings(struct conn_list *dest)
     packet.flags = b->flags;
     sz_strlcpy(packet.soundtag, b->soundtag);
     sz_strlcpy(packet.soundtag_alt, b->soundtag_alt);
-    PACKET_STRVEC_COMPUTE(packet.helptext, b->helptext);
+    packet_strvec_compute(packet.helptext, b->helptext);
 
     lsend_packet_ruleset_building(dest, &packet);
   }
@@ -7676,7 +7677,7 @@ static void send_ruleset_terrain(struct conn_list *dest)
     packet.color_green = pterrain->rgb->g;
     packet.color_blue = pterrain->rgb->b;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, pterrain->helptext);
+    packet_strvec_compute(packet.helptext, pterrain->helptext);
 
     lsend_packet_ruleset_terrain(dest, &packet);
   }
@@ -7819,7 +7820,7 @@ static void send_ruleset_extras(struct conn_list *dest)
     packet.bridged_over = e->bridged_over;
     packet.conflicts = e->conflicts;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, e->helptext);
+    packet_strvec_compute(packet.helptext, e->helptext);
 
     lsend_packet_ruleset_extra(dest, &packet);
   }
@@ -7922,7 +7923,7 @@ static void send_ruleset_goods(struct conn_list *dest)
     packet.onetime_pct = g->onetime_pct;
     packet.flags = g->flags;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, g->helptext);
+    packet_strvec_compute(packet.helptext, g->helptext);
 
     lsend_packet_ruleset_goods(dest, &packet);
   }
@@ -8134,7 +8135,7 @@ static void send_ruleset_governments(struct conn_list *dest)
     sz_strlcpy(gov.rule_name, rule_name_get(&g->name));
     sz_strlcpy(gov.graphic_str, g->graphic_str);
     sz_strlcpy(gov.graphic_alt, g->graphic_alt);
-    PACKET_STRVEC_COMPUTE(gov.helptext, g->helptext);
+    packet_strvec_compute(gov.helptext, g->helptext);
 
     lsend_packet_ruleset_government(dest, &gov);
 
@@ -8364,7 +8365,7 @@ static void send_ruleset_multipliers(struct conn_list *dest)
     requirement_vector_iterate_end;
     packet.reqs_count = j;
 
-    PACKET_STRVEC_COMPUTE(packet.helptext, pmul->helptext);
+    packet_strvec_compute(packet.helptext, pmul->helptext);
 
     lsend_packet_ruleset_multiplier(dest, &packet);
   }

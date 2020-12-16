@@ -64,7 +64,7 @@ void improvements_init(void)
 static void improvement_free(struct impr_type *p)
 {
   if (NULL != p->helptext) {
-    strvec_destroy(p->helptext);
+    delete p->helptext;
     p->helptext = NULL;
   }
 

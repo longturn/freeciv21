@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* utility */
 #include "bitvector.h"
 #include "shared.h"
@@ -128,7 +127,7 @@ struct advance {
   struct requirement_vector research_reqs;
 
   bv_tech_flags flags;
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 
   /*
    * Message displayed to the first player to get a bonus tech
@@ -282,5 +281,3 @@ struct iterator *advance_root_req_iter_init(struct advance_root_req_iter *it,
                   _padvance, advance_root_req_iter_sizeof,                  \
                   advance_root_req_iter_init, _goal)
 #define advance_root_req_iterate_end generic_iterate_end
-
-

@@ -43,7 +43,7 @@ struct government {
   struct requirement_vector reqs;
   QHash<const struct nation_type *, struct ruler_title *> *ruler_titles;
   int changed_to_times;
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 
   /* AI cached data for this government. */
   struct {

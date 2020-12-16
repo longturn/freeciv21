@@ -50,7 +50,7 @@ void multipliers_free(void)
   {
     requirement_vector_free(&(pmul->reqs));
     if (pmul->helptext) {
-      strvec_destroy(pmul->helptext);
+      delete pmul->helptext;
       pmul->helptext = NULL;
     }
   }

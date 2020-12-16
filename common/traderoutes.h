@@ -12,7 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
 #include "support.h" /* bool */
 
 struct city;
@@ -185,7 +184,7 @@ struct goods_type {
 
   bv_goods_flags flags;
 
-  struct strvec *helptext;
+  QVector<QString> *helptext;
 };
 
 void goods_init(void);
@@ -229,5 +228,3 @@ bool city_receives_goods(const struct city *pcity,
   }                                                                         \
   }                                                                         \
   goods_type_iterate_end;
-
-

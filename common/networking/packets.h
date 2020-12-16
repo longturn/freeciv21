@@ -175,20 +175,5 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
                      enum packet_type packet_type);
 bool packet_check(struct data_in *din, struct connection *pc);
 
-/* Utilities to exchange strings and string vectors. */
-#define PACKET_STRVEC_SEPARATOR '\3'
-#define PACKET_STRVEC_COMPUTE(str, strvec)                                  \
-  if (NULL != strvec) {                                                     \
-    strvec_to_str(strvec, PACKET_STRVEC_SEPARATOR, str, sizeof(str));       \
-  } else {                                                                  \
-    str[0] = '\0';                                                          \
-  }
-#define PACKET_STRVEC_EXTRACT(strvec, str)                                  \
-  if ('\0' != str[0]) {                                                     \
-    strvec = strvec_new();                                                  \
-    strvec_from_str(strvec, PACKET_STRVEC_SEPARATOR, str);                  \
-  } else {                                                                  \
-    strvec = NULL;                                                          \
-  }
-
-
+void packet_strvec_compute(char *str, QVector<QString> *qstrvec);
+void packet_strvec_extract(QVector<QString> *qstrvec, const char *str);

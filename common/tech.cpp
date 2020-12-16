@@ -485,7 +485,7 @@ static void tech_free(Tech_type_id tech)
   struct advance *p = &advances[tech];
 
   if (NULL != p->helptext) {
-    strvec_destroy(p->helptext);
+    delete p->helptext;
     p->helptext = NULL;
   }
 

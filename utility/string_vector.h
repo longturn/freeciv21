@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QString>
+#include <QVector>
 
 /* utility */
 #include "support.h" /* bool type. */
@@ -25,7 +27,6 @@ void strvec_destroy(struct strvec *psv);
 
 void strvec_reserve(struct strvec *psv, size_t reserve);
 void strvec_store(struct strvec *psv, const char *const *vec, size_t size);
-void strvec_from_str(struct strvec *psv, char separator, const char *str);
 void strvec_clear(struct strvec *psv);
 void strvec_remove_empty(struct strvec *psv);
 void strvec_remove_duplicate(struct strvec *psv,
@@ -45,12 +46,16 @@ bool are_strvecs_equal(const struct strvec *stv1, const struct strvec *stv2);
 const char *const *strvec_data(const struct strvec *psv);
 bool strvec_index_valid(const struct strvec *psv, size_t svindex);
 const char *strvec_get(const struct strvec *psv, size_t svindex);
-void strvec_to_str(const struct strvec *psv, char separator, char *buf,
-                   size_t buf_len);
 const char *strvec_to_or_list(const struct strvec *psv,
                               struct astring *astr);
 const char *strvec_to_and_list(const struct strvec *psv,
                                struct astring *astr);
+
+void qstrvec_store(QVector<QString> *psv, const char *const *vec,
+                   size_t size);
+void qstrvec_from_str(QVector<QString> *, char separator, const char *str);
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
+                    size_t buf_len);
 
 /* Iteration macro. */
 #define strvec_iterate(psv, str)                                            \
@@ -63,5 +68,3 @@ const char *strvec_to_and_list(const struct strvec *psv,
 #define strvec_iterate_end                                                  \
   }                                                                         \
   }
-
-

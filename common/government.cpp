@@ -489,7 +489,7 @@ static inline void government_free(struct government *pgovern)
   FC_FREE(pgovern->ruler_titles);
 
   if (NULL != pgovern->helptext) {
-    strvec_destroy(pgovern->helptext);
+    delete pgovern->helptext;
     pgovern->helptext = NULL;
   }
 

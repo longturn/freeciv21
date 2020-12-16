@@ -373,7 +373,6 @@ int city_num_trade_routes(const struct city *pcity)
   return trade_route_list_size(pcity->routes);
 }
 
-
 /*********************************************************************/ /**
    Returns the maximum trade production of the tiles of the city.
  **************************************************************************/
@@ -536,7 +535,7 @@ void goods_free(void)
     requirement_vector_free(&(goods[i].reqs));
 
     if (NULL != goods[i].helptext) {
-      strvec_destroy(goods[i].helptext);
+      delete goods[i].helptext;
       goods[i].helptext = NULL;
     }
   }

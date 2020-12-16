@@ -1414,7 +1414,7 @@ bool role_units_translations(struct astring *astr, int flag, bool alts)
     }
     return TRUE;
   } else if (0 < count) {
-    const char **vec = new const char*[count];
+    const char **vec = new const char *[count];
     int i;
 
     for (i = 0; i < count; i++) {
@@ -2106,7 +2106,7 @@ void unit_types_init(void)
 static void unit_type_free(struct unit_type *punittype)
 {
   if (NULL != punittype->helptext) {
-    strvec_destroy(punittype->helptext);
+    delete punittype->helptext;
     punittype->helptext = NULL;
     requirement_vector_free(&(punittype->build_reqs));
   }
@@ -2279,7 +2279,7 @@ void unit_classes_free(void)
       unit_class_list_destroy(unit_classes[i].cache.subset_movers);
     }
     if (unit_classes[i].helptext != NULL) {
-      strvec_destroy(unit_classes[i].helptext);
+      delete unit_classes[i].helptext;
       unit_classes[i].helptext = NULL;
     }
   }

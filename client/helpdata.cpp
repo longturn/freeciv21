@@ -999,8 +999,8 @@ void boot_help_texts(void)
                 fc_snprintf(pitem->text, len, "%s %s\n\n%s", _(ts_name),
                             version, nodesc);
               } else {
-                len =
-                    qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(nodesc) + 1;
+                len = qstrlen(_(ts_name)) + qstrlen("\n\n") + qstrlen(nodesc)
+                      + 1;
 
                 pitem->text = new char[len + desc_len];
                 fc_snprintf(pitem->text, len, "%s\n\n%s", _(ts_name),
@@ -1038,13 +1038,11 @@ void boot_help_texts(void)
               pitem->topic = qstrdup(name);
               if (pmul->helptext) {
                 const char *sep = "";
-                strvec_iterate(pmul->helptext, text)
-                {
+                for (auto text : *pmul->helptext) {
                   cat_snprintf(help_text_buffer, sizeof(help_text_buffer),
-                               "%s%s", sep, text);
+                               "%s%s", sep, qUtf8Printable(text));
                   sep = "\n\n";
                 }
-                strvec_iterate_end;
               }
               pitem->text = qstrdup(help_text_buffer);
               help_nodes->append(pitem);
@@ -1218,11 +1216,9 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (NULL != pimprove->helptext) {
-    strvec_iterate(pimprove->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *pimprove->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   /* Add requirement text for improvement itself */
@@ -1690,11 +1686,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   cat_snprintf(buf, bufsz, _("* Belongs to %s unit class."),
                uclass_name_translation(pclass));
   if (NULL != pclass->helptext) {
-    strvec_iterate(pclass->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "\n%s\n", _(text));
+    for (auto text : *pclass->helptext) {
+      cat_snprintf(buf, bufsz, "\n%s\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   } else {
     CATLSTR(buf, bufsz, "\n");
   }
@@ -1785,7 +1779,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
    * when a unit type has multiple combat bonuses of the same kind. */
   combat_bonus_list_iterate(utype->bonuses, cbonus)
   {
-    const char **against = new const char*[utype_count()];
+    const char **against = new const char *[utype_count()];
     int targets = 0;
 
     if (cbonus->quiet) {
@@ -1914,7 +1908,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   }
   nations_iterate_end;
   {
-    const char **types = new const char*[utype_count()];
+    const char **types = new const char *[utype_count()];
     int i = 0;
 
     unit_type_iterate(utype2)
@@ -1967,7 +1961,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                  utype->pop_cost);
   }
   if (0 < utype->transport_capacity) {
-    const char **classes = new const char*[uclass_count()];
+    const char **classes = new const char *[uclass_count()];
     int i = 0;
     struct astring list = ASTRING_INIT;
 
@@ -2092,7 +2086,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
     if (BV_ISSET_ANY(embarks)) {
       /* Build list of embark exceptions */
-      const char **eclasses = new const char*[uclass_count()];
+      const char **eclasses = new const char *[uclass_count()];
 
       int i = 0;
       struct astring elist = ASTRING_INIT;
@@ -2126,7 +2120,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
     if (BV_ISSET_ANY(disembarks) && !BV_ARE_EQUAL(embarks, disembarks)) {
       /* Build list of disembark exceptions (if different from embarking) */
-      const char **dclasses = new const char*[uclass_count()];
+      const char **dclasses = new const char *[uclass_count()];
       int i = 0;
       struct astring dlist = ASTRING_INIT;
 
@@ -2250,7 +2244,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
   fuel = utype_fuel(utype);
   if (fuel > 0) {
-    const char **types = new const char*[utype_count()];
+    const char **types = new const char *[utype_count()];
     int i = 0;
 
     unit_type_iterate(transport)
@@ -2959,11 +2953,9 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   if (NULL != utype->helptext) {
-    strvec_iterate(utype->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *utype->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
   CATLSTR(buf, bufsz, user_text);
   return buf;
@@ -3200,11 +3192,9 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     if (strlen(buf) > 0) {
       CATLSTR(buf, bufsz, "\n");
     }
-    strvec_iterate(vap->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *vap->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   astr_free(&astr);
@@ -3266,7 +3256,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     CATLSTR(buf, bufsz, "\n");
   }
   {
-    const char **classes = new const char*[uclass_count()];
+    const char **classes = new const char *[uclass_count()];
     int i = 0;
 
     unit_class_iterate(uclass)
@@ -3314,11 +3304,9 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     if (buf[0] != '\0') {
       CATLSTR(buf, bufsz, "\n");
     }
-    strvec_iterate(pterrain->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *pterrain->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
   if (user_text && user_text[0] != '\0') {
     CATLSTR(buf, bufsz, "\n\n");
@@ -3530,11 +3518,9 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (pextra->helptext != NULL) {
-    strvec_iterate(pextra->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *pextra->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   /* Describe how extra is created and destroyed */
@@ -3762,7 +3748,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   {
-    const char **classes = new const char*[uclass_count()];
+    const char **classes = new const char *[uclass_count()];
     int i = 0;
 
     unit_class_iterate(uclass)
@@ -3977,11 +3963,9 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pgood->helptext) {
-    strvec_iterate(pgood->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *pgood->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   if (pgood->onetime_pct == 0) {
@@ -4031,11 +4015,9 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pspec->helptext) {
-    strvec_iterate(pspec->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *pspec->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   /* Requirements for this specialist. */
@@ -4072,11 +4054,9 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != gov->helptext) {
-    strvec_iterate(gov->helptext, text)
-    {
-      cat_snprintf(buf, bufsz, "%s\n\n", _(text));
+    for (auto text : *gov->helptext) {
+      cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
-    strvec_iterate_end;
   }
 
   /* Add requirement text for government itself */

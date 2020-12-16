@@ -132,36 +132,6 @@ void strvec_store(struct strvec *psv, const char *const *vec, size_t size)
 }
 
 /**********************************************************************/ /**
-   Build the string vector from a string until 'str_size' bytes are read.
-   Passing -1 for 'str_size' will assume 'str' as the expected format. Note
-   it's a bit dangerous.
-
-   This string format is a list of strings separated by 'separator'.
-
-   See also strvec_to_str().
- **************************************************************************/
-void strvec_from_str(struct strvec *psv, char separator, const char *str)
-{
-  const char *p;
-  char *new_str;
-
-  strvec_clear(psv);
-  while ((p = strchr(str, separator))) {
-    new_str = new char[p - str + 1];
-    memcpy(new_str, str, p - str);
-    new_str[p - str] = '\0';
-    psv->size++;
-    psv->vec = static_cast<char **>(
-        fc_realloc(psv->vec, psv->size * sizeof(char *)));
-    psv->vec[psv->size - 1] = new_str;
-    str = p + 1;
-  }
-  if ('\0' != *str) {
-    strvec_append(psv, str);
-  }
-}
-
-/**********************************************************************/ /**
    Remove all strings from the vector.
  **************************************************************************/
 void strvec_clear(struct strvec *psv)
@@ -394,37 +364,6 @@ const char *strvec_get(const struct strvec *psv, size_t svindex)
 }
 
 /**********************************************************************/ /**
-   Build the string from a string vector.
-
-   This string format is a list of strings separated by 'separator'.
-
-   See also strvec_from_str().
- **************************************************************************/
-void strvec_to_str(const struct strvec *psv, char separator, char *buf,
-                   size_t buf_len)
-{
-  int len;
-
-  strvec_iterate(psv, str)
-  {
-    len = fc_snprintf(buf, buf_len, "%s", str) + 1;
-    if (1 >= len) {
-      /* Truncated. */
-      return;
-    }
-
-    buf += len;
-    buf_len -= len;
-    if (0 < buf_len) {
-      *(buf - 1) = separator;
-    }
-  }
-  strvec_iterate_end;
-
-  buf[0] = '\0';
-}
-
-/**********************************************************************/ /**
    Build a localized string with the elements of the string vector. Elements
    will be "or"-separated.
 
@@ -447,4 +386,82 @@ const char *strvec_to_and_list(const struct strvec *psv,
 {
   fc_assert_ret_val(NULL != psv, NULL);
   return astr_build_and_list(astr, (const char **) psv->vec, psv->size);
+}
+
+/**********************************************************************/ /**
+   Build the string from a string vector.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_from_str().
+ **************************************************************************/
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
+                    size_t buf_len)
+{
+  int len;
+
+  for (auto str : *psv) {
+    len = fc_snprintf(buf, buf_len, "%s", qUtf8Printable(str)) + 1;
+    if (1 >= len) {
+      /* Truncated. */
+      return;
+    }
+
+    buf += len;
+    buf_len -= len;
+    if (0 < buf_len) {
+      *(buf - 1) = separator;
+    }
+  }
+
+  buf[0] = '\0';
+}
+/**********************************************************************/ /**
+   Build the string vector from a string until 'str_size' bytes are read.
+   Passing -1 for 'str_size' will assume 'str' as the expected format. Note
+   it's a bit dangerous.
+
+   This string format is a list of strings separated by 'separator'.
+
+   See also strvec_to_str().
+ **************************************************************************/
+void qstrvec_from_str(QVector<QString> *psv, char separator, const char *str)
+{
+  const char *p;
+  char *new_str;
+
+  psv->clear();
+  while ((p = strchr(str, separator))) {
+    new_str = new char[p - str + 1];
+    memcpy(new_str, str, p - str);
+    new_str[p - str] = '\0';
+    int size = psv->count();
+    psv->resize(psv->count() + 1);
+    psv->replace(size, new_str);
+    str = p + 1;
+  }
+  if ('\0' != *str) {
+    psv->append(str);
+  }
+}
+
+/**********************************************************************/ /**
+   Stores the string vector from a normal vector. If size == -1, it will
+   assume it is a NULL terminated vector.
+ **************************************************************************/
+void qstrvec_store(QVector<QString> *psv, const char *const *vec,
+                   size_t size)
+{
+  if (size == (size_t) -1) {
+    psv->clear();
+    for (; *vec; vec++) {
+      psv->append(*vec);
+    }
+  } else {
+    size_t i;
+    psv->resize(size);
+    for (i = 0; i < size; i++, vec++) {
+      psv->replace(i, *vec);
+    }
+  }
 }

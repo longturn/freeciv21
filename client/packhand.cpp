@@ -76,7 +76,6 @@
 #include "voteinfo_bar_g.h"
 
 /* client */
-#include "governor.h"
 #include "attribute.h"
 #include "audio.h"
 #include "client_main.h"
@@ -85,7 +84,8 @@
 #include "connectdlg_common.h"
 #include "control.h"
 #include "editor.h"
-#include "goto.h"     /* client_goto_init() */
+#include "goto.h" /* client_goto_init() */
+#include "governor.h"
 #include "helpdata.h" /* boot_help_texts() */
 #include "mapview_common.h"
 #include "music.h"
@@ -341,7 +341,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     client_info.emerg_version = 0;
 #endif
     qstrncpy(client_info.distribution, FREECIV_DISTRIBUTOR,
-            sizeof(client_info.distribution));
+             sizeof(client_info.distribution));
     send_packet_client_info(&client.conn, &client_info);
 
     /* we could always use hack, verify we're local */
@@ -850,7 +850,7 @@ void handle_city_info(const struct packet_city_info *packet)
 
   if (city_is_new && !city_has_changed_owner) {
     governor::i()->add_city_new(pcity);
-  } else { //city new and changed is the same call :P
+  } else { // city new and changed is the same call :P
     governor::i()->add_city_changed(pcity);
   }
 
@@ -3361,7 +3361,7 @@ void handle_ruleset_unit_class(const struct packet_ruleset_unit_class *p)
   c->non_native_def_pct = p->non_native_def_pct;
   c->flags = p->flags;
 
-  PACKET_STRVEC_EXTRACT(c->helptext, p->helptext);
+  packet_strvec_extract(c->helptext, p->helptext);
 }
 
 /************************************************************************/ /**
@@ -3428,7 +3428,7 @@ void handle_ruleset_unit(const struct packet_ruleset_unit *p)
     }
   }
 
-  PACKET_STRVEC_EXTRACT(u->helptext, p->helptext);
+  packet_strvec_extract(u->helptext, p->helptext);
 
   u->adv.worker = p->worker;
 
@@ -3608,7 +3608,7 @@ void handle_ruleset_tech(const struct packet_ruleset_tech *p)
   a->flags = p->flags;
   a->cost = p->cost;
   a->num_reqs = p->num_reqs;
-  PACKET_STRVEC_EXTRACT(a->helptext, p->helptext);
+  packet_strvec_extract(a->helptext, p->helptext);
 
   tileset_setup_tech_type(tileset, a);
 }
@@ -3679,7 +3679,7 @@ void handle_ruleset_building(const struct packet_ruleset_building *p)
   b->upkeep = p->upkeep;
   b->sabotage = p->sabotage;
   b->flags = p->flags;
-  PACKET_STRVEC_EXTRACT(b->helptext, p->helptext);
+  packet_strvec_extract(b->helptext, p->helptext);
   sz_strlcpy(b->soundtag, p->soundtag);
   sz_strlcpy(b->soundtag_alt, p->soundtag_alt);
 
@@ -3692,11 +3692,9 @@ void handle_ruleset_building(const struct packet_ruleset_building *p)
       log_debug("  upkeep      %2d", bdbg->upkeep);
       log_debug("  sabotage   %3d", bdbg->sabotage);
       if (NULL != bdbg->helptext) {
-        strvec_iterate(bdbg->helptext, text)
-        {
-          log_debug("  helptext    %s", text);
+        for (auto text : *bdbg->helptext) {
+          log_debug("  helptext    %s", qUtf8Printable(text));
         }
-        strvec_iterate_end;
       }
     }
     improvement_iterate_end;
@@ -3730,7 +3728,7 @@ void handle_ruleset_multiplier(const struct packet_ruleset_multiplier *p)
   }
   fc_assert(pmul->reqs.size == p->reqs_count);
 
-  PACKET_STRVEC_EXTRACT(pmul->helptext, p->helptext);
+  packet_strvec_extract(pmul->helptext, p->helptext);
 }
 
 /************************************************************************/ /**
@@ -3754,7 +3752,7 @@ void handle_ruleset_government(const struct packet_ruleset_government *p)
   sz_strlcpy(gov->graphic_str, p->graphic_str);
   sz_strlcpy(gov->graphic_alt, p->graphic_alt);
 
-  PACKET_STRVEC_EXTRACT(gov->helptext, p->helptext);
+  packet_strvec_extract(gov->helptext, p->helptext);
 
   tileset_setup_government(tileset, gov);
 }
@@ -3798,7 +3796,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   if (pterrain->resources != NULL) {
     delete[] pterrain->resources;
   }
-  pterrain->resources = new extra_type*[p->num_resources + 1]();
+  pterrain->resources = new extra_type *[p->num_resources + 1]();
   for (j = 0; j < p->num_resources; j++) {
     pterrain->resources[j] = extra_by_number(p->resources[j]);
     if (!pterrain->resources[j]) {
@@ -3842,7 +3840,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   fc_assert_ret(pterrain->rgb == NULL);
   pterrain->rgb = rgbcolor_new(p->color_red, p->color_green, p->color_blue);
 
-  PACKET_STRVEC_EXTRACT(pterrain->helptext, p->helptext);
+  packet_strvec_extract(pterrain->helptext, p->helptext);
 
   tileset_setup_tile_type(tileset, pterrain);
 }
@@ -4024,7 +4022,7 @@ void handle_ruleset_extra(const struct packet_ruleset_extra *p)
   pextra->bridged_over = p->bridged_over;
   pextra->conflicts = p->conflicts;
 
-  PACKET_STRVEC_EXTRACT(pextra->helptext, p->helptext);
+  packet_strvec_extract(pextra->helptext, p->helptext);
 
   tileset_setup_extra(tileset, pextra);
 }
@@ -4127,7 +4125,7 @@ void handle_ruleset_goods(const struct packet_ruleset_goods *p)
   pgood->onetime_pct = p->onetime_pct;
   pgood->flags = p->flags;
 
-  PACKET_STRVEC_EXTRACT(pgood->helptext, p->helptext);
+  packet_strvec_extract(pgood->helptext, p->helptext);
 }
 
 /************************************************************************/ /**
@@ -4583,7 +4581,7 @@ void handle_ruleset_specialist(const struct packet_ruleset_specialist *p)
   }
   fc_assert(s->reqs.size == p->reqs_count);
 
-  PACKET_STRVEC_EXTRACT(s->helptext, p->helptext);
+  packet_strvec_extract(s->helptext, p->helptext);
 
   tileset_setup_specialist_type(tileset, p->id);
 }
@@ -4843,7 +4841,7 @@ static action_id auto_attack_act(const struct act_prob *act_probs)
         /* Needs a target to be specified. */
         return ACTION_NONE;
         break;
-      Q_UNREACHABLE();
+        Q_UNREACHABLE();
       case ACTION_COUNT:
         fc_assert(act != ACTION_COUNT);
         break;
