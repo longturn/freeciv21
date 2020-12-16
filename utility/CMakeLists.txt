@@ -38,6 +38,7 @@ add_library(
   iterator.cpp
   log.cpp
   netfile.cpp
+  megaenums.cpp
   rand.cpp
   registry.cpp
   registry_ini.cpp

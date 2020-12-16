@@ -15,22 +15,14 @@
 
 /* utility */
 #include "iterator.h"
+#include "megaenums.h"
 #include "support.h"
 
 /* common */
 #include "fc_types.h"
 #include "tech.h"
 
-/* TECH_KNOWN is self-explanatory, TECH_PREREQS_KNOWN are those for which all
- * requirements are fulfilled; all others (including those which can never
- * be reached) are TECH_UNKNOWN. */
-#define SPECENUM_NAME tech_state
-/* TECH_UNKNOWN must be 0 as the code does no special initialisation after
- * memset(0), See researches_init(). */
-#define SPECENUM_VALUE0 TECH_UNKNOWN
-#define SPECENUM_VALUE1 TECH_PREREQS_KNOWN
-#define SPECENUM_VALUE2 TECH_KNOWN
-#include "specenum_gen.h"
+DECLARE_ENUM_WITH_TYPE(tech_state, int32_t, TECH_UNKNOWN = 0, TECH_PREREQS_KNOWN = 1, TECH_KNOWN = 2);
 
 struct research {
   /* The number of techs and future techs the player has
