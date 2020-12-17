@@ -80,8 +80,8 @@ static void func_destroy(struct luascript_func *pfunc)
    'missing_func_optional'.
  *****************************************************************************/
 bool luascript_func_check(struct fc_lua *fcl,
-                          struct strvec *missing_func_required,
-                          struct strvec *missing_func_optional)
+                          QVector<QString> *missing_func_required,
+                          QVector<QString> *missing_func_optional)
 {
   bool ret = TRUE;
 
@@ -94,9 +94,9 @@ bool luascript_func_check(struct fc_lua *fcl,
       fc_assert_ret_val(fcl->funcs->contains(func_name), FALSE);
       auto pfunc = fcl->funcs->value(func_name);
       if (pfunc->required) {
-        strvec_append(missing_func_required, func_name);
+        missing_func_required->append(func_name);
       } else {
-        strvec_append(missing_func_optional, func_name);
+        missing_func_optional->append(func_name);
       }
 
       ret = FALSE;

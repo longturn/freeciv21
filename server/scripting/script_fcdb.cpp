@@ -131,30 +131,28 @@ static void script_fcdb_functions_define(void)
 static bool script_fcdb_functions_check(const char *fcdb_luafile)
 {
   bool ret = TRUE;
-  struct strvec *missing_func_required = strvec_new();
-  struct strvec *missing_func_optional = strvec_new();
+  QVector<QString> *missing_func_required = new QVector<QString>;
+  QVector<QString> *missing_func_optional = new QVector<QString>;
 
   if (!luascript_func_check(fcl, missing_func_required,
                             missing_func_optional)) {
-    strvec_iterate(missing_func_required, func_name)
+    for (auto func_name : *missing_func_required)
     {
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
                 fcdb_luafile, func_name);
       ret = FALSE;
     }
-    strvec_iterate_end;
-    strvec_iterate(missing_func_optional, func_name)
+    for (auto func_name : *missing_func_optional)
     {
       qDebug("Database script '%s' does not define the optional "
              "function '%s'.",
              fcdb_luafile, func_name);
     }
-    strvec_iterate_end;
   }
 
-  strvec_destroy(missing_func_required);
-  strvec_destroy(missing_func_optional);
+  delete missing_func_required;
+  delete missing_func_optional;
 
   return ret;
 }
