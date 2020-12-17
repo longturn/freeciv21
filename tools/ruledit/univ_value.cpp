@@ -45,7 +45,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_ADVANCE:
     if (game.control.num_tech_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.advance = advance_by_number(A_NONE);
     return TRUE;
@@ -54,7 +54,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_IMPROVEMENT:
     if (game.control.num_impr_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.building = improvement_by_number(0);
     return TRUE;
@@ -63,13 +63,13 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_NATION:
     if (game.control.nation_count <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nation = nation_by_number(0);
     return TRUE;
   case VUT_UTYPE:
     if (game.control.num_unit_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.utype = utype_by_number(0);
     return TRUE;
@@ -78,7 +78,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_UCLASS:
     if (game.control.num_unit_classes <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.uclass = uclass_by_number(0);
     return TRUE;
@@ -90,7 +90,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_SPECIALIST:
     if (game.control.num_specialist_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.specialist = specialist_by_number(0);
     return TRUE;
@@ -120,7 +120,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_GOOD:
     if (game.control.num_goods_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.good = goods_by_number(0);
     return TRUE;
@@ -129,7 +129,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_NATIONALITY:
     if (game.control.nation_count <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nationality = nation_by_number(0);
     return TRUE;
@@ -141,7 +141,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_EXTRA:
     if (game.control.num_extra_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.extra = extra_by_number(0);
     return TRUE;
@@ -150,7 +150,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_ACHIEVEMENT:
     if (game.control.num_achievement_types <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.achievement = achievement_by_number(0);
     return TRUE;
@@ -162,7 +162,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_STYLE:
     if (game.control.num_styles <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.style = style_by_number(0);
     return TRUE;
@@ -192,7 +192,7 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_NATIONGROUP:
     if (nation_group_count() <= 0) {
-      return FALSE;
+      return false;
     }
     src->value.nationgroup = nation_group_by_number(0);
     return TRUE;
@@ -217,10 +217,10 @@ bool universal_value_initial(struct universal *src)
     return TRUE;
   case VUT_COUNT:
     fc_assert(src->kind != VUT_COUNT);
-    return FALSE;
+    return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 /********************************************************************/ /**
@@ -478,7 +478,7 @@ void universal_kind_values(struct universal *univ, univ_kind_values_cb cb,
   case VUT_AGE:
   case VUT_MINTECHS:
     /* Requirement types having numerical value */
-    cb(NULL, FALSE, data);
+    cb(NULL, false, data);
     break;
   case VUT_COUNT:
     fc_assert(univ->kind != VUT_COUNT);

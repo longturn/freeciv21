@@ -323,7 +323,7 @@ bool genlist_remove(struct genlist *pgenlist, const void *punlink)
 {
   struct genlist_link *plink;
 
-  fc_assert_ret_val(NULL != pgenlist, FALSE);
+  fc_assert_ret_val(NULL != pgenlist, false);
 
   for (plink = pgenlist->head_link; NULL != plink; plink = plink->next) {
     if (plink->dataptr == punlink) {
@@ -332,7 +332,7 @@ bool genlist_remove(struct genlist *pgenlist, const void *punlink)
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -372,7 +372,7 @@ int genlist_remove_all(struct genlist *pgenlist, const void *punlink)
 bool genlist_remove_if(struct genlist *pgenlist,
                        genlist_cond_fn_t cond_data_func)
 {
-  fc_assert_ret_val(NULL != pgenlist, FALSE);
+  fc_assert_ret_val(NULL != pgenlist, false);
 
   if (NULL != cond_data_func) {
     struct genlist_link *plink = pgenlist->head_link;
@@ -385,7 +385,7 @@ bool genlist_remove_if(struct genlist *pgenlist,
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**

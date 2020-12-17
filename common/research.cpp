@@ -321,7 +321,7 @@ static bool reqs_may_activate(const struct player *target_player,
                           target_building, target_tile, target_unit,
                           target_unittype, target_output, target_specialist,
                           target_action, preq, prob_type)) {
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
@@ -356,7 +356,7 @@ static bool research_allowed(
 
   if (adv == NULL) {
     /* Not a valid advance. */
-    return FALSE;
+    return false;
   }
 
   research_players_iterate(presearch, pplayer)
@@ -375,7 +375,7 @@ static bool research_allowed(
   }
   research_players_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -430,7 +430,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       /* It will always be illegal to start researching this tech because
        * of unchanging requirements. Since it isn't already known and can't
        * be researched it must be unreachable. */
-      return FALSE;
+      return false;
     }
 
     /* Check if required techs are research_reqs reachable. */
@@ -438,7 +438,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
       Tech_type_id req_tech = advance_required(techs[i], tech_req(req));
 
       if (valid_advance_by_number(req_tech) == NULL) {
-        return FALSE;
+        return false;
       } else if (!BV_ISSET(done, req_tech)) {
         techs[techs_num] = req_tech;
         techs_num++;
@@ -461,7 +461,7 @@ static bool research_get_reachable(const struct research *presearch,
                                    Tech_type_id tech)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else {
     advance_root_req_iterate(advance_by_number(tech), proot)
     {
@@ -472,13 +472,13 @@ static bool research_get_reachable(const struct research *presearch,
          * case is needed for descendants of this tech.) */
         if (presearch->inventions[advance_number(proot)].state
             != TECH_KNOWN) {
-          return FALSE;
+          return false;
         }
       } else {
         for (int req = 0; req < AR_SIZE; req++) {
           if (valid_advance(advance_requires(proot, tech_req(req)))
               == NULL) {
-            return FALSE;
+            return false;
           }
         }
       }
@@ -488,7 +488,7 @@ static bool research_get_reachable(const struct research *presearch,
 
   /* Check research reqs reachability. */
   if (!research_get_reachable_rreqs(presearch, tech)) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -507,7 +507,7 @@ static bool research_get_root_reqs_known(const struct research *presearch,
   advance_root_req_iterate(advance_by_number(tech), proot)
   {
     if (presearch->inventions[advance_number(proot)].state != TECH_KNOWN) {
-      return FALSE;
+      return false;
     }
   }
   advance_root_req_iterate_end;
@@ -581,7 +581,7 @@ void research_update(struct research *presearch)
       BV_SET(presearch->inventions[i].required_techs, j);
       presearch->inventions[i].num_required_techs++;
       presearch->inventions[i].bulbs_required +=
-          research_total_bulbs_required(presearch, j, FALSE);
+          research_total_bulbs_required(presearch, j, false);
       /* This is needed to get a correct result for the
        * research_total_bulbs_required() call when
        * game.info.game.info.tech_cost_style is TECH_COST_CIV1CIV2. */
@@ -696,7 +696,7 @@ bool research_invention_reachable(const struct research *presearch,
                                   const Tech_type_id tech)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else if (presearch != NULL) {
     return presearch->inventions[tech].reachable;
   } else {
@@ -708,7 +708,7 @@ bool research_invention_reachable(const struct research *presearch,
     }
     researches_iterate_end;
 
-    return FALSE;
+    return false;
   }
 }
 
@@ -723,7 +723,7 @@ bool research_invention_gettable(const struct research *presearch,
                                  const Tech_type_id tech, bool allow_holes)
 {
   if (valid_advance_by_number(tech) == NULL) {
-    return FALSE;
+    return false;
   } else if (presearch != NULL) {
     return (allow_holes
                 ? presearch->inventions[tech].root_reqs_known
@@ -739,7 +739,7 @@ bool research_invention_gettable(const struct research *presearch,
     }
     researches_iterate_end;
 
-    return FALSE;
+    return false;
   }
 }
 
@@ -834,7 +834,7 @@ bool research_goal_tech_req(const struct research *presearch,
 
   if (tech == goal || NULL == (pgoal = valid_advance_by_number(goal))
       || NULL == (ptech = valid_advance_by_number(tech))) {
-    return FALSE;
+    return false;
   } else if (NULL != presearch) {
     return BV_ISSET(presearch->inventions[goal].required_techs, tech);
   } else {
@@ -845,7 +845,7 @@ bool research_goal_tech_req(const struct research *presearch,
       }
     }
     advance_req_iterate_end;
-    return FALSE;
+    return false;
   }
 }
 

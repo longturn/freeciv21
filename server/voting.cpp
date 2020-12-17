@@ -256,7 +256,7 @@ bool conn_can_vote(const struct connection *pconn, const struct vote *pvote)
 {
   if (!pconn || !conn_controls_player(pconn)
       || conn_get_access(pconn) < ALLOW_BASIC) {
-    return FALSE;
+    return false;
   }
 
   if (vote_is_team_only(pvote)) {
@@ -266,7 +266,7 @@ bool conn_can_vote(const struct connection *pconn, const struct vote *pvote)
     caller_plr = conn_get_player(vote_get_caller(pvote));
     if (!pplayer || !caller_plr
         || !players_on_same_team(pplayer, caller_plr)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -280,7 +280,7 @@ bool conn_can_see_vote(const struct connection *pconn,
                        const struct vote *pvote)
 {
   if (!pconn) {
-    return FALSE;
+    return false;
   }
 
   if (conn_is_global_observer(pconn)) {
@@ -295,7 +295,7 @@ bool conn_can_see_vote(const struct connection *pconn,
     caller_plr = conn_get_player(vote_get_caller(pvote));
     if (!pplayer || !caller_plr
         || !players_on_same_team(pplayer, caller_plr)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -405,7 +405,7 @@ bool vote_would_pass_immediately(const struct connection *caller,
   const struct command *pcmd;
 
   if (!conn_can_vote(caller, NULL)) {
-    return FALSE;
+    return false;
   }
 
   pcmd = command_by_number(command_id);
@@ -414,7 +414,7 @@ bool vote_would_pass_immediately(const struct connection *caller,
   virtual_vote.flags = command_vote_flags(pcmd);
 
   if (virtual_vote.flags & VCF_NOPASSALONE) {
-    return FALSE;
+    return false;
   }
 
   virtual_vote.caller_id = caller->id;
@@ -432,7 +432,7 @@ bool vote_would_pass_immediately(const struct connection *caller,
 static void check_vote(struct vote *pvote)
 {
   int num_cast = 0, num_voters = 0;
-  bool resolve = FALSE, passed = FALSE;
+  bool resolve = false, passed = false;
   struct connection *pconn = NULL;
   double yes_pc = 0.0, no_pc = 0.0, rem_pc = 0.0, base = 0.0;
   int flags;

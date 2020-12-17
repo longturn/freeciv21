@@ -44,7 +44,7 @@ int api_server_player_civilization_score(lua_State *L, Player *pplayer)
  *****************************************************************************/
 bool api_server_was_started(lua_State *L)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
 
   return game_was_started();
 }
@@ -54,14 +54,14 @@ bool api_server_was_started(lua_State *L)
  *****************************************************************************/
 bool api_server_save(lua_State *L, const char *filename)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
 
   /* Limit the allowed characters in the filename. */
   if (filename != NULL && !is_safe_filename(filename)) {
-    return FALSE;
+    return false;
   }
 
-  save_game(filename, "User request (Lua)", FALSE);
+  save_game(filename, "User request (Lua)", false);
 
   return TRUE;
 }
@@ -73,9 +73,9 @@ bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
 {
   struct packet_play_music p;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pplayer, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, tag, 3, API_TYPE_STRING, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pplayer, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, tag, 3, API_TYPE_STRING, false);
 
   sz_strlcpy(p.tag, tag);
 
@@ -102,5 +102,5 @@ const char *api_server_setting_get(lua_State *L, const char *sett_name)
     return NULL;
   }
 
-  return setting_value_name(pset, FALSE, buf, sizeof(buf));
+  return setting_value_name(pset, false, buf, sizeof(buf));
 }

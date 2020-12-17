@@ -368,7 +368,7 @@ static struct reqtree *create_dummy_reqtree(struct player *pplayer,
       continue;
     }
     nodes[tech] = new_tree_node();
-    nodes[tech]->is_dummy = FALSE;
+    nodes[tech]->is_dummy = false;
     nodes[tech]->tech = tech;
   }
   advance_index_iterate_end;
@@ -531,7 +531,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   /* copy normal nodes */
   for (i = 0; i < tree->num_nodes; i++) {
     new_tree->nodes[i] = new_tree_node();
-    new_tree->nodes[i]->is_dummy = FALSE;
+    new_tree->nodes[i]->is_dummy = false;
     new_tree->nodes[i]->tech = tree->nodes[i]->tech;
     new_tree->nodes[i]->layer = tree->nodes[i]->layer;
     tree->nodes[i]->number = i;
@@ -1173,5 +1173,5 @@ bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
       return TRUE;
     }
   }
-  return FALSE;
+  return false;
 }

@@ -94,13 +94,13 @@ bool auth_user(struct connection *pconn, char *username)
                               "Sorry."),
                             pconn);
       qInfo(_("%s was rejected: Guests not allowed."), username);
-      return FALSE;
+      return false;
     }
   } else {
     /* we are not a guest, we need an extra check as to whether a
      * connection can be established: the client must authenticate itself */
     char buffer[MAX_LEN_MSG];
-    bool exists = FALSE;
+    bool exists = false;
 
     sz_strlcpy(pconn->username, username);
 
@@ -125,7 +125,7 @@ bool auth_user(struct connection *pconn, char *username)
         qInfo(_("%s was rejected: Database error and guests not "
                 "allowed."),
               pconn->username);
-        return FALSE;
+        return false;
       }
     } else if (exists) {
       /* we found a user */
@@ -152,7 +152,7 @@ bool auth_user(struct connection *pconn, char *username)
         qInfo(_("%s was rejected: Only preregistered users allowed."),
               pconn->username);
 
-        return FALSE;
+        return false;
       }
     }
   }
@@ -175,7 +175,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
                 "verifies for new user."),
               pconn->username);
 
-        return FALSE;
+        return false;
       } else {
         dsend_packet_authentication_req(pconn, AUTH_NEWUSER_RETRY, msg);
         return TRUE;
@@ -191,7 +191,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
 
     establish_new_connection(pconn);
   } else if (pconn->server.status == AS_REQUESTING_OLD_PASS) {
-    bool success = FALSE;
+    bool success = false;
 
     if (script_fcdb_call("user_verify", pconn, password, &success)
         && success) {
@@ -204,7 +204,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
     }
   } else {
     qDebug("%s is sending unrequested auth packets", pconn->username);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -317,7 +317,7 @@ static bool is_good_password(const char *password, char *msg)
                 _("Your password is too short, the minimum length is %d. "
                   "Try again."),
                 MIN_PASSWORD_LEN);
-    return FALSE;
+    return false;
   }
 
   fc_snprintf(msg, MAX_LEN_MSG,
@@ -337,17 +337,17 @@ static bool is_good_password(const char *password, char *msg)
 
   /* check number of capital letters */
   if (num_caps < MIN_PASSWORD_CAPS) {
-    return FALSE;
+    return false;
   }
 
   /* check number of numbers */
   if (num_nums < MIN_PASSWORD_NUMS) {
     Q_UNREACHABLE();
-    return FALSE;
+    return false;
   }
 
   if (!is_ascii_name(password)) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;

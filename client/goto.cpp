@@ -88,7 +88,7 @@ struct goto_map {
   goto_map_list_iterate_end;
 
 static struct goto_map_list *goto_maps = NULL;
-static bool goto_warned = FALSE;
+static bool goto_warned = false;
 
 static void reset_last_part(struct goto_map *goto_map);
 static void remove_last_part(struct goto_map *goto_map);
@@ -168,7 +168,7 @@ void free_client_goto(void)
   }
 
   goto_destination = NULL;
-  goto_warned = FALSE;
+  goto_warned = false;
 }
 
 /************************************************************************/ /**
@@ -291,11 +291,11 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
         pf_path_destroy(goto_map->patrol.return_path);
         goto_map->patrol.return_path = NULL;
       }
-      return FALSE;
+      return false;
     }
 
     reset_last_part(goto_map);
-    return FALSE;
+    return false;
   }
 
   qCDebug(goto_category) << "  path found:" << new_path;
@@ -339,7 +339,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
           pf_path_destroy(goto_map->patrol.return_path);
           goto_map->patrol.return_path = NULL;
         }
-        return FALSE;
+        return false;
       }
 
       p->path = old_path;
@@ -348,7 +348,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
       p->end_fuel_left = pf_path_last_position(old_path)->fuel_left;
       pf_path_destroy(new_path);
       reset_last_part(goto_map);
-      return FALSE;
+      return false;
     }
 
     qCDebug(goto_category) << "  returned path found:" << return_path;
@@ -477,10 +477,10 @@ bool goto_add_waypoint(void)
 {
   bool duplicate_of_last = TRUE;
 
-  fc_assert_ret_val(goto_is_active(), FALSE);
+  fc_assert_ret_val(goto_is_active(), false);
   if (NULL == goto_destination) {
     /* Not a valid position. */
-    return FALSE;
+    return false;
   }
 
   goto_map_list_iterate(goto_maps, goto_map)
@@ -489,21 +489,21 @@ bool goto_add_waypoint(void)
 
     if (last_part->path == NULL) {
       /* The current part has zero length. */
-      return FALSE;
+      return false;
     }
     if (last_part->start_tile != last_part->end_tile) {
-      duplicate_of_last = FALSE;
+      duplicate_of_last = false;
     }
   }
   goto_map_list_iterate_end;
   if (duplicate_of_last) {
-    return FALSE;
+    return false;
   }
 
   goto_map_list_iterate(goto_maps, goto_map) { add_part(goto_map); }
   goto_map_list_iterate_end;
 
-  refresh_tile_mapcanvas(goto_destination, FALSE, FALSE);
+  refresh_tile_mapcanvas(goto_destination, false, false);
   return TRUE;
 }
 
@@ -513,9 +513,9 @@ bool goto_add_waypoint(void)
  ****************************************************************************/
 bool goto_pop_waypoint(void)
 {
-  bool popped = FALSE;
+  bool popped = false;
 
-  fc_assert_ret_val(goto_is_active(), FALSE);
+  fc_assert_ret_val(goto_is_active(), false);
   goto_map_list_iterate(goto_maps, goto_map)
   {
     struct part *p = &goto_map->parts[goto_map->num_parts - 1];
@@ -671,7 +671,7 @@ static bool is_non_allied_city_adjacent(const struct player *pplayer,
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -888,7 +888,7 @@ static void goto_fill_parameter_base(struct pf_parameter *parameter,
   fc_assert(parameter->get_TB == NULL);
   fc_assert(parameter->get_MC != NULL);
   fc_assert(parameter->start_tile == unit_tile(punit));
-  fc_assert(parameter->omniscience == FALSE);
+  fc_assert(parameter->omniscience == false);
 
   parameter->get_EC = get_EC;
   if (utype_acts_hostile(unit_type_get(punit))) {
@@ -1005,7 +1005,7 @@ void enter_goto_state(struct unit_list *punits)
     add_part(goto_map);
   }
   unit_list_iterate_end;
-  goto_warned = FALSE;
+  goto_warned = false;
 }
 
 /************************************************************************/ /**
@@ -1022,7 +1022,7 @@ void exit_goto_state(void)
   goto_map_list_clear(goto_maps);
 
   goto_destination = NULL;
-  goto_warned = FALSE;
+  goto_warned = false;
 }
 
 /************************************************************************/ /**
@@ -1062,18 +1062,18 @@ bool goto_is_active(void)
  ****************************************************************************/
 bool goto_get_turns(int *min, int *max)
 {
-  fc_assert_ret_val(min != NULL, FALSE);
-  fc_assert_ret_val(max != NULL, FALSE);
+  fc_assert_ret_val(min != NULL, false);
+  fc_assert_ret_val(max != NULL, false);
 
   *min = FC_INFINITY;
   *max = -1;
 
   if (!goto_is_active()) {
-    return FALSE;
+    return false;
   }
   if (NULL == goto_destination) {
     /* Not a valid position. */
-    return FALSE;
+    return false;
   }
 
   if (hover_state == HOVER_CONNECT) {
@@ -1083,7 +1083,7 @@ bool goto_get_turns(int *min, int *max)
 
     goto_map_list_iterate(goto_maps, goto_map)
     {
-      bool moved = FALSE;
+      bool moved = false;
       int turns = goto_map->connect.initial_turns;
       int i;
 
@@ -1143,12 +1143,12 @@ bool goto_get_turns(int *min, int *max)
 bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
                      int *turns, bool *waypoint)
 {
-  fc_assert_ret_val(ptile != NULL, FALSE);
-  fc_assert_ret_val(turns != NULL, FALSE);
-  fc_assert_ret_val(waypoint != NULL, FALSE);
+  fc_assert_ret_val(ptile != NULL, false);
+  fc_assert_ret_val(turns != NULL, false);
+  fc_assert_ret_val(waypoint != NULL, false);
 
   if (!goto_is_active()) {
-    return FALSE;
+    return false;
   }
 
   *state = GTS_INVALID;
@@ -1161,7 +1161,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
     int activity_time;
 
     if (tile_get_known(ptile, client_player()) == TILE_UNKNOWN) {
-      return FALSE; /* We never connect on unknown tiles. */
+      return false; /* We never connect on unknown tiles. */
     }
 
     activity_time = get_activity_time(ptile, client_player());
@@ -1172,7 +1172,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       const struct pf_position *pos = NULL; /* Keep compiler happy! */
       int map_turns = goto_map->connect.initial_turns;
       int turns_for_map = -2;
-      bool moved = FALSE;
+      bool moved = false;
       int i, j;
 
       for (i = 0; i < goto_map->num_parts; i++) {
@@ -1207,7 +1207,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       }
 
       if (ptile == goto_destination) {
-        fc_assert_ret_val(pos != NULL, FALSE);
+        fc_assert_ret_val(pos != NULL, false);
         if (moved && activity_time > 0) {
           map_turns++;
         }
@@ -1236,7 +1236,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
     }
     goto_map_list_iterate_end;
   } else {
-    bool mark_on_map = FALSE;
+    bool mark_on_map = false;
     /* In other modes, we want to know the turn number to reach the tile. */
     goto_map_list_iterate(goto_maps, goto_map)
     {
@@ -1302,7 +1302,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       }
 
       if (ptile == destination) {
-        fc_assert_ret_val(pos != NULL, FALSE);
+        fc_assert_ret_val(pos != NULL, false);
         if (map_turns > *turns) {
           mark_on_map = TRUE;
           *state = (pos->moves_left == 0 ? GTS_EXHAUSTED_MP : GTS_MP_LEFT);
@@ -1332,9 +1332,9 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
  ****************************************************************************/
 bool is_valid_goto_draw_line(struct tile *dest_tile)
 {
-  fc_assert_ret_val(goto_is_active(), FALSE);
+  fc_assert_ret_val(goto_is_active(), false);
   if (NULL == dest_tile) {
-    return FALSE;
+    return false;
   }
 
   /* assume valid destination */
@@ -1369,7 +1369,7 @@ void request_orders_cleared(struct unit *punit)
   qCDebug(goto_category, "Clearing orders for unit %d.", punit->id);
   p.unit_id = punit->id;
   p.src_tile = tile_index(unit_tile(punit));
-  p.repeat = p.vigilant = FALSE;
+  p.repeat = p.vigilant = false;
   p.length = 0;
   p.dest_tile = tile_index(unit_tile(punit));
   request_unit_ssa_set(punit, SSA_NONE);
@@ -1527,7 +1527,7 @@ static void send_rally_path_orders(struct city *pcity, struct unit *punit,
 void send_goto_path(struct unit *punit, struct pf_path *path,
                     struct unit_order *final_order)
 {
-  send_path_orders(punit, path, FALSE, FALSE, ORDER_MOVE, final_order);
+  send_path_orders(punit, path, false, false, ORDER_MOVE, final_order);
 }
 
 /************************************************************************/ /**
@@ -1536,7 +1536,7 @@ void send_goto_path(struct unit *punit, struct pf_path *path,
 void send_rally_path(struct city *pcity, struct unit *punit,
                      struct pf_path *path, struct unit_order *final_order)
 {
-  send_rally_path_orders(pcity, punit, path, FALSE, ORDER_MOVE, final_order);
+  send_rally_path_orders(pcity, punit, path, false, ORDER_MOVE, final_order);
 }
 
 /************************************************************************/ /**
@@ -1559,7 +1559,7 @@ bool send_goto_tile(struct unit *punit, struct tile *ptile)
     pf_path_destroy(path);
     return TRUE;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -1576,13 +1576,13 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
   struct pf_map *pfm;
   struct pf_path *path;
 
-  fc_assert_ret_val(pcity != NULL, FALSE);
-  fc_assert_ret_val(ptile != NULL, FALSE);
+  fc_assert_ret_val(pcity != NULL, false);
+  fc_assert_ret_val(ptile != NULL, false);
 
   /* Create a virtual unit of the type being produced by the city. */
   if (pcity->production.kind != VUT_UTYPE) {
     /* Can only give orders to units. */
-    return FALSE;
+    return false;
   }
   putype = pcity->production.value.utype;
   punit =
@@ -1603,7 +1603,7 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
     return TRUE;
   } else {
     unit_virtual_destroy(punit);
-    return FALSE;
+    return false;
   }
 }
 
@@ -1630,7 +1630,7 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
     pf_path_destroy(path);
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1671,11 +1671,11 @@ static bool order_recursive_roads(struct tile *ptile,
                                   struct packet_unit_orders *p, int rec)
 {
   if (rec > MAX_EXTRA_TYPES) {
-    return FALSE;
+    return false;
   }
 
   if (!is_extra_caused_by(pextra, EC_ROAD)) {
-    return FALSE;
+    return false;
   }
 
   if (tile_has_extra(ptile, pextra)) {
@@ -1687,7 +1687,7 @@ static bool order_recursive_roads(struct tile *ptile,
   {
     if (!tile_has_extra(ptile, pdep)) {
       if (!order_recursive_roads(ptile, pdep, p, rec + 1)) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -1732,8 +1732,8 @@ void send_connect_route(enum unit_activity activity, struct extra_type *tgt)
 
     p.unit_id = punit->id;
     p.src_tile = tile_index(unit_tile(punit));
-    p.repeat = FALSE;
-    p.vigilant = FALSE; /* Should be TRUE? */
+    p.repeat = false;
+    p.vigilant = false; /* Should be TRUE? */
 
     p.length = 0;
     old_tile = path->positions[0].tile;
@@ -1810,7 +1810,7 @@ static bool order_wants_direction(enum unit_orders order, action_id act_id,
 
     if (!action_id_distance_accepted(act_id, 1)) {
       /* Always illegal to perform to a target on a neighbor tile. */
-      return FALSE;
+      return false;
     }
 
     if (is_non_allied_city_tile(tgt_tile, client_player()) != NULL
@@ -1824,13 +1824,13 @@ static bool order_wants_direction(enum unit_orders order, action_id act_id,
 
     if (gui_options.popup_last_move_to_allied) {
       /* Prefer efficiency over safety among allies. */
-      fc_assert_ret_val(action_id_distance_accepted(act_id, 1), FALSE);
+      fc_assert_ret_val(action_id_distance_accepted(act_id, 1), false);
       return TRUE;
     }
 
-    return FALSE;
+    return false;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1851,9 +1851,9 @@ static bool order_demands_direction(enum unit_orders order, action_id act_id)
       return TRUE;
     }
 
-    return FALSE;
+    return false;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1894,7 +1894,7 @@ void send_goto_route(void)
         && ((is_allied_city_tile(tgt_tile, client_player())
              || is_allied_unit_tile(tgt_tile, client_player()))
             && (can_utype_do_act_if_tgt_diplrel(
-                    unit_type_get(punit), ACTION_ANY, DRO_FOREIGN, FALSE)
+                    unit_type_get(punit), ACTION_ANY, DRO_FOREIGN, false)
                 || can_utype_do_act_if_tgt_diplrel(
                     unit_type_get(punit), ACTION_ANY, DS_ALLIANCE, TRUE)
                 || can_utype_do_act_if_tgt_diplrel(
@@ -1978,7 +1978,7 @@ struct pf_path *path_to_nearest_allied_city(struct unit *punit)
   goto_fill_parameter_base(&parameter, punit);
   pfm = pf_map_new(&parameter);
 
-  pf_map_tiles_iterate(pfm, ptile, FALSE)
+  pf_map_tiles_iterate(pfm, ptile, false)
   {
     if (is_allied_city_tile(ptile, unit_owner(punit))) {
       path = pf_map_path(pfm, ptile);

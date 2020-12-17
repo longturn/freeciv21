@@ -168,8 +168,8 @@ static struct dem_row {
     {'P', N_("Production"), get_production, production_to_text, TRUE},
     {'E', N_("Economics"), get_economics, economics_to_text, TRUE},
     {'M', N_("Military Service"), get_mil_service, mil_service_to_text,
-     FALSE},
-    {'O', N_("Pollution"), get_pollution, pollution_to_text, FALSE},
+     false},
+    {'O', N_("Pollution"), get_pollution, pollution_to_text, false},
     {'C', N_("Culture"), get_culture, culture_to_text, TRUE}};
 
 /* Demographics columns. */
@@ -966,7 +966,7 @@ bool is_valid_demography(const char *demography, int *error)
   /* We check each character individually to see if it's valid.  This
    * does not check for duplicate entries. */
   for (i = 0; i < len; i++) {
-    bool found = FALSE;
+    bool found = false;
     int j;
 
     /* See if the character is a valid column label. */
@@ -994,7 +994,7 @@ bool is_valid_demography(const char *demography, int *error)
         (*error) = i;
       }
       /* The character is invalid. */
-      return FALSE;
+      return false;
     }
   }
 
@@ -1025,7 +1025,7 @@ void report_demographics(struct connection *pconn)
     }
   }
 
-  anyrows = FALSE;
+  anyrows = false;
   for (i = 0; i < ARRAY_SIZE(rowtable); i++) {
     if (strchr(game.server.demography, rowtable[i].key)) {
       anyrows = TRUE;
@@ -1138,8 +1138,8 @@ static bool scan_score_log(char *id)
   struct plrdata_slot *plrdata;
   char plr_name[MAX_LEN_NAME], line[120], *ptr;
 
-  fc_assert_ret_val(score_log != NULL, FALSE);
-  fc_assert_ret_val(score_log->fp != NULL, FALSE);
+  fc_assert_ret_val(score_log != NULL, false);
+  fc_assert_ret_val(score_log->fp != NULL, false);
 
   score_log->last_turn = -1;
   id[0] = '\0';
@@ -1151,20 +1151,20 @@ static bool scan_score_log(char *id)
       }
       qCritical("[%s:-] Can't read scorelog file header!",
                 game.server.scorefile);
-      return FALSE;
+      return false;
     }
 
     ptr = strchr(line, '\n');
     if (!ptr) {
       qCritical("[%s:%d] Line too long!", game.server.scorefile, line_nr);
-      return FALSE;
+      return false;
     }
     *ptr = '\0';
 
     if (line_nr == 1) {
       if (strncmp(line, scorelog_magic, qstrlen(scorelog_magic)) != 0) {
         qCritical("[%s:%d] Bad file magic!", game.server.scorefile, line_nr);
-        return FALSE;
+        return false;
       }
     }
 
@@ -1172,14 +1172,14 @@ static bool scan_score_log(char *id)
       if (strlen(id) > 0) {
         qCritical("[%s:%d] Multiple ID entries!", game.server.scorefile,
                   line_nr);
-        return FALSE;
+        return false;
       }
       fc_strlcpy(id, line + qstrlen("id "), MAX_LEN_GAME_IDENTIFIER);
       if (strcmp(id, server.game_identifier) != 0) {
         qCritical("[%s:%d] IDs don't match! game='%s' scorelog='%s'",
                   game.server.scorefile, line_nr, server.game_identifier,
                   id);
-        return FALSE;
+        return false;
       }
     }
 
@@ -1187,10 +1187,10 @@ static bool scan_score_log(char *id)
       if (sscanf(line + qstrlen("turn "), "%d", &turn) != 1) {
         qCritical("[%s:%d] Bad line (turn)!", game.server.scorefile,
                   line_nr);
-        return FALSE;
+        return false;
       }
 
-      fc_assert_ret_val(turn > score_log->last_turn, FALSE);
+      fc_assert_ret_val(turn > score_log->last_turn, false);
       score_log->last_turn = turn;
     }
 
@@ -1200,7 +1200,7 @@ static bool scan_score_log(char *id)
                     plr_name)) {
         qCritical("[%s:%d] Bad line (addplayer)!", game.server.scorefile,
                   line_nr);
-        return FALSE;
+        return false;
       }
 
       /* Now get the complete player name if there are several parts. */
@@ -1219,14 +1219,14 @@ static bool scan_score_log(char *id)
       if (0 > plr_no || plr_no >= player_slot_count()) {
         qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
-        return FALSE;
+        return false;
       }
 
       plrdata = score_log->plrdata + plr_no;
       if (plrdata->name != NULL) {
         qCritical("[%s:%d] Two names for one player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
-        return FALSE;
+        return false;
       }
 
       plrdata_slot_init(plrdata, plr_name);
@@ -1237,20 +1237,20 @@ static bool scan_score_log(char *id)
           != sscanf(line + qstrlen("delplayer "), "%d %d", &turn, &plr_no)) {
         qCritical("[%s:%d] Bad line (delplayer)!", game.server.scorefile,
                   line_nr);
-        return FALSE;
+        return false;
       }
 
       if (!(plr_no >= 0 && plr_no < player_slot_count())) {
         qCritical("[%s:%d] Invalid player number: %d!",
                   game.server.scorefile, line_nr, plr_no);
-        return FALSE;
+        return false;
       }
 
       plrdata = score_log->plrdata + plr_no;
       if (plrdata->name == NULL) {
         qCritical("[%s:%d] Trying to remove undefined player (id %d)!",
                   game.server.scorefile, line_nr, plr_no);
-        return FALSE;
+        return false;
       }
 
       plrdata_slot_free(plrdata);
@@ -1259,18 +1259,18 @@ static bool scan_score_log(char *id)
 
   if (score_log->last_turn == -1) {
     qCritical("[%s:-] Scorelog contains no turn!", game.server.scorefile);
-    return FALSE;
+    return false;
   }
 
   if (strlen(id) == 0) {
     qCritical("[%s:-] Scorelog contains no ID!", game.server.scorefile);
-    return FALSE;
+    return false;
   }
 
   if (score_log->last_turn + 1 != game.info.turn) {
     qCritical("[%s:-] Scorelog doesn't match savegame!",
               game.server.scorefile);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1615,7 +1615,7 @@ void report_final_scores(struct conn_list *dest)
   i = 0;
   players_iterate(pplayer)
   {
-    if (is_barbarian(pplayer) == FALSE) {
+    if (is_barbarian(pplayer) == false) {
       size[i].value = pplayer->score.game;
       size[i].player = pplayer;
       i++;

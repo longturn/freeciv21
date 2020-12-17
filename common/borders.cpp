@@ -131,5 +131,5 @@ bool is_border_source(struct tile *ptile)
     extra_type_by_cause_iterate_end;
   }
 
-  return FALSE;
+  return false;
 }

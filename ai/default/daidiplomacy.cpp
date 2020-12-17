@@ -195,7 +195,7 @@ static bool shared_vision_is_safe(struct player *pplayer,
       enum diplstate_type ds = player_diplstate_get(pplayer, eplayer)->type;
 
       if (ds != DS_NO_CONTACT && ds != DS_ALLIANCE) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -231,7 +231,7 @@ static int compute_tech_sell_price(struct ai_type *ait, struct player *giver,
 
   worth = dai_goldequiv_tech(ait, taker, tech_id);
 
-  *is_dangerous = FALSE;
+  *is_dangerous = false;
 
   /* Share and expect being shared brotherly between allies */
   if (pplayers_allied(giver, taker)) {
@@ -644,7 +644,7 @@ void dai_treaty_evaluate(struct ai_type *ait, struct player *pplayer,
        * at war. We do not accept tech or cities since these can be used
        * against us, unless we know that we want this tech anyway, or
        * it doesn't matter due to tech cost style. */
-      only_gifts = FALSE;
+      only_gifts = false;
     }
   }
   clause_list_iterate_end;
@@ -966,7 +966,7 @@ static void dai_diplomacy_suggest(struct player *pplayer,
 void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
                                  struct player *aplayer)
 {
-  bool wants_ceasefire = FALSE;
+  bool wants_ceasefire = false;
 
   /* Randomize initial love */
   pplayer->ai_common.love[player_index(aplayer)] += 2 - fc_rand(5);
@@ -984,7 +984,7 @@ void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
       clause.value = 0;
       clause.type = CLAUSE_CEASEFIRE;
 
-      if (dai_goldequiv_clause(ait, pplayer, aplayer, &clause, FALSE,
+      if (dai_goldequiv_clause(ait, pplayer, aplayer, &clause, false,
                                DS_CEASEFIRE)
           > 0) {
         wants_ceasefire = TRUE;
@@ -998,7 +998,7 @@ void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
                        "while we get to know each other better?"),
                      player_name(pplayer), player_name(aplayer));
     clear_old_treaty(pplayer, aplayer);
-    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_CEASEFIRE, FALSE, 0);
+    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_CEASEFIRE, false, 0);
   } else {
     dai_diplo_notify(aplayer,
                      _("*%s (AI)* I found you %s! Now make it worth my "
@@ -1228,11 +1228,11 @@ static void suggest_tech_exchange(struct ai_type *ait,
       diff = worth[tech] + worth[tech2];
       if ((diff > 0 && player1->economic.gold >= diff)
           || (diff < 0 && player2->economic.gold >= -diff) || diff == 0) {
-        dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, FALSE,
+        dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, false,
                               tech2);
         dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, TRUE, tech);
         if (diff > 0) {
-          dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, FALSE, diff);
+          dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, false, diff);
         } else if (diff < 0) {
           dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, TRUE, -diff);
         }
@@ -1291,7 +1291,7 @@ static void dai_share(struct ai_type *ait, struct player *pplayer,
                  && research_invention_state(aresearch, idx) != TECH_KNOWN
                  && research_invention_gettable(
                      aresearch, idx, game.info.tech_trade_allow_holes)) {
-        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ADVANCE, FALSE, idx);
+        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ADVANCE, false, idx);
       }
     }
     advance_index_iterate_end;
@@ -1300,7 +1300,7 @@ static void dai_share(struct ai_type *ait, struct player *pplayer,
   /* Only give shared vision if safe. Only ask for shared vision if fair. */
   gives_vision = gives_shared_vision(pplayer, aplayer);
   if (!gives_vision && shared_vision_is_safe(pplayer, aplayer)) {
-    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_VISION, FALSE, 0);
+    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_VISION, false, 0);
     gives_vision = TRUE;
   }
   if (gives_vision && !gives_shared_vision(aplayer, pplayer)
@@ -1312,7 +1312,7 @@ static void dai_share(struct ai_type *ait, struct player *pplayer,
     dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, TRUE, 0);
   }
   if (!player_has_embassy(aplayer, pplayer)) {
-    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, FALSE, 0);
+    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, false, 0);
   }
 
   if (!has_handicap(pplayer, H_DIPLOMACY) || is_human(aplayer)) {
@@ -1539,7 +1539,7 @@ static void war_countdown(struct ai_type *ait, struct player *pplayer,
             player_name(pplayer), player_name(adip->at_war_with_ally),
             player_name(target), countdown);
       } else {
-        fc_assert(FALSE); /* Huh? */
+        fc_assert(false); /* Huh? */
       }
       break;
     }
@@ -1662,7 +1662,7 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
     turns = game.info.turn;
     turns -= player_diplstate_get(pplayer, aplayer)->first_contact_turn;
     if (WAR(pplayer, aplayer)) {
-      need_targets = FALSE;
+      need_targets = false;
     } else if (pplayer->ai_common.love[player_index(aplayer)] < most_hatred
                && turns > TURNS_BEFORE_TARGET) {
       most_hatred = pplayer->ai_common.love[player_index(aplayer)];
@@ -1881,13 +1881,13 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
         clause.type = CLAUSE_ALLIANCE;
         if (adip->at_war_with_ally
             || (is_human(aplayer) && adip->asked_about_alliance > 0)
-            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, FALSE,
+            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, false,
                                     DS_ALLIANCE)
                    < 0) {
           break;
         }
         clear_old_treaty(pplayer, aplayer);
-        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ALLIANCE, FALSE, 0);
+        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ALLIANCE, false, 0);
         adip->asked_about_alliance = is_human(aplayer) ? 13 : 0;
         dai_diplo_notify(aplayer,
                          _("*%s (AI)* Greetings friend, may we suggest "
@@ -1899,13 +1899,13 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
         clause.type = CLAUSE_PEACE;
         if (adip->at_war_with_ally
             || (is_human(aplayer) && adip->asked_about_peace > 0)
-            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, FALSE,
+            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, false,
                                     DS_PEACE)
                    < 0) {
           break;
         }
         clear_old_treaty(pplayer, aplayer);
-        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_PEACE, FALSE, 0);
+        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_PEACE, false, 0);
         adip->asked_about_peace = is_human(aplayer) ? 12 : 0;
         dai_diplo_notify(aplayer,
                          _("*%s (AI)* Greetings neighbor, may we suggest "
@@ -1917,13 +1917,13 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
       case DS_WAR:
         clause.type = CLAUSE_CEASEFIRE;
         if ((is_human(aplayer) && adip->asked_about_ceasefire > 0)
-            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, FALSE,
+            || dai_goldequiv_clause(ait, pplayer, aplayer, &clause, false,
                                     DS_CEASEFIRE)
                    < 0) {
           break; /* Fight until the end! */
         }
         clear_old_treaty(pplayer, aplayer);
-        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_CEASEFIRE, FALSE, 0);
+        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_CEASEFIRE, false, 0);
         adip->asked_about_ceasefire = is_human(aplayer) ? 9 : 0;
         dai_diplo_notify(
             aplayer,
@@ -1935,7 +1935,7 @@ void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
       case DS_ARMISTICE:
         break;
       default:
-        fc_assert_msg(FALSE, "Unknown pact type %d.", ds);
+        fc_assert_msg(false, "Unknown pact type %d.", ds);
         break;
       }
     }
@@ -1957,7 +1957,7 @@ bool dai_on_war_footing(struct ai_type *ait, struct player *pplayer)
   }
   players_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /******************************************************************/ /**

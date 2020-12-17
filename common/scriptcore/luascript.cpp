@@ -528,8 +528,8 @@ bool luascript_check_function(struct fc_lua *fcl, const char *funcname)
 {
   bool defined;
 
-  fc_assert_ret_val(fcl, FALSE);
-  fc_assert_ret_val(fcl->state, FALSE);
+  fc_assert_ret_val(fcl, false);
+  fc_assert_ret_val(fcl->state, false);
 
   lua_getglobal(fcl->state, funcname);
   defined = lua_isfunction(fcl->state, -1);
@@ -631,10 +631,10 @@ bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
                                int nargs, enum api_types *parg_types,
                                va_list args)
 {
-  bool stop_emission = FALSE;
+  bool stop_emission = false;
 
-  fc_assert_ret_val(fcl, FALSE);
-  fc_assert_ret_val(fcl->state, FALSE);
+  fc_assert_ret_val(fcl, false);
+  fc_assert_ret_val(fcl->state, false);
 
   /* The function name */
   lua_getglobal(fcl->state, callback_name);
@@ -643,7 +643,7 @@ bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
     luascript_log(fcl, LOG_ERROR, "lua error: Unknown callback '%s'",
                   callback_name);
     lua_pop(fcl->state, 1);
-    return FALSE;
+    return false;
   }
 
   luascript_log(fcl, LOG_DEBUG, "lua callback: '%s'", callback_name);
@@ -652,7 +652,7 @@ bool luascript_callback_invoke(struct fc_lua *fcl, const char *callback_name,
 
   /* Call the function with nargs arguments, return 1 results */
   if (luascript_call(fcl, nargs, 1, NULL)) {
-    return FALSE;
+    return false;
   }
 
   /* Shall we stop the emission of this signal? */

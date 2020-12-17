@@ -73,7 +73,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
   Mix_Chunk *wave = NULL;
 
   if (!fullpath) {
-    return FALSE;
+    return false;
   }
 
   if (repeat) {
@@ -120,7 +120,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     if (i < 0) {
       qDebug("No available sound channel to play %s.", tag);
       Mix_FreeChunk(wave);
-      return FALSE;
+      return false;
     }
     qDebug("Playing file \"%s\" on channel %d", fullpath, i);
     /* free previous sample on this channel. it will by definition no
@@ -222,7 +222,7 @@ static bool sdl_audio_init(void)
   int i;
 
   if (init_sdl_audio() < 0) {
-    return FALSE;
+    return false;
   }
 
   if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, buf_size)
@@ -230,7 +230,7 @@ static bool sdl_audio_init(void)
     qCritical("Error calling Mix_OpenAudio");
     /* try something else */
     quit_sdl_audio();
-    return FALSE;
+    return false;
   }
 
   Mix_AllocateChannels(MIX_CHANNELS);

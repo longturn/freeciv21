@@ -43,12 +43,12 @@ template <class BV> inline bool BV_ISSET(const BV &bv, int bit)
   do {                                                                      \
     _BV_ASSERT(bv, bit);                                                    \
     (bv).vec[_BV_BYTE_INDEX(bit)] |= _BV_BITMASK(bit);                      \
-  } while (FALSE)
+  } while (false)
 #define BV_CLR(bv, bit)                                                     \
   do {                                                                      \
     _BV_ASSERT(bv, bit);                                                    \
     (bv).vec[_BV_BYTE_INDEX(bit)] &= ~_BV_BITMASK(bit);                     \
-  } while (FALSE)
+  } while (false)
 #define BV_SET_VAL(bv, bit, val)                                            \
   do {                                                                      \
     if (val) {                                                              \
@@ -56,15 +56,15 @@ template <class BV> inline bool BV_ISSET(const BV &bv, int bit)
     } else {                                                                \
       BV_CLR(bv, bit);                                                      \
     }                                                                       \
-  } while (FALSE);
+  } while (false);
 #define BV_CLR_ALL(bv)                                                      \
   do {                                                                      \
     memset((bv).vec, 0, sizeof((bv).vec));                                  \
-  } while (FALSE)
+  } while (false)
 #define BV_SET_ALL(bv)                                                      \
   do {                                                                      \
     memset((bv).vec, 0xff, sizeof((bv).vec));                               \
-  } while (FALSE)
+  } while (false)
 
 bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
                    size_t size1, size_t size2);

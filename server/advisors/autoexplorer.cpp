@@ -88,18 +88,18 @@ static bool player_may_explore(const struct tile *ptile,
   /* Don't allow military units to cross borders. */
   if (!utype_has_flag(punittype, UTYF_CIVILIAN)
       && !player_can_invade_tile(pplayer, ptile)) {
-    return FALSE;
+    return false;
   }
 
   /* Can't visit tiles with non-allied units. */
   if (is_non_allied_unit_tile(ptile, pplayer)) {
-    return FALSE;
+    return false;
   }
 
   /* Non-allied cities are taboo even if no units are inside. */
   if (tile_city(ptile)
       && !pplayers_allied(city_owner(tile_city(ptile)), pplayer)) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -315,10 +315,10 @@ enum unit_move_result manage_auto_explorer(struct unit *punit)
   pft_fill_unit_parameter(&parameter, punit);
   parameter.get_TB = no_fights_or_unknown;
   /* When exploring, even AI should pretend to not cheat. */
-  parameter.omniscience = FALSE;
+  parameter.omniscience = false;
 
   pfm = pf_map_new(&parameter);
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     int desirable;
     double log_desirable;

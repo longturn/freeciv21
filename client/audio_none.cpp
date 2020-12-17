@@ -50,7 +50,7 @@ static bool none_audio_play(const char *const tag,
     sound_bell();
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

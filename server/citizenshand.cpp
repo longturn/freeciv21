@@ -177,7 +177,7 @@ void citizens_print(const struct city *pcity)
 static bool citizen_convert_check(struct city *pcity)
 {
   if (fc_rand(1000) + 1 > game.info.citizen_convert_speed) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;

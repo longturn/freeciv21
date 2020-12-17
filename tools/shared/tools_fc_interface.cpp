@@ -31,7 +31,7 @@ static bool tool_player_tile_vision_get(const struct tile *ptile,
                                         enum vision_layer vision)
 {
   qCritical("Assumed unused function %s called.", __FUNCTION__);
-  return FALSE;
+  return false;
 }
 
 /***********************************************************************/ /**

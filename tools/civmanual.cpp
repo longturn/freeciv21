@@ -273,9 +273,9 @@ static bool manual_command(struct tag_types *tag_info)
   /* Reset aifill to zero */
   game.info.aifill = 0;
 
-  if (!load_rulesets(NULL, NULL, FALSE, NULL, FALSE, FALSE, FALSE)) {
+  if (!load_rulesets(NULL, NULL, false, NULL, false, false, false)) {
     /* Failed to load correct ruleset */
-    return FALSE;
+    return false;
   }
 
   for (int imanuals = 0; imanuals < MANUAL_COUNT; imanuals++) {
@@ -289,7 +289,7 @@ static bool manual_command(struct tag_types *tag_info)
     if (!is_reg_file_for_access(filename, TRUE)
         || !(doc = fc_fopen(filename, "w"))) {
       qCritical(_("Could not write manual file %s."), filename);
-      return FALSE;
+      return false;
     }
 
     fprintf(doc, "%s", tag_info->header);
@@ -348,7 +348,7 @@ static bool manual_command(struct tag_types *tag_info)
 
           fprintf(doc, "\n<p class=\"bounds\">%s</p>",
                   _("Possible values:"));
-          for (i = 0; (value = setting_enum_val(pset, i, FALSE)); i++) {
+          for (i = 0; (value = setting_enum_val(pset, i, false)); i++) {
             fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
                     setting_enum_val(pset, i, TRUE));
           }
@@ -359,7 +359,7 @@ static bool manual_command(struct tag_types *tag_info)
           fprintf(
               doc, "\n<p class=\"bounds\">%s</p>",
               _("Possible values (option can take any number of these):"));
-          for (i = 0; (value = setting_bitwise_bit(pset, i, FALSE)); i++) {
+          for (i = 0; (value = setting_bitwise_bit(pset, i, false)); i++) {
             fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
                     setting_bitwise_bit(pset, i, TRUE));
           }
@@ -765,7 +765,7 @@ int main(int argc, char **argv)
   QCoreApplication::setApplicationVersion(VERSION_STRING);
 
   init_nls();
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
+  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 
   QCommandLineParser parser;
   parser.addHelpOption();
@@ -832,14 +832,14 @@ int main(int argc, char **argv)
   fc_interface_init_tool();
 
   /* Initialize game with default values */
-  game_init(FALSE);
+  game_init(false);
 
   /* Set ruleset user requested in to use */
   if (!ruleset.isEmpty()) {
     sz_strlcpy(game.server.rulesetdir, qPrintable(ruleset));
   }
 
-  settings_init(FALSE);
+  settings_init(false);
 
   if (!manual_command(tag_info)) {
     retval = EXIT_FAILURE;

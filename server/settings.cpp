@@ -172,7 +172,7 @@ struct setting {
 static struct {
   bool init;
   struct setting_list *level[OLEVELS_NUM];
-} setting_sorted = {.init = FALSE};
+} setting_sorted = {.init = false};
 
 static bool setting_ruleset_one(struct section_file *file, const char *name,
                                 const char *path);
@@ -559,7 +559,7 @@ compresstype_name(enum fz_method compresstype)
 static const struct sset_val_name *bool_name(int enable)
 {
   switch (enable) {
-    NAME_CASE(FALSE, "DISABLED", N_("disabled"));
+    NAME_CASE(false, "DISABLED", N_("disabled"));
     NAME_CASE(TRUE, "ENABLED", N_("enabled"));
   }
   return NULL;
@@ -806,7 +806,7 @@ static bool savename_validate(const char *value, struct connection *caller,
                       _("Invalid save name definition: '%s' "
                         "(resolves to '%s')."),
                       value, buf);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -824,7 +824,7 @@ static bool generator_validate(int value, struct connection *caller,
         && (NULL != caller || !game.scenario.is_scenario)) {
       settings_snprintf(reject_msg, reject_msg_len,
                         _("You cannot disable the map generator."));
-      return FALSE;
+      return false;
     }
     return TRUE;
   } else {
@@ -832,7 +832,7 @@ static bool generator_validate(int value, struct connection *caller,
       settings_snprintf(reject_msg, reject_msg_len,
                         _("You cannot require a map generator "
                           "when a map is loaded."));
-      return FALSE;
+      return false;
     }
   }
   return TRUE;
@@ -847,7 +847,7 @@ static bool scorefile_validate(const char *value, struct connection *caller,
   if (!is_safe_filename(value)) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Invalid score name definition: '%s'."), value);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -869,7 +869,7 @@ static bool demography_callback(const char *value, struct connection *caller,
                       _("Demography string validation failed at character: "
                         "'%c'. Try \"/help demography\"."),
                       value[error]);
-    return FALSE;
+    return false;
   }
 }
 
@@ -904,7 +904,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
   int len = qstrlen(value), i;
-  bool havecharacter_state = FALSE;
+  bool havecharacter_state = false;
 
   /* We check each character individually to see if it's valid.  This
    * does not check for duplicate entries.
@@ -924,7 +924,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
     /* If we've already passed a primary label, check to see if the
      * character is a modifier. */
     if (havecharacter_state && strchr("1234", value[i])) {
-      havecharacter_state = FALSE;
+      havecharacter_state = false;
       continue;
     }
 
@@ -933,7 +933,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
                       _("Allowed take string validation failed at "
                         "character: '%c'. Try \"/help allowtake\"."),
                       value[i]);
-    return FALSE;
+    return false;
   }
 
   /* All characters were valid. */
@@ -949,7 +949,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
 {
   int len = qstrlen(value), i;
   Unit_Class_id first_role;
-  bool firstnative = FALSE;
+  bool firstnative = false;
 
   /* We check each character individually to see if it's valid. */
   for (i = 0; i < len; i++) {
@@ -962,7 +962,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
                       _("Starting units string validation failed at "
                         "character '%c'. Try \"/help startunits\"."),
                       value[i]);
-    return FALSE;
+    return false;
   }
 
   /* Check the first character to make sure it can use a startpos. */
@@ -984,7 +984,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
                       _("The first starting unit must be native to at "
                         "least one \"Starter\" terrain. "
                         "Try \"/help startunits\"."));
-    return FALSE;
+    return false;
   }
 
   /* Everything seems fine. */
@@ -1001,7 +1001,7 @@ static bool endturn_callback(int value, struct connection *caller,
     /* Tried to set endturn earlier than current turn */
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Cannot set endturn earlier than current turn."));
-    return FALSE;
+    return false;
   }
   return TRUE;
 }
@@ -1017,7 +1017,7 @@ static bool maxplayers_callback(int value, struct connection *caller,
                       _("Number of players (%d) is higher than requested "
                         "value (%d). Keeping old value."),
                       player_count(), value);
-    return FALSE;
+    return false;
   }
   /* If any start positions are defined by a scenario, we can only
    * accommodate as many players as we have start positions. */
@@ -1027,7 +1027,7 @@ static bool maxplayers_callback(int value, struct connection *caller,
         _("Requested value (%d) is greater than number of "
           "available start positions (%d). Keeping old value."),
         value, map_startpos_count());
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1049,7 +1049,7 @@ static bool nationset_callback(const char *value, struct connection *caller,
                       _("Unknown nation set \"%s\". See '%slist nationsets' "
                         "for possible values."),
                       value, caller ? "/" : "");
-    return FALSE;
+    return false;
   }
 }
 
@@ -1065,7 +1065,7 @@ static bool timeout_callback(int value, struct connection *caller,
     settings_snprintf(reject_msg, reject_msg_len,
                       _("You are not allowed to set timeout values less "
                         "than 30 seconds."));
-    return FALSE;
+    return false;
   }
 
   if (value == -1 && game.server.unitwaittime != 0) {
@@ -1074,7 +1074,7 @@ static bool timeout_callback(int value, struct connection *caller,
                       /* TRANS: Do not translate setting names in ''. */
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
-    return FALSE;
+    return false;
   }
 
   if (value > 0 && value < game.server.unitwaittime * 3 / 2) {
@@ -1086,7 +1086,7 @@ static bool timeout_callback(int value, struct connection *caller,
                         "'unitwaittime' setting (= %d). Please change "
                         "'unitwaittime' first."),
                       game.server.unitwaittime);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1104,7 +1104,7 @@ static bool first_timeout_callback(int value, struct connection *caller,
     settings_snprintf(reject_msg, reject_msg_len,
                       _("You are not allowed to set timeout values less "
                         "than 30 seconds."));
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1121,7 +1121,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
                       /* TRANS: Do not translate setting names in ''. */
                       _("For autogames ('timeout' = -1) 'unitwaittime' "
                         "should be deactivated (= 0)."));
-    return FALSE;
+    return false;
   }
 
   if (game.info.timeout > 0 && value > game.info.timeout * 2 / 3) {
@@ -1131,7 +1131,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
                         "'timeout' setting (= %d). Please change 'timeout' "
                         "first."),
                       game.info.timeout);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1151,7 +1151,7 @@ static bool mapsize_callback(int value, struct connection *caller,
         reject_msg, reject_msg_len,
         _("For an isometric or hexagonal map the ysize must be "
           "even."));
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1170,13 +1170,13 @@ static bool xsize_callback(int value, struct connection *caller,
                       _("The map size (%d * %d = %d) must be larger than "
                         "%d tiles."),
                       value, wld.map.ysize, size, MAP_MIN_SIZE * 1000);
-    return FALSE;
+    return false;
   } else if (size > MAP_MAX_SIZE * 1000) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("The map size (%d * %d = %d) must be lower than "
                         "%d tiles."),
                       value, wld.map.ysize, size, MAP_MAX_SIZE * 1000);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1195,13 +1195,13 @@ static bool ysize_callback(int value, struct connection *caller,
                       _("The map size (%d * %d = %d) must be larger than "
                         "%d tiles."),
                       wld.map.xsize, value, size, MAP_MIN_SIZE * 1000);
-    return FALSE;
+    return false;
   } else if (size > MAP_MAX_SIZE * 1000) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("The map size (%d * %d = %d) must be lower than "
                         "%d tiles."),
                       wld.map.xsize, value, size, MAP_MAX_SIZE * 1000);
-    return FALSE;
+    return false;
   } else if (wld.map.server.mapsize == MAPSIZE_XYSIZE && MAP_IS_ISOMETRIC
              && value % 2 != 0) {
     /* An isometric map needs a even ysize. It is calculated automatically
@@ -1210,7 +1210,7 @@ static bool ysize_callback(int value, struct connection *caller,
         reject_msg, reject_msg_len,
         _("For an isometric or hexagonal map the ysize must be "
           "even."));
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1231,7 +1231,7 @@ static bool topology_callback(unsigned value, struct connection *caller,
         reject_msg, reject_msg_len,
         _("For an isometric or hexagonal map the ysize must be "
           "even."));
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1272,7 +1272,7 @@ static bool plrcol_validate(int value, struct connection *caller,
     settings_snprintf(reject_msg, reject_msg_len,
                       _("No nations in the currently loaded ruleset have "
                         "associated colors."));
-    return FALSE;
+    return false;
   }
   return TRUE;
 }
@@ -1291,9 +1291,9 @@ static bool plrcol_validate(int value, struct connection *caller,
    scateg,                                                                  \
    slevel,                                                                  \
    INIT_BRACE_BEGIN.boolean = {&value, _default, func_validate, bool_name,  \
-                               FALSE} INIT_BRACE_END,                       \
+                               false} INIT_BRACE_END,                       \
    func_action,                                                             \
-   FALSE},
+   false},
 
 #define GEN_INT(name, value, sclass, scateg, slevel, al_read, al_write,     \
                 short_help, extra_help, func_help, func_validate,           \
@@ -1311,7 +1311,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    INIT_BRACE_BEGIN.integer = {(int *) &value, _default, _min, _max,        \
                                func_validate, 0} INIT_BRACE_END,            \
    func_action,                                                             \
-   FALSE},
+   false},
 
 #define GEN_STRING(name, value, sclass, scateg, slevel, al_read, al_write,  \
                    short_help, extra_help, func_validate, func_action,      \
@@ -1329,7 +1329,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    INIT_BRACE_BEGIN.string = {value, _default, sizeof(value),               \
                               func_validate, (char*)""} INIT_BRACE_END,     \
    func_action,                                                             \
-   FALSE},
+   false},
 
 #define GEN_ENUM(name, value, sclass, scateg, slevel, al_read, al_write,    \
                  short_help, extra_help, func_help, func_validate,          \
@@ -1349,7 +1349,7 @@ static bool plrcol_validate(int value, struct connection *caller,
                                   (val_name_func_t) func_name,              \
                                   0} INIT_BRACE_END,                        \
    func_action,                                                             \
-   FALSE},
+   false},
 
 #define GEN_BITWISE(name, value, sclass, scateg, slevel, al_read, al_write, \
                     short_help, extra_help, func_validate, func_action,     \
@@ -1367,7 +1367,7 @@ static bool plrcol_validate(int value, struct connection *caller,
    INIT_BRACE_BEGIN.bitwise = {(unsigned *) (void *) &value, _default,      \
                                func_validate, func_name, 0} INIT_BRACE_END, \
    func_action,                                                             \
-   FALSE},
+   false},
 
 /* game settings */
 static struct setting settings[] = {
@@ -4384,7 +4384,7 @@ static struct setting settings[] = {
                                         "until the timeout has expired, "
                                         "even after all players "
                                         "have clicked on \"Turn Done\"."),
-                                     NULL, NULL, FALSE)
+                                     NULL, NULL, false)
 
                                 GEN_STRING(
                                     "demography", game.server.demography,
@@ -5027,7 +5027,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
                       _("The setting '%s' can't be modified after the map "
                         "is fixed."),
                       setting_name(pset));
-    return FALSE;
+    return false;
 
   case SSET_RULES_SCENARIO:
     /* Like SSET_RULES except that it can be changed before the game starts
@@ -5064,7 +5064,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
                       _("The setting '%s' can't be modified after the game "
                         "has started."),
                       setting_name(pset));
-    return FALSE;
+    return false;
 
   case SSET_RULES_FLEXIBLE:
   case SSET_META:
@@ -5076,7 +5076,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
             setting_name(pset), setting_number(pset), pset->sclass);
   settings_snprintf(reject_msg, reject_msg_len, _("Internal error."));
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -5092,7 +5092,7 @@ bool setting_is_changeable(const struct setting *pset,
     settings_snprintf(reject_msg, reject_msg_len,
                       _("You are not allowed to change the setting '%s'."),
                       setting_name(pset));
-    return FALSE;
+    return false;
   }
 
   if (setting_locked(pset)) {
@@ -5100,7 +5100,7 @@ bool setting_is_changeable(const struct setting *pset,
     settings_snprintf(reject_msg, reject_msg_len,
                       _("The setting '%s' is locked by the ruleset."),
                       setting_name(pset));
-    return FALSE;
+    return false;
   }
 
   return setting_is_free_to_change(pset, reject_msg, reject_msg_len);
@@ -5200,10 +5200,10 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
                       astr_build_and_list(&astr, matches, num_matches));
     astr_free(&astr);
   }
-    return FALSE;
+    return false;
   case M_PRE_EMPTY:
     settings_snprintf(reject_msg, reject_msg_len, _("Missing value."));
-    return FALSE;
+    return false;
   case M_PRE_LONG:
   case M_PRE_FAIL:
   case M_PRE_LAST:
@@ -5212,7 +5212,7 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
 
   settings_snprintf(reject_msg, reject_msg_len, _("No match for \"%s\"."),
                     prefix);
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -5250,7 +5250,7 @@ static bool setting_bool_validate_base(const struct setting *pset,
   if (SST_BOOL != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not a boolean."));
-    return FALSE;
+    return false;
   }
 
   sz_strlcpy(buf, val);
@@ -5277,7 +5277,7 @@ bool setting_bool_set(struct setting *pset, const char *val,
   if (!setting_is_changeable(pset, caller, reject_msg, reject_msg_len)
       || !setting_bool_validate_base(pset, val, &int_val, caller, reject_msg,
                                      reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   *pset->boolean.pvalue = (0 != int_val);
@@ -5360,7 +5360,7 @@ bool setting_int_set(struct setting *pset, int val,
   if (!setting_is_changeable(pset, caller, reject_msg, reject_msg_len)
       || !setting_int_validate(pset, val, caller, reject_msg,
                                reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   *pset->integer.pvalue = val;
@@ -5380,14 +5380,14 @@ bool setting_int_validate(const struct setting *pset, int val,
   if (SST_INT != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not an integer."));
-    return FALSE;
+    return false;
   }
 
   if (val < pset->integer.min_value || val > pset->integer.max_value) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Value out of range: %d (min: %d; max: %d)."), val,
                       pset->integer.min_value, pset->integer.max_value);
-    return FALSE;
+    return false;
   }
 
   return (
@@ -5431,7 +5431,7 @@ bool setting_str_set(struct setting *pset, const char *val,
   if (!setting_is_changeable(pset, caller, reject_msg, reject_msg_len)
       || !setting_str_validate(pset, val, caller, reject_msg,
                                reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   fc_strlcpy(pset->string.value, val, pset->string.value_size);
@@ -5451,14 +5451,14 @@ bool setting_str_validate(const struct setting *pset, const char *val,
   if (SST_STRING != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not a string."));
-    return FALSE;
+    return false;
   }
 
   if (strlen(val) >= pset->string.value_size) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("String value too long (max length: %lu)."),
                       (unsigned long) pset->string.value_size);
-    return FALSE;
+    return false;
   }
 
   return (!pset->string.validate
@@ -5544,7 +5544,7 @@ static bool setting_enum_validate_base(const struct setting *pset,
   if (SST_ENUM != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not an enumerator."));
-    return FALSE;
+    return false;
   }
 
   sz_strlcpy(buf, val);
@@ -5579,7 +5579,7 @@ static bool set_enum_value(struct setting *pset, int val)
     *to_short = (short) val;
   } break;
   default:
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -5623,18 +5623,18 @@ bool setting_enum_set(struct setting *pset, const char *val,
   int int_val;
 
   if (!setting_is_changeable(pset, caller, reject_msg, reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   if (!setting_enum_validate_base(pset, val, &int_val, caller, reject_msg,
                                   reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   if (!set_enum_value(pset, int_val)) {
     qCritical("Illegal enumerator value size %d for %s",
               pset->enumerator.store_size, val);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -5767,7 +5767,7 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
   if (SST_BITWISE != pset->stype) {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("This setting is not a bitwise."));
-    return FALSE;
+    return false;
   }
 
   *pint_val = 0;
@@ -5788,7 +5788,7 @@ setting_bitwise_validate_base(const struct setting *pset, const char *val,
       break;
     } else if (!setting_match_prefix(pset->bitwise.name, buf, &bit,
                                      reject_msg, reject_msg_len)) {
-      return FALSE;
+      return false;
     }
     *pint_val |= 1 << bit;
     val = p;
@@ -5813,7 +5813,7 @@ bool setting_bitwise_set(struct setting *pset, const char *val,
   if (!setting_is_changeable(pset, caller, reject_msg, reject_msg_len)
       || !setting_bitwise_validate_base(pset, val, &int_val, caller,
                                         reject_msg, reject_msg_len)) {
-    return FALSE;
+    return false;
   }
 
   *pset->bitwise.pvalue = int_val;
@@ -5969,7 +5969,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
   /* Unlock all settings. */
   settings_iterate(SSET_ALL, pset)
   {
-    setting_lock_set(pset, FALSE);
+    setting_lock_set(pset, false);
     setting_set_to_default(pset);
   }
   settings_iterate_end;
@@ -6028,7 +6028,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
 
   if (pset == NULL) {
     /* no setting found */
-    return FALSE;
+    return false;
   }
 
   switch (pset->stype) {
@@ -6038,7 +6038,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
 
     /* Allow string with same boolean representation as accepted on
      * server command line */
-    if (secfile_lookup_enum_data(file, &ival, FALSE,
+    if (secfile_lookup_enum_data(file, &ival, false,
                                  setting_bool_secfile_str, pset, "%s.value",
                                  path)) {
       val = (ival != 0);
@@ -6095,7 +6095,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   case SST_ENUM: {
     int val;
 
-    if (!secfile_lookup_enum_data(file, &val, FALSE,
+    if (!secfile_lookup_enum_data(file, &val, false,
                                   setting_enum_secfile_str, pset, "%s.value",
                                   path)) {
       qCritical("Can't read value for setting '%s': %s", name,
@@ -6142,7 +6142,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   pset->setdef = SETDEF_RULESET;
 
   /* set lock */
-  lock = secfile_lookup_bool_default(file, FALSE, "%s.lock", path);
+  lock = secfile_lookup_bool_default(file, false, "%s.lock", path);
 
   if (lock) {
     /* set lock */
@@ -6177,7 +6177,7 @@ bool setting_non_default(const struct setting *pset)
 
   qCritical("%s(): Setting \"%s\" (nb %d) not handled in switch statement.",
             __FUNCTION__, setting_name(pset), setting_number(pset));
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -6246,7 +6246,7 @@ static void setting_game_free(struct setting *pset)
 static void setting_game_restore(struct setting *pset)
 {
   char reject_msg[256] = "", buf[256];
-  bool res = FALSE;
+  bool res = false;
 
   if (!setting_is_changeable(pset, NULL, reject_msg, sizeof(reject_msg))) {
     log_debug("Can't restore '%s': %s", setting_name(pset), reject_msg);
@@ -6256,7 +6256,7 @@ static void setting_game_restore(struct setting *pset)
   switch (setting_type(pset)) {
   case SST_BOOL:
     res = (NULL
-               != setting_bool_to_str(pset, pset->boolean.game_value, FALSE,
+               != setting_bool_to_str(pset, pset->boolean.game_value, false,
                                       buf, sizeof(buf))
            && setting_bool_set(pset, buf, NULL, reject_msg,
                                sizeof(reject_msg)));
@@ -6275,7 +6275,7 @@ static void setting_game_restore(struct setting *pset)
   case SST_ENUM:
     res = (NULL
                != setting_enum_to_str(pset, pset->enumerator.game_value,
-                                      FALSE, buf, sizeof(buf))
+                                      false, buf, sizeof(buf))
            && setting_enum_set(pset, buf, NULL, reject_msg,
                                sizeof(reject_msg)));
     break;
@@ -6283,13 +6283,13 @@ static void setting_game_restore(struct setting *pset)
   case SST_BITWISE:
     res = (NULL
                != setting_bitwise_to_str(pset, pset->bitwise.game_value,
-                                         FALSE, buf, sizeof(buf))
+                                         false, buf, sizeof(buf))
            && setting_bitwise_set(pset, buf, NULL, reject_msg,
                                   sizeof(reject_msg)));
     break;
 
   case SST_COUNT:
-    res = FALSE;
+    res = false;
     break;
   }
 
@@ -6305,7 +6305,7 @@ static void setting_game_restore(struct setting *pset)
  ****************************************************************************/
 void settings_game_start(void)
 {
-  settings_iterate(SSET_ALL, pset) { setting_game_set(pset, FALSE); }
+  settings_iterate(SSET_ALL, pset) { setting_game_set(pset, false); }
   settings_iterate_end;
 
   /* Settings from the start of the game are saved. */
@@ -6350,10 +6350,10 @@ void settings_game_save(struct section_file *file, const char *section)
                            "%s.set%d.gamestart", section, set_count);
         break;
       case SST_ENUM:
-        secfile_insert_enum_data(file, read_enum_value(pset), FALSE,
+        secfile_insert_enum_data(file, read_enum_value(pset), false,
                                  setting_enum_secfile_str, pset,
                                  "%s.set%d.value", section, set_count);
-        secfile_insert_enum_data(file, pset->enumerator.game_value, FALSE,
+        secfile_insert_enum_data(file, pset->enumerator.game_value, false,
                                  setting_enum_secfile_str, pset,
                                  "%s.set%d.gamestart", section, set_count);
         break;
@@ -6405,7 +6405,7 @@ void settings_game_load(struct section_file *file, const char *section)
 
   /* Check if the saved settings are valid settings from game start. */
   game.server.settings_gamestart_valid = secfile_lookup_bool_default(
-      file, FALSE, "%s.gamestart_valid", section);
+      file, false, "%s.gamestart_valid", section);
 
   for (i = 0; i < set_count; i++) {
     name = secfile_lookup_str(file, "%s.set%d.name", section, i);
@@ -6511,7 +6511,7 @@ void settings_game_load(struct section_file *file, const char *section)
       case SST_ENUM: {
         int val;
 
-        if (!secfile_lookup_enum_data(file, &val, FALSE,
+        if (!secfile_lookup_enum_data(file, &val, false,
                                       setting_enum_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
           qDebug("Option '%s' not defined in the savegame: %s", name,
@@ -6602,7 +6602,7 @@ void settings_game_load(struct section_file *file, const char *section)
 
         case SST_ENUM:
           pset->enumerator.game_value = secfile_lookup_enum_default_data(
-              file, read_enum_value(pset), FALSE, setting_enum_secfile_str,
+              file, read_enum_value(pset), false, setting_enum_secfile_str,
               pset, "%s.set%d.gamestart", section, i);
           break;
 
@@ -6649,7 +6649,7 @@ bool settings_game_reset(void)
 {
   if (!game.server.settings_gamestart_valid) {
     log_debug("No saved settings from the game start available.");
-    return FALSE;
+    return false;
   }
 
   settings_iterate(SSET_ALL, pset) { setting_game_restore(pset); }
@@ -6667,7 +6667,7 @@ void settings_init(bool act)
 
   settings_iterate(SSET_ALL, pset)
   {
-    setting_lock_set(pset, FALSE);
+    setting_lock_set(pset, false);
     setting_set_to_default(pset);
     setting_game_set(pset, TRUE);
     if (act) {
@@ -6929,7 +6929,7 @@ static void settings_list_init(void)
   struct setting *pset;
   int i;
 
-  fc_assert_ret(setting_sorted.init == FALSE);
+  fc_assert_ret(setting_sorted.init == false);
 
   /* Do it for all values of enum sset_level. */
   for (i = 0; i < OLEVELS_NUM; i++) {
@@ -7049,7 +7049,7 @@ static void settings_list_free(void)
     setting_list_destroy(setting_sorted.level[i]);
   }
 
-  setting_sorted.init = FALSE;
+  setting_sorted.init = false;
 }
 
 /************************************************************************/ /**

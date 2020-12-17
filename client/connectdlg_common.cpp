@@ -54,10 +54,10 @@
 #define WAIT_BETWEEN_TRIES 100000 /* usecs */
 #define NUMBER_OF_TRIES 500
 
-bool server_quitting = FALSE;
+bool server_quitting = false;
 
 static char challenge_fullname[MAX_LEN_PATH];
-static bool client_has_hack = FALSE;
+static bool client_has_hack = false;
 
 int internal_server_port;
 
@@ -133,7 +133,7 @@ then:
 bool is_server_running(void)
 {
   if (server_quitting) {
-    return FALSE;
+    return false;
   }
   return serverProcess::i()->state();
 }
@@ -173,11 +173,11 @@ void client_kill_server(bool force)
        * server. In either case, the only thing to do is a "hard" kill of
        * the server. */
       serverProcess::i()->kill();
-      server_quitting = FALSE;
+      server_quitting = false;
     }
   }
 
-  client_has_hack = FALSE;
+  client_has_hack = false;
 }
 
 /*********************************************************************/ /**
@@ -228,7 +228,7 @@ bool client_start_server(void)
     output_window_append(ftc_client, _("Couldn't start the server."));
     output_window_append(ftc_client,
                          _("You'll have to start one manually. Sorry..."));
-    return FALSE;
+    return false;
   }
 
   storage = QString::fromUtf8(freeciv_storage_dir());
@@ -237,7 +237,7 @@ bool client_start_server(void)
                          _("Cannot find freeciv storage directory"));
     output_window_append(
         ftc_client, _("You'll have to start server manually. Sorry..."));
-    return FALSE;
+    return false;
   }
 
   ruleset = QString::fromUtf8(tileset_what_ruleset(tileset));
@@ -276,7 +276,7 @@ bool client_start_server(void)
   }
   // Wait for the server to print its welcome screen
   serverProcess::i()->waitForReadyRead();
-  server_quitting = FALSE;
+  server_quitting = false;
   /* a reasonable number of tries */
   QString srv = QStringLiteral("localhost");
   while (connect_to_server(
@@ -308,7 +308,7 @@ bool client_start_server(void)
     output_window_append(ftc_client,
                          _("You'll have to start one manually. Sorry..."));
 
-    return FALSE;
+    return false;
   }
 
   /* We set the topology to match the view.
@@ -340,7 +340,7 @@ bool client_start_server(void)
     if (0 < tileset_hex_width(tileset) || 0 < tileset_hex_height(tileset)) {
       fc_strlcat(topobuf, "|HEX", sizeof(topobuf));
     }
-    desired_settable_option_update("topology", topobuf, FALSE);
+    desired_settable_option_update("topology", topobuf, false);
   }
 
   return TRUE;
@@ -392,7 +392,7 @@ void send_client_wants_hack(const char *filename)
     /* generate an authentication token */
     randomize_string(req.token, sizeof(req.token));
 
-    file = secfile_new(FALSE);
+    file = secfile_new(false);
     secfile_insert_str(file, req.token, "challenge.token");
     if (!secfile_save(file, challenge_fullname, 0, FZ_PLAIN)) {
       qCritical("Couldn't write token to temporary file: %s",

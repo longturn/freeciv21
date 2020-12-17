@@ -60,8 +60,8 @@ static bool effect_list_universal_needed_cb(struct effect *peffect,
 static bool is_universal_needed(struct universal *uni, requirers_cb cb,
                                 void *data)
 {
-  bool needed = FALSE;
-  bool needed_by_music_style = FALSE;
+  bool needed = false;
+  bool needed_by_music_style = false;
   int i;
   struct effect_list_cb_data cb_data;
 
@@ -159,7 +159,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
     needed = TRUE;
   }
 
-  cb_data.needed = FALSE;
+  cb_data.needed = false;
   cb_data.uni = uni;
   cb_data.cb = cb;
   cb_data.requirers_data = data;
@@ -176,7 +176,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
 bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.advance = padv}, .kind = VUT_ADVANCE};
-  bool needed = FALSE;
+  bool needed = false;
 
   advance_iterate(A_FIRST, pdependant)
   {
@@ -222,7 +222,7 @@ bool is_building_needed(struct impr_type *pimpr, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.building = pimpr},
                           .kind = VUT_IMPROVEMENT};
-  bool needed = FALSE;
+  bool needed = false;
 
   needed |= is_universal_needed(&uni, cb, data);
 
@@ -235,7 +235,7 @@ bool is_building_needed(struct impr_type *pimpr, requirers_cb cb, void *data)
 bool is_utype_needed(struct unit_type *ptype, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.utype = ptype}, .kind = VUT_UTYPE};
-  bool needed = FALSE;
+  bool needed = false;
 
   needed |= is_universal_needed(&uni, cb, data);
 
@@ -248,7 +248,7 @@ bool is_utype_needed(struct unit_type *ptype, requirers_cb cb, void *data)
 bool is_good_needed(struct goods_type *pgood, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.good = pgood}, .kind = VUT_GOOD};
-  bool needed = FALSE;
+  bool needed = false;
 
   needed |= is_universal_needed(&uni, cb, data);
 
@@ -261,9 +261,9 @@ bool is_good_needed(struct goods_type *pgood, requirers_cb cb, void *data)
 bool is_extra_needed(struct extra_type *pextra, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.extra = pextra}, .kind = VUT_EXTRA};
-  bool needed = FALSE;
-  bool conflicts = FALSE;
-  bool hides = FALSE;
+  bool needed = false;
+  bool conflicts = false;
+  bool hides = false;
   int id = extra_index(pextra);
 
   extra_type_iterate(requirer)
@@ -292,7 +292,7 @@ bool is_extra_needed(struct extra_type *pextra, requirers_cb cb, void *data)
 bool is_terrain_needed(struct terrain *pterr, requirers_cb cb, void *data)
 {
   struct universal uni = {.value = {.terrain = pterr}, .kind = VUT_TERRAIN};
-  bool needed = FALSE;
+  bool needed = false;
 
   needed |= is_universal_needed(&uni, cb, data);
 
@@ -306,7 +306,7 @@ bool is_government_needed(struct government *pgov, requirers_cb cb,
                           void *data)
 {
   struct universal uni = {.value = {.govern = pgov}, .kind = VUT_GOVERNMENT};
-  bool needed = FALSE;
+  bool needed = false;
 
   needed |= is_universal_needed(&uni, cb, data);
 
@@ -344,9 +344,9 @@ bool is_multiplier_needed(struct multiplier *pmul, requirers_cb cb,
                           void *data)
 {
   struct effect_list_multiplier_data cb_data;
-  bool needed = FALSE;
+  bool needed = false;
 
-  cb_data.needed = FALSE;
+  cb_data.needed = false;
   cb_data.pmul = pmul;
   cb_data.cb = cb;
   cb_data.requirers_data = data;

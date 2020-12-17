@@ -99,7 +99,7 @@ bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
   *canvas_y += (height - tileset_tile_height(tileset)) / 2;
 
   fc_assert_ret_val(is_valid_city_coords(city_radius_sq, city_x, city_y),
-                    FALSE);
+                    false);
 
   return TRUE;
 }
@@ -414,7 +414,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   va_end(args);
 
   /* Descriptions will be freed individually, so need to strdup */
-  city_sum_add_real(sum, value, FALSE, NULL, 0, desc, fc_strdup(desc));
+  city_sum_add_real(sum, value, false, NULL, 0, desc, fc_strdup(desc));
 }
 
 /**********************************************************************/ /**
@@ -657,7 +657,7 @@ void get_city_dialog_output_text(const struct city *pcity,
       /* Our calculation doesn't match what the server sent. Account it all
        * to corruption/waste. */
       regular_waste = pcity->waste[otype];
-      breakdown_ok = FALSE;
+      breakdown_ok = false;
     }
     if (regular_waste > 0) {
       const char *fmt;
@@ -759,7 +759,7 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
    * add up due to rounding. Making it always add up probably requires
    * arbitrary assignment of 0.1% rounding figures to particular
    * effects with something like distribute(). */
-  city_sum_print(sum, buf, bufsz, FALSE,
+  city_sum_print(sum, buf, bufsz, false,
                  Q_("?city_plague:"
                     "====== : Adds up to\n"
                     "%5.1f%% : Plague chance per turn"),
@@ -785,7 +785,7 @@ void get_city_dialog_pollution_text(const struct city *pcity, char *buf,
   city_sum_add(sum, prod, Q_("?city_pollution:Pollution from shields"));
   city_sum_add(sum, pop, Q_("?city_pollution:Pollution from citizens"));
   city_sum_add(sum, mod, Q_("?city_pollution:Pollution modifier"));
-  city_sum_print(sum, buf, bufsz, FALSE,
+  city_sum_print(sum, buf, bufsz, false,
                  Q_("?city_pollution:"
                     "==== : Adds up to\n"
                     "%4.0f : Total surplus"),
@@ -1165,11 +1165,11 @@ static bool base_city_queue_insert(struct city *pcity, int position,
 
     /* Insert as current production. */
     if (!can_city_build_direct(pcity, item)) {
-      return FALSE;
+      return false;
     }
 
     if (!worklist_insert(&pcity->worklist, &old, 0)) {
-      return FALSE;
+      return false;
     }
 
     city_change_production(pcity, item);
@@ -1177,18 +1177,18 @@ static bool base_city_queue_insert(struct city *pcity, int position,
              && position <= worklist_length(&pcity->worklist)) {
     /* Insert into middle. */
     if (!can_city_build_later(pcity, item)) {
-      return FALSE;
+      return false;
     }
     if (!worklist_insert(&pcity->worklist, item, position - 1)) {
-      return FALSE;
+      return false;
     }
   } else {
     /* Insert at end. */
     if (!can_city_build_later(pcity, item)) {
-      return FALSE;
+      return false;
     }
     if (!worklist_append(&pcity->worklist, item)) {
-      return FALSE;
+      return false;
     }
   }
   return TRUE;
@@ -1206,7 +1206,7 @@ bool city_queue_insert(struct city *pcity, int position,
     city_set_worklist(pcity, &pcity->worklist);
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1230,7 +1230,7 @@ bool city_queue_clear(struct city *pcity)
 bool city_queue_insert_worklist(struct city *pcity, int position,
                                 const struct worklist *worklist)
 {
-  bool success = FALSE;
+  bool success = false;
 
   if (worklist_length(worklist) == 0) {
     return TRUE;
@@ -1291,7 +1291,7 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
         && !are_universals_equal(&pcity->production, &target)) {
       /* We cannot change production to one from worklist.
        * Do not replace old worklist with new one. */
-      return FALSE;
+      return false;
     }
 
     worklist_advance(&copy);

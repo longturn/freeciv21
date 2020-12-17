@@ -100,7 +100,7 @@ typedef int fc_errno;
   do {                                                                      \
     delete (ptr);                                                           \
     (ptr) = NULL;                                                           \
-  } while (FALSE)
+  } while (false)
 
 #define fc_strdup(str) real_fc_strdup((str), "strdup", __FC_LINE__, __FILE__)
 

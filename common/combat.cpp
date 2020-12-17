@@ -48,12 +48,12 @@ static bool can_player_attack_tile(const struct player *pplayer,
 
   /* 1. Is there anyone there at all? */
   if (!pcity && unit_list_size((ptile->units)) == 0) {
-    return FALSE;
+    return false;
   }
 
   /* 2. If there is a city there, can we attack it? */
   if (pcity && !pplayers_at_war(city_owner(pcity), pplayer)) {
-    return FALSE;
+    return false;
   }
 
   /* 3. Are we allowed to attack _all_ units there? */
@@ -61,7 +61,7 @@ static bool can_player_attack_tile(const struct player *pplayer,
   {
     if (!pplayers_at_war(unit_owner(aunit), pplayer)) {
       /* Enemy hiding behind a human/diplomatic shield */
-      return FALSE;
+      return false;
     }
   }
   unit_list_iterate_end;
@@ -100,7 +100,7 @@ bool is_unit_reachable_at(const struct unit *defender,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -138,10 +138,10 @@ unit_attack_unit_at_tile_result(const struct unit *punit,
   /* 2. Can't attack with ground unit from ocean, except for marines */
   if (!is_native_tile(unit_type_get(punit), unit_tile(punit))
       && !utype_can_do_act_when_ustate(unit_type_get(punit), ACTION_ATTACK,
-                                       USP_NATIVE_TILE, FALSE)
+                                       USP_NATIVE_TILE, false)
       && !utype_can_do_act_when_ustate(unit_type_get(punit),
                                        ACTION_SUICIDE_ATTACK,
-                                       USP_NATIVE_TILE, FALSE)) {
+                                       USP_NATIVE_TILE, false)) {
     return ATT_NONNATIVE_SRC;
   }
 
@@ -172,8 +172,8 @@ static enum unit_attack_result
 unit_attack_all_at_tile_result(const struct unit *punit,
                                const struct tile *ptile)
 {
-  bool any_reachable_unit = FALSE;
-  bool any_neverprotect_unit = FALSE;
+  bool any_reachable_unit = false;
+  bool any_neverprotect_unit = false;
 
   unit_list_iterate(ptile->units, aunit)
   {
@@ -738,7 +738,7 @@ struct unit *get_defender(const struct unit *attacker,
     if (unit_can_defend_here(&(wld.map), defender)
         && unit_attack_unit_at_tile_result(attacker, defender, ptile)
                == ATT_OK) {
-      bool change = FALSE;
+      bool change = false;
       int build_cost = unit_build_shield_cost_base(defender);
       int defense_rating = get_defense_rating(attacker, defender);
       /* This will make units roughly evenly good defenders look alike. */

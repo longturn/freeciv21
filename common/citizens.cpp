@@ -202,7 +202,7 @@ struct player_slot *citizens_random(const struct city *pcity)
   }
   citizens_iterate_end;
 
-  fc_assert(FALSE);
+  fc_assert(false);
 
   return NULL;
 }

@@ -148,7 +148,7 @@ void tile_set_terrain(struct tile *ptile, struct terrain *pterrain)
  ****************************************************************************/
 const bv_extras *tile_extras_null(void)
 {
-  static bool empty_cleared = FALSE;
+  static bool empty_cleared = false;
 
   if (!empty_cleared) {
     BV_CLR_ALL(empty_extras);
@@ -185,7 +185,7 @@ bool tile_has_base_flag(const struct tile *ptile, enum base_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -206,7 +206,7 @@ bool tile_has_base_flag_for_unit(const struct tile *ptile,
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -226,7 +226,7 @@ bool tile_has_claimable_base(const struct tile *ptile,
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -330,7 +330,7 @@ bool tile_has_refuel_extra(const struct tile *ptile,
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -348,7 +348,7 @@ bool tile_has_native_base(const struct tile *ptile,
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 #ifndef tile_resource
@@ -521,7 +521,7 @@ static bool add_recursive_extras(struct tile *ptile,
 {
   if (rec > MAX_EXTRA_TYPES) {
     /* Infinite recursion */
-    return FALSE;
+    return false;
   }
 
   /* First place dependency extras */
@@ -535,7 +535,7 @@ static bool add_recursive_extras(struct tile *ptile,
 
   /* Is tile native for extra after that? */
   if (!is_native_tile_to_extra(pextra, ptile)) {
-    return FALSE;
+    return false;
   }
 
   tile_create_extra(ptile, pextra);
@@ -551,7 +551,7 @@ static bool rm_recursive_extras(struct tile *ptile,
 {
   if (rec > MAX_EXTRA_TYPES) {
     /* Infinite recursion */
-    return FALSE;
+    return false;
   }
 
   extra_type_iterate(pdepending)
@@ -562,7 +562,7 @@ static bool rm_recursive_extras(struct tile *ptile,
         if (pdep == pextra) {
           /* Depends on what we are going to remove */
           if (!rm_recursive_extras(ptile, pdepending, rec + 1)) {
-            return FALSE;
+            return false;
           }
         }
       }
@@ -588,7 +588,7 @@ bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
 {
   /* Add extra with its dependencies */
   if (!add_recursive_extras(ptile, tgt, 0)) {
-    return FALSE;
+    return false;
   }
 
   /* Remove conflicting extras */
@@ -615,7 +615,7 @@ bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt)
 {
   /* Remove extra with everything depending on it. */
   if (!rm_recursive_extras(ptile, tgt, 0)) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -741,8 +741,8 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   case ACTIVITY_OLD_RAILROAD:
   case ACTIVITY_FORTRESS:
   case ACTIVITY_AIRBASE:
-    fc_assert(FALSE);
-    return FALSE;
+    fc_assert(false);
+    return false;
 
   case ACTIVITY_PILLAGE:
   case ACTIVITY_BASE:
@@ -750,7 +750,7 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
     /* do nothing  - not implemented */
-    return FALSE;
+    return false;
 
   case ACTIVITY_IDLE:
   case ACTIVITY_FORTIFIED:
@@ -764,10 +764,10 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   case ACTIVITY_LAST:
     /* do nothing - these activities have no effect
        on terrain type or tile extras */
-    return FALSE;
+    return false;
   }
-  fc_assert(FALSE);
-  return FALSE;
+  fc_assert(false);
+  return false;
 }
 
 /************************************************************************/ /**
@@ -814,7 +814,7 @@ const char *tile_get_info_text(const struct tile *ptile,
 {
   static char s[256];
   bool pollution;
-  bool lb = FALSE;
+  bool lb = false;
   int bufsz = sizeof(s);
 
   sz_strlcpy(s, terrain_name_translation(tile_terrain(ptile)));
@@ -829,7 +829,7 @@ const char *tile_get_info_text(const struct tile *ptile,
         && tile_has_visible_extra(ptile, pextra)) {
       if (lb) {
         sz_strlcat(s, "\n");
-        lb = FALSE;
+        lb = false;
       } else {
         sz_strlcat(s, "/");
       }
@@ -845,7 +845,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   if (tile_resource_is_valid(ptile)) {
     if (lb) {
       sz_strlcat(s, "\n");
-      lb = FALSE;
+      lb = false;
     } else {
       sz_strlcat(s, " ");
     }
@@ -858,7 +858,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   }
 
   if (include_nuisances) {
-    pollution = FALSE;
+    pollution = false;
     extra_type_iterate(pextra)
     {
       if (pextra->category == ECAT_NUISANCE) {
@@ -906,7 +906,7 @@ bool tile_has_river(const struct tile *ptile)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -926,7 +926,7 @@ bool tile_has_road_flag(const struct tile *ptile, enum road_flag_id flag)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -942,7 +942,7 @@ bool tile_has_extra_flag(const struct tile *ptile, enum extra_flag_id flag)
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -960,7 +960,7 @@ bool tile_has_conflicting_extra(const struct tile *ptile,
   }
   extra_type_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -969,10 +969,10 @@ bool tile_has_conflicting_extra(const struct tile *ptile,
 bool tile_has_visible_extra(const struct tile *ptile,
                             const struct extra_type *pextra)
 {
-  bool hidden = FALSE;
+  bool hidden = false;
 
   if (!BV_ISSET(ptile->extras, extra_index(pextra))) {
-    return FALSE;
+    return false;
   }
 
   extra_type_iterate(top)
@@ -1002,7 +1002,7 @@ bool tile_has_cause_extra(const struct tile *ptile, enum extra_cause cause)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1124,11 +1124,11 @@ bool tile_virtual_check(struct tile *vtile)
   int tindex;
 
   if (!vtile || map_is_empty()) {
-    return FALSE;
+    return false;
   }
 
   tindex = tile_index(vtile);
-  fc_assert_ret_val(0 <= tindex && tindex < map_num_tiles(), FALSE);
+  fc_assert_ret_val(0 <= tindex && tindex < map_num_tiles(), false);
 
   return (vtile != wld.map.tiles + tindex);
 }
@@ -1151,7 +1151,7 @@ void *tile_hash_key(const struct tile *ptile)
  ****************************************************************************/
 bool tile_set_label(struct tile *ptile, const char *label)
 {
-  bool changed = FALSE;
+  bool changed = false;
 
   /* Handle empty label as NULL label */
   if (label != NULL && label[0] == '\0') {

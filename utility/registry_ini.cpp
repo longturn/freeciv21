@@ -235,7 +235,7 @@ static bool is_secfile_entry_name_valid(const char *name)
 
   while ('\0' != *name) {
     if (!QChar::isLetterOrNumber(*name) && NULL == strchr(allowed, *name)) {
-      return FALSE;
+      return false;
     }
     name++;
   }
@@ -265,7 +265,7 @@ static bool secfile_hash_insert(struct section_file *secfile,
     if (!secfile->allow_duplicates) {
       SECFILE_LOG(secfile, entry_section(hentry),
                   "Tried to insert same value twice: %s", buf);
-      return FALSE;
+      return false;
     }
   }
   secfile->hash.entries->insert(buf, pentry);
@@ -302,15 +302,15 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   struct section_file *secfile;
   struct section *psection = NULL;
   struct section *single_section = NULL;
-  bool table_state = FALSE; /* TRUE when within tabular format. */
+  bool table_state = false; /* TRUE when within tabular format. */
   int table_lineno = 0;     /* Row number in tabular, 0 top data row. */
   const char *tok;
   int i;
   struct astring base_name = ASTRING_INIT; /* for table or single entry */
   struct astring field_name = ASTRING_INIT;
   struct astring_vector columns; /* astrings for column headings */
-  bool found_my_section = FALSE;
-  bool error = FALSE;
+  bool found_my_section = false;
+  bool error = false;
 
   if (!inf) {
     return NULL;
@@ -395,7 +395,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         error = TRUE;
         goto END;
       }
-      table_state = FALSE;
+      table_state = false;
       continue;
     }
     if (table_state) {
@@ -637,7 +637,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
   struct entry *pentry, *col_pentry;
   int i;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
   if (NULL == filename) {
     filename = secfile->name;
@@ -651,7 +651,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
     SECFILE_LOG(secfile, NULL, _("Could not open %s for writing"),
                 real_filename);
 
-    return FALSE;
+    return false;
   }
 
   section_list_iterate(secfile->sections, psection)
@@ -709,10 +709,10 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
 
           sz_strlcpy(pentry_name, entry_name(pentry));
           c = first = pentry_name;
-          if (*c == '\0' || !is_legal_table_entry_name(*c, FALSE)) {
+          if (*c == '\0' || !is_legal_table_entry_name(*c, false)) {
             break;
           }
-          for (; *c != '\0' && is_legal_table_entry_name(*c, FALSE); c++) {
+          for (; *c != '\0' && is_legal_table_entry_name(*c, false); c++) {
             /* nothing */
           }
           if (0 != strncmp(c, "0.", 2)) {
@@ -851,11 +851,11 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
     SECFILE_LOG(secfile, NULL, "Error before closing %s: %s", real_filename,
                 fz_strerror(fs));
     fz_fclose(fs);
-    return FALSE;
+    return false;
   }
   if (0 != fz_fclose(fs)) {
     SECFILE_LOG(secfile, NULL, "Error closing %s", real_filename);
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -870,7 +870,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
  **************************************************************************/
 void secfile_check_unused(const struct section_file *secfile)
 {
-  bool any = FALSE;
+  bool any = false;
 
   section_list_iterate(secfile_sections(secfile), psection)
   {
@@ -1185,7 +1185,7 @@ struct section *secfile_insert_include(struct section_file *secfile,
   psection->special = EST_INCLUDE;
 
   /* Then add string entry "file" to it. */
-  secfile_insert_str_full(secfile, filename, NULL, FALSE, FALSE, EST_INCLUDE,
+  secfile_insert_str_full(secfile, filename, NULL, false, false, EST_INCLUDE,
                           "%s.file", buffer);
 
   return psection;
@@ -1210,7 +1210,7 @@ struct section *secfile_insert_long_comment(struct section_file *secfile,
   psection->special = EST_COMMENT;
 
   /* Then add string entry "comment" to it. */
-  secfile_insert_str_full(secfile, comment, NULL, FALSE, TRUE, EST_COMMENT,
+  secfile_insert_str_full(secfile, comment, NULL, false, TRUE, EST_COMMENT,
                           "%s.comment", buffer);
 
   return psection;
@@ -1739,7 +1739,7 @@ bool secfile_entry_delete(struct section_file *secfile, const char *path,
   va_list args;
   struct entry *pentry;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -1747,7 +1747,7 @@ bool secfile_entry_delete(struct section_file *secfile, const char *path,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "Path %s does not exists.", fullpath);
-    return FALSE;
+    return false;
   }
 
   entry_destroy(pentry);
@@ -1783,7 +1783,7 @@ bool secfile_lookup_bool(const struct section_file *secfile, bool *bval,
   const struct entry *pentry;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -1791,7 +1791,7 @@ bool secfile_lookup_bool(const struct section_file *secfile, bool *bval,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   return entry_bool_get(pentry, bval);
@@ -1836,7 +1836,7 @@ bool secfile_lookup_int(const struct section_file *secfile, int *ival,
   const struct entry *pentry;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -1844,7 +1844,7 @@ bool secfile_lookup_int(const struct section_file *secfile, int *ival,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   return entry_int_get(pentry, ival);
@@ -1983,7 +1983,7 @@ bool secfile_lookup_float(const struct section_file *secfile, float *fval,
   const struct entry *pentry;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -1991,7 +1991,7 @@ bool secfile_lookup_float(const struct section_file *secfile, float *fval,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   return entry_float_get(pentry, fval);
@@ -2148,10 +2148,10 @@ bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
   const char *str;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != penumerator, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != is_valid_fn, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != by_name_fn, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != penumerator, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != is_valid_fn, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != by_name_fn, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -2159,11 +2159,11 @@ bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   if (!entry_str_get(pentry, &str)) {
-    return FALSE;
+    return false;
   }
 
   *penumerator = by_name_fn(str, strcmp);
@@ -2173,7 +2173,7 @@ bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
 
   SECFILE_LOG(secfile, entry_section(pentry),
               "Entry \"%s\": no match for \"%s\".", entry_name(pentry), str);
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -2283,10 +2283,10 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
   int val;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != penumerator, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != is_valid_fn, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != by_name_fn, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != penumerator, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != is_valid_fn, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != by_name_fn, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -2294,11 +2294,11 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   if (!entry_str_get(pentry, &str)) {
-    return FALSE;
+    return false;
   }
 
   *penumerator = 0;
@@ -2323,7 +2323,7 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
       SECFILE_LOG(secfile, entry_section(pentry),
                   "Entry \"%s\": no match for \"%s\".", entry_name(pentry),
                   val_name);
-      return FALSE;
+      return false;
     }
     *penumerator |= val;
     str = p;
@@ -2460,9 +2460,9 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
   int val;
   va_list args;
 
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != pvalue, FALSE);
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != name_fn, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != secfile, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != pvalue, false);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, NULL, NULL != name_fn, false);
 
   va_start(args, path);
   fc_vsnprintf(fullpath, sizeof(fullpath), path, args);
@@ -2470,11 +2470,11 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
 
   if (!(pentry = secfile_entry_by_path(secfile, fullpath))) {
     SECFILE_LOG(secfile, NULL, "\"%s\" entry doesn't exist.", fullpath);
-    return FALSE;
+    return false;
   }
 
   if (!entry_str_get(pentry, &str)) {
-    return FALSE;
+    return false;
   }
 
   if (bitwise) {
@@ -2504,7 +2504,7 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
         SECFILE_LOG(secfile, entry_section(pentry),
                     "Entry \"%s\": no match for \"%s\".", entry_name(pentry),
                     val_name);
-        return FALSE;
+        return false;
       }
       *pvalue |= 1 << val;
       str = p;
@@ -2520,7 +2520,7 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
       SECFILE_LOG(secfile, entry_section(pentry),
                   "Entry \"%s\": no match for \"%s\".", entry_name(pentry),
                   str);
-      return FALSE;
+      return false;
     }
   }
 
@@ -2835,28 +2835,28 @@ bool section_set_name(struct section *psection, const char *name)
   struct section_file *secfile;
   struct section *pother;
 
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, psection, NULL != psection, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, psection, NULL != psection, false);
   secfile = psection->secfile;
-  SECFILE_RETURN_VAL_IF_FAIL(secfile, psection, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(secfile, psection, NULL != secfile, false);
 
   if (NULL == name || '\0' == name[0]) {
     SECFILE_LOG(secfile, psection, "No new name for section \"%s\".",
                 psection->name);
-    return FALSE;
+    return false;
   }
 
   if (!is_secfile_entry_name_valid(name)) {
     SECFILE_LOG(secfile, psection,
                 "\"%s\" is not a valid section name for section \"%s\".",
                 name, psection->name);
-    return FALSE;
+    return false;
   }
 
   if ((pother = secfile_section_by_name(secfile, name))
       && pother != psection) {
     /* We cannot duplicate sections in any case! */
     SECFILE_LOG(secfile, psection, "Section \"%s\" already exists.", name);
-    return FALSE;
+    return false;
   }
 
   /* Remove old references in the hash tables. */
@@ -3055,8 +3055,8 @@ struct entry *section_entry_str_new(struct section *psection,
     pentry->type = ENTRY_STR;
     pentry->string.value = fc_strdup(NULL != value ? value : "");
     pentry->string.escaped = escaped;
-    pentry->string.raw = FALSE;
-    pentry->string.gt_marking = FALSE;
+    pentry->string.raw = false;
+    pentry->string.gt_marking = false;
   }
 
   return pentry;
@@ -3169,23 +3169,23 @@ bool entry_set_name(struct entry *pentry, const char *name)
   struct section *psection;
   struct section_file *secfile;
 
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   psection = pentry->psection;
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != psection, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != psection, false);
   secfile = psection->secfile;
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, psection, NULL != secfile, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, psection, NULL != secfile, false);
 
   if (NULL == name || '\0' == name[0]) {
     SECFILE_LOG(secfile, psection, "No new name for entry \"%s\".",
                 pentry->name);
-    return FALSE;
+    return false;
   }
 
   if (!is_secfile_entry_name_valid(name)) {
     SECFILE_LOG(secfile, psection,
                 "\"%s\" is not a valid entry name for entry \"%s\".", name,
                 pentry->name);
-    return FALSE;
+    return false;
   }
 
   if (!secfile->allow_duplicates) {
@@ -3193,7 +3193,7 @@ bool entry_set_name(struct entry *pentry, const char *name)
 
     if (NULL != pother && pother != pentry) {
       SECFILE_LOG(secfile, psection, "Entry \"%s\" already exists.", name);
-      return FALSE;
+      return false;
     }
   }
 
@@ -3252,7 +3252,7 @@ static inline void entry_use(struct entry *pentry) { pentry->used++; }
  **************************************************************************/
 bool entry_bool_get(const struct entry *pentry, bool *value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
 
   if (ENTRY_INT == pentry->type
       && (pentry->integer.value == 0 || pentry->integer.value == 1)
@@ -3263,7 +3263,7 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
   }
 
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_BOOL == pentry->type, FALSE);
+                             ENTRY_BOOL == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->boolean.value;
@@ -3276,9 +3276,9 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
  **************************************************************************/
 bool entry_bool_set(struct entry *pentry, bool value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_BOOL == pentry->type, FALSE);
+                             ENTRY_BOOL == pentry->type, false);
 
   pentry->boolean.value = value;
   return TRUE;
@@ -3289,9 +3289,9 @@ bool entry_bool_set(struct entry *pentry, bool value)
  **************************************************************************/
 bool entry_float_get(const struct entry *pentry, float *value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_FLOAT == pentry->type, FALSE);
+                             ENTRY_FLOAT == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->floating.value;
@@ -3305,9 +3305,9 @@ bool entry_float_get(const struct entry *pentry, float *value)
  **************************************************************************/
 bool entry_float_set(struct entry *pentry, float value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_FLOAT == pentry->type, FALSE);
+                             ENTRY_FLOAT == pentry->type, false);
 
   pentry->floating.value = value;
 
@@ -3319,9 +3319,9 @@ bool entry_float_set(struct entry *pentry, float value)
  **************************************************************************/
 bool entry_int_get(const struct entry *pentry, int *value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_INT == pentry->type, FALSE);
+                             ENTRY_INT == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->integer.value;
@@ -3334,9 +3334,9 @@ bool entry_int_get(const struct entry *pentry, int *value)
  **************************************************************************/
 bool entry_int_set(struct entry *pentry, int value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_INT == pentry->type, FALSE);
+                             ENTRY_INT == pentry->type, false);
 
   pentry->integer.value = value;
   return TRUE;
@@ -3347,9 +3347,9 @@ bool entry_int_set(struct entry *pentry, int value)
  **************************************************************************/
 bool entry_str_get(const struct entry *pentry, const char **value)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, FALSE);
+                             ENTRY_STR == pentry->type, false);
 
   if (NULL != value) {
     *value = pentry->string.value;
@@ -3364,9 +3364,9 @@ bool entry_str_set(struct entry *pentry, const char *value)
 {
   char *old_val;
 
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, FALSE);
+                             ENTRY_STR == pentry->type, false);
 
   /* We free() old value only after we've placed the new one, to
    * support secfile_replace_str_vec() calls that want to keep some of
@@ -3383,9 +3383,9 @@ bool entry_str_set(struct entry *pentry, const char *value)
  **************************************************************************/
 bool entry_str_escaped(const struct entry *pentry)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, FALSE);
+                             ENTRY_STR == pentry->type, false);
 
   return pentry->string.escaped;
 }
@@ -3395,9 +3395,9 @@ bool entry_str_escaped(const struct entry *pentry)
  **************************************************************************/
 bool entry_str_set_escaped(struct entry *pentry, bool escaped)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, FALSE);
+                             ENTRY_STR == pentry->type, false);
 
   pentry->string.escaped = escaped;
   return TRUE;
@@ -3408,9 +3408,9 @@ bool entry_str_set_escaped(struct entry *pentry, bool escaped)
  **************************************************************************/
 bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 {
-  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, FALSE);
+  SECFILE_RETURN_VAL_IF_FAIL(NULL, NULL, NULL != pentry, false);
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
-                             ENTRY_STR == pentry->type, FALSE);
+                             ENTRY_STR == pentry->type, false);
 
   pentry->string.gt_marking = gt_marking;
 

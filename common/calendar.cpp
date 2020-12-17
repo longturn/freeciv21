@@ -38,7 +38,7 @@ void game_next_year(struct packet_game_info *info)
   if (info->year_0_hack) {
     /* hacked it to get rid of year 0 */
     info->year = 0;
-    info->year_0_hack = FALSE;
+    info->year_0_hack = false;
   }
 
   /* !McFred:

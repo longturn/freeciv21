@@ -189,7 +189,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
   char players[256];
   char humans[256];
   char message[1024];
-  bool found_new = FALSE;
+  bool found_new = false;
 
   struct server *pserver;
 
@@ -370,7 +370,7 @@ static bool meta_read_response(struct server_scan *scan)
                 qUtf8Printable(cmd_metaserver));
     scan->error_func(scan, str);
 
-    return FALSE;
+    return false;
   }
 
   /* parse message body */
@@ -387,7 +387,7 @@ static bool meta_read_response(struct server_scan *scan)
                 qUtf8Printable(cmd_metaserver), secfile_error());
     scan->error_func(scan, str);
 
-    return FALSE;
+    return false;
   }
 
   return TRUE;

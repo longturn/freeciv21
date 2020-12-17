@@ -126,7 +126,7 @@ int city_trade_removable(const struct city *pcity,
   }                                                                         \
   trade_route_list_iterate_end;                                             \
   }                                                                         \
-  while (FALSE)
+  while (false)
 
 #define trade_routes_iterate_safe(c, proute)                                \
   {                                                                         \
@@ -158,7 +158,7 @@ int city_trade_removable(const struct city *pcity,
   }                                                                         \
   trade_routes_iterate_end;                                                 \
   }                                                                         \
-  while (FALSE)                                                             \
+  while (false)                                                             \
     ;
 
 /* Used in the network protocol. */

@@ -693,7 +693,7 @@ static void dai_spend_gold(struct ai_type *ait, struct player *pplayer)
     /* Civilian upgrades now */
     city_list_iterate(pplayer->cities, pcity)
     {
-      dai_upgrade_units(pcity, cached_limit, FALSE);
+      dai_upgrade_units(pcity, cached_limit, false);
     }
     city_list_iterate_end;
   }
@@ -906,7 +906,7 @@ void dai_manage_cities(struct ai_type *ait, struct player *pplayer)
     i = 0;
     while (player_get_expected_income(pplayer) < -(pplayer->economic.gold)
            && i < count) {
-      dai_city_sell_noncritical(sellers[i++], FALSE);
+      dai_city_sell_noncritical(sellers[i++], false);
     }
   }
   TIMING_LOG(AIT_EMERGENCY, TIMER_STOP);
@@ -992,7 +992,7 @@ static bool building_crucial(const struct player *plr,
 #if 0 /* This check will become more complicated now. */
   if (ai_wants_no_science(plr)
       && building_has_effect(pimprove, EFT_SCIENCE_BONUS)) {
-    return FALSE;
+    return false;
   }
 #endif
   if (building_has_effect(pimprove, EFT_DEFEND_BONUS)
@@ -1001,7 +1001,7 @@ static bool building_crucial(const struct player *plr,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1677,7 +1677,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
     int n_needed_techs = 0;
     struct tech_vector needed_techs;
     bool present = TRUE;
-    bool impossible_to_get = FALSE;
+    bool impossible_to_get = false;
 
     tech_vector_init(&needed_techs);
 
@@ -1693,7 +1693,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
       }
       if (!is_req_active(pplayer, NULL, pcity, pimprove, NULL, NULL, NULL,
                          NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
-        active = FALSE;
+        active = false;
         if (VUT_ADVANCE == preq->source.kind && preq->present) {
           /* This missing requirement is a missing tech requirement.
            * This will be for some additional effect
@@ -1753,7 +1753,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
   action_iterate(act_id)
   {
     bool is_possible;
-    bool will_be_possible = FALSE;
+    bool will_be_possible = false;
     enum req_range max_range;
     int act_neg_util;
 
@@ -1786,7 +1786,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
             range = preq->range; /* Assumption: Max one pr vector */
             continue;
           } else {
-            active = FALSE;
+            active = false;
             break;
           }
         }
@@ -1794,7 +1794,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
         if (!is_req_active(pplayer, NULL, pcity, pimprove, city_tile(pcity),
                            NULL, NULL, NULL, NULL, NULL, preq,
                            RPT_POSSIBLE)) {
-          active = FALSE;
+          active = false;
           break;
         }
       }
@@ -2080,7 +2080,7 @@ void dai_consider_wonder_city(struct ai_type *ait, struct city *pcity,
                               bool *result)
 {
   if (def_ai_city_data(pcity, ait)->grave_danger > 0) {
-    *result = FALSE;
+    *result = false;
   } else {
     *result = TRUE;
   }
@@ -2103,7 +2103,7 @@ Impr_type_id dai_find_source_building(struct city *pcity,
   {
     if (peffect->value > greatest_value) {
       const struct impr_type *building = NULL;
-      bool wrong_unit = FALSE;
+      bool wrong_unit = false;
 
       requirement_vector_iterate(&peffect->reqs, preq)
       {

@@ -568,7 +568,7 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
   if (!has_thread_cond_impl()) {
     qCritical(_("This Freeciv compilation has no full threads "
                 "implementation, threaded ai cannot be used."));
-    return FALSE;
+    return false;
   }
 
   qstrncpy(ai->name, "threaded", sizeof(ai->name));

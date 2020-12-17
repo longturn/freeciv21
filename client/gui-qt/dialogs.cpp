@@ -153,7 +153,7 @@ static bool is_race_dialog_open = false;
 /* Information used in action selection follow up questions. Can't be
  * stored in the action selection dialog since it is closed before the
  * follow up question is asked. */
-static bool is_more_user_input_needed = FALSE;
+static bool is_more_user_input_needed = false;
 
 /* Don't remove a unit's action decision want or move on to the next actor
  unit that wants a decision in the current unit selection. */
@@ -1679,7 +1679,7 @@ static void diplomat_queue_handle_primary(int actor_unit_id)
 static void diplomat_queue_handle_secondary(int actor_id)
 {
   /* Stop waiting. Move on to the next queued diplomat. */
-  is_more_user_input_needed = FALSE;
+  is_more_user_input_needed = false;
   diplomat_queue_handle_primary(actor_id);
 }
 
@@ -1693,7 +1693,7 @@ void action_selection_no_longer_in_progress_gui_specific(int actor_id)
 {
   Q_UNUSED(actor_id)
   /* Stop assuming the answer to a follow up question will arrive. */
-  is_more_user_input_needed = FALSE;
+  is_more_user_input_needed = false;
 }
 
 /***********************************************************************/ /**
@@ -1750,7 +1750,7 @@ void popup_action_selection(struct unit *actor_unit,
                 "Diplomat queue problem. Is another diplomat window open?");
 
   /* No extra input is required as no action has been chosen yet. */
-  is_more_user_input_needed = FALSE;
+  is_more_user_input_needed = false;
 
   actor_homecity = game_city_by_number(actor_unit->homecity);
 
@@ -1923,8 +1923,8 @@ void popup_action_selection(struct unit *actor_unit,
   }
   action_iterate_end;
 
-  if (unit_can_move_to_tile(&(wld.map), actor_unit, target_tile, FALSE,
-                            FALSE)) {
+  if (unit_can_move_to_tile(&(wld.map), actor_unit, target_tile, false,
+                            false)) {
     qv2 = target_tile->index;
 
     func = act_sel_keep_moving;

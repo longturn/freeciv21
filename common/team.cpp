@@ -149,7 +149,7 @@ bool team_slot_is_used(const struct team_slot *tslot)
 {
   /* No team slot available, if the game is not initialised. */
   if (!team_slots_initialised()) {
-    return FALSE;
+    return false;
   }
 
   return NULL != tslot->team;

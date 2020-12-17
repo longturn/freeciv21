@@ -231,7 +231,7 @@ QString plrdlg_col_state(const struct player *plr)
     return _("R.I.P.");
   } else if (!plr->is_connected) {
     struct option *opt;
-    bool consider_tb = FALSE;
+    bool consider_tb = false;
 
     if (is_ai(plr)) {
       return QLatin1String("");
@@ -306,7 +306,7 @@ static int cmp_score(const struct player *player1,
 ****************************************************************************/
 struct player_dlg_column player_dlg_columns[] = {
     {TRUE, COL_TEXT, N_("?Player:Name"), col_name, NULL, cmp_name, "name"},
-    {FALSE, COL_TEXT, N_("Username"), col_username, NULL, NULL, "username"},
+    {false, COL_TEXT, N_("Username"), col_username, NULL, NULL, "username"},
     {TRUE, COL_FLAG, N_("Flag"), NULL, NULL, NULL, "flag"},
     {TRUE, COL_TEXT, N_("Nation"), col_nation, NULL, NULL, "nation"},
     {TRUE, COL_COLOR, N_("Border"), NULL, NULL, NULL, "border"},
@@ -320,10 +320,10 @@ struct player_dlg_column player_dlg_columns[] = {
      "diplstate"},
     {TRUE, COL_TEXT, N_("Vision"), col_vision, NULL, NULL, "vision"},
     {TRUE, COL_TEXT, N_("State"), plrdlg_col_state, NULL, NULL, "state"},
-    {FALSE, COL_TEXT, N_("?Player_dlg:Host"), col_host, NULL, NULL, "host"},
-    {FALSE, COL_RIGHT_TEXT, N_("?Player_dlg:Idle"), col_idle, NULL, NULL,
+    {false, COL_TEXT, N_("?Player_dlg:Host"), col_host, NULL, NULL, "host"},
+    {false, COL_RIGHT_TEXT, N_("?Player_dlg:Idle"), col_idle, NULL, NULL,
      "idle"},
-    {FALSE, COL_RIGHT_TEXT, N_("Ping"), get_ping_time_text, NULL, NULL,
+    {false, COL_RIGHT_TEXT, N_("Ping"), get_ping_time_text, NULL, NULL,
      "ping"}};
 
 const int num_player_dlg_columns = ARRAY_SIZE(player_dlg_columns);

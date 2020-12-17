@@ -1073,7 +1073,7 @@ int unit_actions::update_actions()
   }
 
   /* Upgrade */
-  if (UU_OK == unit_upgrade_test(current_unit, FALSE)) {
+  if (UU_OK == unit_upgrade_test(current_unit, false)) {
     a = new hud_action(this);
     a->action_shortcut = SC_UPGRADE_UNIT;
     a->set_pixmap(

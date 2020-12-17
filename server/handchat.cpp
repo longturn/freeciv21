@@ -55,7 +55,7 @@ static inline bool conn_is_ignored(const struct connection *sender,
   if (NULL != sender && NULL != dest) {
     return conn_pattern_list_match(dest->server.ignore_list, sender);
   } else {
-    return FALSE;
+    return false;
   }
 }
 

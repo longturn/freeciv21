@@ -82,13 +82,13 @@ bool luascript_func_check(struct fc_lua *fcl,
 {
   bool ret = TRUE;
 
-  fc_assert_ret_val(fcl, FALSE);
-  fc_assert_ret_val(fcl->funcs, FALSE);
+  fc_assert_ret_val(fcl, false);
+  fc_assert_ret_val(fcl->funcs, false);
 
   for (auto const &qfunc_name : fcl->funcs->keys()) {
     char *func_name = qfunc_name.toLocal8Bit().data();
     if (!luascript_check_function(fcl, func_name)) {
-      fc_assert_ret_val(fcl->funcs->contains(func_name), FALSE);
+      fc_assert_ret_val(fcl->funcs->contains(func_name), false);
       auto pfunc = fcl->funcs->value(func_name);
       if (pfunc->required) {
         missing_func_required->append(func_name);
@@ -96,7 +96,7 @@ bool luascript_func_check(struct fc_lua *fcl,
         missing_func_optional->append(func_name);
       }
 
-      ret = FALSE;
+      ret = false;
     }
   }
 
@@ -190,18 +190,18 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
                                 va_list args)
 {
   struct luascript_func *pfunc;
-  bool success = FALSE;
+  bool success = false;
 
-  fc_assert_ret_val(fcl, FALSE);
-  fc_assert_ret_val(fcl->state, FALSE);
-  fc_assert_ret_val(fcl->funcs, FALSE);
+  fc_assert_ret_val(fcl, false);
+  fc_assert_ret_val(fcl->state, false);
+  fc_assert_ret_val(fcl->funcs, false);
 
   if (!(fcl->funcs->contains(func_name))) {
     luascript_log(fcl, LOG_ERROR,
                   "Lua function '%s' does not exist, "
                   "so cannot be invoked.",
                   func_name);
-    return FALSE;
+    return false;
   }
   pfunc = fcl->funcs->value(func_name);
   /* The function name */
@@ -213,7 +213,7 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
       luascript_log(fcl, LOG_ERROR, "Unknown lua function '%s'", func_name);
       lua_pop(fcl->state, 1);
     }
-    return FALSE;
+    return false;
   }
 
   luascript_push_args(fcl, pfunc->nargs, pfunc->arg_types, args);
@@ -256,14 +256,14 @@ bool luascript_func_is_required(struct fc_lua *fcl, const char *func_name)
 {
   struct luascript_func *pfunc;
 
-  fc_assert_ret_val(fcl, FALSE);
-  fc_assert_ret_val(fcl->state, FALSE);
-  fc_assert_ret_val(fcl->funcs, FALSE);
+  fc_assert_ret_val(fcl, false);
+  fc_assert_ret_val(fcl->state, false);
+  fc_assert_ret_val(fcl->funcs, false);
 
   if (!fcl->funcs->contains(func_name)) {
     luascript_log(fcl, LOG_ERROR, "Lua function '%s' does not exist.",
                   func_name);
-    return FALSE;
+    return false;
   }
   pfunc = fcl->funcs->value(func_name);
   return pfunc->required;

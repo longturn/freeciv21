@@ -104,13 +104,13 @@ void create_animals(void)
     return;
   }
 
-  anination = pick_a_nation(NULL, FALSE, TRUE, ANIMAL_BARBARIAN);
+  anination = pick_a_nation(NULL, false, TRUE, ANIMAL_BARBARIAN);
 
   if (anination == NO_NATION_SELECTED) {
     return;
   }
 
-  plr = server_create_player(-1, default_ai_type_name(), NULL, FALSE);
+  plr = server_create_player(-1, default_ai_type_name(), NULL, false);
   if (plr == NULL) {
     return;
   }
@@ -125,7 +125,7 @@ void create_animals(void)
 
   sz_strlcpy(plr->username, _(ANON_USER_NAME));
   plr->unassigned_user = TRUE;
-  plr->is_connected = FALSE;
+  plr->is_connected = false;
   plr->government = init_government_of_nation(anination);
   plr->economic.gold = 100;
 

@@ -183,15 +183,15 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
   int unassigned_caravans;
   int max_routes;
   Continent_id continent = tile_continent(pcity->tile);
-  bool dest_city_found = FALSE;
-  bool dest_city_nat_different_cont = FALSE;
-  bool dest_city_nat_same_cont = FALSE;
-  bool dest_city_in_different_cont = FALSE;
-  bool dest_city_in_same_cont = FALSE;
+  bool dest_city_found = false;
+  bool dest_city_nat_different_cont = false;
+  bool dest_city_nat_same_cont = false;
+  bool dest_city_in_different_cont = false;
+  bool dest_city_in_same_cont = false;
   bool prefer_different_cont;
   int pct = 0;
   int trader_trait;
-  bool need_boat = FALSE;
+  bool need_boat = false;
   int trade_action;
 
   if (city_list_size(pplayer->cities) < 5) {
@@ -210,7 +210,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
       > trade_route_type_trade_pct(TRT_NATIONAL)) {
     prefer_different_cont = TRUE;
   } else {
-    prefer_different_cont = FALSE;
+    prefer_different_cont = false;
   }
 
   /* Look for proper destination city for trade. */
@@ -245,7 +245,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
         > trade_route_type_trade_pct(TRT_IN)) {
       prefer_different_cont = TRUE;
     } else {
-      prefer_different_cont = FALSE;
+      prefer_different_cont = false;
     }
 
     players_iterate(aplayer)
@@ -490,7 +490,7 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
                "desires terrain improvers with passion " ADV_WANT_PRINTF,
                worker_want);
       dai_choose_role_unit(ait, pplayer, pcity, choice, CT_CIVILIAN,
-                           UTYF_SETTLERS, worker_want, FALSE);
+                           UTYF_SETTLERS, worker_want, false);
       adv_choice_set_use(choice, "worker");
     }
     /* Terrain improvers don't use boats (yet) */
@@ -646,7 +646,7 @@ void dai_wonder_city_distance(struct ai_type *ait, struct player *pplayer,
   parameter.omniscience = !has_handicap(pplayer, H_MAP);
   pfm = pf_map_new(&parameter);
 
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     struct city *acity = tile_city(ptile);
 

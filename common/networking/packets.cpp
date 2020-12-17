@@ -103,12 +103,12 @@ static bool conn_compression_flush(struct connection *pconn)
 
   error = compress2(compressed, &compressed_size, pconn->compression.queue.p,
                     pconn->compression.queue.size, compression_level);
-  fc_assert_ret_val(error == Z_OK, FALSE);
+  fc_assert_ret_val(error == Z_OK, false);
 
   /* Compression signalling currently assumes a 2-byte packet length; if that
    * changes, the protocol should probably be changed */
   fc_assert_ret_val(
-      data_type_size(data_type(pconn->packet_header.length)) == 2, FALSE);
+      data_type_size(data_type(pconn->packet_header.length)) == 2, false);
 
   /* Include normal length field in decision */
   jumbo = (compressed_size + 2 >= JUMBO_BORDER);
@@ -344,7 +344,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
     int itype;
   } utype;
   struct data_in din;
-  bool compressed_packet = FALSE;
+  bool compressed_packet = false;
   int header_size = 0;
   void *data;
   void *(*receive_handler)(struct connection *);
@@ -635,7 +635,7 @@ bool packet_check(struct data_in *din, struct connection *pc)
 
     log_packet("received long packet (type %d, len %d, rem %lu) from %s",
                type, len, (unsigned long) rem, conn_description(pc));
-    return FALSE;
+    return false;
   }
   return TRUE;
 }
@@ -771,7 +771,7 @@ static void packet_handlers_free(void) {}
 const struct packet_handlers *packet_handlers_initial(void)
 {
   static struct packet_handlers default_handlers;
-  static bool initialized = FALSE;
+  static bool initialized = false;
 
   if (!initialized) {
     memset(&default_handlers, 0, sizeof(default_handlers));

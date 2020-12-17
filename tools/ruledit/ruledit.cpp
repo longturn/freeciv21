@@ -80,7 +80,7 @@ int main(int argc, char **argv)
   (void) bindtextdomain("freeciv-ruledit", get_locale_dir());
 #endif
 
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
+  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 #ifdef ENABLE_NLS
   bind_textdomain_codeset("freeciv-ruledit", get_internal_encoding());
 #endif
@@ -90,12 +90,12 @@ int main(int argc, char **argv)
 
   init_connections();
 
-  settings_init(FALSE);
+  settings_init(false);
 
   /* Reset aifill to zero */
   game.info.aifill = 0;
 
-  game_init(FALSE);
+  game_init(false);
   i_am_tool();
 
   /* Initialize the fc_interface functions needed to understand rules. */

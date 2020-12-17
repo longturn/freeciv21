@@ -62,7 +62,7 @@ struct tai_thr {
  **************************************************************************/
 void tai_init_threading(void)
 {
-  thrai.thread_running = FALSE;
+  thrai.thread_running = false;
 
   thrai.num_players = 0;
 }
@@ -72,7 +72,7 @@ void tai_init_threading(void)
  **************************************************************************/
 static void tai_thread_start(void *arg)
 {
-  bool finished = FALSE;
+  bool finished = false;
   struct ai_type *ait = arg;
 
   log_debug("New AI thread launched");
@@ -226,7 +226,7 @@ void tai_control_lost(struct ai_type *ait, struct player *pplayer)
     tai_send_msg(TAI_MSG_THR_EXIT, pplayer, NULL);
 
     thrai.ait.wait();
-    thrai.thread_running = FALSE;
+    thrai.thread_running = false;
 
     taimsg_list_destroy(thrai.msgs_to.msglist);
     taireq_list_destroy(thrai.reqs_from.reqlist);

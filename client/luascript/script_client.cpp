@@ -186,7 +186,7 @@ static void script_client_code_save(struct section_file *file)
 bool script_client_init(void)
 {
   if (main_fcl != NULL) {
-    fc_assert_ret_val(main_fcl->state != NULL, FALSE);
+    fc_assert_ret_val(main_fcl->state != NULL, false);
 
     return TRUE;
   }
@@ -196,7 +196,7 @@ bool script_client_init(void)
     luascript_destroy(main_fcl); /* TODO: main_fcl is NULL here... */
     main_fcl = NULL;
 
-    return FALSE;
+    return false;
   }
 
   tolua_common_a_open(main_fcl->state);

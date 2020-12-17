@@ -123,8 +123,8 @@ const char *api_methods_game_ruleset_name(lua_State *L)
 bool api_methods_building_type_is_wonder(lua_State *L,
                                          Building_Type *pbuilding)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
 
   return is_wonder(pbuilding);
 }
@@ -135,8 +135,8 @@ bool api_methods_building_type_is_wonder(lua_State *L,
 bool api_methods_building_type_is_great_wonder(lua_State *L,
                                                Building_Type *pbuilding)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
 
   return is_great_wonder(pbuilding);
 }
@@ -147,8 +147,8 @@ bool api_methods_building_type_is_great_wonder(lua_State *L,
 bool api_methods_building_type_is_small_wonder(lua_State *L,
                                                Building_Type *pbuilding)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
 
   return is_small_wonder(pbuilding);
 }
@@ -159,8 +159,8 @@ bool api_methods_building_type_is_small_wonder(lua_State *L,
 bool api_methods_building_type_is_improvement(lua_State *L,
                                               Building_Type *pbuilding)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pbuilding, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pbuilding, false);
 
   return is_improvement(pbuilding);
 }
@@ -196,9 +196,9 @@ api_methods_building_type_name_translation(lua_State *L,
 bool api_methods_city_has_building(lua_State *L, City *pcity,
                                    Building_Type *building)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, false);
 
   return city_has_building(pcity, building);
 }
@@ -243,7 +243,7 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
                                        Player *inspirer)
 {
   Q_UNUSED(L)
-  bool inspired = FALSE;
+  bool inspired = false;
 
   if (!game.info.citizen_nationality) {
     if (self->original == inspirer) {
@@ -298,8 +298,8 @@ int api_methods_city_culture_get(lua_State *L, City *pcity)
  *****************************************************************************/
 bool api_methods_is_city_happy(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
 
   /* Note: if clients ever have virtual cities or sth, needs amending */
   return is_server() ? city_happy(pcity) : pcity->client.happy;
@@ -310,8 +310,8 @@ bool api_methods_is_city_happy(lua_State *L, City *pcity)
  *****************************************************************************/
 bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
 
   /* Note: if clients ever have virtual cities or sth, needs amending */
   return is_server() ? city_unhappy(pcity) : pcity->client.unhappy;
@@ -322,8 +322,8 @@ bool api_methods_is_city_unhappy(lua_State *L, City *pcity)
  *****************************************************************************/
 bool api_methods_is_city_celebrating(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
 
   return city_celebrating(pcity);
 }
@@ -333,8 +333,8 @@ bool api_methods_is_city_celebrating(lua_State *L, City *pcity)
  *****************************************************************************/
 bool api_methods_is_gov_center(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
 
   return is_gov_center(pcity);
 }
@@ -344,8 +344,8 @@ bool api_methods_is_gov_center(lua_State *L, City *pcity)
  *****************************************************************************/
 bool api_methods_is_capital(lua_State *L, City *pcity)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pcity, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pcity, false);
 
   return is_capital(pcity);
 }
@@ -442,9 +442,9 @@ const char *api_methods_player_controlling_gui(lua_State *L, Player *pplayer)
 bool api_methods_player_has_wonder(lua_State *L, Player *pplayer,
                                    Building_Type *building)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pplayer, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pplayer, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, building, 3, Building_Type, false);
 
   return wonder_is_built(pplayer, building);
 }
@@ -499,9 +499,9 @@ int api_methods_player_gold(lua_State *L, Player *pplayer)
 bool api_methods_player_knows_tech(lua_State *L, Player *pplayer,
                                    Tech_Type *ptech)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pplayer, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptech, 3, Tech_Type, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pplayer, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptech, 3, Tech_Type, false);
 
   return research_invention_state(research_get(pplayer),
                                   advance_number(ptech))
@@ -536,7 +536,7 @@ bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
     return player_has_flag(pplayer, flag_val);
   }
 
-  return FALSE;
+  return false;
 }
 
 /*************************************************************************/ /**
@@ -545,9 +545,9 @@ bool api_methods_player_has_flag(lua_State *L, Player *pplayer,
 bool api_methods_player_shares_research(lua_State *L, Player *pplayer,
                                         Player *aplayer)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, pplayer, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, aplayer, 3, Player, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, pplayer, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, aplayer, 3, Player, false);
 
   return research_get(pplayer) == research_get(aplayer);
 }
@@ -790,8 +790,8 @@ bool api_methods_tile_city_exists_within_max_city_map(lua_State *L,
                                                       Tile *ptile,
                                                       bool may_be_on_center)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, ptile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   return city_exists_within_max_city_map(ptile, may_be_on_center);
 }
@@ -802,8 +802,8 @@ bool api_methods_tile_city_exists_within_max_city_map(lua_State *L,
  *****************************************************************************/
 bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, ptile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (!name) {
     extra_type_iterate(pextra)
@@ -814,7 +814,7 @@ bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
     }
     extra_type_iterate_end;
 
-    return FALSE;
+    return false;
   } else {
     struct extra_type *pextra;
 
@@ -830,8 +830,8 @@ bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
  *****************************************************************************/
 bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, ptile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (!name) {
     extra_type_by_cause_iterate(EC_BASE, pextra)
@@ -842,7 +842,7 @@ bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
     }
     extra_type_by_cause_iterate_end;
 
-    return FALSE;
+    return false;
   } else {
     struct extra_type *pextra;
 
@@ -859,8 +859,8 @@ bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
  *****************************************************************************/
 bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, ptile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (!name) {
     extra_type_by_cause_iterate(EC_ROAD, pextra)
@@ -871,7 +871,7 @@ bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
     }
     extra_type_by_cause_iterate_end;
 
-    return FALSE;
+    return false;
   } else {
     struct extra_type *pextra;
 
@@ -889,8 +889,8 @@ bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
 {
   struct city *pcity;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, ptile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (is_non_allied_unit_tile(ptile, against)) {
     return TRUE;
@@ -901,7 +901,7 @@ bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /*************************************************************************/ /**
@@ -1009,8 +1009,8 @@ int api_methods_tile_sq_distance(lua_State *L, Tile *ptile1, Tile *ptile2)
  *****************************************************************************/
 bool api_methods_unit_city_can_be_built_here(lua_State *L, Unit *punit)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, punit, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit, false);
 
   return city_can_be_built_here(unit_tile(punit), punit);
 }
@@ -1067,16 +1067,16 @@ bool api_methods_unit_type_has_flag(lua_State *L, Unit_Type *punit_type,
 {
   enum unit_type_flag_id id;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, punit_type, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, flag, 3, string, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit_type, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, flag, 3, string, false);
 
   id = unit_type_flag_id_by_name(flag, fc_strcasecmp);
   if (unit_type_flag_id_is_valid(id)) {
     return utype_has_flag(punit_type, id);
   } else {
     luascript_error(L, "Unit type flag \"%s\" does not exist", flag);
-    return FALSE;
+    return false;
   }
 }
 
@@ -1088,16 +1088,16 @@ bool api_methods_unit_type_has_role(lua_State *L, Unit_Type *punit_type,
 {
   enum unit_role_id id;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, punit_type, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, role, 3, string, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit_type, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, role, 3, string, false);
 
   id = unit_role_id_by_name(role, fc_strcasecmp);
   if (unit_role_id_is_valid(id)) {
     return utype_has_role(punit_type, id);
   } else {
     luascript_error(L, "Unit role \"%s\" does not exist", role);
-    return FALSE;
+    return false;
   }
 }
 
@@ -1108,9 +1108,9 @@ bool api_methods_unit_type_can_exist_at_tile(lua_State *L,
                                              Unit_Type *punit_type,
                                              Tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, punit_type, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit_type, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, false);
 
   return can_exist_at_tile(&(wld.map), punit_type, ptile);
 }

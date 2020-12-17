@@ -234,18 +234,18 @@ bool is_safe_filename(const char *name)
 
   /* must not be NULL or empty */
   if (!name || *name == '\0') {
-    return FALSE;
+    return false;
   }
 
   for (; '\0' != name[i]; i++) {
     if ('.' != name[i] && NULL == strchr(base64url, name[i])) {
-      return FALSE;
+      return false;
     }
   }
 
   /* we don't allow the filename to ascend directories */
   if (strstr(name, PARENT_DIR_OPERATOR)) {
-    return FALSE;
+    return false;
   }
 
   /* Otherwise, it is okay... */
@@ -265,23 +265,23 @@ bool is_ascii_name(const char *name)
 
   /* must not be NULL or empty */
   if (!name || *name == '\0') {
-    return FALSE;
+    return false;
   }
 
   /* must begin and end with some non-space character */
   if ((*name == ' ') || (*(strchr(name, '\0') - 1) == ' ')) {
-    return FALSE;
+    return false;
   }
 
   /* must be composed entirely of printable ascii characters,
    * and no illegal characters which can break ranking scripts. */
   for (i = 0; name[i]; i++) {
     if (!is_ascii(name[i])) {
-      return FALSE;
+      return false;
     }
     for (j = 0; illegal_chars[j]; j++) {
       if (name[i] == illegal_chars[j]) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -299,12 +299,12 @@ bool is_base64url(const char *s)
 
   /* must not be NULL or empty */
   if (NULL == s || '\0' == *s) {
-    return FALSE;
+    return false;
   }
 
   for (; '\0' != s[i]; i++) {
     if (NULL == strchr(base64url, s[i])) {
-      return FALSE;
+      return false;
     }
   }
   return TRUE;
@@ -460,7 +460,7 @@ char *end_of_strn(char *str, int *nleft)
 bool check_strlen(const char *str, size_t len, const char *errmsg)
 {
   fc_assert_ret_val_msg(strlen(str) < len, TRUE, errmsg, str, len);
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -481,7 +481,7 @@ bool str_to_int(const char *str, int *pint)
 {
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -514,7 +514,7 @@ bool str_to_uint(const char *str, unsigned int *pint)
 {
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -548,7 +548,7 @@ bool str_to_float(const char *str, float *pfloat)
   bool dot;
   const char *start;
 
-  fc_assert_ret_val(NULL != str, FALSE);
+  fc_assert_ret_val(NULL != str, false);
 
   while (QChar::isSpace(*str)) {
     /* Skip leading spaces. */
@@ -575,7 +575,7 @@ bool str_to_float(const char *str, float *pfloat)
       str++;
     }
   } else {
-    dot = FALSE;
+    dot = false;
   }
 
   while (QChar::isSpace(*str)) {
@@ -995,7 +995,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
     for (auto dirname : *dirs) {
       if (first) {
         astr_add(&realfile, "/%s", qUtf8Printable(dirname));
-        first = FALSE;
+        first = false;
       } else {
         astr_add(&realfile, "%s", qUtf8Printable(dirname));
       }
@@ -1304,7 +1304,7 @@ void switch_lang(const char *lang)
 
   qInfo("LANG set to %s", lang);
 #else  /* FREECIV_ENABLE_NLS */
-  fc_assert(FALSE);
+  fc_assert(false);
 #endif /* FREECIV_ENABLE_NLS */
 }
 
@@ -1613,7 +1613,7 @@ bool make_dir(const char *pathname)
 bool path_is_absolute(const char *filename)
 {
   if (!filename) {
-    return FALSE;
+    return false;
   }
 
 #ifdef FREECIV_MSWINDOWS
@@ -1626,7 +1626,7 @@ bool path_is_absolute(const char *filename)
   }
 #endif /* FREECIV_MSWINDOWS */
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1697,7 +1697,7 @@ char scanin(char **buf, char *delimiters, char *dest, int size)
 void format_time_duration(time_t t, char *buf, int maxlen)
 {
   int seconds, minutes, hours, days;
-  bool space = FALSE;
+  bool space = false;
 
   seconds = t % 60;
   minutes = (t / 60) % 60;
@@ -1769,7 +1769,7 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
       continue;
     case '?':
       if ('\0' == *test) {
-        return FALSE;
+        return false;
       }
       test++;
       pattern++;
@@ -1795,7 +1795,7 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
       test = strchr(test, jump_to);
       if (NULL == test) {
         /* No match. */
-        return FALSE;
+        return false;
       }
     }
 
@@ -1806,7 +1806,7 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
     (test)++;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -1821,7 +1821,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
 
   if ('\0' == **test) {
     /* Need one character. */
-    return FALSE;
+    return false;
   }
 
   /* Find the end of the pattern. */
@@ -1829,7 +1829,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
     *pattern = strchr(*pattern, ']');
     if (NULL == *pattern) {
       /* Wildcard format error. */
-      return FALSE;
+      return false;
     } else if (*(*pattern - 1) != '\\') {
       /* This is the end. */
       break;
@@ -1843,7 +1843,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
     negation = TRUE;
     start++;
   } else {
-    negation = FALSE;
+    negation = false;
   }
   testc = **test;
   (*test)++;
@@ -1852,7 +1852,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   for (; start < *pattern; start++) {
     if ('-' == *start || '!' == *start) {
       /* Wildcard format error. */
-      return FALSE;
+      return false;
     } else if (start < *pattern - 2 && '-' == *(start + 1)) {
       /* Case range. */
       if (*start <= testc && testc <= *(start + 2)) {
@@ -1890,12 +1890,12 @@ bool wildcard_fit_string(const char *pattern, const char *test)
       return wildcard_asterisk_fit(pattern, test); /* Maybe recursive. */
     case '[':
       if (!wildcard_range_fit(&pattern, &test)) {
-        return FALSE;
+        return false;
       }
       continue;
     case '?':
       if ('\0' == *test) {
-        return FALSE;
+        return false;
       }
       break;
     case '\\':
@@ -1903,7 +1903,7 @@ bool wildcard_fit_string(const char *pattern, const char *test)
       fc__fallthrough; /* No break */
     default:
       if (*pattern != *test) {
-        return FALSE;
+        return false;
       }
       break;
     }
@@ -1911,7 +1911,7 @@ bool wildcard_fit_string(const char *pattern, const char *test)
     test++;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -2117,7 +2117,7 @@ static size_t extract_escapes(const char *format, char *escapes,
   static const char format_escapes[] = {'*', 'd', 'i', 'o', 'u', 'x', 'X',
                                         'e', 'E', 'f', 'F', 'g', 'G', 'a',
                                         'A', 'c', 's', 'p', 'n', '\0'};
-  bool reordered = FALSE;
+  bool reordered = false;
   size_t num = 0;
   int idx = 0;
 

@@ -39,8 +39,8 @@ void caravan_parameter_init_default(struct caravan_parameter *parameter)
   parameter->consider_wonders = TRUE; /* see also init_from_unit */
   parameter->account_for_broken_routes = TRUE;
   parameter->allow_foreign_trade = FTL_NATIONAL_ONLY;
-  parameter->ignore_transit_time = FALSE;
-  parameter->convert_trade = FALSE;
+  parameter->ignore_transit_time = false;
+  parameter->convert_trade = false;
   parameter->callback = NULL;
 }
 
@@ -52,14 +52,14 @@ void caravan_parameter_init_from_unit(struct caravan_parameter *parameter,
 {
   caravan_parameter_init_default(parameter);
   if (!unit_can_do_action(caravan, ACTION_TRADE_ROUTE)) {
-    parameter->consider_trade = FALSE;
+    parameter->consider_trade = false;
   }
   if (!unit_can_do_action(caravan, ACTION_MARKETPLACE)
       && !unit_can_do_action(caravan, ACTION_TRADE_ROUTE)) {
-    parameter->consider_windfall = FALSE;
+    parameter->consider_windfall = false;
   }
   if (!unit_can_do_action(caravan, ACTION_HELP_WONDER)) {
-    parameter->consider_wonders = FALSE;
+    parameter->consider_wonders = false;
   }
 }
 
@@ -71,17 +71,17 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
   /* a discount > 1.0 means money later is worth more than money now,
      which is ridiculous. */
   if (parameter->discount > 1.0) {
-    return FALSE;
+    return false;
   }
 
   /* a negative discount doesn't converge */
   if (parameter->discount < 0.0) {
-    return FALSE;
+    return false;
   }
 
   /* infinite horizon with no discount gives infinite reward. */
   if (parameter->horizon == FC_INFINITY && parameter->discount == 1.0) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -95,8 +95,8 @@ void caravan_result_init_zero(struct caravan_result *result)
   result->src = result->dest = NULL;
   result->arrival_time = 0;
   result->value = 0;
-  result->help_wonder = FALSE;
-  result->required_boat = FALSE;
+  result->help_wonder = false;
+  result->required_boat = false;
 }
 
 /************************************************************************/ /**
@@ -112,15 +112,15 @@ static void caravan_result_init(struct caravan_result *result,
   result->arrival_time = arrival_time;
 
   result->value = 0;
-  result->help_wonder = FALSE;
+  result->help_wonder = false;
   if ((src != NULL) && (dest != NULL)) {
     if (tile_continent(src->tile) != tile_continent(dest->tile)) {
       result->required_boat = TRUE;
     } else {
-      result->required_boat = FALSE;
+      result->required_boat = false;
     }
   } else {
-    result->required_boat = FALSE;
+    result->required_boat = false;
   }
 }
 
@@ -315,7 +315,7 @@ static double trade_benefit(const struct player *caravan_owner,
                                     newtrade);
   } else {
     /* Always fails. */
-    fc_assert_msg(FALSE == param->convert_trade,
+    fc_assert_msg(false == param->convert_trade,
                   "Unimplemented functionality: "
                   "using CM to calculate trade.");
     return 0;
@@ -409,8 +409,8 @@ does_foreign_trade_param_allow(const struct caravan_parameter *param,
     return !pplayers_at_war(src, dest);
   }
 
-  fc_assert(FALSE);
-  return FALSE;
+  fc_assert(false);
+  return false;
 }
 
 /************************************************************************/ /**
@@ -440,7 +440,7 @@ static bool get_discounted_reward(const struct unit *caravan,
   if (!does_foreign_trade_param_allow(parameter, pplayer_src,
                                       pplayer_dest)) {
     caravan_result_init_zero(result);
-    return FALSE;
+    return false;
   }
 
   consider_wonder =
@@ -460,7 +460,7 @@ static bool get_discounted_reward(const struct unit *caravan,
     /* No caravan action is possible against this target. */
     caravan_result_init_zero(result);
 
-    return FALSE;
+    return false;
   }
 
   trade = trade_benefit(pplayer_src, src, dest, parameter);
@@ -494,13 +494,13 @@ static bool get_discounted_reward(const struct unit *caravan,
 
   if (consider_trade && trade + windfall >= wonder) {
     result->value = trade + windfall;
-    result->help_wonder = FALSE;
+    result->help_wonder = false;
   } else if (consider_wonder) {
     result->value = wonder;
     result->help_wonder = TRUE;
   } else {
     caravan_result_init_zero(result);
-    return FALSE;
+    return false;
   }
 
   if (parameter->callback) {
@@ -545,14 +545,14 @@ static bool cewt_callback(void *vdata, const struct city *dest,
   Q_UNUSED(moves_left)
   cewt_data *data = static_cast<cewt_data *>(vdata);
 
-  fc_assert_ret_val(data->result, FALSE);
+  fc_assert_ret_val(data->result, false);
 
   if (dest == data->result->dest) {
     data->result->arrival_time = arrival_time;
     get_discounted_reward(data->caravan, data->param, data->result);
     return TRUE;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -647,7 +647,7 @@ static bool cfbdw_callback(void *vdata, const struct city *dest,
     *data->best = current;
   }
 
-  return FALSE; /* don't stop. */
+  return false; /* don't stop. */
 }
 
 /************************************************************************/ /**
@@ -779,7 +779,7 @@ static bool cowt_callback(void *vdata, const struct city *pcity,
     }
   }
 
-  return FALSE; /* don't stop searching */
+  return false; /* don't stop searching */
 }
 
 /************************************************************************/ /**

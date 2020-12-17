@@ -88,7 +88,7 @@ bv_extras get_tile_infrastructure_set(const struct tile *ptile, int *pcount)
     if (is_extra_removed_by(pextra, ERM_PILLAGE)
         && tile_has_extra(ptile, pextra)) {
       struct tile *missingset = tile_virtual_new(ptile);
-      bool dependency = FALSE;
+      bool dependency = false;
 
       tile_remove_extra(missingset, pextra);
       extra_type_iterate(pdependant)
@@ -167,8 +167,8 @@ void map_init(struct civ_map *imap, bool server_side)
     imap->server.single_pole = MAP_DEFAULT_SINGLE_POLE;
     imap->server.alltemperate = MAP_DEFAULT_ALLTEMPERATE;
     imap->server.temperature = MAP_DEFAULT_TEMPERATURE;
-    imap->server.have_huts = FALSE;
-    imap->server.have_resources = FALSE;
+    imap->server.have_huts = false;
+    imap->server.have_resources = false;
     imap->server.team_placement = MAP_DEFAULT_TEAM_PLACEMENT;
   }
 }
@@ -297,8 +297,8 @@ void map_init_topology(void)
 
   /* Values for direction8_invalid() */
   fc_assert(direction8_invalid() == 8);
-  dir_validity[8] = FALSE;
-  dir_cardinality[8] = FALSE;
+  dir_validity[8] = false;
+  dir_cardinality[8] = false;
 
   /* Values for actual directions */
   for (int dir = 0; dir < 8; dir++) {
@@ -307,14 +307,14 @@ void map_init_topology(void)
       wld.map.num_valid_dirs++;
       dir_validity[dir] = TRUE;
     } else {
-      dir_validity[dir] = FALSE;
+      dir_validity[dir] = false;
     }
     if (is_cardinal_dir_calculate(direction8(dir))) {
       wld.map.cardinal_dirs[wld.map.num_cardinal_dirs] = direction8(dir);
       wld.map.num_cardinal_dirs++;
       dir_cardinality[dir] = TRUE;
     } else {
-      dir_cardinality[dir] = FALSE;
+      dir_cardinality[dir] = false;
     }
   }
   fc_assert(wld.map.num_valid_dirs > 0 && wld.map.num_valid_dirs <= 8);
@@ -651,7 +651,7 @@ bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -662,7 +662,7 @@ bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
 bool can_reclaim_ocean(const struct tile *ptile)
 {
   int land_tiles =
-      100 - count_terrain_class_near_tile(ptile, FALSE, TRUE, TC_OCEAN);
+      100 - count_terrain_class_near_tile(ptile, false, TRUE, TC_OCEAN);
 
   return land_tiles >= terrain_control.ocean_reclaim_requirement_pct;
 }
@@ -675,7 +675,7 @@ bool can_reclaim_ocean(const struct tile *ptile)
 bool can_channel_land(const struct tile *ptile)
 {
   int ocean_tiles =
-      count_terrain_class_near_tile(ptile, FALSE, TRUE, TC_OCEAN);
+      count_terrain_class_near_tile(ptile, false, TRUE, TC_OCEAN);
 
   return ocean_tiles >= terrain_control.land_channel_requirement_pct;
 }
@@ -688,7 +688,7 @@ bool can_channel_land(const struct tile *ptile)
 bool can_thaw_terrain(const struct tile *ptile)
 {
   int unfrozen_tiles =
-      100 - count_terrain_flag_near_tile(ptile, FALSE, TRUE, TER_FROZEN);
+      100 - count_terrain_flag_near_tile(ptile, false, TRUE, TER_FROZEN);
 
   return unfrozen_tiles >= terrain_control.terrain_thaw_requirement_pct;
 }
@@ -701,7 +701,7 @@ bool can_thaw_terrain(const struct tile *ptile)
 bool can_freeze_terrain(const struct tile *ptile)
 {
   int frozen_tiles =
-      count_terrain_flag_near_tile(ptile, FALSE, TRUE, TER_FROZEN);
+      count_terrain_flag_near_tile(ptile, false, TRUE, TER_FROZEN);
 
   return frozen_tiles >= terrain_control.terrain_freeze_requirement_pct;
 }
@@ -717,21 +717,21 @@ bool terrain_surroundings_allow_change(const struct tile *ptile,
 
   if (is_ocean(tile_terrain(ptile)) && !is_ocean(pterrain)
       && !can_reclaim_ocean(ptile)) {
-    ret = FALSE;
+    ret = false;
   } else if (!is_ocean(tile_terrain(ptile)) && is_ocean(pterrain)
              && !can_channel_land(ptile)) {
-    ret = FALSE;
+    ret = false;
   }
 
   if (ret) {
     if (terrain_has_flag(tile_terrain(ptile), TER_FROZEN)
         && !terrain_has_flag(pterrain, TER_FROZEN)
         && !can_thaw_terrain(ptile)) {
-      ret = FALSE;
+      ret = false;
     } else if (!terrain_has_flag(tile_terrain(ptile), TER_FROZEN)
                && terrain_has_flag(pterrain, TER_FROZEN)
                && !can_freeze_terrain(ptile)) {
-      ret = FALSE;
+      ret = false;
     }
   }
 
@@ -755,8 +755,8 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
   Q_UNUSED(punit)
   const struct unit_class *pclass = utype_class(punittype);
   int cost;
-  bool cardinality_checked = FALSE;
-  bool cardinal_move BAD_HEURISTIC_INIT(FALSE);
+  bool cardinality_checked = false;
+  bool cardinal_move BAD_HEURISTIC_INIT(false);
   bool ri;
 
   /* Try to exit early for detectable conditions */
@@ -898,7 +898,7 @@ static bool restrict_infra(const struct player *pplayer,
   struct player *plr1 = tile_owner(t1), *plr2 = tile_owner(t2);
 
   if (!pplayer || !game.info.restrictinfra) {
-    return FALSE;
+    return false;
   }
 
   if ((plr1 && pplayers_at_war(plr1, pplayer))
@@ -906,7 +906,7 @@ static bool restrict_infra(const struct player *pplayer,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -923,7 +923,7 @@ bool is_tiles_adjacent(const struct tile *tile0, const struct tile *tile1)
  ***********************************************************************/
 bool same_pos(const struct tile *tile1, const struct tile *tile2)
 {
-  fc_assert_ret_val(tile1 != NULL && tile2 != NULL, FALSE);
+  fc_assert_ret_val(tile1 != NULL && tile2 != NULL, false);
 
   /* In case of virtual tile, tile1 can be different from tile2,
    * but they have same index */
@@ -969,7 +969,7 @@ bool normalize_map_pos(const struct civ_map *nmap, int *x, int *y)
     index_to_map_pos(x, y, tile_index(ptile));
     return TRUE;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -1096,7 +1096,7 @@ struct tile *rand_neighbour(const struct civ_map *nmap,
     dirs[choice] = dirs[n - 1];
   }
 
-  fc_assert(FALSE); /* Are we on a 1x1 map with no wrapping??? */
+  fc_assert(false); /* Are we on a 1x1 map with no wrapping??? */
   return NULL;
 }
 
@@ -1211,7 +1211,7 @@ enum direction8 dir_cw(enum direction8 dir)
   case DIR8_NORTHWEST:
     return DIR8_NORTH;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     throw std::logic_error("Invalid direction");
   }
 }
@@ -1240,7 +1240,7 @@ enum direction8 dir_ccw(enum direction8 dir)
   case DIR8_NORTHWEST:
     return DIR8_WEST;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     throw std::logic_error("Invalid direction");
   }
 }
@@ -1267,7 +1267,7 @@ static bool is_valid_dir_calculate(enum direction8 dir)
   case DIR8_WEST:
     return TRUE;
   default:
-    return FALSE;
+    return false;
   }
 }
 
@@ -1279,7 +1279,7 @@ static bool is_valid_dir_calculate(enum direction8 dir)
  ***********************************************************************/
 bool is_valid_dir(enum direction8 dir)
 {
-  fc_assert_ret_val(dir <= direction8_invalid(), FALSE);
+  fc_assert_ret_val(dir <= direction8_invalid(), false);
 
   return dir_validity[dir];
 }
@@ -1294,7 +1294,7 @@ bool map_untrusted_dir_is_valid(enum direction8 dir)
 {
   if (!direction8_is_valid(dir)) {
     /* Isn't even in range of direction8. */
-    return FALSE;
+    return false;
   }
 
   return is_valid_dir(dir);
@@ -1324,7 +1324,7 @@ static bool is_cardinal_dir_calculate(enum direction8 dir)
     /* These directions are cardinal in hexagonal topologies. */
     return current_topo_has_flag(TF_HEX) && !current_topo_has_flag(TF_ISO);
   }
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1335,7 +1335,7 @@ static bool is_cardinal_dir_calculate(enum direction8 dir)
  ***********************************************************************/
 bool is_cardinal_dir(enum direction8 dir)
 {
-  fc_assert_ret_val(dir <= direction8_invalid(), FALSE);
+  fc_assert_ret_val(dir <= direction8_invalid(), false);
 
   return dir_cardinality[dir];
 }
@@ -1359,7 +1359,7 @@ bool base_get_direction_for_step(const struct civ_map *nmap,
   }
   adjc_dir_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1376,7 +1376,7 @@ int get_direction_for_step(const struct civ_map *nmap,
     return dir;
   }
 
-  fc_assert(FALSE);
+  fc_assert(false);
   return -1;
 }
 
@@ -1396,7 +1396,7 @@ bool is_move_cardinal(const struct civ_map *nmap,
   }
   cardinal_adjc_dir_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1433,7 +1433,7 @@ static struct startpos *startpos_new(struct tile *ptile)
   auto *psp = new startpos;
 
   psp->location = ptile;
-  psp->exclude = FALSE;
+  psp->exclude = false;
   psp->nations = new QSet<const struct nation_type *>;
 
   return psp;
@@ -1473,12 +1473,12 @@ int startpos_number(const struct startpos *psp)
  ***********************************************************************/
 bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
-  fc_assert_ret_val(NULL != pnation, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
+  fc_assert_ret_val(NULL != pnation, false);
   bool ret = psp->nations->contains(pnation);
   psp->nations->remove(pnation);
   if (0 == psp->nations->size() || !psp->exclude) {
-    psp->exclude = FALSE; /* Disable "excluding" mode. */
+    psp->exclude = false; /* Disable "excluding" mode. */
     psp->nations->insert(pnation);
   }
   return ret;
@@ -1490,8 +1490,8 @@ bool startpos_allow(struct startpos *psp, struct nation_type *pnation)
  ***********************************************************************/
 bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
-  fc_assert_ret_val(NULL != pnation, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
+  fc_assert_ret_val(NULL != pnation, false);
   bool ret = psp->nations->contains(pnation);
   psp->nations->remove(pnation);
   if (0 == psp->nations->size() || psp->exclude) {
@@ -1517,8 +1517,8 @@ struct tile *startpos_tile(const struct startpos *psp)
 bool startpos_nation_allowed(const struct startpos *psp,
                              const struct nation_type *pnation)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
-  fc_assert_ret_val(NULL != pnation, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
+  fc_assert_ret_val(NULL != pnation, false);
   return XOR(psp->exclude, psp->nations->contains(pnation));
 }
 
@@ -1527,7 +1527,7 @@ bool startpos_nation_allowed(const struct startpos *psp,
  ***********************************************************************/
 bool startpos_allows_all(const struct startpos *psp)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
   return (0 == psp->nations->size());
 }
 
@@ -1538,8 +1538,8 @@ bool startpos_allows_all(const struct startpos *psp)
 bool startpos_pack(const struct startpos *psp,
                    struct packet_edit_startpos_full *packet)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
-  fc_assert_ret_val(NULL != packet, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
+  fc_assert_ret_val(NULL != packet, false);
 
   packet->id = startpos_number(psp);
   packet->exclude = psp->exclude;
@@ -1558,8 +1558,8 @@ bool startpos_pack(const struct startpos *psp,
 bool startpos_unpack(struct startpos *psp,
                      const struct packet_edit_startpos_full *packet)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
-  fc_assert_ret_val(NULL != packet, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
+  fc_assert_ret_val(NULL != packet, false);
 
   psp->exclude = packet->exclude;
 
@@ -1586,7 +1586,7 @@ bool startpos_unpack(struct startpos *psp,
  ***********************************************************************/
 bool startpos_is_excluding(const struct startpos *psp)
 {
-  fc_assert_ret_val(NULL != psp, FALSE);
+  fc_assert_ret_val(NULL != psp, false);
   return psp->exclude;
 }
 
@@ -1658,8 +1658,8 @@ bool map_startpos_remove(struct tile *ptile)
 {
   bool ret;
   struct tile *prtile = static_cast<tile *>(tile_hash_key(ptile));
-  fc_assert_ret_val(NULL != ptile, FALSE);
-  fc_assert_ret_val(NULL != wld.map.startpos_table, FALSE);
+  fc_assert_ret_val(NULL != ptile, false);
+  fc_assert_ret_val(NULL != wld.map.startpos_table, false);
   ret = wld.map.startpos_table->contains(prtile);
   if (ret) {
     startpos_destroy(wld.map.startpos_table->take(prtile));

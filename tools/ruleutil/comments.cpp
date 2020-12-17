@@ -61,12 +61,12 @@ bool comments_load(void)
   fullpath = fileinfoname(get_data_dirs(), "ruledit/" COMMENTS_FILE_NAME);
 
   if (fullpath == NULL) {
-    return FALSE;
+    return false;
   }
 
-  comment_file = secfile_load(fullpath, FALSE);
+  comment_file = secfile_load(fullpath, false);
   if (comment_file == NULL) {
-    return FALSE;
+    return false;
   }
 
 #define comment_load(target, comment_file, comment_path)                    \
@@ -76,7 +76,7 @@ bool comments_load(void)
     if ((comment = secfile_lookup_str(comment_file, comment_path))) {       \
       target = fc_strdup(comment);                                          \
     } else {                                                                \
-      return FALSE;                                                         \
+      return false;                                                         \
     }                                                                       \
   }
 

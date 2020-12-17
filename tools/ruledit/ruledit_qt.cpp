@@ -196,7 +196,7 @@ void ruledit_gui::launch_now()
   rn_bytes = ruleset_select->text().toUtf8();
   sz_strlcpy(game.server.rulesetdir, rn_bytes.data());
 
-  if (load_rulesets(NULL, NULL, TRUE, conversion_log_cb, FALSE, TRUE,
+  if (load_rulesets(NULL, NULL, TRUE, conversion_log_cb, false, TRUE,
                     TRUE)) {
     display_msg(R__("Ruleset loaded"));
 

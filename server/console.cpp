@@ -38,9 +38,9 @@
 
 #include "console.h"
 
-static bool console_show_prompt = FALSE;
-static bool console_prompt_is_showing = FALSE;
-static bool console_rfcstyle = FALSE;
+static bool console_show_prompt = false;
+static bool console_prompt_is_showing = false;
+static bool console_rfcstyle = false;
 static bool readline_received_enter = TRUE;
 
 namespace {
@@ -88,7 +88,7 @@ static void con_update_prompt(void)
   }
 
   if (readline_received_enter) {
-    readline_received_enter = FALSE;
+    readline_received_enter = false;
   } else {
     rl_forced_update_display();
   }
@@ -155,7 +155,7 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
   va_end(args);
 
   /* remove all format tags */
-  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, FALSE);
+  featured_text_to_plain_text(buf1, buf2, sizeof(buf2), NULL, false);
   con_puts(rfc_status, buf2);
 }
 
@@ -176,7 +176,7 @@ void con_puts(enum rfc_status rfc_status, const char *str)
   } else {
     fc_printf("%s\n", str);
   }
-  console_prompt_is_showing = FALSE;
+  console_prompt_is_showing = false;
   con_update_prompt();
 }
 
@@ -213,7 +213,7 @@ void con_prompt_init(void)
   if (first) {
     con_puts(C_COMMENT, "");
     con_puts(C_COMMENT, _("For introductory help, type 'help'."));
-    first = FALSE;
+    first = false;
   }
 }
 
@@ -229,14 +229,14 @@ void con_prompt_on(void)
 /********************************************************************/ /**
    Do not print a prompt after log messages.
  ************************************************************************/
-void con_prompt_off(void) { console_show_prompt = FALSE; }
+void con_prompt_off(void) { console_show_prompt = false; }
 
 /********************************************************************/ /**
    User pressed enter: will need a new prompt
  ************************************************************************/
 void con_prompt_enter(void)
 {
-  console_prompt_is_showing = FALSE;
+  console_prompt_is_showing = false;
   readline_received_enter = TRUE;
 }
 
@@ -246,5 +246,5 @@ void con_prompt_enter(void)
 void con_prompt_enter_clear(void)
 {
   console_prompt_is_showing = TRUE;
-  readline_received_enter = FALSE;
+  readline_received_enter = false;
 }

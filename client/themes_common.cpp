@@ -126,7 +126,7 @@ bool load_theme(const char *theme_name)
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**

@@ -61,7 +61,7 @@
 /* Set if anything in a sequence of edits triggers the expensive
  * assign_continent_numbers() check, which will be done once when the
  * sequence is complete. */
-static bool need_continents_reassigned = FALSE;
+static bool need_continents_reassigned = false;
 /* Hold pointers to tiles which were changed during the edit sequence,
  * so that they can be sanity-checked when the sequence is complete
  * and final global fix-ups have been done. */
@@ -78,7 +78,7 @@ void edithand_init(void)
 {
   modified_tile_table->clear();
 
-  need_continents_reassigned = FALSE;
+  need_continents_reassigned = false;
 
   if (unfogged_players != NULL) {
     free(unfogged_players);
@@ -114,7 +114,7 @@ void edithand_send_initial_packets(struct conn_list *dest)
   {
     if (psp->exclude) continue;
     startpos.id = tile_index(startpos_tile(psp));
-    startpos.removal = FALSE;
+    startpos.removal = false;
     startpos.tag = 0;
 
     startpos_pack(psp, &startpos_full);
@@ -139,7 +139,7 @@ static void check_edited_tile_terrains(void)
   if (need_continents_reassigned) {
     assign_continent_numbers();
     send_all_known_tiles(NULL);
-    need_continents_reassigned = FALSE;
+    need_continents_reassigned = false;
   }
 
 #ifdef SANITY_CHECKING
@@ -222,11 +222,11 @@ static bool edit_tile_terrain_handling(struct tile *ptile,
   if (old_terrain == pterrain
       || (terrain_has_flag(pterrain, TER_NO_CITIES)
           && NULL != tile_city(ptile))) {
-    return FALSE;
+    return false;
   }
 
   tile_change_terrain(ptile, pterrain);
-  fix_tile_on_terrain_change(ptile, old_terrain, FALSE);
+  fix_tile_on_terrain_change(ptile, old_terrain, false);
   modified_tile_table->insert(ptile);
   if (need_to_reassign_continents(old_terrain, pterrain)) {
     need_continents_reassigned = TRUE;
@@ -249,22 +249,22 @@ static bool edit_tile_extra_handling(struct tile *ptile,
 {
   if (remove_mode) {
     if (!tile_has_extra(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     if (!tile_extra_rm_apply(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     terrain_changed(ptile);
 
   } else {
     if (tile_has_extra(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
 
     if (!tile_extra_apply(ptile, pextra)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -369,7 +369,7 @@ void handle_edit_tile(struct connection *pc,
 {
   struct tile *ptile;
   struct player *eowner;
-  bool changed = FALSE;
+  bool changed = false;
 
   ptile = index_to_tile(&(wld.map), packet->tile);
   if (!ptile) {
@@ -392,7 +392,7 @@ void handle_edit_tile(struct connection *pc,
     {
       if (edit_tile_extra_handling(
               ptile, pextra, !BV_ISSET(packet->extras, extra_number(pextra)),
-              FALSE)) {
+              false)) {
         changed = TRUE;
       }
     }
@@ -414,7 +414,7 @@ void handle_edit_tile(struct connection *pc,
   /* Send the new state to all affected. */
   if (changed) {
     update_tile_knowledge(ptile);
-    send_tile_info(NULL, ptile, FALSE);
+    send_tile_info(NULL, ptile, false);
   }
 }
 
@@ -489,8 +489,8 @@ void handle_edit_unit_create(struct connection *pc, int owner, int tile,
     send_player_info_c(pplayer, NULL);
   }
 
-  homecity = find_closest_city(ptile, NULL, pplayer, FALSE, FALSE, FALSE,
-                               TRUE, FALSE, utype_class(punittype));
+  homecity = find_closest_city(ptile, NULL, pplayer, false, false, false,
+                               TRUE, false, utype_class(punittype));
   id = homecity ? homecity->id : 0;
 
   conn_list_do_buffer(game.est_connections);
@@ -590,7 +590,7 @@ void handle_edit_unit(struct connection *pc,
   const struct unit_type *putype;
   struct unit *punit;
   int id;
-  bool changed = FALSE;
+  bool changed = false;
   int fuel, hp;
 
   id = packet->id;
@@ -728,8 +728,8 @@ void handle_edit_city(struct connection *pc,
   struct player *pplayer;
   char buf[1024];
   int id;
-  bool changed = FALSE;
-  bool need_game_info = FALSE;
+  bool changed = false;
+  bool need_game_info = false;
   bv_player need_player_info;
 
   pcity = game_city_by_number(packet->id);
@@ -914,7 +914,7 @@ void handle_edit_player_create(struct connection *pc, int tag)
     return;
   }
 
-  pplayer = server_create_player(-1, default_ai_type_name(), NULL, FALSE);
+  pplayer = server_create_player(-1, default_ai_type_name(), NULL, false);
   if (!pplayer) {
     notify_conn(pc->self, NULL, E_BAD_COMMAND, ftc_editor,
                 _("Player creation failed."));
@@ -929,9 +929,9 @@ void handle_edit_player_create(struct connection *pc, int tag)
   }
   sz_strlcpy(pplayer->username, _(ANON_USER_NAME));
   pplayer->unassigned_user = TRUE;
-  pplayer->is_connected = FALSE;
+  pplayer->is_connected = false;
   pplayer->government = init_government_of_nation(pnation);
-  pplayer->server.got_first_city = FALSE;
+  pplayer->server.got_first_city = false;
 
   pplayer->economic.gold = 0;
   pplayer->economic = player_limit_to_max_rates(pplayer);
@@ -966,7 +966,7 @@ void handle_edit_player_remove(struct connection *pc, int id)
   /* Don't use conn_list_iterate here because connection_detach() can be
    * recursive and free the next connection pointer. */
   while (conn_list_size(pplayer->connections) > 0) {
-    connection_detach(conn_list_get(pplayer->connections, 0), FALSE);
+    connection_detach(conn_list_get(pplayer->connections, 0), false);
   }
 
   kill_player(pplayer);
@@ -980,7 +980,7 @@ void handle_edit_player(struct connection *pc,
                         const struct packet_edit_player *packet)
 {
   struct player *pplayer;
-  bool changed = FALSE, update_research = FALSE;
+  bool changed = false, update_research = false;
   struct nation_type *pnation;
   struct research *research;
   enum tech_state known;
@@ -1096,7 +1096,7 @@ void handle_edit_player(struct connection *pc,
   gov = government_by_number(packet->government);
   if (gov != pplayer->government) {
     if (gov != game.government_during_revolution) {
-      government_change(pplayer, gov, FALSE);
+      government_change(pplayer, gov, false);
     } else {
       int turns = revolution_length(gov, pplayer);
 
@@ -1205,7 +1205,7 @@ void handle_edit_player_vision(struct connection *pc, int plr_no, int tile,
   {
     if (!known) {
       struct city *pcity = tile_city(ptile);
-      bool cannot_make_unknown = FALSE;
+      bool cannot_make_unknown = false;
 
       if (pcity && city_owner(pcity) == pplayer) {
         continue;
@@ -1312,7 +1312,7 @@ void handle_edit_toggle_fogofwar(struct connection *pc, int plr_no)
   conn_list_do_buffer(game.est_connections);
   if (unfogged_players[player_number(pplayer)]) {
     enable_fog_of_war_player(pplayer);
-    unfogged_players[player_number(pplayer)] = FALSE;
+    unfogged_players[player_number(pplayer)] = false;
   } else {
     disable_fog_of_war_player(pplayer);
     unfogged_players[player_number(pplayer)] = TRUE;
@@ -1341,7 +1341,7 @@ void handle_edit_startpos(struct connection *pconn,
     changed = map_startpos_remove(ptile);
   } else {
     if (NULL != map_startpos_get(ptile)) {
-      changed = FALSE;
+      changed = false;
     } else {
       map_startpos_new(ptile);
       changed = TRUE;
@@ -1404,7 +1404,7 @@ void handle_edit_startpos_full(
 void handle_edit_game(struct connection *pc,
                       const struct packet_edit_game *packet)
 {
-  bool changed = FALSE;
+  bool changed = false;
 
   if (packet->scenario != game.scenario.is_scenario) {
     game.scenario.is_scenario = packet->scenario;
@@ -1492,7 +1492,7 @@ void handle_save_scenario(struct connection *pc, const char *name)
   }
 
   /* Client initiated scenario saving is not handmade */
-  game.scenario.handmade = FALSE;
+  game.scenario.handmade = false;
 
   save_game(name, "Scenario", TRUE);
 }

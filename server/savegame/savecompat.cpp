@@ -424,7 +424,7 @@ static void compat_load_020400(struct loaddata *loading,
       /* Process a map row at a time */
       for (y = 0; y < maxmapsize; y++) {
         /* Look for broken info to convert */
-        bool found = FALSE;
+        bool found = false;
         memset(known_row_old, 0, sizeof(known_row_old));
         for (l = 0; l < lines; l++) {
           for (j = 0; j < 8; j++) {
@@ -489,7 +489,7 @@ static void compat_load_020400(struct loaddata *loading,
                            "settings.set_count")) {
       int i, new_opt = set_count;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       for (i = 0; i < set_count; i++) {
         const char *name =
             secfile_lookup_str(loading->file, "settings.set%d.name", i);
@@ -607,7 +607,7 @@ static void compat_load_020500(struct loaddata *loading,
                            "settings.set_count")) {
       int i;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       for (i = 0; i < set_count; i++) {
         const char *name =
             secfile_lookup_str(loading->file, "settings.set%d.name", i);
@@ -630,7 +630,7 @@ static void compat_load_020500(struct loaddata *loading,
               secfile_replace_bool(loading->file, TRUE,
                                    "settings.set%d.value", i);
             } else {
-              secfile_replace_bool(loading->file, FALSE,
+              secfile_replace_bool(loading->file, false,
                                    "settings.set%d.value", i);
             }
           } else {
@@ -647,7 +647,7 @@ static void compat_load_020500(struct loaddata *loading,
                 secfile_replace_bool(loading->file, TRUE,
                                      "settings.set%d.gamestart", i);
               } else {
-                secfile_replace_bool(loading->file, FALSE,
+                secfile_replace_bool(loading->file, false,
                                      "settings.set%d.gamestart", i);
               }
             } else {
@@ -725,7 +725,7 @@ static void compat_load_020600(struct loaddata *loading,
       enum revolen_type rlt = GAME_DEFAULT_REVOLENTYPE;
       enum revolen_type gsrlt = GAME_DEFAULT_REVOLENTYPE;
       bool gamestart_valid = secfile_lookup_bool_default(
-          loading->file, FALSE, "settings.gamestart_valid");
+          loading->file, false, "settings.gamestart_valid");
       int new_set_count;
 
       for (i = 0; i < set_count; i++) {
@@ -1028,7 +1028,7 @@ static void compat_load_020600(struct loaddata *loading,
     for (i = 0; i < units_num; i++) {
       int len;
 
-      if (secfile_lookup_bool_default(loading->file, FALSE,
+      if (secfile_lookup_bool_default(loading->file, false,
                                       "player%d.u%d.orders_last_move_safe",
                                       plrno, i)) {
         continue;
@@ -1330,12 +1330,12 @@ static void compat_load_030000(struct loaddata *loading,
                                   "game.save_players")) {
     started = TRUE;
 
-    old_turn = increase_secfile_turn_int(loading, "game.turn", 0, FALSE) - 1;
+    old_turn = increase_secfile_turn_int(loading, "game.turn", 0, false) - 1;
     increase_secfile_turn_int(loading, "game.scoreturn",
-                              old_turn + GAME_DEFAULT_SCORETURN, FALSE);
+                              old_turn + GAME_DEFAULT_SCORETURN, false);
     increase_secfile_turn_int(loading, "history.turn", -2, TRUE);
   } else {
-    started = FALSE;
+    started = false;
   }
 
   player_slots_iterate(pslot)
@@ -1347,7 +1347,7 @@ static void compat_load_030000(struct loaddata *loading,
       continue;
     }
 
-    if (secfile_lookup_bool_default(loading->file, FALSE,
+    if (secfile_lookup_bool_default(loading->file, false,
                                     "player%d.ai.control", plrno)) {
       flag_names[0] = plr_flag_id_name(PLRF_AI);
 
@@ -1365,7 +1365,7 @@ static void compat_load_030000(struct loaddata *loading,
 
         fc_snprintf(buf, sizeof(buf), "player%d.u%d.born", plrno, i);
 
-        increase_secfile_turn_int(loading, buf, old_turn, FALSE);
+        increase_secfile_turn_int(loading, buf, old_turn, false);
       }
 
       num = secfile_lookup_int_default(loading->file, 0, "player%d.ncities",
@@ -1387,7 +1387,7 @@ static void compat_load_030000(struct loaddata *loading,
       secfile_lookup_int_default(loading->file, 0, "settings.set_count");
 
   /* User meta server message is now a setting. */
-  if (secfile_lookup_bool_default(loading->file, FALSE,
+  if (secfile_lookup_bool_default(loading->file, false,
                                   "game.meta_usermessage")) {
     const char *metamessage;
 
@@ -1474,7 +1474,7 @@ static void insert_server_side_agent(struct loaddata *loading,
         continue;
       }
 
-      ai = secfile_lookup_bool_default(loading->file, FALSE,
+      ai = secfile_lookup_bool_default(loading->file, false,
                                        "player%d.u%d.ai", plrno, unit);
 
       if (ai) {

@@ -204,7 +204,7 @@ struct advance *advance_by_rule_name(const char *name)
  **************************************************************************/
 bool advance_has_flag(Tech_type_id tech, enum tech_flag_id flag)
 {
-  fc_assert_ret_val(tech_flag_id_is_valid(flag), FALSE);
+  fc_assert_ret_val(tech_flag_id_is_valid(flag), false);
   return BV_ISSET(advance_by_number(tech)->flags, flag);
 }
 
@@ -236,7 +236,7 @@ void techs_precalc_data(void)
       break;
     case TECH_COST_CLASSIC_PRESET:
       if (-1 != padvance->cost) {
-        min_req = FALSE;
+        min_req = false;
         break;
       }
       fc__fallthrough; /* No break. */
@@ -246,7 +246,7 @@ void techs_precalc_data(void)
       break;
     case TECH_COST_EXPERIMENTAL_PRESET:
       if (-1 != padvance->cost) {
-        min_req = FALSE;
+        min_req = false;
         break;
       }
       fc__fallthrough; /* No break. */
@@ -301,7 +301,7 @@ void tech_classes_init(void)
 
   for (i = 0; i < MAX_NUM_TECH_CLASSES; i++) {
     tech_classes[i].idx = i;
-    tech_classes[i].ruledit_disabled = FALSE;
+    tech_classes[i].ruledit_disabled = false;
   }
 }
 
@@ -451,7 +451,7 @@ void techs_init(void)
   for (i = 0; i < ARRAY_SIZE(advances); i++) {
     advances[i].item_number = i;
     advances[i].cost = -1;
-    advances[i].inherited_root_req = FALSE;
+    advances[i].inherited_root_req = false;
     advances[i].tclass = 0;
 
     requirement_vector_init(&(advances[i].research_reqs));
@@ -518,7 +518,7 @@ static void advance_req_iter_next(struct iterator *it)
 {
   struct advance_req_iter *iter = ADVANCE_REQ_ITER(it);
   const struct advance *padvance = *iter->current, *preq;
-  bool is_new = FALSE;
+  bool is_new = false;
 
   for (int req = AR_ONE; req < AR_SIZE; req++) {
     preq = valid_advance(advance_requires(padvance, tech_req(req)));
@@ -608,7 +608,7 @@ static void advance_root_req_iter_next(struct iterator *it)
    * requirements may have more). */
   while (advance_root_req_iter_valid(it)) {
     const struct advance *padvance = *iter->current;
-    bool is_new = FALSE;
+    bool is_new = false;
 
     for (int req = AR_ONE; req < AR_SIZE; req++) {
       const struct advance *preq =

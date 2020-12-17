@@ -101,7 +101,7 @@ struct vision {
   do {                                                                      \
     fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_INVIS]);           \
     fc_assert((v)->radius_sq[V_MAIN] >= (v)->radius_sq[V_SUBSURFACE]);      \
-  } while (FALSE);
+  } while (false);
 
 struct vision *vision_new(struct player *pplayer, struct tile *ptile);
 void vision_free(struct vision *vision);

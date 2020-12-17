@@ -150,7 +150,7 @@ static inline bool fz_method_is_valid(enum fz_method method)
 #endif
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 #define fz_method_validate(method)                                          \
@@ -199,7 +199,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
   }
 
   fp = (fz_FILE *) fc_malloc(sizeof(*fp));
-  fp->memory = FALSE;
+  fp->memory = false;
   sz_strlcpy(mode, in_mode);
 
   if (mode[0] == 'w') {
@@ -268,7 +268,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
         } else {
           /* Read success and we can continue reading */
           fp->u.bz2.firstbyte = tmp;
-          fp->u.bz2.eof = FALSE;
+          fp->u.bz2.eof = false;
         }
         fp->method = FZ_BZIP2;
         return fp;
@@ -310,7 +310,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
           fp->u.xz.hack_byte_used = TRUE;
           action = LZMA_RUN;
         } else {
-          fp->u.xz.hack_byte_used = FALSE;
+          fp->u.xz.hack_byte_used = false;
           action = LZMA_FINISH;
         }
         xz_action(fp, action);
@@ -419,7 +419,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   free(fp);
   return NULL;
@@ -500,7 +500,7 @@ int fz_fclose(fz_FILE *fp)
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   free(fp);
   return 1;
@@ -559,7 +559,7 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
       size_t len = 0;
       bool line_end;
 
-      for (j = 0, line_end = FALSE;
+      for (j = 0, line_end = false;
            fp->u.xz.out_avail > 0 && !line_end && j < size - i - 1;
            j++, fp->u.xz.out_avail--) {
         buffer[i + j] = fp->u.xz.out_buf[fp->u.xz.out_index++];
@@ -586,7 +586,7 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
           hblen = fread(&fp->u.xz.hack_byte, 1, 1, fp->u.xz.plain);
         }
         if (hblen == 0) {
-          fp->u.xz.hack_byte_used = FALSE;
+          fp->u.xz.hack_byte_used = false;
         }
       }
       if (len == 0) {
@@ -683,7 +683,7 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   return NULL;
 }
@@ -703,7 +703,7 @@ static bool xz_outbuffer_to_file(fz_FILE *fp, lzma_action action)
     fp->u.xz.error = lzma_code(&fp->u.xz.stream, action);
 
     if (fp->u.xz.error != LZMA_OK && fp->u.xz.error != LZMA_STREAM_END) {
-      return FALSE;
+      return false;
     }
 
     while (total < PLAIN_FILE_BUF_SIZE - fp->u.xz.stream.avail_out) {
@@ -712,7 +712,7 @@ static bool xz_outbuffer_to_file(fz_FILE *fp, lzma_action action)
                    fp->u.xz.plain);
       total += len;
       if (len == 0) {
-        return FALSE;
+        return false;
       }
     }
     fp->u.xz.stream.avail_out = PLAIN_FILE_BUF_SIZE;
@@ -826,7 +826,7 @@ int fz_fprintf(fz_FILE *fp, const char *format, ...)
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   return 0;
 }
@@ -869,7 +869,7 @@ int fz_ferror(fz_FILE *fp)
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   return 0;
 }
@@ -1014,7 +1014,7 @@ const char *fz_strerror(fz_FILE *fp)
   }
 
   /* Should never happen */
-  fc_assert_msg(FALSE, "Internal error in %s() (method = %d)", __FUNCTION__,
+  fc_assert_msg(false, "Internal error in %s() (method = %d)", __FUNCTION__,
                 fp->method);
   return NULL;
 }

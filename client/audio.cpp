@@ -56,7 +56,7 @@ static int num_plugins_used = 0;
 static int selected_plugin = -1;
 static int current_track = -1;
 static enum music_usage current_usage;
-static bool switching_usage = FALSE;
+static bool switching_usage = false;
 
 static struct mfcb_data {
   struct section_file *sfile;
@@ -139,7 +139,7 @@ void audio_add_plugin(struct audio_plugin *p)
 bool audio_select_plugin(QString &name)
 {
   int i;
-  bool found = FALSE;
+  bool found = false;
 
   for (i = 0; i < num_plugins_used; i++) {
     if (QString(plugins[i].name) == name) {
@@ -164,7 +164,7 @@ bool audio_select_plugin(QString &name)
   if (!plugins[i].init()) {
     qCritical("Plugin %s found, but can't be initialized.",
               qUtf8Printable(name));
-    return FALSE;
+    return false;
   }
 
   selected_plugin = i;
@@ -295,7 +295,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   }
   qDebug("Initializing sound using %s and %s...",
          qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
-  ss_filename = audiospec_fullname(soundset_name, FALSE);
+  ss_filename = audiospec_fullname(soundset_name, false);
   ms_filename = audiospec_fullname(musicset_name, TRUE);
   if (!ss_filename || !ms_filename) {
     qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
@@ -330,7 +330,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   delete[] ms_filename;
 
   {
-    static bool atexit_set = FALSE;
+    static bool atexit_set = false;
 
     if (!atexit_set) {
       atexit(audio_shutdown);
@@ -374,13 +374,13 @@ static void music_finished_callback(void)
   bool usage_enabled = TRUE;
 
   if (switching_usage) {
-    switching_usage = FALSE;
+    switching_usage = false;
     return;
   }
 
   switch (current_usage) {
   case MU_SINGLE:
-    usage_enabled = FALSE;
+    usage_enabled = false;
     break;
   case MU_MENU:
     usage_enabled = gui_options.sound_enable_menu_music;
@@ -392,7 +392,7 @@ static void music_finished_callback(void)
 
   if (usage_enabled) {
     current_track =
-        audio_play_tag(mfcb.sfile, mfcb.tag, TRUE, current_track, FALSE);
+        audio_play_tag(mfcb.sfile, mfcb.tag, TRUE, current_track, false);
   }
 }
 
@@ -481,7 +481,7 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
  **************************************************************************/
 static bool audio_play_sound_tag(const char *tag, bool repeat)
 {
-  return (audio_play_tag(ss_tagfile, tag, repeat, -1, FALSE) >= 0);
+  return (audio_play_tag(ss_tagfile, tag, repeat, -1, false) >= 0);
 }
 
 /**********************************************************************/ /**
@@ -505,8 +505,8 @@ void audio_play_sound(const char *const tag, const char *const alt_tag)
     log_debug("audio_play_sound('%s', '%s')", tag, pretty_alt_tag);
 
     /* try playing primary tag first, if not go to alternative tag */
-    if (!audio_play_sound_tag(tag, FALSE)
-        && !audio_play_sound_tag(alt_tag, FALSE)) {
+    if (!audio_play_sound_tag(tag, false)
+        && !audio_play_sound_tag(alt_tag, false)) {
       qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
     }
   }
@@ -545,7 +545,7 @@ void audio_play_music(const char *const tag, char *const alt_tag,
 {
   current_usage = usage;
 
-  real_audio_play_music(tag, alt_tag, FALSE);
+  real_audio_play_music(tag, alt_tag, false);
 }
 
 /**********************************************************************/ /**

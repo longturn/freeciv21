@@ -243,7 +243,7 @@ void notify_conn(struct conn_list *dest, const struct tile *ptile,
   vpackage_event(&genmsg, ptile, event, color, format, args);
   va_end(args);
 
-  notify_conn_packet(dest, &genmsg, FALSE);
+  notify_conn_packet(dest, &genmsg, false);
 
   if (!dest || dest == game.est_connections) {
     /* Add to the cache */
@@ -293,7 +293,7 @@ void notify_player(const struct player *pplayer, const struct tile *ptile,
   vpackage_event(&genmsg, ptile, event, color, format, args);
   va_end(args);
 
-  notify_conn_packet(dest, &genmsg, FALSE);
+  notify_conn_packet(dest, &genmsg, false);
 
   /* Add to the cache */
   event_cache_add_for_player(&genmsg, pplayer);
@@ -319,7 +319,7 @@ void notify_embassies(const struct player *pplayer, const struct tile *ptile,
   {
     if (player_has_embassy(other_player, pplayer)
         && pplayer != other_player) {
-      notify_conn_packet(other_player->connections, &genmsg, FALSE);
+      notify_conn_packet(other_player->connections, &genmsg, false);
       players = event_cache_player_add(players, other_player);
     }
   }
@@ -370,7 +370,7 @@ void notify_team(const struct player *pplayer, const struct tile *ptile,
     event_cache_add_for_all(&genmsg);
   }
 
-  notify_conn_packet(dest, &genmsg, FALSE);
+  notify_conn_packet(dest, &genmsg, false);
 
   if (pplayer) {
     conn_list_destroy(dest);
@@ -489,7 +489,7 @@ static struct event_cache_data_list *event_cache = NULL;
 
 /* Event cache status: ON(TRUE) / OFF(FALSE); used for saving the
  * event cache */
-static bool event_cache_status = FALSE;
+static bool event_cache_status = false;
 
 /**********************************************************************/ /**
    Callback for freeing event cache data
@@ -577,7 +577,7 @@ void event_cache_free(void)
     event_cache_data_list_destroy(event_cache);
     event_cache = NULL;
   }
-  event_cache_status = FALSE;
+  event_cache_status = false;
 }
 
 /**********************************************************************/ /**
@@ -713,13 +713,13 @@ static bool event_cache_match(const struct event_cache_data *pdata,
                               bool is_global_observer, bool include_public)
 {
   if (server_state() != pdata->server_state) {
-    return FALSE;
+    return false;
   }
 
   if (server_state() == S_S_RUNNING && game.info.turn < pdata->packet.turn
       && game.info.turn
              > pdata->packet.turn - game.server.event_cache.turns) {
-    return FALSE;
+    return false;
   }
 
   switch (pdata->target_type) {
@@ -732,7 +732,7 @@ static bool event_cache_match(const struct event_cache_data *pdata,
     return is_global_observer;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -757,9 +757,9 @@ void send_pending_events(struct connection *pconn, bool include_public)
         pcm = pdata->packet;
         fc_snprintf(pcm.message, sizeof(pcm.message), "(T%d - %s) %s",
                     pdata->packet.turn, timestr, pdata->packet.message);
-        notify_conn_packet(pconn->self, &pcm, FALSE);
+        notify_conn_packet(pconn->self, &pcm, false);
       } else {
-        notify_conn_packet(pconn->self, &pdata->packet, FALSE);
+        notify_conn_packet(pconn->self, &pdata->packet, false);
       }
     }
   }
@@ -858,7 +858,7 @@ void event_cache_load(struct section_file *file, const char *section)
           players = event_cache_player_add(players, pplayer);
         } else if ('0' != *q) {
           /* a value not '0' or '1' means a corruption of the savegame */
-          valid = FALSE;
+          valid = false;
           break;
         }
 
@@ -896,7 +896,7 @@ void event_cache_save(struct section_file *file, const char *section)
 
   /* stop event logging; this way events from log_*() will not be added
    * to the event list while saving the event list */
-  event_cache_status = FALSE;
+  event_cache_status = false;
 
   event_cache_iterate(pdata)
   {

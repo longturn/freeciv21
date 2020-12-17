@@ -165,7 +165,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
   struct Treaty *ptreaty;
   bool *player_accept, *other_accept;
   enum dipl_reason diplcheck;
-  bool worker_refresh_required = FALSE;
+  bool worker_refresh_required = false;
   struct player *pother = player_by_number(counterpart);
 
   if (NULL == pother || pplayer == pother) {
@@ -514,7 +514,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                               advance_by_number(pclause->value), "traded");
           research_apply_penalty(presearch, pclause->value,
                                  game.server.diplbulbcost);
-          found_new_tech(presearch, pclause->value, FALSE, TRUE);
+          found_new_tech(presearch, pclause->value, false, TRUE);
         }
       } break;
       case CLAUSE_GOLD: {
@@ -561,7 +561,7 @@ void handle_diplomacy_accept_treaty_req(struct player *pplayer,
                       _("You give the city of %s to %s."), city_link(pcity),
                       player_name(pdest));
 
-        if (transfer_city(pdest, pcity, -1, TRUE, TRUE, FALSE,
+        if (transfer_city(pdest, pcity, -1, TRUE, TRUE, false,
                           !is_barbarian(pdest))) {
           script_server_signal_emit("city_transferred", pcity, pgiver, pdest,
                                     "trade");
@@ -932,12 +932,12 @@ void reject_all_treaties(struct player *pplayer)
     if (!treaty) {
       continue;
     }
-    treaty->accept0 = FALSE;
-    treaty->accept1 = FALSE;
+    treaty->accept0 = false;
+    treaty->accept1 = false;
     dlsend_packet_diplomacy_accept_treaty(
-        pplayer->connections, player_number(pplayer2), FALSE, FALSE);
+        pplayer->connections, player_number(pplayer2), false, false);
     dlsend_packet_diplomacy_accept_treaty(
-        pplayer2->connections, player_number(pplayer), FALSE, FALSE);
+        pplayer2->connections, player_number(pplayer), false, false);
   }
   players_iterate_end;
 }

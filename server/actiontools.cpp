@@ -534,7 +534,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
 {
   if (actor == NULL || target == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -558,7 +558,7 @@ static bool may_unit_act_vs_city(struct unit *actor, struct city *target,
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -600,7 +600,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
 {
   if (actor == NULL || target == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -624,7 +624,7 @@ static bool may_unit_act_vs_unit(struct unit *actor, struct unit *target,
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -736,7 +736,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
 {
   if (actor == NULL || tgt_tile == NULL || tgt_extra == NULL) {
     /* Can't do any actions if actor or target are missing. */
-    return FALSE;
+    return false;
   }
 
   action_iterate(act)
@@ -762,7 +762,7 @@ static bool may_unit_act_vs_tile_extra(const struct unit *actor,
   }
   action_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

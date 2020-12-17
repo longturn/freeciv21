@@ -287,8 +287,8 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
 {
   struct signal *psignal;
 
-  fc_assert_ret_val(fcl != NULL, FALSE);
-  fc_assert_ret_val(fcl->signals_hash != NULL, FALSE);
+  fc_assert_ret_val(fcl != NULL, false);
+  fc_assert_ret_val(fcl->signals_hash != NULL, false);
 
   psignal = fcl->signals_hash->value(signal_name, nullptr);
   if (psignal) {
@@ -300,7 +300,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /*************************************************************************/ /**

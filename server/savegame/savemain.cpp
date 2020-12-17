@@ -175,7 +175,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       while ((end_dot = strrchr(dot, '.')) && stripped) {
         int i;
 
-        stripped = FALSE;
+        stripped = false;
 
         for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
           if (!strcmp(end_dot, strip_extensions[i])) {

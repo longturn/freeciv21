@@ -122,7 +122,7 @@ static bool fcdb_load_config(const char *filename)
   if (!(secfile = secfile_load(filename, FALSE))) {
     qCritical(_("Cannot load fcdb config file '%s':\n%s"), filename,
               secfile_error());
-    return FALSE;
+    return false;
   }
 
   entry_list_iterate(
@@ -158,7 +158,7 @@ bool fcdb_init(const char *conf_file)
 
   if (conf_file && strcmp(conf_file, "-")) {
     if (!fcdb_load_config(conf_file)) {
-      return FALSE;
+      return false;
     }
   } else {
     log_debug("No fcdb config file.");

@@ -109,7 +109,7 @@ static bool dai_should_we_air_attack_tile(struct ai_type *ait,
     /* No units capable of occupying are invading */
     log_debug("Don't want to attack %s, although we could",
               city_name_get(acity));
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -217,7 +217,7 @@ static int find_something_to_bomb(struct ai_type *ait, struct unit *punit,
   pfm = pf_map_new(&parameter);
 
   /* Let's find something to bomb */
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     if (move_cost >= punit->moves_left) {
       /* Too far! */
@@ -282,7 +282,7 @@ static struct tile *dai_find_strategic_airbase(struct ai_type *ait,
   pft_fill_unit_parameter(&parameter, punit);
   parameter.omniscience = !has_handicap(pplayer, H_MAP);
   pfm = pf_map_new(&parameter);
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     if (move_cost >= punit->moves_left) {
       break; /* Too far! */
@@ -449,21 +449,21 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
                              struct city *pcity, struct adv_choice *choice,
                              bool allow_gold_upkeep)
 {
-  bool want_something = FALSE;
+  bool want_something = false;
 
   /* This AI doesn't know to build planes */
   if (has_handicap(pplayer, H_NOPLANES)) {
-    return FALSE;
+    return false;
   }
 
   /* military_advisor_choose_build does something idiotic,
    * this function should not be called if there is danger... */
   if (choice->want >= 100 && choice->type != CT_ATTACKER) {
-    return FALSE;
+    return false;
   }
 
   if (!player_knows_techs_with_flag(pplayer, TF_BUILD_AIRBORNE)) {
-    return FALSE;
+    return false;
   }
 
   unit_type_iterate(punittype)
@@ -500,7 +500,7 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
         choice->want = profit;
         choice->value.utype = punittype;
         choice->type = CT_ATTACKER;
-        choice->need_boat = FALSE;
+        choice->need_boat = false;
         adv_choice_set_use(choice, "offensive air");
         want_something = TRUE;
         log_debug("%s wants to build %s (want=%d)", city_name_get(pcity),

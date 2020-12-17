@@ -46,7 +46,7 @@ void create_placed_map(void)
 {
   fc_assert_ret(!placed_map_is_initialized());
   placed_map = new bool[MAP_INDEX_SIZE];
-  INITIALIZE_ARRAY(placed_map, MAP_INDEX_SIZE, FALSE);
+  INITIALIZE_ARRAY(placed_map, MAP_INDEX_SIZE, false);
 }
 
 /**********************************************************************/ /**
@@ -74,7 +74,7 @@ void map_set_placed(struct tile *ptile) { pmap(ptile) = TRUE; }
 /**********************************************************************/ /**
    Mark tile terrain as not placed.
  **************************************************************************/
-void map_unset_placed(struct tile *ptile) { pmap(ptile) = FALSE; }
+void map_unset_placed(struct tile *ptile) { pmap(ptile) = false; }
 
 /**********************************************************************/ /**
    Set all oceanics tiles in placed_map
@@ -124,7 +124,7 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
       maxval = MAX(maxval, int_map[tile_index(ptile)]);
       minval = MIN(minval, int_map[tile_index(ptile)]);
     }
-    first = FALSE;
+    first = false;
     total++;
   }
   whole_map_iterate_filtered_end;
@@ -489,7 +489,7 @@ void assign_continent_numbers(void)
       ocean_sizes = static_cast<int *>(fc_realloc(
           ocean_sizes, (wld.map.num_oceans + 1) * sizeof(*ocean_sizes)));
       ocean_sizes[wld.map.num_oceans] = 0;
-      assign_continent_flood(ptile, FALSE, -wld.map.num_oceans);
+      assign_continent_flood(ptile, false, -wld.map.num_oceans);
     }
   }
   whole_map_iterate_end;
@@ -506,7 +506,7 @@ void assign_continent_numbers(void)
  **************************************************************************/
 struct terrain *most_shallow_ocean(bool frozen)
 {
-  bool oceans = FALSE, frozenmatch = FALSE;
+  bool oceans = false, frozenmatch = false;
   struct terrain *shallow = NULL;
 
   terrain_type_iterate(pterr)

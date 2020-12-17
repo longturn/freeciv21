@@ -668,7 +668,7 @@ void help_widget::add_extras_of_act_for_terrain(struct terrain *pterr,
   extra_type_by_cause_iterate(cause, pextra)
   {
     if (pextra->buildable
-        && universal_fulfills_requirements(FALSE, &(pextra->reqs),
+        && universal_fulfills_requirements(false, &(pextra->reqs),
                                            &for_terr)) {
       QLabel *tb;
       QString str;

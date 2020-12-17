@@ -47,19 +47,19 @@ static struct tile *rec_canvas_center_tile;
 static int rec_corner_x, rec_corner_y; /* corner to iterate from */
 static int rec_w, rec_h;               /* width, heigth in pixels */
 
-bool rbutton_down = FALSE;
-bool rectangle_active = FALSE;
+bool rbutton_down = false;
+bool rectangle_active = false;
 
 /* This changes the behaviour of left mouse
    button in Area Selection mode. */
-bool tiles_hilited_cities = FALSE;
+bool tiles_hilited_cities = false;
 
 /* The mapcanvas clipboard */
 struct universal clipboard = {.value = {.building = NULL}, .kind = VUT_NONE};
 
 /* Goto with drag and drop. */
-bool keyboardless_goto_button_down = FALSE;
-bool keyboardless_goto_active = FALSE;
+bool keyboardless_goto_button_down = false;
+bool keyboardless_goto_active = false;
 struct tile *keyboardless_goto_start_tile;
 
 /* Update the workers for a city on the map, when the update is received */
@@ -116,7 +116,7 @@ static void define_tiles_within_rectangle(bool append)
   float x2, y2;
   struct unit_list *units = unit_list_new();
   const struct city *pcity;
-  bool found_any_cities = FALSE;
+  bool found_any_cities = false;
 
   y = rec_corner_y;
   for (yy = 0; yy <= segments_y; yy++, y += inc_y) {
@@ -244,7 +244,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
   }
 
   if (rec_w == 0 && rec_h == 0) {
-    rectangle_active = FALSE;
+    rectangle_active = false;
     return;
   }
 
@@ -271,8 +271,8 @@ void redraw_selection_rectangle(void)
 void cancel_selection_rectangle(void)
 {
   if (rectangle_active) {
-    rectangle_active = FALSE;
-    rbutton_down = FALSE;
+    rectangle_active = false;
+    rbutton_down = false;
 
     /* Erase the previously drawn selection rectangle. */
     draw_selection_rectangle(rec_corner_x, rec_corner_y, rec_w, rec_h);
@@ -290,8 +290,8 @@ void release_right_button(int canvas_x, int canvas_y, bool shift)
   } else {
     recenter_button_pressed(canvas_x, canvas_y);
   }
-  rectangle_active = FALSE;
-  rbutton_down = FALSE;
+  rectangle_active = false;
+  rbutton_down = false;
 }
 
 /**********************************************************************/ /**
@@ -319,7 +319,7 @@ void key_city_show_open(struct city *pcity)
   if (can_client_change_view() && pcity) {
     if (pcity) {
       pcity->client.city_opened = true;
-      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
+      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, false);
     }
   }
 }
@@ -329,7 +329,7 @@ void key_city_hide_open(struct city *pcity)
   if (can_client_change_view() && pcity) {
     if (pcity) {
       pcity->client.city_opened = false;
-      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, FALSE);
+      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, false);
     }
   }
 }
@@ -344,18 +344,18 @@ bool clipboard_copy_production(struct tile *ptile)
   struct city *pcity = tile_city(ptile);
 
   if (!can_client_issue_orders()) {
-    return FALSE;
+    return false;
   }
 
   if (pcity) {
     if (city_owner(pcity) != client.conn.playing) {
-      return FALSE;
+      return false;
     }
     clipboard = pcity->production;
   } else {
     struct unit *punit = find_visible_unit(ptile);
     if (!punit) {
-      return FALSE;
+      return false;
     }
     if (!can_player_build_unit_direct(client.conn.playing,
                                       unit_type_get(punit))) {
@@ -445,8 +445,8 @@ void release_goto_button(int canvas_x, int canvas_y)
     clear_hover_state();
     update_unit_info_label(get_units_in_focus());
   }
-  keyboardless_goto_active = FALSE;
-  keyboardless_goto_button_down = FALSE;
+  keyboardless_goto_active = false;
+  keyboardless_goto_button_down = false;
   keyboardless_goto_start_tile = NULL;
 }
 
@@ -485,7 +485,7 @@ bool can_end_turn(void)
 
   opt = optset_option_by_name(server_optset, "fixedlength");
   if (opt != NULL && option_bool_get(opt)) {
-    return FALSE;
+    return false;
   }
 
   return (can_client_issue_orders() && client.conn.playing->is_alive

@@ -119,7 +119,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
   msg->descr = s;
   msg->tags = text_tag_list_copy(tags);
   msg->location_ok = (ptile != NULL);
-  msg->visited = FALSE;
+  msg->visited = false;
   msg->turn = turn;
   msg->phase = phase;
   messages[messages_total++] = msg;
@@ -135,7 +135,7 @@ void meswin_add(const char *message, const struct text_tag_list *tags,
            && (!client_has_player()
                || can_player_see_city_internals(client_player(), pcity)));
     } else {
-      messages[i]->city_ok = FALSE;
+      messages[i]->city_ok = false;
     }
   }
 

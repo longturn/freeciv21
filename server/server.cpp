@@ -165,7 +165,7 @@ QTcpServer *srv_prepare()
   voting_init();
   ai_timer_init();
 
-  server_game_init(FALSE);
+  server_game_init(false);
   mapimg_init(mapimg_server_tile_known, mapimg_server_tile_terrain,
               mapimg_server_tile_owner, mapimg_server_tile_city,
               mapimg_server_tile_unit, mapimg_server_plrcolor_count,
@@ -200,11 +200,11 @@ QTcpServer *srv_prepare()
 
   /* load a saved game */
   if (srvarg.load_filename.isEmpty()
-      || !load_command(NULL, qUtf8Printable(srvarg.load_filename), FALSE,
+      || !load_command(NULL, qUtf8Printable(srvarg.load_filename), false,
                        TRUE)) {
     /* Rulesets are loaded on game initialization, but may be changed later
      * if /load or /rulesetdir is done. */
-    load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
+    load_rulesets(NULL, NULL, false, NULL, TRUE, false, TRUE);
   }
 
   maybe_automatic_meta_message(default_meta_message_string());
@@ -571,7 +571,7 @@ void server::prepare_game()
   if (NULL != srvarg.script_filename) {
     /* Adding an error message more here will duplicate them. */
     (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
-                            TRUE, FALSE);
+                            TRUE, false);
   }
 
   (void) aifill(game.info.aifill);
@@ -644,14 +644,14 @@ void server::begin_phase()
       for (int i = 0; i < mapimg_count(); i++) {
         struct mapdef *pmapdef = mapimg_isvalid(i);
         if (pmapdef != NULL) {
-          mapimg_create(pmapdef, FALSE, game.server.save_name,
+          mapimg_create(pmapdef, false, game.server.save_name,
                         qUtf8Printable(srvarg.saves_pathname));
         } else {
           qCritical("%s", mapimg_error());
         }
       }
     } else {
-      m_skip_mapimg = FALSE;
+      m_skip_mapimg = false;
     }
   }
 
@@ -722,7 +722,7 @@ void server::end_turn()
       rank_users(TRUE);
     } else {
       // game ended for victory conditions - rank users based on survival
-      rank_users(FALSE);
+      rank_users(false);
     }
   } else if (S_S_OVER == server_state()) {
     // game terminated by /endgame command - calculate team scores
@@ -791,7 +791,7 @@ void server::update_game_state()
       m_skip_mapimg = !game.info.is_new_game;
 
       // We may as well reset is_new_game now.
-      game.info.is_new_game = FALSE;
+      game.info.is_new_game = false;
 
       begin_turn();
     } else {
@@ -848,9 +848,9 @@ bool server::shut_game_down()
   /* Reset server */
   server_game_free();
   fc_rand_uninit();
-  server_game_init(FALSE);
+  server_game_init(false);
   mapimg_reset();
-  load_rulesets(NULL, NULL, FALSE, NULL, TRUE, FALSE, TRUE);
+  load_rulesets(NULL, NULL, false, NULL, TRUE, false, TRUE);
   game.info.is_new_game = TRUE;
   return true;
 }

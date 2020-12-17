@@ -52,8 +52,8 @@
  *****************************************************************************/
 bool api_edit_unleash_barbarians(lua_State *L, Tile *ptile)
 {
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, false);
 
   return unleash_barbarians(ptile);
 }
@@ -162,9 +162,9 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
   bool alive;
   struct city *pcity;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, dest, 3, Tile, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, punit, 2, Unit, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, dest, 3, Tile, false);
 
   /* Teleport first so destination is revealed even if unit dies */
   alive = unit_move(
@@ -189,12 +189,12 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
 
     if (!can_unit_exist_at_tile(&(wld.map), punit, dest)) {
       wipe_unit(punit, ULR_NONNATIVE_TERR, NULL);
-      return FALSE;
+      return false;
     }
     if (is_non_allied_unit_tile(dest, owner)
         || (pcity && !pplayers_allied(city_owner(pcity), owner))) {
       wipe_unit(punit, ULR_STACK_CONFLICT, NULL);
-      return FALSE;
+      return false;
     }
   }
 
@@ -245,20 +245,20 @@ bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
 {
   struct terrain *old_terrain;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, pterr, 3, Terrain, FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 2, Tile, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, pterr, 3, Terrain, false);
 
   old_terrain = tile_terrain(ptile);
 
   if (old_terrain == pterr
       || (terrain_has_flag(pterr, TER_NO_CITIES)
           && tile_city(ptile) != NULL)) {
-    return FALSE;
+    return false;
   }
 
   tile_change_terrain(ptile, pterr);
-  fix_tile_on_terrain_change(ptile, old_terrain, FALSE);
+  fix_tile_on_terrain_change(ptile, old_terrain, false);
   if (need_to_reassign_continents(old_terrain, pterr)) {
     assign_continent_numbers();
     send_all_known_tiles(NULL);
@@ -308,10 +308,10 @@ Player *api_edit_create_player(lua_State *L, const char *username,
   LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!", NULL);
 
   if (game_was_started()) {
-    create_command_newcomer(username, ai, FALSE, pnation, &pplayer, buf,
+    create_command_newcomer(username, ai, false, pnation, &pplayer, buf,
                             sizeof(buf));
   } else {
-    create_command_pregame(username, ai, FALSE, &pplayer, buf, sizeof(buf));
+    create_command_pregame(username, ai, false, &pplayer, buf, sizeof(buf));
   }
 
   if (strlen(buf) > 0) {
@@ -370,7 +370,7 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
       }
     }
     research_apply_penalty(presearch, id, cost);
-    found_new_tech(presearch, id, FALSE, TRUE);
+    found_new_tech(presearch, id, false, TRUE);
     result = advance_by_number(id);
     script_tech_learned(presearch, pplayer, result, reason);
 
@@ -411,8 +411,8 @@ bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
   enum trait tr;
 
   LUASCRIPT_CHECK_STATE(L, -1);
-  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, tname, 3, string, FALSE);
+  LUASCRIPT_CHECK_ARG_NIL(L, pplayer, 2, Player, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, tname, 3, string, false);
 
   tr = trait_by_name(tname, fc_strcasecmp);
 
@@ -504,7 +504,7 @@ void api_edit_tile_set_label(lua_State *L, Tile *ptile, const char *label)
 
   tile_set_label(ptile, label);
   if (server_state() >= S_S_RUNNING) {
-    send_tile_info(NULL, ptile, FALSE);
+    send_tile_info(NULL, ptile, false);
   }
 }
 
@@ -534,7 +534,7 @@ Player *api_edit_civil_war(lua_State *L, Player *pplayer, int probability)
   LUASCRIPT_CHECK_ARG(L, probability >= 0 && probability <= 100, 3,
                       "must be a percentage", NULL);
 
-  if (!civil_war_possible(pplayer, FALSE, FALSE)) {
+  if (!civil_war_possible(pplayer, false, false)) {
     return NULL;
   }
 
@@ -571,10 +571,10 @@ bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
 {
   struct city *pcity;
 
-  LUASCRIPT_CHECK_STATE(L, FALSE);
-  LUASCRIPT_CHECK_SELF(L, punit, FALSE);
-  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, FALSE);
-  LUASCRIPT_CHECK_ARG(L, movecost >= 0, 4, "Negative move cost!", FALSE);
+  LUASCRIPT_CHECK_STATE(L, false);
+  LUASCRIPT_CHECK_SELF(L, punit, false);
+  LUASCRIPT_CHECK_ARG_NIL(L, ptile, 3, Tile, false);
+  LUASCRIPT_CHECK_ARG(L, movecost >= 0, 4, "Negative move cost!", false);
 
   return unit_move(
       punit, ptile, movecost,
@@ -617,7 +617,7 @@ void api_edit_unit_moving_allow(lua_State *L, Unit *punit)
   LUASCRIPT_CHECK_SELF(L, punit);
 
   if (punit != NULL) {
-    punit->stay = FALSE;
+    punit->stay = false;
   }
 }
 

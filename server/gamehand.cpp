@@ -117,7 +117,7 @@ struct unit_type *crole_to_unit_type(char crole, struct player *pplayer)
   enum unit_role_id role = crole_to_role_id(crole);
 
   if (role == 0) {
-    fc_assert_ret_val(FALSE, NULL);
+    fc_assert_ret_val(false, NULL);
     return NULL;
   }
 
@@ -145,7 +145,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
 {
   struct tile *ptile = NULL;
   struct unit_type *utype;
-  bool hut_present = FALSE;
+  bool hut_present = false;
 
   if (ptype != NULL) {
     utype = ptype;
@@ -195,7 +195,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
   /* Expose visible area. */
   map_show_circle(pplayer, ptile, game.server.init_vis_radius_sq);
 
-  (void) create_unit(pplayer, ptile, utype, FALSE, 0, 0);
+  (void) create_unit(pplayer, ptile, utype, false, 0, 0);
   return ptile;
 }
 
@@ -320,14 +320,14 @@ static void do_team_placement(const struct team_placement_config *pconfig,
   pstate->score = pbest_state->score;
 
   do {
-    repeat = FALSE;
+    repeat = false;
     for (i = 0; i < pconfig->usable_startpos_num; i++) {
       t1 = pstate->startpos[i];
       if (t1 == -1) {
         continue; /* Not used. */
       }
       ptile1 = pconfig->startpos[i];
-      base_delta_calculated = FALSE;
+      base_delta_calculated = false;
       for (j = i + 1; j < (i >= pconfig->flexible_startpos_num
                                ? pconfig->usable_startpos_num
                                : pconfig->flexible_startpos_num);
@@ -472,7 +472,7 @@ void init_new_game(void)
     do {
       struct nation_type *pnation;
       struct startpos_list_link *choice;
-      bool removed = FALSE;
+      bool removed = false;
 
       /* Assign first players which can pick only one start position. */
       players_iterate(pplayer)
@@ -800,8 +800,8 @@ void init_new_game(void)
 
     /* We have to initialise the advisor and ai here as we could make contact
      * to other nations at this point. */
-    adv_data_phase_init(pplayer, FALSE);
-    CALL_PLR_AI_FUNC(phase_begin, pplayer, pplayer, FALSE);
+    adv_data_phase_init(pplayer, false);
+    CALL_PLR_AI_FUNC(phase_begin, pplayer, pplayer, false);
 
     ptile = player_startpos[player_index(pplayer)];
 
@@ -1151,9 +1151,9 @@ void handle_single_want_hack_req(
 {
   struct section_file *secfile;
   const char *token = NULL;
-  bool you_have_hack = FALSE;
+  bool you_have_hack = false;
 
-  if ((secfile = secfile_load(get_challenge_fullname(pc), FALSE))) {
+  if ((secfile = secfile_load(get_challenge_fullname(pc), false))) {
     token = secfile_lookup_str(secfile, "challenge.token");
     you_have_hack = (token && strcmp(token, packet->token) == 0);
     secfile_destroy(secfile);

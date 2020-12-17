@@ -56,7 +56,7 @@
 struct civ_game game;
 struct world wld;
 
-bool am_i_server = FALSE;
+bool am_i_server = false;
 
 static void game_defaults(bool keep_ruleset_value);
 
@@ -73,7 +73,7 @@ void i_am_server(void) { am_i_server = TRUE; }
 /**********************************************************************/ /**
    Set program type to client.
  **************************************************************************/
-void i_am_client(void) { am_i_server = FALSE; }
+void i_am_client(void) { am_i_server = false; }
 
 /**********************************************************************/ /**
    Count the # of thousand citizen in a civilisation.
@@ -241,7 +241,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.airlifting_style = GAME_DEFAULT_AIRLIFTINGSTYLE;
   game.info.angrycitizen = GAME_DEFAULT_ANGRYCITIZEN;
   game.info.borders = GAME_DEFAULT_BORDERS;
-  game.calendar.calendar_skip_0 = FALSE;
+  game.calendar.calendar_skip_0 = false;
   game.info.caravan_bonus_style = GAME_DEFAULT_CARAVAN_BONUS_STYLE;
   game.info.celebratesize = GAME_DEFAULT_CELEBRATESIZE;
   game.info.citymindist = GAME_DEFAULT_CITYMINDIST;
@@ -254,7 +254,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.global_advance_count = 0;
   for (i = 0; i < A_LAST; i++) {
     /* game.num_tech_types = 0 here */
-    game.info.global_advances[i] = FALSE;
+    game.info.global_advances[i] = false;
   }
   for (i = 0; i < B_LAST; i++) {
     /* game.num_impr_types = 0 here */
@@ -269,7 +269,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.government_during_revolution_id = G_LAST;
   game.info.happyborders = GAME_DEFAULT_HAPPYBORDERS;
   game.info.heating = 0;
-  game.info.is_edit_mode = FALSE;
+  game.info.is_edit_mode = false;
   game.info.is_new_game = TRUE;
   game.info.killstack = GAME_DEFAULT_KILLSTACK;
   game.info.killcitizen = GAME_DEFAULT_KILLCITIZEN;
@@ -295,22 +295,22 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.trading_tech = GAME_DEFAULT_TRADING_TECH;
   game.info.turn = 0;
   game.info.warminglevel = 0; /* set later */
-  game.info.year_0_hack = FALSE;
+  game.info.year_0_hack = false;
   game.info.year = GAME_START_YEAR;
 
   /* The scenario packets. */
-  game.scenario.is_scenario = FALSE;
+  game.scenario.is_scenario = false;
   game.scenario.name[0] = '\0';
   game.scenario.authors[0] = '\0';
   game.scenario.players = TRUE;
-  game.scenario.startpos_nations = FALSE;
-  game.scenario.handmade = FALSE;
-  game.scenario.prevent_new_cities = FALSE;
+  game.scenario.startpos_nations = false;
+  game.scenario.handmade = false;
+  game.scenario.prevent_new_cities = false;
   game.scenario.lake_flooding = TRUE;
   game.scenario.have_resources = TRUE;
   game.scenario.ruleset_locked = TRUE;
-  game.scenario.save_random = FALSE;
-  game.scenario.allow_ai_type_fallback = FALSE;
+  game.scenario.save_random = false;
+  game.scenario.allow_ai_type_fallback = false;
 
   game.scenario_desc.description[0] = '\0';
 
@@ -333,7 +333,7 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.conquercost = GAME_DEFAULT_CONQUERCOST;
     game.server.contactturns = GAME_DEFAULT_CONTACTTURNS;
     for (i = 0; i < DEBUG_LAST; i++) {
-      game.server.debug[i] = FALSE;
+      game.server.debug[i] = false;
     }
     sz_strlcpy(game.server.demography, GAME_DEFAULT_DEMOGRAPHY);
     game.server.diplchance = GAME_DEFAULT_DIPLCHANCE;
@@ -352,7 +352,7 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.event_cache.turns = GAME_DEFAULT_EVENT_CACHE_TURNS;
     game.server.foggedborders = GAME_DEFAULT_FOGGEDBORDERS;
     game.server.fogofwar_old = game.info.fogofwar;
-    game.server.last_updated_year = FALSE;
+    game.server.last_updated_year = false;
     game.server.freecost = GAME_DEFAULT_FREECOST;
     game.server.global_warming_percent = GAME_DEFAULT_GLOBAL_WARMING_PERCENT;
     game.server.homecaughtunits = GAME_DEFAULT_HOMECAUGHTUNITS;
@@ -477,17 +477,17 @@ void game_reset(void)
 {
   if (is_server()) {
     game_free();
-    game_init(FALSE);
+    game_init(false);
   } else {
     /* Reset the players infos. */
-    players_iterate(pplayer) { player_clear(pplayer, FALSE); }
+    players_iterate(pplayer) { player_clear(pplayer, false); }
     players_iterate_end;
 
     main_map_free();
     free_city_map_index();
     idex_free(&wld);
 
-    map_init(&wld.map, FALSE);
+    map_init(&wld.map, false);
     idex_init(&wld);
     researches_init();
   }
@@ -682,14 +682,14 @@ bool is_player_phase(const struct player *pplayer, int phase)
     return player_number(pplayer) == phase;
     break;
   case PMT_TEAMS_ALTERNATE:
-    fc_assert_ret_val(NULL != pplayer->team, FALSE);
+    fc_assert_ret_val(NULL != pplayer->team, false);
     return team_number(pplayer->team) == phase;
     break;
   default:
     break;
   }
 
-  fc_assert_msg(FALSE, "Unrecognized phase mode %d in is_player_phase().",
+  fc_assert_msg(false, "Unrecognized phase mode %d in is_player_phase().",
                 phase);
   return TRUE;
 }

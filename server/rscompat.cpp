@@ -65,7 +65,7 @@ int rscompat_check_capabilities(struct section_file *file,
                                 struct rscompat_info *info)
 {
   const char *datafile_options;
-  bool ok = FALSE;
+  bool ok = false;
   int format;
 
   if (!(datafile_options = secfile_lookup_str(file, "datafile.options"))) {
@@ -141,7 +141,7 @@ rscompat_enabler_add_obligatory_hard_reqs(struct action_enabler *ae)
   struct action *paction = action_by_number(ae->action);
   /* Some changes requires starting to process an action's enablers from
    * the beginning. */
-  bool needs_restart = FALSE;
+  bool needs_restart = false;
 
   while ((problem = action_enabler_suggest_repair(ae)) != NULL) {
     /* A hard obligatory requirement is missing. */
@@ -241,7 +241,7 @@ void rscompat_enablers_add_obligatory_hard_reqs(void)
   {
     bool restart_enablers_for_action;
     do {
-      restart_enablers_for_action = FALSE;
+      restart_enablers_for_action = false;
       action_enabler_list_iterate(action_enablers_for_action(act_id), ae)
       {
         if (ae->disabled) {
@@ -378,7 +378,7 @@ bool rscompat_names(struct rscompat_info *info)
                    "Can't upgrade the ruleset. Not enough free unit type "
                    "user flags to add user flags for the unit type flags "
                    "that used to be hardcoded.");
-        return FALSE;
+        return false;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
@@ -387,7 +387,7 @@ bool rscompat_names(struct rscompat_info *info)
         qCCritical(ruleset_category,
                    "Ruleset had illegal user unit type flag '%s'",
                    new_flags_31[i].name);
-        return FALSE;
+        return false;
       }
       set_user_unit_type_flag_name(unit_type_flag_id(first_free + i),
                                    new_flags_31[i].name,
@@ -404,7 +404,7 @@ bool rscompat_names(struct rscompat_info *info)
                    "Can't upgrade the ruleset. Not enough free unit "
                    "type class user flags to add user flags for the "
                    "unit type class flags that used to be hardcoded.");
-        return FALSE;
+        return false;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
@@ -414,7 +414,7 @@ bool rscompat_names(struct rscompat_info *info)
         qCCritical(ruleset_category,
                    "Ruleset had illegal user unit class flag '%s'",
                    new_class_flags_31[i].name);
-        return FALSE;
+        return false;
       }
       set_user_unit_class_flag_name(unit_class_flag_id(first_free + i),
                                     new_class_flags_31[i].name,
@@ -448,7 +448,7 @@ bool rscompat_names(struct rscompat_info *info)
                    "Can't upgrade the ruleset. Not enough free terrain "
                    "user flags to add user flags for the terrain flags "
                    "that used to be hardcoded.");
-        return FALSE;
+        return false;
       }
       /* Shouldn't be possible for valid old ruleset to have flag names that
        * clash with these ones */
@@ -457,7 +457,7 @@ bool rscompat_names(struct rscompat_info *info)
         qCCritical(ruleset_category,
                    "Ruleset had illegal user terrain flag '%s'",
                    new_flags_31[i].name);
-        return FALSE;
+        return false;
       }
       set_user_terrain_flag_name(terrain_flag_id(first_free + i),
                                  new_flags_31[i].name,
@@ -494,7 +494,7 @@ static bool effect_handle_split_universal(struct effect *peffect,
                                         &separated);
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -538,20 +538,20 @@ static bool effect_list_compat_cb(struct effect *peffect, void *data)
        * Freeciv 3.1. Old hard coded rules had no punishment for trying to
        * do this when it is illegal according to the rules. */
       effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                        req_from_str("Action", "Local", false, false, false,
                                      "Transport Board"));
       effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                        req_from_str("Action", "Local", false, false, false,
                                      "Transport Embark"));
 
       /* Disembarking became action enabler controlled in Freeciv 3.1. Old
        * hard coded rules had no punishment for trying to do those when it
        * is illegal according to the rules. */
       effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                        req_from_str("Action", "Local", false, false, false,
                                      "Transport Disembark"));
       effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, FALSE, FALSE,
+                        req_from_str("Action", "Local", false, false, false,
                                      "Transport Disembark 2"));
     }
   }
@@ -585,8 +585,8 @@ static void effect_to_enabler(action_id action, struct section_file *file,
      *       their type. */
     requirement_vector_copy(&enabler->actor_reqs, reqs);
 
-    settler_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE,
-                                  FALSE, UTYF_SETTLERS);
+    settler_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, false, TRUE,
+                                  false, UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, settler_req);
 
     /* Add the enabler to the ruleset. */
@@ -644,7 +644,7 @@ bool rscompat_old_effect_3_1(const char *type, struct section_file *file,
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -670,7 +670,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
     /* The reduction only applies to "Bombard". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Bombard"));
 
     /* Post successful action move fragment loss for "Heal Unit"
@@ -678,7 +678,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
     /* The reduction only applies to "Heal Unit". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Heal Unit"));
 
     /* Post successful action move fragment loss for "Expel Unit"
@@ -686,7 +686,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
 
     /* The reduction only applies to "Expel Unit". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Expel Unit"));
 
     /* Post successful action move fragment loss for "Capture Units"
@@ -694,7 +694,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, SINGLE_MOVE, NULL);
 
     /* The reduction only applies to "Capture Units". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Capture Units"));
 
     /* Post successful action move fragment loss for "Establish Embassy"
@@ -702,7 +702,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
 
     /* The reduction only applies to "Establish Embassy". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Establish Embassy"));
 
     /* Post successful action move fragment loss for "Investigate City"
@@ -710,7 +710,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     peffect = effect_new(EFT_ACTION_SUCCESS_MOVE_COST, 1, NULL);
 
     /* The reduction only applies to "Investigate City". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Investigate City"));
 
     /* Post successful action move fragment loss for targets of "Expel Unit"
@@ -719,7 +719,7 @@ void rscompat_postprocess(struct rscompat_info *info)
                          NULL);
 
     /* The reduction only applies to "Expel Unit". */
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                             TRUE, "Expel Unit"));
 
     /* Post successful action move fragment loss for targets of
@@ -742,12 +742,12 @@ void rscompat_postprocess(struct rscompat_info *info)
                            putype->rscompat_cache.paratroopers_mr_sub, NULL);
 
       /* The reduction only applies to "Paradrop Unit". */
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
-                                              FALSE, "Paradrop Unit"));
+      effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
+                                              false, "Paradrop Unit"));
 
       /* The reduction only applies to this unit type. */
       effect_req_append(peffect,
-                        req_from_str("UnitType", "Local", FALSE, TRUE, FALSE,
+                        req_from_str("UnitType", "Local", false, TRUE, false,
                                      utype_rule_name(putype)));
     }
     unit_type_iterate_end;
@@ -758,23 +758,23 @@ void rscompat_postprocess(struct rscompat_info *info)
     /* Unit actually fortified. This does not need checks for unit class or
      * type flags for unit's ability to fortify as it would not be fortified
      * if it can't. */
-    effect_req_append(peffect, req_from_str("Activity", "Local", FALSE, TRUE,
-                                            FALSE, "Fortified"));
+    effect_req_append(peffect, req_from_str("Activity", "Local", false, TRUE,
+                                            false, "Fortified"));
 
     /* Fortify bonus in cities */
     peffect = effect_new(EFT_FORTIFY_DEFENSE_BONUS, 50, NULL);
 
     /* City center */
-    effect_req_append(peffect, req_from_str("CityTile", "Local", FALSE, TRUE,
-                                            FALSE, "Center"));
+    effect_req_append(peffect, req_from_str("CityTile", "Local", false, TRUE,
+                                            false, "Center"));
     /* Not cumulative with regular fortified bonus */
-    effect_req_append(peffect, req_from_str("Activity", "Local", FALSE,
-                                            FALSE, FALSE, "Fortified"));
+    effect_req_append(peffect, req_from_str("Activity", "Local", false,
+                                            false, false, "Fortified"));
     /* Unit flags */
-    effect_req_append(peffect, req_from_str("UnitClassFlag", "Local", FALSE,
-                                            TRUE, FALSE, "CanFortify"));
-    effect_req_append(peffect, req_from_str("UnitFlag", "Local", FALSE,
-                                            FALSE, FALSE, "Cant_Fortify"));
+    effect_req_append(peffect, req_from_str("UnitClassFlag", "Local", false,
+                                            TRUE, false, "CanFortify"));
+    effect_req_append(peffect, req_from_str("UnitFlag", "Local", false,
+                                            false, false, "Cant_Fortify"));
 
     /* The probability that "Steal Maps" and "Steal Maps Escape" steals the
      * map of a tile has moved to the ruleset. */
@@ -783,14 +783,14 @@ void rscompat_postprocess(struct rscompat_info *info)
     /* The rule that "Recycle Unit"'s unit shield value is 50% has moved to
      * the ruleset. */
     peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, NULL);
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
-                                            FALSE, "Recycle Unit"));
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
+                                            false, "Recycle Unit"));
 
     /* The rule that "Upgrade Unit"'s current unit shield value is 50% when
      * calculating unit upgrade price has moved to the ruleset. */
     peffect = effect_new(EFT_UNIT_SHIELD_VALUE_PCT, -50, NULL);
-    effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
-                                            FALSE, "Upgrade Unit"));
+    effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
+                                            false, "Upgrade Unit"));
   }
 
   if (info->ver_units < 20) {
@@ -814,53 +814,53 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     enabler = action_enabler_new();
     enabler->action = ACTION_PILLAGE;
-    e_req = req_from_str("UnitClassFlag", "Local", FALSE, TRUE, FALSE,
+    e_req = req_from_str("UnitClassFlag", "Local", false, TRUE, false,
                          "CanPillage");
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
     enabler = action_enabler_new();
     enabler->action = ACTION_CLEAN_FALLOUT;
-    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, false, TRUE, false,
                             UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
     enabler = action_enabler_new();
     enabler->action = ACTION_CLEAN_POLLUTION;
-    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, false, TRUE, false,
                             UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
     enabler = action_enabler_new();
     enabler->action = ACTION_FORTIFY;
-    e_req = req_from_str("UnitClassFlag", "Local", FALSE, TRUE, TRUE,
+    e_req = req_from_str("UnitClassFlag", "Local", false, TRUE, TRUE,
                          "CanFortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
-    e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
+    e_req = req_from_str("UnitFlag", "Local", false, false, TRUE,
                          "Cant_Fortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
-    e_req = req_from_str("TerrainFlag", "Local", FALSE, FALSE, TRUE,
+    e_req = req_from_str("TerrainFlag", "Local", false, false, TRUE,
                          "NoFortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
     enabler = action_enabler_new();
     enabler->action = ACTION_FORTIFY;
-    e_req = req_from_str("UnitClassFlag", "Local", FALSE, TRUE, TRUE,
+    e_req = req_from_str("UnitClassFlag", "Local", false, TRUE, TRUE,
                          "CanFortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
-    e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
+    e_req = req_from_str("UnitFlag", "Local", false, false, TRUE,
                          "Cant_Fortify");
     requirement_vector_append(&enabler->actor_reqs, e_req);
-    e_req = req_from_str("CityTile", "Local", FALSE, TRUE, TRUE, "Center");
+    e_req = req_from_str("CityTile", "Local", false, TRUE, TRUE, "Center");
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
 
     enabler = action_enabler_new();
     enabler->action = ACTION_ROAD;
-    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, false, TRUE, false,
                             UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
@@ -871,7 +871,7 @@ void rscompat_postprocess(struct rscompat_info *info)
 
     enabler = action_enabler_new();
     enabler->action = ACTION_BASE;
-    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+    e_req = req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL, false, TRUE, false,
                             UTYF_SETTLERS);
     requirement_vector_append(&enabler->actor_reqs, e_req);
     action_enabler_add(enabler);
@@ -904,14 +904,14 @@ void rscompat_postprocess(struct rscompat_info *info)
 
         /* One allows regular attacks. */
         requirement_vector_append(
-            &ae->actor_reqs, req_from_str("UnitClassFlag", "Local", FALSE,
-                                          FALSE, TRUE, "Missile"));
+            &ae->actor_reqs, req_from_str("UnitClassFlag", "Local", false,
+                                          false, TRUE, "Missile"));
 
         /* The other allows suicide attacks. */
         enabler->action = ACTION_SUICIDE_ATTACK;
         requirement_vector_append(&enabler->actor_reqs,
                                   req_from_str("UnitClassFlag", "Local",
-                                               FALSE, TRUE, TRUE,
+                                               false, TRUE, TRUE,
                                                "Missile"));
 
         /* Add after the action was changed. */
@@ -942,11 +942,11 @@ void rscompat_postprocess(struct rscompat_info *info)
          * target tile it pretends to be one. */
         requirement_vector_append(
             &city->actor_reqs, req_from_values(VUT_MINMOVES, REQ_RANGE_LOCAL,
-                                               FALSE, TRUE, FALSE, 1));
+                                               false, TRUE, false, 1));
         requirement_vector_append(&units->actor_reqs,
                                   req_from_values(VUT_MINMOVES,
-                                                  REQ_RANGE_LOCAL, FALSE,
-                                                  TRUE, FALSE, 1));
+                                                  REQ_RANGE_LOCAL, false,
+                                                  TRUE, false, 1));
 
         /* Be slightly stricter about the relationship to target unit stacks
          * than "Explode Nuclear" was before it would target an adjacent
@@ -954,16 +954,16 @@ void rscompat_postprocess(struct rscompat_info *info)
          * friends and allies. */
         requirement_vector_append(
             &city->actor_reqs, req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
-                                               FALSE, TRUE, FALSE, DS_WAR));
+                                               false, TRUE, false, DS_WAR));
         requirement_vector_append(
             &units->actor_reqs, req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
-                                                FALSE, TRUE, FALSE, DS_WAR));
+                                                false, TRUE, false, DS_WAR));
 
         /* Only display one nuke action at once. */
         requirement_vector_append(
             &units->target_reqs,
-            req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
-                            FALSE, CITYT_CENTER));
+            req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, false, false,
+                            false, CITYT_CENTER));
 
         /* Add after the action was changed. */
         action_enabler_add(city);
@@ -999,7 +999,7 @@ void rscompat_postprocess(struct rscompat_info *info)
     /* The paratroopers_mr_req field has moved to the enabler for the
      * "Paradrop Unit" action. */
     {
-      bool generic_in_use = FALSE;
+      bool generic_in_use = false;
       struct action_enabler_list *ae_custom = action_enabler_list_new();
 
       action_enabler_list_iterate(
@@ -1035,13 +1035,13 @@ void rscompat_postprocess(struct rscompat_info *info)
             enabler = action_enabler_copy(ae);
 
             /* This enabler is specific to the unit type */
-            e_req = req_from_values(VUT_UTYPE, REQ_RANGE_LOCAL, FALSE, TRUE,
-                                    FALSE, utype_number(putype));
+            e_req = req_from_values(VUT_UTYPE, REQ_RANGE_LOCAL, false, TRUE,
+                                    false, utype_number(putype));
             requirement_vector_append(&enabler->actor_reqs, e_req);
 
             /* Add the minimum amout of move fragments */
             e_req = req_from_values(
-                VUT_MINMOVES, REQ_RANGE_LOCAL, FALSE, TRUE, FALSE,
+                VUT_MINMOVES, REQ_RANGE_LOCAL, false, TRUE, false,
                 putype->rscompat_cache.paratroopers_mr_req);
             requirement_vector_append(&enabler->actor_reqs, e_req);
 
@@ -1112,18 +1112,18 @@ bool rscompat_auto_attack_3_1(struct rscompat_info *compat,
     /* Auto attack happens during war. */
     requirement_vector_append(&auto_perf->reqs,
                               req_from_values(VUT_DIPLREL, REQ_RANGE_LOCAL,
-                                              FALSE, TRUE, TRUE, DS_WAR));
+                                              false, TRUE, TRUE, DS_WAR));
 
     /* Needs a movement point to auto attack. */
     requirement_vector_append(&auto_perf->reqs,
                               req_from_values(VUT_MINMOVES, REQ_RANGE_LOCAL,
-                                              FALSE, TRUE, TRUE, 1));
+                                              false, TRUE, TRUE, 1));
 
     for (i = 0; i < psize; i++) {
       /* Add each protecor_flag as a !present requirement. */
       requirement_vector_append(&auto_perf->reqs,
                                 req_from_values(VUT_UTFLAG, REQ_RANGE_LOCAL,
-                                                FALSE, FALSE, TRUE,
+                                                false, false, TRUE,
                                                 protecor_flag[i]));
     }
 
@@ -1155,7 +1155,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
     if (slow_invasions) {
       /* Use for disembarking from native terrain so disembarking from
        * non native terain is handled by "Transport Disembark 2". */
-      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, TRUE,
+      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, false, TRUE,
                               TRUE, USP_NATIVE_TILE);
       requirement_vector_append(&enabler->actor_reqs, e_req);
     }
@@ -1197,7 +1197,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       /* City center counts as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, TRUE,
+      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, false, TRUE,
                               TRUE, CITYT_CENTER);
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
@@ -1205,7 +1205,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       /* No TerrainSpeed sees everything as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, FALSE,
+      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, false, false,
                               TRUE, UCF_TERRAIN_SPEED);
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
@@ -1213,7 +1213,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       /* "BeachLander" sees everything as native. */
       enabler = action_enabler_new();
       enabler->action = ACTION_TRANSPORT_DISEMBARK1;
-      e_req = req_from_str("UnitFlag", "Local", FALSE, TRUE, TRUE,
+      e_req = req_from_str("UnitFlag", "Local", false, TRUE, TRUE,
                            "BeachLander");
       requirement_vector_append(&enabler->actor_reqs, e_req);
       action_enabler_add(enabler);
@@ -1223,22 +1223,22 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       enabler->action = ACTION_TRANSPORT_DISEMBARK2;
 
       /* Native terrain is native. */
-      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, FALSE,
+      e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, false, false,
                               TRUE, USP_NATIVE_TILE);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* City is native. */
-      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
+      e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, false, false,
                               TRUE, CITYT_CENTER);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* "BeachLander" sees everything as native. */
-      e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
+      e_req = req_from_str("UnitFlag", "Local", false, false, TRUE,
                            "BeachLander");
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
       /* No TerrainSpeed sees everything as native. */
-      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, TRUE, TRUE,
+      e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, false, TRUE, TRUE,
                               UCF_TERRAIN_SPEED);
       requirement_vector_append(&enabler->actor_reqs, e_req);
 
@@ -1253,26 +1253,26 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
 
       /* The reduction only applies to "Transport Disembark 2". */
       effect_req_append(peffect,
-                        req_from_str("Action", "Local", FALSE, TRUE, TRUE,
+                        req_from_str("Action", "Local", false, TRUE, TRUE,
                                      "Transport Disembark 2"));
 
       /* No reduction here unless disembarking to native terrain. */
       effect_req_append(peffect,
                         req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                                        FALSE, TRUE, TRUE, USP_NATIVE_TILE));
+                                        false, TRUE, TRUE, USP_NATIVE_TILE));
 
       /* Take movement for conquering from non native terrain */
       peffect =
           effect_new(EFT_ACTION_SUCCESS_MOVE_COST, MAX_MOVE_FRAGS, NULL);
 
       /* The reduction only applies to "Conquer City 2". */
-      effect_req_append(peffect, req_from_str("Action", "Local", FALSE, TRUE,
+      effect_req_append(peffect, req_from_str("Action", "Local", false, TRUE,
                                               TRUE, "Conquer City 2"));
 
       /* No reduction here unless disembarking to native terrain. */
       effect_req_append(peffect,
                         req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL,
-                                        FALSE, TRUE, TRUE, USP_NATIVE_TILE));
+                                        false, TRUE, TRUE, USP_NATIVE_TILE));
 
       /* Upgrade exisiting Conquer City action enablers */
       to_upgrade = action_enabler_list_copy(
@@ -1282,7 +1282,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       {
         /* City center counts as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, TRUE,
+        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, false, TRUE,
                                 TRUE, CITYT_CENTER);
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
@@ -1293,7 +1293,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       {
         /* No TerrainSpeed sees everything as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, FALSE,
+        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, false, false,
                                 TRUE, UCF_TERRAIN_SPEED);
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
@@ -1304,7 +1304,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       {
         /* "BeachLander" sees everything as native. */
         enabler = action_enabler_copy(conquer_city_enabler);
-        e_req = req_from_str("UnitFlag", "Local", FALSE, TRUE, TRUE,
+        e_req = req_from_str("UnitFlag", "Local", false, TRUE, TRUE,
                              "BeachLander");
         requirement_vector_append(&enabler->actor_reqs, e_req);
         action_enabler_add(enabler);
@@ -1318,22 +1318,22 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
         enabler->action = ACTION_CONQUER_CITY2;
 
         /* Native terrain is native. */
-        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, FALSE,
+        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, false, false,
                                 TRUE, USP_NATIVE_TILE);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* City is native. */
-        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, FALSE, FALSE,
+        e_req = req_from_values(VUT_CITYTILE, REQ_RANGE_LOCAL, false, false,
                                 TRUE, CITYT_CENTER);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* No TerrainSpeed sees everything as native. */
-        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, FALSE, TRUE,
+        e_req = req_from_values(VUT_UCFLAG, REQ_RANGE_LOCAL, false, TRUE,
                                 TRUE, UCF_TERRAIN_SPEED);
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
         /* "BeachLander" sees everything as native. */
-        e_req = req_from_str("UnitFlag", "Local", FALSE, FALSE, TRUE,
+        e_req = req_from_str("UnitFlag", "Local", false, false, TRUE,
                              "BeachLander");
         requirement_vector_append(&enabler->actor_reqs, e_req);
 
@@ -1345,7 +1345,7 @@ bool rscompat_old_slow_invasions_3_1(struct rscompat_info *compat,
       {
         /* Use for conquering from native terrain so conquest from
          * non native terain is handled by "Conquer City 2". */
-        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, FALSE, TRUE,
+        e_req = req_from_values(VUT_UNITSTATE, REQ_RANGE_LOCAL, false, TRUE,
                                 TRUE, USP_NATIVE_TILE);
         requirement_vector_append(&conquer_city_enabler->actor_reqs, e_req);
       }

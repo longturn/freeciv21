@@ -136,9 +136,9 @@ static bool save_reqs_vector(struct section_file *sfile,
                              const char *path, const char *entry)
 {
   int i;
-  bool includes_negated = FALSE;
-  bool includes_surviving = FALSE;
-  bool includes_quiet = FALSE;
+  bool includes_negated = false;
+  bool includes_surviving = false;
+  bool includes_quiet = false;
 
   requirement_vector_iterate(reqs, preq)
   {
@@ -373,7 +373,7 @@ static bool save_buildings_ruleset(const char *filename, const char *name)
   int sect_idx;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   comment_buildings(sfile);
@@ -444,7 +444,7 @@ static bool save_styles_ruleset(const char *filename, const char *name)
   int i;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   comment_styles(sfile);
@@ -534,7 +534,7 @@ static bool save_action_auto_uflag_block(
       qCritical("Can't handle action auto performer requirement %s",
                 req_to_fstring(req));
 
-      return FALSE;
+      return false;
     }
   }
   requirement_vector_iterate_end;
@@ -545,7 +545,7 @@ static bool save_action_auto_uflag_block(
   if (ret != i) {
     qCritical("%s: didn't save all unit type flags.", uflags_path);
 
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -578,7 +578,7 @@ static bool save_action_auto_actions(struct section_file *sfile,
   if (ret != i) {
     qCritical("%s: didn't save all actions.", actions_path);
 
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -623,7 +623,7 @@ static bool save_cities_ruleset(const char *filename, const char *name)
   int sect_idx;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   comment_specialists(sfile);
@@ -764,7 +764,7 @@ static bool save_effects_ruleset(const char *filename, const char *name)
   effect_cb_data data;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   data.idx = 0;
@@ -773,7 +773,7 @@ static bool save_effects_ruleset(const char *filename, const char *name)
   comment_effects(sfile);
 
   if (!iterate_effect_cache(effect_save, &data)) {
-    return FALSE;
+    return false;
   }
 
   return save_ruleset_file(sfile, filename);
@@ -825,7 +825,7 @@ static bool save_action_range(struct section_file *sfile, action_id act)
   if (action_max_range_ruleset_var_name(act) != NULL) {
     /* Max range can be loaded from the ruleset. */
     if (!save_action_max_range(sfile, act)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -896,7 +896,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   int force_capture_units, force_bombard, force_explode_nuclear;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   if (game.server.ruledit.description_file != NULL) {
@@ -954,7 +954,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   save_building_list(sfile, game.rgame.global_init_buildings, "options",
                      "global_init_buildings");
 
-  save_default_bool(sfile, game.control.popup_tech_help, FALSE,
+  save_default_bool(sfile, game.control.popup_tech_help, false,
                     "options.popup_tech_help", NULL);
   save_default_int(sfile, game.info.base_pollution,
                    RS_DEFAULT_BASE_POLLUTION, "civstyle.base_pollution",
@@ -985,7 +985,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   save_default_int(sfile, game.info.civil_war_bonus_unhappy,
                    RS_DEFAULT_CIVIL_WAR_UNHAPPY,
                    "civstyle.civil_war_bonus_unhappy", NULL);
-  save_default_bool(sfile, game.info.paradrop_to_transport, FALSE,
+  save_default_bool(sfile, game.info.paradrop_to_transport, false,
                     "civstyle.paradrop_to_transport", NULL);
   save_default_int(sfile, game.info.base_bribe_cost,
                    RS_DEFAULT_BASE_BRIBE_COST, "civstyle.base_bribe_cost",
@@ -1157,7 +1157,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
       != i) {
     qCritical("Didn't save all quiet actions.");
 
-    return FALSE;
+    return false;
   }
 
   comment_enablers(sfile);
@@ -1407,7 +1407,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
     }
   }
 
-  locks = FALSE;
+  locks = false;
   settings_iterate(SSET_ALL, pset)
   {
     if (setting_locked(pset)) {
@@ -1437,7 +1437,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
                            "settings.set%d.value", set_count);
         break;
       case SST_ENUM:
-        secfile_insert_enum_data(sfile, read_enum_value(pset), FALSE,
+        secfile_insert_enum_data(sfile, read_enum_value(pset), false,
                                  setting_enum_secfile_str, pset,
                                  "settings.set%d.value", set_count);
         break;
@@ -1475,7 +1475,7 @@ static bool save_governments_ruleset(const char *filename, const char *name)
   int sect_idx;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   save_gov_ref(sfile, game.government_during_revolution, "governments",
@@ -1725,7 +1725,7 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
   set_count = 0;
   nation_city_list_iterate(pnat->server.default_cities, pncity)
   {
-    bool list_started = FALSE;
+    bool list_started = false;
 
     city_str[set_count] =
         new char[strlen(nation_city_name(pncity)) + qstrlen(" (!river")
@@ -1807,7 +1807,7 @@ static bool save_nations_ruleset(const char *filename, const char *name,
   struct section_file *sfile = create_ruleset_file(name, "nation");
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   if (data->nationlist != NULL) {
@@ -1938,7 +1938,7 @@ static bool save_techs_ruleset(const char *filename, const char *name)
   struct advance *a_none = advance_by_number(A_NONE);
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < MAX_NUM_USER_TECH_FLAGS; i++) {
@@ -2041,7 +2041,7 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
   int i;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < MAX_NUM_USER_TER_FLAGS; i++) {
@@ -2662,7 +2662,7 @@ static bool save_combat_bonuses(struct section_file *sfile,
                                 struct unit_type *put, char *path)
 {
   int i;
-  bool has_quiet = FALSE;
+  bool has_quiet = false;
 
   combat_bonus_list_iterate(put->bonuses, pbonus)
   {
@@ -2704,7 +2704,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
   int sect_idx;
 
   if (sfile == NULL) {
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < MAX_NUM_USER_UNIT_FLAGS; i++) {
@@ -2886,7 +2886,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
       secfile_insert_int(sfile, put->transport_capacity, "%s.transport_cap",
                          path);
 
-      save_uclass_vec(sfile, &(put->cargo), path, "cargo", FALSE);
+      save_uclass_vec(sfile, &(put->cargo), path, "cargo", false);
       save_uclass_vec(sfile, &(put->embarks), path, "embarks", TRUE);
       save_uclass_vec(sfile, &(put->disembarks), path, "disembarks", TRUE);
 
@@ -2988,12 +2988,12 @@ static bool save_script_lua(const char *filename, const char *name,
       len = fwrite(buffer, 1, full_len, ffile);
 
       if (len != full_len) {
-        return FALSE;
+        return false;
       }
 
       fclose(ffile);
     } else {
-      return FALSE;
+      return false;
     }
   }
 
@@ -3090,7 +3090,7 @@ bool save_ruleset(const char *path, const char *name, struct rule_data *data)
     return success;
   } else {
     qCritical("Failed to create directory %s", path);
-    return FALSE;
+    return false;
   }
 
   return TRUE;

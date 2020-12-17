@@ -78,7 +78,7 @@ Q_GLOBAL_STATIC(waitingQueue, processing_started_waiting_queue)
 Q_GLOBAL_STATIC(waitingQueue, processing_finished_waiting_queue)
 
 static int update_queue_frozen_level = 0;
-static bool update_queue_has_idle_callback = FALSE;
+static bool update_queue_has_idle_callback = false;
 
 static void update_unqueue(void *data);
 static void update_queue_push(uq_callback_t callback,
@@ -154,7 +154,7 @@ waiting_queue_data_extract(struct waiting_queue_data *wq_data)
 void update_queue_init(void)
 {
   update_queue_frozen_level = 0;
-  update_queue_has_idle_callback = FALSE;
+  update_queue_has_idle_callback = false;
 }
 
 /************************************************************************/ /**
@@ -184,7 +184,7 @@ void update_queue_free(void)
       waiting_queue_list_iterate_end;
     }
   update_queue_frozen_level = 0;
-  update_queue_has_idle_callback = FALSE;
+  update_queue_has_idle_callback = false;
 }
 
 /************************************************************************/ /**
@@ -267,11 +267,11 @@ static void update_unqueue(void *data)
   updatePair pair;
   if (update_queue_is_frozen() || !tileset_is_fully_loaded()) {
     /* Cannot update now, let's add it again. */
-    update_queue_has_idle_callback = FALSE;
+    update_queue_has_idle_callback = false;
     return;
   }
 
-  update_queue_has_idle_callback = FALSE;
+  update_queue_has_idle_callback = false;
 
   /* Invoke callbacks. */
   while (!update_queue->isEmpty()) {
@@ -365,7 +365,7 @@ bool update_queue_has_callback_full(uq_callback_t callback,
     }
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -519,7 +519,7 @@ void menus_init(void)
 void menus_update(void)
 {
   if (!update_queue_has_callback(menus_update_callback)) {
-    update_queue_add(menus_update_callback, FC_INT_TO_PTR(FALSE));
+    update_queue_add(menus_update_callback, FC_INT_TO_PTR(false));
   }
 }
 

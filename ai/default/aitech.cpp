@@ -299,7 +299,7 @@ static void dai_tech_effect_values(struct ai_type *ait,
             }
             if (!is_req_active(pplayer, NULL, pcity, NULL, NULL, NULL, NULL,
                                NULL, NULL, NULL, preq, RPT_POSSIBLE)) {
-              active = FALSE;
+              active = false;
               break; /* presence doesn't matter for inactive effects. */
             }
           }
@@ -365,7 +365,7 @@ void dai_manage_tech(struct ai_type *ait, struct player *pplayer)
     if (choice.want - choice.current_want > penalty
         && (penalty + research->bulbs_researched
             <= research_total_bulbs_required(research, research->researching,
-                                             FALSE))) {
+                                             false))) {
       TECH_LOG(ait, LOG_DEBUG, pplayer, advance_by_number(choice.choice),
                "new research, was %s, penalty was %d",
                research_advance_rule_name(research, research->researching),
@@ -440,7 +440,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
       const struct impr_type *building;
       int cost = 0;
       struct advance *itech = deftype->require_advance;
-      bool impossible_to_get = FALSE;
+      bool impossible_to_get = false;
 
       if (A_NEVER != itech
           && research_invention_state(presearch, advance_number(itech))

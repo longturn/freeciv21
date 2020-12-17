@@ -34,10 +34,10 @@ void adv_units_ruleset_init(void)
 {
   unit_class_iterate(pclass)
   {
-    bool move_land_enabled = FALSE;  /* Can move at some land terrains */
-    bool move_land_disabled = FALSE; /* Cannot move at some land terrains */
-    bool move_sea_enabled = FALSE;   /* Can move at some ocean terrains */
-    bool move_sea_disabled = FALSE;  /* Cannot move at some ocean terrains */
+    bool move_land_enabled = false;  /* Can move at some land terrains */
+    bool move_land_disabled = false; /* Cannot move at some land terrains */
+    bool move_sea_enabled = false;   /* Can move at some ocean terrains */
+    bool move_sea_disabled = false;  /* Cannot move at some ocean terrains */
 
     terrain_type_iterate(pterrain)
     {
@@ -90,7 +90,7 @@ void adv_units_ruleset_init(void)
         {
           if (!is_req_active(NULL, NULL, NULL, NULL, NULL, NULL, ptype, NULL,
                              NULL, NULL, preq, RPT_POSSIBLE)) {
-            ptype->adv.igwall = FALSE;
+            ptype->adv.igwall = false;
             break;
           }
         }

@@ -228,7 +228,7 @@ static void dai_hunter_missile_want(struct player *pplayer,
     choice->value.utype = best_unit_type;
     choice->want = best;
     choice->type = CT_ATTACKER;
-    choice->need_boat = FALSE;
+    choice->need_boat = false;
     adv_choice_set_use(choice, "missile");
   } else if (best >= 0) {
     CITY_LOG(LOGLEVEL_HUNT, pcity,
@@ -256,7 +256,7 @@ static void eval_hunter_want(struct ai_type *ait, struct player *pplayer,
     choice->value.utype = best_type;
     choice->want = want;
     choice->type = CT_ATTACKER;
-    choice->need_boat = FALSE;
+    choice->need_boat = false;
     adv_choice_set_use(choice, "hunter");
   }
 }
@@ -302,12 +302,12 @@ void dai_hunter_choice(struct ai_type *ait, struct player *pplayer,
 bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
 {
   if (is_barbarian(pplayer) || unit_owner(punit) != pplayer) {
-    return FALSE;
+    return false;
   }
   if (unit_has_type_role(punit, L_HUNTER)) {
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -335,7 +335,7 @@ static void dai_hunter_try_launch(struct ai_type *ait,
       parameter.omniscience = !has_handicap(pplayer, H_MAP);
       pfm = pf_map_new(&parameter);
 
-      pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+      pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
       {
         if (move_cost > missile->moves_left / SINGLE_MOVE) {
           break;
@@ -473,7 +473,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
                          &original_cost);
   }
 
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     /* End faster if we have a target */
     if (move_cost > limit) {

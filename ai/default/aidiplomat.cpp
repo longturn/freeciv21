@@ -132,7 +132,7 @@ void dai_choose_diplomat_defensive(struct ai_type *ait,
       city_data->urgency = 1;
       choice->type = CT_DEFENDER;
       choice->value.utype = ut;
-      choice->need_boat = FALSE;
+      choice->need_boat = false;
       adv_choice_set_use(choice, "defensive diplomat");
     } else if (num_role_units(UTYF_DIPLOMAT) > 0) {
       /* We don't know diplomats yet... */
@@ -238,7 +238,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
        * 'game.info.game.info.tech_cost_style' is set to
        * TECH_COST_CIV1CIV2. */
       gain_theft = (research_total_bulbs_required(
-                        presearch, presearch->researching, FALSE)
+                        presearch, presearch->researching, false)
                     * TRADE_WEIGHTING);
     }
     gain = MAX(gain_incite, gain_theft);
@@ -291,7 +291,7 @@ void dai_choose_diplomat_offensive(struct ai_type *ait,
       choice->want = want;
       choice->type = CT_CIVILIAN; /* so we don't build barracks for it */
       choice->value.utype = ut;
-      choice->need_boat = FALSE;
+      choice->need_boat = false;
       adv_choice_set_use(choice, "offensive diplomat");
       BV_SET(ai->stats.diplomat_reservations, acity->id);
     }
@@ -415,7 +415,7 @@ static bool is_city_surrounded_by_our_spies(struct player *pplayer,
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**************************************************************************/ /**
@@ -436,7 +436,7 @@ static void find_city_to_diplomat(struct player *pplayer, struct unit *punit,
   *move_dist = -1;
   dai_calc_data(pplayer, NULL, &expenses, NULL);
 
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     struct city *acity;
     struct player *aplayer;
@@ -520,7 +520,7 @@ static struct city *dai_diplomat_defend(struct ai_type *ait,
     return pcity;
   }
 
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, FALSE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, false)
   {
     struct city *acity;
     struct player *aplayer;
@@ -581,10 +581,10 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
   dai_calc_data(pplayer, NULL, &expenses, NULL);
   gold_avail = pplayer->economic.gold - expenses;
 
-  pf_map_positions_iterate(pfm, pos, FALSE)
+  pf_map_positions_iterate(pfm, pos, false)
   {
     struct tile *ptile = pos.tile;
-    bool threat = FALSE;
+    bool threat = false;
     int newval, bestval = 0, cost;
     struct unit *pvictim = is_other_players_unit_tile(ptile, pplayer);
     int sanity = punit->id;
@@ -623,7 +623,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       threat = TRUE;
     } else {
       /* Enemy cannot reach us or probably not kill us */
-      threat = FALSE;
+      threat = false;
     }
 
     if (has_handicap(pplayer, H_NOBRIBE_WF)) {
@@ -657,7 +657,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       if (!path || !adv_unit_execute_path(punit, path)
           || punit->moves_left <= 0) {
         pf_path_destroy(path);
-        return FALSE;
+        return false;
       }
       pf_path_destroy(path);
     }
@@ -670,7 +670,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       if (game_unit_by_number(sanity) && punit->moves_left > 0) {
         return TRUE;
       } else {
-        return FALSE;
+        return false;
       }
     } else if (action_prob_possible(action_prob_vs_unit(
                    punit, ACTION_SPY_SABOTAGE_UNIT_ESC, pvictim))
@@ -682,7 +682,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
       if (game_unit_by_number(sanity) && punit->moves_left > 0) {
         return TRUE;
       } else {
-        return FALSE;
+        return false;
       }
     } else {
       /* usually because we ended move early due to another unit */
@@ -690,7 +690,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
                "could not bribe target (%d, %d), "
                " %d moves left",
                TILE_XY(pos.tile), punit->moves_left);
-      return FALSE;
+      return false;
     }
   }
   pf_map_positions_iterate_end;
@@ -756,7 +756,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
   /* Check if existing target still makes sense */
   if (unit_data->task == AIUNIT_ATTACK
       || unit_data->task == AIUNIT_DEFEND_HOME) {
-    bool failure = FALSE;
+    bool failure = false;
 
     ctarget = tile_city(punit->goto_tile);
     if (pf_map_position(pfm, punit->goto_tile, &pos) && ctarget) {
@@ -814,7 +814,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
                city_name_get(ctarget));
     } else if ((ctarget =
                     find_closest_city(unit_tile(punit), NULL, pplayer, TRUE,
-                                      FALSE, FALSE, TRUE, FALSE, NULL))
+                                      false, false, TRUE, false, NULL))
                != NULL) {
       /* This should only happen if the entire continent was suddenly
        * conquered. So we head for closest coastal city and wait for someone

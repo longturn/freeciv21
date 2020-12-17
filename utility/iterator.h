@@ -83,7 +83,7 @@ static inline bool iterator_valid(const struct iterator *it)
 #define generic_iterate_end                                                 \
   }                                                                         \
   }                                                                         \
-  while (FALSE)
+  while (false)
 
 /***************************************************************************
   Iterator init functions cannot return NULL, so this dummy helper function

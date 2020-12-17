@@ -122,15 +122,15 @@ int main(int argc, char **argv)
 
   init_nls();
 
-  init_character_encodings(FC_DEFAULT_DATA_ENCODING, FALSE);
+  init_character_encodings(FC_DEFAULT_DATA_ENCODING, false);
 
   rup_parse_cmdline(app);
 
   init_connections();
 
-  settings_init(FALSE);
+  settings_init(false);
 
-  game_init(FALSE);
+  game_init(false);
   i_am_tool();
 
   /* Initialize the fc_interface functions needed to understand rules. */
@@ -145,7 +145,7 @@ int main(int argc, char **argv)
   /* Reset aifill to zero */
   game.info.aifill = 0;
 
-  if (load_rulesets(NULL, NULL, TRUE, conv_log, FALSE, TRUE, TRUE)) {
+  if (load_rulesets(NULL, NULL, TRUE, conv_log, false, TRUE, TRUE)) {
     struct rule_data data;
     QString tgt_dir;
 

@@ -45,7 +45,7 @@ void achievements_init(void)
 
   for (i = 0; i < ARRAY_SIZE(achievements); i++) {
     achievements[i].id = i;
-    achievements[i].ruledit_disabled = FALSE;
+    achievements[i].ruledit_disabled = false;
     achievements[i].first = NULL;
     achievements[i].value = 0;
     achievements[i].culture = 0;
@@ -188,7 +188,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
   if ((ach->unique && ach->first != NULL)
       || (BV_ISSET(ach->achievers, player_index(pplayer)))) {
     /* It was already achieved */
-    return FALSE;
+    return false;
   }
 
   switch (ach->type) {
@@ -214,7 +214,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     whole_map_iterate(&(wld.map), ptile)
     {
-      bool this_is_known = FALSE;
+      bool this_is_known = false;
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
@@ -235,14 +235,14 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
       } else {
         unknown++;
         if (unknown >= max_unknown) {
-          return FALSE;
+          return false;
         }
       }
     }
     whole_map_iterate_end;
   }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_MULTICULTURAL: {
     bv_player seen_citizens;
     int count = 0;
@@ -269,7 +269,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     city_list_iterate_end;
   }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_CULTURED_CITY:
     city_list_iterate(pplayer->cities, pcity)
     {
@@ -279,13 +279,13 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     }
     city_list_iterate_end;
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_CULTURED_NATION:
     if (player_culture(pplayer) >= ach->value) {
       return TRUE;
     }
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_LUCKY:
     return ((int) fc_rand(10000) < ach->value);
   case ACHIEVEMENT_HUTS:
@@ -299,7 +299,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     }
     city_list_iterate_end;
 
-    return FALSE;
+    return false;
   case ACHIEVEMENT_LITERATE:
     return get_literacy(pplayer) >= ach->value;
   case ACHIEVEMENT_LAND_AHOY: {
@@ -308,7 +308,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
     whole_map_iterate(&(wld.map), ptile)
     {
-      bool this_is_known = FALSE;
+      bool this_is_known = false;
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
@@ -334,7 +334,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     }
     whole_map_iterate_end;
 
-    return FALSE;
+    return false;
   }
   case ACHIEVEMENT_COUNT:
     break;
@@ -342,7 +342,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
   qCritical("achievement_check(): Illegal achievement type %d", ach->type);
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -372,7 +372,7 @@ bool achievement_player_has(const struct achievement *pach,
                             const struct player *pplayer)
 {
   if (pplayer == NULL) {
-    return FALSE;
+    return false;
   }
 
   return BV_ISSET(pach->achievers, player_index(pplayer));

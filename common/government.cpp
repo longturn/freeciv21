@@ -167,10 +167,10 @@ const char *government_name_for_player(const struct player *pplayer)
 bool can_change_to_government(struct player *pplayer,
                               const struct government *gov)
 {
-  fc_assert_ret_val(NULL != gov, FALSE);
+  fc_assert_ret_val(NULL != gov, false);
 
   if (!pplayer) {
-    return FALSE;
+    return false;
   }
 
   if (get_player_bonus(pplayer, EFT_ANY_GOVERNMENT) > 0) {
@@ -235,7 +235,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "It should match \"%%s\"",
                 rule_name_get(&pruler_title->male));
     }
-    ret = FALSE;
+    ret = false;
   }
 
   if (!formats_match(rule_name_get(&pruler_title->female), "%s")) {
@@ -250,7 +250,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 "It should match \"%%s\"",
                 rule_name_get(&pruler_title->female));
     }
-    ret = FALSE;
+    ret = false;
   }
 
   if (!formats_match(name_translation_get(&pruler_title->male), "%s")) {
@@ -267,7 +267,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 rule_name_get(&pruler_title->male),
                 name_translation_get(&pruler_title->male));
     }
-    ret = FALSE;
+    ret = false;
   }
 
   if (!formats_match(name_translation_get(&pruler_title->female), "%s")) {
@@ -284,7 +284,7 @@ static bool ruler_title_check(const struct ruler_title *pruler_title)
                 rule_name_get(&pruler_title->female),
                 name_translation_get(&pruler_title->female));
     }
-    ret = FALSE;
+    ret = false;
   }
 
   return ret;
@@ -474,7 +474,7 @@ static inline void government_init(struct government *pgovern)
       new QHash<const struct nation_type *, struct ruler_title *>;
   requirement_vector_init(&pgovern->reqs);
   pgovern->changed_to_times = 0;
-  pgovern->ruledit_disabled = FALSE;
+  pgovern->ruledit_disabled = false;
 }
 
 /**********************************************************************/ /**
@@ -535,7 +535,7 @@ bool untargeted_revolution_allowed(void)
       || game.info.revolentype == REVOLEN_RANDQUICK) {
     /* We need to know the target government at the onset of the revolution
      * in order to know how long anarchy will last. */
-    return FALSE;
+    return false;
   }
   return TRUE;
 }

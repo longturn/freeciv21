@@ -311,7 +311,7 @@ bool editor_tool_has_mode(enum editor_tool_type ett,
 {
   if (editor == NULL || !(ett < NUM_EDITOR_TOOL_TYPES)
       || !(etm < NUM_EDITOR_TOOL_MODES)) {
-    return FALSE;
+    return false;
   }
 
   if (etm == ETM_COPY || etm == ETM_PASTE) {
@@ -352,7 +352,7 @@ bool editor_is_active(void) { return can_conn_edit(&client.conn); }
 bool editor_tool_is_usable(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
 
   switch (ett) {
@@ -378,7 +378,7 @@ bool editor_tool_is_usable(enum editor_tool_type ett)
 bool editor_tool_has_value(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_VALUE;
 }
@@ -439,7 +439,7 @@ static void editor_start_selection_rectangle(int canvas_x, int canvas_y)
 static inline bool tile_really_has_any_specials(const struct tile *ptile)
 {
   if (!ptile) {
-    return FALSE;
+    return false;
   }
 
   extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra)
@@ -450,7 +450,7 @@ static inline bool tile_really_has_any_specials(const struct tile *ptile)
   }
   extra_type_by_cause_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -685,7 +685,7 @@ void editor_mouse_button_press(int canvas_x, int canvas_y, int button,
       editor_grab_applied_player(ptile);
     } else if (modifiers == EKM_NONE) {
       editor->tool_active = TRUE;
-      editor_apply_tool(ptile, FALSE);
+      editor_apply_tool(ptile, false);
       editor_notify_edit_finished();
       editor_set_current_tile(ptile);
     }
@@ -731,7 +731,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     return;
   }
 
-  editor->selrect_active = FALSE;
+  editor->selrect_active = false;
 
   if (editor->selrect_width <= 0 || editor->selrect_height <= 0) {
     struct tile *ptile;
@@ -804,7 +804,7 @@ void editor_mouse_button_release(int canvas_x, int canvas_y, int button,
   switch (button) {
   case MOUSE_BUTTON_LEFT:
     editor_set_current_tile(NULL);
-    editor->tool_active = FALSE;
+    editor->tool_active = false;
     break;
 
   case MOUSE_BUTTON_RIGHT:
@@ -882,7 +882,7 @@ void editor_mouse_move(int canvas_x, int canvas_y, int modifiers)
   }
 
   if (editor->tool_active && old != NULL && old != ptile) {
-    editor_apply_tool(ptile, FALSE);
+    editor_apply_tool(ptile, false);
     editor_notify_edit_finished();
     editor_set_current_tile(ptile);
   }
@@ -1058,7 +1058,7 @@ void editor_tool_toggle_mode(enum editor_tool_type ett,
 void editor_tool_cycle_mode(enum editor_tool_type ett)
 {
   int mode, count;
-  bool found = FALSE;
+  bool found = false;
 
   mode = editor_tool_get_mode(ett);
   if (!(0 <= mode && mode < NUM_EDITOR_TOOL_MODES)) {
@@ -1117,7 +1117,7 @@ void editor_selection_remove(const struct tile *ptile)
 bool editor_tile_is_selected(const struct tile *ptile)
 {
   if (!editor || !ptile) {
-    return FALSE;
+    return false;
   }
   return editor->selected_tile_table->contains(ptile);
 }
@@ -1207,7 +1207,7 @@ const char *editor_tool_get_value_name(enum editor_tool_type emt, int value)
 bool editor_tool_has_size(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_SIZE;
 }
@@ -1241,7 +1241,7 @@ void editor_tool_set_size(enum editor_tool_type ett, int size)
 bool editor_tool_has_count(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_COUNT;
 }
@@ -1364,7 +1364,7 @@ void editor_tool_set_applied_player(enum editor_tool_type ett, int player_no)
 bool editor_tool_has_applied_player(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_APPLIED_PLAYER;
 }
@@ -1376,7 +1376,7 @@ bool editor_tool_has_applied_player(enum editor_tool_type ett)
 bool editor_tool_has_value_erase(enum editor_tool_type ett)
 {
   if (!editor || !(ett < NUM_EDITOR_TOOL_TYPES)) {
-    return FALSE;
+    return false;
   }
   return editor->tools[ett].flags & ETF_HAS_VALUE_ERASE;
 }
@@ -1494,7 +1494,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
 {
   struct tile *vtile;
   struct unit *vunit;
-  bool copied = FALSE;
+  bool copied = false;
 
   if (!ebuf || !ptile) {
     return;
@@ -1645,7 +1645,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
   struct packet_edit_tile tile_packet;
   struct city *vcity;
   int value, owner, tile;
-  bool send_edit_tile = FALSE;
+  bool send_edit_tile = false;
 
   if (!ebuf || !vtile || !ptile_dest) {
     return;
@@ -1932,7 +1932,7 @@ const struct tile *edit_buffer_get_origin(const struct edit_buffer *ebuf)
 bool edit_buffer_has_type(const struct edit_buffer *ebuf, int type)
 {
   if (!ebuf) {
-    return FALSE;
+    return false;
   }
   return ebuf->type_flags & type;
 }

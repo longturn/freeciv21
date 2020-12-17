@@ -159,7 +159,7 @@ static void init_zeros(struct inputfile *inf)
   inf->datafn = NULL;
   inf->included_from = NULL;
   inf->line_num = inf->cur_line_pos = 0;
-  inf->at_eof = inf->in_string = FALSE;
+  inf->at_eof = inf->in_string = false;
   inf->string_start_line = 0;
   astr_init(&inf->cur_line);
   astr_init(&inf->token);
@@ -171,12 +171,12 @@ static void init_zeros(struct inputfile *inf)
  ***********************************************************************/
 static bool inf_sanity_check(struct inputfile *inf)
 {
-  fc_assert_ret_val(NULL != inf, FALSE);
-  fc_assert_ret_val(INF_MAGIC == inf->magic, FALSE);
-  fc_assert_ret_val(NULL != inf->fp, FALSE);
-  fc_assert_ret_val(FALSE == inf->at_eof || TRUE == inf->at_eof, FALSE);
-  fc_assert_ret_val(FALSE == inf->in_string || TRUE == inf->in_string,
-                    FALSE);
+  fc_assert_ret_val(NULL != inf, false);
+  fc_assert_ret_val(INF_MAGIC == inf->magic, false);
+  fc_assert_ret_val(NULL != inf->fp, false);
+  fc_assert_ret_val(false == inf->at_eof || TRUE == inf->at_eof, false);
+  fc_assert_ret_val(false == inf->in_string || TRUE == inf->in_string,
+                    false);
 
 #ifdef FREECIV_DEBUG
   fc_assert_ret_val(0 <= inf->string_start_line, FALSE);
@@ -302,7 +302,7 @@ void inf_close(struct inputfile *inf)
  ***********************************************************************/
 static bool have_line(struct inputfile *inf)
 {
-  fc_assert_ret_val(inf_sanity_check(inf), FALSE);
+  fc_assert_ret_val(inf_sanity_check(inf), false);
 
   return !astr_empty(&inf->cur_line);
 }
@@ -347,13 +347,13 @@ static bool check_include(struct inputfile *inf)
   if (len == 0) {
     len = qstrlen(include_prefix);
   }
-  fc_assert_ret_val(inf_sanity_check(inf), FALSE);
+  fc_assert_ret_val(inf_sanity_check(inf), false);
   if (inf->in_string || astr_len(&inf->cur_line) <= len
       || inf->cur_line_pos > 0) {
-    return FALSE;
+    return false;
   }
   if (strncmp(astr_str(&inf->cur_line), include_prefix, len) != 0) {
-    return FALSE;
+    return false;
   }
   /* from here, the include-line must be well formed */
   /* keep inf->cur_line_pos accurate just so error messages are useful */
@@ -368,7 +368,7 @@ static bool check_include(struct inputfile *inf)
   if (*c != '\"') {
     qCCritical(inf_category,
             "Did not find opening doublequote for '*include' line");
-    return FALSE;
+    return false;
   }
   c++;
   inf->cur_line_pos = c - astr_str(&inf->cur_line);
@@ -379,7 +379,7 @@ static bool check_include(struct inputfile *inf)
   if (*c != '\"') {
     qCCritical(inf_category,
             "Did not find closing doublequote for '*include' line");
-    return FALSE;
+    return false;
   }
   c++;
   bare_name_len = c - bare_name_start;
@@ -395,7 +395,7 @@ static bool check_include(struct inputfile *inf)
   if (!(*c == '\0' || is_comment(*c))) {
     qCCritical(inf_category, "Junk after filename for '*include' line");
     delete[] bare_name;
-    return FALSE;
+    return false;
   }
   inf->cur_line_pos = astr_len(&inf->cur_line) - 1;
 
@@ -403,7 +403,7 @@ static bool check_include(struct inputfile *inf)
   if (!full_name) {
     qCritical("Could not find included file \"%s\"", bare_name);
     delete[] bare_name;
-    return FALSE;
+    return false;
   }
   delete[] bare_name;
 
@@ -414,7 +414,7 @@ static bool check_include(struct inputfile *inf)
     do {
       if (inc->filename && strcmp(full_name, inc->filename) == 0) {
         qCritical("Recursion trap on '*include' for \"%s\"", full_name);
-        return FALSE;
+        return false;
       }
     } while ((inc = inc->included_from));
   }
@@ -445,10 +445,10 @@ static bool read_a_line(struct inputfile *inf)
   char *ret;
   int pos;
 
-  fc_assert_ret_val(inf_sanity_check(inf), FALSE);
+  fc_assert_ret_val(inf_sanity_check(inf), false);
 
   if (inf->at_eof) {
-    return FALSE;
+    return false;
   }
 
   /* abbreviation: */
@@ -477,7 +477,7 @@ static bool read_a_line(struct inputfile *inf)
         /* Note: Don't allow multi-line strings to cross "include"
          * boundaries */
         qCCritical(inf_category, "Multi-line string went to end-of-file");
-        return FALSE;
+        return false;
       }
       break;
     }
@@ -524,7 +524,7 @@ static bool read_a_line(struct inputfile *inf)
       delete inc;
       return read_a_line(inf);
     }
-    return FALSE;
+    return false;
   }
 }
 
@@ -770,7 +770,7 @@ static const char *get_token_value(struct inputfile *inf)
   struct astring *partial;
   const char *c, *start;
   char trailing;
-  bool has_i18n_marking = FALSE;
+  bool has_i18n_marking = false;
   char border_character = '\"';
 
   fc_assert_ret_val(have_line(inf), NULL);
@@ -867,7 +867,7 @@ static const char *get_token_value(struct inputfile *inf)
     *((char *) (c - 1)) = trailing; /* Revert. */
     astr_set(&inf->token, "*");     /* Mark as a string read from a file */
 
-    eof = FALSE;
+    eof = false;
     pos = 1; /* Past 'filestring' marker */
     while (!eof) {
       char *ret;
@@ -975,6 +975,6 @@ static const char *get_token_value(struct inputfile *inf)
       qCWarning(inf_category, "Missing end of i18n string marking");
     }
   }
-  inf->in_string = FALSE;
+  inf->in_string = false;
   return astr_str(&inf->token);
 }

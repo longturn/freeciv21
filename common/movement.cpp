@@ -188,13 +188,13 @@ bool can_attack_non_native(const struct unit_type *utype)
 bool can_attack_from_non_native(const struct unit_type *utype)
 {
   return (utype_can_do_act_when_ustate(utype, ACTION_ATTACK, USP_NATIVE_TILE,
-                                       FALSE)
+                                       false)
           || utype_can_do_act_when_ustate(utype, ACTION_SUICIDE_ATTACK,
-                                          USP_NATIVE_TILE, FALSE)
+                                          USP_NATIVE_TILE, false)
           || utype_can_do_act_when_ustate(utype, ACTION_CONQUER_CITY2,
-                                          USP_LIVABLE_TILE, FALSE)
+                                          USP_LIVABLE_TILE, false)
           || utype_can_do_act_when_ustate(utype, ACTION_CONQUER_CITY,
-                                          USP_LIVABLE_TILE, FALSE));
+                                          USP_LIVABLE_TILE, false));
 }
 
 /************************************************************************/ /**
@@ -205,7 +205,7 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
                           const struct tile *pexclude)
 {
   struct tile_list *process_queue = tile_list_new();
-  bool found = FALSE;
+  bool found = false;
 
   QBitArray tile_processed(map_num_tiles());
   for (;;) {
@@ -263,7 +263,7 @@ bool can_exist_at_tile(const struct civ_map *nmap,
    * land. */
   if (utype_has_flag(utype, UTYF_COAST_STRICT)
       && !is_safe_ocean(nmap, ptile)) {
-    return FALSE;
+    return false;
   }
 
   return is_native_tile(utype, ptile);
@@ -320,7 +320,7 @@ bool is_native_to_class(const struct unit_class *punitclass,
     extra_type_list_iterate_end;
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -424,7 +424,7 @@ bool is_native_move(const struct unit_class *punitclass,
   }
   extra_type_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -446,7 +446,7 @@ bool is_native_near_tile(const struct civ_map *nmap,
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -463,7 +463,7 @@ bool can_unit_survive_at_tile(const struct civ_map *nmap,
                               const struct tile *ptile)
 {
   if (!can_unit_exist_at_tile(nmap, punit, ptile)) {
-    return FALSE;
+    return false;
   }
 
   if (tile_city(ptile)) {
@@ -482,12 +482,12 @@ bool can_unit_survive_at_tile(const struct civ_map *nmap,
 
   if (utype_fuel(unit_type_get(punit))) {
     /* Unit requires fuel and this is not refueling tile */
-    return FALSE;
+    return false;
   }
 
   if (is_losing_hp(punit)) {
     /* Unit is losing HP over time in this tile (no city or native base) */
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -691,8 +691,8 @@ unit_move_to_tile_test(const struct civ_map *nmap, const struct unit *punit,
 bool can_unit_transport(const struct unit *transporter,
                         const struct unit *transported)
 {
-  fc_assert_ret_val(transporter != NULL, FALSE);
-  fc_assert_ret_val(transported != NULL, FALSE);
+  fc_assert_ret_val(transporter != NULL, false);
+  fc_assert_ret_val(transported != NULL, false);
 
   return can_unit_type_transport(unit_type_get(transporter),
                                  unit_class_get(transported));
@@ -706,7 +706,7 @@ bool can_unit_type_transport(const struct unit_type *transporter,
                              const struct unit_class *transported)
 {
   if (transporter->transport_capacity <= 0) {
-    return FALSE;
+    return false;
   }
 
   return BV_ISSET(transporter->cargo, uclass_index(transported));
@@ -722,7 +722,7 @@ bool unit_can_load(const struct unit *punit)
   if (unit_transported(punit)) {
     /* In another transport already. Can it unload first? */
     if (!can_unit_unload(punit, punit->transporter)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -739,7 +739,7 @@ bool unit_can_load(const struct unit *punit)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -757,7 +757,7 @@ bool unit_could_load_at(const struct unit *punit, const struct tile *ptile)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 static int move_points_denomlen = 0;
@@ -856,5 +856,5 @@ const char *move_points_text_full(int mp, bool reduce, const char *prefix,
  ****************************************************************************/
 const char *move_points_text(int mp, bool reduce)
 {
-  return move_points_text_full(mp, reduce, NULL, NULL, FALSE);
+  return move_points_text_full(mp, reduce, NULL, NULL, false);
 }

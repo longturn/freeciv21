@@ -39,7 +39,7 @@ void specialists_init(void)
     struct specialist *p = &specialists[i];
 
     p->item_number = i;
-    p->ruledit_disabled = FALSE;
+    p->ruledit_disabled = false;
 
     requirement_vector_init(&p->reqs);
   }

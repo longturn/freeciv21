@@ -112,14 +112,14 @@ static void script_fcdb_functions_define(void)
                      API_TYPE_BOOL);
   luascript_func_add(fcl, "user_verify", TRUE, 2, 1, API_TYPE_CONNECTION,
                      API_TYPE_STRING, API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_save", FALSE, 2, 0, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_save", false, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_STRING);
   luascript_func_add(fcl, "user_log", TRUE, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_delegate_to", FALSE, 3, 1,
+  luascript_func_add(fcl, "user_delegate_to", false, 3, 1,
                      API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_STRING,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_take", FALSE, 4, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_take", false, 4, 1, API_TYPE_CONNECTION,
                      API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_BOOL,
                      API_TYPE_BOOL);
 }
@@ -140,7 +140,7 @@ static bool script_fcdb_functions_check(const char *fcdb_luafile)
       qCritical("Database script '%s' does not define the required function "
                 "'%s'.",
                 fcdb_luafile, func_name);
-      ret = FALSE;
+      ret = false;
     }
     for (auto func_name : *missing_func_optional)
     {
@@ -225,7 +225,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
 {
 #ifdef HAVE_FCDB
   if (fcl != NULL) {
-    fc_assert_ret_val(fcl->state != NULL, FALSE);
+    fc_assert_ret_val(fcl->state != NULL, false);
 
     return TRUE;
   }
@@ -235,10 +235,10 @@ bool script_fcdb_init(const char *fcdb_luafile)
     fcdb_luafile = FC_CONF_PATH "/" SCRIPT_FCDB_LUA_FILE;
   }
 
-  fcl = luascript_new(NULL, FALSE);
+  fcl = luascript_new(NULL, false);
   if (fcl == NULL) {
     qCritical("Error loading the Freeciv database lua definition.");
-    return FALSE;
+    return false;
   }
 
   tolua_common_a_open(fcl->state);
@@ -273,13 +273,13 @@ bool script_fcdb_init(const char *fcdb_luafile)
     qCritical("Error loading the Freeciv database lua script '%s'.",
               fcdb_luafile);
     script_fcdb_free();
-    return FALSE;
+    return false;
   }
 
   if (!script_fcdb_call("database_init")) {
     qCritical("Error connecting to the database");
     script_fcdb_free();
-    return FALSE;
+    return false;
   }
 #endif /* HAVE_FCDB */
 

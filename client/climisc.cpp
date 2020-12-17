@@ -128,7 +128,7 @@ void client_remove_unit(struct unit *punit)
     }
   }
 
-  refresh_unit_mapcanvas(&old_unit, ptile, TRUE, FALSE);
+  refresh_unit_mapcanvas(&old_unit, ptile, TRUE, false);
   flush_dirty_overview();
 }
 
@@ -145,7 +145,7 @@ void client_remove_city(struct city *pcity)
 
   /* Explicitly remove all improvements, to properly remove any global
      effects and to handle the preservation of "destroyed" effects. */
-  effect_update = FALSE;
+  effect_update = false;
 
   city_built_iterate(pcity, pimprove)
   {
@@ -161,7 +161,7 @@ void client_remove_city(struct city *pcity)
   popdown_city_dialog(pcity);
   game_remove_city(&wld, pcity);
   city_report_dialog_update();
-  refresh_city_mapcanvas(&old_city, ptile, TRUE, FALSE);
+  refresh_city_mapcanvas(&old_city, ptile, TRUE, false);
 }
 
 /**********************************************************************/ /**
@@ -297,7 +297,7 @@ void client_diplomacy_clause_string(char *buf, int bufsiz,
                 nation_plural_for_player(pclause->from));
     break;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     if (bufsiz > 0) {
       *buf = '\0';
     }
@@ -431,7 +431,7 @@ void center_on_something(void)
     return;
   }
 
-  can_slide = FALSE;
+  can_slide = false;
   if (get_num_units_in_focus() > 0) {
     center_tile_mapcanvas(unit_tile(head_of_units_in_focus()));
   } else if (client_has_player()
@@ -549,7 +549,7 @@ bool city_unit_supported(const struct city *pcity,
     }
     unit_list_iterate_end;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -570,7 +570,7 @@ bool city_unit_present(const struct city *pcity,
     }
     unit_list_iterate_end;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -698,7 +698,7 @@ int collect_production_targets(struct universal *targets,
   int items_used = 0;
 
   for (id = first; id < last; id++) {
-    bool append = FALSE;
+    bool append = false;
     struct universal target = cid_decode(id);
 
     if (!append_units
@@ -832,7 +832,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
           can_player_build_improvement_later(pplayer, pimprove);
     } else {
       /* Global observer case: can any player build? */
-      can_build = FALSE;
+      can_build = false;
       players_iterate(aplayer)
       {
         if (can_player_build_improvement_now(aplayer, pimprove)) {
@@ -842,7 +842,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       }
       players_iterate_end;
 
-      can_eventually_build = FALSE;
+      can_eventually_build = false;
       players_iterate(aplayer)
       {
         if (can_player_build_improvement_later(aplayer, pimprove)) {
@@ -877,7 +877,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       can_eventually_build = can_player_build_unit_later(pplayer, punittype);
     } else {
       /* Global observer case: can any player build? */
-      can_build = FALSE;
+      can_build = false;
       players_iterate(aplayer)
       {
         if (can_player_build_unit_now(aplayer, punittype)) {
@@ -887,7 +887,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       }
       players_iterate_end;
 
-      can_eventually_build = FALSE;
+      can_eventually_build = false;
       players_iterate(aplayer)
       {
         if (can_player_build_unit_later(aplayer, punittype)) {
@@ -976,9 +976,9 @@ void handle_event(const char *featured_text, struct tile *ptile,
   char plain_text[MAX_LEN_MSG];
   struct text_tag_list *tags;
   int where = MW_OUTPUT;        /* where to display the message */
-  bool fallback_needed = FALSE; /* we want fallback if actual 'where' is not
+  bool fallback_needed = false; /* we want fallback if actual 'where' is not
                                  * usable */
-  bool shown = FALSE;           /* Message displayed somewhere at least */
+  bool shown = false;           /* Message displayed somewhere at least */
 
   if (!event_type_is_valid(event)) {
     /* Server may have added a new event; leave as MW_OUTPUT */
@@ -1210,7 +1210,7 @@ bool can_units_do_connect(struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1301,7 +1301,7 @@ bool mapimg_client_define(void)
   if (client_is_global_observer()) {
     cat_snprintf(str, sizeof(str), ":show=all");
     /* use all available knowledge */
-    gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = FALSE;
+    gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = false;
   } else {
     cat_snprintf(str, sizeof(str), ":show=plrid:plrid=%d",
                  player_index(client.conn.playing));
@@ -1326,10 +1326,10 @@ bool mapimg_client_define(void)
 
   log_debug("client map image definition: %s", str);
 
-  if (!mapimg_define(str, FALSE) || !mapimg_isvalid(0)) {
+  if (!mapimg_define(str, false) || !mapimg_isvalid(0)) {
     /* An error in the definition string or an error validation the string.
      * The error message is available via mapimg_error(). */
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -1350,12 +1350,12 @@ bool mapimg_client_createmap(const char *filename)
   }
 
   if (!mapimg_client_define()) {
-    return FALSE;
+    return false;
   }
 
   pmapdef = mapimg_isvalid(0);
   if (!pmapdef) {
-    return FALSE;
+    return false;
   }
 
   return mapimg_create(pmapdef, TRUE, mapimgfile, NULL);

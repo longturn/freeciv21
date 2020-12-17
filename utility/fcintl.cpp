@@ -19,7 +19,7 @@
 
 #include "fcintl.h"
 
-static bool autocap = FALSE;
+static bool autocap = false;
 
 /*******************************************************************/ /**
    Some strings are ambiguous for translation.  For example, "Game" is

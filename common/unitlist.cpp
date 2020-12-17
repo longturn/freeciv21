@@ -101,7 +101,7 @@ bool can_units_do(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -112,7 +112,7 @@ bool can_units_do_activity(const struct unit_list *punits,
 {
   /* Make sure nobody uses these old activities any more */
   fc_assert_ret_val(
-      activity != ACTIVITY_FORTRESS && activity != ACTIVITY_AIRBASE, FALSE);
+      activity != ACTIVITY_FORTRESS && activity != ACTIVITY_AIRBASE, false);
 
   unit_list_iterate(punits, punit)
   {
@@ -122,7 +122,7 @@ bool can_units_do_activity(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -140,7 +140,7 @@ bool can_units_do_activity_targeted(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -162,7 +162,7 @@ bool can_units_do_any_road(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -183,7 +183,7 @@ bool can_units_do_base_gui(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -203,7 +203,7 @@ bool units_have_type_flag(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -212,7 +212,7 @@ bool units_have_type_flag(const struct unit_list *punits,
 bool units_contain_cityfounder(const struct unit_list *punits)
 {
   if (game.scenario.prevent_new_cities) {
-    return FALSE;
+    return false;
   }
 
   unit_list_iterate(punits, punit)
@@ -223,7 +223,7 @@ bool units_contain_cityfounder(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -244,7 +244,7 @@ bool units_can_do_action(const struct unit_list *punits, action_id act_id,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -260,7 +260,7 @@ bool units_are_occupied(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -276,7 +276,7 @@ bool units_can_load(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -294,7 +294,7 @@ bool units_can_unload(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -312,7 +312,7 @@ bool units_have_activity_on_tile(const struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -323,13 +323,13 @@ bool units_can_upgrade(const struct unit_list *punits)
 {
   unit_list_iterate(punits, punit)
   {
-    if (UU_OK == unit_upgrade_test(punit, FALSE)) {
+    if (UU_OK == unit_upgrade_test(punit, false)) {
       return TRUE;
     }
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -346,7 +346,7 @@ bool units_can_convert(const struct unit_list *punits)
   }
   unit_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 // Return TRUE if any of the units is in city

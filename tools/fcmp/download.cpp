@@ -76,7 +76,7 @@ static const char *download_modpack_recursive(const char *URL,
   char baseURL[2048];
   char fileURL[2048];
   const char *src_name;
-  bool partial_failure = FALSE;
+  bool partial_failure = false;
   int dep;
   const char *dep_name;
 
@@ -206,7 +206,7 @@ static const char *download_modpack_recursive(const char *URL,
             control, NULL, "dependencies.list%d.version", dep);
 
         if (dep_ver != NULL && cvercmp_max(dep_ver, inst_ver)) {
-          needed = FALSE;
+          needed = false;
         }
       }
 
@@ -270,7 +270,7 @@ static const char *download_modpack_recursive(const char *URL,
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
     int i;
-    bool illegal_filename = FALSE;
+    bool illegal_filename = false;
 
     src_name = secfile_lookup_str_default(control, NULL, "files.list%d.src",
                                           filenbr);

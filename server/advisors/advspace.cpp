@@ -34,7 +34,7 @@ bool adv_spaceship_autoplace(struct player *pplayer,
                              struct player_spaceship *ship)
 {
   struct spaceship_component place;
-  bool retval = FALSE;
+  bool retval = false;
   bool placed;
 
   do {

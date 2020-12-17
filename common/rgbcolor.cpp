@@ -62,7 +62,7 @@ struct rgbcolor *rgbcolor_copy(const struct rgbcolor *prgbcolor)
 bool rgbcolors_are_equal(const struct rgbcolor *c1,
                          const struct rgbcolor *c2)
 {
-  fc_assert_ret_val(c1 != NULL && c2 != NULL, FALSE);
+  fc_assert_ret_val(c1 != NULL && c2 != NULL, false);
 
   /* No check of cached 'color' member -- if values are equal, it should be
    * equivalent */
@@ -95,8 +95,8 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   char colorpath[256];
   va_list args;
 
-  fc_assert_ret_val(file != NULL, FALSE);
-  fc_assert_ret_val(*prgbcolor == NULL, FALSE);
+  fc_assert_ret_val(file != NULL, false);
+  fc_assert_ret_val(*prgbcolor == NULL, false);
 
   va_start(args, path);
   fc_vsnprintf(colorpath, sizeof(colorpath), path, args);
@@ -106,7 +106,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
       || !secfile_lookup_int(file, &g, "%s.g", colorpath)
       || !secfile_lookup_int(file, &b, "%s.b", colorpath)) {
     /* One color value (red, green or blue) is missing. */
-    return FALSE;
+    return false;
   }
 
   rgbcolor_check(colorpath, r, g, b);
@@ -143,13 +143,13 @@ void rgbcolor_save(struct section_file *file,
 bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
                      size_t hex_len)
 {
-  fc_assert_ret_val(prgbcolor != NULL, FALSE);
+  fc_assert_ret_val(prgbcolor != NULL, false);
   /* Needs a length greater than 7 ('#' + 6 hex digites and '\0'). */
-  fc_assert_ret_val(hex_len > 7, FALSE);
+  fc_assert_ret_val(hex_len > 7, false);
 
-  fc_assert_ret_val(0 <= prgbcolor->r && prgbcolor->r <= 255, FALSE);
-  fc_assert_ret_val(0 <= prgbcolor->g && prgbcolor->g <= 255, FALSE);
-  fc_assert_ret_val(0 <= prgbcolor->b && prgbcolor->b <= 255, FALSE);
+  fc_assert_ret_val(0 <= prgbcolor->r && prgbcolor->r <= 255, false);
+  fc_assert_ret_val(0 <= prgbcolor->g && prgbcolor->g <= 255, false);
+  fc_assert_ret_val(0 <= prgbcolor->b && prgbcolor->b <= 255, false);
 
   fc_snprintf(hex, hex_len, "#%06x",
               (prgbcolor->r * 256 + prgbcolor->g) * 256 + prgbcolor->b);
@@ -165,20 +165,20 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex)
   int rgb, r, g, b;
   char hex2[16];
 
-  fc_assert_ret_val(*prgbcolor == NULL, FALSE);
-  fc_assert_ret_val(hex != NULL, FALSE);
+  fc_assert_ret_val(*prgbcolor == NULL, false);
+  fc_assert_ret_val(hex != NULL, false);
 
   if (hex[0] == '#') {
     hex++;
   }
 
   if (strlen(hex) != 6) {
-    return FALSE;
+    return false;
   }
 
   fc_snprintf(hex2, sizeof(hex2), "0x%s", hex);
   if (!sscanf(hex2, "%x", &rgb)) {
-    return FALSE;
+    return false;
   }
 
   r = rgb / 256 / 256;

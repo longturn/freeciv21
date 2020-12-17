@@ -238,7 +238,7 @@ static int base_assess_defense_unit(struct city *pcity, struct unit *punit,
                                     int wall_value)
 {
   int defense;
-  bool do_wall = FALSE;
+  bool do_wall = false;
 
   if (!is_military_unit(punit)) {
     return 0;
@@ -279,7 +279,7 @@ int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
 {
   int defense = 0, walls = 0;
   /* This can be an arg if needed, but we don't need to change it now. */
-  const bool igwall = FALSE;
+  const bool igwall = false;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
 
   /* wallvalue = 10, walls = 10,
@@ -292,7 +292,7 @@ int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
 
   unit_list_iterate(pcity->tile->units, punit)
   {
-    defense += base_assess_defense_unit(pcity, punit, igwall, FALSE, walls);
+    defense += base_assess_defense_unit(pcity, punit, igwall, false, walls);
   }
   unit_list_iterate_end;
 
@@ -348,7 +348,7 @@ static int assess_defense_backend(struct ai_type *ait, struct city *pcity,
  **************************************************************************/
 int assess_defense(struct ai_type *ait, struct city *pcity)
 {
-  return assess_defense_backend(ait, pcity, FALSE);
+  return assess_defense_backend(ait, pcity, false);
 }
 
 /**********************************************************************/ /**
@@ -525,13 +525,13 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
   } else {
     city_data->grave_danger = 0;
   }
-  city_data->diplomat_threat = FALSE;
-  city_data->has_diplomat = FALSE;
+  city_data->diplomat_threat = false;
+  city_data->has_diplomat = false;
 
   unit_type_iterate(utype)
   {
     defense_bonuses_pct[utype_index(utype)] = 0;
-    defender_type_handled[utype_index(utype)] = FALSE;
+    defender_type_handled[utype_index(utype)] = false;
   }
   unit_type_iterate_end;
 
@@ -915,7 +915,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
   simple_ai_unit_type_iterate_end;
 
   if (!best_unit_type) {
-    return FALSE;
+    return false;
   }
 
   choice->value.utype = best_unit_type;
@@ -1038,7 +1038,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
             && pf_map_position(ferry_map, dest_tile, &pos)) {
           move_time = pos.turn;
           dest_tile = pf_map_parameter(ferry_map)->start_tile;
-          pf_map_tiles_iterate(pfm, atile, FALSE)
+          pf_map_tiles_iterate(pfm, atile, false)
           {
             if (atile == dest_tile) {
               pf_map_iter_position(pfm, &pos);
@@ -1069,7 +1069,7 @@ process_attacker_want(struct ai_type *ait, struct city *pcity, int value,
 
       if (victim_unit_type) {
         vuln = unittype_def_rating_squared(punittype, victim_unit_type,
-                                           victim_player, ptile, FALSE,
+                                           victim_player, ptile, false,
                                            veteran);
       } else {
         vuln = 0;
@@ -1275,7 +1275,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
     if (1 < move_time && def_type) {
       def_vet = city_production_unit_veteran_level(acity, def_type);
       vulnerability = unittype_def_rating_squared(
-          unit_type_get(myunit), def_type, city_owner(acity), ptile, FALSE,
+          unit_type_get(myunit), def_type, city_owner(acity), ptile, false,
           def_vet);
       benefit = utype_build_shield_cost_base(def_type);
     } else {
@@ -1288,7 +1288,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
     if (pdef) {
       int m = unittype_def_rating_squared(
           unit_type_get(myunit), unit_type_get(pdef), city_owner(acity),
-          ptile, FALSE, pdef->veteran);
+          ptile, false, pdef->veteran);
       if (vulnerability < m) {
         vulnerability = m;
         benefit = unit_build_shield_cost_base(pdef);
@@ -1473,7 +1473,7 @@ struct adv_choice *military_advisor_choose_build(
   struct unit *virtualunit;
   struct ai_city *city_data = def_ai_city_data(pcity, ait);
   adv_want martial_value = 0;
-  bool martial_need = FALSE;
+  bool martial_need = false;
   struct adv_choice *choice = adv_new_choice();
   bool allow_gold_upkeep;
 
@@ -1549,7 +1549,7 @@ struct adv_choice *military_advisor_choose_build(
       if (dai_process_defender_want(ait, pplayer, pcity, danger, choice)) {
         choice->want = 100 + danger;
         adv_choice_set_use(choice, "first defender");
-        build_walls = FALSE;
+        build_walls = false;
 
         CITY_LOG(LOG_DEBUG, pcity,
                  "m_a_c_d wants first defender with " ADV_WANT_PRINTF,
@@ -1593,10 +1593,10 @@ struct adv_choice *military_advisor_choose_build(
                    "m_a_c_d wants defense building with " ADV_WANT_PRINTF,
                    choice->want);
         } else {
-          build_walls = FALSE;
+          build_walls = false;
         }
       } else {
-        build_walls = FALSE;
+        build_walls = false;
       }
       if ((danger > 0 && num_defenders <= urgency) || martial_value > 0) {
         struct adv_choice uchoice;
@@ -1655,7 +1655,7 @@ struct adv_choice *military_advisor_choose_build(
      * that we have not increased taxes. */
     allow_gold_upkeep = TRUE;
   } else {
-    allow_gold_upkeep = FALSE;
+    allow_gold_upkeep = false;
   }
 
   /* Consider making a land bodyguard */

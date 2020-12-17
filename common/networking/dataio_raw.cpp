@@ -97,7 +97,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
   bool ret = TRUE;
 
   if (ndst > 0 && len >= ndst) {
-    ret = FALSE;
+    ret = false;
     len = ndst - 1;
   }
 
@@ -131,7 +131,7 @@ static bool enough_space(struct raw_data_out *dout, size_t size)
 {
   if (dout->current + size > dout->dest_size) {
     dout->too_short = TRUE;
-    return FALSE;
+    return false;
   } else {
     dout->used = MAX(dout->used, dout->current + size);
     return TRUE;
@@ -157,7 +157,7 @@ void dio_output_init(struct raw_data_out *dout, void *destination,
   dout->dest_size = dest_size;
   dout->current = 0;
   dout->used = 0;
-  dout->too_short = FALSE;
+  dout->too_short = false;
 }
 
 /**********************************************************************/ /**
@@ -215,7 +215,7 @@ size_t data_type_size(enum data_type type)
     break;
   }
 
-  fc_assert_msg(FALSE, "data_type %d not handled.", type);
+  fc_assert_msg(false, "data_type %d not handled.", type);
   return 0;
 }
 
@@ -228,7 +228,7 @@ bool dio_input_skip(struct data_in *din, size_t size)
     din->current += size;
     return TRUE;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -318,7 +318,7 @@ void dio_put_type_raw(struct raw_data_out *dout, enum data_type type,
     break;
   }
 
-  fc_assert_msg(FALSE, "data_type %d not handled.", type);
+  fc_assert_msg(false, "data_type %d not handled.", type);
 }
 
 /**********************************************************************/ /**
@@ -354,7 +354,7 @@ void dio_put_sint32_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_bool8_raw(struct raw_data_out *dout, bool value)
 {
-  FIELD_RANGE_TEST(value != TRUE && value != FALSE, value = (value != FALSE);
+  FIELD_RANGE_TEST(value != TRUE && value != false, value = (value != false);
                    , "Trying to put a non-boolean: %d", (int) value);
 
   dio_put_uint8_raw(dout, value ? 1 : 0);
@@ -365,7 +365,7 @@ void dio_put_bool8_raw(struct raw_data_out *dout, bool value)
  **************************************************************************/
 void dio_put_bool32_raw(struct raw_data_out *dout, bool value)
 {
-  FIELD_RANGE_TEST(value != TRUE && value != FALSE, value = (value != FALSE);
+  FIELD_RANGE_TEST(value != TRUE && value != false, value = (value != false);
                    , "Trying to put a non-boolean: %d", (int) value);
 
   dio_put_uint32_raw(dout, value ? 1 : 0);
@@ -557,7 +557,7 @@ bool dio_get_uint8_raw(struct data_in *din, int *dest)
   if (!enough_data(din, 1)) {
     log_packet("Packet too short to read 1 byte");
 
-    return FALSE;
+    return false;
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 1);
@@ -578,7 +578,7 @@ bool dio_get_uint16_raw(struct data_in *din, int *dest)
   if (!enough_data(din, 2)) {
     log_packet("Packet too short to read 2 bytes");
 
-    return FALSE;
+    return false;
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 2);
@@ -599,7 +599,7 @@ bool dio_get_uint32_raw(struct data_in *din, int *dest)
   if (!enough_data(din, 4)) {
     log_packet("Packet too short to read 4 bytes");
 
-    return FALSE;
+    return false;
   }
 
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 4);
@@ -630,8 +630,8 @@ bool dio_get_type_raw(struct data_in *din, enum data_type type, int *dest)
     break;
   }
 
-  fc_assert_msg(FALSE, "data_type %d not handled.", type);
-  return FALSE;
+  fc_assert_msg(false, "data_type %d not handled.", type);
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -642,12 +642,12 @@ bool dio_get_bool8_raw(struct data_in *din, bool *dest)
   int ival;
 
   if (!dio_get_uint8_raw(din, &ival)) {
-    return FALSE;
+    return false;
   }
 
   if (ival != 0 && ival != 1) {
     log_packet("Got a bad boolean: %d", ival);
-    return FALSE;
+    return false;
   }
 
   *dest = (ival != 0);
@@ -662,12 +662,12 @@ bool dio_get_bool32_raw(struct data_in *din, bool *dest)
   int ival;
 
   if (!dio_get_uint32_raw(din, &ival)) {
-    return FALSE;
+    return false;
   }
 
   if (ival != 0 && ival != 1) {
     log_packet("Got a bad boolean: %d", ival);
-    return FALSE;
+    return false;
   }
 
   *dest = (ival != 0);
@@ -683,7 +683,7 @@ bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
   int ival;
 
   if (!dio_get_uint32_raw(din, &ival)) {
-    return FALSE;
+    return false;
   }
 
   *dest = (float) ival / float_factor;
@@ -699,7 +699,7 @@ bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
   int ival;
 
   if (!dio_get_sint32_raw(din, &ival)) {
-    return FALSE;
+    return false;
   }
 
   *dest = (float) ival / float_factor;
@@ -714,7 +714,7 @@ bool dio_get_sint8_raw(struct data_in *din, int *dest)
   int tmp;
 
   if (!dio_get_uint8_raw(din, &tmp)) {
-    return FALSE;
+    return false;
   }
 
   if (tmp > 0x7f) {
@@ -732,7 +732,7 @@ bool dio_get_sint16_raw(struct data_in *din, int *dest)
   int tmp;
 
   if (!dio_get_uint16_raw(din, &tmp)) {
-    return FALSE;
+    return false;
   }
 
   if (tmp > 0x7fff) {
@@ -750,7 +750,7 @@ bool dio_get_sint32_raw(struct data_in *din, int *dest)
   int tmp;
 
   if (!dio_get_uint32_raw(din, &tmp)) {
-    return FALSE;
+    return false;
   }
 
 #if SIZEOF_INT != 4
@@ -770,7 +770,7 @@ bool dio_get_memory_raw(struct data_in *din, void *dest, size_t dest_size)
 {
   if (!enough_data(din, dest_size)) {
     log_packet("Got too short memory");
-    return FALSE;
+    return false;
   }
 
   memcpy(dest, ADD_TO_POINTER(din->src, din->current), dest_size);
@@ -791,7 +791,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
 
   if (!enough_data(din, 1)) {
     log_packet("Got a bad string");
-    return FALSE;
+    return false;
   }
 
   remaining = dio_input_remaining(din);
@@ -804,12 +804,12 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
 
   if (offset >= remaining) {
     log_packet("Got a too short string");
-    return FALSE;
+    return false;
   }
 
   if (!(*get_conv_callback)(dest, max_dest_size, c, offset)) {
     log_packet("Got a bad encoded string");
-    return FALSE;
+    return false;
   }
 
   din->current += offset + 1;
@@ -827,7 +827,7 @@ bool dio_get_cm_parameter_raw(struct data_in *din,
   for (i = 0; i < O_LAST; i++) {
     if (!dio_get_sint16_raw(din, &param->minimal_surplus[i])) {
       log_packet("Got a bad cm_parameter");
-      return FALSE;
+      return false;
     }
   }
 
@@ -836,19 +836,19 @@ bool dio_get_cm_parameter_raw(struct data_in *din,
       || !dio_get_bool8_raw(din, &param->allow_disorder)
       || !dio_get_bool8_raw(din, &param->allow_specialists)) {
     log_packet("Got a bad cm_parameter");
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < O_LAST; i++) {
     if (!dio_get_uint16_raw(din, &param->factor[i])) {
       log_packet("Got a bad cm_parameter");
-      return FALSE;
+      return false;
     }
   }
 
   if (!dio_get_uint16_raw(din, &param->happy_factor)) {
     log_packet("Got a bad cm_parameter");
-    return FALSE;
+    return false;
   }
 
   return TRUE;
@@ -868,7 +868,7 @@ bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
       || !dio_get_uint8_raw(din, &order->action)
       || !dio_get_sint8_raw(din, &idir)) {
     log_packet("Got a bad unit_order");
-    return FALSE;
+    return false;
   }
 
   order->order = unit_orders(iorder);
@@ -890,7 +890,7 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
 
   if (!dio_get_uint8_raw(din, &length)) {
     log_packet("Got a bad worklist");
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < length; i++) {
@@ -901,7 +901,7 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
     if (!dio_get_uint8_raw(din, &kind)
         || !dio_get_uint8_raw(din, &identifier)) {
       log_packet("Got a too short worklist");
-      return FALSE;
+      return false;
     }
 
     /*
@@ -925,14 +925,14 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
   int *vec;
 
   if (!dio_get_uint8_raw(din, &count)) {
-    return FALSE;
+    return false;
   }
 
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint8_raw(din, vec + inx)) {
       delete[] vec;
-      return FALSE;
+      return false;
     }
   }
   vec[inx] = stop_value;
@@ -951,14 +951,14 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
   int *vec;
 
   if (!dio_get_uint8_raw(din, &count)) {
-    return FALSE;
+    return false;
   }
 
   vec = new int[count + 1];
   for (inx = 0; inx < count; inx++) {
     if (!dio_get_uint16_raw(din, vec + inx)) {
       delete[] vec;
-      return FALSE;
+      return false;
     }
   }
   vec[inx] = stop_value;
@@ -977,7 +977,7 @@ bool dio_get_action_probability_raw(struct data_in *din,
 
   if (!dio_get_uint8_raw(din, &min) || !dio_get_uint8_raw(din, &max)) {
     log_packet("Got a bad action probability");
-    return FALSE;
+    return false;
   }
 
   aprob->min = min;
@@ -1010,7 +1010,7 @@ bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
       || !dio_get_bool8_raw(din, &present)
       || !dio_get_bool8_raw(din, &quiet)) {
     log_packet("Got a bad requirement");
-    return FALSE;
+    return false;
   }
 
   /*

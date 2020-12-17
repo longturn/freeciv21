@@ -159,7 +159,7 @@ static void texai_tile_worker_task_select(
     enum texai_worker_task_limitation limit)
 {
   int orig_value;
-  bool potential_worst_worked = FALSE;
+  bool potential_worst_worked = false;
 
   if (!city_can_work_tile(pcity, ptile)) {
     return;
@@ -176,7 +176,7 @@ static void texai_tile_worker_task_select(
   as_transform_action_iterate(act)
   {
     bool consider = TRUE;
-    bool possible = FALSE;
+    bool possible = false;
     enum extra_cause cause;
     enum extra_rmcause rmcause;
     struct extra_type *tgt = NULL;
@@ -187,7 +187,7 @@ static void texai_tile_worker_task_select(
       if (unit_owner(punit) == pplayer
           && unit_has_type_flag(punit, UTYF_SETTLERS)
           && punit->activity == action_id_get_activity(act)) {
-        consider = FALSE;
+        consider = false;
         break;
       }
     }
@@ -241,7 +241,7 @@ static void texai_tile_worker_task_select(
         }
         if (value > state->old_worst_worked) {
           /* After improvement it would not be the worst */
-          potential_worst_worked = FALSE;
+          potential_worst_worked = false;
         } else {
           state->worst_worked = value;
         }
@@ -321,7 +321,7 @@ static void texai_tile_worker_task_select(
         if (unit_owner(punit) == pplayer
             && unit_has_type_flag(punit, UTYF_SETTLERS)
             && punit->activity == action_get_activity(paction)) {
-          consider = FALSE;
+          consider = false;
           break;
         }
       }
@@ -409,7 +409,7 @@ static void texai_tile_worker_task_select(
         }
         if (value > state->old_worst_worked) {
           /* After improvement it would not be the worst */
-          potential_worst_worked = FALSE;
+          potential_worst_worked = false;
         } else {
           state->worst_worked = value;
         }
@@ -542,7 +542,7 @@ texai_city_worker_task_select(struct ai_type *ait, struct player *pplayer,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

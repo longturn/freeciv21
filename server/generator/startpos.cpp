@@ -62,7 +62,7 @@ static int get_tile_value(struct tile *ptile)
   output_type_iterate(o)
   {
     value +=
-        city_tile_output(NULL, ptile, FALSE, static_cast<Output_type_id>(o));
+        city_tile_output(NULL, ptile, false, static_cast<Output_type_id>(o));
   }
   output_type_iterate_end;
 
@@ -95,7 +95,7 @@ static int get_tile_value(struct tile *ptile)
     irrig_bonus = -value;
     output_type_iterate(o)
     {
-      irrig_bonus += city_tile_output(NULL, vtile, FALSE,
+      irrig_bonus += city_tile_output(NULL, vtile, false,
                                       static_cast<Output_type_id>(o));
     }
     output_type_iterate_end;
@@ -113,7 +113,7 @@ static int get_tile_value(struct tile *ptile)
     mine_bonus = -value;
     output_type_iterate(o)
     {
-      mine_bonus += city_tile_output(NULL, vtile, FALSE,
+      mine_bonus += city_tile_output(NULL, vtile, false,
                                      static_cast<Output_type_id>(o));
     }
     output_type_iterate_end;
@@ -204,34 +204,34 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
 
   /* Only start on certain terrain types. */
   if (pdata->value[tile_index(ptile)] < pdata->min_value) {
-    return FALSE;
+    return false;
   }
 
-  fc_assert_ret_val(cont > 0, FALSE);
+  fc_assert_ret_val(cont > 0, false);
   if (islands[islands_index[cont]].starters == 0) {
-    return FALSE;
+    return false;
   }
 
   /* Don't start on a hut. */
   /* FIXME: for HUT_NOTHING might be valid */
   if (hut_on_tile(ptile)) {
-    return FALSE;
+    return false;
   }
 
   /* Has to be native tile for initial unit */
   if (!is_native_tile(pdata->initial_unit, ptile)) {
-    return FALSE;
+    return false;
   }
 
   /* Check native area size. */
   if (!check_native_area(pdata->initial_unit, ptile,
                          terrain_control.min_start_native_area)) {
-    return FALSE;
+    return false;
   }
 
   if (game.server.start_city
       && terrain_has_flag(tile_terrain(ptile), TER_NO_CITIES)) {
-    return FALSE;
+    return false;
   }
 
   /* A longstanding bug allowed starting positions to exist on poles,
@@ -239,7 +239,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
    * the pole (dependent on map temperature) that a start pos must be.
    * Cold and frozen tiles are not allowed for start pos placement. */
   if (tmap_is(ptile, TT_NHOT)) {
-    return FALSE;
+    return false;
   }
 
   /* Don't start too close to someone else. */
@@ -253,7 +253,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
          && (real_map_distance(ptile, tile1) * 1000 / pdata->min_value
              <= (sqrt(cont_size / island->total))))
         || (real_map_distance(ptile, tile1) * 1000 / pdata->min_value < 5)) {
-      return FALSE;
+      return false;
     }
   }
   return TRUE;
@@ -323,14 +323,14 @@ bool create_start_positions(enum map_startpos mode,
   int total_goodies = 0;
   /* this is factor is used to maximize land used in extreme little maps */
   float efactor = (float)player_count() / float(map_size_checked()) / 4;
-  bool failure = FALSE;
+  bool failure = false;
   bool is_tmap = temperature_is_initialized();
 
   if (wld.map.num_continents < 1) {
     /* Currently we can only place starters on land terrain, so fail
      * immediately if there isn't any on the map. */
     qDebug("Map has no land, so cannot assign start positions!");
-    return FALSE;
+    return false;
   }
 
   if (!is_tmap) {
@@ -339,7 +339,7 @@ bool create_start_positions(enum map_startpos mode,
      * false temperature map. This is used in the tmap_is() call above.
      * We don't create a "real" map here because that requires the height
      * map and other information which has already been destroyed. */
-    create_tmap(FALSE);
+    create_tmap(false);
   }
 
   /* If the default is given, just use MAPSTARTPOS_VARIABLE. */
@@ -504,7 +504,7 @@ bool create_start_positions(enum map_startpos mode,
       qDebug("starters on isle %i", k);
     }
   }
-  fc_assert_ret_val(player_count() <= sum, FALSE);
+  fc_assert_ret_val(player_count() <= sum, false);
 
   /* now search for the best place and set start_positions */
   while (map_startpos_count() < player_count()) {

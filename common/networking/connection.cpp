@@ -92,7 +92,7 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
   if (buf->nsize - buf->ndata < extra_space) {
     /* added this check so we don't gobble up too much mem */
     if (buf->ndata + extra_space > MAX_LEN_BUFFER) {
-      return FALSE;
+      return false;
     }
     buf->nsize = buf->ndata + extra_space;
     buf->data = (unsigned char *) fc_realloc(buf->data, buf->nsize);
@@ -219,7 +219,7 @@ static bool add_connection_data(struct connection *pconn,
   log_debug("add %d bytes to %d (space =%d)", len, buf->ndata, buf->nsize);
   if (!buffer_ensure_free_extra_space(buf, len)) {
     connection_close(pconn, _("buffer overflow"));
-    return FALSE;
+    return false;
   }
 
   memcpy(buf->data + buf->ndata, data, len);
@@ -246,7 +246,7 @@ bool connection_send_data(struct connection *pconn,
     if (!add_connection_data(pconn, data, len)) {
       qDebug("cut connection %s due to huge send buffer (1)",
              conn_description(pconn));
-      return FALSE;
+      return false;
     }
     flush_connection_send_buffer_packets(pconn);
   } else {
@@ -254,7 +254,7 @@ bool connection_send_data(struct connection *pconn,
     if (!add_connection_data(pconn, data, len)) {
       qDebug("cut connection %s due to huge send buffer (2)",
              conn_description(pconn));
-      return FALSE;
+      return false;
     }
     flush_connection_send_buffer_all(pconn);
   }
@@ -540,7 +540,7 @@ static void free_packet_hashes(struct connection *pc)
  **************************************************************************/
 void connection_common_init(struct connection *pconn)
 {
-  pconn->established = FALSE;
+  pconn->established = false;
   pconn->used = TRUE;
   packet_header_init(&pconn->packet_header);
   pconn->last_write = NULL;
@@ -564,8 +564,8 @@ void connection_common_close(struct connection *pconn)
   } else {
     pconn->sock->deleteLater();
     pconn->sock = nullptr;
-    pconn->used = FALSE;
-    pconn->established = FALSE;
+    pconn->used = false;
+    pconn->established = false;
 
     free_socket_packet_buffer(pconn->buffer);
     pconn->buffer = NULL;
@@ -755,7 +755,7 @@ bool conn_pattern_match(const struct conn_pattern *ppattern,
   } else {
     qCritical("%s(): Invalid pattern type (%d)", __FUNCTION__,
               ppattern->type);
-    return FALSE;
+    return false;
   }
 }
 
@@ -773,7 +773,7 @@ bool conn_pattern_list_match(const struct conn_pattern_list *plist,
   }
   conn_pattern_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**

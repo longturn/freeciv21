@@ -1457,16 +1457,16 @@ def get_packet_has_game_info_flag(packets):
     body = ""
     for n in msorted:
         for i in range(last + 1, n):
-            body = body+'    FALSE,\n'
+            body = body+'    false,\n'
         if mapping[n].is_info != "game":
-            body = body+'    FALSE, /* %s */\n' % mapping[n].type
+            body = body+'    false, /* %s */\n' % mapping[n].type
         else:
             body = body+'    TRUE, /* %s */\n' % mapping[n].type
         last = n
 
     extro = '''  };
 
-  return (type < PACKET_LAST ? flag[type] : FALSE);
+  return (type < PACKET_LAST ? flag[type] : false);
 }
 
 '''
@@ -1984,7 +1984,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 
 ''' % (p.type, a, args))
         f.write('''  default:
-    return FALSE;
+    return false;
   }
 }
 ''')
@@ -2036,7 +2036,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
 
 ''' % (p.type, a, args))
         f.write('''  default:
-    return FALSE;
+    return false;
   }
 }
 ''')

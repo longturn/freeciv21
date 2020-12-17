@@ -403,7 +403,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
   size_t len_search, len_replace;
   char *s, *p;
 
-  fc_assert_ret_val(str != NULL, FALSE);
+  fc_assert_ret_val(str != NULL, false);
   if (search == NULL || replace == NULL) {
     return TRUE;
   }
@@ -421,7 +421,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
 
     if (len < (strlen(str) + len_replace - len_search + 1)) {
       /* sizeof(str) not large enough to do the replacement */
-      return FALSE;
+      return false;
     }
 
     memmove(p + len_replace, p + len_search, qstrlen(p + len_search) + 1);

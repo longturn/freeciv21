@@ -112,7 +112,7 @@ void page_load::update_load_page(void)
   int row;
 
   row = 0;
-  files = fileinfolist_infix(get_save_dirs(), ".sav", FALSE);
+  files = fileinfolist_infix(get_save_dirs(), ".sav", false);
   ui.saves_load->clearContents();
   ui.saves_load->setRowCount(0);
   ui.show_preview->setChecked(gui_options.gui_qt_show_preview);

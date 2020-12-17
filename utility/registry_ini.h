@@ -72,9 +72,9 @@ struct entry *secfile_insert_bool_full(struct section_file *secfile,
                                        ...)
     fc__attribute((__format__(__printf__, 5, 6)));
 #define secfile_insert_bool(secfile, value, path, ...)                      \
-  secfile_insert_bool_full(secfile, value, NULL, FALSE, path, ##__VA_ARGS__)
+  secfile_insert_bool_full(secfile, value, NULL, false, path, ##__VA_ARGS__)
 #define secfile_insert_bool_comment(secfile, value, comment, path, ...)     \
-  secfile_insert_bool_full(secfile, value, comment, FALSE, path,            \
+  secfile_insert_bool_full(secfile, value, comment, false, path,            \
                            ##__VA_ARGS__)
 #define secfile_replace_bool(secfile, value, path, ...)                     \
   secfile_insert_bool_full(secfile, value, NULL, TRUE, path, ##__VA_ARGS__)
@@ -87,11 +87,11 @@ size_t secfile_insert_bool_vec_full(struct section_file *secfile,
                                     const char *path, ...)
     fc__attribute((__format__(__printf__, 6, 7)));
 #define secfile_insert_bool_vec(secfile, values, dim, path, ...)            \
-  secfile_insert_bool_vec_full(secfile, values, dim, NULL, FALSE, path,     \
+  secfile_insert_bool_vec_full(secfile, values, dim, NULL, false, path,     \
                                ##__VA_ARGS__)
 #define secfile_insert_bool_vec_comment(secfile, values, dim, comment,      \
                                         path, ...)                          \
-  secfile_insert_bool_vec_full(secfile, values, dim, comment, FALSE, path,  \
+  secfile_insert_bool_vec_full(secfile, values, dim, comment, false, path,  \
                                ##__VA_ARGS__)
 #define secfile_replace_bool_vec(secfile, values, dim, path, ...)           \
   secfile_insert_bool_vec_full(secfile, values, dim, NULL, TRUE, path,      \
@@ -107,9 +107,9 @@ struct entry *secfile_insert_int_full(struct section_file *secfile,
                                       ...)
     fc__attribute((__format__(__printf__, 5, 6)));
 #define secfile_insert_int(secfile, value, path, ...)                       \
-  secfile_insert_int_full(secfile, value, NULL, FALSE, path, ##__VA_ARGS__)
+  secfile_insert_int_full(secfile, value, NULL, false, path, ##__VA_ARGS__)
 #define secfile_insert_int_comment(secfile, value, comment, path, ...)      \
-  secfile_insert_int_full(secfile, value, comment, FALSE, path,             \
+  secfile_insert_int_full(secfile, value, comment, false, path,             \
                           ##__VA_ARGS__)
 #define secfile_replace_int(secfile, value, path, ...)                      \
   secfile_insert_int_full(secfile, value, NULL, TRUE, path, ##__VA_ARGS__)
@@ -121,11 +121,11 @@ size_t secfile_insert_int_vec_full(struct section_file *secfile,
                                    const char *path, ...)
     fc__attribute((__format__(__printf__, 6, 7)));
 #define secfile_insert_int_vec(secfile, values, dim, path, ...)             \
-  secfile_insert_int_vec_full(secfile, values, dim, NULL, FALSE, path,      \
+  secfile_insert_int_vec_full(secfile, values, dim, NULL, false, path,      \
                               ##__VA_ARGS__)
 #define secfile_insert_int_vec_comment(secfile, values, dim, comment, path, \
                                        ...)                                 \
-  secfile_insert_int_vec_full(secfile, values, dim, comment, FALSE, path,   \
+  secfile_insert_int_vec_full(secfile, values, dim, comment, false, path,   \
                               ##__VA_ARGS__)
 #define secfile_replace_int_vec(secfile, values, dim, path, ...)            \
   secfile_insert_int_vec_full(secfile, values, dim, NULL, TRUE, path,       \
@@ -141,7 +141,7 @@ struct entry *secfile_insert_float_full(struct section_file *secfile,
                                         ...)
     fc__attribute((__format__(__printf__, 5, 6)));
 #define secfile_insert_float(secfile, value, path, ...)                     \
-  secfile_insert_float_full(secfile, value, NULL, FALSE, path, ##__VA_ARGS__)
+  secfile_insert_float_full(secfile, value, NULL, false, path, ##__VA_ARGS__)
 
 struct section *secfile_insert_include(struct section_file *secfile,
                                        const char *filename);
@@ -156,20 +156,20 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
                                       const char *path, ...)
     fc__attribute((__format__(__printf__, 7, 8)));
 #define secfile_insert_str(secfile, string, path, ...)                      \
-  secfile_insert_str_full(secfile, string, NULL, FALSE, FALSE, EST_NORMAL,  \
+  secfile_insert_str_full(secfile, string, NULL, false, false, EST_NORMAL,  \
                           path, ##__VA_ARGS__)
 #define secfile_insert_str_noescape(secfile, string, path, ...)             \
-  secfile_insert_str_full(secfile, string, NULL, FALSE, TRUE, EST_NORMAL,   \
+  secfile_insert_str_full(secfile, string, NULL, false, TRUE, EST_NORMAL,   \
                           path, ##__VA_ARGS__)
 #define secfile_insert_str_comment(secfile, string, comment, path, ...)     \
-  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE,            \
+  secfile_insert_str_full(secfile, string, comment, false, TRUE,            \
                           EST_NORMAL, path, ##__VA_ARGS__)
 #define secfile_insert_str_noescape_comment(secfile, string, comment, path, \
                                             ...)                            \
-  secfile_insert_str_full(secfile, string, comment, FALSE, TRUE,            \
+  secfile_insert_str_full(secfile, string, comment, false, TRUE,            \
                           EST_NORMAL, path, ##__VA_ARGS__)
 #define secfile_replace_str(secfile, string, path, ...)                     \
-  secfile_insert_str_full(secfile, string, NULL, TRUE, FALSE, EST_NORMAL,   \
+  secfile_insert_str_full(secfile, string, NULL, TRUE, false, EST_NORMAL,   \
                           path, ##__VA_ARGS__)
 #define secfile_replace_str_noescape(secfile, string, path, ...)            \
   secfile_insert_str_full(secfile, string, NULL, TRUE, TRUE, EST_NORMAL,    \
@@ -187,21 +187,21 @@ size_t secfile_insert_str_vec_full(struct section_file *secfile,
                                    bool no_escape, const char *path, ...)
     fc__attribute((__format__(__printf__, 7, 8)));
 #define secfile_insert_str_vec(secfile, strings, dim, path, ...)            \
-  secfile_insert_str_vec_full(secfile, strings, dim, NULL, FALSE, FALSE,    \
+  secfile_insert_str_vec_full(secfile, strings, dim, NULL, false, false,    \
                               path, ##__VA_ARGS__)
 #define secfile_insert_str_vec_noescape(secfile, strings, dim, path, ...)   \
-  secfile_insert_str_vec_full(secfile, strings, dim, NULL, FALSE, TRUE,     \
+  secfile_insert_str_vec_full(secfile, strings, dim, NULL, false, TRUE,     \
                               path, ##__VA_ARGS__)
 #define secfile_insert_str_vec_comment(secfile, strings, dim, comment,      \
                                        path, ...)                           \
-  secfile_insert_str_vec_full(secfile, strings, dim, comment, FALSE, TRUE,  \
+  secfile_insert_str_vec_full(secfile, strings, dim, comment, false, TRUE,  \
                               path, ##__VA_ARGS__)
 #define secfile_insert_str_vec_noescape_comment(secfile, strings, dim,      \
                                                 comment, path, ...)         \
-  secfile_insert_str_vec_full(secfile, strings, dim, comment, FALSE, TRUE,  \
+  secfile_insert_str_vec_full(secfile, strings, dim, comment, false, TRUE,  \
                               path, ##__VA_ARGS__)
 #define secfile_replace_str_vec(secfile, strings, dim, path, ...)           \
-  secfile_insert_str_vec_full(secfile, strings, dim, NULL, TRUE, FALSE,     \
+  secfile_insert_str_vec_full(secfile, strings, dim, NULL, TRUE, false,     \
                               path, ##__VA_ARGS__)
 #define secfile_replace_str_vec_noescape(secfile, strings, dim, path, ...)  \
   secfile_insert_str_vec_full(secfile, strings, dim, NULL, TRUE, TRUE,      \
@@ -240,12 +240,12 @@ struct entry *secfile_insert_bitwise_enum_full(
            (secfile_enum_name_fn_t) specenum_type##_name, comment,          \
            allow_replace, path, ##__VA_ARGS__))
 #define secfile_insert_enum(secfile, enumerator, specenum_type, path, ...)  \
-  secfile_insert_enum_full(secfile, enumerator, specenum_type, NULL, FALSE, \
+  secfile_insert_enum_full(secfile, enumerator, specenum_type, NULL, false, \
                            path, ##__VA_ARGS__)
 #define secfile_insert_enum_comment(secfile, enumerator, specenum_type,     \
                                     comment, path, ...)                     \
   secfile_insert_enum_full(secfile, enumerator, specenum_type, comment,     \
-                           FALSE, path, ##__VA_ARGS__)
+                           false, path, ##__VA_ARGS__)
 #define secfile_replace_enum(secfile, enumerator, specenum_type, path, ...) \
   secfile_insert_enum_full(secfile, enumerator, specenum_type, NULL, TRUE,  \
                            path, ##__VA_ARGS__)
@@ -281,11 +281,11 @@ size_t secfile_insert_bitwise_enum_vec_full(
 #define secfile_insert_enum_vec(secfile, enumerators, dim, specenum_type,   \
                                 path, ...)                                  \
   secfile_insert_enum_vec_full(secfile, enumerators, dim, specenum_type,    \
-                               NULL, FALSE, path, ##__VA_ARGS__)
+                               NULL, false, path, ##__VA_ARGS__)
 #define secfile_insert_enum_vec_comment(secfile, enumerators, dim,          \
                                         specenum_type, comment, path, ...)  \
   secfile_insert_enum_vec_full(secfile, enumerators, dim, specenum_type,    \
-                               comment, FALSE, path, ##__VA_ARGS__)
+                               comment, false, path, ##__VA_ARGS__)
 #define secfile_replace_enum_vec(secfile, enumerators, dim, specenum_type,  \
                                  path, ...)                                 \
   secfile_insert_enum_vec_full(secfile, enumerators, dim, specenum_type,    \
@@ -303,11 +303,11 @@ struct entry *secfile_insert_enum_data_full(
 #define secfile_insert_enum_data(secfile, value, bitwise, name_fn, data,    \
                                  path, ...)                                 \
   secfile_insert_enum_data_full(secfile, value, bitwise, name_fn, data,     \
-                                NULL, FALSE, path, ##__VA_ARGS__)
+                                NULL, false, path, ##__VA_ARGS__)
 #define secfile_insert_enum_data_comment(secfile, value, bitwise, name_fn,  \
                                          data, path, ...)                   \
   secfile_insert_enum_data_full(secfile, value, bitwise, name_fn, data,     \
-                                comment, FALSE, path, ##__VA_ARGS__)
+                                comment, false, path, ##__VA_ARGS__)
 #define secfile_replace_enum_data(secfile, value, bitwise, name_fn, data,   \
                                   path, ...)                                \
   secfile_insert_enum_data_full(secfile, value, bitwise, name_fn, data,     \
@@ -324,11 +324,11 @@ size_t secfile_insert_enum_vec_data_full(
 #define secfile_insert_enum_vec_data(secfile, values, dim, bitwise,         \
                                      name_fn, data, path, ...)              \
   secfile_insert_enum_vec_data_full(secfile, values, dim, bitwise, name_fn, \
-                                    data, NULL, FALSE, path, ##__VA_ARGS__)
+                                    data, NULL, false, path, ##__VA_ARGS__)
 #define secfile_insert_enum_vec_data_comment(secfile, values, dim, bitwise, \
                                              name_fn, data, path, ...)      \
   secfile_insert_enum_vec_data_full(secfile, values, dim, bitwise, name_fn, \
-                                    data, comment, FALSE, path,             \
+                                    data, comment, false, path,             \
                                     ##__VA_ARGS__)
 #define secfile_replace_enum_vec_data(secfile, values, dim, bitwise,        \
                                       name_fn, data, path, ...)             \

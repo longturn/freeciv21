@@ -47,11 +47,11 @@ bool diplomacy_possible(const struct player *pplayer1,
   case DIPLO_FOR_TEAMS:
     return players_on_same_team(pplayer1, pplayer2);
   case DIPLO_DISABLED:
-    return FALSE;
+    return false;
   }
   qCritical("%s(): Unsupported diplomacy variant %d.", __FUNCTION__,
             game.info.diplomacy);
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -93,8 +93,8 @@ void init_treaty(struct Treaty *ptreaty, struct player *plr0,
 {
   ptreaty->plr0 = plr0;
   ptreaty->plr1 = plr1;
-  ptreaty->accept0 = FALSE;
-  ptreaty->accept1 = FALSE;
+  ptreaty->accept0 = false;
+  ptreaty->accept1 = false;
   ptreaty->clauses = clause_list_new();
 }
 
@@ -121,15 +121,15 @@ bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
       clause_list_remove(ptreaty->clauses, pclause);
       delete pclause;
 
-      ptreaty->accept0 = FALSE;
-      ptreaty->accept1 = FALSE;
+      ptreaty->accept0 = false;
+      ptreaty->accept1 = false;
 
       return TRUE;
     }
   }
   clause_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -146,12 +146,12 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
 
   if (!clause_type_is_valid(type)) {
     qCritical("Illegal clause type encountered.");
-    return FALSE;
+    return false;
   }
 
   if (type == CLAUSE_ADVANCE && !valid_advance_by_number(val)) {
     qCritical("Illegal tech value %i in clause.", val);
-    return FALSE;
+    return false;
   }
 
   if (is_pact_clause(type)
@@ -164,7 +164,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
               "already have this treaty level.",
               nation_rule_name(nation_of_player(ptreaty->plr0)),
               nation_rule_name(nation_of_player(ptreaty->plr1)));
-    return FALSE;
+    return false;
   }
 
   if (type == CLAUSE_EMBASSY && player_has_real_embassy(pto, pfrom)) {
@@ -172,11 +172,11 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     qCritical("Illegal embassy clause: %s already have embassy with %s.",
               nation_rule_name(nation_of_player(pto)),
               nation_rule_name(nation_of_player(pfrom)));
-    return FALSE;
+    return false;
   }
 
   if (!clause_enabled(type, pfrom, pto)) {
-    return FALSE;
+    return false;
   }
 
   if (!are_reqs_active(pfrom, pto, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
@@ -184,7 +184,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
       || !are_reqs_active(pto, pfrom, NULL, NULL, NULL, NULL, NULL, NULL,
                           NULL, NULL, &clause_infos[type].receiver_reqs,
                           RPT_POSSIBLE)) {
-    return FALSE;
+    return false;
   }
 
   clause_list_iterate(ptreaty->clauses, old_clause)
@@ -192,20 +192,20 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
     if (old_clause->type == type && old_clause->from == pfrom
         && old_clause->value == val) {
       /* same clause already there */
-      return FALSE;
+      return false;
     }
     if (is_pact_clause(type) && is_pact_clause(old_clause->type)) {
       /* pact clause already there */
-      ptreaty->accept0 = FALSE;
-      ptreaty->accept1 = FALSE;
+      ptreaty->accept0 = false;
+      ptreaty->accept1 = false;
       old_clause->type = type;
       return TRUE;
     }
     if (type == CLAUSE_GOLD && old_clause->type == CLAUSE_GOLD
         && old_clause->from == pfrom) {
       /* gold clause there, different value */
-      ptreaty->accept0 = FALSE;
-      ptreaty->accept1 = FALSE;
+      ptreaty->accept0 = false;
+      ptreaty->accept1 = false;
       old_clause->value = val;
       return TRUE;
     }
@@ -220,8 +220,8 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
 
   clause_list_append(ptreaty->clauses, pclause);
 
-  ptreaty->accept0 = FALSE;
-  ptreaty->accept1 = FALSE;
+  ptreaty->accept0 = false;
+  ptreaty->accept1 = false;
 
   return TRUE;
 }
@@ -235,7 +235,7 @@ void clause_infos_init(void)
 
   for (i = 0; i < CLAUSE_COUNT; i++) {
     clause_infos[i].type = clause_type(i);
-    clause_infos[i].enabled = FALSE;
+    clause_infos[i].enabled = false;
     requirement_vector_init(&(clause_infos[i].giver_reqs));
     requirement_vector_init(&(clause_infos[i].receiver_reqs));
   }
@@ -280,17 +280,17 @@ bool clause_enabled(enum clause_type type, struct player *from,
   struct clause_info *info = &clause_infos[type];
 
   if (!info->enabled) {
-    return FALSE;
+    return false;
   }
 
   if (!game.info.trading_gold && type == CLAUSE_GOLD) {
-    return FALSE;
+    return false;
   }
   if (!game.info.trading_tech && type == CLAUSE_ADVANCE) {
-    return FALSE;
+    return false;
   }
   if (!game.info.trading_city && type == CLAUSE_CITY) {
-    return FALSE;
+    return false;
   }
 
   return TRUE;

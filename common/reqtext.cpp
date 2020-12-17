@@ -47,12 +47,12 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
                      const char *prefix)
 {
   if (preq->quiet && verb != VERB_ACTUAL) {
-    return FALSE;
+    return false;
   }
 
   switch (preq->source.kind) {
   case VUT_NONE:
-    return FALSE;
+    return false;
 
   case VUT_ADVANCE:
     switch (preq->range) {
@@ -1404,7 +1404,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
   case VUT_UCFLAG: {
     const char** classes = new const char*[uclass_count()];
     int i = 0;
-    bool done = FALSE;
+    bool done = false;
     struct astring list = ASTRING_INIT;
 
     unit_class_iterate(uclass)
@@ -2850,7 +2850,7 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
               preq->range);
   }
 
-  return FALSE;
+  return false;
 }
 
 /*************************************************************/ /**
@@ -2866,5 +2866,5 @@ bool req_text_insert_nl(char *buf, size_t bufsz, struct player *pplayer,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }

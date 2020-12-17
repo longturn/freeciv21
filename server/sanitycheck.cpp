@@ -64,7 +64,7 @@
     } else {                                                                \
       SANITY_TERRAIN(_tile, check);                                         \
     }                                                                       \
-  } while (FALSE)
+  } while (false)
 
 static void check_city_feelings(const struct city *pcity, const char *file,
                                 const char *function, int line);
@@ -257,7 +257,7 @@ static bool check_city_good(struct city *pcity, const char *file,
                 "at %s \"%s\"[%d]%s",
                 nation_rule_name(nation_of_player(pplayer)),
                 city_name_get(pcity), city_size_get(pcity), "{city center}");
-    return FALSE;
+    return false;
   }
 
   SANITY_CITY(pcity,

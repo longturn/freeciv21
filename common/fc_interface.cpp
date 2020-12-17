@@ -34,7 +34,7 @@ struct functions fc_functions;
 const struct functions *fc_funcs = NULL;
 /* After this is set to TRUE (in interface_init()), the functions are
    available via fc_funcs. */
-bool fc_funcs_defined = FALSE;
+bool fc_funcs_defined = false;
 
 /************************************************************************/ /**
    Return the function pointer. Only possible before interface_init() was
@@ -42,7 +42,7 @@ bool fc_funcs_defined = FALSE;
  ****************************************************************************/
 struct functions *fc_interface_funcs(void)
 {
-  fc_assert_exit(fc_funcs_defined == FALSE);
+  fc_assert_exit(fc_funcs_defined == false);
 
   return &fc_functions;
 }

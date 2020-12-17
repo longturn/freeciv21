@@ -571,7 +571,7 @@ static inline bool player_is_cpuhog(const struct player *pplayer)
    * specific configure option they happened to pass to build this time - or
    * even knowing what configure options somebody else used when building
    * freeciv for them. */
-  return FALSE;
+  return false;
 }
 
 

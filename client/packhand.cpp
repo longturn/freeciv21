@@ -258,7 +258,7 @@ static struct unit *unpackage_unit(const struct packet_unit_info *packet)
   punit->action_decision_tile =
       index_to_tile(&(wld.map), packet->action_decision_tile);
 
-  punit->client.asking_city_name = FALSE;
+  punit->client.asking_city_name = false;
 
   return punit;
 }
@@ -278,7 +278,7 @@ unpackage_short_unit(const struct packet_unit_short_info *packet)
 {
   struct unit *punit =
       unit_virtual_create(player_by_number(packet->owner), NULL,
-                          utype_by_number(packet->type), FALSE);
+                          utype_by_number(packet->type), false);
 
   /* Owner and type fields are already filled in by unit_virtual_create. */
   punit->id = packet->id;
@@ -326,7 +326,7 @@ void handle_server_join_reply(bool you_can_join, const char *message,
     client.conn.established = TRUE;
     client.conn.id = conn_id;
 
-    set_server_busy(FALSE);
+    set_server_busy(false);
 
     if (get_client_page() == PAGE_MAIN
         || get_client_page() == PAGE_NETWORK) {
@@ -476,7 +476,7 @@ void handle_team_name_info(int team_id, const char *team_name)
  ****************************************************************************/
 void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
 {
-  bool show_combat = FALSE;
+  bool show_combat = false;
   struct unit *punit0 = game_unit_by_number(packet->attacker_unit_id);
   struct unit *punit1 = game_unit_by_number(packet->defender_unit_id);
 
@@ -511,17 +511,17 @@ void handle_unit_combat_info(const struct packet_unit_combat_info *packet)
         punit1->hp = hp1;
 
         set_units_in_combat(NULL, NULL);
-        refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, FALSE);
-        refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, FALSE);
+        refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, false);
+        refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, false);
       }
     }
     if (packet->make_att_veteran && punit0) {
       punit0->veteran++;
-      refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, FALSE);
+      refresh_unit_mapcanvas(punit0, unit_tile(punit0), TRUE, false);
     }
     if (packet->make_def_veteran && punit1) {
       punit1->veteran++;
-      refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, FALSE);
+      refresh_unit_mapcanvas(punit1, unit_tile(punit1), TRUE, false);
     }
   }
 }
@@ -547,7 +547,7 @@ static bool update_improvement_from_packet(struct city *pcity,
       return TRUE;
     }
   }
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -559,16 +559,16 @@ void handle_city_info(const struct packet_city_info *packet)
   struct universal product;
   int i;
   bool popup;
-  bool city_is_new = FALSE;
-  bool city_has_changed_owner = FALSE;
-  bool need_science_dialog_update = FALSE;
-  bool need_units_dialog_update = FALSE;
-  bool need_economy_dialog_update = FALSE;
-  bool name_changed = FALSE;
-  bool update_descriptions = FALSE;
-  bool shield_stock_changed = FALSE;
-  bool production_changed = FALSE;
-  bool trade_routes_changed = FALSE;
+  bool city_is_new = false;
+  bool city_has_changed_owner = false;
+  bool need_science_dialog_update = false;
+  bool need_units_dialog_update = false;
+  bool need_economy_dialog_update = false;
+  bool name_changed = false;
+  bool update_descriptions = false;
+  bool shield_stock_changed = false;
+  bool production_changed = false;
+  bool trade_routes_changed = false;
   struct unit_list *pfocus_units = get_units_in_focus();
   struct city *pcity = game_city_by_number(packet->id);
   struct tile_list *worked_tiles = NULL;
@@ -894,7 +894,7 @@ void handle_city_info(const struct packet_city_info *packet)
     dsend_packet_unit_get_actions(
         &client.conn, action_selection_actor_unit(),
         action_selection_target_unit(), city_tile(pcity)->index,
-        action_selection_target_extra(), FALSE);
+        action_selection_target_extra(), false);
   }
 
   if (gui_options.draw_city_trade_routes
@@ -950,7 +950,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
   }
 
   if (can_client_change_view()) {
-    refresh_city_mapcanvas(pcity, pcenter, FALSE, FALSE);
+    refresh_city_mapcanvas(pcity, pcenter, false, false);
   }
 
   if (city_workers_display == pcity) {
@@ -1005,7 +1005,7 @@ static void city_packet_common(struct city *pcity, struct tile *pcenter,
               nation_rule_name(nation_of_city(pcity)), city_name_get(pcity));
   }
 
-  editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, FALSE);
+  editgui_notify_object_changed(OBJTYPE_CITY, pcity->id, false);
 }
 
 /************************************************************************/ /**
@@ -1016,7 +1016,7 @@ void handle_traderoute_info(const struct packet_traderoute_info *packet)
 {
   struct city *pcity = game_city_by_number(packet->city);
   struct trade_route *proute;
-  bool city_changed = FALSE;
+  bool city_changed = false;
 
   if (pcity == NULL) {
     return;
@@ -1049,10 +1049,10 @@ void handle_traderoute_info(const struct packet_traderoute_info *packet)
  ****************************************************************************/
 void handle_city_short_info(const struct packet_city_short_info *packet)
 {
-  bool city_has_changed_owner = FALSE;
-  bool city_is_new = FALSE;
-  bool name_changed = FALSE;
-  bool update_descriptions = FALSE;
+  bool city_has_changed_owner = false;
+  bool city_is_new = false;
+  bool name_changed = false;
+  bool update_descriptions = false;
   struct city *pcity = game_city_by_number(packet->id);
   struct tile *pcenter = index_to_tile(&(wld.map), packet->tile);
   struct tile *ptile = NULL;
@@ -1175,7 +1175,7 @@ void handle_city_short_info(const struct packet_city_short_info *packet)
   improvement_iterate_end;
 
   city_packet_common(pcity, pcenter, powner, worked_tiles, city_is_new,
-                     FALSE, FALSE);
+                     false, false);
 
   if (city_is_new && !city_has_changed_owner) {
     governor::i()->add_city_new(pcity);
@@ -1325,12 +1325,12 @@ void handle_start_phase(int phase)
   if (phase == 0) {
     /* TODO: Have server set as busy also if switching phase
      * is taking long in a alternating phases mode. */
-    set_server_busy(FALSE);
+    set_server_busy(false);
   }
 
   if (NULL != client.conn.playing
       && is_player_phase(client.conn.playing, phase)) {
-    non_ai_unit_focus = FALSE;
+    non_ai_unit_focus = false;
 
     update_turn_done_button_state();
 
@@ -1342,14 +1342,14 @@ void handle_start_phase(int phase)
 
     city_list_iterate(client.conn.playing->cities, pcity)
     {
-      pcity->client.colored = FALSE;
-      pcity->client.city_opened = FALSE;
+      pcity->client.colored = false;
+      pcity->client.city_opened = false;
     }
     city_list_iterate_end;
 
     unit_list_iterate(client.conn.playing->units, punit)
     {
-      punit->client.colored = FALSE;
+      punit->client.colored = false;
     }
     unit_list_iterate_end;
 
@@ -1550,15 +1550,15 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 {
   struct city *pcity;
   struct unit *punit;
-  bool need_menus_update = FALSE;
-  bool need_economy_report_update = FALSE;
-  bool need_units_report_update = FALSE;
-  bool repaint_unit = FALSE;
-  bool repaint_city = FALSE; /* regards unit's homecity */
+  bool need_menus_update = false;
+  bool need_economy_report_update = false;
+  bool need_units_report_update = false;
+  bool repaint_unit = false;
+  bool repaint_city = false; /* regards unit's homecity */
   struct tile *old_tile = NULL;
-  bool check_focus = FALSE; /* conservative focus change */
-  bool moved = FALSE;
-  bool ret = FALSE;
+  bool check_focus = false; /* conservative focus change */
+  bool moved = false;
+  bool ret = false;
 
   punit = player_unit_by_number(unit_owner(packet_unit), packet_unit->id);
   if (!punit && game_unit_by_number(packet_unit->id)) {
@@ -1579,7 +1579,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
      * repaint being deferred until the unit is updated, so that what's
      * drawn reflects the new status (e.g., no city outline). */
     if (unit_drawn_with_city_outline(punit, TRUE)) {
-      refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+      refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
     }
 
     ret = TRUE;
@@ -1632,7 +1632,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           && is_player_phase(client.conn.playing, game.info.phase)) {
         /* many wakeup units per tile are handled */
         unit_focus_urgent(punit);
-        check_focus = FALSE; /* and keep it */
+        check_focus = false; /* and keep it */
       }
 
       punit->activity = packet_unit->activity;
@@ -1749,7 +1749,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
 
           if (ccity->client.occupied != new_occupied) {
             ccity->client.occupied = new_occupied;
-            refresh_city_mapcanvas(ccity, ccity->tile, FALSE, FALSE);
+            refresh_city_mapcanvas(ccity, ccity->tile, false, false);
             if (gui_options.draw_full_citybar) {
               update_city_description(ccity);
             }
@@ -1768,7 +1768,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
           /* Unit moved into a city - obviously it's occupied. */
           if (!ccity->client.occupied) {
             ccity->client.occupied = TRUE;
-            refresh_city_mapcanvas(ccity, ccity->tile, FALSE, FALSE);
+            refresh_city_mapcanvas(ccity, ccity->tile, false, false);
             if (gui_options.draw_full_citybar) {
               update_city_description(ccity);
             }
@@ -1815,7 +1815,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       check_focus = TRUE;
     }
 
-    editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, FALSE);
+    editgui_notify_object_changed(OBJTYPE_UNIT, punit->id, false);
 
     punit->action_decision_tile = packet_unit->action_decision_tile;
     if (punit->action_decision_want != packet_unit->action_decision_want
@@ -1911,7 +1911,7 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
   }
 
   if (repaint_unit) {
-    refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, FALSE);
+    refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
   }
 
   if ((check_focus || get_num_units_in_focus() == 0)
@@ -2061,7 +2061,7 @@ void handle_map_info(int xsize, int ysize, int topology_id)
 void handle_game_info(const struct packet_game_info *pinfo)
 {
   bool boot_help;
-  bool update_aifill_button = FALSE, update_ai_skill_level = FALSE;
+  bool update_aifill_button = false, update_ai_skill_level = false;
 
   if (game.info.aifill != pinfo->aifill) {
     update_aifill_button = TRUE;
@@ -2123,7 +2123,7 @@ void handle_game_info(const struct packet_game_info *pinfo)
     update_info_label();
   }
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, FALSE);
+  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /************************************************************************/ /**
@@ -2225,9 +2225,9 @@ void handle_player_remove(int playerno)
  ****************************************************************************/
 void handle_player_info(const struct packet_player_info *pinfo)
 {
-  bool is_new_nation = FALSE;
-  bool turn_done_changed = FALSE;
-  bool new_player = FALSE;
+  bool is_new_nation = false;
+  bool turn_done_changed = false;
+  bool new_player = false;
   int i;
   struct player *pplayer, *my_player;
   struct nation_type *pnation;
@@ -2312,7 +2312,7 @@ void handle_player_info(const struct packet_player_info *pinfo)
   pplayer->style = style_by_number(pinfo->style);
 
   if (pplayer == client.conn.playing) {
-    bool music_change = FALSE;
+    bool music_change = false;
 
     if (pplayer->music_style != pinfo->music_style) {
       pplayer->music_style = pinfo->music_style;
@@ -2450,7 +2450,7 @@ void handle_player_info(const struct packet_player_info *pinfo)
 
   editgui_refresh();
   editgui_notify_object_changed(OBJTYPE_PLAYER, player_number(pplayer),
-                                FALSE);
+                                false);
 }
 
 /************************************************************************/ /**
@@ -2459,8 +2459,8 @@ void handle_player_info(const struct packet_player_info *pinfo)
 void handle_research_info(const struct packet_research_info *packet)
 {
   struct research *presearch;
-  bool tech_changed = FALSE;
-  bool poptechup = FALSE;
+  bool tech_changed = false;
+  bool poptechup = false;
   std::vector<Tech_type_id> gained_techs;
   gained_techs.reserve(advance_count());
   int gained_techs_num = 0, i;
@@ -2509,7 +2509,7 @@ void handle_research_info(const struct packet_research_info *packet)
   if (C_S_RUNNING == client_state()) {
     if (presearch == research_get(client_player())) {
       if (poptechup && is_human(client_player())) {
-        science_report_dialog_popup(FALSE);
+        science_report_dialog_popup(false);
       }
       science_report_dialog_update();
       if (tech_changed) {
@@ -2534,7 +2534,7 @@ void handle_research_info(const struct packet_research_info *packet)
       research_players_iterate(presearch, pplayer)
       {
         editgui_notify_object_changed(OBJTYPE_PLAYER, player_number(pplayer),
-                                      FALSE);
+                                      false);
       }
       research_players_iterate_end;
     }
@@ -2550,7 +2550,7 @@ void handle_player_diplstate(const struct packet_player_diplstate *packet)
   struct player *plr2 = player_by_number(packet->plr2);
   struct player *my_player = client_player();
   struct player_diplstate *ds = player_diplstate_get(plr1, plr2);
-  bool need_players_dialog_update = FALSE;
+  bool need_players_dialog_update = false;
 
   fc_assert_ret(ds != NULL);
 
@@ -2634,7 +2634,7 @@ void handle_player_diplstate(const struct packet_player_diplstate *packet)
       dsend_packet_unit_get_actions(
           &client.conn, action_selection_actor_unit(),
           action_selection_target_unit(), tgt_tile->index,
-          action_selection_target_extra(), FALSE);
+          action_selection_target_extra(), false);
     }
   }
 }
@@ -2648,7 +2648,7 @@ void handle_player_diplstate(const struct packet_player_diplstate *packet)
 void handle_conn_info(const struct packet_conn_info *pinfo)
 {
   struct connection *pconn = conn_by_number(pinfo->id);
-  bool preparing_client_state = FALSE;
+  bool preparing_client_state = false;
 
   log_debug("conn_info id%d used%d est%d plr%d obs%d acc%d", pinfo->id,
             pinfo->used, pinfo->established, pinfo->player_num,
@@ -2824,7 +2824,7 @@ static bool spaceship_autoplace(struct player *pplayer,
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 /************************************************************************/ /**
@@ -2879,8 +2879,8 @@ void handle_tile_info(const struct packet_tile_info *packet)
 {
   enum known_type new_known;
   enum known_type old_known;
-  bool known_changed = FALSE;
-  bool tile_changed = FALSE;
+  bool known_changed = false;
+  bool tile_changed = false;
   struct player *powner = player_by_number(packet->owner);
   struct player *eowner = player_by_number(packet->extras_owner);
   struct extra_type *presource = NULL;
@@ -2905,7 +2905,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
       if (NULL != pterrain || TILE_UNKNOWN == packet->known) {
         tile_set_terrain(ptile, pterrain);
       } else {
-        tile_changed = FALSE;
+        tile_changed = false;
         qCritical("handle_tile_info() unknown terrain (%d, %d).",
                   TILE_XY(ptile));
       }
@@ -3098,14 +3098,14 @@ void handle_tile_info(const struct packet_tile_info *packet)
   }
 
   if (known_changed || tile_changed) {
-    editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile), FALSE);
+    editgui_notify_object_changed(OBJTYPE_TILE, tile_index(ptile), false);
   }
 
   /* refresh tiles */
   if (can_client_change_view()) {
     /* the tile itself (including the necessary parts of adjacent tiles) */
     if (tile_changed || old_known != new_known) {
-      refresh_tile_mapcanvas(ptile, TRUE, FALSE);
+      refresh_tile_mapcanvas(ptile, TRUE, false);
     }
   }
 
@@ -3140,7 +3140,7 @@ void handle_scenario_info(const struct packet_scenario_info *packet)
   game.scenario.handmade = packet->handmade;
   game.scenario.allow_ai_type_fallback = packet->allow_ai_type_fallback;
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, FALSE);
+  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /************************************************************************/ /**
@@ -3150,7 +3150,7 @@ void handle_scenario_description(const char *description)
 {
   sz_strlcpy(game.scenario_desc.description, description);
 
-  editgui_notify_object_changed(OBJTYPE_GAME, 1, FALSE);
+  editgui_notify_object_changed(OBJTYPE_GAME, 1, false);
 }
 
 /************************************************************************/ /**
@@ -3164,8 +3164,8 @@ void handle_ruleset_control(const struct packet_ruleset_control *packet)
    * the nation selection dialog if it is open. */
   popdown_races_dialog();
 
-  game.client.ruleset_init = FALSE;
-  game.client.ruleset_ready = FALSE;
+  game.client.ruleset_init = false;
+  game.client.ruleset_ready = false;
   game_ruleset_free();
   game_ruleset_init();
   game.client.ruleset_init = TRUE;
@@ -4341,7 +4341,7 @@ void handle_ruleset_nation(const struct packet_ruleset_nation *packet)
   }
 
   /* set later by PACKET_NATION_AVAILABILITY */
-  pnation->client.is_pickable = FALSE;
+  pnation->client.is_pickable = false;
   pnation->is_playable = packet->is_playable;
   pnation->barb_type = packet->barbarian_type;
 
@@ -4591,7 +4591,7 @@ void handle_city_name_suggestion_info(int unit_id, const char *name)
 
   if (punit) {
     if (gui_options.ask_city_name) {
-      bool other_asking = FALSE;
+      bool other_asking = false;
 
       unit_list_iterate(unit_tile(punit)->units, other)
       {
@@ -4867,7 +4867,7 @@ void handle_unit_actions(const struct packet_unit_actions *packet)
   const struct act_prob *act_probs = packet->action_probabilities;
 
   bool disturb_player = packet->disturb_player;
-  bool valid = FALSE;
+  bool valid = false;
 
   /* The dead can't act */
   if (actor_unit && (target_tile || target_city || target_unit)) {
@@ -5174,7 +5174,7 @@ void handle_edit_object_created(int tag, int id)
 void handle_edit_startpos(const struct packet_edit_startpos *packet)
 {
   struct tile *ptile = index_to_tile(&(wld.map), packet->id);
-  bool changed = FALSE;
+  bool changed = false;
 
   /* Check. */
   if (NULL == ptile) {
@@ -5187,7 +5187,7 @@ void handle_edit_startpos(const struct packet_edit_startpos *packet)
     changed = map_startpos_remove(ptile);
   } else {
     if (NULL != map_startpos_get(ptile)) {
-      changed = FALSE;
+      changed = false;
     } else {
       map_startpos_new(ptile);
       changed = TRUE;
@@ -5196,7 +5196,7 @@ void handle_edit_startpos(const struct packet_edit_startpos *packet)
 
   /* Notify. */
   if (changed && can_client_change_view()) {
-    refresh_tile_mapcanvas(ptile, TRUE, FALSE);
+    refresh_tile_mapcanvas(ptile, TRUE, false);
     if (packet->removal) {
       editgui_notify_object_changed(OBJTYPE_STARTPOS, packet->id, TRUE);
     } else {
@@ -5230,9 +5230,9 @@ void handle_edit_startpos_full(
   /* Handle. */
   if (startpos_unpack(psp, packet) && can_client_change_view()) {
     /* Notify. */
-    refresh_tile_mapcanvas(ptile, TRUE, FALSE);
+    refresh_tile_mapcanvas(ptile, TRUE, false);
     editgui_notify_object_changed(OBJTYPE_STARTPOS, startpos_number(psp),
-                                  FALSE);
+                                  false);
   }
 }
 

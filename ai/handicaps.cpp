@@ -79,7 +79,7 @@ bool has_handicap(const struct player *pplayer, enum handicap_type htype)
  **************************************************************************/
 const char *handicap_desc(enum handicap_type htype, bool *inverted)
 {
-  *inverted = FALSE;
+  *inverted = false;
   switch (htype) {
   case H_DIPLOMAT:
     return _("Doesn't build offensive diplomatic units.");
@@ -136,6 +136,6 @@ const char *handicap_desc(enum handicap_type htype, bool *inverted)
   }
 
   /* Should never reach here */
-  fc_assert(FALSE);
+  fc_assert(false);
   return nullptr;
 }

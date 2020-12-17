@@ -86,6 +86,6 @@ static inline const char *adv_choice_get_use(const struct adv_choice *choice)
         fc_assert(_uindex >= 0 && _uindex < utype_count());                 \
       }                                                                     \
     }                                                                       \
-  } while (FALSE);
+  } while (false);
 
 

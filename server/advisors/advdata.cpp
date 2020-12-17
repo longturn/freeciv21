@@ -156,7 +156,7 @@ static bool player_has_really_useful_tech_parasite(struct player *pplayer)
   int players_needed = get_player_bonus(pplayer, EFT_TECH_PARASITE);
 
   if (players_needed == 0) {
-    return FALSE;
+    return false;
   }
 
   presearch = research_get(pplayer);
@@ -190,7 +190,7 @@ static bool player_has_really_useful_tech_parasite(struct player *pplayer)
     players_iterate_alive_end;
   }
   advance_index_iterate_end;
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -282,26 +282,26 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     action_list_end(nuke_actions, i);
   }
 
-  fc_assert_ret_val(adv != NULL, FALSE);
+  fc_assert_ret_val(adv != NULL, false);
 
   if (adv->phase_is_initialized) {
-    return FALSE;
+    return false;
   }
   adv->phase_is_initialized = TRUE;
 
   TIMING_LOG(AIT_AIDATA, TIMER_START);
 
-  danger_of_nukes = FALSE;
+  danger_of_nukes = false;
 
   /*** Threats ***/
 
   adv->num_continents = wld.map.num_continents;
   adv->num_oceans = wld.map.num_oceans;
   adv->threats.continent = new bool[adv->num_continents + 1]();
-  adv->threats.invasions = FALSE;
+  adv->threats.invasions = false;
   adv->threats.nuclear = 0; /* none */
   adv->threats.ocean = new bool[adv->num_oceans + 1]();
-  adv->threats.igwall = FALSE;
+  adv->threats.igwall = false;
 
   players_iterate(aplayer)
   {
@@ -428,7 +428,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
       if (adv->explore.sea_done && has_handicap(pplayer, H_TARGETS)
           && !map_is_known(ptile, pplayer)) {
         /* We're not done there. */
-        adv->explore.sea_done = FALSE;
+        adv->explore.sea_done = false;
         adv->explore.ocean[-continent] = TRUE;
       }
       /* skip rest, which is land only */
@@ -441,13 +441,13 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
     if (hut_on_tile(ptile)
         && (!has_handicap(pplayer, H_HUTS)
             || map_is_known(ptile, pplayer))) {
-      adv->explore.land_done = FALSE;
+      adv->explore.land_done = false;
       adv->explore.continent[continent] = TRUE;
       continue;
     }
     if (has_handicap(pplayer, H_TARGETS) && !map_is_known(ptile, pplayer)) {
       /* this AI must explore */
-      adv->explore.land_done = FALSE;
+      adv->explore.land_done = false;
       adv->explore.continent[continent] = TRUE;
     }
   }
@@ -478,7 +478,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   {
     struct adv_dipl *dip = adv_dipl_get(pplayer, aplayer);
 
-    dip->allied_with_enemy = FALSE;
+    dip->allied_with_enemy = false;
     players_iterate(check_pl)
     {
       if (pplayers_allied(aplayer, check_pl)
@@ -528,7 +528,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
   /* Research want */
   if (is_future_tech(research_get(pplayer)->researching)
       || player_has_really_useful_tech_parasite(pplayer)) {
-    adv->wants_science = FALSE;
+    adv->wants_science = false;
   } else {
     adv->wants_science = TRUE;
   }
@@ -541,7 +541,7 @@ bool adv_data_phase_init(struct player *pplayer, bool is_new_phase)
    * for the beginners.
    */
   if (has_handicap(pplayer, H_EXPANSION)) {
-    bool found_human = FALSE;
+    bool found_human = false;
     adv->max_num_cities = 3;
     players_iterate_alive(aplayer)
     {
@@ -595,7 +595,7 @@ void adv_data_phase_done(struct player *pplayer)
   adv->num_continents = 0;
   adv->num_oceans = 0;
 
-  adv->phase_is_initialized = FALSE;
+  adv->phase_is_initialized = false;
 }
 
 /**********************************************************************/ /**
@@ -652,7 +652,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
 #endif
 
   if (caller_closes != NULL) {
-    *caller_closes = FALSE;
+    *caller_closes = false;
   }
 
   if (adv->num_continents != wld.map.num_continents
@@ -665,7 +665,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
          at illegal time. This at least minimize bad effects of such calls.
        */
       adv_data_phase_done(pplayer);
-      adv_data_phase_init(pplayer, FALSE);
+      adv_data_phase_init(pplayer, false);
     } else {
       /* Call them in "wrong" order so we return recalculated data to caller,
          but leave data phase closed.
@@ -678,7 +678,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
          for example) */
       log_debug("%s advisor data phase closed when adv_data_get() called",
                 player_name(pplayer));
-      adv_data_phase_init(pplayer, FALSE);
+      adv_data_phase_init(pplayer, false);
       if (caller_closes != NULL) {
         *caller_closes = TRUE;
       } else {
@@ -687,7 +687,7 @@ struct adv_data *adv_data_get(struct player *pplayer, bool *caller_closes)
     }
   } else {
     if (!adv->phase_is_initialized && caller_closes != NULL) {
-      adv_data_phase_init(pplayer, FALSE);
+      adv_data_phase_init(pplayer, false);
       *caller_closes = TRUE;
     }
   }
@@ -747,7 +747,7 @@ void adv_data_default(struct player *pplayer)
   adv->wonder_city = 0;
 
   adv->wants_science = TRUE;
-  adv->celebrate = FALSE;
+  adv->celebrate = false;
   adv->max_num_cities = 10000;
 }
 
@@ -855,7 +855,7 @@ void adv_best_government(struct player *pplayer)
     governments_iterate(gov)
     {
       adv_want val = 0;
-      bool override = FALSE;
+      bool override = false;
 
       if (gov == game.government_during_revolution) {
         continue; /* pointless */
@@ -1097,7 +1097,7 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
   }
 
   if (dang == OVERRIDE_FALSE) {
-    return FALSE;
+    return false;
   }
 
   if (dang == OVERRIDE_TRUE) {
@@ -1106,7 +1106,7 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
 
   if (pplayer == aplayer) {
     /* We always trust ourself */
-    return FALSE;
+    return false;
   }
 
   ds = player_diplstate_get(pplayer, aplayer)->type;
@@ -1133,5 +1133,5 @@ bool adv_is_player_dangerous(struct player *pplayer, struct player *aplayer)
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }

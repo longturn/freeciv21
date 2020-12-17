@@ -42,7 +42,7 @@ void terrains_init(void)
   for (i = 0; i < ARRAY_SIZE(civ_terrains); i++) {
     /* Can't use terrain_by_number here because it does a bounds check. */
     civ_terrains[i].item_number = i;
-    civ_terrains[i].ruledit_disabled = FALSE;
+    civ_terrains[i].ruledit_disabled = false;
     civ_terrains[i].rgb = NULL;
     civ_terrains[i].animal = NULL;
   }
@@ -245,7 +245,7 @@ bool terrain_has_resource(const struct terrain *pterrain,
     }
     r++;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -310,7 +310,7 @@ bool is_terrain_card_near(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self)
 {
   if (!pterrain) {
-    return FALSE;
+    return false;
   }
 
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
@@ -331,7 +331,7 @@ bool is_terrain_near_tile(const struct tile *ptile,
                           const struct terrain *pterrain, bool check_self)
 {
   if (!pterrain) {
-    return FALSE;
+    return false;
   }
 
   adjc_iterate(&(wld.map), ptile, adjc_tile)
@@ -401,7 +401,7 @@ bool is_resource_card_near(const struct tile *ptile,
                            const struct extra_type *pres, bool check_self)
 {
   if (!pres) {
-    return FALSE;
+    return false;
   }
 
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
@@ -422,7 +422,7 @@ bool is_resource_near_tile(const struct tile *ptile,
                            const struct extra_type *pres, bool check_self)
 {
   if (!pres) {
-    return FALSE;
+    return false;
   }
 
   adjc_iterate(&(wld.map), ptile, adjc_tile)
@@ -453,7 +453,7 @@ bool is_terrain_flag_card_near(const struct tile *ptile,
   }
   cardinal_adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -473,7 +473,7 @@ bool is_terrain_flag_near_tile(const struct tile *ptile,
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -521,7 +521,7 @@ const char *get_infrastructure_text(bv_extras extras)
   {
     if (pextra->category == ECAT_INFRA
         && BV_ISSET(extras, extra_index(pextra))) {
-      bool hidden = FALSE;
+      bool hidden = false;
 
       extra_type_iterate(top)
       {
@@ -603,7 +603,7 @@ bool is_terrain_class_card_near(const struct tile *ptile,
   }
   cardinal_adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -625,7 +625,7 @@ bool is_terrain_class_near_tile(const struct tile *ptile,
   }
   adjc_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -687,8 +687,8 @@ bool terrain_can_support_alteration(const struct terrain *pterrain,
     break;
   }
 
-  fc_assert(FALSE);
-  return FALSE;
+  fc_assert(false);
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -722,7 +722,7 @@ int terrain_extra_build_time(const struct terrain *pterrain,
   case ACTIVITY_MINE:
     return pterrain->mining_time * factor;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     return 0;
   }
 }
@@ -756,7 +756,7 @@ int terrain_extra_removal_time(const struct terrain *pterrain,
   case ACTIVITY_PILLAGE:
     return pterrain->pillage_time * factor;
   default:
-    fc_assert(FALSE);
+    fc_assert(false);
     return 0;
   }
 }

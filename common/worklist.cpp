@@ -89,7 +89,7 @@ bool worklist_peek_ith(const struct worklist *pwl, struct universal *prod,
   if (idx < 0 || pwl->length <= idx) {
     prod->kind = VUT_NONE;
     prod->value.building = NULL;
-    return FALSE;
+    return false;
   }
 
   *prod = pwl->entries[idx];
@@ -145,7 +145,7 @@ bool worklist_append(struct worklist *pwl, const struct universal *prod)
   int next_index = worklist_length(pwl);
 
   if (next_index >= MAX_LEN_WORKLIST) {
-    return FALSE;
+    return false;
   }
 
   pwl->entries[next_index] = *prod;
@@ -166,7 +166,7 @@ bool worklist_insert(struct worklist *pwl, const struct universal *prod,
   int new_len = MIN(pwl->length + 1, MAX_LEN_WORKLIST), i;
 
   if (idx < 0 || idx > pwl->length) {
-    return FALSE;
+    return false;
   }
 
   /* move all active values down an index to get room for new id
@@ -191,12 +191,12 @@ bool are_worklists_equal(const struct worklist *wlist1,
   int i;
 
   if (wlist1->length != wlist2->length) {
-    return FALSE;
+    return false;
   }
 
   for (i = 0; i < wlist1->length; i++) {
     if (!are_universals_equal(&wlist1->entries[i], &wlist2->entries[i])) {
-      return FALSE;
+      return false;
     }
   }
 

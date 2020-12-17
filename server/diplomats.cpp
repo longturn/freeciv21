@@ -97,13 +97,13 @@ bool spy_poison(struct player *pplayer, struct unit *pdiplomat,
   const char *clink;
 
   /* Fetch target city's player.  Sanity checks. */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   ctile = city_tile(pcity);
   clink = city_link(pcity);
@@ -113,7 +113,7 @@ bool spy_poison(struct player *pplayer, struct unit *pdiplomat,
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
                                 ctile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("poison: infiltrated");
@@ -181,17 +181,17 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
   const char *tgt_city_link;
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(act_player, FALSE);
-  fc_assert_ret_val(act_unit, FALSE);
+  fc_assert_ret_val(act_player, false);
+  fc_assert_ret_val(act_unit, false);
 
   /* Sanity check: The target city still exists. */
-  fc_assert_ret_val(tgt_city, FALSE);
+  fc_assert_ret_val(tgt_city, false);
 
   /* Who to infect. */
   tgt_player = city_owner(tgt_city);
 
   /* Sanity check: The target player still exists. */
-  fc_assert_ret_val(tgt_player, FALSE);
+  fc_assert_ret_val(tgt_player, false);
 
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
@@ -201,7 +201,7 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
   /* Battle all units capable of diplomatic defense. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
                                 NULL, tgt_tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("spread plague: infiltrated");
@@ -229,7 +229,7 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
     /* Execute the caught infector. */
     wipe_unit(act_unit, ULR_CAUGHT, tgt_player);
 
-    return FALSE;
+    return false;
   }
 
   log_debug("spread plague: succeeded");
@@ -284,18 +284,18 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
   struct traderoute_packet_list *routes;
 
   /* Fetch target city's player.  Sanity checks. */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   /* Sanity check: The target is foreign. */
   if (cplayer == pplayer) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   log_debug("investigate: unit: %d", pdiplomat->id);
@@ -425,18 +425,18 @@ bool diplomat_embassy(struct player *pplayer, struct unit *pdiplomat,
   struct player *cplayer;
 
   /* Fetch target city's player.  Sanity checks. */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   /* Sanity check: The target is foreign. */
   if (cplayer == pplayer) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   log_debug("embassy: unit: %d", pdiplomat->id);
@@ -485,13 +485,13 @@ bool spy_sabotage_unit(struct player *pplayer, struct unit *pdiplomat,
   struct player *uplayer;
 
   /* Fetch target unit's player.  Sanity checks. */
-  fc_assert_ret_val(pvictim, FALSE);
+  fc_assert_ret_val(pvictim, false);
   uplayer = unit_owner(pvictim);
-  fc_assert_ret_val(uplayer, FALSE);
+  fc_assert_ret_val(uplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   log_debug("sabotage-unit: unit: %d", pdiplomat->id);
 
@@ -502,7 +502,7 @@ bool spy_sabotage_unit(struct player *pplayer, struct unit *pdiplomat,
    * victim of the sabotage. */
   if (!diplomat_infiltrate_tile(pplayer, uplayer, paction, pdiplomat,
                                 pvictim, unit_tile(pvictim), NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("sabotage-unit: succeeded");
@@ -574,25 +574,25 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
   bool bounce;
 
   /* Fetch target unit's player.  Sanity checks. */
-  fc_assert_ret_val(pvictim, FALSE);
+  fc_assert_ret_val(pvictim, false);
   uplayer = unit_owner(pvictim);
-  fc_assert_ret_val(uplayer, FALSE);
+  fc_assert_ret_val(uplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   /* Sanity check: The target is foreign. */
   if (uplayer == pplayer) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   /* Sanity check: The victim isn't a unique unit the actor player already
    * has. */
   fc_assert_ret_val_msg(
       !utype_player_already_has_this_unique(pplayer, unit_type_get(pvictim)),
-      FALSE, "bribe-unit: already got unique unit");
+      false, "bribe-unit: already got unique unit");
 
   log_debug("bribe-unit: unit: %d", pdiplomat->id);
 
@@ -606,7 +606,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
                   _("You don't have enough gold to bribe the %s %s."),
                   nation_adjective_for_player(uplayer), unit_link(pvictim));
     log_debug("bribe-unit: not enough gold");
-    return FALSE;
+    return false;
   }
 
   log_debug("bribe-unit: enough gold");
@@ -615,7 +615,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
    * will get the bribe. */
   if (!diplomat_infiltrate_tile(pplayer, uplayer, paction, pdiplomat,
                                 pvictim, pvictim->tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("bribe-unit: succeeded");
@@ -695,7 +695,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
       /* May have died while trying to disembark. */
       && unit_is_alive(diplomat_id)
       /* Post bribe move. */
-      && !unit_move_handling(pdiplomat, victim_tile, FALSE, TRUE)
+      && !unit_move_handling(pdiplomat, victim_tile, false, TRUE)
       /* May have died while trying to move. */
       && unit_is_alive(diplomat_id)) {
     pdiplomat->moves_left = 0;
@@ -725,8 +725,8 @@ bool spy_attack(struct player *act_player, struct unit *act_unit,
   struct player *tgt_player = NULL;
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(act_player, FALSE);
-  fc_assert_ret_val(act_unit, FALSE);
+  fc_assert_ret_val(act_player, false);
+  fc_assert_ret_val(act_unit, false);
 
   act_unit_id = act_unit->id;
 
@@ -811,18 +811,18 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
 
   /* We have to check arguments. They are sent to us by a client,
      so we cannot trust them */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   /* Sanity check: The target is foreign. */
   if (cplayer == pplayer) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   /* Currently based on if unit is consumed or not. */
@@ -841,7 +841,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
           && !(technology == A_UNSET
                && action_has_result(paction, ACTRES_SPY_STEAL_TECH))
           && !valid_advance_by_number(technology))) {
-    return FALSE;
+    return false;
   }
 
   presearch = research_get(pplayer);
@@ -849,18 +849,18 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
 
   if (technology == A_FUTURE) {
     if (presearch->future_tech >= cresearch->future_tech) {
-      return FALSE;
+      return false;
     }
   } else if (technology != A_UNSET) {
     if (research_invention_state(presearch, technology) == TECH_KNOWN) {
-      return FALSE;
+      return false;
     }
     if (research_invention_state(cresearch, technology) != TECH_KNOWN) {
-      return FALSE;
+      return false;
     }
     if (!research_invention_gettable(presearch, technology,
                                      game.info.tech_steal_allow_holes)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -869,7 +869,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
                                 pcity->tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("steal-tech: infiltrated");
@@ -938,7 +938,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
     action_consequence_caught(paction, pplayer, cplayer, city_tile(pcity),
                               city_link(pcity));
     wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
-    return FALSE;
+    return false;
   }
 
   tech_stolen = steal_a_tech(pplayer, cplayer, technology);
@@ -949,7 +949,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
                   city_link(pcity));
     diplomat_charge_movement(pdiplomat, pcity->tile);
     send_unit_info(NULL, pdiplomat);
-    return FALSE;
+    return false;
   }
 
   /* Update stealing player's science progress and research fields */
@@ -982,7 +982,7 @@ bool diplomat_may_lose_gold(struct player *dec_player,
                             struct player *inc_player, int revolt_gold)
 {
   if (game.server.incite_gold_loss_chance <= 0) {
-    return FALSE;
+    return false;
   }
 
   /* Roll the dice. */
@@ -1007,7 +1007,7 @@ bool diplomat_may_lose_gold(struct player *dec_player,
 
     return TRUE;
   } else {
-    return FALSE;
+    return false;
   }
 }
 
@@ -1038,18 +1038,18 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
   int revolt_cost;
 
   /* Fetch target civilization's player.  Sanity checks. */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   /* Sanity check: The target is foreign. */
   if (cplayer == pplayer) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   ctile = city_tile(pcity);
@@ -1065,14 +1065,14 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
     notify_player(pplayer, ctile, E_MY_DIPLOMAT_FAILED, ftc_server,
                   _("You don't have enough gold to subvert %s."), clink);
     log_debug("incite: not enough gold");
-    return FALSE;
+    return false;
   }
 
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
                                 pcity->tile, NULL)) {
     diplomat_may_lose_gold(pplayer, cplayer, revolt_cost / 2);
-    return FALSE;
+    return false;
   }
 
   log_debug("incite: infiltrated");
@@ -1095,7 +1095,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
     action_consequence_caught(paction, pplayer, cplayer, ctile, clink);
 
     wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
-    return FALSE;
+    return false;
   }
 
   log_debug("incite: succeeded");
@@ -1128,7 +1128,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
 
   /* Transfer city and units supported by this city (that
      are within one square of the city) to the new owner. */
-  if (transfer_city(pplayer, pcity, 1, TRUE, TRUE, FALSE,
+  if (transfer_city(pplayer, pcity, 1, TRUE, TRUE, false,
                     !is_barbarian(pplayer))) {
     script_server_signal_emit("city_transferred", pcity, cplayer, pplayer,
                               "incited");
@@ -1175,20 +1175,20 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   int count, which;
 
   /* Fetch target city's player.  Sanity checks. */
-  fc_assert_ret_val(pcity, FALSE);
+  fc_assert_ret_val(pcity, false);
   cplayer = city_owner(pcity);
-  fc_assert_ret_val(cplayer, FALSE);
+  fc_assert_ret_val(cplayer, false);
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(pplayer, FALSE);
-  fc_assert_ret_val(pdiplomat, FALSE);
+  fc_assert_ret_val(pplayer, false);
+  fc_assert_ret_val(pdiplomat, false);
 
   log_debug("sabotage: unit: %d", pdiplomat->id);
 
   /* Check if the Diplomat/Spy succeeds against defending Diplomats/Spies. */
   if (!diplomat_infiltrate_tile(pplayer, cplayer, paction, pdiplomat, NULL,
                                 pcity->tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("sabotage: infiltrated");
@@ -1211,7 +1211,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
                               city_link(pcity));
 
     wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
-    return FALSE;
+    return false;
   }
 
   log_debug("sabotage: succeeded");
@@ -1244,7 +1244,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
       diplomat_charge_movement(pdiplomat, pcity->tile);
       send_unit_info(NULL, pdiplomat);
       log_debug("sabotage: random: nothing to do");
-      return FALSE;
+      return false;
     }
     if (count == 0 || fc_rand(2) == 1) {
       ptarget = NULL;
@@ -1283,7 +1283,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
     if (pimprove == NULL) {
       qCritical("sabotage: requested for invalid improvement %d",
                 improvement);
-      return FALSE;
+      return false;
     }
     /*
      * Told which improvement to pick:
@@ -1303,7 +1303,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
         send_unit_info(NULL, pdiplomat);
         log_debug("sabotage: disallowed target improvement: %d (%s)",
                   improvement, improvement_rule_name(pimprove));
-        return FALSE;
+        return false;
       }
     } else {
       notify_player(
@@ -1315,7 +1315,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
       send_unit_info(NULL, pdiplomat);
       log_debug("sabotage: target improvement not found: %d (%s)",
                 improvement, improvement_rule_name(pimprove));
-      return FALSE;
+      return false;
     }
   }
 
@@ -1373,7 +1373,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
 
       wipe_unit(pdiplomat, ULR_CAUGHT, cplayer);
       log_debug("sabotage: caught in capital or on city walls");
-      return FALSE;
+      return false;
     }
 
     /* Report it. */
@@ -1432,27 +1432,27 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
   int gold_give;
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(act_player, FALSE);
-  fc_assert_ret_val(act_unit, FALSE);
+  fc_assert_ret_val(act_player, false);
+  fc_assert_ret_val(act_unit, false);
 
   /* Sanity check: The target city still exists. */
-  fc_assert_ret_val(tgt_city, FALSE);
+  fc_assert_ret_val(tgt_city, false);
 
   /* Who to steal from. */
   tgt_player = city_owner(tgt_city);
 
   /* Sanity check: The target player still exists. */
-  fc_assert_ret_val(tgt_player, FALSE);
+  fc_assert_ret_val(tgt_player, false);
 
   /* Sanity check: The target is foreign. */
   if (tgt_player == act_player) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   /* Sanity check: There is something to steal. */
   if (tgt_player->economic.gold <= 0) {
-    return FALSE;
+    return false;
   }
 
   tgt_tile = city_tile(tgt_city);
@@ -1463,7 +1463,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
   /* Battle all units capable of diplomatic defence. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
                                 NULL, tgt_tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("steal gold: infiltrated");
@@ -1488,7 +1488,7 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
     /* Execute the caught thief. */
     wipe_unit(act_unit, ULR_CAUGHT, tgt_player);
 
-    return FALSE;
+    return false;
   }
 
   log_debug("steal gold: succeeded");
@@ -1566,22 +1566,22 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
   const char *tgt_city_link;
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(act_player, FALSE);
-  fc_assert_ret_val(act_unit, FALSE);
+  fc_assert_ret_val(act_player, false);
+  fc_assert_ret_val(act_unit, false);
 
   /* Sanity check: The target city still exists. */
-  fc_assert_ret_val(tgt_city, FALSE);
+  fc_assert_ret_val(tgt_city, false);
 
   /* Who to steal from. */
   tgt_player = city_owner(tgt_city);
 
   /* Sanity check: The target player still exists. */
-  fc_assert_ret_val(tgt_player, FALSE);
+  fc_assert_ret_val(tgt_player, false);
 
   /* Sanity check: The target is foreign. */
   if (tgt_player == act_player) {
     /* Nothing to do to a domestic target. */
-    return FALSE;
+    return false;
   }
 
   tgt_tile = city_tile(tgt_city);
@@ -1592,7 +1592,7 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
   /* Battle all units capable of diplomatic defence. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
                                 NULL, tgt_tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("steal some maps: infiltrated");
@@ -1618,7 +1618,7 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
     /* Execute the caught thief. */
     wipe_unit(act_unit, ULR_CAUGHT, tgt_player);
 
-    return FALSE;
+    return false;
   }
 
   log_debug("steal some maps: succeeded");
@@ -1685,17 +1685,17 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
   const char *tgt_city_link;
 
   /* Sanity check: The actor still exists. */
-  fc_assert_ret_val(act_player, FALSE);
-  fc_assert_ret_val(act_unit, FALSE);
+  fc_assert_ret_val(act_player, false);
+  fc_assert_ret_val(act_unit, false);
 
   /* Sanity check: The target city still exists. */
-  fc_assert_ret_val(tgt_city, FALSE);
+  fc_assert_ret_val(tgt_city, false);
 
   /* The victim. */
   tgt_player = city_owner(tgt_city);
 
   /* Sanity check: The target player still exists. */
-  fc_assert_ret_val(tgt_player, FALSE);
+  fc_assert_ret_val(tgt_player, false);
 
   tgt_tile = city_tile(tgt_city);
   tgt_city_link = city_link(tgt_city);
@@ -1705,7 +1705,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
   /* Battle all units capable of diplomatic defense. */
   if (!diplomat_infiltrate_tile(act_player, tgt_player, paction, act_unit,
                                 NULL, tgt_tile, NULL)) {
-    return FALSE;
+    return false;
   }
 
   log_debug("suitcase nuke: infiltrated");
@@ -1729,7 +1729,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
     /* Execute the caught terrorist. */
     wipe_unit(act_unit, ULR_CAUGHT, tgt_player);
 
-    return FALSE;
+    return false;
   }
 
   log_debug("suitcase nuke: succeeded");
@@ -1794,7 +1794,7 @@ static bool diplomat_success_vs_defender(struct unit *pattacker,
 
   if (unit_has_type_flag(pdefender, UTYF_SUPERSPY)) {
     /* A defending UTYF_SUPERSPY will defeat every possible attacker. */
-    return FALSE;
+    return false;
   }
   if (unit_has_type_flag(pattacker, UTYF_SUPERSPY)) {
     /* An attacking UTYF_SUPERSPY will defeat every possible defender
@@ -1819,7 +1819,7 @@ static bool diplomat_success_vs_defender(struct unit *pattacker,
         utype_veteran_level(unit_type_get(pattacker), pattacker->veteran);
     const struct veteran_level *vdef =
         utype_veteran_level(unit_type_get(pdefender), pdefender->veteran);
-    fc_assert_ret_val(vatt != NULL && vdef != NULL, FALSE);
+    fc_assert_ret_val(vatt != NULL && vdef != NULL, false);
     chance += vatt->power_fact - vdef->power_fact;
   }
 
@@ -1940,7 +1940,7 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
       }
       send_unit_info(NULL, pdiplomat);
       wipe_unit(punit, ULR_ELIMINATED, pplayer);
-      return FALSE;
+      return false;
     } else {
       /* Attacking Spy/Diplomat dies. */
 
@@ -2028,7 +2028,7 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
                                 victim_link);
 
       wipe_unit(pdiplomat, ULR_ELIMINATED, uplayer);
-      return FALSE;
+      return false;
     }
   }
 
@@ -2096,8 +2096,8 @@ static void diplomat_escape_full(struct player *pplayer,
   }
 
   /* find closest city for escape target */
-  spyhome = find_closest_city(ptile, NULL, unit_owner(pdiplomat), FALSE,
-                              FALSE, FALSE, TRUE, FALSE, NULL);
+  spyhome = find_closest_city(ptile, NULL, unit_owner(pdiplomat), false,
+                              false, false, TRUE, false, NULL);
 
   if (spyhome
       && !utype_is_consumed_by_action(paction, unit_type_get(pdiplomat))
@@ -2113,7 +2113,7 @@ static void diplomat_escape_full(struct player *pplayer,
     }
 
     /* being teleported costs all movement */
-    if (!teleport_unit_to_city(pdiplomat, spyhome, -1, FALSE)) {
+    if (!teleport_unit_to_city(pdiplomat, spyhome, -1, false)) {
       send_unit_info(NULL, pdiplomat);
       qCritical("Bug in diplomat_escape: Spy can't teleport.");
       return;

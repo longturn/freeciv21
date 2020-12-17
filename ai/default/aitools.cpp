@@ -186,12 +186,12 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
   struct city *dcity;
   struct unit *guard = aiguard_guard_of(ait, punit);
   const struct veteran_level *vlevel;
-  bool bg_needed = FALSE;
+  bool bg_needed = false;
 
   if (is_barbarian(unit_owner(punit))) {
     /* barbarians must have more courage (ie less brains) */
     aiguard_clear_guard(ait, punit);
-    return FALSE;
+    return false;
   }
 
   /* Estimate enemy attack power. */
@@ -225,7 +225,7 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
   }
 
   vlevel = utype_veteran_level(unit_type_get(punit), punit->veteran);
-  fc_assert_ret_val(vlevel != NULL, FALSE);
+  fc_assert_ret_val(vlevel != NULL, false);
 
   /* We look for the bodyguard where we stand. */
   if (guard == NULL || unit_tile(guard) != unit_tile(punit)) {
@@ -240,7 +240,7 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
       bg_needed = TRUE;
     } else {
       aiguard_clear_guard(ait, punit);
-      bg_needed = FALSE;
+      bg_needed = false;
     }
   } else if (guard != NULL) {
     bg_needed = TRUE;
@@ -279,7 +279,7 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
   if (unit_transported(punit) || !goto_is_sane(punit, dest_tile)) {
     /* Must go by boat, call an aiferryboat function */
     if (!aiferry_gobyboat(ait, pplayer, punit, dest_tile, bg_needed)) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -291,12 +291,12 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
              TILE_XY(dest_tile));
     if (!dai_unit_goto(ait, punit, dest_tile)) {
       /* died */
-      return FALSE;
+      return false;
     }
     /* liable to bump into someone that will kill us.  Should avoid? */
   } else {
     UNIT_LOG(LOGLEVEL_GOTHERE, punit, "Not moving");
-    return FALSE;
+    return false;
   }
 
   if (def_ai_unit_data(punit, ait)->ferryboat > 0
@@ -447,7 +447,7 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
  **************************************************************************/
 bool goto_is_sane(struct unit *punit, struct tile *ptile)
 {
-  bool can_get_there = FALSE;
+  bool can_get_there = false;
 
   if (same_pos(unit_tile(punit), ptile)) {
     can_get_there = TRUE;
@@ -785,7 +785,7 @@ bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
     /* However, until we can do something more useful with them, we
        will assign explorers to a city so that they can be disbanded for
        the greater good -- Per */
-    return FALSE;
+    return false;
   }
   if (pcity->surplus[O_SHIELD] >= unit_type_get(punit)->upkeep[O_SHIELD]
       && pcity->surplus[O_FOOD] >= unit_type_get(punit)->upkeep[O_FOOD]) {
@@ -793,7 +793,7 @@ bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
                    ACTION_HOME_CITY);
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -921,7 +921,7 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
                    ACTION_TRANSPORT_DISEMBARK2);
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, FALSE, TRUE);
+    (void) unit_move_handling(punit, ptile, false, TRUE);
   }
   alive = (game_unit_by_number(sanity) != NULL);
 
@@ -968,7 +968,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
   const bool is_plr_ai = is_ai(pplayer);
 
   CHECK_UNIT(punit);
-  fc_assert_ret_val_msg(is_tiles_adjacent(unit_tile(punit), ptile), FALSE,
+  fc_assert_ret_val_msg(is_tiles_adjacent(unit_tile(punit), ptile), false,
                         "Tiles not adjacent: Unit = %d, "
                         "from = (%d, %d]) to = (%d, %d).",
                         punit->id, TILE_XY(unit_tile(punit)),
@@ -979,13 +979,13 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
   if (is_enemy_unit_tile(ptile, pplayer)
       || is_enemy_city_tile(ptile, pplayer)) {
     UNIT_LOG(LOG_DEBUG, punit, "movement halted due to enemy presence");
-    return FALSE;
+    return false;
   }
 
   /* barbarians shouldn't enter huts */
   /* FIXME: use unit_can_displace_hut(punit, ptile) better */
   if (is_barbarian(pplayer) && hut_on_tile(ptile)) {
-    return FALSE;
+    return false;
   }
 
   /* don't leave bodyguard behind */
@@ -995,7 +995,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
     UNIT_LOG(LOGLEVEL_BODYGUARD, punit,
              "does not want to leave "
              "its bodyguard");
-    return FALSE;
+    return false;
   }
 
   /* Select move kind. */
@@ -1043,7 +1043,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
         && adv_danger_at(punit, ptile)
         && !adv_danger_at(punit, unit_tile(punit))) {
       UNIT_LOG(LOG_DEBUG, punit, "ending move early to stay out of trouble");
-      return FALSE;
+      return false;
     }
   }
 
@@ -1062,7 +1062,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
                    action_number(paction));
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, FALSE, TRUE);
+    (void) unit_move_handling(punit, ptile, false, TRUE);
   }
 
   /* handle the results */
@@ -1075,7 +1075,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
     }
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1167,7 +1167,7 @@ bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
     return TRUE;
   }
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -1228,7 +1228,7 @@ bool dai_assess_military_unhappiness(struct city *pcity)
 
   /* bail out now if happy_cost is 0 */
   if (get_player_bonus(city_owner(pcity), EFT_UNHAPPY_FACTOR) == 0) {
-    return FALSE;
+    return false;
   }
 
   unit_list_iterate(pcity->units_supported, punit)

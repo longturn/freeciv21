@@ -69,7 +69,7 @@ struct texai_build_choice_req {
  **************************************************************************/
 void texai_init_threading(void)
 {
-  exthrai.thread_running = FALSE;
+  exthrai.thread_running = false;
 
   exthrai.num_players = 0;
 }
@@ -79,7 +79,7 @@ void texai_init_threading(void)
  **************************************************************************/
 static void texai_thread_start(void *arg)
 {
-  bool finished = FALSE;
+  bool finished = false;
   struct ai_type *texai = arg;
 
   log_debug("New AI thread launched");
@@ -340,7 +340,7 @@ void texai_control_lost(struct ai_type *ait, struct player *pplayer)
     texai_send_msg(TEXAI_MSG_THR_EXIT, pplayer, NULL);
 
     fc_thread_wait(&exthrai.ait);
-    exthrai.thread_running = FALSE;
+    exthrai.thread_running = false;
 
     fc_thread_cond_destroy(&exthrai.msgs_to.thr_cond);
     fc_destroy_mutex(&exthrai.msgs_to.mutex);

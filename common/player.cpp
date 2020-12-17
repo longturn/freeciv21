@@ -130,7 +130,7 @@ static bool is_valid_alliance(const struct player *p1,
     if (pplayer != p1 && pplayer != p2
         && ds == DS_WAR /* do not count 'never met' as war here */
         && pplayers_allied(p2, pplayer)) {
-      return FALSE;
+      return false;
     }
   }
   players_iterate_alive_end;
@@ -400,11 +400,11 @@ struct player *player_slot_get_player(const struct player_slot *pslot)
  ***********************************************************************/
 bool player_slot_is_used(const struct player_slot *pslot)
 {
-  fc_assert_ret_val(NULL != pslot, FALSE);
+  fc_assert_ret_val(NULL != pslot, false);
 
   /* No player slot available, if the game is not initialised. */
   if (!player_slots_initialised()) {
-    return FALSE;
+    return false;
   }
 
   return NULL != pslot->player;
@@ -521,13 +521,13 @@ static void player_defaults(struct player *pplayer)
   pplayer->target_government = NULL;
   pplayer->nation = NO_NATION_SELECTED;
   pplayer->team = NULL;
-  pplayer->is_ready = FALSE;
+  pplayer->is_ready = false;
   pplayer->nturns_idle = 0;
   pplayer->is_alive = TRUE;
   pplayer->turns_alive = 0;
-  pplayer->is_winner = FALSE;
+  pplayer->is_winner = false;
   pplayer->last_war_action = -1;
-  pplayer->phase_done = FALSE;
+  pplayer->phase_done = false;
 
   pplayer->revolution_finishes = -1;
   pplayer->primary_capital_id = 0;
@@ -572,10 +572,10 @@ static void player_defaults(struct player *pplayer)
   pplayer->ai_common.traits = NULL;
 
   pplayer->ai = NULL;
-  pplayer->was_created = FALSE;
+  pplayer->was_created = false;
   pplayer->savegame_ai_type_name = NULL;
   pplayer->random_name = TRUE;
-  pplayer->is_connected = FALSE;
+  pplayer->is_connected = false;
   pplayer->current_conn = NULL;
   pplayer->connections = conn_list_new();
   BV_CLR_ALL(pplayer->gives_shared_vision);
@@ -802,7 +802,7 @@ bool player_set_nation(struct player *pplayer, struct nation_type *pnation)
     pplayer->nation = pnation;
     return TRUE;
   }
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -903,7 +903,7 @@ bool player_can_trust_tile_has_no_units(const struct player *pplayer,
   /* Can't see invisible units. */
   if (!fc_funcs->player_tile_vision_get(ptile, pplayer, V_INVIS)
       || !fc_funcs->player_tile_vision_get(ptile, pplayer, V_SUBSURFACE)) {
-    return FALSE;
+    return false;
   }
 
   /* Units within some extras may be hidden. */
@@ -911,7 +911,7 @@ bool player_can_trust_tile_has_no_units(const struct player *pplayer,
     extra_type_list_iterate(extra_type_list_of_unit_hiders(), pextra)
     {
       if (tile_has_extra(ptile, pextra)) {
-        return FALSE;
+        return false;
       }
     }
     extra_type_list_iterate_end;
@@ -932,14 +932,14 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
 
   if (!player_can_trust_tile_has_no_units(pplayer, ptile)) {
     /* The existance of any units at all is hidden from the player. */
-    return FALSE;
+    return false;
   }
 
   /* Can't see city units. */
   pcity = tile_city(ptile);
   if (pcity && !can_player_see_units_in_city(pplayer, pcity)
       && unit_list_size(ptile->units) > 0) {
-    return FALSE;
+    return false;
   }
 
   /* Can't see non allied units in transports. */
@@ -949,7 +949,7 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
         && unit_owner(punit) != pplayer) {
       /* An ally could transport a non ally */
       if (unit_list_size(punit->transporting) > 0) {
-        return FALSE;
+        return false;
       }
     }
   }
@@ -975,7 +975,7 @@ bool can_player_see_unit_at(const struct player *pplayer,
 
   /* If the player can't even see the tile... */
   if (TILE_KNOWN_SEEN != tile_get_known(ptile, pplayer)) {
-    return FALSE;
+    return false;
   }
 
   /* Don't show non-allied units that are in transports.  This is logical
@@ -983,13 +983,13 @@ bool can_player_see_unit_at(const struct player *pplayer,
    * isn't taken into account. */
   if (is_transported && unit_owner(punit) != pplayer
       && !pplayers_allied(pplayer, unit_owner(punit))) {
-    return FALSE;
+    return false;
   }
 
   /* Units in cities may be hidden. */
   pcity = tile_city(ptile);
   if (pcity && !can_player_see_units_in_city(pplayer, pcity)) {
-    return FALSE;
+    return false;
   }
 
   /* Units within some extras may be hidden. */
@@ -1000,7 +1000,7 @@ bool can_player_see_unit_at(const struct player *pplayer,
     {
       if (tile_has_extra(ptile, pextra)
           && is_native_extra_to_utype(pextra, ptype)) {
-        return FALSE;
+        return false;
       }
     }
     extra_type_list_iterate_end;
@@ -1016,7 +1016,7 @@ bool can_player_see_unit_at(const struct player *pplayer,
   return fc_funcs->player_tile_vision_get(ptile, pplayer,
                                           unit_type_get(punit)->vlayer);
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1085,8 +1085,8 @@ bool can_player_see_city_internals(const struct player *pplayer,
 bool player_can_see_city_externals(const struct player *pow_player,
                                    const struct city *target_city)
 {
-  fc_assert_ret_val(target_city, FALSE);
-  fc_assert_ret_val(pow_player, FALSE);
+  fc_assert_ret_val(target_city, false);
+  fc_assert_ret_val(pow_player, false);
 
   if (can_player_see_city_internals(pow_player, target_city)) {
     /* City internals includes city externals. */
@@ -1098,7 +1098,7 @@ bool player_can_see_city_externals(const struct player *pow_player,
     return TRUE;
   }
 
-  fc_assert_ret_val(target_city->routes, FALSE);
+  fc_assert_ret_val(target_city->routes, false);
 
   trade_partners_iterate(target_city, trade_city)
   {
@@ -1109,7 +1109,7 @@ bool player_can_see_city_externals(const struct player *pow_player,
   }
   trade_partners_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1181,7 +1181,7 @@ bool player_in_city_map(const struct player *pplayer,
   }
   city_tile_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1312,7 +1312,7 @@ bool pplayers_at_war(const struct player *pplayer,
   enum diplstate_type ds;
 
   if (pplayer == pplayer2) {
-    return FALSE;
+    return false;
   }
 
   ds = player_diplstate_get(pplayer, pplayer2)->type;
@@ -1329,7 +1329,7 @@ bool pplayers_allied(const struct player *pplayer,
   enum diplstate_type ds;
 
   if (!pplayer || !pplayer2) {
-    return FALSE;
+    return false;
   }
 
   if (pplayer == pplayer2) {
@@ -1364,7 +1364,7 @@ bool players_non_invade(const struct player *pplayer1,
                         const struct player *pplayer2)
 {
   if (pplayer1 == pplayer2 || !pplayer1 || !pplayer2) {
-    return FALSE;
+    return false;
   }
 
   /* Movement during armistice is allowed so that player can withdraw
@@ -1383,7 +1383,7 @@ bool pplayers_non_attack(const struct player *pplayer,
   enum diplstate_type ds;
 
   if (pplayer == pplayer2) {
-    return FALSE;
+    return false;
   }
 
   ds = player_diplstate_get(pplayer, pplayer2)->type;
@@ -1430,7 +1430,7 @@ bool is_diplrel_between(const struct player *player1,
 
   /* No relationship to it self. */
   if (player1 == player2 && diplrel != DRO_FOREIGN) {
-    return FALSE;
+    return false;
   }
 
   if (diplrel < DS_LAST) {
@@ -1458,10 +1458,10 @@ bool is_diplrel_between(const struct player *player1,
     return player1 != player2;
   }
 
-  fc_assert_msg(FALSE, "diplrel_between(): invalid diplrel number %d.",
+  fc_assert_msg(false, "diplrel_between(): invalid diplrel number %d.",
                 diplrel);
 
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1481,7 +1481,7 @@ bool is_diplrel_to_other(const struct player *pplayer, int diplrel)
     }
   }
   players_iterate_alive_end;
-  return FALSE;
+  return false;
 }
 
 /*******************************************************************/ /**
@@ -1627,7 +1627,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
 
   /* It is not possible to have a diplstate to your self. */
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DRO_FOREIGN, REQ_RANGE_LOCAL, FALSE));
+         requirement_diplrel_ereq(DRO_FOREIGN, REQ_RANGE_LOCAL, false));
 
   mess_pos++;
 
@@ -1637,7 +1637,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HAS_REAL_EMBASSY,
                                                   REQ_RANGE_LOCAL, TRUE));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DRO_HAS_EMBASSY, REQ_RANGE_LOCAL, FALSE));
+         requirement_diplrel_ereq(DRO_HAS_EMBASSY, REQ_RANGE_LOCAL, false));
 
   mess_pos++;
 
@@ -1647,7 +1647,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HOSTS_REAL_EMBASSY,
                                                   REQ_RANGE_LOCAL, TRUE));
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HOSTS_EMBASSY,
-                                                  REQ_RANGE_LOCAL, FALSE));
+                                                  REQ_RANGE_LOCAL, false));
 
   mess_pos++;
 
@@ -1663,7 +1663,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
         BV_SET(mess[mess_pos],
                requirement_diplrel_ereq(rel, legal_ranges[i], TRUE));
         BV_SET(mess[mess_pos],
-               requirement_diplrel_ereq(rel, legal_ranges[j], FALSE));
+               requirement_diplrel_ereq(rel, legal_ranges[j], false));
 
         mess_pos++;
       }
@@ -1803,7 +1803,7 @@ bool is_settable_ai_level(enum ai_level level)
 {
   if (level == AI_LEVEL_AWAY) {
     /* Cannot set away level for AI */
-    return FALSE;
+    return false;
   }
 
   return TRUE;

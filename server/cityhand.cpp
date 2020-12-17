@@ -540,8 +540,8 @@ void handle_city_rally_point(struct player *pplayer, int city_id, int length,
   pcity->rally_point.length = length;
 
   if (length == 0) {
-    pcity->rally_point.vigilant = FALSE;
-    pcity->rally_point.persistent = FALSE;
+    pcity->rally_point.vigilant = false;
+    pcity->rally_point.persistent = false;
     if (pcity->rally_point.orders) {
       FCPP_FREE(pcity->rally_point.orders);
     }

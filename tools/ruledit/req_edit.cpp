@@ -341,7 +341,7 @@ void req_edit::req_present_menu(QAction *action)
 {
   if (selected != nullptr) {
     if (action->text() == QLatin1String("Prevents")) {
-      selected->present = FALSE;
+      selected->present = false;
     } else {
       selected->present = TRUE;
     }

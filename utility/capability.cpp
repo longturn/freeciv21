@@ -46,7 +46,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
 {
   const char *next;
 
-  fc_assert_ret_val(capstr != NULL, FALSE);
+  fc_assert_ret_val(capstr != NULL, false);
 
   for (;;) {
     GET_TOKEN(capstr, next);
@@ -62,7 +62,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
       return TRUE;
     }
     if (*next == '\0') {
-      return FALSE;
+      return false;
     }
 
     capstr = next + 1;
@@ -89,7 +89,7 @@ bool has_capabilities(const char *us, const char *them)
     GET_TOKEN(us, next);
 
     if (*us == '+' && !fc_has_capability(us + 1, them, next - (us + 1))) {
-      return FALSE;
+      return false;
     }
     if (*next == '\0') {
       return TRUE;

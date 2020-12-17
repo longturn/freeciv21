@@ -36,7 +36,7 @@
 
 #include "effects.h"
 
-static bool initialized = FALSE;
+static bool initialized = false;
 
 /**************************************************************************
   The code creates a ruleset cache on ruleset load. This constant cache
@@ -296,7 +296,7 @@ void ruleset_cache_free(void)
     }
   }
 
-  initialized = FALSE;
+  initialized = false;
 }
 
 /**********************************************************************/ /**
@@ -316,7 +316,7 @@ int effect_cumulative_max(enum effect_type type, struct universal *for_uni)
     {
       if (peffect->type == type && peffect->value > 0) {
         if (for_uni == NULL
-            || universal_fulfills_requirements(FALSE, &(peffect->reqs),
+            || universal_fulfills_requirements(false, &(peffect->reqs),
                                                for_uni)) {
           value += peffect->value;
         }
@@ -345,7 +345,7 @@ int effect_cumulative_min(enum effect_type type, struct universal *for_uni)
     {
       if (peffect->type == type && peffect->value < 0) {
         if (for_uni == NULL
-            || universal_fulfills_requirements(FALSE, &(peffect->reqs),
+            || universal_fulfills_requirements(false, &(peffect->reqs),
                                                for_uni)) {
           value += peffect->value;
         }
@@ -376,7 +376,7 @@ int effect_value_from_universals(enum effect_type type,
   effect_list_iterate(el, peffect)
   {
     bool effect_applies = TRUE;
-    bool first_source_mentioned = FALSE;
+    bool first_source_mentioned = false;
 
     if (peffect->multiplier) {
       /* Discount any effects with multipliers; we are looking for constant
@@ -387,7 +387,7 @@ int effect_value_from_universals(enum effect_type type,
     requirement_vector_iterate(&(peffect->reqs), preq)
     {
       int i;
-      bool req_mentioned_a_source = FALSE;
+      bool req_mentioned_a_source = false;
 
       for (i = 0; effect_applies && i < n_unis; i++) {
         switch (universal_fulfills_requirement(preq, &(unis[i]))) {
@@ -399,7 +399,7 @@ int effect_value_from_universals(enum effect_type type,
           req_mentioned_a_source = TRUE; /* this req matched this source */
           if (preq->present) {
             /* Requirement contradicts template. Effect doesn't apply. */
-            effect_applies = FALSE;
+            effect_applies = false;
           } /* but negative req doesn't count for first_source_mentioned */
           break;
         case ITF_YES:
@@ -411,7 +411,7 @@ int effect_value_from_universals(enum effect_type type,
             /* keep looking */
           } else /* !present */ {
             /* Requirement contradicts template. Effect doesn't apply. */
-            effect_applies = FALSE;
+            effect_applies = false;
           }
           break;
         }
@@ -419,7 +419,7 @@ int effect_value_from_universals(enum effect_type type,
       if (!req_mentioned_a_source) {
         /* This requirement isn't relevant to any source in our template,
          * so it's an extra condition and the effect should be ignored. */
-        effect_applies = FALSE;
+        effect_applies = false;
       }
       if (!effect_applies) {
         /* Already known to be irrelevant, bail out early */
@@ -478,7 +478,7 @@ void send_ruleset_cache(struct conn_list *dest)
       effect_packet.has_multiplier = TRUE;
       effect_packet.multiplier = multiplier_number(peffect->multiplier);
     } else {
-      effect_packet.has_multiplier = FALSE;
+      effect_packet.has_multiplier = false;
       effect_packet.multiplier = 0; /* arbitrary */
     }
 
@@ -514,7 +514,7 @@ bool building_has_effect(const struct impr_type *pimprove,
   struct effect_list *plist = get_req_source_effects(&source);
 
   if (!plist) {
-    return FALSE;
+    return false;
   }
 
   effect_list_iterate(plist, peffect)
@@ -525,7 +525,7 @@ bool building_has_effect(const struct impr_type *pimprove,
   }
   effect_list_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -557,7 +557,7 @@ static bool is_effect_prevented(
   }
   requirement_vector_iterate_end;
 
-  return FALSE;
+  return false;
 }
 
 /**********************************************************************/ /**
@@ -589,7 +589,7 @@ bool is_building_replaced(const struct city *pcity,
      * reverse */
     if (!is_effect_prevented(city_owner(pcity), NULL, pcity, pimprove, NULL,
                              NULL, NULL, NULL, NULL, peffect, prob_type)) {
-      return FALSE;
+      return false;
     }
   }
   effect_list_iterate_end;
@@ -980,7 +980,7 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
 
         if (!is_req_active(city_owner(pcity), NULL, pcity, pimprove, NULL,
                            NULL, NULL, NULL, NULL, NULL, preq, prob_type)) {
-          useful = FALSE;
+          useful = false;
           break;
         }
       }
@@ -1061,12 +1061,12 @@ void get_effect_list_req_text(const struct effect_list *plist,
  **************************************************************************/
 bool iterate_effect_cache(iec_cb cb, void *data)
 {
-  fc_assert_ret_val(cb != NULL, FALSE);
+  fc_assert_ret_val(cb != NULL, false);
 
   effect_list_iterate(ruleset_cache.tracker, peffect)
   {
     if (!cb(peffect, data)) {
-      return FALSE;
+      return false;
     }
   }
   effect_list_iterate_end;
