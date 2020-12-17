@@ -12,6 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
+#include <QVector>
+#include <QString>
 /* utility */
 #include "support.h" /* bool type. */
 
@@ -25,21 +27,11 @@ void strvec_destroy(struct strvec *psv);
 void strvec_reserve(struct strvec *psv, size_t reserve);
 void strvec_store(struct strvec *psv, const char *const *vec, size_t size);
 void strvec_clear(struct strvec *psv);
-void strvec_remove_empty(struct strvec *psv);
-void strvec_remove_duplicate(struct strvec *psv,
-                             int (*cmp_func)(const char *, const char *));
-void strvec_copy(struct strvec *dest, const struct strvec *src);
-void strvec_sort(struct strvec *psv,
-                 int (*sort_func)(const char *const *, const char *const *));
-
 void strvec_prepend(struct strvec *psv, const char *string);
 void strvec_append(struct strvec *psv, const char *string);
 void strvec_insert(struct strvec *psv, size_t svindex, const char *string);
 bool strvec_set(struct strvec *psv, size_t svindex, const char *string);
-bool strvec_remove(struct strvec *psv, size_t svindex);
-
 size_t strvec_size(const struct strvec *psv);
-bool are_strvecs_equal(const struct strvec *stv1, const struct strvec *stv2);
 const char *const *strvec_data(const struct strvec *psv);
 bool strvec_index_valid(const struct strvec *psv, size_t svindex);
 const char *strvec_get(const struct strvec *psv, size_t svindex);
@@ -47,15 +39,5 @@ const char *strvec_to_or_list(const struct strvec *psv,
                               struct astring *astr);
 const char *strvec_to_and_list(const struct strvec *psv,
                                struct astring *astr);
-
-/* Iteration macro. */
-#define strvec_iterate(psv, str)                                            \
-  {                                                                         \
-    size_t _id;                                                             \
-    const char *str;                                                        \
-    for (_id = 0; _id < strvec_size((psv)); _id++) {                        \
-      str = strvec_get((psv), _id);
-
-#define strvec_iterate_end                                                  \
-  }                                                                         \
-  }
+void qstrvec_store(QVector<QString> *psv, const char *const *vec,
+                   size_t size);

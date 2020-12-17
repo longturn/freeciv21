@@ -151,93 +151,6 @@ void strvec_clear(struct strvec *psv)
   psv->size = 0;
 }
 
-/**********************************************************************/ /**
-   Remove strings which are duplicated inside the vector.
- **************************************************************************/
-void strvec_remove_duplicate(struct strvec *psv,
-                             int (*cmp_func)(const char *, const char *))
-{
-  size_t i, j;
-  const char *str1, *str2;
-
-  if (!psv->vec || 1 == psv->size) {
-    return;
-  }
-
-  for (i = 1; i < psv->size; i++) {
-    if ((str1 = psv->vec[i])) {
-      for (j = 0; j < i; j++) {
-        if ((str2 = psv->vec[j]) && 0 == cmp_func(str2, str1)) {
-          strvec_remove(psv, i);
-          i--;
-          break;
-        }
-      }
-    }
-  }
-}
-
-/**********************************************************************/ /**
-   Remove all empty strings from the vector and removes all leading and
-   trailing spaces.
- **************************************************************************/
-void strvec_remove_empty(struct strvec *psv)
-{
-  size_t i;
-  char *str;
-
-  if (!psv->vec) {
-    return;
-  }
-
-  for (i = 0; i < psv->size;) {
-    str = psv->vec[i];
-
-    if (!str) {
-      strvec_remove(psv, i);
-      continue;
-    }
-
-    remove_leading_trailing_spaces(str);
-    if (str[0] == '\0') {
-      strvec_remove(psv, i);
-      continue;
-    }
-
-    i++;
-  }
-}
-
-/**********************************************************************/ /**
-   Copy a string vector.
- **************************************************************************/
-void strvec_copy(struct strvec *dest, const struct strvec *src)
-{
-  size_t i;
-  char **p;
-  char *const *l;
-
-  if (!src->vec) {
-    strvec_clear(dest);
-    return;
-  }
-
-  strvec_reserve(dest, src->size);
-  for (i = 0, p = dest->vec, l = src->vec; i < dest->size; i++, p++, l++) {
-    string_free(*p);
-    *p = string_duplicate(*l);
-  }
-}
-
-/**********************************************************************/ /**
-   Sort the string vector, using qsort().
- **************************************************************************/
-void strvec_sort(struct strvec *psv,
-                 int (*sort_func)(const char *const *, const char *const *))
-{
-  qsort(psv->vec, psv->size, sizeof(const char *),
-        (int (*)(const void *, const void *)) sort_func);
-}
 
 /**********************************************************************/ /**
    Insert a string at the start of the vector.
@@ -289,55 +202,11 @@ bool strvec_set(struct strvec *psv, size_t svindex, const char *string)
   return FALSE;
 }
 
-/**********************************************************************/ /**
-   Remove the string at the index from the vector.
-   Returns TRUE if the element has been really removed.
- **************************************************************************/
-bool strvec_remove(struct strvec *psv, size_t svindex)
-{
-  if (!strvec_index_valid(psv, svindex)) {
-    return FALSE;
-  }
-
-  if (psv->size == 1) {
-    /* It is the last. */
-    strvec_clear(psv);
-    return TRUE;
-  }
-
-  string_free(psv->vec[svindex]);
-  memmove(psv->vec + svindex, psv->vec + svindex + 1,
-          (psv->size - svindex - 1) * sizeof(char *));
-  psv->vec[psv->size - 1] = NULL; /* Do not attempt to free this data. */
-  strvec_reserve(psv, psv->size - 1);
-
-  return TRUE;
-}
 
 /**********************************************************************/ /**
    Returns the size of the vector.
  **************************************************************************/
 size_t strvec_size(const struct strvec *psv) { return psv->size; }
-
-/**********************************************************************/ /**
-   Returns TRUE if stv1 and stv2 are equal.
- **************************************************************************/
-bool are_strvecs_equal(const struct strvec *stv1, const struct strvec *stv2)
-{
-  int i;
-
-  if (strvec_size(stv1) != strvec_size(stv2)) {
-    return FALSE;
-  }
-
-  for (i = 0; i < strvec_size(stv1); i++) {
-    if (0 != strcmp(stv1->vec[i], stv2->vec[i])) {
-      return FALSE;
-    }
-  }
-
-  return TRUE;
-}
 
 /**********************************************************************/ /**
    Returns the datas of the vector.
@@ -388,3 +257,23 @@ const char *strvec_to_and_list(const struct strvec *psv,
   return astr_build_and_list(astr, (const char **) psv->vec, psv->size);
 }
 
+/**********************************************************************/ /**
+   Stores the string vector from a normal vector. If size == -1, it will
+   assume it is a NULL terminated vector.
+ **************************************************************************/
+void qstrvec_store(QVector<QString> *psv, const char *const *vec,
+                   size_t size)
+{
+  if (size == (size_t) -1) {
+    psv->clear();
+    for (; *vec; vec++) {
+      psv->append(*vec);
+    }
+  } else {
+    size_t i;
+    psv->resize(size);
+    for (i = 0; i < size; i++, vec++) {
+      psv->replace(i, *vec);
+    }
+  }
+}
