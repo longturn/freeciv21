@@ -12,8 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <vector>
-
 /* utility */
 #include "ioz.h"
 #include "support.h" /* bool type and fc__attribute */

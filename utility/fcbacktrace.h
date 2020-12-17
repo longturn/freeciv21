@@ -11,10 +11,5 @@
 
 #pragma once
 
-/* utility */
-#include "log.h"
-
 void backtrace_init();
 void backtrace_deinit();
-
-

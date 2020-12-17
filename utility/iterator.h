@@ -11,10 +11,6 @@
     \_____/ /                     If not, see https://www.gnu.org/licenses/.
       \____/        ********************************************************/
 #pragma once
-
-
-#include "support.h" /* bool */
-
 /***********************************************************************
   Iterator base class. "Derived" iterators must have this struct as
   their first member (as a "vtable") and provide implementations of the

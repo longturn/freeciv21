@@ -15,6 +15,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sys/stat.h>
 
 /* dependencies/lua */
 extern "C" {

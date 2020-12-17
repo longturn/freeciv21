@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h> /* size_t */
-#include <sys/stat.h>
+#include <cstdio>
 
 #ifdef TRUE
 #undef TRUE

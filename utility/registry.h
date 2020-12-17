@@ -10,9 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-#include "shared.h"
-
 struct section;
 
 void registry_module_init(void);

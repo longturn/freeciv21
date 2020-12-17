@@ -15,6 +15,8 @@
 #include <fc_config.h>
 #endif
 
+#include <sys/stat.h>
+
 /* utility */
 #include "fciconv.h"
 #include "fcintl.h"

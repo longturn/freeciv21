@@ -12,12 +12,10 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <stdlib.h> /* size_t */
 #include <string.h> /* memset */
 
 /* utility */
 #include "log.h"
-#include "support.h" /* bool, fc__attribute */
 
 /* Yields TRUE iff the bit bit_no is set in val. */
 #define TEST_BIT(val, bit_no)                                               \

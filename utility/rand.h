@@ -10,11 +10,7 @@
 **************************************************************************/
 #pragma once
 
-
-#include <stdint.h>
-
 /* Utility */
-#include "log.h"
 #include "support.h" /* bool type */
 
 typedef uint32_t RANDOM_TYPE;

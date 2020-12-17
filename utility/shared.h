@@ -13,9 +13,6 @@
 #pragma once
 
 #include <QDir>
-#include <stdlib.h> /* size_t */
-#include <string.h> /* memset */
-#include <time.h>   /* time_t */
 
 /* utility */
 #include "log.h"
