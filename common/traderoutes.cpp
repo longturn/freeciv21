@@ -19,7 +19,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "rand.h"
-#include "string_vector.h"
 
 /* common */
 #include "city.h"

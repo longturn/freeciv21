@@ -20,9 +20,6 @@ extern "C" {
 #include "lualib.h"
 }
 
-/* utility */
-#include "string_vector.h"
-
 /* common/scriptcore */
 #include "luascript.h"
 #include "luascript_types.h"

@@ -48,7 +48,6 @@
 #include "fciconv.h"
 #include "fcintl.h"
 #include "rand.h"
-#include "string_vector.h"
 
 #include "shared.h"
 

@@ -19,7 +19,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */

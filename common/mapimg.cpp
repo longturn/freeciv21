@@ -26,7 +26,6 @@
 #include "bitvector.h"
 #include "fcintl.h"
 #include "log.h"
-#include "string_vector.h"
 #include "timing.h"
 
 /* common */

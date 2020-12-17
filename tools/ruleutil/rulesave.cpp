@@ -17,7 +17,6 @@
 
 /* utility */
 #include "registry.h"
-#include "string_vector.h"
 
 /* common */
 #include "achievements.h"

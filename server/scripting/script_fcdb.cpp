@@ -42,7 +42,6 @@
 /* utility */
 #include "log.h"
 #include "registry.h"
-#include "string_vector.h"
 
 /* common/scriptcore */
 #include "luascript.h"

@@ -21,7 +21,6 @@
 /* utility */
 #include "log.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* client/include */

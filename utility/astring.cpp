@@ -356,3 +356,28 @@ void astr_copy(struct astring *dest, const struct astring *src)
     astr_set(dest, "%s", src->str);
   }
 }
+
+const char *strvec_to_or_list(const QVector<QString> *psv, struct astring *astr)
+{
+  char *ccc[psv->count()];
+  int i = 0;
+  for (auto a: *psv) {
+    ccc[i] = a.toLocal8Bit().data();
+    i++;
+  }
+
+  return astr_build_or_list(astr, ccc, psv->count());
+}
+
+const char *strvec_to_and_list(const QVector<QString> *psv,
+                               struct astring *astr)
+{
+  char *ccc[psv->count()];
+  int i = 0;
+  for (auto a: *psv) {
+    ccc[i] = a.toLocal8Bit().data();
+    i++;
+  }
+
+  return astr_build_and_list(astr, ccc, psv->count());
+}

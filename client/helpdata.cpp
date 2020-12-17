@@ -33,7 +33,6 @@
 #include "log.h"
 #include "registry.h"
 #include "requirements.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -533,18 +532,18 @@ static void insert_allows_single(struct universal *psource,
           if (0 < conoreqs->count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[0]), /* "Allows %s (with %s but no %s)." */
-                         subjstr, qstrvec_to_and_list(coreqs, &coreqstr),
-                         qstrvec_to_or_list(conoreqs, &conoreqstr));
+                         subjstr, strvec_to_and_list(coreqs, &coreqstr),
+                         strvec_to_or_list(conoreqs, &conoreqstr));
           } else {
             cat_snprintf(buf, bufsz,
                          Q_(strs[1]), /* "Allows %s (with %s)." */
-                         subjstr, qstrvec_to_and_list(coreqs, &coreqstr));
+                         subjstr, strvec_to_and_list(coreqs, &coreqstr));
           }
         } else {
           if (0 < conoreqs->count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[2]), /* "Allows %s (absent %s)." */
-                         subjstr, qstrvec_to_and_list(conoreqs, &conoreqstr));
+                         subjstr, strvec_to_and_list(conoreqs, &conoreqstr));
           } else {
             cat_snprintf(buf, bufsz, Q_(strs[3]), /* "Allows %s." */
                          subjstr);
@@ -2730,7 +2729,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         extra_type_iterate_end;
 
         if (extras_vec->count() > 0) {
-          qstrvec_to_and_list(extras_vec, &extras_and);
+          strvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: %s is list of extra types separated by ',' and 'and' */
           cat_snprintf(buf, bufsz, _("  * builds %s on tiles.\n"),
                        astr_str(&extras_and));
@@ -2753,7 +2752,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         extra_type_iterate_end;
 
         if (extras_vec->count() > 0) {
-          qstrvec_to_and_list(extras_vec, &extras_and);
+          strvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * cleans %s from tiles.\n"),
                        astr_str(&extras_and));
@@ -2775,7 +2774,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         extra_type_iterate_end;
 
         if (extras_vec->count() > 0) {
-          qstrvec_to_and_list(extras_vec, &extras_and);
+          strvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * pillages %s from tiles.\n"),
                        astr_str(&extras_and));
@@ -4209,8 +4208,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         astr_set(&outputs_or, "%s", Q_("?outputlist: Nothing "));
         astr_set(&outputs_and, "%s", Q_("?outputlist: Nothing "));
       } else {
-        qstrvec_to_or_list(outputs, &outputs_or);
-        qstrvec_to_and_list(outputs, &outputs_and);
+        strvec_to_or_list(outputs, &outputs_or);
+        strvec_to_and_list(outputs, &outputs_and);
       }
 
       switch (peffect->type) {
@@ -4482,7 +4481,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               buf, bufsz,
               /* TRANS: %s is list of unit types separated by 'or' */
               _("* Pays no upkeep for %s.\n"),
-              qstrvec_to_or_list(fanatics, &fanaticstr));
+              strvec_to_or_list(fanatics, &fanaticstr));
           delete fanatics;
           astr_free(&fanaticstr);
         }

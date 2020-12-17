@@ -35,7 +35,6 @@
 #include "rand.h"
 #include "registry.h"
 #include "section_file.h"
-#include "string_vector.h"
 #include "support.h" /* fc__attribute, bool type, etc. */
 #include "timing.h"
 

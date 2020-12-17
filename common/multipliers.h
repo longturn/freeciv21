@@ -15,7 +15,6 @@
 
 /* utility */
 #include "bitvector.h"
-#include "string_vector.h"
 
 /* common */
 #include "fc_types.h"

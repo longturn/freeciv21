@@ -21,7 +21,6 @@
 #include <QSpinBox>
 // utility
 #include "log.h"
-#include "string_vector.h"
 // client
 #include "options.h"
 // gui-qt

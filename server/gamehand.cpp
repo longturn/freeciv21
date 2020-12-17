@@ -24,7 +24,6 @@
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */

@@ -19,7 +19,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h" /* ARRAY_SIZE */
-#include "string_vector.h"
 #include "support.h"
 
 /* common */

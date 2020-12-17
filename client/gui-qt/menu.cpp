@@ -20,7 +20,6 @@
 #include <QVBoxLayout>
 // utility
 #include "fcintl.h"
-#include "string_vector.h"
 // common
 #include "game.h"
 #include "goto.h"

@@ -28,7 +28,6 @@
 /* utility */
 #include "fciconv.h"
 #include "registry.h"
-#include "string_vector.h"
 
 /* common */
 #include "fc_interface.h"

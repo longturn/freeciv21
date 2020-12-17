@@ -18,7 +18,6 @@
 /* utility */
 #include "fcintl.h"
 #include "rand.h"
-#include "string_vector.h"
 
 /* common */
 #include "base.h"

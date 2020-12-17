@@ -17,7 +17,6 @@
 #include <QTextStream>
 /* utility */
 #include "shared.h"
-#include "string_vector.h"
 /* client */
 #include "page_game.h"
 #include "qtg_cxxside.h"

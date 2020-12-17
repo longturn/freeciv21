@@ -17,7 +17,6 @@
 /* utility */
 #include "fcintl.h"
 #include "log.h"
-#include "string_vector.h"
 
 /* common */
 #include "city.h"

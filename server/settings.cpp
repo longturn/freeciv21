@@ -21,7 +21,6 @@
 #include "log.h"
 #include "registry.h"
 #include "shared.h"
-#include "string_vector.h"
 
 /* common */
 #include "map.h"
@@ -5722,7 +5721,7 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
       return buf;
     }
 
-    qstrvec_to_and_list(vec, &astr);
+    strvec_to_and_list(vec, &astr);
     delete vec;
     fc_strlcpy(buf, astr_str(&astr), buf_len);
     astr_free(&astr);

@@ -26,7 +26,6 @@
 #include "fcintl.h"
 #include "registry.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -852,6 +851,26 @@ static char *lookup_string(struct section_file *file, const char *prefix,
   return NULL;
 }
 
+/**********************************************************************/ /**
+   Stores the string vector from a normal vector. If size == -1, it will
+   assume it is a NULL terminated vector.
+ **************************************************************************/
+static void strvec_store(QVector<QString> *psv, const char *const *vec,
+                   size_t size)
+{
+  if (size == (size_t) -1) {
+    psv->clear();
+    for (; *vec; vec++) {
+      psv->append(*vec);
+    }
+  } else {
+    size_t i;
+    psv->resize(size);
+    for (i = 0; i < size; i++, vec++) {
+      psv->replace(i, *vec);
+    }
+  }
+}
 
 /**********************************************************************/ /**
    Lookup optional string vector, returning allocated memory or NULL.
@@ -866,7 +885,7 @@ static QVector<QString> *lookup_strvec(struct section_file *file,
 
   if (NULL != vec) {
     QVector<QString> *dest = new QVector<QString>;
-    qstrvec_store(dest, vec, dim);
+    strvec_store(dest, vec, dim);
 
     delete[] vec;
     return dest;

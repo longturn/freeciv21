@@ -22,7 +22,6 @@
 #include "fcintl.h"
 #include "log.h"
 #include "shared.h" /* ARRAY_SIZE */
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -1050,7 +1049,7 @@ void get_effect_list_req_text(const struct effect_list *plist,
   }
   effect_list_iterate_end;
 
-  qstrvec_to_and_list(psv, astr);
+  strvec_to_and_list(psv, astr);
   delete psv;
 }
 
