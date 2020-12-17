@@ -73,14 +73,31 @@ typedef int fc_errno;
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
 
 #define NFCPP_FREE(ptr)                                                     \
-if (ptr) delete[] (ptr);                                                    \
+  if (ptr)                                                                  \
+    delete[](ptr);
 
 #define NFC_FREE(ptr)                                                       \
-if (ptr) delete (ptr);                                                      \
+  if (ptr)                                                                  \
+    delete (ptr);
+
+#define NFCN_FREE(ptr)                                                      \
+  if (ptr)                                                                  \
+    delete (ptr);                                                           \
+  ptr = nullptr;
+
+#define VOIDNFCN_FREE(ptr)                                                  \
+  if (ptr)                                                                  \
+    ::operator delete(ptr);                                                   \
+  ptr = nullptr;
+
+#define NFCNPP_FREE(ptr)                                                    \
+  if (ptr)                                                                  \
+    delete[](ptr);                                                          \
+  ptr = nullptr;
 
 #define FCPP_FREE(ptr)                                                      \
-delete[] (ptr);                                                             \
-(ptr) = NULL;
+  delete[](ptr);                                                            \
+  (ptr) = NULL;
 
 #define FC_FREE(ptr)                                                        \
   do {                                                                      \
@@ -92,7 +109,6 @@ delete[] (ptr);                                                             \
 
 char *real_fc_strdup(const char *str, const char *called_as, int line,
                      const char *file) fc__warn_unused_result;
-
 
 int fc_strcasecmp(const char *str0, const char *str1);
 int fc_strncasecmp(const char *str0, const char *str1, size_t n);

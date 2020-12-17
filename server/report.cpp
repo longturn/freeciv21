@@ -452,7 +452,8 @@ void report_wonders_of_the_world(struct conn_list *dest)
                            _("(building %s in %s (%s, %s))\n"),
                            improvement_name_translation(i),
                            city_name_get(pcity),
-                           nation_adjective_for_player(pplayer), qUtf8Printable(team_name));
+                           nation_adjective_for_player(pplayer),
+                           qUtf8Printable(team_name));
             } else {
               cat_snprintf(
                   buffer, sizeof(buffer), _("(building %s in %s (%s))\n"),
@@ -1121,10 +1122,7 @@ static void plrdata_slot_replace(struct plrdata_slot *plrdata,
  **************************************************************************/
 static void plrdata_slot_free(struct plrdata_slot *plrdata)
 {
-  if (plrdata->name != NULL) {
-    free(plrdata->name);
-    plrdata->name = NULL;
-  }
+  NFCN_FREE(plrdata->name);
 }
 
 /**********************************************************************/ /**
@@ -1322,9 +1320,7 @@ void log_civ_score_free(void)
     {
       struct plrdata_slot *plrdata =
           score_log->plrdata + player_slot_index(pslot);
-      if (plrdata->name != NULL) {
-        free(plrdata->name);
-      }
+      NFC_FREE(plrdata->name);
     }
     player_slots_iterate_end;
     free(score_log->plrdata);

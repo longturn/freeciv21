@@ -532,11 +532,7 @@ void goods_free(void)
 
   for (i = 0; i < MAX_GOODS_TYPES; i++) {
     requirement_vector_free(&(goods[i].reqs));
-
-    if (NULL != goods[i].helptext) {
-      delete goods[i].helptext;
-      goods[i].helptext = NULL;
-    }
+    NFCN_FREE(goods[i].helptext);
   }
 }
 

@@ -190,12 +190,7 @@ void log_close()
 {
   QMutexLocker locker(&mutex);
 
-  // Flush and delete log file
-  if (log_file != nullptr) {
-    delete log_file;
-    log_file = nullptr;
-  }
-
+  NFCN_FREE(log_file);
   // Reinstall the old handler
   qInstallMessageHandler(original_handler);
 }

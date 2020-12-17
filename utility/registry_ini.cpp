@@ -3123,9 +3123,7 @@ void entry_destroy(struct entry *pentry)
 
   /* Common free. */
   delete[] pentry->name;
-  if (NULL != pentry->comment) {
-    delete[] pentry->comment;
-  }
+  NFCPP_FREE(pentry->comment);
   delete pentry;
 }
 

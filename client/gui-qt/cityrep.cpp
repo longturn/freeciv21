@@ -58,10 +58,7 @@ hIcon *hIcon::i()
 
 void hIcon::drop()
 {
-  if (m_instance) {
-    delete m_instance;
-    m_instance = nullptr;
-  }
+  NFCN_FREE(m_instance);
 }
 
 void hIcon::createIcons()

@@ -219,7 +219,7 @@ extern bool sg_success;
         char buf[64];                                                       \
         fc_snprintf(buf, sizeof(buf), secpath, ##__VA_ARGS__, _nat_y);      \
         qDebug("Line too short (expected %d got %lu)='%s'", wld.map.xsize,  \
-               (unsigned long) qstrlen(_line), buf);                         \
+               (unsigned long) qstrlen(_line), buf);                        \
         _printed_warning = TRUE;                                            \
         continue;                                                           \
       }                                                                     \
@@ -490,54 +490,18 @@ static struct loaddata *loaddata_new(struct section_file *file)
  ****************************************************************************/
 static void loaddata_destroy(struct loaddata *loading)
 {
-  if (loading->improvement.order != NULL) {
-    free(loading->improvement.order);
-  }
-
-  if (loading->technology.order != NULL) {
-    free(loading->technology.order);
-  }
-
-  if (loading->activities.order != NULL) {
-    free(loading->activities.order);
-  }
-
-  if (loading->trait.order != NULL) {
-    free(loading->trait.order);
-  }
-
-  if (loading->extra.order != NULL) {
-    free(loading->extra.order);
-  }
-
-  if (loading->multiplier.order != NULL) {
-    free(loading->multiplier.order);
-  }
-
-  if (loading->special.order != NULL) {
-    free(loading->special.order);
-  }
-
-  if (loading->base.order != NULL) {
-    free(loading->base.order);
-  }
-
-  if (loading->road.order != NULL) {
-    free(loading->road.order);
-  }
-
-  if (loading->specialist.order != NULL) {
-    free(loading->specialist.order);
-  }
-
-  if (loading->ds_t.order != NULL) {
-    free(loading->ds_t.order);
-  }
-
-  if (loading->worked_tiles != NULL) {
-    free(loading->worked_tiles);
-  }
-
+  NFC_FREE(loading->improvement.order);
+  NFC_FREE(loading->technology.order);
+  NFC_FREE(loading->activities.order);
+  NFC_FREE(loading->trait.order);
+  NFC_FREE(loading->extra.order);
+  NFC_FREE(loading->multiplier.order);
+  NFC_FREE(loading->special.order);
+  NFC_FREE(loading->base.order);
+  NFC_FREE(loading->road.order);
+  NFC_FREE(loading->specialist.order);
+  NFC_FREE(loading->ds_t.order);
+  NFC_FREE(loading->worked_tiles);
   free(loading);
 }
 
@@ -1218,7 +1182,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    game.control.num_extra_types, (int) loading->extra.size);
     /* make sure that the size of the array is divisible by 4 */
     nmod = 4 * ((loading->extra.size + 3) / 4);
-    loading->extra.order = new extra_type*[nmod]();
+    loading->extra.order = new extra_type *[nmod]();
     for (j = 0; j < loading->extra.size; j++) {
       loading->extra.order[j] = extra_type_by_rule_name(modname[j]);
     }
@@ -1242,7 +1206,7 @@ static void sg_load_savefile(struct loaddata *loading)
                    "Failed to load multipliers order: %s", secfile_error());
     /* It's OK for the set of multipliers in the savefile to differ
      * from those in the ruleset. */
-    loading->multiplier.order = new multiplier*[loading->multiplier.size]();
+    loading->multiplier.order = new multiplier *[loading->multiplier.size]();
     for (j = 0; j < loading->multiplier.size; j++) {
       loading->multiplier.order[j] = multiplier_by_rule_name(modname[j]);
       if (!loading->multiplier.order[j]) {
@@ -2296,7 +2260,7 @@ static void sg_load_map_known(struct loaddata *loading)
 
   if (secfile_lookup_bool_default(loading->file, TRUE, "game.save_known")) {
     int lines = player_slot_max_used_number() / 32 + 1, j, p, l, i;
-    unsigned int *known =  new unsigned int[lines * MAP_INDEX_SIZE]();
+    unsigned int *known = new unsigned int[lines * MAP_INDEX_SIZE]();
 
     for (l = 0; l < lines; l++) {
       for (j = 0; j < 8; j++) {

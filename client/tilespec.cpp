@@ -1098,18 +1098,9 @@ static void tileset_free_toplevel(struct tileset *t)
     t->color_system = NULL;
   }
 
-  if (t->summary != NULL) {
-    delete[] t->summary;
-    t->summary = NULL;
-  }
-  if (t->description != NULL) {
-    delete[] t->description;
-    t->description = NULL;
-  }
-  if (t->for_ruleset != NULL) {
-    delete[] t->for_ruleset;
-    t->for_ruleset = NULL;
-  }
+  NFCNPP_FREE(t->summary);
+  NFCNPP_FREE(t->description);
+  NFCNPP_FREE(t->for_ruleset);
 }
 
 /************************************************************************/ /**
@@ -1751,10 +1742,7 @@ static struct tileset *tileset_read_toplevel(const char *tileset_name,
     fc_strlcpy(t->summary, tstr, len + 1);
   } else {
     /* No summary */
-    if (t->summary != NULL) {
-      delete[] t->summary;
-      t->summary = NULL;
-    }
+    NFCNPP_FREE(t->summary);
   }
 
   tstr = secfile_lookup_str_default(file, "", "tilespec.description");

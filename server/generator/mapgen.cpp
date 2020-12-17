@@ -1396,8 +1396,7 @@ bool map_fractal_generate(bool autosize, struct unit_type *initial_unit)
         || MAPGEN_FRACTAL == wld.map.server.generator
         || MAPGEN_FRACTURE == wld.map.server.generator) {
       make_land();
-      delete[] height_map;
-      height_map = NULL;
+      FCPP_FREE(height_map);
     }
     if (!wld.map.server.tinyisles) {
       remove_tiny_islands();

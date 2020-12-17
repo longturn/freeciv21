@@ -92,18 +92,9 @@ void secfile_destroy(struct section_file *secfile)
   /* Mark it NULL to be sure to don't try to make operations when
    * deleting the entries. */
   secfile->hash.sections = NULL;
-  if (NULL != secfile->hash.entries) {
-    delete secfile->hash.entries;
-    /* Mark it NULL to be sure to don't try to make operations when
-     * deleting the entries. */
-    secfile->hash.entries = NULL;
-  }
-
+  NFCN_FREE(secfile->hash.entries);
   section_list_destroy(secfile->sections);
-
-  if (NULL != secfile->name) {
-    delete[] secfile->name;
-  }
+  NFCPP_FREE(secfile->name);
 
   delete secfile;
 }

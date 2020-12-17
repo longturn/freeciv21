@@ -1223,9 +1223,7 @@ void dai_auto_settler_free(struct ai_plr *ai)
   fc_assert_ret(ai != NULL);
 
   if (ai->settler) {
-    if (ai->settler->tdc_hash) {
-      delete ai->settler->tdc_hash;
-    }
+    NFC_FREE(ai->settler->tdc_hash);
     delete[] ai->settler;
   }
   ai->settler = NULL;

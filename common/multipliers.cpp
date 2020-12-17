@@ -48,10 +48,7 @@ void multipliers_free(void)
   multipliers_iterate(pmul)
   {
     requirement_vector_free(&(pmul->reqs));
-    if (pmul->helptext) {
-      delete pmul->helptext;
-      pmul->helptext = NULL;
-    }
+    NFCN_FREE(pmul->helptext);
   }
   multipliers_iterate_end;
 }

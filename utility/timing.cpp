@@ -68,9 +68,7 @@ civtimer *timer_renew(civtimer *t, enum timer_timetype type,
  ***********************************************************************/
 void timer_destroy(civtimer *t)
 {
-  if (t != nullptr) {
-    delete t;
-  }
+  NFC_FREE(t);
 }
 
 /*******************************************************************/ /**

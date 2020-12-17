@@ -3418,11 +3418,7 @@ void destroy_city_virtual(struct city *pcity)
   if (pcity->tile_cache != NULL) {
     free(pcity->tile_cache); //realloc
   }
-
-  if (pcity->cm_parameter) {
-    delete[] pcity->cm_parameter;
-  }
-
+  NFCPP_FREE(pcity->cm_parameter);
   if (!is_server()) {
     unit_list_destroy(pcity->client.info_units_supported);
     unit_list_destroy(pcity->client.info_units_present);

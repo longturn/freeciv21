@@ -3056,9 +3056,7 @@ void handle_tile_info(const struct packet_tile_info *packet)
   if (packet->spec_sprite[0] != '\0') {
     if (!ptile->spec_sprite
         || strcmp(ptile->spec_sprite, packet->spec_sprite) != 0) {
-      if (ptile->spec_sprite) {
-        delete ptile->spec_sprite;
-      }
+      NFC_FREE(ptile->spec_sprite);
       ptile->spec_sprite = fc_strdup(packet->spec_sprite);
       tile_changed = TRUE;
     }
@@ -3258,12 +3256,8 @@ void handle_ruleset_summary(const struct packet_ruleset_summary *packet)
 {
   int len;
 
-  if (game.ruleset_summary != NULL) {
-    delete[] game.ruleset_summary;
-  }
-
+  NFCPP_FREE(game.ruleset_summary);
   len = qstrlen(packet->text);
-
   game.ruleset_summary = new char[len + 1];
 
   fc_strlcpy(game.ruleset_summary, packet->text, len + 1);
@@ -3793,9 +3787,7 @@ void handle_ruleset_terrain(const struct packet_ruleset_terrain *p)
   output_type_iterate(o) { pterrain->output[o] = p->output[o]; }
   output_type_iterate_end;
 
-  if (pterrain->resources != NULL) {
-    delete[] pterrain->resources;
-  }
+  NFCPP_FREE(pterrain->resources);
   pterrain->resources = new extra_type *[p->num_resources + 1]();
   for (j = 0; j < p->num_resources; j++) {
     pterrain->resources[j] = extra_by_number(p->resources[j]);

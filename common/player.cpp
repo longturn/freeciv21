@@ -630,22 +630,13 @@ void player_clear(struct player *pplayer, bool full)
     return;
   }
 
-  if (pplayer->savegame_ai_type_name != NULL) {
-    delete[] pplayer->savegame_ai_type_name;
-    pplayer->savegame_ai_type_name = NULL;
-  }
+  NFCNPP_FREE(pplayer->savegame_ai_type_name);
 
   /* Clears the attribute blocks. */
-  if (pplayer->attribute_block.data) {
-    free(pplayer->attribute_block.data);
-    pplayer->attribute_block.data = NULL;
-  }
+  VOIDNFCN_FREE(pplayer->attribute_block.data);
   pplayer->attribute_block.length = 0;
 
-  if (pplayer->attribute_block_buffer.data) {
-    free(pplayer->attribute_block_buffer.data);
-    pplayer->attribute_block_buffer.data = NULL;
-  }
+  VOIDNFCN_FREE(pplayer->attribute_block_buffer.data);
   pplayer->attribute_block_buffer.length = 0;
 
   /* Clears units and cities. */

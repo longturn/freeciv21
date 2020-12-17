@@ -1639,8 +1639,7 @@ void free_unit_orders(struct unit *punit)
 {
   if (punit->has_orders) {
     punit->goto_tile = NULL;
-    delete[] punit->orders.list;
-    punit->orders.list = NULL;
+    FCPP_FREE(punit->orders.list);
   }
   punit->orders.length = 0;
   punit->has_orders = FALSE;

@@ -2795,25 +2795,13 @@ static void server_option_free(struct server_option *poption)
     break;
 
   case OT_ENUM:
-    if (NULL != poption->enumerator.support_names) {
-      delete poption->enumerator.support_names;
-      poption->enumerator.support_names = NULL;
-    }
-    if (NULL != poption->enumerator.pretty_names) {
-      delete poption->enumerator.pretty_names;
-      poption->enumerator.pretty_names = NULL;
-    }
+    NFCN_FREE(poption->enumerator.support_names);
+    NFCN_FREE(poption->enumerator.pretty_names);
     break;
 
   case OT_BITWISE:
-    if (NULL != poption->bitwise.support_names) {
-      delete poption->bitwise.support_names;
-      poption->bitwise.support_names = NULL;
-    }
-    if (NULL != poption->bitwise.pretty_names) {
-      delete poption->bitwise.pretty_names;
-      poption->bitwise.pretty_names = NULL;
-    }
+    NFCN_FREE(poption->bitwise.support_names);
+    NFCN_FREE(poption->bitwise.pretty_names);
     break;
 
   case OT_BOOLEAN:
@@ -2823,15 +2811,9 @@ static void server_option_free(struct server_option *poption)
     break;
   }
 
-  if (NULL != poption->name) {
-    FC_FREE(poption->name);
-  }
-  if (NULL != poption->description) {
-    FC_FREE(poption->description);
-  }
-  if (NULL != poption->help_text) {
-    FC_FREE(poption->help_text);
-  }
+  NFCN_FREE(poption->name);
+  NFCN_FREE(poption->description);
+  NFCN_FREE(poption->help_text);
 }
 
 /************************************************************************/ /**

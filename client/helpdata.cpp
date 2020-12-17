@@ -85,8 +85,7 @@ void free_help_texts(void)
     NFCPP_FREE(ptmp->text);
     NFC_FREE(ptmp);
   }
-  delete help_nodes;
-  help_nodes = nullptr;
+  FC_FREE(help_nodes);
 }
 
 /************************************************************************/ /**

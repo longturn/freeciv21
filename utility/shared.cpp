@@ -619,10 +619,7 @@ char *user_home_dir(void)
  ****************************************************************************/
 void free_user_home_dir(void)
 {
-  if (home_dir_user != NULL) {
-    delete[] home_dir_user;
-    home_dir_user = NULL;
-  }
+  NFCNPP_FREE(home_dir_user);
 }
 
 /************************************************************************/ /**
@@ -650,10 +647,7 @@ char *freeciv_storage_dir(void)
  ****************************************************************************/
 void free_freeciv_storage_dir(void)
 {
-  if (storage_dir_freeciv != NULL) {
-    delete[] storage_dir_freeciv;
-    storage_dir_freeciv = NULL;
-  }
+  NFCNPP_FREE(storage_dir_freeciv);
 }
 
 /************************************************************************/ /**
@@ -805,18 +799,9 @@ static QStringList *base_get_dirs(const char *dir_list)
  ****************************************************************************/
 void free_data_dir_names(void)
 {
-  if (data_dir_names != NULL) {
-    delete data_dir_names;
-    data_dir_names = NULL;
-  }
-  if (save_dir_names != NULL) {
-    delete save_dir_names;
-    save_dir_names = NULL;
-  }
-  if (scenario_dir_names != NULL) {
-    delete scenario_dir_names;
-    scenario_dir_names = NULL;
-  }
+  NFCN_FREE(data_dir_names);
+  NFCN_FREE(save_dir_names);
+  NFCN_FREE(scenario_dir_names);
 }
 
 /************************************************************************/ /**
@@ -968,8 +953,8 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
       files->append(name.toUtf8().data());
     }
   }
-  files->erase(std::unique(files->begin(), files->end() ), files->end());
-  std::sort(files->begin(), files->end() );
+  files->erase(std::unique(files->begin(), files->end()), files->end());
+  std::sort(files->begin(), files->end());
   return files;
 }
 
@@ -1389,10 +1374,8 @@ void init_nls(void)
  ****************************************************************************/
 void free_nls(void)
 {
-  delete[] grouping;
-  grouping = NULL;
-  delete[] grouping_sep;
-  grouping_sep = NULL;
+  FCPP_FREE(grouping);
+  FCPP_FREE(grouping_sep);
 }
 
 /************************************************************************/ /**
@@ -1545,10 +1528,7 @@ char *get_multicast_group(bool ipv6_preferred)
  ****************************************************************************/
 void free_multicast_group(void)
 {
-  if (mc_group != NULL) {
-    delete[] mc_group;
-    mc_group = NULL;
-  }
+  NFCNPP_FREE(mc_group);
 }
 
 /************************************************************************/ /**

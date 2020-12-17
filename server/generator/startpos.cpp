@@ -528,10 +528,8 @@ bool create_start_positions(enum map_startpos mode,
     }
   }
 
-  delete[] islands;
-  delete[] islands_index;
-  islands = NULL;
-  islands_index = NULL;
+  FCPP_FREE(islands);
+  FCPP_FREE(islands_index);
 
   if (!is_tmap) {
     destroy_tmap();

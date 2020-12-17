@@ -55,16 +55,8 @@ void terrains_free(void)
 {
   terrain_type_iterate(pterrain)
   {
-    if (NULL != pterrain->helptext) {
-      delete pterrain->helptext;
-      pterrain->helptext = NULL;
-    }
-    if (pterrain->resources != NULL) {
-      /* Server allocates this on ruleset loading, client when
-       * ruleset packet is received. */
-      delete[] pterrain->resources;
-      pterrain->resources = NULL;
-    }
+    NFCN_FREE(pterrain->helptext);
+    NFCNPP_FREE(pterrain->resources);
     if (pterrain->rgb != NULL) {
       /* Server allocates this on ruleset loading, client when
        * ruleset packet is received. */
@@ -803,19 +795,13 @@ void set_user_terrain_flag_name(enum terrain_flag_id id, const char *name,
 
   fc_assert_ret(id >= TER_USER_1 && id <= TER_USER_LAST);
 
-  if (user_terrain_flags[tfid].name != NULL) {
-    FC_FREE(user_terrain_flags[tfid].name);
-    user_terrain_flags[tfid].name = NULL;
-  }
+  NFCN_FREE(user_terrain_flags[tfid].name);
 
   if (name && name[0] != '\0') {
     user_terrain_flags[tfid].name = fc_strdup(name);
   }
 
-  if (user_terrain_flags[tfid].helptxt != NULL) {
-    FC_FREE(user_terrain_flags[tfid].helptxt);
-    user_terrain_flags[tfid].helptxt = NULL;
-  }
+  NFCN_FREE(user_terrain_flags[tfid].helptxt);
 
   if (helptxt && helptxt[0] != '\0') {
     user_terrain_flags[tfid].helptxt = fc_strdup(helptxt);

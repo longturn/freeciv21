@@ -85,17 +85,10 @@ sidebarWidget::sidebarWidget(QPixmap *pix, const QString &label,
  ***************************************************************************/
 sidebarWidget::~sidebarWidget()
 {
-  if (scaled_pixmap) {
-    delete scaled_pixmap;
-  }
+  NFC_FREE(scaled_pixmap);
+  NFC_FREE(def_pixmap);
+  NFC_FREE(final_pixmap);
 
-  if (def_pixmap) {
-    delete def_pixmap;
-  }
-
-  if (final_pixmap) {
-    delete final_pixmap;
-  }
   delete timer;
   delete sfont;
   delete info_font;

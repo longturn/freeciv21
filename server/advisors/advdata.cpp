@@ -762,9 +762,9 @@ void adv_data_close(struct player *pplayer)
 
   adv_data_phase_done(pplayer);
 
-  if (adv->government_want != NULL) {
-    delete[] adv->government_want;
-  }
+
+    NFCPP_FREE(adv->government_want);
+
 
   if (adv->dipl.adv_dipl_slots != NULL) {
     players_iterate(aplayer)
@@ -778,9 +778,7 @@ void adv_data_close(struct player *pplayer)
     delete[] adv->dipl.adv_dipl_slots;
   }
 
-  if (adv != NULL) {
-    delete adv;
-  }
+  NFC_FREE(adv);
 
   pplayer->server.adv = NULL;
 }

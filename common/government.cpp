@@ -486,11 +486,7 @@ static inline void government_free(struct government *pgovern)
     delete a;
   }
   FC_FREE(pgovern->ruler_titles);
-
-  if (NULL != pgovern->helptext) {
-    delete pgovern->helptext;
-    pgovern->helptext = NULL;
-  }
+  NFCN_FREE(pgovern->helptext);
 
   requirement_vector_free(&pgovern->reqs);
 }
@@ -525,9 +521,7 @@ void governments_free(void)
   for (i = 0; i < game.control.government_count; i++) {
     government_free(governments + i);
   }
-
-  delete[] governments;
-  governments = NULL;
+  FCPP_FREE(governments);
   game.control.government_count = 0;
 }
 

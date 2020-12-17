@@ -904,9 +904,7 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
         && (ml_range->max == MOVES_LEFT_INFINITY
             || ml_range->max > move_fragments)) {
       /* The number of move fragments is in range of the action enabler. */
-
       delete ml_range;
-
       return TRUE;
     }
 
@@ -1619,21 +1617,11 @@ void set_user_unit_type_flag_name(enum unit_type_flag_id id,
   int ufid = id - UTYF_USER_FLAG_1;
 
   fc_assert_ret(id >= UTYF_USER_FLAG_1 && id <= UTYF_LAST_USER_FLAG);
-
-  if (user_type_flags[ufid].name != NULL) {
-    FC_FREE(user_type_flags[ufid].name);
-    user_type_flags[ufid].name = NULL;
-  }
-
+  NFCN_FREE(user_type_flags[ufid].name);
   if (name && name[0] != '\0') {
     user_type_flags[ufid].name = fc_strdup(name);
   }
-
-  if (user_type_flags[ufid].helptxt != NULL) {
-    delete[] user_type_flags[ufid].helptxt;
-    user_type_flags[ufid].helptxt = NULL;
-  }
-
+  NFCNPP_FREE(user_type_flags[ufid].helptxt);
   if (helptxt && helptxt[0] != '\0') {
     user_type_flags[ufid].helptxt = fc_strdup(helptxt);
   }
@@ -2277,10 +2265,7 @@ void unit_classes_free(void)
     if (unit_classes[i].cache.subset_movers != NULL) {
       unit_class_list_destroy(unit_classes[i].cache.subset_movers);
     }
-    if (unit_classes[i].helptext != NULL) {
-      delete unit_classes[i].helptext;
-      unit_classes[i].helptext = NULL;
-    }
+    NFCN_FREE(unit_classes[i].helptext);
   }
 }
 
@@ -2381,9 +2366,7 @@ struct veteran_system *veteran_system_new(int count)
 void veteran_system_destroy(struct veteran_system *vsystem)
 {
   if (vsystem) {
-    if (vsystem->definitions) {
-      delete[] vsystem->definitions;
-    }
+    NFCPP_FREE(vsystem->definitions);
     delete[] vsystem;
   }
 }

@@ -85,16 +85,11 @@ void team_slots_free(void)
     if (NULL != tslot->team) {
       team_destroy(tslot->team);
     }
-    if (NULL != tslot->defined_name) {
-      delete[] tslot->defined_name;
-    }
-    if (NULL != tslot->rule_name) {
-      delete[] tslot->rule_name;
-    }
+    NFCPP_FREE(tslot->defined_name);
+    NFCPP_FREE(tslot->rule_name);
+
 #ifdef FREECIV_ENABLE_NLS
-    if (NULL != tslot->name_translation) {
-      delete[] tslot->name_translation;
-    }
+    NFCPP_FREE(tslot->name_translation);
 #endif /* FREECIV_ENABLE_NLS */
   }
   team_slots_iterate_end;
@@ -285,20 +280,14 @@ void team_slot_set_defined_name(struct team_slot *tslot,
   fc_assert_ret(NULL != tslot);
   fc_assert_ret(NULL != team_name);
 
-  if (NULL != tslot->defined_name) {
-    delete[] tslot->defined_name;
-  }
+  NFCPP_FREE(tslot->defined_name);
   tslot->defined_name = fc_strdup(team_name);
+  NFCPP_FREE(tslot->rule_name);
 
-  if (NULL != tslot->rule_name) {
-    delete[] tslot->rule_name;
-  }
   tslot->rule_name = fc_strdup(Qn_(team_name));
 
 #ifdef FREECIV_ENABLE_NLS
-  if (NULL != tslot->name_translation) {
-    delete[] tslot->name_translation;
-  }
+  NFCPP_FREE(tslot->name_translation);
   tslot->name_translation = fc_strdup(Q_(team_name));
 #endif /* FREECIV_ENABLE_NLS */
 }

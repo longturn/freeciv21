@@ -78,7 +78,6 @@ void color_system_free(struct color_system *colors)
   }
 
   delete[] colors->stdcolors;
-
   delete colors;
 }
 

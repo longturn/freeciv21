@@ -521,8 +521,7 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.sent[i]);
       }
     }
-    delete[] pc->phs.sent;
-    pc->phs.sent = NULL;
+    FCPP_FREE(pc->phs.sent);
   }
 
   if (pc->phs.received) {
@@ -531,8 +530,7 @@ static void free_packet_hashes(struct connection *pc)
         genhash_destroy(pc->phs.received[i]);
       }
     }
-    delete[] pc->phs.received;
-    pc->phs.received = NULL;
+    FCPP_FREE(pc->phs.received);
   }
 }
 

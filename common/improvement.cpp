@@ -62,11 +62,7 @@ void improvements_init(void)
  **************************************************************************/
 static void improvement_free(struct impr_type *p)
 {
-  if (NULL != p->helptext) {
-    delete p->helptext;
-    p->helptext = NULL;
-  }
-
+  NFCN_FREE(p->helptext);
   requirement_vector_free(&p->reqs);
   requirement_vector_free(&p->obsolete_by);
 }

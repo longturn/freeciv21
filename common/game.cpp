@@ -594,14 +594,8 @@ void game_ruleset_free(void)
     if (game.server.luadata != NULL) {
       secfile_destroy(game.server.luadata);
     }
-    if (game.server.ruledit.description_file != NULL) {
-      delete[] game.server.ruledit.description_file;
-      game.server.ruledit.description_file = NULL;
-    }
-    if (game.server.ruledit.nationlist != NULL) {
-      delete[] game.server.ruledit.nationlist;
-      game.server.ruledit.nationlist = NULL;
-    }
+    NFCNPP_FREE(game.server.ruledit.description_file);
+    NFCNPP_FREE(game.server.ruledit.nationlist);
     if (game.server.ruledit.embedded_nations != NULL) {
       for (i = 0; i < game.server.ruledit.embedded_nations_count; i++) {
         delete[] game.server.ruledit.embedded_nations[i];
@@ -640,20 +634,9 @@ void game_ruleset_free(void)
     game.calendar.calendar_fragment_name[i][0] = '\0';
   }
 
-  if (game.ruleset_summary != NULL) {
-    delete[] game.ruleset_summary;
-    game.ruleset_summary = NULL;
-  }
-
-  if (game.ruleset_description != NULL) {
-    delete[] game.ruleset_description;
-    game.ruleset_description = NULL;
-  }
-
-  if (game.ruleset_capabilities != NULL) {
-    delete[] game.ruleset_capabilities;
-    game.ruleset_capabilities = NULL;
-  }
+  NFCNPP_FREE(game.ruleset_summary);
+  NFCNPP_FREE(game.ruleset_description);
+  NFCNPP_FREE(game.ruleset_capabilities);
 }
 
 /**********************************************************************/ /**
@@ -816,14 +799,8 @@ void user_flag_init(struct user_flag *flag)
  **************************************************************************/
 void user_flag_free(struct user_flag *flag)
 {
-  if (flag->name != NULL) {
-    delete[] flag->name;
-    flag->name = NULL;
-  }
-  if (flag->helptxt != NULL) {
-    delete[] flag->helptxt;
-    flag->helptxt = NULL;
-  }
+  NFCNPP_FREE(flag->name);
+  NFCNPP_FREE(flag->helptxt);
 }
 
 /**********************************************************************/ /**
