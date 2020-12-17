@@ -1040,18 +1040,18 @@ void get_effect_req_text(const struct effect *peffect, char *buf,
 void get_effect_list_req_text(const struct effect_list *plist,
                               struct astring *astr)
 {
-  struct strvec *psv = strvec_new();
+  QVector<QString> *psv = new QVector<QString>;
   char req_text[512];
 
   effect_list_iterate(plist, peffect)
   {
     get_effect_req_text(peffect, req_text, sizeof(req_text));
-    strvec_append(psv, req_text);
+    psv->append(req_text);
   }
   effect_list_iterate_end;
 
-  strvec_to_and_list(psv, astr);
-  strvec_destroy(psv);
+  qstrvec_to_and_list(psv, astr);
+  delete psv;
 }
 
 /**********************************************************************/ /**
