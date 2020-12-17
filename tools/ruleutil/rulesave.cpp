@@ -337,16 +337,16 @@ static bool save_uclass_vec(struct section_file *sfile,
 /**********************************************************************/ /**
    Save strvec as ruleset vector of strings
  **************************************************************************/
-static bool save_strvec(struct section_file *sfile, struct strvec *to_save,
+static bool save_strvec(struct section_file *sfile, QVector<QString> *to_save,
                         const char *path, const char *entry)
 {
   if (to_save != NULL) {
-    int sect_count = strvec_size(to_save);
+    int sect_count = to_save->count();
     const char *sections[sect_count];
     int i;
 
     for (i = 0; i < sect_count; i++) {
-      sections[i] = strvec_get(to_save, i);
+      sections[i] = qUtf8Printable(to_save->at(i));
     }
 
     secfile_insert_str_vec(sfile, sections, sect_count, "%s.%s", path,
