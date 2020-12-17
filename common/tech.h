@@ -21,8 +21,6 @@
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec; /* Actually defined in "utility/string_vector.h". */
-
 /*
   [kept for amusement and posterity]
 typedef int Tech_type_id;

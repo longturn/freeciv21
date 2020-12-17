@@ -122,8 +122,6 @@ void randomize_base64url_string(char *s, size_t n);
 
 int compare_strings(const void *first, const void *second);
 int compare_strings_ptrs(const void *first, const void *second);
-int compare_strings_strvec(const char *const *first,
-                           const char *const *second);
 
 char *skip_leading_spaces(char *s);
 void remove_leading_spaces(char *s);

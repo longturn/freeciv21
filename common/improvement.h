@@ -23,7 +23,6 @@
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec; /* Actually defined in "utility/string_vector.h". */
 
 /* B_LAST is a value that is guaranteed to be larger than all
  * actual Impr_type_id values.  It is used as a flag value; it can

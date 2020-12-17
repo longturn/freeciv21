@@ -351,17 +351,6 @@ int compare_strings_ptrs(const void *first, const void *second)
 }
 
 /************************************************************************/ /**
-   Compares two strings, in the collating order of the current locale,
-   given pointers to the two string pointers.  Case-sensitive.
-   Designed to be called from strvec_sort().
- ****************************************************************************/
-int compare_strings_strvec(const char *const *first,
-                           const char *const *second)
-{
-  return fc_strcoll(*first, *second);
-}
-
-/************************************************************************/ /**
    Returns 's' incremented to first non-space character.
  ****************************************************************************/
 char *skip_leading_spaces(char *s)

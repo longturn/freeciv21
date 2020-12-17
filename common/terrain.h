@@ -22,7 +22,6 @@
 #include "unittype.h"
 
 struct base_type;
-struct strvec; /* Actually defined in "utility/string_vector.h". */
 struct rgbcolor;
 
 /* Used in the network protocol. */

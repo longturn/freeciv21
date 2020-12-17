@@ -22,8 +22,6 @@
 #include "requirements.h"
 
 struct astring; /* Actually defined in "utility/astring.h". */
-struct strvec;  /* Actually defined in "utility/string_vector.h". */
-
 struct ai_type;
 
 /* U_LAST is a value which is guaranteed to be larger than all

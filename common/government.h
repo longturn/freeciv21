@@ -21,8 +21,6 @@
 #include "name_translation.h"
 #include "requirements.h"
 
-struct strvec; /* Actually defined in "utility/string_vector.h". */
-
 struct ruler_title; /* Opaque type. */
 
 /* G_LAST is a value guaranteed to be larger than any valid
