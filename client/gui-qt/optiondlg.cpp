@@ -662,7 +662,7 @@ void option_dialog::add_option(struct option *poption)
     values = option_bitwise_values(poption);
     vbox_layout = new QVBoxLayout();
     for (j = 0; j < values->count(); j++) {
-      check = new QCheckBox(_(values->at(j)));
+      check = new QCheckBox(_(qUtf8Printable(values->at(j))));
       vbox_layout->addWidget(check);
     }
     group->setLayout(vbox_layout);
