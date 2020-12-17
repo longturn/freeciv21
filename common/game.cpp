@@ -68,7 +68,7 @@ bool is_server(void) { return am_i_server; }
 /**********************************************************************/ /**
    Set program type to server.
  **************************************************************************/
-void i_am_server(void) { am_i_server = TRUE; }
+void i_am_server(void) { am_i_server = true; }
 
 /**********************************************************************/ /**
    Set program type to client.
@@ -270,7 +270,7 @@ static void game_defaults(bool keep_ruleset_value)
   game.info.happyborders = GAME_DEFAULT_HAPPYBORDERS;
   game.info.heating = 0;
   game.info.is_edit_mode = false;
-  game.info.is_new_game = TRUE;
+  game.info.is_new_game = true;
   game.info.killstack = GAME_DEFAULT_KILLSTACK;
   game.info.killcitizen = GAME_DEFAULT_KILLCITIZEN;
   game.calendar.negative_year_label[0] = '\0';
@@ -302,13 +302,13 @@ static void game_defaults(bool keep_ruleset_value)
   game.scenario.is_scenario = false;
   game.scenario.name[0] = '\0';
   game.scenario.authors[0] = '\0';
-  game.scenario.players = TRUE;
+  game.scenario.players = true;
   game.scenario.startpos_nations = false;
   game.scenario.handmade = false;
   game.scenario.prevent_new_cities = false;
-  game.scenario.lake_flooding = TRUE;
-  game.scenario.have_resources = TRUE;
-  game.scenario.ruleset_locked = TRUE;
+  game.scenario.lake_flooding = true;
+  game.scenario.have_resources = true;
+  game.scenario.ruleset_locked = true;
   game.scenario.save_random = false;
   game.scenario.allow_ai_type_fallback = false;
 
@@ -393,9 +393,9 @@ static void game_defaults(bool keep_ruleset_value)
     game.server.save_compress_type = GAME_DEFAULT_COMPRESS_TYPE;
     sz_strlcpy(game.server.save_name, GAME_DEFAULT_SAVE_NAME);
     game.server.save_nturns = GAME_DEFAULT_SAVETURNS;
-    game.server.save_options.save_known = TRUE;
-    game.server.save_options.save_private_map = TRUE;
-    game.server.save_options.save_starts = TRUE;
+    game.server.save_options.save_known = true;
+    game.server.save_options.save_private_map = true;
+    game.server.save_options.save_starts = true;
     game.server.savepalace = GAME_DEFAULT_SAVEPALACE;
     game.server.scorelog = GAME_DEFAULT_SCORELOG;
     game.server.scoreloglevel = GAME_DEFAULT_SCORELOGLEVEL;
@@ -676,7 +676,7 @@ bool is_player_phase(const struct player *pplayer, int phase)
 {
   switch (game.info.phase_mode) {
   case PMT_CONCURRENT:
-    return TRUE;
+    return true;
     break;
   case PMT_PLAYERS_ALTERNATE:
     return player_number(pplayer) == phase;
@@ -691,7 +691,7 @@ bool is_player_phase(const struct player *pplayer, int phase)
 
   fc_assert_msg(false, "Unrecognized phase mode %d in is_player_phase().",
                 phase);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

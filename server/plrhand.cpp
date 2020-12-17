@@ -145,7 +145,7 @@ void kill_player(struct player *pplayer)
     player_list_iterate(team_members(pplayer->team), pteam_member)
     {
       if (pteam_member->is_alive) {
-        someone_alive = TRUE;
+        someone_alive = true;
         break;
       }
     }
@@ -176,7 +176,7 @@ void kill_player(struct player *pplayer)
       /* Transfer city to original owner, kill all its units outside of
          a radius of 3, give verbose messages of every unit transferred,
          and raze buildings according to raze chance (also removes palace) */
-      if (transfer_city(pcity->original, pcity, 3, TRUE, TRUE, TRUE, TRUE)) {
+      if (transfer_city(pcity->original, pcity, 3, true, true, true, true)) {
         script_server_signal_emit("city_transferred", pcity, pplayer,
                                   pcity->original, "death-back_to_original");
       }
@@ -192,7 +192,7 @@ void kill_player(struct player *pplayer)
       qDebug("Civil war strikes the remaining empire of %s", pplayer->name);
       /* out of sheer cruelty we reanimate the player
        * so he can behold what happens to his empire */
-      pplayer->is_alive = TRUE;
+      pplayer->is_alive = true;
       (void) civil_war(pplayer);
     } else {
       qDebug("The empire of %s is too small for civil war.", pplayer->name);
@@ -214,7 +214,7 @@ void kill_player(struct player *pplayer)
     game.server.savepalace = false;
 
     qDebug("Barbarians take the empire of %s", pplayer->name);
-    adv_data_phase_init(barbarians, TRUE);
+    adv_data_phase_init(barbarians, true);
 
     /* Transfer any remaining cities */
     city_list_iterate_safe(pplayer->cities, pcity)
@@ -502,7 +502,7 @@ void handle_player_change_government(struct player *pplayer,
   /* Now see if the revolution is instantaneous. */
   if (turns <= 0
       && pplayer->target_government != game.government_during_revolution) {
-    government_change(pplayer, pplayer->target_government, TRUE);
+    government_change(pplayer, pplayer->target_government, true);
     return;
   } else if (turns > 0) {
     notify_player(pplayer, NULL, E_REVOLT_START, ftc_server,
@@ -581,7 +581,7 @@ void update_revolution(struct player *pplayer)
        * the new government. */
       log_debug("Update: finishing revolution for %s.",
                 player_name(pplayer));
-      government_change(pplayer, pplayer->target_government, TRUE);
+      government_change(pplayer, pplayer->target_government, true);
     } else {
       /* If the revolution is over but there's no target government set,
        * alert the player. */
@@ -689,7 +689,7 @@ void update_players_after_alliance_breakup(
   send_player_all_c(pplayer2, NULL);
   remove_allied_visibility(pplayer, pplayer2, pplayer_seen_units);
   remove_allied_visibility(pplayer2, pplayer, pplayer2_seen_units);
-  resolve_unit_stacks(pplayer, pplayer2, TRUE);
+  resolve_unit_stacks(pplayer, pplayer2, true);
 }
 
 /**********************************************************************/ /**
@@ -704,7 +704,7 @@ static void maybe_claim_base(struct tile *ptile, struct player *new_owner,
   {
     if (unit_owner(punit) == new_owner
         && tile_has_claimable_base(ptile, unit_type_get(punit))) {
-      claim = TRUE;
+      claim = true;
       break;
     }
   }
@@ -1212,7 +1212,7 @@ static void package_player_info(struct player *plr,
   players_iterate_end;
 
   if (plr->rgb != NULL) {
-    packet->color_valid = TRUE;
+    packet->color_valid = true;
     packet->color_red = plr->rgb->r;
     packet->color_green = plr->rgb->g;
     packet->color_blue = plr->rgb->b;
@@ -1221,7 +1221,7 @@ static void package_player_info(struct player *plr,
      * '/list colors' etc. */
     const struct rgbcolor *preferred = player_preferred_color(plr);
     if (preferred != NULL) {
-      packet->color_valid = TRUE;
+      packet->color_valid = true;
       packet->color_red = preferred->r;
       packet->color_green = preferred->g;
       packet->color_blue = preferred->b;
@@ -1272,7 +1272,7 @@ static void package_player_info(struct player *plr,
     packet->target_government = packet->government;
     memset(&packet->real_embassy, 0, sizeof(packet->real_embassy));
     if (receiver && player_has_real_embassy(plr, receiver)) {
-      packet->real_embassy[player_index(receiver)] = TRUE;
+      packet->real_embassy[player_index(receiver)] = true;
     }
 
     BV_CLR_ALL(packet->gives_shared_vision);
@@ -1528,7 +1528,7 @@ bool player_color_changeable(const struct player *pplayer,
     }
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1824,7 +1824,7 @@ void server_remove_player(struct player *pplayer)
     trade_routes_iterate_safe(pcity, proute)
     {
       struct trade_route *pback =
-          remove_trade_route(pcity, proute, TRUE, TRUE);
+          remove_trade_route(pcity, proute, true, true);
 
       FC_FREE(proute);
       FC_FREE(pback);
@@ -1835,7 +1835,7 @@ void server_remove_player(struct player *pplayer)
 
   /* We have to clear all player data before the ai memory is freed because
    * some function may depend on it. */
-  player_clear(pplayer, TRUE);
+  player_clear(pplayer, true);
 
   if (!map_is_empty()) {
     remove_player_from_maps(pplayer);
@@ -1963,7 +1963,7 @@ static bool server_player_name_is_allowed(const struct connection *caller,
 
   /* Any name from the default list is always allowed. */
   if (NULL != pnation && NULL != nation_leader_by_name(pnation, name)) {
-    return TRUE;
+    return true;
   }
 
   /* To prevent abuse, only players with HACK access (usually local
@@ -1977,7 +1977,7 @@ static bool server_player_name_is_allowed(const struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2012,7 +2012,7 @@ bool server_player_set_name_full(const struct connection *caller,
       log_debug("Name of player nb %d set to \"%s\".",
                 player_number(pplayer), real_name);
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
-      return TRUE; /* Success! */
+      return true; /* Success! */
     } else {
       qDebug("Failed to set the name of the player nb %d to \"%s\": %s",
              player_number(pplayer), real_name, error_buf);
@@ -2037,7 +2037,7 @@ bool server_player_set_name_full(const struct connection *caller,
         qDebug("Name of player nb %d set to \"%s\" instead.",
                player_number(pplayer), test);
         fc_strlcpy(pplayer->name, test, sizeof(pplayer->name));
-        return TRUE;
+        return true;
       } else {
         log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
                   player_number(pplayer), test, error_buf);
@@ -2053,7 +2053,7 @@ bool server_player_set_name_full(const struct connection *caller,
     qDebug("Name of player nb %d set to \"%s\".", player_number(pplayer),
            real_name);
     fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
-    return TRUE;
+    return true;
   } else {
     log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
               player_number(pplayer), real_name, error_buf);
@@ -2067,7 +2067,7 @@ bool server_player_set_name_full(const struct connection *caller,
       qDebug("Name of player nb %d to \"%s\".", player_number(pplayer),
              real_name);
       fc_strlcpy(pplayer->name, real_name, sizeof(pplayer->name));
-      return TRUE;
+      return true;
     } else {
       log_debug("Failed to set the name of the player nb %d to \"%s\": %s",
                 player_number(pplayer), real_name, error_buf);
@@ -2089,7 +2089,7 @@ void server_player_set_name(struct player *pplayer, const char *name)
   bool ret;
 
   ret = server_player_set_name_full(NULL, pplayer, NULL, name, NULL, 0);
-  fc_assert(TRUE == ret);
+  fc_assert(true == ret);
 }
 
 /**********************************************************************/ /**
@@ -2605,13 +2605,13 @@ static struct player *split_player(struct player *pplayer)
   if (!cplayer) {
     return NULL;
   }
-  server_player_init(cplayer, TRUE, TRUE);
+  server_player_init(cplayer, true, true);
 
   /* Rebel will always be an AI player */
   rebel_nation =
-      pick_a_nation(nation_of_player(pplayer)->server.civilwar_nations, TRUE,
+      pick_a_nation(nation_of_player(pplayer)->server.civilwar_nations, true,
                     false, NOT_A_BARBARIAN);
-  player_nation_defaults(cplayer, rebel_nation, TRUE);
+  player_nation_defaults(cplayer, rebel_nation, true);
 
   fc_assert(game_was_started());
   /* Find a color for the new player. */
@@ -2621,7 +2621,7 @@ static struct player *split_player(struct player *pplayer)
   send_player_info_c(cplayer, NULL);
 
   sz_strlcpy(cplayer->username, _(ANON_USER_NAME));
-  cplayer->unassigned_user = TRUE;
+  cplayer->unassigned_user = true;
   cplayer->is_connected = false;
   cplayer->government = init_government_of_nation(nation_of_player(cplayer));
   fc_assert(cplayer->revolution_finishes < 0);
@@ -2682,7 +2682,7 @@ static struct player *split_player(struct player *pplayer)
     }
   }
   advance_index_iterate_end;
-  cplayer->phase_done = TRUE;        /* Have other things to think
+  cplayer->phase_done = true;        /* Have other things to think
                                         about - paralysis */
   BV_CLR_ALL(cplayer->real_embassy); /* all embassies destroyed */
   research_update(new_research);
@@ -2726,8 +2726,8 @@ static struct player *split_player(struct player *pplayer)
 
   /* Not sure if this is necessary, but might be a good idea
    * to avoid doing some ai calculations with bogus data. */
-  adv_data_phase_init(cplayer, TRUE);
-  CALL_PLR_AI_FUNC(phase_begin, cplayer, cplayer, TRUE);
+  adv_data_phase_init(cplayer, true);
+  CALL_PLR_AI_FUNC(phase_begin, cplayer, cplayer, true);
   CALL_PLR_AI_FUNC(gained_control, cplayer, cplayer);
   CALL_PLR_AI_FUNC(split_by_civil_war, pplayer, pplayer, cplayer);
   CALL_PLR_AI_FUNC(created_by_civil_war, cplayer, pplayer, cplayer);
@@ -2761,7 +2761,7 @@ bool civil_war_possible(struct player *pplayer, bool conquering_city,
     return game.server.civilwarsize < GAME_MAX_CIVILWARSIZE
            && n >= game.server.civilwarsize;
   } else {
-    return TRUE;
+    return true;
   }
 }
 
@@ -2887,7 +2887,7 @@ struct player *civil_war(struct player *pplayer)
     {
       if (unit_owner(punit) == pplayer
           && unit_has_type_flag(punit, UTYF_GAMELOSS)) {
-        gameloss_present = TRUE;
+        gameloss_present = true;
         break;
       }
     }
@@ -3026,7 +3026,7 @@ void handle_player_phase_done(struct player *pplayer, int turn)
      * probably didn't actually mean to end their turn! */
     return;
   }
-  pplayer->phase_done = TRUE;
+  pplayer->phase_done = true;
 
   check_for_full_turn_done();
 
@@ -3134,7 +3134,7 @@ void send_delegation_info(const struct connection *pconn)
         notify_conn(pconn->self, NULL, E_CONNECTION, ftc_server,
                     _("Control of player '%s' is delegated to you."),
                     player_name(aplayer));
-        any_delegations = TRUE;
+        any_delegations = true;
       }
     }
     players_iterate_end;

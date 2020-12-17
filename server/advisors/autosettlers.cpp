@@ -192,12 +192,12 @@ adv_want adv_settlers_road_bonus(struct tile *ptile, struct road_type *proad)
             build_rnbr = road_number(extra_road_get(punit->activity_target));
 
             if (build_rnbr == rnbr) {
-              real_road[i] = TRUE;
-              potential_road[i] = TRUE;
+              real_road[i] = true;
+              potential_road[i] = true;
             }
             for (j = 0; !potential_road[i] && j < dep_count; j++) {
               if (build_rnbr == dep_rnbr[j]) {
-                potential_road[i] = TRUE;
+                potential_road[i] = true;
               }
             }
           }
@@ -320,9 +320,9 @@ static void consider_settler_action(
   }
 
   if (new_tile_value > old_tile_value) {
-    improves = TRUE;
+    improves = true;
   } else if (new_tile_value == old_tile_value && extra > 0) {
-    improves = TRUE;
+    improves = true;
   } else {
     improves = false;
   }
@@ -378,7 +378,7 @@ static void consider_settler_action(
             && old_tile_value > *best_old_tile_value)) {
       if (in_use) {
         *best_value = total_value;
-        *improve_worked = TRUE;
+        *improve_worked = true;
       } else {
         *best_value = new_tile_value;
         *improve_worked = false;
@@ -461,7 +461,7 @@ adv_want settler_evaluate_improvements(struct unit *punit,
     city_tile_iterate_index(city_map_radius_sq_get(pcity), pcenter, ptile,
                             cindex)
     {
-      bool consider = TRUE;
+      bool consider = true;
       bool in_use = (tile_worked(ptile) == pcity);
 
       if (!in_use && !city_can_work_tile(pcity, ptile)) {
@@ -822,7 +822,7 @@ struct city *settler_evaluate_city_requests(struct unit *punit,
   {
     worker_task_list_iterate(pcity->task_reqs, ptask)
     {
-      bool consider = TRUE;
+      bool consider = true;
 
       /* Do not go to tiles that already have workers there. */
       unit_list_iterate(ptask->ptile->units, aunit)
@@ -1074,7 +1074,7 @@ bool auto_settler_setup_work(struct player *pplayer, struct unit *punit,
         send_unit_info(NULL, punit); /* FIXME: probably duplicate */
 
         UNIT_LOG(LOG_DEBUG, punit, "reached its worksite and started work");
-        working = TRUE;
+        working = true;
       } else if (alive) {
         UNIT_LOG(LOG_DEBUG, punit,
                  "didn't start work yet; got to (%d, %d) with "
@@ -1106,7 +1106,7 @@ bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
   unit_list_iterate(ptile->units, defender)
   {
     if (is_military_unit(defender)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1115,7 +1115,7 @@ bool adv_settler_safe_tile(const struct player *pplayer, struct unit *punit,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

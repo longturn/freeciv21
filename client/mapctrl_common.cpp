@@ -148,8 +148,8 @@ static void define_tiles_within_rectangle(bool append)
        */
       pcity = tile_city(ptile);
       if (pcity != NULL && city_owner(pcity) == client_player()) {
-        mapdeco_set_highlight(ptile, TRUE);
-        found_any_cities = tiles_hilited_cities = TRUE;
+        mapdeco_set_highlight(ptile, true);
+        found_any_cities = tiles_hilited_cities = true;
       }
       unit_list_iterate(ptile->units, punit)
       {
@@ -249,7 +249,7 @@ void update_selection_rectangle(float canvas_x, float canvas_y)
   }
 
   /* It is currently drawn only to the screen, not backing store */
-  rectangle_active = TRUE;
+  rectangle_active = true;
   draw_selection_rectangle(canvas_x, canvas_y, rec_w, rec_h);
   rec_corner_x = canvas_x;
   rec_corner_y = canvas_y;
@@ -319,7 +319,7 @@ void key_city_show_open(struct city *pcity)
   if (can_client_change_view() && pcity) {
     if (pcity) {
       pcity->client.city_opened = true;
-      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, false);
+      refresh_city_mapcanvas(pcity, pcity->tile, true, false);
     }
   }
 }
@@ -329,7 +329,7 @@ void key_city_hide_open(struct city *pcity)
   if (can_client_change_view() && pcity) {
     if (pcity) {
       pcity->client.city_opened = false;
-      refresh_city_mapcanvas(pcity, pcity->tile, TRUE, false);
+      refresh_city_mapcanvas(pcity, pcity->tile, true, false);
     }
   }
 }
@@ -362,7 +362,7 @@ bool clipboard_copy_production(struct tile *ptile)
       create_event(ptile, E_BAD_COMMAND, ftc_client,
                    _("You don't know how to build %s!"),
                    unit_name_translation(punit));
-      return TRUE;
+      return true;
     }
     clipboard.kind = VUT_UTYPE;
     clipboard.value.utype = unit_type_get(punit);
@@ -373,7 +373,7 @@ bool clipboard_copy_production(struct tile *ptile)
       ptile, E_CITY_PRODUCTION_CHANGED, /* ? */
       ftc_client, _("Copy %s to clipboard."),
       universal_name_translation(&clipboard, buffer, sizeof(buffer)));
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -461,7 +461,7 @@ void maybe_activate_keyboardless_goto(int canvas_x, int canvas_y)
   if (ptile && get_num_units_in_focus() > 0
       && !same_pos(keyboardless_goto_start_tile, ptile)
       && can_client_issue_orders()) {
-    keyboardless_goto_active = TRUE;
+    keyboardless_goto_active = true;
     request_unit_goto(ORDER_LAST, ACTION_NONE, -1);
   }
 }
@@ -599,7 +599,7 @@ void update_turn_done_button_state(void)
     if (waiting_for_end_turn) {
       send_turn_done();
     } else {
-      update_turn_done_button(TRUE);
+      update_turn_done_button(true);
     }
   }
 }

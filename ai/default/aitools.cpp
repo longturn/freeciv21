@@ -237,13 +237,13 @@ static bool dai_gothere_bodyguard(struct ai_type *ait, struct unit *punit,
                "want bodyguard @(%d, %d) danger=%d, my_def=%d",
                TILE_XY(dest_tile), danger, my_def);
       aiguard_request_guard(ait, punit);
-      bg_needed = TRUE;
+      bg_needed = true;
     } else {
       aiguard_clear_guard(ait, punit);
       bg_needed = false;
     }
   } else if (guard != NULL) {
-    bg_needed = TRUE;
+    bg_needed = true;
   }
 
   /* What if we have a bodyguard, but don't need one? */
@@ -269,7 +269,7 @@ bool dai_gothere(struct ai_type *ait, struct player *pplayer,
 
   if (same_pos(dest_tile, unit_tile(punit)) || punit->moves_left <= 0) {
     /* Nowhere to go */
-    return TRUE;
+    return true;
   }
 
   /* See if we need a bodyguard at our destination */
@@ -392,7 +392,7 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
                                struct tile *ptile,
                                struct pf_parameter *parameter)
 {
-  bool alive = TRUE;
+  bool alive = true;
   struct pf_map *pfm;
   struct pf_path *path;
 
@@ -409,18 +409,18 @@ bool dai_unit_goto_constrained(struct ai_type *ait, struct unit *punit,
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: already there!");
     send_unit_info(NULL, punit);
 
-    return TRUE;
+    return true;
   } else if (!goto_is_sane(punit, ptile)) {
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: 'insane' goto!");
     punit->activity = ACTIVITY_IDLE;
     send_unit_info(NULL, punit);
 
-    return TRUE;
+    return true;
   } else if (punit->moves_left == 0) {
     UNIT_LOG(LOG_DEBUG, punit, "constrained goto: no moves left!");
     send_unit_info(NULL, punit);
 
-    return TRUE;
+    return true;
   }
 
   pfm = pf_map_new(parameter);
@@ -450,7 +450,7 @@ bool goto_is_sane(struct unit *punit, struct tile *ptile)
   bool can_get_there = false;
 
   if (same_pos(unit_tile(punit), ptile)) {
-    can_get_there = TRUE;
+    can_get_there = true;
   } else {
     struct pf_parameter parameter;
     struct pf_map *pfm;
@@ -459,7 +459,7 @@ bool goto_is_sane(struct unit *punit, struct tile *ptile)
     pfm = pf_map_new(&parameter);
 
     if (pf_map_move_cost(pfm, ptile) != PF_IMPOSSIBLE_MC) {
-      can_get_there = TRUE;
+      can_get_there = true;
     }
     pf_map_destroy(pfm);
   }
@@ -776,7 +776,7 @@ void dai_unit_new_task(struct ai_type *ait, struct unit *punit,
 bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
 {
   CHECK_UNIT(punit);
-  fc_assert_ret_val(unit_owner(punit) == city_owner(pcity), TRUE);
+  fc_assert_ret_val(unit_owner(punit) == city_owner(pcity), true);
 
   if (punit->homecity == 0 && !unit_has_type_role(punit, L_EXPLORER)) {
     /* This unit doesn't pay any upkeep while it doesn't have a homecity,
@@ -791,7 +791,7 @@ bool dai_unit_make_homecity(struct unit *punit, struct city *pcity)
       && pcity->surplus[O_FOOD] >= unit_type_get(punit)->upkeep[O_FOOD]) {
     unit_do_action(unit_owner(punit), punit->id, pcity->id, 0, "",
                    ACTION_HOME_CITY);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -845,8 +845,8 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
   struct city *tcity;
 
   CHECK_UNIT(punit);
-  fc_assert_ret_val(is_ai(unit_owner(punit)), TRUE);
-  fc_assert_ret_val(is_tiles_adjacent(unit_tile(punit), ptile), TRUE);
+  fc_assert_ret_val(is_ai(unit_owner(punit)), true);
+  fc_assert_ret_val(is_tiles_adjacent(unit_tile(punit), ptile), true);
 
   unit_activity_handling(punit, ACTIVITY_IDLE);
   /* FIXME: try the next action if the unit tried to do an illegal action.
@@ -921,7 +921,7 @@ bool dai_unit_attack(struct ai_type *ait, struct unit *punit,
                    ACTION_TRANSPORT_DISEMBARK2);
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, false, TRUE);
+    (void) unit_move_handling(punit, ptile, false, true);
   }
   alive = (game_unit_by_number(sanity) != NULL);
 
@@ -1062,7 +1062,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
                    action_number(paction));
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, false, TRUE);
+    (void) unit_move_handling(punit, ptile, false, true);
   }
 
   /* handle the results */
@@ -1073,7 +1073,7 @@ bool dai_unit_move(struct ai_type *ait, struct unit *punit,
         && def_ai_unit_data(bodyguard, ait)->charge == punit->id) {
       dai_unit_bodyguard_move(ait, bodyguard, ptile);
     }
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1164,7 +1164,7 @@ bool dai_choose_role_unit(struct ai_type *ait, struct player *pplayer,
 
     choice->need_boat = need_boat;
 
-    return TRUE;
+    return true;
   }
 
   return false;

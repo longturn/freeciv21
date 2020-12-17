@@ -112,7 +112,7 @@ bool rgbcolor_load(struct section_file *file, struct rgbcolor **prgbcolor,
   rgbcolor_check(colorpath, r, g, b);
   *prgbcolor = rgbcolor_new(r, g, b);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -154,7 +154,7 @@ bool rgbcolor_to_hex(const struct rgbcolor *prgbcolor, char *hex,
   fc_snprintf(hex, hex_len, "#%06x",
               (prgbcolor->r * 256 + prgbcolor->g) * 256 + prgbcolor->b);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -187,7 +187,7 @@ bool rgbcolor_from_hex(struct rgbcolor **prgbcolor, const char *hex)
 
   *prgbcolor = rgbcolor_new(r, g, b);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

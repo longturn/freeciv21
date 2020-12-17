@@ -182,7 +182,7 @@ static struct tile *place_starting_unit(struct tile *starttile,
   {
     if (tile_has_extra(ptile, pextra)) {
       tile_extra_rm_apply(ptile, pextra);
-      hut_present = TRUE;
+      hut_present = true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -353,7 +353,7 @@ static void do_team_placement(const struct team_placement_config *pconfig,
               }
             }
             delta += base_delta;
-            base_delta_calculated = TRUE;
+            base_delta_calculated = true;
           }
         } else if (t1 < t2) {
           ptile2 = pconfig->startpos[j];
@@ -380,14 +380,14 @@ static void do_team_placement(const struct team_placement_config *pconfig,
               }
             }
             delta += base_delta;
-            base_delta_calculated = TRUE;
+            base_delta_calculated = true;
           }
         } else {
           continue;
         }
 
         if (delta <= 0) {
-          repeat = TRUE;
+          repeat = true;
           auto pnew = new team_placement_state;
           pnew->startpos = new int[pconfig->total_startpos_num];
           memcpy(pnew->startpos, pstate->startpos, state_array_size);
@@ -506,7 +506,7 @@ void init_new_game(void)
           player_startpos[player_index(pplayer)] = ptile;
           startpos_list_erase(targeted_list, choice);
           players_to_place--;
-          removed = TRUE;
+          removed = true;
           qDebug("Start position (%d, %d) exactly matches player %s (%s).",
                  TILE_XY(ptile), player_name(pplayer),
                  nation_rule_name(pnation));
@@ -1167,7 +1167,7 @@ void handle_single_want_hack_req(
   }
 
   if (you_have_hack) {
-    conn_set_access(pc, ALLOW_HACK, TRUE);
+    conn_set_access(pc, ALLOW_HACK, true);
   }
 
   dsend_packet_single_want_hack_reply(pc, you_have_hack);

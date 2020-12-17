@@ -188,10 +188,10 @@ bool script_client_init(void)
   if (main_fcl != NULL) {
     fc_assert_ret_val(main_fcl->state != NULL, false);
 
-    return TRUE;
+    return true;
   }
 
-  main_fcl = luascript_new(script_client_output, TRUE);
+  main_fcl = luascript_new(script_client_output, true);
   if (main_fcl == NULL) {
     luascript_destroy(main_fcl); /* TODO: main_fcl is NULL here... */
     main_fcl = NULL;
@@ -221,7 +221,7 @@ bool script_client_init(void)
   luascript_signal_init(main_fcl);
   script_client_signal_create();
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

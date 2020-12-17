@@ -80,7 +80,7 @@ bool luascript_func_check(struct fc_lua *fcl,
                           QVector<QString> *missing_func_required,
                           QVector<QString> *missing_func_optional)
 {
-  bool ret = TRUE;
+  bool ret = true;
 
   fc_assert_ret_val(fcl, false);
   fc_assert_ret_val(fcl->funcs, false);
@@ -221,7 +221,7 @@ bool luascript_func_call_valist(struct fc_lua *fcl, const char *func_name,
   /* Call the function with nargs arguments, return 1 results */
   if (luascript_call(fcl, pfunc->nargs, pfunc->nreturns, NULL) == 0) {
     /* Successful call to the script. */
-    success = TRUE;
+    success = true;
 
     luascript_pop_returns(fcl, func_name, pfunc->nreturns,
                           pfunc->return_types, args);

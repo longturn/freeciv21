@@ -102,7 +102,7 @@ section_file *netfile_get_section_file(const QUrl &url, const nf_errmsg &cb)
   if (netfile_download_file_core(url, &buffer, cb)) {
     auto file = fz_from_memory(buffer.buffer());
     // Parse
-    return secfile_from_stream(file, TRUE);
+    return secfile_from_stream(file, true);
   }
 
   return nullptr;

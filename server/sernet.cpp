@@ -187,7 +187,7 @@ void really_close_connections()
 static void server_conn_close_callback(struct connection *pconn)
 {
   /* Do as little as possible here to avoid recursive evil. */
-  pconn->server.is_closing = TRUE;
+  pconn->server.is_closing = true;
 }
 
 /*************************************************************************/ /**

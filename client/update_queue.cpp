@@ -200,7 +200,7 @@ void update_queue_thaw(void)
   update_queue_frozen_level--;
   if (0 == update_queue_frozen_level && !update_queue_has_idle_callback
       && NULL != update_queue && 0 < update_queue->size()) {
-    update_queue_has_idle_callback = TRUE;
+    update_queue_has_idle_callback = true;
     add_idle_callback(update_unqueue, NULL);
   } else if (0 > update_queue_frozen_level) {
     qCritical("update_queue_frozen_level < 0, repairing...");
@@ -302,7 +302,7 @@ static void update_queue_push(uq_callback_t callback,
   update_queue->enqueue(qMakePair(callback, uq_data));
 
   if (!update_queue_has_idle_callback && !update_queue_is_frozen()) {
-    update_queue_has_idle_callback = TRUE;
+    update_queue_has_idle_callback = true;
     add_idle_callback(update_unqueue, NULL);
   }
 }
@@ -363,7 +363,7 @@ bool update_queue_has_callback_full(uq_callback_t callback,
     if (NULL != free_data_func) {
       *free_data_func = uq_data->free_data_func;
     }
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -510,7 +510,7 @@ static void menus_update_callback(void *data)
  ****************************************************************************/
 void menus_init(void)
 {
-  update_queue_add(menus_update_callback, FC_INT_TO_PTR(TRUE));
+  update_queue_add(menus_update_callback, FC_INT_TO_PTR(true));
 }
 
 /************************************************************************/ /**

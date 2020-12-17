@@ -229,7 +229,7 @@ static void redraw_overview(void)
 /************************************************************************/ /**
    Mark the overview as "dirty" so that it will be redrawn soon.
  ****************************************************************************/
-static void dirty_overview(void) { overview_dirty = TRUE; }
+static void dirty_overview(void) { overview_dirty = true; }
 
 /************************************************************************/ /**
    Redraw the overview if it is "dirty".

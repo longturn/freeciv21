@@ -105,7 +105,7 @@ static bool fcdb_set_option(const char *key, const char *value,
     FC_FREE(oldopt);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -145,7 +145,7 @@ static bool fcdb_load_config(const char *filename)
    * complain about unused entries (e.g. those not in [fcdb]). */
   secfile_destroy(secfile);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -204,7 +204,7 @@ void fcdb_free(void)
 /************************************************************************/ /**
    Dummy function - Initialize freeciv database system
  ****************************************************************************/
-bool fcdb_init(const char *conf_file) { return TRUE; }
+bool fcdb_init(const char *conf_file) { return true; }
 
 /************************************************************************/ /**
    Dummy function - Return the selected fcdb config value.

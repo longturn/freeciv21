@@ -217,7 +217,7 @@ bool is_city_channel_tile(const struct unit_class *punitclass,
       } else if (piter != pexclude
                  && is_native_to_class(punitclass, tile_terrain(piter),
                                        tile_extras(piter))) {
-        found = TRUE;
+        found = true;
         break;
       } else if (piter != pexclude && NULL != tile_city(piter)) {
         tile_list_append(process_queue, piter);
@@ -256,7 +256,7 @@ bool can_exist_at_tile(const struct civ_map *nmap,
           || is_native_near_tile(nmap, utype_class(utype), ptile)
           || (1 == game.info.citymindist
               && is_city_channel_tile(utype_class(utype), ptile, NULL)))) {
-    return TRUE;
+    return true;
   }
 
   /* UTYF_COAST_STRICT unit cannot exist in an ocean tile without access to
@@ -303,18 +303,18 @@ bool is_native_to_class(const struct unit_class *punitclass,
 {
   if (!pterrain) {
     /* Unknown is considered native terrain */
-    return TRUE;
+    return true;
   }
 
   if (BV_ISSET(pterrain->native_to, uclass_index(punitclass))) {
-    return TRUE;
+    return true;
   }
 
   if (extras != NULL) {
     extra_type_list_iterate(punitclass->cache.native_tile_extras, pextra)
     {
       if (BV_ISSET(*extras, extra_index(pextra))) {
-        return TRUE;
+        return true;
       }
     }
     extra_type_list_iterate_end;
@@ -336,10 +336,10 @@ bool is_native_move(const struct unit_class *punitclass,
 
   if (is_native_to_class(punitclass, tile_terrain(dst_tile), NULL)) {
     /* We aren't using extras to make the destination native. */
-    return TRUE;
+    return true;
   } else if (!is_native_tile_to_class(punitclass, src_tile)) {
     /* Disembarking or leaving port, so ignore road connectivity. */
-    return TRUE;
+    return true;
   } else if (is_native_to_class(punitclass, tile_terrain(src_tile), NULL)) {
     /* Native source terrain depends entirely on destination tile nativity.
      */
@@ -354,7 +354,7 @@ bool is_native_move(const struct unit_class *punitclass,
         && is_native_tile_to_class(punitclass, dst_tile)) {
       /* If there is one, and the destination is native, the move is native.
        */
-      return TRUE;
+      return true;
     }
   }
   extra_type_list_iterate_end;
@@ -365,7 +365,7 @@ bool is_native_move(const struct unit_class *punitclass,
       continue;
     } else if (!is_extra_caused_by(pextra, EC_ROAD)) {
       /* The destination is native because of a non-road extra. */
-      return TRUE;
+      return true;
     }
 
     proad = extra_road_get(pextra);
@@ -376,7 +376,7 @@ bool is_native_move(const struct unit_class *punitclass,
         if (pextra != jextra && is_extra_caused_by(jextra, EC_ROAD)
             && tile_has_extra(src_tile, jextra)
             && road_has_flag(jextra->data.road, RF_JUMP_FROM)) {
-          return TRUE;
+          return true;
         }
       }
       extra_type_list_iterate_end;
@@ -389,22 +389,22 @@ bool is_native_move(const struct unit_class *punitclass,
       }
       if (ALL_DIRECTIONS_CARDINAL()) {
         /* move_mode does not matter as all of them accept cardinal move */
-        return TRUE;
+        return true;
       }
       switch (extra_road_get(iextra)->move_mode) {
       case RMM_FAST_ALWAYS:
         /* Road connects source and destination, so we're fine. */
-        return TRUE;
+        return true;
       case RMM_CARDINAL:
         /* Road connects source and destination if cardinal move. */
         if (is_move_cardinal(&(wld.map), src_tile, dst_tile)) {
-          return TRUE;
+          return true;
         }
         break;
       case RMM_RELAXED:
         if (is_move_cardinal(&(wld.map), src_tile, dst_tile)) {
           /* Cardinal moves have no between tiles, so connected. */
-          return TRUE;
+          return true;
         }
         cardinal_between_iterate(&(wld.map), src_tile, dst_tile, between)
         {
@@ -413,7 +413,7 @@ bool is_native_move(const struct unit_class *punitclass,
             /* We have a link for the connection.
              * 'pextra != iextra' is there just to avoid tile_has_extra()
              * in by far more common case that 'pextra == iextra' */
-            return TRUE;
+            return true;
           }
         }
         cardinal_between_iterate_end;
@@ -435,13 +435,13 @@ bool is_native_near_tile(const struct civ_map *nmap,
                          const struct tile *ptile)
 {
   if (is_native_tile_to_class(uclass, ptile)) {
-    return TRUE;
+    return true;
   }
 
   adjc_iterate(nmap, ptile, ptile2)
   {
     if (is_native_tile_to_class(uclass, ptile2)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -467,17 +467,17 @@ bool can_unit_survive_at_tile(const struct civ_map *nmap,
   }
 
   if (tile_city(ptile)) {
-    return TRUE;
+    return true;
   }
 
   if (tile_has_refuel_extra(ptile, unit_type_get(punit))) {
     /* Unit can always survive at refueling base */
-    return TRUE;
+    return true;
   }
 
   if (unit_has_type_flag(punit, UTYF_COAST) && is_safe_ocean(nmap, ptile)) {
     /* Refueling coast */
-    return TRUE;
+    return true;
   }
 
   if (utype_fuel(unit_type_get(punit))) {
@@ -490,7 +490,7 @@ bool can_unit_survive_at_tile(const struct civ_map *nmap,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -512,17 +512,17 @@ bool can_step_taken_wrt_to_zoc(const struct unit_type *punittype,
                                const struct civ_map *zmap)
 {
   if (unit_type_really_ignores_zoc(punittype)) {
-    return TRUE;
+    return true;
   }
   if (is_allied_unit_tile(dst_tile, unit_owner)) {
-    return TRUE;
+    return true;
   }
   if (tile_city(src_tile) || tile_city(dst_tile)) {
-    return TRUE;
+    return true;
   }
   if (terrain_has_flag(tile_terrain(src_tile), TER_NO_ZOC)
       || terrain_has_flag(tile_terrain(dst_tile), TER_NO_ZOC)) {
-    return TRUE;
+    return true;
   }
 
   return (is_my_zoc(unit_owner, src_tile, zmap)
@@ -733,7 +733,7 @@ bool unit_can_load(const struct unit *punit)
      * to support unload+load to a new transport. */
     if (ptransport != punit->transporter) {
       if (could_unit_load(punit, ptransport)) {
-        return TRUE;
+        return true;
       }
     }
   }
@@ -752,7 +752,7 @@ bool unit_could_load_at(const struct unit *punit, const struct tile *ptile)
   unit_list_iterate(ptile->units, ptransport)
   {
     if (could_unit_load(punit, ptransport)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;

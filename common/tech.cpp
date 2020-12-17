@@ -219,7 +219,7 @@ void techs_precalc_data(void)
   advance_iterate(A_FIRST, padvance)
   {
     int num_reqs = 0;
-    bool min_req = TRUE;
+    bool min_req = true;
 
     advance_req_iterate(padvance, preq)
     {
@@ -529,7 +529,7 @@ static void advance_req_iter_next(struct iterator *it)
         *iter->end++ = preq;
       } else {
         *iter->current = preq;
-        is_new = TRUE;
+        is_new = true;
       }
     }
   }
@@ -624,7 +624,7 @@ static void advance_root_req_iter_next(struct iterator *it)
            * with preq (whose own root_req we'll consider in a bit) */
           if (!is_new) {
             *iter->current = preq;
-            is_new = TRUE;
+            is_new = true;
           } else {
             *iter->end++ = preq; /* make a note for later */
           }

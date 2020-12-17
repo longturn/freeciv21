@@ -29,7 +29,7 @@ void api_signal_connect(lua_State *L, const char *signal_name,
 
   LUASCRIPT_CHECK(L, fcl != NULL, "Undefined Freeciv lua state!");
 
-  luascript_signal_callback(fcl, signal_name, callback_name, TRUE);
+  luascript_signal_callback(fcl, signal_name, callback_name, true);
 }
 
 /*************************************************************************/ /**

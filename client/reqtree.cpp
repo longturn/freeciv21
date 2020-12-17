@@ -540,7 +540,7 @@ static struct reqtree *add_dummy_nodes(struct reqtree *tree)
   /* allocate dummy nodes */
   for (i = 0; i < num_dummy_nodes; i++) {
     new_tree->nodes[i + tree->num_nodes] = new_tree_node();
-    new_tree->nodes[i + tree->num_nodes]->is_dummy = TRUE;
+    new_tree->nodes[i + tree->num_nodes]->is_dummy = true;
   }
   /* k points to the first unused dummy node */
   k = tree->num_nodes;
@@ -844,7 +844,7 @@ static QColor* node_color(struct tree_node *node)
       return get_diag_color(30);
     }
 
-    if (!research_invention_gettable(research, node->tech, TRUE)) {
+    if (!research_invention_gettable(research, node->tech, true)) {
       if (research_goal_tech_req(research, research->tech_goal, node->tech)
           || node->tech == research->tech_goal) {
         return get_diag_color(7);
@@ -1170,7 +1170,7 @@ bool find_tech_on_reqtree(struct reqtree *tree, Tech_type_id tech, int *x,
       if (h) {
         *h = node->node_height;
       }
-      return TRUE;
+      return true;
     }
   }
   return false;

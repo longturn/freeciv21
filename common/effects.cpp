@@ -222,7 +222,7 @@ void ruleset_cache_init(void)
 {
   int i;
 
-  initialized = TRUE;
+  initialized = true;
 
   ruleset_cache.tracker = effect_list_new();
 
@@ -375,7 +375,7 @@ int effect_value_from_universals(enum effect_type type,
 
   effect_list_iterate(el, peffect)
   {
-    bool effect_applies = TRUE;
+    bool effect_applies = true;
     bool first_source_mentioned = false;
 
     if (peffect->multiplier) {
@@ -396,17 +396,17 @@ int effect_value_from_universals(enum effect_type type,
            * to another source in our template). Keep looking. */
           break;
         case ITF_NO:
-          req_mentioned_a_source = TRUE; /* this req matched this source */
+          req_mentioned_a_source = true; /* this req matched this source */
           if (preq->present) {
             /* Requirement contradicts template. Effect doesn't apply. */
             effect_applies = false;
           } /* but negative req doesn't count for first_source_mentioned */
           break;
         case ITF_YES:
-          req_mentioned_a_source = TRUE; /* this req matched this source */
+          req_mentioned_a_source = true; /* this req matched this source */
           if (preq->present) {
             if (i == 0) {
-              first_source_mentioned = TRUE;
+              first_source_mentioned = true;
             }
             /* keep looking */
           } else /* !present */ {
@@ -475,7 +475,7 @@ void send_ruleset_cache(struct conn_list *dest)
     effect_packet.effect_type = peffect->type;
     effect_packet.effect_value = peffect->value;
     if (peffect->multiplier) {
-      effect_packet.has_multiplier = TRUE;
+      effect_packet.has_multiplier = true;
       effect_packet.multiplier = multiplier_number(peffect->multiplier);
     } else {
       effect_packet.has_multiplier = false;
@@ -520,7 +520,7 @@ bool building_has_effect(const struct impr_type *pimprove,
   effect_list_iterate(plist, peffect)
   {
     if (peffect->type == effect_type) {
-      return TRUE;
+      return true;
     }
   }
   effect_list_iterate_end;
@@ -552,7 +552,7 @@ static bool is_effect_prevented(
                           target_building, target_tile, target_unit,
                           target_unittype, target_output, target_specialist,
                           NULL, preq, REVERSED_RPT(prob_type))) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -577,7 +577,7 @@ bool is_building_replaced(const struct city *pcity,
 
   /* A building with no effects and no flags is always redundant! */
   if (!plist) {
-    return TRUE;
+    return true;
   }
 
   effect_list_iterate(plist, peffect)
@@ -594,7 +594,7 @@ bool is_building_replaced(const struct city *pcity,
   }
   effect_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -963,8 +963,8 @@ int get_potential_improvement_bonus(const struct impr_type *pimprove,
 
     effect_list_iterate(plist, peffect)
     {
-      bool present = TRUE;
-      bool useful = TRUE;
+      bool present = true;
+      bool useful = true;
 
       if (peffect->type != effect_type) {
         continue;
@@ -1071,5 +1071,5 @@ bool iterate_effect_cache(iec_cb cb, void *data)
   }
   effect_list_iterate_end;
 
-  return TRUE;
+  return true;
 }

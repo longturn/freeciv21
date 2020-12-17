@@ -487,7 +487,7 @@ void mapimg_init(mapimg_tile_known_func mapimg_tile_known,
   fc_assert_ret(mapimg_plrcolor_get != NULL);
   mapimg.mapimg_plrcolor_get = mapimg_plrcolor_get;
 
-  mapimg.init = TRUE;
+  mapimg.init = true;
 }
 
 /************************************************************************/ /**
@@ -731,7 +731,7 @@ bool mapimg_define(const char *maparg, bool check)
   struct mapdef *pmapdef = NULL;
   QStringList mapargs, mapopts;
   int i;
-  bool ret = TRUE;
+  bool ret = true;
 
   MAPIMG_ASSERT_RET_VAL(mapimg_initialised(), false);
 
@@ -866,7 +866,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       QStringList formatargs;
       enum imageformat format;
       enum imagetool tool;
-      bool error = TRUE;
+      bool error = true;
 
       /* get format options */
 
@@ -939,11 +939,11 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
       }
 
       for (l = 0; l < len; l++) {
-        error = TRUE;
+        error = true;
         for (layer = mapimg_layer_begin(); layer != mapimg_layer_end();
              layer = mapimg_layer_next(layer)) {
           if (val[l] == mapimg_layer_name(layer)[0]) {
-            pmapdef->layers[layer] = TRUE;
+            pmapdef->layers[layer] = true;
             error = false;
             break;
           }
@@ -1066,7 +1066,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
     break;
   }
 
-  return TRUE;
+  return true;
 
 INVALID:
   MAPIMG_LOG(_("invalid value for option '%s': '%s'"), mapdef_arg_name(arg),
@@ -1089,7 +1089,7 @@ struct mapdef *mapimg_isvalid(int id)
   }
 
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
-  mapimg_checkplayers(pmapdef, TRUE);
+  mapimg_checkplayers(pmapdef, true);
 
   switch (pmapdef->status) {
   case MAPIMG_STATUS_UNKNOWN:
@@ -1177,7 +1177,7 @@ bool mapimg_delete(int id)
   pmapdef = mapdef_list_get(mapimg.mapdef, id);
   mapdef_list_remove(mapimg.mapdef, pmapdef);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1270,7 +1270,7 @@ bool mapimg_show(int id, char *str, size_t str_len, bool detail)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1303,7 +1303,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
 {
   struct img *pimg;
   char mapimgfile[MAX_LEN_PATH];
-  bool ret = TRUE;
+  bool ret = true;
 #ifdef FREECIV_DEBUG
   civtimer *timer_cpu, *timer_user;
 #endif
@@ -1328,7 +1328,7 @@ bool mapimg_create(struct mapdef *pmapdef, bool force, const char *savename,
    *   by this number */
   if (!force && game.info.turn != 1
       && !(pmapdef->turns != 0 && game.info.turn % pmapdef->turns == 0)) {
-    return TRUE;
+    return true;
   }
 
 #ifdef FREECIV_DEBUG
@@ -1409,13 +1409,13 @@ bool mapimg_colortest(const char *savename, const char *path)
 {
   struct img *pimg;
   const struct rgbcolor *pcolor;
-  struct mapdef *pmapdef = mapdef_new(TRUE);
+  struct mapdef *pmapdef = mapdef_new(true);
   char mapimgfile[MAX_LEN_PATH];
   bv_pixel pixel;
   int i, nat_x, nat_y;
   int max_playercolor = mapimg.mapimg_plrcolor_count();
   int max_terraincolor = terrain_count();
-  bool ret = TRUE;
+  bool ret = true;
   enum imagetool tool;
 
 #define SIZE_X 16
@@ -1537,7 +1537,7 @@ static bool mapimg_test(int id)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1594,7 +1594,7 @@ static bool mapimg_def2str(struct mapdef *pmapdef, char *str, size_t str_len)
   }
   cat_snprintf(str, str_len, "zoom=%d", pmapdef->zoom);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1663,7 +1663,7 @@ static bool mapimg_checkplayers(struct mapdef *pmapdef, bool recheck)
 
   pmapdef->status = MAPIMG_STATUS_OK;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1783,11 +1783,11 @@ static struct mapdef *mapdef_new(bool colortest)
   pmapdef->zoom = 2;
   pmapdef->turns = 1;
   pmapdef->layers[MAPIMG_LAYER_TERRAIN] = false;
-  pmapdef->layers[MAPIMG_LAYER_CITIES] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_UNITS] = TRUE;
-  pmapdef->layers[MAPIMG_LAYER_BORDERS] = TRUE;
+  pmapdef->layers[MAPIMG_LAYER_CITIES] = true;
+  pmapdef->layers[MAPIMG_LAYER_UNITS] = true;
+  pmapdef->layers[MAPIMG_LAYER_BORDERS] = true;
   pmapdef->layers[MAPIMG_LAYER_FOGOFWAR] = false;
-  pmapdef->layers[MAPIMG_LAYER_KNOWLEDGE] = TRUE;
+  pmapdef->layers[MAPIMG_LAYER_KNOWLEDGE] = true;
   pmapdef->layers[MAPIMG_LAYER_AREA] = false;
   pmapdef->player.show = SHOW_ALL;
   /* The union is not set at this point (player.id, player.name and
@@ -2065,7 +2065,7 @@ static bool img_save_magickwand(const struct img *pimg,
 {
   const struct rgbcolor *pcolor = NULL;
   struct player *pplr_now = NULL, *pplr_only = NULL;
-  bool ret = TRUE;
+  bool ret = true;
   char imagefile[MAX_LEN_PATH];
   char str_color[32], comment[2048] = "", title[258];
   magickwand_size_t img_width, img_height, map_width, map_height;
@@ -2343,7 +2343,7 @@ static bool img_save_ppm(const struct img *pimg, const char *mapimgfile)
   qDebug("Map image saved as '%s'.", ppmname);
   fclose(fp);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2357,7 +2357,7 @@ static bool img_filename(const char *mapimgfile, enum imageformat format,
   fc_snprintf(filename, filename_len, "%s.map.%s", mapimgfile,
               imageformat_name(format));
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

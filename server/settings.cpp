@@ -560,7 +560,7 @@ static const struct sset_val_name *bool_name(int enable)
 {
   switch (enable) {
     NAME_CASE(false, "DISABLED", N_("disabled"));
-    NAME_CASE(TRUE, "ENABLED", N_("enabled"));
+    NAME_CASE(true, "ENABLED", N_("enabled"));
   }
   return NULL;
 }
@@ -673,7 +673,7 @@ static void nationset_action(const struct setting *pset)
                   "for all current players."));
   }
 
-  send_nation_availability(game.est_connections, TRUE);
+  send_nation_availability(game.est_connections, true);
 }
 
 /************************************************************************/ /**
@@ -809,7 +809,7 @@ static bool savename_validate(const char *value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -826,7 +826,7 @@ static bool generator_validate(int value, struct connection *caller,
                         _("You cannot disable the map generator."));
       return false;
     }
-    return TRUE;
+    return true;
   } else {
     if (MAPGEN_SCENARIO != value) {
       settings_snprintf(reject_msg, reject_msg_len,
@@ -835,7 +835,7 @@ static bool generator_validate(int value, struct connection *caller,
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -850,7 +850,7 @@ static bool scorefile_validate(const char *value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -863,7 +863,7 @@ static bool demography_callback(const char *value, struct connection *caller,
   int error;
 
   if (is_valid_demography(value, &error)) {
-    return TRUE;
+    return true;
   } else {
     settings_snprintf(reject_msg, reject_msg_len,
                       _("Demography string validation failed at character: "
@@ -893,7 +893,7 @@ static bool autosaves_callback(unsigned value, struct connection *caller,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -917,7 +917,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
   for (i = 0; i < len; i++) {
     /* Check to see if the character is a primary label. */
     if (strchr("HhAadbOo", value[i])) {
-      havecharacter_state = TRUE;
+      havecharacter_state = true;
       continue;
     }
 
@@ -937,7 +937,7 @@ static bool allowtake_callback(const char *value, struct connection *caller,
   }
 
   /* All characters were valid. */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -972,7 +972,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
   {
     if (terrain_has_flag(pterrain, TER_STARTER)
         && BV_ISSET(pterrain->native_to, first_role)) {
-      firstnative = TRUE;
+      firstnative = true;
       break;
     }
   }
@@ -988,7 +988,7 @@ static bool startunits_callback(const char *value, struct connection *caller,
   }
 
   /* Everything seems fine. */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1003,7 +1003,7 @@ static bool endturn_callback(int value, struct connection *caller,
                       _("Cannot set endturn earlier than current turn."));
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1030,7 +1030,7 @@ static bool maxplayers_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1040,9 +1040,9 @@ static bool nationset_callback(const char *value, struct connection *caller,
                                char *reject_msg, size_t reject_msg_len)
 {
   if (strlen(value) == 0) {
-    return TRUE;
+    return true;
   } else if (nation_set_by_rule_name(value)) {
-    return TRUE;
+    return true;
   } else {
     settings_snprintf(reject_msg, reject_msg_len,
                       /* TRANS: do not translate 'list nationsets' */
@@ -1089,7 +1089,7 @@ static bool timeout_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1107,7 +1107,7 @@ static bool first_timeout_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1134,7 +1134,7 @@ static bool unitwaittime_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1154,7 +1154,7 @@ static bool mapsize_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1179,7 +1179,7 @@ static bool xsize_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1213,7 +1213,7 @@ static bool ysize_callback(int value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1234,7 +1234,7 @@ static bool topology_callback(unsigned value, struct connection *caller,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1250,7 +1250,7 @@ static bool compresstype_callback(int value, struct connection *caller,
   }
 #endif /* FREECIV_HAVE_LIBBZ2 */
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1265,7 +1265,7 @@ static bool plrcol_validate(int value, struct connection *caller,
     {
       if (nation_color(pnation)) {
         /* At least one nation has a color. Allow this mode. */
-        return TRUE;
+        return true;
       }
     }
     nations_iterate_end;
@@ -1274,7 +1274,7 @@ static bool plrcol_validate(int value, struct connection *caller,
                         "associated colors."));
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 #define GEN_BOOL(name, value, sclass, scateg, slevel, al_read, al_write,    \
@@ -5020,7 +5020,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
   case SSET_MAP_GEN:
     /* Only change map options if we don't yet have a map: */
     if (map_is_empty()) {
-      return TRUE;
+      return true;
     }
 
     settings_snprintf(reject_msg, reject_msg_len,
@@ -5040,7 +5040,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
     if (game.scenario.is_scenario && game.scenario.players
         && server_state() == S_S_INITIAL) {
       /* Special case detected. */
-      return TRUE;
+      return true;
     }
 
     /* The special case didn't make it legal to change the setting. Don't
@@ -5057,7 +5057,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
      * never actually been started).
      */
     if (map_is_empty() || game.info.is_new_game) {
-      return TRUE;
+      return true;
     }
 
     settings_snprintf(reject_msg, reject_msg_len,
@@ -5069,7 +5069,7 @@ static bool setting_is_free_to_change(const struct setting *pset,
   case SSET_RULES_FLEXIBLE:
   case SSET_META:
     /* These can always be changed: */
-    return TRUE;
+    return true;
   }
 
   qCritical("Wrong class variant for setting %s (%d): %d.",
@@ -5189,7 +5189,7 @@ static bool setting_match_prefix(const val_name_func_t name_fn,
                                     ARRAY_SIZE(matches), &num_matches)) {
   case M_PRE_EXACT:
   case M_PRE_ONLY:
-    return TRUE; /* Ok. */
+    return true; /* Ok. */
   case M_PRE_AMBIGUOUS: {
     struct astring astr = ASTRING_INIT;
 
@@ -5281,7 +5281,7 @@ bool setting_bool_set(struct setting *pset, const char *val,
   }
 
   *pset->boolean.pvalue = (0 != int_val);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -5364,7 +5364,7 @@ bool setting_int_set(struct setting *pset, int val,
   }
 
   *pset->integer.pvalue = val;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -5435,7 +5435,7 @@ bool setting_str_set(struct setting *pset, const char *val,
   }
 
   fc_strlcpy(pset->string.value, val, pset->string.value_size);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -5582,7 +5582,7 @@ static bool set_enum_value(struct setting *pset, int val)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -5637,7 +5637,7 @@ bool setting_enum_set(struct setting *pset, const char *val,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -5817,7 +5817,7 @@ bool setting_bitwise_set(struct setting *pset, const char *val,
   }
 
   *pset->bitwise.pvalue = int_val;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -6004,7 +6004,7 @@ bool settings_ruleset(struct section_file *file, const char *section,
   /* send game settings */
   send_server_settings(NULL);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -6053,7 +6053,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                     sizeof(reject_msg))) {
         *pset->boolean.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              setting_value_name(pset, true, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6069,7 +6069,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     } else if (val != *pset->integer.pvalue) {
       if (setting_int_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              setting_value_name(pset, true, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6085,7 +6085,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
     } else if (0 != strcmp(val, pset->string.value)) {
       if (setting_str_set(pset, val, NULL, reject_msg, sizeof(reject_msg))) {
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              setting_value_name(pset, true, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6106,7 +6106,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                        sizeof(reject_msg))) {
         set_enum_value(pset, val);
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              setting_value_name(pset, true, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6116,7 +6116,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
   case SST_BITWISE: {
     int val;
 
-    if (!secfile_lookup_enum_data(file, &val, TRUE,
+    if (!secfile_lookup_enum_data(file, &val, true,
                                   setting_bitwise_secfile_str, pset,
                                   "%s.value", path)) {
       qCritical("Can't read value for setting '%s': %s", name,
@@ -6127,7 +6127,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
                                     sizeof(reject_msg))) {
         *pset->bitwise.pvalue = val;
         qInfo(_("Ruleset: '%s' has been set to %s."), setting_name(pset),
-              setting_value_name(pset, TRUE, buf, sizeof(buf)));
+              setting_value_name(pset, true, buf, sizeof(buf)));
       } else {
         qCritical("%s", reject_msg);
       }
@@ -6151,7 +6151,7 @@ static bool setting_ruleset_one(struct section_file *file, const char *name,
           setting_name(pset));
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -6309,7 +6309,7 @@ void settings_game_start(void)
   settings_iterate_end;
 
   /* Settings from the start of the game are saved. */
-  game.server.settings_gamestart_valid = TRUE;
+  game.server.settings_gamestart_valid = true;
 }
 
 /************************************************************************/ /**
@@ -6358,10 +6358,10 @@ void settings_game_save(struct section_file *file, const char *section)
                                  "%s.set%d.gamestart", section, set_count);
         break;
       case SST_BITWISE:
-        secfile_insert_enum_data(file, *pset->bitwise.pvalue, TRUE,
+        secfile_insert_enum_data(file, *pset->bitwise.pvalue, true,
                                  setting_bitwise_secfile_str, pset,
                                  "%s.set%d.value", section, set_count);
-        secfile_insert_enum_data(file, pset->bitwise.game_value, TRUE,
+        secfile_insert_enum_data(file, pset->bitwise.game_value, true,
                                  setting_bitwise_secfile_str, pset,
                                  "%s.set%d.gamestart", section, set_count);
         break;
@@ -6436,7 +6436,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->boolean.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    setting_value_name(pset, true, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6467,7 +6467,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->integer.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    setting_value_name(pset, true, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6495,7 +6495,7 @@ void settings_game_load(struct section_file *file, const char *section)
                                 sizeof(reject_msg))) {
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    setting_value_name(pset, true, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6528,7 +6528,7 @@ void settings_game_load(struct section_file *file, const char *section)
               set_enum_value(pset, val);
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    setting_value_name(pset, true, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6544,7 +6544,7 @@ void settings_game_load(struct section_file *file, const char *section)
       case SST_BITWISE: {
         int val;
 
-        if (!secfile_lookup_enum_data(file, &val, TRUE,
+        if (!secfile_lookup_enum_data(file, &val, true,
                                       setting_bitwise_secfile_str, pset,
                                       "%s.set%d.value", section, i)) {
           qDebug("Option '%s' not defined in the savegame: %s", name,
@@ -6561,7 +6561,7 @@ void settings_game_load(struct section_file *file, const char *section)
               *pset->bitwise.pvalue = val;
               qInfo(_("Savegame: '%s' has been set to %s."),
                     setting_name(pset),
-                    setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                    setting_value_name(pset, true, buf, sizeof(buf)));
             } else {
               qCritical("Savegame: error restoring '%s' . (%s)",
                         setting_name(pset), reject_msg);
@@ -6608,7 +6608,7 @@ void settings_game_load(struct section_file *file, const char *section)
 
         case SST_BITWISE:
           pset->bitwise.game_value = secfile_lookup_enum_default_data(
-              file, *pset->bitwise.pvalue, TRUE, setting_bitwise_secfile_str,
+              file, *pset->bitwise.pvalue, true, setting_bitwise_secfile_str,
               pset, "%s.set%d.gamestart", section, i);
           break;
 
@@ -6655,7 +6655,7 @@ bool settings_game_reset(void)
   settings_iterate(SSET_ALL, pset) { setting_game_restore(pset); }
   settings_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -6669,7 +6669,7 @@ void settings_init(bool act)
   {
     setting_lock_set(pset, false);
     setting_set_to_default(pset);
-    setting_game_set(pset, TRUE);
+    setting_game_set(pset, true);
     if (act) {
       setting_action(pset);
     }
@@ -6913,7 +6913,7 @@ void send_server_setting_control(struct connection *pconn)
     sz_strlcpy(setting.name, setting_name(pset));
     /* Send untranslated strings to client */
     sz_strlcpy(setting.short_help, setting_short_help(pset));
-    sz_strlcpy(setting.extra_help, setting_extra_help(pset, TRUE));
+    sz_strlcpy(setting.extra_help, setting_extra_help(pset, true));
     setting.category = pset->scategory;
 
     send_packet_server_setting_const(pconn, &setting);
@@ -6978,7 +6978,7 @@ static void settings_list_init(void)
     setting_list_sort(setting_sorted.level[i], settings_list_cmp);
   }
 
-  setting_sorted.init = TRUE;
+  setting_sorted.init = true;
 }
 
 /************************************************************************/ /**
@@ -6989,7 +6989,7 @@ void settings_list_update(void)
   struct setting *pset;
   int i;
 
-  fc_assert_ret(setting_sorted.init == TRUE);
+  fc_assert_ret(setting_sorted.init == true);
 
   /* Clear the lists for changed and locked values. */
   setting_list_clear(setting_sorted.level[SSET_CHANGED]);
@@ -7028,7 +7028,7 @@ int settings_list_cmp(const struct setting *const *ppset1,
  ****************************************************************************/
 struct setting_list *settings_list_get(enum sset_level level)
 {
-  fc_assert_ret_val(setting_sorted.init == TRUE, NULL);
+  fc_assert_ret_val(setting_sorted.init == true, NULL);
   fc_assert_ret_val(setting_sorted.level[level] != NULL, NULL);
   fc_assert_ret_val(sset_level_is_valid(level), NULL);
 
@@ -7042,7 +7042,7 @@ static void settings_list_free(void)
 {
   int i;
 
-  fc_assert_ret(setting_sorted.init == TRUE);
+  fc_assert_ret(setting_sorted.init == true);
 
   /* Free the lists. */
   for (i = 0; i < OLEVELS_NUM; i++) {

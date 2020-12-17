@@ -1604,7 +1604,7 @@ QString popup_terrain_info(struct tile *ptile)
   bool has_road = false;
 
   terr = ptile->terrain;
-  ret = QString(_("Terrain: %1\n")).arg(tile_get_info_text(ptile, TRUE, 0));
+  ret = QString(_("Terrain: %1\n")).arg(tile_get_info_text(ptile, true, 0));
   ret =
       ret
       + QString(_("Food/Prod/Trade: %1\n")).arg(get_tile_output_text(ptile));
@@ -1622,7 +1622,7 @@ QString popup_terrain_info(struct tile *ptile)
     if (tile_has_road(ptile, proad)) {
       if (proad->move_cost <= movement_cost) {
         has_road = true;
-        move_text = move_points_text(proad->move_cost, TRUE);
+        move_text = move_points_text(proad->move_cost, true);
         movement_cost = proad->move_cost;
       }
     }

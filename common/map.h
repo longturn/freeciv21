@@ -28,9 +28,9 @@
 
 /* Parameters for terrain counting functions. */
 static const bool C_ADJACENT = false;
-static const bool C_CARDINAL = TRUE;
+static const bool C_CARDINAL = true;
 static const bool C_NUMBER = false;
-static const bool C_PERCENT = TRUE;
+static const bool C_PERCENT = true;
 
 #define MAP_IS_ISOMETRIC (CURRENT_TOPOLOGY & (TF_ISO + TF_HEX))
 
@@ -588,11 +588,11 @@ moves. Includes MAP_MAX_LINEAR_SIZE because a map can be non wrapping. */
 
 #define MAP_DEFAULT_TINYISLES false
 #define MAP_MIN_TINYISLES false
-#define MAP_MAX_TINYISLES TRUE
+#define MAP_MAX_TINYISLES true
 
-#define MAP_DEFAULT_SEPARATE_POLES TRUE
+#define MAP_DEFAULT_SEPARATE_POLES true
 #define MAP_MIN_SEPARATE_POLES false
-#define MAP_MAX_SEPARATE_POLES TRUE
+#define MAP_MAX_SEPARATE_POLES true
 
 #define MAP_DEFAULT_FLATPOLES 100
 #define MAP_MIN_FLATPOLES 0
@@ -600,11 +600,11 @@ moves. Includes MAP_MAX_LINEAR_SIZE because a map can be non wrapping. */
 
 #define MAP_DEFAULT_SINGLE_POLE false
 #define MAP_MIN_SINGLE_POLE false
-#define MAP_MAX_SINGLE_POLE TRUE
+#define MAP_MAX_SINGLE_POLE true
 
 #define MAP_DEFAULT_ALLTEMPERATE false
 #define MAP_MIN_ALLTEMPERATE false
-#define MAP_MAX_ALLTEMPERATE TRUE
+#define MAP_MAX_ALLTEMPERATE true
 
 #define MAP_DEFAULT_TEMPERATURE 50
 #define MAP_MIN_TEMPERATURE 0

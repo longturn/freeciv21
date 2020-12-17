@@ -161,7 +161,7 @@ static void dai_select_tech(struct ai_type *ait, struct player *pplayer,
   {
     if (valid_advance_by_number(i)) {
       if (values[i] > values[newtech]
-          && research_invention_gettable(presearch, i, TRUE)) {
+          && research_invention_gettable(presearch, i, true)) {
         newtech = i;
       }
       if (goal_values[i] > goal_values[newgoal]
@@ -283,8 +283,8 @@ static void dai_tech_effect_values(struct ai_type *ait,
 
         effect_list_iterate(get_req_source_effects(&source), peffect)
         {
-          bool present = TRUE;
-          bool active = TRUE;
+          bool present = true;
+          bool active = true;
 
           requirement_vector_iterate(&peffect->reqs, preq)
           {
@@ -471,7 +471,7 @@ struct unit_type *dai_wants_defender_against(struct ai_type *ait,
               cost += imprcost;
             } else if (!dai_can_requirement_be_met_in_city(preq, pplayer,
                                                            pcity)) {
-              impossible_to_get = TRUE;
+              impossible_to_get = true;
             }
           }
         }

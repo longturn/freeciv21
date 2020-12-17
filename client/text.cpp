@@ -167,9 +167,9 @@ const char *popup_info_text(struct tile *ptile)
     astr_add(&str, _("Unknown"));
     return astr_str(&str);
   }
-  astr_add_line(&str, _("Terrain: %s"), tile_get_info_text(ptile, TRUE, 0));
+  astr_add_line(&str, _("Terrain: %s"), tile_get_info_text(ptile, true, 0));
   astr_add_line(&str, _("Food/Prod/Trade: %s"), get_tile_output_text(ptile));
-  first = TRUE;
+  first = true;
   extra_type_iterate(pextra)
   {
     if (pextra->category == ECAT_BONUS
@@ -415,7 +415,7 @@ const char *popup_info_text(struct tile *ptile)
           int att = unit_win_chance(pfocus_unit, tile_unit) * 100;
           int def = (1.0 - unit_win_chance(tile_unit, pfocus_unit)) * 100;
 
-          found = TRUE;
+          found = true;
 
           /* Presumably the best attacker and defender will be used. */
           att_chance = MIN(att, att_chance);
@@ -699,7 +699,7 @@ static int get_bulbs_per_turn(int *pours, bool *pteam, int *ptheirs)
       }
       city_list_iterate_end;
     } else {
-      team = TRUE;
+      team = true;
       theirs -= pplayer->client.tech_upkeep;
     }
   }
@@ -1147,7 +1147,7 @@ const char *get_unit_info_label_text2(struct unit_list *punits,
     struct city *pcity = player_city_by_number(owner, punit->homecity);
 
     astr_add_line(&str, "%s",
-                  tile_get_info_text(unit_tile(punit), TRUE, linebreaks));
+                  tile_get_info_text(unit_tile(punit), true, linebreaks));
     {
       const char *infratext =
           get_infrastructure_text(unit_tile(punit)->extras);
@@ -1336,7 +1336,7 @@ bool get_units_upgrade_info(char *buf, size_t bufsz,
           buf, bufsz,
           PL_("%s for %d gold?\n%s", "%s for %d gold?\n%s", upgrade_cost),
           ubuf, upgrade_cost, tbuf);
-      return TRUE;
+      return true;
     }
   }
 }
@@ -1361,7 +1361,7 @@ bool get_units_disband_info(char *buf, size_t bufsz,
       /* TRANS: %s is a unit type */
       fc_snprintf(buf, bufsz, _("Disband %s?"),
                   unit_name_translation(unit_list_front(punits)));
-      return TRUE;
+      return true;
     }
   } else {
     int count = 0;
@@ -1380,7 +1380,7 @@ bool get_units_disband_info(char *buf, size_t bufsz,
       fc_snprintf(buf, bufsz,
                   PL_("Disband %d unit?", "Disband %d units?", count),
                   count);
-      return TRUE;
+      return true;
     }
   }
 }
@@ -1731,7 +1731,7 @@ const char *get_act_sel_action_custom_text(struct action *paction,
 
   if (action_has_result(paction, ACTRES_TRADE_ROUTE)) {
     int revenue = get_caravan_enter_city_trade_bonus(
-        actor_homecity, target_city, actor_unit->carrying, TRUE);
+        actor_homecity, target_city, actor_unit->carrying, true);
 
     astr_set(&custom,
              /* TRANS: Estimated one time bonus and recurring revenue for

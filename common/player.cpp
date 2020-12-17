@@ -135,7 +135,7 @@ static bool is_valid_alliance(const struct player *p1,
   }
   players_iterate_alive_end;
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -512,18 +512,18 @@ static void player_defaults(struct player *pplayer)
 
   sz_strlcpy(pplayer->name, ANON_PLAYER_NAME);
   sz_strlcpy(pplayer->username, _(ANON_USER_NAME));
-  pplayer->unassigned_user = TRUE;
+  pplayer->unassigned_user = true;
   sz_strlcpy(pplayer->ranked_username, _(ANON_USER_NAME));
-  pplayer->unassigned_ranked = TRUE;
+  pplayer->unassigned_ranked = true;
   pplayer->user_turns = 0;
-  pplayer->is_male = TRUE;
+  pplayer->is_male = true;
   pplayer->government = NULL;
   pplayer->target_government = NULL;
   pplayer->nation = NO_NATION_SELECTED;
   pplayer->team = NULL;
   pplayer->is_ready = false;
   pplayer->nturns_idle = 0;
-  pplayer->is_alive = TRUE;
+  pplayer->is_alive = true;
   pplayer->turns_alive = 0;
   pplayer->is_winner = false;
   pplayer->last_war_action = -1;
@@ -574,7 +574,7 @@ static void player_defaults(struct player *pplayer)
   pplayer->ai = NULL;
   pplayer->was_created = false;
   pplayer->savegame_ai_type_name = NULL;
-  pplayer->random_name = TRUE;
+  pplayer->random_name = true;
   pplayer->is_connected = false;
   pplayer->current_conn = NULL;
   pplayer->connections = conn_list_new();
@@ -712,7 +712,7 @@ void player_destroy(struct player *pplayer)
     vision_layer_iterate_end;
   }
   /* Remove all that is game-dependent in the player structure. */
-  player_clear(pplayer, TRUE);
+  player_clear(pplayer, true);
 
   fc_assert(0 == unit_list_size(pplayer->units));
   unit_list_destroy(pplayer->units);
@@ -800,7 +800,7 @@ bool player_set_nation(struct player *pplayer, struct nation_type *pnation)
       pnation->player = pplayer;
     }
     pplayer->nation = pnation;
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -917,7 +917,7 @@ bool player_can_trust_tile_has_no_units(const struct player *pplayer,
     extra_type_list_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -955,7 +955,7 @@ bool can_player_see_hypotetic_units_at(const struct player *pplayer,
   }
   unit_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -1009,7 +1009,7 @@ bool can_player_see_unit_at(const struct player *pplayer,
   /* Allied or non-hiding units are always seen. */
   if (pplayers_allied(unit_owner(punit), pplayer)
       || !is_hiding_unit(punit)) {
-    return TRUE;
+    return true;
   }
 
   /* Hiding units are only seen by the V_INVIS fog layer. */
@@ -1090,12 +1090,12 @@ bool player_can_see_city_externals(const struct player *pow_player,
 
   if (can_player_see_city_internals(pow_player, target_city)) {
     /* City internals includes city externals. */
-    return TRUE;
+    return true;
   }
 
   if (tile_is_seen(city_tile(target_city), pow_player)) {
     /* The tile is being observed. */
-    return TRUE;
+    return true;
   }
 
   fc_assert_ret_val(target_city->routes, false);
@@ -1104,7 +1104,7 @@ bool player_can_see_city_externals(const struct player *pow_player,
   {
     if (city_owner(trade_city) == pow_player) {
       /* Revealed because of the trade route. */
-      return TRUE;
+      return true;
     }
   }
   trade_partners_iterate_end;
@@ -1176,7 +1176,7 @@ bool player_in_city_map(const struct player *pplayer,
 
     if (pcity && (pplayer == NULL || city_owner(pcity) == pplayer)
         && city_map_radius_sq_get(pcity) >= sq_map_distance(ptile, ptile1)) {
-      return TRUE;
+      return true;
     }
   }
   city_tile_iterate_end;
@@ -1333,7 +1333,7 @@ bool pplayers_allied(const struct player *pplayer,
   }
 
   if (pplayer == pplayer2) {
-    return TRUE;
+    return true;
   }
 
   ds = player_diplstate_get(pplayer, pplayer2)->type;
@@ -1350,7 +1350,7 @@ bool pplayers_in_peace(const struct player *pplayer,
   enum diplstate_type ds = player_diplstate_get(pplayer, pplayer2)->type;
 
   if (pplayer == pplayer2) {
-    return TRUE;
+    return true;
   }
 
   return (ds == DS_PEACE || ds == DS_ALLIANCE || ds == DS_ARMISTICE
@@ -1477,7 +1477,7 @@ bool is_diplrel_to_other(const struct player *pplayer, int diplrel)
       continue;
     }
     if (is_diplrel_between(pplayer, oplayer, diplrel)) {
-      return TRUE;
+      return true;
     }
   }
   players_iterate_alive_end;
@@ -1611,19 +1611,19 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
 
   /* It is not possible to have more than one diplstate to a nation. */
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_ARMISTICE, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_ARMISTICE, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_WAR, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_WAR, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_CEASEFIRE, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_CEASEFIRE, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_PEACE, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_PEACE, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_ALLIANCE, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_ALLIANCE, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_NO_CONTACT, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_NO_CONTACT, REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
-         requirement_diplrel_ereq(DS_TEAM, REQ_RANGE_LOCAL, TRUE));
+         requirement_diplrel_ereq(DS_TEAM, REQ_RANGE_LOCAL, true));
 
   /* It is not possible to have a diplstate to your self. */
   BV_SET(mess[mess_pos],
@@ -1635,7 +1635,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   BV_CLR_ALL(mess[mess_pos]);
 
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HAS_REAL_EMBASSY,
-                                                  REQ_RANGE_LOCAL, TRUE));
+                                                  REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos],
          requirement_diplrel_ereq(DRO_HAS_EMBASSY, REQ_RANGE_LOCAL, false));
 
@@ -1645,7 +1645,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
   BV_CLR_ALL(mess[mess_pos]);
 
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HOSTS_REAL_EMBASSY,
-                                                  REQ_RANGE_LOCAL, TRUE));
+                                                  REQ_RANGE_LOCAL, true));
   BV_SET(mess[mess_pos], requirement_diplrel_ereq(DRO_HOSTS_EMBASSY,
                                                   REQ_RANGE_LOCAL, false));
 
@@ -1661,7 +1661,7 @@ static bv_diplrel_all_reqs *diplrel_mess_gen(void)
         BV_CLR_ALL(mess[mess_pos]);
 
         BV_SET(mess[mess_pos],
-               requirement_diplrel_ereq(rel, legal_ranges[i], TRUE));
+               requirement_diplrel_ereq(rel, legal_ranges[i], true));
         BV_SET(mess[mess_pos],
                requirement_diplrel_ereq(rel, legal_ranges[j], false));
 
@@ -1806,7 +1806,7 @@ bool is_settable_ai_level(enum ai_level level)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**

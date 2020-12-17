@@ -104,7 +104,7 @@ void create_animals(void)
     return;
   }
 
-  anination = pick_a_nation(NULL, false, TRUE, ANIMAL_BARBARIAN);
+  anination = pick_a_nation(NULL, false, true, ANIMAL_BARBARIAN);
 
   if (anination == NO_NATION_SELECTED) {
     return;
@@ -114,29 +114,29 @@ void create_animals(void)
   if (plr == NULL) {
     return;
   }
-  server_player_init(plr, TRUE, TRUE);
+  server_player_init(plr, true, true);
 
   player_set_nation(plr, anination);
-  player_nation_defaults(plr, anination, TRUE);
+  player_nation_defaults(plr, anination, true);
 
   assign_player_colors();
 
   server.nbarbarians++;
 
   sz_strlcpy(plr->username, _(ANON_USER_NAME));
-  plr->unassigned_user = TRUE;
+  plr->unassigned_user = true;
   plr->is_connected = false;
   plr->government = init_government_of_nation(anination);
   plr->economic.gold = 100;
 
-  plr->phase_done = TRUE;
+  plr->phase_done = true;
 
   set_as_ai(plr);
   plr->ai_common.barbarian_type = ANIMAL_BARBARIAN;
   set_ai_level_directer(plr, ai_level(game.info.skill_level));
 
   presearch = research_get(plr);
-  init_tech(presearch, TRUE);
+  init_tech(presearch, true);
   give_initial_techs(presearch, 0);
 
   /* Ensure that we are at war with everyone else */

@@ -73,7 +73,7 @@
 #define BIG_NUMBER 100000
 
 /* turn this off when we don't want functions to message players */
-static bool diplomacy_verbose = TRUE;
+static bool diplomacy_verbose = true;
 
 /* turns to wait after contact before taking aim for war */
 #define TURNS_BEFORE_TARGET 15
@@ -184,7 +184,7 @@ static bool shared_vision_is_safe(struct player *pplayer,
                                   struct player *aplayer)
 {
   if (pplayer->team && pplayer->team == aplayer->team) {
-    return TRUE;
+    return true;
   }
   players_iterate_alive(eplayer)
   {
@@ -200,7 +200,7 @@ static bool shared_vision_is_safe(struct player *pplayer,
     }
   }
   players_iterate_alive_end;
-  return TRUE;
+  return true;
 }
 
 /******************************************************************/ /**
@@ -258,7 +258,7 @@ static int compute_tech_sell_price(struct ai_type *ait, struct player *giver,
     /* Don't risk it falling into enemy hands */
     if (pplayers_allied(taker, eplayer)
         && adv_is_player_dangerous(giver, eplayer)) {
-      *is_dangerous = TRUE;
+      *is_dangerous = true;
     }
 
     if (pplayers_allied(taker, eplayer)
@@ -596,7 +596,7 @@ static int dai_goldequiv_clause(struct ai_type *ait, struct player *pplayer,
     dai_data_phase_finished(ait, pplayer);
   }
 
-  diplomacy_verbose = TRUE;
+  diplomacy_verbose = true;
   return worth;
 }
 
@@ -608,7 +608,7 @@ void dai_treaty_evaluate(struct ai_type *ait, struct player *pplayer,
                          struct player *aplayer, struct Treaty *ptreaty)
 {
   int total_balance = 0;
-  bool only_gifts = TRUE;
+  bool only_gifts = true;
   enum diplstate_type ds_after =
       player_diplstate_get(pplayer, aplayer)->type;
   int given_cities = 0;
@@ -630,7 +630,7 @@ void dai_treaty_evaluate(struct ai_type *ait, struct player *pplayer,
     const struct research *presearch = research_get(pplayer);
 
     total_balance +=
-        dai_goldequiv_clause(ait, pplayer, aplayer, pclause, TRUE, ds_after);
+        dai_goldequiv_clause(ait, pplayer, aplayer, pclause, true, ds_after);
 
     if (pclause->type != CLAUSE_GOLD && pclause->type != CLAUSE_MAP
         && pclause->type != CLAUSE_SEAMAP && pclause->type != CLAUSE_VISION
@@ -732,7 +732,7 @@ void dai_treaty_accepted(struct ai_type *ait, struct player *pplayer,
   bool close_here;
   struct ai_plr *ai;
   int total_balance = 0;
-  bool gift = TRUE;
+  bool gift = true;
   enum diplstate_type ds_after =
       player_diplstate_get(pplayer, aplayer)->type;
 
@@ -752,7 +752,7 @@ void dai_treaty_accepted(struct ai_type *ait, struct player *pplayer,
   clause_list_iterate(ptreaty->clauses, pclause)
   {
     int balance =
-        dai_goldequiv_clause(ait, pplayer, aplayer, pclause, TRUE, ds_after);
+        dai_goldequiv_clause(ait, pplayer, aplayer, pclause, true, ds_after);
 
     total_balance += balance;
     gift = (gift && (balance >= 0));
@@ -976,7 +976,7 @@ void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
       && could_meet_with_player(pplayer, aplayer)) {
     if (has_handicap(pplayer, H_CEASEFIRE)) {
       fc_assert(!has_handicap(pplayer, H_AWAY));
-      wants_ceasefire = TRUE;
+      wants_ceasefire = true;
     } else if (!has_handicap(pplayer, H_AWAY)) {
       struct Clause clause;
 
@@ -987,7 +987,7 @@ void dai_diplomacy_first_contact(struct ai_type *ait, struct player *pplayer,
       if (dai_goldequiv_clause(ait, pplayer, aplayer, &clause, false,
                                DS_CEASEFIRE)
           > 0) {
-        wants_ceasefire = TRUE;
+        wants_ceasefire = true;
       }
     }
   }
@@ -1230,11 +1230,11 @@ static void suggest_tech_exchange(struct ai_type *ait,
           || (diff < 0 && player2->economic.gold >= -diff) || diff == 0) {
         dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, false,
                               tech2);
-        dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, TRUE, tech);
+        dai_diplomacy_suggest(player1, player2, CLAUSE_ADVANCE, true, tech);
         if (diff > 0) {
           dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, false, diff);
         } else if (diff < 0) {
-          dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, TRUE, -diff);
+          dai_diplomacy_suggest(player1, player2, CLAUSE_GOLD, true, -diff);
         }
         return;
       }
@@ -1286,7 +1286,7 @@ static void dai_share(struct ai_type *ait, struct player *pplayer,
           && research_invention_state(aresearch, idx) == TECH_KNOWN
           && research_invention_gettable(presearch, idx,
                                          game.info.tech_trade_allow_holes)) {
-        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ADVANCE, TRUE, idx);
+        dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_ADVANCE, true, idx);
       } else if (research_invention_state(presearch, idx) == TECH_KNOWN
                  && research_invention_state(aresearch, idx) != TECH_KNOWN
                  && research_invention_gettable(
@@ -1301,15 +1301,15 @@ static void dai_share(struct ai_type *ait, struct player *pplayer,
   gives_vision = gives_shared_vision(pplayer, aplayer);
   if (!gives_vision && shared_vision_is_safe(pplayer, aplayer)) {
     dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_VISION, false, 0);
-    gives_vision = TRUE;
+    gives_vision = true;
   }
   if (gives_vision && !gives_shared_vision(aplayer, pplayer)
       && (is_human(aplayer) || shared_vision_is_safe(aplayer, pplayer))) {
-    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_VISION, TRUE, 0);
+    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_VISION, true, 0);
   }
 
   if (!player_has_embassy(pplayer, aplayer)) {
-    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, TRUE, 0);
+    dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, true, 0);
   }
   if (!player_has_embassy(aplayer, pplayer)) {
     dai_diplomacy_suggest(pplayer, aplayer, CLAUSE_EMBASSY, false, 0);
@@ -1556,7 +1556,7 @@ static void war_countdown(struct ai_type *ait, struct player *pplayer,
 void dai_diplomacy_actions(struct ai_type *ait, struct player *pplayer)
 {
   struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
-  bool need_targets = TRUE;
+  bool need_targets = true;
   struct player *target = NULL;
   int most_hatred = MAX_AI_LOVE;
   int war_threshold;
@@ -1952,7 +1952,7 @@ bool dai_on_war_footing(struct ai_type *ait, struct player *pplayer)
   players_iterate(plr)
   {
     if (dai_diplomacy_get(ait, pplayer, plr)->countdown >= 0) {
-      return TRUE;
+      return true;
     }
   }
   players_iterate_end;

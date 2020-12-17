@@ -117,7 +117,7 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
     /* Only a single veteran level. Don't bother to name it. */
     if (nolevels) {
       CATLSTR(outbuf, outlen, nolevels);
-      return TRUE;
+      return true;
     } else {
       return false;
     }
@@ -148,9 +148,9 @@ static bool insert_veteran_help(char *outbuf, size_t outlen,
           MAX(0, 25 - (int) get_internal_string_length(name)), "",
           level->power_fact,
           /* e.g. "-    ", "+ 1/3", "+ 1    ", "+ 2 2/3" */
-          move_points_text_full(level->move_bonus, TRUE, "+ ", "-", TRUE));
+          move_points_text_full(level->move_bonus, true, "+ ", "-", true));
     }
-    return TRUE;
+    return true;
   }
 }
 
@@ -397,7 +397,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
       if (pextra->buildable && pextra->build_time > 0) {
-        terrain_independent_extras = TRUE;
+        terrain_independent_extras = true;
         break;
       }
     }
@@ -406,7 +406,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
       extra_type_by_cause_iterate(EC_ROAD, pextra)
       {
         if (pextra->buildable && pextra->build_time > 0) {
-          terrain_independent_extras = TRUE;
+          terrain_independent_extras = true;
           break;
         }
       }
@@ -457,7 +457,7 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
       }
       extra_type_by_cause_iterate_end;
     }
-    return TRUE;
+    return true;
   } else if (0 == strcmp(name, "VeteranLevels")) {
     return insert_veteran_help(
         outbuf, outlen, game.veteran,
@@ -474,11 +474,11 @@ static bool insert_generated_text(char *outbuf, size_t outlen,
         _("This is %s, %s client."), ver, client_string);
     insert_client_build_info(outbuf, outlen);
 
-    return TRUE;
+    return true;
   } else if (0 == strcmp(name, "DefaultMetaserver")) {
     cat_snprintf(outbuf, outlen, "  %s", FREECIV_META_URL);
 
-    return TRUE;
+    return true;
   }
   qCritical("Unknown directive '$%s' in help", name);
   return false;
@@ -812,7 +812,7 @@ void boot_help_texts(void)
 
                 for (ci = 0; ci < ncats; ci++) {
                   if (fc_strcasecmp(cats[ci], cat) == 0) {
-                    include = TRUE;
+                    include = true;
                     break;
                   }
                 }
@@ -1084,7 +1084,7 @@ void boot_help_texts(void)
                                            para + 1);
         } else {
           sz_strlcat(long_buffer, _(para));
-          inserted = TRUE;
+          inserted = true;
         }
         if (inserted && i != npara - 1) {
           sz_strlcat(long_buffer, "\n\n");
@@ -1101,7 +1101,7 @@ void boot_help_texts(void)
 
   secfile_check_unused(sf);
   secfile_destroy(sf);
-  booted = TRUE;
+  booted = true;
   qDebug("Booted help texts ok");
 }
 
@@ -1227,7 +1227,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   requirement_vector_iterate(&pimprove->reqs, preq)
   {
     if (req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT, "")) {
-      reqs = TRUE;
+      reqs = true;
     }
   }
   requirement_vector_iterate_end;
@@ -1320,10 +1320,10 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
 
     action_enabler_list_iterate(action_enablers_for_action(act), enabler)
     {
-      if (universal_fulfills_requirements(TRUE, &(enabler->target_reqs),
+      if (universal_fulfills_requirements(true, &(enabler->target_reqs),
                                           &source)) {
         /* The building is needed by this action enabler. */
-        demanded = TRUE;
+        demanded = true;
 
         /* See if this enabler gives the building a wider range. */
         requirement_vector_iterate(&(enabler->target_reqs), preq)
@@ -1464,7 +1464,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
     {
       if (requirement_fulfilled_by_improvement(pimprove,
                                                &(enabler->target_reqs))) {
-        vulnerable = TRUE;
+        vulnerable = true;
         break;
       } else {
         enum req_range vector_max_range = REQ_RANGE_LOCAL;
@@ -1650,7 +1650,7 @@ static bool utype_may_do_escape_action(const struct unit_type *utype)
 
     if (paction->actor.is_unit.moves_actor == MAK_ESCAPE) {
       /* Survives and escapes. */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
@@ -1991,14 +1991,14 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       {
         if (can_unit_type_transport(utype, utype_class(pcargo))) {
           if (utype_can_freely_load(pcargo, utype)) {
-            has_unrestricted_load = TRUE;
+            has_unrestricted_load = true;
           } else {
-            has_restricted_load = TRUE;
+            has_restricted_load = true;
           }
           if (utype_can_freely_unload(pcargo, utype)) {
-            has_unrestricted_unload = TRUE;
+            has_unrestricted_unload = true;
           } else {
-            has_restricted_unload = TRUE;
+            has_restricted_unload = true;
           }
         }
       }
@@ -2178,7 +2178,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
                   * fractional part. */
                  _("* Ignores terrain effects (moving costs at most %s MP "
                    "per tile).\n"),
-                 move_points_text(terrain_control.igter_cost, TRUE));
+                 move_points_text(terrain_control.igter_cost, true));
   }
   if (utype_has_flag(utype, UTYF_NOZOC)) {
     CATLSTR(buf, bufsz, _("* Never imposes a zone of control.\n"));
@@ -2318,7 +2318,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
 
   /* Auto attack immunity. (auto_attack.if_attacker ruleset setting) */
   if (server_setting_value_bool_get(server_setting_by_name("autoattack"))) {
-    bool not_an_auto_attacker = TRUE;
+    bool not_an_auto_attacker = true;
 
     action_auto_perf_iterate(auto_action)
     {
@@ -2369,7 +2369,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
         break;
       default:
         if (!can_utype_do_act_if_tgt_diplrel(utype, act, DRO_FOREIGN,
-                                             TRUE)) {
+                                             true)) {
           /* TRANS: describes the target of an action. */
           target_adjective = _("domestic ");
         } else if (!can_utype_do_act_if_tgt_diplrel(utype, act, DRO_FOREIGN,
@@ -2557,7 +2557,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
             int casus_belli_amount;
 
             if (!can_utype_do_act_if_tgt_diplrel(utype, act, diplrel,
-                                                 TRUE)) {
+                                                 true)) {
               /* Can't do the action. Can't give Casus Belli. */
               continue;
             }
@@ -2883,7 +2883,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     {
       if (requirement_fulfilled_by_unit_type(utype,
                                              &(enabler->target_reqs))) {
-        vulnerable = TRUE;
+        vulnerable = true;
         break;
       }
     }
@@ -3349,7 +3349,7 @@ const char *helptext_road_bonus_str(const struct terrain *pterrain,
       if (incr == 0 && bonus == 0) {
         cat_snprintf(str, sizeof(str), "%d", incr);
       } else {
-        has_effect = TRUE;
+        has_effect = true;
         if (incr != 0) {
           cat_snprintf(str, sizeof(str), "%+d", incr);
         }
@@ -3817,7 +3817,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
                     * fractional part. */
                    _("* Movement cost along %s is %s MP.\n"),
                    extra_name_translation(pextra),
-                   move_points_text(proad->move_cost, TRUE));
+                   move_points_text(proad->move_cost, true));
     }
   }
 
@@ -3875,7 +3875,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
       output_type_iterate(o)
       {
         if (proad->tile_incr[o] > 0) {
-          do_bonus = TRUE;
+          do_bonus = true;
           fc_assert(o == O_FOOD || o == O_SHIELD || o == O_TRADE);
         }
       }
@@ -3991,7 +3991,7 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   requirement_vector_iterate(&pgood->reqs, preq)
   {
     if (req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT, "")) {
-      reqs = TRUE;
+      reqs = true;
     }
   }
   requirement_vector_iterate_end;
@@ -4026,7 +4026,7 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   requirement_vector_iterate(&pspec->reqs, preq)
   {
     if (req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT, "")) {
-      reqs = TRUE;
+      reqs = true;
     }
   }
   requirement_vector_iterate_end;
@@ -4065,7 +4065,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   requirement_vector_iterate(&gov->reqs, preq)
   {
     if (req_text_insert_nl(buf, bufsz, pplayer, preq, VERB_DEFAULT, "")) {
-      reqs = TRUE;
+      reqs = true;
     }
   }
   requirement_vector_iterate_end;
@@ -4088,7 +4088,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     struct astring outputs_or = ASTRING_INIT;
     struct astring outputs_and = ASTRING_INIT;
     bool too_complex = false;
-    bool world_value_valid = TRUE;
+    bool world_value_valid = true;
 
     /* Grab output type, if there is one */
     requirement_vector_iterate(&peffect->reqs, preq)
@@ -4098,7 +4098,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
        * Also don't try to explain an effect with any requirements explicitly
        * marked as 'quiet' by ruleset author. */
       if (!preq->present || preq->quiet) {
-        too_complex = TRUE;
+        too_complex = true;
         continue;
       }
       switch (preq->source.kind) {
@@ -4131,7 +4131,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
           /* Already have a unit flag requirement. More than one is too
            * complex for us to explain, so say nothing. */
           /* FIXME: we could handle this */
-          too_complex = TRUE;
+          too_complex = true;
         }
         break;
       case VUT_GOVERNMENT:
@@ -4141,7 +4141,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         fc_assert(preq->source.value.govern == gov);
         break;
       default:
-        too_complex = TRUE;
+        too_complex = true;
         world_value_valid = false;
         break;
       };
@@ -4180,7 +4180,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         /* There was no outputtype requirement. Effect is active for all
          * output types. Generate lists for that. */
         bool harvested_only =
-            TRUE; /* Consider only output types from fields */
+            true; /* Consider only output types from fields */
 
         if (peffect->type == EFT_UPKEEP_FACTOR
             || peffect->type == EFT_UNIT_UPKEEP_FREE_PER_CITY
@@ -4774,7 +4774,7 @@ void helptext_nation(char *buf, size_t bufsz, struct nation_type *pnation,
 {
   struct universal source = {.value = {.nation = pnation},
                              .kind = VUT_NATION};
-  bool print_break = TRUE;
+  bool print_break = true;
 
 #define PRINT_BREAK()                                                       \
   do {                                                                      \

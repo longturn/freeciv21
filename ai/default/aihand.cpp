@@ -246,9 +246,9 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
 
   /* City parameters needed for celebrations. */
   cm_init_parameter(&cmp);
-  cmp.require_happy = TRUE; /* note this one */
+  cmp.require_happy = true; /* note this one */
   cmp.allow_disorder = false;
-  cmp.allow_specialists = TRUE;
+  cmp.allow_specialists = true;
   cmp.factor[O_FOOD] = 20;
   cmp.minimal_surplus[O_GOLD] = -FC_INFINITY;
 
@@ -474,7 +474,7 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
       if (cmr->found_a_valid && pcity->surplus[O_FOOD] > 0
           && city_size_get(pcity) >= game.info.celebratesize
           && city_can_grow_to(pcity, city_size_get(pcity) + 1)) {
-        city_data->celebrate = TRUE;
+        city_data->celebrate = true;
         can_celebrate++;
       } else {
         city_data->celebrate = false;
@@ -645,13 +645,13 @@ static void dai_manage_taxes(struct ai_type *ait, struct player *pplayer)
     log_base(LOGLEVEL_TAX, "*** %s CELEBRATES! ***", player_name(pplayer));
 
     /* We do celebrate! */
-    ai->celebrate = TRUE;
+    ai->celebrate = true;
 
     city_list_iterate(pplayer->cities, pcity)
     {
       struct cm_result *cmr = cm_result_new(pcity);
 
-      if (def_ai_city_data(pcity, ait)->celebrate == TRUE) {
+      if (def_ai_city_data(pcity, ait)->celebrate == true) {
         log_base(LOGLEVEL_TAX, "setting %s to celebrate",
                  city_name_get(pcity));
         cm_query_result(pcity, &cmp, cmr, false);

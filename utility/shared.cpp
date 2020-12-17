@@ -249,7 +249,7 @@ bool is_safe_filename(const char *name)
   }
 
   /* Otherwise, it is okay... */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -287,7 +287,7 @@ bool is_ascii_name(const char *name)
   }
 
   /* otherwise, it's okay... */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -307,7 +307,7 @@ bool is_base64url(const char *s)
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -459,7 +459,7 @@ char *end_of_strn(char *str, int *nleft)
  ****************************************************************************/
 bool check_strlen(const char *str, size_t len, const char *errmsg)
 {
-  fc_assert_ret_val_msg(strlen(str) < len, TRUE, errmsg, str, len);
+  fc_assert_ret_val_msg(strlen(str) < len, true, errmsg, str, len);
   return false;
 }
 
@@ -567,7 +567,7 @@ bool str_to_float(const char *str, float *pfloat)
   }
 
   if (*str == '.') {
-    dot = TRUE;
+    dot = true;
     str++;
 
     while (QChar::isDigit(*str)) {
@@ -634,7 +634,7 @@ char *freeciv_storage_dir(void)
 
     qstrcpy(storage_dir_freeciv, FREECIV_STORAGE_DIR);
 
-    storage_dir_freeciv = expand_dir(storage_dir_freeciv, TRUE);
+    storage_dir_freeciv = expand_dir(storage_dir_freeciv, true);
 
     qDebug(_("Storage dir is \"%s\"."), storage_dir_freeciv);
   }
@@ -989,7 +989,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
   }
 
   if (!filename) {
-    bool first = TRUE;
+    bool first = true;
 
     astr_clear(&realfile);
     for (auto dirname : *dirs) {
@@ -1271,7 +1271,7 @@ static void autocap_update(void)
 {
   const char *autocap_opt_in[] = {"fi", NULL};
   int i;
-  bool ac_enabled = FALSE;
+  bool ac_enabled = false;
 
   char *lang = getenv("LANG");
 
@@ -1279,7 +1279,7 @@ static void autocap_update(void)
     for (i = 0; autocap_opt_in[i] != NULL && !ac_enabled; i++) {
       if (lang[0] == autocap_opt_in[i][0]
           && lang[1] == autocap_opt_in[i][1]) {
-        ac_enabled = TRUE;
+        ac_enabled = true;
         break;
       }
     }
@@ -1618,11 +1618,11 @@ bool path_is_absolute(const char *filename)
 
 #ifdef FREECIV_MSWINDOWS
   if (strchr(filename, ':')) {
-    return TRUE;
+    return true;
   }
 #else  /* FREECIV_MSWINDOWS */
   if (filename[0] == '/') {
-    return TRUE;
+    return true;
   }
 #endif /* FREECIV_MSWINDOWS */
 
@@ -1712,17 +1712,17 @@ void format_time_duration(time_t t, char *buf, int maxlen)
 
   if (days > 0) {
     cat_snprintf(buf, maxlen, "%d %s", days, PL_("day", "days", days));
-    space = TRUE;
+    space = true;
   }
   if (hours > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", hours,
                  PL_("hour", "hours", hours));
-    space = TRUE;
+    space = true;
   }
   if (minutes > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", minutes,
                  PL_("minute", "minutes", minutes));
-    space = TRUE;
+    space = true;
   }
   if (seconds > 0) {
     cat_snprintf(buf, maxlen, "%s%d %s", space ? " " : "", seconds,
@@ -1759,11 +1759,11 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
 
   /* Jump over the leading asterisks. */
   pattern++;
-  while (TRUE) {
+  while (true) {
     switch (*pattern) {
     case '\0':
       /* It is a leading asterisk. */
-      return TRUE;
+      return true;
     case '*':
       pattern++;
       continue;
@@ -1800,7 +1800,7 @@ static bool wildcard_asterisk_fit(const char *pattern, const char *test)
     }
 
     if (wildcard_fit_string(pattern, test)) {
-      return TRUE;
+      return true;
     }
 
     (test)++;
@@ -1825,7 +1825,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   }
 
   /* Find the end of the pattern. */
-  while (TRUE) {
+  while (true) {
     *pattern = strchr(*pattern, ']');
     if (NULL == *pattern) {
       /* Wildcard format error. */
@@ -1840,7 +1840,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
   }
 
   if ('!' == *start) {
-    negation = TRUE;
+    negation = true;
     start++;
   } else {
     negation = false;
@@ -1881,7 +1881,7 @@ static bool wildcard_range_fit(const char **pattern, const char **test)
  ****************************************************************************/
 bool wildcard_fit_string(const char *pattern, const char *test)
 {
-  while (TRUE) {
+  while (true) {
     switch (*pattern) {
     case '\0':
       /* '\0' != test. */
@@ -2137,7 +2137,7 @@ static size_t extract_escapes(const char *format, char *escapes,
       if ('$' == *format) {
         /* Strings are reordered. */
         sscanf(start, "%d", &idx);
-        reordered = TRUE;
+        reordered = true;
       }
     }
 

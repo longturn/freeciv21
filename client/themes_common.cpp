@@ -122,7 +122,7 @@ bool load_theme(const char *theme_name)
     for (j = 0; j < directories[i].num_themes; j++) {
       if (strcmp(theme_name, directories[i].themes[j]) == 0) {
         gui_load_theme(directories[i].path, directories[i].themes[j]);
-        return TRUE;
+        return true;
       }
     }
   }

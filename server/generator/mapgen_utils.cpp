@@ -69,7 +69,7 @@ bool not_placed(const struct tile *ptile) { return !pmap(ptile); }
 /**********************************************************************/ /**
    Mark tile terrain as placed.
  **************************************************************************/
-void map_set_placed(struct tile *ptile) { pmap(ptile) = TRUE; }
+void map_set_placed(struct tile *ptile) { pmap(ptile) = true; }
 
 /**********************************************************************/ /**
    Mark tile terrain as not placed.
@@ -112,7 +112,7 @@ void adjust_int_map_filtered(int *int_map, int int_map_max, void *data,
                                             const void *data))
 {
   int minval = 0, maxval = 0, total = 0;
-  bool first = TRUE;
+  bool first = true;
 
   /* Determine minimum and maximum value. */
   whole_map_iterate_filtered(ptile, data, filter)
@@ -184,7 +184,7 @@ void smooth_int_map(int *int_map, bool zeroes_at_edges)
   static const float weight_standard[5] = {0.13, 0.19, 0.37, 0.19, 0.13};
   static const float weight_isometric[5] = {0.15, 0.21, 0.29, 0.21, 0.15};
   const float *weight;
-  bool axe = TRUE;
+  bool axe = true;
   int *target_map, *source_map;
   int *alt_int_map = new int[MAP_INDEX_SIZE]();
 
@@ -483,7 +483,7 @@ void assign_continent_numbers(void)
           fc_realloc(continent_sizes, (wld.map.num_continents + 1)
                                           * sizeof(*continent_sizes)));
       continent_sizes[wld.map.num_continents] = 0;
-      assign_continent_flood(ptile, TRUE, wld.map.num_continents);
+      assign_continent_flood(ptile, true, wld.map.num_continents);
     } else {
       wld.map.num_oceans++;
       ocean_sizes = static_cast<int *>(fc_realloc(
@@ -517,7 +517,7 @@ struct terrain *most_shallow_ocean(bool frozen)
 
       if (!oceans && nonfresh) {
         /* First ocean type seen, reset even if frozenness doesn't match */
-        oceans = TRUE;
+        oceans = true;
         shallow = pterr;
         frozenmatch = frozen_ok;
         continue;
@@ -528,7 +528,7 @@ struct terrain *most_shallow_ocean(bool frozen)
       if (!frozenmatch && frozen_ok) {
         /* Prefer terrain that matches frozenness (as long as we don't go
          * backwards on freshness) */
-        frozenmatch = TRUE;
+        frozenmatch = true;
         shallow = pterr;
         continue;
       } else if (frozenmatch && !frozen_ok) {

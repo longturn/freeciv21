@@ -94,7 +94,7 @@ void dio_set_put_conv_callback(DIO_PUT_CONV_FUN fun)
 static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
 {
   size_t len = nsrc; /* length to copy, not including null */
-  bool ret = TRUE;
+  bool ret = true;
 
   if (ndst > 0 && len >= ndst) {
     ret = false;
@@ -130,11 +130,11 @@ bool dataio_get_conv_callback(char *dst, size_t ndst, const char *src,
 static bool enough_space(struct raw_data_out *dout, size_t size)
 {
   if (dout->current + size > dout->dest_size) {
-    dout->too_short = TRUE;
+    dout->too_short = true;
     return false;
   } else {
     dout->used = MAX(dout->used, dout->current + size);
-    return TRUE;
+    return true;
   }
 }
 
@@ -226,7 +226,7 @@ bool dio_input_skip(struct data_in *din, size_t size)
 {
   if (enough_data(din, size)) {
     din->current += size;
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -354,7 +354,7 @@ void dio_put_sint32_raw(struct raw_data_out *dout, int value)
  **************************************************************************/
 void dio_put_bool8_raw(struct raw_data_out *dout, bool value)
 {
-  FIELD_RANGE_TEST(value != TRUE && value != false, value = (value != false);
+  FIELD_RANGE_TEST(value != true && value != false, value = (value != false);
                    , "Trying to put a non-boolean: %d", (int) value);
 
   dio_put_uint8_raw(dout, value ? 1 : 0);
@@ -365,7 +365,7 @@ void dio_put_bool8_raw(struct raw_data_out *dout, bool value)
  **************************************************************************/
 void dio_put_bool32_raw(struct raw_data_out *dout, bool value)
 {
-  FIELD_RANGE_TEST(value != TRUE && value != false, value = (value != false);
+  FIELD_RANGE_TEST(value != true && value != false, value = (value != false);
                    , "Trying to put a non-boolean: %d", (int) value);
 
   dio_put_uint32_raw(dout, value ? 1 : 0);
@@ -563,7 +563,7 @@ bool dio_get_uint8_raw(struct data_in *din, int *dest)
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 1);
   *dest = x;
   din->current++;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -584,7 +584,7 @@ bool dio_get_uint16_raw(struct data_in *din, int *dest)
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 2);
   *dest = qFromBigEndian(x);
   din->current += 2;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -605,7 +605,7 @@ bool dio_get_uint32_raw(struct data_in *din, int *dest)
   memcpy(&x, ADD_TO_POINTER(din->src, din->current), 4);
   *dest = qFromBigEndian(x);
   din->current += 4;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -651,7 +651,7 @@ bool dio_get_bool8_raw(struct data_in *din, bool *dest)
   }
 
   *dest = (ival != 0);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -671,7 +671,7 @@ bool dio_get_bool32_raw(struct data_in *din, bool *dest)
   }
 
   *dest = (ival != 0);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -687,7 +687,7 @@ bool dio_get_ufloat_raw(struct data_in *din, float *dest, int float_factor)
   }
 
   *dest = (float) ival / float_factor;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -703,7 +703,7 @@ bool dio_get_sfloat_raw(struct data_in *din, float *dest, int float_factor)
   }
 
   *dest = (float) ival / float_factor;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -721,7 +721,7 @@ bool dio_get_sint8_raw(struct data_in *din, int *dest)
     tmp -= 0x100;
   }
   *dest = tmp;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -739,7 +739,7 @@ bool dio_get_sint16_raw(struct data_in *din, int *dest)
     tmp -= 0x10000;
   }
   *dest = tmp;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -760,7 +760,7 @@ bool dio_get_sint32_raw(struct data_in *din, int *dest)
 #endif
 
   *dest = tmp;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -775,7 +775,7 @@ bool dio_get_memory_raw(struct data_in *din, void *dest, size_t dest_size)
 
   memcpy(dest, ADD_TO_POINTER(din->src, din->current), dest_size);
   din->current += dest_size;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -813,7 +813,7 @@ bool dio_get_string_raw(struct data_in *din, char *dest,
   }
 
   din->current += offset + 1;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -851,7 +851,7 @@ bool dio_get_cm_parameter_raw(struct data_in *din,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -875,7 +875,7 @@ bool dio_get_unit_order_raw(struct data_in *din, struct unit_order *order)
   order->activity = unit_activity(iactivity);
   order->dir = direction8(idir);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -911,7 +911,7 @@ bool dio_get_worklist_raw(struct data_in *din, struct worklist *pwl)
     worklist_append(pwl, &univ);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -938,7 +938,7 @@ bool dio_get_uint8_vec8_raw(struct data_in *din, int **values,
   vec[inx] = stop_value;
   *values = vec;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -964,7 +964,7 @@ bool dio_get_uint16_vec8_raw(struct data_in *din, int **values,
   vec[inx] = stop_value;
   *values = vec;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -983,7 +983,7 @@ bool dio_get_action_probability_raw(struct data_in *din,
   aprob->min = min;
   aprob->max = max;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1018,7 +1018,7 @@ bool dio_get_requirement_raw(struct data_in *din, struct requirement *preq)
    */
   *preq = req_from_values(type, range, survives, present, quiet, value);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

@@ -147,7 +147,7 @@ void fc_srand(RANDOM_TYPE seed)
   rand_state.k = (55 - 24);
   rand_state.x = (55 - 0);
 
-  rand_state.is_init = TRUE;
+  rand_state.is_init = true;
   fc_rand(MAX_UINT32);
 }
 

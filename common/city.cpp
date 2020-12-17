@@ -81,9 +81,9 @@ struct citystyle *city_styles = NULL;
 /* One day these values may be read in from the ruleset.  In the meantime
  * they're just an easy way to access information about each output type. */
 struct output_type output_types[O_LAST] = {
-    {O_FOOD, N_("Food"), "food", TRUE, UNHAPPY_PENALTY_SURPLUS},
-    {O_SHIELD, N_("Shield"), "shield", TRUE, UNHAPPY_PENALTY_SURPLUS},
-    {O_TRADE, N_("Trade"), "trade", TRUE, UNHAPPY_PENALTY_NONE},
+    {O_FOOD, N_("Food"), "food", true, UNHAPPY_PENALTY_SURPLUS},
+    {O_SHIELD, N_("Shield"), "shield", true, UNHAPPY_PENALTY_SURPLUS},
+    {O_TRADE, N_("Trade"), "trade", true, UNHAPPY_PENALTY_NONE},
     {O_GOLD, N_("Gold"), "gold", false, UNHAPPY_PENALTY_ALL_PRODUCTION},
     {O_LUXURY, N_("Luxury"), "luxury", false, UNHAPPY_PENALTY_NONE},
     {O_SCIENCE, N_("Science"), "science", false,
@@ -108,7 +108,7 @@ bool city_tile_index_to_xy(int *city_map_x, int *city_map_y,
   *city_map_x = CITY_REL2ABS(city_map_index[city_tile_index].dx);
   *city_map_y = CITY_REL2ABS(city_map_index[city_tile_index].dy);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -760,7 +760,7 @@ bool city_production_build_units(const struct city *pcity,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -823,7 +823,7 @@ bool can_city_build_improvement_now(const struct city *pcity,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -851,7 +851,7 @@ bool can_city_build_improvement_later(const struct city *pcity,
   }
   requirement_vector_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -884,7 +884,7 @@ bool can_city_build_unit_direct(const struct city *pcity,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -902,7 +902,7 @@ bool can_city_build_unit_now(const struct city *pcity,
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -925,7 +925,7 @@ bool can_city_build_unit_later(const struct city *pcity,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1044,7 +1044,7 @@ void city_choose_build_default(struct city *pcity)
       improvement_iterate(pimprove)
       {
         if (can_city_build_improvement_direct(pcity, pimprove)) {
-          found = TRUE;
+          found = true;
           pcity->production.kind = VUT_IMPROVEMENT;
           pcity->production.value.building = pimprove;
           break;
@@ -1056,7 +1056,7 @@ void city_choose_build_default(struct city *pcity)
         unit_type_iterate(punittype)
         {
           if (can_city_build_unit_direct(pcity, punittype)) {
-            found = TRUE;
+            found = true;
             pcity->production.kind = VUT_UTYPE;
             pcity->production.value.utype = punittype;
           }
@@ -1382,7 +1382,7 @@ bool base_city_can_work_tile(const struct player *restriction,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1407,7 +1407,7 @@ bool citymindist_prevents_city_on_tile(const struct tile *ptile)
   square_iterate(&(wld.map), ptile, citymindist - 1, ptile1)
   {
     if (tile_city(ptile1)) {
-      return TRUE;
+      return true;
     }
   }
   square_iterate_end;
@@ -1431,7 +1431,7 @@ bool city_can_be_built_here(const struct tile *ptile,
 
   if (punit == NULL) {
     /* The reamining checks tests if punit can found a city here */
-    return TRUE;
+    return true;
   }
 
   action_by_result_iterate(paction, act_id, ACTRES_FOUND_CITY)
@@ -1456,13 +1456,13 @@ bool city_can_be_built_here(const struct tile *ptile,
         && tile_owner(ptile) != unit_owner(punit)
         /* The ruleset may allow founding cities on foreign terrain. */
         && !can_utype_do_act_if_tgt_diplrel(
-            unit_type_get(punit), paction->id, DRO_FOREIGN, TRUE)) {
+            unit_type_get(punit), paction->id, DRO_FOREIGN, true)) {
       /* Cannot steal borders by settling. This has to be settled by
        * force of arms. */
       continue;
     }
 
-    return TRUE;
+    return true;
   }
   action_by_result_iterate_end;
 
@@ -1487,7 +1487,7 @@ bool city_can_be_built_tile_only(const struct tile *ptile)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1713,7 +1713,7 @@ void city_production_caravan_shields_init(void)
   /* Common for all production kinds. */
   prod_as_req.range = REQ_RANGE_LOCAL;
   prod_as_req.survives = false;
-  prod_as_req.present = TRUE;
+  prod_as_req.present = true;
 
   /* Check improvements */
   prod_as_req.source.kind = VUT_IMPROVEMENT;
@@ -2027,7 +2027,7 @@ bool is_friendly_city_near(const struct player *owner,
     struct city *pcity = tile_city(ptile1);
 
     if (pcity && pplayers_allied(owner, city_owner(pcity))) {
-      return TRUE;
+      return true;
     }
   }
   square_iterate_end;
@@ -2046,7 +2046,7 @@ bool city_exists_within_max_city_map(const struct tile *ptile,
   {
     if (may_be_on_center || !same_pos(ptile, ptile1)) {
       if (tile_city(ptile1)) {
-        return TRUE;
+        return true;
       }
     }
   }
@@ -2867,7 +2867,7 @@ void set_city_production(struct city *pcity)
           trade_route_settings_by_type(type);
 
       if (settings->cancelling == TRI_ACTIVE) {
-        can_trade = TRUE;
+        can_trade = true;
       }
     }
 
@@ -3167,7 +3167,7 @@ int city_waste(const struct city *pcity, Output_type_id otype, int total,
       }
 
       if (gov_center == NULL) {
-        waste_all = TRUE; /* no gov center - no income */
+        waste_all = true; /* no gov center - no income */
       } else {
         waste_level += waste_by_dist * min_dist / 100;
         if (waste_by_rel_dist > 0) {
@@ -3444,7 +3444,7 @@ bool city_exist(int id)
 {
   /* Check if city exist in game */
   if (game_city_by_number(id)) {
-    return TRUE;
+    return true;
   }
 
   return false;

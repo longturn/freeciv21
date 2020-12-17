@@ -464,10 +464,10 @@ adv_want dai_effect_value(struct player *pplayer, struct government *gov,
     {
       if (requirement_fulfilled_by_unit_class(pclass, &peffect->reqs)) {
         if (pclass->adv.sea_move != MOVE_NONE) {
-          affects_sea_capable_units = TRUE;
+          affects_sea_capable_units = true;
         }
         if (pclass->adv.land_move != MOVE_NONE) {
-          affects_land_capable_units = TRUE;
+          affects_land_capable_units = true;
         }
       }
       if (affects_sea_capable_units && affects_land_capable_units) {
@@ -690,7 +690,7 @@ static bool have_better_government(const struct player *pplayer,
 {
   if (pgov->ai.better) {
     if (pplayer->government == pgov->ai.better) {
-      return TRUE;
+      return true;
     } else {
       return have_better_government(pplayer, pgov->ai.better);
     }
@@ -808,7 +808,7 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
   case VUT_CITYTILE:
   case VUT_IMPR_GENUS:
     /* Can always be achieved. */
-    return TRUE;
+    return true;
 
   case VUT_NONE:
   case VUT_UTYPE:
@@ -830,5 +830,5 @@ bool dai_can_requirement_be_met_in_city(const struct requirement *preq,
     /* No sensible implementation possible with data available. */
     break;
   }
-  return TRUE;
+  return true;
 }

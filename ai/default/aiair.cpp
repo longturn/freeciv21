@@ -68,7 +68,7 @@ static struct tile *find_nearest_airbase(const struct unit *punit,
   parameter.omniscience = !has_handicap(pplayer, H_MAP);
   pfm = pf_map_new(&parameter);
 
-  pf_map_move_costs_iterate(pfm, ptile, move_cost, TRUE)
+  pf_map_move_costs_iterate(pfm, ptile, move_cost, true)
   {
     if (move_cost > punit->moves_left) {
       /* Too far! */
@@ -112,7 +112,7 @@ static bool dai_should_we_air_attack_tile(struct ai_type *ait,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /******************************************************************/ /**
@@ -387,7 +387,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
         UNIT_LOG(LOG_DEBUG, punit, "Oops, fallin outta the sky");
       }
       def_ai_unit_data(punit, ait)->done =
-          TRUE; /* Won't help trying again */
+          true; /* Won't help trying again */
       return;
     }
 
@@ -417,7 +417,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
                 unit_rule_name(punit), TILE_XY(dst_tile),
                 tile_city(dst_tile) ? city_name_get(tile_city(dst_tile))
                                     : "");
-      def_ai_unit_data(punit, ait)->done = TRUE; /* Wait for next turn */
+      def_ai_unit_data(punit, ait)->done = true; /* Wait for next turn */
       if (!adv_follow_path(punit, path, dst_tile)) {
         pf_path_destroy(path);
         return; /* The unit died. */
@@ -426,7 +426,7 @@ void dai_manage_airunit(struct ai_type *ait, struct player *pplayer,
     } else {
       log_debug("%s cannot find anything to kill and is staying put",
                 unit_rule_name(punit));
-      def_ai_unit_data(punit, ait)->done = TRUE;
+      def_ai_unit_data(punit, ait)->done = true;
       unit_activity_handling(punit, ACTIVITY_IDLE);
     }
   }
@@ -502,7 +502,7 @@ bool dai_choose_attacker_air(struct ai_type *ait, struct player *pplayer,
         choice->type = CT_ATTACKER;
         choice->need_boat = false;
         adv_choice_set_use(choice, "offensive air");
-        want_something = TRUE;
+        want_something = true;
         log_debug("%s wants to build %s (want=%d)", city_name_get(pcity),
                   utype_rule_name(punittype), profit);
       } else {

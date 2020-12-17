@@ -123,7 +123,7 @@ bool entry_from_token(struct section *psection, const char *name,
     (void) section_entry_str_new(psection, name, buf, false);
     DEBUG_ENTRIES("entry %s '%s'", name, buf);
     delete[] buf;
-    return TRUE;
+    return true;
   }
 
   if ('$' == tok[0] || '"' == tok[0]) {
@@ -134,7 +134,7 @@ bool entry_from_token(struct section *psection, const char *name,
     (void) section_entry_str_new(psection, name, buf, escaped);
     DEBUG_ENTRIES("entry %s '%s'", name, buf);
     delete[] buf;
-    return TRUE;
+    return true;
   }
 
   if (QChar::isDigit(tok[0])
@@ -145,7 +145,7 @@ bool entry_from_token(struct section *psection, const char *name,
       (void) section_entry_float_new(psection, name, fvalue);
       DEBUG_ENTRIES("entry %s %d", name, fvalue);
 
-      return TRUE;
+      return true;
     } else {
       int ivalue;
 
@@ -153,7 +153,7 @@ bool entry_from_token(struct section *psection, const char *name,
         (void) section_entry_int_new(psection, name, ivalue);
         DEBUG_ENTRIES("entry %s %d", name, ivalue);
 
-        return TRUE;
+        return true;
       }
     }
   }
@@ -164,7 +164,7 @@ bool entry_from_token(struct section *psection, const char *name,
 
     (void) section_entry_bool_new(psection, name, value);
     DEBUG_ENTRIES("entry %s %s", name, value ? "TRUE" : "FALSE");
-    return TRUE;
+    return true;
   }
 
   return false;

@@ -148,7 +148,7 @@ static inline bool fz_method_is_valid(enum fz_method method)
 #ifdef FREECIV_HAVE_LIBLZMA
   case FZ_XZ:
 #endif
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -157,7 +157,7 @@ static inline bool fz_method_is_valid(enum fz_method method)
   (fz_method_is_valid(method)                                               \
        ? method                                                             \
        : (fc_assert_msg(                                                    \
-              TRUE == fz_method_is_valid(method),                           \
+              true == fz_method_is_valid(method),                           \
               "Unsupported compress method %d, reverting to plain.",        \
               method),                                                      \
           FZ_PLAIN))
@@ -258,7 +258,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
           } else {
             fp->u.bz2.firstbyte = tmp;
           }
-          fp->u.bz2.eof = TRUE;
+          fp->u.bz2.eof = true;
         } else if (fp->u.bz2.error != BZ_OK) {
           /* Read failed */
           BZ2_bzReadClose(&tmp_err, fp->u.bz2.file);
@@ -307,7 +307,7 @@ fz_FILE *fz_from_file(const char *filename, const char *in_mode,
         fp->u.xz.stream.avail_out = PLAIN_FILE_BUF_SIZE;
         len = fread(&fp->u.xz.hack_byte, 1, 1, fp->u.xz.plain);
         if (len > 0) {
-          fp->u.xz.hack_byte_used = TRUE;
+          fp->u.xz.hack_byte_used = true;
           action = LZMA_RUN;
         } else {
           fp->u.xz.hack_byte_used = false;
@@ -565,7 +565,7 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
         buffer[i + j] = fp->u.xz.out_buf[fp->u.xz.out_index++];
         fp->u.xz.total_read++;
         if (buffer[i + j] == '\n') {
-          line_end = TRUE;
+          line_end = true;
         }
       }
 
@@ -669,7 +669,7 @@ char *fz_fgets(char *buffer, int size, fz_FILE *fp)
       }
       if (fp->u.bz2.error == BZ_STREAM_END) {
         /* EOF reached. Do not BZ2_bzRead() any more. */
-        fp->u.bz2.eof = TRUE;
+        fp->u.bz2.eof = true;
       }
     }
     buffer[i] = '\0';
@@ -719,7 +719,7 @@ static bool xz_outbuffer_to_file(fz_FILE *fp, lzma_action action)
     fp->u.xz.stream.next_out = fp->u.xz.out_buf;
   } while (fp->u.xz.stream.avail_in > 0);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

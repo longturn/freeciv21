@@ -668,5 +668,5 @@ private
   ai->funcs.city_info = texai_city_changed;
   ai->funcs.unit_info = texai_unit_changed;
 
-  return TRUE;
+  return true;
 }

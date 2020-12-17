@@ -237,7 +237,7 @@ void building_advisor(struct player *pplayer)
       struct adv_city *city_data = pcity->server.adv;
 
       if (is_ai(pplayer)) {
-        bool result = TRUE;
+        bool result = true;
 
         /* AI has opportunity to say that this city cannot be
          * wonder city */

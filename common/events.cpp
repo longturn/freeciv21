@@ -315,7 +315,7 @@ bool is_city_event(enum event_type event)
     return false;
 
   default:
-    return TRUE;
+    return true;
   }
 }
 

@@ -1097,7 +1097,7 @@ bool are_requirements_contradictions(const struct requirement *req1,
 {
   if (are_requirements_opposites(req1, req2)) {
     /* The exact opposite. */
-    return TRUE;
+    return true;
   }
 
   switch (req1->source.kind) {
@@ -1192,7 +1192,7 @@ bool does_req_contradicts_reqs(const struct requirement *req,
   requirement_vector_iterate(vec, preq)
   {
     if (are_requirements_contradictions(req, preq)) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -1211,7 +1211,7 @@ static inline bool players_in_same_range(const struct player *pplayer1,
 {
   switch (range) {
   case REQ_RANGE_WORLD:
-    return TRUE;
+    return true;
   case REQ_RANGE_ALLIANCE:
     return pplayers_allied(pplayer1, pplayer2);
   case REQ_RANGE_TEAM:
@@ -1279,7 +1279,7 @@ static bool player_has_ever_built(const struct player *pplayer,
   if (is_wonder(building)) {
     return (wonder_is_built(pplayer, building)
                     || wonder_is_lost(pplayer, building)
-                ? TRUE
+                ? true
                 : false);
   } else {
     qCritical("Player-ranged requirements are only supported for wonders.");
@@ -1901,13 +1901,13 @@ static enum fc_tristate is_terrain_in_range(const struct tile *target_tile,
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(
-        pterrain && is_terrain_card_near(target_tile, pterrain, TRUE));
+        pterrain && is_terrain_card_near(target_tile, pterrain, true));
   case REQ_RANGE_ADJACENT:
     if (!target_tile) {
       return TRI_MAYBE;
     }
     return BOOL_TO_TRISTATE(
-        pterrain && is_terrain_near_tile(target_tile, pterrain, TRUE));
+        pterrain && is_terrain_near_tile(target_tile, pterrain, true));
   case REQ_RANGE_CITY:
     if (!target_city) {
       return TRI_MAYBE;
@@ -2916,7 +2916,7 @@ is_citystatus_in_range(const struct city *target_city, enum req_range range,
       trade_partners_iterate(target_city, trade_partner)
       {
         if (city_owner(trade_partner) == trade_partner->original) {
-          found = TRUE;
+          found = true;
           break;
         }
       }
@@ -3244,7 +3244,7 @@ bool is_req_active(
         trade_partners_iterate(target_city, trade_partner)
         {
           if (city_size_get(trade_partner) >= req->source.value.minsize) {
-            found = TRUE;
+            found = true;
             break;
           }
         }
@@ -3344,7 +3344,7 @@ bool is_req_active(
 
   if (eval == TRI_MAYBE) {
     if (prob_type == RPT_POSSIBLE) {
-      return TRUE;
+      return true;
     } else {
       return false;
     }
@@ -3392,7 +3392,7 @@ bool are_reqs_active(const struct player *target_player,
     }
   }
   requirement_vector_iterate_end;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3418,7 +3418,7 @@ bool is_req_unchanging(const struct requirement *req)
   case VUT_STYLE:
   case VUT_TOPO:
   case VUT_SERVERSETTING:
-    return TRUE;
+    return true;
   case VUT_NATION:
   case VUT_NATIONGROUP:
     return (req->range != REQ_RANGE_ALLIANCE);
@@ -3460,7 +3460,7 @@ bool is_req_unchanging(const struct requirement *req)
      * practically guaranteed to change.  We return TRUE here for historical
      * reasons and so that the AI doesn't get confused (since the AI
      * doesn't know how to meet special and terrain requirements). */
-    return TRUE;
+    return true;
   case VUT_MINYEAR:
     /* Once year is reached, it does not change again */
     return req->source.value.minyear > game.info.year;
@@ -3468,7 +3468,7 @@ bool is_req_unchanging(const struct requirement *req)
     break;
   }
   fc_assert_msg(false, "Invalid source kind %d.", req->source.kind);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3481,7 +3481,7 @@ bool is_req_in_vec(const struct requirement *req,
   requirement_vector_iterate(vec, preq)
   {
     if (are_requirements_equal(req, preq)) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -3501,7 +3501,7 @@ bool req_vec_wants_type(const struct requirement_vector *reqs,
   requirement_vector_iterate(reqs, preq)
   {
     if (preq->present && preq->source.kind == kind) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -3631,13 +3631,13 @@ bool req_vec_change_apply(const struct req_vec_change *modification,
   switch (modification->operation) {
   case RVCO_APPEND:
     requirement_vector_append(target, modification->req);
-    return TRUE;
+    return true;
   case RVCO_REMOVE:
     requirement_vector_iterate(target, preq)
     {
       if (are_requirements_equal(&modification->req, preq)) {
         requirement_vector_remove(target, i);
-        return TRUE;
+        return true;
       }
       i++;
     }
@@ -3771,7 +3771,7 @@ bool are_universals_equal(const struct universal *psource1,
   }
   switch (psource1->kind) {
   case VUT_NONE:
-    return TRUE;
+    return true;
   case VUT_ADVANCE:
     return psource1->value.advance == psource2->value.advance;
   case VUT_TECHFLAG:
@@ -4162,7 +4162,7 @@ const char *universal_name_translation(const struct universal *psource,
     /* TRANS: Minimum unit movement points left for requirement to be met
      * (%s is a string like "1" or "2 1/3") */
     cat_snprintf(buf, bufsz, _("%s MP"),
-                 move_points_text(psource->value.minmoves, TRUE));
+                 move_points_text(psource->value.minmoves, true));
     return buf;
   case VUT_MINHP:
     /* TRANS: HP = hit points */
@@ -4258,7 +4258,7 @@ const char *universal_name_translation(const struct universal *psource,
                  _(topo_flag_name(psource->value.topo_property)));
     return buf;
   case VUT_SERVERSETTING:
-    fc_strlcat(buf, ssetv_human_readable(psource->value.ssetval, TRUE),
+    fc_strlcat(buf, ssetv_human_readable(psource->value.ssetval, true),
                bufsz);
     return buf;
   case VUT_TERRAINALTER:
@@ -4340,7 +4340,7 @@ bool universal_replace_in_req_vec(struct requirement_vector *reqs,
   {
     if (universal_is_mentioned_by_requirement(preq, to_replace)) {
       preq->source = *replacement;
-      changed = TRUE;
+      changed = true;
     }
   }
   requirement_vector_iterate_end;
@@ -4358,7 +4358,7 @@ bool universal_is_mentioned_by_requirements(
   requirement_vector_iterate(reqs, preq)
   {
     if (universal_is_mentioned_by_requirement(preq, psource)) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -4412,7 +4412,7 @@ bool universal_fulfills_requirements(bool check_necessary,
       break;
     case ITF_YES:
       if (preq->present) {
-        necessary = TRUE;
+        necessary = true;
       } else {
         return false;
       }
@@ -4447,7 +4447,7 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
     return false;
   case ITF_NO:
   case ITF_YES:
-    return TRUE;
+    return true;
   }
 
   qCritical("Unhandled item_found value");

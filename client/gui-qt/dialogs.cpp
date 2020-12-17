@@ -1422,7 +1422,7 @@ void choice_dialog::switch_target()
   unit_skip->setParent(nullptr);
   dsend_packet_unit_get_actions(&client.conn, unit_id, targeted_unit->id,
                                 targeted_unit->tile->index,
-                                action_selection_target_extra(), TRUE);
+                                action_selection_target_extra(), true);
   layout->addLayout(unit_skip);
 }
 
@@ -2101,7 +2101,7 @@ static void diplomat_bribe(QVariant data1, QVariant data2)
       && NULL != game_unit_by_number(diplomat_target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_SPY_BRIBE_UNIT, diplomat_id,
                            diplomat_target_id);
@@ -2555,7 +2555,7 @@ static void spy_steal_shared(QVariant data1, QVariant data2,
 
   /* Wait for the player's reply before moving on to the next queued
    * diplomat. */
-  is_more_user_input_needed = TRUE;
+  is_more_user_input_needed = true;
 
   if (pvcity) {
     pvictim = city_owner(pvcity);
@@ -2663,7 +2663,7 @@ static void spy_request_strike_bld_list(QVariant data1, QVariant data2)
       && NULL != game_city_by_number(target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_STRIKE_BUILDING, actor_id, target_id);
   }
@@ -2681,7 +2681,7 @@ static void spy_request_sabotage_list(QVariant data1, QVariant data2)
       && NULL != game_city_by_number(diplomat_target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_SPY_TARGETED_SABOTAGE_CITY, diplomat_id,
                            diplomat_target_id);
@@ -2700,7 +2700,7 @@ static void spy_request_sabotage_esc_list(QVariant data1, QVariant data2)
       && NULL != game_city_by_number(diplomat_target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_SPY_TARGETED_SABOTAGE_CITY_ESC,
                            diplomat_id, diplomat_target_id);
@@ -2988,7 +2988,7 @@ static void diplomat_incite(QVariant data1, QVariant data2)
       && NULL != game_city_by_number(diplomat_target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_SPY_INCITE_CITY, diplomat_id,
                            diplomat_target_id);
@@ -3007,7 +3007,7 @@ static void diplomat_incite_escape(QVariant data1, QVariant data2)
       && NULL != game_city_by_number(diplomat_target_id)) {
     /* Wait for the server's reply before moving on to the next queued
      * diplomat. */
-    is_more_user_input_needed = TRUE;
+    is_more_user_input_needed = true;
 
     request_action_details(ACTION_SPY_INCITE_CITY_ESC, diplomat_id,
                            diplomat_target_id);

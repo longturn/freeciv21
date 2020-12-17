@@ -266,7 +266,7 @@ void notify_conn_early(struct conn_list *dest, const struct tile *ptile,
   vpackage_event(&genmsg, ptile, event, color, format, args);
   va_end(args);
 
-  notify_conn_packet(dest, &genmsg, TRUE);
+  notify_conn_packet(dest, &genmsg, true);
 
   if (!dest || dest == game.est_connections) {
     /* Add to the cache */
@@ -565,7 +565,7 @@ void event_cache_init(void)
     event_cache_free();
   }
   event_cache = event_cache_data_list_new_full(event_cache_data_free);
-  event_cache_status = TRUE;
+  event_cache_status = true;
 }
 
 /**********************************************************************/ /**
@@ -848,7 +848,7 @@ void event_cache_load(struct section_file *file, const char *section)
     } else if (0 == fc_strcasecmp(p, "Global Observers")) {
       target_type = ECT_GLOBAL_OBSERVERS;
     } else {
-      bool valid = TRUE;
+      bool valid = true;
 
       target_type = ECT_PLAYERS;
       q = p;
@@ -962,7 +962,7 @@ void event_cache_save(struct section_file *file, const char *section)
 
   qDebug("Events saved: %d.", event_count);
 
-  event_cache_status = TRUE;
+  event_cache_status = true;
 }
 
 /**********************************************************************/ /**

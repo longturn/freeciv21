@@ -53,7 +53,7 @@ bool adv_follow_path(struct unit *punit, struct pf_path *path,
   bool alive;
 
   if (punit->moves_left <= 0) {
-    return TRUE;
+    return true;
   }
   punit->goto_tile = ptile;
   unit_activity_handling(punit, ACTIVITY_GOTO);
@@ -91,7 +91,7 @@ bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
 
     if (same_pos(unit_tile(punit), ptile)) {
       UNIT_LOG(LOG_DEBUG, punit, "execute_path: waiting this turn");
-      return TRUE;
+      return true;
     }
 
     /* We use ai_unit_move() for everything but the last step
@@ -114,11 +114,11 @@ bool adv_unit_execute_path(struct unit *punit, struct pf_path *path)
 
     if (!same_pos(unit_tile(punit), ptile) || punit->moves_left <= 0) {
       /* Stopped (or maybe fought) or ran out of moves */
-      return TRUE;
+      return true;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -210,10 +210,10 @@ static bool adv_unit_move(struct unit *punit, struct tile *ptile)
                    action_number(paction));
   } else {
     /* Other move. */
-    (void) unit_move_handling(punit, ptile, false, TRUE);
+    (void) unit_move_handling(punit, ptile, false, true);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -242,7 +242,7 @@ static bool adv_could_be_my_zoc(struct unit *myunit, struct tile *ptile)
   }
   adjc_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -330,7 +330,7 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
   CALL_PLR_AI_FUNC(consider_tile_dangerous, unit_owner(punit), ptile, punit,
                    &dc);
   if (dc == OVERRIDE_TRUE) {
-    return TRUE;
+    return true;
   } else if (dc == OVERRIDE_FALSE) {
     return false;
   }
@@ -361,7 +361,7 @@ bool adv_danger_at(struct unit *punit, struct tile *ptile)
         a += adv_unit_att_rating(enemy);
         if ((a * a * 10) >= d) {
           /* The enemies combined strength is too big! */
-          return TRUE;
+          return true;
         }
       }
     }

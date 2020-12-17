@@ -92,7 +92,7 @@ bool is_temperature_type_near(const struct tile *ptile, temperature_type tt)
   adjc_iterate(&(wld.map), ptile, tile1)
   {
     if (BOOL_VAL(tmap(tile1) & (tt))) {
-      return TRUE;
+      return true;
     };
   }
   adjc_iterate_end;
@@ -139,7 +139,7 @@ void create_tmap(bool real)
       float temperate =
           (0.15 * (wld.map.server.temperature / 100 - t / MAX_COLATITUDE) * 2
            * MIN(50,
-                 count_terrain_class_near_tile(ptile, false, TRUE, TC_OCEAN))
+                 count_terrain_class_near_tile(ptile, false, true, TC_OCEAN))
            / 100);
 
       tmap(ptile) = t * (1.0 + temperate) * (1.0 + height);

@@ -343,7 +343,7 @@ void req_edit::req_present_menu(QAction *action)
     if (action->text() == QLatin1String("Prevents")) {
       selected->present = false;
     } else {
-      selected->present = TRUE;
+      selected->present = true;
     }
     update_selected();
   }

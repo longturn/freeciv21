@@ -56,7 +56,7 @@ void citizens_update(struct city *pcity, struct player *plr)
     citizens_print(pcity);
   }
 
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return;
   }
 
@@ -149,7 +149,7 @@ void citizens_print(const struct city *pcity)
 {
   fc_assert_ret(pcity);
 
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return;
   }
 
@@ -180,7 +180,7 @@ static bool citizen_convert_check(struct city *pcity)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

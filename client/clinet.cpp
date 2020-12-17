@@ -91,7 +91,7 @@ static void client_conn_close_callback(struct connection *pconn)
 
   close_socket_nomessage(pconn);
   /* If we lost connection to the internal server - kill it. */
-  client_kill_server(TRUE);
+  client_kill_server(true);
   qCritical("Lost connection to server: %s.", qPrintable(reason));
   output_window_printf(ftc_client, _("Lost connection to server (%s)!"),
                        qUtf8Printable(reason));
@@ -225,7 +225,7 @@ void disconnect_from_server(void)
   }
   close_socket_nomessage(&client.conn);
   if (force) {
-    client_kill_server(TRUE);
+    client_kill_server(true);
   }
   output_window_append(ftc_client, _("Disconnected from server."));
 
@@ -383,5 +383,5 @@ void start_autoconnecting_to_server(void)
       qUtf8Printable(server_host), server_port, qUtf8Printable(user_name),
       0.001 * AUTOCONNECT_INTERVAL, MAX_AUTOCONNECT_ATTEMPTS);
 
-  autoconnecting = TRUE;
+  autoconnecting = true;
 }

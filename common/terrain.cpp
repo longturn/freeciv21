@@ -241,7 +241,7 @@ bool terrain_has_resource(const struct terrain *pterrain,
 
   while (NULL != *r) {
     if (*r == presource) {
-      return TRUE;
+      return true;
     }
     r++;
   }
@@ -316,7 +316,7 @@ bool is_terrain_card_near(const struct tile *ptile,
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_terrain(adjc_tile) == pterrain) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -337,7 +337,7 @@ bool is_terrain_near_tile(const struct tile *ptile,
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_terrain(adjc_tile) == pterrain) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -407,7 +407,7 @@ bool is_resource_card_near(const struct tile *ptile,
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_resource(adjc_tile) == pres) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -428,7 +428,7 @@ bool is_resource_near_tile(const struct tile *ptile,
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_resource(adjc_tile) == pres) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -448,7 +448,7 @@ bool is_terrain_flag_card_near(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(adjc_tile);
 
     if (T_UNKNOWN != pterrain && terrain_has_flag(pterrain, flag)) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -468,7 +468,7 @@ bool is_terrain_flag_near_tile(const struct tile *ptile,
     struct terrain *pterrain = tile_terrain(adjc_tile);
 
     if (T_UNKNOWN != pterrain && terrain_has_flag(pterrain, flag)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -528,7 +528,7 @@ const char *get_infrastructure_text(bv_extras extras)
         int topi = extra_index(top);
 
         if (BV_ISSET(pextra->hidden_by, topi) && BV_ISSET(extras, topi)) {
-          hidden = TRUE;
+          hidden = true;
           break;
         }
       }
@@ -597,7 +597,7 @@ bool is_terrain_class_card_near(const struct tile *ptile,
 
     if (pterrain != T_UNKNOWN) {
       if (terrain_type_terrain_class(pterrain) == tclass) {
-        return TRUE;
+        return true;
       }
     }
   }
@@ -619,7 +619,7 @@ bool is_terrain_class_near_tile(const struct tile *ptile,
 
     if (pterrain != T_UNKNOWN) {
       if (terrain_type_terrain_class(pterrain) == tclass) {
-        return TRUE;
+        return true;
       }
     }
   }

@@ -48,7 +48,7 @@ static bool none_audio_play(const char *const tag,
 {
   if (strcmp(tag, "e_turn_bell") == 0) {
     sound_bell();
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -56,7 +56,7 @@ static bool none_audio_play(const char *const tag,
 /**********************************************************************/ /**
    Initialize.
  **************************************************************************/
-static bool none_audio_init(void) { return TRUE; }
+static bool none_audio_init(void) { return true; }
 
 /**********************************************************************/ /**
    Initialize.

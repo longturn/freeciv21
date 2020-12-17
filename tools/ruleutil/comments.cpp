@@ -120,7 +120,7 @@ bool comments_load(void)
   secfile_check_unused(comment_file);
   secfile_destroy(comment_file);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

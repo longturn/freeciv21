@@ -186,7 +186,7 @@ static bool get_conv(char *dst, size_t ndst, const char *src, size_t nsrc)
   Q_UNUSED(nsrc)
 
   char *out = data_to_internal_string_malloc(src);
-  bool ret = TRUE;
+  bool ret = true;
   size_t len;
 
   if (!out) {
@@ -220,7 +220,7 @@ static void charsets_init(void)
    This is called at program exit in any emergency. This is registered
    as at_quick_exit() callback, so no destructor kind of actions here
  **************************************************************************/
-static void emergency_exit(void) { client_kill_server(TRUE); }
+static void emergency_exit(void) { client_kill_server(true); }
 
 /**********************************************************************/ /**
    This is called at program exit.
@@ -423,7 +423,7 @@ int client_main(int argc, char *argv[])
   }
   if (parser.isSet(QStringLiteral("file"))) {
     savefile = parser.value(QStringLiteral("file"));
-    auto_spawn = TRUE;
+    auto_spawn = true;
   }
   if (parser.isSet(QStringLiteral("name"))) {
     user_name = parser.value(QStringLiteral("name"));
@@ -450,7 +450,7 @@ int client_main(int argc, char *argv[])
     }
   }
   if (parser.isSet(QStringLiteral("autoconnect"))) {
-    auto_connect = TRUE;
+    auto_connect = true;
   }
   if (parser.isSet(QStringLiteral("tiles"))) {
     forced_tileset_name = parser.value(QStringLiteral("tiles"));
@@ -579,15 +579,15 @@ int client_main(int argc, char *argv[])
   fill_topo_ts_default();
 
   if (!forced_tileset_name.isEmpty()) {
-    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), TRUE, -1,
-                           TRUE)) {
+    if (!tilespec_try_read(qUtf8Printable(forced_tileset_name), true, -1,
+                           true)) {
       qCritical(_("Can't load requested tileset %s!"),
                 qUtf8Printable(forced_tileset_name));
       client_exit();
       return EXIT_FAILURE;
     }
   } else {
-    tilespec_try_read(gui_options.default_tileset_name, false, -1, TRUE);
+    tilespec_try_read(gui_options.default_tileset_name, false, -1, true);
   }
 
   audio_real_init(sound_set_name, music_set_name, sound_plugin_name);
@@ -712,7 +712,7 @@ void send_turn_done(void)
      */
 
     if (!governor::i()->hot()) {
-      waiting_for_end_turn = TRUE;
+      waiting_for_end_turn = true;
     }
 
     return;
@@ -848,7 +848,7 @@ void set_client_state(enum client_states newstate)
     global_worklists_build();
     can_slide = false;
     unit_focus_update();
-    can_slide = TRUE;
+    can_slide = true;
     set_client_page(PAGE_GAME);
     /* Find something sensible to display instead of the intro gfx. */
     center_on_something();
@@ -1017,7 +1017,7 @@ void start_turn_change_wait(void)
   seconds_shown_to_new_turn = ceil(game.tinfo.last_turn_change_time) + 0.1;
   between_turns->start();
 
-  waiting_turn_change = TRUE;
+  waiting_turn_change = true;
 }
 
 /**********************************************************************/ /**
@@ -1193,7 +1193,7 @@ bool is_server_busy(void) { return server_busy; }
  **************************************************************************/
 bool client_is_global_observer(void)
 {
-  return client.conn.playing == NULL && client.conn.observer == TRUE;
+  return client.conn.playing == NULL && client.conn.observer == true;
 }
 
 /**********************************************************************/ /**
@@ -1494,4 +1494,4 @@ bool is_client_quitting(void) { return client_quitting; }
 /**********************************************************************/ /**
    Mark client as one going to quit as soon as possible,
  **************************************************************************/
-void start_quitting(void) { client_quitting = TRUE; }
+void start_quitting(void) { client_quitting = true; }

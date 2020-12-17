@@ -143,7 +143,7 @@ bool audio_select_plugin(QString &name)
 
   for (i = 0; i < num_plugins_used; i++) {
     if (QString(plugins[i].name) == name) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
@@ -173,7 +173,7 @@ bool audio_select_plugin(QString &name)
   plugins[selected_plugin].set_volume(gui_options.sound_effects_volume
                                       / 100.0);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -254,7 +254,7 @@ static bool check_audiofile_capstr(struct section_file *sfile,
     exit(EXIT_FAILURE);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -296,7 +296,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   qDebug("Initializing sound using %s and %s...",
          qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
   ss_filename = audiospec_fullname(soundset_name, false);
-  ms_filename = audiospec_fullname(musicset_name, TRUE);
+  ms_filename = audiospec_fullname(musicset_name, true);
   if (!ss_filename || !ms_filename) {
     qCritical("Cannot find audio spec-file \"%s\" or \"%s\"",
               qUtf8Printable(soundset_name), qUtf8Printable(musicset_name));
@@ -308,12 +308,12 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
     ms_tagfile = NULL;
     return;
   }
-  if (!(ss_tagfile = secfile_load(ss_filename, TRUE))) {
+  if (!(ss_tagfile = secfile_load(ss_filename, true))) {
     qFatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
            secfile_error());
     exit(EXIT_FAILURE);
   }
-  if (!(ms_tagfile = secfile_load(ms_filename, TRUE))) {
+  if (!(ms_tagfile = secfile_load(ms_filename, true))) {
     qFatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
            secfile_error());
     exit(EXIT_FAILURE);
@@ -334,7 +334,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 
     if (!atexit_set) {
       atexit(audio_shutdown);
-      atexit_set = TRUE;
+      atexit_set = true;
     }
   }
 
@@ -371,7 +371,7 @@ void audio_restart(QString soundset_name, QString musicset_name)
  **************************************************************************/
 static void music_finished_callback(void)
 {
-  bool usage_enabled = TRUE;
+  bool usage_enabled = true;
 
   if (switching_usage) {
     switching_usage = false;
@@ -392,7 +392,7 @@ static void music_finished_callback(void)
 
   if (usage_enabled) {
     current_track =
-        audio_play_tag(mfcb.sfile, mfcb.tag, TRUE, current_track, false);
+        audio_play_tag(mfcb.sfile, mfcb.tag, true, current_track, false);
   }
 }
 
@@ -526,10 +526,10 @@ static void real_audio_play_music(const char *const tag, char *const alt_tag,
   log_debug("audio_play_music('%s', '%s')", tag, pretty_alt_tag);
 
   /* try playing primary tag first, if not go to alternative tag */
-  current_track = audio_play_music_tag(tag, TRUE, keepstyle);
+  current_track = audio_play_music_tag(tag, true, keepstyle);
 
   if (current_track < 0) {
-    current_track = audio_play_music_tag(alt_tag, TRUE, keepstyle);
+    current_track = audio_play_music_tag(alt_tag, true, keepstyle);
 
     if (current_track < 0) {
       qDebug("Neither of tags %s or %s found", tag, pretty_alt_tag);
@@ -555,7 +555,7 @@ void audio_play_track(const char *const tag, char *const alt_tag)
 {
   current_usage = MU_SINGLE;
 
-  real_audio_play_music(tag, alt_tag, TRUE);
+  real_audio_play_music(tag, alt_tag, true);
 }
 
 /**********************************************************************/ /**
@@ -568,7 +568,7 @@ void audio_stop(void) { plugins[selected_plugin].stop(); }
  **************************************************************************/
 void audio_stop_usage(void)
 {
-  switching_usage = TRUE;
+  switching_usage = true;
   plugins[selected_plugin].stop();
 }
 

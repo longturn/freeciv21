@@ -261,7 +261,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     BV_SET(ship->structure, num);
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_FUEL) {
@@ -289,7 +289,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     ship->fuel++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_PROPULSION) {
@@ -318,7 +318,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     ship->propulsion++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_HABITATION) {
@@ -347,7 +347,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     ship->habitation++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_LIFE_SUPPORT) {
@@ -376,7 +376,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     ship->life_support++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   if (type == SSHIP_PLACE_SOLAR_PANELS) {
@@ -405,7 +405,7 @@ bool do_spaceship_place(struct player *pplayer, enum action_requester from,
     ship->solar_panels++;
     spaceship_calc_derived(ship);
     send_spaceship_info(pplayer, NULL);
-    return TRUE;
+    return true;
   }
 
   qCritical("Received unknown spaceship place type %d from %s", type,

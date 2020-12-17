@@ -83,7 +83,7 @@ struct client_options gui_options = {
     "\0",                      //.default_sound_plugin_name =
     GUI_DEFAULT_CHAT_LOGFILE,  //.default_chat_logfile =
 
-    TRUE, //.save_options_on_exit =
+    true, //.save_options_on_exit =
 
     /** Migrations **/
     false, //.first_boot =
@@ -101,31 +101,31 @@ struct client_options gui_options = {
     30,                             //.smooth_move_unit_msec =
     200,                            //.smooth_center_slide_msec =
     10,                             //.smooth_combat_step_msec =
-    TRUE,                           //.ai_manual_turn_done =
-    TRUE,                           //.auto_center_on_unit =
-    TRUE,                           //.auto_center_on_automated =
+    true,                           //.ai_manual_turn_done =
+    true,                           //.auto_center_on_unit =
+    true,                           //.auto_center_on_automated =
     false,                          //.auto_center_on_combat =
-    TRUE,                           //.auto_center_each_turn =
-    TRUE,                           //.wakeup_focus =
-    TRUE,                           //.goto_into_unknown =
-    TRUE,                           //.center_when_popup_city =
-    TRUE,                           //.show_previous_turn_messages =
+    true,                           //.auto_center_each_turn =
+    true,                           //.wakeup_focus =
+    true,                           //.goto_into_unknown =
+    true,                           //.center_when_popup_city =
+    true,                           //.show_previous_turn_messages =
     false,                          //.concise_city_production =
     false,                          //.auto_turn_done =
-    TRUE,                           //.meta_accelerators =
-    TRUE,                           //.ask_city_name =
-    TRUE,                           //.popup_new_cities =
-    TRUE,                           //.popup_actor_arrival =
-    TRUE,                           //.popup_attack_actions =
-    TRUE,                           //.popup_last_move_to_allied =
-    TRUE,                           //.update_city_text_in_refresh_tile =
-    TRUE,                           //.keyboardless_goto =
-    TRUE,                           //.enable_cursor_changes =
+    true,                           //.meta_accelerators =
+    true,                           //.ask_city_name =
+    true,                           //.popup_new_cities =
+    true,                           //.popup_actor_arrival =
+    true,                           //.popup_attack_actions =
+    true,                           //.popup_last_move_to_allied =
+    true,                           //.update_city_text_in_refresh_tile =
+    true,                           //.keyboardless_goto =
+    true,                           //.enable_cursor_changes =
     false,                          //.separate_unit_selection =
-    TRUE,                           //.unit_selection_clears_orders =
+    true,                           //.unit_selection_clears_orders =
     FT_COLOR("#000000", "#FFFF00"), //.highlight_our_names =
 
-    TRUE,  //.voteinfo_bar_use =
+    true,  //.voteinfo_bar_use =
     false, //.voteinfo_bar_always_show =
     false, //.voteinfo_bar_hide_when_not_player =
     false, //.voteinfo_bar_new_at_front =
@@ -134,39 +134,39 @@ struct client_options gui_options = {
     false, //.autoaccept_soundset_suggestion =
     false, //.autoaccept_musicset_suggestion =
 
-    TRUE, //.sound_enable_effects =
-    TRUE, //.sound_enable_menu_music =
-    TRUE, //.sound_enable_game_music =
+    true, //.sound_enable_effects =
+    true, //.sound_enable_menu_music =
+    true, //.sound_enable_game_music =
 
     /* This option is currently set by the client - not by the user. */
 
-    TRUE,  //.draw_city_outlines =
+    true,  //.draw_city_outlines =
     false, //.draw_city_output =
     false, //.draw_map_grid =
-    TRUE,  //.draw_city_names =
-    TRUE,  //.draw_city_growth =
-    TRUE,  //.draw_city_productions =
+    true,  //.draw_city_names =
+    true,  //.draw_city_growth =
+    true,  //.draw_city_productions =
     false, //.draw_city_buycost =
     false, //.draw_city_trade_routes =
-    TRUE,  //.draw_terrain =
+    true,  //.draw_terrain =
     false, //.draw_coastline =
-    TRUE,  //.draw_roads_rails =
-    TRUE,  //.draw_irrigation =
-    TRUE,  //.draw_mines =
-    TRUE,  //.draw_fortress_airbase =
-    TRUE,  //.draw_specials =
-    TRUE,  //.draw_huts =
-    TRUE,  //.draw_pollution =
-    TRUE,  //.draw_cities =
-    TRUE,  //.draw_units =
+    true,  //.draw_roads_rails =
+    true,  //.draw_irrigation =
+    true,  //.draw_mines =
+    true,  //.draw_fortress_airbase =
+    true,  //.draw_specials =
+    true,  //.draw_huts =
+    true,  //.draw_pollution =
+    true,  //.draw_cities =
+    true,  //.draw_units =
     false, //.draw_focus_unit =
-    TRUE,  //.draw_fog_of_war =
-    TRUE,  //.draw_borders =
+    true,  //.draw_fog_of_war =
+    true,  //.draw_borders =
     false, //.draw_native =
-    TRUE,  //.draw_full_citybar =
-    TRUE,  //.draw_unit_shields =
-    TRUE,  //.player_dlg_show_dead_players =
-    TRUE,  //.reqtree_show_icons =
+    true,  //.draw_full_citybar =
+    true,  //.draw_unit_shields =
+    true,  //.player_dlg_show_dead_players =
+    true,  //.reqtree_show_icons =
     false, //.reqtree_curved_lines =
     false, // SOMETHING ?
 
@@ -177,20 +177,20 @@ struct client_options gui_options = {
     {
         //.mapimg_layer =
         false, /* a - MAPIMG_LAYER_AREA */
-        TRUE,  /* b - MAPIMG_LAYER_BORDERS */
-        TRUE,  /* c - MAPIMG_LAYER_CITIES */
-        TRUE,  /* f - MAPIMG_LAYER_FOGOFWAR */
-        TRUE,  /* k - MAPIMG_LAYER_KNOWLEDGE */
-        TRUE,  /* t - MAPIMG_LAYER_TERRAIN */
-        TRUE   /* u - MAPIMG_LAYER_UNITS */
+        true,  /* b - MAPIMG_LAYER_BORDERS */
+        true,  /* c - MAPIMG_LAYER_CITIES */
+        true,  /* f - MAPIMG_LAYER_FOGOFWAR */
+        true,  /* k - MAPIMG_LAYER_KNOWLEDGE */
+        true,  /* t - MAPIMG_LAYER_TERRAIN */
+        true   /* u - MAPIMG_LAYER_UNITS */
     },
     "mapimage filename",
 
     /* gui-qt client specific options. */
     false, //.gui_qt_fullscreen =
-    TRUE,  //.gui_qt_show_preview =
+    true,  //.gui_qt_show_preview =
     true,  //.gui_qt_allied_chat_only =
-    TRUE,  //.gui_qt_sidebar_left =
+    true,  //.gui_qt_sidebar_left =
     0,     // font_increase
     FC_QT_DEFAULT_THEME_NAME,
     "Monospace,8,-1,5,75,0,0,0,0,0",   //.gui_qt_font_notify_label =
@@ -632,7 +632,7 @@ bool option_bool_set(struct option *poption, bool val)
 
   if (poption->bool_vtable->set(poption, val)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -691,7 +691,7 @@ bool option_int_set(struct option *poption, int val)
 
   if (poption->int_vtable->set(poption, val)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -740,7 +740,7 @@ bool option_str_set(struct option *poption, const char *str)
 
   if (poption->str_vtable->set(poption, str)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -858,7 +858,7 @@ bool option_enum_set_int(struct option *poption, int val)
 
   if (poption->enum_vtable->set(poption, val)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -877,7 +877,7 @@ bool option_enum_set_str(struct option *poption, const char *str)
   if (poption->enum_vtable->set(poption,
                                 option_enum_str_to_int(poption, str))) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -946,7 +946,7 @@ bool option_bitwise_set(struct option *poption, unsigned val)
   }
 
   option_changed(poption);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -993,7 +993,7 @@ bool option_font_set(struct option *poption, const char *font)
 
   if (poption->font_vtable->set(poption, font)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1033,7 +1033,7 @@ bool option_color_set(struct option *poption, struct ft_color color)
 
   if (poption->color_vtable->set(poption, color)) {
     option_changed(poption);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1525,7 +1525,7 @@ static struct client_option client_options[] = {
            "This can help to make it obvious when the server has "
            "cut the connection due to a connectivity outage, if "
            "the client would otherwise sit idle for a long period."),
-        COC_NETWORK, GUI_STUB, TRUE, NULL),
+        COC_NETWORK, GUI_STUB, true, NULL),
     GEN_STR_LIST_OPTION(
         default_sound_set_name, N_("Soundset"),
         N_("This is the soundset that will be used.  Changing "
@@ -1591,7 +1591,7 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(draw_city_outlines, N_("Draw city outlines"),
                     N_("Setting this option will draw a line at the city "
                        "workable limit."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_output, N_("Draw city output"),
                     N_("Setting this option will draw city output for every "
@@ -1607,22 +1607,22 @@ static struct client_option client_options[] = {
                        "containing useful information beneath each city. "
                        "Disabling this option will display only the city's "
                        "name and, optionally, production."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_city_names, N_("Draw the city names"),
         N_("Setting this option will draw the names of the cities "
            "on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_growth, N_("Draw the city growth"),
                     N_("Setting this option will draw in how many turns the "
                        "cities will grow or shrink."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_productions, N_("Draw the city productions"),
                     N_("Setting this option will draw what the cities are "
                        "currently building on the map."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_city_buycost, N_("Draw the city buy costs"),
                     N_("Setting this option will draw how much gold is "
@@ -1636,7 +1636,7 @@ static struct client_option client_options[] = {
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_terrain, N_("Draw the terrain"),
                     N_("Setting this option will draw the terrain."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_coastline, N_("Draw the coast line"),
@@ -1646,45 +1646,45 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(draw_roads_rails, N_("Draw the roads and the railroads"),
                     N_("Setting this option will draw the roads and the "
                        "railroads on the map."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_irrigation, N_("Draw the irrigation"),
         N_("Setting this option will draw the irrigation systems "
            "on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_mines, N_("Draw the mines"),
         N_("Setting this option will draw the mines on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_fortress_airbase, N_("Draw the bases"),
         N_("Setting this option will draw the bases on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_specials, N_("Draw the resources"),
                     N_("Setting this option will draw the resources on the "
                        "map."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_huts, N_("Draw the huts"),
                     N_("Setting this option will draw the huts on the "
                        "map."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(draw_pollution, N_("Draw the pollution/nuclear fallout"),
                     N_("Setting this option will draw pollution and "
                        "nuclear fallout on the map."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_cities, N_("Draw the cities"),
         N_("Setting this option will draw the cities on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_units,
         N_("Draw the units"),
         N_("Setting this option will draw the units on the map."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         solid_color_behind_units, N_("Solid unit background color"),
         N_("Setting this option will cause units on the map "
@@ -1696,7 +1696,7 @@ static struct client_option client_options[] = {
         N_("Setting this option will draw a shield icon "
            "as the flags on units.  If unset, the full flag will "
            "be drawn."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_focus_unit, N_("Draw the units in focus"),
         N_("Setting this option will cause the currently focused "
@@ -1706,12 +1706,12 @@ static struct client_option client_options[] = {
         COC_GRAPHICS, GUI_STUB, false, view_option_changed_callback),
     GEN_BOOL_OPTION(draw_fog_of_war, N_("Draw the fog of war"),
                     N_("Setting this option will draw the fog of war."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_borders, N_("Draw the borders"),
         N_("Setting this option will draw the national borders."),
-        COC_GRAPHICS, GUI_STUB, TRUE, view_option_changed_callback),
+        COC_GRAPHICS, GUI_STUB, true, view_option_changed_callback),
     GEN_BOOL_OPTION(
         draw_native,
         N_("Draw whether tiles are native to "
@@ -1725,7 +1725,7 @@ static struct client_option client_options[] = {
                     N_("Show dead players in Nations report"),
                     N_("This option controls whether defeated nations are "
                        "shown on the Nations report page."),
-                    COC_GRAPHICS, GUI_STUB, TRUE,
+                    COC_GRAPHICS, GUI_STUB, true,
                     view_option_changed_callback),
     GEN_BOOL_OPTION(
         sound_bell_at_new_turn, N_("Sound bell at new turn"),
@@ -1762,7 +1762,7 @@ static struct client_option client_options[] = {
            "on the technology tree diagram. Turning "
            "this option off makes the technology tree "
            "more compact."),
-        COC_GRAPHICS, GUI_STUB, TRUE, reqtree_show_icons_callback),
+        COC_GRAPHICS, GUI_STUB, true, reqtree_show_icons_callback),
     GEN_BOOL_OPTION(
         reqtree_curved_lines, N_("Use curved lines in the technology tree"),
         N_("Setting this option make the technology tree "
@@ -1781,16 +1781,16 @@ static struct client_option client_options[] = {
                     N_("Disable this option if you do not want to "
                        "press the Turn Done button manually when watching "
                        "an AI player."),
-                    COC_INTERFACE, GUI_STUB, TRUE,
+                    COC_INTERFACE, GUI_STUB, true,
                     manual_turn_done_callback),
     GEN_BOOL_OPTION(auto_center_on_unit, N_("Auto center on units"),
                     N_("Set this option to have the active unit centered "
                        "automatically when the unit focus changes."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(auto_center_on_automated, N_("Show automated units"),
                     N_("Disable this option if you do not want to see "
                        "automated units autocentered and animated."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         auto_center_on_combat, N_("Auto center on combat"),
         N_("Set this option to have any combat be centered "
@@ -1802,33 +1802,33 @@ static struct client_option client_options[] = {
                     N_("Set this option to have the client automatically "
                        "recenter the map on a suitable location at the "
                        "start of each turn."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(wakeup_focus, N_("Focus on awakened units"),
                     N_("Set this option to have newly awoken units be "
                        "focused automatically."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(keyboardless_goto, N_("Keyboardless goto"),
                     N_("If this option is set then a goto may be initiated "
                        "by left-clicking and then holding down the mouse "
                        "button while dragging the mouse onto a different "
                        "tile."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         goto_into_unknown, N_("Allow goto into the unknown"),
         N_("Setting this option will make the game consider "
            "moving into unknown tiles.  If not, then goto routes "
            "will detour around or be blocked by unknown tiles."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(center_when_popup_city, N_("Center map when popup city"),
                     N_("Setting this option makes the mapview center on a "
                        "city when its city dialog is popped up."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         show_previous_turn_messages, N_("Show messages from previous turn"),
         N_("Message Window shows messages also from previous turn. "
            "This makes sure you don't miss messages received in the end of "
            "the turn, just before the window gets cleared."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         concise_city_production, N_("Concise city production"),
         N_("Set this option to make the city production (as shown "
@@ -1843,12 +1843,12 @@ static struct client_option client_options[] = {
         ask_city_name, N_("Prompt for city names"),
         N_("Disabling this option will make the names of newly "
            "founded cities be chosen automatically by the server."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(popup_new_cities,
                     N_("Pop up city dialog for new cities"),
                     N_("Setting this option will pop up a newly-founded "
                        "city's city dialog automatically."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         popup_actor_arrival, N_("Pop up caravan and spy actions"),
         N_("If this option is enabled, when a unit arrives at "
@@ -1860,7 +1860,7 @@ static struct client_option client_options[] = {
            "action manually by pressing either 'r' (for a trade "
            "route), 'b' (for building a wonder) or 'd' (for a "
            "spy action) when the unit is in the city."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         popup_attack_actions, N_("Pop up attack questions"),
         N_("If this option is enabled, when a unit arrives at a "
@@ -1869,7 +1869,7 @@ static struct client_option client_options[] = {
            "action is legal and no other interesting action are. "
            "This allows you to change your mind or to select an "
            "uninteresting action."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         popup_last_move_to_allied, N_("Pop up actions last move to allied"),
         N_("If this option is enabled the final move in a unit's"
@@ -1882,13 +1882,13 @@ static struct client_option client_options[] = {
            " The down side is that the unit remains adjacent to"
            " rather than inside the protection of an allied city"
            " or unit stack."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(enable_cursor_changes, N_("Enable cursor changing"),
                     N_("This option controls whether the client should "
                        "try to change the mouse cursor depending on what "
                        "is being pointed at, as well as to indicate "
                        "changes in the client or server state."),
-                    COC_INTERFACE, GUI_STUB, TRUE, NULL),
+                    COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(separate_unit_selection,
                     N_("Select cities before units"),
                     N_("If this option is enabled, when both cities and "
@@ -1905,11 +1905,11 @@ static struct client_option client_options[] = {
            "<space> once will clear their orders and leave them "
            "selected, and pressing <space> a second time will "
            "dismiss them."),
-        COC_INTERFACE, GUI_STUB, TRUE, NULL),
+        COC_INTERFACE, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(voteinfo_bar_use, N_("Enable vote bar"),
                     N_("If this option is turned on, the vote bar will be "
                        "displayed to show vote information."),
-                    COC_GRAPHICS, GUI_STUB, TRUE, voteinfo_bar_callback),
+                    COC_GRAPHICS, GUI_STUB, true, voteinfo_bar_callback),
     GEN_BOOL_OPTION(
         voteinfo_bar_always_show, N_("Always display the vote bar"),
         N_("If this option is turned on, the vote bar will never "
@@ -1935,17 +1935,17 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(sound_enable_effects, N_("Enable sound effects"),
                     N_("Play sound effects, assuming there's suitable "
                        "sound plugin and soundset with the sounds."),
-                    COC_SOUND, GUI_STUB, TRUE, NULL),
+                    COC_SOUND, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(
         sound_enable_game_music, N_("Enable in-game music"),
         N_("Play music during the game, assuming there's suitable "
            "sound plugin and musicset with in-game tracks."),
-        COC_SOUND, GUI_STUB, TRUE, game_music_enable_callback),
+        COC_SOUND, GUI_STUB, true, game_music_enable_callback),
     GEN_BOOL_OPTION(sound_enable_menu_music, N_("Enable menu music"),
                     N_("Play music while not in actual game, "
                        "assuming there's suitable "
                        "sound plugin and musicset with menu music tracks."),
-                    COC_SOUND, GUI_STUB, TRUE, menu_music_enable_callback),
+                    COC_SOUND, GUI_STUB, true, menu_music_enable_callback),
     GEN_INT_OPTION(sound_effects_volume, N_("Sound volume"),
                    N_("Volume scale from 0-100"), COC_SOUND, GUI_STUB, 100,
                    0, 100, sound_volume_callback),
@@ -1967,7 +1967,7 @@ static struct client_option client_options[] = {
                     N_("Background layer"),
                     N_("The background layer of the overview shows just "
                        "ocean and land."),
-                    COC_OVERVIEW, GUI_STUB, TRUE, NULL),
+                    COC_OVERVIEW, GUI_STUB, true, NULL),
     GEN_BOOL_OPTION(overview.layers[OLAYER_RELIEF],
                     N_("Terrain relief map layer"),
                     N_("The relief layer shows all terrains on the map."),
@@ -1982,17 +1982,17 @@ static struct client_option client_options[] = {
                        "ocean tiles as well (this may look ugly with many "
                        "islands). This option is only of interest if you "
                        "have set the option \"Borders layer\" already."),
-                    COC_OVERVIEW, GUI_STUB, TRUE, overview_redraw_callback),
+                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_UNITS], N_("Units layer"),
                     N_("Enabling this will draw units on the overview."),
-                    COC_OVERVIEW, GUI_STUB, TRUE, overview_redraw_callback),
+                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.layers[OLAYER_CITIES], N_("Cities layer"),
                     N_("Enabling this will draw cities on the overview."),
-                    COC_OVERVIEW, GUI_STUB, TRUE, overview_redraw_callback),
+                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
     GEN_BOOL_OPTION(overview.fog, N_("Overview fog of war"),
                     N_("Enabling this will show fog of war on the "
                        "overview."),
-                    COC_OVERVIEW, GUI_STUB, TRUE, overview_redraw_callback),
+                    COC_OVERVIEW, GUI_STUB, true, overview_redraw_callback),
 
     /* options for map images */
     GEN_STR_LIST_OPTION(mapimg_format, N_("Image format"),
@@ -2011,24 +2011,24 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_BORDERS], N_("Show borders"),
                     N_("If set, the border of each nation is shown on the "
                        "saved image."),
-                    COC_MAPIMG, GUI_STUB, TRUE, mapimg_changed_callback),
+                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_CITIES], N_("Show cities"),
                     N_("If set, cities are shown on the saved image."),
-                    COC_MAPIMG, GUI_STUB, TRUE, mapimg_changed_callback),
+                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_FOGOFWAR],
                     N_("Show fog of war"),
                     N_("If set, the extent of fog of war is shown on the "
                        "saved image."),
-                    COC_MAPIMG, GUI_STUB, TRUE, mapimg_changed_callback),
+                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(
         mapimg_layer[MAPIMG_LAYER_TERRAIN], N_("Show full terrain"),
         N_("If set, terrain relief is shown with different colors "
            "in the saved image; otherwise, only land and water are "
            "distinguished."),
-        COC_MAPIMG, GUI_STUB, TRUE, mapimg_changed_callback),
+        COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
     GEN_BOOL_OPTION(mapimg_layer[MAPIMG_LAYER_UNITS], N_("Show units"),
                     N_("If set, units are shown in the saved image."),
-                    COC_MAPIMG, GUI_STUB, TRUE, mapimg_changed_callback),
+                    COC_MAPIMG, GUI_STUB, true, mapimg_changed_callback),
     GEN_STR_OPTION(
         mapimg_filename, N_("Map image file name"),
         N_("The base part of the filename for saved map images. "
@@ -2047,7 +2047,7 @@ static struct client_option client_options[] = {
            "If disabled, then no titlebar will be shown, and "
            "minimize/maximize/etc buttons will be placed on the "
            "menu bar."),
-        COC_INTERFACE, GUI_QT, TRUE, NULL),
+        COC_INTERFACE, GUI_QT, true, NULL),
     GEN_INT_OPTION(gui_qt_increase_fonts, N_("Change all fonts size"),
                    N_("Change size of all fonts at once by given percent."
                       "That options is not unsaveable. Hit Apply button"
@@ -2101,12 +2101,12 @@ static struct client_option client_options[] = {
     GEN_BOOL_OPTION(gui_qt_show_preview, N_("Show savegame information"),
                     N_("If this option is set the client will show "
                        "information and map preview of current savegame."),
-                    COC_GRAPHICS, GUI_QT, TRUE, NULL),
+                    COC_GRAPHICS, GUI_QT, true, NULL),
     GEN_BOOL_OPTION(
         gui_qt_sidebar_left, N_("Sidebar position"),
         N_("If this option is set, the sidebar will be to the left "
            "of the map, otherwise to the right."),
-        COC_INTERFACE, GUI_QT, TRUE, NULL)};
+        COC_INTERFACE, GUI_QT, true, NULL)};
 static const int client_options_num = ARRAY_SIZE(client_options);
 
 /* Iteration loop, including invalid options for the current gui type. */
@@ -2241,7 +2241,7 @@ static int client_option_category(const struct option *poption)
 static bool client_option_is_changeable(const struct option *poption)
 {
   Q_UNUSED(poption)
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2281,7 +2281,7 @@ static bool client_option_bool_set(struct option *poption, bool val)
   }
 
   *pcoption->boolean.pvalue = val;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2330,7 +2330,7 @@ static bool client_option_int_set(struct option *poption, int val)
   }
 
   *pcoption->integer.pvalue = val;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2375,7 +2375,7 @@ static bool client_option_str_set(struct option *poption, const char *str)
   }
 
   fc_strlcpy(pcoption->string.pvalue, str, pcoption->string.size);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2445,7 +2445,7 @@ static bool client_option_font_set(struct option *poption, const char *font)
   }
 
   fc_strlcpy(pcoption->font.pvalue, font, pcoption->font.size);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2478,17 +2478,17 @@ static bool client_option_color_set(struct option *poption,
   if (NULL == color_tgt) {                                                  \
     if (NULL != color) {                                                    \
       color_tgt = fc_strdup(color);                                         \
-      changed = TRUE;                                                       \
+      changed = true;                                                       \
     }                                                                       \
   } else {                                                                  \
     if (NULL == color) {                                                    \
       delete[] color_tgt;                                                   \
       color_tgt = NULL;                                                     \
-      changed = TRUE;                                                       \
+      changed = true;                                                       \
     } else if (0 != strcmp(color_tgt, color)) {                             \
       delete[] color_tgt;                                                   \
       color_tgt = fc_strdup(color);                                         \
-      changed = TRUE;                                                       \
+      changed = true;                                                       \
     }                                                                       \
   }
 
@@ -2542,7 +2542,7 @@ static bool client_option_load(struct option *poption,
     int value;
 
     return (secfile_lookup_enum_data(
-                sf, &value, TRUE, client_option_bitwise_secfile_str, poption,
+                sf, &value, true, client_option_bitwise_secfile_str, poption,
                 "client.%s", option_name(poption))
             && option_bitwise_set(poption, value));
   }
@@ -2594,7 +2594,7 @@ static void client_option_save(struct option *poption,
                              "client.%s", option_name(poption));
     break;
   case OT_BITWISE:
-    secfile_insert_enum_data(sf, option_bitwise_get(poption), TRUE,
+    secfile_insert_enum_data(sf, option_bitwise_get(poption), true,
                              client_option_bitwise_secfile_str, poption,
                              "client.%s", option_name(poption));
     break;
@@ -2909,9 +2909,9 @@ void handle_server_setting_const(
   psoption->setdef = packet->setdef;                                        \
   if (psoption->is_visible != packet->is_visible) {                         \
     if (psoption->is_visible) {                                             \
-      need_gui_remove = TRUE;                                               \
+      need_gui_remove = true;                                               \
     } else if (packet->is_visible) {                                        \
-      need_gui_add = TRUE;                                                  \
+      need_gui_add = true;                                                  \
     }                                                                       \
     psoption->is_visible = packet->is_visible;                              \
   }                                                                         \
@@ -2925,7 +2925,7 @@ void handle_server_setting_const(
      * Do now override settings that are already saved to savegame          \
      * and now loaded. */                                                   \
     desired_settable_option_send(OPTION(poption));                          \
-    psoption->desired_sent = TRUE;                                          \
+    psoption->desired_sent = true;                                          \
   }                                                                         \
                                                                             \
   /* Update the GUI. */                                                     \
@@ -3114,8 +3114,8 @@ void handle_server_setting_enum(
         psoption->enumerator.pretty_names->replace(i,
                                                    packet->pretty_names[i]);
       }
-      need_gui_remove = TRUE;
-      need_gui_add = TRUE;
+      need_gui_remove = true;
+      need_gui_add = true;
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
@@ -3127,8 +3127,8 @@ void handle_server_setting_enum(
           /* Store untranslated string from server. */
           psoption->enumerator.pretty_names->replace(
               i, packet->pretty_names[i]);
-          need_gui_remove = TRUE;
-          need_gui_add = TRUE;
+          need_gui_remove = true;
+          need_gui_add = true;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
@@ -3201,8 +3201,8 @@ void handle_server_setting_bitwise(
         /* Store untranslated string from server. */
         psoption->bitwise.pretty_names->replace(i, packet->pretty_names[i]);
       }
-      need_gui_remove = TRUE;
-      need_gui_add = TRUE;
+      need_gui_remove = true;
+      need_gui_add = true;
     } else {
       /* Check if a value changed, then we need to reset the list
        * of possible values. */
@@ -3214,8 +3214,8 @@ void handle_server_setting_bitwise(
           /* Store untranslated string from server. */
           psoption->bitwise.pretty_names->replace(i,
                                                   packet->pretty_names[i]);
-          need_gui_remove = TRUE;
-          need_gui_add = TRUE;
+          need_gui_remove = true;
+          need_gui_add = true;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
@@ -3369,7 +3369,7 @@ static bool server_option_bool_set(struct option *poption, bool val)
 
   send_chat_printf("/set %s %s", psoption->name,
                    val ? "enabled" : "disabled");
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3418,7 +3418,7 @@ static bool server_option_int_set(struct option *poption, int val)
   }
 
   send_chat_printf("/set %s %d", psoption->name, val);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3461,7 +3461,7 @@ static bool server_option_str_set(struct option *poption, const char *str)
   }
 
   send_chat_printf("/set %s \"%s\"", psoption->name, str);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3506,7 +3506,7 @@ static bool server_option_enum_set(struct option *poption, int val)
   }
 
   send_chat_printf("/set %s \"%s\"", psoption->name, name);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3590,7 +3590,7 @@ static bool server_option_bitwise_set(struct option *poption, unsigned val)
   server_option_bitwise_support_base(psoption->bitwise.support_names, val,
                                      name, sizeof(name));
   send_chat_printf("/set %s \"%s\"", psoption->name, name);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3860,7 +3860,7 @@ static void load_cma_preset(struct section_file *file, int i)
   parameter.happy_factor =
       secfile_lookup_int_default(file, 0, "cma.preset%d.happyfactor", i);
   parameter.allow_disorder = false;
-  parameter.allow_specialists = TRUE;
+  parameter.allow_specialists = true;
 
   cmafec_preset_add(name, &parameter);
 }
@@ -4059,7 +4059,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
               name_buffer + qstrlen(name) + 1);
 
         if (FIRST_MINOR_NEW_BOOLEAN > minor) {
-          *allow_digital_boolean = TRUE;
+          *allow_digital_boolean = true;
         }
         return name_buffer;
       }
@@ -4073,7 +4073,7 @@ static const char *get_last_option_file_name(bool *allow_digital_boolean)
               "loading from '%s' instead."),
             get_current_option_file_name() + qstrlen(name) + 1,
             OLD_OPTION_FILE_NAME);
-      *allow_digital_boolean = TRUE;
+      *allow_digital_boolean = true;
       return name_buffer;
     } else {
       return NULL;
@@ -4282,7 +4282,7 @@ static bool settable_option_upgrade_value(const struct option *poption,
     if (0 <= old_value && old_value < ARRAY_SIZE(values)                    \
         && NULL != values[old_value]) {                                     \
       fc_strlcpy(buf, values[old_value], buf_len);                          \
-      return TRUE;                                                          \
+      return true;                                                          \
     } else {                                                                \
       return false;                                                         \
     }                                                                       \
@@ -4507,19 +4507,19 @@ void options_load(void)
   name = get_last_option_file_name(&allow_digital_boolean);
   if (!name) {
     qInfo(_("Didn't find the option file. Creating a new one."));
-    options_fully_initialized = TRUE;
+    options_fully_initialized = true;
     create_default_cma_presets();
-    gui_options.first_boot = TRUE;
+    gui_options.first_boot = true;
     return;
   }
-  if (!(sf = secfile_load(name, TRUE))) {
+  if (!(sf = secfile_load(name, true))) {
     log_debug("Error loading option file '%s':\n%s", name, secfile_error());
     /* try to create the rc file */
-    sf = secfile_new(TRUE);
+    sf = secfile_new(true);
     secfile_insert_str(sf, VERSION_STRING, "client.version");
 
     create_default_cma_presets();
-    gui_options.first_boot = TRUE;
+    gui_options.first_boot = true;
     save_cma_presets(sf);
 
     /* FIXME: need better messages */
@@ -4529,7 +4529,7 @@ void options_load(void)
       qInfo(_("Saved settings to file %s"), name);
     }
     secfile_destroy(sf);
-    options_fully_initialized = TRUE;
+    options_fully_initialized = true;
     return;
   }
   secfile_allow_digital_boolean(sf, allow_digital_boolean);
@@ -4568,7 +4568,7 @@ void options_load(void)
 
   /* Renamed in 2.6 */
   gui_options.popup_actor_arrival = secfile_lookup_bool_default(
-      sf, TRUE, "%s.popup_caravan_arrival", prefix);
+      sf, true, "%s.popup_caravan_arrival", prefix);
 
   /* Load all the regular options */
   client_options_iterate_all(poption) { client_option_load(poption, sf); }
@@ -4579,7 +4579,7 @@ void options_load(void)
    * behaviour overrides the "destination" option. */
 
   /* Removed in 2.4 */
-  if (!secfile_lookup_bool_default(sf, TRUE, "%s.do_combat_animation",
+  if (!secfile_lookup_bool_default(sf, true, "%s.do_combat_animation",
                                    prefix)) {
     gui_options.smooth_combat_step_msec = 0;
   }
@@ -4601,7 +4601,7 @@ void options_load(void)
   global_worklists_load(sf);
 
   secfile_destroy(sf);
-  options_fully_initialized = TRUE;
+  options_fully_initialized = true;
 }
 
 /************************************************************************/ /**
@@ -4634,7 +4634,7 @@ void options_save(option_save_log_callback log_cb)
     return;
   }
 
-  sf = secfile_new(TRUE);
+  sf = secfile_new(true);
   secfile_insert_str(sf, VERSION_STRING, "client.version");
 
   secfile_insert_bool(sf, gui_options.save_options_on_exit,
@@ -4939,10 +4939,10 @@ static void mapimg_changed_callback(struct option *poption)
 
     /* Reset the value to the default value. */
     success = option_reset(poption);
-    fc_assert_msg(success == TRUE, "Failed to reset the option \"%s\".",
+    fc_assert_msg(success == true, "Failed to reset the option \"%s\".",
                   option_name(poption));
     success = mapimg_client_define();
-    fc_assert_msg(success == TRUE,
+    fc_assert_msg(success == true,
                   "Failed to restore mapimg definition for option \"%s\".",
                   option_name(poption));
   }
@@ -5063,13 +5063,13 @@ static bool is_ts_option_unset(const char *optname)
   opt = optset_option_by_name(client_optset, optname);
 
   if (opt == NULL) {
-    return TRUE;
+    return true;
   }
 
   val = opt->str_vtable->get(opt);
 
   if (val == NULL || val[0] == '\0') {
-    return TRUE;
+    return true;
   }
 
   return false;

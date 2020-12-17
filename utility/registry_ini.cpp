@@ -169,7 +169,7 @@
 #define MAX_LEN_SECPATH 1024
 
 /* Set to FALSE for old-style savefiles. */
-#define SAVE_TABLES TRUE
+#define SAVE_TABLES true
 
 #define SPECVEC_TAG astring
 #include "specvec.h"
@@ -239,7 +239,7 @@ static bool is_secfile_entry_name_valid(const char *name)
     }
     name++;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -254,7 +254,7 @@ static bool secfile_hash_insert(struct section_file *secfile,
   if (NULL == secfile->hash.entries) {
     /* Consider as success if this secfile doesn't have built the entries
      * hash table. */
-    return TRUE;
+    return true;
   }
 
   entry_path(pentry, buf, sizeof(buf));
@@ -269,7 +269,7 @@ static bool secfile_hash_insert(struct section_file *secfile,
     }
   }
   secfile->hash.entries->insert(buf, pentry);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -283,7 +283,7 @@ static bool secfile_hash_delete(struct section_file *secfile,
   if (NULL == secfile->hash.entries) {
     /* Consider as success if this secfile doesn't have built the entries
      * hash table. */
-    return TRUE;
+    return true;
   }
 
   entry_path(pentry, buf, sizeof(buf));
@@ -317,7 +317,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
   }
 
   /* Assign the real value later, to speed up the creation of new entries. */
-  secfile = secfile_new(TRUE);
+  secfile = secfile_new(true);
   if (filename) {
     secfile->name = fc_strdup(filename);
   } else {
@@ -356,7 +356,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (table_state) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "New section during table"));
-        error = TRUE;
+        error = true;
         goto END;
       }
       /* Check if we already have a section with this name.
@@ -370,14 +370,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
           psection = secfile_section_new(secfile, tok);
           if (section) {
             single_section = psection;
-            found_my_section = TRUE;
+            found_my_section = true;
           }
         }
       }
       if (!inf_token(inf, INF_TOK_EOL)) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Expected end of line"));
-        error = TRUE;
+        error = true;
         goto END;
       }
       continue;
@@ -386,13 +386,13 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (!table_state) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Misplaced \"}\""));
-        error = TRUE;
+        error = true;
         goto END;
       }
       if (!inf_token(inf, INF_TOK_EOL)) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Expected end of line"));
-        error = TRUE;
+        error = true;
         goto END;
       }
       table_state = false;
@@ -408,7 +408,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
           SECFILE_LOG(secfile, psection, "%s",
                       inf_log_str(inf, "Expected value"));
-          error = TRUE;
+          error = true;
           goto END;
         }
 
@@ -426,7 +426,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (!inf_token(inf, INF_TOK_EOL)) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Expected end of line"));
-        error = TRUE;
+        error = true;
         goto END;
       }
       table_lineno++;
@@ -436,7 +436,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     if (!(tok = inf_token(inf, INF_TOK_ENTRY_NAME))) {
       SECFILE_LOG(secfile, psection, "%s",
                   inf_log_str(inf, "Expected entry name"));
-      error = TRUE;
+      error = true;
       goto END;
     }
 
@@ -453,13 +453,13 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
         if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
           SECFILE_LOG(secfile, psection, "%s",
                       inf_log_str(inf, "Expected value"));
-          error = TRUE;
+          error = true;
           goto END;
         }
         if (tok[0] != '\"') {
           SECFILE_LOG(secfile, psection, "%s",
                       inf_log_str(inf, "Table column header non-string"));
-          error = TRUE;
+          error = true;
           goto END;
         }
         { /* expand columns: */
@@ -480,10 +480,10 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (!inf_token(inf, INF_TOK_EOL)) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Expected end of line"));
-        error = TRUE;
+        error = true;
         goto END;
       }
-      table_state = TRUE;
+      table_state = true;
       table_lineno = 0;
       continue;
     }
@@ -495,7 +495,7 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
       if (!(tok = inf_token(inf, INF_TOK_VALUE))) {
         SECFILE_LOG(secfile, psection, "%s",
                     inf_log_str(inf, "Expected value"));
-        error = TRUE;
+        error = true;
         goto END;
       }
       if (i == 0) {
@@ -508,14 +508,14 @@ static struct section_file *secfile_from_input_file(struct inputfile *inf,
     if (!inf_token(inf, INF_TOK_EOL)) {
       SECFILE_LOG(secfile, psection, "%s",
                   inf_log_str(inf, "Expected end of line"));
-      error = TRUE;
+      error = true;
       goto END;
     }
   }
 
   if (table_state) {
     SECFILE_LOG(secfile, psection, "Finished registry before end of table");
-    error = TRUE;
+    error = true;
   }
 
 END:
@@ -556,7 +556,7 @@ END:
       entry_list_iterate(section_entries(hashing_section), pentry)
       {
         if (!secfile_hash_insert(secfile, pentry)) {
-          error = TRUE;
+          error = true;
           break;
         }
       }
@@ -719,7 +719,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
             break;
           }
           c += 2;
-          if (*c == '\0' || !is_legal_table_entry_name(*c, TRUE)) {
+          if (*c == '\0' || !is_legal_table_entry_name(*c, true)) {
             break;
           }
 
@@ -858,7 +858,7 @@ bool secfile_save(const struct section_file *secfile, const char *filename,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -879,7 +879,7 @@ void secfile_check_unused(const struct section_file *secfile)
       if (!entry_used(pentry)) {
         if (!any && secfile->name) {
           qDebug("Unused entries in file %s:", secfile->name);
-          any = TRUE;
+          any = true;
         }
         qCWarning(deprecations_category, "%s: unused entry: %s.%s",
                   secfile->name != NULL ? secfile->name : "nameless",
@@ -1210,7 +1210,7 @@ struct section *secfile_insert_long_comment(struct section_file *secfile,
   psection->special = EST_COMMENT;
 
   /* Then add string entry "comment" to it. */
-  secfile_insert_str_full(secfile, comment, NULL, false, TRUE, EST_COMMENT,
+  secfile_insert_str_full(secfile, comment, NULL, false, true, EST_COMMENT,
                           "%s.comment", buffer);
 
   return psection;
@@ -1270,7 +1270,7 @@ struct entry *secfile_insert_str_full(struct section_file *secfile,
   }
 
   if (stype == EST_COMMENT) {
-    pentry->string.raw = TRUE;
+    pentry->string.raw = true;
   }
 
   return pentry;
@@ -1398,7 +1398,7 @@ struct entry *secfile_insert_plain_enum_full(struct section_file *secfile,
   }
 
   if (NULL == pentry) {
-    pentry = section_entry_str_new(psection, ent_name, str, TRUE);
+    pentry = section_entry_str_new(psection, ent_name, str, true);
   }
 
   if (NULL != pentry && NULL != comment) {
@@ -1511,7 +1511,7 @@ struct entry *secfile_insert_bitwise_enum_full(
   }
 
   if (NULL == pentry) {
-    pentry = section_entry_str_new(psection, ent_name, str, TRUE);
+    pentry = section_entry_str_new(psection, ent_name, str, true);
   }
 
   if (NULL != pentry && NULL != comment) {
@@ -1631,7 +1631,7 @@ struct entry *secfile_insert_enum_data_full(
   }
 
   if (NULL == pentry) {
-    pentry = section_entry_str_new(psection, ent_name, str, TRUE);
+    pentry = section_entry_str_new(psection, ent_name, str, true);
   }
 
   if (NULL != pentry && NULL != comment) {
@@ -1752,7 +1752,7 @@ bool secfile_entry_delete(struct section_file *secfile, const char *path,
 
   entry_destroy(pentry);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2168,7 +2168,7 @@ bool secfile_lookup_plain_enum_full(const struct section_file *secfile,
 
   *penumerator = by_name_fn(str, strcmp);
   if (is_valid_fn(*penumerator)) {
-    return TRUE;
+    return true;
   }
 
   SECFILE_LOG(secfile, entry_section(pentry),
@@ -2304,7 +2304,7 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
   *penumerator = 0;
   if ('\0' == str[0]) {
     /* Empty string = no value. */
-    return TRUE;
+    return true;
   }
 
   /* Value names are separated by '|'. */
@@ -2329,7 +2329,7 @@ bool secfile_lookup_bitwise_enum_full(const struct section_file *secfile,
     str = p;
   } while (NULL != p);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2481,7 +2481,7 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
     *pvalue = 0;
     if ('\0' == str[0]) {
       /* Empty string = no value. */
-      return TRUE;
+      return true;
     }
 
     /* Value names are separated by '|'. */
@@ -2524,7 +2524,7 @@ bool secfile_lookup_enum_data(const struct section_file *secfile,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2887,7 +2887,7 @@ bool section_set_name(struct section *psection, const char *name)
     entry_list_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3206,7 +3206,7 @@ bool entry_set_name(struct entry *pentry, const char *name)
 
   /* Insert into hash table the new path. */
   secfile_hash_insert(secfile, pentry);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3259,7 +3259,7 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
       && NULL != pentry->psection && NULL != pentry->psection->secfile
       && pentry->psection->secfile->allow_digital_boolean) {
     *value = (0 != pentry->integer.value);
-    return TRUE;
+    return true;
   }
 
   SECFILE_RETURN_VAL_IF_FAIL(pentry->psection->secfile, pentry->psection,
@@ -3268,7 +3268,7 @@ bool entry_bool_get(const struct entry *pentry, bool *value)
   if (NULL != value) {
     *value = pentry->boolean.value;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3281,7 +3281,7 @@ bool entry_bool_set(struct entry *pentry, bool value)
                              ENTRY_BOOL == pentry->type, false);
 
   pentry->boolean.value = value;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3297,7 +3297,7 @@ bool entry_float_get(const struct entry *pentry, float *value)
     *value = pentry->floating.value;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3311,7 +3311,7 @@ bool entry_float_set(struct entry *pentry, float value)
 
   pentry->floating.value = value;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3326,7 +3326,7 @@ bool entry_int_get(const struct entry *pentry, int *value)
   if (NULL != value) {
     *value = pentry->integer.value;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3339,7 +3339,7 @@ bool entry_int_set(struct entry *pentry, int value)
                              ENTRY_INT == pentry->type, false);
 
   pentry->integer.value = value;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3354,7 +3354,7 @@ bool entry_str_get(const struct entry *pentry, const char **value)
   if (NULL != value) {
     *value = pentry->string.value;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3375,7 +3375,7 @@ bool entry_str_set(struct entry *pentry, const char *value)
   old_val = pentry->string.value;
   pentry->string.value = fc_strdup(NULL != value ? value : "");
   free(old_val);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3400,7 +3400,7 @@ bool entry_str_set_escaped(struct entry *pentry, bool escaped)
                              ENTRY_STR == pentry->type, false);
 
   pentry->string.escaped = escaped;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3414,7 +3414,7 @@ bool entry_str_set_gt_marking(struct entry *pentry, bool gt_marking)
 
   pentry->string.gt_marking = gt_marking;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

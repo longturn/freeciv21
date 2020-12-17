@@ -256,7 +256,7 @@ static bool is_valid_start_pos(const struct tile *ptile, const void *dataptr)
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -382,7 +382,7 @@ bool create_start_positions(enum map_startpos mode,
   }
   whole_map_iterate_end;
   /* get an average value */
-  smooth_int_map(tile_value, TRUE);
+  smooth_int_map(tile_value, true);
 
   initialize_isle_data();
 
@@ -522,7 +522,7 @@ bool create_start_positions(enum map_startpos mode,
         qInfo(_("The server appears to have gotten into an infinite "
                 "loop in the allocation of starting positions.\nMaybe "
                 "the number of players is too high for this map."));
-        failure = TRUE;
+        failure = true;
         break;
       }
     }

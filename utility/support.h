@@ -13,18 +13,6 @@
 #pragma once
 
 #include <cstdio>
-
-#ifdef TRUE
-#undef TRUE
-#endif
-
-#ifdef FALSE
-#undef FALSE
-#endif
-
-#define TRUE true
-#define FALSE false
-
 #include <inttypes.h>
 
 /* Want to use GCC's __attribute__ keyword to check variadic

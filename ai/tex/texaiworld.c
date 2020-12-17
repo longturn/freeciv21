@@ -73,7 +73,7 @@ void texai_world_close(void) { idex_free(&texai_world); }
  **************************************************************************/
 void texai_map_init(void)
 {
-  map_init(&(texai_world.map), TRUE);
+  map_init(&(texai_world.map), true);
   map_allocate(&(texai_world.map));
 }
 

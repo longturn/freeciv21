@@ -66,7 +66,7 @@ static bool can_player_attack_tile(const struct player *pplayer,
   }
   unit_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -89,15 +89,15 @@ bool is_unit_reachable_at(const struct unit *defender,
                           const struct tile *location)
 {
   if (NULL != tile_city(location)) {
-    return TRUE;
+    return true;
   }
 
   if (is_unit_reachable_by_unit(defender, attacker)) {
-    return TRUE;
+    return true;
   }
 
   if (tile_has_native_base(location, unit_type_get(defender))) {
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -189,12 +189,12 @@ unit_attack_all_at_tile_result(const struct unit *punit,
       if (result == ATT_UNREACHABLE
           && unit_has_type_flag(aunit, UTYF_NEVER_PROTECTS)) {
         /* Doesn't prevent us from attacking other units on the tile */
-        any_neverprotect_unit = TRUE;
+        any_neverprotect_unit = true;
         continue;
       } else if (result != ATT_OK) {
         return result;
       }
-      any_reachable_unit = TRUE;
+      any_reachable_unit = true;
     }
   }
   unit_list_iterate_end;
@@ -755,13 +755,13 @@ struct unit *get_defender(const struct unit *attacker,
       }
 
       if (unit_def > bestvalue) {
-        change = TRUE;
+        change = true;
       } else if (unit_def == bestvalue) {
         if (build_cost < best_cost) {
-          change = TRUE;
+          change = true;
         } else if (build_cost == best_cost) {
           if (rating_of_best < defense_rating) {
-            change = TRUE;
+            change = true;
           }
         }
       }

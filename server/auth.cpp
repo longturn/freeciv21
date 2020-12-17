@@ -156,7 +156,7 @@ bool auth_user(struct connection *pconn, char *username)
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -178,7 +178,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
         return false;
       } else {
         dsend_packet_authentication_req(pconn, AUTH_NEWUSER_RETRY, msg);
-        return TRUE;
+        return true;
       }
     }
 
@@ -207,7 +207,7 @@ bool auth_handle_reply(struct connection *pconn, char *password)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -350,7 +350,7 @@ static bool is_good_password(const char *password, char *msg)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

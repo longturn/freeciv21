@@ -45,7 +45,7 @@ bool adv_spaceship_autoplace(struct player *pplayer,
                              place.num)) {
         /* A part was placed. It was placed even if the placement of future
          * parts will fail. */
-        retval = TRUE;
+        retval = true;
       } else {
         /* Unable to place this part. Don't try to place it again. */
         break;

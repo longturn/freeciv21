@@ -209,7 +209,7 @@ inline bool operator==(const struct cm_result &result1,
   }
   city_map_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 // yet another abstraction layer
@@ -302,7 +302,7 @@ bool cma_yoloswag::apply_result_on_server(struct city *pcity,
 
   if (*current_state == *result && !ALWAYS_APPLY_AT_SERVER) {
     stats.apply_result_ignored++;
-    return TRUE;
+    return true;
   }
   /* Do checks */
   if (city_size_get(pcity) != cm_result_citizens(result)) {
@@ -452,7 +452,7 @@ bool cma_yoloswag::is_city_under_agent(const struct city *pcity,
       && sizeof(*parameter) == sizeof(my_parameter)) {
     memcpy(parameter, &my_parameter, codacybs);
   }
-  return TRUE;
+  return true;
 }
 bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                                  struct cm_parameter *parameter)
@@ -491,7 +491,7 @@ bool cma_yoloswag::get_parameter(enum attr_city attr, int city_id,
                     &dummy); /* Dummy value; used to be factor_target. */
   dio_get_bool8_raw(&din, &parameter->require_happy);
 
-  return TRUE;
+  return true;
 }
 
 void cma_yoloswag::set_parameter(enum attr_city attr, int city_id,
@@ -575,7 +575,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
     log_handle_city2("  try %d", i);
 
     if (pcity != check_city(city_id, &parameter)) {
-      handled = TRUE;
+      handled = true;
       break;
     }
 
@@ -589,7 +589,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
                    _("The citizen governor can't fulfill the requirements "
                      "for %s. Passing back control."),
                    city_link(pcity));
-      handled = TRUE;
+      handled = true;
       break;
     } else {
       if (!apply_result_on_server(pcity, result)) {
@@ -603,7 +603,7 @@ void cma_yoloswag::handle_city(struct city *pcity)
       } else {
         log_handle_city2("  ok");
         /* Everything ok */
-        handled = TRUE;
+        handled = true;
         break;
       }
     }
@@ -988,35 +988,35 @@ void create_default_cma_presets(void)
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
-       .allow_specialists = TRUE,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 4},
        .happy_factor = 25},
       {/* prefer food */
        .minimal_surplus = {-20, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
-       .allow_specialists = TRUE,
+       .allow_specialists = true,
        .factor = {25, 5, 0, 4, 0, 4},
        .happy_factor = 0},
       {/* prefer prod */
        .minimal_surplus = {0, -20, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
-       .allow_specialists = TRUE,
+       .allow_specialists = true,
        .factor = {10, 25, 0, 4, 0, 4},
        .happy_factor = 0},
       {/* prefer gold */
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
-       .allow_specialists = TRUE,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 25, 0, 4},
        .happy_factor = 0},
       {/* prefer science */
        .minimal_surplus = {0, 0, 0, -20, 0, 0},
        .require_happy = false,
        .allow_disorder = false,
-       .allow_specialists = TRUE,
+       .allow_specialists = true,
        .factor = {10, 5, 0, 4, 0, 25},
        .happy_factor = 0}};
   const char *names[ARRAY_SIZE(parameters)] = {

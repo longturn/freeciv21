@@ -219,7 +219,7 @@ bool utype_can_create_extra(const struct unit_type *putype,
 
     if (action_creates_extra(paction, pextra)) {
       /* Can create */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
@@ -245,7 +245,7 @@ bool utype_can_remove_extra(const struct unit_type *putype,
 
     if (action_removes_extra(paction, pextra)) {
       /* Can remove */
-      return TRUE;
+      return true;
     }
   }
   action_iterate_end;
@@ -334,7 +334,7 @@ static bool action_is_hostile(action_id act_id)
   case ACTRES_PILLAGE:
   case ACTRES_SPY_ATTACK:
   case ACTRES_SPY_SPREAD_PLAGUE:
-    return TRUE;
+    return true;
   case ACTRES_ESTABLISH_EMBASSY:
   case ACTRES_TRADE_ROUTE:
   case ACTRES_MARKETPLACE:
@@ -367,7 +367,7 @@ static bool action_is_hostile(action_id act_id)
     return false;
   case ACTRES_NONE:
     /* Assume they are up to something. */
-    return TRUE;
+    return true;
   }
 
   /* Should not be reached. */
@@ -463,7 +463,7 @@ bool utype_can_do_action_result(const struct unit_type *putype,
   action_by_result_iterate(paction, act_id, result)
   {
     if (utype_can_do_action(putype, paction->id)) {
-      return TRUE;
+      return true;
     }
   }
   action_by_result_iterate_end;
@@ -556,7 +556,7 @@ static void unit_state_action_cache_set(struct unit_type *putype)
     {
       if (requirement_fulfilled_by_unit_type(putype, &(enabler->actor_reqs))
           && action_id_get_actor_kind(enabler->action) == AAK_UNIT) {
-        bool present = TRUE;
+        bool present = true;
         do {
           /* OK if not mentioned */
           req.present = present;
@@ -611,7 +611,7 @@ static void local_dipl_rel_action_cache_set(struct unit_type *putype)
   tile_is_claimed.range = REQ_RANGE_LOCAL;
   tile_is_claimed.survives = false;
   tile_is_claimed.source.kind = VUT_CITYTILE;
-  tile_is_claimed.present = TRUE;
+  tile_is_claimed.present = true;
   tile_is_claimed.source.value.citytile = CITYT_CLAIMED;
 
   /* Common for every situation */
@@ -635,7 +635,7 @@ static void local_dipl_rel_action_cache_set(struct unit_type *putype)
               /* No diplomatic relation to Nature */
               || !does_req_contradicts_reqs(&tile_is_claimed,
                                             &enabler->target_reqs))) {
-        bool present = TRUE;
+        bool present = true;
         do {
           req.present = present;
           if (!does_req_contradicts_reqs(&req, &(enabler->actor_reqs))) {
@@ -699,7 +699,7 @@ static void tgt_citytile_act_cache_set(struct unit_type *putype)
     {
       if (requirement_fulfilled_by_unit_type(putype, &(enabler->target_reqs))
           && action_id_get_actor_kind(enabler->action) == AAK_UNIT) {
-        bool present = TRUE;
+        bool present = true;
         do {
           /* OK if not mentioned */
           req.present = present;
@@ -876,7 +876,7 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
     {
       if (utype_may_act_move_frags(punit_type, alt_act, move_fragments)) {
         /* It only has to be true for one action. */
-        return TRUE;
+        return true;
       }
     }
     action_iterate_end;
@@ -905,7 +905,7 @@ bool utype_may_act_move_frags(const struct unit_type *punit_type,
             || ml_range->max > move_fragments)) {
       /* The number of move fragments is in range of the action enabler. */
       delete ml_range;
-      return TRUE;
+      return true;
     }
 
     delete ml_range;
@@ -941,7 +941,7 @@ bool utype_may_act_tgt_city_tile(const struct unit_type *punit_type,
     {
       if (utype_may_act_tgt_city_tile(punit_type, alt_act, prop, is_there)) {
         /* It only has to be true for one action. */
-        return TRUE;
+        return true;
       }
     }
     action_iterate_end;
@@ -977,7 +977,7 @@ bool utype_may_act_tgt_city_tile(const struct unit_type *punit_type,
 
     if (!does_req_contradicts_reqs(&req, &(enabler->target_reqs))) {
       /* This action isn't blocked by the given target tile property. */
-      return TRUE;
+      return true;
     }
   }
   action_enabler_list_iterate_end;
@@ -1010,7 +1010,7 @@ bool utype_is_consumed_by_action_result(enum action_result result,
     }
 
     if (utype_is_consumed_by_action(paction, utype)) {
-      return TRUE;
+      return true;
     }
   }
   action_by_result_iterate_end;
@@ -1039,10 +1039,10 @@ bool utype_is_moved_to_tgt_by_action(const struct action *paction,
   case MAK_REGULAR:
     /* A "regular" move. Does it charge the move cost of a regular move?
      * Update utype_pays_for_regular_move_to_tgt() if yes. */
-    return TRUE;
+    return true;
   case MAK_TELEPORT:
     /* A teleporting move. */
-    return TRUE;
+    return true;
   case MAK_FORCED:
     /* Tries a forced move under certain conditions. */
     return false;
@@ -1076,7 +1076,7 @@ bool utype_is_unmoved_by_action(const struct action *paction,
   switch (paction->actor.is_unit.moves_actor) {
   case MAK_STAYS:
     /* Stays at the tile were it was. */
-    return TRUE;
+    return true;
   case MAK_REGULAR:
     /* A "regular" move. Does it charge the move cost of a regular move?
      * Update utype_pays_for_regular_move_to_tgt() if yes. */
@@ -1115,17 +1115,17 @@ bool utype_pays_for_regular_move_to_tgt(const struct action *paction,
 
   if (action_has_result(paction, ACTRES_CONQUER_CITY)) {
     /* Moves into the city to occupy it. */
-    return TRUE;
+    return true;
   }
 
   if (action_has_result(paction, ACTRES_TRANSPORT_DISEMBARK)) {
     /* Moves out of the transport to disembark. */
-    return TRUE;
+    return true;
   }
 
   if (action_has_result(paction, ACTRES_TRANSPORT_EMBARK)) {
     /* Moves into the transport to embark. */
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -1351,11 +1351,11 @@ const char *utype_values_string(const struct unit_type *punittype)
   /* Print in two parts as move_points_text() returns a static buffer */
   fc_snprintf(buffer, sizeof(buffer), "%d/%d/%s", punittype->attack_strength,
               punittype->defense_strength,
-              move_points_text(punittype->move_rate, TRUE));
+              move_points_text(punittype->move_rate, true));
   if (utype_fuel(punittype)) {
     cat_snprintf(buffer, sizeof(buffer), "(%s)",
                  move_points_text(
-                     punittype->move_rate * utype_fuel(punittype), TRUE));
+                     punittype->move_rate * utype_fuel(punittype), true));
   }
   return buffer;
 }
@@ -1409,7 +1409,7 @@ bool role_units_translations(struct astring *astr, int flag, bool alts)
       astr_set(astr, _("%s and similar units"),
                utype_name_translation(get_role_unit(flag, 0)));
     }
-    return TRUE;
+    return true;
   } else if (0 < count) {
     const char **vec = new const char *[count];
     int i;
@@ -1424,7 +1424,7 @@ bool role_units_translations(struct astring *astr, int flag, bool alts)
       astr_build_and_list(astr, vec, count);
     }
     delete[] vec;
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1667,7 +1667,7 @@ bool utype_player_already_has_this_unique(const struct player *pplayer,
        * consider keeping an array of unittypes updated with this info
        * instead. */
 
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1787,7 +1787,7 @@ bool can_player_build_unit_direct(const struct player *p,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1805,7 +1805,7 @@ bool can_player_build_unit_now(const struct player *p,
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1825,7 +1825,7 @@ bool can_player_build_unit_later(const struct player *p,
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**************************************************************************
@@ -1835,7 +1835,7 @@ bool can_player_build_unit_later(const struct player *p,
 "space", and any "role" argument can also be a "flag". Unit order is in terms
 of the order in the units ruleset.
 **************************************************************************/
-static bool first_init = TRUE;
+static bool first_init = true;
 static int n_with_role[MAX_UNIT_ROLES];
 static struct unit_type **with_role[MAX_UNIT_ROLES];
 
@@ -2337,7 +2337,7 @@ bool utype_veteran_has_power_bonus(const struct unit_type *punittype)
   int i, initial_power_fact = utype_veteran_level(punittype, 0)->power_fact;
   for (i = 1; i < utype_veteran_levels(punittype); i++) {
     if (utype_veteran_level(punittype, i)->power_fact > initial_power_fact) {
-      return TRUE;
+      return true;
     }
   }
   return false;
@@ -2440,7 +2440,7 @@ void set_unit_class_caches(struct unit_class *pclass)
 
   unit_class_iterate(pcharge)
   {
-    bool subset_mover = TRUE;
+    bool subset_mover = true;
 
     terrain_type_iterate(pterrain)
     {
@@ -2502,8 +2502,8 @@ void set_unit_type_caches(struct unit_type *ptype)
 static enum unit_move_type move_type_from_extra(struct extra_type *pextra,
                                                 struct unit_class *puc)
 {
-  bool land_allowed = TRUE;
-  bool sea_allowed = TRUE;
+  bool land_allowed = true;
+  bool sea_allowed = true;
 
   if (!extra_has_flag(pextra, EF_NATIVE_TILE)) {
     return unit_move_type_invalid();
@@ -2578,12 +2578,12 @@ void set_unit_move_type(struct unit_class *puclass)
     enum unit_move_type eut = move_type_from_extra(pextra, puclass);
 
     if (eut == UMT_BOTH) {
-      land_moving = TRUE;
-      sea_moving = TRUE;
+      land_moving = true;
+      sea_moving = true;
     } else if (eut == UMT_LAND) {
-      land_moving = TRUE;
+      land_moving = true;
     } else if (eut == UMT_SEA) {
-      sea_moving = TRUE;
+      sea_moving = true;
     }
   }
   extra_type_iterate_end;
@@ -2592,9 +2592,9 @@ void set_unit_move_type(struct unit_class *puclass)
   {
     if (is_native_to_class(puclass, pterrain, NULL)) {
       if (is_ocean(pterrain)) {
-        sea_moving = TRUE;
+        sea_moving = true;
       } else {
-        land_moving = TRUE;
+        land_moving = true;
       }
     }
   }

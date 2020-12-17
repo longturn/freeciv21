@@ -152,7 +152,7 @@ const bv_extras *tile_extras_null(void)
 
   if (!empty_cleared) {
     BV_CLR_ALL(empty_extras);
-    empty_cleared = TRUE;
+    empty_cleared = true;
   }
 
   return &(empty_extras);
@@ -180,7 +180,7 @@ bool tile_has_base_flag(const struct tile *ptile, enum base_flag_id flag)
     struct base_type *pbase = extra_base_get(pextra);
 
     if (tile_has_extra(ptile, pextra) && base_has_flag(pbase, flag)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -201,7 +201,7 @@ bool tile_has_base_flag_for_unit(const struct tile *ptile,
 
     if (tile_has_extra(ptile, pextra)
         && base_has_flag_for_utype(pbase, flag, punittype)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -221,7 +221,7 @@ bool tile_has_claimable_base(const struct tile *ptile,
 
     if (tile_has_extra(ptile, pextra) && territory_claiming_base(pbase)
         && is_native_extra_to_uclass(pextra, utype_class(punittype))) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -325,7 +325,7 @@ bool tile_has_refuel_extra(const struct tile *ptile,
   {
     if (tile_has_extra(ptile, pextra) && extra_has_flag(pextra, EF_REFUEL)
         && is_native_extra_to_utype(pextra, punittype)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_iterate_end;
@@ -343,7 +343,7 @@ bool tile_has_native_base(const struct tile *ptile,
   {
     if (tile_has_extra(ptile, pextra)
         && is_native_extra_to_utype(pextra, punittype)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -540,7 +540,7 @@ static bool add_recursive_extras(struct tile *ptile,
 
   tile_create_extra(ptile, pextra);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -573,7 +573,7 @@ static bool rm_recursive_extras(struct tile *ptile,
 
   tile_destroy_extra(ptile, pextra);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -600,7 +600,7 @@ bool tile_extra_apply(struct tile *ptile, struct extra_type *tgt)
   }
   extra_type_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -618,7 +618,7 @@ bool tile_extra_rm_apply(struct tile *ptile, struct extra_type *tgt)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -719,23 +719,23 @@ bool tile_apply_activity(struct tile *ptile, Activity_type_id act,
   switch (act) {
   case ACTIVITY_MINE:
     tile_mine(ptile, tgt);
-    return TRUE;
+    return true;
 
   case ACTIVITY_IRRIGATE:
     tile_irrigate(ptile, tgt);
-    return TRUE;
+    return true;
 
   case ACTIVITY_TRANSFORM:
     tile_transform(ptile);
-    return TRUE;
+    return true;
 
   case ACTIVITY_CULTIVATE:
     tile_cultivate(ptile);
-    return TRUE;
+    return true;
 
   case ACTIVITY_PLANT:
     tile_plant(ptile);
-    return TRUE;
+    return true;
 
   case ACTIVITY_OLD_ROAD:
   case ACTIVITY_OLD_RAILROAD:
@@ -792,7 +792,7 @@ static bool tile_info_pollution(char *buf, int bufsz,
 
     fc_strlcat(buf, extra_name_translation(pextra), bufsz);
 
-    return TRUE;
+    return true;
   }
 
   return prevp;
@@ -820,7 +820,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   sz_strlcpy(s, terrain_name_translation(tile_terrain(ptile)));
   if (linebreaks & TILE_LB_TERRAIN_RIVER) {
     /* Linebreak needed before next text */
-    lb = TRUE;
+    lb = true;
   }
 
   extra_type_iterate(pextra)
@@ -839,7 +839,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   extra_type_iterate_end;
   if (linebreaks & TILE_LB_RIVER_RESOURCE) {
     /* New linebreak requested */
-    lb = TRUE;
+    lb = true;
   }
 
   if (tile_resource_is_valid(ptile)) {
@@ -854,7 +854,7 @@ const char *tile_get_info_text(const struct tile *ptile,
   }
   if (linebreaks & TILE_LB_RESOURCE_POLL) {
     /* New linebreak requested */
-    lb = TRUE;
+    lb = true;
   }
 
   if (include_nuisances) {
@@ -901,7 +901,7 @@ bool tile_has_river(const struct tile *ptile)
   {
     if (tile_has_extra(ptile, priver)
         && road_has_flag(extra_road_get(priver), RF_RIVER)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -920,7 +920,7 @@ bool tile_has_road_flag(const struct tile *ptile, enum road_flag_id flag)
       struct road_type *proad = extra_road_get(pextra);
 
       if (road_has_flag(proad, flag)) {
-        return TRUE;
+        return true;
       }
     }
   }
@@ -937,7 +937,7 @@ bool tile_has_extra_flag(const struct tile *ptile, enum extra_flag_id flag)
   extra_type_iterate(pextra)
   {
     if (tile_has_extra(ptile, pextra) && extra_has_flag(pextra, flag)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_iterate_end;
@@ -955,7 +955,7 @@ bool tile_has_conflicting_extra(const struct tile *ptile,
   {
     if (BV_ISSET(pextra->conflicts, extra_index(pconfl))
         && tile_has_extra(ptile, pconfl)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_iterate_end;
@@ -980,7 +980,7 @@ bool tile_has_visible_extra(const struct tile *ptile,
     int topi = extra_index(top);
 
     if (BV_ISSET(pextra->hidden_by, topi) && BV_ISSET(ptile->extras, topi)) {
-      hidden = TRUE;
+      hidden = true;
       break;
     }
   }
@@ -997,7 +997,7 @@ bool tile_has_cause_extra(const struct tile *ptile, enum extra_cause cause)
   extra_type_by_cause_iterate(cause, pextra)
   {
     if (tile_has_extra(ptile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -1160,14 +1160,14 @@ bool tile_set_label(struct tile *ptile, const char *label)
 
   if (ptile->label != NULL) {
     if (label == NULL) {
-      changed = TRUE;
+      changed = true;
     } else if (strcmp(ptile->label, label)) {
-      changed = TRUE;
+      changed = true;
     }
     FC_FREE(ptile->label);
     ptile->label = NULL;
   } else if (label != NULL) {
-    changed = TRUE;
+    changed = true;
   }
 
   if (label != NULL) {

@@ -48,7 +48,7 @@ bool bv_check_mask(const unsigned char *vec1, const unsigned char *vec2,
 
   for (i = 0; i < size1; i++) {
     if ((vec1[0] & vec2[0]) != 0) {
-      return TRUE;
+      return true;
     }
     vec1++;
     vec2++;
@@ -73,7 +73,7 @@ bool bv_are_equal(const unsigned char *vec1, const unsigned char *vec2,
     vec1++;
     vec2++;
   }
-  return TRUE;
+  return true;
 }
 
 /***********************************************************************/ /**

@@ -356,7 +356,7 @@ static inline bool pf_normal_node_init(struct pf_normal_map *pfnm,
     node->extra_tile = params->get_EC(ptile, node_known_type, params);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -559,7 +559,7 @@ static bool pf_jumbo_map_iterate(struct pf_map *pfm)
   pfm->tile = index_to_tile(params->map, tindex);
   pfnm->lattice[tindex].status = NS_PROCESSED;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -714,7 +714,7 @@ static bool pf_normal_map_iterate(struct pf_map *pfm)
   pfm->tile = index_to_tile(params->map, tindex);
   pfnm->lattice[tindex].status = NS_PROCESSED;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -748,7 +748,7 @@ static inline bool pf_normal_map_iterate_until(struct pf_normal_map *pfnm,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -801,10 +801,10 @@ static bool pf_normal_map_position(struct pf_map *pfm, struct tile *ptile,
 
   if (ptile == pfm->params.start_tile) {
     pf_position_fill_start_tile(pos, pf_map_parameter(pfm));
-    return TRUE;
+    return true;
   } else if (pf_normal_map_iterate_until(pfnm, ptile)) {
     pf_normal_map_fill_position(pfnm, ptile, pos);
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -871,7 +871,7 @@ static struct pf_map *pf_normal_map_new(const struct pf_parameter *parameter)
   if (NULL == params->get_costs) {
     if (!pf_normal_node_init(pfnm, node, params->start_tile, PF_MS_NONE)) {
       /* Always fails. */
-      fc_assert(TRUE
+      fc_assert(true
                 == pf_normal_node_init(pfnm, node, params->start_tile,
                                        PF_MS_NONE));
     }
@@ -1080,7 +1080,7 @@ static inline bool pf_danger_node_init(struct pf_danger_map *pfdm,
   node->is_dangerous =
       params->is_pos_dangerous(ptile, node_known_type, params);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1222,7 +1222,7 @@ pf_danger_map_construct_path(const struct pf_danger_map *pfdm,
         pf_finalize_position(params, pos);
         /* Set old_waited so that we record direction8_invalid() as a
          * direction at the step we were going to wait. */
-        old_waited = TRUE;
+        old_waited = true;
         i--;
       }
       /* Update "waited" (node->waited means "waited to get here"). */
@@ -1650,7 +1650,7 @@ static bool pf_danger_map_iterate(struct pf_map *pfm)
         fc_assert(!node->is_dangerous);
 #endif
         node->status = NS_PROCESSED;
-        return TRUE;
+        return true;
       }
     }
 
@@ -1704,7 +1704,7 @@ static inline bool pf_danger_map_iterate_until(struct pf_danger_map *pfdm,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1757,10 +1757,10 @@ static bool pf_danger_map_position(struct pf_map *pfm, struct tile *ptile,
 
   if (ptile == pfm->params.start_tile) {
     pf_position_fill_start_tile(pos, pf_map_parameter(pfm));
-    return TRUE;
+    return true;
   } else if (pf_danger_map_iterate_until(pfdm, ptile)) {
     pf_danger_map_fill_position(pfdm, ptile, pos);
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -1832,7 +1832,7 @@ static struct pf_map *pf_danger_map_new(const struct pf_parameter *parameter)
   if (!pf_danger_node_init(pfdm, node, params->start_tile, PF_MS_NONE)) {
     /* Always fails. */
     fc_assert(
-        TRUE
+        true
         == pf_danger_node_init(pfdm, node, params->start_tile, PF_MS_NONE));
   }
 
@@ -2089,7 +2089,7 @@ static inline bool pf_fuel_node_init(struct pf_fuel_map *pffm,
     node->extra_tile = params->get_EC(ptile, node_known_type, params);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2445,21 +2445,21 @@ pf_fuel_map_attack_is_possible(const struct pf_parameter *param,
 {
   if (utype_can_do_action(param->utype, ACTION_SUICIDE_ATTACK)) {
     /* Case missile */
-    return TRUE;
+    return true;
   } else if (utype_has_flag(param->utype, UTYF_ONEATTACK)) {
     /* Case Bombers */
     if (moves_left <= param->move_rate) {
       /* We are in the last turn of fuel, don't attack */
       return false;
     } else {
-      return TRUE;
+      return true;
     }
   } else {
     /* Case fighters */
     if (moves_left - SINGLE_MOVE < moves_left_req) {
       return false;
     } else {
-      return TRUE;
+      return true;
     }
   }
 }
@@ -2788,7 +2788,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
       tile = index_to_tile(params->map, tindex);
       pfm->tile = tile;
       node = pffm->lattice + tindex;
-      waited = TRUE;
+      waited = true;
 #ifdef PF_DEBUG
       fc_assert(0 < node->moves_left_req);
       fc_assert(NS_PROCESSED == node->status);
@@ -2815,7 +2815,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
         /* Node status step C. and D. */
         node->status = NS_PROCESSED;
         node->segment = pf_fuel_pos_ref(node->pos);
-        return TRUE;
+        return true;
       }
       waited = (NS_WAITING == node->status);
     }
@@ -2872,7 +2872,7 @@ static inline bool pf_fuel_map_iterate_until(struct pf_fuel_map *pffm,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2926,10 +2926,10 @@ static bool pf_fuel_map_position(struct pf_map *pfm, struct tile *ptile,
 
   if (ptile == pfm->params.start_tile) {
     pf_position_fill_start_tile(pos, pf_map_parameter(pfm));
-    return TRUE;
+    return true;
   } else if (pf_fuel_map_iterate_until(pffm, ptile)) {
     pf_fuel_map_fill_position(pffm, ptile, pos);
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -3002,7 +3002,7 @@ static struct pf_map *pf_fuel_map_new(const struct pf_parameter *parameter)
   if (!pf_fuel_node_init(pffm, node, params->start_tile, PF_MS_NONE)) {
     /* Always fails. */
     fc_assert(
-        TRUE
+        true
         == pf_fuel_node_init(pffm, node, params->start_tile, PF_MS_NONE));
   }
 
@@ -3154,7 +3154,7 @@ bool pf_map_iterate(struct pf_map *pfm)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3339,7 +3339,7 @@ bool pf_path_advance(struct pf_path *path, struct tile *ptile)
   delete[] path->positions;
   path->positions = new_positions;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3371,7 +3371,7 @@ bool pf_path_backtrack(struct pf_path *path, struct tile *ptile)
   delete[] path->positions;
   path->positions = new_positions;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -3429,7 +3429,7 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 
   if (e1.utype == e2.utype) {
     /* Short test. */
-    return TRUE;
+    return true;
   }
 
   if (utype_class(e1.utype) != utype_class(e2.utype)) {
@@ -3452,7 +3452,7 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 inline uint qHash(const pf_parameter &key, uint seed)
@@ -3697,7 +3697,7 @@ bool pf_reverse_map_utype_position(struct pf_reverse_map *pfrm,
 
   if (mypos != NULL) {
     *pos = *mypos;
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -3714,7 +3714,7 @@ bool pf_reverse_map_unit_position(struct pf_reverse_map *pfrm,
 
   if (mypos != NULL) {
     *pos = *mypos;
-    return TRUE;
+    return true;
   } else {
     return false;
   }

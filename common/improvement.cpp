@@ -87,7 +87,7 @@ void improvement_feature_cache_init(void)
     unit_type_iterate(putype)
     {
       if (requirement_needs_improvement(pimprove, &putype->build_reqs)) {
-        pimprove->allows_units = TRUE;
+        pimprove->allows_units = true;
         break;
       }
     }
@@ -97,7 +97,7 @@ void improvement_feature_cache_init(void)
     extra_type_iterate(pextra)
     {
       if (requirement_needs_improvement(pimprove, &pextra->reqs)) {
-        pimprove->allows_extras = TRUE;
+        pimprove->allows_extras = true;
         break;
       }
     }
@@ -107,7 +107,7 @@ void improvement_feature_cache_init(void)
     disaster_type_iterate(pdis)
     {
       if (!requirement_fulfilled_by_improvement(pimprove, &pdis->reqs)) {
-        pimprove->prevents_disaster = TRUE;
+        pimprove->prevents_disaster = true;
         break;
       }
     }
@@ -118,7 +118,7 @@ void improvement_feature_cache_init(void)
     {
       if (!requirement_fulfilled_by_improvement(pimprove,
                                                 &act->target_reqs)) {
-        pimprove->protects_vs_actions = TRUE;
+        pimprove->protects_vs_actions = true;
         break;
       }
     }
@@ -415,7 +415,7 @@ bool improvement_obsolete(const struct player *pplayer,
   {
     if (is_req_active(pplayer, NULL, pcity, pimprove, ptile, NULL, NULL,
                       NULL, NULL, NULL, preq, RPT_CERTAIN)) {
-      return TRUE;
+      return true;
     }
   }
   requirement_vector_iterate_end;
@@ -438,7 +438,7 @@ static bool impr_provides_buildable_units(const struct city *pcity,
   {
     if (requirement_needs_improvement(pimprove, &ut->build_reqs)
         && can_city_build_unit_now(pcity, ut)) {
-      return TRUE;
+      return true;
     }
   }
   unit_type_iterate_end;
@@ -464,7 +464,7 @@ static bool impr_provides_buildable_extras(const struct city *pcity,
                         ptile)
       {
         if (player_can_build_extra(pextra, city_owner(pcity), ptile)) {
-          return TRUE;
+          return true;
         }
       }
       city_tile_iterate_end;
@@ -490,7 +490,7 @@ static bool impr_prevents_disaster(const struct city *pcity,
   {
     if (!requirement_fulfilled_by_improvement(pimprove, &pdis->reqs)
         && !can_disaster_happen(pdis, pcity)) {
-      return TRUE;
+      return true;
     }
   }
   disaster_type_iterate_end;
@@ -516,7 +516,7 @@ static bool impr_protects_vs_actions(const struct city *pcity,
   {
     if (!requirement_fulfilled_by_improvement(pimprove, &act->target_reqs)
         && !is_action_possible_on_city(act->action, NULL, pcity)) {
-      return TRUE;
+      return true;
     }
   }
   action_enablers_iterate_end;
@@ -566,7 +566,7 @@ static bool improvement_has_effects(const struct city *pcity,
     if (0
         != get_potential_improvement_bonus(pimprove, pcity, peffect->type,
                                            RPT_CERTAIN)) {
-      return TRUE;
+      return true;
     }
   }
   effect_list_iterate_end;
@@ -647,19 +647,19 @@ bool can_player_build_improvement_direct(const struct player *p,
   /* Check for space part construction.  This assumes that space parts have
    * no other effects. */
   if (building_has_effect(pimprove, EFT_SS_STRUCTURAL)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.structurals >= NUM_SS_STRUCTURALS) {
       return false;
     }
   }
   if (building_has_effect(pimprove, EFT_SS_COMPONENT)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.components >= NUM_SS_COMPONENTS) {
       return false;
     }
   }
   if (building_has_effect(pimprove, EFT_SS_MODULE)) {
-    space_part = TRUE;
+    space_part = true;
     if (p->spaceship.modules >= NUM_SS_MODULES) {
       return false;
     }
@@ -677,7 +677,7 @@ bool can_player_build_improvement_direct(const struct player *p,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -693,7 +693,7 @@ bool can_player_build_improvement_now(const struct player *p,
   if (improvement_obsolete(p, pimprove, NULL)) {
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -729,7 +729,7 @@ bool can_player_build_improvement_later(const struct player *p,
   /* FIXME: should check some "unchanging" reqs here - like if there's
    * a nation requirement, we can go ahead and check it now. */
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

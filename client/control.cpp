@@ -367,7 +367,7 @@ static void ask_server_for_actions(struct unit *punit)
 
   dsend_packet_unit_get_actions(
       &client.conn, punit->id, IDENTITY_NUMBER_ZERO,
-      tile_index(punit->action_decision_tile), EXTRA_NONE, TRUE);
+      tile_index(punit->action_decision_tile), EXTRA_NONE, true);
 }
 
 /**********************************************************************/ /**
@@ -440,7 +440,7 @@ static void current_focus_append(struct unit *punit)
   unit_list_append(current_focus, punit);
 
   punit->client.focus_status = FOCUS_AVAIL;
-  refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
 
   if (should_ask_server_for_actions(punit) && can_ask_server_for_actions()) {
     ask_server_for_actions(punit);
@@ -462,7 +462,7 @@ static void current_focus_remove(struct unit *punit)
   }
 
   unit_list_remove(current_focus, punit);
-  refresh_unit_mapcanvas(punit, unit_tile(punit), TRUE, false);
+  refresh_unit_mapcanvas(punit, unit_tile(punit), true, false);
 }
 
 /**********************************************************************/ /**
@@ -509,7 +509,7 @@ void unit_focus_set(struct unit *punit)
   if (!(get_num_units_in_focus() == 1
         && punit == head_of_units_in_focus())) {
     store_previous_focus();
-    focus_changed = TRUE;
+    focus_changed = true;
   }
 
   /* Close the action selection dialog if the actor unit lose focus. */
@@ -525,7 +525,7 @@ void unit_focus_set(struct unit *punit)
    * circle). */
   unit_list_iterate(current_focus, punit_old)
   {
-    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), TRUE, false);
+    refresh_unit_mapcanvas(punit_old, unit_tile(punit_old), true, false);
   }
   unit_list_iterate_end;
   unit_list_clear(current_focus);
@@ -687,7 +687,7 @@ void unit_focus_advance(void)
      * enables the auto end turn.
      */
     if (punit->ssa_controller == SSA_NONE) {
-      non_ai_unit_focus = TRUE;
+      non_ai_unit_focus = true;
       break;
     }
   }
@@ -744,7 +744,7 @@ void unit_focus_advance(void)
 
       if (!candidate) {
         /* Accept current focus unit as last resort. */
-        candidate = find_best_focus_candidate(TRUE);
+        candidate = find_best_focus_candidate(true);
       }
     }
   }
@@ -898,7 +898,7 @@ int blink_active_unit(void)
         /* We flush to screen directly here.  This is most likely faster
          * since these drawing operations are all small but may be spread
          * out widely. */
-        refresh_unit_mapcanvas(punit, unit_tile(punit), false, TRUE);
+        refresh_unit_mapcanvas(punit, unit_tile(punit), false, true);
       }
       unit_list_iterate_end;
     }
@@ -1003,7 +1003,7 @@ void update_unit_pix_label(struct unit_list *punitlist)
     unit_list_iterate_end;
 
     if (i > num_units_below) {
-      set_unit_icons_more_arrow(TRUE);
+      set_unit_icons_more_arrow(true);
     } else {
       set_unit_icons_more_arrow(false);
       for (; i < num_units_below; i++) {
@@ -1137,7 +1137,7 @@ void request_unit_goto(enum unit_orders last_order, action_id act_id,
         struct astring astr = ASTRING_INIT;
 
         if (role_units_translations(&astr, action_id_get_role(act_id),
-                                    TRUE)) {
+                                    true)) {
           /* ...but other units can perform it. */
 
           create_event(unit_tile(punit), E_BAD_COMMAND, ftc_client,
@@ -1184,7 +1184,7 @@ static bool can_units_attack_at(struct unit_list *punits,
   unit_list_iterate(punits, punit)
   {
     if (is_attack_unit(punit) && can_unit_attack_tile(punit, ptile)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1307,7 +1307,7 @@ static bool is_activity_on_tile(struct tile *ptile,
   unit_list_iterate(ptile->units, punit)
   {
     if (punit->activity == activity) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1704,7 +1704,7 @@ void request_action_details(action_id action, int actor_id, int target_id)
                                  /* Users that need the answer in the
                                   * background should send the packet them
                                   * self. At least for now. */
-                                 TRUE);
+                                 true);
 }
 
 /**********************************************************************/ /**
@@ -2137,7 +2137,7 @@ void request_unit_paradrop(struct unit_list *punits)
   unit_list_iterate(punits, punit)
   {
     if (can_unit_paradrop(punit)) {
-      can = TRUE;
+      can = true;
       break;
     }
     if (!offender) { /* Take first offender tile/unit */
@@ -2661,7 +2661,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
       && gui_options.auto_center_on_unit && !unit_has_orders(punit)
       && punit->activity != ACTIVITY_GOTO
       && punit->activity != ACTIVITY_SENTRY
-      && ((gui_options.auto_center_on_automated == TRUE
+      && ((gui_options.auto_center_on_automated == true
            && punit->ssa_controller != SSA_NONE)
           || (punit->ssa_controller == SSA_NONE))
       && !tile_visible_and_not_on_border_mapcanvas(dst_tile)) {
@@ -2684,7 +2684,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
 
     /* We have to refresh the tile before moving.  This will draw
      * the tile without the unit (because it was unlinked above). */
-    refresh_unit_mapcanvas(punit, src_tile, TRUE, false);
+    refresh_unit_mapcanvas(punit, src_tile, true, false);
 
     if (gui_options.auto_center_on_automated == false
         && punit->ssa_controller != SSA_NONE) {
@@ -2706,7 +2706,7 @@ void do_move_unit(struct unit *punit, struct unit *target_unit)
     /* For find_visible_unit(), see above. */
     punit_moving = NULL;
 
-    refresh_unit_mapcanvas(punit, dst_tile, TRUE, false);
+    refresh_unit_mapcanvas(punit, dst_tile, true, false);
   }
 
   /* With the "full" city bar we have to update the city bar when units move

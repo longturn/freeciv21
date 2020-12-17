@@ -101,7 +101,7 @@ bool city_to_canvas_pos(float *canvas_x, float *canvas_y, int city_x,
   fc_assert_ret_val(is_valid_city_coords(city_radius_sq, city_x, city_y),
                     false);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -190,7 +190,7 @@ char *city_production_cost_str(const struct city *pcity)
   int num_units;
 
   if (build_slots > 1
-      && city_production_build_units(pcity, TRUE, &num_units)) {
+      && city_production_build_units(pcity, true, &num_units)) {
     /* the city could build more than one unit of the selected type */
     if (num_units == 0) {
       /* no unit will be finished this turn but one is build */
@@ -246,7 +246,7 @@ void get_city_dialog_production(struct city *pcity, char *buffer,
     return;
   }
 
-  turns = city_production_turns_to_build(pcity, TRUE);
+  turns = city_production_turns_to_build(pcity, true);
   stock = pcity->shield_stock;
   cost_str = city_production_cost_str(pcity);
 
@@ -440,7 +440,7 @@ static void fc__attribute((__format__(__printf__, 3, 4)))
   va_end(args);
 
   /* Descriptions will be freed individually, so need to strdup */
-  city_sum_add_real(sum, value, TRUE, NULL, 0, desc, fc_strdup(desc));
+  city_sum_add_real(sum, value, true, NULL, 0, desc, fc_strdup(desc));
 }
 
 /**********************************************************************/ /**
@@ -626,7 +626,7 @@ void get_city_dialog_output_text(const struct city *pcity,
         }
         bonus += delta;
         new_total = bonus * base / 100;
-        city_sum_add_full(sum, new_total - city_sum_total(sum), TRUE,
+        city_sum_add_full(sum, new_total - city_sum_total(sum), true,
                           /* TRANS: percentage city output bonus/loss from
                            * some source; preserve leading space */
                           Q_("?city_surplus: (%+.0f%%)"), delta,
@@ -652,7 +652,7 @@ void get_city_dialog_output_text(const struct city *pcity,
       city_sum_add_if_nonzero(sum, -wastetypes[OLOSS_SIZE],
                               Q_("?city_surplus:Size penalty"));
       regular_waste = wastetypes[OLOSS_WASTE];
-      breakdown_ok = TRUE;
+      breakdown_ok = true;
     } else {
       /* Our calculation doesn't match what the server sent. Account it all
        * to corruption/waste. */
@@ -685,7 +685,7 @@ void get_city_dialog_output_text(const struct city *pcity,
     city_sum_add(sum, -pcity->usage[otype], Q_("?city_surplus:Used"));
   }
 
-  city_sum_print(sum, buf, bufsz, TRUE,
+  city_sum_print(sum, buf, bufsz, true,
                  Q_("?city_surplus:"
                     "==== : Adds up to\n"
                     "%4.0f : Total surplus"),
@@ -747,7 +747,7 @@ void get_city_dialog_illness_text(const struct city *pcity, char *buf,
       delta = peffect->value;
     }
 
-    city_sum_add_full(sum, -(0.1 * ill_base * delta / 100), TRUE,
+    city_sum_add_full(sum, -(0.1 * ill_base * delta / 100), true,
                       Q_("?city_plague: (%+.0f%%)"), -delta,
                       Q_("?city_plague:Risk from %s"),
                       Q_("?city_plague:Bonus from %s"), buf2);
@@ -838,7 +838,7 @@ void get_city_dialog_culture_text(const struct city *pcity, char *buf,
   effect_list_iterate_end;
   effect_list_destroy(plist);
 
-  city_sum_print(sum, buf, bufsz, TRUE,
+  city_sum_print(sum, buf, bufsz, true,
                  Q_("?city_culture:"
                     "==== : Adds up to\n"
                     "%4.0f : Total culture"),
@@ -1191,7 +1191,7 @@ static bool base_city_queue_insert(struct city *pcity, int position,
       return false;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1204,7 +1204,7 @@ bool city_queue_insert(struct city *pcity, int position,
 {
   if (base_city_queue_insert(pcity, position, item)) {
     city_set_worklist(pcity, &pcity->worklist);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1219,7 +1219,7 @@ bool city_queue_clear(struct city *pcity)
 {
   worklist_init(&pcity->worklist);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1233,7 +1233,7 @@ bool city_queue_insert_worklist(struct city *pcity, int position,
   bool success = false;
 
   if (worklist_length(worklist) == 0) {
-    return TRUE;
+    return true;
   }
 
   worklist_iterate(worklist, target)
@@ -1244,7 +1244,7 @@ bool city_queue_insert_worklist(struct city *pcity, int position,
          * we're appending. */
         position++;
       }
-      success = TRUE;
+      success = true;
     }
   }
   worklist_iterate_end;
@@ -1307,7 +1307,7 @@ bool city_set_queue(struct city *pcity, const struct worklist *pqueue)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

@@ -34,7 +34,7 @@ bool diplomacy_possible(const struct player *pplayer1,
 {
   switch (game.info.diplomacy) {
   case DIPLO_FOR_ALL:
-    return TRUE;
+    return true;
   case DIPLO_FOR_HUMANS:
     return (is_human(pplayer1) && is_human(pplayer2));
   case DIPLO_FOR_AIS:
@@ -124,7 +124,7 @@ bool remove_clause(struct Treaty *ptreaty, struct player *pfrom,
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
 
-      return TRUE;
+      return true;
     }
   }
   clause_list_iterate_end;
@@ -199,7 +199,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->type = type;
-      return TRUE;
+      return true;
     }
     if (type == CLAUSE_GOLD && old_clause->type == CLAUSE_GOLD
         && old_clause->from == pfrom) {
@@ -207,7 +207,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
       ptreaty->accept0 = false;
       ptreaty->accept1 = false;
       old_clause->value = val;
-      return TRUE;
+      return true;
     }
   }
   clause_list_iterate_end;
@@ -223,7 +223,7 @@ bool add_clause(struct Treaty *ptreaty, struct player *pfrom,
   ptreaty->accept0 = false;
   ptreaty->accept1 = false;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -293,5 +293,5 @@ bool clause_enabled(enum clause_type type, struct player *from,
     return false;
   }
 
-  return TRUE;
+  return true;
 }

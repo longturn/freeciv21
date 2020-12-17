@@ -201,7 +201,7 @@ int send_packet_data(struct connection *pc, unsigned char *data, int len,
     pc->outgoing_packet_notify(pc, packet_type, len, result);
   }
 
-  if (TRUE) {
+  if (true) {
     int size = len;
 
     if (conn_compression_frozen(pc)) {
@@ -369,7 +369,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
    * changes, the protocol should probably be changed */
   fc_assert(data_type_size(data_type(pc->packet_header.length)) == 2);
   if (len_read == JUMBO_SIZE) {
-    compressed_packet = TRUE;
+    compressed_packet = true;
     header_size = 6;
     if (dio_input_remaining(&din) >= 4) {
       dio_get_uint32_raw(&din, &whole_packet_len);
@@ -380,7 +380,7 @@ void *get_packet_from_connection_raw(struct connection *pc,
       whole_packet_len = 6;
     }
   } else if (len_read >= COMPRESSION_BORDER) {
-    compressed_packet = TRUE;
+    compressed_packet = true;
     header_size = 2;
     whole_packet_len = len_read - COMPRESSION_BORDER;
     log_compress("COMPRESS: got a normal packet of size %d",
@@ -637,7 +637,7 @@ bool packet_check(struct data_in *din, struct connection *pc)
                type, len, (unsigned long) rem, conn_description(pc));
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -776,7 +776,7 @@ const struct packet_handlers *packet_handlers_initial(void)
   if (!initialized) {
     memset(&default_handlers, 0, sizeof(default_handlers));
     packet_handlers_fill_initial(&default_handlers);
-    initialized = TRUE;
+    initialized = true;
   }
 
   return &default_handlers;

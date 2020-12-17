@@ -94,7 +94,7 @@ bool worklist_peek_ith(const struct worklist *pwl, struct universal *prod,
 
   *prod = pwl->entries[idx];
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -151,7 +151,7 @@ bool worklist_append(struct worklist *pwl, const struct universal *prod)
   pwl->entries[next_index] = *prod;
   pwl->length++;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -179,7 +179,7 @@ bool worklist_insert(struct worklist *pwl, const struct universal *prod,
   pwl->entries[idx] = *prod;
   pwl->length = new_len;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -200,5 +200,5 @@ bool are_worklists_equal(const struct worklist *wlist1,
     }
   }
 
-  return TRUE;
+  return true;
 }

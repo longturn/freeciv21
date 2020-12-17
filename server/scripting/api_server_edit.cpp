@@ -173,7 +173,7 @@ bool api_edit_unit_teleport(lua_State *L, Unit *punit, Tile *dest)
        * no objection if you see the old behavior as a bug and
        * remove auto embarking completely or for transports
        * the unit can't legally board. -- Sveinung */
-      NULL, TRUE,
+      NULL, true,
       /* Backwards compatibility for old scripts in rulesets
        * and (scenario) savegames. I have no objection if you
        * see the old behavior as a bug and remove auto
@@ -266,7 +266,7 @@ bool api_edit_change_terrain(lua_State *L, Tile *ptile, Terrain *pterr)
 
   update_tile_knowledge(ptile);
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**
@@ -370,7 +370,7 @@ Tech_Type *api_edit_give_technology(lua_State *L, Player *pplayer,
       }
     }
     research_apply_penalty(presearch, id, cost);
-    found_new_tech(presearch, id, false, TRUE);
+    found_new_tech(presearch, id, false, true);
     result = advance_by_number(id);
     script_tech_learned(presearch, pplayer, result, reason);
 
@@ -420,7 +420,7 @@ bool api_edit_trait_mod_set(lua_State *L, Player *pplayer, const char *tname,
 
   pplayer->ai_common.traits[tr].mod += mod;
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**
@@ -582,7 +582,7 @@ bool api_edit_unit_move(lua_State *L, Unit *punit, Tile *ptile, int movecost)
        * no objection if you see the old behavior as a bug and
        * remove auto embarking completely or for transports
        * the unit can't legally board. -- Sveinung */
-      NULL, TRUE,
+      NULL, true,
       /* Backwards compatibility for old scripts in rulesets
        * and (scenario) savegames. I have no objection if you
        * see the old behavior as a bug and remove auto
@@ -604,7 +604,7 @@ void api_edit_unit_moving_disallow(lua_State *L, Unit *punit)
   LUASCRIPT_CHECK_SELF(L, punit);
 
   if (punit != NULL) {
-    punit->stay = TRUE;
+    punit->stay = true;
   }
 }
 

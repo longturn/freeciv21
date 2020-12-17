@@ -309,7 +309,7 @@ class Field:
 
         for (i = 0; i < %(array_size_u)s; i++) {
           if (%(c)s) {
-            differ = TRUE;
+            differ = true;
             break;
           }
         }
@@ -655,7 +655,7 @@ class Variant:
                  list(map(lambda x, f=f: '!'+f(x), self.negcaps)))
             self.condition = " && ".join(t)
         else:
-            self.condition = "TRUE"
+            self.condition = "true"
         self.key_fields = list(filter(lambda x: x.is_key, self.fields))
         self.other_fields = list(filter(lambda x: not x.is_key, self.fields))
         self.bits = len(self.other_fields)
@@ -1461,7 +1461,7 @@ def get_packet_has_game_info_flag(packets):
         if mapping[n].is_info != "game":
             body = body+'    false, /* %s */\n' % mapping[n].type
         else:
-            body = body+'    TRUE, /* %s */\n' % mapping[n].type
+            body = body+'    true, /* %s */\n' % mapping[n].type
         last = n
 
     extro = '''  };
@@ -1789,7 +1789,7 @@ static genhash_val_t hash_const(const void *vkey)
 
 static bool cmp_const(const void *vkey1, const void *vkey2)
 {
-  return TRUE;
+  return true;
 }
 ''')
 
@@ -1980,7 +1980,7 @@ bool server_handle_packet(enum packet_type type, const void *packet,
 
             f.write('''  case %s:
     handle_%s(%s);
-    return TRUE;
+    return true;
 
 ''' % (p.type, a, args))
         f.write('''  default:
@@ -2032,7 +2032,7 @@ bool client_handle_packet(enum packet_type type, const void *packet)
 
             f.write('''  case %s:
     handle_%s(%s);
-    return TRUE;
+    return true;
 
 ''' % (p.type, a, args))
         f.write('''  default:

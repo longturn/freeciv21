@@ -432,7 +432,7 @@ static bool tile_type_equal(const struct cm_tile_type *a,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -456,13 +456,13 @@ static bool tile_type_better(const struct cm_tile_type *a,
     /* If A is a specialist and B isn't, and all of A's production is at
      * least as good as B's, then A is better because it doesn't tie up
      * the map tile. */
-    return TRUE;
+    return true;
   } else if (!a->is_specialist && b->is_specialist) {
     /* Vice versa. */
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -580,7 +580,7 @@ compute_fitness(const int surplus[], bool disorder, bool happy,
 {
   struct cm_fitness fitness;
 
-  fitness.sufficient = TRUE;
+  fitness.sufficient = true;
   fitness.weighted = 0;
 
   output_type_iterate(stat_index)
@@ -682,7 +682,7 @@ static void apply_solution(struct cm_state *state,
   city_map_iterate(city_radius_sq, cindex, x, y)
   {
     if (is_free_worked_index(cindex)) {
-      state->workers_map[cindex] = TRUE;
+      state->workers_map[cindex] = true;
     } else {
       state->workers_map[cindex] = false;
     }
@@ -714,7 +714,7 @@ static void apply_solution(struct cm_state *state,
       for (j = 0; j < nworkers; j++) {
         const struct cm_tile *cmtile = tile_get(type, j);
 
-        state->workers_map[cmtile->index] = TRUE;
+        state->workers_map[cmtile->index] = true;
       }
     }
   }
@@ -998,7 +998,7 @@ static void init_specialist_lattice_nodes(struct tile_type_vector *lattice,
   struct cm_tile_type type;
 
   tile_type_init(&type);
-  type.is_specialist = TRUE;
+  type.is_specialist = true;
 
   /* for each specialist type, create a tile_type that has as production
    * the bonus for the specialist (if the city is allowed to use it) */
@@ -1066,7 +1066,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
     {
       /* see if all prereqs were marked.  If so, decide to mark this guy,
          and put all the descendents on 'next'.  */
-      bool can_mark = TRUE;
+      bool can_mark = true;
       int sumdepth = 0;
 
       if (will_mark[ptype->lattice_index]) {
@@ -1083,7 +1083,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
             /* if this is the case, then something better could
                always be used, and the same holds for our children */
             sumdepth = FC_INFINITY;
-            can_mark = TRUE;
+            can_mark = true;
             break;
           }
         }
@@ -1091,7 +1091,7 @@ static void top_sort_lattice(struct tile_type_vector *lattice)
       tile_type_vector_iterate_end;
       if (can_mark) {
         /* mark and put successors on the next frontier */
-        will_mark[ptype->lattice_index] = TRUE;
+        will_mark[ptype->lattice_index] = true;
         tile_type_vector_iterate(&ptype->worse_types, worse)
         {
           tile_type_vector_append(next, worse);
@@ -1146,7 +1146,7 @@ static void clean_lattice(struct tile_type_vector *lattice,
    * bug.
    * This applies to -O2 optimization on some distributions. */
   if (lattice->size > 0) {
-    forced_loop = TRUE;
+    forced_loop = true;
   }
   for (i = 0, j = 0; i < lattice->size || forced_loop; i++) {
     struct cm_tile_type *ptype = lattice->p[i];
@@ -1446,7 +1446,7 @@ static bool take_sibling_choice(struct cm_state *state, bool negative_ok)
     add_worker(&state->current, newchoice, state);
     state->choice.stack[state->choice.size - 1] = newchoice;
     /* choice.size is unchanged */
-    return TRUE;
+    return true;
   }
 }
 
@@ -1484,7 +1484,7 @@ static bool take_child_choice(struct cm_state *state, bool negative_ok)
   state->choice.stack[state->choice.size] = newchoice;
   state->choice.size++;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1670,7 +1670,7 @@ static bool choice_is_promising(struct cm_state *state, int newchoice,
     }
     if (production[stat_index] > state->best.production[stat_index]
         && state->parameter.factor[stat_index] > 0) {
-      beats_best = TRUE;
+      beats_best = true;
       /* may still fail to meet min at another production type, so
        * don't short-circuit */
     }
@@ -1845,7 +1845,7 @@ static bool bb_next(struct cm_state *state, bool negative_ok)
 
     /* if we popped out all the way, we're done */
     if (choice_stack_empty(state)) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -2088,7 +2088,7 @@ static void cm_find_best_solution(struct cm_state *state,
       qCWarning(cm_category,
                 "Did not find a cm solution in %d iterations for %s.",
                 max_count, city_name_get(state->pcity));
-      result->aborted = TRUE;
+      result->aborted = true;
       break;
     }
   }
@@ -2145,7 +2145,7 @@ bool operator==(const struct cm_parameter &p1, const struct cm_parameter &p2)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2172,7 +2172,7 @@ void cm_init_parameter(struct cm_parameter *dest)
   dest->happy_factor = 1;
   dest->require_happy = false;
   dest->allow_disorder = false;
-  dest->allow_specialists = TRUE;
+  dest->allow_specialists = true;
   dest->max_growth = false;
 }
 
@@ -2191,8 +2191,8 @@ void cm_init_emergency_parameter(struct cm_parameter *dest)
 
   dest->happy_factor = 1;
   dest->require_happy = false;
-  dest->allow_disorder = TRUE;
-  dest->allow_specialists = TRUE;
+  dest->allow_disorder = true;
+  dest->allow_specialists = true;
   dest->max_growth = false;
 }
 
@@ -2289,7 +2289,7 @@ static void cm_result_copy(struct cm_result *result,
                    &result->happy);
 
   /* this is a valid result, in a sense */
-  result->found_a_valid = TRUE;
+  result->found_a_valid = true;
 }
 
 /************************************************************************/ /**

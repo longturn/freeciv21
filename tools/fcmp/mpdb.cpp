@@ -94,7 +94,7 @@ void load_install_info_list(const char *filename)
         mpdb_update_modpack(str, modpack_type_by_name(type, fc_strcasecmp),
                             ver);
       } else {
-        all_read = TRUE;
+        all_read = true;
       }
     }
 

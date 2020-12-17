@@ -104,7 +104,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
       if (samples[j].tag && (strcmp(samples[j].tag, tag) == 0)) {
         log_debug("Playing file \"%s\" from cache (slot %d)", fullpath, j);
         Mix_PlayChannel(-1, samples[j].wave, 0);
-        return TRUE;
+        return true;
       }
     } /* guess not */
 
@@ -133,7 +133,7 @@ static bool sdl_audio_play(const char *const tag, const char *const fullpath,
     samples[i].wave = wave;
     samples[i].tag = tag;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -239,7 +239,7 @@ static bool sdl_audio_init(void)
   }
   /* sanity check, for now; add volume controls later */
   sdl_audio_set_volume(sdl_audio_volume);
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

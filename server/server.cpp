@@ -157,7 +157,7 @@ QTcpServer *srv_prepare()
 
   con_flush();
 
-  settings_init(TRUE);
+  settings_init(true);
   stdinhand_init();
   edithand_init();
   voting_init();
@@ -201,10 +201,10 @@ QTcpServer *srv_prepare()
   /* load a saved game */
   if (srvarg.load_filename.isEmpty()
       || !load_command(NULL, qUtf8Printable(srvarg.load_filename), false,
-                       TRUE)) {
+                       true)) {
     /* Rulesets are loaded on game initialization, but may be changed later
      * if /load or /rulesetdir is done. */
-    load_rulesets(NULL, NULL, false, NULL, TRUE, false, TRUE);
+    load_rulesets(NULL, NULL, false, NULL, true, false, true);
   }
 
   maybe_automatic_meta_message(default_meta_message_string());
@@ -571,7 +571,7 @@ void server::prepare_game()
   if (NULL != srvarg.script_filename) {
     /* Adding an error message more here will duplicate them. */
     (void) read_init_script(NULL, qUtf8Printable(srvarg.script_filename),
-                            TRUE, false);
+                            true, false);
   }
 
   (void) aifill(game.info.aifill);
@@ -719,14 +719,14 @@ void server::end_turn()
     set_server_state(S_S_OVER);
     if (game.info.turn > game.server.end_turn) {
       // endturn was reached - rank users based on team scores
-      rank_users(TRUE);
+      rank_users(true);
     } else {
       // game ended for victory conditions - rank users based on survival
       rank_users(false);
     }
   } else if (S_S_OVER == server_state()) {
     // game terminated by /endgame command - calculate team scores
-    rank_users(TRUE);
+    rank_users(true);
   }
 
   if (server_state() == S_S_RUNNING) {
@@ -850,8 +850,8 @@ bool server::shut_game_down()
   fc_rand_uninit();
   server_game_init(false);
   mapimg_reset();
-  load_rulesets(NULL, NULL, false, NULL, TRUE, false, TRUE);
-  game.info.is_new_game = TRUE;
+  load_rulesets(NULL, NULL, false, NULL, true, false, true);
+  game.info.is_new_game = true;
   return true;
 }
 

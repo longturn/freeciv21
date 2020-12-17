@@ -128,7 +128,7 @@ void client_remove_unit(struct unit *punit)
     }
   }
 
-  refresh_unit_mapcanvas(&old_unit, ptile, TRUE, false);
+  refresh_unit_mapcanvas(&old_unit, ptile, true, false);
   flush_dirty_overview();
 }
 
@@ -149,7 +149,7 @@ void client_remove_city(struct city *pcity)
 
   city_built_iterate(pcity, pimprove)
   {
-    effect_update = TRUE;
+    effect_update = true;
     city_remove_improvement(pcity, pimprove);
   }
   city_built_iterate_end;
@@ -161,7 +161,7 @@ void client_remove_city(struct city *pcity)
   popdown_city_dialog(pcity);
   game_remove_city(&wld, pcity);
   city_report_dialog_update();
-  refresh_city_mapcanvas(&old_city, ptile, TRUE, false);
+  refresh_city_mapcanvas(&old_city, ptile, true, false);
 }
 
 /**********************************************************************/ /**
@@ -470,7 +470,7 @@ void center_on_something(void)
 
     center_tile_mapcanvas(ctile);
   }
-  can_slide = TRUE;
+  can_slide = true;
 }
 
 /**********************************************************************/ /**
@@ -544,7 +544,7 @@ bool city_unit_supported(const struct city *pcity,
     unit_list_iterate(pcity->units_supported, punit)
     {
       if (unit_type_get(punit) == tvtype) {
-        return TRUE;
+        return true;
       }
     }
     unit_list_iterate_end;
@@ -565,7 +565,7 @@ bool city_unit_present(const struct city *pcity,
     unit_list_iterate(pcity->tile->units, punit)
     {
       if (unit_type_get(punit) == tvtype) {
-        return TRUE;
+        return true;
       }
     }
     unit_list_iterate_end;
@@ -753,7 +753,7 @@ int collect_currently_building_targets(struct universal *targets)
   memset(mapping, 0, sizeof(mapping));
   city_list_iterate(client.conn.playing->cities, pcity)
   {
-    mapping[cid_encode_from_city(pcity)] = TRUE;
+    mapping[cid_encode_from_city(pcity)] = true;
   }
   city_list_iterate_end;
 
@@ -836,7 +836,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       players_iterate(aplayer)
       {
         if (can_player_build_improvement_now(aplayer, pimprove)) {
-          can_build = TRUE;
+          can_build = true;
           break;
         }
       }
@@ -846,7 +846,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       players_iterate(aplayer)
       {
         if (can_player_build_improvement_later(aplayer, pimprove)) {
-          can_eventually_build = TRUE;
+          can_eventually_build = true;
           break;
         }
       }
@@ -881,7 +881,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       players_iterate(aplayer)
       {
         if (can_player_build_unit_now(aplayer, punittype)) {
-          can_build = TRUE;
+          can_build = true;
           break;
         }
       }
@@ -891,7 +891,7 @@ int collect_eventually_buildable_targets(struct universal *targets,
       players_iterate(aplayer)
       {
         if (can_player_build_unit_later(aplayer, punittype)) {
-          can_eventually_build = TRUE;
+          can_eventually_build = true;
           break;
         }
       }
@@ -1057,12 +1057,12 @@ void handle_event(const char *featured_text, struct tile *ptile,
     if (NULL == client.conn.playing || is_human(client.conn.playing)
         || event == E_MESSAGE_WALL) {
       popup_notify_goto_dialog(_("Popup Request"), plain_text, tags, ptile);
-      shown = TRUE;
+      shown = true;
     } else {
       /* Force to chatline so it will be visible somewhere at least.
        * Messages window may still handle this so chatline is not needed
        * after all. */
-      fallback_needed = TRUE;
+      fallback_needed = true;
     }
   }
 
@@ -1071,10 +1071,10 @@ void handle_event(const char *featured_text, struct tile *ptile,
     /* When the game isn't running, the messages dialog isn't present. */
     if (C_S_RUNNING <= client_state()) {
       meswin_add(plain_text, tags, ptile, event, turn, phase);
-      shown = TRUE;
+      shown = true;
     } else {
       /* Force to chatline instead. */
-      fallback_needed = TRUE;
+      fallback_needed = true;
     }
   }
 
@@ -1205,7 +1205,7 @@ bool can_units_do_connect(struct unit_list *punits,
   unit_list_iterate(punits, punit)
   {
     if (can_unit_do_connect(punit, activity, tgt)) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1306,7 +1306,7 @@ bool mapimg_client_define(void)
     cat_snprintf(str, sizeof(str), ":show=plrid:plrid=%d",
                  player_index(client.conn.playing));
     /* use only player knowledge */
-    gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = TRUE;
+    gui_options.mapimg_layer[MAPIMG_LAYER_KNOWLEDGE] = true;
   }
 
   /* Map image definition: map */
@@ -1332,7 +1332,7 @@ bool mapimg_client_define(void)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1358,7 +1358,7 @@ bool mapimg_client_createmap(const char *filename)
     return false;
   }
 
-  return mapimg_create(pmapdef, TRUE, mapimgfile, NULL);
+  return mapimg_create(pmapdef, true, mapimgfile, NULL);
 }
 
 /**********************************************************************/ /**

@@ -51,7 +51,7 @@ static bool sanity_check_metadata(void)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -67,7 +67,7 @@ static bool nation_has_initial_tech(struct nation_type *pnation,
        i < MAX_NUM_TECH_LIST && game.rgame.global_init_techs[i] != A_LAST;
        i++) {
     if (game.rgame.global_init_techs[i] == advance_number(tech)) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -75,7 +75,7 @@ static bool nation_has_initial_tech(struct nation_type *pnation,
   for (i = 0; i < MAX_NUM_TECH_LIST && pnation->init_techs[i] != A_LAST;
        i++) {
     if (pnation->init_techs[i] == advance_number(tech)) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -115,7 +115,7 @@ static bool sanity_check_setting_is_game_rule(struct setting *pset)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -227,7 +227,7 @@ static bool sanity_check_req_individual(struct requirement *preq,
      * load time. See req_from_str(). */
     break;
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -249,7 +249,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
   if (!conjunctive) {
     /* All the checks below are only meaningful for conjunctive lists. */
     /* FIXME: we could add checks suitable for disjunctive lists. */
-    return TRUE;
+    return true;
   }
 
   /* Add to counter for positive requirements. */
@@ -398,7 +398,7 @@ static bool sanity_check_req_set(int reqs_of_type[],
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -446,7 +446,7 @@ static bool sanity_check_req_vec(const struct requirement_vector *preqs,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -513,7 +513,7 @@ static bool effect_list_sanity_cb(struct effect *peffect, void *data)
     requirement_vector_iterate_end;
   }
 
-  return sanity_check_req_vec(&peffect->reqs, TRUE, one_tile,
+  return sanity_check_req_vec(&peffect->reqs, true, one_tile,
                               effect_type_name(peffect->type));
 }
 
@@ -542,7 +542,7 @@ static bool rs_barbarian_units(void)
       {
         if (is_ocean(pterr)
             && BV_ISSET(pterr->native_to, uclass_index(utype_class(u)))) {
-          sea_capable = TRUE;
+          sea_capable = true;
           break;
         }
       }
@@ -591,7 +591,7 @@ static bool rs_barbarian_units(void)
     unit_type_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -622,7 +622,7 @@ static bool rs_common_units(void)
     {
       if (is_ocean(pterr)
           && BV_ISSET(pterr->native_to, uclass_index(utype_class(u)))) {
-        sea_capable = TRUE;
+        sea_capable = true;
         break;
       }
     }
@@ -643,7 +643,7 @@ static bool rs_common_units(void)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -673,7 +673,7 @@ static bool rs_buildings(void)
   }
   improvement_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -691,7 +691,7 @@ static bool sanity_check_boolean_effects(void)
       EFT_NO_DIPLOMACY,      EFT_GOV_CENTER,        EFT_NOT_TECH_SOURCE,
       EFT_VICTORY,           EFT_HAVE_CONTACTS,     EFT_COUNT};
   int i;
-  bool ret = TRUE;
+  bool ret = true;
 
   for (i = 0; boolean_effects[i] != EFT_COUNT; i++) {
     if (effect_cumulative_min(boolean_effects[i], NULL) < 0
@@ -718,7 +718,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 {
   int num_utypes;
   int i;
-  bool ok = TRUE; /* Store failures to variable instead of returning
+  bool ok = true; /* Store failures to variable instead of returning
                    * immediately so all errors get printed, not just first
                    * one. */
   bool default_gov_failed = false;
@@ -815,7 +815,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
                "default_government.",
                government_rule_name(game.government_during_revolution));
     ok = false;
-    default_gov_failed = TRUE;
+    default_gov_failed = true;
   }
 
   /* Check that all players can have their initial techs */
@@ -965,7 +965,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Disasters */
   disaster_type_iterate(pdis)
   {
-    if (!sanity_check_req_vec(&pdis->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pdis->reqs, true, -1,
                               disaster_rule_name(pdis))) {
       qCCritical(ruleset_category,
                  "Disasters have conflicting or invalid requirements!");
@@ -977,7 +977,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Goods */
   goods_type_iterate(pgood)
   {
-    if (!sanity_check_req_vec(&pgood->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pgood->reqs, true, -1,
                               goods_rule_name(pgood))) {
       qCCritical(ruleset_category,
                  "Goods have conflicting or invalid requirements!");
@@ -989,7 +989,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Buildings */
   improvement_iterate(pimprove)
   {
-    if (!sanity_check_req_vec(&pimprove->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pimprove->reqs, true, -1,
                               improvement_rule_name(pimprove))) {
       qCCritical(ruleset_category,
                  "Buildings have conflicting or invalid requirements!");
@@ -1007,7 +1007,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Governments */
   governments_iterate(pgov)
   {
-    if (!sanity_check_req_vec(&pgov->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pgov->reqs, true, -1,
                               government_rule_name(pgov))) {
       qCCritical(ruleset_category,
                  "Governments have conflicting or invalid requirements!");
@@ -1021,7 +1021,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   {
     struct specialist *psp = specialist_by_number(sp);
 
-    if (!sanity_check_req_vec(&psp->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&psp->reqs, true, -1,
                               specialist_rule_name(psp))) {
       qCCritical(ruleset_category,
                  "Specialists have conflicting or invalid requirements!");
@@ -1033,13 +1033,13 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Extras */
   extra_type_iterate(pextra)
   {
-    if (!sanity_check_req_vec(&pextra->reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pextra->reqs, true, -1,
                               extra_rule_name(pextra))) {
       qCCritical(ruleset_category,
                  "Extras have conflicting or invalid requirements!");
       ok = false;
     }
-    if (!sanity_check_req_vec(&pextra->rmreqs, TRUE, -1,
+    if (!sanity_check_req_vec(&pextra->rmreqs, true, -1,
                               extra_rule_name(pextra))) {
       qCCritical(ruleset_category,
                  "Extras have conflicting or invalid removal requirements!");
@@ -1107,7 +1107,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
   /* City styles */
   for (i = 0; i < game.control.styles_count; i++) {
-    if (!sanity_check_req_vec(&city_styles[i].reqs, TRUE, -1,
+    if (!sanity_check_req_vec(&city_styles[i].reqs, true, -1,
                               city_style_rule_name(i))) {
       qCCritical(ruleset_category,
                  "City styles have conflicting or invalid requirements!");
@@ -1168,9 +1168,9 @@ bool sanity_check_ruleset_data(bool ignore_retired)
 
     action_enabler_list_iterate(action_enablers_for_action(act), enabler)
     {
-      if (!sanity_check_req_vec(&(enabler->actor_reqs), TRUE, -1,
+      if (!sanity_check_req_vec(&(enabler->actor_reqs), true, -1,
                                 "Action Enabler Actor Reqs")
-          || !sanity_check_req_vec(&(enabler->target_reqs), TRUE, -1,
+          || !sanity_check_req_vec(&(enabler->target_reqs), true, -1,
                                    "Action Enabler Target Reqs")) {
         qCCritical(ruleset_category,
                    "Action enabler for %s has conflicting or invalid "
@@ -1278,7 +1278,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
   /* Music styles */
   music_styles_iterate(pmus)
   {
-    if (!sanity_check_req_vec(&pmus->reqs, TRUE, -1, "Music Style")) {
+    if (!sanity_check_req_vec(&pmus->reqs, true, -1, "Music Style")) {
       qCCritical(ruleset_category,
                  "Music Styles have conflicting or invalid requirements!");
       ok = false;
@@ -1309,7 +1309,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
       terrain_type_iterate(pterr)
       {
         if (BV_ISSET(pterr->native_to, uclass_index(pclass))) {
-          can_exist = TRUE;
+          can_exist = true;
           break;
         }
       }
@@ -1320,7 +1320,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
         {
           if (BV_ISSET(pextra->native_to, uclass_index(pclass))
               && extra_has_flag(pextra, EF_NATIVE_TILE)) {
-            can_exist = TRUE;
+            can_exist = true;
             break;
           }
         }
@@ -1388,7 +1388,7 @@ bool sanity_check_ruleset_data(bool ignore_retired)
  **************************************************************************/
 bool autoadjust_ruleset_data(void)
 {
-  bool ok = TRUE;
+  bool ok = true;
 
   extra_type_by_cause_iterate(EC_RESOURCE, pextra)
   {
@@ -1480,7 +1480,7 @@ bool autoadjust_ruleset_data(void)
  **************************************************************************/
 bool autolock_settings(void)
 {
-  bool ok = TRUE;
+  bool ok = true;
 
   if (num_role_units(L_BARBARIAN) == 0) {
     struct setting *pset = setting_by_name("barbarians");
@@ -1492,7 +1492,7 @@ bool autolock_settings(void)
     if (!setting_enum_set(pset, "DISABLED", NULL, NULL, 0)) {
       ok = false;
     }
-    setting_lock_set(pset, TRUE);
+    setting_lock_set(pset, true);
   }
 
   return ok;

@@ -167,7 +167,7 @@ void client_kill_server(bool force)
        * it could potentially be called when we're connected to an unowned
        * server.  In this case we don't want to kill it. */
       send_chat("/quit");
-      server_quitting = TRUE;
+      server_quitting = true;
     } else if (force) {
       /* Either we already disconnected, or we didn't get control of the
        * server. In either case, the only thing to do is a "hard" kill of
@@ -213,7 +213,7 @@ bool client_start_server(void)
 
   /* only one server (forked from this client) shall be running at a time */
   /* This also resets client_has_hack. */
-  client_kill_server(TRUE);
+  client_kill_server(true);
 
   output_window_append(ftc_client, _("Starting local server..."));
 
@@ -293,7 +293,7 @@ bool client_start_server(void)
    * capabilities won't help us here... */
   if (!client.conn.used || serverProcess::i()->processId() == 0) {
     /* possible that server is still running. kill it, kill it with Igni */
-    client_kill_server(TRUE);
+    client_kill_server(true);
 
     qCritical("Failed to connect to spawned server!");
 #ifdef FREECIV_DEBUG
@@ -343,7 +343,7 @@ bool client_start_server(void)
     desired_settable_option_update("topology", topobuf, false);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -422,14 +422,14 @@ void handle_single_want_hack_reply(bool you_have_hack)
     output_window_append(ftc_client,
                          _("Established control over the server. "
                            "You have command access level 'hack'."));
-    client_has_hack = TRUE;
+    client_has_hack = true;
   } else if (is_server_running()) {
     /* only output this if we started the server and we NEED hack */
     output_window_append(ftc_client,
                          _("Failed to obtain the required access "
                            "level to take control of the server. "
                            "Attempting to shut down server."));
-    client_kill_server(TRUE);
+    client_kill_server(true);
   }
 }
 

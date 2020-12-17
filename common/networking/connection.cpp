@@ -98,7 +98,7 @@ static bool buffer_ensure_free_extra_space(struct socket_packet_buffer *buf,
     buf->data = (unsigned char *) fc_realloc(buf->data, buf->nsize);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -212,7 +212,7 @@ static bool add_connection_data(struct connection *pconn,
 
   if (NULL == pconn || !pconn->used
       || (is_server() && pconn->server.is_closing)) {
-    return TRUE;
+    return true;
   }
 
   buf = pconn->send_buffer;
@@ -225,7 +225,7 @@ static bool add_connection_data(struct connection *pconn,
   memcpy(buf->data + buf->ndata, data, len);
   buf->ndata += len;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -236,7 +236,7 @@ bool connection_send_data(struct connection *pconn,
 {
   if (NULL == pconn || !pconn->used
       || (is_server() && pconn->server.is_closing)) {
-    return TRUE;
+    return true;
   }
 
   pconn->statistics.bytes_send += len;
@@ -258,7 +258,7 @@ bool connection_send_data(struct connection *pconn,
     }
     flush_connection_send_buffer_all(pconn);
   }
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -541,7 +541,7 @@ static void free_packet_hashes(struct connection *pc)
 void connection_common_init(struct connection *pconn)
 {
   pconn->established = false;
-  pconn->used = TRUE;
+  pconn->used = true;
   packet_header_init(&pconn->packet_header);
   pconn->last_write = NULL;
   pconn->buffer = new_socket_packet_buffer();
@@ -768,7 +768,7 @@ bool conn_pattern_list_match(const struct conn_pattern_list *plist,
   conn_pattern_list_iterate(plist, ppattern)
   {
     if (conn_pattern_match(ppattern, pconn)) {
-      return TRUE;
+      return true;
     }
   }
   conn_pattern_list_iterate_end;

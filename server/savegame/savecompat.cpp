@@ -431,7 +431,7 @@ static void compat_load_020400(struct loaddata *loading,
             const char *s = secfile_lookup_str_default(
                 loading->file, NULL, "map.k%02d_%04d", l * 8 + j, y);
             if (s) {
-              found = TRUE;
+              found = true;
               if (xsize == 0) {
                 xsize = qstrlen(s);
               }
@@ -620,14 +620,14 @@ static void compat_load_020500(struct loaddata *loading,
         if (!fc_strcasecmp("killcitizen", name)) {
           int value;
 
-          if (secfile_lookup_enum_data(loading->file, &value, TRUE,
+          if (secfile_lookup_enum_data(loading->file, &value, true,
                                        killcitizen_enum_str, NULL,
                                        "settings.set%d.value", i)) {
             /* Lowest bit of old killcitizen value indicates if
              * land units should kill citizens. We take that as
              * new boolean killcitizen value. */
             if (value & 0x1) {
-              secfile_replace_bool(loading->file, TRUE,
+              secfile_replace_bool(loading->file, true,
                                    "settings.set%d.value", i);
             } else {
               secfile_replace_bool(loading->file, false,
@@ -637,14 +637,14 @@ static void compat_load_020500(struct loaddata *loading,
             log_sg("Setting '%s': %s", name, secfile_error());
           }
           if (gamestart_valid) {
-            if (secfile_lookup_enum_data(loading->file, &value, TRUE,
+            if (secfile_lookup_enum_data(loading->file, &value, true,
                                          killcitizen_enum_str, NULL,
                                          "settings.set%d.gamestart", i)) {
               /* Lowest bit of old killcitizen value indicates if
                * land units should kill citizens. We take that as
                * new boolean killcitizen value. */
               if (value & 0x1) {
-                secfile_replace_bool(loading->file, TRUE,
+                secfile_replace_bool(loading->file, true,
                                      "settings.set%d.gamestart", i);
               } else {
                 secfile_replace_bool(loading->file, false,
@@ -1326,14 +1326,14 @@ static void compat_load_030000(struct loaddata *loading,
   }
 
   /* Already started games should have their turn counts increased by 1 */
-  if (secfile_lookup_bool_default(loading->file, TRUE,
+  if (secfile_lookup_bool_default(loading->file, true,
                                   "game.save_players")) {
-    started = TRUE;
+    started = true;
 
     old_turn = increase_secfile_turn_int(loading, "game.turn", 0, false) - 1;
     increase_secfile_turn_int(loading, "game.scoreturn",
                               old_turn + GAME_DEFAULT_SCORETURN, false);
-    increase_secfile_turn_int(loading, "history.turn", -2, TRUE);
+    increase_secfile_turn_int(loading, "history.turn", -2, true);
   } else {
     started = false;
   }
@@ -1376,7 +1376,7 @@ static void compat_load_030000(struct loaddata *loading,
 
         fc_snprintf(buf, sizeof(buf), "player%d.c%d.turn_founded", plrno, i);
 
-        increase_secfile_turn_int(loading, buf, -2, TRUE);
+        increase_secfile_turn_int(loading, buf, -2, true);
       }
     }
   }

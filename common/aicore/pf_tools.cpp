@@ -52,7 +52,7 @@ static inline bool pf_attack_possible(const struct tile *ptile,
 
   if (TILE_KNOWN_SEEN != known) {
     /* We cannot see units, let's assume we can attack. */
-    return TRUE;
+    return true;
   }
 
   attack_any = false;
@@ -65,7 +65,7 @@ static inline bool pf_attack_possible(const struct tile *ptile,
     /* Unit reachability test. */
     if (BV_ISSET(param->utype->targets, uclass_index(unit_class_get(punit)))
         || tile_has_native_base(ptile, unit_type_get(punit))) {
-      attack_any = TRUE;
+      attack_any = true;
     } else if (game.info.unreachable_protects) {
       /* We would need to be able to attack all, this is not the case. */
       return false;
@@ -150,7 +150,7 @@ static bool pf_action_possible(const struct tile *src,
       return (PF_MS_NATIVE | PF_MS_CITY) & src_scope;
     }
   }
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -217,7 +217,7 @@ static inline bool pf_transport_check(const struct pf_parameter *param,
   }
   unit_transports_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -269,7 +269,7 @@ pf_get_move_scope(const struct tile *ptile, bool *can_disembark,
 
       if (allied_city_tile || tile_has_native_base(ptile, utype)) {
         scope |= PF_MS_TRANSPORT;
-        *can_disembark = TRUE;
+        *can_disembark = true;
         break;
       }
 
@@ -280,7 +280,7 @@ pf_get_move_scope(const struct tile *ptile, bool *can_disembark,
       scope |= PF_MS_TRANSPORT;
 
       if (utype_can_freely_unload(param->utype, utype)) {
-        *can_disembark = TRUE;
+        *can_disembark = true;
         break;
       }
     }
@@ -342,7 +342,7 @@ static inline bool pf_move_possible(const struct tile *src,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /* ===================== Move Cost Callbacks ========================= */
@@ -550,7 +550,7 @@ static bool is_possible_base_fuel(const struct tile *ptile,
   }
 
   if (is_allied_city_tile(ptile, param->owner)) {
-    return TRUE;
+    return true;
   }
 
   uclass = utype_class(param->utype);
@@ -558,7 +558,7 @@ static bool is_possible_base_fuel(const struct tile *ptile,
   {
     /* All airbases are considered possible, simply attack enemies. */
     if (tile_has_extra(ptile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_list_iterate_end;
@@ -580,7 +580,7 @@ static bool is_possible_base_fuel(const struct tile *ptile,
     if (pf_transport_check(param, ptrans, trans_utype)
         && (utype_can_freely_load(param->utype, trans_utype)
             || tile_has_native_base(ptile, trans_utype))) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -792,7 +792,7 @@ static inline void pft_fill_parameter(struct pf_parameter *parameter,
                                       const struct unit_type *punittype)
 {
   parameter->get_MC = normal_move;
-  parameter->ignore_none_scopes = TRUE;
+  parameter->ignore_none_scopes = true;
   pft_enable_default_actions(parameter);
 
   if (!parameter->get_moves_left_req && utype_fuel(punittype)) {
@@ -888,7 +888,7 @@ static void pft_fill_attack_param(struct pf_parameter *parameter,
                                   const struct unit_type *punittype)
 {
   parameter->get_MC = normal_move;
-  parameter->ignore_none_scopes = TRUE;
+  parameter->ignore_none_scopes = true;
   pft_enable_default_actions(parameter);
   /* We want known units! */
   parameter->actions =
@@ -952,7 +952,7 @@ void pft_fill_reverse_parameter(struct pf_parameter *parameter,
 
   parameter->get_MC = normal_move;
   parameter->get_move_scope = pf_get_move_scope;
-  parameter->ignore_none_scopes = TRUE;
+  parameter->ignore_none_scopes = true;
 
   parameter->get_action = pf_reverse_get_action;
   parameter->data = target_tile;

@@ -254,7 +254,7 @@ bool client_nation_is_in_current_set(const struct nation_type *pnation)
 {
   /* Currently, there is no way to select a nation set for freeciv-manual.
    * Then, let's assume we want to print help for all nations. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -286,7 +286,7 @@ static bool manual_command(struct tag_types *tag_info)
     fc_snprintf(filename, sizeof(filename), "%s%d.%s",
                 game.server.rulesetdir, manuals + 1, tag_info->file_ext);
 
-    if (!is_reg_file_for_access(filename, TRUE)
+    if (!is_reg_file_for_access(filename, true)
         || !(doc = fc_fopen(filename, "w"))) {
       qCritical(_("Could not write manual file %s."), filename);
       return false;
@@ -311,7 +311,7 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s%s - %s%s\n\n", tag_info->sect_title_begin,
                 setting_name(pset), _(setting_short_help(pset)),
                 tag_info->sect_title_end);
-        sethelp = _(setting_extra_help(pset, TRUE));
+        sethelp = _(setting_extra_help(pset, true));
         if (strlen(sethelp) > 0) {
           char *help = fc_strdup(sethelp);
           size_t help_len = qstrlen(help) + 1;
@@ -336,7 +336,7 @@ static bool manual_command(struct tag_types *tag_info)
         }
 
         fprintf(doc, "</p>\n");
-        setting_default_name(pset, TRUE, buf, sizeof(buf));
+        setting_default_name(pset, true, buf, sizeof(buf));
         switch (setting_type(pset)) {
         case SST_INT:
           fprintf(doc, "\n<p class=\"bounds\">%s %d, %s %s, %s %d</p>\n",
@@ -350,7 +350,7 @@ static bool manual_command(struct tag_types *tag_info)
                   _("Possible values:"));
           for (i = 0; (value = setting_enum_val(pset, i, false)); i++) {
             fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
-                    setting_enum_val(pset, i, TRUE));
+                    setting_enum_val(pset, i, true));
           }
         } break;
         case SST_BITWISE: {
@@ -361,7 +361,7 @@ static bool manual_command(struct tag_types *tag_info)
               _("Possible values (option can take any number of these):"));
           for (i = 0; (value = setting_bitwise_bit(pset, i, false)); i++) {
             fprintf(doc, "\n<p class=\"bounds\"><li/> %s: \"%s\"</p>", value,
-                    setting_bitwise_bit(pset, i, TRUE));
+                    setting_bitwise_bit(pset, i, true));
           }
         } break;
         case SST_BOOL:
@@ -377,7 +377,7 @@ static bool manual_command(struct tag_types *tag_info)
         }
         if (setting_non_default(pset)) {
           fprintf(doc, _("\n<p class=\"changed\">Value set to %s</p>\n"),
-                  setting_value_name(pset, TRUE, buf, sizeof(buf)));
+                  setting_value_name(pset, true, buf, sizeof(buf)));
         }
 
         fprintf(doc, "%s", tag_info->item_end);
@@ -681,7 +681,7 @@ static bool manual_command(struct tag_types *tag_info)
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "moves");
         fprintf(doc, _("Moves: %s"),
-                move_points_text(putype->move_rate, TRUE));
+                move_points_text(putype->move_rate, true));
         fprintf(doc, "%s", tag_info->subitem_end);
         fprintf(doc, tag_info->subitem_begin, "vision");
         fprintf(doc, _("Vision: %d"),
@@ -750,7 +750,7 @@ static bool manual_command(struct tag_types *tag_info)
     qInfo(_("Manual file %s successfully written."), filename);
   } /* manuals */
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

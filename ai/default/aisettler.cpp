@@ -290,7 +290,7 @@ static struct cityresult *cityresult_fill(struct ai_type *ait,
     saved_claimer = tile_claimer(result->tile);
     tile_set_owner(result->tile, pplayer, result->tile); /* temporarily */
     city_choose_build_default(pcity);                    /* ?? */
-    virtual_city = TRUE;
+    virtual_city = true;
   }
 
   result->city_radius_sq = city_map_radius_sq_get(pcity);
@@ -951,7 +951,7 @@ static struct cityresult *find_best_city_placement(struct ai_type *ait,
     cr2 = settler_map_iterate(ait, &parameter, punit,
                               unit_build_shield_cost_base(ferry));
     if (cr2) {
-      cr2->overseas = TRUE;
+      cr2->overseas = true;
       cr2->virt_boat = (ferry->id == 0);
     }
 
@@ -1049,7 +1049,7 @@ BUILD_CITY:
       if (same_pos(unit_tile(punit), ptile)) {
         if (!dai_do_build_city(ait, pplayer, punit)) {
           UNIT_LOG(LOG_DEBUG, punit, "could not make city on %s",
-                   tile_get_info_text(unit_tile(punit), TRUE, 0));
+                   tile_get_info_text(unit_tile(punit), true, 0));
           dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL);
           /* Only known way to end in here is that hut turned in to a city
            * when settler entered tile. So this is not going to lead in any
@@ -1106,7 +1106,7 @@ BUILD_CITY:
 
     /* may use a boat: */
     TIMING_LOG(AIT_SETTLERS, TIMER_START);
-    result = find_best_city_placement(ait, punit, TRUE, false);
+    result = find_best_city_placement(ait, punit, true, false);
     TIMING_LOG(AIT_SETTLERS, TIMER_STOP);
     if (result && result->result > best_impr) {
       UNIT_LOG(LOG_DEBUG, punit, "city want %d", result->result);
@@ -1281,7 +1281,7 @@ static bool dai_do_build_city(struct ai_type *ait, struct player *pplayer,
   /* Init ai.choice. Handling ferryboats might use it. */
   adv_init_choice(&def_ai_city_data(pcity, ait)->choice);
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

@@ -95,7 +95,7 @@ static void texai_thread_start(void *arg)
     fc_thread_cond_wait(&exthrai.msgs_to.thr_cond, &exthrai.msgs_to.mutex);
 
     if (texai_check_messages(texai) <= TEXAI_ABORT_EXIT) {
-      finished = TRUE;
+      finished = true;
     }
   }
   fc_release_mutex(&exthrai.msgs_to.mutex);
@@ -305,7 +305,7 @@ void texai_control_gained(struct ai_type *ait, struct player *pplayer)
     exthrai.msgs_to.msglist = texaimsg_list_new();
     exthrai.reqs_from.reqlist = texaireq_list_new();
 
-    exthrai.thread_running = TRUE;
+    exthrai.thread_running = true;
 
     fc_thread_cond_init(&exthrai.msgs_to.thr_cond);
     fc_init_mutex(&exthrai.msgs_to.mutex);
@@ -382,7 +382,7 @@ void texai_refresh(struct ai_type *ait, struct player *pplayer)
         }
       } break;
       case TEXAI_REQ_TURN_DONE:
-        req->plr->ai_phase_done = TRUE;
+        req->plr->ai_phase_done = true;
         break;
       }
 

@@ -59,7 +59,7 @@ static bool fc_has_capability(const char *cap, const char *capstr,
 
     if (((size_t)(next - capstr) == cap_len)
         && strncmp(cap, capstr, cap_len) == 0) {
-      return TRUE;
+      return true;
     }
     if (*next == '\0') {
       return false;
@@ -92,7 +92,7 @@ bool has_capabilities(const char *us, const char *them)
       return false;
     }
     if (*next == '\0') {
-      return TRUE;
+      return true;
     }
 
     us = next + 1;

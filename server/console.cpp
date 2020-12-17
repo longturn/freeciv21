@@ -41,7 +41,7 @@
 static bool console_show_prompt = false;
 static bool console_prompt_is_showing = false;
 static bool console_rfcstyle = false;
-static bool readline_received_enter = TRUE;
+static bool readline_received_enter = true;
 
 namespace {
 static QString log_prefix();
@@ -93,7 +93,7 @@ static void con_update_prompt(void)
     rl_forced_update_display();
   }
 
-  console_prompt_is_showing = TRUE;
+  console_prompt_is_showing = true;
 }
 
 /********************************************************************/ /**
@@ -208,7 +208,7 @@ bool con_get_style(void) { return console_rfcstyle; }
  ************************************************************************/
 void con_prompt_init(void)
 {
-  static bool first = TRUE;
+  static bool first = true;
 
   if (first) {
     con_puts(C_COMMENT, "");
@@ -222,7 +222,7 @@ void con_prompt_init(void)
  ************************************************************************/
 void con_prompt_on(void)
 {
-  console_show_prompt = TRUE;
+  console_show_prompt = true;
   con_update_prompt();
 }
 
@@ -237,7 +237,7 @@ void con_prompt_off(void) { console_show_prompt = false; }
 void con_prompt_enter(void)
 {
   console_prompt_is_showing = false;
-  readline_received_enter = TRUE;
+  readline_received_enter = true;
 }
 
 /********************************************************************/ /**
@@ -245,6 +245,6 @@ void con_prompt_enter(void)
  ************************************************************************/
 void con_prompt_enter_clear(void)
 {
-  console_prompt_is_showing = TRUE;
+  console_prompt_is_showing = true;
   readline_received_enter = false;
 }

@@ -458,7 +458,7 @@ void go_act_menu::update()
    * target tile. */
   QList<QAction *> keys = items.keys();
   for (QAction *item : qAsConst(keys)) {
-    if (units_can_do_action(get_units_in_focus(), items.value(item), TRUE)) {
+    if (units_can_do_action(get_units_in_focus(), items.value(item), true)) {
       item->setVisible(true);
       can_do_something = true;
     } else {
@@ -1621,7 +1621,7 @@ void mr_menu::menus_sensitive()
 
           pterrain = tile_terrain(unit_tile(punit));
 
-          if (units_have_type_flag(punits, UTYF_SETTLERS, TRUE)) {
+          if (units_have_type_flag(punits, UTYF_SETTLERS, true)) {
             struct extra_type *pextra = next_extra(punits, EC_MINE);
 
             if (pextra != NULL) {
@@ -1647,7 +1647,7 @@ void mr_menu::menus_sensitive()
 
           pterrain = tile_terrain(unit_tile(punit));
 
-          if (units_have_type_flag(punits, UTYF_SETTLERS, TRUE)) {
+          if (units_have_type_flag(punits, UTYF_SETTLERS, true)) {
             struct extra_type *pextra = next_extra(punits, EC_IRRIGATION);
 
             if (pextra != nullptr) {
@@ -1895,7 +1895,7 @@ void mr_menu::menus_sensitive()
         break;
 
       case AUTOTRADEROUTE:
-        if (units_can_do_action(punits, ACTION_TRADE_ROUTE, TRUE)) {
+        if (units_can_do_action(punits, ACTION_TRADE_ROUTE, true)) {
           i.value()->setEnabled(true);
         }
         break;
@@ -1909,7 +1909,7 @@ void mr_menu::menus_sensitive()
         break;
 
       case ORDER_DIPLOMAT_DLG:
-        if (units_can_do_action(punits, ACTION_ANY, TRUE)) {
+        if (units_can_do_action(punits, ACTION_ANY, true)) {
           i.value()->setEnabled(true);
         }
         break;

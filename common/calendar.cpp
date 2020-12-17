@@ -83,7 +83,7 @@ void game_next_year(struct packet_game_info *info)
 
   if (info->year == 0 && game.calendar.calendar_skip_0) {
     info->year = 1;
-    info->year_0_hack = TRUE;
+    info->year_0_hack = true;
   }
 }
 

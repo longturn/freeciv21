@@ -310,7 +310,7 @@ bool can_establish_trade_route(const struct city *pc1,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -499,7 +499,7 @@ bool have_cities_trade_route(const struct city *pc1, const struct city *pc2)
   trade_partners_iterate(pc1, route_to)
   {
     if (route_to->id == pc2->id) {
-      return TRUE;
+      return true;
     }
   }
   trade_partners_iterate_end;
@@ -664,7 +664,7 @@ bool city_receives_goods(const struct city *pcity,
   {
     if (proute->goods == pgood
         && (proute->dir == RDIR_TO || proute->dir == RDIR_BIDIRECTIONAL)) {
-      return TRUE;
+      return true;
     }
   }
   trade_routes_iterate_end;

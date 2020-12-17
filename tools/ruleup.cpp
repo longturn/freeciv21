@@ -145,7 +145,7 @@ int main(int argc, char **argv)
   /* Reset aifill to zero */
   game.info.aifill = 0;
 
-  if (load_rulesets(NULL, NULL, TRUE, conv_log, false, TRUE, TRUE)) {
+  if (load_rulesets(NULL, NULL, true, conv_log, false, true, true)) {
     struct rule_data data;
     QString tgt_dir;
 

@@ -602,7 +602,7 @@ static const char *cr_entry_build_cost(const struct city *pcity,
     return buf;
   }
   price = pcity->client.buy_cost;
-  turns = city_production_turns_to_build(pcity, TRUE);
+  turns = city_production_turns_to_build(pcity, true);
 
   if (price > 99999) {
     fc_snprintf(bufone, sizeof(bufone), "---");
@@ -697,13 +697,13 @@ static const char *cr_entry_cma(const struct city *pcity, const void *data)
 #define FUNC_TAG(var) cr_entry_##var, #var
 
 static const struct city_report_spec base_city_report_specs[] = {
-    {TRUE, -15, 0, NULL, N_("?city:Name"), N_("City Name"), NULL,
+    {true, -15, 0, NULL, N_("?city:Name"), N_("City Name"), NULL,
      FUNC_TAG(cityname)},
     {false, -15, 0, NULL, N_("Nation"), N_("Nation"), NULL,
      FUNC_TAG(nation)},
-    {TRUE, 2, 1, NULL, N_("?size [short]:Sz"), N_("Size"), NULL,
+    {true, 2, 1, NULL, N_("?size [short]:Sz"), N_("Size"), NULL,
      FUNC_TAG(size)},
-    {TRUE, -8, 1, NULL, N_("State"), N_("Celebrating/Peace/Disorder"), NULL,
+    {true, -8, 1, NULL, N_("State"), N_("Celebrating/Peace/Disorder"), NULL,
      FUNC_TAG(hstate_verbose)},
     {false, 1, 1, NULL, NULL, N_("Concise *=Celebrating, X=Disorder"), NULL,
      FUNC_TAG(hstate_concise)},
@@ -716,7 +716,7 @@ static const struct city_report_spec base_city_report_specs[] = {
      NULL, FUNC_TAG(unhappy)},
     {false, 2, 1, NULL, N_("?Angry workers:A"), N_("Workers: Angry"), NULL,
      FUNC_TAG(angry)},
-    {TRUE, 10, 1, N_("?city:Workers"),
+    {true, 10, 1, N_("?city:Workers"),
      N_("?happy/content/unhappy/angry:H/C/U/A"),
      N_("Workers: Happy, Content, Unhappy, Angry"), NULL, FUNC_TAG(workers)},
 
@@ -734,11 +734,11 @@ static const struct city_report_spec base_city_report_specs[] = {
      FUNC_TAG(supported)},
 
     {/* TRANS: Header "It will take this many turns before city grows" */
-     TRUE, 14, 1, N_("?food (population):Grow"),
+     true, 14, 1, N_("?food (population):Grow"),
      N_("?Stock/Target:(Have/Need)"), N_("Turns until growth/famine"), NULL,
      FUNC_TAG(growturns)},
 
-    {TRUE, 10, 1, N_("Surplus"), N_("?food/production/trade:F/P/T"),
+    {true, 10, 1, N_("Surplus"), N_("?food/production/trade:F/P/T"),
      N_("Surplus: Food, Production, Trade"), NULL, FUNC_TAG(resources)},
     {false, 3, 1, NULL, N_("?Food surplus [short]:+F"), N_("Surplus: Food"),
      NULL, FUNC_TAG(foodplus)},
@@ -751,7 +751,7 @@ static const struct city_report_spec base_city_report_specs[] = {
     {false, 3, 1, NULL, N_("?Trade loss (corruption) [short]:-T"),
      N_("Corruption"), NULL, FUNC_TAG(corruption)},
 
-    {TRUE, 10, 1, N_("Economy"), N_("?gold/luxury/science:G/L/S"),
+    {true, 10, 1, N_("Economy"), N_("?gold/luxury/science:G/L/S"),
      N_("Economy: Gold, Luxuries, Science"), NULL, FUNC_TAG(output)},
     {false, 3, 1, NULL, N_("?Gold:G"), N_("Economy: Gold"), NULL,
      FUNC_TAG(gold)},
@@ -780,11 +780,11 @@ static const struct city_report_spec base_city_report_specs[] = {
     /* TRANS: "BS" = "build slots" */
     {false, 3, 1, NULL, N_("BS"), N_("Maximum units buildable per turn"),
      NULL, FUNC_TAG(build_slots)},
-    {TRUE, 9, 1, N_("Production"), N_("Turns/Buy"),
+    {true, 9, 1, N_("Production"), N_("Turns/Buy"),
      /*N_("Turns or gold to complete production"), future menu needs
         translation */
      N_("Production"), NULL, FUNC_TAG(build_cost)},
-    {TRUE, 0, 1, N_("Currently Building"), N_("?Stock/Target:(Have/Need)"),
+    {true, 0, 1, N_("Currently Building"), N_("?Stock/Target:(Have/Need)"),
      N_("Currently Building"), NULL, FUNC_TAG(building)}};
 
 struct city_report_spec *city_report_specs;
@@ -933,7 +933,7 @@ static void init_datum_string(struct datum *dat, const char *left,
  ************************************************************************/
 static void init_datum_number(struct datum *dat, float val)
 {
-  dat->is_numeric = TRUE;
+  dat->is_numeric = true;
   dat->val.numeric_value = val;
 }
 

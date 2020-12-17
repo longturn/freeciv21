@@ -18,7 +18,7 @@
 // Forward declarations
 class QString;
 
-#define DEFAULT_META_SERVER_NO_SEND TRUE
+#define DEFAULT_META_SERVER_NO_SEND true
 #define DEFAULT_META_SERVER_ADDR FREECIV_META_URL
 #define METASERVER_REFRESH_INTERVAL (3 * 60)
 #define METASERVER_MIN_UPDATE_INTERVAL 7 /* not too short, not too long */

@@ -63,7 +63,7 @@ bool api_server_save(lua_State *L, const char *filename)
 
   save_game(filename, "User request (Lua)", false);
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**
@@ -81,7 +81,7 @@ bool api_play_music(lua_State *L, Player *pplayer, const char *tag)
 
   lsend_packet_play_music(pplayer->connections, &p);
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**

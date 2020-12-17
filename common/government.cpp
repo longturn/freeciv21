@@ -175,7 +175,7 @@ bool can_change_to_government(struct player *pplayer,
 
   if (get_player_bonus(pplayer, EFT_ANY_GOVERNMENT) > 0) {
     /* Note, this may allow govs that are on someone else's "tech tree". */
-    return TRUE;
+    return true;
   }
 
   return are_reqs_active(pplayer, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
@@ -221,7 +221,7 @@ static void ruler_title_destroy(struct ruler_title *pruler_title)
  **************************************************************************/
 static bool ruler_title_check(const struct ruler_title *pruler_title)
 {
-  bool ret = TRUE;
+  bool ret = true;
 
   if (!formats_match(rule_name_get(&pruler_title->male), "%s")) {
     if (NULL != pruler_title->pnation) {
@@ -537,5 +537,5 @@ bool untargeted_revolution_allowed(void)
      * in order to know how long anarchy will last. */
     return false;
   }
-  return TRUE;
+  return true;
 }

@@ -102,7 +102,7 @@ static bool player_may_explore(const struct tile *ptile,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -125,7 +125,7 @@ static bool explorer_goto(struct unit *punit, struct tile *ptile)
 {
   struct pf_parameter parameter;
   struct adv_risk_cost risk_cost;
-  bool alive = TRUE;
+  bool alive = true;
   struct pf_map *pfm;
   struct pf_path *path;
   struct player *pplayer = unit_owner(punit);

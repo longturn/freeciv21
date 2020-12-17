@@ -80,7 +80,7 @@ void researches_init(void)
     advance_index_iterate_end;
   }
 
-  game.info.global_advances[A_NONE] = TRUE;
+  game.info.global_advances[A_NONE] = true;
 
   /* Set technology names. */
   /* TRANS: "None" tech */
@@ -325,7 +325,7 @@ static bool reqs_may_activate(const struct player *target_player,
     }
   }
   requirement_vector_iterate_end;
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -370,7 +370,7 @@ static bool research_allowed(
        * research it will be illegal in research sharing games. To require
        * that the player that fulfills the requirement must order it to be
        * researched creates unnecessary bureaucracy. */
-      return TRUE;
+      return true;
     }
   }
   research_players_iterate_end;
@@ -448,7 +448,7 @@ static bool research_get_reachable_rreqs(const struct research *presearch,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -491,7 +491,7 @@ static bool research_get_reachable(const struct research *presearch,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -512,7 +512,7 @@ static bool research_get_root_reqs_known(const struct research *presearch,
   }
   advance_root_req_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -529,7 +529,7 @@ void research_update(struct research *presearch)
   advance_index_iterate(A_FIRST, i)
   {
     enum tech_state state = presearch->inventions[i].state;
-    bool root_reqs_known = TRUE;
+    bool root_reqs_known = true;
     bool reachable = research_get_reachable(presearch, i);
 
     /* Finding if the root reqs of an unreachable tech isn't redundant.
@@ -677,7 +677,7 @@ enum tech_state research_invention_set(struct research *presearch,
 
   if (value == TECH_KNOWN) {
     if (!game.info.global_advances[tech]) {
-      game.info.global_advances[tech] = TRUE;
+      game.info.global_advances[tech] = true;
       game.info.global_advance_count++;
     }
   }
@@ -703,7 +703,7 @@ bool research_invention_reachable(const struct research *presearch,
     researches_iterate(research_iter)
     {
       if (research_iter->inventions[tech].reachable) {
-        return TRUE;
+        return true;
       }
     }
     researches_iterate_end;
@@ -734,7 +734,7 @@ bool research_invention_gettable(const struct research *presearch,
       if (allow_holes ? research_iter->inventions[tech].root_reqs_known
                       : research_iter->inventions[tech].state
                             == TECH_PREREQS_KNOWN) {
-        return TRUE;
+        return true;
       }
     }
     researches_iterate_end;
@@ -841,7 +841,7 @@ bool research_goal_tech_req(const struct research *presearch,
     advance_req_iterate(pgoal, preq)
     {
       if (preq == ptech) {
-        return TRUE;
+        return true;
       }
     }
     advance_req_iterate_end;

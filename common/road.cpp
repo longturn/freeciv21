@@ -196,7 +196,7 @@ bool road_can_be_built(const struct road_type *proad,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -218,7 +218,7 @@ static bool are_road_reqs_fulfilled(const struct road_type *proad,
   }
 
   if (requirement_vector_size(&proad->first_reqs) > 0) {
-    bool beginning = TRUE;
+    bool beginning = true;
 
     extra_type_list_iterate(proad->integrators, iroad)
     {
@@ -414,7 +414,7 @@ bool is_road_flag_card_near(const struct tile *ptile, enum road_flag_id flag)
       cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
@@ -437,7 +437,7 @@ bool is_road_flag_near_tile(const struct tile *ptile, enum road_flag_id flag)
       adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;

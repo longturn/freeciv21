@@ -66,7 +66,7 @@ void fc_interface_init(void)
   fc_assert_exit(fc_funcs->player_tile_city_id_get);
   fc_assert_exit(fc_funcs->gui_color_free);
 
-  fc_funcs_defined = TRUE;
+  fc_funcs_defined = true;
 
   setup_real_activities_array();
 }

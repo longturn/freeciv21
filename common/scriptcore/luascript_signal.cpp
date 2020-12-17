@@ -295,7 +295,7 @@ bool luascript_signal_callback_defined(struct fc_lua *fcl,
     /* check for a duplicate callback */
     for (auto pcallback : qAsConst(*psignal->callbacks)) {
       if (!strcmp(pcallback->name, callback_name)) {
-        return TRUE;
+        return true;
       }
     }
   }

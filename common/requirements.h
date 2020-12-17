@@ -322,7 +322,7 @@ bool universal_is_relevant_to_requirement(const struct requirement *req,
 
 #define requirement_needs_improvement(_imp_, _rqs_)                         \
   sv_universal_fulfills_requirements(                                       \
-      TRUE, (_rqs_),                                                        \
+      true, (_rqs_),                                                        \
       (struct universal){.value = {.building = (_imp_)},                    \
                          .kind = VUT_IMPROVEMENT})
 

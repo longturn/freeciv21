@@ -322,7 +322,7 @@ bool is_extra_card_near(const struct tile *ptile,
   cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_has_extra(adjc_tile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_iterate_end;
@@ -340,7 +340,7 @@ bool is_extra_near_tile(const struct tile *ptile,
   adjc_iterate(&(wld.map), ptile, adjc_tile)
   {
     if (tile_has_extra(adjc_tile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -364,7 +364,7 @@ bool extra_can_be_built(const struct extra_type *pextra,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -405,7 +405,7 @@ bool can_build_extra_base(const struct extra_type *pextra,
     extra_type_list_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -520,7 +520,7 @@ static bool can_extra_be_removed(const struct extra_type *pextra,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -565,7 +565,7 @@ bool is_native_tile_to_extra(const struct extra_type *pextra,
   struct terrain *pterr = tile_terrain(ptile);
 
   if (terrain_has_resource(pterr, pextra)) {
-    return TRUE;
+    return true;
   }
 
   if (is_extra_caused_by(pextra, EC_IRRIGATION)
@@ -612,7 +612,7 @@ bool extra_conflicting_on_tile(const struct extra_type *pextra,
   {
     if (tile_has_extra(ptile, old_extra)
         && !can_extras_coexist(old_extra, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_iterate_end;
@@ -629,7 +629,7 @@ bool hut_on_tile(const struct tile *ptile)
   extra_type_by_rmcause_iterate(ERM_ENTER, extra)
   {
     if (tile_has_extra(ptile, extra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -652,7 +652,7 @@ bool unit_can_enter_hut(const struct unit *punit, const struct tile *ptile)
         && are_reqs_active(unit_owner(punit), tile_owner(ptile), NULL, NULL,
                            ptile, NULL, NULL, NULL, NULL, NULL,
                            &extra->rmreqs, RPT_POSSIBLE)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -675,7 +675,7 @@ bool unit_can_displace_hut(const struct unit *punit,
         && are_reqs_active(unit_owner(punit), tile_owner(ptile), NULL, NULL,
                            ptile, NULL, NULL, NULL, NULL, NULL,
                            &extra->rmreqs, RPT_POSSIBLE)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_rmcause_iterate_end;
@@ -795,7 +795,7 @@ bool is_extra_flag_card_near(const struct tile *ptile,
       cardinal_adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       cardinal_adjc_iterate_end;
@@ -819,7 +819,7 @@ bool is_extra_flag_near_tile(const struct tile *ptile,
       adjc_iterate(&(wld.map), ptile, adjc_tile)
       {
         if (tile_has_extra(adjc_tile, pextra)) {
-          return TRUE;
+          return true;
         }
       }
       adjc_iterate_end;
@@ -902,7 +902,7 @@ bool can_extras_coexist(const struct extra_type *pextra1,
                         const struct extra_type *pextra2)
 {
   if (pextra1 == pextra2) {
-    return TRUE;
+    return true;
   }
 
   return !BV_ISSET(pextra1->conflicts, extra_index(pextra2));

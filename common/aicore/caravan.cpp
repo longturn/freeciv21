@@ -34,10 +34,10 @@ void caravan_parameter_init_default(struct caravan_parameter *parameter)
 {
   parameter->horizon = FC_INFINITY;
   parameter->discount = 0.95;
-  parameter->consider_windfall = TRUE;
-  parameter->consider_trade = TRUE;
-  parameter->consider_wonders = TRUE; /* see also init_from_unit */
-  parameter->account_for_broken_routes = TRUE;
+  parameter->consider_windfall = true;
+  parameter->consider_trade = true;
+  parameter->consider_wonders = true; /* see also init_from_unit */
+  parameter->account_for_broken_routes = true;
   parameter->allow_foreign_trade = FTL_NATIONAL_ONLY;
   parameter->ignore_transit_time = false;
   parameter->convert_trade = false;
@@ -84,7 +84,7 @@ bool caravan_parameter_is_legal(const struct caravan_parameter *parameter)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -115,7 +115,7 @@ static void caravan_result_init(struct caravan_result *result,
   result->help_wonder = false;
   if ((src != NULL) && (dest != NULL)) {
     if (tile_continent(src->tile) != tile_continent(dest->tile)) {
-      result->required_boat = TRUE;
+      result->required_boat = true;
     } else {
       result->required_boat = false;
     }
@@ -177,7 +177,7 @@ static void caravan_search_from(const struct unit *caravan,
      Do-while loop rather than while loop to make sure to process the
      start tile.
    */
-  pf_map_positions_iterate(pfm, pos, TRUE)
+  pf_map_positions_iterate(pfm, pos, true)
   {
     struct city *pcity;
 
@@ -446,15 +446,15 @@ static bool get_discounted_reward(const struct unit *caravan,
   consider_wonder =
       parameter->consider_wonders
       && action_prob_possible(action_speculate_unit_on_city(
-          ACTION_HELP_WONDER, caravan, src, city_tile(dest), TRUE, dest));
+          ACTION_HELP_WONDER, caravan, src, city_tile(dest), true, dest));
   consider_trade =
       parameter->consider_trade
       && action_prob_possible(action_speculate_unit_on_city(
-          ACTION_TRADE_ROUTE, caravan, src, city_tile(dest), TRUE, dest));
+          ACTION_TRADE_ROUTE, caravan, src, city_tile(dest), true, dest));
   consider_windfall =
       parameter->consider_windfall
       && action_prob_possible(action_speculate_unit_on_city(
-          ACTION_MARKETPLACE, caravan, src, city_tile(dest), TRUE, dest));
+          ACTION_MARKETPLACE, caravan, src, city_tile(dest), true, dest));
 
   if (!consider_wonder && !consider_trade && !consider_windfall) {
     /* No caravan action is possible against this target. */
@@ -497,7 +497,7 @@ static bool get_discounted_reward(const struct unit *caravan,
     result->help_wonder = false;
   } else if (consider_wonder) {
     result->value = wonder;
-    result->help_wonder = TRUE;
+    result->help_wonder = true;
   } else {
     caravan_result_init_zero(result);
     return false;
@@ -507,7 +507,7 @@ static bool get_discounted_reward(const struct unit *caravan,
     parameter->callback(result, parameter->callback_data);
   }
 
-  return TRUE;
+  return true;
 }
 
 /****************************************************************************
@@ -550,7 +550,7 @@ static bool cewt_callback(void *vdata, const struct city *dest,
   if (dest == data->result->dest) {
     data->result->arrival_time = arrival_time;
     get_discounted_reward(data->caravan, data->param, data->result);
-    return TRUE;
+    return true;
   } else {
     return false;
   }

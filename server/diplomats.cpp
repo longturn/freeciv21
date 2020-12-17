@@ -152,9 +152,9 @@ bool spy_poison(struct player *pplayer, struct unit *pdiplomat,
   action_consequence_success(paction, pplayer, cplayer, ctile, clink);
 
   /* Now lets see if the spy survives. */
-  diplomat_escape_full(pplayer, pdiplomat, TRUE, ctile, clink, paction);
+  diplomat_escape_full(pplayer, pdiplomat, true, ctile, clink, paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -258,10 +258,10 @@ bool spy_spread_plague(struct player *act_player, struct unit *act_unit,
                              tgt_city_link);
 
   /* Try to escape. */
-  diplomat_escape_full(act_player, act_unit, TRUE, tgt_tile, tgt_city_link,
+  diplomat_escape_full(act_player, act_unit, true, tgt_tile, tgt_city_link,
                        paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -313,7 +313,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
                        pcity->id);
     /* We need to force to send the packet to ensure the client will receive
      * something (e.g. investigating twice). */
-    lsend_packet_unit_short_info(pplayer->connections, &unit_packet, TRUE);
+    lsend_packet_unit_short_info(pplayer->connections, &unit_packet, true);
   }
   unit_list_iterate_end;
   unit_list_iterate((pcity->tile)->units, punit)
@@ -322,7 +322,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
                        pcity->id);
     /* We need to force to send the packet to ensure the client will receive
      * something (e.g. investigating twice). */
-    lsend_packet_unit_short_info(pplayer->connections, &unit_packet, TRUE);
+    lsend_packet_unit_short_info(pplayer->connections, &unit_packet, true);
   }
   unit_list_iterate_end;
   /* Send city info to investigator's player.
@@ -330,7 +330,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
   routes = traderoute_packet_list_new();
   /* We need to force to send the packet to ensure the client will receive
    * something and popup the city dialog. */
-  lsend_packet_city_info(pplayer->connections, &city_packet, TRUE);
+  lsend_packet_city_info(pplayer->connections, &city_packet, true);
   traderoute_packet_list_iterate(routes, route_packet)
   {
     lsend_packet_traderoute_info(pplayer->connections, route_packet);
@@ -351,7 +351,7 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
     send_unit_info(NULL, pdiplomat);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -465,7 +465,7 @@ bool diplomat_embassy(struct player *pplayer, struct unit *pdiplomat,
     send_unit_info(NULL, pdiplomat);
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -547,7 +547,7 @@ bool spy_sabotage_unit(struct player *pplayer, struct unit *pdiplomat,
   /* Now lets see if the spy survives. */
   diplomat_escape(pplayer, pdiplomat, NULL, paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -648,7 +648,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
   bounce = ((NULL != pcity && !pplayers_allied(city_owner(pcity), pplayer))
             || 1 < unit_list_size(unit_tile(pvictim)->units));
   if (bounce) {
-    bounce_unit(pvictim, TRUE);
+    bounce_unit(pvictim, true);
   }
 
   /* This costs! */
@@ -659,7 +659,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
                              victim_link);
 
   if (!unit_is_alive(diplomat_id)) {
-    return TRUE;
+    return true;
   }
 
   /* Try to move the briber onto the victim's square unless the victim has
@@ -695,7 +695,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
       /* May have died while trying to disembark. */
       && unit_is_alive(diplomat_id)
       /* Post bribe move. */
-      && !unit_move_handling(pdiplomat, victim_tile, false, TRUE)
+      && !unit_move_handling(pdiplomat, victim_tile, false, true)
       /* May have died while trying to move. */
       && unit_is_alive(diplomat_id)) {
     pdiplomat->moves_left = 0;
@@ -707,7 +707,7 @@ bool diplomat_bribe(struct player *pplayer, struct unit *pdiplomat,
   /* Update clients. */
   send_player_all_c(pplayer, NULL);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -735,14 +735,14 @@ bool spy_attack(struct player *act_player, struct unit *act_unit,
                            tgt_tile, &tgt_player);
 
   /* Sanity check: the defender had an owner. */
-  fc_assert_ret_val(tgt_player != NULL, TRUE);
+  fc_assert_ret_val(tgt_player != NULL, true);
 
   if (!unit_is_alive(act_unit_id)) {
     /* action_consequence_caught() is handled in
      * diplomat_infiltrate_tile() */
 
     /* The action was to start a diplomatic battle. */
-    return TRUE;
+    return true;
   }
 
   /* This may cause a diplomatic incident. */
@@ -750,7 +750,7 @@ bool spy_attack(struct player *act_player, struct unit *act_unit,
                              tile_link(tgt_tile));
 
   /* The action was to start a diplomatic battle. */
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -965,7 +965,7 @@ bool diplomat_get_tech(struct player *pplayer, struct unit *pdiplomat,
   /* Check if a spy survives her mission. */
   diplomat_escape(pplayer, pdiplomat, pcity, paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1005,7 +1005,7 @@ bool diplomat_may_lose_gold(struct player *dec_player,
     send_player_all_c(dec_player, NULL);
     send_player_all_c(inc_player, NULL);
 
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -1128,7 +1128,7 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
 
   /* Transfer city and units supported by this city (that
      are within one square of the city) to the new owner. */
-  if (transfer_city(pplayer, pcity, 1, TRUE, TRUE, false,
+  if (transfer_city(pplayer, pcity, 1, true, true, false,
                     !is_barbarian(pplayer))) {
     script_server_signal_emit("city_transferred", pcity, cplayer, pplayer,
                               "incited");
@@ -1138,12 +1138,12 @@ bool diplomat_incite(struct player *pplayer, struct unit *pdiplomat,
    * _After_ transferring the city, or the city area is first fogged
    * when the diplomat is removed, and then unfogged when the city
    * is transferred. */
-  diplomat_escape_full(pplayer, pdiplomat, TRUE, ctile, clink, paction);
+  diplomat_escape_full(pplayer, pdiplomat, true, ctile, clink, paction);
 
   /* Update the players gold in the client */
   send_player_info_c(pplayer, pplayer->connections);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1405,7 +1405,7 @@ bool diplomat_sabotage(struct player *pplayer, struct unit *pdiplomat,
   /* Check if a spy survives her mission. */
   diplomat_escape(pplayer, pdiplomat, pcity, paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1536,14 +1536,14 @@ bool spy_steal_gold(struct player *act_player, struct unit *act_unit,
                              tgt_city_link);
 
   /* Try to escape. */
-  diplomat_escape_full(act_player, act_unit, TRUE, tgt_tile, tgt_city_link,
+  diplomat_escape_full(act_player, act_unit, true, tgt_tile, tgt_city_link,
                        paction);
 
   /* Update the players' gold in the client */
   send_player_info_c(act_player, act_player->connections);
   send_player_info_c(tgt_player, tgt_player->connections);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1661,10 +1661,10 @@ bool spy_steal_some_maps(struct player *act_player, struct unit *act_unit,
                              tgt_city_link);
 
   /* Try to escape. */
-  diplomat_escape_full(act_player, act_unit, TRUE, tgt_tile, tgt_city_link,
+  diplomat_escape_full(act_player, act_unit, true, tgt_tile, tgt_city_link,
                        paction);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1743,7 +1743,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
                 nation_plural_for_player(act_player), tgt_city_link);
 
   /* Try to escape before the blast. */
-  diplomat_escape_full(act_player, act_unit, TRUE, tgt_tile, tgt_city_link,
+  diplomat_escape_full(act_player, act_unit, true, tgt_tile, tgt_city_link,
                        paction);
 
   if (utype_is_consumed_by_action(paction, unit_type_get(act_unit))) {
@@ -1764,7 +1764,7 @@ bool spy_nuke_city(struct player *act_player, struct unit *act_unit,
   action_consequence_success(paction, act_player, tgt_player, tgt_tile,
                              tgt_city_link);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1799,7 +1799,7 @@ static bool diplomat_success_vs_defender(struct unit *pattacker,
   if (unit_has_type_flag(pattacker, UTYF_SUPERSPY)) {
     /* An attacking UTYF_SUPERSPY will defeat every possible defender
      * except another UTYF_SUPERSPY. */
-    return TRUE;
+    return true;
   }
 
   /* Add or remove 25% if spy flag. */
@@ -2032,7 +2032,7 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -2097,7 +2097,7 @@ static void diplomat_escape_full(struct player *pplayer,
 
   /* find closest city for escape target */
   spyhome = find_closest_city(ptile, NULL, unit_owner(pdiplomat), false,
-                              false, false, TRUE, false, NULL);
+                              false, false, true, false, NULL);
 
   if (spyhome
       && !utype_is_consumed_by_action(paction, unit_type_get(pdiplomat))

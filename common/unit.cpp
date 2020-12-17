@@ -346,7 +346,7 @@ bool is_square_threatened(const struct player *pplayer,
               || (can_attack_non_native(unit_type_get(punit))
                   && is_native_near_tile(&(wld.map), unit_class_get(punit),
                                          ptile)))) {
-        return TRUE;
+        return true;
       }
     }
     unit_list_iterate_end;
@@ -377,13 +377,13 @@ bool is_hiding_unit(const struct unit *punit)
   enum vision_layer vl = unit_type_get(punit)->vlayer;
 
   if (vl == V_INVIS || vl == V_SUBSURFACE) {
-    return TRUE;
+    return true;
   }
 
   if (unit_transported(punit)) {
     vl = unit_type_get(unit_transport_get(punit))->vlayer;
     if (vl == V_INVIS || vl == V_SUBSURFACE) {
-      return TRUE;
+      return true;
     }
   }
 
@@ -521,7 +521,7 @@ bool activity_requires_target(enum unit_activity activity)
   case ACTIVITY_MINE:
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
-    return TRUE;
+    return true;
   case ACTIVITY_IDLE:
   case ACTIVITY_FORTIFIED:
   case ACTIVITY_SENTRY:
@@ -692,7 +692,7 @@ bool could_unit_load(const struct unit *pcargo, const struct unit *ptrans)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -743,7 +743,7 @@ bool can_unit_unload(const struct unit *pcargo, const struct unit *ptrans)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -886,7 +886,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
   switch (activity) {
   case ACTIVITY_IDLE:
   case ACTIVITY_GOTO:
-    return TRUE;
+    return true;
 
   case ACTIVITY_POLLUTION:
     /* The call below doesn't support actor tile speculation. */
@@ -955,7 +955,7 @@ bool can_unit_do_activity_targeted_at(const struct unit *punit,
       /* Don't let units sentry on tiles they will die on. */
       return false;
     }
-    return TRUE;
+    return true;
 
   case ACTIVITY_PILLAGE:
     /* The call below doesn't support actor tile speculation. */
@@ -1056,7 +1056,7 @@ bool is_unit_activity_on_tile(enum unit_activity activity,
   unit_list_iterate(ptile->units, punit)
   {
     if (punit->activity == activity) {
-      return TRUE;
+      return true;
     }
   }
   unit_list_iterate_end;
@@ -1386,7 +1386,7 @@ bool is_my_zoc(const struct player *pplayer, const struct tile *ptile0,
   }
   square_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1435,7 +1435,7 @@ bool unit_being_aggressive(const struct unit *punit)
     return !is_unit_near_a_friendly_city(punit);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1448,7 +1448,7 @@ bool is_build_activity(enum unit_activity activity, const struct tile *ptile)
   case ACTIVITY_IRRIGATE:
   case ACTIVITY_BASE:
   case ACTIVITY_GEN_ROAD:
-    return TRUE;
+    return true;
   default:
     return false;
   }
@@ -1463,7 +1463,7 @@ bool is_clean_activity(enum unit_activity activity)
   case ACTIVITY_PILLAGE:
   case ACTIVITY_POLLUTION:
   case ACTIVITY_FALLOUT:
-    return TRUE;
+    return true;
   default:
     return false;
   }
@@ -1478,7 +1478,7 @@ bool is_terrain_change_activity(enum unit_activity activity)
   case ACTIVITY_CULTIVATE:
   case ACTIVITY_PLANT:
   case ACTIVITY_TRANSFORM:
-    return TRUE;
+    return true;
   default:
     return false;
   }
@@ -1684,7 +1684,7 @@ static struct unit *base_transporter_for_unit(
     unit_transports_iterate(ptrans, ptranstrans)
     {
       if (unit_has_orders(ptranstrans)) {
-        cur.has_orders = TRUE;
+        cur.has_orders = true;
       }
       cur.outermost_moves_left = ptranstrans->moves_left;
       cur.total_moves +=
@@ -1815,7 +1815,7 @@ static bool can_type_transport_units_cargo(const struct unit_type *utype,
   }
   unit_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1894,7 +1894,7 @@ bool unit_can_convert(const struct unit *punit)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2019,7 +2019,7 @@ bool unit_is_alive(int id)
 {
   /* Check if unit exist in game */
   if (game_unit_by_number(id)) {
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -2139,7 +2139,7 @@ bool unit_transport_load(struct unit *pcargo, struct unit *ptrans,
     pcargo->transporter = ptrans;
     unit_list_append(ptrans->transporting, pcargo);
 
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -2174,7 +2174,7 @@ bool unit_transport_unload(struct unit *pcargo)
   /* For the server (also safe for the client). */
   pcargo->transporter = NULL;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2188,7 +2188,7 @@ bool unit_transported(const struct unit *pcargo)
    * client) if the transported_by field is set. */
   if (pcargo->transporter != NULL
       || (!is_server() && pcargo->client.transported_by != -1)) {
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -2275,7 +2275,7 @@ bool unit_transport_check(const struct unit *pcargo,
   }
   unit_cargo_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2287,7 +2287,7 @@ bool unit_contained_in(const struct unit *pcargo, const struct unit *ptrans)
   unit_transports_iterate(pcargo, plevel)
   {
     if (ptrans == plevel) {
-      return TRUE;
+      return true;
     }
   }
   unit_transports_iterate_end;

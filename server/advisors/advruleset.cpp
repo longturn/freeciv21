@@ -44,16 +44,16 @@ void adv_units_ruleset_init(void)
       if (is_native_to_class(pclass, pterrain, NULL)) {
         /* Can move at terrain */
         if (is_ocean(pterrain)) {
-          move_sea_enabled = TRUE;
+          move_sea_enabled = true;
         } else {
-          move_land_enabled = TRUE;
+          move_land_enabled = true;
         }
       } else {
         /* Cannot move at terrain */
         if (is_ocean(pterrain)) {
-          move_sea_disabled = TRUE;
+          move_sea_disabled = true;
         } else {
-          move_land_disabled = TRUE;
+          move_land_disabled = true;
         }
       }
     }
@@ -81,7 +81,7 @@ void adv_units_ruleset_init(void)
 
   unit_type_iterate(ptype)
   {
-    ptype->adv.igwall = TRUE;
+    ptype->adv.igwall = true;
 
     effect_list_iterate(get_effects(EFT_DEFEND_BONUS), peffect)
     {

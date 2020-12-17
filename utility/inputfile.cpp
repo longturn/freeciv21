@@ -78,13 +78,12 @@
 #include "astring.h"
 #include "fcintl.h"
 #include "ioz.h"
-#include "shared.h" /* TRUE, FALSE */
 #include "support.h"
 
 #include "inputfile.h"
 
-#define INF_DEBUG_FOUND FALSE
-#define INF_DEBUG_NOT_FOUND FALSE
+#define INF_DEBUG_FOUND false
+#define INF_DEBUG_NOT_FOUND false
 
 #define INF_MAGIC (0xabdc0132) /* arbitrary */
 
@@ -174,8 +173,8 @@ static bool inf_sanity_check(struct inputfile *inf)
   fc_assert_ret_val(NULL != inf, false);
   fc_assert_ret_val(INF_MAGIC == inf->magic, false);
   fc_assert_ret_val(NULL != inf->fp, false);
-  fc_assert_ret_val(false == inf->at_eof || TRUE == inf->at_eof, false);
-  fc_assert_ret_val(false == inf->in_string || TRUE == inf->in_string,
+  fc_assert_ret_val(false == inf->at_eof || true == inf->at_eof, false);
+  fc_assert_ret_val(false == inf->in_string || true == inf->in_string,
                     false);
 
 #ifdef FREECIV_DEBUG
@@ -185,7 +184,7 @@ static bool inf_sanity_check(struct inputfile *inf)
   }
 #endif /* FREECIV_DEBUG */
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -312,8 +311,8 @@ static bool have_line(struct inputfile *inf)
  ***********************************************************************/
 static bool at_eol(struct inputfile *inf)
 {
-  fc_assert_ret_val(inf_sanity_check(inf), TRUE);
-  fc_assert_ret_val(inf->cur_line_pos <= astr_len(&inf->cur_line), TRUE);
+  fc_assert_ret_val(inf_sanity_check(inf), true);
+  fc_assert_ret_val(inf->cur_line_pos <= astr_len(&inf->cur_line), true);
 
   return (inf->cur_line_pos >= astr_len(&inf->cur_line));
 }
@@ -323,7 +322,7 @@ static bool at_eol(struct inputfile *inf)
  ***********************************************************************/
 bool inf_at_eof(struct inputfile *inf)
 {
-  fc_assert_ret_val(inf_sanity_check(inf), TRUE);
+  fc_assert_ret_val(inf_sanity_check(inf), true);
   return inf->at_eof;
 }
 
@@ -430,7 +429,7 @@ static bool check_include(struct inputfile *inf)
   *new_inf = *inf;
   *inf = temp;
   inf->included_from = new_inf;
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -472,7 +471,7 @@ static bool read_a_line(struct inputfile *inf)
       if (pos > 0) {
         qCCritical(inf_category, _("End-of-file not in line of its own"));
       }
-      inf->at_eof = TRUE;
+      inf->at_eof = true;
       if (inf->in_string) {
         /* Note: Don't allow multi-line strings to cross "include"
          * boundaries */
@@ -512,7 +511,7 @@ static bool read_a_line(struct inputfile *inf)
     if (check_include(inf)) {
       return read_a_line(inf);
     }
-    return TRUE;
+    return true;
   } else {
     astr_clear(line);
     if (inf->included_from) {
@@ -814,7 +813,7 @@ static const char *get_token_value(struct inputfile *inf)
 
   /* allow gettext marker: */
   if (*c == '_' && *(c + 1) == '(') {
-    has_i18n_marking = TRUE;
+    has_i18n_marking = true;
     c += 2;
     while (*c != '\0' && QChar::isSpace(*c)) {
       c++;
@@ -875,7 +874,7 @@ static const char *get_token_value(struct inputfile *inf)
       ret = fz_fgets((char *) astr_str(&inf->token) + pos,
                      astr_capacity(&inf->token) - pos, fp);
       if (ret == NULL) {
-        eof = TRUE;
+        eof = true;
       } else {
         pos = astr_len(&inf->token);
         astr_reserve(&inf->token, pos + 200);
@@ -925,7 +924,7 @@ static const char *get_token_value(struct inputfile *inf)
 
   /* prepare for possibly multi-line string: */
   inf->string_start_line = inf->line_num;
-  inf->in_string = TRUE;
+  inf->in_string = true;
 
   partial = &inf->partial; /* abbreviation */
   astr_clear(partial);

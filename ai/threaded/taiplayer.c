@@ -83,7 +83,7 @@ static void tai_thread_start(void *arg)
     thrai.msgs_to.thr_cond.wait(&thrai.msgs_to.mutex);
 
     if (tai_check_messages(ait) <= TAI_ABORT_EXIT) {
-      finished = TRUE;
+      finished = true;
     }
   }
 
@@ -205,7 +205,7 @@ void tai_control_gained(struct ai_type *ait, struct player *pplayer)
     thrai.msgs_to.msglist = taimsg_list_new();
     thrai.reqs_from.reqlist = taireq_list_new();
 
-    thrai.thread_running = TRUE;
+    thrai.thread_running = true;
 
     thrai.ait->set_func(tai_thread_start, ait);
     thrai.ait->start(QThread::NormalPriority);
@@ -255,7 +255,7 @@ void tai_refresh(struct ai_type *ait, struct player *pplayer)
         tai_req_worker_task_rcv(req);
         break;
       case TAI_REQ_TURN_DONE:
-        req->plr->ai_phase_done = TRUE;
+        req->plr->ai_phase_done = true;
         break;
       }
 

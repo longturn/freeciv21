@@ -576,7 +576,7 @@ bool fc_ai_threaded_setup(struct ai_type *ai)
 private
   = fc_malloc(sizeof(struct dai_private_data));
 private
-  ->contemplace_workers = TRUE;
+  ->contemplace_workers = true;
   ai->private = private;
 
   tai_init_self(ai);
@@ -647,5 +647,5 @@ private
 
   ai->funcs.refresh = twai_refresh;
 
-  return TRUE;
+  return true;
 }

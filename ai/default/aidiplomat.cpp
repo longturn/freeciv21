@@ -408,7 +408,7 @@ static bool is_city_surrounded_by_our_spies(struct player *pplayer,
     {
       if (unit_owner(punit) == pplayer
           && aia_utype_is_considered_spy(unit_type_get(punit))) {
-        return TRUE;
+        return true;
       }
     }
     unit_list_iterate_end;
@@ -620,7 +620,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
     newval = ATTACK_POWER(ptype);
     if (newval > bestval && unit_move_rate(pvictim) > pos.total_MC) {
       /* Enemy can probably kill us */
-      threat = TRUE;
+      threat = true;
     } else {
       /* Enemy cannot reach us or probably not kill us */
       threat = false;
@@ -668,7 +668,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
                      ACTION_SPY_BRIBE_UNIT);
       /* autoattack might kill us as we move in */
       if (game_unit_by_number(sanity) && punit->moves_left > 0) {
-        return TRUE;
+        return true;
       } else {
         return false;
       }
@@ -680,7 +680,7 @@ static bool dai_diplomat_bribe_nearby(struct ai_type *ait,
                      ACTION_SPY_SABOTAGE_UNIT_ESC);
       /* autoattack might kill us as we move in */
       if (game_unit_by_number(sanity) && punit->moves_left > 0) {
-        return TRUE;
+        return true;
       } else {
         return false;
       }
@@ -745,7 +745,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
       UNIT_LOG(LOG_DIPLOMAT, punit, "stays to protect %s (urg %d)",
                city_name_get(pcity), city_data->urgency);
       dai_unit_new_task(ait, punit, AIUNIT_NONE, NULL); /* abort mission */
-      def_ai_unit_data(punit, ait)->done = TRUE;
+      def_ai_unit_data(punit, ait)->done = true;
       pf_map_destroy(pfm);
       return;
     }
@@ -761,20 +761,20 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
     ctarget = tile_city(punit->goto_tile);
     if (pf_map_position(pfm, punit->goto_tile, &pos) && ctarget) {
       if (same_pos(ctarget->tile, unit_tile(punit))) {
-        failure = TRUE;
+        failure = true;
       } else if (pplayers_allied(pplayer, city_owner(ctarget))
                  && unit_data->task == AIUNIT_ATTACK
                  && player_has_embassy(pplayer, city_owner(ctarget))) {
         /* We probably incited this city with another diplomat */
-        failure = TRUE;
+        failure = true;
       } else if (!pplayers_allied(pplayer, city_owner(ctarget))
                  && unit_data->task == AIUNIT_DEFEND_HOME) {
         /* We probably lost the city */
-        failure = TRUE;
+        failure = true;
       }
     } else {
       /* City vanished! */
-      failure = TRUE;
+      failure = true;
     }
     if (failure) {
       UNIT_LOG(LOG_DIPLOMAT, punit, "mission aborted");
@@ -813,8 +813,8 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
       UNIT_LOG(LOG_DIPLOMAT, punit, "going to defend %s",
                city_name_get(ctarget));
     } else if ((ctarget =
-                    find_closest_city(unit_tile(punit), NULL, pplayer, TRUE,
-                                      false, false, TRUE, false, NULL))
+                    find_closest_city(unit_tile(punit), NULL, pplayer, true,
+                                      false, false, true, false, NULL))
                != NULL) {
       /* This should only happen if the entire continent was suddenly
        * conquered. So we head for closest coastal city and wait for someone
@@ -823,7 +823,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
       UNIT_LOG(LOG_DIPLOMAT, punit, "going idle");
     } else {
       UNIT_LOG(LOG_DIPLOMAT, punit, "could not find a job");
-      def_ai_unit_data(punit, ait)->done = TRUE;
+      def_ai_unit_data(punit, ait)->done = true;
       pf_map_destroy(pfm);
       return;
     }
@@ -863,7 +863,7 @@ void dai_manage_diplomat(struct ai_type *ait, struct player *pplayer,
     }
     pf_path_destroy(path);
   } else {
-    def_ai_unit_data(punit, ait)->done = TRUE;
+    def_ai_unit_data(punit, ait)->done = true;
   }
   pf_map_destroy(pfm);
 }

@@ -267,7 +267,7 @@ bool global_worklist_set(struct global_worklist *pgwl,
 {
   if (pgwl && pgwl->status == STATUS_WORKLIST && pwl) {
     worklist_copy(&pgwl->worklist, pwl);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -383,7 +383,7 @@ static bool global_worklist_load(struct section_file *file, const char *path,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**

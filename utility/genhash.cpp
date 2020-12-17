@@ -286,7 +286,7 @@ struct genhash *genhash_new(genhash_val_fn_t key_val_func,
 void genhash_destroy(struct genhash *pgenhash)
 {
   fc_assert_ret(NULL != pgenhash);
-  pgenhash->no_shrink = TRUE;
+  pgenhash->no_shrink = true;
   genhash_clear(pgenhash);
   free(pgenhash->buckets);
   delete pgenhash;
@@ -327,7 +327,7 @@ static void genhash_resize_table(struct genhash *pgenhash,
    entries.  But for determining new size, ignore deleted entries,
    since they'll be removed by rehashing.
  ****************************************************************************/
-#define genhash_maybe_expand(htab) genhash_maybe_resize((htab), TRUE)
+#define genhash_maybe_expand(htab) genhash_maybe_resize((htab), true)
 #define genhash_maybe_shrink(htab) genhash_maybe_resize((htab), false)
 static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
 {
@@ -364,7 +364,7 @@ static bool genhash_maybe_resize(struct genhash *pgenhash, bool expandingp)
             (long unsigned) new_nbuckets, expandingp ? "up" : "down",
             (long unsigned) limit);
   genhash_resize_table(pgenhash, new_nbuckets);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -614,7 +614,7 @@ bool genhash_insert(struct genhash *pgenhash, const void *key,
     }
     genhash_slot_create(pgenhash, slot, key, data, hash_val);
     pgenhash->num_entries++;
-    return TRUE;
+    return true;
   }
 }
 
@@ -655,7 +655,7 @@ bool genhash_replace_full(struct genhash *pgenhash, const void *key,
     /* Replace. */
     genhash_slot_get(slot, old_pkey, old_pdata);
     genhash_slot_set(pgenhash, slot, key, data);
-    return TRUE;
+    return true;
   } else {
     /* Insert. */
     if (genhash_maybe_expand(pgenhash)) {
@@ -684,7 +684,7 @@ bool genhash_lookup(const struct genhash *pgenhash, const void *key,
   slot = genhash_slot_lookup(pgenhash, key, genhash_val_calc(pgenhash, key));
   if (NULL != *slot) {
     genhash_slot_get(slot, NULL, pdata);
-    return TRUE;
+    return true;
   } else {
     genhash_default_get(NULL, pdata);
     return false;
@@ -722,7 +722,7 @@ bool genhash_remove_full(struct genhash *pgenhash, const void *key,
     genhash_maybe_shrink(pgenhash);
     fc_assert(0 < pgenhash->num_entries);
     pgenhash->num_entries--;
-    return TRUE;
+    return true;
   } else {
     genhash_default_get(deleted_pkey, deleted_pdata);
     return false;
@@ -750,7 +750,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
 
   /* Check pointers. */
   if (pgenhash1 == pgenhash2) {
-    return TRUE;
+    return true;
   } else if (NULL == pgenhash1 || NULL == pgenhash2) {
     return false;
   }
@@ -779,7 +779,7 @@ bool genhashs_are_equal_full(const struct genhash *pgenhash1,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

@@ -273,7 +273,7 @@ const char *nation_leader_name(const struct nation_leader *pleader)
  ****************************************************************************/
 bool nation_leader_is_male(const struct nation_leader *pleader)
 {
-  fc_assert_ret_val(NULL != pleader, TRUE);
+  fc_assert_ret_val(NULL != pleader, true);
   return pleader->is_male;
 }
 
@@ -804,7 +804,7 @@ bool nation_is_in_set(const struct nation_type *pnation,
   nation_set_list_iterate(pnation->sets, aset)
   {
     if (aset == pset) {
-      return TRUE;
+      return true;
     }
   }
   nation_set_list_iterate_end;
@@ -1009,7 +1009,7 @@ void nation_group_set_match(struct nation_group *pgroup, int match)
  ****************************************************************************/
 bool is_nation_group_hidden(struct nation_group *pgroup)
 {
-  fc_assert_ret_val(NULL != pgroup, TRUE);
+  fc_assert_ret_val(NULL != pgroup, true);
   return pgroup->hidden;
 }
 
@@ -1057,7 +1057,7 @@ bool nation_is_in_group(const struct nation_type *pnation,
   nation_group_list_iterate(pnation->groups, agroup)
   {
     if (agroup == pgroup) {
-      return TRUE;
+      return true;
     }
   }
   nation_group_list_iterate_end;
@@ -1172,7 +1172,7 @@ int nations_match(const struct nation_type *pnation1,
     nation_list_iterate(pnation1->server.conflicts_with, pnation0)
     {
       if (pnation0 == pnation2) {
-        in_conflict = TRUE;
+        in_conflict = true;
         sum = 1; /* Be sure to returns something negative. */
         break;
       }
@@ -1183,7 +1183,7 @@ int nations_match(const struct nation_type *pnation1,
       nation_list_iterate(pnation2->server.conflicts_with, pnation0)
       {
         if (pnation0 == pnation1) {
-          in_conflict = TRUE;
+          in_conflict = true;
           sum = 1; /* Be sure to returns something negative. */
           break;
         }

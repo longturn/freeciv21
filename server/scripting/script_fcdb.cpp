@@ -105,16 +105,16 @@ static struct fc_lua *fcl = NULL;
  *****************************************************************************/
 static void script_fcdb_functions_define(void)
 {
-  luascript_func_add(fcl, "database_init", TRUE, 0, 0);
-  luascript_func_add(fcl, "database_free", TRUE, 0, 0);
+  luascript_func_add(fcl, "database_init", true, 0, 0);
+  luascript_func_add(fcl, "database_free", true, 0, 0);
 
-  luascript_func_add(fcl, "user_exists", TRUE, 1, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_exists", true, 1, 1, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
-  luascript_func_add(fcl, "user_verify", TRUE, 2, 1, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_verify", true, 2, 1, API_TYPE_CONNECTION,
                      API_TYPE_STRING, API_TYPE_BOOL);
   luascript_func_add(fcl, "user_save", false, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_STRING);
-  luascript_func_add(fcl, "user_log", TRUE, 2, 0, API_TYPE_CONNECTION,
+  luascript_func_add(fcl, "user_log", true, 2, 0, API_TYPE_CONNECTION,
                      API_TYPE_BOOL);
   luascript_func_add(fcl, "user_delegate_to", false, 3, 1,
                      API_TYPE_CONNECTION, API_TYPE_PLAYER, API_TYPE_STRING,
@@ -129,7 +129,7 @@ static void script_fcdb_functions_define(void)
  *****************************************************************************/
 static bool script_fcdb_functions_check(const char *fcdb_luafile)
 {
-  bool ret = TRUE;
+  bool ret = true;
   QVector<QString> *missing_func_required = new QVector<QString>;
   QVector<QString> *missing_func_optional = new QVector<QString>;
 
@@ -227,7 +227,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
   if (fcl != NULL) {
     fc_assert_ret_val(fcl->state != NULL, false);
 
-    return TRUE;
+    return true;
   }
 
   if (!fcdb_luafile) {
@@ -283,7 +283,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
   }
 #endif /* HAVE_FCDB */
 
-  return TRUE;
+  return true;
 }
 
 /*************************************************************************/ /**
@@ -294,7 +294,7 @@ bool script_fcdb_init(const char *fcdb_luafile)
  *****************************************************************************/
 bool script_fcdb_call(const char *func_name, ...)
 {
-  bool success = TRUE;
+  bool success = true;
 #ifdef HAVE_FCDB
 
   va_list args;
@@ -351,6 +351,6 @@ bool script_fcdb_do_string(struct connection *caller, const char *str)
 
   return (status == 0);
 #else
-  return TRUE;
+  return true;
 #endif /* HAVE_FCDB */
 }

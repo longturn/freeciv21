@@ -228,7 +228,7 @@ void tab_enabler::update_enabler_info(struct action_enabler *enabler)
       /* Offer to repair the enabler if it has a problem. */
       /* TRANS: Fix an error in an action enabler. */
       repair_button->setText(QString::fromUtf8(R__("Repair Enabler")));
-      repair_button->setEnabled(TRUE);
+      repair_button->setEnabled(true);
       break;
     case RVPS_IMPROVE:
       /* TRANS: Fix a non error issue in an action enabler. */

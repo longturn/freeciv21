@@ -47,11 +47,11 @@ static bool effect_list_universal_needed_cb(struct effect *peffect,
 
   if (universal_is_mentioned_by_requirements(&peffect->reqs, cbdata->uni)) {
     cbdata->cb(R__("Effect"), cbdata->requirers_data);
-    cbdata->needed = TRUE;
+    cbdata->needed = true;
   }
 
   /* Always continue to next until all effects checked */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -69,7 +69,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   {
     if (universal_is_mentioned_by_requirements(&pdis->reqs, uni)) {
       cb(disaster_rule_name(pdis), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   disaster_type_iterate_end;
@@ -80,7 +80,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
         || universal_is_mentioned_by_requirements(&pimprove->obsolete_by,
                                                   uni)) {
       cb(improvement_rule_name(pimprove), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   improvement_iterate_end;
@@ -89,7 +89,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   {
     if (universal_is_mentioned_by_requirements(&pgov->reqs, uni)) {
       cb(government_rule_name(pgov), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   governments_iterate_end;
@@ -100,7 +100,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
 
     if (universal_is_mentioned_by_requirements(&psp->reqs, uni)) {
       cb(specialist_rule_name(psp), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   specialist_type_iterate_end;
@@ -110,7 +110,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
     if (universal_is_mentioned_by_requirements(&pextra->reqs, uni)
         || universal_is_mentioned_by_requirements(&pextra->rmreqs, uni)) {
       cb(extra_rule_name(pextra), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   extra_type_iterate_end;
@@ -119,7 +119,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   {
     if (universal_is_mentioned_by_requirements(&pgood->reqs, uni)) {
       cb(goods_rule_name(pgood), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   goods_type_iterate_end;
@@ -132,7 +132,7 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
           || universal_is_mentioned_by_requirements(&(enabler->target_reqs),
                                                     uni)) {
         cb(R__("Action Enabler"), data);
-        needed = TRUE;
+        needed = true;
       }
     }
     action_enabler_list_iterate_end;
@@ -142,21 +142,21 @@ static bool is_universal_needed(struct universal *uni, requirers_cb cb,
   for (i = 0; i < game.control.styles_count; i++) {
     if (universal_is_mentioned_by_requirements(&city_styles[i].reqs, uni)) {
       cb(city_style_rule_name(i), data);
-      needed = TRUE;
+      needed = true;
     }
   }
 
   music_styles_iterate(pmus)
   {
     if (universal_is_mentioned_by_requirements(&pmus->reqs, uni)) {
-      needed_by_music_style = TRUE;
+      needed_by_music_style = true;
     }
   }
   music_styles_iterate_end;
 
   if (needed_by_music_style) {
     cb(R__("Music Style"), data);
-    needed = TRUE;
+    needed = true;
   }
 
   cb_data.needed = false;
@@ -184,7 +184,7 @@ bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data)
         || pdependant->require[AR_TWO] == padv
         || pdependant->require[AR_ROOT] == padv) {
       cb(advance_rule_name(pdependant), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   advance_iterate_end;
@@ -193,7 +193,7 @@ bool is_tech_needed(struct advance *padv, requirers_cb cb, void *data)
   {
     if (ptype->require_advance == padv) {
       cb(utype_rule_name(ptype), data);
-      needed = TRUE;
+      needed = true;
     }
   }
   unit_type_iterate_end;
@@ -330,11 +330,11 @@ static bool effect_list_multiplier_cb(struct effect *peffect, void *data)
 
   if (peffect->multiplier == cbdata->pmul) {
     cbdata->cb(R__("Effect"), cbdata->requirers_data);
-    cbdata->needed = TRUE;
+    cbdata->needed = true;
   }
 
   /* Always continue to next until all effects checked */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

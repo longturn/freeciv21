@@ -270,7 +270,7 @@ bool conn_can_vote(const struct connection *pconn, const struct vote *pvote)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -285,7 +285,7 @@ bool conn_can_see_vote(const struct connection *pconn,
 
   if (conn_is_global_observer(pconn)) {
     /* All is visible for global observer. */
-    return TRUE;
+    return true;
   }
 
   if (vote_is_team_only(pvote)) {
@@ -299,7 +299,7 @@ bool conn_can_see_vote(const struct connection *pconn,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -497,7 +497,7 @@ static void check_vote(struct vote *pvote)
     }
 
     if (flags & VCF_NODISSENT && no_pc > MY_EPSILON) {
-      resolve = TRUE;
+      resolve = true;
     }
 
     if (!resolve) {
@@ -515,17 +515,17 @@ static void check_vote(struct vote *pvote)
 
     /* Resolve if everyone voted already. */
     if (!resolve && fabs(rem_pc) < MY_EPSILON) {
-      resolve = TRUE;
+      resolve = true;
     }
 
     /* Resolve this vote if it has been around long enough. */
     if (!resolve && pvote->turn_count > 1) {
-      resolve = TRUE;
+      resolve = true;
     }
 
     /* Resolve this vote if everyone tries to abstain. */
     if (!resolve && fabs(base) < MY_EPSILON) {
-      resolve = TRUE;
+      resolve = true;
     }
   }
 

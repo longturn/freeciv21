@@ -324,7 +324,7 @@ static bool send_to_metaserver(enum meta_flag flag)
 
       players_iterate(plr)
       {
-        bool is_player_available = TRUE;
+        bool is_player_available = true;
         struct connection *pconn = conn_by_user(plr->username);
 
         QLatin1String type;
@@ -441,7 +441,7 @@ static bool send_to_metaserver(enum meta_flag flag)
   meta_srv_thread->set_func(send_metaserver_post, post);
   meta_srv_thread->start(QThread::NormalPriority);
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -465,11 +465,11 @@ bool server_open_meta(bool persistent)
     set_meta_message_string(default_meta_message_string());
   }
 
-  server_is_open = TRUE;
+  server_is_open = true;
   persistent_meta_connection = persistent;
   meta_retry_wait = 0;
 
-  return TRUE;
+  return true;
 }
 
 /*********************************************************************/ /**
@@ -509,7 +509,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
     meta_srv_thread->wait();
     meta_srv_thread->quit();
 
-    return TRUE;
+    return true;
   }
 
   /* don't allow the user to spam the metaserver with updates */
@@ -517,7 +517,7 @@ bool send_server_info_to_metaserver(enum meta_flag flag)
       && (timer_read_seconds(last_send_timer)
           < METASERVER_MIN_UPDATE_INTERVAL)) {
     if (flag == META_INFO) {
-      want_update = TRUE; /* we couldn't update now, but update a.s.a.p. */
+      want_update = true; /* we couldn't update now, but update a.s.a.p. */
     }
     return false;
   }

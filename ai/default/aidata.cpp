@@ -157,7 +157,7 @@ void dai_data_phase_begin(struct ai_type *ait, struct player *pplayer,
     return;
   }
 
-  ai->phase_initialized = TRUE;
+  ai->phase_initialized = true;
 
   adv = adv_data_get(pplayer, &caller_closes);
 
@@ -337,7 +337,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
                 player_name(pplayer));
       dai_data_phase_begin(ait, pplayer, false);
       if (caller_closes != NULL) {
-        *caller_closes = TRUE;
+        *caller_closes = true;
       } else {
         dai_data_phase_finished(ait, pplayer);
       }
@@ -345,7 +345,7 @@ struct ai_plr *dai_plr_data_get(struct ai_type *ait, struct player *pplayer,
   } else {
     if (!ai->phase_initialized && caller_closes != NULL) {
       dai_data_phase_begin(ait, pplayer, false);
-      *caller_closes = TRUE;
+      *caller_closes = true;
     }
   }
 
@@ -483,7 +483,7 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
           needs_back_rearrange = false;
-          better_found = TRUE;
+          better_found = true;
         }
       }
 
@@ -510,14 +510,14 @@ void dai_adjust_policies(struct ai_type *ait, struct player *pplayer)
           pplayer->multipliers_target[pidx] = pplayer->multipliers[pidx];
 
           needs_back_rearrange = false;
-          better_found = TRUE;
+          better_found = true;
         }
       }
 
       if (!better_found) {
         /* Restore original multiplier value */
         pplayer->multipliers[pidx] = mp_val;
-        needs_back_rearrange = TRUE;
+        needs_back_rearrange = true;
       }
     }
   }
@@ -573,8 +573,8 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
 
     effect_list_iterate(get_req_source_effects(&source), peffect)
     {
-      bool present = TRUE;
-      bool active = TRUE;
+      bool present = true;
+      bool active = true;
 
       requirement_vector_iterate(&peffect->reqs, preq)
       {
@@ -632,5 +632,5 @@ void dai_gov_value(struct ai_type *ait, struct player *pplayer,
   requirement_vector_iterate_end;
   *val = amortize(*val, dist);
 
-  *override = TRUE;
+  *override = true;
 }

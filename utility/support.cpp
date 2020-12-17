@@ -384,7 +384,7 @@ char *fc_strrep_resize(char *str, size_t *len, const char *search,
 
   success = fc_strrep(str, (*len), search, replace);
   /* should never happen */
-  fc_assert_ret_val_msg(success == TRUE, NULL,
+  fc_assert_ret_val_msg(success == true, NULL,
                         "Can't replace '%s' by '%s' in '%s'. To small "
                         "size after reallocation: %lu.",
                         search, replace, str, (long unsigned int) *len);
@@ -405,7 +405,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
 
   fc_assert_ret_val(str != NULL, false);
   if (search == NULL || replace == NULL) {
-    return TRUE;
+    return true;
   }
 
   len_search = qstrlen(search);
@@ -429,7 +429,7 @@ bool fc_strrep(char *str, size_t len, const char *search,
     s = p + len_replace;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**

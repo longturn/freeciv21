@@ -322,7 +322,7 @@ bool editor_tool_has_mode(enum editor_tool_type ett,
     return etm == ETM_COPY || etm == ETM_PASTE;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -368,7 +368,7 @@ bool editor_tool_is_usable(enum editor_tool_type ett)
     break;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -428,7 +428,7 @@ static void editor_start_selection_rectangle(int canvas_x, int canvas_y)
   editor->selrect_start_y = canvas_y;
   editor->selrect_width = 0;
   editor->selrect_height = 0;
-  editor->selrect_active = TRUE;
+  editor->selrect_active = true;
 }
 
 /************************************************************************/ /**
@@ -445,7 +445,7 @@ static inline bool tile_really_has_any_specials(const struct tile *ptile)
   extra_type_by_cause_iterate(static_cast<extra_cause>(EC_SPECIAL), pextra)
   {
     if (tile_has_extra(ptile, pextra)) {
-      return TRUE;
+      return true;
     }
   }
   extra_type_by_cause_iterate_end;
@@ -684,7 +684,7 @@ void editor_mouse_button_press(int canvas_x, int canvas_y, int button,
     } else if (modifiers == EKM_CTRL) {
       editor_grab_applied_player(ptile);
     } else if (modifiers == EKM_NONE) {
-      editor->tool_active = TRUE;
+      editor->tool_active = true;
       editor_apply_tool(ptile, false);
       editor_notify_edit_finished();
       editor_set_current_tile(ptile);
@@ -747,7 +747,7 @@ static void editor_end_selection_rectangle(int canvas_x, int canvas_y)
     }
 
     if (ptile) {
-      refresh_tile_mapcanvas(ptile, TRUE, TRUE);
+      refresh_tile_mapcanvas(ptile, true, true);
     }
 
     return;
@@ -1068,7 +1068,7 @@ void editor_tool_cycle_mode(enum editor_tool_type ett)
   for (count = 0; count < NUM_EDITOR_TOOL_MODES; count++) {
     mode = (mode + 1) % NUM_EDITOR_TOOL_MODES;
     if (editor_tool_has_mode(ett, static_cast<editor_tool_mode>(mode))) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
@@ -1143,7 +1143,7 @@ void editor_apply_tool_to_selection(void)
 
   connection_do_buffer(&client.conn);
   for (auto ptile : *editor->selected_tile_table) {
-    editor_apply_tool(ptile, TRUE);
+    editor_apply_tool(ptile, true);
   }
   editor_notify_edit_finished();
   connection_do_unbuffer(&client.conn);
@@ -1509,13 +1509,13 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
     case EBT_TERRAIN:
       if (tile_terrain(ptile)) {
         tile_set_terrain(vtile, tile_terrain(ptile));
-        copied = TRUE;
+        copied = true;
       }
       break;
     case EBT_RESOURCE:
       if (tile_resource(ptile)) {
         tile_set_resource(vtile, tile_resource(ptile));
-        copied = TRUE;
+        copied = true;
       }
       break;
     case EBT_SPECIAL:
@@ -1524,7 +1524,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
       {
         if (tile_has_extra(ptile, pextra)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1535,7 +1535,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         if (tile_has_extra(ptile, pextra)
             && is_extra_caused_by(pextra, EC_BASE)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_iterate_end;
@@ -1546,7 +1546,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         if (tile_has_extra(ptile, pextra)
             && is_extra_caused_by(pextra, EC_ROAD)) {
           tile_add_extra(vtile, pextra);
-          copied = TRUE;
+          copied = true;
         }
       }
       extra_type_iterate_end;
@@ -1562,7 +1562,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         vunit->homecity = punit->homecity;
         vunit->hp = punit->hp;
         unit_list_append(vtile->units, vunit);
-        copied = TRUE;
+        copied = true;
       }
       unit_list_iterate_end;
       break;
@@ -1585,7 +1585,7 @@ void edit_buffer_copy(struct edit_buffer *ebuf, const struct tile *ptile)
         }
         improvement_iterate_end;
         tile_set_worked(vtile, vcity);
-        copied = TRUE;
+        copied = true;
       }
       break;
     default:
@@ -1670,7 +1670,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
       {
         if (tile_has_extra(vtile, pextra)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1681,7 +1681,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
       {
         if (tile_has_extra(vtile, pextra)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_by_cause_iterate_end;
@@ -1692,7 +1692,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
         if (tile_has_extra(vtile, pextra)
             && is_extra_caused_by(pextra, EC_BASE)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_iterate_end;
@@ -1703,7 +1703,7 @@ static void paste_tile(struct edit_buffer *ebuf, const struct tile *vtile,
         if (tile_has_extra(vtile, pextra)
             && is_extra_caused_by(pextra, EC_ROAD)) {
           BV_SET(tile_packet.extras, extra_index(pextra));
-          send_edit_tile = TRUE;
+          send_edit_tile = true;
         }
       }
       extra_type_iterate_end;

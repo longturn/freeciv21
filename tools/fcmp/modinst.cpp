@@ -74,10 +74,10 @@ void load_install_info_lists(struct fcmp_params *fcmp)
   }
 
   if (fc_stat(scenario_db_filename, &buf)) {
-    create_mpdb(scenario_db_filename, TRUE);
+    create_mpdb(scenario_db_filename, true);
     load_install_info_list(scenario_ii_filename);
   } else {
-    open_mpdb(scenario_db_filename, TRUE);
+    open_mpdb(scenario_db_filename, true);
   }
 }
 

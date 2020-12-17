@@ -97,7 +97,7 @@ bv_extras get_tile_infrastructure_set(const struct tile *ptile, int *pcount)
           if (!are_reqs_active(NULL, NULL, NULL, NULL, missingset, NULL,
                                NULL, NULL, NULL, NULL, &pdependant->reqs,
                                RPT_POSSIBLE)) {
-            dependency = TRUE;
+            dependency = true;
             break;
           }
         }
@@ -305,14 +305,14 @@ void map_init_topology(void)
     if (is_valid_dir_calculate(direction8(dir))) {
       wld.map.valid_dirs[wld.map.num_valid_dirs] = direction8(dir);
       wld.map.num_valid_dirs++;
-      dir_validity[dir] = TRUE;
+      dir_validity[dir] = true;
     } else {
       dir_validity[dir] = false;
     }
     if (is_cardinal_dir_calculate(direction8(dir))) {
       wld.map.cardinal_dirs[wld.map.num_cardinal_dirs] = direction8(dir);
       wld.map.num_cardinal_dirs++;
-      dir_cardinality[dir] = TRUE;
+      dir_cardinality[dir] = true;
     } else {
       dir_cardinality[dir] = false;
     }
@@ -646,7 +646,7 @@ bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
   {
     if (tile_terrain(adjc_tile) != T_UNKNOWN
         && !terrain_has_flag(tile_terrain(adjc_tile), TER_UNSAFE_COAST)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -662,7 +662,7 @@ bool is_safe_ocean(const struct civ_map *nmap, const struct tile *ptile)
 bool can_reclaim_ocean(const struct tile *ptile)
 {
   int land_tiles =
-      100 - count_terrain_class_near_tile(ptile, false, TRUE, TC_OCEAN);
+      100 - count_terrain_class_near_tile(ptile, false, true, TC_OCEAN);
 
   return land_tiles >= terrain_control.ocean_reclaim_requirement_pct;
 }
@@ -675,7 +675,7 @@ bool can_reclaim_ocean(const struct tile *ptile)
 bool can_channel_land(const struct tile *ptile)
 {
   int ocean_tiles =
-      count_terrain_class_near_tile(ptile, false, TRUE, TC_OCEAN);
+      count_terrain_class_near_tile(ptile, false, true, TC_OCEAN);
 
   return ocean_tiles >= terrain_control.land_channel_requirement_pct;
 }
@@ -688,7 +688,7 @@ bool can_channel_land(const struct tile *ptile)
 bool can_thaw_terrain(const struct tile *ptile)
 {
   int unfrozen_tiles =
-      100 - count_terrain_flag_near_tile(ptile, false, TRUE, TER_FROZEN);
+      100 - count_terrain_flag_near_tile(ptile, false, true, TER_FROZEN);
 
   return unfrozen_tiles >= terrain_control.terrain_thaw_requirement_pct;
 }
@@ -701,7 +701,7 @@ bool can_thaw_terrain(const struct tile *ptile)
 bool can_freeze_terrain(const struct tile *ptile)
 {
   int frozen_tiles =
-      count_terrain_flag_near_tile(ptile, false, TRUE, TER_FROZEN);
+      count_terrain_flag_near_tile(ptile, false, true, TER_FROZEN);
 
   return frozen_tiles >= terrain_control.terrain_freeze_requirement_pct;
 }
@@ -713,7 +713,7 @@ bool can_freeze_terrain(const struct tile *ptile)
 bool terrain_surroundings_allow_change(const struct tile *ptile,
                                        const struct terrain *pterrain)
 {
-  bool ret = TRUE;
+  bool ret = true;
 
   if (is_ocean(tile_terrain(ptile)) && !is_ocean(pterrain)
       && !can_reclaim_ocean(ptile)) {
@@ -823,7 +823,7 @@ int tile_move_cost_ptrs(const struct civ_map *nmap, const struct unit *punit,
             if (!cardinality_checked) {
               cardinal_move = (ALL_DIRECTIONS_CARDINAL()
                                || is_move_cardinal(nmap, t1, t2));
-              cardinality_checked = TRUE;
+              cardinality_checked = true;
             }
             if (cardinal_move) {
               cost = proad->move_cost;
@@ -903,7 +903,7 @@ static bool restrict_infra(const struct player *pplayer,
 
   if ((plr1 && pplayers_at_war(plr1, pplayer))
       || (plr2 && pplayers_at_war(plr2, pplayer))) {
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -967,7 +967,7 @@ bool normalize_map_pos(const struct civ_map *nmap, int *x, int *y)
 
   if (ptile) {
     index_to_map_pos(x, y, tile_index(ptile));
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -1265,7 +1265,7 @@ static bool is_valid_dir_calculate(enum direction8 dir)
   case DIR8_EAST:
   case DIR8_SOUTH:
   case DIR8_WEST:
-    return TRUE;
+    return true;
   default:
     return false;
   }
@@ -1314,7 +1314,7 @@ static bool is_cardinal_dir_calculate(enum direction8 dir)
   case DIR8_SOUTH:
   case DIR8_EAST:
   case DIR8_WEST:
-    return TRUE;
+    return true;
   case DIR8_SOUTHEAST:
   case DIR8_NORTHWEST:
     /* These directions are cardinal in iso-hex topologies. */
@@ -1354,7 +1354,7 @@ bool base_get_direction_for_step(const struct civ_map *nmap,
   {
     if (same_pos(end_tile, test_tile)) {
       *dir = test_dir;
-      return TRUE;
+      return true;
     }
   }
   adjc_dir_iterate_end;
@@ -1391,7 +1391,7 @@ bool is_move_cardinal(const struct civ_map *nmap,
   cardinal_adjc_dir_iterate(nmap, start_tile, test_tile, test_dir)
   {
     if (same_pos(end_tile, test_tile)) {
-      return TRUE;
+      return true;
     }
   }
   cardinal_adjc_dir_iterate_end;
@@ -1495,7 +1495,7 @@ bool startpos_disallow(struct startpos *psp, struct nation_type *pnation)
   bool ret = psp->nations->contains(pnation);
   psp->nations->remove(pnation);
   if (0 == psp->nations->size() || psp->exclude) {
-    psp->exclude = TRUE; /* Enable "excluding" mode. */
+    psp->exclude = true; /* Enable "excluding" mode. */
   } else {
     psp->nations->insert(pnation);
   }
@@ -1548,7 +1548,7 @@ bool startpos_pack(const struct startpos *psp,
   for (auto pnation : *psp->nations) {
     BV_SET(packet->nations, nation_number(pnation));
   }
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**
@@ -1565,7 +1565,7 @@ bool startpos_unpack(struct startpos *psp,
 
   psp->nations->clear();
   if (!BV_ISSET_ANY(packet->nations)) {
-    return TRUE;
+    return true;
   }
   nations_iterate(pnation)
   {
@@ -1574,7 +1574,7 @@ bool startpos_unpack(struct startpos *psp,
     }
   }
   nations_iterate_end;
-  return TRUE;
+  return true;
 }
 
 /*******************************************************************/ /**

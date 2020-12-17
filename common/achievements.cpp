@@ -218,19 +218,19 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       } else {
         /* Client */
         if (ptile->terrain != T_UNKNOWN) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       }
 
       if (this_is_known) {
         known++;
         if (known >= required) {
-          return TRUE;
+          return true;
         }
       } else {
         unknown++;
@@ -260,7 +260,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
           count++;
           if (count >= ach->value) {
             /* There's at least value different nationalities. */
-            return TRUE;
+            return true;
           }
         }
       }
@@ -274,7 +274,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     city_list_iterate(pplayer->cities, pcity)
     {
       if (city_culture(pcity) >= ach->value) {
-        return TRUE;
+        return true;
       }
     }
     city_list_iterate_end;
@@ -282,7 +282,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     return false;
   case ACHIEVEMENT_CULTURED_NATION:
     if (player_culture(pplayer) >= ach->value) {
-      return TRUE;
+      return true;
     }
 
     return false;
@@ -294,7 +294,7 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
     city_list_iterate(pplayer->cities, pcity)
     {
       if (city_size_get(pcity) >= ach->value) {
-        return TRUE;
+        return true;
       }
     }
     city_list_iterate_end;
@@ -312,12 +312,12 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
 
       if (is_server()) {
         if (pplayer->tile_known->at(tile_index(ptile))) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       } else {
         /* Client */
         if (ptile->terrain != T_UNKNOWN) {
-          this_is_known = TRUE;
+          this_is_known = true;
         }
       }
 
@@ -326,9 +326,9 @@ bool achievement_check(struct achievement *ach, struct player *pplayer)
          *        to their current continent when they were last seen. */
         if (ptile->continent > 0 && !seen[ptile->continent - 1]) {
           if (++count >= ach->value) {
-            return TRUE;
+            return true;
           }
-          seen[ptile->continent - 1] = TRUE;
+          seen[ptile->continent - 1] = true;
         }
       }
     }

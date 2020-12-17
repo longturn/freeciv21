@@ -196,7 +196,7 @@
  *    pfm = pf_map_new(&parameter);
  *
  *    // iterate the map, using macros defined on this header.
- *    pf_map_*_iterate(pfm, something, TRUE) {
+ *    pf_map_*_iterate(pfm, something, true) {
  *      // do something
  *    } pf_map_*_iterate_end;
  *
@@ -207,24 +207,24 @@
  * should be:
  *
  *  1) tile iteration:
- *     pf_map_tiles_iterate(pfm, ptile, TRUE) {
+ *     pf_map_tiles_iterate(pfm, ptile, true) {
  *       // do something
  *     } pf_map_tiles_iterate_end;
  *
  *  2) move cost iteration on the nearest position:
- *     pf_map_move_costs_iterate(pfm, ptile, move_cost, TRUE) {
+ *     pf_map_move_costs_iterate(pfm, ptile, move_cost, true) {
  *       // do something
  *     } pf_map_move_costs_iterate_end;
  *
  *  3) information (for example the total MC and the number of turns) on the
  *  next nearest position:
- *     pf_map_positions_iterate(pfm, pos, TRUE) {
+ *     pf_map_positions_iterate(pfm, pos, true) {
  *       // do something
  *     } pf_map_positions_iterate_end;
  *
  *  4) information about the whole path (leading to the next nearest
  *  position):
- *     pf_map_paths_iterate(pfm, path, TRUE) {
+ *     pf_map_paths_iterate(pfm, path, true) {
  *       // do something
  *       pf_path_destroy(path);
  *     } pf_map_paths_iterate_end;
@@ -411,7 +411,7 @@ struct pf_parameter {
   bool (*get_zoc)(const struct player *pplayer, const struct tile *ptile,
                   const struct civ_map *zmap);
 
-  /* If this callback is non-NULL and returns TRUE this position is
+  /* If this callback is non-NULL and returns true this position is
    * dangerous. The unit will never end a turn at a dangerous
    * position. Can be NULL. */
   bool (*is_pos_dangerous)(const struct tile *ptile, enum known_type,

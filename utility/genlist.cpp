@@ -328,7 +328,7 @@ bool genlist_remove(struct genlist *pgenlist, const void *punlink)
   for (plink = pgenlist->head_link; NULL != plink; plink = plink->next) {
     if (plink->dataptr == punlink) {
       genlist_link_destroy(pgenlist, plink);
-      return TRUE;
+      return true;
     }
   }
 
@@ -380,7 +380,7 @@ bool genlist_remove_if(struct genlist *pgenlist,
     for (; NULL != plink; plink = plink->next) {
       if (cond_data_func(plink->dataptr)) {
         genlist_link_destroy(pgenlist, plink);
-        return TRUE;
+        return true;
       }
     }
   }

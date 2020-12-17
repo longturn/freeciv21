@@ -316,7 +316,7 @@ int assess_defense_quadratic(struct ai_type *ait, struct city *pcity)
 int assess_defense_unit(struct ai_type *ait, struct city *pcity,
                         struct unit *punit, bool igwall)
 {
-  return base_assess_defense_unit(pcity, punit, igwall, TRUE,
+  return base_assess_defense_unit(pcity, punit, igwall, true,
                                   def_ai_city_data(pcity, ait)->wallvalue);
 }
 
@@ -357,7 +357,7 @@ int assess_defense(struct ai_type *ait, struct city *pcity)
  **************************************************************************/
 static int assess_defense_igwall(struct ai_type *ait, struct city *pcity)
 {
-  return assess_defense_backend(ait, pcity, TRUE);
+  return assess_defense_backend(ait, pcity, true);
 }
 
 /**********************************************************************/ /**
@@ -540,7 +540,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
     const struct unit_type *def = unit_type_get(punit);
 
     if (unit_has_type_flag(punit, UTYF_DIPLOMAT)) {
-      city_data->has_diplomat = TRUE;
+      city_data->has_diplomat = true;
     }
     if (!defender_type_handled[utype_index(def)]) {
       /* This is first defender of this type. Check defender type
@@ -563,7 +563,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
         unit_type_iterate_end;
       }
 
-      defender_type_handled[utype_index(def)] = TRUE;
+      defender_type_handled[utype_index(def)] = true;
     }
   }
   unit_list_iterate_end;
@@ -636,7 +636,7 @@ static unsigned int assess_danger(struct ai_type *ait, struct city *pcity,
                                         vulnerability / MAX(move_time, 1));
 
       if (utype_acts_hostile(unit_type_get(punit)) && 2 >= move_time) {
-        city_data->diplomat_threat = TRUE;
+        city_data->diplomat_threat = true;
       }
 
       vulnerability *= vulnerability; /* positive feedback */
@@ -921,7 +921,7 @@ bool dai_process_defender_want(struct ai_type *ait, struct player *pplayer,
   choice->value.utype = best_unit_type;
   choice->want = danger;
   choice->type = CT_DEFENDER;
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1336,7 +1336,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
     /* Attract a boat to our city or retain the one that's already here */
     fc_assert_ret_val(unit_class_get(myunit)->adv.sea_move != MOVE_FULL,
                       choice);
-    best_choice->need_boat = TRUE;
+    best_choice->need_boat = true;
     process_attacker_want(ait, pcity, benefit, def_type, def_owner, def_vet,
                           ptile, best_choice, ferry_map, ferryboat,
                           boattype);
@@ -1358,7 +1358,7 @@ static struct adv_choice *kill_something_with(struct ai_type *ait,
       fc_assert_ret_val(unit_class_get(myunit)->adv.sea_move != MOVE_FULL,
                         choice);
       if (dai_choose_role_unit(ait, pplayer, pcity, choice, CT_ATTACKER,
-                               L_FERRYBOAT, choice->want, TRUE)
+                               L_FERRYBOAT, choice->want, true)
           && dai_is_ferry_type(choice->value.utype, ait)) {
 #ifdef FREECIV_DEBUG
         struct ai_plr *ai = dai_plr_data_get(ait, pplayer, NULL);
@@ -1488,7 +1488,7 @@ struct adv_choice *military_advisor_choose_build(
   if (pcity->feel[CITIZEN_UNHAPPY][FEELING_NATIONALITY]
           + pcity->feel[CITIZEN_ANGRY][FEELING_NATIONALITY]
       > 0) {
-    martial_need = TRUE;
+    martial_need = true;
   }
 
   if (!martial_need) {
@@ -1496,7 +1496,7 @@ struct adv_choice *military_advisor_choose_build(
     {
       if (pcity->specialists[sp] > 0
           && get_specialist_output(pcity, sp, O_LUXURY) > 0) {
-        martial_need = TRUE;
+        martial_need = true;
         break;
       }
     }
@@ -1516,7 +1516,7 @@ struct adv_choice *military_advisor_choose_build(
     struct impr_type *pimprove;
     int num_defenders = unit_list_size(ptile->units);
     int wall_id, danger;
-    bool build_walls = TRUE;
+    bool build_walls = true;
     int qdanger = city_data->danger * city_data->danger;
 
     /* First determine the danger.  It is measured in percents of our
@@ -1573,7 +1573,7 @@ struct adv_choice *military_advisor_choose_build(
               || (city_data->grave_danger == 0
                   && pplayer->economic.gold > impr_buy_gold_cost(
                          pcity, pimprove, pcity->shield_stock)))
-          && ai_fuzzy(pplayer, TRUE)) {
+          && ai_fuzzy(pplayer, true)) {
         if (pcity->server.adv->building_want[wall_id] > 0) {
           /* NB: great wall is under domestic */
           choice->value.building = pimprove;
@@ -1653,7 +1653,7 @@ struct adv_choice *military_advisor_choose_build(
     /* Always allow one unit with real gold upkeep (after
      * EFT_UNIT_UPKEEP_FREE_PER_CITY) Allow more if economics is so strong
      * that we have not increased taxes. */
-    allow_gold_upkeep = TRUE;
+    allow_gold_upkeep = true;
   } else {
     allow_gold_upkeep = false;
   }

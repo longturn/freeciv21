@@ -110,12 +110,12 @@ static void tai_tile_worker_task_select(
   if (tile_worked(ptile) == pcity && orig_value < state->worst_worked) {
     state->worst_worked = orig_value;
     state->orig_worst_worked = orig_value;
-    potential_worst_worked = TRUE;
+    potential_worst_worked = true;
   }
 
   as_transform_action_iterate(act)
   {
-    bool consider = TRUE;
+    bool consider = true;
     bool possible = false;
     struct extra_type *tgt = NULL;
     enum extra_cause cause;
@@ -149,8 +149,8 @@ static void tai_tile_worker_task_select(
       }
 
       if (action_prob_possible(action_speculate_unit_on_tile(
-              act, punit, unit_home(punit), ptile, TRUE, ptile, tgt))) {
-        possible = TRUE;
+              act, punit, unit_home(punit), ptile, true, ptile, tgt))) {
+        possible = true;
         break;
       }
     }
@@ -171,7 +171,7 @@ static void tai_tile_worker_task_select(
             unit_list_iterate(units, punit)
             {
               if (action_prob_possible(action_speculate_unit_on_tile(
-                      act, punit, unit_home(punit), ptile, TRUE, ptile,
+                      act, punit, unit_home(punit), ptile, true, ptile,
                       tgt))) {
                 state->wants[utype_index(unit_type_get(punit))] +=
                     worked->want;
@@ -198,7 +198,7 @@ static void tai_tile_worker_task_select(
             unit_list_iterate(units, punit)
             {
               if (action_prob_possible(action_speculate_unit_on_tile(
-                      act, punit, unit_home(punit), ptile, TRUE, ptile,
+                      act, punit, unit_home(punit), ptile, true, ptile,
                       tgt))) {
                 state->wants[utype_index(unit_type_get(punit))] +=
                     unworked->want;
@@ -225,7 +225,7 @@ static void tai_tile_worker_task_select(
           struct action *taction = action_by_number(try_act);
           if (is_extra_removed_by_action(tgt, taction)
               && action_prob_possible(action_speculate_unit_on_tile(
-                  try_act, punit, unit_home(punit), ptile, TRUE, ptile,
+                  try_act, punit, unit_home(punit), ptile, true, ptile,
                   tgt))) {
             paction = taction;
             break;
@@ -238,7 +238,7 @@ static void tai_tile_worker_task_select(
           struct action *taction = action_by_number(try_act);
           if (is_extra_caused_by_action(tgt, taction)
               && action_prob_possible(action_speculate_unit_on_tile(
-                  try_act, punit, unit_home(punit), ptile, TRUE, ptile,
+                  try_act, punit, unit_home(punit), ptile, true, ptile,
                   tgt))) {
             paction = taction;
             break;
@@ -253,7 +253,7 @@ static void tai_tile_worker_task_select(
       adv_want base_value;
       int value;
       adv_want extra;
-      bool consider = TRUE;
+      bool consider = true;
       struct road_type *proad;
 
       /* Do not request activities that already are under way. */
@@ -339,7 +339,7 @@ static void tai_tile_worker_task_select(
               fc_assert_action(action_get_target_kind(paction) == ATK_TILE,
                                break);
               if (action_prob_possible(action_speculate_unit_on_tile(
-                      paction->id, punit, unit_home(punit), ptile, TRUE,
+                      paction->id, punit, unit_home(punit), ptile, true,
                       ptile, tgt))) {
                 state->wants[utype_index(unit_type_get(punit))] +=
                     worked->want;
@@ -368,7 +368,7 @@ static void tai_tile_worker_task_select(
               fc_assert_action(action_get_target_kind(paction) == ATK_TILE,
                                break);
               if (action_prob_possible(action_speculate_unit_on_tile(
-                      paction->id, punit, unit_home(punit), ptile, TRUE,
+                      paction->id, punit, unit_home(punit), ptile, true,
                       ptile, tgt))) {
                 state->wants[utype_index(unit_type_get(punit))] +=
                     unworked->want;
@@ -480,7 +480,7 @@ tai_city_worker_task_select(struct ai_type *ait, struct player *pplayer,
     task->tgt = target;
     task->want = selected->want;
 
-    return TRUE;
+    return true;
   }
 
   return false;

@@ -286,10 +286,10 @@ bool script_server_init(void)
   if (fcl_main != NULL) {
     fc_assert_ret_val(fcl_main->state != NULL, false);
 
-    return TRUE;
+    return true;
   }
 
-  fcl_main = luascript_new(NULL, TRUE);
+  fcl_main = luascript_new(NULL, true);
   if (fcl_main == NULL) {
     luascript_destroy(fcl_main);
     fcl_main = NULL;
@@ -335,7 +335,7 @@ bool script_server_init(void)
   luascript_signal_init(fcl_unsafe);
   luascript_func_init(fcl_unsafe);
 
-  return TRUE;
+  return true;
 }
 
 /***********************************************************************/ /**

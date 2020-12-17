@@ -132,7 +132,7 @@ void establish_new_connection(struct connection *pconn)
   memset(pconn->server.password, 0, sizeof(pconn->server.password));
 
   /* send join_reply packet */
-  packet.you_can_join = TRUE;
+  packet.you_can_join = true;
   sz_strlcpy(packet.capability, our_capability);
   fc_snprintf(packet.message, sizeof(packet.message), _("%s Welcome"),
               pconn->username);
@@ -141,7 +141,7 @@ void establish_new_connection(struct connection *pconn)
   send_packet_server_join_reply(pconn, &packet);
 
   /* "establish" the connection */
-  pconn->established = TRUE;
+  pconn->established = true;
   pconn->server.status = AS_ESTABLISHED;
 
   pconn->server.delegation.status = false;
@@ -211,14 +211,14 @@ void establish_new_connection(struct connection *pconn)
       notify_conn(dest, NULL, E_CONNECTION, ftc_server,
                   _("Couldn't get control of '%s' from delegation to %s."),
                   player_name(pplayer), pdelegate->username);
-      delegation_error = TRUE;
+      delegation_error = true;
       pplayer = NULL;
     }
   }
 
   if (!delegation_error) {
     if ((pplayer = player_by_user(pconn->username))
-        && connection_attach_real(pconn, pplayer, false, TRUE)) {
+        && connection_attach_real(pconn, pplayer, false, true)) {
       /* a player has already been created for this user, reconnect */
 
       if (S_S_INITIAL == server_state()) {
@@ -226,7 +226,7 @@ void establish_new_connection(struct connection *pconn)
       }
     } else {
       if (!game_was_started()) {
-        if (connection_attach_real(pconn, NULL, false, TRUE)) {
+        if (connection_attach_real(pconn, NULL, false, true)) {
           pplayer = conn_get_player(pconn);
           fc_assert(pplayer != NULL);
         } else {
@@ -243,7 +243,7 @@ void establish_new_connection(struct connection *pconn)
 
   if (NULL == pplayer) {
     /* Else this has already been done in connection_attach_real(). */
-    send_pending_events(pconn, TRUE);
+    send_pending_events(pconn, true);
     send_running_votes(pconn, false);
     restore_access_level(pconn);
     send_conn_info(dest, game.est_connections);
@@ -305,7 +305,7 @@ void establish_new_connection(struct connection *pconn)
 
   if (NULL != pplayer) {
     /* Else, no need to do anything. */
-    reset_all_start_commands(TRUE);
+    reset_all_start_commands(true);
     (void) send_server_info_to_metaserver(META_INFO);
   }
 
@@ -464,7 +464,7 @@ bool handle_login_request(struct connection *pconn,
   } else {
     sz_strlcpy(pconn->username, req->username);
     establish_new_connection(pconn);
-    return TRUE;
+    return true;
   }
 }
 
@@ -480,7 +480,7 @@ void lost_connection_to_client(struct connection *pconn)
 {
   const char *desc = conn_description(pconn);
 
-  fc_assert_ret(TRUE == pconn->server.is_closing);
+  fc_assert_ret(true == pconn->server.is_closing);
 
   qInfo(_("Lost connection: %s."), desc);
 
@@ -489,7 +489,7 @@ void lost_connection_to_client(struct connection *pconn)
               conn_controls_player(pconn) ? ftc_player_lost : ftc_server,
               _("Lost connection: %s."), desc);
 
-  connection_detach(pconn, TRUE);
+  connection_detach(pconn, true);
   send_conn_info_remove(pconn->self, game.est_connections);
   notify_if_first_access_level_is_available();
 
@@ -556,7 +556,7 @@ void send_conn_info(struct conn_list *src, struct conn_list *dest)
  **************************************************************************/
 void send_conn_info_remove(struct conn_list *src, struct conn_list *dest)
 {
-  send_conn_info_arg(src, dest, TRUE);
+  send_conn_info_arg(src, dest, true);
 }
 
 /**********************************************************************/ /**
@@ -624,7 +624,7 @@ static bool connection_attach_real(struct connection *pconn,
       } else {
         team_remove_player(pplayer);
       }
-      server_player_init(pplayer, false, TRUE);
+      server_player_init(pplayer, false, true);
 
       /* Make it human! */
       set_as_human(pplayer);
@@ -633,7 +633,7 @@ static bool connection_attach_real(struct connection *pconn,
     sz_strlcpy(pplayer->username, pconn->username);
     pplayer->unassigned_user = false;
     pplayer->user_turns = 0; /* reset for a new user */
-    pplayer->is_connected = TRUE;
+    pplayer->is_connected = true;
 
     if (!game_was_started()) {
       if (!pplayer->was_created && NULL == pplayer->nation) {
@@ -660,7 +660,7 @@ static bool connection_attach_real(struct connection *pconn,
     conn_list_iterate(game.glob_observers, pconn2)
     {
       if (pconn2 == pconn) {
-        already = TRUE;
+        already = true;
         break;
       }
     }
@@ -677,7 +677,7 @@ static bool connection_attach_real(struct connection *pconn,
     if (aplayer != pplayer
         && 0 == strncmp(aplayer->username, pconn->username, MAX_LEN_NAME)) {
       sz_strlcpy(aplayer->username, _(ANON_USER_NAME));
-      aplayer->unassigned_user = TRUE;
+      aplayer->unassigned_user = true;
       send_player_info_c(aplayer, NULL);
     }
   }
@@ -737,7 +737,7 @@ static bool connection_attach_real(struct connection *pconn,
 
   send_updated_vote_totals(NULL);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -783,7 +783,7 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
     conn_list_iterate(pplayer->connections, aconn)
     {
       if (!aconn->observer) {
-        pplayer->is_connected = TRUE;
+        pplayer->is_connected = true;
         break;
       }
     }
@@ -802,14 +802,14 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
                       _("Detaching from %s."), player_name(pplayer));
           /* Recursive... but shouldn't be a problem, as this can only
            * be a non-controlling connection so can't get back here. */
-          connection_detach(aconn, TRUE);
+          connection_detach(aconn, true);
         }
         conn_list_iterate_end;
 
         /* Actually do the removal. */
         server_remove_player(pplayer);
         (void) aifill(game.info.aifill);
-        reset_all_start_commands(TRUE);
+        reset_all_start_commands(true);
       } else {
         /* Aitoggle the player if no longer connected. */
         if (game.server.auto_ai_toggle && is_human(pplayer)) {
@@ -824,7 +824,7 @@ void connection_detach(struct connection *pconn, bool remove_unused_player)
           qDebug("connection_detach() calls send_player_info_c()");
           send_player_info_c(pplayer, NULL);
 
-          reset_all_start_commands(TRUE);
+          reset_all_start_commands(true);
         }
       }
     }
@@ -845,7 +845,7 @@ bool connection_delegate_take(struct connection *pconn,
 
   /* Save the original player of this connection and the original username of
    * the player. */
-  pconn->server.delegation.status = TRUE;
+  pconn->server.delegation.status = true;
   pconn->server.delegation.playing = conn_get_player(pconn);
   pconn->server.delegation.observer = pconn->observer;
   if (conn_controls_player(pconn)) {
@@ -885,7 +885,7 @@ bool connection_delegate_take(struct connection *pconn,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -950,7 +950,7 @@ bool connection_delegate_restore(struct connection *pconn)
   /* Send updated username to all connections. */
   send_player_info_c(dplayer, NULL);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

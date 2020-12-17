@@ -247,7 +247,7 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
 
   if (!game.info.citizen_nationality) {
     if (self->original == inspirer) {
-      inspired = TRUE;
+      inspired = true;
     }
   } else {
     if (game.info.citizen_partisans_pct > 0) {
@@ -262,12 +262,12 @@ int api_methods_city_inspire_partisans(lua_State *L, City *self,
 
         if (total != 0
             && ((own * 100 / total) >= game.info.citizen_partisans_pct)) {
-          inspired = TRUE;
+          inspired = true;
         }
       }
       /* else is_client() -> don't consider inspired by default. */
     } else if (self->original == inspirer) {
-      inspired = TRUE;
+      inspired = true;
     }
   }
 
@@ -809,7 +809,7 @@ bool api_methods_tile_has_extra(lua_State *L, Tile *ptile, const char *name)
     extra_type_iterate(pextra)
     {
       if (tile_has_extra(ptile, pextra)) {
-        return TRUE;
+        return true;
       }
     }
     extra_type_iterate_end;
@@ -837,7 +837,7 @@ bool api_methods_tile_has_base(lua_State *L, Tile *ptile, const char *name)
     extra_type_by_cause_iterate(EC_BASE, pextra)
     {
       if (tile_has_extra(ptile, pextra)) {
-        return TRUE;
+        return true;
       }
     }
     extra_type_by_cause_iterate_end;
@@ -866,7 +866,7 @@ bool api_methods_tile_has_road(lua_State *L, Tile *ptile, const char *name)
     extra_type_by_cause_iterate(EC_ROAD, pextra)
     {
       if (tile_has_extra(ptile, pextra)) {
-        return TRUE;
+        return true;
       }
     }
     extra_type_by_cause_iterate_end;
@@ -893,12 +893,12 @@ bool api_methods_enemy_tile(lua_State *L, Tile *ptile, Player *against)
   LUASCRIPT_CHECK_SELF(L, ptile, false);
 
   if (is_non_allied_unit_tile(ptile, against)) {
-    return TRUE;
+    return true;
   }
 
   pcity = tile_city(ptile);
   if (ptile != NULL && !pplayers_allied(against, city_owner(pcity))) {
-    return TRUE;
+    return true;
   }
 
   return false;

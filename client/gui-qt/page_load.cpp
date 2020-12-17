@@ -217,7 +217,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
     return;
   }
   fn_bytes = current_file.toLocal8Bit();
-  if ((sf = secfile_load_section(fn_bytes.data(), "game", TRUE))) {
+  if ((sf = secfile_load_section(fn_bytes.data(), "game", true))) {
     const char *sname;
     bool sbool;
     int integer;
@@ -232,7 +232,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       final_str = QStringLiteral("<b>") + _("Turn") + ":</b> "
                   + QString::number(integer).toHtmlEscaped() + "<br>";
     }
-    if ((sf = secfile_load_section(fn_bytes.data(), "players", TRUE))) {
+    if ((sf = secfile_load_section(fn_bytes.data(), "players", true))) {
       integer = secfile_lookup_int_default(sf, -1, "players.nplayers");
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Players") + ":</b>" + " "
@@ -338,7 +338,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       }
       ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
                                 ui.load_pix->pixmap()->height());
-      if ((sf = secfile_load_section(fn_bytes.data(), "research", TRUE))) {
+      if ((sf = secfile_load_section(fn_bytes.data(), "research", true))) {
         sname = secfile_lookup_str_default(
             sf, nullptr, "research.r%d.now_name", curr_player);
         if (sname) {

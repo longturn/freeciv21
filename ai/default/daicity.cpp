@@ -571,7 +571,7 @@ static void dai_spend_gold(struct ai_type *ait, struct player *pplayer)
       struct ai_city *acity_data = def_ai_city_data(acity, ait);
 
       if (acity_data->choice.want > bestchoice.want
-          && ai_fuzzy(pplayer, TRUE)) {
+          && ai_fuzzy(pplayer, true)) {
         bestchoice.value = acity_data->choice.value;
         bestchoice.want = acity_data->choice.want;
         bestchoice.type = acity_data->choice.type;
@@ -606,7 +606,7 @@ static void dai_spend_gold(struct ai_type *ait, struct player *pplayer)
           upgrade_limit = expenses;
         }
         /* Upgrade only military units now */
-        dai_upgrade_units(pcity, upgrade_limit, TRUE);
+        dai_upgrade_units(pcity, upgrade_limit, true);
       }
     }
 
@@ -687,7 +687,7 @@ static void dai_spend_gold(struct ai_type *ait, struct player *pplayer)
       }
       increase_maxbuycost(pplayer, buycost);
     }
-  } while (TRUE);
+  } while (true);
 
   if (!war_footing) {
     /* Civilian upgrades now */
@@ -880,7 +880,7 @@ void dai_manage_cities(struct ai_type *ait, struct player *pplayer)
       /* Fix critical shortages or unhappiness */
       resolve_city_emergency(ait, pplayer, pcity);
     }
-    dai_city_sell_noncritical(pcity, TRUE);
+    dai_city_sell_noncritical(pcity, true);
     sync_cities();
   }
   city_list_iterate_end;
@@ -998,7 +998,7 @@ static bool building_crucial(const struct player *plr,
   if (building_has_effect(pimprove, EFT_DEFEND_BONUS)
       /* selling city walls is really, really dumb -- Syela */
       || is_improvement_productive(pcity, pimprove)) {
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -1342,7 +1342,7 @@ static bool adjust_wants_for_reqs(struct ai_type *ait,
                                   const struct impr_type *pimprove,
                                   const adv_want v)
 {
-  bool all_met = TRUE;
+  bool all_met = true;
   int n_needed_techs = 0;
   int n_needed_improvements = 0;
   struct tech_vector needed_techs;
@@ -1586,7 +1586,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
   int nplayers = normal_player_count();
   struct adv_data *ai = adv_data_get(pplayer, NULL);
   bool capital = is_capital(pcity);
-  bool can_build = TRUE;
+  bool can_build = true;
   struct government *gov = government_of_player(pplayer);
   struct universal source = {.value = {.building = pimprove},
                              .kind = VUT_IMPROVEMENT};
@@ -1673,10 +1673,10 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
   effect_list_iterate(get_req_source_effects(&source), peffect)
   {
     struct requirement *mypreq = NULL;
-    bool active = TRUE;
+    bool active = true;
     int n_needed_techs = 0;
     struct tech_vector needed_techs;
-    bool present = TRUE;
+    bool present = true;
     bool impossible_to_get = false;
 
     tech_vector_init(&needed_techs);
@@ -1702,7 +1702,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
           tech_vector_append(&needed_techs, preq->source.value.advance);
         } else if (!dai_can_requirement_be_met_in_city(preq, pplayer,
                                                        pcity)) {
-          impossible_to_get = TRUE;
+          impossible_to_get = true;
         }
       }
     }
@@ -1774,7 +1774,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
      * built? */
     action_enabler_list_iterate(action_enablers_for_action(act_id), enabler)
     {
-      bool active = TRUE;
+      bool active = true;
       enum req_range range = REQ_RANGE_LOCAL;
 
       requirement_vector_iterate(&(enabler->target_reqs), preq)
@@ -1801,7 +1801,7 @@ static void adjust_improvement_wants_by_effects(struct ai_type *ait,
       requirement_vector_iterate_end;
 
       if (active) {
-        will_be_possible = TRUE;
+        will_be_possible = true;
 
         /* Store the widest range that enables the action. */
         if (max_range < range) {
@@ -2082,7 +2082,7 @@ void dai_consider_wonder_city(struct ai_type *ait, struct city *pcity,
   if (def_ai_city_data(pcity, ait)->grave_danger > 0) {
     *result = false;
   } else {
-    *result = TRUE;
+    *result = true;
   }
 }
 
@@ -2121,7 +2121,7 @@ Impr_type_id dai_find_source_building(struct city *pcity,
                                      NULL, NULL, preq, RPT_POSSIBLE)) {
           /* Effect requires other kind of unit than what we are interested
            * about */
-          wrong_unit = TRUE;
+          wrong_unit = true;
           break;
         }
       }

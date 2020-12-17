@@ -253,9 +253,9 @@ fc__attribute((const))
 static inline bool SPECENUM_FOO(_is_bitwise)(void)
 {
 #ifdef SPECENUM_BITWISE
-  return TRUE;
+  return true;
 #else
-  return FALSE;
+  return false;
 #endif
 }
 ''')
@@ -310,7 +310,7 @@ static inline bool SPECENUM_FOO(_is_valid)(enum SPECENUM_NAME enumerator)
 
 #  ifdef SPECENUM_ZERO
   if (enumerator == SPECENUM_ZERO) {
-    return TRUE;
+    return true;
   }
 #  endif
   return (enumerator & valid) == enumerator;
@@ -321,9 +321,9 @@ static inline bool SPECENUM_FOO(_is_valid)(enum SPECENUM_NAME enumerator)
         file.write('''
 #  if %d < SPECENUM_SIZE
 #    ifdef SPECENUM_VALUE%d
-       TRUE,
+       true,
 #    else
-       FALSE,
+       false,
 #    endif
 #  endif'''%(i,i))
 
@@ -420,7 +420,7 @@ static inline const char *SPECENUM_FOO(_name)(enum SPECENUM_NAME enumerator)
 #else
   static const char *names[SPECENUM_SIZE];
 #endif
-  static bool initialized = FALSE;
+  static bool initialized = false;
 
 #ifdef SPECENUM_NAMEOVERRIDE
   {
@@ -455,7 +455,7 @@ static inline const char *SPECENUM_FOO(_name)(enum SPECENUM_NAME enumerator)
   names[SPECENUM_COUNT] = SPECENUM_STRING(SPECENUM_COUNT);
 #  endif
 #endif
-    initialized = TRUE;
+    initialized = true;
   }
 
 #ifdef SPECENUM_BITWISE
@@ -527,7 +527,7 @@ SPECENUM_FOO(_translated_name)(enum SPECENUM_NAME enumerator)
 #else
   static const char *names[SPECENUM_SIZE];
 #endif
-  static bool initialized = FALSE;
+  static bool initialized = false;
 
 #ifdef SPECENUM_NAMEOVERRIDE
   {
@@ -562,7 +562,7 @@ SPECENUM_FOO(_translated_name)(enum SPECENUM_NAME enumerator)
   names[SPECENUM_COUNT] = SPECENUM_STRING(SPECENUM_COUNT);
 #  endif
 #endif
-    initialized = TRUE;
+    initialized = true;
   }
 
 #ifdef SPECENUM_BITWISE

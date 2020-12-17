@@ -181,7 +181,7 @@ static const char *download_modpack_recursive(const char *URL,
       const char *inst_ver;
       const char *dep_typestr;
       enum modpack_type dep_type;
-      bool needed = TRUE;
+      bool needed = true;
 
       dep_URL = secfile_lookup_str_default(control, NULL,
                                            "dependencies.list%d.URL", dep);
@@ -295,8 +295,8 @@ static const char *download_modpack_recursive(const char *URL,
           fc_snprintf(buf, sizeof(buf), _("Illegal path for %s"), dest_name);
           mcb(buf);
         }
-        partial_failure = TRUE;
-        illegal_filename = TRUE;
+        partial_failure = true;
+        illegal_filename = true;
       }
 
 #ifndef DIR_SEPARATOR_IS_DEFAULT
@@ -351,7 +351,7 @@ static const char *download_modpack_recursive(const char *URL,
                       src_name);
           mcb(buf);
         }
-        partial_failure = TRUE;
+        partial_failure = true;
       }
     } else {
 #ifndef DIR_SEPARATOR_IS_DEFAULT

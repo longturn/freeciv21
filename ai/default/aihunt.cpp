@@ -305,7 +305,7 @@ bool dai_hunter_qualify(struct player *pplayer, struct unit *punit)
     return false;
   }
   if (unit_has_type_role(punit, L_HUNTER)) {
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -619,7 +619,7 @@ int dai_hunter_manage(struct ai_type *ait, struct player *pplayer,
       }
 
       pf_map_destroy(pfm);
-      unit_data->done = TRUE;
+      unit_data->done = true;
       return stackthreat; /* still have work to do */
     }
     unit_list_iterate_safe_end;

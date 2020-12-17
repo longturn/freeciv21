@@ -208,7 +208,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
 
   if (trade_route_type_trade_pct(TRT_NATIONAL_IC)
       > trade_route_type_trade_pct(TRT_NATIONAL)) {
-    prefer_different_cont = TRUE;
+    prefer_different_cont = true;
   } else {
     prefer_different_cont = false;
   }
@@ -220,14 +220,14 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
     city_list_iterate(pplayer->cities, acity)
     {
       if (can_cities_trade(pcity, acity)) {
-        dest_city_found = TRUE;
+        dest_city_found = true;
         if (tile_continent(acity->tile) != continent) {
-          dest_city_nat_different_cont = TRUE;
+          dest_city_nat_different_cont = true;
           if (prefer_different_cont) {
             break;
           }
         } else {
-          dest_city_nat_same_cont = TRUE;
+          dest_city_nat_same_cont = true;
           if (!prefer_different_cont) {
             break;
           }
@@ -243,7 +243,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
   if (prefer_different_cont && !dest_city_nat_different_cont) {
     if (trade_route_type_trade_pct(TRT_IN_IC)
         > trade_route_type_trade_pct(TRT_IN)) {
-      prefer_different_cont = TRUE;
+      prefer_different_cont = true;
     } else {
       prefer_different_cont = false;
     }
@@ -257,14 +257,14 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
         city_list_iterate(aplayer->cities, acity)
         {
           if (can_cities_trade(pcity, acity)) {
-            dest_city_found = TRUE;
+            dest_city_found = true;
             if (tile_continent(acity->tile) != continent) {
-              dest_city_in_different_cont = TRUE;
+              dest_city_in_different_cont = true;
               if (prefer_different_cont) {
                 break;
               }
             } else {
-              dest_city_in_same_cont = TRUE;
+              dest_city_in_same_cont = true;
               if (!prefer_different_cont) {
                 break;
               }
@@ -365,7 +365,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
 
     if (typepct > pct) {
       pct = typepct;
-      need_boat = TRUE;
+      need_boat = true;
     }
   }
   if (dest_city_in_different_cont) {
@@ -373,7 +373,7 @@ static void dai_choose_trade_route(struct ai_type *ait, struct city *pcity,
 
     if (typepct > pct) {
       pct = typepct;
-      need_boat = TRUE;
+      need_boat = true;
     }
   }
 
@@ -552,12 +552,12 @@ struct adv_choice *domestic_advisor_choose_build(struct ai_type *ait,
         choice->want = 0 - founder_want;
         choice->type = CT_CIVILIAN;
         choice->value.utype = founder_type; /* default */
-        choice->need_boat = TRUE;
+        choice->need_boat = true;
 
         /* Then try to overwrite it with ferryboat information
          * If no ferryboat is found, above founder choice stays. */
         dai_choose_role_unit(ait, pplayer, pcity, choice, CT_CIVILIAN,
-                             L_FERRYBOAT, -founder_want, TRUE);
+                             L_FERRYBOAT, -founder_want, true);
         adv_choice_set_use(choice, "founder's boat");
       }
     } else if (!founder_type

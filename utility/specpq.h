@@ -236,7 +236,7 @@ static inline bool SPECPQ_FOO(_pq_remove)(SPECPQ_PQ *_pq,
   if (pdata) {
     *pdata = top;
   }
-  return TRUE;
+  return true;
 }
 
 /****************************************************************************
@@ -253,7 +253,7 @@ static inline bool SPECPQ_FOO(_pq_peek)(const SPECPQ_PQ *_pq,
   }
 
   *pdata = pq->cells[1].data;
-  return TRUE;
+  return true;
 }
 
 /****************************************************************************
@@ -271,7 +271,7 @@ static inline bool SPECPQ_FOO(_pq_priority)(const SPECPQ_PQ *_pq,
   }
 
   *ppriority = pq->cells[1].priority;
-  return TRUE;
+  return true;
 }
 
 #undef SPECPQ_TAG

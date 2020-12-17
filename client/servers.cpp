@@ -125,7 +125,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
   fcudp_scan = scan;
   if (announce == ANNOUNCE_NONE) {
     /* Succeeded in doing nothing */
-    return TRUE;
+    return true;
   }
   group = get_multicast_group(announce == ANNOUNCE_IPV6);
 
@@ -152,7 +152,7 @@ bool fcUdpScan::begin_scan(struct server_scan *scan)
                 SERVER_LAN_PORT);
   scan->servers = server_list_new();
 
-  return TRUE;
+  return true;
 }
 
 void fcUdpScan::readPendingDatagrams()
@@ -226,7 +226,7 @@ enum server_scan_status fcUdpScan::get_server_list(struct server_scan *scan)
     pserver->humans = atoi(humans);
     pserver->message = fc_strdup(message);
     pserver->players = NULL;
-    found_new = TRUE;
+    found_new = true;
 
     server_list_prepend(scan->servers, pserver);
   }
@@ -250,7 +250,7 @@ static struct server_list *parse_metaserver_data(fz_FILE *f)
   const char *comment;
 
   /* This call closes f. */
-  if (!(file = secfile_from_stream(f, TRUE))) {
+  if (!(file = secfile_from_stream(f, true))) {
     return NULL;
   }
 
@@ -390,7 +390,7 @@ static bool meta_read_response(struct server_scan *scan)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

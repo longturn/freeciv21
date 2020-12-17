@@ -159,18 +159,18 @@ static struct dem_row {
   const char *(*to_text)(int);
   bool greater_values_are_better;
 } rowtable[] = {
-    {'N', N_("Population"), get_population, population_to_text, TRUE},
-    {'A', N_("Land Area"), get_landarea, area_to_text, TRUE},
-    {'S', N_("Settled Area"), get_settledarea, area_to_text, TRUE},
-    {'R', N_("Research Speed"), get_research, science_to_text, TRUE},
+    {'N', N_("Population"), get_population, population_to_text, true},
+    {'A', N_("Land Area"), get_landarea, area_to_text, true},
+    {'S', N_("Settled Area"), get_settledarea, area_to_text, true},
+    {'R', N_("Research Speed"), get_research, science_to_text, true},
     /* TRANS: How literate people are. */
-    {'L', N_("?ability:Literacy"), get_literacy, percent_to_text, TRUE},
-    {'P', N_("Production"), get_production, production_to_text, TRUE},
-    {'E', N_("Economics"), get_economics, economics_to_text, TRUE},
+    {'L', N_("?ability:Literacy"), get_literacy, percent_to_text, true},
+    {'P', N_("Production"), get_production, production_to_text, true},
+    {'E', N_("Economics"), get_economics, economics_to_text, true},
     {'M', N_("Military Service"), get_mil_service, mil_service_to_text,
      false},
     {'O', N_("Pollution"), get_pollution, pollution_to_text, false},
-    {'C', N_("Culture"), get_culture, culture_to_text, TRUE}};
+    {'C', N_("Culture"), get_culture, culture_to_text, true}};
 
 /* Demographics columns. */
 enum dem_flag { DEM_COL_QUANTITY, DEM_COL_RANK, DEM_COL_BEST, DEM_COL_LAST };
@@ -972,7 +972,7 @@ bool is_valid_demography(const char *demography, int *error)
     /* See if the character is a valid column label. */
     for (j = 0; j < DEM_COL_LAST; j++) {
       if (demography[i] == coltable[j].key) {
-        found = TRUE;
+        found = true;
         break;
       }
     }
@@ -984,7 +984,7 @@ bool is_valid_demography(const char *demography, int *error)
     /* See if the character is a valid row label. */
     for (j = 0; j < ARRAY_SIZE(rowtable); j++) {
       if (demography[i] == rowtable[j].key) {
-        found = TRUE;
+        found = true;
         break;
       }
     }
@@ -999,7 +999,7 @@ bool is_valid_demography(const char *demography, int *error)
   }
 
   /* Looks like all characters were valid. */
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1028,7 +1028,7 @@ void report_demographics(struct connection *pconn)
   anyrows = false;
   for (i = 0; i < ARRAY_SIZE(rowtable); i++) {
     if (strchr(game.server.demography, rowtable[i].key)) {
-      anyrows = TRUE;
+      anyrows = true;
       break;
     }
   }
@@ -1273,7 +1273,7 @@ static bool scan_score_log(char *id)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**

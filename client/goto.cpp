@@ -261,7 +261,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
   old_path = p->path;
   if (old_path != NULL && pf_path_last_position(old_path)->tile == ptile) {
     /* Nothing to update. */
-    return TRUE;
+    return true;
   }
 
   qCDebug(goto_category, "update_last_part(%d,%d) old (%d,%d)-(%d,%d)",
@@ -277,7 +277,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
 
       if (!goto_warned) {
         qCCritical(goto_category, "No path found to reach the start point.");
-        goto_warned = TRUE;
+        goto_warned = true;
       }
 
       if (old_path != NULL) {
@@ -325,7 +325,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
         if (!goto_warned) {
           qCCritical(goto_category,
                      "No path found to reach the start point.");
-          goto_warned = TRUE;
+          goto_warned = true;
         }
 
         if (old_path != NULL) {
@@ -374,7 +374,7 @@ static bool update_last_part(struct goto_map *goto_map, struct tile *ptile)
                                     : new_path)
               ->total_MC);
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -475,7 +475,7 @@ static void remove_last_part(struct goto_map *goto_map)
  ****************************************************************************/
 bool goto_add_waypoint(void)
 {
-  bool duplicate_of_last = TRUE;
+  bool duplicate_of_last = true;
 
   fc_assert_ret_val(goto_is_active(), false);
   if (NULL == goto_destination) {
@@ -504,7 +504,7 @@ bool goto_add_waypoint(void)
   goto_map_list_iterate_end;
 
   refresh_tile_mapcanvas(goto_destination, false, false);
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -525,7 +525,7 @@ bool goto_pop_waypoint(void)
       /* we don't have any waypoint but the start pos. */
       continue;
     }
-    popped = TRUE;
+    popped = true;
 
     remove_last_part(goto_map);
 
@@ -666,7 +666,7 @@ static bool is_non_allied_city_adjacent(const struct player *pplayer,
   adjc_iterate(&(wld.map), ptile, tile1)
   {
     if (is_non_allied_city_tile(tile1, pplayer)) {
-      return TRUE;
+      return true;
     }
   }
   adjc_iterate_end;
@@ -1092,7 +1092,7 @@ bool goto_get_turns(int *min, int *max)
 
         turns += pf_path_last_position(goto_map->parts[i].path)->turn;
         if (!moved && path->length > 1) {
-          moved = TRUE;
+          moved = true;
         }
       }
 
@@ -1133,7 +1133,7 @@ bool goto_get_turns(int *min, int *max)
     goto_map_list_iterate_end;
   }
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1177,7 +1177,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
 
       for (i = 0; i < goto_map->num_parts; i++) {
         if (i > 0 && goto_map->parts[i].start_tile == ptile) {
-          *waypoint = TRUE;
+          *waypoint = true;
         }
 
         path = goto_map->parts[i].path;
@@ -1188,7 +1188,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
         for (j = 0; j < path->length; j++) {
           pos = path->positions + j;
           if (!moved && j > 0) {
-            moved = TRUE;
+            moved = true;
           }
           if (pos->tile != ptile) {
             continue;
@@ -1250,7 +1250,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
 
       for (i = 0; i < goto_map->num_parts; i++) {
         if (i > 0 && goto_map->parts[i].start_tile == ptile) {
-          mark_on_map = *waypoint = TRUE;
+          mark_on_map = *waypoint = true;
         }
 
         path = goto_map->parts[i].path;
@@ -1262,11 +1262,11 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
           pos = path->positions + j;
           /* turn to reach was increased in that step */
           if (pos->turn != last_pos->turn && pos->tile == ptile) {
-            mark_on_map = TRUE;
+            mark_on_map = true;
           }
           if (pos->moves_left == 0 && last_pos->moves_left != 0
               && pos->tile == ptile) {
-            mark_on_map = TRUE;
+            mark_on_map = true;
           }
           if (pos->tile == ptile
               /* End turn case. */
@@ -1304,7 +1304,7 @@ bool goto_tile_state(const struct tile *ptile, enum goto_tile_state *state,
       if (ptile == destination) {
         fc_assert_ret_val(pos != NULL, false);
         if (map_turns > *turns) {
-          mark_on_map = TRUE;
+          mark_on_map = true;
           *state = (pos->moves_left == 0 ? GTS_EXHAUSTED_MP : GTS_MP_LEFT);
           *turns = map_turns;
         } else if (map_turns == *turns && *state == GTS_MP_LEFT
@@ -1557,7 +1557,7 @@ bool send_goto_tile(struct unit *punit, struct tile *ptile)
   if (path) {
     send_goto_path(punit, path, NULL);
     pf_path_destroy(path);
-    return TRUE;
+    return true;
   } else {
     return false;
   }
@@ -1600,7 +1600,7 @@ bool send_rally_tile(struct city *pcity, struct tile *ptile)
     send_rally_path(pcity, punit, path, NULL);
     unit_virtual_destroy(punit);
     pf_path_destroy(path);
-    return TRUE;
+    return true;
   } else {
     unit_virtual_destroy(punit);
     return false;
@@ -1628,7 +1628,7 @@ bool send_attack_tile(struct unit *punit, struct tile *ptile)
   if (path) {
     send_path_orders(punit, path, false, false, ORDER_ACTION_MOVE, NULL);
     pf_path_destroy(path);
-    return TRUE;
+    return true;
   }
   return false;
 }
@@ -1656,7 +1656,7 @@ void send_patrol_route(void)
     }
     path = pf_path_concat(path, goto_map->patrol.return_path);
 
-    send_path_orders(punit, path, TRUE, TRUE, ORDER_MOVE, NULL);
+    send_path_orders(punit, path, true, true, ORDER_MOVE, NULL);
 
     pf_path_destroy(path);
   }
@@ -1680,7 +1680,7 @@ static bool order_recursive_roads(struct tile *ptile,
 
   if (tile_has_extra(ptile, pextra)) {
     /* No need to build what is already there. */
-    return TRUE;
+    return true;
   }
 
   extra_deps_iterate(&(pextra->reqs), pdep)
@@ -1701,7 +1701,7 @@ static bool order_recursive_roads(struct tile *ptile,
   p->orders[p->length].action = ACTION_ROAD;
   p->length++;
 
-  return TRUE;
+  return true;
 }
 
 /************************************************************************/ /**
@@ -1801,11 +1801,11 @@ static bool order_wants_direction(enum unit_orders order, action_id act_id,
   case ORDER_ACTION_MOVE:
     /* Not only is it legal. It is mandatory. A move is always done in a
      * direction. */
-    return TRUE;
+    return true;
   case ORDER_PERFORM_ACTION:
     if (!action_id_distance_accepted(act_id, 0)) {
       /* Always illegal to do to a target on the actor's own tile. */
-      return TRUE;
+      return true;
     }
 
     if (!action_id_distance_accepted(act_id, 1)) {
@@ -1819,13 +1819,13 @@ static bool order_wants_direction(enum unit_orders order, action_id act_id,
        * top of it. */
       /* TODO: detect situations where it also would be illegal to perform
        * the action from the neighbor tile. */
-      return TRUE;
+      return true;
     }
 
     if (gui_options.popup_last_move_to_allied) {
       /* Prefer efficiency over safety among allies. */
       fc_assert_ret_val(action_id_distance_accepted(act_id, 1), false);
-      return TRUE;
+      return true;
     }
 
     return false;
@@ -1844,11 +1844,11 @@ static bool order_demands_direction(enum unit_orders order, action_id act_id)
   case ORDER_MOVE:
   case ORDER_ACTION_MOVE:
     /* A move is always done in a direction. */
-    return TRUE;
+    return true;
   case ORDER_PERFORM_ACTION:
     if (!action_id_distance_accepted(act_id, 0)) {
       /* Always illegal to do to a target on the actor's own tile. */
-      return TRUE;
+      return true;
     }
 
     return false;
@@ -1896,9 +1896,9 @@ void send_goto_route(void)
             && (can_utype_do_act_if_tgt_diplrel(
                     unit_type_get(punit), ACTION_ANY, DRO_FOREIGN, false)
                 || can_utype_do_act_if_tgt_diplrel(
-                    unit_type_get(punit), ACTION_ANY, DS_ALLIANCE, TRUE)
+                    unit_type_get(punit), ACTION_ANY, DS_ALLIANCE, true)
                 || can_utype_do_act_if_tgt_diplrel(
-                    unit_type_get(punit), ACTION_ANY, DS_TEAM, TRUE)))) {
+                    unit_type_get(punit), ACTION_ANY, DS_TEAM, true)))) {
       /* Try to pop up the action selection dialog before moving to the
        * target tile. */
       goto_last_order = ORDER_ACTION_MOVE;

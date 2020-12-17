@@ -82,7 +82,7 @@ static void migrate_options_from_2_5()
 
   gui_options.gui_qt_fullscreen = gui_options.migrate_fullscreen;
 
-  gui_options.gui_qt_migrated_from_2_5 = TRUE;
+  gui_options.gui_qt_migrated_from_2_5 = true;
 }
 
 /**********************************************************************/ /**
@@ -103,7 +103,7 @@ void qtg_ui_main()
     if (gui_options.first_boot) {
       /* We're using fresh defaults for this version of this client,
        * so prevent any future migrations from other versions */
-      gui_options.gui_qt_migrated_from_2_5 = TRUE;
+      gui_options.gui_qt_migrated_from_2_5 = true;
     } else if (!gui_options.gui_qt_migrated_from_2_5) {
       migrate_options_from_2_5();
     }

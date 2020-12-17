@@ -170,7 +170,7 @@ void save_game(const char *orig_filename, const char *save_reason,
     } else {
       char *end_dot;
       const char *strip_extensions[] = {".sav", ".gz", ".bz2", ".xz", NULL};
-      bool stripped = TRUE;
+      bool stripped = true;
 
       while ((end_dot = strrchr(dot, '.')) && stripped) {
         int i;
@@ -180,7 +180,7 @@ void save_game(const char *orig_filename, const char *save_reason,
         for (i = 0; strip_extensions[i] != NULL && !stripped; i++) {
           if (!strcmp(end_dot, strip_extensions[i])) {
             *end_dot = '\0';
-            stripped = TRUE;
+            stripped = true;
           }
         }
       }
@@ -200,7 +200,7 @@ void save_game(const char *orig_filename, const char *save_reason,
 
   /* Allowing duplicates shouldn't be allowed. However, it takes very too
    * long time for huge game saving... */
-  stdata->sfile = secfile_new(TRUE);
+  stdata->sfile = secfile_new(true);
   savegame_save(stdata->sfile, save_reason, scenario);
 
   /* We have consistent game state in stdata->sfile now, so

@@ -33,7 +33,7 @@ void citizens_init(struct city *pcity)
 {
   fc_assert_ret(pcity);
 
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return;
   }
 
@@ -72,7 +72,7 @@ void citizens_free(struct city *pcity)
 citizens citizens_nation_get(const struct city *pcity,
                              const struct player_slot *pslot)
 {
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return 0;
   }
 
@@ -105,7 +105,7 @@ void citizens_nation_add(struct city *pcity, const struct player_slot *pslot,
 {
   citizens nationality = citizens_nation_get(pcity, pslot);
 
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return;
   }
 
@@ -144,7 +144,7 @@ void citizens_nation_move(struct city *pcity,
 void citizens_nation_set(struct city *pcity, const struct player_slot *pslot,
                          citizens count)
 {
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return;
   }
 
@@ -163,7 +163,7 @@ citizens citizens_count(const struct city *pcity)
   /* Use int here to check for an possible overflow at the end. */
   int count = 0;
 
-  if (game.info.citizen_nationality != TRUE) {
+  if (game.info.citizen_nationality != true) {
     return city_size_get(pcity);
   }
 

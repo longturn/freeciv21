@@ -53,7 +53,7 @@
 static struct section_file *create_ruleset_file(const char *rsname,
                                                 const char *rstype)
 {
-  struct section_file *sfile = secfile_new(TRUE);
+  struct section_file *sfile = secfile_new(true);
   char buf[500];
 
   comment_file_header(sfile);
@@ -87,7 +87,7 @@ static bool save_default_int(struct section_file *sfile, int value,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -105,7 +105,7 @@ static bool save_default_bool(struct section_file *sfile, bool value,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -119,13 +119,13 @@ static bool save_name_translation(struct section_file *sfile,
 
   mod_entry =
       secfile_insert_str(sfile, untranslated_name(name), "%s.name", path);
-  entry_str_set_gt_marking(mod_entry, TRUE);
+  entry_str_set_gt_marking(mod_entry, true);
   if (strcmp(skip_intl_qualifier_prefix(untranslated_name(name)),
              rule_name_get(name))) {
     secfile_insert_str(sfile, rule_name_get(name), "%s.rule_name", path);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -143,13 +143,13 @@ static bool save_reqs_vector(struct section_file *sfile,
   requirement_vector_iterate(reqs, preq)
   {
     if (!preq->present) {
-      includes_negated = TRUE;
+      includes_negated = true;
     }
     if (preq->survives) {
-      includes_surviving = TRUE;
+      includes_surviving = true;
     }
     if (preq->quiet) {
-      includes_quiet = TRUE;
+      includes_quiet = true;
     }
   }
   requirement_vector_iterate_end;
@@ -183,7 +183,7 @@ static bool save_reqs_vector(struct section_file *sfile,
   }
   requirement_vector_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -206,7 +206,7 @@ static bool save_tech_list(struct section_file *sfile, int *input,
                            entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -222,7 +222,7 @@ static bool save_tech_ref(struct section_file *sfile,
     secfile_insert_str(sfile, advance_rule_name(padv), "%s.%s", path, entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -241,7 +241,7 @@ static bool save_terrain_ref(struct section_file *sfile,
     secfile_insert_str(sfile, terrain_rule_name(save), "%s.%s", path, entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -253,7 +253,7 @@ static bool save_gov_ref(struct section_file *sfile,
 {
   secfile_insert_str(sfile, government_rule_name(gov), "%s.%s", path, entry);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -278,7 +278,7 @@ static bool save_building_list(struct section_file *sfile, int *input,
                            entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -303,7 +303,7 @@ static bool save_unit_list(struct section_file *sfile,
                            entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -330,7 +330,7 @@ static bool save_uclass_vec(struct section_file *sfile,
                            entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -352,7 +352,7 @@ static bool save_strvec(struct section_file *sfile, QVector<QString> *to_save,
                            entry);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -548,7 +548,7 @@ static bool save_action_auto_uflag_block(
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -581,7 +581,7 @@ static bool save_action_auto_actions(struct section_file *sfile,
     return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -752,7 +752,7 @@ static bool effect_save(struct effect *peffect, void *data)
 
   save_reqs_vector(cbdata->sfile, &peffect->reqs, path, "reqs");
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -791,7 +791,7 @@ static bool save_action_ui_name(struct section_file *sfile, int act,
     secfile_insert_str(sfile, ui_name, "actions.%s", entry_name);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -829,7 +829,7 @@ static bool save_action_range(struct section_file *sfile, action_id act)
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -843,7 +843,7 @@ static bool save_action_kind(struct section_file *sfile, action_id act)
          == RS_DEFAULT_USER_ACTION_TARGET_KIND)
         && action_enabler_list_size(action_enablers_for_action(act)) == 0) {
       /* Don't save the default for actions that aren't enabled. */
-      return TRUE;
+      return true;
     }
 
     secfile_insert_enum(sfile, action_by_number(act)->target_kind,
@@ -851,7 +851,7 @@ static bool save_action_kind(struct section_file *sfile, action_id act)
                         action_target_kind_ruleset_var_name(act));
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -864,7 +864,7 @@ static bool save_action_actor_consuming_always(struct section_file *sfile,
     /* Actor consumption can be loaded from the ruleset. */
     if (action_enabler_list_size(action_enablers_for_action(act)) == 0) {
       /* Don't save value for actions that aren't enabled. */
-      return TRUE;
+      return true;
     }
 
     save_default_bool(sfile, action_by_number(act)->actor_consuming_always,
@@ -872,7 +872,7 @@ static bool save_action_actor_consuming_always(struct section_file *sfile,
                       action_actor_consuming_always_ruleset_var_name(act));
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -929,7 +929,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
 
     mod_entry =
         secfile_insert_str(sfile, game.ruleset_summary, "about.summary");
-    entry_str_set_gt_marking(mod_entry, TRUE);
+    entry_str_set_gt_marking(mod_entry, true);
   }
 
   if (game.ruleset_description != NULL) {
@@ -977,7 +977,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
                    "civstyle.happy_cost", NULL);
   save_default_int(sfile, game.info.food_cost, RS_DEFAULT_FOOD_COST,
                    "civstyle.food_cost", NULL);
-  save_default_bool(sfile, game.info.civil_war_enabled, TRUE,
+  save_default_bool(sfile, game.info.civil_war_enabled, true,
                     "civstyle.civil_war_enabled", NULL);
   save_default_int(sfile, game.info.civil_war_bonus_celebrating,
                    RS_DEFAULT_CIVIL_WAR_CELEB,
@@ -1411,7 +1411,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
   settings_iterate(SSET_ALL, pset)
   {
     if (setting_locked(pset)) {
-      locks = TRUE;
+      locks = true;
       break;
     }
   }
@@ -1442,7 +1442,7 @@ static bool save_game_ruleset(const char *filename, const char *name)
                                  "settings.set%d.value", set_count);
         break;
       case SST_BITWISE:
-        secfile_insert_enum_data(sfile, setting_bitwise_get(pset), TRUE,
+        secfile_insert_enum_data(sfile, setting_bitwise_get(pset), true,
                                  setting_bitwise_secfile_str, pset,
                                  "settings.set%d.value", set_count);
         break;
@@ -1587,7 +1587,7 @@ static bool save_traits(struct trait_limits *traits,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -1736,11 +1736,11 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
     switch (nation_city_river_preference(pncity)) {
     case NCP_DISLIKE:
       strcat(city_str[set_count], " (!river");
-      list_started = TRUE;
+      list_started = true;
       break;
     case NCP_LIKE:
       strcat(city_str[set_count], " (river");
-      list_started = TRUE;
+      list_started = true;
       break;
     case NCP_NONE:
       break;
@@ -1767,7 +1767,7 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
           strcat(city_str[set_count], ", ");
         } else {
           strcat(city_str[set_count], " (");
-          list_started = TRUE;
+          list_started = true;
         }
         strcat(city_str[set_count], pref);
         strcat(city_str[set_count], terrain_rule_name(pterr));
@@ -1795,7 +1795,7 @@ static bool save_nation(struct section_file *sfile, struct nation_type *pnat,
 
   secfile_insert_str(sfile, pnat->legend, "%s.legend", path);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2114,7 +2114,7 @@ static bool save_terrain_ruleset(const char *filename, const char *name)
                         "parameters.pythagorean_diagonal");
   }
   if (wld.map.server.ocean_resources) {
-    secfile_insert_bool(sfile, TRUE, "parameters.ocean_resources");
+    secfile_insert_bool(sfile, true, "parameters.ocean_resources");
   }
 
   comment_terrains(sfile);
@@ -2652,7 +2652,7 @@ static bool save_veteran_system(struct section_file *sfile, const char *path,
   secfile_insert_int_vec(sfile, vlist_move, vsystem->levels,
                          "%s.veteran_move_bonus", path);
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2667,7 +2667,7 @@ static bool save_combat_bonuses(struct section_file *sfile,
   combat_bonus_list_iterate(put->bonuses, pbonus)
   {
     if (pbonus->quiet) {
-      has_quiet = TRUE;
+      has_quiet = true;
     }
   }
   combat_bonus_list_iterate_end;
@@ -2691,7 +2691,7 @@ static bool save_combat_bonuses(struct section_file *sfile,
   }
   combat_bonus_list_iterate_end;
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -2824,7 +2824,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
         if (preq->source.kind == VUT_GOVERNMENT) {
           fc_assert_msg(preq->range == REQ_RANGE_PLAYER,
                         "can't convert non player range to the rs format");
-          fc_assert_msg(preq->present == TRUE,
+          fc_assert_msg(preq->present == true,
                         "can't convert not present reqs to the rs format");
           secfile_insert_str(sfile, universal_rule_name(&preq->source),
                              "%s.gov_req", path);
@@ -2842,7 +2842,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
         if (preq->source.kind == VUT_IMPROVEMENT) {
           fc_assert_msg(preq->range == REQ_RANGE_CITY,
                         "can't convert non player range to the rs format");
-          fc_assert_msg(preq->present == TRUE,
+          fc_assert_msg(preq->present == true,
                         "can't convert not present reqs to the rs format");
           secfile_insert_str(sfile, universal_rule_name(&preq->source),
                              "%s.impr_req", path);
@@ -2887,8 +2887,8 @@ static bool save_units_ruleset(const char *filename, const char *name)
                          path);
 
       save_uclass_vec(sfile, &(put->cargo), path, "cargo", false);
-      save_uclass_vec(sfile, &(put->embarks), path, "embarks", TRUE);
-      save_uclass_vec(sfile, &(put->disembarks), path, "disembarks", TRUE);
+      save_uclass_vec(sfile, &(put->embarks), path, "embarks", true);
+      save_uclass_vec(sfile, &(put->disembarks), path, "disembarks", true);
 
       if (put->vlayer != V_MAIN) {
         secfile_insert_str(sfile, vision_layer_name(put->vlayer),
@@ -2919,7 +2919,7 @@ static bool save_units_ruleset(const char *filename, const char *name)
       }
 
       save_combat_bonuses(sfile, put, path);
-      save_uclass_vec(sfile, &(put->targets), path, "targets", TRUE);
+      save_uclass_vec(sfile, &(put->targets), path, "targets", true);
 
       if (put->veteran != NULL) {
         save_veteran_system(sfile, path, put->veteran);
@@ -2997,7 +2997,7 @@ static bool save_script_lua(const char *filename, const char *name,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3009,7 +3009,7 @@ static bool save_luadata(const char *filename)
     return secfile_save(game.server.luadata, filename, 0, FZ_PLAIN);
   }
 
-  return TRUE;
+  return true;
 }
 
 /**********************************************************************/ /**
@@ -3018,7 +3018,7 @@ static bool save_luadata(const char *filename)
 bool save_ruleset(const char *path, const char *name, struct rule_data *data)
 {
   if (make_dir(path)) {
-    bool success = TRUE;
+    bool success = true;
     char filename[500];
 
     if (success) {
@@ -3093,5 +3093,5 @@ bool save_ruleset(const char *path, const char *name, struct rule_data *data)
     return false;
   }
 
-  return TRUE;
+  return true;
 }
