@@ -28,7 +28,6 @@
 #include "log.h"
 #include "registry.h"
 #include "shared.h"
-#include "string_vector.h"
 #include "support.h"
 
 /* common */
@@ -318,7 +317,7 @@ struct option_str_vtable {
 struct option_enum_vtable {
   int (*get)(const struct option *);
   int (*def)(const struct option *);
-  const struct strvec *(*values)(const struct option *);
+  const QVector<QString> *(*values)(const struct option *);
   bool (*set)(struct option *, int);
   int (*cmp)(const char *, const char *);
 };
@@ -752,7 +751,7 @@ bool option_str_set(struct option *poption, const char *str)
  ****************************************************************************/
 int option_enum_str_to_int(const struct option *poption, const char *str)
 {
-  const struct strvec *values;
+  const QVector<QString> *values;
   int val;
 
   fc_assert_ret_val(NULL != poption, 0);
@@ -760,8 +759,9 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
   values = poption->enum_vtable->values(poption);
   fc_assert_ret_val(NULL != values, 0);
 
-  for (val = 0; val < strvec_size(values); val++) {
-    if (0 == poption->enum_vtable->cmp(strvec_get(values, val), str)) {
+  for (val = 0; val < values->count(); val++) {
+    if (0
+        == poption->enum_vtable->cmp(qUtf8Printable(values->at(val)), str)) {
       return val;
     }
   }
@@ -774,14 +774,18 @@ int option_enum_str_to_int(const struct option *poption, const char *str)
  ****************************************************************************/
 const char *option_enum_int_to_str(const struct option *poption, int val)
 {
-  const struct strvec *values;
+  const QVector<QString> *values;
 
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
   values = poption->enum_vtable->values(poption);
   fc_assert_ret_val(NULL != values, NULL);
-
-  return strvec_get(values, val);
+  if (val < values->count()) {
+    // TODO bug here - val is bigger than vector size
+    return qUtf8Printable(values->at(val));
+  } else {
+    return nullptr;
+  }
 }
 
 /************************************************************************/ /**
@@ -804,8 +808,8 @@ const char *option_enum_get_str(const struct option *poption)
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
 
-  return strvec_get(poption->enum_vtable->values(poption),
-                    poption->enum_vtable->get(poption));
+  return qUtf8Printable(poption->enum_vtable->values(poption)->at(
+      poption->enum_vtable->get(poption)));
 }
 
 /************************************************************************/ /**
@@ -828,15 +832,15 @@ const char *option_enum_def_str(const struct option *poption)
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
 
-  return strvec_get(poption->enum_vtable->values(poption),
-                    poption->enum_vtable->def(poption));
+  return qUtf8Printable(poption->enum_vtable->values(poption)->at(
+      poption->enum_vtable->def(poption)));
 }
 
 /************************************************************************/ /**
    Returns the possible string values of this enum option, as user-visible
    (translatable but not translated) strings.
  ****************************************************************************/
-const struct strvec *option_enum_values(const struct option *poption)
+const QVector<QString> *option_enum_values(const struct option *poption)
 {
   fc_assert_ret_val(NULL != poption, NULL);
   fc_assert_ret_val(OT_ENUM == poption->type, NULL);
@@ -1180,14 +1184,14 @@ struct client_option {
     struct {
       int *const pvalue;
       const int def;
-      struct strvec *support_names, *pretty_names; /* untranslated */
+      QVector<QString> *support_names, *pretty_names; /* untranslated */
       const struct copt_val_name *(*const name_accessor)(int value);
     } enumerator;
     /* OT_BITWISE type option. */
     struct {
       unsigned *const pvalue;
       const unsigned def;
-      struct strvec *support_names, *pretty_names; /* untranslated */
+      QVector<QString> *support_names, *pretty_names; /* untranslated */
       const struct copt_val_name *(*const name_accessor)(int value);
     } bitwise;
     /* OT_FONT type option. */
@@ -2382,10 +2386,11 @@ static bool client_option_str_set(struct option *poption, const char *str)
 static const char *client_option_enum_secfile_str(secfile_data_t data,
                                                   int val)
 {
-  const struct strvec *names = CLIENT_OPTION(data)->enumerator.support_names;
+  const QVector<QString> *names =
+      CLIENT_OPTION(data)->enumerator.support_names;
 
-  return (0 <= val && val < strvec_size(names) ? strvec_get(names, val)
-                                               : NULL);
+  return (0 <= val && val < names->count() ? qUtf8Printable(names->at(val))
+                                           : NULL);
 }
 
 /************************************************************************/ /**
@@ -2396,10 +2401,10 @@ static const char *client_option_enum_secfile_str(secfile_data_t data,
 static const char *client_option_bitwise_secfile_str(secfile_data_t data,
                                                      int val)
 {
-  const struct strvec *names = CLIENT_OPTION(data)->bitwise.support_names;
+  const QVector<QString> *names = CLIENT_OPTION(data)->bitwise.support_names;
 
-  return (0 <= val && val < strvec_size(names) ? strvec_get(names, val)
-                                               : NULL);
+  return (0 <= val && val < names->count() ? qUtf8Printable(names->at(val))
+                                           : NULL);
 }
 
 /************************************************************************/ /**
@@ -2688,7 +2693,7 @@ static const struct option_str_vtable server_option_str_vtable = {
 
 static int server_option_enum_get(const struct option *poption);
 static int server_option_enum_def(const struct option *poption);
-static const struct strvec *
+static const QVector<QString> *
 server_option_enum_pretty(const struct option *poption);
 static bool server_option_enum_set(struct option *poption, int val);
 
@@ -2746,8 +2751,8 @@ struct server_option {
     struct {
       int value;
       int def;
-      struct strvec *support_names;
-      struct strvec *pretty_names; /* untranslated */
+      QVector<QString> *support_names;
+      QVector<QString> *pretty_names; /* untranslated */
     } enumerator;
     /* OT_BITWISE type option. */
     struct {
@@ -2791,11 +2796,11 @@ static void server_option_free(struct server_option *poption)
 
   case OT_ENUM:
     if (NULL != poption->enumerator.support_names) {
-      strvec_destroy(poption->enumerator.support_names);
+      delete poption->enumerator.support_names;
       poption->enumerator.support_names = NULL;
     }
     if (NULL != poption->enumerator.pretty_names) {
-      strvec_destroy(poption->enumerator.pretty_names);
+      delete poption->enumerator.pretty_names;
       poption->enumerator.pretty_names = NULL;
     }
     break;
@@ -3101,31 +3106,31 @@ void handle_server_setting_enum(
     if (NULL == psoption->enumerator.support_names) {
       /* First time we get this packet. */
       fc_assert(NULL == psoption->enumerator.pretty_names);
-      psoption->enumerator.support_names = strvec_new();
-      strvec_reserve(psoption->enumerator.support_names, packet->values_num);
-      psoption->enumerator.pretty_names = strvec_new();
-      strvec_reserve(psoption->enumerator.pretty_names, packet->values_num);
+      psoption->enumerator.support_names = new QVector<QString>;
+      psoption->enumerator.support_names->resize(packet->values_num);
+      psoption->enumerator.pretty_names = new QVector<QString>;
+      psoption->enumerator.pretty_names->resize(packet->values_num);
       for (i = 0; i < packet->values_num; i++) {
-        strvec_set(psoption->enumerator.support_names, i,
-                   packet->support_names[i]);
+        psoption->enumerator.support_names->replace(
+            i, packet->support_names[i]);
         /* Store untranslated string from server. */
-        strvec_set(psoption->enumerator.pretty_names, i,
-                   packet->pretty_names[i]);
+        psoption->enumerator.pretty_names->replace(i,
+                                                   packet->pretty_names[i]);
       }
-    } else if (strvec_size(psoption->enumerator.support_names)
+    } else if (psoption->enumerator.support_names->count()
                != packet->values_num) {
-      fc_assert(strvec_size(psoption->enumerator.support_names)
-                == strvec_size(psoption->enumerator.pretty_names));
+      fc_assert(psoption->enumerator.support_names->count()
+                == psoption->enumerator.pretty_names->count());
       /* The number of values have changed, we need to reset the list
        * of possible values. */
-      strvec_reserve(psoption->enumerator.support_names, packet->values_num);
-      strvec_reserve(psoption->enumerator.pretty_names, packet->values_num);
+      psoption->enumerator.support_names->resize(packet->values_num);
+      psoption->enumerator.pretty_names->resize(packet->values_num);
       for (i = 0; i < packet->values_num; i++) {
-        strvec_set(psoption->enumerator.support_names, i,
-                   packet->support_names[i]);
+        psoption->enumerator.support_names->replace(
+            i, packet->support_names[i]);
         /* Store untranslated string from server. */
-        strvec_set(psoption->enumerator.pretty_names, i,
-                   packet->pretty_names[i]);
+        psoption->enumerator.pretty_names->replace(i,
+                                                   packet->pretty_names[i]);
       }
       need_gui_remove = TRUE;
       need_gui_add = TRUE;
@@ -3135,18 +3140,18 @@ void handle_server_setting_enum(
       const char *str;
 
       for (i = 0; i < packet->values_num; i++) {
-        str = strvec_get(psoption->enumerator.pretty_names, i);
+        str = qUtf8Printable(psoption->enumerator.pretty_names->at(i));
         if (NULL == str || 0 != strcmp(str, packet->pretty_names[i])) {
           /* Store untranslated string from server. */
-          strvec_set(psoption->enumerator.pretty_names, i,
-                     packet->pretty_names[i]);
+          psoption->enumerator.pretty_names->replace(
+              i, packet->pretty_names[i]);
           need_gui_remove = TRUE;
           need_gui_add = TRUE;
         }
         /* Support names are not visible, we don't need to check if it
          * has changed. */
-        strvec_set(psoption->enumerator.support_names, i,
-                   packet->support_names[i]);
+        psoption->enumerator.support_names->replace(
+            i, packet->support_names[i]);
       }
     }
   }
@@ -3497,7 +3502,7 @@ static int server_option_enum_def(const struct option *poption)
    Returns the user-visible, translatable (but untranslated) "pretty" names
    of this server option of type OT_ENUM.
  ****************************************************************************/
-static const struct strvec *
+static const QVector<QString> *
 server_option_enum_pretty(const struct option *poption)
 {
   return SERVER_OPTION(poption)->enumerator.pretty_names;
@@ -3513,7 +3518,8 @@ static bool server_option_enum_set(struct option *poption, int val)
   const char *name;
 
   if (val == psoption->enumerator.value
-      || !(name = strvec_get(psoption->enumerator.support_names, val))) {
+      || !(name = qUtf8Printable(
+               psoption->enumerator.support_names->at(val)))) {
     return FALSE;
   }
 
@@ -3530,13 +3536,13 @@ static void server_option_enum_support_name(const struct option *poption,
                                             const char **pdefault)
 {
   const struct server_option *psoption = SERVER_OPTION(poption);
-  const struct strvec *values = psoption->enumerator.support_names;
+  const QVector<QString> *values = psoption->enumerator.support_names;
 
   if (NULL != pvalue) {
-    *pvalue = strvec_get(values, psoption->enumerator.value);
+    *pvalue = qUtf8Printable(values->at(psoption->enumerator.value));
   }
   if (NULL != pdefault) {
-    *pdefault = strvec_get(values, psoption->enumerator.def);
+    *pdefault = qUtf8Printable(values->at(psoption->enumerator.def));
   }
 }
 
@@ -4713,17 +4719,17 @@ void options_save(option_save_log_callback log_cb)
    Initialize lists of names for a client option.
  ****************************************************************************/
 static void options_init_names(const struct copt_val_name *(*acc)(int),
-                               struct strvec **support,
-                               struct strvec **pretty)
+                               QVector<QString> **support,
+                               QVector<QString> **pretty)
 {
   int val;
   const struct copt_val_name *name;
   fc_assert_ret(NULL != acc);
-  *support = strvec_new();
-  *pretty = strvec_new();
+  *support = new QVector<QString>;
+  *pretty = new QVector<QString>;
   for (val = 0; (name = acc(val)); val++) {
-    strvec_append(*support, name->support);
-    strvec_append(*pretty, name->pretty);
+    (*support)->append(name->support);
+    (*pretty)->append(name->pretty);
   }
 }
 
@@ -4832,20 +4838,16 @@ void options_free(void)
     switch (option_type(poption)) {
     case OT_ENUM:
       fc_assert_action(NULL != pcoption->enumerator.support_names, break);
-      strvec_destroy(pcoption->enumerator.support_names);
-      pcoption->enumerator.support_names = NULL;
+      FC_FREE(pcoption->enumerator.support_names);
       fc_assert_action(NULL != pcoption->enumerator.pretty_names, break);
-      strvec_destroy(pcoption->enumerator.pretty_names);
-      pcoption->enumerator.pretty_names = NULL;
+      FC_FREE(pcoption->enumerator.pretty_names);
       break;
 
     case OT_BITWISE:
       fc_assert_action(NULL != pcoption->bitwise.support_names, break);
-      strvec_destroy(pcoption->bitwise.support_names);
-      pcoption->bitwise.support_names = NULL;
+      FC_FREE(pcoption->bitwise.support_names);
       fc_assert_action(NULL != pcoption->bitwise.pretty_names, break);
-      strvec_destroy(pcoption->bitwise.pretty_names);
-      pcoption->bitwise.pretty_names = NULL;
+      FC_FREE(pcoption->bitwise.pretty_names);
       break;
 
     case OT_BOOLEAN:

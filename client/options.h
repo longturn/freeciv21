@@ -269,7 +269,7 @@ int option_enum_get_int(const struct option *poption);
 const char *option_enum_get_str(const struct option *poption);
 int option_enum_def_int(const struct option *poption);
 const char *option_enum_def_str(const struct option *poption);
-const struct strvec *option_enum_values(const struct option *poption);
+const QVector<QString> *option_enum_values(const struct option *poption);
 bool option_enum_set_int(struct option *poption, int val);
 bool option_enum_set_str(struct option *poption, const char *str);
 
