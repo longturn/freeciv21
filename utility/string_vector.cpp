@@ -257,7 +257,7 @@ const char *strvec_to_and_list(const struct strvec *psv,
   return astr_build_and_list(astr, (const char **) psv->vec, psv->size);
 }
 
-const char *qtrvec_to_or_list(const QVector<QString> *psv, struct astring *astr)
+const char *qstrvec_to_or_list(const QVector<QString> *psv, struct astring *astr)
 {
   fc_assert_ret_val(NULL != psv, NULL);
   char **ccc = nullptr;

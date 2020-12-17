@@ -499,8 +499,8 @@ static void insert_allows_single(struct universal *psource,
                                  const char *const *strs, char *buf,
                                  size_t bufsz, const char *prefix)
 {
-  struct strvec *coreqs = strvec_new();
-  struct strvec *conoreqs = strvec_new();
+  QVector<QString> *coreqs = new QVector<QString>;
+  QVector<QString> *conoreqs = new QVector<QString>;
   struct astring coreqstr = ASTRING_INIT;
   struct astring conoreqstr = ASTRING_INIT;
   char *buf2 = new char[bufsz];
@@ -520,27 +520,31 @@ static void insert_allows_single(struct universal *psource,
           if (!coreq->quiet
               && !are_universals_equal(psource, &coreq->source)) {
             universal_name_translation(&coreq->source, buf2, sizeof(buf2));
-            strvec_append(coreq->present ? coreqs : conoreqs, buf2);
+            if (coreq->present) {
+              coreqs->append(buf2);
+            } else {
+              conoreqs->append(buf2);
+            }
           }
         }
         requirement_vector_iterate_end;
 
-        if (0 < strvec_size(coreqs)) {
-          if (0 < strvec_size(conoreqs)) {
+        if (0 < coreqs->count()) {
+          if (0 < conoreqs->count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[0]), /* "Allows %s (with %s but no %s)." */
-                         subjstr, strvec_to_and_list(coreqs, &coreqstr),
-                         strvec_to_or_list(conoreqs, &conoreqstr));
+                         subjstr, qstrvec_to_and_list(coreqs, &coreqstr),
+                         qstrvec_to_or_list(conoreqs, &conoreqstr));
           } else {
             cat_snprintf(buf, bufsz,
                          Q_(strs[1]), /* "Allows %s (with %s)." */
-                         subjstr, strvec_to_and_list(coreqs, &coreqstr));
+                         subjstr, qstrvec_to_and_list(coreqs, &coreqstr));
           }
         } else {
-          if (0 < strvec_size(conoreqs)) {
+          if (0 < conoreqs->count()) {
             cat_snprintf(buf, bufsz,
                          Q_(strs[2]), /* "Allows %s (absent %s)." */
-                         subjstr, strvec_to_and_list(conoreqs, &conoreqstr));
+                         subjstr, qstrvec_to_and_list(conoreqs, &conoreqstr));
           } else {
             cat_snprintf(buf, bufsz, Q_(strs[3]), /* "Allows %s." */
                          subjstr);
@@ -556,8 +560,8 @@ static void insert_allows_single(struct universal *psource,
   }
   requirement_vector_iterate_end;
 
-  strvec_destroy(coreqs);
-  strvec_destroy(conoreqs);
+  delete coreqs;
+  delete conoreqs;
   astr_free(&coreqstr);
   astr_free(&conoreqstr);
   delete[] buf2;
@@ -2715,70 +2719,70 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
       case ACTRES_IRRIGATE:
       case ACTRES_BASE: {
         struct astring extras_and = ASTRING_INIT;
-        struct strvec *extras_vec = strvec_new();
+        QVector<QString> *extras_vec = new QVector<QString>;
 
         extra_type_iterate(pextra)
         {
           if (action_creates_extra(paction, pextra)) {
-            strvec_append(extras_vec, extra_name_translation(pextra));
+            extras_vec->append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
 
-        if (strvec_size(extras_vec) > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
+        if (extras_vec->count() > 0) {
+          qstrvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: %s is list of extra types separated by ',' and 'and' */
           cat_snprintf(buf, bufsz, _("  * builds %s on tiles.\n"),
                        astr_str(&extras_and));
-          strvec_clear(extras_vec);
+          extras_vec->clear();
         }
 
-        strvec_destroy(extras_vec);
+        delete extras_vec;
       } break;
       case ACTRES_CLEAN_POLLUTION:
       case ACTRES_CLEAN_FALLOUT: {
         struct astring extras_and = ASTRING_INIT;
-        struct strvec *extras_vec = strvec_new();
+        QVector<QString> *extras_vec = new QVector<QString>;
 
         extra_type_iterate(pextra)
         {
           if (action_removes_extra(paction, pextra)) {
-            strvec_append(extras_vec, extra_name_translation(pextra));
+            extras_vec->append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
 
-        if (strvec_size(extras_vec) > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
+        if (extras_vec->count() > 0) {
+          qstrvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * cleans %s from tiles.\n"),
                        astr_str(&extras_and));
-          strvec_clear(extras_vec);
+          extras_vec->clear();
         }
 
-        strvec_destroy(extras_vec);
+        delete extras_vec;
       } break;
       case ACTRES_PILLAGE: {
         struct astring extras_and = ASTRING_INIT;
-        struct strvec *extras_vec = strvec_new();
+        QVector<QString> *extras_vec = new QVector<QString>;
 
         extra_type_iterate(pextra)
         {
           if (action_removes_extra(paction, pextra)) {
-            strvec_append(extras_vec, extra_name_translation(pextra));
+            extras_vec->append(extra_name_translation(pextra));
           }
         }
         extra_type_iterate_end;
 
-        if (strvec_size(extras_vec) > 0) {
-          strvec_to_and_list(extras_vec, &extras_and);
+        if (extras_vec->count() > 0) {
+          qstrvec_to_and_list(extras_vec, &extras_and);
           /* TRANS: list of extras separated by "and" */
           cat_snprintf(buf, bufsz, _("  * pillages %s from tiles.\n"),
                        astr_str(&extras_and));
-          strvec_clear(extras_vec);
+          extras_vec->clear();
         }
 
-        strvec_destroy(extras_vec);
+        delete extras_vec;
         astr_free(&extras_and);
       } break;
       case ACTRES_FORTIFY: {
@@ -4082,7 +4086,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
     struct unit_class *unitclass = NULL;
     const struct unit_type *unittype = NULL;
     enum unit_type_flag_id unitflag = unit_type_flag_id_invalid();
-    struct strvec *outputs = strvec_new();
+    QVector<QString> *outputs = new QVector<QString>;
     struct astring outputs_or = ASTRING_INIT;
     struct astring outputs_and = ASTRING_INIT;
     bool too_complex = FALSE;
@@ -4107,7 +4111,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
          * Ruleset loading code should check against that. */
         fc_assert(output_type == O_LAST);
         output_type = preq->source.value.outputtype;
-        strvec_append(outputs, get_output_name(output_type));
+        outputs->append(get_output_name(output_type));
         break;
       case VUT_UCLASS:
         fc_assert(unitclass == NULL);
@@ -4194,19 +4198,19 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               get_output_type(static_cast<Output_type_id>(ot));
 
           if (!harvested_only || pot->harvested) {
-            strvec_append(outputs, _(pot->name));
+            outputs->append(_(pot->name));
           }
         }
         output_type_iterate_end;
       }
 
-      if (0 == strvec_size(outputs)) {
+      if (0 == outputs->count()) {
         /* TRANS: Empty output type list, should never happen. */
         astr_set(&outputs_or, "%s", Q_("?outputlist: Nothing "));
         astr_set(&outputs_and, "%s", Q_("?outputlist: Nothing "));
       } else {
-        strvec_to_or_list(outputs, &outputs_or);
-        strvec_to_and_list(outputs, &outputs_and);
+        qstrvec_to_or_list(outputs, &outputs_or);
+        qstrvec_to_and_list(outputs, &outputs_and);
       }
 
       switch (peffect->type) {
@@ -4464,13 +4468,13 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
         break;
       case EFT_FANATICS:
         if (playerwide && net_value > 0) {
-          struct strvec *fanatics = strvec_new();
+          QVector<QString> *fanatics = new QVector<QString>;
           struct astring fanaticstr = ASTRING_INIT;
 
           unit_type_iterate(putype)
           {
             if (utype_has_flag(putype, UTYF_FANATIC)) {
-              strvec_append(fanatics, utype_name_translation(putype));
+              fanatics->append(utype_name_translation(putype));
             }
           }
           unit_type_iterate_end;
@@ -4478,8 +4482,8 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
               buf, bufsz,
               /* TRANS: %s is list of unit types separated by 'or' */
               _("* Pays no upkeep for %s.\n"),
-              strvec_to_or_list(fanatics, &fanaticstr));
-          strvec_destroy(fanatics);
+              qstrvec_to_or_list(fanatics, &fanaticstr));
+          delete fanatics;
           astr_free(&fanaticstr);
         }
         break;
@@ -4690,7 +4694,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
       };
     }
 
-    strvec_destroy(outputs);
+    delete outputs;
     astr_free(&outputs_or);
     astr_free(&outputs_and);
   }
