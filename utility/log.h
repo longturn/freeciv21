@@ -12,14 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-#include <stdarg.h>
-#include <stdlib.h>
-
 // Qt
-#include <QDebug>
 #include <QLoggingCategory>
-#include <QString>
-#include <QtGlobal>
 
 #include "fcintl.h"
 
