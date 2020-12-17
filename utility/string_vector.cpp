@@ -257,6 +257,33 @@ const char *strvec_to_and_list(const struct strvec *psv,
   return astr_build_and_list(astr, (const char **) psv->vec, psv->size);
 }
 
+const char *qtrvec_to_or_list(const QVector<QString> *psv, struct astring *astr)
+{
+  fc_assert_ret_val(NULL != psv, NULL);
+  char **ccc = nullptr;
+  int i = 0;
+  for (auto a: *psv) {
+    ccc[i] = psv->at(i).toLocal8Bit().data();
+    i++;
+  }
+
+  return astr_build_or_list(astr, ccc, psv->count());
+}
+
+const char *qstrvec_to_and_list(const QVector<QString> *psv,
+                               struct astring *astr)
+{
+  fc_assert_ret_val(NULL != psv, NULL);
+  char **ccc = nullptr;
+  int i = 0;
+  for (auto a: *psv) {
+    ccc[i] = psv->at(i).toLocal8Bit().data();
+    i++;
+  }
+
+  return astr_build_and_list(astr, ccc, psv->count());
+}
+
 /**********************************************************************/ /**
    Stores the string vector from a normal vector. If size == -1, it will
    assume it is a NULL terminated vector.

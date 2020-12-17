@@ -39,5 +39,9 @@ const char *strvec_to_or_list(const struct strvec *psv,
                               struct astring *astr);
 const char *strvec_to_and_list(const struct strvec *psv,
                                struct astring *astr);
+const char *qtrvec_to_or_list(const QVector<QString> *psv,
+                              struct astring *astr);
+const char *qstrvec_to_and_list(const QVector<QString> *psv,
+                               struct astring *astr);
 void qstrvec_store(QVector<QString> *psv, const char *const *vec,
                    size_t size);

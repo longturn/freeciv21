@@ -5702,28 +5702,28 @@ static const char *setting_bitwise_to_str(const struct setting *pset,
   if (pretty) {
     char buf2[256];
     struct astring astr = ASTRING_INIT;
-    struct strvec *vec = strvec_new();
+    QVector<QString> *vec = new QVector<QString>;
     size_t len;
 
     for (bit = 0; (name = pset->bitwise.name(bit)); bit++) {
       if ((1 << bit) & value) {
         /* TRANS: only emphasizing a string. */
         fc_snprintf(buf2, sizeof(buf2), _("\"%s\""), Q_(name->pretty));
-        strvec_append(vec, buf2);
+        vec->append(buf2);
       }
     }
 
-    if (0 == strvec_size(vec)) {
+    if (0 == vec->count()) {
       /* No value. */
       fc_assert(0 == value);
       /* TRANS: Bitwise setting has no bits set. */
       fc_strlcpy(buf, _("empty value"), buf_len);
-      strvec_destroy(vec);
+      delete vec;
       return buf;
     }
 
-    strvec_to_and_list(vec, &astr);
-    strvec_destroy(vec);
+    qstrvec_to_and_list(vec, &astr);
+    delete vec;
     fc_strlcpy(buf, astr_str(&astr), buf_len);
     astr_free(&astr);
     fc_strlcat(buf, " (", buf_len);
