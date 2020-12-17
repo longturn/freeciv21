@@ -53,8 +53,8 @@ static struct name_translation advance_unset_name = NAME_INIT;
 static struct name_translation advance_future_name = NAME_INIT;
 static struct name_translation advance_unknown_name = NAME_INIT;
 
-static struct strvec *future_rule_name;
-static struct strvec *future_name_translation;
+static QVector<QString> *future_rule_name;
+static QVector<QString> *future_name_translation;
 
 /************************************************************************/ /**
    Initializes all player research structure.
@@ -90,8 +90,8 @@ void researches_init(void)
   /* TRANS: "Unknown" advance/technology */
   name_set(&advance_unknown_name, NULL, N_("(Unknown)"));
 
-  future_rule_name = strvec_new();
-  future_name_translation = strvec_new();
+  future_rule_name = new QVector<QString>;
+  future_name_translation = new QVector<QString>;
 }
 
 /************************************************************************/ /**
@@ -99,8 +99,8 @@ void researches_init(void)
  ****************************************************************************/
 void researches_free(void)
 {
-  strvec_destroy(future_rule_name);
-  strvec_destroy(future_name_translation);
+  delete future_rule_name;
+  delete future_name_translation;
 }
 
 /************************************************************************/ /**
@@ -216,19 +216,19 @@ research_advance_name(Tech_type_id tech)
    Set a new future tech name in the string vector, and return the string
    duplicate stored inside the vector.
  ****************************************************************************/
-static const char *research_future_set_name(struct strvec *psv, int no,
+static const char *research_future_set_name(QVector<QString> *psv, int no,
                                             const char *new_name)
 {
-  if (strvec_size(psv) <= no) {
+  if (psv->count() <= no) {
     /* Increase the size of the vector if needed. */
-    strvec_reserve(psv, no + 1);
+    psv->resize(no + 1);
   }
 
   /* Set in vector. */
-  strvec_set(psv, no, new_name);
+  psv->replace(no, new_name);
 
   /* Return duplicate of 'new_name'. */
-  return strvec_get(psv, no);
+  return qUtf8Printable(psv->at(no));
 }
 
 /************************************************************************/ /**
@@ -244,7 +244,7 @@ const char *research_advance_rule_name(const struct research *presearch,
     const int no = presearch->future_tech;
     const char *name;
 
-    name = strvec_get(future_rule_name, no);
+    name = qUtf8Printable(future_rule_name->at(no));
     if (name == NULL) {
       char buffer[256];
 
@@ -274,10 +274,13 @@ research_advance_name_translation(const struct research *presearch,
 {
   if (A_FUTURE == tech && NULL != presearch) {
     const int no = presearch->future_tech;
-    const char *name;
+    const char *name = nullptr;
 
-    name = strvec_get(future_name_translation, no);
-    if (name == NULL) {
+    if (no < future_name_translation->count()) {
+       /* FIXME remove check to read outside vector */
+      name = qUtf8Printable(future_name_translation->at(no));
+    }
+    if (name == nullptr) {
       char buffer[256];
 
       /* NB: 'presearch->future_tech == 0' means "Future Tech. 1". */
