@@ -30,6 +30,7 @@
 #include "options.h"
 #include "themes_common.h"
 
+Q_GLOBAL_STATIC(QVector<QString>, themes_list)
 /***************************************************************************
   A theme is a portion of client data, which for following reasons should
   be separated from a tileset:
@@ -86,12 +87,9 @@ void init_themes(void)
  ****************************************************************************/
 const QVector<QString> *get_themes_list(const struct option *poption)
 {
-  static QVector<QString> *themes_list = NULL;
-
-  if (NULL == themes_list) {
+  if (themes_list->isEmpty()) {
     int i, j, k;
 
-    themes_list = new QVector<QString>;
     for (i = 0; i < num_directories; i++) {
       for (j = 0; j < directories[i].num_themes; j++) {
         for (k = 0; k < themes_list->count(); k++) {

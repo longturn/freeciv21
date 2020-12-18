@@ -53,8 +53,8 @@ static struct name_translation advance_unset_name = NAME_INIT;
 static struct name_translation advance_future_name = NAME_INIT;
 static struct name_translation advance_unknown_name = NAME_INIT;
 
-static QVector<QString> *future_rule_name;
-static QVector<QString> *future_name_translation;
+Q_GLOBAL_STATIC(QVector<QString>, future_rule_name)
+Q_GLOBAL_STATIC(QVector<QString>, future_name_translation);
 
 /************************************************************************/ /**
    Initializes all player research structure.
@@ -89,9 +89,6 @@ void researches_init(void)
   name_set(&advance_future_name, NULL, N_("Future Tech."));
   /* TRANS: "Unknown" advance/technology */
   name_set(&advance_unknown_name, NULL, N_("(Unknown)"));
-
-  future_rule_name = new QVector<QString>;
-  future_name_translation = new QVector<QString>;
 }
 
 /************************************************************************/ /**
@@ -99,8 +96,8 @@ void researches_init(void)
  ****************************************************************************/
 void researches_free(void)
 {
-  delete future_rule_name;
-  delete future_name_translation;
+  future_rule_name->clear();
+  future_name_translation->clear();
 }
 
 /************************************************************************/ /**

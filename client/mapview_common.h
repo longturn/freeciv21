@@ -10,7 +10,7 @@
 **************************************************************************/
 #pragma once
 
-// /* common */
+/* common */
 #include "map.h"
 #include "featured_text.h"
 /* include */

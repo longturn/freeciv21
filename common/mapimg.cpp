@@ -63,6 +63,8 @@
 #define magickwand_size_t unsigned long
 #endif
 
+Q_GLOBAL_STATIC(QVector<QString>, format_list)
+
 /* == image colors == */
 enum img_special {
   IMGCOLOR_ERROR,
@@ -1113,12 +1115,8 @@ struct mapdef *mapimg_isvalid(int id)
  ****************************************************************************/
 const QVector<QString> *mapimg_get_format_list(void)
 {
-  static QVector<QString> *format_list = NULL;
-
-  if (NULL == format_list) {
+  if (format_list->isEmpty()) {
     enum imagetool tool;
-
-    format_list = new QVector<QString>();
 
     for (tool = imagetool_begin(); tool != imagetool_end();
          tool = imagetool_next(tool)) {

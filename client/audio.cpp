@@ -63,6 +63,8 @@ static struct mfcb_data {
   const char *tag;
 } mfcb;
 
+Q_GLOBAL_STATIC(QVector<QString>, plugin_list)
+
 static int audio_play_tag(struct section_file *sfile, const char *tag,
                           bool repeat, int exclude, bool keepstyle);
 
@@ -73,13 +75,8 @@ static int audio_play_tag(struct section_file *sfile, const char *tag,
  **************************************************************************/
 const QVector<QString> *get_soundplugin_list(const struct option *poption)
 {
-  static QVector<QString> *plugin_list = NULL;
-
-  if (NULL == plugin_list) {
-    int i;
-
-    plugin_list = new QVector<QString>;
-    for (i = 0; i < num_plugins_used; i++) {
+  if (plugin_list->isEmpty()) {
+    for (int i = 0; i < num_plugins_used; i++) {
       plugin_list->append(plugins[i].name);
     }
   }

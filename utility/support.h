@@ -58,27 +58,32 @@ typedef int fc_errno;
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
 
 #define NFCPP_FREE(ptr)                                                     \
-  if (ptr)                                                                  \
-    delete[](ptr);
+  if (ptr) {                                                                \
+    delete[](ptr);                                                          \
+  }
 
 #define NFC_FREE(ptr)                                                       \
-  if (ptr)                                                                  \
-    delete (ptr);
+  if (ptr) {                                                                \
+    delete (ptr);                                                           \
+  }
 
 #define NFCN_FREE(ptr)                                                      \
-  if (ptr)                                                                  \
+  if (ptr) {                                                                \
     delete (ptr);                                                           \
-  ptr = nullptr;
+    ptr = nullptr;                                                          \
+  }
 
 #define VOIDNFCN_FREE(ptr)                                                  \
-  if (ptr)                                                                  \
-    ::operator delete(ptr);                                                   \
-  ptr = nullptr;
+  if (ptr) {                                                                \
+    ::operator delete(ptr);                                                 \
+    ptr = nullptr;                                                          \
+  }
 
 #define NFCNPP_FREE(ptr)                                                    \
-  if (ptr)                                                                  \
+  if (ptr) {                                                                \
     delete[](ptr);                                                          \
-  ptr = nullptr;
+    ptr = nullptr;                                                          \
+  }
 
 #define FCPP_FREE(ptr)                                                      \
   delete[](ptr);                                                            \

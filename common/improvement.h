@@ -17,7 +17,7 @@
 /* utility */
 #include "bitvector.h"
 
-// /* common */
+/* common */
 #include "name_translation.h"
 #include "requirements.h"
 
