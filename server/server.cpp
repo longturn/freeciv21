@@ -265,9 +265,6 @@ server::server()
 #else
   m_interactive = isatty(fileno(stdin));
 #endif
-  if (m_interactive) {
-    init_interactive();
-  }
 
   // Now init the old C API
   fc_interface_init_server();
@@ -289,7 +286,9 @@ server::server()
 
   // Prepare a game
   prepare_game();
-
+  if (m_interactive) {
+    init_interactive();
+  }
   // Start pulsing
   m_pulse_timer = new QTimer(this);
   m_pulse_timer->start(1000);
