@@ -12,10 +12,8 @@
 
 void start_style_music(void);
 void stop_style_music(void);
-void start_menu_music(const QString tag, QString alt_tag);
+void start_menu_music(const QString &tag, const QString &alt_tag);
 void stop_menu_music(void);
-void play_single_track(const QString tag);
+void play_single_track(const QString &tag);
 
 void musicspec_reread_callback(struct option *poption);
-
-

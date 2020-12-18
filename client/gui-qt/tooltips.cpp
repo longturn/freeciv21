@@ -210,7 +210,7 @@ QString get_tooltip_unit(const struct unit_type *utype, bool ext)
 /************************************************************************/ /**
    Returns shortened help for given universal ( stored in qvar )
  ****************************************************************************/
-QString get_tooltip(QVariant qvar)
+QString get_tooltip(const QVariant &qvar)
 {
   QString str, def_str, ret_str;
   QStringList sl;

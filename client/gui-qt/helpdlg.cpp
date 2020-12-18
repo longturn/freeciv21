@@ -1205,7 +1205,7 @@ canvas *terrain_canvas(struct terrain *terrain,
 }
 
 // helper for create_terrain_widget
-static QLabel *make_helplabel(QString title, const QString &tooltip,
+static QLabel *make_helplabel(const QString &title, const QString &tooltip,
                               QHBoxLayout *layout)
 {
   QLabel *label;

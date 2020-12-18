@@ -65,7 +65,7 @@ static struct mfcb_data {
 
 Q_GLOBAL_STATIC(QVector<QString>, plugin_list)
 
-static int audio_play_tag(struct section_file *sfile, const QString tag,
+static int audio_play_tag(struct section_file *sfile, const QString &tag,
                           bool repeat, int exclude, bool keepstyle);
 
 /**********************************************************************/ /**
@@ -361,7 +361,8 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
 /**********************************************************************/ /**
    Switch soundset
  **************************************************************************/
-void audio_restart(QString soundset_name, QString musicset_name)
+void audio_restart(const QString &soundset_name,
+                   const QString &musicset_name)
 {
   audio_stop(); /* Fade down old one */
 
@@ -404,7 +405,7 @@ static void music_finished_callback(void)
    INTERNAL. Returns id (>= 0) of the tag selected for playing, 0 when
    there's no alternative tags, or negative value in case of error.
  **************************************************************************/
-static int audio_play_tag(struct section_file *sfile, const QString tag,
+static int audio_play_tag(struct section_file *sfile, const QString &tag,
                           bool repeat, int exclude, bool keepstyle)
 {
   const char *soundfile;
@@ -426,8 +427,8 @@ static int audio_play_tag(struct section_file *sfile, const QString tag,
 
       j = 0;
       for (i = 0; i < MAX_ALT_AUDIO_FILES; i++) {
-        const char *ftmp = secfile_lookup_str(sfile, "files.%s_%d",
-                                              qUtf8Printable(tag), i);
+        const char *ftmp =
+            secfile_lookup_str(sfile, "files.%s_%d", qUtf8Printable(tag), i);
 
         if (ftmp == NULL) {
           if (excluded != -1 && j == 0) {
@@ -475,8 +476,7 @@ static int audio_play_tag(struct section_file *sfile, const QString tag,
     }
   }
 
-  if (!plugins[selected_plugin].play(tag, fullpath, repeat,
-                                     cb)) {
+  if (!plugins[selected_plugin].play(tag, fullpath, repeat, cb)) {
     return -1;
   }
 
@@ -486,7 +486,7 @@ static int audio_play_tag(struct section_file *sfile, const QString tag,
 /**********************************************************************/ /**
    Play tag from sound set
  **************************************************************************/
-static bool audio_play_sound_tag(const QString tag, bool repeat)
+static bool audio_play_sound_tag(const QString &tag, bool repeat)
 {
   return (audio_play_tag(ss_tagfile, tag, repeat, -1, false) >= 0);
 }
@@ -494,7 +494,7 @@ static bool audio_play_sound_tag(const QString tag, bool repeat)
 /**********************************************************************/ /**
    Play tag from music set
  **************************************************************************/
-static int audio_play_music_tag(const QString tag, bool repeat,
+static int audio_play_music_tag(const QString &tag, bool repeat,
                                 bool keepstyle)
 {
   return audio_play_tag(ms_tagfile, tag, repeat, -1, keepstyle);
@@ -503,19 +503,21 @@ static int audio_play_music_tag(const QString tag, bool repeat,
 /**********************************************************************/ /**
    Play an audio sample as suggested by sound tags
  **************************************************************************/
-void audio_play_sound(const QString tag, const QString alt_tag)
+void audio_play_sound(const QString &tag, const QString &alt_tag)
 {
   const QString pretty_alt_tag = alt_tag.isEmpty() ? "(null)" : alt_tag;
 
   if (gui_options.sound_enable_effects) {
     fc_assert_ret(tag != NULL);
 
-    log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag), qUtf8Printable(pretty_alt_tag));
+    log_debug("audio_play_sound('%s', '%s')", qUtf8Printable(tag),
+              qUtf8Printable(pretty_alt_tag));
 
     /* try playing primary tag first, if not go to alternative tag */
     if (!audio_play_sound_tag(tag, false)
         && !audio_play_sound_tag(alt_tag, false)) {
-      qDebug("Neither of tags %s or %s found", qUtf8Printable(tag), qUtf8Printable(pretty_alt_tag));
+      qDebug("Neither of tags %s or %s found", qUtf8Printable(tag),
+             qUtf8Printable(pretty_alt_tag));
     }
   }
 }
@@ -524,14 +526,15 @@ void audio_play_sound(const QString tag, const QString alt_tag)
    Play music, either in loop or just one track in the middle of the style
    music.
  **************************************************************************/
-static void real_audio_play_music(const QString tag,
-                                  QString alt_tag, bool keepstyle)
+static void real_audio_play_music(const QString &tag, const QString &alt_tag,
+                                  bool keepstyle)
 {
   QString pretty_alt_tag = alt_tag.isEmpty() ? ("(null)") : alt_tag;
 
   fc_assert_ret(tag != NULL);
 
-  log_debug("audio_play_music('%s', '%s')", qUtf8Printable(tag), qUtf8Printable(pretty_alt_tag));
+  log_debug("audio_play_music('%s', '%s')", qUtf8Printable(tag),
+            qUtf8Printable(pretty_alt_tag));
 
   /* try playing primary tag first, if not go to alternative tag */
   current_track = audio_play_music_tag(tag, true, keepstyle);
@@ -540,7 +543,8 @@ static void real_audio_play_music(const QString tag,
     current_track = audio_play_music_tag(alt_tag, true, keepstyle);
 
     if (current_track < 0) {
-      qDebug("Neither of tags %s or %s found", qUtf8Printable(tag), qUtf8Printable(pretty_alt_tag));
+      qDebug("Neither of tags %s or %s found", qUtf8Printable(tag),
+             qUtf8Printable(pretty_alt_tag));
     }
   }
 }
@@ -548,7 +552,7 @@ static void real_audio_play_music(const QString tag,
 /**********************************************************************/ /**
    Loop music as suggested by sound tags
  **************************************************************************/
-void audio_play_music(const QString tag, QString alt_tag,
+void audio_play_music(const QString &tag, const QString &alt_tag,
                       enum music_usage usage)
 {
   current_usage = usage;
@@ -559,7 +563,7 @@ void audio_play_music(const QString tag, QString alt_tag,
 /**********************************************************************/ /**
    Play single track as suggested by sound tags
  **************************************************************************/
-void audio_play_track(const QString tag, QString alt_tag)
+void audio_play_track(const QString &tag, const QString &alt_tag)
 {
   current_usage = MU_SINGLE;
 

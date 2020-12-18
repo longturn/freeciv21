@@ -42,9 +42,8 @@ static void none_audio_wait(void) {}
 /**********************************************************************/ /**
    Play sound sample
  **************************************************************************/
-static bool none_audio_play(const QString tag,
-                            const QString fullpath, bool repeat,
-                            audio_finished_callback cb)
+static bool none_audio_play(const QString &tag, const QString &fullpath,
+                            bool repeat, audio_finished_callback cb)
 {
   if (tag == "e_turn_bell") {
     sound_bell();

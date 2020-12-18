@@ -28,7 +28,7 @@ struct audio_plugin {
   void (*wait)(void);
   double (*get_volume)(void);
   void (*set_volume)(double volume);
-  bool (*play)(const QString tag, const QString path, bool repeat,
+  bool (*play)(const QString &tag, const QString &path, bool repeat,
                audio_finished_callback cb);
 };
 
@@ -46,12 +46,13 @@ void audio_add_plugin(struct audio_plugin *p);
 void audio_shutdown(void);
 void audio_stop(void);
 void audio_stop_usage(void);
-void audio_restart(QString soundset_name, QString musicset_name);
+void audio_restart(const QString &soundset_name,
+                   const QString &musicset_name);
 
-void audio_play_sound(const QString tag, const QString alt_tag);
-void audio_play_music(const QString tag, QString alt_tag,
+void audio_play_sound(const QString &tag, const QString &alt_tag);
+void audio_play_music(const QString &tag, const QString &alt_tag,
                       enum music_usage usage);
-void audio_play_track(const QString tag, QString alt_tag);
+void audio_play_track(const QString &tag, const QString &alt_tag);
 
 double audio_get_volume(void);
 void audio_set_volume(double volume);

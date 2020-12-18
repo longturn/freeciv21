@@ -497,7 +497,7 @@ fc_sc_button::fc_sc_button(fc_shortcut *s) : QPushButton()
 /**********************************************************************/ /**
    Executes slot to show information about assigned shortcut
  **************************************************************************/
-void fc_sc_button::show_info(QString str)
+void fc_sc_button::show_info(const QString &str)
 {
   err_message = str;
   popup_error();

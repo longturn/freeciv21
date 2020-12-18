@@ -168,7 +168,7 @@ public:
   fc_sc_button(fc_shortcut *s);
   fc_shortcut *sc;
   fc_shortcut *sc_orig;
-  void show_info(QString str);
+  void show_info(const QString &str);
 private slots:
   void popup_error();
 };

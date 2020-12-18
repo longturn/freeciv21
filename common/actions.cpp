@@ -251,7 +251,7 @@ static void oblig_hard_req_reg(struct ae_contra_or *contras,
    The vararg parameter is a list of action ids it applies to terminated
    by ACTION_NONE.
  **************************************************************************/
-static void oblig_hard_req_register(struct requirement contradiction,
+static void oblig_hard_req_register(const struct requirement &contradiction,
                                     bool is_target,
                                     const char *error_message, ...)
 {

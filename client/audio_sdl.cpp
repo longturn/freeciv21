@@ -66,7 +66,7 @@ static double sdl_audio_get_volume(void) { return sdl_audio_volume; }
 /**********************************************************************/ /**
    Play sound
  **************************************************************************/
-static bool sdl_audio_play(const QString tag, const QString fullpath,
+static bool sdl_audio_play(const QString &tag, const QString &fullpath,
                            bool repeat, audio_finished_callback cb)
 {
   int i, j;
@@ -102,7 +102,8 @@ static bool sdl_audio_play(const QString tag, const QString fullpath,
     /* see if we can cache on this one */
     for (j = 0; j < MIX_CHANNELS; j++) {
       if (samples[j].tag && samples[j].tag == qUtf8Printable(tag)) {
-        log_debug("Playing file \"%s\" from cache (slot %d)", qUtf8Printable(fullpath), j);
+        log_debug("Playing file \"%s\" from cache (slot %d)",
+                  qUtf8Printable(fullpath), j);
         Mix_PlayChannel(-1, samples[j].wave, 0);
         return true;
       }

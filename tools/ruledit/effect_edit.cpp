@@ -39,7 +39,7 @@
 /**********************************************************************/ /**
    Setup effect_edit object
  **************************************************************************/
-effect_edit::effect_edit(ruledit_gui *ui_in, QString target,
+effect_edit::effect_edit(ruledit_gui *ui_in, const QString &target,
                          struct universal *filter_in,
                          enum effect_filter_main_class efmc_in)
     : QDialog()

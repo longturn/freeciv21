@@ -39,7 +39,7 @@
 /**********************************************************************/ /**
    Setup req_edit object
  **************************************************************************/
-req_edit::req_edit(ruledit_gui *ui_in, QString target,
+req_edit::req_edit(ruledit_gui *ui_in, const QString &target,
                    struct requirement_vector *preqs)
     : QDialog()
 {

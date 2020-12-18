@@ -93,7 +93,7 @@ fc_client::fc_client()
   set_status_bar(_("Welcome to Freeciv"));
   create_cursors();
   // fake color init for research diagram
-  research_color::i()->setFixedSize(1,1);
+  research_color::i()->setFixedSize(1, 1);
   research_color::i()->hide();
   pages[PAGE_MAIN] = new page_main(central_wdg, this);
   page = PAGE_MAIN;
@@ -220,8 +220,8 @@ void fc_client::switch_page(int new_pg)
       setWindowFlags(Qt::Window | Qt::CustomizeWindowHint);
     }
     showMaximized();
-    // Uncommenting will fix some resizing errors but will cause some problems
-    // with no focus caused by update_queue or something
+    // Uncommenting will fix some resizing errors but will cause some
+    // problems with no focus caused by update_queue or something
     // QCoreApplication::processEvents();
     /* For MS Windows, it might ingore first */
     showMaximized();
@@ -604,7 +604,7 @@ void update_start_page(void)
 /**********************************************************************/ /**
    Sets application status bar for given time in miliseconds
  **************************************************************************/
-void fc_client::set_status_bar(QString message, int timeout)
+void fc_client::set_status_bar(const QString &message, int timeout)
 {
   if (status_bar_label->text().isEmpty()) {
     status_bar_label->setText(message);
@@ -672,21 +672,19 @@ fc_corner::fc_corner(QMainWindow *qmw) : QWidget()
   }
   mw = qmw;
   hb = new QHBoxLayout();
-  qpb =
-      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmin")),
-                      QLatin1String(""));
+  qpb = new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmin")),
+                        QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::minimize);
   hb->addWidget(qpb);
-  qpb =
-      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmax")),
-                      QLatin1String(""));
+  qpb = new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cmax")),
+                        QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::maximize);
   hb->addWidget(qpb);
-  qpb = new QPushButton(
-      fcIcons::instance()->getIcon(QStringLiteral("cclose")),
-      QLatin1String(""));
+  qpb =
+      new QPushButton(fcIcons::instance()->getIcon(QStringLiteral("cclose")),
+                      QLatin1String(""));
   qpb->setFixedSize(h, h);
   connect(qpb, &QAbstractButton::clicked, this, &fc_corner::close_fc);
   hb->addWidget(qpb);

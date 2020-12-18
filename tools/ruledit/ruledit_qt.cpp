@@ -274,7 +274,7 @@ void ruledit_gui::flush_widgets() { nation->flush_widgets(); }
 /**********************************************************************/ /**
    Open req_edit dialog
  **************************************************************************/
-void ruledit_gui::open_req_edit(QString target,
+void ruledit_gui::open_req_edit(const QString &target,
                                 struct requirement_vector *preqs)
 {
   req_edit *redit;
@@ -346,7 +346,8 @@ void ruledit_gui::unregister_req_vec_fix(req_vec_fix *fixer)
 /**********************************************************************/ /**
    Open effect_edit dialog
  **************************************************************************/
-void ruledit_gui::open_effect_edit(QString target, struct universal *uni,
+void ruledit_gui::open_effect_edit(const QString &target,
+                                   struct universal *uni,
                                    enum effect_filter_main_class efmc)
 {
   effect_edit *e_edit;

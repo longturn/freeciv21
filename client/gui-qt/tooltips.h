@@ -14,7 +14,7 @@
 class QString;
 class QVariant;
 
-QString get_tooltip(QVariant qvar);
+QString get_tooltip(const QVariant &qvar);
 QString get_tooltip_improvement(const impr_type *building,
                                 struct city *pcity = nullptr,
                                 bool ext = false);
@@ -30,4 +30,3 @@ public:
 protected:
   bool eventFilter(QObject *obj, QEvent *event);
 };
-

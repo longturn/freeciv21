@@ -91,13 +91,14 @@ public:
   void show_required(requirers_dlg *requirers, const char *msg);
   void flush_widgets();
 
-  void open_req_edit(QString target, struct requirement_vector *preqs);
+  void open_req_edit(const QString &target,
+                     struct requirement_vector *preqs);
   void unregister_req_edit(class req_edit *redit);
 
   void open_req_vec_fix(req_vec_fix_item *item_info);
   void unregister_req_vec_fix(req_vec_fix *fixer);
 
-  void open_effect_edit(QString target, struct universal *uni,
+  void open_effect_edit(const QString &target, struct universal *uni,
                         enum effect_filter_main_class efmc);
   void unregister_effect_edit(class effect_edit *e_edit);
   void refresh_effect_edits();

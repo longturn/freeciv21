@@ -59,7 +59,9 @@ const QString &log_get_level();
 #ifdef FREECIV_DEBUG
 #define log_debug(message, ...) qDebug(message, ##__VA_ARGS__)
 #else
-#define log_debug(message, ...) {}
+#define log_debug(message, ...)                                             \
+  {                                                                         \
+  }
 #endif
 
 #ifdef FREECIV_TESTMATIC
@@ -143,7 +145,7 @@ void fc_assert_handle_failure(const char *condition, const char *file,
 #ifdef FREECIV_CXX11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) static_assert(cond, #tag)
 #endif /* FREECIV_CXX11_STATIC_ASSERT */
-#else /* __cplusplus */
+#else  /* __cplusplus */
 #ifdef FREECIV_C11_STATIC_ASSERT
 #define FC_STATIC_ASSERT(cond, tag) _Static_assert(cond, #tag)
 #endif /* FREECIV_C11_STATIC_ASSERT */
@@ -162,6 +164,4 @@ void fc_assert_handle_failure(const char *condition, const char *file,
   enum { static_assert_##tag = 1 / (!!(cond)) }
 #endif
 
-void log_time(QString msg, bool log = false);
-
-
+void log_time(const QString &msg, bool log = false);
