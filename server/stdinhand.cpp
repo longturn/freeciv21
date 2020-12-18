@@ -50,9 +50,9 @@
 #include "player.h"
 #include "research.h"
 #include "rgbcolor.h"
+#include "style.h"
 #include "unitlist.h"
 #include "version.h"
-#include "style.h"
 
 /* server */
 #include "aiiface.h"
@@ -2364,7 +2364,7 @@ static bool team_command(struct connection *caller, char *str, bool check)
         QRegularExpression("\\s+(?=([^\"]*\"[^\"]*\")*[^\"]*$)"),
         QString::SkipEmptyParts);
     remove_quotes(arg);
-    for (auto a : arg) {
+    for (const auto &a : qAsConst(arg)) {
       qInfo() << a;
     }
   }
@@ -6762,7 +6762,7 @@ static void show_rulesets(struct connection *caller)
   cmd_reply(CMD_LIST, caller, C_COMMENT, horiz_line);
 
   serv_list = get_init_script_choices();
-  for (auto s : *serv_list) {
+  for (const auto &s : *serv_list) {
     cmd_reply(CMD_LIST, caller, C_COMMENT, "%s", qUtf8Printable(s));
   }
   delete serv_list;

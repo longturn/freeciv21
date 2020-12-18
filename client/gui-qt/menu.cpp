@@ -2752,7 +2752,7 @@ void mr_menu::tileset_custom_load()
     on_bytes = s.toLocal8Bit();
     poption = optset_option_by_name(client_optset, on_bytes.data());
     tlset_list = get_tileset_list(poption);
-    for (auto value : *tlset_list) {
+    for (const auto &value : *tlset_list) {
       but = new QPushButton(value);
       connect(but, &QAbstractButton::clicked, this,
               &mr_menu::load_new_tileset);
@@ -2938,7 +2938,7 @@ void mr_menu::save_game_as()
   QString current_file;
   QString location;
 
-  for (auto dirname : *get_save_dirs()) {
+  for (const auto &dirname : *get_save_dirs()) {
     location = dirname;
     // choose last location
   }

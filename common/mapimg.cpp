@@ -769,7 +769,7 @@ bool mapimg_define(const char *maparg, bool check)
   /* get map options */
   mapargs = QString(maparg).split(":");
 
-  for (auto str : mapargs) {
+  for (const auto &str : qAsConst(mapargs)) {
     /* split map options into variable and value */
     mapopts = str.split("=");
 

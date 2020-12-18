@@ -637,7 +637,7 @@ void option_dialog::add_option(struct option *poption)
     values = option_str_values(poption);
     if (NULL != values) {
       combo = new QComboBox();
-      for (auto value : *values) {
+      for (const auto &value : *values) {
         combo->addItem(value);
       }
       widget = combo;

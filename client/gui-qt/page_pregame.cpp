@@ -184,8 +184,8 @@ void page_pregame::update_start_page()
             item->setIcon(
                 col, fcIcons::instance()->getIcon(QStringLiteral("ai")));
           } else {
-            item->setIcon(col, fcIcons::instance()->getIcon(
-                                   QStringLiteral("human")));
+            item->setIcon(
+                col, fcIcons::instance()->getIcon(QStringLiteral("human")));
           }
 
           item->setText(col, str);
@@ -431,7 +431,7 @@ void page_pregame::start_page_menu(QPoint pos)
     return;
   }
 
-  for (auto item : sel_items) {
+  for (auto item : qAsConst(sel_items)) {
     qvar = item->data(0, Qt::UserRole);
     qvar2 = item->data(1, Qt::UserRole);
 
@@ -520,7 +520,7 @@ void page_pregame::start_page_menu(QPoint pos)
                   new QAction(QString(level_name), ui.start_players_tree);
               QObject::connect(action, &QAction::triggered,
                                [this, spl, level_cmd]() {
-                                 for (auto sp : spl) {
+                                 for (const auto &sp : spl) {
                                    QString str;
                                    str = "/" + QString(level_cmd) + " " + sp;
                                    send_fake_chat_message(str);
@@ -554,7 +554,7 @@ void page_pregame::start_page_menu(QPoint pos)
           action = new QAction(str, ui.start_players_tree);
           QObject::connect(
               action, &QAction::triggered, [this, spl, tslot]() {
-                for (auto sp : spl) {
+                for (const auto &sp : spl) {
                   QString str = "/team" + sp + " \""
                                 + QString(team_slot_rule_name(tslot)) + "\"";
                   send_fake_chat_message(str);
@@ -570,7 +570,7 @@ void page_pregame::start_page_menu(QPoint pos)
         str = QString(_("Aitoggle player"));
         action = new QAction(str, ui.start_players_tree);
         QObject::connect(action, &QAction::triggered, [this, spl]() {
-          for (auto sp : spl) {
+          for (const auto &sp : spl) {
             QString str = "/aitoggle " + sp;
             send_fake_chat_message(str);
           }

@@ -617,10 +617,7 @@ char *user_home_dir(void)
 /************************************************************************/ /**
    Free user home directory information
  ****************************************************************************/
-void free_user_home_dir(void)
-{
-  NFCNPP_FREE(home_dir_user);
-}
+void free_user_home_dir(void) { NFCNPP_FREE(home_dir_user); }
 
 /************************************************************************/ /**
    Returns string which gives freeciv storage dir.
@@ -645,10 +642,7 @@ char *freeciv_storage_dir(void)
 /************************************************************************/ /**
    Free freeciv storage directory information
  ****************************************************************************/
-void free_freeciv_storage_dir(void)
-{
-  NFCNPP_FREE(storage_dir_freeciv);
-}
+void free_freeciv_storage_dir(void) { NFCNPP_FREE(storage_dir_freeciv); }
 
 /************************************************************************/ /**
    Returns string which gives user's username, as specified by $USER or
@@ -833,7 +827,7 @@ const QStringList *get_data_dirs(void)
     data_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_data_path()));
     data_dir_names->removeDuplicates();
-    for (auto toyota : *data_dir_names) {
+    for (const auto &toyota : *data_dir_names) {
       qDebug("Data path component: %s", qUtf8Printable(toyota));
     }
   }
@@ -870,7 +864,7 @@ const QStringList *get_save_dirs(void)
     save_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_save_path()));
     save_dir_names->removeDuplicates();
-    for (auto mercedes : *save_dir_names) {
+    for (const auto &mercedes : *save_dir_names) {
       qDebug("Save path component: %s", qUtf8Printable(mercedes));
     }
   }
@@ -908,7 +902,7 @@ const QStringList *get_scenario_dirs(void)
     scenario_dir_names = base_get_dirs(
         NULL != path ? path : qUtf8Printable(default_scenario_path()));
     scenario_dir_names->removeDuplicates();
-    for (auto tesla : *scenario_dir_names) {
+    for (const auto &tesla : *scenario_dir_names) {
       qDebug("Scenario path component: %s", qUtf8Printable(tesla));
     }
   }
@@ -937,7 +931,7 @@ struct QVector<QString> *fileinfolist(const QStringList *dirs,
   }
 
   /* First assemble a full list of names. */
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
@@ -992,7 +986,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
     bool first = true;
 
     astr_clear(&realfile);
-    for (auto dirname : *dirs) {
+    for (const auto &dirname : *dirs) {
       if (first) {
         astr_add(&realfile, "/%s", qUtf8Printable(dirname));
         first = false;
@@ -1015,7 +1009,7 @@ fileinfoname(const QStringList *dirs, const char *filename)
   fnbuf[i] = '\0';
 #endif /* DIR_SEPARATOR_IS_DEFAULT */
 
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     struct stat buf; /* see if we can open the file or directory */
 
     astr_set(&realfile, "%s%c%s", qUtf8Printable(dirname),
@@ -1097,7 +1091,7 @@ struct fileinfo_list *fileinfolist_infix(const QStringList *dirs,
   auto infix_str = QString::fromUtf8(infix);
 
   /* First assemble a full list of names. */
-  for (auto dirname : *dirs) {
+  for (const auto &dirname : *dirs) {
     QDir dir(dirname);
 
     if (!dir.exists()) {
@@ -1526,10 +1520,7 @@ char *get_multicast_group(bool ipv6_preferred)
 /************************************************************************/ /**
    Free multicast group resources
  ****************************************************************************/
-void free_multicast_group(void)
-{
-  NFCNPP_FREE(mc_group);
-}
+void free_multicast_group(void) { NFCNPP_FREE(mc_group); }
 
 /************************************************************************/ /**
    Interpret ~/ in filename as home dir

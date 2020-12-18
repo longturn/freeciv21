@@ -40,9 +40,9 @@
 #include "rand.h"
 #include "registry.h"
 #include "shared.h"
+#include "style.h"
 #include "support.h"
 #include "workertask.h"
-#include "style.h"
 
 /* common */
 #include "base.h"
@@ -963,7 +963,7 @@ const QVector<QString> *get_tileset_list(const struct option *poption)
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     tilesets[idx] = new QVector<QString>;
-    for (auto file : *list) {
+    for (const auto &file : *list) {
       struct tileset *t =
           tileset_read_toplevel(qUtf8Printable(file), false, topo, 1.0f);
 
@@ -1141,7 +1141,7 @@ bool tilespec_try_read(const char *tileset_name, bool verbose, int topo_id,
     QVector<QString> *list = fileinfolist(get_data_dirs(), TILESPEC_SUFFIX);
 
     original = false;
-    for (auto file : *list) {
+    for (const auto &file : *list) {
       struct tileset *t =
           tileset_read_toplevel(qUtf8Printable(file), false, topo_id, 1.0f);
 

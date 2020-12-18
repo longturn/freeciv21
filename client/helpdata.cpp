@@ -1041,7 +1041,7 @@ void boot_help_texts(void)
               pitem->topic = qstrdup(name);
               if (pmul->helptext) {
                 const char *sep = "";
-                for (auto text : *pmul->helptext) {
+                for (const auto &text : *pmul->helptext) {
                   cat_snprintf(help_text_buffer, sizeof(help_text_buffer),
                                "%s%s", sep, qUtf8Printable(text));
                   sep = "\n\n";
@@ -1219,7 +1219,7 @@ char *helptext_building(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (NULL != pimprove->helptext) {
-    for (auto text : *pimprove->helptext) {
+    for (const auto &text : *pimprove->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -1689,7 +1689,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
   cat_snprintf(buf, bufsz, _("* Belongs to %s unit class."),
                uclass_name_translation(pclass));
   if (NULL != pclass->helptext) {
-    for (auto text : *pclass->helptext) {
+    for (const auto &text : *pclass->helptext) {
       cat_snprintf(buf, bufsz, "\n%s\n", _(qUtf8Printable(text)));
     }
   } else {
@@ -2956,7 +2956,7 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
     }
   }
   if (NULL != utype->helptext) {
-    for (auto text : *utype->helptext) {
+    for (const auto &text : *utype->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3195,7 +3195,7 @@ void helptext_advance(char *buf, size_t bufsz, struct player *pplayer,
     if (strlen(buf) > 0) {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (auto text : *vap->helptext) {
+    for (const auto &text : *vap->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3307,7 +3307,7 @@ void helptext_terrain(char *buf, size_t bufsz, struct player *pplayer,
     if (buf[0] != '\0') {
       CATLSTR(buf, bufsz, "\n");
     }
-    for (auto text : *pterrain->helptext) {
+    for (const auto &text : *pterrain->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3521,7 +3521,7 @@ void helptext_extra(char *buf, size_t bufsz, struct player *pplayer,
   }
 
   if (pextra->helptext != NULL) {
-    for (auto text : *pextra->helptext) {
+    for (const auto &text : *pextra->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -3966,7 +3966,7 @@ void helptext_goods(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pgood->helptext) {
-    for (auto text : *pgood->helptext) {
+    for (const auto &text : *pgood->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -4018,7 +4018,7 @@ void helptext_specialist(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != pspec->helptext) {
-    for (auto text : *pspec->helptext) {
+    for (const auto &text : *pspec->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }
@@ -4057,7 +4057,7 @@ void helptext_government(char *buf, size_t bufsz, struct player *pplayer,
   buf[0] = '\0';
 
   if (NULL != gov->helptext) {
-    for (auto text : *gov->helptext) {
+    for (const auto &text : *gov->helptext) {
       cat_snprintf(buf, bufsz, "%s\n\n", _(qUtf8Printable(text)));
     }
   }

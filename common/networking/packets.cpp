@@ -797,7 +797,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   tokens = QString(capability).split(" \t\n,");
   tokens.sort();
 
-  for (auto str : tokens) {
+  for (const auto &str : qAsConst(tokens)) {
     if (!has_capability(qUtf8Printable(str), packet_functional_capability)) {
       continue;
     }
@@ -856,7 +856,7 @@ void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
 {
   QString s;
 
-  for (auto str : *psv) {
+  for (const auto &str : *psv) {
     s = s + str + separator;
   }
   qstrncpy(buf, qUtf8Printable(s), s.count());
@@ -889,4 +889,3 @@ void qstrvec_from_str(QVector<QString> *psv, char separator, const char *str)
     psv->append(str);
   }
 }
-

@@ -64,7 +64,7 @@
 
 /* utility */
 #include "fcintl.h"
-#include "log.h" /* fc_assert */
+#include "log.h"     /* fc_assert */
 #include "support.h" /* fc_vsnprintf, fc_strlcat */
 
 #include "astring.h"
@@ -357,11 +357,12 @@ void astr_copy(struct astring *dest, const struct astring *src)
   }
 }
 
-const char *strvec_to_or_list(const QVector<QString> *psv, struct astring *astr)
+const char *strvec_to_or_list(const QVector<QString> *psv,
+                              struct astring *astr)
 {
   char *ccc[psv->count()];
   int i = 0;
-  for (auto a: *psv) {
+  for (const auto &a : *psv) {
     ccc[i] = a.toLocal8Bit().data();
     i++;
   }
@@ -374,7 +375,7 @@ const char *strvec_to_and_list(const QVector<QString> *psv,
 {
   char *ccc[psv->count()];
   int i = 0;
-  for (auto a: *psv) {
+  for (const auto &a : *psv) {
     ccc[i] = a.toLocal8Bit().data();
     i++;
   }

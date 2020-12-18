@@ -33,8 +33,8 @@
 #include "game.h"
 #include "improvement.h"
 #include "movement.h"
-#include "packets.h"
 #include "nation.h"
+#include "packets.h"
 
 /* server */
 #include "citytools.h"
@@ -1121,7 +1121,7 @@ static void send_ruleset_choices(struct connection *pc)
 
   ruleset_choices = get_init_script_choices();
 
-  for (auto s : *ruleset_choices) {
+  for (const auto &s : *ruleset_choices) {
     const int maxlen = sizeof packet.rulesets[i];
     if (i >= MAX_NUM_RULESETS) {
       qDebug("Can't send more than %d ruleset names to client, "
