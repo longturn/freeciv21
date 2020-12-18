@@ -54,7 +54,9 @@ static void console_handle_message(QtMsgType type,
                                    const QMessageLogContext &context,
                                    const QString &message)
 {
+  con_set_color(CON_GREEN);
   if (type == QtCriticalMsg) {
+    con_set_color(CON_RED);
     notify_conn(NULL, NULL, E_LOG_ERROR, ftc_warning, "%s",
                 qUtf8Printable(message));
   } else if (type == QtFatalMsg) {
@@ -66,15 +68,18 @@ static void console_handle_message(QtMsgType type,
     }
     conn_list_iterate_end;
 
+
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning, "%s",
                 qUtf8Printable(message));
     notify_conn(NULL, NULL, E_LOG_FATAL, ftc_warning,
                 _("Please report this message at %s"), BUG_URL);
+
   }
 
   if (original_handler != nullptr) {
     original_handler(type, context, log_prefix() + message);
   }
+  con_set_color(CON_RESET);
 }
 } // anonymous namespace
 
@@ -92,7 +97,6 @@ static void con_update_prompt(void)
   } else {
     rl_forced_update_display();
   }
-
   console_prompt_is_showing = true;
 }
 
@@ -140,6 +144,12 @@ void con_log_close(void)
   log_close();
 }
 
+void con_set_color(const char *col)
+{
+  fc_printf("%s", col);
+  console_prompt_is_showing = false;
+  con_update_prompt();
+}
 /********************************************************************/ /**
    Write to console and add line-break, and show prompt if required.
  ************************************************************************/
@@ -168,6 +178,9 @@ void con_write(enum rfc_status rfc_status, const char *message, ...)
  ************************************************************************/
 void con_puts(enum rfc_status rfc_status, const char *str)
 {
+  if (rfc_status > 0) {
+    con_set_color(CON_YELLOW);
+  }
   if (console_prompt_is_showing) {
     fc_printf("\n");
   }
@@ -178,6 +191,7 @@ void con_puts(enum rfc_status rfc_status, const char *str)
   }
   console_prompt_is_showing = false;
   con_update_prompt();
+  con_set_color(CON_RESET);
 }
 
 /********************************************************************/ /**
