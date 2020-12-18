@@ -117,7 +117,7 @@ char **qtg_get_gui_specific_themes_directories(int *count)
 
   *count = data_dirs->size();
   for (const auto &data_dir : *data_dirs) {
-    QString buf = QString("%1/themes/gui-qt").arg(data_dir);
+    QString buf = QStringLiteral("%1/themes/gui-qt").arg(data_dir);
 
     directories[i++] = qstrdup(qUtf8Printable(buf));
   }

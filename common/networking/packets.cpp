@@ -794,7 +794,7 @@ const struct packet_handlers *packet_handlers_get(const char *capability)
   fc_assert(strlen(capability) < sizeof(functional_capability));
 
   /* Get functional network capability string. */
-  tokens = QString(capability).split(" \t\n,");
+  tokens = QString(capability).split(QStringLiteral(" \t\n,"));
   tokens.sort();
 
   for (const auto &str : qAsConst(tokens)) {

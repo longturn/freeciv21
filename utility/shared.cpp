@@ -64,7 +64,7 @@
 
 static QString default_data_path()
 {
-  QString path = QString(".%1data%1%2%3%4")
+  QString path = QStringLiteral(".%1data%1%2%3%4")
                      .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
                           QDir::separator(), DATASUBDIR);
   return path;
@@ -72,7 +72,7 @@ static QString default_data_path()
 
 static QString default_save_path()
 {
-  QString path = QString(".%1%2%3saves")
+  QString path = QStringLiteral(".%1%2%3saves")
                      .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR,
                           QDir::separator());
   return path;
@@ -81,7 +81,7 @@ static QString default_save_path()
 static QString default_scenario_path()
 {
   QString path =
-      QString(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
+      QStringLiteral(".%1data%3scenarios%1%2%3%4%3scenarios%1%2%3scenarios")
           .arg(QDir::listSeparator(), FREECIV_STORAGE_DIR, QDir::separator(),
                DATASUBDIR);
   return path;

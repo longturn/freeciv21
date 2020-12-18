@@ -767,11 +767,11 @@ bool mapimg_define(const char *maparg, bool check)
   pmapdef = mapdef_new(false);
 
   /* get map options */
-  mapargs = QString(maparg).split(":");
+  mapargs = QString(maparg).split(QStringLiteral(":"));
 
   for (const auto &str : qAsConst(mapargs)) {
     /* split map options into variable and value */
-    mapopts = str.split("=");
+    mapopts = str.split(QStringLiteral("="));
 
     if (mapopts.count() == 2) {
       enum mapdef_arg arg =
@@ -872,7 +872,7 @@ static bool mapimg_define_arg(struct mapdef *pmapdef, enum mapdef_arg arg,
 
       /* get format options */
 
-      formatargs = QString(val).split("|");
+      formatargs = QString(val).split(QStringLiteral("|"));
 
       if (formatargs.count() == 2) {
         tool = imagetool_by_name(qUtf8Printable(formatargs.at(0)), strcmp);

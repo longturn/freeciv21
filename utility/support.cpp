@@ -201,10 +201,12 @@ int fc_strncasequotecmp(const char *str0, const char *str1, size_t n)
 {
   auto left = QString::fromUtf8(str0);
   auto right = QString::fromUtf8(str1);
-  if (left.startsWith("\"") && left.endsWith("\"")) {
+  if (left.startsWith(QLatin1String("\""))
+      && left.endsWith(QLatin1String("\""))) {
     left = left.mid(1, left.length() - 2);
   }
-  if (right.startsWith("\"") && right.endsWith("\"")) {
+  if (right.startsWith(QLatin1String("\""))
+      && right.endsWith(QLatin1String("\""))) {
     right = right.mid(1, right.length() - 2);
   }
   return left.leftRef(n).compare(right.leftRef(n), Qt::CaseInsensitive);
@@ -345,7 +347,7 @@ const char *fc_strerror(fc_errno err)
                 err);
   }
   return buf;
-#else /* FREECIV_MSWINDOWS */
+#else  /* FREECIV_MSWINDOWS */
   static char buf[256];
   return local_to_internal_string_buffer(strerror(err), buf, sizeof(buf));
 #endif /* FREECIV_MSWINDOWS */

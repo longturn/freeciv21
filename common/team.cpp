@@ -411,7 +411,8 @@ int team_pretty_name(const struct team *pteam, QString &buf)
   if (NULL != pteam) {
     if (NULL != pteam->slot->defined_name) {
       /* TRANS: %s is ruleset-chosen team name (e.g. "Red") */
-      buf = QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
+      buf =
+          QString(_("team %1")).arg(team_slot_name_translation(pteam->slot));
       return 1;
     } else {
       buf = QString(_("team %1")).arg(QString::number(team_number(pteam)));
@@ -420,7 +421,7 @@ int team_pretty_name(const struct team *pteam, QString &buf)
   }
 
   /* No need to translate, it's an error. */
-  buf = "(null team)";
+  buf = QLatin1String("(null team)");
   return -1;
 }
 

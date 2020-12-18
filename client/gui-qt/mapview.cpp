@@ -775,7 +775,8 @@ static void show_small_citybar(struct canvas *pcanvas, int canvas_x,
 
     /* HACK: put a character's worth of space between the two
      * strings if needed. */
-    get_text_size(&spacer_width, nullptr, FONT_CITY_NAME, "M");
+    get_text_size(&spacer_width, nullptr, FONT_CITY_NAME,
+                  QStringLiteral("M"));
 
     total_width = 0;
     total_height = 0;

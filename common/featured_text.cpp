@@ -190,7 +190,8 @@ static bool find_option(const char *buf_in, const char *option,
       /* This is this one. */
       buf_in += option_len;
 
-      while ((QChar::isSpace(*buf_in) || *buf_in == '=') && *buf_in != '\0') {
+      while ((QChar::isSpace(*buf_in) || *buf_in == '=')
+             && *buf_in != '\0') {
         buf_in++;
       }
       if (*buf_in == '"') {
@@ -228,7 +229,7 @@ static bool find_option(const char *buf_in, const char *option,
 static bool text_tag_init_from_sequence(struct text_tag *ptag,
                                         enum text_tag_type type,
                                         ft_offset_t start_offset,
-                                        QString& qsequence)
+                                        QString &qsequence)
 {
   ptag->type = type;
   ptag->start_offset = start_offset;
@@ -846,7 +847,7 @@ static size_t extract_sequence_text(const char *featured_text, QString &buf,
   if (end - buf_in + 2 > 0) {
     buf = QString(buf_in).left(MIN(end - buf_in + 2, len));
   } else {
-    buf = "";
+    buf = QLatin1String("");
   }
   return stop - featured_text + 1;
 }
