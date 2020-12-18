@@ -42,11 +42,11 @@ static void none_audio_wait(void) {}
 /**********************************************************************/ /**
    Play sound sample
  **************************************************************************/
-static bool none_audio_play(const char *const tag,
-                            const char *const fullpath, bool repeat,
+static bool none_audio_play(const QString tag,
+                            const QString fullpath, bool repeat,
                             audio_finished_callback cb)
 {
-  if (strcmp(tag, "e_turn_bell") == 0) {
+  if (tag == "e_turn_bell") {
     sound_bell();
     return true;
   }
@@ -65,8 +65,8 @@ void audio_none_init(void)
 {
   struct audio_plugin self;
 
-  sz_strlcpy(self.name, "none");
-  sz_strlcpy(self.descr, "/dev/null plugin");
+  self.name = QStringLiteral("none");
+  self.descr = QStringLiteral("/dev/null plugin");
   self.init = none_audio_init;
   self.shutdown = none_audio_shutdown;
   self.stop = none_audio_stop;

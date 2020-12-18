@@ -14,23 +14,21 @@
 
 #include <QVector>
 
-#define MAX_AUDIO_NAME_LEN 20
-#define MAX_AUDIO_DESCR_LEN 200
-
 #define MAX_ALT_AUDIO_FILES 5
 
 typedef void (*audio_finished_callback)(void);
 
+class QString;
 struct audio_plugin {
-  char name[MAX_AUDIO_NAME_LEN];
-  char descr[MAX_AUDIO_DESCR_LEN];
+  QString name;
+  QString descr;
   bool (*init)(void);
   void (*shutdown)(void);
   void (*stop)(void);
   void (*wait)(void);
   double (*get_volume)(void);
   void (*set_volume)(double volume);
-  bool (*play)(const char *const tag, const char *const path, bool repeat,
+  bool (*play)(const QString tag, const QString path, bool repeat,
                audio_finished_callback cb);
 };
 
@@ -50,13 +48,13 @@ void audio_stop(void);
 void audio_stop_usage(void);
 void audio_restart(QString soundset_name, QString musicset_name);
 
-void audio_play_sound(const char *const tag, const char *const alt_tag);
-void audio_play_music(const char *const tag, char *const alt_tag,
+void audio_play_sound(const QString tag, const QString alt_tag);
+void audio_play_music(const QString tag, QString alt_tag,
                       enum music_usage usage);
-void audio_play_track(const char *const tag, char *const alt_tag);
+void audio_play_track(const QString tag, QString alt_tag);
 
 double audio_get_volume(void);
 void audio_set_volume(double volume);
 
 bool audio_select_plugin(QString &name);
-const char *audio_get_all_plugin_names(void);
+const QString audio_get_all_plugin_names(void);

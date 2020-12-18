@@ -55,7 +55,7 @@ void start_style_music(void)
     pms = music_style_by_number(client.conn.playing->music_style);
 
     if (pms != NULL) {
-      const char *tag = NULL;
+      QString tag;
 
       switch (client.conn.playing->client.mood) {
       case MOOD_COUNT:
@@ -69,8 +69,8 @@ void start_style_music(void)
         break;
       }
 
-      if (tag != NULL && tag[0] != '\0') {
-        log_debug("Play %s", tag);
+      if (!tag.isEmpty()) {
+        log_debug("Play %s", qUtf8Printable(tag));
         audio_play_music(tag, NULL, MU_INGAME);
       }
     }
@@ -85,7 +85,7 @@ void stop_style_music(void) { audio_stop_usage(); }
 /**********************************************************************/ /**
    Start menu music.
  **************************************************************************/
-void start_menu_music(const char *const tag, char *const alt_tag)
+void start_menu_music(const QString tag, QString alt_tag)
 {
   if (gui_options.sound_enable_menu_music) {
     audio_play_music(tag, alt_tag, MU_MENU);
@@ -100,7 +100,7 @@ void stop_menu_music(void) { audio_stop_usage(); }
 /**********************************************************************/ /**
    Play single track before continuing normal style music
  **************************************************************************/
-void play_single_track(const char *const tag)
+void play_single_track(const QString tag)
 {
   if (client_state() != C_S_RUNNING) {
     /* Only in running game */

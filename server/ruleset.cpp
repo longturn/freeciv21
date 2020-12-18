@@ -852,7 +852,7 @@ static char *lookup_string(struct section_file *file, const char *prefix,
    assume it is a NULL terminated vector.
  **************************************************************************/
 static void strvec_store(QVector<QString> *psv, const char *const *vec,
-                   size_t size)
+                         size_t size)
 {
   if (size == (size_t) -1) {
     psv->clear();
@@ -5405,13 +5405,13 @@ static bool load_ruleset_styles(struct section_file *file,
         struct music_style *pmus = music_style_by_number(musi);
         const char *sec_name = section_name(psection);
 
-        sz_strlcpy(pmus->music_peaceful,
-                   secfile_lookup_str_default(file, "-", "%s.music_peaceful",
-                                              sec_name));
-        sz_strlcpy(pmus->music_combat,
-                   secfile_lookup_str_default(file, "-", "%s.music_combat",
-                                              sec_name));
+        const char *s = secfile_lookup_str_default(
+            file, "-", "%s.music_peaceful", sec_name);
+        pmus->music_peaceful = *s;
 
+        s = secfile_lookup_str_default(file, "-", "%s.music_combat",
+                                       sec_name);
+        pmus->music_combat = *s;
         reqs =
             lookup_req_list(file, compat, sec_name, "reqs", "Music Style");
         if (reqs == NULL) {
@@ -8403,8 +8403,8 @@ static void send_ruleset_musics(struct conn_list *dest)
 
     packet.id = pmus->id;
 
-    sz_strlcpy(packet.music_peaceful, pmus->music_peaceful);
-    sz_strlcpy(packet.music_combat, pmus->music_combat);
+    sz_strlcpy(packet.music_peaceful, qUtf8Printable(pmus->music_peaceful));
+    sz_strlcpy(packet.music_combat, qUtf8Printable(pmus->music_combat));
 
     j = 0;
     requirement_vector_iterate(&(pmus->reqs), preq)

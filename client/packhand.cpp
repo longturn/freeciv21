@@ -4505,8 +4505,8 @@ void handle_ruleset_music(const struct packet_ruleset_music *packet)
   }
   fc_assert(pmus->reqs.size == packet->reqs_count);
 
-  sz_strlcpy(pmus->music_peaceful, packet->music_peaceful);
-  sz_strlcpy(pmus->music_combat, packet->music_combat);
+  pmus->music_peaceful = packet->music_peaceful;
+  pmus->music_combat = packet->music_combat;
 }
 
 /************************************************************************/ /**

@@ -496,9 +496,9 @@ static bool save_styles_ruleset(const char *filename, const char *name)
 
     fc_snprintf(path, sizeof(path), "musicstyle_%d", sect_idx++);
 
-    secfile_insert_str(sfile, pmus->music_peaceful, "%s.music_peaceful",
+    secfile_insert_str(sfile, qUtf8Printable(pmus->music_peaceful), "%s.music_peaceful",
                        path);
-    secfile_insert_str(sfile, pmus->music_combat, "%s.music_combat", path);
+    secfile_insert_str(sfile, qUtf8Printable(pmus->music_combat), "%s.music_combat", path);
 
     save_reqs_vector(sfile, &(pmus->reqs), path, "reqs");
   }

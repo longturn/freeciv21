@@ -384,7 +384,7 @@ int client_main(int argc, char *argv[])
         "PORT"},
        {{"P", _("Plugin")},
         QString::asprintf(_("Use PLUGIN for sound output %s"),
-                          audio_get_all_plugin_names()),
+                          qUtf8Printable(audio_get_all_plugin_names())),
         "PLUGIN"},
        {{"r", "read"},
         _("Read startup script FILE (for spawned server only)"),
