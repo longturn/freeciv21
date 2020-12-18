@@ -10,7 +10,6 @@
 
 #pragma once
 
-
 #include "fc_types.h"
 
 /* See client/gui-gtk-3.0/editprop.c for instructions

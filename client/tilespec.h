@@ -17,15 +17,6 @@
 ***********************************************************************/
 #pragma once
 
-#include <QString>
-#include <QVector>
-/* utility */
-#include "log.h" /* QtMsgType */
-
-/* common */
-#include "city.h" /* enum citizen_category */
-#include "fc_types.h"
-
 #include "options.h"
 
 struct sprite; /* opaque; gui-dep */

@@ -42,6 +42,7 @@
 #include "name_translation.h"
 #include "nation.h"
 #include "packets.h"
+#include "packhand_gen.h"
 #include "player.h"
 #include "research.h"
 #include "rgbcolor.h"
@@ -52,8 +53,8 @@
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
-#include "worklist.h"
 #include "workertask.h"
+#include "worklist.h"
 
 /* client/include */
 #include "chatline_g.h"

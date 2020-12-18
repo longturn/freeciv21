@@ -13,12 +13,6 @@
 
 #pragma once
 
-
-#include <stddef.h> /* size_t */
-
-/* utility */
-#include "support.h" /* bool type */
-
 /* common */
 #include "city.h"
 #include "fc_types.h"

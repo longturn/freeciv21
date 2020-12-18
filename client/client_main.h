@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "fc_types.h"
-
 #include "packets.h" /* enum report_type */
-#include "worklist.h"
 
 /*
  * Every TIMER_INTERVAL milliseconds real_timer_callback is

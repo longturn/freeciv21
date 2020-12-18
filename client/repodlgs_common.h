@@ -13,13 +13,6 @@
 
 #pragma once
 
-
-#include "fc_types.h"
-#include "improvement.h"
-#include "unittype.h"
-
-#include "citydlg_common.h" /* for city request functions */
-
 struct improvement_entry {
   struct impr_type *type;
   int count, redundant, cost, total_cost;

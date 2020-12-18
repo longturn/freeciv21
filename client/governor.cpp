@@ -18,9 +18,9 @@
 // common
 #include "city.h"
 #include "dataio.h"
-#include "specialist.h"
+#include "featured_text.h"
 #include "nation.h"
-
+#include "specialist.h"
 /* client */
 #include "attribute.h"
 #include "client_main.h"

@@ -10,7 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
 void start_style_music(void);
 void stop_style_music(void);
 void start_menu_music(const char *const tag, char *const alt_tag);

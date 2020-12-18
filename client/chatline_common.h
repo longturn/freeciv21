@@ -10,10 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-/* utility */
-#include "support.h" /* bool type */
-
 /* common */
 #include "featured_text.h" /* struct text_tag_list, struct ft_color */
 

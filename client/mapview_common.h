@@ -8,17 +8,11 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
-
-/* common */
-#include "fc_types.h"
-#include "featured_text.h" /* enum text_link_type type */
+// /* common */
 #include "map.h"
-
+#include "featured_text.h"
 /* include */
 #include "colors_g.h"
 

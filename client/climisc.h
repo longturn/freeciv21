@@ -13,12 +13,9 @@
 #pragma once
 
 
-/* common */
+// /* common */
 #include "events.h"
 #include "fc_types.h"
-#include "featured_text.h" /* struct ft_color */
-#include "unitlist.h"
-#include "unittype.h"
 
 struct Clause;
 struct nation_type;

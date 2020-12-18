@@ -10,12 +10,8 @@
 **************************************************************************/
 #pragma once
 
-/* utility */
-#include "support.h" /* bool type */
-
 /* common */
 #include "events.h"
-#include "fc_types.h"      /* enum gui_type */
 #include "featured_text.h" /* struct ft_color */
 #include "mapimg.h"
 

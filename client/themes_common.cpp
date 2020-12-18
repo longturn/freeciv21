@@ -27,6 +27,7 @@
 #include "themes_g.h"
 
 /* client */
+#include "options.h"
 #include "themes_common.h"
 
 /***************************************************************************

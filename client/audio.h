@@ -12,8 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-#include "support.h" /* bool type */
-#include <QString>
 #include <QVector>
 
 #define MAX_AUDIO_NAME_LEN 20

@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* common */
-#include "actions.h"
-#include "packets.h"
 #include "unitlist.h"
 
 enum cursor_hover_state {

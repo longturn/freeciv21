@@ -21,13 +21,14 @@
 // utility
 #include "fcintl.h"
 // common
+#include "fc_types.h"
 #include "game.h"
 #include "goto.h"
 #include "government.h"
 #include "map.h"
+#include "multipliers.h"
 #include "road.h"
 #include "unit.h"
-#include "multipliers.h"
 // client
 #include "cityrep_g.h"
 #include "client_main.h"

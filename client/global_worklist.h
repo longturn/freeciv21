@@ -10,14 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-/* utility */
-#include "registry.h"
-#include "shared.h"
-
-/* common */
-#include "worklist.h"
-
 struct global_worklist;      /* Opaque type. */
 struct global_worklist_list; /* Opaque type. */
 

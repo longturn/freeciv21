@@ -12,9 +12,6 @@
 ***********************************************************************/
 #pragma once
 
-/* client */
-#include "options.h"
-
 void init_themes(void);
 class QStringList;
 const QVector<QString> *get_themes_list(const struct option *poption);
