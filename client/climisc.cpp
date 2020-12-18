@@ -1125,10 +1125,10 @@ void create_event(struct tile *ptile, enum event_type event,
  **************************************************************************/
 struct city *get_nearest_city(const struct unit *punit, int *sq_dist)
 {
-  struct city *pcity_near;
+  struct city *pcity_near = tile_city(unit_tile(punit));
   int pcity_near_dist;
 
-  if ((pcity_near = tile_city(unit_tile(punit)))) {
+  if (pcity_near) {
     pcity_near_dist = 0;
   } else {
     pcity_near = NULL;

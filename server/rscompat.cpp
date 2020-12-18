@@ -64,11 +64,12 @@ int rscompat_check_capabilities(struct section_file *file,
                                 const char *filename,
                                 struct rscompat_info *info)
 {
-  const char *datafile_options;
+  const char *datafile_options =
+      secfile_lookup_str(file, "datafile.options");
   bool ok = false;
   int format;
 
-  if (!(datafile_options = secfile_lookup_str(file, "datafile.options"))) {
+  if (!datafile_options) {
     qCCritical(ruleset_category,
                "\"%s\": ruleset capability problem:", filename);
     qCCritical(ruleset_category, "%s", secfile_error());

@@ -1861,8 +1861,8 @@ static bool handle_unit_packet_common(struct unit *packet_unit)
       }
       unit_list_iterate_end;
     }
-
-    if ((pcity = tile_city(unit_tile(punit)))) {
+    pcity = tile_city(unit_tile(punit));
+    if (pcity) {
       /* The unit is in a city - obviously it's occupied. */
       pcity->client.occupied = true;
     }

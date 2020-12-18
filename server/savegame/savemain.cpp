@@ -154,7 +154,8 @@ void save_game(const char *orig_filename, const char *save_reason,
     filename = stdata->filepath;
   } else {
     sz_strlcpy(stdata->filepath, orig_filename);
-    if ((filename = strrchr(stdata->filepath, '/'))) {
+    filename = strrchr(stdata->filepath, '/');
+    if (filename) {
       filename++;
     } else {
       filename = stdata->filepath;

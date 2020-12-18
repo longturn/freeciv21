@@ -43,13 +43,13 @@
 #include "menu_g.h"
 
 /* client */
-#include "governor.h"
 #include "audio.h"
 #include "client_main.h"
 #include "climap.h"
 #include "climisc.h"
 #include "editor.h"
 #include "goto.h"
+#include "governor.h"
 #include "options.h"
 #include "overview_common.h"
 #include "tilespec.h"
@@ -1062,9 +1062,9 @@ void action_selection_no_longer_in_progress(const int old_actor_id)
  **************************************************************************/
 void action_decision_clear_want(const int old_actor_id)
 {
-  struct unit *old;
+  struct unit *old = game_unit_by_number(old_actor_id);
 
-  if ((old = game_unit_by_number(old_actor_id))) {
+  if (old) {
     /* Have the server record that a decision no longer is wanted. */
     dsend_packet_unit_sscs_set(&client.conn, old_actor_id, USSDT_UNQUEUE,
                                IDENTITY_NUMBER_ZERO);
@@ -1539,9 +1539,9 @@ void request_unit_airlift(struct unit *punit, struct city *pcity)
  **************************************************************************/
 void request_unit_return(struct unit *punit)
 {
-  struct pf_path *path;
+  struct pf_path *path = path_to_nearest_allied_city(punit);
 
-  if ((path = path_to_nearest_allied_city(punit))) {
+  if (path) {
     int turns = pf_path_last_position(path)->turn;
     int max_hp = unit_type_get(punit)->hp;
 
@@ -1634,7 +1634,6 @@ void request_unit_select(struct unit_list *punits,
   }
   unit_list_iterate_end;
 
-
   if (selloc == SELLOC_TILE) {
     for (auto hash_tile : tile_table) {
       unit_list_iterate(hash_tile->units, punit)
@@ -1665,7 +1664,6 @@ void request_unit_select(struct unit_list *punits,
     }
     unit_list_iterate_end;
   }
-
 }
 
 /**********************************************************************/ /**
@@ -1717,9 +1715,9 @@ void request_action_details(action_id action, int actor_id, int target_id)
  **************************************************************************/
 void request_unit_build_city(struct unit *punit)
 {
-  struct city *pcity;
+  struct city *pcity = tile_city(unit_tile(punit));
 
-  if ((pcity = tile_city(unit_tile(punit)))) {
+  if (pcity) {
     /* Try to join the city. */
     request_do_action(ACTION_JOIN_CITY, punit->id, pcity->id, 0, "");
   } else {
@@ -1914,7 +1912,8 @@ static void do_disband_alternative(void *p)
   /* Send a request to the server unless it is known to be pointless. */
   switch (action_id_get_target_kind(act)) {
   case ATK_CITY:
-    if ((pcity = tile_city(unit_tile(punit)))
+    pcity = tile_city(unit_tile(punit));
+    if (pcity
         && action_prob_possible(action_prob_vs_city(punit, act, pcity))) {
       request_do_action(act, punit->id, pcity->id, 0, "");
     }
@@ -2107,9 +2106,9 @@ void request_unit_unload(struct unit *pcargo)
  **************************************************************************/
 void request_unit_caravan_action(struct unit *punit, action_id action)
 {
-  struct city *target_city;
+  struct city *target_city = tile_city(unit_tile(punit));
 
-  if (!((target_city = tile_city(unit_tile(punit))))) {
+  if (!target_city) {
     return;
   }
 
@@ -3176,8 +3175,8 @@ void key_unit_action_select(void)
 
   unit_list_iterate(get_units_in_focus(), punit)
   {
-    if (utype_may_act_at_all(unit_type_get(punit))
-        && (ptile = unit_tile(punit))) {
+    ptile = unit_tile(punit);
+    if (utype_may_act_at_all(unit_type_get(punit)) && ptile) {
       /* Have the server record that an action decision is wanted for this
        * unit. */
       dsend_packet_unit_sscs_set(&client.conn, punit->id, USSDT_QUEUE,
@@ -3292,7 +3291,8 @@ void key_unit_unload_all(void)
 
   unit_list_iterate(get_units_in_focus(), punit)
   {
-    if ((plast = request_unit_unload_all(punit))) {
+    plast = request_unit_unload_all(punit);
+    if (plast) {
       pnext_focus = plast;
     }
   }

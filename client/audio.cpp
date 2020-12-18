@@ -305,12 +305,14 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
     ms_tagfile = NULL;
     return;
   }
-  if (!(ss_tagfile = secfile_load(ss_filename, true))) {
+  ss_tagfile = secfile_load(ss_filename, true);
+  if (!ss_tagfile) {
     qFatal(_("Could not load sound spec-file '%s':\n%s"), ss_filename,
            secfile_error());
     exit(EXIT_FAILURE);
   }
-  if (!(ms_tagfile = secfile_load(ms_filename, true))) {
+  ms_tagfile = secfile_load(ms_filename, true);
+  if (!ms_tagfile) {
     qFatal(_("Could not load music spec-file '%s':\n%s"), ms_filename,
            secfile_error());
     exit(EXIT_FAILURE);

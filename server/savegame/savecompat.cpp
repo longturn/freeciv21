@@ -157,7 +157,7 @@ void sg_load_compat(struct loaddata *loading, enum sgf_version format_class)
               "Trying to load the game nevertheless ...",
               loading->version, compat[compat_current].version);
   }
-#else /* FREECIV_DEBUG */
+#else  /* FREECIV_DEBUG */
   sg_failure_ret(0 < loading->version
                      && loading->version <= compat[compat_current].version,
                  "Unknown savefile format version (%d).", loading->version);
@@ -1526,10 +1526,9 @@ static void compat_load_030100(struct loaddata *loading,
 
       order_len = secfile_lookup_int_default(
           loading->file, 0, "player%d.u%d.orders_length", plrno, unit);
-
-      if ((action_unitstr = secfile_lookup_str_default(
-               loading->file, "", "player%d.u%d.action_list", plrno,
-               unit))) {
+      action_unitstr = secfile_lookup_str_default(
+          loading->file, "", "player%d.u%d.action_list", plrno, unit);
+      if (action_unitstr) {
         int order_num;
 
         if (order_len > qstrlen(action_unitstr)) {
@@ -1911,10 +1910,10 @@ static void compat_load_dev(struct loaddata *loading)
       for (unit = 0; unit < units_num; unit++) {
         size_t old_tgt_size;
         int *old_tgt_vec;
-
-        if ((old_tgt_vec = secfile_lookup_int_vec(
-                 loading->file, &old_tgt_size, "player%d.u%d.tgt_vec", plrno,
-                 unit))) {
+        old_tgt_vec =
+            secfile_lookup_int_vec(loading->file, &old_tgt_size,
+                                   "player%d.u%d.tgt_vec", plrno, unit);
+        if (old_tgt_vec) {
           secfile_insert_int_vec(loading->file, old_tgt_vec, old_tgt_size,
                                  "player%d.u%d.sub_tgt_vec", plrno, unit);
           free(old_tgt_vec);
@@ -2039,10 +2038,9 @@ static void compat_load_dev(struct loaddata *loading)
 
         order_len = secfile_lookup_int_default(
             loading->file, 0, "player%d.u%d.orders_length", plrno, unit);
-
-        if ((action_unitstr = secfile_lookup_str_default(
-                 loading->file, "", "player%d.u%d.action_list", plrno,
-                 unit))) {
+        action_unitstr = secfile_lookup_str_default(
+            loading->file, "", "player%d.u%d.action_list", plrno, unit);
+        if (action_unitstr) {
           int order_num;
 
           if (order_len > qstrlen(action_unitstr)) {
@@ -2093,10 +2091,10 @@ static void compat_load_dev(struct loaddata *loading)
         order_len = secfile_lookup_int_default(
             loading->file, 0, "player%d.c%d.rally_point_length", plrno,
             city);
-
-        if ((action_citystr = secfile_lookup_str_default(
-                 loading->file, "", "player%d.c%d.rally_point_actions",
-                 plrno, city))) {
+        action_citystr = secfile_lookup_str_default(
+            loading->file, "", "player%d.c%d.rally_point_actions", plrno,
+            city);
+        if (action_citystr) {
           int order_num;
 
           if (order_len > qstrlen(action_citystr)) {
@@ -2246,7 +2244,7 @@ enum ai_level ai_level_convert(int old_level)
   case 10:
 #ifdef FREECIV_DEBUG
     return AI_LEVEL_EXPERIMENTAL;
-#else /* FREECIV_DEBUG */
+#else  /* FREECIV_DEBUG */
     return AI_LEVEL_HARD;
 #endif /* FREECIV_DEBUG */
   }

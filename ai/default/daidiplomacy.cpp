@@ -365,8 +365,8 @@ static int dai_goldequiv_clause(struct ai_type *ait, struct player *pplayer,
 
     /* This guy is allied to one of our enemies. Only accept
      * ceasefire. */
-    if ((penemy = get_allied_with_enemy_player(pplayer, aplayer))
-        && pclause->type != CLAUSE_CEASEFIRE) {
+    penemy = get_allied_with_enemy_player(pplayer, aplayer);
+    if (penemy && pclause->type != CLAUSE_CEASEFIRE) {
       dai_diplo_notify(
           aplayer, _("*%s (AI)* First break alliance with %s, %s."),
           player_name(pplayer), player_name(penemy), player_name(aplayer));

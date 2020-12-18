@@ -218,7 +218,8 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
     return;
   }
   fn_bytes = current_file.toLocal8Bit();
-  if ((sf = secfile_load_section(fn_bytes.data(), "game", true))) {
+  sf = secfile_load_section(fn_bytes.data(), "game", true);
+  if (sf) {
     const char *sname;
     bool sbool;
     int integer;
@@ -233,7 +234,8 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       final_str = QStringLiteral("<b>") + _("Turn") + ":</b> "
                   + QString::number(integer).toHtmlEscaped() + "<br>";
     }
-    if ((sf = secfile_load_section(fn_bytes.data(), "players", true))) {
+    sf = secfile_load_section(fn_bytes.data(), "players", true);
+    if (sf) {
       integer = secfile_lookup_int_default(sf, -1, "players.nplayers");
       if (integer >= 0) {
         final_str = final_str + "<b>" + _("Players") + ":</b>" + " "
@@ -303,7 +305,8 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       terrain_type_iterate_end;
 
       /* Load possible terrains and their identifiers (chars) */
-      if ((sf = secfile_load_section(fn_bytes.data(), "savefile", true)))
+      sf = secfile_load_section(fn_bytes.data(), "savefile", true);
+      if (sf)
         while ((terr_name = secfile_lookup_str_default(
                     sf, NULL, "savefile.terrident%d.name", ii))
                != NULL) {
@@ -339,7 +342,8 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
       }
       ui.load_pix->setFixedSize(ui.load_pix->pixmap()->width(),
                                 ui.load_pix->pixmap()->height());
-      if ((sf = secfile_load_section(fn_bytes.data(), "research", true))) {
+      sf = secfile_load_section(fn_bytes.data(), "research", true);
+      if (sf) {
         sname = secfile_lookup_str_default(
             sf, nullptr, "research.r%d.now_name", curr_player);
         if (sname) {

@@ -279,8 +279,10 @@ bool diplomat_investigate(struct player *pplayer, struct unit *pdiplomat,
                           struct city *pcity, const struct action *paction)
 {
   struct player *cplayer;
-  struct packet_unit_short_info unit_packet{};
-  struct packet_city_info city_packet{};
+  struct packet_unit_short_info unit_packet {
+  };
+  struct packet_city_info city_packet {
+  };
   struct traderoute_packet_list *routes;
 
   /* Fetch target city's player.  Sanity checks. */
@@ -1866,8 +1868,8 @@ diplomat_infiltrate_tile(struct player *pplayer, struct player *cplayer,
     /* N.B.: *_link() always returns the same pointer. */
     sz_strlcpy(link_city, city_link(pcity));
   }
-
-  if ((punit = get_diplomatic_defender(pdiplomat, pvictim, ptile))) {
+  punit = get_diplomatic_defender(pdiplomat, pvictim, ptile);
+  if (punit) {
     struct player *uplayer = unit_owner(punit);
 
     if (defender_owner != NULL) {
