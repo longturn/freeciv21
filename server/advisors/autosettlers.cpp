@@ -34,6 +34,8 @@
 #include "movement.h"
 #include "packets.h"
 #include "unitlist.h"
+#include "nation.h"
+#include "workertask.h"
 
 /* common/aicore */
 #include "citymap.h"

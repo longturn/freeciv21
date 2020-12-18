@@ -22,7 +22,8 @@
 /* utility */
 #include "connection.h"
 #include "log.h"
-
+#include "nation.h"
+#include "style.h"
 /* client */
 #include "audio.h"
 #include "client_main.h"

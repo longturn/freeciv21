@@ -20,6 +20,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>

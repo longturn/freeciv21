@@ -25,6 +25,7 @@
 #include "tech.h"
 #include "tile.h"
 #include "unittype.h"
+#include "nation.h"
 
 /* server */
 #include "aiiface.h"

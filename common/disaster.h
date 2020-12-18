@@ -10,8 +10,6 @@
 **************************************************************************/
 #pragma once
 
-
-/* common */
 #include "name_translation.h"
 #include "requirements.h"
 

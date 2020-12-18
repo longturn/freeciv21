@@ -10,6 +10,7 @@
 **************************************************************************/
 #pragma once
 
+#include "fc_types.h"
 
 struct worker_task {
   struct tile *ptile;

@@ -24,6 +24,7 @@
 
 // Qt
 #include <QApplication>
+#include <QBitArray>
 #include <QCommandLineParser>
 #include <QElapsedTimer>
 #include <QGlobalStatic>

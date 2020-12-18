@@ -12,10 +12,6 @@
 *****************************************************************************/
 #pragma once
 
-
-/* utility */
-#include "shared.h" /* bool */
-
 /* common */
 #include "fc_types.h"
 

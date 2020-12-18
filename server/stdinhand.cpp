@@ -52,6 +52,7 @@
 #include "rgbcolor.h"
 #include "unitlist.h"
 #include "version.h"
+#include "style.h"
 
 /* server */
 #include "aiiface.h"

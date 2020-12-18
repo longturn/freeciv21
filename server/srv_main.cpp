@@ -64,6 +64,8 @@
 #include "unitlist.h"
 #include "version.h"
 #include "victory.h"
+#include "multipliers.h"
+#include "style.h"
 
 /* server */
 #include "aiiface.h"

@@ -18,7 +18,7 @@
 
 /* common */
 #include "actions.h"
-
+#include "nation.h"
 /* server */
 #include "aiiface.h"
 #include "notify.h"

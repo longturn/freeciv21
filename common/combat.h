@@ -12,9 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* common */
-#include "fc_types.h"
 #include "unittype.h"
 
 /*

@@ -13,9 +13,7 @@
 #pragma once
 
 /* common */
-#include "base.h"
 #include "fc_types.h"
-#include "road.h"
 #include "terrain.h"
 
 /* Used in the network protocol. */

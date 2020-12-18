@@ -12,6 +12,8 @@
 
 #pragma once
 
+#include "requirements.h"
+#include "name_translation.h"
 
 struct nation_style {
   int id;

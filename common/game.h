@@ -15,16 +15,14 @@
 #include <time.h> /* time_t */
 
 /* utility */
-#include "fcthread.h"
-#include "shared.h"
-#include "timing.h"
+// #include "fcthread.h"
+// #include "shared.h"
+// #include "timing.h"
 
 /* common */
 #include "connection.h" /* struct conn_list */
-#include "fc_types.h"
 #include "packets.h"
 #include "player.h"
-#include "world_object.h"
 
 enum debug_globals { DEBUG_FERRIES, DEBUG_LAST };
 

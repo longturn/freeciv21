@@ -10,15 +10,11 @@
 **************************************************************************/
 #pragma once
 
-
+#include "name_translation.h"
 /* utility */
 #include "iterator.h"
 
-/* common */
-#include "fc_types.h"
-#include "name_translation.h"
 #include "rgbcolor.h"
-#include "terrain.h" /* MAX_NUM_TERRAINS */
 
 #define NO_NATION_SELECTED (NULL)
 

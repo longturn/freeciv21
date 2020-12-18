@@ -29,6 +29,8 @@
 #include "style.h"
 #include "unittype.h"
 #include "version.h"
+#include "rgbcolor.h"
+#include "nation.h"
 
 /* server */
 #include "ruleset.h"

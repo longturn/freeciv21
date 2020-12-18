@@ -28,6 +28,7 @@
 #include "player.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "nation.h"
 
 /* aicore */
 #include "pf_tools.h"

@@ -34,6 +34,7 @@
 #include "improvement.h"
 #include "movement.h"
 #include "packets.h"
+#include "nation.h"
 
 /* server */
 #include "citytools.h"

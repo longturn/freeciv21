@@ -43,6 +43,7 @@
 #include "game.h"
 #include "map.h"
 #include "version.h"
+#include "nation.h"
 
 /* server */
 #include "console.h"

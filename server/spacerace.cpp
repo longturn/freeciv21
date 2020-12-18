@@ -28,6 +28,7 @@
 #include "game.h"
 #include "packets.h"
 #include "spaceship.h"
+#include "nation.h"
 
 /* server */
 #include "notify.h"

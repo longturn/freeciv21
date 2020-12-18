@@ -17,6 +17,8 @@
 #include "canvas.h"
 #include "pages_g.h"
 
+class QTcpSocket;
+
 void setup_gui_funcs();
 
 void qtg_ui_init();

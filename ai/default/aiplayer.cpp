@@ -20,7 +20,7 @@
 #include "city.h"
 #include "game.h"
 #include "unit.h"
-
+#include "multipliers.h"
 /* server */
 #include "citytools.h"
 

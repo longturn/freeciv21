@@ -13,6 +13,8 @@
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QTableWidget>
+// common
+#include "nation.h"
 // client
 #include "repodlgs_common.h"
 #include "sprite.h"

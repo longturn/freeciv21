@@ -29,6 +29,7 @@
 #include "game.h"
 #include "map.h"
 #include "unit.h"
+#include "nation.h"
 
 /* server */
 #include "notify.h"

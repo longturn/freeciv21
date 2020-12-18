@@ -41,6 +41,8 @@
 #include "registry.h"
 #include "shared.h"
 #include "support.h"
+#include "workertask.h"
+#include "style.h"
 
 /* common */
 #include "base.h"

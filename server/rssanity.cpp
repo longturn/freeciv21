@@ -31,6 +31,9 @@
 #include "road.h"
 #include "specialist.h"
 #include "tech.h"
+#include "style.h"
+#include "multipliers.h"
+#include "nation.h"
 
 /* server */
 #include "ruleset.h"

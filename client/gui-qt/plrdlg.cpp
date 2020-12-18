@@ -20,6 +20,7 @@
 #include "game.h"
 #include "government.h"
 #include "research.h"
+#include "nation.h"
 // client
 #include "chatline_common.h"
 #include "client_main.h"

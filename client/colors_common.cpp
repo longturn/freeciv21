@@ -22,6 +22,7 @@
 /* common */
 #include "player.h"
 #include "rgbcolor.h"
+#include "terrain.h"
 
 /* client/include */
 #include "colors_g.h"

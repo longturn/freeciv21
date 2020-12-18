@@ -24,6 +24,7 @@
 
 /* common */
 #include "map.h"
+#include "nation.h"
 
 /* server */
 #include "gamehand.h"

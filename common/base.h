@@ -12,10 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* utility */
-#include "bitvector.h"
-
 /* common */
 #include "fc_types.h"
 #include "requirements.h"

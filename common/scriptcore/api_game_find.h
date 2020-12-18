@@ -7,9 +7,7 @@
  a copy of the GNU General Public License along with Freeciv21. If not,
  see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
-
 
 /* dependencies/lua */
 #include "lua.h"

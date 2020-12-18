@@ -51,12 +51,7 @@
 
 #pragma once
 
-/* utility */
-#include "support.h"
-
-/* common */
 #include "tile.h"
-
 #define MAX_LEN_MAPDEF 256
 
 /* map image layers */

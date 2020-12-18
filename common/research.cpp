@@ -25,6 +25,7 @@
 #include "fc_types.h"
 #include "game.h"
 #include "name_translation.h"
+#include "nation.h"
 #include "player.h"
 #include "team.h"
 #include "tech.h"

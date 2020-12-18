@@ -20,11 +20,8 @@
 #include "log.h" /* fc_assert */
 
 /* common */
-#include "fc_types.h"
 #include "game.h"
 #include "map_types.h"
-#include "packets.h"
-#include "tile.h"
 
 /* Parameters for terrain counting functions. */
 static const bool C_ADJACENT = false;

@@ -22,6 +22,7 @@
 #include "chatline_common.h"
 #include "government.h"
 #include "research.h"
+#include "nation.h"
 // client
 #include "client_main.h"
 #include "climisc.h"

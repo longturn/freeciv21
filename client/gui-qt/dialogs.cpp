@@ -32,6 +32,7 @@
 #include "movement.h"
 #include "nation.h"
 #include "research.h"
+#include "style.h"
 // client
 #include "audio.h"
 #include "chatline_common.h"

@@ -12,19 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "bitvector.h"
-#include "log.h"
-
 /* common */
-#include "fc_types.h"
 #include "improvement.h"
-#include "name_translation.h"
-#include "traderoutes.h"
-#include "unit.h"
-#include "unitlist.h"
-#include "vision.h"
-#include "workertask.h"
 #include "worklist.h"
 
 enum production_class_type {

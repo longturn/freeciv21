@@ -21,7 +21,7 @@
 /* common */
 #include "game.h"
 #include "player.h"
-
+#include "nation.h"
 #include "diptreaty.h"
 
 static struct clause_info clause_infos[CLAUSE_COUNT];

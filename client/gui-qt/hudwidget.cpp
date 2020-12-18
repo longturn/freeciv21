@@ -24,6 +24,7 @@
 #include "tile.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "nation.h"
 // client
 #include "calendar.h"
 #include "client_main.h"

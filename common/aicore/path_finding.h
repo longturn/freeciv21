@@ -10,12 +10,6 @@
 **************************************************************************/
 #pragma once
 
-/* common */
-#include "map.h"
-#include "tile.h"
-#include "unit.h"
-#include "unittype.h"
-
 /* ========================== Explanations =============================== */
 
 /*

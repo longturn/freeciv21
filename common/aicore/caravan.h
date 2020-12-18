@@ -12,12 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-/* utility */
-#include "shared.h"
-
-/* common */
-#include "fc_types.h"
-
 enum foreign_trade_limit {
   FTL_NATIONAL_ONLY,
   FTL_ALLIED,

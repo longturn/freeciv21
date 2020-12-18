@@ -12,15 +12,6 @@
       \____/        ********************************************************/
 #pragma once
 
-
-/* utility */
-#include "support.h" /* bool type */
-
-/* common */
-#include "connection.h"
-#include "fc_types.h"
-#include "multipliers.h"
-
 #include "requirements.h"
 
 /* Type of effects. Add new values via SPECENUM_VALUE%d and

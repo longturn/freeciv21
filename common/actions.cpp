@@ -30,6 +30,7 @@
 #include "game.h"
 #include "map.h"
 #include "movement.h"
+#include "nation.h"
 #include "research.h"
 #include "server_settings.h"
 #include "tile.h"

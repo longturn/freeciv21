@@ -44,6 +44,7 @@
 #include "player.h"
 #include "requirements.h"
 #include "tech.h"
+#include "unit.h"
 #include "worklist.h"
 
 /* common/aicore */

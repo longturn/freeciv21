@@ -20,6 +20,7 @@
 // common
 #include "chatline_common.h"
 #include "connectdlg_common.h"
+#include "rgbcolor.h"
 // client
 #include "options.h"
 // gui-qt

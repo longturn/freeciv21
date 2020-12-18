@@ -19,7 +19,6 @@
 ***************************************************************************/
 
 /* common */
-#include "fc_types.h"
 #include "world_object.h"
 
 void idex_init(struct world *iworld);

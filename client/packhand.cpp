@@ -53,6 +53,7 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "worklist.h"
+#include "workertask.h"
 
 /* client/include */
 #include "chatline_g.h"

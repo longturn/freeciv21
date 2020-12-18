@@ -27,6 +27,7 @@
 #include "map.h"
 #include "road.h"
 #include "unit.h"
+#include "multipliers.h"
 // client
 #include "cityrep_g.h"
 #include "client_main.h"

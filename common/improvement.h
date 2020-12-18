@@ -16,10 +16,8 @@
 
 /* utility */
 #include "bitvector.h"
-#include "support.h" /* bool */
 
-/* common */
-#include "fc_types.h"
+// /* common */
 #include "name_translation.h"
 #include "requirements.h"
 

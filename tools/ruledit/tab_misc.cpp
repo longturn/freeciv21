@@ -34,6 +34,8 @@
 #include "game.h"
 #include "government.h"
 #include "specialist.h"
+#include "multipliers.h"
+#include "style.h"
 
 // server
 #include "rssanity.h"

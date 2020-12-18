@@ -33,6 +33,7 @@
 #include "game.h"
 #include "map.h"
 #include "road.h"
+#include "nation.h"
 
 /* server/generator */
 #include "fracture_map.h"

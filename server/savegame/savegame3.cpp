@@ -66,6 +66,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 #include <QSet>
 #include <ctype.h>
 #include <stdarg.h>
@@ -104,6 +105,7 @@
 #include "unit.h"
 #include "unitlist.h"
 #include "version.h"
+#include "style.h"
 
 /* server */
 #include "barbarian.h"

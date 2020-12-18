@@ -20,6 +20,7 @@
 #include <QTableWidget>
 /* common */
 #include "game.h"
+#include "nation.h"
 /* client */
 #include "client_main.h"
 #include "control.h"

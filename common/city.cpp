@@ -39,6 +39,7 @@
 #include "requirements.h"
 #include "specialist.h"
 #include "traderoutes.h"
+#include "workertask.h"
 #include "unit.h"
 
 /* aicore */

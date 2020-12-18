@@ -17,6 +17,7 @@
 
 /* utility */
 #include "fcintl.h"
+#include "iterator.h"
 #include "log.h"
 #include "shared.h"
 #include "support.h"
@@ -24,6 +25,7 @@
 /* common */
 #include "game.h"
 #include "player.h"
+#include "nation.h"
 #include "tech.h"
 
 #include "government.h"

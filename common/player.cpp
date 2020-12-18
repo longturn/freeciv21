@@ -15,6 +15,7 @@
 #include <fc_config.h>
 #endif
 
+#include <QBitArray>
 /* utility */
 #include "fcintl.h"
 #include "log.h"
@@ -31,6 +32,8 @@
 #include "idex.h"
 #include "improvement.h"
 #include "map.h"
+#include "multipliers.h"
+#include "nation.h"
 #include "research.h"
 #include "rgbcolor.h"
 #include "tech.h"

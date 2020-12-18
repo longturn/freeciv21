@@ -40,6 +40,7 @@
 #include "rgbcolor.h"
 #include "tech.h"
 #include "unitlist.h"
+#include "style.h"
 
 /* common/scriptcore */
 #include "luascript_types.h"

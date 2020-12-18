@@ -13,14 +13,6 @@
 
 #pragma once
 
-/* utility */
-#include "bitvector.h"
-
-/* common */
-#include "fc_types.h"
-#include "name_translation.h"
-#include "requirements.h"
-
 struct multiplier {
   Multiplier_type_id id;
   struct name_translation name;

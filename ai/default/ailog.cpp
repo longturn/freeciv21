@@ -18,7 +18,7 @@
 #include "map.h"
 #include "player.h"
 #include "research.h"
-
+#include "nation.h"
 /* server */
 #include "notify.h"
 

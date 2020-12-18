@@ -26,11 +26,13 @@
 #include "extras.h"
 #include "government.h"
 #include "map.h"
+#include "nation.h"
 #include "movement.h"
 #include "player.h"
 #include "requirements.h"
 #include "server_settings.h"
 #include "specialist.h"
+#include "style.h"
 
 #include "reqtext.h"
 

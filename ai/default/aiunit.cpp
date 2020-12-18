@@ -37,6 +37,7 @@
 #include "traderoutes.h"
 #include "unit.h"
 #include "unitlist.h"
+#include "nation.h"
 
 /* common/aicore */
 #include "caravan.h"

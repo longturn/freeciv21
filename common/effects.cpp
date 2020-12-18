@@ -30,6 +30,7 @@
 #include "government.h"
 #include "improvement.h"
 #include "map.h"
+#include "multipliers.h"
 #include "packets.h"
 #include "player.h"
 #include "tech.h"

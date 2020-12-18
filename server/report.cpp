@@ -39,6 +39,7 @@
 #include "specialist.h"
 #include "unitlist.h"
 #include "version.h"
+#include "nation.h"
 
 /* server */
 #include "citytools.h"

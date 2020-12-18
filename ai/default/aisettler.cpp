@@ -32,6 +32,7 @@
 #include "movement.h"
 #include "packets.h"
 #include "player.h"
+#include "workertask.h"
 
 /* common/aicore */
 #include "citymap.h"

@@ -27,6 +27,7 @@
 #include "government.h"
 #include "player.h"
 #include "research.h"
+#include "nation.h"
 // client
 #include "client_main.h"
 #include "colors_common.h"

@@ -25,6 +25,7 @@
 /* common */
 #include "connection.h"
 #include "game.h"
+#include "nation.h"
 
 /* client */
 #include "client_main.h"

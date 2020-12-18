@@ -24,7 +24,8 @@
 #include "specialist.h"
 #include "tech.h"
 #include "traderoutes.h"
-
+#include "nation.h"
+#include "style.h"
 /* server */
 #include "rssanity.h"
 #include "settings.h"

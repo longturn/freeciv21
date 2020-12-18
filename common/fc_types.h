@@ -11,10 +11,8 @@
 
 #pragma once
 
-
 /* utility */
 #include "bitvector.h"
-#include "shared.h"
 
 /* This file serves to reduce the cross-inclusion of header files which
  * occurs when a type which is defined in one file is needed for a function

@@ -12,10 +12,7 @@
       \____/        ********************************************************/
 #pragma once
 
-
-#include "fc_types.h"
 #include "map.h"
-#include "tile.h"
 
 #define SINGLE_MOVE (terrain_control.move_fragments)
 #define MOVE_COST_IGTER (terrain_control.igter_cost)

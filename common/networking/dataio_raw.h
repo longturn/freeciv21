@@ -12,10 +12,8 @@
       \____/        ********************************************************/
 #pragma once
 
-
 /* utility */
-#include "bitvector.h"
-#include "support.h" /* bool type */
+#include "support.h"
 
 struct cm_parameter;
 struct worklist;

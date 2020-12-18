@@ -8,13 +8,7 @@
     a copy of the GNU General Public License along with Freeciv21. If not,
                   see https://www.gnu.org/licenses/.
 **************************************************************************/
-
 #pragma once
-
-
-/* utility */
-#include "fcintl.h"
-#include "support.h"
 
 /* common */
 #include "fc_types.h" /* MAX_LEN_NAME */
