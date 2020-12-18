@@ -178,9 +178,9 @@ static bool inf_sanity_check(struct inputfile *inf)
                     false);
 
 #ifdef FREECIV_DEBUG
-  fc_assert_ret_val(0 <= inf->string_start_line, FALSE);
+  fc_assert_ret_val(0 <= inf->string_start_line, false);
   if (inf->included_from && !inf_sanity_check(inf->included_from)) {
-    return FALSE;
+    return false;
   }
 #endif /* FREECIV_DEBUG */
 

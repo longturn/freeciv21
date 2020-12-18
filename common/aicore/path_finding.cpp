@@ -2797,7 +2797,7 @@ static bool pf_fuel_map_iterate(struct pf_map *pfm)
 #ifdef PF_DEBUG
       bool success = map_index_pq_remove(pffm->queue, &tindex);
 
-      fc_assert(TRUE == success);
+      fc_assert(true == success);
 #else
       map_index_pq_remove(pffm->queue, &tindex);
 #endif
@@ -3119,8 +3119,8 @@ bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
                      struct pf_position *pos)
 {
 #ifdef PF_DEBUG
-  fc_assert_ret_val(NULL != pfm, FALSE);
-  fc_assert_ret_val(NULL != ptile, FALSE);
+  fc_assert_ret_val(NULL != pfm, false);
+  fc_assert_ret_val(NULL != ptile, false);
 #endif
   return pfm->get_position(pfm, ptile, pos);
 }
@@ -3139,7 +3139,7 @@ bool pf_map_position(struct pf_map *pfm, struct tile *ptile,
 bool pf_map_iterate(struct pf_map *pfm)
 {
 #ifdef PF_DEBUG
-  fc_assert_ret_val(NULL != pfm, FALSE);
+  fc_assert_ret_val(NULL != pfm, false);
 #endif
 
   if (NULL == pfm->tile) {
@@ -3438,7 +3438,7 @@ inline bool operator==(const pf_parameter &e1, const pf_parameter &e2)
 
   if (!e1.omniscience) {
 #ifdef PF_DEBUG
-    fc_assert(e2.omniscience == FALSE);
+    fc_assert(e2.omniscience == false);
 #endif
     if (e1.utype->unknown_move_cost != e2.utype->unknown_move_cost) {
       return false;

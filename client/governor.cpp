@@ -19,6 +19,7 @@
 #include "city.h"
 #include "dataio.h"
 #include "specialist.h"
+#include "nation.h"
 
 /* client */
 #include "attribute.h"

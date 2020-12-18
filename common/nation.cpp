@@ -73,7 +73,7 @@ static bool nation_check(const nation_type *pnation)
               pnation->item_number, nation_count());
     return false;
   }
-  return TRUE;
+  return true;
 }
 
 #else                                 /* FREECIV_DEBUG */

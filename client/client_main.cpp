@@ -155,7 +155,7 @@ bool waiting_for_end_turn = false;
 static bool server_busy = false;
 
 #ifdef FREECIV_DEBUG
-bool hackless = FALSE;
+bool hackless = false;
 #endif
 
 static bool client_quitting = false;
@@ -412,7 +412,7 @@ int client_main(int argc, char *argv[])
   }
 #ifdef FREECIV_DEBUG
   if (parser.isSet(QStringLiteral("Hackless"))) {
-    hackless = TRUE;
+    hackless = true;
   }
 #endif
   if (parser.isSet(QStringLiteral("log"))) {
