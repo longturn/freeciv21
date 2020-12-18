@@ -286,6 +286,7 @@ server::server()
 
   // Prepare a game
   prepare_game();
+  con_prompt_init();
   if (m_interactive) {
     init_interactive();
   }
