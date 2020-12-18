@@ -340,7 +340,7 @@ void server::init_interactive()
 
   // Initialize readline
   rl_initialize();
-  rl_callback_handler_install((char *) "> ", handle_readline_input_callback);
+  rl_callback_handler_install((char *) "\u001b[32m>\u001b[0m ", handle_readline_input_callback);
   rl_attempted_completion_function = freeciv_completion;
 }
 
