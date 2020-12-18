@@ -306,7 +306,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
 
       /* Load possible terrains and their identifiers (chars) */
       sf = secfile_load_section(fn_bytes.data(), "savefile", true);
-      if (sf)
+      if (sf) {
         while ((terr_name = secfile_lookup_str_default(
                     sf, NULL, "savefile.terrident%d.name", ii))
                != NULL) {
@@ -318,7 +318,7 @@ void page_load::slot_selection_changed(const QItemSelection &selected,
           }
           ii++;
         }
-
+      }
       /* Create image */
       QImage img(nat_x, nat_y, QImage::Format_ARGB32_Premultiplied);
       img.fill(Qt::black);

@@ -58,36 +58,48 @@ typedef int fc_errno;
 #define fc_realloc(ptr, sz) realloc(ptr, sz)
 
 #define NFCPP_FREE(ptr)                                                     \
-  if (ptr) {                                                                \
-    delete[](ptr);                                                          \
-  }
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete[](ptr);                                                        \
+    }                                                                       \
+  } while (false)
 
 #define NFC_FREE(ptr)                                                       \
-  if (ptr) {                                                                \
-    delete (ptr);                                                           \
-  }
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete (ptr);                                                         \
+    }                                                                       \
+  } while (false)
 
 #define NFCN_FREE(ptr)                                                      \
-  if (ptr) {                                                                \
-    delete (ptr);                                                           \
-    ptr = nullptr;                                                          \
-  }
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete (ptr);                                                         \
+      ptr = nullptr;                                                        \
+    }                                                                       \
+  } while (false)
 
 #define VOIDNFCN_FREE(ptr)                                                  \
-  if (ptr) {                                                                \
-    ::operator delete(ptr);                                                 \
-    ptr = nullptr;                                                          \
-  }
+  do {                                                                      \
+    if (ptr) {                                                              \
+      ::operator delete(ptr);                                               \
+      ptr = nullptr;                                                        \
+    }                                                                       \
+  } while (false)
 
 #define NFCNPP_FREE(ptr)                                                    \
-  if (ptr) {                                                                \
-    delete[](ptr);                                                          \
-    ptr = nullptr;                                                          \
-  }
+  do {                                                                      \
+    if (ptr) {                                                              \
+      delete[](ptr);                                                        \
+      ptr = nullptr;                                                        \
+    }                                                                       \
+    while (false)
 
 #define FCPP_FREE(ptr)                                                      \
-  delete[](ptr);                                                            \
-  (ptr) = NULL;
+  do {                                                                      \
+    delete[](ptr);                                                          \
+    (ptr) = NULL;                                                           \
+  } while (false)
 
 #define FC_FREE(ptr)                                                        \
   do {                                                                      \

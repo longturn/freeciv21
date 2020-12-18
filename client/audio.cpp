@@ -333,14 +333,7 @@ void audio_real_init(QString &soundset_name, QString &musicset_name,
   QString t1 = "musicspec.options";
   check_audiofile_capstr(ms_tagfile, &ms_filename, &us_ms_capstr, &t1);
 
-  {
-    static bool atexit_set = false;
-
-    if (!atexit_set) {
-      atexit(audio_shutdown);
-      atexit_set = true;
-    }
-  }
+  atexit(audio_shutdown);
 
   if (preferred_plugin_name[0] != '\0') {
     if (!audio_select_plugin(preferred_plugin_name))
