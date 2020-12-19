@@ -71,5 +71,7 @@ void audio_none_init(void)
   self.stop = none_audio_stop;
   self.wait = none_audio_wait;
   self.play = none_audio_play;
+  self.get_volume = audio_get_volume;
+  self.set_volume = audio_set_volume;
   audio_add_plugin(&self);
 }

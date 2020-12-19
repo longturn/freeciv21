@@ -1449,10 +1449,10 @@ bool req_text_insert(char *buf, size_t bufsz, struct player *pplayer,
       break;
     }
     astr_free(&list);
+    delete[] classes;
     if (done) {
       return true;
     }
-    delete[] classes;
   } break;
 
   case VUT_UNITSTATE: {

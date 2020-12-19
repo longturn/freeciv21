@@ -1708,6 +1708,9 @@ hud_unit_combat::hud_unit_combat(int attacker_unit_id, int defender_unit_id,
 
   attacker = game_unit_by_number(attacker_unit_id);
   defender = game_unit_by_number(defender_unit_id);
+  if (!attacker || ! defender) {
+    return;
+  }
   type_attacker = attacker->utype;
   type_defender = defender->utype;
   att_veteran = make_att_veteran;

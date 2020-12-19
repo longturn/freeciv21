@@ -3337,7 +3337,7 @@ static bool observe_command(struct connection *caller, char *str, bool check)
   }
 
   /* attempting to observe a player you're already observing should fail. */
-  if (pplayer == pconn->playing && pconn->observer) {
+  if (pconn && pplayer == pconn->playing && pconn->observer) {
     if (pplayer) {
       cmd_reply(CMD_OBSERVE, caller, C_FAIL,
                 _("%s is already observing %s."), pconn->username,

@@ -631,7 +631,8 @@ void draw_full_city_bar(struct city *pcity, struct canvas *pcanvas, int x,
     } else {
       growth_time = QStringLiteral("∞");
     }
-    granary_max = city_granary_size(city_size_get(pcity));
+    // avoid div by 0
+    granary_max = qMax(1 , city_granary_size(city_size_get(pcity)));
 
     int hstock = (fonttext_height * pcity->food_stock) / granary_max;
     int hhstock = (fonttext_height * pcity->surplus[O_FOOD]) / granary_max;

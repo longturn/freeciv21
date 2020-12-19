@@ -244,7 +244,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
   case TTT_STRIKE:
   case TTT_UNDERLINE:
     return true;
-  case TTT_COLOR: {
+  case TTT_COLOR:
     if (!find_option(sequence, "foreground", ptag->color.foreground,
                      sizeof(ptag->color.foreground))
         && !find_option(sequence, "fg", ptag->color.foreground,
@@ -257,7 +257,6 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
                         sizeof(ptag->color.background))) {
       ptag->color.background[0] = '\0';
     }
-  }
     return true;
   case TTT_LINK: {
     char buf[64];
@@ -286,7 +285,7 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
     }
 
     switch (ptag->link.type) {
-    case TLT_CITY: {
+    case TLT_CITY:
       if (!find_option(sequence, "id", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "city link without id.");
@@ -305,9 +304,8 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "CITY_ID%d",
                     ptag->link.id);
       }
-    }
       return true;
-    case TLT_TILE: {
+    case TLT_TILE:
       struct tile *ptile;
       int x, y;
 
@@ -348,9 +346,8 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
       ptag->link.id = tile_index(ptile);
       fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "(%d, %d)",
                   TILE_XY(ptile));
-    }
       return true;
-    case TLT_UNIT: {
+    case TLT_UNIT:
       if (!find_option(sequence, "id", buf, sizeof(buf))) {
         log_featured_text("text_tag_init_from_sequence(): "
                           "unit link without id.");
@@ -369,10 +366,10 @@ static bool text_tag_init_from_sequence(struct text_tag *ptag,
         fc_snprintf(ptag->link.name, sizeof(ptag->link.name), "UNIT_ID%d",
                     ptag->link.id);
       }
-    }
       return true;
     case TLT_INVALID:
       fc_assert_ret_val(ptag->link.type != TLT_INVALID, false);
+      break;
     };
   }
   case TTT_INVALID:

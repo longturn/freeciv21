@@ -254,7 +254,7 @@ void save_game(const char *orig_filename, const char *save_reason,
       tmpname = srvarg.saves_pathname;
     } else {
       /* Make sure scenario directory exist */
-      if (srvarg.saves_pathname.isNull()) {
+      if (srvarg.scenarios_pathname.isNull()) {
         QDir().mkpath(srvarg.scenarios_pathname);
       }
 

@@ -828,7 +828,7 @@ void packets_deinit(void) { packet_handlers_free(); }
 void packet_strvec_compute(char *str, QVector<QString> *qstrvec)
 {
   if (NULL != qstrvec) {
-    qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str, sizeof(str));
+    qstrvec_to_str(qstrvec, PACKET_STRVEC_SEPARATOR, str);
   } else {
     str[0] = '\0';
   }
@@ -851,8 +851,7 @@ QVector<QString> *packet_strvec_extract(const char *str)
 
    See also strvec_from_str().
  **************************************************************************/
-void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf,
-                    size_t buf_len)
+void qstrvec_to_str(const QVector<QString> *psv, char separator, char *buf)
 {
   QString s;
 

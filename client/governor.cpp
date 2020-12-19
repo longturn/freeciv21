@@ -865,7 +865,7 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   buffer = new char[50];
 
   if (surplus == 0) {
-    fc_snprintf(buffer, sizeof(buffer), _("never"));
+    fc_snprintf(buffer, 50, _("never"));
     return buffer;
   }
 
@@ -879,7 +879,7 @@ static const char *get_city_growth_string(struct city *pcity, int surplus)
   } else {
     turns = ((cost - stock - 1) / surplus) + 1 + 1;
   }
-  fc_snprintf(buffer, sizeof(buffer), PL_("%d turn", "%d turns", turns),
+  fc_snprintf(buffer, 50, PL_("%d turn", "%d turns", turns),
               turns);
   return buffer;
 }
@@ -900,8 +900,7 @@ static const char *get_prod_complete_string(struct city *pcity, int surplus)
   if (city_production_has_flag(pcity, IF_GOLD)) {
     fc_strlcpy(
         buffer,
-        improvement_name_translation(pcity->production.value.building),
-        sizeof(buffer));
+        improvement_name_translation(pcity->production.value.building), 50);
     return buffer;
   }
   stock = pcity->shield_stock + surplus;
@@ -960,7 +959,7 @@ cmafec_get_result_descr(struct city *pcity, const struct cm_result *result,
                 cmafec_get_short_descr(parameter));
   }
 
-  fc_snprintf(buffer, sizeof(buffer),
+  fc_snprintf(buffer, 600,
               _("Name: %s\n"
                 "Food:       %10s Gold:    %10s\n"
                 "Production: %10s Luxury:  %10s\n"

@@ -922,10 +922,9 @@ const QStringList *get_scenario_dirs(void)
  ****************************************************************************/
 struct QVector<QString> *fileinfolist(const QStringList *dirs,
                                       const char *suffix) {
-  QVector<QString> *files = new QVector<QString>();
-
   fc_assert_ret_val(!strchr(suffix, DIR_SEPARATOR_CHAR), NULL);
 
+  QVector<QString> *files = new QVector<QString>();
   if (NULL == dirs) {
     return files;
   }

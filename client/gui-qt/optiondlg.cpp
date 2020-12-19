@@ -655,7 +655,7 @@ void option_dialog::add_option(struct option *poption)
         break;
       }
       /* we store enum value in QVariant */
-      combo->addItem(_(s), i);
+      combo->addItem(_(qUtf8Printable(s)), i);
       i++;
     }
     widget = combo;

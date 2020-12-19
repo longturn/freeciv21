@@ -4678,7 +4678,7 @@ void options_save(option_save_log_callback log_cb)
   /* Directory name */
   sz_strlcpy(dir_name, name);
   for (i = qstrlen(dir_name) - 1;
-       dir_name[i] != DIR_SEPARATOR_CHAR && i >= 0; i--) {
+       i >= 0 && dir_name[i] != DIR_SEPARATOR_CHAR; i--) {
     /* Nothing */
   }
   if (i > 0) {

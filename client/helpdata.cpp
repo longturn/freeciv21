@@ -518,7 +518,7 @@ static void insert_allows_single(struct universal *psource,
         {
           if (!coreq->quiet
               && !are_universals_equal(psource, &coreq->source)) {
-            universal_name_translation(&coreq->source, buf2, sizeof(buf2));
+            universal_name_translation(&coreq->source, buf2, bufsz);
             if (coreq->present) {
               coreqs->append(buf2);
             } else {
@@ -1783,13 +1783,12 @@ char *helptext_unit(char *buf, size_t bufsz, struct player *pplayer,
    * when a unit type has multiple combat bonuses of the same kind. */
   combat_bonus_list_iterate(utype->bonuses, cbonus)
   {
-    const char **against = new const char *[utype_count()];
-    int targets = 0;
-
     if (cbonus->quiet) {
       /* Handled in the help text of the ruleset. */
       continue;
     }
+    int targets = 0;
+    const char **against = new const char *[utype_count()];
 
     /* Find the unit types of the bonus targets. */
     unit_type_iterate(utype2)
